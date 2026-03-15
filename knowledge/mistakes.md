@@ -134,5 +134,139 @@ const EASE = [0.22, 1, 0.36, 1] as const  // readonly [0.22, 1, 0.36, 1]
 
 ---
 
+---
+
+## Mimio'dan Öğrenilenler (next-themes Alternatifleri)
+
+### 16. next-themes Olmadan FOUC Önleme
+**Hata**: `next-themes` kullanmadan dark mode — sayfa ilk açılışta beyaz çakar
+**Çözüm**: `<head>` içine inline script ekle:
+```html
+<script dangerouslySetInnerHTML={{ __html:
+  `try{var t=localStorage.getItem('mimio-theme');
+   document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');
+  }catch(e){}`
+}} />
+```
+**Not**: Bu pattern `suppressHydrationWarning` yerine `data-theme` attribute kullanır. next-themes olmadan hydration mismatch olmaz.
+
+### 17. Tailwind v4: `tailwind.config.ts` Yok
+**Hata**: v4 projesinde `tailwind.config.ts` oluşturmaya çalışmak
+**Fark**: Tailwind v4'te konfigürasyon `globals.css` içinde `@theme {}` bloğuyla yapılır
+```css
+@import "tailwindcss";
+@theme {
+  --color-primary: #6366f1;
+}
+```
+**Kullanım**: `bg-(--color-primary)` syntax'ı — `bg-indigo-500` değil
+
+### 18. `background-attachment: fixed` Mobilde Çalışmaz
+**Hata**: `background-attachment: fixed` iOS/Android'de scroll sırasında titreşir
+**Çözüm**: Mobil breakpoint'te `scroll`'a döndür:
+```css
+@media (max-width: 640px) {
+  body { background-attachment: scroll; }
+}
+```
+**Not**: DigyNotes ve Keskealsaydım da bu düzeltmeyi yapıyor.
+
+---
+
+## DigyNotes'tan Öğrenilenler
+
+### 19. React Quill SSR Sorunu
+**Hata**: `react-quill` Next.js'de SSR ile çalışmaz
+**Çözüm**: `dynamic` import ile yükle:
+```tsx
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+```
+
+### 20. Prisma Generate Build'de Unutulması
+**Hata**: Vercel build'de `PrismaClientInitializationError`
+**Sebep**: `prisma generate` build öncesi çalıştırılmadı
+**Çözüm**:
+```json
+{ "scripts": { "build": "prisma generate && next build" } }
+```
+
+### 21. Scroll Lock'ta `position: fixed` ile Scroll Pozisyonu Kaybolması
+**Hata**: Modal açıldığında body'e `overflow: hidden` + `position: fixed` eklenince sayfa başa atlar
+**Çözüm**: `top: var(--scroll-lock-top, 0)` ile scroll pozisyonunu sakla, kapanışta geri yükle:
+```ts
+document.documentElement.style.setProperty('--scroll-lock-top', `-${window.scrollY}px`)
+// Kapatınca:
+const scrollY = parseInt(style.getPropertyValue('--scroll-lock-top') || '0')
+window.scrollTo(0, -scrollY)
+```
+
+---
+
+## Keskealsaydım'dan Öğrenilenler
+
+### 22. Vite Chunk Boyutu Uyarısı (`> 500kB`)
+**Hata**: `Some chunks are larger than 500 kB after minification`
+**Çözüm**:
+1. Route bazlı lazy loading: `const Page = lazy(() => import('./pages/X'))`
+2. `vite.config.ts`'de `manualChunks`:
+```ts
+build: {
+  rollupOptions: {
+    output: {
+      manualChunks: { vendor: ['react', 'react-dom'] }
+    }
+  }
+}
+```
+
+### 23. Go Backend + Frontend Vercel Deploy
+**Hata**: Go API + Vite frontend'i Vercel'de nasıl deploy edilir bilinmiyor
+**Çözüm**: `vercel.json` ile rewrite kuralları:
+```json
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+**Not**: Go için `api/` dizini Vercel Serverless Functions olarak çalışır.
+
+### 24. ESLint Config Dosyası Bulunamadı
+**Hata**: `ESLint couldn't find a configuration file`
+**Sebep**: Frontend alt dizininde ayrı eslint config gerekiyor
+**Çözüm**: `frontend/.eslintrc.cjs` oluştur ve `@typescript-eslint/*` paketlerini kur
+
+### 25. DB Migration'ları Geri Dönük Değiştirme
+**Hata**: Var olan migration dosyasını düzenlemek
+**Kural**: Migration dosyaları immutable'dır — değişiklik için her zaman yeni migration dosyası oluştur
+
+---
+
+## Genel (Tüm Projelerden)
+
+### 26. Hardcoded Renk Değerleri Kullanmak
+**Hata**: `bg-white`, `text-gray-900`, `border-gray-200`, `rgba(255,255,255,0.04)`
+**Kural**: Her zaman CSS variable veya Tailwind token kullan
+```tsx
+// ❌ Yanlış
+<div className="bg-white dark:bg-gray-900">
+<div style={{ background: "rgba(255,255,255,0.04)" }}>
+
+// ✅ Doğru (Mimio/ahmetakyapi stili)
+<div className="bg-(--color-surface)">
+<div className="glass">
+```
+
+### 27. `font-variant-numeric` Sayı Gösterimlerinde
+**Hata**: Rakamlar satır içinde farklı genişliklerde — tablo hizalama bozulur
+**Çözüm**:
+```css
+.number-ticker { font-variant-numeric: tabular-nums; }
+```
+Finance/istatistik uygulamalarında her sayı gösterimi için.
+
+---
+
 *Son güncelleme: 2026-03-15*
 *Yeni hata eklemek için bu dosyayı düzenle.*
