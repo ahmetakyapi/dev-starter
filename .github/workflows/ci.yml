@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+  pull_request:
+    paths:
+      - 'packages/**'
+
+jobs:
+  build:
+    name: Build Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build @ahmetakyapi/theme
+        run: npm run build --workspace=packages/@ahmet/theme
+
+      - name: Build @ahmetakyapi/ui
+        run: npm run build --workspace=packages/@ahmet/ui
+
+      - name: Verify exports
+        run: |
+          node -e "const t = require('./packages/@ahmet/theme/dist/tokens.js'); console.log('theme ok — ease:', t.default.animation.ease)"
+          node -e "const ui = require('./packages/@ahmet/ui/dist/index.js'); console.log('ui ok —', Object.keys(ui).length, 'exports')"

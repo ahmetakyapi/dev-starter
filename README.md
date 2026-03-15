@@ -24,9 +24,12 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/              Her projenin görsel hafızası (5 proje)
 │   ├── mistakes.md          27 belgelenmiş hata ve çözümü
-│   └── patterns.md          Kopyala-yapıştır kod desenleri
+│   ├── patterns.md          Kopyala-yapıştır kod desenleri
+│   └── decisions.md         Teknoloji seçimlerinin gerekçesi
 │
-└── agents/                  uiux · frontend · backend · deploy
+├── snippets/                OG image · Animated number · Infinite scroll · Search bar
+├── agents/                  uiux · frontend · backend · deploy
+└── .github/workflows/       Paket build CI
 ```
 
 **Claude Code Skills** (`~/.claude/commands/`):
@@ -38,6 +41,8 @@ dev-starter/
 | `/deploy` | Vercel pre/post deploy checklist |
 | `/review-ui` | UI/UX kod incelemesi |
 | `/snippet` | Modal · Drawer · Form · Skeleton · Toast · Confirm |
+| `/check` | Tüm bilinen hatalar üzerinden proje sağlık kontrolü |
+| `/release` | Versiyon güncelle, build al, npm'e publish et |
 
 ---
 
@@ -262,7 +267,7 @@ Proje bağlamını okuyarak doğru import'larla hazır bileşen üretir.
 
 ---
 
-## Ajan Dosyaları
+## Agent Dosyaları
 
 `agents/` dizinindeki tanım dosyaları, Claude'a belirli bir görev için kimliğini, bilgi tabanını ve karar çerçevesini verir. Doğrudan çağrılmazlar — "bu konuda uzman olarak hareket et, şu dosyaları oku" şeklinde kullanılır.
 
@@ -341,20 +346,48 @@ Deployment hazırlığı, env var yönetimi, domain konfigürasyonu ve post-depl
 | Keskealsaydım | HSL | Space Grotesk | Emerald · Cyan | shadcn HSL vars |
 | Ramazan Vakitleri | `#1a1a2e` | System | Lavender · Pembe · Mavi | Dark only, vanilla CSS |
 
+### `knowledge/decisions.md` — Mimari Kararlar
+
+Her teknoloji seçiminin gerekçesi. Neden bu, neden alternatif değil.
+
+| Teknoloji | Tercih edilen | Bırakılan alternatif |
+|---|---|---|
+| Framework | Next.js 14+ App Router | Remix, Vite+React |
+| ORM | Drizzle ORM | Prisma |
+| Database | Neon Postgres | Supabase, PlanetScale |
+| Animasyon | Framer Motion | GSAP |
+| Auth | next-auth v5 | Clerk |
+| Deployment | Vercel | Railway, Fly.io |
+
 ### `knowledge/patterns.md`
 
 Auth (next-auth v5) · Database (Drizzle+Neon) · API helpers · next-themes kurulumu · Three.js dynamic import · Framer Motion (spotlight, stagger, modal) · SEO (sitemap, robots, OG) · Edge health route
 
 ---
 
+## Snippets
+
+`snippets/` dizininde sıfırdan yazılması uzun süren, her projede tekrarlanan hazır parçalar var. İhtiyaç duyunca ilgili dosyayı projeye kopyala.
+
+| Dosya | Ne yapar |
+|---|---|
+| `og-image.tsx` | `@vercel/og` ile dinamik OpenGraph görseli, `app/api/og/route.tsx` olarak kullanılır |
+| `animated-number.tsx` | `useSpring` ile sayı animasyonu — finance/istatistik dashboard'ları için |
+| `infinite-scroll.tsx` | `IntersectionObserver` tabanlı sonsuz liste hook'u, TanStack Query örneği ile |
+| `search-bar.tsx` | Debounced arama, URL search param senkronizasyonu, temizle butonu |
+
+---
+
 ## Ekosistemi Güncelleme
 
 ```
-Yeni hata      →  knowledge/mistakes.md
-Yeni proje     →  knowledge/themes/[proje].md
-Yeni desen     →  knowledge/patterns.md
-Yeni bileşen   →  packages/@ahmet/ui/src/components/ + index.ts + npm publish
-Yeni skill     →  ~/.claude/commands/[skill-adi].md
+Yeni hata          →  knowledge/mistakes.md
+Yeni proje         →  knowledge/themes/[proje].md
+Yeni desen         →  knowledge/patterns.md
+Yeni mimari karar  →  knowledge/decisions.md
+Yeni bileşen       →  packages/@ahmet/ui/src/components/ → /release
+Yeni snippet       →  snippets/[isim].tsx
+Yeni skill         →  ~/.claude/commands/[skill-adi].md
 ```
 
 ---
