@@ -5,6 +5,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Hero from '@/components/sections/Hero'
 import Features from '@/components/sections/Features'
+// import Pricing from '@/components/sections/Pricing'   // Fiyatlandırma — aktif et
 import CTA from '@/components/sections/CTA'
 import CustomCursor from '@/components/CustomCursor'
 
@@ -23,6 +24,7 @@ export default function Home() {
       <main>
         <Hero />
         <Features />
+        {/* <Pricing /> */}
         <CTA />
       </main>
       <Footer />
