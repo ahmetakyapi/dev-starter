@@ -44,7 +44,11 @@ dev-starter/
 ## npm Paketleri
 
 ```bash
-npm install @ahmetakyapi/theme @ahmetakyapi/ui
+npm install @ahmetakyapi/theme
+```
+
+```bash
+npm install @ahmetakyapi/ui
 ```
 
 ### @ahmetakyapi/theme
@@ -255,6 +259,61 @@ Tema tutarlılığı · animasyon kalitesi · erişilebilirlik · performans · 
 Proje bağlamını okuyarak doğru import'larla hazır bileşen üretir.
 
 `modal` · `drawer` · `form` · `skeleton` · `toast` · `confirm`
+
+---
+
+## Ajan Dosyaları
+
+`agents/` dizinindeki tanım dosyaları, Claude'a belirli bir görev için kimliğini, bilgi tabanını ve karar çerçevesini verir. Doğrudan çağrılmazlar — "bu konuda uzman olarak hareket et, şu dosyaları oku" şeklinde kullanılır.
+
+### `uiux-agent.md` — UI/UX Mühendisi
+
+Görsel dil koruyucusu. Yeni bileşen tasarlarken, animasyon yazarken veya dark/light mode implementasyonunda kullanılır.
+
+**Karar çerçevesi:** Hareket → Cam → Işık → Tipografi → Boşluk → Koyu/Açık
+
+**Okur:** `knowledge/themes/ahmetakyapi.md` · `knowledge/mistakes.md`
+
+**Kurallar:** GSAP değil Framer Motion · hardcoded renk yasak · EASE = `[0.22, 1, 0.36, 1]`
+
+---
+
+### `frontend-agent.md` — Next.js Developer
+
+App Router uzmanı. Sayfa/layout yazarken, Server vs Client Component kararında, API entegrasyonunda kullanılır.
+
+**Okur:** `knowledge/mistakes.md` · `knowledge/patterns.md` · projenin `CLAUDE.md`'si
+
+**Server vs Client karar ağacı:**
+```
+Varsayılan: Server Component
+useState / useEffect / event handler / browser API / Framer Motion gerekiyor mu?
+→ Hayır → Server Component bırak
+→ Evet  → 'use client' ekle, mümkün olan en alt seviyede tut
+```
+
+---
+
+### `backend-agent.md` — API & Veritabanı
+
+Drizzle schema, API route'ları, next-auth v5 ve Zod validasyonu konusunda uzmanlaşmış.
+
+**Zorunlu kurallar:**
+- `@neondatabase/serverless` — `pg` değil (Vercel serverless uyumluluğu)
+- Her foreign key'de `ON DELETE` davranışı zorunlu
+- Migration immutability — var olan dosya düzenlenmez, yeni dosya açılır
+
+**Response pattern:** `ok<T>()` · `err()` · `serverErr()` — `NextResponse.json()` ile tutarlı API
+
+---
+
+### `deploy-agent.md` — Vercel & DevOps
+
+Deployment hazırlığı, env var yönetimi, domain konfigürasyonu ve post-deploy kontrol.
+
+**Checklist:** `npx tsc --noEmit` → `npm run lint` → `npm run build` → env vars → DB migration → `vercel --prod` → health endpoint
+
+**Sık karşılaşılan sorunlar:** Build'de `module not found` · runtime'da `undefined` env var · production'da auth çalışmıyor · DB connection timeout
 
 ---
 
