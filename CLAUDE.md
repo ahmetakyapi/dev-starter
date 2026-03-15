@@ -10,15 +10,17 @@ Bu, Ahmet'in kişisel geliştirme ekosistemi. Yeni proje başlatmak, tema uygula
 dev-starter/
 ├── packages/@ahmet/
 │   ├── theme/      → CSS tokenları, Tailwind preset, animasyon varyantları
-│   └── ui/         → Hooks (useSpotlight, useMagnetic, useCardTilt) + variants
+│   └── ui/         → GlassCard, Button, Chip, CustomCursor + hooks + variants
 │
 ├── knowledge/
 │   ├── themes/
-│   │   ├── ahmetakyapi.md  → Ana görsel dil referansı ✓ DOLU
-│   │   ├── digynotes.md    → digynotes görsel hafıza (güncellenmeli)
-│   │   └── mimio.md        → mimio görsel hafıza (güncellenmeli)
-│   ├── mistakes.md         → Tekrar edilmeyecek hatalar ✓ DOLU
-│   └── patterns.md         → Test edilmiş kod desenleri ✓ DOLU
+│   │   ├── ahmetakyapi.md     → Ana görsel dil referansı
+│   │   ├── digynotes.md       → DigyNotes görsel hafıza
+│   │   ├── mimio.md           → Mimio görsel hafıza
+│   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
+│   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar
+│   └── patterns.md            → Test edilmiş kod desenleri
 │
 ├── agents/
 │   ├── uiux-agent.md       → Tasarım & animasyon kararları
@@ -26,9 +28,9 @@ dev-starter/
 │   ├── backend-agent.md    → DB, API, auth
 │   └── deploy-agent.md     → Vercel deployment
 │
-└── templates/              → Hazır proje şablonları (yapılacak)
-    ├── nextjs-fullstack/
-    └── landing/
+└── templates/
+    ├── nextjs-fullstack/   → Next.js + Drizzle + auth tam uygulama
+    └── landing/            → Three.js + glassmorphism tanıtım sayfası
 ```
 
 ---
@@ -57,6 +59,16 @@ dev-starter/
 /review-ui [dosya veya dizin]
 ```
 
+### Hızlı Bileşen Üret
+```
+/snippet modal
+/snippet form
+/snippet drawer
+/snippet skeleton
+/snippet toast
+/snippet confirm
+```
+
 ---
 
 ## Paket Kullanımı
@@ -83,8 +95,11 @@ export default { presets: [preset], content: [...] }
 ```
 
 ```ts
-// hooks veya bileşenlerde
-import { useSpotlight, useMagnetic, useCardTilt, fadeUp } from '@ahmet/ui'
+// hooks, bileşenler ve varyantlar
+import { useSpotlight, useMagnetic, useCardTilt } from '@ahmet/ui'
+import { GlassCard, Button, Chip, CustomCursor } from '@ahmet/ui'
+import { fadeUp, fadeIn, staggerContainer, EASE } from '@ahmet/ui'
+import { cn } from '@ahmet/ui'
 ```
 
 ---
