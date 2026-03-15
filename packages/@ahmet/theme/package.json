@@ -1,0 +1,29 @@
+{
+  "name": "@ahmet/theme",
+  "version": "1.0.0",
+  "description": "Kişisel proje tema tokenları — ahmetakyapi.com görsel dili baz alınarak",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./tailwind": "./tailwind-preset.ts",
+    "./css": "./index.css"
+  },
+  "files": ["dist", "index.css", "tailwind-preset.ts", "tokens.ts"],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup tokens.ts --format esm,cjs --dts"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "tailwindcss": ">=3.0.0"
+  }
+}

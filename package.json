@@ -1,0 +1,15 @@
+{
+  "name": "dev-starter",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/@ahmet/*",
+    "templates/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev:theme": "npm run dev --workspace=packages/@ahmet/theme",
+    "dev:ui": "npm run dev --workspace=packages/@ahmet/ui"
+  },
+  "description": "Ahmet Akyapı — kişisel geliştirme ekosistemi. Tema tokenları, UI bileşenleri, proje şablonları ve Claude Code kural seti."
+}

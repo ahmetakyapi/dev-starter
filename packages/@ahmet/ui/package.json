@@ -1,0 +1,35 @@
+{
+  "name": "@ahmet/ui",
+  "version": "1.0.0",
+  "description": "Kişisel proje UI bileşen kütüphanesi — glass, chip, cursor, spotlight",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "dev": "tsup src/index.ts --watch --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm,cjs --dts"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "framer-motion": ">=11",
+    "next-themes": ">=0.3",
+    "tailwindcss": ">=3"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "@types/react": "^18"
+  },
+  "dependencies": {
+    "@ahmet/theme": "*"
+  }
+}

@@ -1,0 +1,103 @@
+# dev-starter — Ekosistem CLAUDE.md
+
+Bu, Ahmet'in kişisel geliştirme ekosistemi. Yeni proje başlatmak, tema uygulamak veya deploy etmek için buradan başla.
+
+---
+
+## Ekosistem Yapısı
+
+```
+dev-starter/
+├── packages/@ahmet/
+│   ├── theme/      → CSS tokenları, Tailwind preset, animasyon varyantları
+│   └── ui/         → Hooks (useSpotlight, useMagnetic, useCardTilt) + variants
+│
+├── knowledge/
+│   ├── themes/
+│   │   ├── ahmetakyapi.md  → Ana görsel dil referansı ✓ DOLU
+│   │   ├── digynotes.md    → digynotes görsel hafıza (güncellenmeli)
+│   │   └── mimio.md        → mimio görsel hafıza (güncellenmeli)
+│   ├── mistakes.md         → Tekrar edilmeyecek hatalar ✓ DOLU
+│   └── patterns.md         → Test edilmiş kod desenleri ✓ DOLU
+│
+├── agents/
+│   ├── uiux-agent.md       → Tasarım & animasyon kararları
+│   ├── frontend-agent.md   → Next.js & React implementasyon
+│   ├── backend-agent.md    → DB, API, auth
+│   └── deploy-agent.md     → Vercel deployment
+│
+└── templates/              → Hazır proje şablonları (yapılacak)
+    ├── nextjs-fullstack/
+    └── landing/
+```
+
+---
+
+## Hızlı Başlangıç
+
+### Yeni Proje
+```
+/new-project [proje-adı]
+```
+
+### Görsel Tema Uygula
+```
+/theme ahmetakyapi
+/theme digynotes
+/theme mimio
+```
+
+### Deploy
+```
+/deploy
+```
+
+### UI İnceleme
+```
+/review-ui [dosya veya dizin]
+```
+
+---
+
+## Paket Kullanımı
+
+Yeni bir Next.js projesinde:
+
+```bash
+# Lokal paketleri referans et (workspace veya dosya yolu)
+npm install @ahmet/theme @ahmet/ui
+```
+
+```ts
+// tailwind.config.ts
+import preset from '@ahmet/theme/tailwind'
+export default { presets: [preset], content: [...] }
+```
+
+```css
+/* globals.css */
+@import '@ahmet/theme/css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+```ts
+// hooks veya bileşenlerde
+import { useSpotlight, useMagnetic, useCardTilt, fadeUp } from '@ahmet/ui'
+```
+
+---
+
+## Bu Dosyaları Güncelleme
+
+- **Yeni hata keşfedilince**: `knowledge/mistakes.md` güncelle
+- **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur
+- **Yeni desen bulununca**: `knowledge/patterns.md` güncelle
+- **Paket versiyonu güncellenince**: `packages/@ahmet/*/package.json` güncelle
+
+---
+
+## Global Kurallar
+
+Bakınız: `~/.claude/CLAUDE.md`
