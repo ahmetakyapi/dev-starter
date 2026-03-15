@@ -1,5 +1,5 @@
 {
-  "name": "@ahmet/ui",
+  "name": "@ahmetakyapi/ui",
   "version": "1.0.0",
   "description": "Kişisel proje UI bileşen kütüphanesi — glass, chip, cursor, spotlight",
   "main": "dist/index.js",
@@ -30,7 +30,7 @@
     "@types/react": "^18"
   },
   "dependencies": {
-    "@ahmet/theme": "*",
+    "@ahmetakyapi/theme": "*",
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.3.0"
   }

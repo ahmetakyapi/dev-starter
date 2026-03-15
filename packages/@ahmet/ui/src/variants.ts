@@ -1,5 +1,5 @@
 /**
- * @ahmet/ui — Framer Motion Animasyon Varyantları
+ * @ahmetakyapi/ui — Framer Motion Animasyon Varyantları
  *
  * Tüm projelerde tutarlı geçişler için standart varyantlar.
  * Kaynak: ahmetakyapi.com pattern analizi

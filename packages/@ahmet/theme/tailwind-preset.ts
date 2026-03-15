@@ -2,11 +2,11 @@ import type { Config } from 'tailwindcss'
 import { colors, fonts, gradients } from './tokens'
 
 /**
- * @ahmet/theme Tailwind Preset
+ * @ahmetakyapi/theme Tailwind Preset
  *
  * Kullanım:
  *   // tailwind.config.ts
- *   import preset from '@ahmet/theme/tailwind'
+ *   import preset from '@ahmetakyapi/theme/tailwind'
  *   export default { presets: [preset], content: [...] }
  */
 const preset: Partial<Config> = {

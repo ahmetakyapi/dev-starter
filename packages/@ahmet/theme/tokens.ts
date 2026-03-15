@@ -1,5 +1,5 @@
 /**
- * @ahmet/theme — Design Tokens
+ * @ahmetakyapi/theme — Design Tokens
  *
  * Kaynak: ahmetakyapi.com (referans görsel dil)
  * Her yeni projede bu tokenlar baz alınır, proje ihtiyacına göre override edilir.

@@ -1,6 +1,6 @@
 /**
  * Framer Motion Animasyon Varyantları
- * Kaynak: @ahmet/ui — tüm projelerde ortak
+ * Kaynak: @ahmetakyapi/ui — tüm projelerde ortak
  */
 
 export const EASE = [0.22, 1, 0.36, 1] as const

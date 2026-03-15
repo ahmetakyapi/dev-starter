@@ -77,18 +77,18 @@ Yeni bir Next.js projesinde:
 
 ```bash
 # Lokal paketleri referans et (workspace veya dosya yolu)
-npm install @ahmet/theme @ahmet/ui
+npm install @ahmetakyapi/theme @ahmetakyapi/ui
 ```
 
 ```ts
 // tailwind.config.ts
-import preset from '@ahmet/theme/tailwind'
+import preset from '@ahmetakyapi/theme/tailwind'
 export default { presets: [preset], content: [...] }
 ```
 
 ```css
 /* globals.css */
-@import '@ahmet/theme/css';
+@import '@ahmetakyapi/theme/css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -96,10 +96,10 @@ export default { presets: [preset], content: [...] }
 
 ```ts
 // hooks, bileşenler ve varyantlar
-import { useSpotlight, useMagnetic, useCardTilt } from '@ahmet/ui'
-import { GlassCard, Button, Chip, CustomCursor } from '@ahmet/ui'
-import { fadeUp, fadeIn, staggerContainer, EASE } from '@ahmet/ui'
-import { cn } from '@ahmet/ui'
+import { useSpotlight, useMagnetic, useCardTilt } from '@ahmetakyapi/ui'
+import { GlassCard, Button, Chip, CustomCursor } from '@ahmetakyapi/ui'
+import { fadeUp, fadeIn, staggerContainer, EASE } from '@ahmetakyapi/ui'
+import { cn } from '@ahmetakyapi/ui'
 ```
 
 ---

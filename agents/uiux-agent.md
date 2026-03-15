@@ -44,7 +44,7 @@ Her zaman şu yapıyla başla:
 'use client'  // sadece gerçekten gerekiyorsa
 
 import { motion } from 'framer-motion'
-import { fadeUp, staggerContainer } from '@ahmet/ui'
+import { fadeUp, staggerContainer } from '@ahmetakyapi/ui'
 // veya local variants
 
 interface [ComponentName]Props {

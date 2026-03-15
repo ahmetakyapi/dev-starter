@@ -73,7 +73,7 @@ const ROUTES = { home: '/', blog: '/blog' } as const
 
 ```
 components/
-  ui/           # @ahmet/ui'dan veya projeye özgü temel bileşenler
+  ui/           # @ahmetakyapi/ui'dan veya projeye özgü temel bileşenler
   [feature]/    # Feature bileşenleri (UserCard, PostList)
 
 hooks/
