@@ -118,6 +118,47 @@ background: linear-gradient(135deg, #a78bfa 0%, #f472b6 50%, #60a5fa 100%);
 - Buton: `background: rgba(255,255,255,0.08)` — frosted glass benzeri
 - Aktif sekme: `background: rgba(255,255,255,0.04)` + `border: rgba(255,255,255,0.15)`
 
+### Saat Gösterimi (Özel)
+```css
+/* Saat rakamları — altın/bronz gradient */
+background: linear-gradient(135deg, #f5e6d3 0%, #e8d4b8 30%, #d4b896 60%, #c9a87c 100%);
+
+/* Ayırıcı (:) — altın/turuncu/kırmızı */
+background: linear-gradient(135deg, #ffd700 0%, #ffb347 50%, #ff6b6b 100%);
+
+/* Tabular nums — sayı hizalaması */
+font-variant-numeric: tabular-nums;
+
+/* Geri sayım rakamları */
+font-size: 4.5rem; font-weight: 300;   /* mobil */
+font-size: 5.5rem;                     /* desktop */
+```
+
+### Kadir Gecesi Özel Badge
+```css
+/* Dini gece için altın vurgu */
+background: linear-gradient(135deg, rgba(251,191,36,0.10), rgba(245,158,11,0.05));
+border: 1px solid rgba(251,191,36,0.20);
+
+/* Animasyonlar */
+animation: kadir-glow 3s ease-in-out infinite;     /* badge nefes alır */
+animation: kadir-sparkle 2s ease-in-out infinite;  /* ikon scale */
+```
+
+### Responsive Container
+```css
+max-width: 430px;   /* mobil */
+max-width: 620px;   /* tablet */
+max-width: 520px;   /* desktop (orta kalır) */
+```
+
+### Namaz Listesi Stagger
+```css
+/* Her namaz vakti giriş animasyonu */
+animation: prayerItemIn 0.3s ease both;
+/* delay: 0.04s, 0.08s, 0.12s, 0.16s, 0.20s, 0.24s */
+```
+
 ---
 
 ## Teknoloji Seçimleri

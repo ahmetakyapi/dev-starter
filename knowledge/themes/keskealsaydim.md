@@ -190,6 +190,32 @@ animation: {
 
 ---
 
+## State ve Veri Yönetimi
+
+```ts
+// State: Zustand
+import { create } from 'zustand'
+
+// Server state: TanStack React Query
+import { useQuery } from '@tanstack/react-query'
+
+// HTTP: Axios
+import axios from 'axios'
+```
+
+### Grafik Kütüphaneleri
+- **Recharts** — genel grafikler (bar, line, pie)
+- **Lightweight Charts** — hisse senedi mum grafiği (TradingView benzeri)
+- **React CountUp** — sayı animasyonları (1.5s duration)
+
+### Bildirim / Toast
+- **Sonner** — toast notification (react-hot-toast değil)
+
+### Kutlama Efekti
+- **React Confetti** — başarı/hedef tamamlandı ekranı
+
+---
+
 ## AI Playbook (docs/ai-playbook/)
 
 Projede AI geliştirme kuralları dokümanı var — migration pattern'i için önemli:

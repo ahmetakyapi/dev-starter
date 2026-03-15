@@ -204,6 +204,45 @@ DigyNotes not editörü için React Quill kullanır. `ql-*` class'ları tema ren
 
 ---
 
+## localStorage Key
+
+```ts
+const THEME_KEY = 'dn_theme'   // 'dark' veya 'light'
+```
+
+---
+
+## DigyNotes'a Özgü UI Desenleri
+
+### Yarım Yıldız Derecelendirme (0–5, 0.5 hassasiyet)
+- Her yıldız yatay iki yarıya bölünmüş — sol tıklama -0.5, sağ tıklama tam yıldız
+- `FaStar`, `FaStarHalfAlt`, `FaRegStar` (react-icons)
+- Renk: `#10b981` (emerald)
+
+### Durum Badge Sistemi (Kategori Bağımlı)
+```ts
+const STATUS_MAP = {
+  movie:  ['İzlendi', 'İzleniyor', 'İzlenecek'],
+  series: ['İzlendi', 'İzleniyor', 'İzlenecek'],
+  book:   ['Okundu', 'Okunuyor', 'Okunacak'],
+  game:   ['Tamamlandı', 'Oynanıyor', 'Oynanacak'],
+  travel: ['Gidildi', 'Planlandı'],
+}
+```
+
+### Tag Sistemi
+- Global `#hashtag` sistemi
+- Otomatik tamamlama (debounce ile)
+- Tıklanabilir etiketler + hover states
+- Input stili: `border: 1px solid var(--border)`, focus: `#10b981`
+
+### Giriş Animasyonları (Confirmation Modal)
+- Escape/dışarı tıklama ile kapanır
+- Delete butonu: `#e53e3e` kırmızı
+- `max-w-sm`, `shadow-2xl`
+
+---
+
 ## Scrollbar
 
 ```css
