@@ -28,7 +28,7 @@ dev-starter/
 │   └── decisions.md         Teknoloji seçimlerinin gerekçesi
 │
 ├── snippets/                OG image · Animated number · Infinite scroll · Search bar
-├── agents/                  uiux · frontend · backend · deploy
+├── agents/                  uiux · frontend · backend · deploy · business-analyst
 └── .github/workflows/       Paket build CI
 ```
 
@@ -322,9 +322,23 @@ Deployment hazırlığı, env var yönetimi, domain konfigürasyonu ve post-depl
 
 ---
 
+### `business-analyst-agent.md` — Business Analyst / Product Strategist
+
+Yapılacak işin doğruluğunu, mantığını ve kullanıcı değerini sorgular. Kod yazmaz — planları, kararları ve diğer agent çıktılarını inceler.
+
+**5 soruluk karar çerçevesi:** Kullanıcı değeri → Kapsam uyumu → Teknik risk → Alternatif maliyet → Tamamlanma kriteri
+
+**Çıktı formatı:** ✅ Onaylandi · 🔄 Revizyon gerekli · ❌ Reddedildi — her biri gerekçe + yönlendirme içerir
+
+**Inter-agent protokol:** Talebi alır → ilgili agent'a yönlendirir → çıktıyı inceler → onaylar veya revizyon talep eder
+
+**UI kontrol listesi:** `postcss.config.js` varlığı · `enableSystem` hydration riski · dark-only renk class'ları · dekoratif elementlerde `dark:` varyantları
+
+---
+
 ## Bilgi Tabanı
 
-### `knowledge/mistakes.md` — 27 hata
+### `knowledge/mistakes.md` — 32 hata
 
 | # | Hata | Çözüm |
 |---|---|---|
@@ -335,6 +349,11 @@ Deployment hazırlığı, env var yönetimi, domain konfigürasyonu ve post-depl
 | 17 | Tailwind v4'te `tailwind.config.ts` | `globals.css` `@theme {}` bloğu |
 | 25 | Migration dosyasını düzenleme | Immutable — her zaman yeni dosya |
 | 26 | Hardcoded renk | CSS variable veya Tailwind token |
+| 28 | `postcss.config.js` eksik | Tailwind utility'leri işlenmiyor, dosya oluştur |
+| 29 | `enableSystem: true` hydration | `disableTransitionOnChange` kullan, `enableSystem` kaldır |
+| 30 | Dark-only Tailwind renkleri | Her class için `dark:` eşleniği yaz |
+| 31 | Dekoratif UI mockup dark-only shell | Her katmana `dark:` prefix'li varyant ekle |
+| 32 | `.next` cache — stale bundle | `rm -rf .next && npm run dev` + hard refresh |
 
 ### `knowledge/themes/` — 5 proje görsel hafızası
 
