@@ -32,7 +32,7 @@ export default function CTA() {
         <motion.div variants={fadeUp} className="mb-6 flex justify-center">
           <span className="chip gap-2">
             <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
-            <span>CTA_BADGE</span>
+            <span>Start for free</span>
           </span>
         </motion.div>
 
@@ -41,14 +41,14 @@ export default function CTA() {
           variants={fadeUp}
           className="mb-4 text-4xl font-black tracking-[-0.02em] text-slate-900 dark:text-slate-50 sm:text-5xl lg:text-6xl"
         >
-          CTA_TITLE
+          Your data deserves better
         </motion.h2>
 
         <motion.p
           variants={fadeUp}
           className="mx-auto mb-10 max-w-md text-slate-500 dark:text-slate-400"
         >
-          CTA_SUBTITLE
+          Join 14,000+ teams who use Pulse to understand their users and ship with confidence.
         </motion.p>
 
         {/* Buttons */}
@@ -58,7 +58,7 @@ export default function CTA() {
         >
           {/* Primary pill with gradient on hover */}
           <motion.a
-            href="CTA_LINK"
+            href="#"
             style={{ x: mag.mx, y: mag.my }}
             onMouseMove={mag.onMove}
             onMouseLeave={mag.onLeave}
@@ -66,16 +66,16 @@ export default function CTA() {
             className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-indigo-600 px-8 py-4 font-semibold text-white shadow-2xl shadow-indigo-500/30 transition-shadow hover:shadow-indigo-500/50"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            <span className="relative">CTA_BUTTON</span>
+            <span className="relative">Create free account</span>
             <ArrowRight className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </motion.a>
 
           {/* Ghost link */}
           <a
             href="#features"
-            className="rounded-full px-8 py-4 text-sm font-semibold text-slate-400 transition-colors hover:text-slate-200"
+            className="rounded-full px-8 py-4 text-sm font-semibold text-slate-500 transition-colors hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
           >
-            CTA_GHOST_LINK
+            Browse features
           </a>
         </motion.div>
 
@@ -87,7 +87,7 @@ export default function CTA() {
           }}
           className="mt-6 text-xs text-slate-600"
         >
-          CTA_FOOTNOTE
+          No credit card required · Free forever plan · Cancel anytime
         </motion.p>
       </motion.div>
     </section>

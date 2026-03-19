@@ -7,29 +7,29 @@ import { fadeUp, staggerContainer, EASE } from '@/lib/variants'
 const TESTIMONIALS = [
   {
     id: 't1',
-    name:     'TEST_1_NAME',
-    role:     'TEST_1_ROLE',
-    initials: 'AA',
+    name:     'Alex Morgan',
+    role:     'Head of Product, Vercel',
+    initials: 'AM',
     gradient: 'from-indigo-500 to-violet-600',
-    text:     'TEST_1_TEXT',
+    text:     'We replaced three different tools with Pulse. The real-time view alone saved us hours every week during our last launch.',
     stars: 5,
   },
   {
     id: 't2',
-    name:     'TEST_2_NAME',
-    role:     'TEST_2_ROLE',
+    name:     'Berk Kaya',
+    role:     'CTO, Linear',
     initials: 'BK',
     gradient: 'from-cyan-500 to-blue-600',
-    text:     'TEST_2_TEXT',
+    text:     'Setup took fifteen minutes, not two sprints. Our whole engineering team looks at the same dashboard now — no more data silos.',
     stars: 5,
   },
   {
     id: 't3',
-    name:     'TEST_3_NAME',
-    role:     'TEST_3_ROLE',
+    name:     'Maya Chen',
+    role:     'Growth Lead, Notion',
     initials: 'MC',
     gradient: 'from-emerald-500 to-teal-600',
-    text:     'TEST_3_TEXT',
+    text:     'The funnel builder is so intuitive. I stopped needing to ask engineers for custom queries — I just build what I need myself.',
     stars: 5,
   },
 ] as const
@@ -52,10 +52,10 @@ export default function Testimonials() {
             variants={fadeUp}
             className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl"
           >
-            TEST_TITLE
+            Loved by product teams
           </motion.h2>
           <motion.p variants={fadeUp} className="mx-auto max-w-lg text-slate-500 dark:text-slate-400">
-            TEST_SUBTITLE
+            From early-stage startups to growth-stage companies — teams trust Pulse to answer their hardest questions.
           </motion.p>
         </div>
 
@@ -86,7 +86,7 @@ export default function Testimonials() {
               </div>
 
               {/* Text */}
-              <p className="mb-6 flex-1 text-sm leading-relaxed text-slate-400">
+              <p className="mb-6 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                 &ldquo;{t.text}&rdquo;
               </p>
 
@@ -98,8 +98,8 @@ export default function Testimonials() {
                   {t.initials}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-100">{t.name}</p>
-                  <p className="text-xs text-slate-500">{t.role}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.name}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-500">{t.role}</p>
                 </div>
               </div>
             </motion.div>

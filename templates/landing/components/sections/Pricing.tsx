@@ -7,48 +7,48 @@ import { GlassCard } from '@/components/ui/GlassCard'
 
 const PLANS = [
   {
-    name: 'PLAN_FREE_NAME',
-    price: 'PLAN_FREE_PRICE',
-    period: 'PLAN_FREE_PERIOD',
-    description: 'PLAN_FREE_DESC',
+    name: 'Starter',
+    price: '$0',
+    period: 'month',
+    description: 'Everything you need to get started',
     features: [
-      'PLAN_FREE_F1',
-      'PLAN_FREE_F2',
-      'PLAN_FREE_F3',
+      'Up to 3 projects',
+      '10K events / month',
+      '7-day data retention',
     ],
-    cta: 'PLAN_FREE_CTA',
-    ctaHref: 'CTA_LINK',
+    cta: 'Get started free',
+    ctaHref: '#',
     highlight: false,
   },
   {
-    name: 'PLAN_PRO_NAME',
-    price: 'PLAN_PRO_PRICE',
-    period: 'PLAN_PRO_PERIOD',
-    description: 'PLAN_PRO_DESC',
+    name: 'Pro',
+    price: '$29',
+    period: 'month',
+    description: 'For teams that are growing fast',
     features: [
-      'PLAN_PRO_F1',
-      'PLAN_PRO_F2',
-      'PLAN_PRO_F3',
-      'PLAN_PRO_F4',
-      'PLAN_PRO_F5',
+      'Unlimited projects',
+      '1M events / month',
+      '1-year data retention',
+      'Custom dashboards',
+      'Priority support',
     ],
-    cta: 'PLAN_PRO_CTA',
-    ctaHref: 'CTA_LINK',
+    cta: 'Start 14-day trial',
+    ctaHref: '#',
     highlight: true,
   },
   {
-    name: 'PLAN_ENT_NAME',
-    price: 'PLAN_ENT_PRICE',
-    period: 'PLAN_ENT_PERIOD',
-    description: 'PLAN_ENT_DESC',
+    name: 'Enterprise',
+    price: 'Custom',
+    period: 'year',
+    description: 'Tailored for large organizations',
     features: [
-      'PLAN_ENT_F1',
-      'PLAN_ENT_F2',
-      'PLAN_ENT_F3',
-      'PLAN_ENT_F4',
+      'Unlimited everything',
+      'Custom data retention',
+      'SSO & SAML',
+      'Dedicated support',
     ],
-    cta: 'PLAN_ENT_CTA',
-    ctaHref: 'CTA_LINK',
+    cta: 'Contact sales',
+    ctaHref: '#',
     highlight: false,
   },
 ]
@@ -67,20 +67,20 @@ export default function Pricing() {
           <motion.div variants={fadeUp} className="mb-4 flex justify-center">
             <span className="chip">
               <Zap className="h-3 w-3" />
-              PRICING_BADGE
+              Simple pricing
             </span>
           </motion.div>
           <motion.h2
             variants={fadeUp}
             className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl"
           >
-            PRICING_TITLE
+            Pay for what you use
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mx-auto mt-4 max-w-lg text-slate-500 dark:text-slate-400"
           >
-            PRICING_SUBTITLE
+            Start free, upgrade when you&apos;re ready. No hidden fees, no surprises.
           </motion.p>
         </div>
 
@@ -133,7 +133,7 @@ export default function Pricing() {
                   className={`block rounded-full py-3 text-center text-sm font-semibold transition-all active:scale-95 ${
                     plan.highlight
                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20 hover:bg-indigo-500'
-                      : 'border border-slate-700/50 text-slate-300 hover:border-indigo-500/40 hover:text-indigo-300'
+                      : 'border border-slate-300 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 dark:border-slate-700/50 dark:text-slate-300 dark:hover:border-indigo-500/40 dark:hover:text-indigo-300'
                   }`}
                 >
                   {plan.cta}

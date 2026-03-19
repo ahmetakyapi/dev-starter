@@ -70,7 +70,7 @@ export default function Hero() {
             </span>
             <span className="font-semibold text-emerald-400">What&apos;s new</span>
             <span className="h-3.5 w-px bg-slate-600/60" />
-            <span className="text-slate-400">BADGE_TEXT</span>
+            <span className="text-slate-400">Dashboard v2.0 is live</span>
             <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
           </span>
         </motion.div>
@@ -80,10 +80,10 @@ export default function Hero() {
           variants={fadeUp}
           className="mb-5 text-5xl font-black leading-[1.03] tracking-[-0.03em] text-slate-900 dark:text-slate-50 sm:text-6xl lg:text-7xl xl:text-[82px]"
         >
-          HERO_TITLE_LINE1
+          Know your product,
           <br />
-          <span className="text-gradient">HERO_GRADIENT_WORD</span>
-          {' '}HERO_TITLE_LINE2
+          <span className="text-gradient">grow with</span>
+          {' '}confidence
         </motion.h1>
 
         {/* Subtitle */}
@@ -91,7 +91,7 @@ export default function Hero() {
           variants={fadeUp}
           className="mx-auto mb-10 max-w-xl text-lg leading-[1.75] text-slate-500 dark:text-slate-400"
         >
-          HERO_SUBTITLE
+          Pulse turns raw events into clear insights. Track users, revenue and engagement — from one beautiful dashboard.
         </motion.p>
 
         {/* CTAs */}
@@ -109,7 +109,7 @@ export default function Hero() {
             className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-indigo-600 px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-indigo-500/30 transition-shadow hover:shadow-indigo-500/50"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            <span className="relative">CTA_PRIMARY</span>
+            <span className="relative">Start for free</span>
             <ArrowRight className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </motion.a>
 
@@ -125,7 +125,7 @@ export default function Hero() {
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10 transition-colors group-hover:bg-white/15">
               <Play className="h-2.5 w-2.5 fill-current" />
             </span>
-            <span>CTA_SECONDARY</span>
+            <span>Watch demo</span>
           </motion.a>
         </motion.div>
 
@@ -141,25 +141,25 @@ export default function Hero() {
           <div className="absolute inset-x-16 -top-4 h-16 bg-indigo-600/20 blur-3xl" />
 
           {/* Browser shell */}
-          <div className="glass overflow-hidden rounded-2xl shadow-2xl shadow-black/50 ring-1 ring-white/[0.06]">
+          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/60 shadow-2xl shadow-slate-300/50 backdrop-blur-xl dark:border-white/[0.06] dark:bg-transparent dark:shadow-black/50 dark:[background:linear-gradient(180deg,rgba(8,12,22,0.72),rgba(6,10,18,0.46))]">
 
             {/* Browser bar */}
-            <div className="flex items-center gap-3 border-b border-white/[0.05] bg-white/[0.02] px-4 py-3">
+            <div className="flex items-center gap-3 border-b border-slate-200/70 bg-slate-100/70 px-4 py-3 dark:border-white/[0.05] dark:bg-white/[0.02]">
               <div className="flex flex-shrink-0 gap-1.5">
-                <div className="h-2.5 w-2.5 rounded-full bg-rose-500/50" />
-                <div className="h-2.5 w-2.5 rounded-full bg-amber-400/50" />
-                <div className="h-2.5 w-2.5 rounded-full bg-emerald-400/50" />
+                <div className="h-2.5 w-2.5 rounded-full bg-rose-400/80 dark:bg-rose-500/50" />
+                <div className="h-2.5 w-2.5 rounded-full bg-amber-400/80 dark:bg-amber-400/50" />
+                <div className="h-2.5 w-2.5 rounded-full bg-emerald-400/80 dark:bg-emerald-400/50" />
               </div>
               <div className="flex flex-1 justify-center">
-                <div className="flex w-48 items-center gap-1.5 rounded-md border border-white/[0.06] bg-white/[0.04] px-3 py-1.5">
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
-                  <span className="font-mono text-[10px] text-slate-500">app.PROJECT_NAME.io</span>
+                <div className="flex w-48 items-center gap-1.5 rounded-md border border-slate-200/80 bg-white/70 px-3 py-1.5 dark:border-white/[0.06] dark:bg-white/[0.04]">
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/80 dark:bg-emerald-400/70" />
+                  <span className="font-mono text-[10px] text-slate-500">app.pulse.io</span>
                 </div>
               </div>
             </div>
 
             {/* Dashboard body */}
-            <div className="grid min-h-[300px] grid-cols-[160px_1fr] divide-x divide-white/[0.04] bg-[#060a12]/60 sm:min-h-[340px] lg:min-h-[380px] lg:grid-cols-[200px_1fr]">
+            <div className="grid min-h-[300px] grid-cols-[160px_1fr] divide-x divide-slate-200/60 bg-slate-800/90 sm:min-h-[340px] lg:min-h-[380px] lg:grid-cols-[200px_1fr] dark:divide-white/[0.04] dark:bg-[#060a12]/60">
 
               {/* Sidebar */}
               <div className="space-y-0.5 p-3">

@@ -5,10 +5,10 @@ import { TrendingUp } from 'lucide-react'
 import { fadeUp, staggerContainer, EASE } from '@/lib/variants'
 
 const METRICS = [
-  { id: 'm1', value: 'METRIC_1_VALUE', label: 'METRIC_1_LABEL', trend: 'METRIC_1_TREND' },
-  { id: 'm2', value: 'METRIC_2_VALUE', label: 'METRIC_2_LABEL', trend: 'METRIC_2_TREND' },
-  { id: 'm3', value: 'METRIC_3_VALUE', label: 'METRIC_3_LABEL', trend: 'METRIC_3_TREND' },
-  { id: 'm4', value: 'METRIC_4_VALUE', label: 'METRIC_4_LABEL', trend: 'METRIC_4_TREND' },
+  { id: 'm1', value: '14k+',  label: 'Active teams',    trend: '+34% YoY'       },
+  { id: 'm2', value: '2.4B',  label: 'Events tracked',  trend: '+18% this month' },
+  { id: 'm3', value: '99.9%', label: 'Uptime SLA',      trend: 'Last 90 days'   },
+  { id: 'm4', value: '<50ms', label: 'Query latency',   trend: 'p99 average'    },
 ] as const
 
 export default function Metrics() {
@@ -45,10 +45,10 @@ export default function Metrics() {
                   i < METRICS.length - 1 ? 'lg:border-r lg:border-white/[0.06]' : ''
                 }`}
               >
-                <p className="mb-1 text-4xl font-black tracking-tight text-slate-50 sm:text-5xl">
+                <p className="mb-1 text-4xl font-black tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl">
                   {m.value}
                 </p>
-                <p className="mb-3 text-sm text-slate-400">{m.label}</p>
+                <p className="mb-3 text-sm text-slate-600 dark:text-slate-400">{m.label}</p>
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1">
                   <TrendingUp className="h-3 w-3 text-emerald-400" />
                   <span className="text-xs font-semibold text-emerald-400">{m.trend}</span>

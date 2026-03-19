@@ -51,7 +51,7 @@ export default function Header() {
                 <span className="text-[10px] font-black text-white">P</span>
               </div>
               <span className="text-sm font-bold tracking-tight text-slate-800 transition-colors group-hover:text-indigo-600 dark:text-slate-100 dark:group-hover:text-indigo-400">
-                PROJECT_NAME
+                Pulse
               </span>
             </motion.a>
 

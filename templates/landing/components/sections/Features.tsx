@@ -23,8 +23,8 @@ const FEATURES: FeatureDef[] = [
     icon: Cpu,
     iconBg: 'bg-indigo-500/10 border-indigo-500/20',
     iconColor: 'text-indigo-400',
-    title: 'FEATURE_1_TITLE',
-    desc: 'FEATURE_1_DESC',
+    title: 'Real-time Analytics',
+    desc: 'Watch events stream in as they happen. Every click, conversion and drop-off, visible live on your dashboard.',
     size: 'lg',
   },
   {
@@ -32,8 +32,8 @@ const FEATURES: FeatureDef[] = [
     icon: Zap,
     iconBg: 'bg-amber-500/10 border-amber-500/20',
     iconColor: 'text-amber-400',
-    title: 'FEATURE_2_TITLE',
-    desc: 'FEATURE_2_DESC',
+    title: 'Lightning Fast',
+    desc: 'Queries resolve in under 50ms. No waiting, no loading spinners — just instant answers when you need them.',
     size: 'sm',
   },
   {
@@ -41,8 +41,8 @@ const FEATURES: FeatureDef[] = [
     icon: Shield,
     iconBg: 'bg-emerald-500/10 border-emerald-500/20',
     iconColor: 'text-emerald-400',
-    title: 'FEATURE_3_TITLE',
-    desc: 'FEATURE_3_DESC',
+    title: 'Privacy First',
+    desc: 'GDPR-compliant by default. No third-party cookies, no personal data stored without explicit consent.',
     size: 'sm',
   },
   {
@@ -50,8 +50,8 @@ const FEATURES: FeatureDef[] = [
     icon: BarChart3,
     iconBg: 'bg-cyan-500/10 border-cyan-500/20',
     iconColor: 'text-cyan-400',
-    title: 'FEATURE_4_TITLE',
-    desc: 'FEATURE_4_DESC',
+    title: 'Custom Dashboards',
+    desc: 'Drag, drop and arrange your metrics. Build the view your team actually wants to open every morning.',
     size: 'sm',
   },
   {
@@ -59,8 +59,8 @@ const FEATURES: FeatureDef[] = [
     icon: Globe,
     iconBg: 'bg-violet-500/10 border-violet-500/20',
     iconColor: 'text-violet-400',
-    title: 'FEATURE_5_TITLE',
-    desc: 'FEATURE_5_DESC',
+    title: 'Global Coverage',
+    desc: 'Data collected across 12 edge regions worldwide. Sub-100ms latency for 95% of your users, anywhere.',
     size: 'sm',
   },
 ]
@@ -101,8 +101,8 @@ function FeatureCard({ feature, className = '' }: Readonly<{ feature: FeatureDef
         <Icon className={`h-5 w-5 ${feature.iconColor}`} />
       </div>
 
-      <h3 className="mb-2.5 text-[15px] font-semibold text-slate-100">{feature.title}</h3>
-      <p className="text-sm leading-relaxed text-slate-400">{feature.desc}</p>
+      <h3 className="mb-2.5 text-[15px] font-semibold text-slate-900 dark:text-slate-100">{feature.title}</h3>
+      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{feature.desc}</p>
 
       {/* Large card: decorative mini-chart preview */}
       {feature.size === 'lg' && (
@@ -163,10 +163,10 @@ export default function Features() {
           variants={fadeUp}
           className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl"
         >
-          FEATURES_TITLE
+          Everything you need to move fast
         </motion.h2>
         <motion.p variants={fadeUp} className="mx-auto max-w-xl text-slate-500 dark:text-slate-400">
-          FEATURES_SUBTITLE
+          Built for modern teams who ship weekly and need reliable data, not spreadsheet gymnastics.
         </motion.p>
       </motion.div>
 

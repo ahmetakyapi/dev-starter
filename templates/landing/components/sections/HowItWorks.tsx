@@ -12,8 +12,8 @@ const STEPS = [
     iconBg: 'bg-indigo-500/10 border-indigo-500/20',
     iconColor: 'text-indigo-400',
     glowColor: 'bg-indigo-500/10',
-    title: 'STEP_1_TITLE',
-    desc:  'STEP_1_DESC',
+    title: 'Connect your app',
+    desc:  'Paste one script tag or install the npm package. Works with any framework — React, Vue, Next.js, plain HTML.',
   },
   {
     id: 'step-2',
@@ -22,8 +22,8 @@ const STEPS = [
     iconBg: 'bg-cyan-500/10 border-cyan-500/20',
     iconColor: 'text-cyan-400',
     glowColor: 'bg-cyan-500/10',
-    title: 'STEP_2_TITLE',
-    desc:  'STEP_2_DESC',
+    title: 'Define your funnels',
+    desc:  'Tell Pulse which events matter. Our visual builder makes it easy — no SQL, no config files, no engineer needed.',
   },
   {
     id: 'step-3',
@@ -32,8 +32,8 @@ const STEPS = [
     iconBg: 'bg-emerald-500/10 border-emerald-500/20',
     iconColor: 'text-emerald-400',
     glowColor: 'bg-emerald-500/10',
-    title: 'STEP_3_TITLE',
-    desc:  'STEP_3_DESC',
+    title: 'Ship with confidence',
+    desc:  'Get alerts when conversion drops, share live reports with your team, and iterate on what actually works.',
   },
 ] as const
 
@@ -56,10 +56,10 @@ export default function HowItWorks() {
           variants={fadeUp}
           className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl"
         >
-          HOW_TITLE
+          Up and running in minutes
         </motion.h2>
         <motion.p variants={fadeUp} className="mx-auto max-w-lg text-slate-500 dark:text-slate-400">
-          HOW_SUBTITLE
+          No complex setup, no engineering bottlenecks. Paste one script tag and start seeing data in seconds.
         </motion.p>
       </motion.div>
 
@@ -98,7 +98,7 @@ export default function HowItWorks() {
                   <div className={`absolute inset-0 scale-150 rounded-full ${step.glowColor} blur-2xl`} />
 
                   {/* Outer ring */}
-                  <div className="relative flex h-[104px] w-[104px] items-center justify-center rounded-full border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.02]">
+                  <div className="relative flex h-[104px] w-[104px] items-center justify-center rounded-full border border-slate-200 bg-gradient-to-b from-slate-50 to-white dark:border-white/[0.08] dark:from-white/[0.05] dark:to-white/[0.02]">
                     {/* Step number — top-right inside ring */}
                     <span className="absolute right-3 top-3 font-mono text-[10px] font-bold text-indigo-400/60">
                       {step.number}
