@@ -1,48 +1,94 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import { fadeUp, staggerContainer } from '@/lib/variants'
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { fadeUp, staggerContainer, EASE } from '@/lib/variants'
+import { useMagnetic } from '@/hooks/useMagnetic'
 
 export default function CTA() {
+  const mag = useMagnetic(0.28)
+
   return (
-    <section className="relative z-10 mx-auto max-w-4xl px-6 pb-32">
+    <section className="relative z-10 mx-auto max-w-5xl px-6 pb-32">
       <motion.div
         variants={staggerContainer(0.1)}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
-        className="glass overflow-hidden rounded-3xl p-12 text-center"
+        className="glass relative overflow-hidden rounded-3xl px-8 py-24 text-center"
       >
-        {/* Arka plan glow */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-cyan-500/5" />
+        {/* Radial glows */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/12 blur-[80px]" />
+          <div className="absolute -left-20 top-1/3 h-44 w-44 rounded-full bg-cyan-500/8 blur-[40px]" />
+          <div className="absolute -right-20 top-1/3 h-44 w-44 rounded-full bg-violet-500/8 blur-[40px]" />
+        </div>
 
+        {/* Accent lines */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+
+        {/* Badge */}
+        <motion.div variants={fadeUp} className="mb-6 flex justify-center">
+          <span className="chip gap-2">
+            <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
+            <span>CTA_BADGE</span>
+          </span>
+        </motion.div>
+
+        {/* Headline */}
         <motion.h2
           variants={fadeUp}
-          className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl"
+          className="mb-4 text-4xl font-black tracking-[-0.02em] text-slate-900 dark:text-slate-50 sm:text-5xl lg:text-6xl"
         >
           CTA_TITLE
         </motion.h2>
 
         <motion.p
           variants={fadeUp}
-          className="mx-auto mb-10 max-w-lg text-slate-500 dark:text-slate-400"
+          className="mx-auto mb-10 max-w-md text-slate-500 dark:text-slate-400"
         >
           CTA_SUBTITLE
         </motion.p>
 
+        {/* Buttons */}
         <motion.div
           variants={fadeUp}
-          className="flex flex-wrap items-center justify-center gap-4"
+          className="flex flex-wrap items-center justify-center gap-3"
         >
-          <a
+          {/* Primary pill with gradient on hover */}
+          <motion.a
             href="CTA_LINK"
-            className="group flex items-center gap-2 rounded-xl bg-indigo-600 px-8 py-4 font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-indigo-500 hover:shadow-indigo-500/40 active:scale-95"
+            style={{ x: mag.mx, y: mag.my }}
+            onMouseMove={mag.onMove}
+            onMouseLeave={mag.onLeave}
+            whileTap={{ scale: 0.96 }}
+            className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-indigo-600 px-8 py-4 font-semibold text-white shadow-2xl shadow-indigo-500/30 transition-shadow hover:shadow-indigo-500/50"
           >
-            CTA_BUTTON
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="relative">CTA_BUTTON</span>
+            <ArrowRight className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </motion.a>
+
+          {/* Ghost link */}
+          <a
+            href="#features"
+            className="rounded-full px-8 py-4 text-sm font-semibold text-slate-400 transition-colors hover:text-slate-200"
+          >
+            CTA_GHOST_LINK
           </a>
         </motion.div>
+
+        {/* Fine print */}
+        <motion.p
+          variants={{
+            hidden:  { opacity: 0 },
+            visible: { opacity: 1, transition: { duration: 0.5, ease: EASE, delay: 0.4 } },
+          }}
+          className="mt-6 text-xs text-slate-600"
+        >
+          CTA_FOOTNOTE
+        </motion.p>
       </motion.div>
     </section>
   )

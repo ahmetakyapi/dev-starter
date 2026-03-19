@@ -28,11 +28,14 @@ const config: Config = {
         grid: '64px 64px',
       },
       animation: {
-        float:        'float 6s ease-in-out infinite',
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4,0,0.6,1) infinite',
-        'spin-slow':  'spin 8s linear infinite',
-        blink:        'blink 1.1s step-end infinite',
-        shimmer:      'shimmer 2.5s linear infinite',
+        float:          'float 6s ease-in-out infinite',
+        'pulse-slow':   'pulse 4s cubic-bezier(0.4,0,0.6,1) infinite',
+        'spin-slow':    'spin 8s linear infinite',
+        blink:          'blink 1.1s step-end infinite',
+        shimmer:        'shimmer 2.5s linear infinite',
+        marquee:        'marquee 30s linear infinite',
+        'marquee-rev':  'marquee-rev 30s linear infinite',
+        'fade-in':      'fade-in 0.6s ease forwards',
       },
       keyframes: {
         float: {
@@ -46,6 +49,18 @@ const config: Config = {
         shimmer: {
           '0%':   { backgroundPosition: '-200% center' },
           '100%': { backgroundPosition: '200% center' },
+        },
+        marquee: {
+          '0%':   { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'marquee-rev': {
+          '0%':   { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+        'fade-in': {
+          '0%':   { opacity: '0' },
+          '100%': { opacity: '1' },
         },
       },
     },

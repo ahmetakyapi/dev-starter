@@ -296,4 +296,131 @@ const manrope = Manrope({
 
 ---
 
+---
+
+## UI Tasarım Desenleri
+
+### Bento Feature Grid
+
+Asimetrik feature grid — büyük kart `col-span-2`, küçükler tek hücre.
+
+```tsx
+// sm: 2 kolon — büyük tam genişlik
+// lg: 3 kolon — büyük 2 hücre, küçükler 1 hücre
+<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  <FeatureCard feature={large} className="sm:col-span-2 lg:col-span-2" />
+  {small.map((f) => <FeatureCard key={f.id} feature={f} />)}
+</div>
+```
+
+### Tilt + Shine Kart Efekti
+
+Fare konumuna göre 3D eğim + holografik parlaklık.
+
+```tsx
+import { useCardTilt } from '@/hooks/useCardTilt'
+
+const { ref, rx, ry, shine, onMove, onLeave } = useCardTilt(6)
+
+<motion.div
+  ref={ref}
+  style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
+  onMouseMove={onMove}
+  onMouseLeave={onLeave}
+  className="glass relative overflow-hidden rounded-2xl p-7"
+>
+  <motion.div className="pointer-events-none absolute inset-0" style={{ background: shine }} />
+  {/* kart içeriği */}
+</motion.div>
+```
+
+Aynı efekti `GlassCard` bileşeniyle de kullanabilirsin: `<GlassCard tilt glow>`.
+
+### Magnetic Buton
+
+Fare yaklaştığında buton çekilir efekti.
+
+```tsx
+import { useMagnetic } from '@/hooks/useMagnetic'
+
+const mag = useMagnetic(0.28)
+
+<motion.a
+  style={{ x: mag.mx, y: mag.my }}
+  onMouseMove={mag.onMove}
+  onMouseLeave={mag.onLeave}
+  whileTap={{ scale: 0.96 }}
+  className="rounded-full bg-indigo-600 px-7 py-3.5 font-semibold text-white"
+>
+  Get started
+</motion.a>
+```
+
+### Marquee Logo Strip (CSS only, Server Component)
+
+Sonsuz döngü için track ikiye katlanır, mask-image ile kenarlar solar.
+
+```tsx
+// Server Component — 'use client' gerekmez
+const track = [...LOGOS, ...LOGOS]
+
+<div
+  className="relative overflow-hidden"
+  style={{
+    maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+    WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+  }}
+>
+  <div className="flex animate-marquee gap-14 whitespace-nowrap">
+    {track.map((name, i) => (
+      <span key={`${name}-${i}`} className="text-sm font-semibold text-slate-600">
+        {name}
+      </span>
+    ))}
+  </div>
+</div>
+```
+
+`tailwind.config.ts`'e gerekli keyframe:
+```ts
+marquee: {
+  '0%':   { transform: 'translateX(0%)' },
+  '100%': { transform: 'translateX(-50%)' },
+},
+```
+
+### Mouse Spotlight
+
+Hero veya sayfa arka planında fare takip eden radial gradient.
+
+```tsx
+import { useSpotlight } from '@/hooks/useSpotlight'
+
+const spotlight = useSpotlight() // varsayılan: 620px, rgba(96,165,250,0.07)
+
+<motion.div className="pointer-events-none fixed inset-0 z-0" style={{ background: spotlight }} />
+```
+
+### Top Accent Line (Kart Dekorasyon)
+
+Her glass kartın üst kenarına ince gradient çizgi.
+
+```tsx
+<div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
+```
+
+### Radial Glow Orbs (Hero / CTA Arka Plan)
+
+Atmosferik derinlik için pozisyonlanmış blur'd daireler.
+
+```tsx
+<div className="pointer-events-none absolute inset-0 overflow-hidden">
+  <div className="absolute -top-1/4 left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full bg-indigo-600/8 blur-[120px]" />
+  <div className="absolute -left-64 top-1/4 h-[600px] w-[600px] rounded-full bg-cyan-500/5 blur-[100px]" />
+  <div className="absolute -right-64 top-1/3 h-[600px] w-[600px] rounded-full bg-violet-500/5 blur-[100px]" />
+</div>
+```
+
+---
+
 *Yeni desenler eklendikçe bu dosya güncellenir.*

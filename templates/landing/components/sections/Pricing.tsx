@@ -130,7 +130,7 @@ export default function Pricing() {
 
                 <a
                   href={plan.ctaHref}
-                  className={`block rounded-xl py-3 text-center text-sm font-semibold transition-all active:scale-95 ${
+                  className={`block rounded-full py-3 text-center text-sm font-semibold transition-all active:scale-95 ${
                     plan.highlight
                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20 hover:bg-indigo-500'
                       : 'border border-slate-700/50 text-slate-300 hover:border-indigo-500/40 hover:text-indigo-300'
