@@ -41,8 +41,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="tr" suppressHydrationWarning className={`${manrope.variable} ${ibmPlexMono.variable}`}>
       <body className={manrope.className}>
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
-          <div className="flex items-center justify-center gap-2 bg-indigo-600 px-4 py-2 text-center text-xs font-medium text-white">
-            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">Demo</span>
+          <div className="flex items-center justify-center gap-2 border-b border-indigo-100 bg-indigo-50/80 px-4 py-1.5 text-center text-xs text-indigo-600 backdrop-blur-sm dark:border-indigo-900/20 dark:bg-indigo-950/30 dark:text-indigo-400">
+            <span className="rounded-full bg-indigo-600 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white dark:bg-indigo-500">Demo</span>
             <span>Bu sayfa bir şablon demosu — tüm içerik örnek amaçlıdır.</span>
           </div>
           {children}
