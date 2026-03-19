@@ -11,10 +11,36 @@
 
 Bu agent çalışmadan önce şunları oku:
 
+- `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, repo listesi, güncel teknoloji
 - `~/dev-starter/knowledge/themes/ahmetakyapi.md`
 - `~/dev-starter/knowledge/mistakes.md`
 - `~/dev-starter/knowledge/patterns.md`
 - Projenin `CLAUDE.md` dosyası (varsa)
+
+## Kullandığı Skills
+
+| Skill                  | Ne Zaman                      |
+| ---------------------- | ----------------------------- |
+| `/review-ui [dosya]`   | Teslim öncesi kalite kontrolü |
+| `/snippet [tip]`       | Hızlı bileşen üretimi         |
+| `/theme [proje]`       | Görsel tema uygulama          |
+| `/check`               | Proje sağlık kontrolü         |
+
+## Agent İletişimi
+
+Bu agent şu durumda diğer agent'lara handoff yapar:
+
+- **→ FE Agent**: Tasarım tamamlandı, implementasyon için hazır
+- **→ BA Agent**: Tasarım kararı iş mantığını etkiliyor, onay gerekiyor
+
+Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölümünü kullan.
+
+## Güncel Teknoloji Notları
+
+- **Framer Motion 11+**: `motion()` factory, `useAnimate` hook, layout animations
+- **Tailwind v4**: `@theme {}` bloğu — `tailwind.config.ts` yok; token'ları CSS'e taşı
+- **React 19**: `ref` artık prop olarak geçilebilir, `forwardRef` kaldırılıyor
+- **Next.js 15**: Server Component'lerde `async params` — UI bileşenlerini etkilemez ama sayfalar etkiler
 
 ---
 

@@ -11,10 +11,19 @@
 
 Bu agent çalışmadan önce şunları oku:
 
+- `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü ve proje bağlamı
 - `~/dev-starter/knowledge/mistakes.md`
 - `~/dev-starter/knowledge/patterns.md`
 - Projenin `CLAUDE.md` dosyası (varsa)
 - İlgili diğer agent'ların çıktıları
+
+## Kullandığı Skills
+
+| Skill              | Ne Zaman                                           |
+| ------------------ | -------------------------------------------------- |
+| `/check`           | Yeni özellik veya deploy öncesi sağlık kontrolü    |
+| `/deploy`          | Deploy aşamasına geçmeden önce checklist doğrulama |
+| `/new-project [ad]`| Yeni proje başlatırken sihirbazı tetikle           |
 
 ---
 

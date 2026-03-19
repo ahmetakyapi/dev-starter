@@ -271,6 +271,77 @@ Proje bağlamını okuyarak doğru import'larla hazır bileşen üretir.
 
 `agents/` dizinindeki tanım dosyaları, Claude'a belirli bir görev için kimliğini, bilgi tabanını ve karar çerçevesini verir. Doğrudan çağrılmazlar — "bu konuda uzman olarak hareket et, şu dosyaları oku" şeklinde kullanılır.
 
+### Nasıl Kullanılır
+
+#### Tek agent
+
+```
+@uiux-agent.md baz alarak bu hero section için Framer Motion animasyonu yaz.
+```
+
+#### Ekip olarak (BA koordinasyonuyla)
+
+```
+@business-analyst-agent.md kullanarak bu özelliği analiz et, sonra
+uygun agent'lara yönlendir.
+```
+
+BA agent talebi alır, doğrular ve ilgili agent'lara `AGENT_HANDOFF` formatında iş geçer:
+
+```text
+AGENT_HANDOFF
+  from: BA
+  to:   FE
+  task: Kullanıcı profil sayfası oluştur
+  context:
+    - proje: keskealsaydim
+    - ilgili dosyalar: app/profile/page.tsx, lib/schema.ts
+    - bağımlılıklar: BE schema hazır (users tablosu)
+  acceptance_criteria:
+    - Dark/light modda görünüm doğru
+    - Auth kontrolü yapılıyor
+```
+
+#### Paralel çalışma
+
+Birbirinden bağımsız iki iş varsa BA agent eş zamanlı yönlendirir:
+
+```text
+Paralel çalıştır:
+  → UI Agent: pricing section tasarımı
+  → BE Agent: subscription API route
+
+Bekle: Her ikisi hazır olunca FE Agent entegre eder.
+```
+
+#### Hata yönetimi
+
+Bir agent görevi tamamlayamazsa `AGENT_ERROR` formatında BA agent'a bildirir:
+
+```text
+AGENT_ERROR
+  agent: FE
+  error: ThemeProvider tip uyuşmazlığı
+  blocker: next-themes v5 API değişikliği
+  needs: patterns.md güncel mi kontrol et
+```
+
+Tüm protokol detayı: `agents/AGENT_PROTOCOL.md`
+
+---
+
+### `business-analyst-agent.md` — Business Analyst / Product Strategist
+
+Yapılacak işin doğruluğunu, mantığını ve kullanıcı değerini sorgular. Kod yazmaz — planları, kararları ve diğer agent çıktılarını inceler.
+
+**5 soruluk karar çerçevesi:** Kullanıcı değeri → Kapsam uyumu → Teknik risk → Alternatif maliyet → Tamamlanma kriteri
+
+**Çıktı formatı:** ✅ Onaylandı · 🔄 Revizyon gerekli · ❌ Reddedildi — her biri gerekçe + yönlendirme içerir
+
+**Skills:** `/check` · `/deploy` · `/new-project`
+
+---
+
 ### `uiux-agent.md` — UI/UX Mühendisi
 
 Görsel dil koruyucusu. Yeni bileşen tasarlarken, animasyon yazarken veya dark/light mode implementasyonunda kullanılır.
@@ -281,6 +352,8 @@ Görsel dil koruyucusu. Yeni bileşen tasarlarken, animasyon yazarken veya dark/
 
 **Kurallar:** GSAP değil Framer Motion · hardcoded renk yasak · EASE = `[0.22, 1, 0.36, 1]`
 
+**Skills:** `/review-ui` · `/snippet` · `/theme` · `/check`
+
 ---
 
 ### `frontend-agent.md` — Next.js Developer
@@ -289,26 +362,23 @@ App Router uzmanı. Sayfa/layout yazarken, Server vs Client Component kararında
 
 **Okur:** `knowledge/mistakes.md` · `knowledge/patterns.md` · projenin `CLAUDE.md`'si
 
-**Server vs Client karar ağacı:**
-```
-Varsayılan: Server Component
-useState / useEffect / event handler / browser API / Framer Motion gerekiyor mu?
-→ Hayır → Server Component bırak
-→ Evet  → 'use client' ekle, mümkün olan en alt seviyede tut
-```
+**Güncel stack:** React 19 (`use`, `useActionState`, `useOptimistic`) · Next.js 15 (async params, `use cache`) · Tailwind v4 (`@theme {}`)
+
+**Skills:** `/snippet` · `/check` · `/review-ui`
 
 ---
 
 ### `backend-agent.md` — API & Veritabanı
 
-Drizzle schema, API route'ları, next-auth v5 ve Zod validasyonu konusunda uzmanlaşmış.
+Drizzle schema, API route'ları, next-auth v5, Server Actions ve Zod validasyonu konusunda uzmanlaşmış.
 
 **Zorunlu kurallar:**
+
 - `@neondatabase/serverless` — `pg` değil (Vercel serverless uyumluluğu)
 - Her foreign key'de `ON DELETE` davranışı zorunlu
 - Migration immutability — var olan dosya düzenlenmez, yeni dosya açılır
 
-**Response pattern:** `ok<T>()` · `err()` · `serverErr()` — `NextResponse.json()` ile tutarlı API
+**Skills:** `/check` · `/deploy`
 
 ---
 
@@ -318,21 +388,7 @@ Deployment hazırlığı, env var yönetimi, domain konfigürasyonu ve post-depl
 
 **Checklist:** `npx tsc --noEmit` → `npm run lint` → `npm run build` → env vars → DB migration → `vercel --prod` → health endpoint
 
-**Sık karşılaşılan sorunlar:** Build'de `module not found` · runtime'da `undefined` env var · production'da auth çalışmıyor · DB connection timeout
-
----
-
-### `business-analyst-agent.md` — Business Analyst / Product Strategist
-
-Yapılacak işin doğruluğunu, mantığını ve kullanıcı değerini sorgular. Kod yazmaz — planları, kararları ve diğer agent çıktılarını inceler.
-
-**5 soruluk karar çerçevesi:** Kullanıcı değeri → Kapsam uyumu → Teknik risk → Alternatif maliyet → Tamamlanma kriteri
-
-**Çıktı formatı:** ✅ Onaylandi · 🔄 Revizyon gerekli · ❌ Reddedildi — her biri gerekçe + yönlendirme içerir
-
-**Inter-agent protokol:** Talebi alır → ilgili agent'a yönlendirir → çıktıyı inceler → onaylar veya revizyon talep eder
-
-**UI kontrol listesi:** `postcss.config.js` varlığı · `enableSystem` hydration riski · dark-only renk class'ları · dekoratif elementlerde `dark:` varyantları
+**Skills:** `/deploy` · `/release` · `/check`
 
 ---
 

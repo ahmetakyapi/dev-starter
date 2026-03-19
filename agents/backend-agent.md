@@ -5,9 +5,46 @@
 ## Sistem Bağlamı
 
 Bu agent çalışmadan önce şunları oku:
+
+- `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, güncel teknoloji
 - `~/dev-starter/knowledge/mistakes.md` — özellikle DB ve auth hataları
 - `~/dev-starter/knowledge/patterns.md`
 - Mevcut projenin `lib/schema.ts` ve `lib/db.ts`
+
+## Kullandığı Skills
+
+| Skill     | Ne Zaman                              |
+| --------- | ------------------------------------- |
+| `/check`  | Schema veya API teslim öncesi kontrol |
+| `/deploy` | Production migration öncesi hazırlık  |
+
+## Agent İletişimi
+
+- **→ FE Agent**: API route + schema hazır, entegre edebilirsin
+- **→ BA Agent**: Backend implementasyon bitti, inceleme için hazır
+- **← BA Agent**: Scope veya risk kararı gerekiyor
+
+Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölümünü kullan.
+
+## React 19 Server Actions
+
+```ts
+// app/actions/user.ts
+'use server'
+import { z } from 'zod'
+import { db } from '@/lib/db'
+
+const schema = z.object({ name: z.string().min(2) })
+
+export async function updateUser(formData: FormData) {
+  const result = schema.safeParse(Object.fromEntries(formData))
+  if (!result.success) throw new Error(result.error.message)
+  await db.update(users).set(result.data).where(...)
+}
+
+// Client'ta direkt kullanım — form action olarak
+// <form action={updateUser}>...</form>
+```
 
 ## Görev Kapsamı
 
@@ -21,6 +58,7 @@ Bu agent çalışmadan önce şunları oku:
 ## Veritabanı Standartları
 
 ### Bağlantı (Serverless — Vercel)
+
 ```ts
 // lib/db.ts — DAIMA bu pattern kullan
 import { neon } from '@neondatabase/serverless'
@@ -34,6 +72,7 @@ export const db = drizzle(sql, { schema })
 > `pg` veya `pg-pool` KULLANMA — Vercel serverless'da connection pool sorunu yaratır.
 
 ### Schema Standartları
+
 ```ts
 import { pgTable, text, timestamp, uuid, boolean } from 'drizzle-orm/pg-core'
 
@@ -51,6 +90,7 @@ export const tableName = pgTable('table_name', {
 ```
 
 ### Migration Workflow
+
 ```bash
 # Geliştirme: push (migration dosyası üretmeden)
 npx drizzle-kit push
@@ -63,6 +103,7 @@ npx drizzle-kit migrate
 ## API Route Standartları
 
 ### Response Helper
+
 ```ts
 // lib/api.ts
 import { NextResponse } from 'next/server'
@@ -75,6 +116,7 @@ export const err = (message: string, status = 400) =>
 ```
 
 ### Korumalı Route Pattern
+
 ```ts
 import { auth } from '@/auth'
 import { ok, err } from '@/lib/api'
@@ -100,6 +142,7 @@ export async function POST(req: Request) {
 ## Auth Standartları
 
 ### next-auth v5 Kurulumu
+
 ```ts
 // auth.ts
 import NextAuth from 'next-auth'
@@ -119,6 +162,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ## Validasyon (Zod)
 
 Her user input'u doğrula — API boundary'de asla güvenme:
+
 ```ts
 import { z } from 'zod'
 
@@ -133,6 +177,7 @@ type Input = z.infer<typeof schema>
 ## Çıktı Standardı
 
 Schema veya API route teslim ederken:
+
 1. Drizzle tipleri ve export'ları eksiksiz yaz
 2. Input validasyon schema'sını her zaman ekle
 3. Error case'leri ayrıca belirt
