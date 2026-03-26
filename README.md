@@ -1,59 +1,194 @@
 # dev-starter
 
-> Ahmet Akyapı'nın kişisel AI destekli geliştirme ekosistemi.
-> Proje şablonları · Paylaşımlı npm paketleri · Görsel hafıza · Claude Code skill'leri
+> Ahmet Akyapi'nin kisisel AI destekli gelistirme ekosistemi.
+> Proje sablonlari · npm paketleri · Agent sistemi · Kalite enforsmani · Claude Code skill'leri
 
 [![npm](https://img.shields.io/npm/v/@ahmetakyapi/theme?label=%40ahmetakyapi%2Ftheme&color=6366f1)](https://www.npmjs.com/package/@ahmetakyapi/theme)
 [![npm](https://img.shields.io/npm/v/@ahmetakyapi/ui?label=%40ahmetakyapi%2Fui&color=6366f1)](https://www.npmjs.com/package/@ahmetakyapi/ui)
 
 ---
 
-## Yapı
+## Yapi
 
 ```
 dev-starter/
-├── templates/
-│   ├── nextjs-fullstack/    Next.js 14 + Drizzle ORM + next-auth v5
-│   └── landing/             Three.js + glassmorphism tanıtım sayfası
+├── packages/@ahmet/
+│   ├── theme/           Design token'lar, CSS degiskenleri, Tailwind preset
+│   └── ui/              GlassCard · Button · Chip · Cursor · hooks · variants
 │
-├── packages/
-│   └── @ahmet/
-│       ├── theme/           Design token'lar, CSS değişkenleri, Tailwind preset
-│       └── ui/              GlassCard · Button · Chip · Cursor · hooks · variants
+├── agents/              7 agent dosyasi + haberlesme protokolu
+│   ├── AGENT_PROTOCOL.md    Akis, context curation, hook'lar, lifecycle
+│   ├── business-analyst-agent.md   Planlama, onay, yonlendirme
+│   ├── uiux-agent.md       Tasarim & animasyon kararlari
+│   ├── frontend-agent.md   Next.js & React implementasyon
+│   ├── backend-agent.md    DB, API, auth
+│   ├── gate-agent.md       6-pass kalite kontrolu, auto-fix
+│   └── deploy-agent.md     Vercel deployment & release
+│
+├── rules/               7 kural dosyasi
+│   ├── immutable-architecture.md   10 kirilamaz mimari kural
+│   ├── design-tokens.md            Hardcoded deger yasagi
+│   ├── commit-conventions.md       Conventional commit standardi
+│   ├── bugfix-protocol.md          TDD bugfix akisi
+│   ├── dev-cycle.md                Plan → Dev → Gate → Commit → Review
+│   ├── routemap-discipline.md      ROUTEMAP tek kaynak prensibi
+│   └── context-curation.md         Agent bazli context seviyeleri
+│
+├── phases/              Proje yasam dongusu
+│   ├── planning.md          P1→P6: Discovery → Stories → Readiness
+│   ├── e2e-polish.md        E0→E5: Seed → Smoke → Perf → Acceptance
+│   └── release-maintenance.md   Release checklist, maintenance triage
+│
+├── hooks/               Enforcement hook'lari (Claude Code entegre)
+│   ├── gate-guard.sh        Commit oncesi Gate PASSED kontrolu
+│   ├── quality-scan.sh      Secret, debug kodu, design token taramasi
+│   └── routemap-sync.sh     ROUTEMAP guncelleme hatirlaticisi
 │
 ├── knowledge/
-│   ├── themes/              Her projenin görsel hafızası (5 proje)
-│   ├── mistakes.md          27 belgelenmiş hata ve çözümü
-│   ├── patterns.md          Kopyala-yapıştır kod desenleri
-│   └── decisions.md         Teknoloji seçimlerinin gerekçesi
+│   ├── themes/              Her projenin gorsel hafizasi (5 proje)
+│   ├── mistakes.md          37 belgelenmis hata ve cozumu
+│   ├── patterns.md          15+ kopyala-yapistir kod deseni
+│   └── decisions.md         Teknoloji secimlerinin gerekcesi
 │
-├── snippets/                OG image · Animated number · Infinite scroll · Search bar
-├── agents/                  uiux · frontend · backend · deploy · business-analyst
-└── .github/workflows/       Paket build CI
+├── snippets/            10 hazir bilesen
+│   ├── animated-number.tsx  Sayi animasyonu
+│   ├── infinite-scroll.tsx  Sonsuz kaydirma
+│   ├── og-image.tsx         Open Graph gorsel uretici
+│   ├── search-bar.tsx       Debounced arama kutusu
+│   ├── modal.tsx            Animasyonlu dialog
+│   ├── drawer.tsx           Yandan acilan panel
+│   ├── form.tsx             Server Action uyumlu form
+│   ├── skeleton.tsx         Yukleme placeholder'lari
+│   ├── toast.tsx            Bildirim sistemi
+│   └── confirm.tsx          Onay dialog'u
+│
+├── templates/
+│   ├── docs/                ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS sablonlari
+│   ├── nextjs-fullstack/    Next.js + Drizzle + auth tam uygulama
+│   └── landing/             Three.js + glassmorphism tanitim sayfasi
+│
+├── scripts/
+│   └── health-check.sh     Ekosistem butunluk kontrolu (51 kontrol noktasi)
+│
+├── .claude/
+│   ├── settings.local.json  Hook entegrasyonu + izinler
+│   └── commands/            7 skill komutu
+│
+├── .github/workflows/ci.yml   Build + typecheck + lint + security + ecosystem health
+├── eslint.config.js         Root ESLint yapilandirmasi
+├── .prettierrc              Prettier yapilandirmasi
+├── .editorconfig            IDE tutarliligi
+├── CHANGELOG.md             Versiyon gecmisi
+└── CONTRIBUTING.md          Katki rehberi
 ```
 
-**Claude Code Skills** (`~/.claude/commands/`):
+---
 
-| Komut | Ne yapar |
-|---|---|
-| `/new-project` | Şablon seç, kopyala, placeholder'ları doldur |
-| `/theme` | Görsel temayı analiz et ve uygula |
-| `/deploy` | Vercel pre/post deploy checklist |
-| `/review-ui` | UI/UX kod incelemesi |
-| `/snippet` | Modal · Drawer · Form · Skeleton · Toast · Confirm |
-| `/check` | Tüm bilinen hatalar üzerinden proje sağlık kontrolü |
-| `/release` | Versiyon güncelle, build al, npm'e publish et |
+## Proje Yasam Dongusu
+
+```
+PLANNING (P1→P6)  →  DEVELOPMENT  →  E2E & POLISH (E0→E5)  →  RELEASE  →  MAINTENANCE
+```
+
+| Faz | Protokol | Yoneten |
+|-----|----------|---------|
+| Planning (P1→P6) | `phases/planning.md` | BA Agent |
+| Development | `rules/dev-cycle.md` | BA → FE/BE/UI → GATE |
+| E2E & Polish (E0→E5) | `phases/e2e-polish.md` | BA + GATE |
+| Release & Maintenance | `phases/release-maintenance.md` | BA + DP |
+
+---
+
+## Agent Sistemi
+
+6 uzman agent + 1 protokol dosyasi. BA Agent koordine eder, ilgili agent'lara is gecerir.
+
+```
+Kullanici talebi → BA Agent → Ilgili agent(lar) → Gate Agent (6-pass QA) → Commit → Deploy
+```
+
+### Agent Ekibi
+
+| Agent | Alan | Context Seviyesi |
+|-------|------|-----------------|
+| **BA** (Business Analyst) | Planlama, onay, yonlendirme, ROUTEMAP | FULL (~50k token) |
+| **UI** (UI/UX) | Tasarim, animasyon, gorsel sistem | FOCUSED (~15k) |
+| **FE** (Frontend) | Next.js, React, TypeScript | TASK-SPECIFIC (~10k) |
+| **BE** (Backend) | DB, API, auth, Server Actions | TASK-SPECIFIC (~10k) |
+| **GATE** (Quality) | 6-pass kalite kontrolu, auto-fix | REVIEW (~20k) |
+| **DP** (Deploy) | Vercel, CI/CD, production | MINIMAL (~5k) |
+
+### Gate Agent — 6-Pass Kalite Kontrolu
+
+Her teslimat Gate Agent'tan gecer:
+
+1. **Requirements** — Acceptance criteria karsilanmis mi?
+2. **Code Compliance** — Mimari kurallar, TypeScript, naming
+3. **Security** — OWASP Top 10 temel kontroller
+4. **Tests** — Yeni fonksiyonlar icin test, regression kontrolu
+5. **Performance** — N+1 query, bundle size, Server/Client Component
+6. **UI Quality** — Design token, responsive, dark/light, a11y
+
+Sorun bulursa **otomatik duzeltir** (max 2 dongu), mimari sorunlari escalate eder.
+
+### Kullanim
+
+```
+# Tek agent
+@frontend-agent.md baz alarak bu sayfayi implement et.
+
+# Ekip olarak (BA koordinasyonuyla)
+@business-analyst-agent.md kullanarak bu ozelligi analiz et, sonra uygun agent'lara yonlendir.
+```
+
+---
+
+## Enforcement Hook'lari
+
+Kurallar kagit ustunde kalmaz — bash hook'lari ile fiziksel olarak uygulanir:
+
+| Hook | Tetik | Ne Yapar |
+|------|-------|----------|
+| `gate-guard.sh` | PreToolUse:Bash (git commit) | Gate PASSED yoksa commit bloklar |
+| `quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded secret, debug kodu, .env tarar |
+| `routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP guncelleme hatirlaticisi |
+
+Hook'lar `.claude/settings.local.json` dosyasinda Claude Code'a entegre.
+
+---
+
+## Skill Komutlari
+
+| Komut | Ne Yapar | Dosya |
+|-------|----------|-------|
+| `/check` | Build, type, lint, security, design token kontrolu | `.claude/commands/check.md` |
+| `/review-ui` | UI/UX inceleme (token, responsive, a11y, dark mode) | `.claude/commands/review-ui.md` |
+| `/deploy` | Vercel deployment checklist | `.claude/commands/deploy.md` |
+| `/snippet [tip]` | Hazir bilesen uretimi (10 tip) | `.claude/commands/snippet.md` |
+| `/theme [proje]` | Gorsel tema uygulama | `.claude/commands/theme.md` |
+| `/new-project [ad]` | Yeni proje sihirbazi | `.claude/commands/new-project.md` |
+| `/release [seviye]` | Versiyon + changelog + git tag | `.claude/commands/release.md` |
+
+---
+
+## Kurallar
+
+| Kural | Ozet |
+|-------|------|
+| `immutable-architecture.md` | Server-first, performance, DB migration, state, auth |
+| `design-tokens.md` | Hardcoded renk/boyut YASAK, semantic token zorunlu |
+| `commit-conventions.md` | `feat/fix/refactor(scope): description` formati |
+| `bugfix-protocol.md` | TDD: failing test → fix → green → regression → document |
+| `dev-cycle.md` | Plan → Dev → Gate → Commit → Review pipeline |
+| `routemap-discipline.md` | ROUTEMAP tek kaynak, session resume |
+| `context-curation.md` | Agent bazli filtered context, token butcesi |
 
 ---
 
 ## npm Paketleri
 
 ```bash
-npm install @ahmetakyapi/theme
-```
-
-```bash
-npm install @ahmetakyapi/ui
+npm install @ahmetakyapi/theme @ahmetakyapi/ui
 ```
 
 ### @ahmetakyapi/theme
@@ -75,14 +210,14 @@ export default { presets: [preset], darkMode: 'class', content: [...] }
 ```
 
 ```ts
-// Token'lara doğrudan erişim
+// Token'lara dogrudan erisim
 import theme from '@ahmetakyapi/theme'
 theme.animation.ease        // [0.22, 1, 0.36, 1]
 theme.colors.bg.dark        // '#04070d'
 theme.animation.spring      // snappy · bouncy · smooth · magnetic
 ```
 
-**CSS class'ları:** `.glass` · `.glass-lg` · `.chip` · `.surface`
+**CSS class'lari:** `.glass` · `.chip` · `.surface`
 
 ---
 
@@ -92,10 +227,10 @@ theme.animation.spring      // snappy · bouncy · smooth · magnetic
 // Hooks
 import { useSpotlight, useMagnetic, useCardTilt } from '@ahmetakyapi/ui'
 
-// Bileşenler
+// Bilesenler
 import { GlassCard, Button, Chip, CustomCursor } from '@ahmetakyapi/ui'
 
-// Framer Motion varyantları
+// Framer Motion varyantlari
 import { fadeUp, fadeIn, scaleIn, staggerContainer, EASE } from '@ahmetakyapi/ui'
 
 // Utility
@@ -111,36 +246,36 @@ const spotlight = useSpotlight(620, 'rgba(96,165,250,0.07)')
 <motion.section style={{ background: spotlight }} />
 ```
 
-**`useMagnetic(strength?)`** — Spring tabanlı magnetic buton efekti.
+**`useMagnetic(strength?)`** — Spring tabanli magnetic buton efekti.
 
 ```tsx
 const { mx, my, onMove, onLeave } = useMagnetic(0.26)
 <motion.button style={{ x: mx, y: my }} onMouseMove={onMove} onMouseLeave={onLeave} />
 ```
 
-**`useCardTilt(intensity?)`** — 3D kart eğimi + holografik shine.
+**`useCardTilt(intensity?)`** — 3D kart egimi + holografik shine.
 
 ```tsx
 const { ref, rx, ry, shine } = useCardTilt(8)
 <motion.div ref={ref} style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }} />
 ```
 
-#### Bileşenler
+#### Bilesenler
 
 **`GlassCard`**
 
 ```tsx
 <GlassCard>Basit glass kart</GlassCard>
-<GlassCard tilt>3D eğim + holografik shine</GlassCard>
+<GlassCard tilt>3D egim + holografik shine</GlassCard>
 <GlassCard glow>Sadece shine efekti</GlassCard>
 ```
 
-**`Button`**
+**`Button`** — Semantic token'lar ile (hardcoded renk yok)
 
 ```tsx
-<Button variant="primary" size="lg">Başla</Button>
+<Button variant="primary" size="lg">Basla</Button>
 <Button variant="ghost" magnetic>Daha Fazla</Button>
-<Button variant="outline" size="sm">İptal</Button>
+<Button variant="outline" size="sm">Iptal</Button>
 ```
 
 **`Chip`**
@@ -156,27 +291,10 @@ const { ref, rx, ry, shine } = useCardTilt(8)
 <CustomCursor />  {/* layout.tsx veya page.tsx'e bir kez */}
 ```
 
-#### Animasyon Varyantları
+#### Animasyon Varyantlari
 
-```ts
-// EASE = [0.22, 1, 0.36, 1]
-
-<motion.ul variants={staggerContainer(0.08)} initial="hidden" whileInView="visible">
-  <motion.li variants={fadeUp} />
-</motion.ul>
-
-// Modal
-<AnimatePresence>
-  {open && (
-    <motion.div variants={modalBackdrop} initial="hidden" animate="visible" exit="exit">
-      <motion.div variants={modalPanel}>{children}</motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
-```
-
-| Varyant | Başlangıç → Bitiş |
-|---|---|
+| Varyant | Baslangic → Bitis |
+|---------|-------------------|
 | `fadeIn` | opacity: 0 → 1 |
 | `fadeUp` | opacity: 0, y: 24 → 0 |
 | `fadeUpLarge` | opacity: 0, y: 40 → 0 |
@@ -185,9 +303,15 @@ const { ref, rx, ry, shine } = useCardTilt(8)
 | `modalBackdrop` | opacity: 0 → 1 |
 | `modalPanel` | opacity: 0, scale: 0.96, y: -16 → normal |
 
+```tsx
+<motion.ul variants={staggerContainer(0.08)} initial="hidden" whileInView="visible">
+  <motion.li variants={fadeUp} />
+</motion.ul>
+```
+
 ---
 
-## Proje Şablonları
+## Proje Sablonlari
 
 ### `nextjs-fullstack`
 
@@ -195,11 +319,11 @@ Next.js 14 · Drizzle ORM · Neon Postgres · next-auth v5 · Tailwind · Framer
 
 ```
 app/layout.tsx          ThemeProvider + suppressHydrationWarning + Manrope/IBM Plex
-app/page.tsx            Spotlight hero + feature kartları
+app/page.tsx            Spotlight hero + feature kartlari
 app/globals.css         glass · chip · surface · radyal arka plan · scrollbar
-app/api/health/         Edge runtime sağlık endpoint'i
+app/api/health/         Edge runtime saglik endpoint'i
 components/
-  layout/Header.tsx     Sticky glass + tema toggle + mobil menü (AnimatePresence)
+  layout/Header.tsx     Sticky glass + tema toggle + mobil menu
   layout/Footer.tsx
   ui/GlassCard.tsx      3D tilt + holografik shine
   ui/Button.tsx         primary · ghost · outline + magnetic
@@ -208,10 +332,10 @@ components/
 hooks/useSpotlight.ts
 hooks/useMagnetic.ts
 lib/db.ts               neon() + drizzle(sql, { schema })
-lib/schema.ts           users tablosu + tip çıkarımı
-lib/api.ts              ok<T>() · err() · serverErr()
+lib/schema.ts           users tablosu + tip cikarimi
+lib/api.ts              ok<T>() · err()
 lib/utils.ts            cn() · formatDate() · truncate()
-lib/variants.ts         EASE + tüm varyantlar
+lib/variants.ts         EASE + tum varyantlar
 ```
 
 ### `landing`
@@ -219,252 +343,107 @@ lib/variants.ts         EASE + tüm varyantlar
 Three.js particle background · Glassmorphism · Hero/Features/Pricing/Testimonials/CTA
 
 ```
-app/page.tsx            SceneBackground (SSR:false) + tüm section'lar
+app/page.tsx            SceneBackground (SSR:false) + tum section'lar
 app/sitemap.ts          Otomatik sitemap.xml
 app/robots.ts           robots.txt
 components/sections/
-  Hero.tsx              Spotlight + magnetic CTA + grid overlay + scroll indicator
+  Hero.tsx              Spotlight + magnetic CTA + dashboard mockup
   Features.tsx          6 kart 3D tilt + holografik shine
-  Pricing.tsx           3 tier (Free · Pro · Enterprise) — varsayılan kapalı
-  Testimonials.tsx      3 kart, yıldız, avatar — varsayılan kapalı
+  HowItWorks.tsx        Adim adim gorsel akis
+  Metrics.tsx           Animasyonlu istatistik kartlari
+  Pricing.tsx           3 tier (Free · Pro · Enterprise)
+  Testimonials.tsx      3 kart, yildiz, avatar
   CTA.tsx               Glass panel + gradient glow
 components/
-  SceneBackground.tsx   Three.js, 800 parçacık, indigo, SSR:false
+  SceneBackground.tsx   Three.js, 800 parcacik, indigo, SSR:false
   ui/GlassCard · Button · Chip
 ```
 
-**Yer tutucular:** `PROJECT_NAME` · `HERO_TITLE_LINE1/2` · `HERO_SUBTITLE` · `CTA_LINK/PRIMARY/TITLE/BUTTON` · `PLAN_FREE/PRO/ENT_*` · `TEST_*`
-
 ---
 
-## Skills
+## Bilgi Tabani
 
-### `/new-project [isim]`
+### `knowledge/mistakes.md` — 37 hata
 
-1. Proje tipi (`fullstack` / `landing`), tema, auth, DB tercihlerini sorar
-2. `knowledge/mistakes.md` + seçilen tema dosyasını okur
-3. Şablonu kopyalar, `sed` ile tüm placeholder'ları değiştirir
-
-### `/theme [tema]`
-
-`globals.css` · `tailwind.config.ts` · `layout.tsx` · `components/` inceleyerek tema tutarsızlıklarını tespit eder ve düzeltir.
-
-**Temalar:** `ahmetakyapi` · `digynotes` · `mimio` · `minimal`
-
-### `/deploy`
-
-Vercel deploy öncesi 9 maddelik kontrol: build · env vars · lint · kritik hatalar · `vercel.json` · DB migration · domain · deploy · post-deploy.
-
-### `/review-ui [dosya/dizin]`
-
-Tema tutarlılığı · animasyon kalitesi · erişilebilirlik · performans · responsive · kod kalitesi — sorunları doğrudan düzeltir.
-
-### `/snippet [tip]`
-
-Proje bağlamını okuyarak doğru import'larla hazır bileşen üretir.
-
-`modal` · `drawer` · `form` · `skeleton` · `toast` · `confirm`
-
----
-
-## Agent Dosyaları
-
-`agents/` dizinindeki tanım dosyaları, Claude'a belirli bir görev için kimliğini, bilgi tabanını ve karar çerçevesini verir. Doğrudan çağrılmazlar — "bu konuda uzman olarak hareket et, şu dosyaları oku" şeklinde kullanılır.
-
-### Nasıl Kullanılır
-
-#### Tek agent
-
-```
-@uiux-agent.md baz alarak bu hero section için Framer Motion animasyonu yaz.
-```
-
-#### Ekip olarak (BA koordinasyonuyla)
-
-```
-@business-analyst-agent.md kullanarak bu özelliği analiz et, sonra
-uygun agent'lara yönlendir.
-```
-
-BA agent talebi alır, doğrular ve ilgili agent'lara `AGENT_HANDOFF` formatında iş geçer:
-
-```text
-AGENT_HANDOFF
-  from: BA
-  to:   FE
-  task: Kullanıcı profil sayfası oluştur
-  context:
-    - proje: keskealsaydim
-    - ilgili dosyalar: app/profile/page.tsx, lib/schema.ts
-    - bağımlılıklar: BE schema hazır (users tablosu)
-  acceptance_criteria:
-    - Dark/light modda görünüm doğru
-    - Auth kontrolü yapılıyor
-```
-
-#### Paralel çalışma
-
-Birbirinden bağımsız iki iş varsa BA agent eş zamanlı yönlendirir:
-
-```text
-Paralel çalıştır:
-  → UI Agent: pricing section tasarımı
-  → BE Agent: subscription API route
-
-Bekle: Her ikisi hazır olunca FE Agent entegre eder.
-```
-
-#### Hata yönetimi
-
-Bir agent görevi tamamlayamazsa `AGENT_ERROR` formatında BA agent'a bildirir:
-
-```text
-AGENT_ERROR
-  agent: FE
-  error: ThemeProvider tip uyuşmazlığı
-  blocker: next-themes v5 API değişikliği
-  needs: patterns.md güncel mi kontrol et
-```
-
-Tüm protokol detayı: `agents/AGENT_PROTOCOL.md`
-
----
-
-### `business-analyst-agent.md` — Business Analyst / Product Strategist
-
-Yapılacak işin doğruluğunu, mantığını ve kullanıcı değerini sorgular. Kod yazmaz — planları, kararları ve diğer agent çıktılarını inceler.
-
-**5 soruluk karar çerçevesi:** Kullanıcı değeri → Kapsam uyumu → Teknik risk → Alternatif maliyet → Tamamlanma kriteri
-
-**Çıktı formatı:** ✅ Onaylandı · 🔄 Revizyon gerekli · ❌ Reddedildi — her biri gerekçe + yönlendirme içerir
-
-**Skills:** `/check` · `/deploy` · `/new-project`
-
----
-
-### `uiux-agent.md` — UI/UX Mühendisi
-
-Görsel dil koruyucusu. Yeni bileşen tasarlarken, animasyon yazarken veya dark/light mode implementasyonunda kullanılır.
-
-**Karar çerçevesi:** Hareket → Cam → Işık → Tipografi → Boşluk → Koyu/Açık
-
-**Okur:** `knowledge/themes/ahmetakyapi.md` · `knowledge/mistakes.md`
-
-**Kurallar:** GSAP değil Framer Motion · hardcoded renk yasak · EASE = `[0.22, 1, 0.36, 1]`
-
-**Skills:** `/review-ui` · `/snippet` · `/theme` · `/check`
-
----
-
-### `frontend-agent.md` — Next.js Developer
-
-App Router uzmanı. Sayfa/layout yazarken, Server vs Client Component kararında, API entegrasyonunda kullanılır.
-
-**Okur:** `knowledge/mistakes.md` · `knowledge/patterns.md` · projenin `CLAUDE.md`'si
-
-**Güncel stack:** React 19 (`use`, `useActionState`, `useOptimistic`) · Next.js 15 (async params, `use cache`) · Tailwind v4 (`@theme {}`)
-
-**Skills:** `/snippet` · `/check` · `/review-ui`
-
----
-
-### `backend-agent.md` — API & Veritabanı
-
-Drizzle schema, API route'ları, next-auth v5, Server Actions ve Zod validasyonu konusunda uzmanlaşmış.
-
-**Zorunlu kurallar:**
-
-- `@neondatabase/serverless` — `pg` değil (Vercel serverless uyumluluğu)
-- Her foreign key'de `ON DELETE` davranışı zorunlu
-- Migration immutability — var olan dosya düzenlenmez, yeni dosya açılır
-
-**Skills:** `/check` · `/deploy`
-
----
-
-### `deploy-agent.md` — Vercel & DevOps
-
-Deployment hazırlığı, env var yönetimi, domain konfigürasyonu ve post-deploy kontrol.
-
-**Checklist:** `npx tsc --noEmit` → `npm run lint` → `npm run build` → env vars → DB migration → `vercel --prod` → health endpoint
-
-**Skills:** `/deploy` · `/release` · `/check`
-
----
-
-## Bilgi Tabanı
-
-### `knowledge/mistakes.md` — 32 hata
-
-| # | Hata | Çözüm |
-|---|---|---|
+| # | Hata | Cozum |
+|---|------|-------|
 | 1 | next-themes hydration mismatch | `<html suppressHydrationWarning>` + mounted guard |
-| 2 | Three.js SSR çakışması | `dynamic(..., { ssr: false })` |
+| 2 | Three.js SSR cakismasi | `dynamic(..., { ssr: false })` |
 | 5 | Vercel'de `pg` timeout | `@neondatabase/serverless` |
 | 10 | Server Component'te Framer Motion | `'use client'` direktifi |
-| 17 | Tailwind v4'te `tailwind.config.ts` | `globals.css` `@theme {}` bloğu |
-| 25 | Migration dosyasını düzenleme | Immutable — her zaman yeni dosya |
+| 17 | Tailwind v4'te `tailwind.config.ts` | `globals.css` `@theme {}` blogu |
+| 25 | Migration dosyasini duzenleme | Immutable — her zaman yeni dosya |
 | 26 | Hardcoded renk | CSS variable veya Tailwind token |
-| 28 | `postcss.config.js` eksik | Tailwind utility'leri işlenmiyor, dosya oluştur |
-| 29 | `enableSystem: true` hydration | `disableTransitionOnChange` kullan, `enableSystem` kaldır |
-| 30 | Dark-only Tailwind renkleri | Her class için `dark:` eşleniği yaz |
-| 31 | Dekoratif UI mockup dark-only shell | Her katmana `dark:` prefix'li varyant ekle |
-| 32 | `.next` cache — stale bundle | `rm -rf .next && npm run dev` + hard refresh |
+| 28 | `postcss.config.js` eksik | Tailwind utility'leri islenmez |
+| 33 | Nested Server Component async context | Veriyi prop olarak gec veya ayri fetch yap |
+| 34 | Drizzle migration rollback yoklugu | Manuel rollback SQL'i hazirla |
+| 35 | Vercel Edge Function limitleri | 128KB bundle, 30s timeout, sinirli API |
+| 36 | Framer Motion bundle size sismesi | LazyMotion + `m` component kullan |
+| 37 | npm workspace dependency conflict | `.npmrc` legacy-peer-deps + root dependencies |
 
-### `knowledge/themes/` — 5 proje görsel hafızası
+### `knowledge/patterns.md` — 15+ desen
+
+Auth · Database (Drizzle+Neon) · API helpers · Error handling · Form submission (React 19) · Middleware auth · Pagination · File upload · Image optimization · next-themes · Three.js dynamic · Framer Motion · SEO · UI tasarim desenleri (bento grid, tilt card, marquee, spotlight, glow orbs)
+
+### `knowledge/themes/` — 5 proje gorsel hafizasi
 
 | Proje | Dark BG | Font | Vurgu | Tema Sistemi |
-|---|---|---|---|---|
+|-------|---------|------|-------|--------------|
 | ahmetakyapi.com | `#04070d` | Manrope + IBM Plex | Indigo · Cyan · Emerald | next-themes class |
 | Mimio | `#04070d` | Plus Jakarta Sans | Indigo | custom data-theme |
 | DigyNotes | `#0a0f1e` | Avenir Next | Emerald | html.light class |
-| Keskealsaydım | HSL | Space Grotesk | Emerald · Cyan | shadcn HSL vars |
+| Keskealsaydim | HSL | Space Grotesk | Emerald · Cyan | shadcn HSL vars |
 | Ramazan Vakitleri | `#1a1a2e` | System | Lavender · Pembe · Mavi | Dark only, vanilla CSS |
-
-### `knowledge/decisions.md` — Mimari Kararlar
-
-Her teknoloji seçiminin gerekçesi. Neden bu, neden alternatif değil.
-
-| Teknoloji | Tercih edilen | Bırakılan alternatif |
-|---|---|---|
-| Framework | Next.js 14+ App Router | Remix, Vite+React |
-| ORM | Drizzle ORM | Prisma |
-| Database | Neon Postgres | Supabase, PlanetScale |
-| Animasyon | Framer Motion | GSAP |
-| Auth | next-auth v5 | Clerk |
-| Deployment | Vercel | Railway, Fly.io |
-
-### `knowledge/patterns.md`
-
-Auth (next-auth v5) · Database (Drizzle+Neon) · API helpers · next-themes kurulumu · Three.js dynamic import · Framer Motion (spotlight, stagger, modal) · SEO (sitemap, robots, OG) · Edge health route
 
 ---
 
 ## Snippets
 
-`snippets/` dizininde sıfırdan yazılması uzun süren, her projede tekrarlanan hazır parçalar var. İhtiyaç duyunca ilgili dosyayı projeye kopyala.
+`snippets/` dizininde her projede tekrarlanan 10 hazir bilesen:
 
-| Dosya | Ne yapar |
-|---|---|
-| `og-image.tsx` | `@vercel/og` ile dinamik OpenGraph görseli, `app/api/og/route.tsx` olarak kullanılır |
-| `animated-number.tsx` | `useSpring` ile sayı animasyonu — finance/istatistik dashboard'ları için |
-| `infinite-scroll.tsx` | `IntersectionObserver` tabanlı sonsuz liste hook'u, TanStack Query örneği ile |
-| `search-bar.tsx` | Debounced arama, URL search param senkronizasyonu, temizle butonu |
+| Dosya | Ne Yapar |
+|-------|----------|
+| `animated-number.tsx` | `useSpring` ile sayi animasyonu |
+| `infinite-scroll.tsx` | `IntersectionObserver` tabanli sonsuz liste |
+| `og-image.tsx` | `@vercel/og` ile dinamik OpenGraph gorseli |
+| `search-bar.tsx` | Debounced arama, URL search param senkronizasyonu |
+| `modal.tsx` | AnimatePresence + backdrop blur dialog |
+| `drawer.tsx` | Yandan acilan panel (sol/sag) |
+| `form.tsx` | React 19 useActionState + Zod validasyon |
+| `skeleton.tsx` | Shimmer animasyonlu loading state (card, list, avatar, table) |
+| `toast.tsx` | Context + AnimatePresence bildirim sistemi (success/error/warning/info) |
+| `confirm.tsx` | Tehlikeli islem onay dialog'u (danger/warning/default) |
 
 ---
 
-## Ekosistemi Güncelleme
+## Ecosystem Health Check
+
+```bash
+bash scripts/health-check.sh
+```
+
+11 kategori, 51 kontrol noktasi:
+Agent dosyalari · Kurallar · Fazlar · Hook'lar · Snippet'ler · Template'ler · Knowledge base · Paket tutarliligi · Design token ihlalleri · CI/CD · Temel dosyalar
+
+---
+
+## Ekosistemi Guncelleme
 
 ```
 Yeni hata          →  knowledge/mistakes.md
 Yeni proje         →  knowledge/themes/[proje].md
 Yeni desen         →  knowledge/patterns.md
 Yeni mimari karar  →  knowledge/decisions.md
-Yeni bileşen       →  packages/@ahmet/ui/src/components/ → /release
+Yeni bilesen       →  packages/@ahmet/ui/src/components/ → /release
 Yeni snippet       →  snippets/[isim].tsx
-Yeni skill         →  ~/.claude/commands/[skill-adi].md
+Yeni skill         →  .claude/commands/[skill-adi].md
+Yeni kural         →  rules/[kural-adi].md + AGENT_PROTOCOL.md
+Yeni hook          →  hooks/[hook].sh + .claude/settings.local.json
+Yeni agent         →  agents/[agent]-agent.md + AGENT_PROTOCOL.md
 ```
+
+Detayli rehber: `CONTRIBUTING.md`
 
 ---
 
-*Ahmet Akyapı · [ahmetakyapi.com](https://ahmetakyapi.com) · [@ahmetakyapi](https://github.com/ahmetakyapi)*
+*Ahmet Akyapi · [ahmetakyapi.com](https://ahmetakyapi.com) · [@ahmetakyapi](https://github.com/ahmetakyapi)*
