@@ -450,5 +450,96 @@ Ardından tarayıcıda hard refresh (`Cmd+Shift+R`).
 
 ---
 
-*Son güncelleme: 2026-03-20*
+## Server Component & Async Context
+
+### 33. Nested Server Component'te Async Context Kaybı
+
+**Hata**: Parent Server Component'teki `await` sonucu child Server Component'e geçemiyor
+
+**Sebep**: Her Server Component kendi async context'inde çalışır, parent'ın scope'unu miras almaz
+
+**Çözüm**: Veriyi prop olarak geç veya ortak data-fetching fonksiyonu kullan:
+
+```tsx
+// Parent
+export default async function Layout({ children }) {
+  const user = await getUser()
+  return <Sidebar user={user}>{children}</Sidebar>
+}
+
+// Child — kendi fetch'ini yapar (React dedupe eder)
+export default async function Page() {
+  const user = await getUser() // ayni istek dedupe edilir
+}
+```
+
+### 34. Drizzle Migration Rollback Yokluğu
+
+**Hata**: Production migration başarısız oldu, geri alınamıyor
+
+**Sebep**: Drizzle ORM'de built-in rollback mekanizması yok
+
+**Çözüm**: Her migration için manuel rollback SQL'i hazırla:
+
+```sql
+-- migrations/0005_add_status_column.sql
+ALTER TABLE posts ADD COLUMN status text DEFAULT 'draft';
+
+-- migrations/0005_add_status_column.rollback.sql (manuel oluştur)
+ALTER TABLE posts DROP COLUMN status;
+```
+
+**Kural**: Production migration öncesi rollback planı olmalı. Breaking change'ler iki aşamada yapılmalı (additive → migrate data → remove old).
+
+### 35. Vercel Edge Function Limitleri
+
+**Hata**: Edge Runtime'da `crypto`, `fs`, `path` gibi Node.js API'ları undefined
+
+**Sebep**: Edge Runtime = V8 isolate, tam Node.js değil
+
+**Kural**:
+- Edge'de çalışan route'lar: `export const runtime = 'edge'`
+- Node.js gerektiren route'lar: `export const runtime = 'nodejs'` (varsayılan)
+- Edge limitleri: 128KB bundle, 30s timeout, sınırlı API
+
+### 36. Framer Motion Bundle Size Şişmesi
+
+**Hata**: Client bundle'da Framer Motion ~40KB gzip yer kaplıyor
+
+**Çözüm**: Sadece kullanılan modülleri import et:
+
+```tsx
+// ❌ Tüm kütüphane import edilir
+import { motion } from 'framer-motion'
+
+// ✅ Tree-shake edilebilir (framer-motion v11+)
+import { m, LazyMotion, domAnimation } from 'framer-motion'
+
+// Layout'ta bir kez:
+<LazyMotion features={domAnimation}>
+  {children}
+</LazyMotion>
+
+// Bileşende:
+<m.div animate={{ opacity: 1 }} />
+```
+
+### 37. npm Workspace Dependency Conflict
+
+**Hata**: `ERESOLVE` — workspace paketleri arasında peer dependency çakışması
+
+**Çözüm**:
+
+```bash
+# .npmrc dosyasında
+legacy-peer-deps=true
+# veya
+strict-peer-deps=false
+```
+
+**Kural**: Workspace paketlerinde ortak bağımlılıklar (react, next) root package.json'da tanımlanmalı.
+
+---
+
+*Son güncelleme: 2026-03-25*
 *Yeni hata eklemek için bu dosyayı düzenle.*

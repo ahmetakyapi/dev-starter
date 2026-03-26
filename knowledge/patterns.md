@@ -423,4 +423,248 @@ Atmosferik derinlik için pozisyonlanmış blur'd daireler.
 
 ---
 
+## Error Handling
+
+### API Route Error Handler
+
+```ts
+// lib/api.ts — genisletilmis versiyon
+import { NextResponse } from 'next/server'
+import { ZodError } from 'zod'
+
+export function ok<T>(data: T, status = 200) {
+  return NextResponse.json({ data }, { status })
+}
+
+export function err(message: string, status = 400) {
+  return NextResponse.json({ error: message }, { status })
+}
+
+export function handleApiError(error: unknown) {
+  if (error instanceof ZodError) {
+    return err(error.errors.map((e) => e.message).join(', '), 422)
+  }
+  if (error instanceof Error) {
+    console.error('[API Error]', error.message)
+    return err('Internal server error', 500)
+  }
+  return err('Unknown error', 500)
+}
+
+// Kullanim:
+export async function POST(req: Request) {
+  try {
+    const body = await req.json()
+    const data = schema.parse(body)
+    // ... islem
+    return ok({ success: true }, 201)
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+```
+
+---
+
+## Form Submission (React 19)
+
+### useActionState + Server Action
+
+```ts
+// app/actions/contact.ts
+'use server'
+import { z } from 'zod'
+
+const schema = z.object({
+  name: z.string().min(2, 'Ad en az 2 karakter olmali'),
+  email: z.string().email('Gecerli bir e-posta girin'),
+  message: z.string().min(10, 'Mesaj en az 10 karakter olmali'),
+})
+
+type FormState = { success: boolean; message: string; errors?: Record<string, string[]> }
+
+export async function submitContact(prev: FormState, formData: FormData): Promise<FormState> {
+  const result = schema.safeParse(Object.fromEntries(formData))
+  if (!result.success) {
+    return { success: false, message: 'Validasyon hatasi', errors: result.error.flatten().fieldErrors }
+  }
+  // ... kaydet
+  return { success: true, message: 'Mesajiniz alindi!' }
+}
+```
+
+```tsx
+// components/ContactForm.tsx
+'use client'
+import { useActionState } from 'react'
+import { submitContact } from '@/app/actions/contact'
+
+export function ContactForm() {
+  const [state, action, isPending] = useActionState(submitContact, { success: false, message: '' })
+
+  return (
+    <form action={action}>
+      <input name="name" required disabled={isPending} />
+      {state.errors?.name && <p className="text-red-400 text-xs">{state.errors.name[0]}</p>}
+      {/* ... diger alanlar */}
+      <button type="submit" disabled={isPending}>
+        {isPending ? 'Gonderiliyor...' : 'Gonder'}
+      </button>
+      {state.message && <p className={state.success ? 'text-emerald-400' : 'text-red-400'}>{state.message}</p>}
+    </form>
+  )
+}
+```
+
+---
+
+## Middleware Auth Pattern
+
+### next-auth v5 Middleware
+
+```ts
+// middleware.ts
+import { auth } from '@/auth'
+import { NextResponse } from 'next/server'
+
+export default auth((req) => {
+  const isLoggedIn = !!req.auth
+  const isProtected = req.nextUrl.pathname.startsWith('/dashboard')
+  const isAuthPage = req.nextUrl.pathname.startsWith('/auth')
+
+  if (isProtected && !isLoggedIn) {
+    return NextResponse.redirect(new URL('/auth/login', req.url))
+  }
+
+  if (isAuthPage && isLoggedIn) {
+    return NextResponse.redirect(new URL('/dashboard', req.url))
+  }
+})
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/auth/:path*'],
+}
+```
+
+---
+
+## Pagination
+
+### Cursor-Based Pagination (Drizzle)
+
+```ts
+// lib/queries.ts
+import { db } from '@/lib/db'
+import { posts } from '@/lib/schema'
+import { gt, desc, sql } from 'drizzle-orm'
+
+type PaginationResult<T> = {
+  items: T[]
+  nextCursor: string | null
+}
+
+export async function getPosts(cursor?: string, limit = 20): Promise<PaginationResult<typeof posts.$inferSelect>> {
+  const query = db
+    .select()
+    .from(posts)
+    .orderBy(desc(posts.createdAt))
+    .limit(limit + 1)
+
+  if (cursor) {
+    query.where(gt(posts.id, cursor))
+  }
+
+  const items = await query
+  const hasMore = items.length > limit
+  if (hasMore) items.pop()
+
+  return {
+    items,
+    nextCursor: hasMore ? items[items.length - 1].id : null,
+  }
+}
+```
+
+---
+
+## File Upload
+
+### Vercel Blob Upload
+
+```ts
+// app/api/upload/route.ts
+import { put } from '@vercel/blob'
+import { auth } from '@/auth'
+import { err, ok } from '@/lib/api'
+
+export async function POST(req: Request) {
+  const session = await auth()
+  if (!session?.user) return err('Unauthorized', 401)
+
+  const form = await req.formData()
+  const file = form.get('file') as File
+  if (!file) return err('Dosya gerekli', 400)
+
+  // Boyut limiti (5MB)
+  if (file.size > 5 * 1024 * 1024) return err('Dosya 5MB\'dan buyuk olamaz', 400)
+
+  // Tip kontrolu
+  const allowed = ['image/jpeg', 'image/png', 'image/webp']
+  if (!allowed.includes(file.type)) return err('Gecersiz dosya tipi', 400)
+
+  const blob = await put(file.name, file, {
+    access: 'public',
+    addRandomSuffix: true,
+  })
+
+  return ok({ url: blob.url }, 201)
+}
+```
+
+---
+
+## Image Optimization
+
+### next/image Best Practices
+
+```tsx
+// Responsive hero gorsel
+import Image from 'next/image'
+
+<Image
+  src="/hero.jpg"
+  alt="Hero gorseli"
+  width={1200}
+  height={630}
+  priority           // LCP icin — above-the-fold gorseller
+  placeholder="blur" // Local import ile kullanildiginda
+  className="rounded-2xl object-cover"
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+/>
+
+// Avatar (sabit boyut)
+<Image
+  src={user.avatar}
+  alt={user.name}
+  width={40}
+  height={40}
+  className="rounded-full"
+/>
+```
+
+```ts
+// next.config.mjs — remote pattern
+const config = {
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+    ],
+  },
+}
+```
+
+---
+
 *Yeni desenler eklendikçe bu dosya güncellenir.*

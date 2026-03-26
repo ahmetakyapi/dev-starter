@@ -14,8 +14,13 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü ve proje bağlamı
 - `~/dev-starter/knowledge/mistakes.md`
 - `~/dev-starter/knowledge/patterns.md`
+- `docs/ROUTEMAP.md` — proje durum takibi (varsa)
+- `docs/PRODUCT.md` — iş mantığı ve kapsam (varsa)
+- `docs/ARCHITECTURE.md` — teknik kısıtlar (varsa)
 - Projenin `CLAUDE.md` dosyası (varsa)
 - İlgili diğer agent'ların çıktıları
+
+**Context seviyesi**: FULL — Tüm dokümanları okur (`rules/context-curation.md`)
 
 ## Kullandığı Skills
 
@@ -35,6 +40,9 @@ Bu agent çalışmadan önce şunları oku:
 - **Risk Assessment**: Bu değişiklik neyi kırabilir? Edge case'ler düşünülmüş mü?
 - **Önceliklendirme**: Bu iş şu an yapılmalı mı, yoksa daha kritik bir şey var mı?
 - **Çıktı Kalite Kontrolü**: Diğer agent'ların ürettiği sonuç gerçekten istenen ile örtüşüyor mu?
+- **Planning Orchestration**: Yeni projede `phases/planning.md` akışını yönetir (P1→P6)
+- **ROUTEMAP Management**: Proje durumunu ROUTEMAP'te günceller, session resume yapar
+- **Maintenance Triage**: Production sonrası HOTFIX/BUGFIX/ENHANCE kararı verir (`phases/release-maintenance.md`)
 
 ---
 

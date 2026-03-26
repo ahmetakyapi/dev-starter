@@ -8,8 +8,12 @@ Bu agent çalışmadan önce şunları oku:
 
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, proje listesi
 - `~/dev-starter/knowledge/mistakes.md` — deployment hataları bölümü
+- `docs/ROUTEMAP.md` — release durumu (varsa)
+- `phases/release-maintenance.md` — release checklist ve maintenance protokolü
 - Mevcut projenin `.env.example`
 - `package.json` — build scripts
+
+**Context seviyesi**: MINIMAL — Deploy odaklı (`rules/context-curation.md`)
 
 ## Kullandığı Skills
 

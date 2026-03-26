@@ -3,15 +3,12 @@ name: CI
 on:
   push:
     branches: [main]
-    paths:
-      - 'packages/**'
   pull_request:
-    paths:
-      - 'packages/**'
+    branches: [main]
 
 jobs:
-  build:
-    name: Build Packages
+  quality:
+    name: Quality Checks
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +22,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint check
+        run: npx eslint packages/ snippets/ --max-warnings 0 || true
+
+      - name: TypeScript check
+        run: |
+          npx tsc --noEmit --project packages/@ahmet/ui/tsconfig.json
+
       - name: Build @ahmetakyapi/theme
         run: npm run build --workspace=packages/@ahmet/theme
 
@@ -35,3 +39,39 @@ jobs:
         run: |
           node -e "const t = require('./packages/@ahmet/theme/dist/tokens.js'); console.log('theme ok — ease:', t.default.animation.ease)"
           node -e "const ui = require('./packages/@ahmet/ui/dist/index.js'); console.log('ui ok —', Object.keys(ui).length, 'exports')"
+
+      - name: Security scan (staged patterns)
+        run: |
+          echo "--- Checking for hardcoded secrets ---"
+          ! grep -rnE '(password|secret|api_key|apikey)\s*[:=]\s*["\x27][^"\x27]{8,}' \
+            packages/ snippets/ templates/ \
+            --include='*.ts' --include='*.tsx' --include='*.js' \
+            | grep -v '\.example\|\.template\|\.test\.\|\.spec\.\|\.md$' \
+            || echo "No secrets found"
+
+          echo "--- Checking for .env files ---"
+          ! find . -name '.env' -not -name '.env.example' -not -path './node_modules/*' -not -path './.git/*' | grep . \
+            || echo "No .env files found"
+
+      - name: Design token violations
+        run: |
+          echo "--- Checking UI package for hardcoded colors ---"
+          VIOLATIONS=$(grep -rnE 'bg-(white|black|gray)-[0-9]|text-(white|black|gray)-[0-9]' \
+            packages/@ahmet/ui/src/ 2>/dev/null \
+            | grep -v '\.test\.\|dark:' || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "⚠️ Design token violations found:"
+            echo "$VIOLATIONS"
+          else
+            echo "✅ No design token violations"
+          fi
+
+  ecosystem:
+    name: Ecosystem Health
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run health check
+        run: bash scripts/health-check.sh

@@ -9,7 +9,24 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, güncel teknoloji
 - `~/dev-starter/knowledge/mistakes.md` — özellikle DB ve auth hataları
 - `~/dev-starter/knowledge/patterns.md`
+- `~/dev-starter/rules/immutable-architecture.md` — DB migration, serverless kuralları
+- `docs/ROUTEMAP.md` — sadece aktif story (varsa)
+- `docs/ARCHITECTURE.md` — DB schema + API endpoint bölümü (varsa)
 - Mevcut projenin `lib/schema.ts` ve `lib/db.ts`
+
+**Context seviyesi**: TASK-SPECIFIC — Görev bazlı filtrelenmiş (`rules/context-curation.md`)
+
+### Dev Cycle
+
+Bu agent `rules/dev-cycle.md` pipeline'ını takip eder:
+
+1. Plan'ı oku → 2. Develop → 3. Self-Check → 4. Gate Agent'a gönder
+
+### Bugfix
+
+Bug geldiğinde `rules/bugfix-protocol.md` TDD akışını takip eder:
+
+1. Reproduce → 2. Failing test → 3. Fix → 4. Green → 5. Regression → 6. Document
 
 ## Kullandığı Skills
 

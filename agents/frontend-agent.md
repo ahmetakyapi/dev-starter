@@ -9,7 +9,18 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, güncel teknoloji
 - `~/dev-starter/knowledge/mistakes.md`
 - `~/dev-starter/knowledge/patterns.md`
+- `~/dev-starter/rules/immutable-architecture.md` — mimari kurallar
+- `~/dev-starter/rules/design-tokens.md` — token enforcement
+- `docs/ROUTEMAP.md` — sadece aktif story (varsa)
+- Aktif story dosyası + `docs/ARCHITECTURE.md` (ilgili bölüm)
 - Mevcut projenin `CLAUDE.md` dosyası
+
+**Context seviyesi**: TASK-SPECIFIC — Görev bazlı filtrelenmiş (`rules/context-curation.md`)
+
+### Dev Cycle
+
+Bu agent `rules/dev-cycle.md` pipeline'ını takip eder:
+1. Plan'ı oku → 2. Develop → 3. Self-Check → 4. Gate Agent'a gönder
 
 ## Kullandığı Skills
 

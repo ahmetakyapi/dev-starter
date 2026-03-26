@@ -12,10 +12,15 @@
 Bu agent çalışmadan önce şunları oku:
 
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, repo listesi, güncel teknoloji
-- `~/dev-starter/knowledge/themes/ahmetakyapi.md`
+- `~/dev-starter/knowledge/themes/ahmetakyapi.md` (veya projeye özel tema)
 - `~/dev-starter/knowledge/mistakes.md`
 - `~/dev-starter/knowledge/patterns.md`
+- `~/dev-starter/rules/design-tokens.md` — token enforcement kuralları
+- `docs/SCREENS.md` — ekran tasarımları (varsa)
+- `docs/ROUTEMAP.md` — sadece aktif story (varsa)
 - Projenin `CLAUDE.md` dosyası (varsa)
+
+**Context seviyesi**: FOCUSED — Tasarım odaklı (`rules/context-curation.md`)
 
 ## Kullandığı Skills
 
