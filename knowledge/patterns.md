@@ -667,4 +667,94 @@ const config = {
 
 ---
 
+## Landing Page: Animasyonlu Oyun/Ürün Demo
+
+### Auto-advancing Step Tabs + Visual Preview
+Ürünün nasıl çalıştığını gösteren interaktif section. Sol tarafta accordion-style adımlar, sağ tarafta animasyonlu görsel.
+
+```tsx
+'use client'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+
+const STEPS = [
+  { id: 'step1', title: 'Adım 1', desc: 'Açıklama...' },
+  { id: 'step2', title: 'Adım 2', desc: 'Açıklama...' },
+]
+
+function Demo() {
+  const [active, setActive] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: false, margin: '-20%' })
+
+  useEffect(() => {
+    if (!inView) return
+    const t = setInterval(() => setActive(s => (s + 1) % STEPS.length), 4000)
+    return () => clearInterval(t)
+  }, [inView])
+
+  return (
+    <div ref={ref} className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="space-y-2">
+        {STEPS.map((step, i) => (
+          <button key={step.id} onClick={() => setActive(i)}
+            className={cn('w-full text-left rounded-2xl p-5', active === i ? 'glass' : '')}
+          >
+            <h3>{step.title}</h3>
+            <AnimatePresence mode="wait">
+              {active === i && (
+                <motion.p initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }} exit={{ opacity:0, height:0 }}>
+                  {step.desc}
+                </motion.p>
+              )}
+            </AnimatePresence>
+            {active === i && (
+              <motion.div className="h-0.5 bg-white/[0.06] mt-3">
+                <motion.div className="h-full bg-gradient-to-r from-indigo-500 to-cyan-400"
+                  initial={{ width: '0%' }} animate={{ width: '100%' }}
+                  transition={{ duration: 4, ease: 'linear' }} key={`p-${active}`}
+                />
+              </motion.div>
+            )}
+          </button>
+        ))}
+      </div>
+      <div className="glass rounded-3xl p-1">
+        <div className="rounded-[20px] bg-[#060a14] aspect-[4/3] relative">
+          <AnimatePresence mode="wait">
+            {active === 0 && <StepVisual1 key="s1" />}
+            {active === 1 && <StepVisual2 key="s2" />}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+**Kurallar:**
+- `useInView` ile sadece görünürken auto-advance yap
+- Progress bar ile aktif adım göster
+- `AnimatePresence mode="wait"` ile geçişler
+- SVG çizim animasyonu: `strokeDasharray` + `strokeDashoffset`
+
+### SVG Path Drawing Animation
+```tsx
+const pathRef = useRef<SVGPathElement>(null)
+useEffect(() => {
+  const el = pathRef.current
+  if (!el) return
+  const len = el.getTotalLength()
+  el.style.strokeDasharray = `${len}`
+  el.style.strokeDashoffset = `${len}`
+  const anim = el.animate(
+    [{ strokeDashoffset: `${len}` }, { strokeDashoffset: '0' }],
+    { duration: 2200, fill: 'forwards', easing: 'ease-out', delay: 300 }
+  )
+  return () => anim.cancel()
+}, [])
+```
+
+---
+
 *Yeni desenler eklendikçe bu dosya güncellenir.*

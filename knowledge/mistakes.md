@@ -539,7 +539,51 @@ strict-peer-deps=false
 
 **Kural**: Workspace paketlerinde ortak bağımlılıklar (react, next) root package.json'da tanımlanmalı.
 
+## Landing Page / Hero Tasarımı
+
+### 38. Gradient Text Satır Kırılması
+**Hata**: `<span className="text-gradient">Çiz, Tahmin Et</span>` gibi gradient text'ler responsive'de garip yerlerde kırılıyor (tek kelime alt satıra düşüyor)
+**Çözüm**: Gradient text'i kısa tut veya satır kırılmasını kontrol et:
+```tsx
+// ❌ Yanlış — kırılma noktası öngörülemez
+Arkadaşlarınla <span className="text-gradient">Çiz, Tahmin Et</span> ve Eğlen!
+
+// ✅ Doğru — kırılmayı kontrol et
+Çiz, Tahmin Et
+<br />
+<span className="text-gradient">ve Eğlen!</span>
+```
+
+### 39. Avatar/Renk Seçici Düzensiz Layout
+**Hata**: 12 renk düğmesi iki satıra bölündüğünde ilk satır input yanında, ikinci satır altında — düzensiz görünüyor
+**Çözüm**: Tek satır `overflow-x-auto` ile veya input'tan ayrı bölüm olarak yerleştir:
+```tsx
+// ✅ Compact single row
+<div className="flex items-center gap-1.5 overflow-x-auto py-1">
+  {AVATAR_COLORS.map(color => (
+    <button className="w-5 h-5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+  ))}
+</div>
+```
+
+### 40. Emoji İkon Kullanımı Landing Page'de
+**Hata**: Feature kartlarında 🎨 🇹🇷 📱 gibi emoji'ler profesyonel görünmüyor, platform'lar arası tutarsız
+**Çözüm**: SVG ikonlar kullan (lucide-react veya inline SVG). Emoji sadece playful/informal bölümlerde:
+```tsx
+// ❌ Emoji ikon
+<div className="text-xl">🎨</div>
+
+// ✅ SVG ikon
+<svg className="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path ... />
+</svg>
+```
+
+### 41. Hero Form Kartı Çok Kalabalık
+**Hata**: Hero'da isim + renk + oda kodu + katıl + oluştur hepsi bir glass card'da — çok kalabalık
+**Çözüm**: Avatar preview (seçilen renkle) + divider + mantıksal gruplama ile düzenle. Renk seçiciyi küçük tut (w-5 h-5).
+
 ---
 
-*Son güncelleme: 2026-03-25*
+*Son güncelleme: 2026-04-11*
 *Yeni hata eklemek için bu dosyayı düzenle.*
