@@ -57,6 +57,8 @@ dev-starter/
 │
 ├── .claude/
 │   ├── settings.local.json   → Hook entegrasyonu + izinler
+│   ├── skills/
+│   │   └── clone-website/    → Website reverse-engineering & pixel-perfect clone
 │   └── commands/             → Skill komut tanımları
 │       ├── check.md          → /check — Proje sağlık kontrolü
 │       ├── review-ui.md      → /review-ui — UI/UX kod incelemesi
@@ -176,6 +178,7 @@ bash scripts/health-check.sh
 | `/theme [proje]` | Görsel tema uygulama | `.claude/commands/theme.md` |
 | `/new-project [ad]` | Yeni proje sihirbazı | `.claude/commands/new-project.md` |
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
+| `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli) | `.claude/skills/clone-website/SKILL.md` |
 
 ---
 
@@ -231,6 +234,12 @@ Her agent sadece ihtiyacı olan bilgiyi alır (`rules/context-curation.md`):
 /snippet skeleton
 /snippet toast
 /snippet confirm
+```
+
+### Website Klonla
+
+```text
+/clone-website https://example.com
 ```
 
 ### Sağlık Kontrolü

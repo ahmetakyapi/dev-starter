@@ -72,6 +72,7 @@ dev-starter/
 │
 ├── .claude/
 │   ├── settings.local.json  Hook entegrasyonu + izinler
+│   ├── skills/              clone-website (pixel-perfect site klonlama)
 │   └── commands/            7 skill komutu
 │
 ├── .github/workflows/ci.yml   Build + typecheck + lint + security + ecosystem health
@@ -168,6 +169,25 @@ Hook'lar `.claude/settings.local.json` dosyasında Claude Code'a entegre.
 | `/theme [proje]`   | Görsel tema uygulama                                    | `.claude/commands/theme.md`   |
 | `/new-project [ad]`| Yeni proje sihirbazı                                    | `.claude/commands/new-project.md` |
 | `/release [seviye]`| Versiyon + changelog + git tag                          | `.claude/commands/release.md` |
+| `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli)  | `.claude/skills/clone-website/SKILL.md` |
+
+### `/clone-website <url>`
+
+Herhangi bir websiteyi pixel-perfect Next.js + shadcn/ui + Tailwind v4 klonu olarak yeniden inşa eder. Browser MCP aracılığıyla siteyi tarar, CSS değerlerini `getComputedStyle()` ile çıkarır, asset'leri indirir ve paralel builder agent'larla her section'ı ayrı worktree'de inşa eder.
+
+**5 fazlı pipeline:**
+1. **Reconnaissance** — Screenshot, font, renk, animasyon ve interaction analizi
+2. **Foundation** — Global token'lar, font, favicon, SVG icon, asset indirme
+3. **Component Spec & Build** — Her section için `docs/research/components/` altında detaylı spec yazıp paralel agent dispatch
+4. **Assembly** — Tüm component'leri `page.tsx`'te birleştirme
+5. **Visual QA** — Orijinalle pixel-pixel karşılaştırma ve düzeltme
+
+**Gereksinimler:** Browser MCP tool (Chrome MCP, Playwright MCP vb.) kurulu olmalı + Next.js projesi hazır olmalı. Browser MCP olmadan site taranamaz ve CSS/asset çıkarılamaz.
+
+```bash
+/clone-website https://example.com
+/clone-website https://site1.com https://site2.com   # birden fazla site
+```
 
 ---
 
