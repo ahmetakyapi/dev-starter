@@ -68,6 +68,46 @@ Eşleştirme yapılamazsa, sorunu raporla ve developer'a bırak.
 
 ---
 
+## Gelismis Teknikler
+
+### Shadow-as-Border
+Cok ince kenarliklari `border` yerine `box-shadow` ile yap. Avantaji: border box model'i etkilemez, birden fazla "border" katmani eklenebilir.
+
+```css
+/* Tek pixel kenarlik */
+box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+
+/* Kenarlik + glow birlikte */
+box-shadow:
+  0 0 0 1px rgba(255,255,255,0.06),
+  0 8px 32px rgba(0,0,0,0.4);
+```
+
+### Multi-Layer Shadow Stack
+Gercekci derinlik icin birden fazla shadow katmani kullan. Tek shadow flat gorunur.
+
+```css
+/* Iyi — 3 katmanli elevation */
+box-shadow:
+  0 0 0 1px rgba(255,255,255,0.05),   /* ince kenarlik */
+  0 2px 4px rgba(0,0,0,0.15),          /* yakin golge */
+  0 12px 24px rgba(0,0,0,0.25);        /* uzak golge */
+
+/* Kotu — tek katman */
+box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+```
+
+### DESIGN.md 9-Section Referansi
+Tema dosyalari (`knowledge/themes/*.md`) DESIGN.md 9-section formatindadir. Her projenin gorsel kurallarini bu dosyalardan oku:
+- Section 2: Renk token tanimlari
+- Section 4: Bilesen stil detaylari
+- Section 6: Shadow ve depth seviyeleri
+- Section 7: Projeye ozgu do/don't kurallari
+
+Yeni tema olusturmak icin: `templates/docs/DESIGN.template.md`
+
+---
+
 ## Kontrol Komutu
 
 ```bash

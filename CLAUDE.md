@@ -21,7 +21,8 @@ dev-starter/
 │   │   ├── mimio.md           → Mimio görsel hafıza
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
-│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (37 kayıt)
+│   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (41 kayıt)
 │   └── patterns.md            → Test edilmiş kod desenleri (15+ desen)
 │
 ├── agents/
@@ -69,7 +70,7 @@ dev-starter/
 │       └── release.md        → /release — Versiyon & changelog yönetimi
 │
 ├── templates/
-│   ├── docs/                 → ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS şablonları
+│   ├── docs/                 → ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS, DESIGN.md şablonları
 │   ├── nextjs-fullstack/     → Next.js + Drizzle + auth tam uygulama
 │   └── landing/              → Three.js + glassmorphism tanıtım sayfası
 │
@@ -310,7 +311,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 ## Bu Dosyaları Güncelleme
 
 - **Yeni hata keşfedilince**: `knowledge/mistakes.md` güncelle
-- **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur
+- **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur (DESIGN.md 9-section formatında — şablon: `templates/docs/DESIGN.template.md`)
 - **Yeni desen bulununca**: `knowledge/patterns.md` güncelle
 - **Paket versiyonu güncellenince**: `packages/@ahmet/*/package.json` + `CHANGELOG.md` güncelle
 - **Yeni kural eklenince**: `rules/` altında dosya oluştur, `AGENT_PROTOCOL.md`'ye referans ekle

@@ -45,8 +45,8 @@ dev-starter/
 │   └── routemap-sync.sh     ROUTEMAP güncelleme hatırlatıcısı
 │
 ├── knowledge/
-│   ├── themes/              Her projenin görsel hafızası (5 proje)
-│   ├── mistakes.md          37 belgelenmiş hata ve çözümü
+│   ├── themes/              Her projenin görsel hafızası (5 proje, DESIGN.md 9-section formatı)
+│   ├── mistakes.md          41 belgelenmiş hata ve çözümü
 │   ├── patterns.md          15+ kopyala-yapıştır kod deseni
 │   └── decisions.md         Teknoloji seçimlerinin gerekçesi
 │
@@ -63,7 +63,7 @@ dev-starter/
 │   └── confirm.tsx          Onay dialog'u
 │
 ├── templates/
-│   ├── docs/                ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS şablonları
+│   ├── docs/                ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS, DESIGN.md şablonları
 │   ├── nextjs-fullstack/    Next.js + Drizzle + auth tam uygulama
 │   └── landing/             Three.js + glassmorphism tanıtım sayfası
 │
@@ -383,7 +383,7 @@ components/
 
 ## Bilgi Tabanı
 
-### `knowledge/mistakes.md` — 37 hata
+### `knowledge/mistakes.md` — 41 hata
 
 | #  | Hata                                          | Çözüm                                             |
 |----|-----------------------------------------------|----------------------------------------------------|
@@ -405,7 +405,11 @@ components/
 
 Auth · Database (Drizzle+Neon) · API helpers · Error handling · Form submission (React 19) · Middleware auth · Pagination · File upload · Image optimization · next-themes · Three.js dynamic · Framer Motion · SEO · UI tasarım desenleri (bento grid, tilt card, marquee, spotlight, glow orbs)
 
-### `knowledge/themes/` — 5 proje görsel hafızası
+### `knowledge/themes/` — 5 proje görsel hafızası (DESIGN.md 9-section formatı)
+
+Tüm tema dosyaları [Google Stitch DESIGN.md](https://github.com/nicholasgriffintn/awesome-design-md) 9-section formatında yazılmıştır. AI agent'ları bu dosyaları okuyarak pixel-perfect UI üretebilir.
+
+**9 Section:** Visual Theme & Atmosphere · Color Palette & Roles · Typography Rules · Component Stylings · Layout Principles · Depth & Elevation · Do's and Don'ts · Responsive Behavior · Agent Prompt Guide
 
 | Proje             | Dark BG    | Font                 | Vurgu                       | Tema Sistemi          |
 |-------------------|------------|----------------------|-----------------------------|-----------------------|
@@ -414,6 +418,8 @@ Auth · Database (Drizzle+Neon) · API helpers · Error handling · Form submiss
 | DigyNotes         | `#0a0f1e`  | Avenir Next          | Emerald                     | html.light class      |
 | Keskealsaydım     | HSL        | Space Grotesk        | Emerald · Cyan              | shadcn HSL vars       |
 | Ramazan Vakitleri | `#1a1a2e`  | System               | Lavender · Pembe · Mavi     | Dark only, vanilla CSS |
+
+Yeni tema oluşturmak için: `templates/docs/DESIGN.template.md`
 
 ---
 
