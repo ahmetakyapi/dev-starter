@@ -33,14 +33,20 @@ klinik ciddiyetin rengi. İndigo/mor SaaS paletinden bilinçli uzaklık.
 Varsayılan tema **açık** — terapist gündüz, aydınlık bir odada çalışır.
 
 **Temel Karakteristikler:**
-- **Font (üç rol)**: Bricolage Grotesque (başlık — karakteri taşıyan tek öge),
-  Instrument Sans (arayüz/gövde, Türkçe aksanlarda net), IBM Plex Mono
-  (yalnızca sayısal okumalar: skor, süre, persentil, span).
+- **Font (tek grotesk + mono)**: Schibsted Grotesk her yerde — başlıktan
+  düğme etiketine. Kontrast ikinci bir aileden değil, ağırlık (400-900) ve
+  harf aralığından gelir. IBM Plex Mono yalnızca sayısal okumalarda (skor,
+  süre, persentil, span).
 - **Renk stratejisi**: Mavi birincil + oker imza + anlam renkleri
   (yosun/kiremit/arduvaz mavi). Birincil yeşil olduğu için "başarı" ayrı bir
   renge ayrıldı: orman yeşili `#3f7d4f`. Mavi yapı ve eylemi, bej zemini taşır.
-- **Degrade YOK**: İki renkli degrade düğmeler ve animasyonlu degrade
-  başlıklar kaldırıldı. Yerine düz dolgu + cetvel çentiği.
+- **Degrade YOK**: İki renkli degrade düğmeler, degrade başlıklar ve
+  degrade yıkanmış kartlar kaldırıldı. Yerine düz dolgu + kılcal çerçeve.
+- **Uydurma veri YOK**: Kartlardaki her grafik gerçek kayıttan türer. Veri
+  yoksa grafik hiç çizilmez — dekoratif kıvılcım çizgisi yasak.
+- **Zemin dokusu**: Bulanık "aurora" veya imleci takip eden spot yok; bej
+  kâğıt üzerinde 112px'lik milimetrik ızgara (`.paper-grid`), yalnızca
+  kahraman bölümünde.
 - **Glassmorphism minimumda**: yalnızca sticky chrome katmanlarında
   (`backdrop-filter: blur(16-24px)`). Kartlar açık temada opak beyaz.
 - **Animasyon felsefesi**: Framer Motion 11, fonksiyonel geçişler.
@@ -196,24 +202,37 @@ yalnızca başlık altı çizgisinde yaşar.
 
 ## 3. Typography Rules
 
-### Font Ailesi — üç rol, üç ses
+### Font Ailesi — iki aile, üç ses
 | Rol | Aile | Ağırlıklar | CSS token | next/font değişkeni |
 |-----|------|-----------|-----------|---------------------|
-| Display | **Bricolage Grotesque** | 600, 700, 800 | `--font-display` | `--font-display-face` |
-| Arayüz / gövde | **Instrument Sans** | 400, 500, 600, 700 | `--font-sans` | `--font-body-face` |
+| Display | **Schibsted Grotesk** | 600-900 | `--font-display` | `--font-body-face` |
+| Arayüz / gövde | **Schibsted Grotesk** | 400, 500, 600 | `--font-sans` | `--font-body-face` |
 | Sayısal veri | **IBM Plex Mono** | 400, 500, 600, 700 | `--font-numeric` | `--font-mono-face` |
 
-Üçünde de `subsets: ["latin", "latin-ext"]` — Türkçe aksanlar (ğ ı ş İ ö ü ç)
+`--font-display` ile `--font-sans` aynı aileyi işaret eder; ayrım ağırlık ve
+optik sıkılıktan gelir:
+
+```css
+h1 { letter-spacing: -0.04em; }   /* punto büyüdükçe daralır */
+h2 { letter-spacing: -0.034em; }
+h4 { letter-spacing: -0.018em; }
+```
+
+İkisinde de `subsets: ["latin", "latin-ext"]` — Türkçe aksanlar (ğ ı ş İ ö ü ç)
 için `latin-ext` **şart**.
 
 > **Tuzak:** next/font'un `variable` adı `@theme` token adıyla aynı olursa
 > CSS'te dairesel referans oluşur (`--font-display: var(--font-display)`) ve
 > sessizce çöker. Bu yüzden next/font tarafında `-face` soneki kullanılır.
 
-**Neden bu üçlü:** Bricolage hümanist-endüstriyel ve hafif tuhaf — sayfaya
-karakter veren tek öge, ölçülü kullanılır. Instrument Sans sessiz ve dar,
-arayüzün önüne geçmez. Plex Mono yalnızca klinik veride: skor, süre,
-persentil ve span değerleri gövde metninden ayrı ve hizalı okunmalı.
+**Neden bu ikili:** Önce üç aile denendi (Bricolage + Instrument Sans +
+Plex Mono). Bricolage'ın hafif tuhaf harf biçimleri klinik bir ölçüm aracının
+tonuyla çekişiyordu — sayfa oyuncu görünüyor ama ürün bir kayıt defteri.
+Schibsted Grotesk haber-editoryal kökenli: dar apertürleri sıkı başlıkta
+karakter veriyor, 400'de gövde metni olarak sessizleşiyor; tek aile hem daha
+disiplinli hem bir font isteği daha az. Plex Mono yalnızca klinik veride:
+skor, süre, persentil ve span değerleri gövde metninden ayrı ve hizalı
+okunmalı.
 
 ```css
 .numeral {                       /* her sayısal okuma bunu kullanır */
@@ -510,7 +529,7 @@ box-shadow: var(--shadow-elevated);
 | Dark bg | `#04070d` | `#04070d` (ayni) |
 | Light bg | `#f5f7fb` (notr) | `#f4efe4` (soğuk kâğıt grisi) |
 | Tema sistemi | next-themes (`class`) | Custom (`data-theme`) |
-| Font | Manrope + IBM Plex Mono | Bricolage Grotesque + Instrument Sans + IBM Plex Mono |
+| Font | Manrope + IBM Plex Mono | Schibsted Grotesk + IBM Plex Mono |
 | Tailwind | v3 | **v4** (`@theme`) |
 | DB | Yok | Neon serverless |
 | Three.js | Var | Yok |
