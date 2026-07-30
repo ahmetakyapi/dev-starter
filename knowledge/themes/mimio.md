@@ -5,13 +5,13 @@
 
 Kaynak proje: `~/mimio` (GitHub: ahmetakyapi/Mimio)
 Versiyon: Next.js 15, **Tailwind CSS v4** (`@theme` direktifi), Framer Motion 11, @neondatabase/serverless
-Son revizyon: **Temmuz 2026 — "Klinik Enstrüman"** (indigo/mor → ladin + meşe, degradeler kaldırıldı)
+Son revizyon: **Temmuz 2026 — "Mavi Baskı"** (indigo/mor → mavi + bej, degradeler kaldırıldı, varsayılan tema açık, M monogramı)
 
 ---
 
 ## 1. Visual Theme & Atmosphere
 
-> **Temmuz 2026 — "Klinik Enstrüman" revizyonu.** Önceki indigo/mor
+> **Temmuz 2026 — "Mavi Baskı" revizyonu.** Önceki indigo/mor
 > glassmorphism yönü terk edildi. Gerekçe: o palet (indigo `#6366f1` +
 > mor degrade + cam yüzey) her SaaS/AI arayüzünün varsayılanıydı; Mimio'yu
 > bir CRM'den ayırt eden hiçbir şey taşımıyordu.
@@ -22,23 +22,23 @@ dünyasındaki iki gerçek nesneden türetilmiştir:
 
 **1. Corsi blok aparatı** — masaya dizilmiş dokuz ahşap blok. Platformun en
 çok oynanan görevi (Sıra Hafızası) tam olarak budur. Aynı nesne markanın
-işareti, kahraman görseli ve oyun tahtası olur. İmza vurgu rengi **meşe
-`#c07c2c`** bu bloğun rengidir ve seyrek kullanılır.
+işareti, kahraman görseli ve oyun tahtası olur. İmza vurgu rengi **oker `#b8763a`** bu bloğun rengidir ve seyrek kullanılır.
 
 **2. Değerlendirme kaydı** — kareli klinik kâğıt, persentil bantları, cetvel
-çentikleri. Açık tema zemini (`#eff1ee`, soğuk yeşile çalan nötr gri) ve
+çentikleri. Açık tema zemini (`#f4efe4`, soğuk yeşile çalan nötr gri) ve
 başlık altı **cetvel çentiği motifi** buradan gelir.
 
-Birincil renk **ladin yeşili `#0f6e63`**: terapi odası sakinliği ve ölçülen
-şeyin "büyüme" olması. İndigo/mor paletten bilinçli uzaklık.
+Birincil renk **mürekkep mavisi `#1d5a8c`**: teknik çizimin, ölçmenin ve
+klinik ciddiyetin rengi. İndigo/mor SaaS paletinden bilinçli uzaklık.
+Varsayılan tema **açık** — terapist gündüz, aydınlık bir odada çalışır.
 
 **Temel Karakteristikler:**
 - **Font (üç rol)**: Bricolage Grotesque (başlık — karakteri taşıyan tek öge),
   Instrument Sans (arayüz/gövde, Türkçe aksanlarda net), IBM Plex Mono
   (yalnızca sayısal okumalar: skor, süre, persentil, span).
-- **Renk stratejisi**: Ladin birincil + meşe imza + anlam renkleri
+- **Renk stratejisi**: Mavi birincil + oker imza + anlam renkleri
   (yosun/kiremit/arduvaz mavi). Birincil yeşil olduğu için "başarı" ayrı bir
-  yeşile (yosun `#7aac3a`) kaydırıldı — ladin mavi-yeşil, yosun sarı-yeşil.
+  renge ayrıldı: orman yeşili `#3f7d4f`. Mavi yapı ve eylemi, bej zemini taşır.
 - **Degrade YOK**: İki renkli degrade düğmeler ve animasyonlu degrade
   başlıklar kaldırıldı. Yerine düz dolgu + cetvel çentiği.
 - **Glassmorphism minimumda**: yalnızca sticky chrome katmanlarında
@@ -60,8 +60,8 @@ bloğuyla tanımlanır:
 ```css
 @import "tailwindcss";
 @theme {
-  --color-primary: #0f6e63;
-  --color-oak: #c07c2c;
+  --color-primary: #1d5a8c;
+  --color-oak: #b8763a;
   /* tüm tokenlar burada */
 }
 ```
@@ -82,39 +82,39 @@ tema geçişi CSS variable override ile çalışır.
 ### Brand
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-primary` | `#0f6e63` | `#0d5f56` | Birincil vurgu, CTA, aktif durum |
-| `--color-primary-hover` | `#0b554c` | `#094a43` | Hover durumu |
-| `--color-primary-light` | `rgba(15,110,99,0.12)` | `rgba(13,95,86,0.09)` | Hafif arka plan vurgu |
-| `--color-oak` | `#c07c2c` | `#9c5f18` | **İmza vurgusu** — blok rengi, cetvel çentiği. Seyrek! |
-| `--color-oak-soft` | `#e3a75c` | `#c07c2c` | Meşe açık ton |
+| `--color-primary` | `#1d5a8c` | `#1d5a8c` | Birincil vurgu, CTA, aktif durum |
+| `--color-primary-hover` | `#17456e` | `#123252` | Hover durumu |
+| `--color-primary-light` | `rgba(29,90,140,0.12)` | `rgba(29,90,140,0.09)` | Hafif arka plan vurgu |
+| `--color-signal` | `#b8763a` | `#8f5626` | **İmza vurgusu** — blok rengi, cetvel çentiği. Seyrek! |
+| `--color-signal-soft` | `#dda05e` | `#b8763a` | Meşe açık ton |
 
 ### Arka Plan / Yüzey
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-page-bg` | `#0b100f` | `#eff1ee` | Ana sayfa arka planı |
-| `--color-surface` | `rgba(255,255,255,0.035)` | `#ffffff` | Standart kart/panel |
-| `--color-surface-strong` | `rgba(18,26,24,0.9)` | `#ffffff` | Modal, dropdown |
-| `--color-surface-elevated` | `rgba(255,255,255,0.055)` | `#ffffff` | Yükseltilmiş yüzey |
+| `--color-page-bg` | `#0c1620` | `#f4efe4` | Ana sayfa arka planı |
+| `--color-surface` | `rgba(255,255,255,0.035)` | `#fdfbf6` | Standart kart/panel |
+| `--color-surface-strong` | `rgba(18,32,47,0.9)` | `#fdfbf6` | Modal, dropdown |
+| `--color-surface-elevated` | `rgba(255,255,255,0.055)` | `#fdfbf6` | Yükseltilmiş yüzey |
 
-> Açık temada yüzeyler **opak beyaz**. Önceki sürümde yarı saydam lavanta
+> Açık temada yüzeyler **opak bej kâğıt** (`#fdfbf6`) — steril beyaz değil. Önceki sürümde yarı saydam lavanta
 > kullanılıyordu; kartlar zeminden ayrışmıyor, kontrast AA'nın altına
 > düşüyordu. Ayrım artık gölge + kılcal nötr çizgiyle kuruluyor.
 
 ### Metin Renkleri
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-text-strong` | `#f2f5f3` | `#0f1614` | Başlık, önemli metin |
-| `--color-text-body` | `#cbd3cf` | `#303a37` | Gövde metni |
-| `--color-text-soft` | `#97a29d` | `#515c58` | İkincil metin |
-| `--color-text-muted` | `#6d7873` | `#67736e` | Placeholder, devre dışı |
+| `--color-text-strong` | `#eef4fa` | `#0d2137` | Başlık, önemli metin |
+| `--color-text-body` | `#c2ceda` | `#2b3f52` | Gövde metni |
+| `--color-text-soft` | `#8fa1b2` | `#4a6072` | İkincil metin |
+| `--color-text-muted` | `#69798a` | `#65788a` | Placeholder, devre dışı |
 
 ### Kenarlık & Çizgi
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-line` | `rgba(255,255,255,0.075)` | `rgba(15,22,20,0.10)` | Standart kenarlık |
-| `--color-line-soft` | `rgba(255,255,255,0.04)` | `rgba(15,22,20,0.055)` | İnce ayırıcı |
-| `--color-line-strong` | `rgba(255,255,255,0.13)` | `rgba(15,22,20,0.17)` | Belirgin kenarlık |
-| `--color-line-focus` | `rgba(53,176,160,0.65)` | `rgba(15,110,99,0.70)` | Focus ring |
+| `--color-line` | `rgba(255,255,255,0.075)` | `rgba(13,33,55,0.10)` | Standart kenarlık |
+| `--color-line-soft` | `rgba(255,255,255,0.04)` | `rgba(13,33,55,0.055)` | İnce ayırıcı |
+| `--color-line-strong` | `rgba(255,255,255,0.13)` | `rgba(13,33,55,0.17)` | Belirgin kenarlık |
+| `--color-line-focus` | `rgba(74,149,204,0.65)` | `rgba(29,90,140,0.70)` | Focus ring |
 
 > Açık temada kenarlıklar **nötr**, marka renkli değil. Renkli kılcal çizgi
 > her yüzeyi markaya boyayıp gürültü yaratıyordu.
@@ -122,17 +122,17 @@ tema geçişi CSS variable override ile çalışır.
 ### Chrome Katmanları
 | Token | Dark | Light |
 |-------|------|-------|
-| `--color-sidebar` | `rgba(9,13,12,0.93)` | `#ffffff` |
-| `--color-chrome-nav` | `rgba(11,16,15,0.92)` | `rgba(255,255,255,0.86)` |
-| `--color-chrome-header` | `rgba(11,16,15,0.88)` | `rgba(255,255,255,0.82)` |
+| `--color-sidebar` | `rgba(10,20,31,0.93)` | `#ffffff` |
+| `--color-chrome-nav` | `rgba(12,22,32,0.92)` | `rgba(255,255,255,0.86)` |
+| `--color-chrome-header` | `rgba(12,22,32,0.88)` | `rgba(255,255,255,0.82)` |
 
 ### Durum / Anlam Renkleri
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-accent-green` | `#7aac3a` | `#4f7a22` | Yosun — gelişme, başarı, pozitif |
-| `--color-accent-amber` | `#c07c2c` | `#9c5f18` | Meşe — uyarı, dikkat gerektiren |
-| `--color-accent-red` | `#d1503c` | `#a03526` | Kiremit — hata, kritik, silme |
-| `--color-accent-teal` | `#4f93b5` | `#35708f` | Arduvaz mavi — nötr veri, bilgi |
+| `--color-accent-green` | `#3f7d4f` | `#33663f` | Yosun — gelişme, başarı, pozitif |
+| `--color-accent-amber` | `#b8763a` | `#8f5626` | Meşe — uyarı, dikkat gerektiren |
+| `--color-accent-red` | `#a8392c` | `#8a2c21` | Kiremit — hata, kritik, silme |
+| `--color-accent-teal` | `#5b7183` | `#465a6b` | Arduvaz mavi — nötr veri, bilgi |
 
 ### Beceri Alanı Renkleri
 Bir oyun kartı, rapor çubuğu ve plan rozeti aynı beceri alanını gösteriyorsa
@@ -140,34 +140,34 @@ aynı rengi taşır.
 
 | Token | Dark | Light | Alan |
 |-------|------|-------|------|
-| `--color-domain-memory` | `#e3a75c` | `#9c5f18` | Hafıza (meşe) |
-| `--color-domain-motor` | `#35b0a0` | `#0d5f56` | Motor (ladin) |
-| `--color-domain-visual` | `#7fb2cc` | `#35708f` | Görsel algı (arduvaz) |
-| `--color-domain-cognitive` | `#de8265` | `#a03526` | Biliş (kiremit) |
+| `--color-domain-memory` | `#dda05e` | `#8f5626` | Hafıza (oker) |
+| `--color-domain-motor` | `#4a95cc` | `#1d5a8c` | Motor (mavi) |
+| `--color-domain-visual` | `#8ba0b0` | `#465a6b` | Görsel algı (arduvaz) |
+| `--color-domain-cognitive` | `#e2705f` | `#8a2c21` | Biliş (kızıl) |
 
 ### Shadow Scale
 Gölgeler **nötr**; renkli halo yok (marka rengi gölgeye sızmaz).
 
 | Token | Dark | Light |
 |-------|------|-------|
-| `--shadow-card` | `0 1px 3px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)` | `0 1px 2px rgba(15,22,20,0.05), 0 1px 3px rgba(15,22,20,0.04)` |
-| `--shadow-lg` | `0 8px 32px rgba(0,0,0,0.50)` | `0 4px 8px rgba(15,22,20,0.04), 0 16px 40px rgba(15,22,20,0.10)` |
-| `--shadow-glow` | `0 8px 24px rgba(15,110,99,0.42), 0 0 0 1px rgba(53,176,160,0.18)` | `0 6px 20px rgba(13,95,86,0.28)` |
+| `--shadow-card` | `0 1px 3px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)` | `0 1px 2px rgba(13,33,55,0.05), 0 1px 3px rgba(13,33,55,0.04)` |
+| `--shadow-lg` | `0 8px 32px rgba(0,0,0,0.50)` | `0 4px 8px rgba(13,33,55,0.04), 0 16px 40px rgba(13,33,55,0.10)` |
+| `--shadow-glow` | `0 8px 24px rgba(29,90,140,0.42), 0 0 0 1px rgba(74,149,204,0.18)` | `0 6px 20px rgba(29,90,140,0.28)` |
 
 ### Sayfa Arka Plan Kodu
 ```css
 /* Dark */
 background:
-  radial-gradient(circle at 16% 8%, rgba(15,110,99,0.10), transparent 34%),
-  radial-gradient(circle at 86% 6%, rgba(192,124,44,0.055), transparent 28%),
-  #0b100f;
+  radial-gradient(circle at 16% 8%, rgba(29,90,140,0.10), transparent 34%),
+  radial-gradient(circle at 86% 6%, rgba(184,118,58,0.055), transparent 28%),
+  #0c1620;
 background-attachment: fixed;
 
 /* Light */
 background:
-  radial-gradient(circle at 16% 6%, rgba(13,95,86,0.05), transparent 34%),
-  radial-gradient(circle at 88% 4%, rgba(156,95,24,0.035), transparent 28%),
-  #eff1ee;
+  radial-gradient(circle at 16% 6%, rgba(29,90,140,0.05), transparent 34%),
+  radial-gradient(circle at 88% 4%, rgba(143,86,38,0.035), transparent 28%),
+  #f4efe4;
 background-attachment: fixed;
 ```
 > Mobilde `background-attachment: scroll`'a döner (iOS'ta `fixed` bozulur).
@@ -185,10 +185,12 @@ Degrade başlığın yerini alan motif. Ürünün ölçüm yapan bir araç oldu�
 }
 ```
 
-### İmza: Dokuz Blok
-`src/components/brand/BlockMark.tsx` — logo, kahraman görseli ve boş durum
-göstergesi. `animated` verildiğinde sabit bir Corsi dizisi (`[4,0,8,5,2]`)
-oynatır; `prefers-reduced-motion` altında son blok sabit yanar.
+### İmza: M Monogramı
+`src/components/brand/BlockMark.tsx` — tek dolu yol olarak çizilmiş M.
+Sağ ayak sol ayaktan yukarıda biter: harf bir ilerleme eğrisi gibi yukarı
+bırakır. `tile` prop'u koyu kutu içinde açık harf verir (küçük boyut / favicon).
+Cetvel çentikleri işaretten çıkarıldı — 32 px'te gürültü yapıyordu; motif
+yalnızca başlık altı çizgisinde yaşar.
 
 ---
 
@@ -245,7 +247,7 @@ Breakpoint başına ayrı sınıf yok; ölçek `:root` içinde tek yerden gelir.
 ### Butonlar
 
 **Primary**
-- Background: `--color-primary` (`#0f6e63`) — **düz dolgu, degrade değil**
+- Background: `--color-primary` (`#1d5a8c`) — **düz dolgu, degrade değil**
 - Text: `#ffffff`
 - Padding: `0.625rem 1.25rem` (10px 20px)
 - Radius: `--radius-md` (0.75rem)
@@ -375,7 +377,7 @@ box-shadow: var(--shadow-elevated);
 
 ### Dekoratif Derinlik
 - Radial gradient'ler sayfanın sol-üst (%16 %8) ve sağ-üst (%86 %6) köşelerinde (üçüncü, alt-orta katman kaldırıldı)
-- Dark modda ladin + meşe ikilisi: opaklıklar 0.10 ve 0.055 (eskiden indigo/cyan/emerald üçlüsüydü — sakinleştirildi)
+- Dark modda mavi + oker ikilisi: opaklıklar 0.14 ve 0.06 (eskiden indigo/cyan/emerald üçlüsüydü — sakinleştirildi)
 - Light modda aynı konumlar, daha düşük opaklık: 0.08, 0.05, 0.04
 - `background-attachment: fixed` ile scroll sırasında gradient'ler sabit
 - Chrome katmanları (sidebar, nav) yarı-saydam; alttaki gradient'ler hafifçe görünür
@@ -394,7 +396,7 @@ box-shadow: var(--shadow-elevated);
 - Game canvas gibi özel alanları tema bağımsız tut
 - Tüm interaktif öğelere `transition` ekle (minimum 0.2s ease)
 - Focus durumunda `--color-line-focus` + `box-shadow` ring kullan
-- Shadow'lar her iki temada da **nötr**: `rgba(0,0,0,...)` / `rgba(15,22,20,...)`. Marka rengi gölgeye sızmaz.
+- Shadow'lar her iki temada da **nötr**: `rgba(0,0,0,...)` / `rgba(13,33,55,...)`. Marka rengi gölgeye sızmaz.
 - `background-attachment: fixed` kullan; **mobilde** `scroll`'a düşür
 
 ### Don't
@@ -407,8 +409,8 @@ box-shadow: var(--shadow-elevated);
 - Magic number kullanma — spacing ve radius için daima token
 - **İki renkli degrade kullanma** — ne düğmede, ne başlıkta, ne kart zemininde.
   Degrade bu markanın terk ettiği şeyin ta kendisi. Düz dolgu + cetvel çentiği.
-- **Meşeyi (`--color-oak`) birincil eylem rengi yapma** — imza vurgusudur,
-  seyrek kullanılır. Birincil her zaman ladin.
+- **Okeri (`--color-signal`) birincil eylem rengi yapma** — imza vurgusudur,
+  seyrek kullanılır. Birincil her zaman mavi.
 - Açık temada yarı saydam kart zemini kullanma — opak beyaz + nötr gölge
 - Renkli gölge (marka renkli halo) kullanma — gölgeler nötr
 - Sayıyı `.numeral` sınıfı olmadan yazma — skor, süre, yüzde hepsi mono
@@ -444,7 +446,7 @@ box-shadow: var(--shadow-elevated);
 ## 9. Agent Prompt Guide
 
 ### Hızlı Renk Referansı
-- **Primary CTA**: `bg-(--color-primary)` → `#0f6e63` (düz, degrade yok)
+- **Primary CTA**: `bg-(--color-primary)` → `#1d5a8c` (düz, degrade yok)
 - **Background**: `bg-(--color-page-bg)` → dark `#04070d`, light `#eef2ff`
 - **Heading text**: `text-(--color-text-strong)` → dark `#f1f5f9`, light `#1e293b`
 - **Body text**: `text-(--color-text-body)` → dark `#cbd5e1`, light `#334155`
@@ -506,7 +508,7 @@ box-shadow: var(--shadow-elevated);
 | Ozellik | ahmetakyapi.com | Mimio |
 |---------|-----------------|-------|
 | Dark bg | `#04070d` | `#04070d` (ayni) |
-| Light bg | `#f5f7fb` (notr) | `#eff1ee` (soğuk kâğıt grisi) |
+| Light bg | `#f5f7fb` (notr) | `#f4efe4` (soğuk kâğıt grisi) |
 | Tema sistemi | next-themes (`class`) | Custom (`data-theme`) |
 | Font | Manrope + IBM Plex Mono | Bricolage Grotesque + Instrument Sans + IBM Plex Mono |
 | Tailwind | v3 | **v4** (`@theme`) |
