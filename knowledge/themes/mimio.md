@@ -5,151 +5,247 @@
 
 Kaynak proje: `~/mimio` (GitHub: ahmetakyapi/Mimio)
 Versiyon: Next.js 15, **Tailwind CSS v4** (`@theme` direktifi), Framer Motion 11, @neondatabase/serverless
+Son revizyon: **Temmuz 2026 — "Klinik Enstrüman"** (indigo/mor → ladin + meşe, degradeler kaldırıldı)
 
 ---
 
 ## 1. Visual Theme & Atmosphere
 
-Mimio, interaktif bir uygulama olup koyu-tonlu, derinlikli bir glassmorphism estetiği taşır. `#04070d` koyu uzay-siyahı arka plan üzerine indigo (`#6366f1`) vurgu rengi hakimdir. Light modda ise arka plan indigo-tinted `#eef2ff` ile sıcak ama yine marka rengiyle bağlantılı kalır. Her iki modda da köşelere yerleştirilmiş radial gradient'ler (indigo, cyan, emerald) dekoratif derinlik katar; `background-attachment: fixed` ile scroll sırasında gradient'ler sabit kalır.
+> **Temmuz 2026 — "Klinik Enstrüman" revizyonu.** Önceki indigo/mor
+> glassmorphism yönü terk edildi. Gerekçe: o palet (indigo `#6366f1` +
+> mor degrade + cam yüzey) her SaaS/AI arayüzünün varsayılanıydı; Mimio'yu
+> bir CRM'den ayırt eden hiçbir şey taşımıyordu.
 
-Sidebar tabanlı uygulama layout'u kullanılır. Navigasyon ve sidebar yüzeyleri yarı-saydam cam efektiyle (backdrop-blur) arka plandan ayrılır. Game canvas gibi özel alanlar her zaman dark kalır, tema değişikliğinden etkilenmez. Bu "bölge bazlı tema bağımsızlığı" Mimio'ya özgü bir pattern'dir.
+Mimio bir gösterge paneli değil, **seans sırasında elde tutulan bir klinik
+araçtır**. Görsel dil bu yüzden soyut markalama yerine ürünün kendi
+dünyasındaki iki gerçek nesneden türetilmiştir:
+
+**1. Corsi blok aparatı** — masaya dizilmiş dokuz ahşap blok. Platformun en
+çok oynanan görevi (Sıra Hafızası) tam olarak budur. Aynı nesne markanın
+işareti, kahraman görseli ve oyun tahtası olur. İmza vurgu rengi **meşe
+`#c07c2c`** bu bloğun rengidir ve seyrek kullanılır.
+
+**2. Değerlendirme kaydı** — kareli klinik kâğıt, persentil bantları, cetvel
+çentikleri. Açık tema zemini (`#eff1ee`, soğuk yeşile çalan nötr gri) ve
+başlık altı **cetvel çentiği motifi** buradan gelir.
+
+Birincil renk **ladin yeşili `#0f6e63`**: terapi odası sakinliği ve ölçülen
+şeyin "büyüme" olması. İndigo/mor paletten bilinçli uzaklık.
 
 **Temel Karakteristikler:**
-- **Font**: Plus Jakarta Sans — yumuşak, modern, geometrik sans-serif. Mono font yok.
-- **Renk stratejisi**: Tek vurgu rengi (indigo #6366f1) + temadan bağımsız accent palette (green, amber, red, teal). Light modda border/shadow'lar indigo-tinted.
-- **Efekt sistemi**: Glassmorphism — `backdrop-filter: blur(16px)` standart, `blur(22px)` güçlendirilmiş. İnce inset highlight + düşük opaklıklı border.
-- **Animasyon felsefesi**: Framer Motion 11 ile fonksiyonel geçişler. Ease: `[0.22, 1, 0.36, 1]`. Tema geçişi: `transition: color 0.3s ease, background-color 0.3s ease`.
-- **Dark/Light mod**: `data-theme="dark"` / `data-theme="light"` (HTML attribute). Custom ThemeProvider, `next-themes` kullanılmaz. Anti-FOUC inline script `<head>` içinde. localStorage key: `mimio-theme`. Varsayılan: dark.
+- **Font (üç rol)**: Bricolage Grotesque (başlık — karakteri taşıyan tek öge),
+  Instrument Sans (arayüz/gövde, Türkçe aksanlarda net), IBM Plex Mono
+  (yalnızca sayısal okumalar: skor, süre, persentil, span).
+- **Renk stratejisi**: Ladin birincil + meşe imza + anlam renkleri
+  (yosun/kiremit/arduvaz mavi). Birincil yeşil olduğu için "başarı" ayrı bir
+  yeşile (yosun `#7aac3a`) kaydırıldı — ladin mavi-yeşil, yosun sarı-yeşil.
+- **Degrade YOK**: İki renkli degrade düğmeler ve animasyonlu degrade
+  başlıklar kaldırıldı. Yerine düz dolgu + cetvel çentiği.
+- **Glassmorphism minimumda**: yalnızca sticky chrome katmanlarında
+  (`backdrop-filter: blur(16-24px)`). Kartlar açık temada opak beyaz.
+- **Animasyon felsefesi**: Framer Motion 11, fonksiyonel geçişler.
+  Ease: `[0.22, 1, 0.36, 1]`. Tek orkestre anı: logodaki dokuz bloğun
+  gerçek bir Corsi dizisi oynatması.
+- **Dark/Light mod**: `data-theme="dark|light|high-contrast"` (HTML attribute).
+  Custom ThemeProvider, `next-themes` kullanılmaz. Anti-FOUC inline script
+  `<head>` içinde + `<html suppressHydrationWarning>`. localStorage key:
+  `mimio-theme`. Varsayılan: sistem tercihi.
+- **Bölge bazlı tema bağımsızlığı**: Oyun arenası (`.arena`) her temada koyu
+  kalır — danışanın dikkati ekranın tek parlak yüzeyinde toplanmalı.
 
 ### Kritik: Tailwind v4 Farkı
 
-`tailwind.config.ts` **yok**. Tüm tokenlar `globals.css` içinde `@theme {}` bloğuyla tanımlanır:
+`tailwind.config.ts` **yok**. Tüm tokenlar `globals.css` içinde `@theme {}`
+bloğuyla tanımlanır:
 ```css
 @import "tailwindcss";
 @theme {
-  --color-primary: #6366f1;
+  --color-primary: #0f6e63;
+  --color-oak: #c07c2c;
   /* tüm tokenlar burada */
 }
 ```
-Sınıf kullanımı: `bg-(--color-primary)` syntax'ı. `dark:` prefix **yok** — tema geçişi CSS variable override ile çalışır.
+Sınıf kullanımı: `bg-(--color-primary)` syntax'ı. `dark:` prefix **yok** —
+tema geçişi CSS variable override ile çalışır.
 
 ### Anti-FOUC Script (layout.tsx)
 ```html
-<script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('mimio-theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');}catch(e){}` }} />
+<script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('mimio-theme');var v;if(t==='light'||t==='dark'||t==='high-contrast'){v=t}else{v=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.setAttribute('data-theme',v);}catch(e){document.documentElement.setAttribute('data-theme','dark');}` }} />
 ```
+`<html>` üzerinde `suppressHydrationWarning` **şart** — script React'ten önce
+`data-theme` yazar, bu kasıtlı bir sunucu/istemci farkıdır.
 
 ---
 
 ## 2. Color Palette & Roles
 
-### Brand (Tema Bağımsız)
+### Brand
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-primary` | `#6366f1` | `#6366f1` | Birincil vurgu, CTA, aktif durum |
-| `--color-primary-hover` | `#4f46e5` | `#4f46e5` | Hover durumu |
-| `--color-primary-light` | `rgba(99,102,241,0.12)` | `rgba(99,102,241,0.08)` | Hafif arka plan vurgu, seçili öğe |
+| `--color-primary` | `#0f6e63` | `#0d5f56` | Birincil vurgu, CTA, aktif durum |
+| `--color-primary-hover` | `#0b554c` | `#094a43` | Hover durumu |
+| `--color-primary-light` | `rgba(15,110,99,0.12)` | `rgba(13,95,86,0.09)` | Hafif arka plan vurgu |
+| `--color-oak` | `#c07c2c` | `#9c5f18` | **İmza vurgusu** — blok rengi, cetvel çentiği. Seyrek! |
+| `--color-oak-soft` | `#e3a75c` | `#c07c2c` | Meşe açık ton |
 
 ### Arka Plan / Yüzey
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-page-bg` | `#04070d` | `#eef2ff` | Ana sayfa arka planı |
-| `--color-surface` | `rgba(255,255,255,0.035)` | `rgba(255,255,255,0.65)` | Standart kart/panel arka planı |
-| `--color-surface-strong` | `rgba(10,16,28,0.88)` | `rgba(255,255,255,0.92)` | Güçlü yüzey — modal, dropdown |
-| `--color-surface-elevated` | `rgba(255,255,255,0.055)` | `rgba(255,255,255,0.85)` | Yükseltilmiş yüzey — glass bileşenler |
+| `--color-page-bg` | `#0b100f` | `#eff1ee` | Ana sayfa arka planı |
+| `--color-surface` | `rgba(255,255,255,0.035)` | `#ffffff` | Standart kart/panel |
+| `--color-surface-strong` | `rgba(18,26,24,0.9)` | `#ffffff` | Modal, dropdown |
+| `--color-surface-elevated` | `rgba(255,255,255,0.055)` | `#ffffff` | Yükseltilmiş yüzey |
+
+> Açık temada yüzeyler **opak beyaz**. Önceki sürümde yarı saydam lavanta
+> kullanılıyordu; kartlar zeminden ayrışmıyor, kontrast AA'nın altına
+> düşüyordu. Ayrım artık gölge + kılcal nötr çizgiyle kuruluyor.
 
 ### Metin Renkleri
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-text-strong` | `#f1f5f9` | `#1e293b` | Başlık, önemli metin |
-| `--color-text-body` | `#cbd5e1` | `#334155` | Gövde metni |
-| `--color-text-soft` | `#94a3b8` | `#64748b` | İkincil metin, açıklama |
-| `--color-text-muted` | `#64748b` | `#94a3b8` | Placeholder, devre dışı metin |
+| `--color-text-strong` | `#f2f5f3` | `#0f1614` | Başlık, önemli metin |
+| `--color-text-body` | `#cbd3cf` | `#303a37` | Gövde metni |
+| `--color-text-soft` | `#97a29d` | `#515c58` | İkincil metin |
+| `--color-text-muted` | `#6d7873` | `#67736e` | Placeholder, devre dışı |
 
 ### Kenarlık & Çizgi
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-line` | `rgba(255,255,255,0.07)` | `rgba(99,102,241,0.10)` | Standart kenarlık |
-| `--color-line-soft` | `rgba(255,255,255,0.04)` | `rgba(99,102,241,0.05)` | İnce ayırıcı |
-| `--color-line-strong` | `rgba(255,255,255,0.12)` | `rgba(99,102,241,0.25)` | Belirgin kenarlık |
-| `--color-line-focus` | `rgba(99,102,241,0.60)` | `rgba(99,102,241,0.50)` | Focus ring |
+| `--color-line` | `rgba(255,255,255,0.075)` | `rgba(15,22,20,0.10)` | Standart kenarlık |
+| `--color-line-soft` | `rgba(255,255,255,0.04)` | `rgba(15,22,20,0.055)` | İnce ayırıcı |
+| `--color-line-strong` | `rgba(255,255,255,0.13)` | `rgba(15,22,20,0.17)` | Belirgin kenarlık |
+| `--color-line-focus` | `rgba(53,176,160,0.65)` | `rgba(15,110,99,0.70)` | Focus ring |
+
+> Açık temada kenarlıklar **nötr**, marka renkli değil. Renkli kılcal çizgi
+> her yüzeyi markaya boyayıp gürültü yaratıyordu.
 
 ### Chrome Katmanları
+| Token | Dark | Light |
+|-------|------|-------|
+| `--color-sidebar` | `rgba(9,13,12,0.93)` | `#ffffff` |
+| `--color-chrome-nav` | `rgba(11,16,15,0.92)` | `rgba(255,255,255,0.86)` |
+| `--color-chrome-header` | `rgba(11,16,15,0.88)` | `rgba(255,255,255,0.82)` |
+
+### Durum / Anlam Renkleri
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-sidebar` | `rgba(4,8,16,0.92)` | `rgba(237,241,255,0.94)` | Sidebar arka planı |
-| `--color-chrome-nav` | `rgba(4,7,13,0.92)` | `rgba(238,242,255,0.93)` | Üst navigasyon arka planı |
-| `--color-chrome-header` | `rgba(4,7,13,0.88)` | `rgba(238,242,255,0.88)` | Sayfa header arka planı |
+| `--color-accent-green` | `#7aac3a` | `#4f7a22` | Yosun — gelişme, başarı, pozitif |
+| `--color-accent-amber` | `#c07c2c` | `#9c5f18` | Meşe — uyarı, dikkat gerektiren |
+| `--color-accent-red` | `#d1503c` | `#a03526` | Kiremit — hata, kritik, silme |
+| `--color-accent-teal` | `#4f93b5` | `#35708f` | Arduvaz mavi — nötr veri, bilgi |
 
-### Durum / Accent Renkleri (Tema Bağımsız)
-| Token | Değer | Kullanım |
-|-------|-------|----------|
-| `--color-accent-green` | `#10b981` | Başarı, aktif, pozitif |
-| `--color-accent-amber` | `#f59e0b` | Uyarı, dikkat |
-| `--color-accent-red` | `#ef4444` | Hata, tehlike, silme |
-| `--color-accent-teal` | `#06b6d4` | Bilgi, link vurgusu |
+### Beceri Alanı Renkleri
+Bir oyun kartı, rapor çubuğu ve plan rozeti aynı beceri alanını gösteriyorsa
+aynı rengi taşır.
+
+| Token | Dark | Light | Alan |
+|-------|------|-------|------|
+| `--color-domain-memory` | `#e3a75c` | `#9c5f18` | Hafıza (meşe) |
+| `--color-domain-motor` | `#35b0a0` | `#0d5f56` | Motor (ladin) |
+| `--color-domain-visual` | `#7fb2cc` | `#35708f` | Görsel algı (arduvaz) |
+| `--color-domain-cognitive` | `#de8265` | `#a03526` | Biliş (kiremit) |
 
 ### Shadow Scale
-| Token | Dark | Light | Kullanım |
-|-------|------|-------|----------|
-| `--shadow-card` | `0 1px 3px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)` | `0 1px 3px rgba(99,102,241,0.08), inset 0 1px 0 rgba(255,255,255,0.9)` | Kart, panel |
-| `--shadow-glow` | `0 8px 24px rgba(99,102,241,0.40), 0 0 0 1px rgba(99,102,241,0.15)` | `0 8px 24px rgba(99,102,241,0.30)` | CTA hover, aktif öğe |
+Gölgeler **nötr**; renkli halo yok (marka rengi gölgeye sızmaz).
+
+| Token | Dark | Light |
+|-------|------|-------|
+| `--shadow-card` | `0 1px 3px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)` | `0 1px 2px rgba(15,22,20,0.05), 0 1px 3px rgba(15,22,20,0.04)` |
+| `--shadow-lg` | `0 8px 32px rgba(0,0,0,0.50)` | `0 4px 8px rgba(15,22,20,0.04), 0 16px 40px rgba(15,22,20,0.10)` |
+| `--shadow-glow` | `0 8px 24px rgba(15,110,99,0.42), 0 0 0 1px rgba(53,176,160,0.18)` | `0 6px 20px rgba(13,95,86,0.28)` |
 
 ### Sayfa Arka Plan Kodu
 ```css
 /* Dark */
 background:
-  radial-gradient(circle at 18% 12%, rgba(79,70,229,0.12), transparent 32%),
-  radial-gradient(circle at 82% 10%, rgba(34,211,238,0.07), transparent 26%),
-  radial-gradient(circle at 50% 100%, rgba(16,185,129,0.05), transparent 30%),
-  #04070d;
+  radial-gradient(circle at 16% 8%, rgba(15,110,99,0.10), transparent 34%),
+  radial-gradient(circle at 86% 6%, rgba(192,124,44,0.055), transparent 28%),
+  #0b100f;
 background-attachment: fixed;
 
 /* Light */
 background:
-  radial-gradient(circle at 18% 12%, rgba(99,102,241,0.08), transparent 32%),
-  radial-gradient(circle at 82% 10%, rgba(34,211,238,0.05), transparent 26%),
-  radial-gradient(circle at 50% 100%, rgba(16,185,129,0.04), transparent 30%),
-  #eef2ff;
+  radial-gradient(circle at 16% 6%, rgba(13,95,86,0.05), transparent 34%),
+  radial-gradient(circle at 88% 4%, rgba(156,95,24,0.035), transparent 28%),
+  #eff1ee;
 background-attachment: fixed;
 ```
+> Mobilde `background-attachment: scroll`'a döner (iOS'ta `fixed` bozulur).
+
+### İmza: Cetvel Çentiği
+Degrade başlığın yerini alan motif. Ürünün ölçüm yapan bir araç olduğunu söyler.
+```css
+.text-gradient-shift {           /* isim eski, davranış yeni */
+  color: var(--color-primary);
+}
+.text-gradient-shift::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -0.12em; height: 0.14em;
+  background: repeating-linear-gradient(90deg, var(--color-oak) 0 2px, transparent 2px 7px);
+}
+```
+
+### İmza: Dokuz Blok
+`src/components/brand/BlockMark.tsx` — logo, kahraman görseli ve boş durum
+göstergesi. `animated` verildiğinde sabit bir Corsi dizisi (`[4,0,8,5,2]`)
+oynatır; `prefers-reduced-motion` altında son blok sabit yanar.
 
 ---
 
 ## 3. Typography Rules
 
-### Font Ailesi
-- **Sans (Primary)**: Plus Jakarta Sans — ağırlıklar: 400, 500, 600, 700, 800
-- **Fallback**: Inter — ağırlıklar: 400, 500, 600
-- **Mono**: Yok — mono font kullanılmaz
-- **text-rendering**: optimizeLegibility
-- **-webkit-font-smoothing**: antialiased
+### Font Ailesi — üç rol, üç ses
+| Rol | Aile | Ağırlıklar | CSS token | next/font değişkeni |
+|-----|------|-----------|-----------|---------------------|
+| Display | **Bricolage Grotesque** | 600, 700, 800 | `--font-display` | `--font-display-face` |
+| Arayüz / gövde | **Instrument Sans** | 400, 500, 600, 700 | `--font-sans` | `--font-body-face` |
+| Sayısal veri | **IBM Plex Mono** | 400, 500, 600, 700 | `--font-numeric` | `--font-mono-face` |
 
-### Hiyerarşi
+Üçünde de `subsets: ["latin", "latin-ext"]` — Türkçe aksanlar (ğ ı ş İ ö ü ç)
+için `latin-ext` **şart**.
 
-| Rol | Font | Boyut | Ağırlık | Satır Yüksekliği | Letter Spacing | Not |
-|-----|------|-------|---------|-------------------|----------------|-----|
-| Display Hero | Plus Jakarta Sans | 2.5rem (40px) | 800 | 1.1 | -0.025em | Büyük başlıklar |
-| Section Heading | Plus Jakarta Sans | 1.75rem (28px) | 700 | 1.2 | -0.02em | Bölüm başlıkları |
-| Card Title | Plus Jakarta Sans | 1.125rem (18px) | 600 | 1.3 | -0.01em | Kart başlıkları |
-| Body Large | Plus Jakarta Sans | 1rem (16px) | 500 | 1.6 | 0 | Vurgulu gövde metni |
-| Body | Plus Jakarta Sans | 0.875rem (14px) | 400 | 1.5 | 0 | Standart gövde metni |
-| Caption | Plus Jakarta Sans | 0.75rem (12px) | 500 | 1.4 | 0.01em | Etiket, açıklama |
-| Overline | Plus Jakarta Sans | 0.6875rem (11px) | 600 | 1.2 | 0.05em | Üst etiket, uppercase |
+> **Tuzak:** next/font'un `variable` adı `@theme` token adıyla aynı olursa
+> CSS'te dairesel referans oluşur (`--font-display: var(--font-display)`) ve
+> sessizce çöker. Bu yüzden next/font tarafında `-face` soneki kullanılır.
+
+**Neden bu üçlü:** Bricolage hümanist-endüstriyel ve hafif tuhaf — sayfaya
+karakter veren tek öge, ölçülü kullanılır. Instrument Sans sessiz ve dar,
+arayüzün önüne geçmez. Plex Mono yalnızca klinik veride: skor, süre,
+persentil ve span değerleri gövde metninden ayrı ve hizalı okunmalı.
+
+```css
+.numeral {                       /* her sayısal okuma bunu kullanır */
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+  letter-spacing: -0.02em;
+}
+```
+
+### Ölçek — `clamp()` tabanlı
+Breakpoint başına ayrı sınıf yok; ölçek `:root` içinde tek yerden gelir.
+
+| Token | Değer | Kullanım |
+|-------|-------|----------|
+| `--text-display` | `clamp(2.75rem, 6.5vw, 5rem)` | Kahraman başlık |
+| `--text-h1` | `clamp(2.25rem, 4.6vw, 3.5rem)` | Sayfa başlığı |
+| `--text-h2` | `clamp(1.75rem, 3.2vw, 2.5rem)` | Bölüm başlığı |
+| `--text-h3` | `clamp(1.25rem, 1.9vw, 1.5rem)` | Kart başlığı |
+| `--text-lead` | `clamp(1.0625rem, 1.35vw, 1.25rem)` | Giriş paragrafı |
 
 ### Prensipler
-- Başlıklarda negatif letter-spacing ile sıkı, yoğun hissiyat
-- Gövde metni `--color-text-body`, başlıklar `--color-text-strong`
-- Placeholder ve disabled metin `--color-text-muted`
-- Tüm font referansları CSS variable üzerinden, hardcoded değer yok
-
----
+- `h1, h2, h3` otomatik olarak display yüzünü alır (`letter-spacing: -0.025em`)
+- Başlıklarda `text-wrap: balance` — tek kelimelik yetim satır olmaz
+- Gövde `--color-text-body`, başlık `--color-text-strong`, ipucu `--color-text-muted`
+- **Her sayı `.numeral` sınıfını taşır** — skor, süre, yüzde, tarih, sayaç
+- Tüm font referansları CSS variable üzerinden; hardcoded font-family yok
 
 ## 4. Component Stylings
 
 ### Butonlar
 
 **Primary**
-- Background: `--color-primary` (`#6366f1`)
+- Background: `--color-primary` (`#0f6e63`) — **düz dolgu, degrade değil**
 - Text: `#ffffff`
 - Padding: `0.625rem 1.25rem` (10px 20px)
 - Radius: `--radius-md` (0.75rem)
@@ -278,8 +374,8 @@ box-shadow: var(--shadow-elevated);
 ```
 
 ### Dekoratif Derinlik
-- Radial gradient'ler sayfanın sol-üst (%18 %12), sağ-üst (%82 %10) ve alt-orta (%50 %100) köşelerinde
-- Dark modda indigo, cyan, emerald üçlüsü: opaklıklar 0.12, 0.07, 0.05
+- Radial gradient'ler sayfanın sol-üst (%16 %8) ve sağ-üst (%86 %6) köşelerinde (üçüncü, alt-orta katman kaldırıldı)
+- Dark modda ladin + meşe ikilisi: opaklıklar 0.10 ve 0.055 (eskiden indigo/cyan/emerald üçlüsüydü — sakinleştirildi)
 - Light modda aynı konumlar, daha düşük opaklık: 0.08, 0.05, 0.04
 - `background-attachment: fixed` ile scroll sırasında gradient'ler sabit
 - Chrome katmanları (sidebar, nav) yarı-saydam; alttaki gradient'ler hafifçe görünür
@@ -290,6 +386,7 @@ box-shadow: var(--shadow-elevated);
 ## 7. Do's and Don'ts
 
 ### Do
+- Dokuz blok işaretini (`BlockMark`) marka temsili gereken her yerde kullan
 - Her zaman CSS variable/token kullan: `bg-(--color-surface)`, `text-(--color-text-strong)`
 - Tailwind v4 syntax kullan: `bg-(--color-primary)` (parantezli)
 - Glass efektlerde `backdrop-filter: blur()` + yarı-saydam arka plan + ince border birlikte kullan
@@ -297,7 +394,7 @@ box-shadow: var(--shadow-elevated);
 - Game canvas gibi özel alanları tema bağımsız tut
 - Tüm interaktif öğelere `transition` ekle (minimum 0.2s ease)
 - Focus durumunda `--color-line-focus` + `box-shadow` ring kullan
-- Shadow'larda dark modda `rgba(0,0,0,...)`, light modda `rgba(99,102,241,...)` kullan (indigo-tinted)
+- Shadow'lar her iki temada da **nötr**: `rgba(0,0,0,...)` / `rgba(15,22,20,...)`. Marka rengi gölgeye sızmaz.
 - `background-attachment: fixed` kullan; **mobilde** `scroll`'a düşür
 
 ### Don't
@@ -306,10 +403,17 @@ box-shadow: var(--shadow-elevated);
 - `dark:` prefix kullanma — Mimio'da Tailwind dark mode yok, `data-theme` var
 - `next-themes` veya `class` tabanlı tema sistemi kullanma
 - `tailwind.config.ts` oluşturma — tüm tokenlar `globals.css` `@theme {}` bloğunda
-- `suppressHydrationWarning` ekleme — bu proede `next-themes` yok, gerek yok
-- Mono font referans etme — projede mono font yok
 - `console.log` commit'e bırakma
 - Magic number kullanma — spacing ve radius için daima token
+- **İki renkli degrade kullanma** — ne düğmede, ne başlıkta, ne kart zemininde.
+  Degrade bu markanın terk ettiği şeyin ta kendisi. Düz dolgu + cetvel çentiği.
+- **Meşeyi (`--color-oak`) birincil eylem rengi yapma** — imza vurgusudur,
+  seyrek kullanılır. Birincil her zaman ladin.
+- Açık temada yarı saydam kart zemini kullanma — opak beyaz + nötr gölge
+- Renkli gölge (marka renkli halo) kullanma — gölgeler nötr
+- Sayıyı `.numeral` sınıfı olmadan yazma — skor, süre, yüzde hepsi mono
+- next/font `variable` adını `@theme` token adıyla aynı yapma — dairesel
+  referans oluşur ve sessizce çöker (`-face` soneki kullan)
 
 ---
 
@@ -340,7 +444,7 @@ box-shadow: var(--shadow-elevated);
 ## 9. Agent Prompt Guide
 
 ### Hızlı Renk Referansı
-- **Primary CTA**: `bg-(--color-primary)` → `#6366f1`
+- **Primary CTA**: `bg-(--color-primary)` → `#0f6e63` (düz, degrade yok)
 - **Background**: `bg-(--color-page-bg)` → dark `#04070d`, light `#eef2ff`
 - **Heading text**: `text-(--color-text-strong)` → dark `#f1f5f9`, light `#1e293b`
 - **Body text**: `text-(--color-text-body)` → dark `#cbd5e1`, light `#334155`
@@ -402,9 +506,9 @@ box-shadow: var(--shadow-elevated);
 | Ozellik | ahmetakyapi.com | Mimio |
 |---------|-----------------|-------|
 | Dark bg | `#04070d` | `#04070d` (ayni) |
-| Light bg | `#f5f7fb` (notr) | `#eef2ff` (indigo-tinted) |
+| Light bg | `#f5f7fb` (notr) | `#eff1ee` (soğuk kâğıt grisi) |
 | Tema sistemi | next-themes (`class`) | Custom (`data-theme`) |
-| Font | Manrope + IBM Plex Mono | Plus Jakarta Sans (mono yok) |
+| Font | Manrope + IBM Plex Mono | Bricolage Grotesque + Instrument Sans + IBM Plex Mono |
 | Tailwind | v3 | **v4** (`@theme`) |
 | DB | Yok | Neon serverless |
 | Three.js | Var | Yok |
