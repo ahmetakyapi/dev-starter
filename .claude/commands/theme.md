@@ -23,7 +23,8 @@ Mevcut temalar (DESIGN.md 9-section formatinda):
   glass/glow YOK, varsayilan acik tema
 - `mimio` — Mavi→cyan imza degradesi, uc katmanli zemin, varsayilan acik tema,
   Schibsted Grotesk + Plus Jakarta Sans
-- `keskealsaydim` — Finance dashboard, HSL variables (shadcn), Space Grotesk
+- `keskealsaydim` — Finance dashboard, HSL variables (shadcn), Archivo,
+  acik/koyu tam destek; sabit hex yok, cam yuzeyler RGB kanal token'i uzerinden
 - `ramazan-vakitleri` — Dark only, mor+pembe+mavi, system font
 - `digynotes` — **ARSIV**: proje diskte yok, dosya dogrulanamaz
 

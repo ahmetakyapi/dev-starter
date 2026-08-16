@@ -434,7 +434,7 @@ Tüm tema dosyaları [Google Stitch DESIGN.md](https://github.com/nicholasgriffi
 | ahmetakyapi.com   | `#04070d`  | Manrope + IBM Plex   | Indigo · Cyan · Emerald     | next-themes class     |
 | Açılış Zili       | ton farkı  | Schibsted Grotesk    | Lacivert→mavi + yön renkleri | custom, varsayılan açık |
 | Mimio             | `#050b16`  | Schibsted Grotesk + Plus Jakarta Sans | Mavi→Cyan degrade | custom, varsayılan açık |
-| Keskealsaydım     | HSL        | Space Grotesk        | Emerald · Cyan              | shadcn HSL vars       |
+| Keskealsaydım     | HSL        | Archivo + IBM Plex   | Emerald · Cyan              | shadcn HSL, açık/koyu tam |
 | Ramazan Vakitleri | `#1a1a2e`  | System               | Lavender · Pembe · Mavi     | Dark only, vanilla CSS |
 | ~~DigyNotes~~     | —          | —                    | —                           | **arşiv** — proje diskte yok |
 

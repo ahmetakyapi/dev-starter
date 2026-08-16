@@ -1,6 +1,7 @@
 # Görsel Hafıza: Keşke Alsaydım
 
-> **Kaynak:** `/Users/ahmet/Desktop/Projects/keskealsaydim/frontend/src/index.css` — doğrulandı 2026-08-17
+> **Kaynak:** `~/Desktop/Projects/keskealsaydim/frontend/src/index.css`,
+> `tailwind.config.js`, `components/ui/` — doğrulandı 2026-08-17 (uçtan uca revizyon sonrası)
 
 > Bu dosya DESIGN.md 9-section formatını takip eder.
 > AI agent'ları bu dosyayı okuyarak pixel-perfect UI üretebilir.
@@ -18,12 +19,19 @@ Keşke Alsaydım, yatırım portföy takip uygulamasıdır. "Keşke alsaydım" s
 Arka plan derin lacivert-siyah tonlarında, üzerinde emerald (yeşil) ve cyan (mavi) radial gradient lekeleri yüzer. Bu iki renk finans dünyasındaki "yükseliş/pozitif" ve "veri/bilgi" anlamlarını taşır. Kartlar glass efektli, hafif transparan, border'ları çok düşük opaklıklı beyaz. Genel atmosfer: karanlık oda, parlayan yeşil ekranlar.
 
 **Temel Karakteristikler:**
-- **Font**: Space Grotesk — teknik, sayısal, monospace-vari ama proportional. Finansal verilere bilinçli seçim. Mono font olarak IBM Plex Mono / JetBrains Mono
-- **Renk stratejisi**: Emerald birincil vurgu (#10b981), Cyan ikincil vurgu (#0ea5e9). shadcn/ui benzeri HSL token sistemi
-- **Efekt sistemi**: Glassmorphism (backdrop-blur + düşük opaklıklı beyaz bg), gradient border trick, card hover glow
-- **Animasyon felsefesi**: CSS-only (Framer Motion yok). Shimmer skeleton, float, glow salınımı, ticker scroll, live-dot ping — hepsi Tailwind keyframes veya index.css'te tanımlı
-- **Tema**: Dark-only tasarım (light mode minimal düzeyde desteklenir, ana deneyim dark)
-- **Altyapı**: Docker + PostgreSQL (local), Go backend (JWT auth, REST API)
+- **Font**: Archivo — küçük punto okunabilirliği ve gerçek tablo rakamları için
+  çizilmiş grotesk. Mono font IBM Plex Mono
+- **Renk stratejisi**: Emerald birincil vurgu, Cyan ikincil vurgu. shadcn/ui benzeri
+  HSL token sistemi; her token'ın açık ve koyu karşılığı var
+- **Efekt sistemi**: Glass yüzeyler `--glass-fill` / `--hairline` kanalları üzerinden
+  tanımlı — açık temada beyaz yerine mürekkeple tonlanır, aynı sınıf iki temada da çalışır
+- **Animasyon felsefesi**: Yalnızca giriş animasyonu. `components/Motion.tsx` içindeki
+  `FadeIn` / `PageTransition`, marka eğrisiyle (`--ease-brand`), tek seferlik.
+  `prefers-reduced-motion` açıkken tamamen devre dışı. Sonsuz ambient animasyon yok
+- **Tema**: Açık ve koyu tam destekli. `index.html`'deki satır içi script depolanan
+  temayı ilk boyamadan önce uygular — tema geçişinde flash olmaz
+- **Altyapı**: Neon PostgreSQL (serverless), Go backend Vercel fonksiyonları olarak,
+  Upstash Redis önbellek. Docker kaldırıldı
 
 ---
 
@@ -47,47 +55,63 @@ Arka plan derin lacivert-siyah tonlarında, üzerinde emerald (yeşil) ve cyan (
 | `--ring` | 160 84% 39% | `#10b981` | Focus ring — emerald |
 | `--radius` | — | `1rem` | Varsayılan border-radius |
 
-### index.css Ek CSS Variables
+### Yüzey ve Doku Token'ları
 
-| Token | HEX | Kullanım |
-|-------|-----|----------|
-| `--bg-base` | `#0a0f1e` | En derin arka plan katmanı |
-| `--bg-card` | `#101828` | Kart yüzeyi |
-| `--bg-raised` | `#182036` | Yükseltilmiş yüzey (hover, active) |
-| `--border` | `#1e3044` | Kenarlık (hex override) |
-| `--gold` | `#10b981` | Vurgu rengi alias (emerald) |
-| `--text-primary` | `#ecf2ff` | Birincil metin |
+| Token | Koyu | Açık | Kullanım |
+|-------|------|------|----------|
+| `--surface` | 204 36% 9% | 0 0% 100% | Kenar çubuğu, başlık çubuğu |
+| `--surface-raised` | 204 30% 13% | 210 30% 96% | Sekme şeridi, tablo başlığı |
+| `--surface-overlay` | 204 34% 11% | 0 0% 100% | Popover, dialog |
+| `--hairline` | 255 255 255 | 12 24 34 | Cam kenarlık **kanalı** (RGB) |
+| `--glass-fill` | 255 255 255 | 12 24 34 | Cam dolgu **kanalı** (RGB) |
+| `--ease-brand` | `cubic-bezier(0.22, 1, 0.36, 1)` | aynı | Tüm geçişlerin varsayılan eğrisi |
 
-### Tailwind Custom Renkler
-
-```ts
-// tailwind.config.js → theme.extend.colors
-success: { DEFAULT: "#00C896", light: "#00E6AC", dark: "#00A67A" },
-danger:  { DEFAULT: "#FF4757", light: "#FF6B7A", dark: "#E63946" },
-surface: { DEFAULT: "#12121A", light: "#1A1A26", dark: "#0A0A0F" },
-```
+> `--hairline` ve `--glass-fill` HSL değil **RGB kanalı** tutar; `rgb(var(--hairline) / 0.08)`
+> biçiminde kullanılır. Açık temada beyaza değil mürekkebe döner, cam efekti bu yüzden
+> iki temada da doğru okunur.
 
 ### Durum Renkleri (Finance Bağlamı)
 
-| Durum | Renk | HEX | Kullanım |
-|-------|------|-----|----------|
-| Pozitif/Kâr | Success Green | `#00C896` | Fiyat artışı, kâr yüzdesi |
-| Negatif/Zarar | Danger Red | `#FF4757` | Fiyat düşüşü, zarar yüzdesi |
-| Nötr/Bilgi | Cyan | `#0ea5e9` | Bilgi badge, ikincil veri |
-| Emerald Vurgu | Primary | `#10b981` | CTA, aktif durum, ring |
+Sabit hex **kullanılmaz** — hepsi token, çünkü beyaz zeminde koyu tema yeşili kontrast
+eşiğini geçmiyordu.
+
+| Durum | Token | Koyu | Açık | Kullanım |
+|-------|-------|------|------|----------|
+| Pozitif/Kâr | `--success` | 162 88% 40% | 162 88% 27% | Fiyat artışı, kâr |
+| Negatif/Zarar | `--danger` | 355 85% 62% | 355 78% 47% | Fiyat düşüşü, zarar |
+| Uyarı | `--warning` | 38 92% 55% | 32 90% 38% | Bayat veri, kısmi sonuç |
+| Nötr/Bilgi | `--secondary` | 199 89% 48% | 199 89% 38% | Bilgi rozeti, ikincil seri |
+| Vurgu | `--primary` | 160 84% 39% | 160 84% 30% | CTA, aktif durum, ring |
+
+> Grafikler bu token'ları `useChartPalette()` ile okur; Recharts Tailwind sınıfı
+> alamadığı için renkler tema değişiminde yeniden hesaplanır.
 
 ### Sayfa Arka Plan Kodu
 
+Gradient lekeleri token'lardan türer, sabit rgba'dan değil — böylece açık temada
+kendiliğinden yumuşar.
+
 ```css
-/* Dark (ana) */
 body {
-  background-color: var(--bg-base); /* #0a0f1e */
+  background-color: hsl(var(--background));
   background-image:
-    radial-gradient(circle at 20% 10%, rgba(16,185,129,0.12), transparent 38%),
-    radial-gradient(circle at 80% 5%,  rgba(14,165,233,0.14), transparent 42%),
-    radial-gradient(circle at 50% 90%, rgba(16,185,129,0.08), transparent 44%);
+    radial-gradient(circle at 20% 10%, hsl(var(--primary)   / 0.12), transparent 38%),
+    radial-gradient(circle at 80% 5%,  hsl(var(--secondary) / 0.14), transparent 42%),
+    radial-gradient(circle at 50% 90%, hsl(var(--primary)   / 0.08), transparent 44%);
   background-attachment: fixed;
-  /* Mobilde scroll'a döndür: background-attachment: scroll */
+}
+
+/* Açık temada aynı lekeler, düşük opaklıkta */
+.light body {
+  background-image:
+    radial-gradient(circle at 20% 0%,  hsl(var(--primary)   / 0.07), transparent 38%),
+    radial-gradient(circle at 80% 5%,  hsl(var(--secondary) / 0.08), transparent 42%),
+    radial-gradient(circle at 50% 95%, hsl(var(--primary)   / 0.05), transparent 44%);
+}
+
+/* iOS'ta fixed her scroll karesinde tüm viewport'u yeniden boyar */
+@media (max-width: 768px) {
+  body { background-attachment: scroll; }
 }
 
 /* Light (düşük opaklık) */
@@ -105,11 +129,18 @@ body {
 
 ### Font Ailesi
 
-- **Sans**: Space Grotesk — ağırlıklar: 400, 500, 600, 700. Teknik, geometrik, sayılara uygun
-- **Fallback**: Manrope, system-ui, sans-serif
-- **Mono**: IBM Plex Mono — ağırlıklar: 400, 500, 600. Alternatif: JetBrains Mono
-- **text-rendering**: optimizeLegibility
+- **Sans**: Archivo — ağırlıklar: 400, 500, 600, 700. Küçük punto okunabilirliği ve
+  gerçek tablo rakamları (`tnum`) için çizilmiş grotesk; veri yoğun finans ekranının
+  ihtiyacı budur
+- **Fallback**: system-ui, -apple-system, sans-serif
+- **Mono**: IBM Plex Mono — ağırlıklar: 400, 500, 600
 - `-webkit-font-smoothing: antialiased`
+
+> **Neden Space Grotesk değil:** 2026-08 itibarıyla Space Grotesk (Inter, Roboto,
+> Geist, Plus Jakarta Sans ile birlikte) AI üretimi arayüzlerde aşırı yaygınlaştı ve
+> ayırt ediciliğini yitirdi. Archivo aynı teknik/sayısal karakteri korurken ürüne
+> kendine ait bir duruş verir. Türkçe diakritikler (ı, İ, ş, ğ, ç, ü, ö) ve ₺ işareti
+> latin/latin-ext alt kümelerinde tam kapsanır — doğrulandı.
 
 ### Finansal Veri Tipografisi
 
@@ -117,18 +148,18 @@ body {
 /* Tüm sayısal değerler — tabular-nums ile hizalama */
 .number, [data-number] {
   font-variant-numeric: tabular-nums;
-  font-family: "Space Grotesk", "IBM Plex Mono", monospace;
+  font-family: "Archivo", "IBM Plex Mono", monospace;
 }
 
 /* Pozitif sayı */
 .number-positive {
-  color: var(--success); /* #00C896 */
+  color: hsl(var(--success)); /* koyu 162 88% 40% · açık 162 88% 27% */
   font-weight: 600;
 }
 
 /* Negatif sayı */
 .number-negative {
-  color: var(--danger); /* #FF4757 */
+  color: hsl(var(--danger));  /* koyu 355 85% 62% · açık 355 78% 47% */
   font-weight: 600;
 }
 ```
@@ -137,12 +168,12 @@ body {
 
 | Rol | Font | Boyut | Ağırlık | Satır Yüksekliği | Letter Spacing | Not |
 |-----|------|-------|---------|-------------------|----------------|-----|
-| Dashboard Başlık | Space Grotesk | 1.875rem (30px) | 700 | 1.2 | -0.02em | Sayfa başlıkları |
-| Section Heading | Space Grotesk | 1.25rem (20px) | 600 | 1.3 | -0.01em | Kart grubu başlıkları |
-| Card Title | Space Grotesk | 1rem (16px) | 600 | 1.4 | -0.01em | Kart başlığı |
-| Body | Space Grotesk | 0.875rem (14px) | 400 | 1.5 | 0 | Genel metin |
-| Caption | Space Grotesk | 0.75rem (12px) | 500 | 1.4 | 0.01em | Alt yazı, etiket |
-| Financial Value | Space Grotesk | 1.5rem (24px) | 700 | 1.1 | -0.02em | Büyük fiyat gösterimi, tabular-nums |
+| Dashboard Başlık | Archivo | 1.875rem (30px) | 700 | 1.2 | -0.02em | Sayfa başlıkları |
+| Section Heading | Archivo | 1.25rem (20px) | 600 | 1.3 | -0.01em | Kart grubu başlıkları |
+| Card Title | Archivo | 1rem (16px) | 600 | 1.4 | -0.01em | Kart başlığı |
+| Body | Archivo | 0.875rem (14px) | 400 | 1.5 | 0 | Genel metin |
+| Caption | Archivo | 0.75rem (12px) | 500 | 1.4 | 0.01em | Alt yazı, etiket |
+| Financial Value | Archivo | 1.5rem (24px) | 700 | 1.1 | -0.02em | Büyük fiyat gösterimi, tabular-nums |
 | Ticker/Small Num | IBM Plex Mono | 0.8125rem (13px) | 500 | 1.3 | 0 | Küçük fiyat, yüzde, tabular-nums |
 | Code/Data | IBM Plex Mono | 0.75rem (12px) | 400 | 1.5 | 0 | Teknik veri |
 
@@ -151,7 +182,8 @@ body {
 - Tüm sayısal veriler `font-variant-numeric: tabular-nums` ile gösterilir — hizalama bozulmamalı
 - Finance değerleri (fiyat, yüzde) her zaman `font-weight: 600` veya `700`
 - Pozitif/negatif renk kodlaması tipografi ile entegre: `.number-positive`, `.number-negative`
-- Space Grotesk'in geometrik karakteri sayıları doğal olarak okunabilir kılar
+- Archivo'nun `tnum` tablo rakamları sütun hizasını korur; `[data-numeric]`, `table`
+  ve `.tabular` seçicileri bunu global olarak açar
 
 ---
 
@@ -245,23 +277,27 @@ backgroundImage: {
 ### Navigasyon
 
 - Finance dashboard stili sidebar/topbar
-- Background: `var(--bg-card)` — `#101828`
+- Background: `bg-surface` (koyu 204 36% 9% · açık beyaz), başlık çubuğunda `/85` + `backdrop-blur-xl`
 - Active link: emerald sol border veya emerald tinted background
 - İkon + metin kombine, kompakt spacing
 
 ### Finance Özel Bileşenler
 
-**Ticker Scroll Bandı**
+**Piyasa Listesi Satırı**
 
-```css
-.ticker-scroll {
-  animation: ticker 30s linear infinite;
-  white-space: nowrap;
-}
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+Sonsuz kayan ticker bandı kaldırıldı: dikkat dağıtıyordu, `prefers-reduced-motion`
+ile uyumsuzdu ve okunmak için beklemeyi gerektiriyordu. Yerine sıralanabilir,
+aranabilir statik liste var.
+
+```tsx
+<li>
+  <button className="flex w-full items-center justify-between gap-3 py-3
+                     text-left transition-colors hover:bg-accent/50">
+    <span className="text-sm font-medium">{symbol}</span>
+    <span data-numeric className="text-sm font-semibold">{price}</span>
+    <ChangeBadge value={changePercent} size="sm" />
+  </button>
+</li>
 ```
 
 **Canlı Veri Göstergesi (Live Dot)**
@@ -271,7 +307,7 @@ backgroundImage: {
   position: relative;
   width: 8px;
   height: 8px;
-  background: var(--success); /* #00C896 */
+  background: hsl(var(--success));
   border-radius: 50%;
 }
 .live-dot::before {
@@ -392,13 +428,14 @@ backgroundImage: {
 ### Do
 
 - Tüm sayısal verilerde `font-variant-numeric: tabular-nums` kullan
-- Pozitif değerlerde success rengi (#00C896), negatif değerlerde danger rengi (#FF4757) kullan — her zaman `font-weight: 600`
+- Pozitif/negatif değerlerde `text-success` / `text-danger` token'larını kullan, sabit hex yazma
 - Kartlarda `glass-card` stili uygula (backdrop-blur + düşük opaklıklı beyaz bg + ince border)
 - HSL token'larını `hsl(var(--token))` formatında kullan (shadcn/ui pattern)
 - Canlı veri göstergelerinde `.live-dot` ping animasyonu ekle
 - Yükleme durumlarında shimmer skeleton kullan (1.8s sweep)
 - `background-attachment: fixed` mobilde `scroll`'a döndür
-- Her financial değeri React CountUp ile animate et (1.5s duration)
+- Para ve yüzdeleri `<Money>` / `<Percent>` / `<ChangeBadge>` ile bas — işaret, renk ve
+  para birimi mantığı tek yerde
 - Sonner toast kullan bildirimler için
 - Zustand store'larını küçük ve odaklı tut
 - TanStack React Query ile server state'i yönet, Zustand'a kopyalama
@@ -455,34 +492,54 @@ backgroundImage: {
 
 ## 9. Agent Prompt Guide
 
-### Hızlı Renk Referansı
+### Hızlı Sınıf Referansı
 
-- **Primary CTA**: `#10b981` (emerald) — butonlar, aktif durum, ring
-- **Secondary accent**: `#0ea5e9` (cyan) — bilgi badge, ikincil vurgu
-- **Background**: `#0b1420` (koyu lacivert) — sayfa arka plan
-- **Card bg**: `rgba(255,255,255,0.05)` glass efekt — `#111e2e` fallback
-- **Heading text**: `#ecf2ff` — parlak beyaz, hafif mavi tint
-- **Body text**: `#94a8bc` — sessiz mavi-gri
-- **Border**: `#213043` — koyu lacivert-gri
-- **Success (kar)**: `#00C896` — yeşil, pozitif sayılar
-- **Danger (zarar)**: `#FF4757` — kırmızı, negatif sayılar
+Hex yazmayın. Aşağıdaki semantik sınıflar iki temada da doğru sonucu verir; sabit
+renk yazmak açık temayı bozar.
+
+| Amaç | Sınıf |
+|------|-------|
+| Sayfa zemini | `bg-background` |
+| Kart | `bg-card border border-border` |
+| Yükseltilmiş yüzey | `bg-surface-raised` |
+| Cam yüzey | `glass-card` |
+| Başlık metni | `text-foreground` |
+| Sessiz metin | `text-muted-foreground` |
+| Birincil vurgu | `bg-primary text-primary-foreground` |
+| İkincil vurgu | `text-secondary` |
+| Kâr | `text-success` |
+| Zarar | `text-danger` |
+| Uyarı | `text-warning` |
+| Odak halkası | `ring-ring` |
 
 ### Örnek Component Prompt'ları
 
-**Portfolio Summary Card:**
-> "Glass card (`rgba(255,255,255,0.05)`, `backdrop-blur`, `1px solid rgba(255,255,255,0.10)`, `border-radius: 1rem`). Üstte başlık 'Portföy Özeti' Space Grotesk 600, `#ecf2ff`. Ana değer büyük `1.5rem 700 tabular-nums`. Değişim yüzdesi `#00C896` pozitif veya `#FF4757` negatif, `font-weight: 600`. Gradient border: `linear-gradient(135deg, #10b981, #38bdf8)`. Hover'da `card-glow-green`."
+**Portföy Özeti Kartı:**
+> "`<Card>` içinde başlık `<CardTitle>`, ana değer `text-2xl font-semibold tracking-tight`
+> ve `data-numeric` (tablo rakamları için). Tutarı `<Money value={...} />`, kâr/zararı
+> `<Money value={...} signed />` ile bas — işaret ve renk bileşenden gelir, elle
+> `+`/`text-green` yazma. Değişim yüzdesi için `<ChangeBadge value={...} />`."
 
-**Watchlist Ticker Bandı:**
-> "Tam genişlik, `overflow: hidden`. İçeride `ticker-scroll` animasyonu `30s linear infinite`. Her ticker item: sembol IBM Plex Mono 500, fiyat Space Grotesk tabular-nums 600, yüzde değişim renk kodlu (yeşil/kırmızı). Aralarında `rgba(255,255,255,0.10)` dikey çizgi ayracı."
+**İzleme Listesi Satırı:**
+> "`<Card>` içinde sembol `text-sm font-semibold`, şirket adı `text-xs text-muted-foreground
+> truncate`. Fiyat `<Money price currency={item.currency} />`. Fiyat gelmediyse `0` basma,
+> `<UnavailableValue />` kullan. Sağda `<ChangeBadge>`, en sağda `<DropdownMenu>` ile
+> karşılaştır / alarm kur / portföye ekle / sil."
 
 **Hisse Detay Sayfası:**
-> "Sol tarafta Lightweight Charts mum grafiği (TradingView benzeri), sağ tarafta glass card'lar içinde finansal metrikler. Canlı fiyat üzerinde `.live-dot` ping animasyonu. Büyük fiyat değeri React CountUp ile animasyonlu (1.5s). Tüm sayılar tabular-nums."
+> "Üstte `<PageHeader>` + eylem butonları. Altında istatistik kartı, sonra Recharts
+> `<AreaChart>`; renkleri `useChartPalette()`'ten al, `isAnimationActive={false}`.
+> Aralık seçimi `<Tabs>` ile. Yükleme `<ShimmerBlock>`, hata `<ErrorState onRetry>`."
 
-**Skeleton Loading State:**
-> "Kart yapısını koruyarak `.skeleton-shimmer` uygula. Arka plan `hsl(var(--muted))` `#1e2d3e`. Shimmer sweep `1.8s ease-in-out infinite`, gradient `linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.08) 37%, transparent 63%)`. Başlık için `h-4 w-32`, değer için `h-8 w-24`, grafik alanı için `h-48 w-full` placeholder."
+**Yükleme / Boş / Hata Durumları:**
+> "Üçü ayrı: yükleme `<ShimmerTable>` veya `<ShimmerStats>`, boş sonuç `<EmptyState>`,
+> başarısız istek `<ErrorState onRetry>`. Hata durumunda boş durum gösterme — kullanıcıya
+> 'veriniz yok' demek ile 'veriniz yüklenemedi' demek aynı şey değil."
 
-**Empty State / Kutlama:**
-> "Hedef tamamlandığında React Confetti efekti. Success state: emerald tonlu glass card, ortada büyük check ikonu, React CountUp ile kar animasyonu."
+**Onay / Yıkıcı Eylem:**
+> "Silme, kapatma gibi geri alınamaz eylemlerde `<ConfirmDialog destructive>` kullan.
+> Doğrudan tetikleme yok. Silme sonrası liste `useMutation`'ın `onMutate` iyimser
+> güncellemesiyle anında tazelenir, hata olursa geri alınır."
 
 ### İterasyon Rehberi
 
@@ -503,19 +560,20 @@ backgroundImage: {
 |--------|-------|-----|
 | Frontend Framework | React + Vite | Next.js DEĞİL — SPA mimarisi |
 | Backend | Go | JWT auth, REST API |
-| Stil | Tailwind CSS v3 | `tailwind.config.js` mevcut, `darkMode` yok (dark-only) |
-| Animasyon | CSS Animations + Tailwind keyframes | Framer Motion yok |
-| Tema Sistemi | CSS Variables (HSL, shadcn/ui stili) | next-themes yok |
-| State | Zustand (client) + TanStack React Query (server) | Axios ile Go backend'e istek |
-| HTTP | Axios | Go backend'e istekler |
-| Grafik | Recharts (genel) + Lightweight Charts (mum) | TradingView benzeri |
-| Sayı Animasyonu | React CountUp | 1.5s duration |
-| Toast | Sonner | react-hot-toast değil |
-| Kutlama | React Confetti | Hedef tamamlandığında |
-| DB | PostgreSQL (Docker) | Neon serverless değil — local Docker |
-| Auth | JWT (Go tarafı) | next-auth değil |
-| İkon | react-icons | lucide-react değil |
-| Deployment | Docker Compose | Vercel değil |
+| Stil | Tailwind CSS v3 | `darkMode: ["class"]` — açık/koyu tam destekli |
+| Animasyon | Framer Motion | Yalnızca giriş; `components/Motion.tsx`, reduced-motion duyarlı |
+| Tema Sistemi | CSS Variables (HSL, shadcn/ui stili) + Zustand | next-themes yok; flash önleyici satır içi script `index.html`'de |
+| Primitifler | Radix UI | dialog, select, tabs, tooltip, dropdown, separator |
+| State | Zustand (oturum, tema) + TanStack React Query (sunucu) | Sunucu durumunu Zustand'a kopyalama |
+| HTTP | Axios | Interceptor'da token yenileme + sekmeler arası eşitleme |
+| Grafik | Recharts | Renkler `useChartPalette()` ile token'lardan; Lightweight Charts kaldırıldı |
+| Sayı Gösterimi | `components/ui/value.tsx` | `<Money>`, `<Percent>`, `<ChangeBadge>`; CountUp kaldırıldı |
+| Toast | Sonner | Tema token'larıyla stillenmiş |
+| DB | Neon PostgreSQL (serverless) | pgbouncer; prepared statement kapalı |
+| Önbellek | Upstash Redis (REST) | Fiyat/arama önbelleği + auth hız sınırı |
+| Auth | JWT (Go tarafı) | Access 30dk, refresh 7g ve her yenilemede döner |
+| İkon | lucide-react | react-icons değil |
+| Deployment | Vercel | 12 serverless fonksiyon tavanında; Docker kaldırıldı |
 
 ### Scrollbar
 
