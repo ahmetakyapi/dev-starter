@@ -61,6 +61,25 @@ if [ -n "$TS_IGNORE" ]; then
   WARNINGS=$((WARNINGS + 1))
 fi
 
+# 6. Impeccable — AI-slop ve tasarım anti-pattern taraması (staged UI dosyaları)
+UI_STAGED=$(echo "$STAGED" | grep -E '\.(tsx?|jsx?|css|html)$' || true)
+if [ -n "$UI_STAGED" ]; then
+  if [ -x "node_modules/.bin/impeccable" ]; then
+    set +e
+    SLOP_OUT=$(echo "$UI_STAGED" | xargs node_modules/.bin/impeccable detect 2>/dev/null)
+    SLOP_CODE=$?
+    set -e
+    if [ $SLOP_CODE -ne 0 ] && [ -n "$SLOP_OUT" ]; then
+      echo "⚠️  IMPECCABLE: Tasarım anti-pattern bulundu:"
+      echo "$SLOP_OUT" | head -20 | sed 's/^/   /'
+      echo "   Detay: npm run design:detect"
+      WARNINGS=$((WARNINGS + 1))
+    fi
+  else
+    echo "ℹ️  impeccable bulunamadı — 'npm install' sonrası tasarım taraması devreye girer"
+  fi
+fi
+
 # Sonuç
 if [ $ERRORS -gt 0 ]; then
   echo ""

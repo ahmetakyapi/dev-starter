@@ -10,8 +10,13 @@
 #   3. Snippet dosyalari
 #   4. Template butunlugu
 #   5. Hook dosyalari
-#   6. Paket versiyon tutarliligi
-#   7. Design token ihlalleri (UI paketi)
+#   6. Knowledge base
+#   7. Skill komutlari
+#   8. Paket versiyon tutarliligi
+#   9. Design token ihlalleri (UI paketi)
+#  10. CI/CD workflow
+#  11. Temel dosyalar
+#  12. Impeccable tasarim anti-pattern taramasi
 
 set -euo pipefail
 
@@ -122,6 +127,16 @@ for tpl_dir in "nextjs-fullstack" "landing"; do
   else
     fail "templates/$tpl_dir/ EKSIK"
   fi
+
+  # Lint script'i varsa ESLint config'i de gelmeli — yoksa 'next lint'
+  # interaktif kurulum sihirbazina duser (mistakes.md #49)
+  if grep -q '"lint"' "templates/${tpl_dir}/package.json" 2>/dev/null; then
+    if [ -f "templates/${tpl_dir}/.eslintrc.json" ] || [ -f "templates/${tpl_dir}/eslint.config.js" ]; then
+      pass "templates/$tpl_dir/ ESLint yapilandirmasi mevcut"
+    else
+      warn "templates/$tpl_dir/ lint script'i var ama ESLint config yok"
+    fi
+  fi
 done
 
 # ─── 7. Knowledge Base ───────────────────────────────────────────────────────
@@ -203,6 +218,51 @@ for f in "CLAUDE.md" "CONTRIBUTING.md" "CHANGELOG.md" ".editorconfig" ".prettier
     warn "$f eksik"
   fi
 done
+
+# ─── 12. Impeccable — Tasarim Anti-Pattern Taramasi ──────────────────────────
+header "Impeccable Tasarim Denetimi"
+
+if [ -f ".impeccable/config.json" ]; then
+  pass ".impeccable/config.json mevcut"
+else
+  warn ".impeccable/config.json eksik — detector proje ayarlarini okuyamaz"
+fi
+
+# Imza degradesi tek token'dan mi geliyor?
+STRAY_GRADIENT=$(grep -rnE 'from-(indigo|violet|purple|fuchsia|cyan|sky|blue)-[0-9]+ (via-[a-z]+-[0-9]+ )?to-[a-z]+-[0-9]+' \
+  templates packages --include="*.tsx" 2>/dev/null || true)
+if [ -n "$STRAY_GRADIENT" ]; then
+  warn "Token disi renk degradesi bulundu — 'bg-signature' kullan:"
+  echo "$STRAY_GRADIENT" | head -5 | sed 's/^/     /'
+else
+  pass "Renk degradeleri tek imza token'indan geliyor"
+fi
+
+# Violet/purple sizintisi — marka paletinde yok, en taninir AI tell'i
+VIOLET_LEAK=$(grep -rnE '(bg|from|via|to|text|border)-(violet|purple|fuchsia)-[0-9]+' \
+  templates packages --include="*.tsx" --include="*.css" 2>/dev/null || true)
+if [ -n "$VIOLET_LEAK" ]; then
+  warn "Marka disi violet/purple kullanimi:"
+  echo "$VIOLET_LEAK" | head -5 | sed 's/^/     /'
+else
+  pass "Violet/purple sizintisi yok"
+fi
+
+# Detector'i calistir (impeccable kuruluysa)
+if [ -x "node_modules/.bin/impeccable" ]; then
+  set +e
+  DETECT_OUT=$(node_modules/.bin/impeccable detect packages templates snippets 2>/dev/null)
+  DETECT_CODE=$?
+  set -e
+  if [ $DETECT_CODE -eq 0 ]; then
+    pass "Impeccable detector temiz (0 bulgu)"
+  else
+    warn "Impeccable detector bulgu raporladi:"
+    echo "$DETECT_OUT" | head -10 | sed 's/^/     /'
+  fi
+else
+  warn "impeccable kurulu degil — 'npm install' ile detector aktiflesir"
+fi
 
 # ─── Summary ─────────────────────────────────────────────────────────────────
 echo ""
