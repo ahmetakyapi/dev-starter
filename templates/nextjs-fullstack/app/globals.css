@@ -127,6 +127,17 @@ html:not(.dark) body {
 
 /* ─── Animations ────────────────────────────────────────────────────────── */
 @layer utilities {
+  /*
+   * Vurgu kelimesi — degrade DEĞİL, solid marka rengi.
+   * Metne degrade kırpmak en tanınır AI tell'lerinden biridir
+   * (impeccable `gradient-text`). Degrade yalnızca 3 imza yüzeyinde yaşar.
+   */
+  .text-accent {
+    color: rgb(79, 70, 229);
+  }
+  .dark .text-accent {
+    color: rgb(129, 140, 248);
+  }
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50%       { transform: translateY(-16px); }

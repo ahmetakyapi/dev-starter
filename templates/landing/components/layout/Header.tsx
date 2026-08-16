@@ -47,7 +47,8 @@ export default function Header() {
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="group flex items-center gap-2.5"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 shadow-lg shadow-indigo-500/20 transition-shadow group-hover:shadow-indigo-500/40">
+              {/* Marka döşemesi — izinli 3 yerden biri */}
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-signature shadow-lg shadow-indigo-500/20 transition-shadow group-hover:shadow-indigo-500/40">
                 <span className="text-[10px] font-black text-white">P</span>
               </div>
               <span className="text-sm font-bold tracking-tight text-slate-800 transition-colors group-hover:text-indigo-600 dark:text-slate-100 dark:group-hover:text-indigo-400">

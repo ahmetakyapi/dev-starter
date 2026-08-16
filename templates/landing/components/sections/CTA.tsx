@@ -21,7 +21,7 @@ export default function CTA() {
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/12 blur-[80px]" />
           <div className="absolute -left-20 top-1/3 h-44 w-44 rounded-full bg-cyan-500/8 blur-[40px]" />
-          <div className="absolute -right-20 top-1/3 h-44 w-44 rounded-full bg-violet-500/8 blur-[40px]" />
+          <div className="absolute -right-20 top-1/3 h-44 w-44 rounded-full bg-blue-500/8 blur-[40px]" />
         </div>
 
         {/* Accent lines */}
@@ -56,7 +56,7 @@ export default function CTA() {
           variants={fadeUp}
           className="flex flex-wrap items-center justify-center gap-3"
         >
-          {/* Primary pill with gradient on hover */}
+          {/* Primary — imza degradesi hover'da (izinli 3 yerden biri: birincil eylem) */}
           <motion.a
             href="#"
             style={{ x: mag.mx, y: mag.my }}
@@ -65,7 +65,7 @@ export default function CTA() {
             whileTap={{ scale: 0.96 }}
             className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-indigo-600 px-8 py-4 font-semibold text-white shadow-2xl shadow-indigo-500/30 transition-shadow hover:shadow-indigo-500/50"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="absolute inset-0 bg-signature opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <span className="relative">Create free account</span>
             <ArrowRight className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </motion.a>

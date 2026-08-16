@@ -57,8 +57,8 @@ const FEATURES: FeatureDef[] = [
   {
     id: 'f5',
     icon: Globe,
-    iconBg: 'bg-violet-500/10 border-violet-500/20',
-    iconColor: 'text-violet-400',
+    iconBg: 'bg-blue-500/10 border-blue-500/20',
+    iconColor: 'text-blue-400',
     title: 'Global Coverage',
     desc: 'Data collected across 12 edge regions worldwide. Sub-100ms latency for 95% of your users, anywhere.',
     size: 'sm',
