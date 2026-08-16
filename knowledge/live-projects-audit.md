@@ -98,6 +98,10 @@ Yani ekosistemin görsel referansı, ekosistemin yeni kuralına uymuyor. Bu bir
 yumuşatılır. Referansı güncellemek daha tutarlı; kural zaten dev-starter'da
 uygulandı ve orada çalışıyor.
 
+> **Güncelleme (2026-08-16)**: Bu bölümdeki iki tespit de sonuçlandı. Referans
+> çelişkisi PR #1 ile, `gradient-text` yasağı ise kuralın yeniden yazılmasıyla.
+> Degrade artık yasak değil; bağlayıcı olan token'lama ve fallback.
+
 ### 2. `gradient-text` yasağı fazla katı — `acilis-zili` bunu kanıtlıyor
 
 Ekosistemdeki en yaygın bulgu bu (40 adet). Ama `acilis-zili`'deki 2 bulgu
@@ -154,14 +158,32 @@ Ekosistemin en disiplinli projesi bu.
 
 **Değişecek: ~10 dosya (hareket) + kontrast taraması.**
 
-### `ahmetakyapi.com` — referans olduğu için en kritik
-- 8 `ai-color-palette` + 12 violet → tek imza degradesine indirilmeli
-- 7 `gradient-text` + 11 `bg-clip-text` → 3 şart testinden geçmeyenler solid'e
-- 4 elle yazılmış degrade → `bg-signature`
-- 4 `gray-on-color` → kontrast düzeltmesi
-- Lint script'i var ama **ESLint config yok**
+### `ahmetakyapi.com` — ✅ ele alındı (2026-08-16, PR #1)
 
-**Değişecek: ~20-25 dosya.** dev-starter'da yapılan işin birebir aynısı.
+**Başlıklardaki degradelere dokunulmadı** — görsel dilin kasıtlı parçası. Bir ara
+solid renge çevrilmişti, geri alındı ve **kural değiştirildi**: degrade artık
+yasak değil (bkz. `rules/design-tokens.md → Degrade Kuralları`).
+
+Düzeltilenler gerçek hatalardı:
+- `.text-gradient` ve `.hero-name-gradient` fallback'siz → hero'daki isim,
+  kırpma desteklenmeyen yerde **boş alan** olarak render oluyordu
+- Koyu modda 2 kontrast hatası (`AdminBlog` ~2.5:1, `AdminShell` ~3.3:1)
+- Footer sosyal ikonları krem zeminde ~2.2:1 (UI öğesi eşiği 3:1)
+- **Lint hiç çalışmıyormuş**: script ve bağımlılık vardı, config yoktu.
+  Eklenince 5 hata ortaya çıktı, hepsi düzeltildi
+
+Kalan bulgular kasıtlı: `Projects` başlıklarındaki indigo (marka rengi),
+`CodeHighlight`'taki violet (syntax vurgusu), grid zemin (görsel dilin parçası).
+
+### `ramazan-vakitleri` — ✅ ele alındı (2026-08-16, PR #2)
+
+**Palet sorusu cevaplandı**: mor–pembe–mavi bir sızıntı değil.
+`--gradient-text` / `--gradient-text-alt` olarak **token'lanmış** ve global
+CLAUDE.md'de belgeli. Yani Kural 1 zaten sağlanmıştı.
+
+Eksik olan tek şey fallback'ti: 11 kuralın hepsi `-webkit-text-fill-color:
+transparent`'ı koşulsuz yazıyordu. Her birine solid `color` eklendi —
+**11 ekleme, 0 silme**, desteklenen tarayıcıda hiçbir görsel değişiklik yok.
 
 ### `derinay` — en çok bulgu
 - 22 `gray-on-color` → erişilebilirlik, en acil kalem
@@ -241,10 +263,9 @@ marka istisnası mı yoksa güncellenecek mi, karar gerekiyor.
 
 ## Önerilen Sıra
 
-1. **`ahmetakyapi.com`** — referans olduğu için ilk. Düzelmeden diğerlerine
-   dokunmak, yanlış referanstan üretmeye devam etmek demek
-2. **`rules/design-tokens.md` güncellemesi** — `gradient-text` için üç şartlı
-   istisna maddesi (acilis-zili'nin kanıtladığı durum)
+1. ~~**`ahmetakyapi.com`**~~ → ✅ PR #1
+2. ~~**`rules/design-tokens.md` güncellemesi**~~ → ✅ Yasak tamamen kaldırıldı;
+   kural token'lama + fallback şartına indirgendi
 3. ~~**`onepiece-hub` palet kararı**~~ → ✅ 2026-08-16, PR #3. Mor bilinçli tema
    değilmiş, token'landı. **`ramazan-vakitleri`** (22 `bg-clip-text`) hâlâ açık:
    mor+pembe+mavi paleti CLAUDE.md'de belgeli, marka istisnası mı?
