@@ -31,6 +31,33 @@ Bu agent çalışmadan önce şunları oku:
 | `/theme [proje]`       | Görsel tema uygulama          |
 | `/check`               | Proje sağlık kontrolü         |
 
+### Impeccable — Tasarım Sözlüğü
+
+Kurulu global plugin (`impeccable@impeccable`). Bu agent'ın ortak tasarım dili budur —
+"biraz daha cesur yap" gibi belirsiz yönergeler yerine komut adı kullan.
+
+| Komut | Ne Zaman |
+| ----- | -------- |
+| `/impeccable shape [özellik]` | Kod yazmadan önce UX/UI planla |
+| `/impeccable critique [hedef]` | Hiyerarşi, netlik, duygusal rezonans incelemesi |
+| `/impeccable audit [hedef]` | a11y · performans · responsive teknik denetimi |
+| `/impeccable polish [hedef]` | Teslim öncesi son geçiş, design system hizalaması |
+| `/impeccable typeset [hedef]` | Font seçimi, hiyerarşi, boyutlandırma |
+| `/impeccable layout [hedef]` | Boşluk, ritim, hizalama |
+| `/impeccable bolder` / `quieter` | Fazla ölçülü ↔ fazla gürültülü tasarımı ayarla |
+| `/impeccable distill [hedef]` | Öze indir, karmaşıklığı at |
+| `/impeccable harden [hedef]` | Hata durumları, i18n, taşma, uç senaryolar |
+| `/impeccable animate [hedef]` | Amaçlı hareket ekle |
+| `/impeccable document` | Mevcut koddan DESIGN.md üret |
+
+**Detector**: `npm run design:detect` — 59 deterministik anti-pattern kuralı.
+Bulgular `rules/design-tokens.md → AI-Slop Yasakları` ile aynı listedir.
+
+**Çakışma kuralı**: Impeccable "the brief wins" der — pinlenmiş palet, font ve
+estetik, doygun-kalıp uyarısını yener. Ahmet'in marka paleti (indigo·blue·cyan·
+emerald·sky) **pinlenmiştir**; detector uyarısı bu paleti değiştirmenin gerekçesi
+değildir. Ama `violet/purple` markanın parçası değildir — o sızıntıdır, temizlenir.
+
 ## Agent İletişimi
 
 Bu agent şu durumda diğer agent'lara handoff yapar:
@@ -78,7 +105,7 @@ Screenshot referansları verildiğinde, kodlamadan önce şu 8 boyutu analiz et:
 - Heading scale sistemi
 - Body text yoğunluğu ve line-height
 - Font pairing tonu (premium / teknik / editorial)
-- Gradient/italic vurgu kullanımı
+- Vurgu tekniği — **solid accent rengi** (degrade metin yasak, bkz. `rules/design-tokens.md`)
 
 ### 3. Card System
 
@@ -177,9 +204,9 @@ Herhangi bir UI kararında şu sırayla düşün:
 ```text
 [Ambient glow orbs] + [Grid overlay] + [Mouse spotlight]
 [Chip/badge — animated dot]
-[H1 — font-black, tracking-[-0.03em], gradient on accent word]
+[H1 — font-black, tracking-[-0.03em], solid .text-accent on accent word]
 [Subtitle — slate-400, leading-[1.75]]
-[Primary pill CTA] + [Ghost pill CTA]
+[Primary pill CTA — bg-signature hover katmanı] + [Ghost pill CTA]
 [Product preview / browser mockup — delayed scale entrance]
 ```
 
@@ -247,6 +274,10 @@ Mevcut primitifleri yeniden inşa etme — kullan.
 - Zayıf hero area (görsel eleman olmadan)
 - `rounded-xl` buton (pill: `rounded-full` tercih et)
 - Emoji icon (lucide-react kullan)
+- Degrade metin (`bg-clip-text`) — solid `.text-accent` kullan
+- `violet` / `purple` / `fuchsia` — marka paletinde yok
+- Elle yazılmış degrade (`from-X to-Y`) — tek kaynak `bg-signature`
+- `width` / `height` animasyonu — `transform: scale()` kullan
 
 ---
 

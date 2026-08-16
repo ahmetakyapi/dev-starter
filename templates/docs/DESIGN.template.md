@@ -1,7 +1,67 @@
+---
+# ─── Makine-okunur token katmanı (resmî DESIGN.md spec) ─────────────────────
+# Bu frontmatter'ı impeccable ve DESIGN.md-uyumlu araçlar okur; aşağıdaki
+# markdown bölümleri ise insan/agent bağlamıdır. Token'lar normatiftir.
+# Token referansı: {colors.primary} biçiminde. Bileşenler primitive'e referans
+# verebilir; primitive'ler birbirine veremez.
+name: [PROJE_ADI]
+description: [tek satırlık tanım]
+colors:
+  primary: '#4f46e5'
+  accent: '#22d3ee'
+  neutral-bg: '#04070d'
+  neutral-fg: '#e2e8f0'
+typography:
+  display:
+    fontFamily: 'Manrope, -apple-system, sans-serif'
+    fontSize: 'clamp(2.5rem, 6vw, 5rem)'
+    fontWeight: 800
+    lineHeight: 1.03
+    letterSpacing: '-0.03em'
+  body:
+    fontFamily: 'Manrope, -apple-system, sans-serif'
+    fontSize: '1rem'
+    fontWeight: 400
+    lineHeight: 1.75
+    letterSpacing: '-0.01em'
+rounded:
+  card: '1rem'
+  pill: '999px'
+spacing:
+  section: '5rem'
+  gutter: '1.5rem'
+components:
+  button-primary:
+    backgroundColor: '{colors.primary}'
+    textColor: '#ffffff'
+    rounded: '{rounded.pill}'
+    padding: '0.875rem 1.75rem'
+---
+
 # Görsel Hafıza: [PROJE_ADI]
 
-> Bu dosya DESIGN.md 9-section formatını takip eder.
-> AI agent'ları bu dosyayı okuyarak pixel-perfect UI üretebilir.
+> Bu dosya iki katmanlıdır:
+> - **Frontmatter** — resmî DESIGN.md spec'inin makine-okunur token şeması.
+>   `/impeccable document` ve DESIGN.md-uyumlu araçlar bu katmanı okur.
+> - **9 bölüm** — ekosistemin kendi görsel hafıza formatı; agent'lar buradan
+>   pixel-perfect UI üretir.
+>
+> Bölümler resmî 8 bölümlük kanonik sıraya şöyle karşılık gelir:
+>
+> | Bu dosya | Resmî DESIGN.md |
+> |----------|-----------------|
+> | 1. Visual Theme & Atmosphere | `## Overview` |
+> | 2. Color Palette & Roles | `## Colors` |
+> | 3. Typography Rules | `## Typography` |
+> | 4. Component Stylings | `## Components` + `## Shapes` (radius) |
+> | 5. Layout Principles | `## Layout` |
+> | 6. Depth & Elevation | `## Elevation & Depth` |
+> | 7. Do's and Don'ts | `## Do's and Don'ts` |
+> | 8. Responsive Behavior | `## Layout` (responsive kısmı) |
+> | 9. Agent Prompt Guide | *(ekosisteme özgü — resmî spec'te karşılığı yok)* |
+>
+> `/impeccable document` çalıştırırsan çıktı kanonik başlıklarla gelir; bu
+> tabloyu kullanarak buraya taşı. Frontmatter'ı ezme — token'lar tek kaynaktır.
 
 Kaynak proje: `~/[PROJE_DIZINI]`
 Versiyon: [FRAMEWORK], [STYLING], [ANIMATION_LIB]
@@ -188,6 +248,20 @@ background: [gradient_kodu];
 - [yasak 1]
 - [yasak 2]
 - [yasak 3]
+
+### Ekosistem Geneli (her projede geçerli)
+
+Bunlar proje bazında tartışılmaz — `rules/design-tokens.md` tarafından zorlanır ve
+`npm run design:detect` ile otomatik taranır.
+
+**Don't**
+- Degrade metin (`background-clip: text`) — vurgu solid accent rengiyle
+- Elle degrade yazmak (`from-X to-Y`) — tek kaynak imza token'ı
+- Degradeyi 3 imza anının dışında kullanmak (birincil eylem, marka döşemesi,
+  seçili gezinme satırı). Veri yüzeyleri ve kart zeminleri degrade taşımaz
+- `violet` / `purple` / `fuchsia` — `indigo→violet` en tanınır AI tell'i
+- `width` / `height` animasyonu — `transform: scale()` kullan
+- Emoji ikon — `lucide-react`
 
 ---
 

@@ -42,6 +42,73 @@ Gate Agent bu pattern'leri arar. Eşleşme = ihlal.
 
 ---
 
+## Degrade Disiplini
+
+**Kural**: Ekosistemde **tek bir renk degradesi** vardır — imza degradesi. Tek kaynağı
+`packages/@ahmet/theme/tokens.ts → gradients.signature`, tek kullanım yolu `bg-signature`
+utility'sidir.
+
+```text
+signature = linear-gradient(135deg, indigo → blue → cyan)
+```
+
+### İzinli üç yer
+
+Degrade yalnızca şu üç anda görünür. Dördüncü bir yer eklemek kural ihlalidir:
+
+| # | Yer | Örnek |
+|---|-----|-------|
+| 1 | **Birincil eylem** | Hero / CTA primary butonu (hover katmanı) |
+| 2 | **Marka döşemesi** | Header logo tile, mockup içi marka karesi |
+| 3 | **Seçili gezinme satırı** | Aktif nav item vurgusu |
+
+### Degrade taşımayan yüzeyler
+
+- **Metin** — `background-clip: text` + degrade yasak. Vurgu kelimesi solid `.text-accent`.
+- **Veri yüzeyleri** — grafik sütunu, avatar, rozet, istatistik kartı. Hepsi solid.
+- **Kart zeminleri** — `.glass` / `.surface` içindeki `linear-gradient(180deg, …)` bir
+  *cam derinliği*dir, renk degradesi değil; bu kuralın kapsamı dışındadır.
+- **Hairline ayırıcılar** — `from-transparent via-X to-transparent` bir çizgi fade'idir,
+  renk geçişi değil; serbesttir.
+
+### Violet/purple yasağı
+
+Marka paleti **indigo · blue · cyan · emerald · sky**'dır. `violet`, `purple`, `fuchsia`
+bu palette **yoktur**. `indigo → violet` geçişi üretken modellerin en tanınır görsel
+imzasıdır (impeccable `ai-color-palette`); markanın parçası değil, sızıntıdır.
+
+```bash
+# Sızıntı taraması
+grep -rnE '(bg|from|via|to|text|border)-(violet|purple|fuchsia)-[0-9]+' \
+  --include="*.tsx" --include="*.css" .
+```
+
+---
+
+## AI-Slop Yasakları
+
+Bu kalıplar `impeccable` detector'ı tarafından otomatik yakalanır
+(`npm run design:detect`). Yakalanması beklenmez — hiç yazılmaz.
+
+| Kalıp | Neden | Doğrusu |
+|-------|-------|---------|
+| `bg-clip-text` + degrade | En tanınır AI tell'i; responsive'de satır kırılması öngörülemez | Solid `.text-accent` |
+| `from-indigo-* to-violet-*` | Purple gradient tell'i | `bg-signature` token'ı |
+| `transition: width, height` | Her karede layout thrash | `transform: scale()` |
+| Emoji ikon | Cross-platform tutarsız render | `lucide-react` |
+| Kart içinde kart | Hiyerarşi kaybı | Tek seviye + ayırıcı |
+| Her başlığın üstünde yuvarlak ikon karesi | Şablon hissi | Seçici kullan |
+
+**Detector'ı susturma.** Bir bulgu kasıtlıysa çözüm `ignoreRules` değil, token'a
+taşımaktır — `.impeccable/config.json` bilinçli olarak boş ignore listeleriyle gelir.
+Kural gerçekten yanlışsa dosya içi tek satırlık istisna kullan:
+
+```css
+/* impeccable-disable overused-font: marka fontu */
+```
+
+---
+
 ## İstisnalar
 
 Bu durumlarda ihlal sayılmaz:
@@ -111,8 +178,17 @@ Yeni tema olusturmak icin: `templates/docs/DESIGN.template.md`
 ## Kontrol Komutu
 
 ```bash
-# Manuel kontrol — tüm src/ altında design token ihlali ara
+# 1. Token ihlali — hardcoded renk / raw Tailwind scale
 grep -rn --include="*.tsx" --include="*.ts" --include="*.css" \
   -E '#[0-9a-fA-F]{3,8}|bg-white|bg-black|text-white|text-black|text-gray-|bg-gray-|border-gray-' \
   src/ --exclude-dir=node_modules
+
+# 2. AI-slop / tasarım anti-pattern taraması (59 kural)
+npm run design:detect          # insan okunur
+npm run design:detect:json     # CI için
+
+# 3. Ekosistem geneli — token + slop + violet sızıntısı birlikte
+bash scripts/health-check.sh   # 12. kategori
 ```
+
+Bu üçü commit anında `hooks/quality-scan.sh` içinden otomatik çalışır.

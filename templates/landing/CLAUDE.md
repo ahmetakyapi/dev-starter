@@ -37,7 +37,11 @@ PROJECT_DESCRIPTION
 
 ## Özel Kurallar
 
-- Gradient text kısa tut — uzun cümle gradient span'e koyma, satır kırılması öngörülemez olur
+- Degrade metin YASAK — vurgu kelimesi solid `.text-accent` ile. (`bg-clip-text` + degrade
+  hem en tanınır AI tell'i hem de responsive'de satır kırılması öngörülemez)
+- Degrade yalnızca `bg-signature` ile ve yalnızca 3 yerde: birincil eylem, marka döşemesi,
+  seçili gezinme satırı. Elle `from-X to-Y` yazma. Bkz. `rules/design-tokens.md`
+- `violet` / `purple` / `fuchsia` kullanma — marka paletinde yok (indigo·blue·cyan·emerald·sky)
 - Emoji ikon kullanma — SVG ikon (lucide-react veya inline) tercih et, cross-platform tutarlılık için
 - Avatar/renk seçici compact tek satır `overflow-x-auto` — iki satıra bölme
 - Hero form kartında mantıksal gruplama yap: avatar preview + isim, divider, oda kodu + butonlar

@@ -585,5 +585,131 @@ Arkadaşlarınla <span className="text-gradient">Çiz, Tahmin Et</span> ve Eğle
 
 ---
 
-*Son güncelleme: 2026-04-11*
+## Impeccable Denetiminden Öğrenilenler
+
+> 2026-08-16 — `impeccable` detector'ı (59 kural) dev-starter'a uygulandığında
+> çıkan 16 bulgunun kök nedenleri. Tarama: `npm run design:detect`
+
+### 42. Degrade Metin (`bg-clip-text`)
+**Hata**: `.text-gradient` utility'si ve `bg-gradient-to-r … bg-clip-text text-transparent`
+başlıklarda kullanılıyordu. İki ayrı sorun üretiyor:
+1. Üretken modellerin en tanınır görsel imzalarından biri (impeccable `gradient-text`)
+2. Responsive'de satır kırılması öngörülemez — tek kelime alt satıra düşüyor (bkz. #23)
+
+**Çözüm**: Vurgu kelimesi solid marka rengiyle. Degrade metinde değil, yalnızca
+üç imza yüzeyinde yaşar.
+```tsx
+// ❌ Degrade metin
+<span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">başladı</span>
+
+// ✅ Solid accent
+<span className="text-accent">başladı</span>
+```
+
+### 43. Token Doğru, Kullanım Sapmış — Degrade Çoğalması
+**Hata**: `tokens.ts → gradients.logo` zaten doğru marka rotasını (indigo→blue→cyan)
+tanımlıyordu, ama **hiçbir template onu kullanmıyordu**. Bunun yerine her dosyada elle
+yazılmış varyantlar birikmişti:
+
+| Yer | Yazılan |
+|-----|---------|
+| landing/Header | `from-indigo-500 via-violet-500 to-cyan-400` |
+| fullstack/Header | `from-indigo-500 via-blue-500 to-cyan-400` |
+| Hero/CTA butonu | `from-indigo-600 to-violet-600` |
+| Hero sidebar | `from-indigo-500 to-violet-600` |
+| Testimonial avatar | 3 ayrı degrade |
+
+Beşi de "marka degradesi" olduğunu sanıyordu; hiçbiri aynı değildi. Üstelik `violet`
+marka paletinde **hiç yoktu** — indigo→violet en tanınır AI tell'i.
+
+**Kök neden**: Token tanımlıydı ama *utility olarak açığa çıkarılmamıştı*. Tanımlamak
+yetmiyor — `bg-signature` gibi tek satırlık bir kullanım yolu olmazsa herkes elle yazar.
+
+**Çözüm**: `gradients.signature` + `backgroundImage.signature` → `bg-signature`.
+Degrade yalnızca 3 yerde: birincil eylem, marka döşemesi, seçili gezinme satırı.
+Bkz. `rules/design-tokens.md → Degrade Disiplini`.
+
+### 44. `width`/`height` Animasyonu — Layout Thrash
+**Hata**: CustomCursor üç dosyada da `transition: 'width 0.2s, height 0.2s'` kullanıyordu.
+Layout property'leri animate etmek her karede reflow tetikler.
+
+**İnce nokta**: Naif düzeltme (transition'ı `transform`'a çevirmek) imleci bozar —
+framer-motion konumu da `transform` ile yazdığı için x/y takibi de gecikir ve imleç
+fareden geri kalır. Ölçek **iç katmana** alınmalı:
+```tsx
+// ✅ Dış katman konum (transition yok) — iç katman ölçek
+<motion.div style={{ x, y, translateX: '-50%', translateY: '-50%', transition: 'opacity 0.2s' }}>
+  <div className="h-8 w-8 transition-transform duration-200"
+       style={{ transform: `scale(${isHover ? 1.25 : 1})` }} />
+</motion.div>
+```
+
+### 45. Detector Kendi Yorumunu Yakalar
+**Hata**: `background-clip:text` ifadesini bir CSS *yorumunda* açıklarken detector onu
+gerçek kullanım sandı ve bulgu üretti.
+**Çözüm**: Yasaklı kalıbı yorumda birebir yazma — tarif et ("metne degrade kırpmak").
+Gerçekten gerekiyorsa satır içi istisna: `/* impeccable-disable <rule>: gerekçe */`
+
+### 46. Kural Kağıtta, İhlal Kodda
+**Hata**: `uiux-agent.md` "Emoji icon kullanma — lucide-react kullan" diyordu, ama
+`templates/nextjs-fullstack/app/page.tsx` emoji ikon kullanıyordu (#40 zaten kayıtlıydı).
+Kural yazılmıştı, template'e uygulanmamıştı.
+**Çözüm**: Her kural için çalıştırılabilir bir kontrol olmalı. `scripts/health-check.sh`
+12. kategori + `hooks/quality-scan.sh` 6. adım bu kuralları commit anında zorlar.
+
+### 47. Impeccable — npm CLI ile Plugin Versiyonu Aynı Değil
+**Hata**: Claude Code plugin'i GitHub'dan geliyor ve `4.1.1`; npm'deki `impeccable` CLI ise
+`3.6.0`. `"impeccable": "^4.1.1"` yazınca `npm install` → `ETARGET no matching version`.
+**Çözüm**: devDependency'yi npm'deki sürüme pinle (`^3.6.0`), plugin'i ayrı güncelle:
+```bash
+npm view impeccable version          # npm CLI sürümü
+claude plugin update impeccable      # plugin sürümü (ayrı kanal)
+```
+
+### 48. npm Paketi Kırık Yayınlandı — Entry Point Uyuşmazlığı
+**Hata**: `tsup tokens.ts --format esm,cjs --dts` çıktıyı `dist/tokens.*` olarak üretiyordu,
+ama `package.json` `main`/`module`/`types`/`exports` alanları `dist/index.*` işaret ediyordu.
+Paket npm'e yayınlandı ve 5 ay boyunca import edilemez halde kaldı — build başarılı olduğu
+için kimse fark etmedi.
+**Çözüm**: Entry'yi isimlendir, ve yayın öncesi `npm pack --dry-run` ile içeriği doğrula:
+```jsonc
+// ✅ çıktı dist/index.* olur
+"build": "tsup --entry.index=tokens.ts --format esm,cjs --dts"
+```
+```bash
+npm pack --dry-run --workspace=packages/@ahmet/theme   # tarball içeriğini listele
+```
+**Kural**: `npm publish` öncesi `files` listesi ile gerçek build çıktısı birebir eşleşmeli.
+
+### 49. Template'de Lint Script Var, Config Yok
+**Hata**: Her iki şablonda da `"lint": "next lint"` script'i ve `eslint` +
+`eslint-config-next` bağımlılıkları vardı, ama **ESLint config dosyası yoktu**.
+Sonuç: üretilen her projede `npm run lint` linting yapmak yerine interaktif kurulum
+sihirbazına düşüyordu — yani CI'da asılı kalır, yerelde sessizce atlanır.
+**Çözüm**: `.eslintrc.json` şablona dahil edilmeli:
+```json
+{ "extends": "next/core-web-vitals" }
+```
+**Genel kural**: Bir script `package.json`'da varsa, çalıştığı doğrulanmış olmalı.
+Bağımlılığı eklemek yetmez — konfigürasyonu da şablonla birlikte gelmeli.
+
+### 50. Bozuk `eslint-disable` Açıklaması
+**Hata**: Açıklama tire ile eklenmişti; ESLint tireden sonrasını **ek kural adı** sandı:
+```tsx
+// ❌ "static decorative list" ve "order never changes" kural adı sanılır
+// eslint-disable-next-line react/no-array-index-key — static decorative list, order never changes
+```
+İki adet `Definition for rule ... was not found` hatası üretiyordu — yani disable
+satırının kendisi lint'i kırıyordu.
+**Çözüm**: Açıklama `--` ile ayrılır. Ama repo kuralı "disable yazma, sorunu çöz"
+olduğu için doğrusu key'i index'ten kurtarmaktır:
+```tsx
+// ✅ index'e dayanmayan stabil key — disable'a gerek yok
+const track = ['a', 'b'].flatMap((lap) => LOGOS.map((name) => ({ id: `${lap}-${name}`, name })))
+{track.map(({ id, name }) => <span key={id}>{name}</span>)}
+```
+
+---
+
+*Son güncelleme: 2026-08-16*
 *Yeni hata eklemek için bu dosyayı düzenle.*
