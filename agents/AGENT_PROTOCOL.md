@@ -104,6 +104,76 @@ Wave arası: Build kontrolü yap, çakışma varsa çöz.
 
 ---
 
+## Doğrulama Disiplini — Tüm Agent'lar İçin Birinci Kural
+
+> Bu bölüm 2026-08-16'da eklendi. Sebebi: ekosistem denetimi sırasında
+> "baktım, doğru görünüyor" ile geçilen **altı ayrı iddia yanlış çıktı**.
+> Hiçbiri dikkatsizlik değildi; hepsi makul görünen varsayımlardı.
+
+**Kural**: Bir iddiada bulunuyorsan onu kanıtlayan komutu çalıştır ve çıktısını
+göster. Çalıştırmadıysan "yaptım" deme — "yapmadım, şu sebeple" de.
+
+| Yerine | Bunu |
+|--------|------|
+| "Build geçiyor" | `npm run build` çıktısını göster |
+| "Tipler doğru" | `tsc --noEmit`, exit kodunu göster |
+| "Token'a çevirdim, görünüm aynı" | Üretilen CSS'ten eski/yeni değeri karşılaştır |
+| "Paket yayına hazır" | `npm pack --dry-run` + temiz dizinde `require()` |
+| "Detector temiz" | Exit kodunu göster — çıktı stderr'e gidiyor olabilir |
+| "Lint geçiyor" | Config dosyasının **var olduğunu** da doğrula |
+
+### Bu oturumda bu kuralın yakaladıkları
+
+Somut örnekler; hepsi "baktım iyi görünüyor" ile kaçardı:
+
+1. **Detector "0 bulgu" dedi, 2 bulgu vardı.** İnsan-okunur çıktı stderr'e
+   gidiyor, stdout boş kalıyordu. `--json` + exit kodu doğruyu verdi.
+2. **`ls a* b*` mevcut ESLint config'ini gizledi.** Eşleşmeyen ilk glob yüzünden
+   `ls` non-zero dönüyor, ikinci dosya bulunsa bile kontrol "yok" diyordu.
+3. **npm paketi 5 aydır kırıktı.** Build başarılıydı, CI yeşildi — çünkü CI
+   build'in *ürettiği* dosyayı test ediyordu, manifest'in *işaret ettiğini*
+   değil. Temiz dizinde `require()` etmek 10 saniyede ortaya çıkardı.
+4. **`npm ci --omit=optional` bariz çözüm gibiydi, build'i kırdı.** Rollup
+   platform binary'sini optional olarak dağıtıyor.
+5. **Kontrast tarayıcısı dark-only projelerde 108 sahte bulgu üretti.**
+   `text-white` tek temalı projede doğru kullanımdır.
+6. **"80 mor kullanımı bilinçli tema olmalı" varsayımı yanlıştı.** Paleti
+   okumak yetti: mor tanımlı değildi, sızıntıydı.
+
+### Kontrolün kendisini de kontrol et
+
+Bir kontrol yazdıysan **başarısız olması gereken bir durumda çalıştır.** Geçen
+bir kontrol, çalışan bir kontrol değildir.
+
+`scripts/verify-package-exports.mjs` yazıldıktan sonra `dist/index.js` eski
+hatalı adına döndürülüp negatif test yapıldı: 3 hata, non-zero exit. Bu yapılmasa
+script'in gerçekten yakalayıp yakalamadığı bilinmezdi.
+
+### Araçlar yanılır — detector'ın son sözü yoktur
+
+Impeccable'ın kendi doktrini *"the brief wins"* der. Bir bulgu her zaman hata
+değildir:
+
+- **Yanlış pozitif**: `gray-on-color` alfa kanalını hesaplamıyor —
+  `bg-indigo-500/15` neredeyse sayfa zemini, ama saturated sanılıyor
+- **Kasıtlı karar**: `acilis-zili`nin degrade metni token'lanmış, `@supports`
+  korumalı, fallback'li ve descender düzeltmeli — yasağın çözmek istediği her
+  sorunu zaten çözmüş
+- **İçerik verisi**: `onepiece-hub`da 15 ekibin kimlik rengi marka sistemi değil
+
+Bulguyu düzeltmeden önce **oku ve anla**. Kasıtlıysa gerekçesini yaz ve bırak —
+ama gerekçe "böyle daha güzel" değil, "şu sorunu şöyle çözüyor" olmalı.
+
+### Sayı iyileşmesi başarı ölçütü değildir
+
+`ahmetakyapi.com`da koyu mod kontrastı düzeltildi ve `gray-on-color` **4'ten 6'ya
+çıktı** — çünkü `dark:` eşi eklemek satıra ikinci bir renk kattı, detector çift
+saydı. Kontrast gerçekten düzelmişti.
+
+Ölçüt bulgu sayısı değil, **kullanıcının gördüğü şeyin doğru olması**.
+
+---
+
 ## Kurallar (Tüm Agent'lar İçin Zorunlu)
 
 Her agent bu kurallara uyar, istisnası yoktur:
@@ -149,8 +219,11 @@ Kuralların kağıt üstünde kalmaması için bash hook'ları:
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
 | `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Gate PASSED yoksa commit bloklar |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded değer, debug kodu, secret tarar |
+| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded değer, debug kodu, secret + impeccable slop tarar |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP güncelleme hatırlatıcısı |
+| impeccable (plugin) | PostToolUse:Edit/Write, Stop | UI dosyası düzenlendikçe tasarım detector'ını çalıştırır |
+
+Hook'un çalıştığını varsayma — `bash scripts/health-check.sh` ile doğrula.
 
 ---
 
@@ -182,13 +255,23 @@ Her agent bir göreve başlamadan önce şunları kontrol et:
 
 ### Ahmet'in Repo'ları
 
-| Repo | Tema Dosyası | Stack Özellikleri |
-|------|-------------|-------------------|
-| ahmetakyapi.com | `themes/ahmetakyapi.md` | Next.js, Three.js, Framer Motion |
-| Mimio | `themes/mimio.md` | Next.js, custom data-theme |
-| DigyNotes | `themes/digynotes.md` | Next.js, Emerald accent, html.light |
-| Keskealsaydım | `themes/keskealsaydim.md` | Next.js, shadcn, HSL vars |
-| Ramazan Vakitleri | `themes/ramazan-vakitleri.md` | Dark only, Mor+Pembe+Mavi |
+`~/Desktop/Projects/` altında **12 aktif proje** var; altısının görsel hafızası
+belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
+
+| Repo | Tema Dosyası | Stack / Not |
+|------|-------------|-------------|
+| ahmetakyapi.com | `themes/ahmetakyapi.md` | Next.js, Three.js, Framer Motion — **ekosistemin görsel referansı** |
+| Açılış Zili | `themes/acilis-zili.md` | Next 16, Tailwind v4, Neon — **en disiplinli görsel sistem**, örnek alınmalı |
+| Mimio | `themes/mimio.md` | Next.js, custom `data-theme`, varsayılan açık |
+| Keskealsaydım | `themes/keskealsaydim.md` | Go backend + `frontend/` içinde Next.js (monorepo) |
+| Ramazan Vakitleri | `themes/ramazan-vakitleri.md` | React + Vite, dark-only, mor–pembe–mavi (token'lı) |
+| DigyNotes | `themes/digynotes.md` | Belgeli ama `~/Desktop/Projects/` altında **yok** — taşınmış olabilir |
+| onepiece-hub | *(belgesiz)* | Next 14, dark-only, `ocean/gold/sea/luffy/fruit` paleti |
+| simayahi | *(belgesiz)* | Next.js — **denetimde en temiz proje** |
+| derinay · dungeon-mates · elevenforge · harfiyen · karalama | *(belgesiz)* | Next.js |
+
+> Belgesiz bir projede çalışıyorsan önce `bash scripts/audit-project.sh <yol>`
+> çalıştır — paletini ve mevcut durumunu bilmeden değişiklik yapma.
 
 ---
 
@@ -203,42 +286,77 @@ Her agent bir göreve başlamadan önce şunları kontrol et:
 | `/deploy` | Vercel deploy checklist | DP, BA |
 | `/release [patch\|minor\|major]` | npm paketi yayınla | DP |
 | `/new-project [ad]` | Yeni proje sihirbazı | BA |
+| `/clone-website <url>` | Pixel-perfect site klonlama | UI |
+| `/impeccable <komut>` | Tasarım sözlüğü — 23 komut | UI, FE, GATE |
+
+### Doğrulama Komutları
+
+Kontrol listesi okumak yerine bunları **çalıştır**:
+
+| Komut | Ne doğrular | Kim |
+|-------|-------------|-----|
+| `npm run design:detect` | 59 tasarım anti-pattern kuralı | UI, GATE |
+| `bash scripts/audit-project.sh <yol>` | Bir projeyi 8 standarda karşı denetler | UI, GATE, BA |
+| `npm run verify:exports` | Paket manifest'inin vaat ettiği yollar gerçekten var mı | DP, GATE |
+| `bash scripts/health-check.sh` | Ekosistem bütünlüğü — 12 kategori | BA, GATE |
+| `npm pack --dry-run -w <paket>` | Yayınlanacak tarball içeriği | DP |
 
 ---
 
-## Güncel Teknoloji Referansları
+## Teknoloji Referansları
 
-### Next.js 15
+> **Ekosistem tek sürümde değil.** Aşağıdaki tabloyu okumadan sürüme özgü
+> desen yazma — v4 sözdizimini v3 projesine uygulamak sessizce çalışmaz.
+> **Her zaman önce projenin `package.json`'ına bak.**
 
-- `params` ve `searchParams` artık `Promise<...>` — `await` edilmeli
-- `use cache` direktifi — granüler cache kontrolü
-- `unstable_cache` → `use cache` ile değiştir
-- PPR (Partial Prerendering) — experimental ama stabil yaklaşıyor
-- `after()` API — response sonrası background işlemler
+### Gerçek durum (2026-08-16 ölçümü)
 
-### React 19
+| Proje | Next | React | Tailwind |
+|-------|------|-------|----------|
+| acilis-zili | **16.2** | **19.2** | **v4** |
+| elevenforge | **16.2** | **19.2** | **v4** |
+| Mimio | 15.5 | 18.2 | **v4** |
+| ahmetakyapi.com · onepiece-hub · derinay · harfiyen · simayahi · dungeon-mates | 14.2 | 18 | v3.4 |
+| ramazan-vakitleri | *(Vite)* | 18.2 | *(saf CSS)* |
 
-- `use(promise)` hook — Suspense ile async data
-- `useActionState` — form action durumu
-- `useOptimistic` — optimistic UI
-- `useFormStatus` — form submission durumu
-- Server Actions stabil — `'use server'` direktifi
-- `ref` artık prop olarak geçilebilir (forwardRef gereksiz)
-- `<form action={serverAction}>` — doğrudan Server Action bağlantısı
+Çoğunluk hâlâ **Next 14 + React 18 + Tailwind v3**. Yeni proje şablonları da
+öyle. Next 16 yalnızca iki projede.
 
-### Tailwind v4
+### Sürüme göre farklar
 
-- Config dosyası yok — `tailwind.config.ts` kullanılmaz
-- `@import "tailwindcss"` CSS dosyasında
-- `@theme { }` bloğunda custom token'lar
-- `@layer` kullanımı aynı
-- Artık PostCSS plugin değil, Vite/native entegrasyon
+**Next 15+** — `params` / `searchParams` `Promise` döner, `await` şart.
+`after()` API'si response sonrası iş için. Next 14'te ikisi de yok.
 
-### TypeScript 5.5+
+**Next 16** — `PageProps` ve `RouteContext` tipleri `.next/types` altına
+**build sırasında** üretiliyor ve gitignore'da. Temiz bir kopyada `npm run
+typecheck` öncesi **`npm run build` çalıştır**, yoksa onlarca sahte
+"Cannot find name 'PageProps'" hatası alırsın (`acilis-zili` CLAUDE.md).
 
-- `satisfies` operatörü — type narrowing için
-- `const` type parameters
-- Inferred type predicates
+**React 19** — `use(promise)`, `useActionState`, `useOptimistic`,
+`useFormStatus`. `ref` artık prop, `forwardRef` gereksiz. React 18
+projelerinde bunların hiçbiri yok.
+
+**Tailwind v4** — `tailwind.config.ts` **yok**; token'lar CSS'te `@theme {}`
+bloğunda. `@import "tailwindcss"`. PostCSS plugin'i değil.
+**v3'te tam tersi**: config dosyası var, `@tailwind base/components/utilities`
+direktifleri kullanılır ve `postcss.config.js` olmadan utility'ler işlenmez
+(`mistakes.md` #28).
+
+**Tailwind — her iki sürümde**: `@layer components` içindeki özel sınıflar
+kullanılmıyorsa **purge edilir**, üretilen CSS'e hiç girmez. Bir sınıfın
+çalıştığını varsayma; `dist`/`.next` CSS'inde ara.
+
+### TypeScript
+
+`satisfies`, `const` type parameters, inferred type predicates kullanılabilir.
+Projelerin tamamı `strict: true`.
+
+### Claude Agent SDK
+
+- `Agent` tool — yeni agent spawn et
+- `SendMessage` — mevcut agent'a mesaj gönder
+- `subagent_type` — hangi agent tipi kullanılacak
+- `isolation: "worktree"` — izole git worktree
 
 ### Claude Agent SDK
 

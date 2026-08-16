@@ -192,6 +192,30 @@ UI/UX veya Frontend Agent çıktısı inceleniyorsa ek olarak:
 
 ---
 
+## Agent Çıktısını Kabul Ederken
+
+**Kanıtsız "yaptım"ı kabul etme.** Her agent teslimatında çalıştırdığı doğrulama
+komutlarını ve sonuçlarını yazmakla yükümlü (`AGENT_PROTOCOL.md → Doğrulama
+Disiplini`). Yazmamışsa teslimat eksiktir — geri gönder.
+
+| Teslimat der ki | Sen sorarsın |
+|-----------------|--------------|
+| "Build geçiyor" | Çıktı nerede? |
+| "Görünüm değişmedi" | Üretilen CSS'ten karşılaştırdın mı? |
+| "Detector temiz" | Exit kodu neydi? |
+| "Testler geçiyor" | Kaç test? Yoksa "test yok" mu demek istedin? |
+| "Paket hazır" | Temiz dizinde kurup import ettin mi? |
+
+**Sayı iyileşmesi tek başına başarı değildir.** Bir kontrast düzeltmesi detector
+bulgusunu artırabilir; bir "temizlik" ürünü kötüleştirebilir. Ölçüt kullanıcının
+gördüğü şeyin doğru olması.
+
+**Kuralı sorgula.** İyi yapılmış bir işi değiştirmeye zorlayan kural, yanlış
+kuraldır. Degrade metin yasağı tam olarak böyleydi: üç projede de kasıtlı ve
+doğru kullanılıyordu, yasak kaldırıldı ve token'lama + fallback şartına
+indirgendi. Bir agent "kural böyle diyor ama bu değişiklik ürünü kötüleştirir"
+diyorsa, agent'ı değil kuralı incele.
+
 ## Kesinlikle Yapma
 
 - Kod yazma — sadece analiz et ve yönlendir
@@ -200,6 +224,7 @@ UI/UX veya Frontend Agent çıktısı inceleniyorsa ek olarak:
 - Scope creep'e izin verme — ekstra özellikler isteyen değil, iş değeri sorgulayan ol
 - Teknik detaylara gömülme — iş mantığına odaklan
 - Sadece sorunları listele — her soruna çözüm öner
+- **Doğrulama çıktısı olmayan teslimatı Gate'e geçirme**
 
 ---
 

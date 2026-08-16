@@ -84,7 +84,7 @@ html:not(.dark) body {
    * `.text-gradient` / `.text-gradient-warm` kaldırıldı: metne degrade
    * kırpmak en tanınır AI tell'lerinden biri (impeccable `gradient-text`) ve
    * responsive'de satır kırılması öngörülemez oluyordu (mistakes.md #42).
-   * Degrade metinde değil, yalnızca 3 imza yüzeyinde yaşar (`bg-signature`).
+   * Degrade kullanılacaksa solid fallback şart — bkz. rules/design-tokens.md
    */
   .text-accent {
     color: rgb(79, 70, 229);

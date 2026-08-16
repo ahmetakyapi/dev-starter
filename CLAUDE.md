@@ -38,7 +38,7 @@ dev-starter/
 │
 ├── rules/
 │   ├── immutable-architecture.md → Kırılamaz mimari kurallar (10 kural)
-│   ├── design-tokens.md          → Token enforcement + degrade disiplini + AI-slop yasakları
+│   ├── design-tokens.md          → Token enforcement + degrade kuralları + AI-slop yasakları
 │   ├── commit-conventions.md     → Conventional commit standardı
 │   ├── bugfix-protocol.md        → TDD bugfix akışı
 │   ├── dev-cycle.md              → Plan → Dev → Gate → Commit → Review pipeline
@@ -185,7 +185,7 @@ npm run design:detect        # 59 anti-pattern kuralı, insan okunur
 npm run design:detect:json   # CI için
 ```
 
-Kurallar: `rules/design-tokens.md → Degrade Disiplini` ve `→ AI-Slop Yasakları`.
+Kurallar: `rules/design-tokens.md → Degrade Kuralları` ve `→ AI-Slop Yasakları`.
 Agent sözlüğü: `agents/uiux-agent.md → Impeccable`.
 
 **Degrade yasak değildir.** Bağlayıcı iki kural var, gerisi tasarım kararı:
@@ -352,7 +352,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 | Kural | Özet |
 |-------|------|
 | `immutable-architecture.md` | Server-first, performance, DB migration, state, auth, no shortcuts |
-| `design-tokens.md` | Hardcoded renk/boyut YASAK, semantic token zorunlu, degrade disiplini (3 imza anı), AI-slop yasakları |
+| `design-tokens.md` | Hardcoded renk/boyut YASAK, semantic token zorunlu, degrade kuralları (token + fallback), AI-slop yasakları |
 | `commit-conventions.md` | `feat/fix/refactor(scope): description` formatı |
 | `bugfix-protocol.md` | TDD: failing test → fix → green → regression → document |
 | `dev-cycle.md` | Plan → Dev → Gate → Commit → Review pipeline |

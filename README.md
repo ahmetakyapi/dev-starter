@@ -27,7 +27,7 @@ dev-starter/
 │
 ├── rules/               7 kural dosyası
 │   ├── immutable-architecture.md   10 kırılamaz mimari kural
-│   ├── design-tokens.md            Token yasağı + degrade disiplini + AI-slop
+│   ├── design-tokens.md            Token yasağı + degrade kuralları + AI-slop
 │   ├── commit-conventions.md       Conventional commit standardı
 │   ├── bugfix-protocol.md          TDD bugfix akışı
 │   ├── dev-cycle.md                Plan → Dev → Gate → Commit → Review

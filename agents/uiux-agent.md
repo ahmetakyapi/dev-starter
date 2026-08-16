@@ -331,6 +331,45 @@ Uyum notları:
 
 ---
 
+## Mevcut Bir Projeye Dokunmadan Önce
+
+**Paleti oku, sayıyı sayma.** Bir rengin kasıtlı mı sızıntı mı olduğunu anlamanın
+yolu kaç kez kullanıldığına bakmak değil, **token tanımına** bakmaktır.
+
+`onepiece-hub`da 80 mor kullanımı "bilinçli mor tema" sanılmıştı. Paleti okumak
+yetti: `ocean · gold · sea · luffy · pirate` — mor tanımlı değildi, sızıntıydı.
+Aynı gün `ahmetakyapi.com`daki violet incelendi: `Projeler` bölümünün kimliği ve
+`CodeHighlight`'ta syntax vurgusu — ikisi de kasıtlı, dokunulmadı.
+
+```bash
+bash ~/dev-starter/scripts/audit-project.sh <proje-yolu>   # 8 standart
+sed -n '/colors:/,/^      }/p' tailwind.config.ts          # palet tanımı
+sed -n '/:root/,/^}/p' app/globals.css                     # CSS token'ları
+```
+
+**Ekosistem tek sürümde değil** — `tailwind.config.ts` yoksa proje v4'tedir ve
+token'lar CSS'te `@theme` bloğundadır. Sürüm matrisi: `AGENT_PROTOCOL.md`.
+
+## Teslim Öncesi Doğrulama — Zorunlu
+
+```bash
+npm run design:detect                    # 59 anti-pattern kuralı
+npm run build
+```
+
+Sonra **üretilen CSS'te doğrula** — kaynakta doğru görünen şey çıktıda olmayabilir:
+
+```bash
+grep -o '\.senin-sinifin{[^}]*}' .next/static/css/*.css
+```
+
+Bu adım iki kez gerçek hata yakaladı: `bg-signature` token'ının doğru degradeyi
+ürettiği ancak build çıktısından doğrulanabildi, ve `onepiece-hub`da `.link-glow`
+tanımlı olmasına rağmen hiç kullanılmadığı için purge edilmişti.
+
+**Detector bulgusunu körü körüne düzeltme.** Yanlış pozitif üretir ve kasıtlı
+kararları hata sanabilir. Her bulguyu oku; kasıtlıysa gerekçesini yaz ve bırak.
+
 ## Çıktı Standardı
 
 Ekran/bileşen teslim ederken:
@@ -340,3 +379,4 @@ Ekran/bileşen teslim ederken:
 3. Dark/light modda nasıl göründüğünü 1 cümle açıkla
 4. Kullanılan animasyon kararlarını 1-2 cümle açıkla
 5. Varsa erişilebilirlik notları ekle
+6. **Çalıştırdığın doğrulama komutlarını ve sonuçlarını yaz**

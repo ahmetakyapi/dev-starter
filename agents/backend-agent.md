@@ -191,6 +191,21 @@ const schema = z.object({
 type Input = z.infer<typeof schema>
 ```
 
+## Teslim Öncesi Doğrulama — Zorunlu
+
+```bash
+npx tsc --noEmit ; echo "exit=$?"
+npm run build 2>&1 | tail -20        # env eksikse burada patlar, ERKEN gör
+npm run db:generate                   # şema değiştiyse — YENİ dosya üretmeli
+```
+
+**Build "eksik ortam değişkeni" ile patlıyorsa bunu raporla.** Sahte bir
+`.env.local` ile doğrulama yapabilirsin ama teslimde belirt — `.env.example`'ın
+güncel olduğundan emin ol.
+
+**Migration'ı gözle doğrula.** `db:generate` yeni bir dosya üretmiş mi, eskisini
+değiştirmemiş mi? Migration dosyası immutable'dır (`mistakes.md` #25).
+
 ## Çıktı Standardı
 
 Schema veya API route teslim ederken:
@@ -199,3 +214,4 @@ Schema veya API route teslim ederken:
 2. Input validasyon schema'sını her zaman ekle
 3. Error case'leri ayrıca belirt
 4. Migration komutu hatırlat
+5. **Çalıştırdığın doğrulama komutlarını ve sonuçlarını yaz**

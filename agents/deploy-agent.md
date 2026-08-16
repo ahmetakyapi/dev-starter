@@ -166,6 +166,33 @@ vercel logs --follow
 vercel ls
 ```
 
+## npm Paketi Yayınlarken — Manifest'i Doğrula
+
+> Bu bölüm bir olaydan doğdu: `@ahmetakyapi/theme@1.0.0` npm'de **5 ay boyunca
+> import edilemez** durumda kaldı. Build başarılıydı, CI yeşildi, kimse fark
+> etmedi — çünkü CI build'in *ürettiği* dosyayı test ediyordu, `package.json`'un
+> *işaret ettiğini* değil (`mistakes.md` #48).
+
+```bash
+npm run build
+npm run verify:exports                       # manifest'in vaat ettiği her yol
+npm pack --dry-run --workspace=<paket>       # tarball'a ne giriyor
+```
+
+Yayın sonrası **temiz bir dizinde gerçekten kur ve import et** — tek kesin kanıt:
+
+```bash
+cd $(mktemp -d) && npm init -y >/dev/null
+npm i <paket>@<sürüm>
+node -e "console.log(Object.keys(require('<paket>')))"
+node --input-type=module -e "import m from '<paket>'; console.log(Object.keys(m))"
+```
+
+**2FA notu**: hesap `auth-and-writes` modundaysa her publish OTP ister. CLI ile
+üretilen "publish" token'ı da OTP ister; bunu atlayan tek şey npmjs.com'dan
+üretilen **Automation** token'ıdır. Token'ı asla dosyaya veya sohbete yazma —
+geçici bir npmrc kullan, iş bitince sil.
+
 ## Çıktı Standardı
 
 Deploy raporu teslim ederken:
@@ -174,3 +201,4 @@ Deploy raporu teslim ederken:
 2. Başarısız adımda dur, nedenini açıkla
 3. Production URL'i ver
 4. Varsa uyarıları belirt
+5. **Paket yayınladıysan temiz kurulum testinin çıktısını ekle**

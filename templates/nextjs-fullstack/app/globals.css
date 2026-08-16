@@ -130,7 +130,7 @@ html:not(.dark) body {
   /*
    * Vurgu kelimesi — degrade DEĞİL, solid marka rengi.
    * Metne degrade kırpmak en tanınır AI tell'lerinden biridir
-   * (impeccable `gradient-text`). Degrade yalnızca 3 imza yüzeyinde yaşar.
+   * Degrade kullanılacaksa solid fallback şart — bkz. rules/design-tokens.md
    */
   .text-accent {
     color: rgb(79, 70, 229);

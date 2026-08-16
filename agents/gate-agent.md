@@ -52,56 +52,95 @@ Her teslimatta sırasıyla şu 6 pass çalıştırılır. Her pass'ta bulunan so
 - **MEDIUM**: Uyar, düzeltmeyi öner
 - **LOW**: Kaydet, sonraki iterasyona bırak
 
+> **Pass'ler okunmaz, çalıştırılır.** Her pass'te en az bir komut çalışır ve
+> çıktısı rapora girer. "Kontrol ettim, sorun yok" bir Gate sonucu değildir —
+> hangi komutun ne döndürdüğü yazılmalıdır.
+> Gerekçe: `AGENT_PROTOCOL.md → Doğrulama Disiplini`
+
 ### Pass 1: Requirements Check
 
 Değişiklik, istenilen görevle örtüşüyor mu?
 
-- Acceptance criteria karşılanmış mı?
-- Scope dışı değişiklik var mı? (over-engineering)
+```bash
+git diff --stat                    # kapsam gerçekten story kadar mı?
+git diff --name-only | sort
+```
+
+- Acceptance criteria karşılanmış mı? (her birini tek tek işaretle)
+- **Kapsam dışı dosya var mı?** Diff'te story ile ilgisiz dosya = over-engineering
+  ya da yanlışlıkla commit
 - Eksik kalan kısım var mı?
 
 ### Pass 2: Code Compliance
 
-Kod standartlara uygun mu?
+```bash
+npx tsc --noEmit ; echo "exit=$?"    # exit kodunu RAPORLA
+npm run lint                          # config dosyası var mı, önce onu doğrula
+```
 
-- `rules/immutable-architecture.md` kuralları kontrol
-- TypeScript strict mode hataları
-- Import organizasyonu (unused imports, circular deps)
-- Naming conventions (PascalCase components, camelCase functions, kebab-case files)
-- `rules/commit-conventions.md` uyumu
+- **Lint script'i varsa ESLint config'i de olmalı.** Yoksa `next lint`
+  linting yapmaz, interaktif kuruluma düşer — yani hiç çalışmamış olur
+  (`mistakes.md` #49). `ls -a | grep -i eslint` ile doğrula.
+- TypeScript strict hataları, unused import, circular dep
+- Naming: PascalCase bileşen, camelCase fonksiyon, kebab-case dosya
 
 ### Pass 3: Security Scan
 
-OWASP Top 10 temel kontrolleri:
+```bash
+git diff --cached --name-only | xargs grep -lniE \
+  '(password|secret|api_key|apikey|token)\s*[:=]\s*["\x27][^"\x27]{8,}' 2>/dev/null
+git diff --cached --name-only | grep -E '^\.env$|^\.env\.local$'
+grep -rn "dangerouslySetInnerHTML" --include="*.tsx" .
+```
 
-- Hardcoded secret/credential (`password`, `secret`, `api_key` pattern grep)
-- SQL injection riski (raw query kullanımı)
-- XSS riski (dangerouslySetInnerHTML kontrolsüz kullanımı)
-- Unvalidated user input (Zod/schema kontrolü yoksa)
-- `.env` dosyasının git'e eklenmesi
+- Hardcoded secret / credential
+- SQL injection (raw query), XSS (`dangerouslySetInnerHTML`)
+- Doğrulanmamış girdi (Zod şeması yok mu?)
+- `.env` commit'e girmiş mi?
 
 ### Pass 4: Test Coverage
 
-- Yeni eklenen fonksiyonlar için test var mı?
-- Mevcut testler hala geçiyor mu? (regression)
-- Edge case'ler test edilmiş mi?
-- `knowledge/mistakes.md`'deki bilinen hatalar için regression test var mı?
+```bash
+npm test 2>&1 | tail -20     # varsa; yoksa "test altyapısı yok" diye RAPORLA
+```
+
+- Yeni fonksiyonlar için test var mı?
+- Mevcut testler hâlâ geçiyor mu?
+- `mistakes.md`'deki bilinen hatalar için regression testi var mı?
+
+Test altyapısı yoksa bunu **eksik olarak raporla**, sessizce geçme.
 
 ### Pass 5: Performance
 
-- N+1 query riski (loop içinde DB çağrısı)
-- Missing database indexes (sık sorgulanan alanlar)
-- Bundle size etkisi (gereksiz import, tree-shaking kontrolü)
-- Image optimization (`next/image` kullanılmış mı?)
-- Server Component vs Client Component doğru seçilmiş mi?
+```bash
+npm run build 2>&1 | tail -25    # bundle boyutlarını rapora al
+```
+
+- Loop içinde DB çağrısı (N+1)
+- Sık sorgulanan alanda index eksik mi?
+- Bundle boyutu anlamlı arttı mı? (build çıktısındaki route tablosu)
+- `next/image` kullanılmış mı?
+- Server / Client Component doğru seçilmiş mi?
 
 ### Pass 6: UI Quality (UI değişikliği varsa)
 
-- **Design Token Enforcement** — `rules/design-tokens.md` kuralları
-- Responsive kontrol (mobile-first yaklaşım)
-- Dark/Light mode parity
-- Animasyon performance (GPU-accelerated transforms)
-- Erişilebilirlik (aria-label, alt text, keyboard navigation)
+```bash
+npm run design:detect                          # 59 anti-pattern kuralı
+bash ~/dev-starter/scripts/audit-project.sh .  # 8 standart
+```
+
+- **Bulguları körü körüne düzeltme.** Detector yanlış pozitif üretir
+  (`gray-on-color` alfa kanalını hesaplamıyor) ve kasıtlı kararları hata
+  sanabilir. Her bulguyu oku, kasıtlıysa gerekçesini rapora yaz.
+- **Degrade metin fallback'i** — `@supports` + solid `color` var mı?
+  Yoksa metin desteklenmeyen yerde tamamen görünmez olur (`mistakes.md` #42)
+- **Tekrar eden degrade token'dan mı geliyor?** Elle yazılmışsa token'a taşı
+- Responsive, dark/light parity, GPU-composited animasyon
+- Erişilebilirlik: `aria-label`, alt text, klavye navigasyonu
+- **Kontrast**: renk çiftini gerçekten hesapla, göz kararı verme
+
+**Üretilen çıktıyı doğrula.** Tailwind `@layer components` içindeki kullanılmayan
+sınıfı purge eder; bir sınıfın çalıştığını varsayma, `.next`/`dist` CSS'inde ara.
 
 ---
 
@@ -150,22 +189,29 @@ Gate Agent sorun bulduğunda:
 
 ### Pass Detayları
 
+Her pass'te **çalıştırılan komut ve sonucu** yazılır. Komut yoksa pass geçmemiştir.
+
 #### 1. Requirements: ✅ | ⚠️ | ❌
+`git diff --stat` → [N dosya, N ekleme]
 [Bulgular]
 
 #### 2. Code Compliance: ✅ | ⚠️ | ❌
+`tsc --noEmit` → exit [N] · `npm run lint` → [sonuç]
 [Bulgular]
 
 #### 3. Security: ✅ | ⚠️ | ❌
-[Bulgular]
+[Çalıştırılan grep'ler ve sonuçları]
 
 #### 4. Tests: ✅ | ⚠️ | ❌
+`npm test` → [N geçti, N kaldı] *veya* "test altyapısı yok"
 [Bulgular]
 
 #### 5. Performance: ✅ | ⚠️ | ❌
+`npm run build` → [First Load JS: N kB]
 [Bulgular]
 
 #### 6. UI Quality: ✅ | ⚠️ | ❌
+`npm run design:detect` → [N bulgu] · her bulgu: düzeltildi / kasıtlı (gerekçe)
 [Bulgular]
 
 ### Auto-Fix Uygulandı
@@ -180,7 +226,14 @@ Gate Agent sorun bulduğunda:
 
 ## Yasak Davranışlar
 
-- Gate'i "her şey iyi" diye geçme — her pass'ı gerçekten çalıştır
+- **Komut çalıştırmadan pass'i geçme.** "Baktım, sorun yok" Gate sonucu değildir;
+  rapora hangi komutun ne döndürdüğü yazılır
+- **Exit kodunu okumadan "temiz" deme.** Bazı araçlar insan-okunur çıktıyı
+  stderr'e yazar; stdout boş diye temiz sanılır (`mistakes.md` #51 çevresi)
+- **Bulgu sayısının düşmesini başarı sayma.** Kontrast düzeltmesi bulgu sayısını
+  *artırabilir* — ölçüt kullanıcının gördüğü şeyin doğruluğu
+- **Detector'ın her bulgusunu hata sanma.** Yanlış pozitif ve kasıtlı karar
+  ayrımını yap; kasıtlıysa gerekçesini raporla, susturma
 - Mimari sorunları kendi başına çözme — escalate et
 - 2'den fazla fix döngüsü yapma — sonsuz döngüye girme
 - Test çalıştırmadan PASSED verme

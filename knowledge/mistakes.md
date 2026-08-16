@@ -639,7 +639,7 @@ yetmiyor — `bg-signature` gibi tek satırlık bir kullanım yolu olmazsa herke
 
 **Çözüm**: `gradients.signature` + `backgroundImage.signature` → `bg-signature`.
 Degrade yalnızca 3 yerde: birincil eylem, marka döşemesi, seçili gezinme satırı.
-Bkz. `rules/design-tokens.md → Degrade Disiplini`.
+Bkz. `rules/design-tokens.md → Degrade Kuralları`.
 
 ### 44. `width`/`height` Animasyonu — Layout Thrash
 **Hata**: CustomCursor üç dosyada da `transition: 'width 0.2s, height 0.2s'` kullanıyordu.
