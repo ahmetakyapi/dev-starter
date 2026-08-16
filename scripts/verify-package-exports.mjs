@@ -17,12 +17,27 @@
  */
 
 import { existsSync } from 'node:fs'
-import { readFile } from 'node:fs/promises'
+import { readFile, readdir } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { resolve, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 const PACKAGES = ['packages/@ahmet/theme', 'packages/@ahmet/ui']
+
+/** src/ altında herhangi bir dosya `'use client'` ile başlıyor mu? */
+async function sourceDeclaresUseClient(srcDir) {
+  if (!existsSync(srcDir)) return false
+  for (const entry of await readdir(srcDir, { withFileTypes: true })) {
+    const full = join(srcDir, entry.name)
+    if (entry.isDirectory()) {
+      if (await sourceDeclaresUseClient(full)) return true
+    } else if (/\.(ts|tsx|js|jsx)$/.test(entry.name)) {
+      const first = (await readFile(full, 'utf8')).split('\n')[0].trim()
+      if (/^['"]use client['"]/.test(first)) return true
+    }
+  }
+  return false
+}
 
 /** exports alanındaki tüm string hedefleri topla (iç içe koşullar dahil) */
 function collectExportTargets(exportsField, acc = []) {
@@ -88,6 +103,27 @@ for (const pkgDir of PACKAGES) {
       pass(`ESM yüklendi — ${Object.keys(mod).length} export`)
     } catch (err) {
       fail(`${pkg.name}: ESM girişi yüklenemedi — ${err.message}`)
+    }
+  }
+
+  // 5. Kaynak 'use client' istiyorsa dist'in İLK satırında da olmalı.
+  //    tsup bundle ederken direktifi düşürür; banner ile geri konmazsa paket
+  //    App Router'da kırılır ve build + tsc + yükleme testleri bunu GÖREMEZ
+  //    (yayındaki 2.1.0 tam olarak böyleydi — bkz. mistakes.md #52).
+  if (await sourceDeclaresUseClient(resolve(pkgDir, 'src'))) {
+    for (const field of ['main', 'module']) {
+      const target = pkg[field]
+      if (!target) continue
+      const firstLine = (await readFile(resolve(pkgDir, target), 'utf8')).split('\n')[0]
+      if (/^['"]use client['"]/.test(firstLine.trim())) {
+        pass(`${field} ilk satırında 'use client' — App Router güvenli`)
+      } else {
+        fail(
+          `${pkg.name}: kaynakta 'use client' var ama ${target} ilk satırında YOK ` +
+            `(bulunan: ${JSON.stringify(firstLine.slice(0, 40))}) — App Router'da kırılır. ` +
+            `tsup.config.ts'e banner ekle.`
+        )
+      }
     }
   }
 }

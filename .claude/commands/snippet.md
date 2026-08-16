@@ -1,5 +1,6 @@
 ---
 description: Hizli bilesen snippet uret — modal, form, drawer, skeleton, toast, confirm, vb.
+argument-hint: "modal | drawer | form | skeleton | toast | confirm | search-bar | animated-number | infinite-scroll | og-image"
 ---
 
 `$ARGUMENTS` tipinde bir bilesen snippet'i uret.

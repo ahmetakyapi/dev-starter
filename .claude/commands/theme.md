@@ -1,5 +1,6 @@
 ---
 description: Proje temasini uygula veya guncelle
+argument-hint: "ahmetakyapi | acilis-zili | mimio | keskealsaydim | ramazan-vakitleri"
 ---
 
 `$ARGUMENTS` projesinin gorsel temasini uygula.
@@ -18,10 +19,13 @@ description: Proje temasini uygula veya guncelle
 
 Mevcut temalar (DESIGN.md 9-section formatinda):
 - `ahmetakyapi` — Ana gorsel dil (indigo/cyan/emerald, glassmorphism, Manrope)
-- `digynotes` — Emerald accent, aurora animasyonlari, Avenir Next
-- `mimio` — Indigo vurgu, custom data-theme, Plus Jakarta Sans
+- `acilis-zili` — En disiplinli sistem: tek grotesk aile, ton farkiyla derinlik,
+  glass/glow YOK, varsayilan acik tema
+- `mimio` — Mavi→cyan imza degradesi, uc katmanli zemin, varsayilan acik tema,
+  Schibsted Grotesk + Plus Jakarta Sans
 - `keskealsaydim` — Finance dashboard, HSL variables (shadcn), Space Grotesk
 - `ramazan-vakitleri` — Dark only, mor+pembe+mavi, system font
+- `digynotes` — **ARSIV**: proje diskte yok, dosya dogrulanamaz
 
 Yeni tema olusturmak icin: `templates/docs/DESIGN.template.md` sablonunu kullan.
 

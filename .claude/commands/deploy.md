@@ -1,5 +1,6 @@
 ---
 description: Vercel deployment checklist ve hazirlik
+argument-hint: "[ortam]"
 ---
 
 Deploy oncesi kontrol listesini calistir. `agents/deploy-agent.md` protokolunu takip et.

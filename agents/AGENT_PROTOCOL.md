@@ -1,7 +1,9 @@
 # Agent Haberleşme Protokolü
 
 Bu dosya tüm agent'ların nasıl iletişim kurduğunu tanımlar.
-Claude Code Agent SDK'sının `Agent` ve `SendMessage` araçlarını kullanır.
+Bu dosyalar ana oturumun **üstlendiği rol tanımlarıdır** — `.claude/agents/`
+altında kayıtlı Claude Code subagent'ı DEĞİLDİR (istisna: `gate` ve `deploy`,
+bkz. `.claude/agents/`). Ana oturum ilgili dosyayı okur ve o rolü üstlenir.
 
 ---
 
@@ -350,13 +352,6 @@ kullanılmıyorsa **purge edilir**, üretilen CSS'e hiç girmez. Bir sınıfın
 
 `satisfies`, `const` type parameters, inferred type predicates kullanılabilir.
 Projelerin tamamı `strict: true`.
-
-### Claude Agent SDK
-
-- `Agent` tool — yeni agent spawn et
-- `SendMessage` — mevcut agent'a mesaj gönder
-- `subagent_type` — hangi agent tipi kullanılacak
-- `isolation: "worktree"` — izole git worktree
 
 ### Claude Agent SDK
 

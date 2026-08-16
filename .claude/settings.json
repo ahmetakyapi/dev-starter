@@ -1,16 +1,5 @@
 {
-  "permissions": {
-    "allow": [
-      "Read",
-      "Glob",
-      "Grep",
-      "WebSearch",
-      "Bash(bash scripts/health-check.sh)"
-    ],
-    "additionalDirectories": [
-      "C:\\Old Projects\\dev-starter\\.claude"
-    ]
-  },
+  "$comment": "Paylasilan proje ayarlari — versiyonlanir. Makineye ozgu izinler ve yollar .claude/settings.local.json'a (gitignore'lu) yazilir.",
   "hooks": {
     "PreToolUse": [
       {

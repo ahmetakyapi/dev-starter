@@ -703,6 +703,83 @@ gerçekten yüklüyor:
 npm run verify:exports
 ```
 
+### 56. Flat ESLint Config'te `dist/` İç İçe Dizinleri Kapsamaz
+**Hata**: `ignores: ['dist/']` yazıldı, ama flat config'te bu YALNIZCA kök seviyedeki
+`dist/`'i eşleştirir. `packages/@ahmet/ui/dist` lint'lendi ve derlenmiş bundle
+üzerinden 57 sahte hata üretti (`'window' is not defined`, `'prop' is already defined`).
+**Çözüm**: İç içe dizinler için `**/` öneki şart — `'**/dist/**'`.
+**Kural**: Flat config'te her ignore kalıbını en az bir iç içe dizinle test et.
+
+### 55. Maskelenmiş CI Adımı = Olmayan CI Adımı
+**Hata**: CI'da `npx eslint packages/ snippets/ --max-warnings 0 || true`.
+`|| true` yüzünden adım hiçbir koşulda kırmızıya düşemiyordu. Dahası, `eslint` ve
+`typescript-eslint` **devDependencies'te hiç yoktu** — `eslint.config.js` onları
+import ediyordu ama kurulu değillerdi. Yani lint diye bir şey yoktu; ne yerelde
+ne CI'da. health-check ise config dosyasının varlığını görüp ✅ diyordu.
+İlk gerçek `npm run lint` koşusu 128 bulgu verdi.
+**Çözüm**: `|| true` kaldırıldı, bağımlılıklar eklendi ve **v9'a pinlendi**
+(`npx` 10.x çekiyordu; sürüm her koşuda değişince sonuç deterministik olmuyor).
+**Kural**: `|| true` taşıyan bir CI adımı dokümantasyondur, kapı değildir.
+Bir kapının kapı olduğunu, onu bilerek kırmızıya düşürerek kanıtla.
+
+### 54. `! grep ... || echo "temiz"` Ters Çalışır
+**Hata**: CI'ın güvenlik taraması bu idiomu kullanıyordu:
+```bash
+! grep -rnE '(password|secret|api_key)\s*[:=]\s*"[^"]{8,}' . || echo "No secrets found"
+```
+Sızıntı **varken** çıktı şu oluyordu:
+```
+leak.ts:1:const api_key = "SUPERSECRETVALUE123"
+No secrets found
+exit=0
+```
+Yani eşleşen satırı basıp hemen ardından "temiz" diyor ve **yeşil geçiyordu**.
+Temiz koşuda ise hiçbir şey basmıyordu — "No secrets found" satırının görünmesi
+zaten sızıntı işaretiydi, tam tersi okunuyordu.
+**Çözüm**: Açık `if` + `exit 1`:
+```bash
+if grep -rnE '...' .; then echo "❌ secret"; exit 1; fi
+echo "✅ temiz"
+```
+**Kural**: Güvenlik kontrolünü `!` ve `||` ile kurma. Her tarayıcıyı bilinen-kötü
+bir fixture ile bir kez kırmızıya düşür — geçtiğini görmek yetmez.
+
+### 53. Template'de `postcss.config.js` Yoksa Tailwind Sessizce Hiç Derlenmez
+**Hata**: `templates/nextjs-fullstack`'te `postcss.config.js` hiç var olmamıştı.
+`globals.css` `@tailwind` direktiflerini içeriyor, `tailwindcss` devDependency
+kurulu — ama PostCSS yapılandırması olmayınca **tek bir utility bile üretilmiyor**.
+Proje açılıyor, çalışıyor, sadece tamamen stilsiz.
+**Neden fark edilmedi**: `next build`, `tsc --noEmit` ve `next lint` ÜÇÜ DE yeşil
+verir. Bu sınıf hata hiçbir derleyici kapısına takılmaz.
+(Aynı ders `templates/landing`'de öğrenilmiş — bkz. #28 — ama buraya taşınmamıştı.)
+**Çözüm**: Yapısal invaryant — `health-check.sh` artık şunu zorunlu kılıyor:
+bir template'in `globals.css`'i `@tailwind` içeriyorsa `postcss.config.*` VAR olmalı.
+**Kural**: Derleyicinin göremediği hatayı invaryantla yakala. "Build geçiyor"
+bir stil hattının çalıştığının kanıtı değildir.
+
+### 52. Claude Code Hook'ları Girdiyi STDIN'den JSON Alır — `TOOL_INPUT` Diye Bir Şey Yok
+**Hata**: `gate-guard.sh` ve `quality-scan.sh` şöyle başlıyordu:
+```bash
+TOOL_INPUT="${TOOL_INPUT:-}"
+if ! echo "$TOOL_INPUT" | grep -qE 'git\s+commit'; then exit 0; fi
+```
+Claude Code hook'a girdiyi **stdin'den JSON** olarak verir:
+`{"tool_name":"Bash","tool_input":{"command":"git commit -m ..."}}`.
+`TOOL_INPUT` hiçbir zaman set edilmedi, hep boş geldi, her çağrı ilk satırda
+`exit 0` verdi. Yani secret taraması, `.env` kontrolü, `@ts-ignore` ve impeccable
+taramaları **5 ay boyunca bir kez bile çalışmadı**.
+İkinci hata: `awk -F'|' '{print $NF}'` — markdown tablo satırının son alanı kapanış
+borusundan sonraki BOŞ dizedir, `$(NF-1)` olmalı. Hook çalışsaydı bile Gate PASSED
+olan story'yi bloklayacaktı.
+**Neden fark edilmedi**: `health-check.sh` dosyanın VARLIĞINI test ediyordu
+(`[ -f hooks/gate-guard.sh ]` → "✅ mevcut"). 58 başarılı, 0 hata raporluyordu.
+**Çözüm**: stdin okuma `hooks/lib/hook-input.sh`'e alındı (jq → python3 fallback).
+`scripts/test-hooks.sh` eklendi: gerçek payload verip **exit kodunu** doğrulayan
+9 davranış testi. health-check artık bu testi çalıştırıyor.
+**Kural**: Bir enforcement katmanını **davranışla** doğrula, varlıkla değil.
+Testin geçerli olduğunu, düzeltmeden önce çalıştırıp KIRMIZI gördüğünde bilirsin —
+bu suite eski kodda 3/9 başarısız veriyor.
+
 ### 51. `npm ci --omit=optional` Build'i Kırar
 **Hata**: impeccable puppeteer'ı opsiyonel bağımlılık olarak çekiyor (~150MB Chrome).
 CI'da atlamak için `npm ci --omit=optional` denendi — build şu hatayla kırıldı:

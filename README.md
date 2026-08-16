@@ -67,7 +67,7 @@ dev-starter/
 │
 ├── templates/
 │   ├── docs/                ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS, DESIGN.md şablonları
-│   ├── nextjs-fullstack/    Next.js + Drizzle + auth tam uygulama
+│   ├── nextjs-fullstack/    Next.js + Drizzle iskeleti (auth DAHİL DEĞİL)
 │   └── landing/             Three.js + glassmorphism tanıtım sayfası
 │
 ├── scripts/
@@ -409,7 +409,7 @@ components/
 | 35 | Vercel Edge Function limitleri                | 128KB bundle, 30s timeout, sınırlı API             |
 | 36 | Framer Motion bundle size şişmesi             | LazyMotion + `m` component kullan                  |
 | 37 | npm workspace dependency conflict             | `.npmrc` legacy-peer-deps + root dependencies      |
-| 42 | Degrade metin (`bg-clip-text`)                | Solid `.text-accent` — AI tell'i + satır kırılması |
+| 42 | Degrade metin fallback'siz                    | `@supports` guard + solid `color` — yoksa görünmez |
 | 43 | Token doğru ama kullanım sapmış               | Token'ı utility olarak aç (`bg-signature`)         |
 | 44 | `width`/`height` animasyonu                   | `transform: scale()` — ölçeği iç katmana al        |
 | 46 | Kural kağıtta, ihlal kodda                    | Her kural için çalıştırılabilir kontrol yaz        |
@@ -430,10 +430,11 @@ Tüm tema dosyaları [Google Stitch DESIGN.md](https://github.com/nicholasgriffi
 | Proje             | Dark BG    | Font                 | Vurgu                       | Tema Sistemi          |
 |-------------------|------------|----------------------|-----------------------------|-----------------------|
 | ahmetakyapi.com   | `#04070d`  | Manrope + IBM Plex   | Indigo · Cyan · Emerald     | next-themes class     |
-| Mimio             | `#04070d`  | Plus Jakarta Sans    | Indigo                      | custom data-theme     |
-| DigyNotes         | `#0a0f1e`  | Avenir Next          | Emerald                     | html.light class      |
+| Açılış Zili       | ton farkı  | Schibsted Grotesk    | Lacivert→mavi + yön renkleri | custom, varsayılan açık |
+| Mimio             | `#050b16`  | Schibsted Grotesk + Plus Jakarta Sans | Mavi→Cyan degrade | custom, varsayılan açık |
 | Keskealsaydım     | HSL        | Space Grotesk        | Emerald · Cyan              | shadcn HSL vars       |
 | Ramazan Vakitleri | `#1a1a2e`  | System               | Lavender · Pembe · Mavi     | Dark only, vanilla CSS |
+| ~~DigyNotes~~     | —          | —                    | —                           | **arşiv** — proje diskte yok |
 
 Yeni tema oluşturmak için: `templates/docs/DESIGN.template.md`
 

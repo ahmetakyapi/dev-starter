@@ -38,7 +38,8 @@ E5: Final Acceptance
 - FK ilişkiler tutarlı
 - Edge case verileri dahil (boş alan, uzun metin, özel karakterler)
 
-**Çıktı**: `prisma/seed.ts` veya `seeds/seed.sql`
+**Çıktı**: `scripts/seed.ts` (Drizzle — ekosistem varsayılanı) veya
+`prisma/seed.ts` (Prisma kullanan eski projeler)
 
 ---
 

@@ -6,11 +6,11 @@
 
 set -euo pipefail
 
+# shellcheck source=lib/hook-input.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/hook-input.sh"
+
 # Sadece git commit komutlarını yakala
-TOOL_INPUT="${TOOL_INPUT:-}"
-if ! echo "$TOOL_INPUT" | grep -qE 'git\s+commit'; then
-  exit 0
-fi
+hook_is_git_commit || exit 0
 
 WARNINGS=0
 ERRORS=0
@@ -22,7 +22,9 @@ if [ -z "$STAGED" ]; then
 fi
 
 # 1. Hardcoded hex renk kontrolü (tsx/ts dosyalarında)
-HEX_HITS=$(echo "$STAGED" | grep -E '\.(tsx?|css)$' | xargs grep -ln '#[0-9a-fA-F]\{3,8\}' 2>/dev/null | grep -v 'globals.css\|tailwind\|theme\|\.config\.' || true)
+# Test dosyaları token DEĞERLERİNİ doğrular — hex barındırmaları beklenir.
+# Diğer kontroller zaten test dosyalarını dışlıyor; bu satır o tutarlılığı kurar.
+HEX_HITS=$(echo "$STAGED" | grep -E '\.(tsx?|css)$' | xargs grep -ln '#[0-9a-fA-F]\{3,8\}' 2>/dev/null | grep -v 'globals.css\|tailwind\|theme\|\.config\.\|\.test\.\|\.spec\.' || true)
 if [ -n "$HEX_HITS" ]; then
   echo "⚠️  DESIGN TOKEN: Hardcoded hex renk bulundu:"
   echo "$HEX_HITS" | sed 's/^/   /'

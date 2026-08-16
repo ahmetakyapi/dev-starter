@@ -51,7 +51,9 @@ Kurulu global plugin (`impeccable@impeccable`). Bu agent'ın ortak tasarım dili
 | `/impeccable document` | Mevcut koddan DESIGN.md üret |
 
 **Detector**: `npm run design:detect` — 59 deterministik anti-pattern kuralı.
-Bulgular `rules/design-tokens.md → AI-Slop Yasakları` ile aynı listedir.
+`rules/design-tokens.md → AI-Slop Yasakları` bu 59 kuralın ekosistem için en
+kritik altısını açıklar — aynı liste DEĞİL, alt kümesi. Tam katalog:
+impeccable.style/slop.
 
 **Çakışma kuralı**: Impeccable "the brief wins" der — pinlenmiş palet, font ve
 estetik, doygun-kalıp uyarısını yener. Ahmet'in marka paleti (indigo·blue·cyan·

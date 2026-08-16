@@ -71,8 +71,8 @@ header "Hook Dosyalari"
 HOOKS=("gate-guard" "quality-scan" "routemap-sync")
 for hook in "${HOOKS[@]}"; do
   if [ -f "hooks/${hook}.sh" ]; then
-    if [ -x "hooks/${hook}.sh" ] 2>/dev/null || true; then
-      pass "$hook.sh mevcut"
+    if [ -x "hooks/${hook}.sh" ]; then
+      pass "$hook.sh mevcut ve calistirilabilir"
     else
       warn "$hook.sh mevcut ama calistirilabilir degil (chmod +x gerekli)"
     fi
@@ -81,15 +81,28 @@ for hook in "${HOOKS[@]}"; do
   fi
 done
 
-# Claude Code hook entegrasyonu
-if [ -f ".claude/settings.local.json" ]; then
-  if grep -q "gate-guard" ".claude/settings.local.json" 2>/dev/null; then
-    pass "Hook'lar Claude Code'a bagli"
+# DOSYA VARLIGI YETMEZ — DAVRANISI TEST ET.
+# Bu kategori 5 ay boyunca "✅ mevcut" dedi; hook'lar ise girdiyi yanlis yerden
+# (TOOL_INPUT env var) okudugu icin hicbir zaman calismadi. Varlik testi bu
+# sinif hatayi YAPISAL olarak goremez. Bkz. knowledge/mistakes.md #52
+if [ -f "scripts/test-hooks.sh" ]; then
+  if bash scripts/test-hooks.sh >/dev/null 2>&1; then
+    pass "Hook davranis testi geciyor (scripts/test-hooks.sh)"
   else
-    warn "settings.local.json var ama hook'lar baglanmamis"
+    fail "Hook davranis testi BASARISIZ — 'bash scripts/test-hooks.sh' calistir"
   fi
 else
-  warn ".claude/settings.local.json yok — hook'lar calismayacak"
+  fail "scripts/test-hooks.sh EKSIK — hook'lar dogrulanmiyor"
+fi
+
+# Claude Code hook entegrasyonu — paylasilan settings.json tercih edilir,
+# settings.local.json makineye ozgudur ve versiyonlanmaz
+if grep -qs "gate-guard" ".claude/settings.json"; then
+  pass "Hook'lar Claude Code'a bagli (.claude/settings.json — paylasilan)"
+elif grep -qs "gate-guard" ".claude/settings.local.json"; then
+  warn "Hook'lar sadece settings.local.json'da — paylasilan settings.json'a tasi"
+else
+  fail "Hook'lar Claude Code'a BAGLI DEGIL — hicbiri calismaz"
 fi
 
 # ─── 5. Snippet Files ────────────────────────────────────────────────────────
@@ -135,6 +148,18 @@ for tpl_dir in "nextjs-fullstack" "landing"; do
       pass "templates/$tpl_dir/ ESLint yapilandirmasi mevcut"
     else
       warn "templates/$tpl_dir/ lint script'i var ama ESLint config yok"
+    fi
+  fi
+
+  # @tailwind direktifi kullanan bir template'te postcss.config ZORUNLU.
+  # Yoksa Tailwind hicbir utility uretmez ve build + tsc + lint UCU DE yesil
+  # verir — bu sinif hata ancak yapisal bir invaryantla yakalanir.
+  # nextjs-fullstack'te tam olarak bu oldu (mistakes.md #28, #53)
+  if grep -rqs '@tailwind' "templates/${tpl_dir}/app/globals.css"; then
+    if ls "templates/${tpl_dir}"/postcss.config.* >/dev/null 2>&1; then
+      pass "templates/$tpl_dir/ postcss yapilandirmasi mevcut (Tailwind derlenir)"
+    else
+      fail "templates/$tpl_dir/ @tailwind kullaniyor ama postcss.config YOK — hicbir stil derlenmez"
     fi
   fi
 done

@@ -16,7 +16,7 @@ Gate Agent bu pattern'leri arar. Eşleşme = ihlal.
 | Pattern | Açıklama | Doğru Kullanım |
 |---------|----------|----------------|
 | `#[0-9a-fA-F]{3,8}` | Hardcoded hex renk | CSS variable: `var(--color-primary)` veya Tailwind token |
-| `rgb\(` / `rgba\(` / `hsl\(` / `hsla\(` | Hardcoded renk fonksiyonu | Semantic token kullan |
+| `rgb\(` / `rgba\(` / `hsl\(` / `hsla\(` | Hardcoded renk fonksiyonu | Semantic token kullan (istisna: alfa kanallı gölge katmanları — aşağı bak) |
 | `[0-9]+px` (inline style) | Hardcoded pixel değeri | Tailwind spacing veya CSS variable |
 | `font-size:\s*[0-9]` | Hardcoded font-size | Tailwind typography scale |
 | `font-weight:\s*[0-9]` | Hardcoded font-weight | Tailwind font-weight token |
@@ -169,6 +169,11 @@ Bu durumlarda ihlal sayılmaz:
 - **Test dosyaları** (`*.test.*`, `*.spec.*`) — test fixture
 - **`globals.css`** — base layer tanımları
 - **Storybook dosyaları** (`*.stories.*`) — demo/preview amaçlı
+- **Alfa kanallı gölge ve kenarlık katmanları** — `box-shadow` içindeki
+  `rgba(255,255,255,α)` / `rgba(0,0,0,α)` bir renk değil, **derinlik ifadesidir**.
+  Bu dosyanın kendi "Multi-layer shadow stack" bölümü tam olarak bunu öneriyor;
+  aynı değeri CRITICAL ihlal saymak kendi kendisiyle çelişirdi. Kural: tekrar
+  ediyorsa `--shadow-*` token'ına çıkar, tek kullanımlıksa yerinde kalabilir.
 
 ---
 

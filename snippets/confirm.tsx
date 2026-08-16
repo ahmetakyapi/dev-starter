@@ -62,7 +62,7 @@ export function Confirm({
   title,
   description,
   confirmText = 'Onayla',
-  cancelText = 'Iptal',
+  cancelText = 'İptal',
   variant = 'default',
   loading = false,
 }: ConfirmProps) {
@@ -125,7 +125,7 @@ export function Confirm({
                 disabled={loading}
                 className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all disabled:opacity-50 ${confirmStyles[variant]}`}
               >
-                {loading ? 'Yukleniyor...' : confirmText}
+                {loading ? 'Yükleniyor...' : confirmText}
               </button>
             </div>
           </motion.div>

@@ -1,5 +1,6 @@
 ---
 description: Proje saglik kontrolu — build, type, lint, design token, test
+argument-hint: "[dizin]"
 ---
 
 Projenin saglik durumunu kontrol et. Sirayla:

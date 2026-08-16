@@ -1,5 +1,7 @@
 # Görsel Hafıza: DigyNotes
 
+> **Kaynak:** proje diskte YOK — arşiv kaydı. Doğrulanamaz, güncellenemez.
+
 > Bu dosya DESIGN.md 9-section formatını takip eder.
 > AI agent'ları bu dosyayı okuyarak pixel-perfect UI üretebilir.
 

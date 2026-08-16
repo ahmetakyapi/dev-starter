@@ -1,5 +1,6 @@
 ---
 # Makine-okunur token katmanı (resmî DESIGN.md spec)
+
 # Kaynak: ~/Desktop/Projects/acilis-zili/app/globals.css — elle uydurulmadı
 name: Açılış Zili
 description: Türkiye ve ABD piyasalarını takip eden, veri yoğun finans yayını

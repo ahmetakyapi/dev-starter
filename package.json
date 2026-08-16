@@ -12,10 +12,23 @@
     "design:detect": "impeccable detect packages templates snippets",
     "design:detect:json": "impeccable detect --json packages templates snippets",
     "verify:exports": "node scripts/verify-package-exports.mjs",
-    "health": "bash scripts/health-check.sh"
+    "health": "bash scripts/health-check.sh",
+    "lint": "eslint packages snippets",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit --project packages/@ahmet/ui/tsconfig.json",
+    "verify:hooks": "bash scripts/test-hooks.sh"
   },
   "devDependencies": {
-    "impeccable": "^3.6.0"
+    "@eslint/js": "^9.39.5",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
+    "eslint": "^9.39.5",
+    "impeccable": "^3.6.0",
+    "vitest": "^3.2.7"
   },
-  "description": "Ahmet Akyapı — kişisel geliştirme ekosistemi. Tema tokenları, UI bileşenleri, proje şablonları ve Claude Code kural seti."
+  "description": "Ahmet Akyapı — kişisel geliştirme ekosistemi. Tema tokenları, UI bileşenleri, proje şablonları ve Claude Code kural seti.",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "type": "module"
 }
