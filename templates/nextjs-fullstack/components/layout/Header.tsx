@@ -42,7 +42,8 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2.5 group"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400 shadow-lg shadow-sky-500/20 transition-shadow group-hover:shadow-sky-500/40">
+            {/* Marka döşemesi — izinli 3 yerden biri */}
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-signature shadow-lg shadow-sky-500/20 transition-shadow group-hover:shadow-sky-500/40">
               <span className="text-xs font-extrabold tracking-tight text-white">P</span>
             </div>
             <span className="text-sm font-semibold text-slate-800 transition-colors group-hover:text-indigo-500 dark:text-slate-100 dark:group-hover:text-indigo-400">

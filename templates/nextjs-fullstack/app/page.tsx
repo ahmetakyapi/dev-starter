@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Zap, Palette, Database } from 'lucide-react'
 import { useSpotlight } from '@/hooks/useSpotlight'
 import { fadeUp, staggerContainer } from '@/lib/variants'
 import Header from '@/components/layout/Header'
@@ -41,18 +42,16 @@ export default function Home() {
             {/* Başlık */}
             <motion.h1
               variants={fadeUp}
-              className="mb-6 text-5xl font-extrabold leading-tight tracking-tight text-slate-100 dark:text-slate-100 sm:text-6xl"
+              className="mb-6 text-5xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-slate-100 sm:text-6xl"
             >
               PROJECT_NAME{' '}
-              <span className="bg-gradient-to-r from-indigo-400 via-sky-400 to-cyan-400 bg-clip-text text-transparent">
-                başladı
-              </span>
+              <span className="text-accent">başladı</span>
             </motion.h1>
 
             {/* Alt yazı */}
             <motion.p
               variants={fadeUp}
-              className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-slate-400"
+              className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-400"
             >
               PROJECT_DESCRIPTION
             </motion.p>
@@ -65,7 +64,7 @@ export default function Home() {
               <button className="rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:bg-indigo-500 hover:shadow-indigo-500/40 active:scale-95">
                 Başla
               </button>
-              <button className="glass rounded-xl px-6 py-3 text-sm font-semibold text-slate-300 transition-all hover:text-white active:scale-95">
+              <button className="glass rounded-xl px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:text-slate-900 active:scale-95 dark:text-slate-300 dark:hover:text-white">
                 Daha Fazla
               </button>
             </motion.div>
@@ -81,15 +80,15 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             className="grid gap-4 sm:grid-cols-3"
           >
-            {FEATURES.map((f) => (
+            {FEATURES.map(({ title, desc, icon: Icon }) => (
               <motion.div
-                key={f.title}
+                key={title}
                 variants={fadeUp}
                 className="glass rounded-2xl p-6"
               >
-                <div className="mb-3 text-2xl">{f.icon}</div>
-                <h3 className="mb-2 font-semibold text-slate-100">{f.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-400">{f.desc}</p>
+                <Icon className="mb-3 h-6 w-6 text-indigo-600 dark:text-indigo-400" aria-hidden />
+                <h3 className="mb-2 font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
+                <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -101,20 +100,21 @@ export default function Home() {
   )
 }
 
+// İkonlar lucide-react — emoji cross-platform tutarsız render ediliyor (uiux-agent kuralı)
 const FEATURES = [
   {
-    icon: '⚡',
+    icon: Zap,
     title: 'Hızlı Başlangıç',
     desc: 'Next.js 14 App Router, Tailwind CSS ve Drizzle ORM ile hazır.',
   },
   {
-    icon: '🎨',
+    icon: Palette,
     title: 'Tema Sistemi',
     desc: 'Dark/light mode, glassmorphism ve tutarlı animasyon sistemi.',
   },
   {
-    icon: '🗄️',
+    icon: Database,
     title: 'Veritabanı Hazır',
     desc: 'Neon Postgres + Drizzle ORM — serverless için optimize.',
   },
-]
+] as const

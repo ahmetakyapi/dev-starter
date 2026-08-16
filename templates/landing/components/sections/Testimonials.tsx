@@ -10,7 +10,9 @@ const TESTIMONIALS = [
     name:     'Alex Morgan',
     role:     'Head of Product, Vercel',
     initials: 'AM',
-    gradient: 'from-indigo-500 to-violet-600',
+    // Solid marka rengi — avatarlar veri yüzeyidir, degrade taşımaz.
+    // 600/700 tonu beyaz metinle WCAG AA kontrastı sağlar (degrade bunu garanti edemiyordu).
+    avatarBg: 'bg-indigo-600',
     text:     'We replaced three different tools with Pulse. The real-time view alone saved us hours every week during our last launch.',
     stars: 5,
   },
@@ -19,7 +21,7 @@ const TESTIMONIALS = [
     name:     'Berk Kaya',
     role:     'CTO, Linear',
     initials: 'BK',
-    gradient: 'from-cyan-500 to-blue-600',
+    avatarBg: 'bg-cyan-700',
     text:     'Setup took fifteen minutes, not two sprints. Our whole engineering team looks at the same dashboard now — no more data silos.',
     stars: 5,
   },
@@ -28,7 +30,7 @@ const TESTIMONIALS = [
     name:     'Maya Chen',
     role:     'Growth Lead, Notion',
     initials: 'MC',
-    gradient: 'from-emerald-500 to-teal-600',
+    avatarBg: 'bg-emerald-700',
     text:     'The funnel builder is so intuitive. I stopped needing to ask engineers for custom queries — I just build what I need myself.',
     stars: 5,
   },
@@ -93,7 +95,7 @@ export default function Testimonials() {
               {/* Person */}
               <div className="flex items-center gap-3 border-t border-white/[0.06] pt-5">
                 <div
-                  className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${t.gradient} text-xs font-bold text-white shadow-md`}
+                  className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${t.avatarBg} text-xs font-bold text-white shadow-md`}
                 >
                   {t.initials}
                 </div>

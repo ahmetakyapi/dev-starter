@@ -50,7 +50,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/4 left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full bg-indigo-600/8 blur-[120px]" />
         <div className="absolute -left-64 top-1/4 h-[600px] w-[600px] rounded-full bg-cyan-500/5 blur-[100px]" />
-        <div className="absolute -right-64 top-1/3 h-[600px] w-[600px] rounded-full bg-violet-500/5 blur-[100px]" />
+        <div className="absolute -right-64 top-1/3 h-[600px] w-[600px] rounded-full bg-blue-500/5 blur-[100px]" />
         <div className="absolute bottom-0 left-1/2 h-[400px] w-[900px] -translate-x-1/2 rounded-full bg-emerald-500/3 blur-[80px]" />
       </div>
 
@@ -82,7 +82,7 @@ export default function Hero() {
         >
           Know your product,
           <br />
-          <span className="text-gradient">grow with</span>
+          <span className="text-accent">grow with</span>
           {' '}confidence
         </motion.h1>
 
@@ -99,7 +99,7 @@ export default function Hero() {
           variants={fadeUp}
           className="mb-20 flex flex-wrap items-center justify-center gap-3"
         >
-          {/* Primary — pill with indigo→violet gradient on hover */}
+          {/* Primary — imza degradesi hover'da (izinli 3 yerden biri: birincil eylem) */}
           <motion.a
             href="#features"
             style={{ x: primaryMag.mx, y: primaryMag.my }}
@@ -108,7 +108,7 @@ export default function Hero() {
             whileTap={{ scale: 0.96 }}
             className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-indigo-600 px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-indigo-500/30 transition-shadow hover:shadow-indigo-500/50"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="absolute inset-0 bg-signature opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <span className="relative">Start for free</span>
             <ArrowRight className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </motion.a>
@@ -164,7 +164,8 @@ export default function Hero() {
               {/* Sidebar */}
               <div className="space-y-0.5 p-3">
                 <div className="mb-5 flex items-center gap-2 px-2 pt-1">
-                  <div className="h-5 w-5 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600" />
+                  {/* Marka döşemesi — izinli 3 yerden biri */}
+                  <div className="h-5 w-5 rounded-lg bg-signature" />
                   <div className="h-2.5 w-16 rounded-sm bg-white/10" />
                 </div>
                 {SIDEBAR_NAV.map((item, i) => (
@@ -218,8 +219,9 @@ export default function Hero() {
                           className="flex-1 rounded-t-sm"
                           style={{
                             height: `${h}%`,
+                            // Veri yüzeyi degrade taşımaz — son iki sütun solid vurgu ile öne çıkar
                             background: i >= CHART_BARS.length - 2
-                              ? 'linear-gradient(to top, rgba(99,102,241,0.95), rgba(139,92,246,0.65))'
+                              ? 'rgba(99,102,241,0.95)'
                               : `rgba(99,102,241,${0.08 + i * 0.015})`,
                           }}
                         />
