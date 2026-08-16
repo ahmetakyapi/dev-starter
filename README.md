@@ -27,7 +27,7 @@ dev-starter/
 │
 ├── rules/               7 kural dosyası
 │   ├── immutable-architecture.md   10 kırılamaz mimari kural
-│   ├── design-tokens.md            Hardcoded değer yasağı
+│   ├── design-tokens.md            Token yasağı + degrade disiplini + AI-slop
 │   ├── commit-conventions.md       Conventional commit standardı
 │   ├── bugfix-protocol.md          TDD bugfix akışı
 │   ├── dev-cycle.md                Plan → Dev → Gate → Commit → Review
@@ -41,12 +41,15 @@ dev-starter/
 │
 ├── hooks/               Enforcement hook'ları (Claude Code entegre)
 │   ├── gate-guard.sh        Commit öncesi Gate PASSED kontrolü
-│   ├── quality-scan.sh      Secret, debug kodu, design token taraması
+│   ├── quality-scan.sh      Secret, debug kodu, token + impeccable taraması
 │   └── routemap-sync.sh     ROUTEMAP güncelleme hatırlatıcısı
+│
+├── .impeccable/
+│   └── config.json          Tasarım detector ayarları (ignore listeleri boş)
 │
 ├── knowledge/
 │   ├── themes/              Her projenin görsel hafızası (5 proje, DESIGN.md 9-section formatı)
-│   ├── mistakes.md          41 belgelenmiş hata ve çözümü
+│   ├── mistakes.md          51 belgelenmiş hata ve çözümü
 │   ├── patterns.md          15+ kopyala-yapıştır kod deseni
 │   └── decisions.md         Teknoloji seçimlerinin gerekçesi
 │
@@ -68,14 +71,16 @@ dev-starter/
 │   └── landing/             Three.js + glassmorphism tanıtım sayfası
 │
 ├── scripts/
-│   └── health-check.sh     Ekosistem bütünlük kontrolü (51 kontrol noktası)
+│   ├── health-check.sh              Ekosistem bütünlük kontrolü (57 kontrol noktası)
+│   └── verify-package-exports.mjs   Manifest'in vaat ettiği giriş noktaları var mı
 │
 ├── .claude/
 │   ├── settings.local.json  Hook entegrasyonu + izinler
 │   ├── skills/              clone-website (pixel-perfect site klonlama)
 │   └── commands/            7 skill komutu
 │
-├── .github/workflows/ci.yml   Build + typecheck + lint + security + ecosystem health
+├── .github/workflows/ci.yml   Build + typecheck + lint + export doğrulama +
+│                              tasarım taraması + security + ecosystem health
 ├── eslint.config.js         Root ESLint yapılandırması
 ├── .prettierrc              Prettier yapılandırması
 ├── .editorconfig            IDE tutarlılığı
@@ -386,7 +391,7 @@ components/
 
 ## Bilgi Tabanı
 
-### `knowledge/mistakes.md` — 50 hata
+### `knowledge/mistakes.md` — 51 hata
 
 | #  | Hata                                          | Çözüm                                             |
 |----|-----------------------------------------------|----------------------------------------------------|

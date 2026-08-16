@@ -31,11 +31,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - **Ekosistem geneli Do's and Don'ts**: DESIGN sablonunun 7. bolumune proje bazinda
   tartisilmayan 6 kural eklendi (degrade disiplini, violet yasagi, layout animasyonu, emoji)
 - **health-check template kontrolu**: Lint script'i olan sablonda ESLint config var mi
+- **`scripts/verify-package-exports.mjs`**: Manifest'in vaat ettigi her yolu
+  (`main`, `module`, `types`, `exports`, `files`) kontrol eder ve giris noktalarini
+  gercekten yukler. `npm run verify:exports` — CI'a da eklendi
 - **mistakes.md #42-50**: Impeccable denetimi, npm yayin hazirligi ve sablon
   dogrulamasindan cikan 9 yeni kayit
 
 ### Duzeltmeler (Fixed)
 
+- **CI paketin sozlesmesini dogrulamiyordu**: `Verify exports` adimi build'in urettigi
+  `dist/tokens.js`'i require ediyordu — `package.json`'un isaret ettigi `dist/index.js`'e
+  hic bakmadi. Kirik paketin 5 ay fark edilmemesinin sebebi buydu. Adim artik
+  `verify:exports` script'ini calistiriyor. CI ayrica Node 20 → 22 (impeccable engines)
+  ve `PUPPETEER_SKIP_DOWNLOAD` ile Chrome indirmesini atliyor
 - **@ahmetakyapi/theme paketi kirikti**: build `dist/tokens.*` uretiyordu ama
   `package.json` `dist/index.*` isaret ediyordu — paket npm'den import edilemiyordu
   (yayindaki 1.0.0 Mart'tan beri bu hatayla duruyor). Build entry `--entry.index` ile duzeltildi

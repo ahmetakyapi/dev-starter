@@ -22,7 +22,7 @@ dev-starter/
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
 │   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
-│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (50 kayıt)
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (51 kayıt)
 │   └── patterns.md            → Test edilmiş kod desenleri (15+ desen)
 │
 ├── agents/
