@@ -681,6 +681,34 @@ npm pack --dry-run --workspace=packages/@ahmet/theme   # tarball içeriğini lis
 ```
 **Kural**: `npm publish` öncesi `files` listesi ile gerçek build çıktısı birebir eşleşmeli.
 
+**Neden CI yakalamadı**: `ci.yml`'deki doğrulama adımı `dist/tokens.js`'i require
+ediyordu — yani build'in *ürettiği* dosyayı. `package.json`'un *işaret ettiği*
+`dist/index.js`'e hiç bakmadı. Artefaktı test etmek sözleşmeyi test etmek değildir.
+Artık `scripts/verify-package-exports.mjs` manifest'in vaat ettiği her yolu
+(`main`, `module`, `types`, `exports`, `files`) kontrol edip giriş noktalarını
+gerçekten yüklüyor:
+```bash
+npm run verify:exports
+```
+
+### 51. `npm ci --omit=optional` Build'i Kırar
+**Hata**: impeccable puppeteer'ı opsiyonel bağımlılık olarak çekiyor (~150MB Chrome).
+CI'da atlamak için `npm ci --omit=optional` denendi — build şu hatayla kırıldı:
+```
+Error: Cannot find module @rollup/rollup-darwin-arm64
+```
+**Sebep**: Rollup'ın platforma özel native binary'si de bir `optionalDependency`.
+`--omit=optional` onu da atıyor, `tsup --dts` rollup'a dayandığı için build ölüyor.
+Aynısı esbuild ve swc için de geçerli — hepsi platform binary'sini optional tutar.
+**Çözüm**: Optional'ları toptan atma; sadece asıl ağır olan indirmeyi atla:
+```yaml
+- run: npm ci
+  env:
+    PUPPETEER_SKIP_DOWNLOAD: 'true'
+```
+**Kural**: `--omit=optional` modern JS toolchain'inde neredeyse her zaman yanlıştır —
+platform binary'leri optional olarak dağıtılır.
+
 ### 49. Template'de Lint Script Var, Config Yok
 **Hata**: Her iki şablonda da `"lint": "next lint"` script'i ve `eslint` +
 `eslint-config-next` bağımlılıkları vardı, ama **ESLint config dosyası yoktu**.
