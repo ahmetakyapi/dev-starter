@@ -6,8 +6,11 @@ const LOGOS = [
 ]
 
 export default function Logos() {
-  // Duplicate for seamless infinite loop
-  const track = [...LOGOS, ...LOGOS]
+  // Seamless infinite loop — iki tur çizilir. Her öğeye tur öneki verilir ki
+  // key index'e dayanmasın (react/no-array-index-key disable'ına gerek kalmaz).
+  const track = ['a', 'b'].flatMap((lap) =>
+    LOGOS.map((name) => ({ id: `${lap}-${name}`, name })),
+  )
 
   return (
     <section className="relative z-10 border-y border-slate-800/40 py-14">
@@ -24,10 +27,9 @@ export default function Logos() {
         }}
       >
         <div className="flex animate-marquee gap-14 whitespace-nowrap">
-          {track.map((name, i) => (
-            // eslint-disable-next-line react/no-array-index-key — static decorative list, order never changes
+          {track.map(({ id, name }) => (
             <span
-              key={`${name}-${i}`}
+              key={id}
               className="text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-slate-400"
             >
               {name}
