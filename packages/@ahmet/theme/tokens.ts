@@ -129,7 +129,19 @@ export const gradients = {
   // Sayfa arka planı — light
   pageLight:
     'radial-gradient(circle at 14% 12%, rgba(59, 130, 246, 0.12), transparent 30%), radial-gradient(circle at 82% 8%, rgba(14, 165, 233, 0.1), transparent 24%), radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.06), transparent 28%)',
-  // Logo gradient
+  /**
+   * İmza degradesi — ekosistemin TEK marka degradesi.
+   *
+   * Yalnızca üç yerde kullanılır (bkz. `rules/design-tokens.md → Degrade Disiplini`):
+   *   1. Birincil eylem (primary CTA)
+   *   2. Marka döşemesi (logo tile)
+   *   3. Seçili gezinme satırı
+   *
+   * Violet/purple bu paletin parçası DEĞİLDİR — indigo→violet en tanınır
+   * AI-slop tell'i (impeccable `ai-color-palette`). Marka rotası: indigo→blue→cyan.
+   */
+  signature: 'linear-gradient(135deg, rgb(99,102,241), rgb(59,130,246), rgb(34,211,238))',
+  /** @deprecated `signature` kullan — bu alias geriye dönük uyumluluk için duruyor. */
   logo: 'linear-gradient(to bottom right, rgb(99,102,241), rgb(59,130,246), rgb(34,211,238))',
   // Grid overlay (subtle)
   gridDark:

@@ -23,6 +23,10 @@ const config: Config = {
       backgroundImage: {
         'grid-dark':  'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
         'grid-light': 'linear-gradient(rgba(99,102,241,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.07) 1px, transparent 1px)',
+        // İmza degradesi — projenin TEK marka degradesi (`bg-signature`).
+        // Sadece 3 yerde: birincil eylem, marka döşemesi, seçili gezinme satırı.
+        // Violet/purple eklenmez — indigo→violet en tanınır AI-slop tell'idir.
+        signature: 'linear-gradient(135deg, rgb(99,102,241), rgb(59,130,246), rgb(34,211,238))',
       },
       backgroundSize: {
         grid: '64px 64px',

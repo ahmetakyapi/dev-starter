@@ -31,6 +31,9 @@ const preset: Partial<Config> = {
         'page-light': gradients.pageLight,
         'grid-dark':  gradients.gridDark,
         'grid-light': gradients.gridLight,
+        // İmza degradesi — `bg-signature`. Sadece 3 imza anında kullan.
+        signature: gradients.signature,
+        /** @deprecated `bg-signature` kullan */
         'logo-gradient': gradients.logo,
       },
       backgroundSize: {
