@@ -48,7 +48,7 @@ dev-starter/
 │   └── config.json          Tasarım detector ayarları (ignore listeleri boş)
 │
 ├── knowledge/
-│   ├── themes/              Her projenin görsel hafızası (5 proje, DESIGN.md 9-section formatı)
+│   ├── themes/              Her projenin görsel hafızası (6 proje, DESIGN.md 9-section formatı)
 │   ├── mistakes.md          51 belgelenmiş hata ve çözümü
 │   ├── patterns.md          15+ kopyala-yapıştır kod deseni
 │   └── decisions.md         Teknoloji seçimlerinin gerekçesi
@@ -420,7 +420,7 @@ components/
 
 Auth · Database (Drizzle+Neon) · API helpers · Error handling · Form submission (React 19) · Middleware auth · Pagination · File upload · Image optimization · next-themes · Three.js dynamic · Framer Motion · SEO · UI tasarım desenleri (bento grid, tilt card, marquee, spotlight, glow orbs)
 
-### `knowledge/themes/` — 5 proje görsel hafızası (DESIGN.md 9-section formatı)
+### `knowledge/themes/` — 6 proje görsel hafızası (DESIGN.md 9-section formatı)
 
 Tüm tema dosyaları [Google Stitch DESIGN.md](https://github.com/nicholasgriffintn/awesome-design-md) 9-section formatında yazılmıştır. AI agent'ları bu dosyaları okuyarak pixel-perfect UI üretebilir.
 

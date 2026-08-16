@@ -242,8 +242,8 @@ marka istisnası mı yoksa güncellenecek mi, karar gerekiyor.
 mimio, keskealsaydim, ramazan-vakitleri). Ama canlıda **12 proje** var.
 Belgesiz olanlar:
 
-`acilis-zili` · `derinay` · `dungeon-mates` · `elevenforge` · `harfiyen` ·
-`karalama` · `onepiece-hub` · `simayahi`
+~~`acilis-zili`~~ (2026-08-16'da eklendi) · `derinay` · `dungeon-mates` ·
+`elevenforge` · `harfiyen` · `karalama` · `onepiece-hub` · `simayahi`
 
 Ayrıca `digynotes` belgeli ama `~/Desktop/Projects/` altında yok — taşınmış
 veya arşivlenmiş olabilir.

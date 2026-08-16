@@ -17,6 +17,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/
 │   │   ├── ahmetakyapi.md     → Ana görsel dil referansı
+│   │   ├── acilis-zili.md     → Açılış Zili — en disiplinli görsel sistem
 │   │   ├── digynotes.md       → DigyNotes görsel hafıza
 │   │   ├── mimio.md           → Mimio görsel hafıza
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
