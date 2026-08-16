@@ -23,7 +23,8 @@ dev-starter/
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
 │   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
 │   ├── mistakes.md            → Tekrar edilmeyecek hatalar (51 kayıt)
-│   └── patterns.md            → Test edilmiş kod desenleri (15+ desen)
+│   ├── patterns.md            → Test edilmiş kod desenleri (15+ desen)
+│   └── live-projects-audit.md → 12 canlı projenin standart uyum denetimi
 │
 ├── agents/
 │   ├── AGENT_PROTOCOL.md  → Haberleşme, akış, context curation, hook'lar
@@ -57,7 +58,9 @@ dev-starter/
 │   └── config.json           → Tasarım detector ayarları (ignore listeleri bilinçli boş)
 │
 ├── scripts/
-│   └── health-check.sh       → Ekosistem bütünlük kontrolü (12 kategori)
+│   ├── health-check.sh              → Ekosistem bütünlük kontrolü (12 kategori)
+│   ├── audit-project.sh            → Canlı projeyi standartlara karşı denetler
+│   └── verify-package-exports.mjs  → Manifest'in vaat ettiği giriş noktaları
 │
 ├── .claude/
 │   ├── settings.local.json   → Hook entegrasyonu + izinler
@@ -187,6 +190,27 @@ Agent sözlüğü: `agents/uiux-agent.md → Impeccable`.
 **Tek imza degradesi**: `bg-signature` (indigo→blue→cyan). Yalnızca üç yerde kullanılır —
 birincil eylem, marka döşemesi, seçili gezinme satırı. `violet`/`purple` marka paletinde
 yoktur. Detector'ı susturmak yerine değeri token'a taşı.
+
+### Canlı Proje Denetimi
+
+```bash
+bash scripts/audit-project.sh ~/Desktop/Projects/<proje>
+```
+
+12 canlı projenin durumu ve standartları uygularsak ne değişeceği:
+`knowledge/live-projects-audit.md`.
+
+**Açık kararlar** — bunlar cevaplanmadan toplu düzeltmeye başlanmamalı:
+
+1. **Referans çelişkisi**: `ahmetakyapi.com` ekosistemin görsel referansı ama
+   20 detector bulgusuyla listenin sondan ikincisi. Referans mı güncellenecek,
+   kural mı yumuşayacak?
+2. **`gradient-text` yasağı fazla katı**: `acilis-zili` token'lanmış, `@supports`
+   korumalı, solid fallback'li ve descender düzeltmeli bir uygulamaya sahip —
+   yasağın çözmeye çalıştığı sorunları zaten çözmüş. Üç şartlı istisna maddesi
+   eklenmeli.
+3. **Palet istisnaları**: `onepiece-hub` (80 violet) ve `ramazan-vakitleri`
+   (mor+pembe+mavi) bilinçli tema mı, sızıntı mı?
 
 ---
 
