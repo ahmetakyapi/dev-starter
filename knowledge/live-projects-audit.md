@@ -170,14 +170,33 @@ Ekosistemin en disiplinli projesi bu.
 
 **Değişecek: ~25 dosya.** Kontrast tarafı öncelikli.
 
-### `onepiece-hub` — violet ağırlıklı
-- **80 violet kullanımı** (ekosistem rekoru) + 16 elle degrade + 6 ai-palette
-- 5 `gradient-text`, 4 `side-tab`, 2 layout animasyonu
+### `onepiece-hub` — ✅ ele alındı (2026-08-16, PR #3)
 
-**Değişecek: ~30 dosya.** Palet kararı verilmeden dokunulmamalı — 80 kullanım
-tesadüf değil, muhtemelen bilinçli bir mor tema. Önce "bu projenin paleti
-violet mi?" sorusu cevaplanmalı; eğer öyleyse marka istisnası olarak
-belgelenmeli, ekosistem kuralı buna göre esnetilmeli.
+**Palet sorusu cevaplandı**: mor bilinçli bir tema değildi. Proje `ocean · gold ·
+sea · luffy · pirate` paletini tanımlıyor, mor içinde **yok** — ama ham
+`purple-*` sınıfı olarak 29 dosyada 109 yerde duruyordu. Yani tutarlı bir
+kategori vurgusu vardı (Şeytan Meyveleri · Haki · Şichibukai), tasarım sistemi
+bundan habersizdi. Bu, dev-starter'daki #43 ile aynı desen.
+
+**Yapılan**: `fruit` paleti eklendi, değerler Tailwind karşılıklarıyla birebir —
+görünüm değişmedi (üretilen CSS'ten doğrulandı). İki gerçek hata çıktı:
+Busoshoku Haki üç farklı mora boyanıyordu (sınıf/hex/glow uyuşmuyordu), ve
+degrade metinler `background-clip: text` desteklenmeyen yerde **tamamen
+görünmez** oluyordu (fallback yoktu).
+
+| | Önce | Sonra |
+|---|---|---|
+| violet sızıntısı | 80 | **3** (beast-pirates ekip rengi — içerik paleti) |
+| detector | 18 | **13** |
+| layout animasyonu | 6 | 4 |
+
+**Kalan 13 bulgu incelendi ve projenin CLAUDE.md'sinde gerekçesiyle tablolandı.**
+Açık tek madde: 4× `side-tab` (`border-l-4` kart vurguları) — gerçek bir kalıp
+uyarısı ama düzeltmesi görsel yeniden tasarım gerektiriyor.
+
+> **Genel ders**: "80 violet bilinçli tema olabilir" varsayımı yanlıştı. Paleti
+> okumak yeterliydi. Bir projenin renk kullanımının kasıtlı olup olmadığını
+> anlamanın yolu sayıya bakmak değil, **token tanımına** bakmaktır.
 
 ### `ramazan-vakitleri` — degrade metin ağırlıklı
 - 22 `bg-clip-text` + 11 detector `gradient-text`
@@ -226,8 +245,9 @@ marka istisnası mı yoksa güncellenecek mi, karar gerekiyor.
    dokunmak, yanlış referanstan üretmeye devam etmek demek
 2. **`rules/design-tokens.md` güncellemesi** — `gradient-text` için üç şartlı
    istisna maddesi (acilis-zili'nin kanıtladığı durum)
-3. **`onepiece-hub` + `ramazan-vakitleri` palet kararı** — bunlar marka
-   istisnası mı? Cevap verilmeden 80 + 22 bulgu düzeltilmemeli
+3. ~~**`onepiece-hub` palet kararı**~~ → ✅ 2026-08-16, PR #3. Mor bilinçli tema
+   değilmiş, token'landı. **`ramazan-vakitleri`** (22 `bg-clip-text`) hâlâ açık:
+   mor+pembe+mavi paleti CLAUDE.md'de belgeli, marka istisnası mı?
 4. **Mekanik düzeltmeler** — `elevenforge` (layout), `Mimio` (easing),
    `harfiyen` (gradient-text), `simayahi` (1 satır)
 5. **Kontrast turu** — `Mimio`, `keskealsaydim`, `elevenforge`; manuel
