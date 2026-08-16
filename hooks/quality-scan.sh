@@ -82,6 +82,25 @@ if [ -n "$UI_STAGED" ]; then
   fi
 fi
 
+# 7. Lockfile tutarlılığı — package.json/package-lock.json stage'lendiyse
+# Kilit manifest'le senkron değilse CI'ın İLK adımı (`npm ci`) patlar ve
+# hiçbir kontrol çalışmaz. Yerelde `npm install` çalıştığı için commit anında
+# hiçbir belirti yoktur; bu yüzden uyarı değil HATA. Bkz. mistakes.md #57
+LOCK_TOUCHED=$(echo "$STAGED" | grep -E '(^|/)(package\.json|package-lock\.json)$' || true)
+if [ -n "$LOCK_TOUCHED" ]; then
+  REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo '.')
+  if [ -f "$REPO_ROOT/scripts/verify-lockfile.mjs" ]; then
+    set +e
+    LOCK_OUT=$( (cd "$REPO_ROOT" && node scripts/verify-lockfile.mjs) 2>&1 )
+    LOCK_CODE=$?
+    set -e
+    if [ $LOCK_CODE -ne 0 ]; then
+      echo "$LOCK_OUT" | sed 's/^/   /'
+      ERRORS=$((ERRORS + 1))
+    fi
+  fi
+fi
+
 # Sonuç
 if [ $ERRORS -gt 0 ]; then
   echo ""

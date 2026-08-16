@@ -12,6 +12,7 @@
     "design:detect": "impeccable detect packages templates snippets",
     "design:detect:json": "impeccable detect --json packages templates snippets",
     "verify:exports": "node scripts/verify-package-exports.mjs",
+    "verify:lock": "node scripts/verify-lockfile.mjs",
     "health": "bash scripts/health-check.sh",
     "lint": "eslint packages snippets",
     "test": "vitest run",

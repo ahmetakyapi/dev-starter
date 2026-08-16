@@ -201,6 +201,36 @@ for pkg_dir in packages/@ahmet/*/; do
   fi
 done
 
+# Kilit dosyasi `npm ci` tarafindan kabul edilebilir mi? Varligini degil,
+# cozulebilirligini test eder — kirik kilit CI'in ILK adimini dusurur ve
+# geri kalan hicbir kontrol calismaz. Bkz. knowledge/mistakes.md #57
+if [ -f "scripts/verify-lockfile.mjs" ]; then
+  set +e
+  LOCK_OUT=$(node scripts/verify-lockfile.mjs 2>&1)
+  LOCK_CODE=$?
+  set -e
+  if [ $LOCK_CODE -eq 0 ]; then
+    pass "package-lock.json npm ci ile tutarli"
+  else
+    fail "package-lock.json senkron degil — CI npm ci adiminda olur:"
+    echo "$LOCK_OUT" | head -6 | sed 's/^/     /'
+  fi
+else
+  fail "scripts/verify-lockfile.mjs EKSIK"
+fi
+
+# Yerel Node major'i .nvmrc ile ayni mi? Farkliysa bir sonraki npm install
+# CI'in reddedecegi bir kilit yazabilir.
+if [ -f ".nvmrc" ] && command -v node >/dev/null 2>&1; then
+  NVMRC_MAJOR=$(tr -d 'v \t\n' < .nvmrc | cut -d. -f1)
+  NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]')
+  if [ "$NVMRC_MAJOR" = "$NODE_MAJOR" ]; then
+    pass "Node $NODE_MAJOR .nvmrc ile ayni"
+  else
+    warn "Node $NODE_MAJOR calisiyor, .nvmrc Node $NVMRC_MAJOR istiyor — kilit uyusmazligi riski"
+  fi
+fi
+
 # ─── 9. Design Token Violations ──────────────────────────────────────────────
 header "Design Token Kontrolu (UI Paketi)"
 

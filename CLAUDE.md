@@ -61,10 +61,12 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh              → Ekosistem bütünlük kontrolü (12 kategori)
 │   ├── audit-project.sh            → Canlı projeyi standartlara karşı denetler
+│   ├── test-hooks.sh               → Hook davranış testleri (varlık değil davranış)
+│   ├── verify-lockfile.mjs         → Kilit `npm ci` ile senkron mu (çevrimdışı)
 │   └── verify-package-exports.mjs  → Manifest'in vaat ettiği giriş noktaları
 │
 ├── .claude/
-│   ├── settings.local.json   → Hook entegrasyonu + izinler
+│   ├── settings.json         → Hook entegrasyonu (paylaşılan, versiyonlanır)
 │   ├── skills/
 │   │   └── clone-website/    → Website reverse-engineering & pixel-perfect clone
 │   └── commands/             → Skill komut tanımları

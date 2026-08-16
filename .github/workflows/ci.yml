@@ -14,11 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # impeccable engines: node >=22.18
+      # .nvmrc yerel gelistirme surumuyle AYNI major olmali. Farkli npm
+      # major'lari ayni package.json'dan farkli kilit uretir: npm 11
+      # chromium-bidi'nin devtools-protocol PEER bagimliligi icin tepe seviye
+      # girdi yazmaz, npm 10 onu sart kosar. Kilit yerelde gecerli, CI'da
+      # gecersiz olur ve her is npm ci'da olur. Bkz. mistakes.md #57
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
+
+      # npm ci'dan ONCE: kilit senkron degilse hata mesaji "Missing: X from
+      # lock file" degil, hangi paketin hangi kenari kirik onu soyler.
+      # node_modules gerektirmez.
+      - name: Verify lockfile integrity
+        run: npm run verify:lock
 
       # --omit=optional KULLANMA: rollup'in platform native binary'si de
       # optionalDependency, onsuz tsup --dts kirilir. Bunun yerine sadece

@@ -71,12 +71,14 @@ dev-starter/
 │   └── landing/             Three.js + glassmorphism tanıtım sayfası
 │
 ├── scripts/
-│   ├── health-check.sh              Ekosistem bütünlük kontrolü (58 kontrol noktası)
+│   ├── health-check.sh              Ekosistem bütünlük kontrolü (63 kontrol noktası)
 │   ├── audit-project.sh             Canlı projeyi 8 standarda karşı denetler
+│   ├── test-hooks.sh                Hook davranış testleri (13 test)
+│   ├── verify-lockfile.mjs          Kilit `npm ci` ile senkron mu (çevrimdışı)
 │   └── verify-package-exports.mjs   Manifest'in vaat ettiği giriş noktaları var mı
 │
 ├── .claude/
-│   ├── settings.local.json  Hook entegrasyonu + izinler
+│   ├── settings.json        Hook entegrasyonu (paylaşılan, versiyonlanır)
 │   ├── skills/              clone-website (pixel-perfect site klonlama)
 │   └── commands/            7 skill komutu
 │
@@ -465,7 +467,7 @@ Yeni tema oluşturmak için: `templates/docs/DESIGN.template.md`
 bash scripts/health-check.sh   # veya: npm run health
 ```
 
-12 kategori, 58 kontrol noktası:
+12 kategori, 63 kontrol noktası:
 Agent dosyaları · Kurallar · Fazlar · Hook'lar · Snippet'ler · Template'ler · Knowledge base · Paket tutarlılığı · Design token ihlalleri · CI/CD · Temel dosyalar · Impeccable tasarım denetimi
 
 ---

@@ -150,6 +150,108 @@ fi
 echo
 
 # ─────────────────────────────────────────────────────────────
+# quality-scan.sh — lockfile kontrolü (mistakes.md #57)
+#
+# Sandbox gerçek verifier'ı kullanır; kopya mantık test edilirse test
+# geçerken üretimdeki script bozuk kalabilir.
+# ─────────────────────────────────────────────────────────────
+echo "quality-scan.sh — kilit tutarlılığı"
+
+mkdir -p "$SANDBOX/lock/scripts" && cd "$SANDBOX/lock" || exit 1
+git init -q . 2>/dev/null
+git config user.email t@t.t && git config user.name t
+cp "$REPO_ROOT/scripts/verify-lockfile.mjs" scripts/verify-lockfile.mjs
+
+# (i) kırık kilit stage'lendi → bloklamalı
+#     puppeteer kilitte var, devtools-protocol bağımlılığı yok — CI'ı düşüren
+#     bozulmanın birebir aynısı.
+cat > package.json <<'EOF'
+{ "name": "fixture", "version": "1.0.0", "devDependencies": { "puppeteer": "^25.7.0" } }
+EOF
+cat > package-lock.json <<'EOF'
+{
+  "name": "fixture",
+  "lockfileVersion": 3,
+  "packages": {
+    "": { "name": "fixture", "version": "1.0.0", "devDependencies": { "puppeteer": "^25.7.0" } },
+    "node_modules/puppeteer": {
+      "version": "25.7.0",
+      "dev": true,
+      "dependencies": { "devtools-protocol": "0.0.1666840" }
+    }
+  }
+}
+EOF
+git add package.json package-lock.json
+OUT=$(payload "git commit -m 'chore: deps'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 2 ] && printf '%s' "$OUT" | grep -q 'devtools-protocol'; then
+  ok "kırık kilit → commit bloklanır (exit 2)"
+else
+  no "kırık kilit → bloklanmalı" "exit 2 + eksik paket adı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (j) package.json'a eklenip kilide yazılmayan bağımlılık → bloklamalı
+cat > package.json <<'EOF'
+{ "name": "fixture", "version": "1.0.0", "devDependencies": { "vitest": "^3.2.7" } }
+EOF
+cat > package-lock.json <<'EOF'
+{
+  "name": "fixture",
+  "lockfileVersion": 3,
+  "packages": {
+    "": { "name": "fixture", "version": "1.0.0", "devDependencies": {} }
+  }
+}
+EOF
+git add package.json package-lock.json
+OUT=$(payload "git commit -m 'chore: deps'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 2 ] && printf '%s' "$OUT" | grep -q 'vitest'; then
+  ok "kilide yazılmayan bağımlılık → bloklanır (exit 2)"
+else
+  no "senkron olmayan manifest → bloklanmalı" "exit 2 + vitest" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (k) tutarlı kilit → geçmeli (yanlış alarm commit'i durdurur, en pahalı hata)
+cat > package.json <<'EOF'
+{ "name": "fixture", "version": "1.0.0", "devDependencies": { "puppeteer": "^25.7.0" } }
+EOF
+cat > package-lock.json <<'EOF'
+{
+  "name": "fixture",
+  "lockfileVersion": 3,
+  "packages": {
+    "": { "name": "fixture", "version": "1.0.0", "devDependencies": { "puppeteer": "^25.7.0" } },
+    "node_modules/puppeteer": {
+      "version": "25.7.0",
+      "dev": true,
+      "dependencies": { "devtools-protocol": "0.0.1666840" }
+    },
+    "node_modules/devtools-protocol": { "version": "0.0.1666840", "dev": true }
+  }
+}
+EOF
+git add package.json package-lock.json
+OUT=$(payload "git commit -m 'chore: deps'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+[ $CODE -eq 0 ] && ok "tutarlı kilit → geçer (exit 0)" || no "tutarlı kilit → geçmeli" 0 "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+
+# (l) kilit dosyasına dokunulmayan commit → kontrol hiç çalışmamalı
+git rm -q --cached package.json package-lock.json
+printf 'export const x = 1\n' > other.ts
+git add other.ts
+OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && ! printf '%s' "$OUT" | grep -q 'kilit\|lock'; then
+  ok "kilide dokunulmadı → kontrol atlanır"
+else
+  no "kilit dışı commit → kontrol çalışmamalı" "exit 0 + kilit mesajı yok" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+echo
+
+# ─────────────────────────────────────────────────────────────
 # routemap-sync.sh
 # ─────────────────────────────────────────────────────────────
 echo "routemap-sync.sh"

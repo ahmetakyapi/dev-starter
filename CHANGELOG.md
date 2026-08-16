@@ -7,6 +7,59 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış]
 
+### CI Kilit Uyusmazligi — 2026-08-17
+
+Denetim merge'unden (`b783080`) sonra CI'in **iki isi de ilk adimda** oldu:
+`npm ci` → `Missing: devtools-protocol from lock file`. Lint, typecheck, test,
+build, verify:exports, design:detect, security scan — hicbiri calismadi.
+
+**Sebep**: `package-lock.json` yerelde Node 24 / npm 11 ile uretilmisti, CI
+`.nvmrc` uzerinden Node 22 / npm 10 kullaniyordu. npm 11 `chromium-bidi`nin
+`devtools-protocol: "*"` PEER bagimliligi icin tepe seviye kilit girdisi yazmaz,
+npm 10 onu sart kosar. Kilit yerelde gecerli, CI'da gecersizdi — ve yerelde
+`npm ci` hic calistirilmadigi icin commit aninda hicbir belirti yoktu.
+
+#### Duzeltmeler (Fixed)
+
+- **package-lock.json yeniden uretildi** — eksik uc `devtools-protocol` girdisi
+  geri geldi. Hem npm 10 hem npm 11 ile `npm ci --dry-run` dogrulandi
+- **`.nvmrc` 22 → 24** — kilidi YAZAN npm ile OKUYAN npm artik ayni major.
+  Uyusmazligin kaynagi buydu; kilidi duzeltmek tek basina tekrarini engellemez
+
+#### Eklenenler (Added) — tekrarini engelleyen katmanlar
+
+- **`scripts/verify-lockfile.mjs`** (`npm run verify:lock`): kilitteki her
+  bagimlilik kenarini — dependencies, optionalDependencies **ve
+  peerDependencies** — cevrimdisi cozer. CI'i duseren kenar bir PEER'di; yalnizca
+  `dependencies` bakan bir kontrol onu goremezdi. Aga cikmaz, milisaniyede biter.
+  Ek olarak `package.json` ↔ kilit kok girdisi senkronunu ve yerel Node major'inin
+  `.nvmrc` ile uyumunu kontrol eder
+- **`hooks/quality-scan.sh` kontrol #7**: `package.json` veya `package-lock.json`
+  stage'lendiyse kilit dogrulanir; senkron degilse commit **bloklanir** (uyari
+  degil, hata — CI'in ilk adimini dusuren bir sey uyari olamaz)
+- **CI'da `npm ci`den ONCE `verify:lock` adimi**: hata mesaji artik "Missing: X
+  from lock file" degil, hangi paketin hangi kenarinin kirik oldugu.
+  `node_modules` gerektirmedigi icin kurulumdan once calisabiliyor
+- **`scripts/test-hooks.sh`e 4 davranis testi** (9 → 13): kirik kilit bloklanir ·
+  kilide yazilmayan bagimlilik bloklanir · tutarli kilit gecer (yanlis alarm
+  commit'i durdurur, en pahali hata) · kilide dokunulmayan commit'te kontrol hic
+  calismaz. Sandbox gercek verifier'i kopyalar — kopya mantik test edilseydi test
+  gecerken uretimdeki script bozuk kalabilirdi
+- **`scripts/health-check.sh`**: kilit tutarliligi + Node/`.nvmrc` major uyumu
+  kontrolleri (58 → 63 kontrol noktasi)
+- **`knowledge/mistakes.md` #57** — "Bir kilit dosyasi, onu ureten arac surumuyle
+  birlikte bir sozlesmedir"
+
+#### Belge duzeltmeleri (Docs)
+
+- README ve CLAUDE.md hala `.claude/settings.local.json` diyordu; onceki commit
+  onu `settings.json` olarak versiyonlanan paylasilan dosyaya tasimisti
+- `scripts/` agacina `test-hooks.sh` ve `verify-lockfile.mjs` eklendi
+
+Olcum: health-check 63/0/0 · test-hooks 13/13 · test 11/11 · lint temiz ·
+typecheck temiz · verify:lock temiz · verify:exports temiz · `npm ci --dry-run`
+npm 10 ve npm 11'de temiz
+
 ### Kapsamli Denetim — 2026-08-17
 
 14 agent'lik bir denetim ekosistemin tamamini taradi; 79 bulgu dogrulama

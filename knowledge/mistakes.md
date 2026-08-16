@@ -826,7 +826,48 @@ const track = ['a', 'b'].flatMap((lap) => LOGOS.map((name) => ({ id: `${lap}-${n
 {track.map(({ id, name }) => <span key={id}>{name}</span>)}
 ```
 
+### 57. Kilit Dosyasını Üreten npm ile CI'ın npm'i Aynı Major Olmalı
+**Hata**: `package-lock.json` yerelde **Node 24 / npm 11** ile üretildi; CI `.nvmrc`
+üzerinden **Node 22 / npm 10** kullanıyordu. `chromium-bidi` şunu bildiriyor:
+```json
+"peerDependencies": { "devtools-protocol": "*" }
+```
+npm 11 bu peer için tepe seviye kilit girdisi **yazmıyor**, npm 10 ise onu **şart
+koşuyor**. Sonuç: kilit yerelde tamamen geçerli, CI'da geçersiz.
+```
+npm error `npm ci` can only install packages when your package.json and
+npm error package-lock.json are in sync.
+npm error Missing: devtools-protocol@0.0.1680125 from lock file
+```
+Her iki iş de **ilk adımda** (`npm ci`) öldü — lint, typecheck, test, build,
+verify:exports, design:detect, security scan: hiçbiri çalışmadı. CI 14 saniyede
+kırmızıya düştü ve o commit'ten sonra hiçbir şey yayınlanamadı.
+
+**Neden yerelde görünmedi**: `npm install` kilidi kendi npm sürümüne göre yazar ve
+tabii ki kendi yazdığını kabul eder. Yerelde `npm ci` hiç çalıştırılmadığı için
+uyuşmazlığın commit anında hiçbir belirtisi yoktu.
+
+**Çözüm — üç katman**:
+1. `.nvmrc` yerel geliştirme major'ıyla eşitlendi (22 → 24). Kilidi yazan npm ile
+   okuyan npm artık aynı.
+2. `scripts/verify-lockfile.mjs` — kilitteki her bağımlılık kenarını (dependencies,
+   optionalDependencies **ve peerDependencies**) çevrimdışı çözer. `npm ci`nin
+   göreceği hatayı ağa çıkmadan, milisaniyede bulur.
+3. Üç yerde zorlanır: `hooks/quality-scan.sh` (package.json/package-lock.json
+   stage'lendiyse commit'i **bloklar**), `scripts/health-check.sh`, ve CI'da
+   `npm ci`den **önce** çalışan `verify:lock` adımı.
+
+**Kural**: Bir kilit dosyası, onu üreten araç sürümüyle birlikte bir sözleşmedir.
+`.nvmrc` yerel sürümden farklıysa, kilidin CI'da geçerli olduğunu **hiçbir yerel
+komut kanıtlamaz**. `npm install` çalıştı diye kilit doğru değildir; doğrulaması
+`npm ci`dir ve o yalnızca CI'da çalışır — o yüzden çevrimdışı bir eşdeğeri lazım.
+
+**Genel ders — bu dosyadaki 6. tekrar**: Bir kontrolün yeşil olması, kontrolün
+çalıştığı anlamına gelmez. Burada yerel `npm install` "başarılı" diyordu ama
+sorulan soru yanlıştı: soru "kurulabiliyor mu" değil, "**CI'ın npm'i bu kilidi
+kabul eder mi**" idi.
+
 ---
 
-*Son güncelleme: 2026-08-16*
+*Son güncelleme: 2026-08-17*
 *Yeni hata eklemek için bu dosyayı düzenle.*
