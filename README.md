@@ -151,10 +151,12 @@ Kurallar kağıt üstünde kalmaz — bash hook'ları ile fiziksel olarak uygula
 | Hook               | Tetik                          | Ne Yapar                                   |
 |--------------------|--------------------------------|--------------------------------------------|
 | `gate-guard.sh`    | PreToolUse:Bash (git commit)   | Gate PASSED yoksa commit bloklar           |
-| `quality-scan.sh`  | PreToolUse:Bash (git commit)   | Hardcoded secret, debug kodu, .env tarar   |
+| `quality-scan.sh`  | PreToolUse:Bash (git commit)   | Hardcoded secret, debug kodu, .env + impeccable slop tarar |
 | `routemap-sync.sh` | PostToolUse:Edit/Write         | ROUTEMAP güncelleme hatırlatıcısı          |
+| impeccable (plugin)| PostToolUse:Edit/Write, Stop   | UI dosyası düzenlendikçe tasarım detector'ı |
 
 Hook'lar `.claude/settings.local.json` dosyasında Claude Code'a entegre.
+Impeccable global plugin olarak kurulu; proje ayarları `.impeccable/config.json`.
 
 ---
 
@@ -170,6 +172,7 @@ Hook'lar `.claude/settings.local.json` dosyasında Claude Code'a entegre.
 | `/new-project [ad]`| Yeni proje sihirbazı                                    | `.claude/commands/new-project.md` |
 | `/release [seviye]`| Versiyon + changelog + git tag                          | `.claude/commands/release.md` |
 | `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli)  | `.claude/skills/clone-website/SKILL.md` |
+| `/impeccable <komut>` | Tasarım sözlüğü — 23 komut (`shape`, `critique`, `audit`, `polish`, `typeset`…) | global plugin |
 
 ### `/clone-website <url>`
 
@@ -383,7 +386,7 @@ components/
 
 ## Bilgi Tabanı
 
-### `knowledge/mistakes.md` — 41 hata
+### `knowledge/mistakes.md` — 50 hata
 
 | #  | Hata                                          | Çözüm                                             |
 |----|-----------------------------------------------|----------------------------------------------------|
@@ -400,6 +403,13 @@ components/
 | 35 | Vercel Edge Function limitleri                | 128KB bundle, 30s timeout, sınırlı API             |
 | 36 | Framer Motion bundle size şişmesi             | LazyMotion + `m` component kullan                  |
 | 37 | npm workspace dependency conflict             | `.npmrc` legacy-peer-deps + root dependencies      |
+| 42 | Degrade metin (`bg-clip-text`)                | Solid `.text-accent` — AI tell'i + satır kırılması |
+| 43 | Token doğru ama kullanım sapmış               | Token'ı utility olarak aç (`bg-signature`)         |
+| 44 | `width`/`height` animasyonu                   | `transform: scale()` — ölçeği iç katmana al        |
+| 46 | Kural kağıtta, ihlal kodda                    | Her kural için çalıştırılabilir kontrol yaz        |
+| 48 | npm paketi kırık yayınlandı (entry uyuşmazlığı)| Yayın öncesi `npm pack --dry-run` ile doğrula      |
+| 49 | Lint script var, ESLint config yok            | `.eslintrc.json` şablona dahil edilmeli            |
+| 50 | Bozuk `eslint-disable` açıklaması             | Açıklama `--` ile ayrılır — ya da sorunu çöz       |
 
 ### `knowledge/patterns.md` — 15+ desen
 
@@ -445,11 +455,33 @@ Yeni tema oluşturmak için: `templates/docs/DESIGN.template.md`
 ## Ecosystem Health Check
 
 ```bash
-bash scripts/health-check.sh
+bash scripts/health-check.sh   # veya: npm run health
 ```
 
-11 kategori, 51 kontrol noktası:
-Agent dosyaları · Kurallar · Fazlar · Hook'lar · Snippet'ler · Template'ler · Knowledge base · Paket tutarlılığı · Design token ihlalleri · CI/CD · Temel dosyalar
+12 kategori, 55+ kontrol noktası:
+Agent dosyaları · Kurallar · Fazlar · Hook'lar · Snippet'ler · Template'ler · Knowledge base · Paket tutarlılığı · Design token ihlalleri · CI/CD · Temel dosyalar · Impeccable tasarım denetimi
+
+---
+
+## Tasarım Denetimi
+
+```bash
+npm run design:detect        # 59 anti-pattern kuralı, insan okunur
+npm run design:detect:json   # CI için
+```
+
+**Tek imza degradesi** — ekosistemde tek bir renk degradesi vardır: `bg-signature`
+(indigo→blue→cyan). Yalnızca üç yerde kullanılır:
+
+| # | Yer |
+|---|-----|
+| 1 | Birincil eylem (primary CTA) |
+| 2 | Marka döşemesi (logo tile) |
+| 3 | Seçili gezinme satırı |
+
+Metin, veri yüzeyleri ve kart zeminleri degrade taşımaz. `violet` / `purple` /
+`fuchsia` marka paletinde yoktur — `indigo→violet` üretken modellerin en tanınır
+görsel imzasıdır. Detay: `rules/design-tokens.md → Degrade Disiplini`.
 
 ---
 

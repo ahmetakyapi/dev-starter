@@ -2,7 +2,7 @@
 
 Bu, Ahmet'in kişisel geliştirme ekosistemi. Yeni proje başlatmak, tema uygulamak veya deploy etmek için buradan başla.
 
-**Versiyon**: 2.0.0
+**Versiyon**: 2.1.0
 
 ---
 
@@ -22,7 +22,7 @@ dev-starter/
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
 │   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
-│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (41 kayıt)
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (50 kayıt)
 │   └── patterns.md            → Test edilmiş kod desenleri (15+ desen)
 │
 ├── agents/
@@ -36,7 +36,7 @@ dev-starter/
 │
 ├── rules/
 │   ├── immutable-architecture.md → Kırılamaz mimari kurallar (10 kural)
-│   ├── design-tokens.md          → Hardcoded değer yasağı, token enforcement
+│   ├── design-tokens.md          → Token enforcement + degrade disiplini + AI-slop yasakları
 │   ├── commit-conventions.md     → Conventional commit standardı
 │   ├── bugfix-protocol.md        → TDD bugfix akışı
 │   ├── dev-cycle.md              → Plan → Dev → Gate → Commit → Review pipeline
@@ -50,11 +50,14 @@ dev-starter/
 │
 ├── hooks/
 │   ├── gate-guard.sh         → Commit öncesi Gate PASSED kontrolü
-│   ├── quality-scan.sh       → Hardcoded değer, debug kodu, secret taraması
+│   ├── quality-scan.sh       → Hardcoded değer, debug kodu, secret + impeccable taraması
 │   └── routemap-sync.sh      → ROUTEMAP güncelleme hatırlatıcısı
 │
+├── .impeccable/
+│   └── config.json           → Tasarım detector ayarları (ignore listeleri bilinçli boş)
+│
 ├── scripts/
-│   └── health-check.sh       → Ekosistem bütünlük kontrolü (11 kategori)
+│   └── health-check.sh       → Ekosistem bütünlük kontrolü (12 kategori)
 │
 ├── .claude/
 │   ├── settings.local.json   → Hook entegrasyonu + izinler
@@ -151,20 +154,39 @@ Kurallar kağıt üstünde kalmaz — bash hook'ları ile fiziksel olarak uygula
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
 | `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Gate PASSED yoksa commit'i bloklar |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded secret, debug kodu, design token ihlali tarar |
+| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded secret, debug kodu, design token ihlali + impeccable slop taraması |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP güncelleme hatırlatıcısı |
+| impeccable (plugin) | PostToolUse:Edit/Write, Stop | UI dosyası düzenlendikçe tasarım detector'ını çalıştırır |
 
 Entegrasyon: `.claude/settings.local.json` dosyasında `hooks` bloğunda tanımlı.
+Impeccable global plugin olarak kuruludur (`impeccable@impeccable`); proje ayarları
+`.impeccable/config.json` dosyasından okunur.
 
 ---
 
 ## Ecosystem Health Check
 
 ```bash
-bash scripts/health-check.sh
+bash scripts/health-check.sh   # veya: npm run health
 ```
 
-11 kategori kontrol eder: Agent dosyaları, kurallar, fazlar, hook'lar, snippet'ler, template'ler, knowledge base, paket tutarlılığı, design token ihlalleri, CI/CD, temel dosyalar.
+12 kategori kontrol eder: Agent dosyaları, kurallar, fazlar, hook'lar, snippet'ler, template'ler, knowledge base, paket tutarlılığı, design token ihlalleri, CI/CD, temel dosyalar, impeccable tasarım denetimi.
+
+---
+
+## Tasarım Denetimi
+
+```bash
+npm run design:detect        # 59 anti-pattern kuralı, insan okunur
+npm run design:detect:json   # CI için
+```
+
+Kurallar: `rules/design-tokens.md → Degrade Disiplini` ve `→ AI-Slop Yasakları`.
+Agent sözlüğü: `agents/uiux-agent.md → Impeccable`.
+
+**Tek imza degradesi**: `bg-signature` (indigo→blue→cyan). Yalnızca üç yerde kullanılır —
+birincil eylem, marka döşemesi, seçili gezinme satırı. `violet`/`purple` marka paletinde
+yoktur. Detector'ı susturmak yerine değeri token'a taşı.
 
 ---
 
@@ -180,6 +202,7 @@ bash scripts/health-check.sh
 | `/new-project [ad]` | Yeni proje sihirbazı | `.claude/commands/new-project.md` |
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
 | `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli) | `.claude/skills/clone-website/SKILL.md` |
+| `/impeccable <komut>` | Tasarım sözlüğü — 23 komut (`shape`, `critique`, `audit`, `polish`, `typeset`, `layout`, `distill`, `harden`, `animate`…) | global plugin |
 
 ---
 
@@ -299,7 +322,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 | Kural | Özet |
 |-------|------|
 | `immutable-architecture.md` | Server-first, performance, DB migration, state, auth, no shortcuts |
-| `design-tokens.md` | Hardcoded renk/boyut YASAK, semantic token zorunlu |
+| `design-tokens.md` | Hardcoded renk/boyut YASAK, semantic token zorunlu, degrade disiplini (3 imza anı), AI-slop yasakları |
 | `commit-conventions.md` | `feat/fix/refactor(scope): description` formatı |
 | `bugfix-protocol.md` | TDD: failing test → fix → green → regression → document |
 | `dev-cycle.md` | Plan → Dev → Gate → Commit → Review pipeline |
@@ -311,7 +334,13 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 ## Bu Dosyaları Güncelleme
 
 - **Yeni hata keşfedilince**: `knowledge/mistakes.md` güncelle
-- **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur (DESIGN.md 9-section formatında — şablon: `templates/docs/DESIGN.template.md`)
+- **Detector yeni bulgu verince**: Önce kodu düzelt. Susturmak gerekiyorsa `ignoreRules` değil,
+  değeri token'a taşı — `.impeccable/config.json` bilinçli olarak boş ignore listeleriyle gelir
+- **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur — şablon:
+  `templates/docs/DESIGN.template.md`. Şablon iki katmanlıdır: resmî DESIGN.md
+  spec'inin YAML frontmatter token şeması (impeccable bunu okur) + ekosistemin
+  9 bölümlük görsel hafıza formatı. `/impeccable document` kanonik başlıklarla
+  çıktı verir; şablondaki eşleme tablosuyla taşı, frontmatter'ı ezme
 - **Yeni desen bulununca**: `knowledge/patterns.md` güncelle
 - **Paket versiyonu güncellenince**: `packages/@ahmet/*/package.json` + `CHANGELOG.md` güncelle
 - **Yeni kural eklenince**: `rules/` altında dosya oluştur, `AGENT_PROTOCOL.md`'ye referans ekle
