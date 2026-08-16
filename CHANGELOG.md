@@ -5,6 +5,46 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ---
 
+## [Yayınlanmamış]
+
+### Degistirilenler (Changed)
+
+- **Degrade yasagi KALDIRILDI**. 2.1.0'da eklenen "degrade metin yasak" ve
+  "degrade yalnizca 3 yerde" kurallari geri alindi. Uygulamada fazla kati
+  cikti: `acilis-zili`, `onepiece-hub` ve `ahmetakyapi.com` ucu de degradeyi
+  kasitli ve dogru kullaniyordu; kural onlari kotulestirecekti.
+
+  Yerine iki bagalayici madde: **(1)** tekrar eden degrade token'dan gelir,
+  **(2)** degrade metin solid fallback tasir (`@supports` + `color`). Violet de
+  yasak degil artik — palete eklenmeli ya da sizinti oldugu kabul edilmeli.
+  Ayrimi sayiya degil **token tanimina** bakarak yap.
+
+- **Agent dosyalari bastan gozden gecirildi** — hepsi dogrulama yapmaya zorluyor.
+  Onceki hallerinde her sey duz yazi kontrol listesiydi; agent kodu okuyup
+  "kontrol ettim" diyebiliyordu. Gate'in 6 pass'i artik komut calistiriyor,
+  FE/BE/UI/DP'ye teslim oncesi dogrulama blogu eklendi, BA kanitsiz teslimati
+  geri ceviriyor.
+
+- **Teknoloji referansi gercek olculere gore duzeltildi**: ekosistem Next 15 /
+  React 19 / Tailwind v4'te degil — cogunluk hala **14 / 18 / v3**, yalnizca iki
+  proje 16 / 19 / v4'te. Repo tablosu 5 projeden 12'ye cikarildi.
+
+### Eklenenler (Added)
+
+- `scripts/audit-project.sh` — bir projeyi 8 standarda karsi denetler
+- `knowledge/live-projects-audit.md` — 12 canli projenin durumu
+- `knowledge/themes/acilis-zili.md` — 6. tema dosyasi
+- `AGENT_PROTOCOL.md → Dogrulama Disiplini` — bu oturumda yanlis cikan alti
+  iddianin kaydi ve "kontrolun kendisini de kontrol et" kurali
+
+### Duzeltmeler (Fixed)
+
+- **@ahmetakyapi/theme@2.1.0 ve @ahmetakyapi/ui@2.1.0 npm'de yayinlandi.**
+  1.0.0 Mart'tan beri import edilemiyordu; temiz dizinde kurulup dogrulandi
+- `onepiece-hub` (PR #3), `ahmetakyapi.com` (PR #1), `ramazan-vakitleri` (PR #2)
+
+---
+
 ## [2.1.0] — 2026-08-16
 
 ### Eklenenler (Added)
