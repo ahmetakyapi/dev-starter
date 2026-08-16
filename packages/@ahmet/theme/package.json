@@ -1,7 +1,32 @@
 {
   "name": "@ahmetakyapi/theme",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Kişisel proje tema tokenları — ahmetakyapi.com görsel dili baz alınarak",
+  "keywords": [
+    "design-tokens",
+    "tailwind",
+    "tailwind-preset",
+    "theme",
+    "glassmorphism",
+    "design-system"
+  ],
+  "author": "Ahmet Akyapı <ahmetakyapii@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/ahmetakyapi/dev-starter/tree/main/packages/@ahmet/theme#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmetakyapi/dev-starter.git",
+    "directory": "packages/@ahmet/theme"
+  },
+  "bugs": {
+    "url": "https://github.com/ahmetakyapi/dev-starter/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -16,8 +41,9 @@
   },
   "files": ["dist", "index.css", "tailwind-preset.ts", "tokens.ts"],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup tokens.ts --format esm,cjs --dts"
+    "dev": "tsup --entry.index=tokens.ts --watch --format esm,cjs --dts",
+    "build": "tsup --entry.index=tokens.ts --format esm,cjs --dts",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
