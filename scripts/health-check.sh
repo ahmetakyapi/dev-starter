@@ -232,20 +232,40 @@ fi
 STRAY_GRADIENT=$(grep -rnE 'from-(indigo|violet|purple|fuchsia|cyan|sky|blue)-[0-9]+ (via-[a-z]+-[0-9]+ )?to-[a-z]+-[0-9]+' \
   templates packages --include="*.tsx" 2>/dev/null || true)
 if [ -n "$STRAY_GRADIENT" ]; then
-  warn "Token disi renk degradesi bulundu — 'bg-signature' kullan:"
+  warn "Elle yazilmis degrade — tekrar ediyorsa token'a tasi ('bg-signature'):"
   echo "$STRAY_GRADIENT" | head -5 | sed 's/^/     /'
 else
-  pass "Renk degradeleri tek imza token'indan geliyor"
+  pass "Renk degradeleri token'dan geliyor"
 fi
 
-# Violet/purple sizintisi — marka paletinde yok, en taninir AI tell'i
+# Degrade metin fallback'i — kirpma desteklenmezse metin gorunmez olur.
+# Degradenin kendisi yasak DEGIL; fallback'siz olani hatadir.
+GRADIENT_TEXT=$(grep -rlE 'bg-clip-text|background-clip:\s*text' \
+  templates packages --include="*.tsx" --include="*.css" 2>/dev/null || true)
+if [ -n "$GRADIENT_TEXT" ]; then
+  UNGUARDED=""
+  while IFS= read -r f; do
+    grep -q '@supports' "$f" 2>/dev/null || UNGUARDED="$UNGUARDED$f\n"
+  done <<< "$GRADIENT_TEXT"
+  if [ -n "$UNGUARDED" ]; then
+    warn "Fallback'siz degrade metin (@supports + solid color eksik):"
+    printf "%b" "$UNGUARDED" | head -5 | sed 's/^/     /'
+  else
+    pass "Degrade metinlerin hepsi @supports korumali"
+  fi
+else
+  pass "Degrade metin kullanilmiyor"
+fi
+
+# Violet/purple — marka paletinde yok. Yasak degil, gozlem: gorunuyorsa
+# ya palete eklenmeli ya sizintidir (bkz. rules/design-tokens.md)
 VIOLET_LEAK=$(grep -rnE '(bg|from|via|to|text|border)-(violet|purple|fuchsia)-[0-9]+' \
   templates packages --include="*.tsx" --include="*.css" 2>/dev/null || true)
 if [ -n "$VIOLET_LEAK" ]; then
-  warn "Marka disi violet/purple kullanimi:"
+  warn "Palet disi violet/purple — token'a ekle veya kaldir:"
   echo "$VIOLET_LEAK" | head -5 | sed 's/^/     /'
 else
-  pass "Violet/purple sizintisi yok"
+  pass "Palet disi renk yok"
 fi
 
 # Detector'i calistir (impeccable kuruluysa)

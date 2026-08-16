@@ -42,43 +42,82 @@ Gate Agent bu pattern'leri arar. Eşleşme = ihlal.
 
 ---
 
-## Degrade Disiplini
+## Degrade Kuralları
 
-**Kural**: Ekosistemde **tek bir renk degradesi** vardır — imza degradesi. Tek kaynağı
-`packages/@ahmet/theme/tokens.ts → gradients.signature`, tek kullanım yolu `bg-signature`
-utility'sidir.
+**Degrade yasak değildir.** Marka ifadesinin meşru bir aracıdır — başlıkta da,
+butonda da, metinde de kullanılabilir. Yasaklanan tek şey yoktur; **disiplinsizlik**
+vardır. İki kural bağlayıcıdır, gerisi tasarım kararıdır.
 
-```text
-signature = linear-gradient(135deg, indigo → blue → cyan)
-```
+> Bu bölüm 2026-08-16'da yeniden yazıldı. Önceki hali degrade metni tamamen
+> yasaklıyor ve degradeyi üç yere sınırlıyordu. Uygulamada bu fazla katı çıktı:
+> `acilis-zili`, `onepiece-hub` ve `ahmetakyapi.com` üçü de degradeyi kasıtlı ve
+> doğru kullanıyordu. Yasak, çözdüğünden çok soruna yol açıyordu.
 
-### İzinli üç yer
+### Kural 1 — Degrade token'dan gelir, elle yazılmaz
 
-Degrade yalnızca şu üç anda görünür. Dördüncü bir yer eklemek kural ihlalidir:
+Aynı degradeyi iki dosyada elle yazmak, iki farklı degrade demektir. Bu teorik
+bir risk değil, iki kez ölçüldü:
 
-| # | Yer | Örnek |
-|---|-----|-------|
-| 1 | **Birincil eylem** | Hero / CTA primary butonu (hover katmanı) |
-| 2 | **Marka döşemesi** | Header logo tile, mockup içi marka karesi |
-| 3 | **Seçili gezinme satırı** | Aktif nav item vurgusu |
+| Proje | Bulgu |
+|-------|-------|
+| dev-starter | "Marka degradesi" sanılan **5 farklı varyant**, hiçbiri aynı değil |
+| onepiece-hub | Kategori rengi **109 yerde** ham Tailwind sınıfı, palette tanımsız |
 
-### Degrade taşımayan yüzeyler
-
-- **Metin** — `background-clip: text` + degrade yasak. Vurgu kelimesi solid `.text-accent`.
-- **Veri yüzeyleri** — grafik sütunu, avatar, rozet, istatistik kartı. Hepsi solid.
-- **Kart zeminleri** — `.glass` / `.surface` içindeki `linear-gradient(180deg, …)` bir
-  *cam derinliği*dir, renk degradesi değil; bu kuralın kapsamı dışındadır.
-- **Hairline ayırıcılar** — `from-transparent via-X to-transparent` bir çizgi fade'idir,
-  renk geçişi değil; serbesttir.
-
-### Violet/purple yasağı
-
-Marka paleti **indigo · blue · cyan · emerald · sky**'dır. `violet`, `purple`, `fuchsia`
-bu palette **yoktur**. `indigo → violet` geçişi üretken modellerin en tanınır görsel
-imzasıdır (impeccable `ai-color-palette`); markanın parçası değil, sızıntıdır.
+Tekrar eden her degrade bir token olmalı: `gradients.signature` → `bg-signature`,
+`--display-gradient`, `--mark-gradient` gibi. Tek seferlik dekoratif bir geçiş
+token gerektirmez.
 
 ```bash
-# Sızıntı taraması
+# Token dışı, elle yazılmış degrade taraması
+grep -rnE 'from-[a-z]+-[0-9]+ +(via-[a-z]+-[0-9]+ +)?to-[a-z]+-[0-9]+' \
+  --include="*.tsx" .
+```
+
+### Kural 2 — Degrade metin solid fallback taşır
+
+`background-clip: text` + `-webkit-text-fill-color: transparent` koşulsuz
+yazıldığında, kırpma desteklenmeyen yerde harfin dolgusu şeffaf kalır ama arkasına
+degrade basılmaz — **metin tamamen görünmez olur.** Bu bir zevk meselesi değil,
+hatadır. Üç projede birden bulundu (`ahmetakyapi.com`, `onepiece-hub`, ve
+`acilis-zili` bunu zaten doğru yapıyordu).
+
+```css
+/* ✅ Önce solid renk, kırpma @supports içinde */
+.display-ink { color: var(--text-strong); }
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .display-ink {
+    background-image: var(--display-gradient);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-bottom: 0.06em;   /* g, y, ş kırpılmasın */
+  }
+}
+```
+
+Uzun cümleyi degrade span'e koyma — satır kırılması öngörülemez olur
+(`mistakes.md` #23). Kısa vurgu kelimesi ve display metni sorunsuz.
+
+### Kapsam dışı
+
+- **Kart zeminleri** — `.glass` / `.surface` içindeki `linear-gradient(180deg, …)`
+  bir *cam derinliği*dir, renk geçişi değil
+- **Hairline ayırıcılar** — `from-transparent via-X to-transparent` bir çizgi
+  fade'idir
+- **Mask** — `maskImage: linear-gradient(...)` renk taşımaz
+
+### Palet tutarlılığı
+
+Marka paleti **indigo · blue · cyan · emerald · sky**'dır. `violet`, `purple`,
+`fuchsia` bu palette yoktur — ama bu bir *yasak* değil, bir *gözlem*: bu renkler
+görünüyorsa ya palete eklenmeli ya da sızıntıdır.
+
+Ayrımı yapmanın yolu sayıya bakmak değil, **token tanımına** bakmaktır. `onepiece-hub`
+80 mor kullanımıyla "bilinçli mor tema" sanılmıştı; paleti okumak yetti — mor tanımlı
+değildi, sızıntıydı ve `fruit` olarak token'landı. `ahmetakyapi.com`'da ise violet
+`Projeler` bölümünün kimliği ve `CodeHighlight`'ta syntax vurgusu; ikisi de kasıtlı.
+
+```bash
 grep -rnE '(bg|from|via|to|text|border)-(violet|purple|fuchsia)-[0-9]+' \
   --include="*.tsx" --include="*.css" .
 ```
@@ -88,16 +127,27 @@ grep -rnE '(bg|from|via|to|text|border)-(violet|purple|fuchsia)-[0-9]+' \
 ## AI-Slop Yasakları
 
 Bu kalıplar `impeccable` detector'ı tarafından otomatik yakalanır
-(`npm run design:detect`). Yakalanması beklenmez — hiç yazılmaz.
+(`npm run design:detect`).
 
 | Kalıp | Neden | Doğrusu |
 |-------|-------|---------|
-| `bg-clip-text` + degrade | En tanınır AI tell'i; responsive'de satır kırılması öngörülemez | Solid `.text-accent` |
-| `from-indigo-* to-violet-*` | Purple gradient tell'i | `bg-signature` token'ı |
+| Fallback'siz degrade metin | Kırpma desteklenmezse metin görünmez olur | `@supports` + solid `color` |
+| Elle yazılmış tekrarlı degrade | Aynı sanılan farklı degradeler birikir | Token'a taşı |
 | `transition: width, height` | Her karede layout thrash | `transform: scale()` |
 | Emoji ikon | Cross-platform tutarsız render | `lucide-react` |
 | Kart içinde kart | Hiyerarşi kaybı | Tek seviye + ayırıcı |
 | Her başlığın üstünde yuvarlak ikon karesi | Şablon hissi | Seçici kullan |
+
+**Detector'ın son sözü yoktur.** Impeccable'ın kendi doktrini *"the brief wins"*
+der: pinlenmiş estetik, doygun-kalıp uyarısını yener. Bir bulgu kasıtlı bir tasarım
+kararıysa gerekçesini yaz ve bırak — ama gerekçe "böyle daha güzel" değil,
+"şu sorunu şöyle çözüyor" olmalı.
+
+Susturman gerekiyorsa `ignoreRules` yerine dosya içi istisna tercih et:
+
+```css
+/* impeccable-disable gradient-text: token'lanmış marka display'i, fallback'li */
+```
 
 **Detector'ı susturma.** Bir bulgu kasıtlıysa çözüm `ignoreRules` değil, token'a
 taşımaktır — `.impeccable/config.json` bilinçli olarak boş ignore listeleriyle gelir.

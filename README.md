@@ -475,18 +475,18 @@ npm run design:detect        # 59 anti-pattern kuralı, insan okunur
 npm run design:detect:json   # CI için
 ```
 
-**Tek imza degradesi** — ekosistemde tek bir renk degradesi vardır: `bg-signature`
-(indigo→blue→cyan). Yalnızca üç yerde kullanılır:
+**Degrade yasak değildir** — başlıkta, butonda, metinde kullanılabilir. Bağlayıcı
+olan iki kural var:
 
-| # | Yer |
-|---|-----|
-| 1 | Birincil eylem (primary CTA) |
-| 2 | Marka döşemesi (logo tile) |
-| 3 | Seçili gezinme satırı |
+| # | Kural | Neden |
+|---|-------|-------|
+| 1 | Tekrar eden degrade **token'dan** gelir (`bg-signature` gibi) | Elle yazmak, aynı sanılan farklı degradeler biriktirir — dev-starter'da 5 varyant, onepiece-hub'da 109 token'sız kullanım |
+| 2 | Degrade metin **solid fallback** taşır (`@supports` + `color`) | Kırpma desteklenmezse metin tamamen görünmez olur — üç projede bulundu |
 
-Metin, veri yüzeyleri ve kart zeminleri degrade taşımaz. `violet` / `purple` /
-`fuchsia` marka paletinde yoktur — `indigo→violet` üretken modellerin en tanınır
-görsel imzasıdır. Detay: `rules/design-tokens.md → Degrade Disiplini`.
+Kart zeminlerindeki `linear-gradient(180deg, …)` bir cam derinliğidir, hairline
+ayırıcılar bir çizgi fade'idir — ikisi de kapsam dışı.
+
+Detay: `rules/design-tokens.md → Degrade Kuralları`.
 
 ---
 

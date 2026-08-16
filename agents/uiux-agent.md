@@ -105,7 +105,8 @@ Screenshot referansları verildiğinde, kodlamadan önce şu 8 boyutu analiz et:
 - Heading scale sistemi
 - Body text yoğunluğu ve line-height
 - Font pairing tonu (premium / teknik / editorial)
-- Vurgu tekniği — **solid accent rengi** (degrade metin yasak, bkz. `rules/design-tokens.md`)
+- Vurgu tekniği — solid accent ya da degrade; degrade ise fallback'li
+  (bkz. `rules/design-tokens.md → Degrade Kuralları`)
 
 ### 3. Card System
 
@@ -204,7 +205,7 @@ Herhangi bir UI kararında şu sırayla düşün:
 ```text
 [Ambient glow orbs] + [Grid overlay] + [Mouse spotlight]
 [Chip/badge — animated dot]
-[H1 — font-black, tracking-[-0.03em], solid .text-accent on accent word]
+[H1 — font-black, tracking-[-0.03em], vurgu kelimesi solid accent veya fallback'li degrade]
 [Subtitle — slate-400, leading-[1.75]]
 [Primary pill CTA — bg-signature hover katmanı] + [Ghost pill CTA]
 [Product preview / browser mockup — delayed scale entrance]
@@ -274,10 +275,13 @@ Mevcut primitifleri yeniden inşa etme — kullan.
 - Zayıf hero area (görsel eleman olmadan)
 - `rounded-xl` buton (pill: `rounded-full` tercih et)
 - Emoji icon (lucide-react kullan)
-- Degrade metin (`bg-clip-text`) — solid `.text-accent` kullan
-- `violet` / `purple` / `fuchsia` — marka paletinde yok
-- Elle yazılmış degrade (`from-X to-Y`) — tek kaynak `bg-signature`
+- Fallback'siz degrade metin — `@supports` + solid `color` şart, yoksa metin
+  desteklenmeyen yerde tamamen görünmez olur
+- Tekrar eden degradeyi elle yazma — token'a taşı (`bg-signature` gibi)
 - `width` / `height` animasyonu — `transform: scale()` kullan
+
+> **Degrade yasak değil.** Başlıkta, butonda, metinde kullanılabilir. Bağlayıcı olan
+> tek şey yukarıdaki iki madde. Ayrıntı: `rules/design-tokens.md → Degrade Kuralları`
 
 ---
 

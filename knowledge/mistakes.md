@@ -590,21 +590,33 @@ Arkadaşlarınla <span className="text-gradient">Çiz, Tahmin Et</span> ve Eğle
 > 2026-08-16 — `impeccable` detector'ı (59 kural) dev-starter'a uygulandığında
 > çıkan 16 bulgunun kök nedenleri. Tarama: `npm run design:detect`
 
-### 42. Degrade Metin (`bg-clip-text`)
-**Hata**: `.text-gradient` utility'si ve `bg-gradient-to-r … bg-clip-text text-transparent`
-başlıklarda kullanılıyordu. İki ayrı sorun üretiyor:
-1. Üretken modellerin en tanınır görsel imzalarından biri (impeccable `gradient-text`)
-2. Responsive'de satır kırılması öngörülemez — tek kelime alt satıra düşüyor (bkz. #23)
+### 42. Degrade Metin Fallback'siz Bırakılırsa Görünmez Olur
+> **Not (2026-08-16)**: Bu kayıt başta "degrade metin yasak" diyordu. Yasak
+> kaldırıldı — sorun degradenin kendisi değil, fallback'in eksikliğiymiş.
 
-**Çözüm**: Vurgu kelimesi solid marka rengiyle. Degrade metinde değil, yalnızca
-üç imza yüzeyinde yaşar.
-```tsx
-// ❌ Degrade metin
-<span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">başladı</span>
+**Hata**: `bg-clip-text` + `-webkit-text-fill-color: transparent` (veya Tailwind'in
+`text-transparent`'ı) **koşulsuz** yazılıyordu. `background-clip: text` desteklenmeyen
+bir yerde harfin dolgusu şeffaf kalır ama arkasına degrade basılmaz — metin
+**tamamen kaybolur**. Üç projede birden bulundu: `ahmetakyapi.com`, `onepiece-hub`,
+ve `dev-starter` template'leri.
 
-// ✅ Solid accent
-<span className="text-accent">başladı</span>
+**Çözüm**: Önce solid renk, kırpma `@supports` içinde:
+```css
+.display-ink { color: var(--text-strong); }        /* fallback ÖNCE */
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .display-ink {
+    background-image: var(--display-gradient);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-bottom: 0.06em;   /* g, y, ş kırpılmasın */
+  }
+}
 ```
+Bu deseni `acilis-zili` zaten uyguluyordu — descender düzeltmesi dahil.
+
+**Ayrıca**: Uzun cümleyi degrade span'e koyma, satır kırılması öngörülemez olur
+(#23). Kısa vurgu kelimesi ve display metni sorunsuz.
 
 ### 43. Token Doğru, Kullanım Sapmış — Degrade Çoğalması
 **Hata**: `tokens.ts → gradients.logo` zaten doğru marka rotasını (indigo→blue→cyan)

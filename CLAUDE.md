@@ -188,9 +188,16 @@ npm run design:detect:json   # CI için
 Kurallar: `rules/design-tokens.md → Degrade Disiplini` ve `→ AI-Slop Yasakları`.
 Agent sözlüğü: `agents/uiux-agent.md → Impeccable`.
 
-**Tek imza degradesi**: `bg-signature` (indigo→blue→cyan). Yalnızca üç yerde kullanılır —
-birincil eylem, marka döşemesi, seçili gezinme satırı. `violet`/`purple` marka paletinde
-yoktur. Detector'ı susturmak yerine değeri token'a taşı.
+**Degrade yasak değildir.** Bağlayıcı iki kural var, gerisi tasarım kararı:
+
+1. **Tekrar eden degrade token'dan gelir** — `bg-signature` (indigo→blue→cyan) gibi.
+   Elle yazmak, aynı sanılan farklı degradeler biriktirir (dev-starter'da 5 varyant,
+   onepiece-hub'da 109 token'sız kullanım).
+2. **Degrade metin solid fallback taşır** — `@supports` + `color`. Yoksa kırpma
+   desteklenmeyen yerde metin tamamen görünmez olur. Üç projede bulundu.
+
+Detector'ın son sözü yoktur; impeccable'ın kendi doktrini *"the brief wins"* der.
+Kasıtlı bir karar için gerekçe yaz, susturma.
 
 ### Canlı Proje Denetimi
 
@@ -206,12 +213,10 @@ bash scripts/audit-project.sh ~/Desktop/Projects/<proje>
 1. **Referans çelişkisi**: `ahmetakyapi.com` ekosistemin görsel referansı ama
    20 detector bulgusuyla listenin sondan ikincisi. Referans mı güncellenecek,
    kural mı yumuşayacak?
-2. **`gradient-text` yasağı fazla katı**: `acilis-zili` token'lanmış, `@supports`
-   korumalı, solid fallback'li ve descender düzeltmeli bir uygulamaya sahip —
-   yasağın çözmeye çalıştığı sorunları zaten çözmüş. Üç şartlı istisna maddesi
-   eklenmeli.
-3. **Palet istisnaları**: `onepiece-hub` (80 violet) ve `ramazan-vakitleri`
-   (mor+pembe+mavi) bilinçli tema mı, sızıntı mı?
+2. ~~**`gradient-text` yasağı fazla katı**~~ → ✅ 2026-08-16, yasak kaldırıldı.
+   Kural artık degradeyi yasaklamıyor; token'lama ve fallback şartına indirgendi.
+3. **Palet istisnaları**: `onepiece-hub` ✅ çözüldü (sızıntıydı, `fruit` olarak
+   token'landı). `ramazan-vakitleri` (mor+pembe+mavi) hâlâ açık.
 
 ---
 

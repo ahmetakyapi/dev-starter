@@ -255,13 +255,16 @@ Bunlar proje bazında tartışılmaz — `rules/design-tokens.md` tarafından zo
 `npm run design:detect` ile otomatik taranır.
 
 **Don't**
-- Degrade metin (`background-clip: text`) — vurgu solid accent rengiyle
-- Elle degrade yazmak (`from-X to-Y`) — tek kaynak imza token'ı
-- Degradeyi 3 imza anının dışında kullanmak (birincil eylem, marka döşemesi,
-  seçili gezinme satırı). Veri yüzeyleri ve kart zeminleri degrade taşımaz
-- `violet` / `purple` / `fuchsia` — `indigo→violet` en tanınır AI tell'i
+- Fallback'siz degrade metin — `@supports` guard + solid `color` şart, yoksa
+  kırpma desteklenmeyen yerde metin tamamen görünmez olur
+- Tekrar eden degradeyi elle yazmak — token'a taşı (tek seferlik dekoratif
+  geçiş token gerektirmez)
+- Uzun cümleyi degrade span'e koymak — satır kırılması öngörülemez olur
 - `width` / `height` animasyonu — `transform: scale()` kullan
 - Emoji ikon — `lucide-react`
+
+> **Degrade yasak değildir.** Başlıkta, butonda, metinde kullanılabilir.
+> Bağlayıcı olan yalnızca yukarıdaki iki degrade maddesidir.
 
 ---
 
