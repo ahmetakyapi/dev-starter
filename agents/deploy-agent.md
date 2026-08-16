@@ -65,8 +65,8 @@ npm run build
 | Değişken              | Zorunlu | Dikkat                                      |
 | --------------------- | ------- | ------------------------------------------- |
 | `DATABASE_URL`        | Evet    | Production Neon URL (dev ile aynı olmasın!) |
-| `NEXTAUTH_SECRET`     | Evet    | `openssl rand -base64 32` ile üret          |
-| `NEXTAUTH_URL`        | Evet    | `https://domain.com` (trailing slash yok)   |
+| `AUTH_SECRET`         | Evet    | `openssl rand -base64 32` ile üret          |
+| `AUTH_URL`            | Hayır   | v5'te opsiyonel — Vercel otomatik algılar   |
 | `NEXT_PUBLIC_APP_URL` | Evet    | Production URL                              |
 
 ### 3. Vercel Proje Ayarları
@@ -126,8 +126,8 @@ Neden: Vercel'de tanımlanmamış
 ### Auth Çalışmıyor (production)
 
 ```text
-Neden: NEXTAUTH_URL yanlış veya secret farklı
-Kontrol: NEXTAUTH_URL = exact production URL, http DEĞİL https
+Neden: AUTH_URL yanlış veya secret farklı
+Kontrol: AUTH_URL = exact production URL, http DEĞİL https
 ```
 
 ### DB Connection Timeout

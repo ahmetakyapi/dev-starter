@@ -4,7 +4,7 @@
 // Güncelleme gerekirse orijinal: templates/nextjs-fullstack/components/CustomCursor.tsx
 
 import { useEffect, useState, useCallback } from 'react'
-import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
 
 export default function CustomCursor() {
   const [mounted, setMounted]  = useState(false)
@@ -12,6 +12,8 @@ export default function CustomCursor() {
   const [isHover, setIsHover]  = useState(false)
   const [isPress, setIsPress]  = useState(false)
   const [isTouch, setIsTouch]  = useState(false)
+  // Fareyi takip eden nesne doğrudan hareket kaynağı — azaltma isteğinde çizilmez
+  const reduceMotion = useReducedMotion()
 
   const dotX  = useMotionValue(-200)
   const dotY  = useMotionValue(-200)
@@ -26,6 +28,10 @@ export default function CustomCursor() {
   useEffect(() => {
     setMounted(true)
     if (window.matchMedia('(pointer: coarse)').matches) { setIsTouch(true); return }
+    if (reduceMotion) return
+
+    // globals.css'teki `cursor: none` kuralı bu kancaya bağlı
+    document.documentElement.dataset.customCursor = ''
 
     const onMove  = (e: MouseEvent) => { dotX.set(e.clientX); dotY.set(e.clientY); setVisible(true) }
     const onDown  = () => setIsPress(true)
@@ -40,6 +46,7 @@ export default function CustomCursor() {
     document.documentElement.addEventListener('mouseleave', onLeave)
     document.documentElement.addEventListener('mouseenter', onEnter)
     return () => {
+      delete document.documentElement.dataset.customCursor
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mousemove', onHoverStart)
       window.removeEventListener('mousedown', onDown)
@@ -47,9 +54,9 @@ export default function CustomCursor() {
       document.documentElement.removeEventListener('mouseleave', onLeave)
       document.documentElement.removeEventListener('mouseenter', onEnter)
     }
-  }, [dotX, dotY, onHoverStart])
+  }, [dotX, dotY, onHoverStart, reduceMotion])
 
-  if (!mounted || isTouch) return null
+  if (!mounted || isTouch || reduceMotion) return null
 
   return (
     <>

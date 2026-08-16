@@ -6,6 +6,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useReducedMotion,
 } from 'framer-motion'
 
 /**
@@ -24,6 +25,11 @@ import {
  *   </motion.div>
  */
 export function useCardTilt(intensity = 8) {
+  // 3B eğim vestibüler rahatsızlık kaynağıdır — hareket azaltma isteyen
+  // kullanıcıda eğim sıfırlanır, parlaklık takibi (renk) korunur.
+  const reduceMotion = useReducedMotion()
+  const tilt = reduceMotion ? 0 : intensity
+
   const ref = useRef<HTMLDivElement>(null)
   const rx = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
   const ry = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
@@ -37,13 +43,13 @@ export function useCardTilt(intensity = 8) {
       const r = ref.current.getBoundingClientRect()
       const nx = (e.clientY - r.top) / r.height - 0.5
       const ny = (e.clientX - r.left) / r.width - 0.5
-      rx.set(-nx * intensity)
-      ry.set(ny * intensity)
+      rx.set(-nx * tilt)
+      ry.set(ny * tilt)
       brightness.set(1.05)
       mouseX.set((e.clientX - r.left) / r.width)
       mouseY.set((e.clientY - r.top) / r.height)
     },
-    [rx, ry, brightness, mouseX, mouseY, intensity],
+    [rx, ry, brightness, mouseX, mouseY, tilt],
   )
 
   const onLeave = useCallback(() => {

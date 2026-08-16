@@ -7,6 +7,106 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış]
 
+### Kapsamli Denetim — 2026-08-17
+
+14 agent'lik bir denetim ekosistemin tamamini taradi; 79 bulgu dogrulama
+asamasindan gecti. Cikan tema: **kontrollerin cogu kendi konusunu test
+etmiyordu.** Uc guvenlik agi ayni anda kirikti ve ucu de yesil rapor veriyordu.
+
+#### Duzeltmeler (Fixed) — kirik olanlar
+
+- **@ahmetakyapi/ui npm'de App Router'da kirikti**: tsup bundle ederken
+  kaynaktaki `'use client'` direktifini dusuruyordu. Yayindaki 2.1.0 bir Server
+  Component'ten import edilince kiriliyordu. `tsup.config.ts` + banner eklendi;
+  `verify:exports` artik dist'in ILK satirini kontrol ediyor (negatif test
+  edildi: banner'siz exit 1, banner'la exit 0)
+- **gate-guard.sh ve quality-scan.sh 5 aydir no-op'tu**: girdiyi `TOOL_INPUT`
+  environment variable'indan okuyorlardi; Claude Code STDIN'den JSON veriyor.
+  Secret taramasi, `.env` kontrolu, `@ts-ignore` ve impeccable taramalarinin
+  hicbiri bir kez bile calismadi. Ikinci hata: `awk '{print $NF}'` markdown
+  tablosunun bos son alanini okuyordu (`$(NF-1)` olmali) — hook calissaydi bile
+  Gate PASSED olan story'yi bloklayacakti. Ikisi de duzeltildi
+- **CI'in guvenlik taramasi ters calisiyordu**: `! grep ... || echo "temiz"`
+  idiomu sizinti VARKEN hem eslesen satiri basip hem "No secrets found" yazip
+  exit 0 veriyordu. Fixture ile repro edildi ve acik `if`/`exit 1`'e cevrildi
+- **templates/nextjs-fullstack'te postcss.config.js hic yoktu**: Tailwind tek
+  bir utility bile uretmiyordu — bu sablondan uretilen her proje tamamen
+  stilsiz aciliyordu. `build`, `tsc` ve `lint` ucu de yesil veriyordu
+- **ESLint hic calismamisti**: bagimliliklar kurulu degildi (config onlari
+  import ediyordu), CI adimi `|| true` ile maskeliydi, health-check yine de ✅
+  diyordu. Ilk gercek kosu 128 bulgu verdi — tamami `no-undef` false-positive'i
+  oldugu icin dogru duzeltme config'teydi. Ayrica flat config'te `ignores:
+  ['dist/']` ic ice `dist`'i kapsamiyordu (`**/dist/**` olmali)
+- **knowledge/patterns.md iki calismaz kod ornegi dagitiyordu**: next-auth v5
+  route handler'i (`handlers as GET` — tum objeyi handler saniyor; canli
+  acilis-zili dosyasindan dogrulandi) ve cursor pagination (cursor siralanmayan
+  UUID sutununda, yon ters — SESSIZ bozulur, ilk sayfa dogru gorunur)
+- **templates/nextjs-fullstack/.gitignore migration'lari yok sayiyordu**
+  (`drizzle/`) — `immutable-architecture` §3'un tam ziddi
+- **@ahmetakyapi/theme imleci kosulsuz gizliyordu** (`cursor: none !important`):
+  paketi yalnizca token icin kuran tuketicide bile imlec kayboluyordu ve
+  `!important` yuzunden geri alinamiyordu. Artik `data-custom-cursor` kancasina
+  bagli
+
+#### Eklenenler (Added)
+
+- **`scripts/test-hooks.sh`** — hook'larin 9 davranis testi. Gercek Claude Code
+  payload'i verip exit kodunu dogrular. Eski kodda 3/9 basarisiz veriyor, yeni
+  kodda 9/9 geciyor. health-check artik varlik degil davranis test ediyor
+- **Test altyapisi** — vitest + `tests/contract.test.ts` (11 assertion).
+  `bugfix-protocol.md`'nin TDD zorunlulugu ve Gate Pass 4'un `npm test`'i
+  ilk kez icra edilebilir. Imza ease egrisi, `cn()` merge sirasi ve degrade
+  token'i artik sessizce degisemez
+- **`prefers-reduced-motion` destegi** — ekosistemde 34 framer-motion dosyasi
+  vardi ve hicbirinde yoktu. Paket CSS'i, iki sablon, CustomCursor, useMagnetic
+  ve useCardTilt kapsandi
+- **health-check'e yapisal invaryant**: `@tailwind` kullanan bir sablonda
+  `postcss.config.*` ZORUNLU. Derleyicinin goremedigi hata sinifini yakalar
+- **`.claude/agents/gate.md` ve `deploy.md`** — ilk gercek Claude Code
+  subagent'lari (ince sarmalayici; rol tanimi `agents/` altinda tek kaynak)
+- **`.claude/settings.json`** — hook'lar artik paylasilan/versiyonlanan
+  dosyada; `settings.local.json` gitignore'landi (icindeki olu Windows yolu
+  `C:\Old Projects\...` silindi)
+- Iki sablona `error.tsx` + `not-found.tsx`, guvenlik basliklari
+  (`poweredByHeader: false`, nosniff, Referrer-Policy, X-Frame-Options,
+  Permissions-Policy), `.nvmrc`, kok `engines: node >=22.18`
+- `mistakes.md` #52–#56, tema dosyalarina `Kaynak: <yol> — <tarih>` satiri
+
+#### Degistirilenler (Changed)
+
+- **`~/dev-starter` symlink olusturuldu** — 39 referans (agent dosyalari, her
+  iki sablonun CLAUDE.md'si, global CLAUDE.md) var olmayan bir yola isaret
+  ediyordu. Tek symlink, sifir dosya degisikligi
+- **commit-conventions.md gercege uyduruldu**: "Turkce degil, Ingilizce" kurali
+  kaldirildi. Ekosistemin referans projesi `acilis-zili`'nin 50 commit'inin
+  48'i Turkce ve iyi yazilmis. Yeni kural: tip/scope Ingilizce, description
+  proje dilinde. *Iyi yapilmis isi degistirmeye zorlayan kural, yanlis kuraldir*
+- **"auth tam uygulama" iddiasi kaldirildi** — sablonda next-auth, auth.ts,
+  middleware.ts ve adapter tablolari yok. README, CLAUDE.md ve new-project.md
+  durustlestirildi; `.env.example` karsiligi olmayan degiskenleri artik
+  "kurulu degil" basligi altinda tutuyor
+- **design-tokens.md kendi kendisiyle celisiyordu**: `rgba()` CRITICAL ihlal
+  sayiliyordu ama ayni dosya rgba'li multi-layer shadow oneriyordu. Alfa
+  kanalli golge katmanlari istisnaya alindi
+- `AGENT_PROTOCOL.md` artik SDK subagent'i oldugunu iddia etmiyor; birebir
+  yinelenen SDK blogu silindi
+- `uiux-agent.md`: detector bulgulari AI-Slop tablosuyla "ayni liste" degil,
+  6 satir vs 59 kural — alt kume oldugu yazildi
+- `deploy-agent.md` + `release-maintenance.md`: `NEXTAUTH_SECRET`/`URL` (v4)
+  → `AUTH_SECRET`/`AUTH_URL` (v5)
+- Tema listeleri guncellendi: `acilis-zili` eklendi, Mimio duzeltildi
+  (`#0c1620` → canli deger `#050b16`), `digynotes` **arsiv** olarak isaretlendi
+  (proje diskte yok), `e2e-polish.md` `prisma/seed.ts` → `scripts/seed.ts`
+- 7 slash komutuna `argument-hint` eklendi
+
+#### Olcum
+
+- `bash scripts/health-check.sh` → **61 basarili, 0 uyari, 0 hata**
+- `bash scripts/test-hooks.sh` → 9/9 (eski kodda 3 basarisiz)
+- `npm test` → 11/11 · `npm run lint` → temiz · `npm run typecheck` → temiz
+- `node scripts/verify-package-exports.mjs` → tum girisler dogrulandi
+- `npm run design:detect` → 0 bulgu
+
 ### Degistirilenler (Changed)
 
 - **Degrade yasagi KALDIRILDI**. 2.1.0'da eklenen "degrade metin yasak" ve

@@ -23,7 +23,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 
 // app/api/auth/[...nextauth]/route.ts
-export { handlers as GET, handlers as POST } from '@/auth'
+// next-auth v5'te `handlers` zaten { GET, POST } içerir — destructure edilir.
+// `handlers as GET` yazmak TÜM objeyi handler sanıp ilk istekte patlar.
+// Kaynak: ~/Desktop/Projects/acilis-zili/app/api/auth/[...nextauth]/route.ts
+import { handlers } from '@/auth'
+
+export const { GET, POST } = handlers
 ```
 
 ---
@@ -556,34 +561,38 @@ export const config = {
 // lib/queries.ts
 import { db } from '@/lib/db'
 import { posts } from '@/lib/schema'
-import { gt, desc, sql } from 'drizzle-orm'
+import { lt, desc } from 'drizzle-orm'
 
 type PaginationResult<T> = {
   items: T[]
   nextCursor: string | null
 }
 
+// KURAL: cursor, SIRALAMA sütununun değeridir. Farklı bir sütun (örn. rastgele
+// UUID `id`) kullanılırsa sorgu SESSİZCE bozulur — ilk sayfa doğru görünür,
+// sonraki sayfalar kayar veya kayıt atlar. Sıralama azalan olduğu için
+// karşılaştırma da `lt` olmalı; `gt` ters yöne sayfalar.
 export async function getPosts(cursor?: string, limit = 20): Promise<PaginationResult<typeof posts.$inferSelect>> {
-  const query = db
+  const items = await db
     .select()
     .from(posts)
+    .where(cursor ? lt(posts.createdAt, new Date(cursor)) : undefined)
     .orderBy(desc(posts.createdAt))
     .limit(limit + 1)
 
-  if (cursor) {
-    query.where(gt(posts.id, cursor))
-  }
-
-  const items = await query
   const hasMore = items.length > limit
   if (hasMore) items.pop()
 
   return {
     items,
-    nextCursor: hasMore ? items[items.length - 1].id : null,
+    nextCursor: hasMore ? items.at(-1)!.createdAt.toISOString() : null,
   }
 }
 ```
+
+> Aynı `createdAt` değerine sahip kayıtlar varsa bileşik cursor gerekir —
+> `(createdAt, id)` çifti ile sırala ve karşılaştır; aksi halde eşit
+> timestamp'lerde kayıt tekrarlanabilir veya atlanabilir.
 
 ---
 

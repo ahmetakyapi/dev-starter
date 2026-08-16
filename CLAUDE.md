@@ -78,7 +78,7 @@ dev-starter/
 │
 ├── templates/
 │   ├── docs/                 → ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS, DESIGN.md şablonları
-│   ├── nextjs-fullstack/     → Next.js + Drizzle + auth tam uygulama
+│   ├── nextjs-fullstack/     → Next.js + Drizzle iskeleti (auth dahil değil)
 │   └── landing/              → Three.js + glassmorphism tanıtım sayfası
 │
 ├── snippets/                 → 10 hazır bileşen
@@ -233,6 +233,24 @@ bash scripts/audit-project.sh ~/Desktop/Projects/<proje>
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
 | `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli) | `.claude/skills/clone-website/SKILL.md` |
 | `/impeccable <komut>` | Tasarım sözlüğü — 23 komut (`shape`, `critique`, `audit`, `polish`, `typeset`, `layout`, `distill`, `harden`, `animate`…) | global plugin |
+
+> **Tek kaynak: bu repo.** `~/.claude/commands/` altında aynı adlı, ayrışmış
+> kopyalar var (Mart sürümleri, bazıları daha uzun). Karar: **repoda commit'li
+> olan kanoniktir**; global kopyalar değiştirilmez ve referans alınmaz. Bir
+> komutu güncellerken `.claude/commands/` içindekini güncelle.
+
+### Kayıtlı Subagent'lar
+
+`agents/*.md` dosyaları ana oturumun **üstlendiği rol tanımlarıdır** — kayıtlı
+subagent değildir. İki istisna, izolasyondan gerçekten fayda gördüğü için:
+
+| Subagent | Sarmalayıcı | Rol tanımı |
+|----------|-------------|------------|
+| `gate` | `.claude/agents/gate.md` | `agents/gate-agent.md` |
+| `deploy` | `.claude/agents/deploy.md` | `agents/deploy-agent.md` |
+
+Sarmalayıcılar bilerek incedir; rol tanımını kopyalamazlar. İki kaynak olursa
+biri sessizce bayatlar — bu denetimin en sık bulduğu hata sınıfı buydu.
 
 ---
 

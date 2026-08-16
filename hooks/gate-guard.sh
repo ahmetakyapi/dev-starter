@@ -6,11 +6,11 @@
 
 set -euo pipefail
 
+# shellcheck source=lib/hook-input.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/hook-input.sh"
+
 # Sadece git commit komutlarını yakala
-TOOL_INPUT="${TOOL_INPUT:-}"
-if ! echo "$TOOL_INPUT" | grep -qE 'git\s+commit'; then
-  exit 0
-fi
+hook_is_git_commit || exit 0
 
 # ROUTEMAP var mı?
 ROUTEMAP=""
@@ -31,7 +31,11 @@ fi
 CURRENT_STORY=$(grep -E '^\|.*\|\s*IN_PROGRESS\s*\|' "$ROUTEMAP" | head -1 || true)
 
 if [ -n "$CURRENT_STORY" ]; then
-  GATE_STATUS=$(echo "$CURRENT_STORY" | awk -F'|' '{print $NF}' | tr -d ' ')
+  # Markdown tablo satırı `| S-01 | Login | IN_PROGRESS | PASSED |` awk -F'|' ile
+  # 6 alana bölünür ve SON alan kapanış borusundan sonraki BOŞ dizedir.
+  # $NF bu yüzden hep boş gelir; Gate PASSED olsa bile "" != "PASSED" olur ve
+  # hook her commit'i bloklardı. Son anlamlı alan $(NF-1).
+  GATE_STATUS=$(echo "$CURRENT_STORY" | awk -F'|' '{print $(NF-1)}' | tr -d ' ')
   if [ "$GATE_STATUS" != "PASSED" ] && [ "$GATE_STATUS" != "PASSED_WITH_WARNINGS" ]; then
     echo "❌ GATE GUARD: Commit bloklandı!"
     echo "   Aktif story Gate'den geçmemiş."

@@ -1,9 +1,11 @@
 # Görsel Hafıza: ahmetakyapi.com
 
+> **Kaynak:** `/Users/ahmet/Desktop/Projects/ahmetakyapi.com/app/globals.css` — doğrulandı 2026-08-17
+
 > Bu dosya DESIGN.md 9-section formatını takip eder.
 > AI agent'ları bu dosyayı okuyarak pixel-perfect UI üretebilir.
 
-Kaynak proje: `~/personal-website`
+Kaynak proje: `~/Desktop/Projects/ahmetakyapi.com`
 Versiyon: Next.js 14, Tailwind CSS 3, Framer Motion 11, React Three Fiber, next-themes
 
 ---

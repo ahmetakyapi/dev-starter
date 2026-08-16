@@ -38,8 +38,8 @@
   },
   "files": ["dist", "src"],
   "scripts": {
-    "dev": "tsup src/index.ts --watch --format esm,cjs --dts",
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {

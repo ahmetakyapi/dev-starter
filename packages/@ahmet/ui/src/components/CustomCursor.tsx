@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
 
 export function CustomCursor() {
   const [mounted, setMounted] = useState(false)
@@ -9,6 +9,9 @@ export function CustomCursor() {
   const [isHover, setIsHover] = useState(false)
   const [isPress, setIsPress] = useState(false)
   const [isTouch, setIsTouch] = useState(false)
+  // Fareyi takip eden bir nesne doğrudan hareket kaynağıdır — hareket azaltma
+  // isteyen kullanıcıda özel imleç hiç çizilmez, sistem imleci geri gelir.
+  const reduceMotion = useReducedMotion()
 
   const dotX  = useMotionValue(-200)
   const dotY  = useMotionValue(-200)
@@ -23,6 +26,12 @@ export function CustomCursor() {
   useEffect(() => {
     setMounted(true)
     if (window.matchMedia('(pointer: coarse)').matches) { setIsTouch(true); return }
+    if (reduceMotion) return
+
+    // Sistem imlecini gizleyen CSS kuralı bu kancaya bağlı. Bileşen mount
+    // olmadan hiçbir tüketicide imleç kaybolmaz — @ahmetakyapi/theme'i yalnızca
+    // token için kuran proje etkilenmez.
+    document.documentElement.dataset.customCursor = ''
 
     const onMove  = (e: MouseEvent) => { dotX.set(e.clientX); dotY.set(e.clientY); setVisible(true) }
     const onDown  = () => setIsPress(true)
@@ -43,10 +52,11 @@ export function CustomCursor() {
       window.removeEventListener('mouseup', onUp)
       document.documentElement.removeEventListener('mouseleave', onLeave)
       document.documentElement.removeEventListener('mouseenter', onEnter)
+      delete document.documentElement.dataset.customCursor
     }
-  }, [dotX, dotY, onHoverStart])
+  }, [dotX, dotY, onHoverStart, reduceMotion])
 
-  if (!mounted || isTouch) return null
+  if (!mounted || isTouch || reduceMotion) return null
 
   return (
     <>

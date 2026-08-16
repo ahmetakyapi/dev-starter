@@ -120,7 +120,7 @@ export default function Hero() {
             onMouseMove={ghostMag.onMove}
             onMouseLeave={ghostMag.onLeave}
             whileTap={{ scale: 0.96 }}
-            className="group glass flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-semibold text-slate-400 transition-all hover:text-slate-100"
+            className="group glass flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-semibold text-slate-600 transition-all hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           >
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10 transition-colors group-hover:bg-white/15">
               <Play className="h-2.5 w-2.5 fill-current" />

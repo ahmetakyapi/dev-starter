@@ -1,6 +1,6 @@
 /**
- * @ahmet/theme — Global CSS
- * Import bu dosyayı globals.css'in başına:  @import '@ahmet/theme/css';
+ * @ahmetakyapi/theme — Global CSS
+ * Import bu dosyayı globals.css'in başına:  @import '@ahmetakyapi/theme/css';
  *
  * Kaynak: ahmetakyapi.com görsel dili
  */
@@ -77,8 +77,45 @@ html:not(.dark) body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.5); }
 
 /* ─── Pointer: custom cursor mode ──────────────────────────────────────── */
+/* KANCAYA BAĞLI. Eskiden koşulsuzdu: paketi yalnızca token için kuran bir
+   tüketicide bile imleci gizliyordu ve `!important` yüzünden geri alınamıyordu.
+   Kural artık yalnızca <CustomCursor /> mount olduğunda devreye girer —
+   bileşen `data-custom-cursor` özniteliğini <html>'e yazar/siler. */
 @media (pointer: fine) and (hover: hover) {
-  *, *::before, *::after { cursor: none !important; }
+  html[data-custom-cursor],
+  html[data-custom-cursor] *,
+  html[data-custom-cursor] *::before,
+  html[data-custom-cursor] *::after {
+    cursor: none;
+  }
+}
+
+/* ─── Erişilebilirlik: hareket azaltma ─────────────────────────────────── */
+/* Hareket yoğun bir tasarım sisteminde bu blok pazarlık konusu değildir.
+   Vestibüler bozukluğu olan kullanıcı için sürekli dönen/yüzen öğeler
+   fiziksel rahatsızlık kaynağıdır. Süreyi sıfırlamak yerine ~0'a çekiyoruz ki
+   `onAnimationEnd`/`onTransitionEnd`'e bağlı mantık kırılmasın. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Sonsuz döngüler tamamen durur — tek geçişleri bile dikkat dağıtıcı */
+  .animate-float,
+  .animate-blink,
+  .animate-border-rotate { animation: none !important; }
+
+  /* Özel imleç kapanır: takip eden nesne doğrudan hareket kaynağıdır */
+  html[data-custom-cursor],
+  html[data-custom-cursor] *,
+  html[data-custom-cursor] *::before,
+  html[data-custom-cursor] *::after {
+    cursor: auto;
+  }
 }
 
 /* ─── Components ────────────────────────────────────────────────────────── */

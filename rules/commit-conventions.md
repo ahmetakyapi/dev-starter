@@ -40,9 +40,23 @@ Değişikliğin etkilediği alan:
 
 - Küçük harfle başla
 - Nokta ile bitirme
-- Imperative mood: "add" (not "added", not "adds")
+- Emir kipi: "ekle"/"add" — "eklendi"/"added" değil
 - Max 72 karakter
-- Türkçe değil, İngilizce
+- **Tip ve scope İngilizce** (`feat`, `fix`, `perf`, `auth`, `db`) —
+  araçlar bunları ayrıştırır, çeviri yapılmaz
+- **Description proje dilinde**, ama tek proje içinde karışmasın
+
+> Bu kural gerçeğe göre düzeltildi: eskiden "Türkçe değil, İngilizce" diyordu,
+> oysa ekosistemin görsel/teknik referansı olan `acilis-zili`'nin 50 commit'inin
+> 48'i Türkçe — ve iyi yazılmış. İyi yapılmış işi değiştirmeye zorlayan kural,
+> yanlış kuraldır.
+
+Örnek (acilis-zili'den):
+
+```
+fix: ekonomik veri değeri üç ekranda üç farklı yazılıyordu
+perf: değişmeyen grafik barları Neon'a yeniden yazılmıyor
+```
 
 ---
 

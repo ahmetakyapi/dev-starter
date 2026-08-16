@@ -36,8 +36,8 @@ E2E & Polish DONE
 ### Environment
 - [ ] Production env vars hazır (Vercel dashboard)
 - [ ] DATABASE_URL (production)
-- [ ] NEXTAUTH_SECRET (unique, production)
-- [ ] NEXTAUTH_URL (production domain, HTTPS)
+- [ ] AUTH_SECRET (unique, production)
+- [ ] AUTH_URL (production domain, HTTPS — v5'te opsiyonel)
 - [ ] NEXT_PUBLIC_APP_URL (production)
 - [ ] 3. parti API key'ler (production)
 

@@ -17,7 +17,7 @@ jobs:
       # impeccable engines: node >=22.18
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       # --omit=optional KULLANMA: rollup'in platform native binary'si de
@@ -29,12 +29,17 @@ jobs:
         env:
           PUPPETEER_SKIP_DOWNLOAD: 'true'
 
+      # `|| true` YOK. Bu adim eskiden maskeliydi ve eslint bagimliliklari hic
+      # kurulu olmadigi icin zaten hicbir zaman calismamisti — CI yesildi,
+      # health-check ✅ diyordu, lint diye bir sey yoktu. Bkz. mistakes.md #55
       - name: Lint check
-        run: npx eslint packages/ snippets/ --max-warnings 0 || true
+        run: npm run lint -- --max-warnings 0
 
       - name: TypeScript check
-        run: |
-          npx tsc --noEmit --project packages/@ahmet/ui/tsconfig.json
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
 
       - name: Build @ahmetakyapi/theme
         run: npm run build --workspace=packages/@ahmet/theme
@@ -52,18 +57,30 @@ jobs:
       - name: Design anti-pattern scan
         run: npm run design:detect
 
-      - name: Security scan (staged patterns)
+      # DIKKAT: buradaki adimlar bir zamanlar `! grep ... || echo "temiz"` idiomunu
+      # kullaniyordu. O idiom TERS calisir — sizinti VARKEN hem eslesen satiri basar
+      # hem "temiz" yazip exit 0 verir. Yani guvenlik taramasi hicbir zaman
+      # kirmiziya dusemedi. Acik if/exit disinda bir sey yazma.
+      # Bkz. knowledge/mistakes.md #54
+      - name: Security scan
         run: |
           echo "--- Checking for hardcoded secrets ---"
-          ! grep -rnE '(password|secret|api_key|apikey)\s*[:=]\s*["\x27][^"\x27]{8,}' \
+          if grep -rnE '(password|secret|api_key|apikey)\s*[:=]\s*["\x27][^"\x27]{8,}' \
             packages/ snippets/ templates/ \
             --include='*.ts' --include='*.tsx' --include='*.js' \
-            | grep -v '\.example\|\.template\|\.test\.\|\.spec\.\|\.md$' \
-            || echo "No secrets found"
+            | grep -v '\.example\|\.template\|\.test\.\|\.spec\.'; then
+            echo "❌ Possible hardcoded secret — see matches above"
+            exit 1
+          fi
+          echo "✅ No hardcoded secrets"
 
           echo "--- Checking for .env files ---"
-          ! find . -name '.env' -not -name '.env.example' -not -path './node_modules/*' -not -path './.git/*' | grep . \
-            || echo "No .env files found"
+          if find . -name '.env' -not -name '.env.example' \
+            -not -path './node_modules/*' -not -path './.git/*' | grep .; then
+            echo "❌ .env file committed — see paths above"
+            exit 1
+          fi
+          echo "✅ No .env files"
 
       - name: Design token violations
         run: |
@@ -72,11 +89,14 @@ jobs:
             packages/@ahmet/ui/src/ 2>/dev/null \
             | grep -v '\.test\.\|dark:' || true)
           if [ -n "$VIOLATIONS" ]; then
-            echo "⚠️ Design token violations found:"
+            echo "❌ Design token violations found:"
             echo "$VIOLATIONS"
-          else
-            echo "✅ No design token violations"
+            exit 1
           fi
+          echo "✅ No design token violations"
+
+      - name: Hook behaviour tests
+        run: bash scripts/test-hooks.sh
 
   ecosystem:
     name: Ecosystem Health
@@ -89,7 +109,7 @@ jobs:
       # olmadan o adim "kurulu degil" uyarisina duser
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies

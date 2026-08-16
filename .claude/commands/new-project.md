@@ -1,5 +1,6 @@
 ---
 description: Yeni proje sihirbazi — template + tema + yapilandirma
+argument-hint: "<proje-adi>"
 ---
 
 `$ARGUMENTS` adinda yeni bir proje olustur.
@@ -7,7 +8,7 @@ description: Yeni proje sihirbazi — template + tema + yapilandirma
 Adimlar:
 
 1. **Template sec**: Kullaniciya sor:
-   - `nextjs-fullstack` — Next.js + Drizzle + auth tam uygulama
+   - `nextjs-fullstack` — Next.js + Drizzle iskeleti (auth DAHİL DEĞİL; desen: `knowledge/patterns.md → Auth`)
    - `landing` — Three.js + glassmorphism tanitim sayfasi
 
 2. **Template kopyala**: `templates/[secilen]/` icerigini hedef dizine kopyala

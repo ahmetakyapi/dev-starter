@@ -1,5 +1,6 @@
 ---
 description: UI/UX kod incelemesi — design token, responsive, a11y, dark mode
+argument-hint: "[dosya veya dizin]"
 ---
 
 $ARGUMENTS dosyasini veya dizinini UI/UX perspektifinden incele.

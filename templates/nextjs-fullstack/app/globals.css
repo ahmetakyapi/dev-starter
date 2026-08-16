@@ -61,8 +61,28 @@ html:not(.dark) body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.5); }
 
 /* ─── Custom Cursor (desktop) ───────────────────────────────────────────── */
+/* Kural CustomCursor'a bağlı: bileşen mount olunca <html>'e
+   data-custom-cursor yazar. Koşulsuz `cursor: none` kullanan sayfada
+   bileşen kaldırılırsa imleç tamamen kaybolur. */
 @media (pointer: fine) and (hover: hover) {
-  *, *::before, *::after { cursor: none !important; }
+  html[data-custom-cursor],
+  html[data-custom-cursor] *,
+  html[data-custom-cursor] *::before,
+  html[data-custom-cursor] *::after { cursor: none; }
+}
+
+/* ─── Erişilebilirlik: hareket azaltma ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html[data-custom-cursor],
+  html[data-custom-cursor] * { cursor: auto; }
 }
 
 /* ─── Background attachment mobile fix ─────────────────────────────────── */

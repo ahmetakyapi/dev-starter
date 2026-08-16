@@ -1,5 +1,7 @@
 # Görsel Hafıza: Mimio
 
+> **Kaynak:** `/Users/ahmet/Desktop/Projects/Mimio/src/app/globals.css` — doğrulandı 2026-08-17
+
 > Bu dosya DESIGN.md 9-section formatını takip eder.
 > AI agent'ları bu dosyayı okuyarak pixel-perfect UI üretebilir.
 
@@ -97,7 +99,7 @@ tema geçişi CSS variable override ile çalışır.
 ### Arka Plan / Yüzey
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--color-page-bg` | `#0c1620` | `#f4efe4` | Ana sayfa arka planı |
+| `--color-page-bg` | `#050b16` | `#f4efe4` | Ana sayfa arka planı |
 | `--color-surface` | `rgba(255,255,255,0.035)` | `#fdfbf6` | Standart kart/panel |
 | `--color-surface-strong` | `rgba(18,32,47,0.9)` | `#fdfbf6` | Modal, dropdown |
 | `--color-surface-elevated` | `rgba(255,255,255,0.055)` | `#fdfbf6` | Yükseltilmiş yüzey |
@@ -166,7 +168,7 @@ Gölgeler **nötr**; renkli halo yok (marka rengi gölgeye sızmaz).
 background:
   radial-gradient(circle at 16% 8%, rgba(29,90,140,0.10), transparent 34%),
   radial-gradient(circle at 86% 6%, rgba(184,118,58,0.055), transparent 28%),
-  #0c1620;
+  #050b16;
 background-attachment: fixed;
 
 /* Light */

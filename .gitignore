@@ -20,3 +20,6 @@ packages/@ahmet/*/dist/
 .impeccable/live/deferred-svelte-component-accepts.json
 .impeccable/live/*.png
 # impeccable-ignore-end
+
+# Claude Code — makineye ozgu ayarlar (paylasilan: .claude/settings.json)
+.claude/settings.local.json

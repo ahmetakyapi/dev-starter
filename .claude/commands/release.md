@@ -1,5 +1,6 @@
 ---
 description: Versiyon artir, changelog guncelle, git tag olustur
+argument-hint: "patch | minor | major"
 ---
 
 `$ARGUMENTS` seviyesinde (patch | minor | major) release yap.

@@ -1,5 +1,7 @@
 # Görsel Hafıza: Ramazan Vakitleri
 
+> **Kaynak:** `/Users/ahmet/Desktop/Projects/ramazan-vakitleri/src/App.css` — doğrulandı 2026-08-17
+
 > Bu dosya DESIGN.md 9-section formatını takip eder.
 > AI agent'ları bu dosyayı okuyarak pixel-perfect UI üretebilir.
 
