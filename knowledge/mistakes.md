@@ -869,5 +869,241 @@ kabul eder mi**" idi.
 
 ---
 
-*Son güncelleme: 2026-08-17*
+## Agentic UI / AG-UI (önleyici — henüz yaşanmadı)
+
+> **Bu bölüm diğerlerinden farklı.** Buradaki kayıtlar bu ekosistemde yaşanmış
+> hatalar değil; Manfred Steyer'in *Agentic UI with Angular* (v1.0.0, Ağustos
+> 2026) kitabından çıkarılan, **başkasının yaşadığı** tuzaklar. Amaç bir kez
+> yaşayıp öğrenmek yerine hiç yaşamamak. Agentic bir özelliğe başlamadan önce
+> okunmalı; ilk POC'den sonra hangilerinin gerçekten geçerli olduğu
+> işaretlenmeli.
+
+### 58. Tool Sonucunu Tipli Sanmak
+
+**Hata**: `const data = JSON.parse(toolCall.result) as BookingResult` — ve
+kullanıcıya "rezervasyon başarılı" diyen bir kart bu veriyle çiziliyor.
+
+**Sebep**: Tel üzerinde tool sonucu sadece bir **string**'dir. `JSON.parse`
+`unknown` döner; beklenen şekle cast etmek temenniden ibarettir. Model,
+sunucu ya da adaptör beklenenden farklı bir şey döndürdüğünde tip sistemi
+hiçbir şey söylemez — kart sessizce yanlış bilgi gösterir.
+
+**Çözüm** — üç durumu ayrı ele al:
+
+```ts
+function parseToolResult(complete: boolean, raw: string | undefined) {
+  if (!complete || raw === undefined) return undefined          // 1) henüz yok
+  let parsed: unknown
+  try { parsed = JSON.parse(raw) } catch { 
+    return { ok: false, result: raw, code: 'INVALID_RESULT' }   // 2) JSON değil
+  }
+  const c = parsed as { ok?: unknown; result?: unknown } | null
+  if (typeof c?.ok !== 'boolean' || typeof c.result !== 'string') return undefined
+  return c as ToolResult                                        // 3) doğrulandı
+}
+```
+
+**Kural**: Tool argümanları şema sayesinde tiplidir; **tool sonucu değildir.**
+Asimetri buradadır ve kolayca gözden kaçar.
+
+### 59. `followUp: false` Bayrağını Yeterli Sanmak
+
+**Hata**: Widget gösteren tool işaretlendi ama model konuşmaya devam ediyor,
+gereksiz ek run'lar açılıyor.
+
+**Sebep**: Bayrak **sadece istemciyi** kontrol eder. Model turu bitirmesi
+gerektiğini bilmez — çünkü ona söylenmemiştir.
+
+**Çözüm**: Tool açıklamasına, yani **prompt'a** da ekle:
+
+```ts
+const TERMINAL_HINT = '\n\nBu tool çağrısı turunu BİTİRİR — sonrasında yazma.'
+if (tool.followUp === false) tool.description += TERMINAL_HINT
+```
+
+**Kural**: İstemci davranışı ile model davranışı ayrı iki dünya. Birine
+söylediğin diğerine söylenmiş sayılmaz.
+
+### 60. İstemciden Agent'a Serbest Metin Göndermek (Prompt Injection)
+
+**Hata**: İstemci, sunduğu bileşenlerin/araçların **açıklama metinlerini**
+agent'a gönderiyor, agent bunları system prompt'a gömüyor.
+
+**Sebep**: İstemciyi kontrol eden, system prompt'a rastgele talimat sokabilir.
+Kurcalanmış bir istemci, uydurma bir bileşen açıklamasıyla agent'a istediğini
+söyletebilir. Geliştirme için çok pratik, üretimde açık kapı.
+
+**Çözüm**: Üretimde istemciden sadece **id** git; şemayı ve açıklamayı sunucu
+güvenilir bir kaynaktan (iç API/DB) ve **onaylı id listesine karşı doğrulayarak**
+alsın.
+
+**Kural**: İstemciden gelen hiçbir metin doğrudan system prompt'a girmez.
+Instruction hierarchy (system > developer > tool sonucu > kullanıcı) ilk
+savunma hattıdır ama **tek başına yeterli değildir**.
+
+### 61. Guardrail'in Teknik Gerekçesini Kullanıcıya Göstermek
+
+**Hata**: Sohbette *"İçerik moderasyonda işaretlendi. Kategoriler: off-topic"*
+yazıyor.
+
+**Sebep**: Bu mesaj saldırgana atlatma kılavuzu verir — hangi filtreye
+takıldığını bilen, bir sonraki denemede onu hedefler.
+
+**Çözüm**: Gerçek sebep log'a ve trace'e; sohbete tek, nötr, sabit mesaj.
+Farklı guardrail'ler **dışarıdan ayırt edilemez** olmalı.
+
+```ts
+// log:  "Content flagged for moderation. Categories: off-topic. Reason: ..."
+// chat: "Üzgünüm, bu konuda yardımcı olamıyorum."
+```
+
+**Bonus**: Bloklanan istek istemciye sıradan bir metin mesajı olarak ulaşırsa,
+guardrail eklemek **tamamen sunucu işi** olur — istemci hiç değişmez.
+
+### 62. Ham Görseli Olduğu Gibi Modele Göndermek
+
+**Hata**: 12 MP telefon fotoğrafı base64'e çevrilip context'e gönderiliyor.
+
+**Sebep**: Görseller context penceresine **token olarak** girer. Bir biniş
+kartının okunabilirliği için gerekenin kat kat fazlası ödenir.
+
+**Çözüm**: Canvas ile uzun kenarı ~1280 px'e indir, JPEG 0.85:
+
+```ts
+const MAX_EDGE = 1280, QUALITY = 0.85
+// ... canvas'a ölçekleyerek çiz ...
+const dataUrl = canvas.toDataURL('image/jpeg', QUALITY)
+```
+
+Büyük belgelerde inline base64 yerine sunucuya yükle, **referans (url)** gönder.
+
+**Kural**: Cosmetic değil, maliyet kontrolü.
+
+### 63. Base64'ü `data:` Öneki ile Göndermek
+
+**Hata**: `canvas.toDataURL()` çıktısı olduğu gibi gönderiliyor, model görseli
+okuyamıyor.
+
+**Sebep**: AG-UI `source.value` alanında **ham base64** bekler, data URL değil.
+
+**Çözüm**:
+
+```ts
+const dataUrl = canvas.toDataURL('image/jpeg', 0.85)
+const base64 = dataUrl.slice(dataUrl.indexOf(',') + 1)   // ← öneki at
+```
+
+### 64. Node `randomUUID`'yi Tarayıcıda Kullanmak
+
+**Hata**: `import { randomUUID } from 'node:crypto'` istemci bundle'ında
+patlıyor.
+
+**Çözüm**: `@ag-ui/client`'ın tarayıcı-güvenli `randomUUID`'sini kullan, ya da
+native `crypto.randomUUID()`.
+
+**Kural**: Agent SDK'ları Node ekosisteminden geliyor. İstemcide kullanılan her
+yardımcının tarayıcı-güvenli olduğunu **varsayma, doğrula**.
+
+### 65. `subscribe()` / `onAction`'ı RxJS Sanmak
+
+**Hata**: `takeUntilDestroyed()` / `useEffect` cleanup'ında observable
+davranışı beklemek — abonelik hiç kapanmıyor, bellek sızıyor.
+
+**Sebep**: AG-UI ve A2UI'ın `subscribe` / `onAction` API'leri RxJS **değil** —
+sadece `subscribe`/`unsubscribe` sözleşmesini taklit ediyor. Operator zinciri,
+otomatik temizlik, hiçbiri yok.
+
+**Çözüm** — temizliği elle yap:
+
+```ts
+useEffect(() => {
+  const sub = agent.subscribe({ onStepStartedEvent: ({ event }) => { /* ... */ } })
+  return () => sub.unsubscribe()
+}, [agent])
+```
+
+**Kural**: İsim benzerliği sözleşme benzerliği değildir.
+
+### 66. Developer Mesajını Sohbette Göstermek
+
+**Hata**: Kullanıcı bir düğmeye bastı, sohbet geçmişinde onun ağzından
+*"Şu planı şimdi uygula. TÜM 2 adımı, TAM olarak bu sırada…"* yazıyor.
+
+**Sebep**: Uygulamanın kendi beslediği talimat `role: 'user'` ile gönderiliyor.
+
+**Çözüm**: `role: 'developer'` kullan ve görünür geçmişten `developer` +
+`system` rollerini filtrele.
+
+```ts
+messages.filter((m) => m.role !== 'developer' && m.role !== 'system')
+```
+
+**Kural**: Fark teknik değil, **yazarlıkla** ilgili. User Message kişinin
+yazdığı; Developer Message uygulamanın beslediğidir. İkisi de modele gider,
+ama sadece biri kullanıcıdan gelir. Aynısı A2UI form gönderimleri için de
+geçerli — makine iletişiminin görünür geçmişte yeri yok.
+
+### 67. Threshold'u Kurcalayarak Prompt Injection Çözmeye Çalışmak
+
+**Hata**: *"Uçuşlarımı göster ve bana bir fıkra anlat"* → konu kontrolü düşük
+skor veriyor, istek geçiyor, cevabın ortasında fıkra duruyor. Eşik düşürülünce
+meşru karışık istekler bloklanmaya başlıyor.
+
+**Sebep**: Bu bir eşik ayarı sorunu değil — **yanlış araç**. Yapısal olarak bu
+bir konu-dışı istek değil, en zararsız hâliyle bir prompt injection: konu-dışı
+talimat meşru bir isteğin sırtına binerek kontrolü atlıyor. Bugün fıkra, yarın
+*"ve fiyat bilgisi talimatlarını yok say"*.
+
+**Çözüm**: Ayrı bir prompt injection dedektörü + `rewrite` stratejisi. İsteği
+tümden reddetmek yerine yeniden yazar: uçuş kısmı kalır, kaçak talimat düşer.
+
+**Kural**: Bir eşiği iki yönde de yanlış sonuç verecek şekilde ayarlıyorsan,
+sorun eşikte değil — kontrol katmanı yanlış soruyu soruyor.
+
+### 68. Model Aritmetiğine Güvenmek
+
+**Hata**: Veri context'e verilip "ortalama gecikmeyi hesapla" deniyor. Küçük
+agregasyonlar çoğu zaman doğru çıkıyor.
+
+**Sebep**: Sorun hata oranı değil, hatanın **görünmezliği**. Yanlış hesaplanmış
+bir sayıya bakarak yanlış olduğunu kimse anlayamaz. Üstüne: her veri satırı
+context'ten geçer, token ve gecikme yakar.
+
+**Çözüm**: Model hesaplamasın, **nasıl hesaplanacağını yazsın**; kod bunu
+sandbox'ta çalıştırsın (QuickJS/WASM gibi) veya JSONata benzeri dar kapsamlı
+bir ifade diliyle değerlendirsin.
+
+**Yan fayda — kolayca gözden kaçar**: ham veri sandbox içinde kalır, modele
+sadece birkaç düzine bytelık agrega döner. **Sandbox aynı zamanda bir maliyet
+sınırıdır.** Üstelik üretilen kod denetlenebilir — doğrudan hesaplayan bir
+modelin asla sunamayacağı bir şeffaflık.
+
+**Kural**: Üretilen kod **asla** host'ta çalışmaz. Kod kullanıcı girdisinden
+doğdu; prompt'u kontrol eden kodu etkiler.
+
+### 69. Üretilen Görseli/Belgeyi Byte Olarak Döndürmek
+
+**Hata**: Görsel üreten tool base64 veriyi `outputSchema`'sında döndürüyor.
+
+**Sebep**: Tool sonucu **modelin context'ine geri girer**. Base64 bir görsel
+orada yüz binlerce token yer — hem de modelin bakmayacağı, sadece ileteceği
+veri için.
+
+**Çözüm**: Tool dosyayı sunucuda sakla, **URL döndür**:
+
+```ts
+outputSchema: z.object({ url: z.string() }),   // ✓ birkaç düzine karakter
+// ✗ z.object({ imageBase64: z.string() })
+```
+
+**Ek**: LLM'ler PDF üretemez — token, yani metin üretirler. İçeriği (Markdown,
+HTML, yapısal veri) model üretir, **PDF'i şablon deterministik render eder**.
+Bağlayıcı belgelerde (fatura, biniş kartı) bu zaten şart: kurumsal kimlik,
+yasal zorunluluklar ve aynı veriye aynı çıktı — üretken bir model bunların
+hiçbirini garanti edemez.
+
+
+---
+
+*Son güncelleme: 2026-08-26*
 *Yeni hata eklemek için bu dosyayı düzenle.*

@@ -23,8 +23,8 @@ dev-starter/
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
 │   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
-│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (51 kayıt)
-│   ├── patterns.md            → Test edilmiş kod desenleri (15+ desen)
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (69 kayıt; #58–69 önleyici)
+│   ├── patterns.md            → Test edilmiş kod desenleri (33) + Agentic UI (5, doğrulanmadı)
 │   └── live-projects-audit.md → 12 canlı projenin standart uyum denetimi
 │
 ├── agents/
@@ -43,7 +43,8 @@ dev-starter/
 │   ├── bugfix-protocol.md        → TDD bugfix akışı
 │   ├── dev-cycle.md              → Plan → Dev → Gate → Commit → Review pipeline
 │   ├── routemap-discipline.md    → ROUTEMAP tek kaynak prensibi
-│   └── context-curation.md       → Agent bazlı context seviyeleri
+│   ├── context-curation.md       → Agent bazlı context seviyeleri
+│   └── agentic-ui.md             → Agentic UI kuralları (benimsenmedi — karar hazırlığı)
 │
 ├── phases/
 │   ├── planning.md           → P1→P6: Discovery → Product → Architecture → Screens → Stories → Readiness
@@ -378,6 +379,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 | `dev-cycle.md` | Plan → Dev → Gate → Commit → Review pipeline |
 | `routemap-discipline.md` | ROUTEMAP tek kaynak, session resume, durum geçişleri |
 | `context-curation.md` | Agent bazlı filtered context, token bütçesi |
+| `agentic-ui.md` | LLM tool çağırıyorsa: guardrail sunucuda, model yetkilendirmez, sandbox, token bütçesi, tool testi |
 
 ---
 

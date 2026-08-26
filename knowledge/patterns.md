@@ -766,4 +766,187 @@ useEffect(() => {
 
 ---
 
+## Agentic UI (AG-UI / CopilotKit)
+
+> Kaynak: Manfred Steyer, *Agentic UI with Angular* (v1.0.0, Ağustos 2026).
+> Desenler Angular'dan React'e çevrildi. **Hiçbiri bu ekosistemde henüz
+> çalıştırılmadı** — POC'den önce kod örneklerini doğrulanmış saymayın.
+> Değeri kod değil, **karar**dır: hangi işi model yapar, hangisini kod.
+
+### Atomik Agent Tool'ları — "hepsini değiştir" yerine granüler operasyonlar
+
+Bir planı/dokümanı/konfigürasyonu agent'a düzenletirken tek bir `setPlan`
+tool'u yeterli görünür. Kitabın bulgusu tersi: **yedi küçük tool bir büyükten
+hem daha doğru hem daha ucuz.**
+
+```ts
+// ✗ Tek tool: "işte yeni plan"
+// Model "2 ve 4. adımı yer değiştir" için TÜM planı yeniden üretmek zorunda.
+// → adım kaybedebilir, yeniden ifade edebilir, detay uydurabilir
+// → değişmeyen içeriği tekrar üretmenin token bedeli
+setPlan({ steps: [ /* ...tamamı... */ ] })
+
+// ✓ Granüler operasyonlar, KARARLI id'lerle
+addPlanStep({ step })          removePlanStep({ id })
+updatePlanStep({ id, patch })  movePlanStep({ id, toIndex })
+swapPlanSteps({ idA, idB })    reversePlan({})
+getPlan({})                    clearPlan({})
+```
+
+**Kritik detay**: adımlar store'un eklerken atadığı **kararlı id'lerle**
+adreslenir — modelin her değişiklikten sonra yeniden hesaplaması gereken
+pozisyon indeksleriyle değil. `swapPlanSteps(idA, idB)` zor yanılır; yapısal
+işi store deterministik yapar.
+
+**Bölümleme de guardrail'dir**: uçuş ve otel için ayrı operasyonlar varsa, bir
+otel isteği yanlışlıkla uçuş değiştiremez — o iş için tool zaten yok.
+
+---
+
+### DSL Sınırı — model niyeti çevirir, kod yapıyı derler
+
+Kitabın tek somut ölçümü ve en aktarılabilir kararı. Model tam UI/yapı çıktısı
+üretiyordu: **39 sn, 46.000 token**. Model sadece kompakt, uygulamaya özel bir
+tarif dili üretmeye indirgendi: **4 sn, ~1.500 token (30× azalma)**. Yapı
+cache'lenince: **0,1 sn, sıfır token (300× hızlanma)** — model hiç çağrılmıyor.
+
+```ts
+// Modelin ÜRETTİĞİ tek şey bu — kullanıcının serbest metnini buna çevirir
+type DashboardDSL = {
+  tiles: Array<
+    | { type: 'boardingPasses'; count: number }
+    | { type: 'bookedFlightsList'; showCheckInButton: boolean }
+    | { type: 'flightSearch'; defaultFrom?: string; defaultTo?: string }
+    | { type: 'hotels' } | { type: 'rentalCars' } | { type: 'weatherList' }
+  >
+}
+
+// Kalan her şey MODELSİZ, deterministik kod:
+const layout = compileToUi(dsl)        // 1) yapıyı derle
+const data   = await loadTiles(dsl)    // 2) veriyi çek (tool call reasoning'i yok)
+```
+
+**İki kazanç aynı kararın iki yüzü:**
+- *Performans* — küçük çıktı hızlı üretilir, az token yakar, zayıf/ucuz model bile hatasız üretir
+- *Guardrail* — model DSL'in öngörmediği hiçbir şeyi ifade edemez: beklenmedik layout yok, uydurulmuş bileşen yok, enjekte edilmiş içerik yok
+
+**Bedeli**: dinamizm DSL'in öngördüğü kadar. "En fazla üç otel göster" için
+DSL'de açık seçenek olmalı. İş uygulamalarında bu iyi bir takas — orada
+öngörülebilirlik, sınırsız sunum özgürlüğünden değerlidir.
+
+**Cache anahtarı**: kullanıcı tarifinin hash'i, ya da pratikte kullanıcının
+kaydettiği dashboard kaydının id'si. Yapı ve veri ayrı mesajlar olduğu için
+büyük olan yapı cache'lenir, küçük olan veri her çağrıda yenilenir.
+
+---
+
+### Deterministik Doğrulama Katmanı — model seçer, kod doğrular
+
+Model çıktısına asla doğrudan güvenme; **seçimi adaylar kümesine karşı
+doğrula**. Eşleşmiyorsa fallback. Halüsinasyon yapısal olarak elenir.
+
+```ts
+// Model uçuşu SEÇER, ama seçebileceği kümeyi kod belirler
+function createPlan(raw: ModelOutput, candidates: Leg[]): Plan {
+  return {
+    ...raw,
+    flights: raw.flights.map((chosen, i) => {
+      const pool = candidates[i].options
+      // Model olmayan bir uçuş numarası uydurduysa sessizce düzelt
+      return pool.find((f) => f.id === chosen.id) ?? pool[0]
+    }),
+  }
+}
+```
+
+Aynı duruş **istemcide de** geçerli — bu desenin en kolay kaçırılan yanı:
+
+```ts
+// Store, otelleri "model doğru sırada yazsın" diye ummaz.
+// Her mutasyonda rota boyunca deterministik olarak dizer.
+setPlan(plan) {
+  this.state = { ...plan, hotels: orderHotelsByRoute(plan.hotels, plan.flights) }
+}
+```
+
+Kullanıcının gördüğü sıra **kod**, model çıktısı değil.
+
+---
+
+### Action Card + Undo — onay yorgunluğuna panzehir
+
+Her aksiyondan önce onay soran uygulama, kullanıcıyı tıklayıp geçmeye eğitir —
+ve deseni var eden kontrolü yok eder. **Geri alınabilir aksiyonlar için:
+hemen yap, kart olarak göster, Undo sun.**
+
+```tsx
+// Aksiyon SUNUCUDA çalıştı. Kart saf sunum + tek bir geri alma yolu.
+function BookFlightCard({ toolCall }: { toolCall: ToolCall<BookArgs> }) {
+  const [undone, setUndone] = useState(false)
+  const result = parseToolResult(toolCall)   // ← string'dir, bkz. mistakes #58
+
+  return (
+    <article>
+      <p>Durum: {undone ? 'Geri alındı' : result?.ok ? 'Rezerve edildi' : 'Başarısız'}</p>
+      {result?.ok && !undone && (
+        // Undo MODELE UĞRAMAZ — doğrudan, deterministik, token'sız
+        <button onClick={async () => { await cancelBooking(result.id); setUndone(true) }}>
+          Geri Al
+        </button>
+      )}
+    </article>
+  )
+}
+```
+
+**Uygulama seviyesinde değil, aksiyon seviyesinde karar ver:**
+
+| Aksiyon | Desen |
+|---------|-------|
+| Geri alınabilir (rezervasyon, taslak kaydetme, filtre) | Action Card + Undo |
+| Geri alınamaz (ödeme, e-posta gönderimi, kalıcı silme) | Önden onay (interrupt) |
+| Kırmızı çizgi (hesap silme) | **Tool'u agent'a hiç verme** — sadece ilgili sayfaya yönlendiren bir tool ver |
+
+Son satır en sağlamı: `deleteAccountTool`'a sahip olmayan bir agent, konuşmanın
+en yaratıcı seyrinde bile hesap silmeye kandırılamaz. Talimat rica, eksiklik
+garantidir.
+
+---
+
+### Protokol = Test Sınırı
+
+"Agentic UI test edilemez" itirazı modeli sistemle karıştırır. Model
+non-deterministik; **onu çağıran, cevabını çözen, tool'unu çalıştıran ve
+state'ini render eden kod değil.** Belirlenmiş bir protokol doğal bir test
+sınırıdır: olaylar belgelenmişse simüle edilebilir.
+
+Üç dikiş noktası — üçü de sunucusuz, modelsiz, API anahtarsız:
+
+```ts
+// 1) Runtime'ın arkasında — agent'ı mock'la, hazır olay dizisi döndür
+class MockAgent extends HttpAgent {
+  run() { return of(...cannedEvents) }   // store ve state test edilir
+}
+
+// 2) Tel üzerinde — gerçek agent kalır, sadece fetch değişir.
+//    Bu bir CONTRACT TEST: giden payload'ın formatını da sabitler.
+const agent = new AppHttpAgent({ url, fetch: mockFetch })
+expect(recordedBody.messages.find(m => m.role === 'user')?.content).toBe('...')
+
+// 3) Protokolün yanında — frontend tool'lar sıradan fonksiyon
+expect(await findFlightsTool.handler({ from: 'Graz', to: 'Wien' })).toEqual({ ok: true })
+```
+
+**Tool testlerinin gözden kaçan değeri**: agent yanlış davrandığında refleks
+prompt'u kurcalamaktır. Oysa sıklıkla tool, açıklamasının vaat ettiğinden
+farklı bir şey döndürür ve model doğru veriden yanlış sonuç çıkarır. Tool
+davranışını **açıklamasına karşı** sabitleyen bir test hata ayıklamayı ikili
+hale getirir: *tool'lar doğruysa sorun prompt'tadır.*
+
+Çift iddia kur — hem dönüş değeri (modelin gördüğü) hem yan etki (kullanıcının
+gördüğü). İkisi de doğru olmalı.
+
+
+---
+
 *Yeni desenler eklendikçe bu dosya güncellenir.*

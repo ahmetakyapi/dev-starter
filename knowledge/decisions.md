@@ -142,6 +142,35 @@ Her teknoloji seçiminin gerekçesi. Yeni bir projede alternatif önermeden önc
 
 **Kritik:** `mounted` guard olmadan `resolvedTheme` sunucuda `undefined` döner. → `mistakes.md #1`
 
+## Agentic UI — AÇIK KARAR (benimsenmedi)
+
+**Tercih edildi:** Henüz yok — bu bir karar değil, karar için hazırlık
+**Alternatifler:** AG-UI + CopilotKit · Vercel AI SDK (`useChat` + tool calling) · doğrudan sağlayıcı SDK'sı · hiç girmemek
+
+**Bağlam:** Manfred Steyer'in *Agentic UI with Angular* kitabı (Ağustos 2026)
+okundu ve çıkarılabilir desenler `knowledge/patterns.md → Agentic UI` ile
+`rules/agentic-ui.md` altına işlendi. Kod yazılmadı.
+
+**Kararı bekleten üç soru:**
+
+1. **Vercel süre limiti.** Agent run'ları saniyelerden dakikalara sürebiliyor.
+   Next.js Route Handler SSE stream'leyebilir ama serverless fonksiyonun bir
+   maksimum süresi var. `maxDuration` ve hesap limiti **ölçülmeden** protokol
+   seçimi yapılamaz — yoksa protokolün faydası değil, deploy sorunu tartışılır.
+2. **AG-UI mı, AI SDK mı?** AG-UI'ın vaadi sunucu bağımsızlığı: agent
+   framework'ünü değiştirdiğinde istemci değişmez. Bu vaat ancak **birden fazla
+   sunucu implementasyonu ihtimali varsa** değer taşır. Tek bir Next.js
+   backend'i için Vercel AI SDK daha az katman olabilir.
+3. **Hangi proje?** En düşük riskli giriş noktası **belgeden veri çıkarma**:
+   chat yok, agent döngüsü yok, protokol yok. Bir vision çağrısı, bir Zod
+   şeması, bir form ön doldurma ve **insan onayı**. Adayları: DigyNotes'ta
+   not/görsel içe aktarma, keskealsaydim'de portföy ekran görüntüsü içe aktarma.
+
+**Karar verilirse güncellenecek:** bu bölüm + `rules/agentic-ui.md`nin başındaki
+"benimsenmedi" notu + `CLAUDE.md` teknoloji yığını.
+
+**Ne zaman değişir:** Yukarıdaki 1. soru bir POC ile ölçüldüğünde.
+
 ---
 
 *Yeni bir teknoloji benimsendiğinde bu dosya güncellenir.*

@@ -7,6 +7,55 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış]
 
+### Agentic UI Bilgi Tabani — 2026-08-26
+
+Manfred Steyer'in *Agentic UI with Angular* kitabi (v1.0.0, Agustos 2026) uctan
+uca okundu; Angular'a ozel olmayan kisim ekosisteme islendi. **Kod yazilmadi,
+bagimlilik eklenmedi** — bu tamamen bir bilgi ve karar hazirligi commit'i.
+
+#### Eklenenler (Added)
+
+- **`rules/agentic-ui.md`** — 10 kirilamaz kural (guardrail sunucuda durur,
+  model asla yetkilendirme karari vermez, least privilege, aksiyon sinifina gore
+  kontrol seviyesi, tool sonucu string'dir, uretilen kod sandbox'ta calisir,
+  model hesaplamaz, belge tool'lari URL dondurur, token butcesi bir
+  guardrail'dir, seffaflik pazarlik konusu degil) + protokol haritasi
+  (AG-UI / MCP / A2A / A2UI / MCP Apps) + test zorunluluklari.
+  Dosya **"benimsenmedi"** notuyla acilir
+- **`knowledge/patterns.md` → Agentic UI** — 5 desen: Atomik Agent Tool'lari,
+  DSL Siniri, Deterministik Dogrulama Katmani, Action Card + Undo,
+  Protokol = Test Siniri. Kod ornekleri Angular'dan React'e cevrildi ve
+  **dogrulanmadi olarak isaretlendi**
+- **`knowledge/mistakes.md` #58–69** — 12 onleyici kayit. Bu bolum diger
+  bolumlerden farkli: burada yasanmis hata yok, **baskasinin yasadigi** tuzaklar
+  var. Bolum basligi bunu acikca soyluyor
+- **`knowledge/decisions.md` → Agentic UI (ACIK KARAR)** — benimsenmedi.
+  Karari bekleten uc soru kayit altinda: Vercel sure limiti olculmedi, AG-UI mi
+  AI SDK mi belirsiz, hangi projede baslanacagi secilmedi
+
+#### Degisenler (Changed)
+
+- `CLAUDE.md` ve `agents/AGENT_PROTOCOL.md` kural tablolarina `agentic-ui.md`
+  satiri eklendi
+- `CLAUDE.md` agacindaki bayat sayilar duzeltildi: mistakes 51 → 69,
+  patterns "15+" → 33 + 5
+
+#### Bilincli olarak YAPILMAYANLAR
+
+Ilk analizde onerilen ama **doğrulanamadigi icin ertelenen** uc madde:
+
+- **`templates/agentic-chat`** — CopilotKit React API'sine karsi calistirilip
+  dogrulanmadan template yazmak, `mistakes.md #53` ve `#49`un tam tekrari olur
+  (template'te calismayan config / config'siz script). Template calisan bir
+  baslangic noktasidir; dogrulanmamis olani olamaz
+- **`snippets/agent-chat.tsx`, `snippets/action-card.tsx`** — ayni gerekce.
+  `snippets/` "test edilmis bilesenler" demek
+- **`hooks/quality-scan.sh` yeni taramalar** — sifir agentic kod uzerinde
+  regex tabanli kontrol eklemek yalniz yanlis pozitif uretir ve commit bloklar.
+  Kontrol, korudugu kod var oldugunda eklenir
+
+Ucu de ilk POC'den sonra, calisan koda karsi yazilacak.
+
 ### CI Kilit Uyusmazligi — 2026-08-17
 
 Denetim merge'unden (`b783080`) sonra CI'in **iki isi de ilk adimda** oldu:
