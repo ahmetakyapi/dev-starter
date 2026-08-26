@@ -108,6 +108,29 @@ jobs:
       - name: Hook behaviour tests
         run: bash scripts/test-hooks.sh
 
+  agentic:
+    name: Agentic Verification
+    runs-on: ubuntu-latest
+
+    # Neden ayri is: snippets/agent-* ve templates/agentic-chat/ dosyalari
+    # @copilotkit/react-core + @ag-ui/* gerektirir. Bunlar bilincli olarak kok
+    # bagimlilik DEGIL (kilidi ve kurulum suresini sisirirler), bu yuzden
+    # `npm test` onlari dislar. Buradaki is gecici bir dizinde pin'li kurulum
+    # yapip tsc --noEmit + vitest run calistirir.
+    #
+    # Bu is olmasaydi 25 agentic test yalnizca birinin elle komut yazmasiyla
+    # calisirdi — yani pratikte hic. -> knowledge/mistakes.md #55
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify agentic snippets and template
+        run: npm run verify:agentic
+
   ecosystem:
     name: Ecosystem Health
     runs-on: ubuntu-latest

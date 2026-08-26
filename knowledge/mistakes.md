@@ -1194,6 +1194,45 @@ istediği çift iddia (dönüş değeri + yan etki) React render etmeden kurulur
 **Kural**: Test edilebilirlik bir dosya düzeni kararıdır. Handler'ı hook'un
 içine gömmek onu React'e rehin verir.
 
+### 73. Yeni Şeyi Doğrulamak, Bozduğunu Doğrulamak Değildir
+
+**Hata**: Agentic snippet ve testler eklendi. Doğrulama yapıldı ve hepsi
+yeşildi: `tsc --noEmit` temiz, sandbox'ta `vitest` 25/25, `test-hooks.sh`
+17/17, `health-check.sh` 70/0/0. Commit atıldı, push edildi.
+
+**CI bir sonraki push'ta kırmızıya düşecekti.** `npm test` (`vitest run`, kök
+dizinde, config'siz) tüm repoyu tarıyor — `templates/agentic-chat/__tests__/`
+ve `snippets/agent-tool.test.ts` dahil. Bu dosyalar `@copilotkit/react-core` ve
+`@ag-ui/*` import ediyor; ikisi de kök bağımlılık değil:
+
+```
+Error: Cannot find package '@ag-ui/core' imported from
+templates/agentic-chat/__tests__/agui-scenarios.test.ts
+Test Files  3 failed | 1 passed
+```
+
+**Sebep**: Çalıştırılan doğrulamaların hepsi **yeni eklenen şeyi** ölçüyordu.
+Hiçbiri "bu ekleme mevcut bir kontrolü bozdu mu" sorusunu sormuyordu. Sandbox'ta
+`vitest` geçiyordu çünkü orada bağımlılıklar kuruluydu — repo kökünde değiller.
+
+**Çözüm — iki katman**:
+
+1. Kök `vitest.config.ts` — `templates/**` ve agentic snippet testi dışlandı.
+   Gerekçe dosyada yazılı: bu paketler bilinçli olarak kök bağımlılık değil.
+2. `.github/workflows/ci.yml` — ayrı bir `agentic` işi. Dışlanan testler
+   `npm run verify:agentic` ile geçici bir dizinde pin'li kurulumla koşuyor.
+   Bu iş olmasaydı 25 test yalnızca birinin elle komut yazmasıyla çalışırdı —
+   yani pratikte hiç. → `mistakes.md #55`
+
+**Kural**: Bir değişiklikten sonra **projenin kendi tam doğrulama komutlarını**
+çalıştır, sadece yeni yazdığının testini değil. Somut olarak: `npm test`,
+`npm run lint`, `npm run typecheck` — CI ne çalıştırıyorsa o.
+
+**Genel ders — bu dosyadaki 7. tekrar**: Bir kontrolün yeşil olması, kontrolün
+doğru soruyu sorduğu anlamına gelmez. Burada sorulan soru *"yeni kod çalışıyor
+mu"* idi; sorulması gereken *"CI hâlâ yeşil mi"*. İkisi aynı şey değil ve
+aradaki fark bir commit'e sığdı.
+
 
 ---
 

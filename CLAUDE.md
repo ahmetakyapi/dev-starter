@@ -23,7 +23,7 @@ dev-starter/
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
 │   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
-│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (72 kayıt; #58–72 agentic)
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (73 kayıt; #58–73 agentic)
 │   ├── patterns.md            → Test edilmiş kod desenleri (33) + Agentic UI (5 + API haritası)
 │   └── live-projects-audit.md → 12 canlı projenin standart uyum denetimi
 │
@@ -34,7 +34,7 @@ dev-starter/
 │   ├── frontend-agent.md   → Next.js & React implementasyon
 │   ├── backend-agent.md    → DB, API, auth
 │   ├── agentic-ui-agent.md → Agentic UI kararları: tool, kontrol, state, DSL
-│   ├── gate-agent.md       → 6-pass kalite kontrolü, auto-fix, enforcement
+│   ├── gate-agent.md       → 6+1 pass kalite kontrolü, auto-fix, enforcement
 │   └── deploy-agent.md     → Vercel deployment & release
 │
 ├── rules/

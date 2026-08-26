@@ -7,6 +7,51 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış]
 
+### CI Regresyonu Onarimi + Gate Pass 7 — 2026-08-27
+
+Bir onceki commit (`17017ad`) **CI'i kirdi**. Yerelde her sey yesildi —
+`tsc`, sandbox `vitest` 25/25, `test-hooks` 17/17, `health-check` 70/0/0 —
+ama calistirilan hicbir kontrol "bu ekleme MEVCUT bir kontrolu bozdu mu"
+sorusunu sormuyordu.
+
+`npm test` (kokte, config'siz `vitest run`) tum repoyu tariyor:
+
+```
+Error: Cannot find package '@ag-ui/core' imported from
+templates/agentic-chat/__tests__/agui-scenarios.test.ts
+Test Files  3 failed | 1 passed
+```
+
+#### Duzeltmeler (Fixed)
+
+- **`vitest.config.ts` (yeni, kok)** — `templates/**` ve
+  `snippets/agent-tool.test.ts` dislandi. Gerekce dosyada yazili:
+  `@copilotkit/react-core` ve `@ag-ui/*` **bilincli olarak** kok bagimlilik
+  degil; dev-starter bir bilgi ve sablon deposu, agentic bir uygulama degil.
+  Kurulmalari kilidi ve kurulum suresini gereksiz sisirir
+
+#### Eklenenler (Added)
+
+- **`.github/workflows/ci.yml` → `agentic` isi** — dislanan 25 test artik
+  CI'da kosuyor. `npm run verify:agentic` gecici dizinde pin'li kurulum yapip
+  `tsc --noEmit` + `vitest run` calistirir. Bu is olmasaydi testler yalnizca
+  birinin elle komut yazmasiyla calisirdi — yani pratikte hic
+- **`agents/gate-agent.md` → Pass 7 (kosullu)** — `rules/agentic-ui.md`
+  "Gate'ten gecmez" diyordu ama Gate bu kuraldan habersizdi: kural kagitta,
+  ihlal kodda (`mistakes.md #46`). Pass 7 yalnizca diff'te agentic kod varsa
+  calisir; calismadiysa raporda **acikca "uygulanmadi"** yazilir.
+  Alti somut kontrol + `npm run verify:agentic`
+- **`knowledge/mistakes.md #73`** — "yeni seyi dogrulamak, bozdugunu
+  dogrulamak degildir". Bu dosyadaki ayni dersin 7. tekrari
+
+#### Dogrulama — bu sefer CI ne calistiriyorsa o
+
+```
+verify:lock  ✅   lint --max-warnings 0  ✅   typecheck  ✅   test  ✅
+verify:exports  ✅   design:detect  ✅   test-hooks  ✅   health-check  ✅
+verify:agentic  ✅
+```
+
 ### Agentic: Senaryo Mock'u, Testler ve Tekrarlanabilir Dogrulama — 2026-08-27
 
 Onceki commit araclari ekledi ama iki bosluk birakti: (1) `rules/agentic-ui.md`

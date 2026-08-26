@@ -19,6 +19,7 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/rules/design-tokens.md` — token enforcement
 - `~/dev-starter/rules/commit-conventions.md` — commit standardı
 - `~/dev-starter/rules/context-curation.md` — context seviyeleri
+- `~/dev-starter/rules/agentic-ui.md` — **yalnızca** diff'te LLM tool/state/UI kodu varsa
 - `docs/ROUTEMAP.md` — aktif story durumu (varsa)
 - Aktif story dosyası + değişen dosyalar (git diff)
 - Projenin `CLAUDE.md` dosyası (varsa)
@@ -43,7 +44,10 @@ Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölüm�
 
 ---
 
-## 6-Pass Kalite Kontrolü
+## 6+1 Pass Kalite Kontrolü
+
+> Pass 1–6 her zaman çalışır. Pass 7 koşulludur: yalnızca diff'te agentic
+> kod varsa. Koşullu bir pass'in atlanması raporda **açıkça** yazılır.
 
 Her teslimatta sırasıyla şu 6 pass çalıştırılır. Her pass'ta bulunan sorunlar **severity** ile işaretlenir:
 
@@ -141,6 +145,37 @@ bash ~/dev-starter/scripts/audit-project.sh .  # 8 standart
 
 **Üretilen çıktıyı doğrula.** Tailwind `@layer components` içindeki kullanılmayan
 sınıfı purge eder; bir sınıfın çalıştığını varsayma, `.next`/`dist` CSS'inde ara.
+
+### Pass 7: Agentic UI (yalnızca LLM tool/state/UI kodu varsa)
+
+Bu pass **koşulludur**. Tetikleyici: diff'te `useFrontendTool`,
+`useRenderTool`, `useHumanInTheLoop`, `useAgent`, `@ag-ui/`, `@copilotkit/`
+veya bir agent/tool tanımı geçiyorsa çalıştır. Geçmiyorsa **atla ve raporda
+"uygulanmadı" yaz** — çalışmamış bir pass'i geçmiş gibi göstermek, bu
+dosyadaki en pahalı hata sınıfı.
+
+```bash
+npm run verify:agentic     # pin + çift kopya + tsc + vitest
+```
+
+`rules/agentic-ui.md` → *Test Zorunlulukları* karşılanmadan Gate **PASSED
+vermez**. Kontrol listesinin tamamı `agents/agentic-ui-agent.md` içinde;
+Gate'in bakması gereken altı madde:
+
+- **Tool sonucu doğrulanıyor mu?** `JSON.parse(...) as X` = ihlal. Tel
+  üzerinde sonuç string'dir; üç durum ayrı ele alınmalı (`mistakes.md #58`)
+- **`followUp: false` modele söylendi mi?** Bayrak yalnız istemciyi kontrol
+  eder; açıklamada da yazmalı (`mistakes.md #59`)
+- **Geri alınamaz aksiyon interrupt'tan geçiyor mu?** Geri alınabilir olan
+  Action Card + Undo kullanmalı — her aksiyona onay sormak ihlaldir
+- **Kırmızı çizgi aksiyonunun tool'u var mı?** Varsa ihlal; agent'a
+  verilmemeli
+- **Yetki kontrolü tool'un içinde mi?** Prompt'ta ise ihlal
+- **Tool birim testi çift iddia kuruyor mu?** Dönüş değeri + yan etki.
+  Yalnız birini test etmek yeterli değil
+
+`@ag-ui/*` sürümü `^` veya `~` ile yazılmışsa **otomatik ihlal** — çift kopya
+tipleri kırar (`mistakes.md #71`).
 
 ---
 
