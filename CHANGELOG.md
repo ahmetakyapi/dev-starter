@@ -7,6 +7,65 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış]
 
+### Agentic: Senaryo Mock'u, Testler ve Tekrarlanabilir Dogrulama — 2026-08-27
+
+Onceki commit araclari ekledi ama iki bosluk birakti: (1) `rules/agentic-ui.md`
+"test olmadan Gate'ten gecmez" diyordu ama ekosistem hicbir test ornegi
+vermiyordu — talep ettigi seyi gostermiyordu; (2) `tsc` dogrulamasi bir kez,
+gecici bir dizinde yapilmisti, tekrarlanabilir degildi.
+
+#### Eklenenler (Added)
+
+- **`templates/agentic-chat/lib/agui-scenarios.ts`** — protokolun tam kelime
+  dagarcigini ureten senaryo kutuphanesi: `text`, `tool`, `widget`, `card`,
+  `interrupt`, `steps`, `state`. Ayni kaynak hem mock endpoint'i hem testleri
+  besler, boylece test ile calisan uygulama ayrisamaz
+- **`templates/agentic-chat/__tests__/agui-scenarios.test.ts`** — fixture'lari
+  AG-UI'in **kendi runtime Zod semalarina** karsi dogrular (34 sema mevcut).
+  Elle yazilmis olay dizileri sessizce eskir; bu test tip kontrolunun
+  goremedigini gorur. 19 test
+- **`templates/agentic-chat/__tests__/agui-contract.test.ts`** — kitabin
+  "tel uzerinde" dikisi: gercek `HttpAgent`, sahte `fetch`, gercek SSE
+  byte'lari. Protokolun IKI yonunu de sabitler. 4 test
+- **`snippets/agent-tool.test.ts`** — `rules/agentic-ui.md`nin istedigi cift
+  iddia: donus degeri (modelin gordugu) + yan etki (kullanicinin gordugu)
+- **`templates/agentic-chat/vitest.config.ts`** — `@copilotkit/react-core`
+  inline; almazsa Node paketin CSS import'unu cozemez
+- **`scripts/verify-agentic.mjs`** + `npm run verify:agentic` — gecici dizinde
+  pin'li bagimliliklari kurar, snippet ve template'leri kopyalar,
+  `tsc --noEmit` + `vitest run` calistirir. Ayrica `@ag-ui/client` pin'inin
+  CopilotKit'in bagimliligiyla ayni oldugunu ve cift kopya olusmadigini
+  dogrular. Ag gerektirdigi icin health-check'in varsayilan yolunda DEGIL
+- **`knowledge/mistakes.md #72`** — agentic kodu test ederken `.css` cozumleme
+  hatasi. Iki cozum: vitest inline, ve daha iyisi handler'i CopilotKit import
+  etmeyen bir dosyada tutmak
+
+#### Degisenler (Changed)
+
+- **`app/api/agent/route.ts`** — senaryo secilebilir hale geldi
+  (`?scenario=card`). Deterministik id uretir, boylece testler sabit degerlere
+  karsi iddia kurabilir
+- **`snippets/agent-tool.tsx`** — handler hook'tan ayrildi
+  (`createFindFlightsHandler`). Sebep mimari: hook'un icine gomulu bir closure'i
+  test etmek React render etmeyi gerektirir; sade fonksiyon dogrudan cagrilir
+- **`scripts/health-check.sh`** — iki ucuz agentic kontrolu: script'in varligi
+  ve `@ag-ui/client` pin'inin sabit olmasi. 68 -> 70 kontrol
+- `rules/agentic-ui.md`, `templates/agentic-chat/README.md`, `CLAUDE.md` —
+  senaryo tablosu, test tablosu ve `verify:agentic` belgelendi
+
+#### Dogrulama
+
+```
+npm run verify:agentic   ✅ pin uyumlu, cift kopya yok, tsc temiz, vitest gecti
+vitest                   25/25   (19 sema + 4 contract + 2 tool)
+test-hooks.sh            17/17
+health-check.sh          70 basarili, 0 uyari, 0 hata
+```
+
+**Kontrolun kendisi test edildi**: pin bilerek `^0.0.57` yapildiginda ve
+snippet'e bilerek tip hatasi eklendiginde `verify:agentic` her iki durumda da
+kirmiziya dustu. Yesil oldugu icin degil, **kirmizi olabildigi icin** guveniliyor.
+
 ### Agentic UI Araclari — 2026-08-27
 
 Bir onceki commit bilgiyi isledi ama kod yazmadi; template/snippet'ler

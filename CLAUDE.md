@@ -23,7 +23,7 @@ dev-starter/
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
 │   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
-│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (71 kayıt; #58–71 agentic)
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (72 kayıt; #58–72 agentic)
 │   ├── patterns.md            → Test edilmiş kod desenleri (33) + Agentic UI (5 + API haritası)
 │   └── live-projects-audit.md → 12 canlı projenin standart uyum denetimi
 │
@@ -65,7 +65,8 @@ dev-starter/
 │   ├── audit-project.sh            → Canlı projeyi standartlara karşı denetler
 │   ├── test-hooks.sh               → Hook davranış testleri (varlık değil davranış)
 │   ├── verify-lockfile.mjs         → Kilit `npm ci` ile senkron mu (çevrimdışı)
-│   └── verify-package-exports.mjs  → Manifest'in vaat ettiği giriş noktaları
+│   ├── verify-package-exports.mjs  → Manifest'in vaat ettiği giriş noktaları
+│   └── verify-agentic.mjs          → Agentic snippet/template hâlâ derleniyor mu (opt-in)
 │
 ├── .claude/
 │   ├── settings.json         → Hook entegrasyonu (paylaşılan, versiyonlanır)
@@ -84,7 +85,7 @@ dev-starter/
 ├── templates/
 │   ├── docs/                 → ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS, DESIGN.md şablonları
 │   ├── nextjs-fullstack/     → Next.js + Drizzle iskeleti (auth dahil değil)
-│   ├── agentic-chat/         → AG-UI overlay — anahtarsız/modelsiz çalışır
+│   ├── agentic-chat/         → AG-UI overlay — 7 senaryo, anahtarsız, testli
 │   └── landing/              → Three.js + glassmorphism tanıtım sayfası
 │
 ├── snippets/                 → 13 hazır bileşen
@@ -184,6 +185,19 @@ bash scripts/health-check.sh   # veya: npm run health
 ```
 
 12 kategori kontrol eder: Agent dosyaları, kurallar, fazlar, hook'lar, snippet'ler, template'ler, knowledge base, paket tutarlılığı, design token ihlalleri, CI/CD, temel dosyalar, impeccable tasarım denetimi.
+
+Agentic snippet ve template'leri **derlenip test edildiğini** kanıtlamak ayrı
+bir komuttur (ağ + `npm install` gerektirir, bu yüzden opt-in):
+
+```bash
+npm run verify:agentic
+```
+
+Geçici bir dizinde pin'li bağımlılıkları kurar, `snippets/agent-*`,
+`snippets/action-card.tsx` ve `templates/agentic-chat/` dosyalarını kopyalar,
+`tsc --noEmit` + `vitest run` çalıştırır. Ayrıca `@ag-ui/client` pin'inin
+CopilotKit'in bağımlılığıyla aynı olduğunu ve çift kopya oluşmadığını doğrular
+(`mistakes.md #71`). CopilotKit yükseltmesinden sonra **önce bunu çalıştır**.
 
 ---
 

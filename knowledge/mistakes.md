@@ -1159,6 +1159,41 @@ ls node_modules/@copilotkit/react-core/node_modules/@ag-ui 2>/dev/null \
 kurarken o sürümü kullan. Aynı ders `mistakes.md #57`de kilit dosyası için
 öğrenilmişti — burada tip sistemi için tekrar ediyor.
 
+### 72. Agentic Kodu Test Ederken `.css` Çözümleme Hatası
+
+**Hata**: `@copilotkit/react-core/v2`'den import eden bir dosyayı Vitest'te test
+ederken:
+
+```
+TypeError: Unknown file extension ".css" for
+.../@copilotkit/react-core/dist/v2/index.css
+```
+
+**Sebep**: Paket bir CSS dosyası import ediyor. Vitest bağımlılığı
+*externalize* ettiği için import Node ESM'e düşüyor ve Node `.css` uzantısını
+çözemiyor. Test dosyasının kendisi CSS'e dokunmasa bile import zinciri
+oraya varıyor.
+
+**Çözüm** — paketi inline'a al, Vite'ın transform hattı devreye girsin:
+
+```ts
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    server: { deps: { inline: ['@copilotkit/react-core'] } },
+  },
+})
+```
+
+**Daha iyisi — mimari çözüm**: Tool handler'larını CopilotKit import
+**etmeyen** bir dosyada tut. `snippets/agent-tool.tsx` bunu gösterir:
+`createFindFlightsHandler` saf bir fonksiyon, hook'un içine gömülü değil. O
+zaman birim testi import zincirine hiç girmez — ve `rules/agentic-ui.md`'nin
+istediği çift iddia (dönüş değeri + yan etki) React render etmeden kurulur.
+
+**Kural**: Test edilebilirlik bir dosya düzeni kararıdır. Handler'ı hook'un
+içine gömmek onu React'e rehin verir.
+
 
 ---
 

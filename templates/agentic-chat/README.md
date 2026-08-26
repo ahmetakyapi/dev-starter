@@ -63,14 +63,47 @@ function AgentWiring() {
 }
 ```
 
-## `app/api/agent/route.ts` — mock endpoint
+## `app/api/agent/route.ts` — senaryo secilebilir mock endpoint
 
-Sabit bir AG-UI olay dizisini SSE olarak yayinlar. Model yok, anahtar yok.
+Gecerli AG-UI olaylarini SSE olarak yayinlar. Model yok, anahtar yok.
+Senaryo query string ile secilir:
+
+```
+POST /api/agent?scenario=tool
+```
+
+| Senaryo | Ne yayinlar | Neyi calistirir |
+|---------|-------------|-----------------|
+| `text` *(varsayilan)* | Parca parca akan metin | Streaming |
+| `tool` | Sunucu tool'u: cagri + sonuc + metin | Seffaflik / varsayilan tool karti |
+| `widget` | Frontend tool cagrisi (sonucsuz) | `useFrontendTool` + `render` |
+| `card` | Sunucu tool'u + sonuc | `useRenderTool` (action card) |
+| `interrupt` | `RUN_FINISHED` + `outcome.interrupt` | `useHumanInTheLoop` |
+| `steps` | `STEP_STARTED` / `STEP_FINISHED` | Workflow ilerleme gostergesi |
+| `state` | `STATE_SNAPSHOT` | Paylasilan state — tool karti YOK |
+
 Ne ise yarar:
 
 - Protokolu **gorunur** kilar — devtools'ta Network > EventStream
-- Istemci mekanigi (stream cozumu, mesaj store'u) modelsiz test edilir
+- Snippet'lerin her birini **anahtarsiz** ucdan uca calistirir
+- Ayni senaryolar testlerde fixture olarak kullanilir (`lib/agui-scenarios.ts`),
+  yani test ile calisan uygulama ayrisamaz
 - Gercek agent'a gecis tek satir: `NEXT_PUBLIC_AGENT_URL` doldurulur
+
+## Testler
+
+```bash
+npx vitest run
+```
+
+| Dosya | Ne dogrular |
+|-------|-------------|
+| `__tests__/agui-scenarios.test.ts` | Fixture'lar AG-UI'in **kendi Zod semalarina** uyuyor mu |
+| `__tests__/agui-contract.test.ts` | Gercek `HttpAgent` + sahte `fetch` + gercek SSE byte'lari — protokolun **iki yonu** |
+| `snippets/agent-tool.test.ts` | Tool handler'i: **cift iddia** (donus degeri + yan etki) |
+
+`vitest.config.ts` `@copilotkit/react-core`'u inline'a alir; almazsa Node paketin
+CSS import'unu cozemez. → `mistakes.md #72`
 
 ## Gercek agent'a gecerken — ONCE bunu olcun
 

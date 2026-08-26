@@ -17,7 +17,8 @@
     "lint": "eslint packages snippets",
     "test": "vitest run",
     "typecheck": "tsc --noEmit --project packages/@ahmet/ui/tsconfig.json",
-    "verify:hooks": "bash scripts/test-hooks.sh"
+    "verify:hooks": "bash scripts/test-hooks.sh",
+    "verify:agentic": "node scripts/verify-agentic.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

@@ -1,31 +1,51 @@
-import { EventType, type BaseEvent, type RunAgentInput } from '@ag-ui/core'
+/**
+ * AG-UI mock endpoint — anahtarsiz, modelsiz.
+ *
+ * Gecerli AG-UI olaylarini SSE olarak yayinlar. Amaci protokolu GORUNUR
+ * kilmak: devtools > Network > EventStream ile her olayi izleyebilirsin.
+ *
+ * Senaryo secimi:  POST /api/agent?scenario=tool
+ * Varsayilan:      text
+ *
+ * Gercek agent'a gecis: NEXT_PUBLIC_AGENT_URL doldur, bu dosyayi sil.
+ */
 
+import type { RunAgentInput } from '@ag-ui/core'
+
+import { buildScenario, encodeSse, isScenario } from '@/lib/agui-scenarios'
+
+// Agent run'lari uzayabilir. Gercek bir agent baglamadan ONCE bu degeri
+// hesabinin fonksiyon sure limitiyle karsilastir. -> templates README
 export const maxDuration = 60
-
-function sse(events: BaseEvent[]): ReadableStream<Uint8Array> {
-  const enc = new TextEncoder()
-  return new ReadableStream({
-    start(c) {
-      for (const e of events) c.enqueue(enc.encode(`data: ${JSON.stringify(e)}\n\n`))
-      c.close()
-    },
-  })
-}
 
 export async function POST(request: Request): Promise<Response> {
   const input = (await request.json()) as RunAgentInput
-  const { threadId, runId } = input
-  const messageId = crypto.randomUUID()
 
-  const events: BaseEvent[] = [
-    { type: EventType.RUN_STARTED, threadId, runId } as BaseEvent,
-    { type: EventType.TEXT_MESSAGE_START, messageId, role: 'assistant' } as BaseEvent,
-    { type: EventType.TEXT_MESSAGE_CONTENT, messageId, delta: 'Merhaba' } as BaseEvent,
-    { type: EventType.TEXT_MESSAGE_END, messageId } as BaseEvent,
-    { type: EventType.RUN_FINISHED, threadId, runId } as BaseEvent,
-  ]
+  const requested = new URL(request.url).searchParams.get('scenario')
+  const scenario = isScenario(requested) ? requested : 'text'
 
-  return new Response(sse(events), {
-    headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
+  let seq = 0
+  const events = buildScenario(scenario, {
+    threadId: input.threadId,
+    runId: input.runId,
+    // Deterministik id: ayni senaryo her zaman ayni akisi uretir, boylece
+    // testler sabit degerlere karsi iddia kurabilir.
+    id: (label) => `${scenario}-${label}-${seq++}`,
+  })
+
+  const payload = new TextEncoder().encode(encodeSse(events))
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(payload)
+      controller.close()
+    },
+  })
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+    },
   })
 }

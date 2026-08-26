@@ -219,6 +219,24 @@ else
   fail "scripts/verify-lockfile.mjs EKSIK"
 fi
 
+# Agentic dogrulama: script VAR MI + pin tutarli mi?
+# Tam dogrulama (tsc + vitest) ag erisimi ve npm install gerektirir; bu yuzden
+# burada CALISTIRILMAZ. Opt-in: npm run verify:agentic
+# Burada yalnizca ucuz olan iki sey kontrol edilir: script'in varligi ve
+# template pin'inin CopilotKit'in bagimliligiyla ayni major/exact olmasi.
+if [ -f "scripts/verify-agentic.mjs" ]; then
+  pass "scripts/verify-agentic.mjs mevcut"
+  AGUI_PIN=$(node -p "JSON.parse(require('fs').readFileSync('templates/agentic-chat/package.json','utf8')).dependencies['@ag-ui/client']" 2>/dev/null || echo "")
+  case "$AGUI_PIN" in
+    ""|*[\^~]*)
+      fail "templates/agentic-chat: @ag-ui/client pin'i sabit degil ('$AGUI_PIN') — mistakes.md #71" ;;
+    *)
+      pass "@ag-ui/client tam surume sabitlenmis ($AGUI_PIN)" ;;
+  esac
+else
+  fail "scripts/verify-agentic.mjs EKSIK"
+fi
+
 # Yerel Node major'i .nvmrc ile ayni mi? Farkliysa bir sonraki npm install
 # CI'in reddedecegi bir kilit yazabilir.
 if [ -f ".nvmrc" ] && command -v node >/dev/null 2>&1; then

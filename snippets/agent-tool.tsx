@@ -33,6 +33,26 @@ const findFlightsParams = z.object({
   to: z.string().describe('varis sehri (havalimani kodu degil)'),
 })
 
+export type FindFlightsArgs = z.infer<typeof findFlightsParams>
+
+/**
+ * Handler AYRI bir fonksiyon — hook'un icine gomulu degil.
+ *
+ * Sebep: `rules/agentic-ui.md` her frontend tool icin birim testi sart kosuyor
+ * ve test CIFT iddia kurmali: donus degeri (modelin gordugu) + yan etki
+ * (kullanicinin gordugu). Hook'un icine gomulu bir closure'i test etmek React
+ * render etmeyi gerektirir; sade fonksiyon dogrudan cagrilir.
+ *
+ * Ornek test: templates/agentic-chat/__tests__/find-flights.test.ts
+ */
+export function createFindFlightsHandler(onSearch: (from: string, to: string) => void) {
+  // Donus degeri MODELE gider — kisa ve yapisal tut, ham veri bosaltma.
+  return async ({ from, to }: FindFlightsArgs) => {
+    onSearch(from, to)
+    return { ok: true, searched: `${from} -> ${to}` }
+  }
+}
+
 export function useFindFlightsTool(onSearch: (from: string, to: string) => void) {
   useFrontendTool(
     {
@@ -41,11 +61,7 @@ export function useFindFlightsTool(onSearch: (from: string, to: string) => void)
         'Ucus arar ve kullaniciyi sonuc listesine yonlendirir. ' +
         'Kullanici belirli bir rota sordugunda cagir.',
       parameters: findFlightsParams,
-      // Donus degeri MODELE gider — kisa ve yapisal tut, ham veri bosaltma.
-      handler: async ({ from, to }) => {
-        onSearch(from, to)
-        return { ok: true, searched: `${from} -> ${to}` }
-      },
+      handler: createFindFlightsHandler(onSearch),
     },
     [onSearch],
   )

@@ -160,6 +160,18 @@ Agentic bir özellik, aşağıdakiler olmadan **Gate'ten geçmez**:
    akışının çözümlenmesi, gerçek sunucu ve model olmadan sabitlenir
 3. Bu testler API anahtarı ve ağ **gerektirmez**; CI'da çalışır
 
+**Çalışan referanslar** — kopyala, uyarlar:
+
+| Dosya | Hangi zorunluluğu karşılar |
+|-------|---------------------------|
+| `snippets/agent-tool.test.ts` | #1 — tool birim testi, çift iddia |
+| `templates/agentic-chat/__tests__/agui-contract.test.ts` | #2 — protokol contract testi |
+| `templates/agentic-chat/__tests__/agui-scenarios.test.ts` | Fixture'lar AG-UI'ın kendi Zod şemalarına uyuyor mu |
+
+Fixture'lar `templates/agentic-chat/lib/agui-scenarios.ts`'ten gelir — aynı
+kaynak hem mock endpoint'i hem testleri besler, böylece test ile çalışan
+uygulama ayrışamaz.
+
 Model davranışı (doğru tool'u seçiyor mu, prompt'a uyuyor mu) bu testlerin
 kapsamı dışındadır — o sunucu tarafı eval'lerin ve birkaç E2E testinin işidir.
 
