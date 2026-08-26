@@ -101,6 +101,34 @@ if [ -n "$LOCK_TOUCHED" ]; then
   fi
 fi
 
+# 8. Agentic: tool sonucu doğrulanmadan cast ediliyor mu?
+# Tel üzerinde tool sonucu STRING'dir; JSON.parse -> unknown döner.
+# Doğrudan cast etmek temenniden ibarettir. -> knowledge/mistakes.md #58
+AGENTIC_FILES=$(echo "$STAGED" | grep -E '\.tsx?$' | xargs grep -ln 'useRenderTool\|useFrontendTool\|useHumanInTheLoop\|toolCall' 2>/dev/null || true)
+if [ -n "$AGENTIC_FILES" ]; then
+  UNSAFE_PARSE=$(echo "$AGENTIC_FILES" | xargs grep -ln 'JSON\.parse(.*) as ' 2>/dev/null | grep -v '\.test\.\|\.spec\.' || true)
+  if [ -n "$UNSAFE_PARSE" ]; then
+    echo "⚠️  AGENTIC: Tool sonucu doğrulanmadan cast ediliyor:"
+    echo "$UNSAFE_PARSE" | sed 's/^/   /'
+    echo "   JSON.parse unknown döner. Alanları kontrol et → mistakes.md #58"
+    WARNINGS=$((WARNINGS + 1))
+  fi
+fi
+
+# 9. Agentic: @ag-ui/client sürümü sabitlenmiş mi?
+# CopilotKit bu paketi TAM sürüme sabitler. Aralık (^/~) yazmak ikinci bir
+# kopya yaratır ve HttpAgent tipi AbstractAgent'a atanamaz. -> mistakes.md #71
+AGUI_PKG=$(echo "$STAGED" | grep -E '(^|/)package\.json$' || true)
+if [ -n "$AGUI_PKG" ]; then
+  LOOSE_AGUI=$(echo "$AGUI_PKG" | xargs grep -ln '"@ag-ui/[a-z]*": *"[\^~]' 2>/dev/null || true)
+  if [ -n "$LOOSE_AGUI" ]; then
+    echo "⚠️  AGENTIC: @ag-ui/* sürümü aralıkla yazılmış (^ veya ~):"
+    echo "$LOOSE_AGUI" | sed 's/^/   /'
+    echo "   CopilotKit tam sürüme sabitler; aralık çift kopya üretir → mistakes.md #71"
+    WARNINGS=$((WARNINGS + 1))
+  fi
+fi
+
 # Sonuç
 if [ $ERRORS -gt 0 ]; then
   echo ""

@@ -32,7 +32,7 @@ header() { echo ""; echo "━━━ $1 ━━━"; }
 # ─── 1. Agent Files ──────────────────────────────────────────────────────────
 header "Agent Dosyalari"
 
-AGENTS=("AGENT_PROTOCOL" "business-analyst-agent" "uiux-agent" "frontend-agent" "backend-agent" "gate-agent" "deploy-agent")
+AGENTS=("AGENT_PROTOCOL" "business-analyst-agent" "uiux-agent" "frontend-agent" "backend-agent" "agentic-ui-agent" "gate-agent" "deploy-agent")
 for agent in "${AGENTS[@]}"; do
   if [ -f "agents/${agent}.md" ]; then
     pass "$agent.md mevcut"
@@ -44,7 +44,7 @@ done
 # ─── 2. Rule Files ───────────────────────────────────────────────────────────
 header "Kural Dosyalari"
 
-RULES=("immutable-architecture" "design-tokens" "commit-conventions" "bugfix-protocol" "dev-cycle" "routemap-discipline" "context-curation")
+RULES=("immutable-architecture" "design-tokens" "commit-conventions" "bugfix-protocol" "dev-cycle" "routemap-discipline" "context-curation" "agentic-ui")
 for rule in "${RULES[@]}"; do
   if [ -f "rules/${rule}.md" ]; then
     pass "$rule.md mevcut"
@@ -108,7 +108,7 @@ fi
 # ─── 5. Snippet Files ────────────────────────────────────────────────────────
 header "Snippet Dosyalari"
 
-SNIPPETS=("animated-number" "infinite-scroll" "og-image" "search-bar" "modal" "drawer" "form" "skeleton" "toast" "confirm")
+SNIPPETS=("animated-number" "infinite-scroll" "og-image" "search-bar" "modal" "drawer" "form" "skeleton" "toast" "confirm" "agent-tool" "action-card" "agent-approval")
 for snippet in "${SNIPPETS[@]}"; do
   if [ -f "snippets/${snippet}.tsx" ]; then
     pass "$snippet.tsx mevcut"

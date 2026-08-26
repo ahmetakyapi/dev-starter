@@ -769,9 +769,13 @@ useEffect(() => {
 ## Agentic UI (AG-UI / CopilotKit)
 
 > Kaynak: Manfred Steyer, *Agentic UI with Angular* (v1.0.0, Ağustos 2026).
-> Desenler Angular'dan React'e çevrildi. **Hiçbiri bu ekosistemde henüz
-> çalıştırılmadı** — POC'den önce kod örneklerini doğrulanmış saymayın.
-> Değeri kod değil, **karar**dır: hangi işi model yapar, hangisini kod.
+> Desenler Angular'dan React'e çevrildi.
+>
+> **Durum (2026-08-27)**: API haritası ve `snippets/agent-*.tsx` dosyaları
+> `@copilotkit/react-core@1.69.2` tip tanımlarına karşı `tsc --noEmit` ile
+> **doğrulandı**. Uçtan uca bir uygulamada henüz çalıştırılmadı — derlendiği
+> kesin, davranışı POC'de ölçülecek. Desenlerin değeri zaten kod değil,
+> **karar**: hangi işi model yapar, hangisini kod.
 
 ### Atomik Agent Tool'ları — "hepsini değiştir" yerine granüler operasyonlar
 
@@ -945,6 +949,60 @@ hale getirir: *tool'lar doğruysa sorun prompt'tadır.*
 
 Çift iddia kur — hem dönüş değeri (modelin gördüğü) hem yan etki (kullanıcının
 gördüğü). İkisi de doğru olmalı.
+
+---
+
+### Doğrulanmış API Haritası — Angular → React
+
+Kitap Angular kullanıyor; CopilotKit'in **React v2** girişi (`@copilotkit/react-core/v2`)
+aynı modeli birebir sunar. Aşağıdaki tablo `1.69.2` sürümünün tip tanımlarından
+çıkarıldı ve `tsc --noEmit` ile doğrulandı (2026-08-27).
+
+| Kitapta (Angular) | React v2 karşılığı |
+|---|---|
+| `provideCopilotKit({...})` | `<CopilotKitProvider>` |
+| `initAgentStore` + `injectAgentStore` | `useAgent({ agentId })` → `{ agent, isReady }` |
+| `createFrontendTool` + `registerFrontendTool` | `useFrontendTool(tool, deps)` |
+| widget (tool + `component`) | `useFrontendTool({ ..., render })` |
+| Action Card (`toolCallRenderer`) | `useRenderTool({ name, parameters, render })` |
+| `defaultToolRendering: true` | `useDefaultRenderTool()` |
+| `injectInterrupt` / HITL | `useHumanInTheLoop({ ..., render })` veya `useInterrupt` |
+| `connectAgentContext` | `useAgentContext({ description, value })` |
+| A2UI / MCP Apps activity renderer | `useRenderActivityMessage` (A2UI yerleşik) |
+| headless mod | `@copilotkit/react-core/v2/headless` |
+| `AppHttpAgent` (self-managed) | `selfManagedAgents={{ id: new HttpAgent({ url }) }}` |
+
+**`FrontendTool` gerçek şekli** — `parameters` Standard Schema V1 kabul eder,
+yani Zod v4 doğrudan çalışır:
+
+```ts
+type FrontendTool<T> = {
+  name: string
+  description?: string
+  parameters?: StandardSchemaV1<any, T>   // Zod / Valibot / ArkType
+  handler?: (args: T, ctx: FrontendToolHandlerContext) => Promise<unknown>
+  followUp?: boolean
+  agentId?: string      // tool'u tek bir agent'a kısıtla → least privilege
+  available?: boolean   // kaydı silmeden modelden gizle
+}
+```
+
+**Kitapta olmayan, React tarafında olan iki şey:**
+
+- `openGenerativeUI.sandboxFunctions` — LLM'in ürettiği UI sandbox'lı iframe'de
+  çalışır ve yalnızca elle verdiğin fonksiyonlara erişir. `rules/agentic-ui.md`
+  kural 6'nın (üretilen kod sandbox'ta çalışır) hazır implementasyonu.
+- `available` bayrağı — tool'u kaydı silmeden modelden gizler. Rol/duruma göre
+  yüzey daraltmanın en ucuz yolu.
+
+**İki tuzak** — ikisi de `tsc` ile bulundu, tahminle değil:
+`useRenderTool` string literal verir, `useFrontendTool` enum → `mistakes.md #70`.
+`@ag-ui/client` sürümü CopilotKit'inkine sabitlenmeli → `mistakes.md #71`.
+
+**Çalışan referans**: `snippets/agent-tool.tsx`, `snippets/action-card.tsx`,
+`snippets/agent-approval.tsx` — üçü de derlendi. İskelet:
+`templates/agentic-chat/`.
+
 
 
 ---

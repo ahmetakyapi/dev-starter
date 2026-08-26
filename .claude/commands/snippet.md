@@ -1,6 +1,6 @@
 ---
 description: Hizli bilesen snippet uret — modal, form, drawer, skeleton, toast, confirm, vb.
-argument-hint: "modal | drawer | form | skeleton | toast | confirm | search-bar | animated-number | infinite-scroll | og-image"
+argument-hint: "modal | drawer | form | skeleton | toast | confirm | search-bar | animated-number | infinite-scroll | og-image | agent-tool | action-card | agent-approval"
 ---
 
 `$ARGUMENTS` tipinde bir bilesen snippet'i uret.
@@ -16,6 +16,9 @@ Mevcut snippet'ler `snippets/` dizininde:
 - `skeleton` — Yukleme placeholder'lari
 - `toast` — Bildirim sistemi
 - `confirm` — Onay dialog'u
+- `agent-tool` — Agent frontend tool'u + widget (AG-UI)
+- `action-card` — Sunucu tool'u karti + Geri Al (AG-UI)
+- `agent-approval` — Geri alinamaz aksiyon onayi / interrupt (AG-UI)
 
 Istenilen snippet `snippets/` dizininde varsa, o dosyayi oku ve projeye uyarla.
 Yoksa, mevcut snippet'lerin yapisina uygun yeni bir snippet olustur.
@@ -27,3 +30,7 @@ Kurallar:
 - Framer Motion varyantlari `variants.ts`'ten import et (mumkunse)
 - Dark/light mode parity
 - Erisilebilirlik (aria-label, keyboard navigation)
+
+> `agent-*` ve `action-card` snippet'leri `@copilotkit/react-core@1.69.2` tip
+> tanimlarina karsi `tsc --noEmit` ile dogrulandi. Uyarlarken surum pin'ine
+> dikkat — `knowledge/mistakes.md #70, #71`. Karar icin: `/agentic`

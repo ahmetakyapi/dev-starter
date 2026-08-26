@@ -7,6 +7,62 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış]
 
+### Agentic UI Araclari — 2026-08-27
+
+Bir onceki commit bilgiyi isledi ama kod yazmadi; template/snippet'ler
+"dogrulanmadan yazilamaz" gerekcesiyle ertelenmisti. Bu commit o gerekceyi
+**dogrulama yaparak** kaldiriyor: `@copilotkit/react-core@1.69.2` gercek tip
+tanimlari okundu ve her dosya `tsc --noEmit` ile derlendi.
+
+#### Eklenenler (Added)
+
+- **`snippets/agent-tool.tsx`** — `useFrontendTool`: veri toplayan tool +
+  widget (`followUp: false` ve modele soylenmesi gereken ipucu dahil)
+- **`snippets/action-card.tsx`** — `useRenderTool`: sunucu tool'u karti,
+  Geri Al ve **guvenli sonuc cozumu** (uc durum: tamamlanmadi / gecerli JSON
+  degil / alanlar yok). Undo modele ugramaz
+- **`snippets/agent-approval.tsx`** — `useHumanInTheLoop`: geri alinamaz
+  aksiyon oncesi onay; secenekler sunucudan gelir, istemci genel kalir
+- **`templates/agentic-chat/`** — AG-UI overlay. `app/api/agent/route.ts`
+  anahtarsiz ve modelsiz calisan bir SSE mock'u yayinlar; gercek agent'a gecis
+  tek env degiskeni. README `maxDuration` olcumunu POC'nin ilk isi olarak
+  isaretler
+- **`agents/agentic-ui-agent.md`** — yeni rol (kisaltma **AG**). Uc karar
+  agaci (tool nereye / kontrol hangi seviyede / model mi kod mu) + teslim
+  oncesi 11 maddelik kontrol listesi
+- **`.claude/commands/agentic.md`** — `/agentic` komutu: tool, kontrol, state,
+  dsl, test, kurulum, denetle
+- **`hooks/quality-scan.sh` kontrol #8 ve #9** — dogrulanmamis tool sonucu
+  cast'i ve `@ag-ui/*` aralik surumu. Ikisi de **uyari**, bloklamaz
+- **`scripts/test-hooks.sh`** — dort yeni davranis testi; ikisi yanlis pozitif
+  olmadigini kanitliyor. Toplam 13 → 17 test
+- **`knowledge/mistakes.md #70, #71`** — ikisi de tahminle degil `tsc` ile
+  bulundu:
+  - #70 `useRenderTool` status'u string literal, `useFrontendTool` enum verir
+  - #71 `@ag-ui/client` latest kurmak cift kopya yaratir, `HttpAgent` tipi
+    `AbstractAgent`e atanamaz hale gelir
+- **`knowledge/patterns.md` → Dogrulanmis API Haritasi** — Angular → React v2
+  karsiliklari, `FrontendTool` gercek sekli, React'te olup kitapta olmayan iki
+  ozellik (`openGenerativeUI.sandboxFunctions`, `available` bayragi)
+
+#### Degisenler (Changed)
+
+- `rules/agentic-ui.md` — "benimsenmedi" notu "benimsenmedi, ama araclar hazir"
+  oldu; **Dogrulanmis Yigin** bolumu eklendi (surum pin kurali dahil)
+- `knowledge/patterns.md` — "hicbiri calistirilmadi" uyarisi gercege cevrildi:
+  derlendigi kesin, davranis POC'de olculecek
+- `CLAUDE.md`, `agents/AGENT_PROTOCOL.md` — yeni agent, komut, template ve
+  snippet'ler kayitli; snippet sayisi 10 → 13
+- `.claude/commands/snippet.md` — uc yeni snippet listelendi
+
+#### Yontem notu
+
+Ilk yazilan kod **iki kez** derlemedi ve her iki hata da bu commit'in
+degerini olusturdu: yanlis hook secildi (`useRenderToolCall` v2'de argumansiz)
+ve surum pin'i kacirildi. Tahminle yazilsaydi ikisi de projeye sizacakti.
+`agents/agentic-ui-agent.md` bu yuzden kendi Dogrulama Disiplini bolumunu
+tasiyor.
+
 ### Agentic UI Bilgi Tabani — 2026-08-26
 
 Manfred Steyer'in *Agentic UI with Angular* kitabi (v1.0.0, Agustos 2026) uctan

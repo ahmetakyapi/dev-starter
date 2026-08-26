@@ -1,0 +1,9 @@
+{
+  "_comment": "Bu bir OVERLAY'dir, tam proje degil. Bagimliliklari mevcut bir nextjs-fullstack projesine ekleyin.",
+  "dependencies": {
+    "@copilotkit/react-core": "1.69.2",
+    "@ag-ui/client": "0.0.57",
+    "@ag-ui/core": "0.0.57",
+    "zod": "^4.0.0"
+  }
+}

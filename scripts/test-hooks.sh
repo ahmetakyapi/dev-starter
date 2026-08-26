@@ -252,6 +252,77 @@ fi
 echo
 
 # ─────────────────────────────────────────────────────────────
+# quality-scan.sh — agentic kontrolleri (mistakes.md #58, #71)
+# ─────────────────────────────────────────────────────────────
+echo "quality-scan.sh — agentic kontrolleri"
+
+mkdir -p "$SANDBOX/agentic" && cd "$SANDBOX/agentic" || exit 1
+git init -q . 2>/dev/null
+git config user.email t@t.t && git config user.name t
+
+# (j) tool sonucu doğrulanmadan cast → uyarı vermeli (bloklamamalı)
+cat > card.tsx <<'EOF'
+import { useRenderTool } from '@copilotkit/react-core/v2'
+export function Card({ result }: { result: string }) {
+  const data = JSON.parse(result) as { ok: boolean }
+  return <p>{String(data.ok)}</p>
+}
+EOF
+git add card.tsx
+OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'AGENTIC.*cast'; then
+  ok "doğrulanmamış tool sonucu → uyarır, bloklamaz (exit 0)"
+else
+  no "doğrulanmamış cast → uyarmalı" "exit 0 + AGENTIC uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (k) güvenli parse → uyarı VERMEMELİ (yanlış pozitif kontrolü)
+rm -f card.tsx && git rm -q --cached card.tsx 2>/dev/null
+cat > safe.tsx <<'EOF'
+import { useRenderTool } from '@copilotkit/react-core/v2'
+export function parseResult(raw: string) {
+  let parsed: unknown
+  try { parsed = JSON.parse(raw) } catch { return undefined }
+  const c = parsed as { ok?: unknown } | null
+  return typeof c?.ok === 'boolean' ? { ok: c.ok } : undefined
+}
+EOF
+git add safe.tsx
+OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && ! printf '%s' "$OUT" | grep -q 'AGENTIC.*cast'; then
+  ok "güvenli parse → uyarı yok (yanlış pozitif yok)"
+else
+  no "güvenli parse → uyarmamalı" "exit 0, AGENTIC uyarısı YOK" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (l) @ag-ui/* aralıkla yazılmış → uyarı vermeli
+rm -f safe.tsx && git rm -q --cached safe.tsx 2>/dev/null
+printf '{"dependencies":{"@ag-ui/client":"^0.0.57"}}
+' > package.json
+git add package.json
+OUT=$(payload "git commit -m 'chore: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if printf '%s' "$OUT" | grep -q 'AGENTIC.*@ag-ui'; then
+  ok "@ag-ui/* aralık sürümü → uyarır"
+else
+  no "@ag-ui aralık → uyarmalı" "AGENTIC @ag-ui uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (m) @ag-ui/* sabit sürüm → uyarı VERMEMELİ
+printf '{"dependencies":{"@ag-ui/client":"0.0.57"}}
+' > package.json
+git add package.json
+OUT=$(payload "git commit -m 'chore: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+if ! printf '%s' "$OUT" | grep -q 'AGENTIC.*@ag-ui'; then
+  ok "@ag-ui/* sabit sürüm → uyarı yok"
+else
+  no "sabit sürüm → uyarmamalı" "AGENTIC @ag-ui uyarısı YOK" "çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+echo
+# ─────────────────────────────────────────────────────────────
 # routemap-sync.sh
 # ─────────────────────────────────────────────────────────────
 echo "routemap-sync.sh"

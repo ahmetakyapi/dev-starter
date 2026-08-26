@@ -1102,8 +1102,65 @@ Bağlayıcı belgelerde (fatura, biniş kartı) bu zaten şart: kurumsal kimlik,
 yasal zorunluluklar ve aynı veriye aynı çıktı — üretken bir model bunların
 hiçbirini garanti edemez.
 
+### 70. CopilotKit v2: `useRenderTool` string literal, `useFrontendTool` enum verir
+
+**Hata**: `useRenderTool`'un render'ında `status === ToolCallStatus.Complete`
+yazınca `tsc` patlıyor: *"Type '\"inProgress\"' is not assignable to type
+'ToolCallStatus'"*.
+
+**Sebep**: Aynı kütüphane, iki farklı tip. `useFrontendTool`'un `render`'ı
+`ToolCallStatus` **enum**'unu verir; `useRenderTool`'un render props'u ise
+**string literal union** verir (`'inProgress' | 'executing' | 'complete'`).
+
+**Çözüm**: `useRenderTool` içinde string karşılaştır:
+
+```ts
+type ToolStatus = 'inProgress' | 'executing' | 'complete'
+// useRenderTool  -> status === 'complete'
+// useFrontendTool -> status === ToolCallStatus.Complete
+```
+
+**Kural**: Bu alandaki kütüphanelerde tip tutarlılığını **varsayma**. Snippet'i
+yazmadan önce `tsc --noEmit` çalıştır — bu hata tam olarak öyle bulundu.
+
+### 71. `@ag-ui/client` `latest` Kurmak Tipleri Kırar
+
+**Hata**: `HttpAgent`, `CopilotKitProvider`'ın `selfManagedAgents` alanına
+atanamıyor:
+
+```
+TS2418: Type of computed property's value is 'HttpAgent', which is not
+assignable to type 'AbstractAgent'.
+  Types have separate declarations of a private property '_debug'.
+```
+
+**Sebep**: CopilotKit `@ag-ui/client`'ı **tam sürüme sabitler** (1.69.2 →
+0.0.57). `npm i @ag-ui/client` latest'i (0.0.58) kurar; npm ikisini birden
+tutar ve `node_modules/@copilotkit/react-core/node_modules/@ag-ui/client`
+altında ikinci bir kopya oluşur. İki ayrı sınıf bildirimi = private alan
+yüzünden nominal uyuşmazlık. Kod çalışır görünür, `tsc` patlar.
+
+**Çözüm**: Sürümü CopilotKit'in istediğine sabitle.
+
+```bash
+npm view @copilotkit/react-core@1.69.2 dependencies.@ag-ui/client   # -> 0.0.57
+npm i @ag-ui/client@0.0.57 @ag-ui/core@0.0.57
+```
+
+Doğrulama — iç kopya **kalmamalı**:
+
+```bash
+ls node_modules/@copilotkit/react-core/node_modules/@ag-ui 2>/dev/null \
+  && echo "CIFT KOPYA VAR" || echo "tek surum, temiz"
+```
+
+**Kural**: Bir kütüphane bir bağımlılığı **tam sürüme** sabitliyorsa (`^` veya
+`~` yok), bu bir tercih değil **sözleşmedir**. Aynı paketi üst seviyeye
+kurarken o sürümü kullan. Aynı ders `mistakes.md #57`de kilit dosyası için
+öğrenilmişti — burada tip sistemi için tekrar ediyor.
+
 
 ---
 
-*Son güncelleme: 2026-08-26*
+*Son güncelleme: 2026-08-27*
 *Yeni hata eklemek için bu dosyayı düzenle.*

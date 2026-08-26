@@ -3,10 +3,15 @@
 **Bu kurallar, LLM'in uygulama içinde tool çağırdığı, state değiştirdiği veya
 UI ürettiği her özellikte geçerlidir. İstisna yoktur.**
 
-> **Durum: benimsenmedi.** Bu dosya kararlar için hazırdır, ekosistemde henüz
-> agentic bir özellik yok. Kaynak: Manfred Steyer, *Agentic UI with Angular*
-> (v1.0.0, Ağustos 2026). Desenler `knowledge/patterns.md → Agentic UI`,
-> tuzaklar `knowledge/mistakes.md #58–69`.
+> **Durum: benimsenmedi, ama araçlar hazır.** Ekosistemde henüz agentic bir
+> özellik yok. Buna karşılık iskelet, snippet'ler ve API haritası
+> `@copilotkit/react-core@1.69.2` tip tanımlarına karşı **doğrulandı**
+> (`tsc --noEmit`, 2026-08-27).
+>
+> Kaynak: Manfred Steyer, *Agentic UI with Angular* (v1.0.0, Ağustos 2026).
+> Desenler + API haritası: `knowledge/patterns.md → Agentic UI`.
+> Tuzaklar: `knowledge/mistakes.md #58–71`.
+> Rol ve karar ağaçları: `agents/agentic-ui-agent.md`. Komut: `/agentic`.
 
 ---
 
@@ -162,6 +167,36 @@ kapsamı dışındadır — o sunucu tarafı eval'lerin ve birkaç E2E testinin 
 Oysa sıklıkla tool, açıklamasının vaat ettiğinden farklı bir şey döndürür.
 Tool davranışını açıklamasına karşı sabitleyen bir test hata ayıklamayı ikili
 hale getirir: **tool'lar doğruysa sorun prompt'tadır.**
+
+---
+
+## Doğrulanmış Yığın
+
+Bu ekosistemde agentic bir özellik yazılırken varsayılan yığın:
+
+| Katman | Seçim | Not |
+|--------|-------|-----|
+| İstemci | `@copilotkit/react-core@1.69.2` **`/v2` girişi** | v2 AG-UI-native; v1 farklı imzalara sahip, karıştırma |
+| Protokol | `@ag-ui/client` + `@ag-ui/core`, **CopilotKit'in pin'lediği sürüm** | Aralık (`^`/`~`) yazma → `mistakes.md #71` |
+| Şema | Zod v4 | `parameters` Standard Schema V1 alır, Zod doğrudan çalışır |
+| Sunucu | Açık — Mastra / LangGraph / kendi route'un | AG-UI arkasında olduğu sürece istemci umursamaz |
+
+Doğru pin'i **her zaman** komutla al, ezberden yazma:
+
+```bash
+npm view @copilotkit/react-core@<surum> dependencies.@ag-ui/client
+```
+
+**Başlangıç noktaları** — hepsi derlendi:
+
+- `templates/agentic-chat/` — anahtarsız, modelsiz çalışan AG-UI iskeleti
+- `snippets/agent-tool.tsx` — frontend tool + widget
+- `snippets/action-card.tsx` — sunucu tool'u kartı + Undo + güvenli sonuç çözümü
+- `snippets/agent-approval.tsx` — geri alınamaz aksiyon onayı
+
+Kural 6'nın (üretilen kod sandbox'ta çalışır) hazır implementasyonu React
+tarafında mevcut: `CopilotKitProvider`'ın `openGenerativeUI.sandboxFunctions`
+alanı. Kendi sandbox'ını yazmadan önce ona bak.
 
 ---
 

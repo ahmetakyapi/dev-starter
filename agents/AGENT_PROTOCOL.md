@@ -15,6 +15,7 @@ bkz. `.claude/agents/`). Ana oturum ilgili dosyayı okur ve o rolü üstlenir.
 | UI/UX | `uiux-agent.md` | Tasarım, animasyon, görsel sistem | **UI** |
 | Frontend | `frontend-agent.md` | Next.js, React, TypeScript | **FE** |
 | Backend | `backend-agent.md` | DB, API, auth | **BE** |
+| Agentic UI | `agentic-ui-agent.md` | LLM tool/state/UI kararları — FE ile BE arasındaki boşluk | **AG** |
 | Gate | `gate-agent.md` | Kalite kontrolü, auto-fix, enforcement | **GATE** |
 | Deploy | `deploy-agent.md` | Vercel, CI/CD, production | **DP** |
 

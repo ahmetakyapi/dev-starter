@@ -23,8 +23,8 @@ dev-starter/
 │   │   ├── keskealsaydim.md   → KeskealSaydım görsel hafıza
 │   │   └── ramazan-vakitleri.md → Ramazan Vakitleri görsel hafıza
 │   │   (Tüm tema dosyaları DESIGN.md 9-section formatında)
-│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (69 kayıt; #58–69 önleyici)
-│   ├── patterns.md            → Test edilmiş kod desenleri (33) + Agentic UI (5, doğrulanmadı)
+│   ├── mistakes.md            → Tekrar edilmeyecek hatalar (71 kayıt; #58–71 agentic)
+│   ├── patterns.md            → Test edilmiş kod desenleri (33) + Agentic UI (5 + API haritası)
 │   └── live-projects-audit.md → 12 canlı projenin standart uyum denetimi
 │
 ├── agents/
@@ -33,6 +33,7 @@ dev-starter/
 │   ├── uiux-agent.md       → Tasarım & animasyon kararları
 │   ├── frontend-agent.md   → Next.js & React implementasyon
 │   ├── backend-agent.md    → DB, API, auth
+│   ├── agentic-ui-agent.md → Agentic UI kararları: tool, kontrol, state, DSL
 │   ├── gate-agent.md       → 6-pass kalite kontrolü, auto-fix, enforcement
 │   └── deploy-agent.md     → Vercel deployment & release
 │
@@ -44,7 +45,7 @@ dev-starter/
 │   ├── dev-cycle.md              → Plan → Dev → Gate → Commit → Review pipeline
 │   ├── routemap-discipline.md    → ROUTEMAP tek kaynak prensibi
 │   ├── context-curation.md       → Agent bazlı context seviyeleri
-│   └── agentic-ui.md             → Agentic UI kuralları (benimsenmedi — karar hazırlığı)
+│   └── agentic-ui.md             → Agentic UI kuralları + doğrulanmış yığın
 │
 ├── phases/
 │   ├── planning.md           → P1→P6: Discovery → Product → Architecture → Screens → Stories → Readiness
@@ -77,14 +78,16 @@ dev-starter/
 │       ├── snippet.md        → /snippet — Hızlı bileşen üretimi
 │       ├── theme.md          → /theme — Görsel tema uygulama
 │       ├── new-project.md    → /new-project — Yeni proje sihirbazı
+│       ├── agentic.md        → /agentic — Agentic UI karar ağacı
 │       └── release.md        → /release — Versiyon & changelog yönetimi
 │
 ├── templates/
 │   ├── docs/                 → ROUTEMAP, PRODUCT, ARCHITECTURE, SCREENS, DESIGN.md şablonları
 │   ├── nextjs-fullstack/     → Next.js + Drizzle iskeleti (auth dahil değil)
+│   ├── agentic-chat/         → AG-UI overlay — anahtarsız/modelsiz çalışır
 │   └── landing/              → Three.js + glassmorphism tanıtım sayfası
 │
-├── snippets/                 → 10 hazır bileşen
+├── snippets/                 → 13 hazır bileşen
 │   ├── animated-number.tsx   → Sayı animasyonu
 │   ├── infinite-scroll.tsx   → Sonsuz kaydırma
 │   ├── og-image.tsx          → Open Graph görsel üretici
@@ -94,7 +97,10 @@ dev-starter/
 │   ├── form.tsx              → Server Action uyumlu form
 │   ├── skeleton.tsx          → Yükleme placeholder'ları
 │   ├── toast.tsx             → Bildirim sistemi
-│   └── confirm.tsx           → Onay dialog'u
+│   ├── confirm.tsx           → Onay dialog'u
+│   ├── agent-tool.tsx        → Agent frontend tool'u + widget (tsc ✓)
+│   ├── action-card.tsx       → Sunucu tool'u kartı + Geri Al (tsc ✓)
+│   └── agent-approval.tsx    → Geri alınamaz aksiyon onayı (tsc ✓)
 │
 ├── eslint.config.js          → Root ESLint yapılandırması
 ├── .prettierrc               → Prettier yapılandırması
@@ -234,6 +240,7 @@ bash scripts/audit-project.sh ~/Desktop/Projects/<proje>
 | `/theme [proje]` | Görsel tema uygulama | `.claude/commands/theme.md` |
 | `/new-project [ad]` | Yeni proje sihirbazı | `.claude/commands/new-project.md` |
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
+| `/agentic [konu]` | Agentic UI karar ağacı — tool, kontrol, state, dsl, test, kurulum, denetle | `.claude/commands/agentic.md` |
 | `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli) | `.claude/skills/clone-website/SKILL.md` |
 | `/impeccable <komut>` | Tasarım sözlüğü — 23 komut (`shape`, `critique`, `audit`, `polish`, `typeset`, `layout`, `distill`, `harden`, `animate`…) | global plugin |
 
@@ -309,6 +316,9 @@ Her agent sadece ihtiyacı olan bilgiyi alır (`rules/context-curation.md`):
 /snippet skeleton
 /snippet toast
 /snippet confirm
+/snippet agent-tool
+/snippet action-card
+/snippet agent-approval
 ```
 
 ### Website Klonla
