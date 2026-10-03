@@ -96,6 +96,27 @@ yazdığı metin. Düzgün ve güzel, ama günlük. Okuyan bir kelimede takılı
 - **Sesli oku testi:** cümleyi yüksek sesle okuduğunda bir insan böyle
   konuşmuyorsa yeniden yaz.
 
+### Yapay Zekânın Türkçede Sık Kullandığı Kelimeler
+
+Bunlar metne "bunu bir model yazmış" hissi verir. Çoğu zaman kelimeyi silmek
+yeter; gerekiyorsa somut bir olguyla değiştir.
+
+| Tür | Ayıkla |
+|---|---|
+| Abartı, övgü | derinlemesine, kapsamlı, son derece, oldukça (her cümlede), muazzam, harika, mükemmel, kusursuz, sorunsuz, eşsiz, benzersiz, etkileyici, dikkat çekici, güçlü (araç için), devrim niteliğinde, oyunun kurallarını değiştiren, hayat kurtarıcı, büyülü |
+| Klişe metafor | yolculuk, … dünyasında, kapı açmak, ışık tutmak, yeni bir boyut, bir adım öteye taşımak, temel taşı, kilit rol, anahtar (sıfat), sınırları zorlamak, köprü kurmak, sihir |
+| Önem kalıpları | önemli bir rol oynar, kritik öneme sahiptir, vazgeçilmezdir, büyük önem taşır, göz ardı edilmemeli |
+| Sunuculuk | bu yazıda … ele alacağız, gelin bakalım, haydi, göz atalım, keşfedelim, inceleyelim, merak etmeyin, endişelenmeyin, unutmayın, peki ama, işte tam bu noktada, sonuç olarak, özetle, kısacası |
+| Dolgu zarf | aslında (gereksizse), tam olarak, elbette, kesinlikle, tabii ki, ilginç bir şekilde, basitçe, kolayca |
+| Kurumsal jargon | optimize etmek (her yerde), potansiyel, deneyim (her yerde), değer katmak, verimlilik artışı, esnek ve ölçeklenebilir, en iyi uygulamalar |
+
+Yapı kokuları da aynı aileden: her paragrafı üçlü sıfatla bitirmek, "X
+değil, Y" kalıbını sık kullanmak, her bölümün sonuna bir ders cümlesi
+koymak, soruyla açılıp hemen cevaplayan paragraf ("Peki neden? Çünkü…").
+
+**Ölçüt:** bir Türk teknoloji editörü bunu bir arkadaşına mesaj atar gibi mi
+yazardı? Değilse yeniden yaz.
+
 ## Yazım
 
 - **Başlıklar Title Case** (`~/.claude/CLAUDE.md` → Metin Yazımı): bağlaçlar
