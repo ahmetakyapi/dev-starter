@@ -246,7 +246,7 @@ tabloyu kaydırır.
 /snippet data-table
 ```
 
-Komut dosyayı okur, projenin yığınını kontrol eder (`next`, `tailwindcss`,
+Komut dosyayı okur, projenin tech stack'ini kontrol eder (`next`, `tailwindcss`,
 `motion`, LazyMotion), uyarlar ve `components/ui/` altına yazar. Elle:
 
 1. `snippets/ui/<ad>.tsx` dosyasını `components/ui/` altına kopyala.

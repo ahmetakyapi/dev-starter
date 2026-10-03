@@ -6,7 +6,7 @@ gününden canlıya çıkışına kadar. Her kuralın yanında bir cümlelik ger
 çoğu zaman hangi projede yaşandığı yazar; gerekçesi olmayan kural, ilk
 zorlukta delinir.
 
-Yığın (Ekim 2026): Next 16 App Router · React 19.2 · Tailwind v4 (`@theme`) ·
+Tech stack (Ekim 2026): Next 16 App Router · React 19.2 · Tailwind v4 (`@theme`) ·
 `motion/react` (LazyMotion) · Drizzle + Neon · next-auth v5 · zod 4 ·
 Vercel. Şablonlar `~/dev-starter/templates/` altında, bu sözleşmeye uyar.
 

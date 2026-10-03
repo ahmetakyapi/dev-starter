@@ -13,7 +13,7 @@
 #   5. Emoji ikon
 #   6. ESLint yapilandirmasi (flat config, `next lint` yok)
 #   7. Isik modu kontrasti — dark: esi olmayan acik metin
-#   8. Yigin uyumu — Tailwind v4, Next 16 proxy.ts, motion/react
+#   8. Tech stack uyumu — Tailwind v4, Next 16 proxy.ts, motion/react
 #
 # Cikis kodu: bulgu varsa 1, temizse 0
 
@@ -135,8 +135,8 @@ else
   echo "     ℹ️  tema sistemi saptanmadi, atlandi"
 fi
 
-# ─── 8. Yigin uyumu ──────────────────────────────────────────────────────────
-section "Yigin uyumu (Tailwind v4, Next 16, motion)"
+# ─── 8. Tech stack uyumu ──────────────────────────────────────────────────────
+section "Tech stack uyumu (Tailwind v4, Next 16, motion)"
 if [ -f "$TARGET/package.json" ] && grep -q '"tailwindcss"' "$TARGET/package.json"; then
   # Tailwind v4: `@import "tailwindcss"` + @tailwindcss/postcss. v3'un
   # `@tailwind` direktifi v4'te hicbir utility uretmez — build yine yesildir.

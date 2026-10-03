@@ -312,7 +312,7 @@ okundu ve çıkarılabilir desenler `knowledge/patterns.md → Agentic UI` ile
 POC için hazır; karar hâlâ açık.
 
 **Karar verilirse güncellenecek:** bu bölüm + `rules/agentic-ui.md`nin başındaki
-"benimsenmedi" notu + `CLAUDE.md` teknoloji yığını.
+"benimsenmedi" notu + `CLAUDE.md` tech stack.
 
 **Ne zaman değişir:** Yukarıdaki 1. soru bir POC ile ölçüldüğünde.
 

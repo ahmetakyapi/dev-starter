@@ -14,7 +14,7 @@ dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareke
 
 1. `ls ~/dev-starter/snippets/ ~/dev-starter/snippets/ui/` ile dosyayi bul ve tamamini oku (`.tsx`, `.ts`;
    `rolling-number` yaninda `.module.css` de var).
-2. Projenin yiginini kontrol et:
+2. Projenin tech stack'ini kontrol et:
    ```bash
    grep -E '"(next|react|tailwindcss|motion|framer-motion)"' package.json
    grep -rn "LazyMotion" app components 2>/dev/null | head -3

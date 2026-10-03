@@ -27,7 +27,7 @@ npm run db:studio
 `npm test`, `npm run build`. Görsel değişiklik ayrıca tarayıcıda iki temada
 gözle kontrol edilir.
 
-## Yığın
+## Tech Stack
 
 Next 16 (App Router, Turbopack) · React 19.2 · TypeScript strict ·
 Tailwind 4 · Motion 13 (`motion/react`) · Drizzle + Neon HTTP ·

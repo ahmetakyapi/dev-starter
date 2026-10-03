@@ -13,7 +13,7 @@ Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` alt ajanini oner.
 
 1. **Token** (`~/dev-starter/guides/02-design-tokens.md`, `rules/design-tokens.md`)
    - Hardcoded hex, hazir palet sinifi (`bg-white`, `text-gray-*`) var mi?
-   - `dark:` varyanti var mi? (yeni yiginda olmamali; tema token'la doner)
+   - `dark:` varyanti var mi? (yeni tech stack'te olmamali; tema token'la doner)
    - Ozel punto sinifi `cn()` icinde birlesiyorsa `extendTailwindMerge` kaydi var mi?
    - Element varsayilanlari `@layer base` icinde mi (katmansiz kural utility'yi ezer)?
 

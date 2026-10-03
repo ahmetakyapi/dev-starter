@@ -12,7 +12,7 @@ Ekosistem referansı: `~/dev-starter/`
 
 ---
 
-## Temel Teknoloji Yığını
+## Temel Tech Stack
 
 Proje konfigürasyonu aksini belirtmediği sürece:
 
@@ -259,7 +259,7 @@ korunur; dial'lar sitenin kendi okumasından çıkarılır. Skill'i greenfield g
 
 **Bilinen çakışmalar**
 - Skill'ler GSAP ya da `framer-motion` önerebilir; ekosistem `motion/react`
-  (LazyMotion + `m.*`) ve CSS kullanır. Öneriyi bu yığına çevir.
+  (LazyMotion + `m.*`) ve CSS kullanır. Öneriyi bu tech stack'e çevir.
 - `high-end-visual-design` kendi font/gölge setini getirir; tema dosyası olan
   projelerde (Mimio, Açılış Zili) çağırma.
 - Skill'ler `lucide-react`'i önermez; ekosistem kuralı `lucide-react` der.

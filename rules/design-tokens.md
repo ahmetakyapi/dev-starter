@@ -2,7 +2,7 @@
 
 **Kural**: Hiçbir bileşende hardcoded görsel değer kullanılmaz. Tüm renkler, tipografi, spacing ve efektler semantic token'lar üzerinden gelmelidir.
 
-> **Yeni yığın (2026-10-03):** Tailwind v4, config dosyası yok. Token'lar iki
+> **Yeni tech stack (2026-10-03):** Tailwind v4, config dosyası yok. Token'lar iki
 > katman: ham rol değişkenleri `:root[data-theme]` içinde, köprü `@theme inline`.
 > Rol adları: `bg-page`, `bg-surface`, `text-strong`, `text-body`, `text-muted`,
 > `border-line`, `bg-primary`, `text-on-primary`, `bg-primary-wash`, `text-primary-ink`.
@@ -244,7 +244,7 @@ grep -rn --include="*.tsx" --include="*.ts" --include="*.css" \
   -E '#[0-9a-fA-F]{3,8}|bg-white|bg-black|text-white|text-black|text-gray-|bg-gray-|border-gray-' \
   src/ --exclude-dir=node_modules
 
-# 2. dark: varyantı ve framer-motion (yeni yığında olmamalı)
+# 2. dark: varyantı ve framer-motion (yeni tech stack'te olmamalı)
 grep -rn --include="*.tsx" -E 'dark:|from .framer-motion' app components
 
 # 3. Ekosistem geneli

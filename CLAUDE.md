@@ -180,7 +180,7 @@ bash scripts/health-check.sh   # veya: npm run health
 13 kategori, 76 kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
 testiyle), snippet'ler, şablonlar, knowledge base, paket tutarlılığı, token
 ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade, palet dışı renk),
-yığın uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion).
+tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion).
 
 Agentic snippet ve şablonların **derlenip test edildiğini** kanıtlamak ayrı
 bir komuttur (ağ + `npm install` gerektirir, bu yüzden opt-in):
@@ -222,7 +222,7 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 | `/new-project [ad]` | Şablon + yer tutucular + palet/tema + belgeler + doğrulama | `.claude/commands/new-project.md` |
 | `/theme [palet\|proje]` | Palet ya da referans tema uygula (Tailwind v4) | `.claude/commands/theme.md` |
 | `/snippet [tip]` | Hazır parçayı projeye uyarla | `.claude/commands/snippet.md` |
-| `/check` | Sağlık: build, tip, lint, test, yığın uyumu, token, güvenlik | `.claude/commands/check.md` |
+| `/check` | Sağlık: build, tip, lint, test, tech stack uyumu, token, güvenlik | `.claude/commands/check.md` |
 | `/review-ui` | UI incelemesi: token, kimlik, iki tema, düzen, a11y, hareket | `.claude/commands/review-ui.md` |
 | `/deploy` | Vercel deployment checklist | `.claude/commands/deploy.md` |
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |

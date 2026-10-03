@@ -182,9 +182,9 @@ hale getirir: **tool'lar doğruysa sorun prompt'tadır.**
 
 ---
 
-## Doğrulanmış Yığın
+## Doğrulanmış Tech Stack
 
-Bu ekosistemde agentic bir özellik yazılırken varsayılan yığın:
+Bu ekosistemde agentic bir özellik yazılırken varsayılan tech stack:
 
 | Katman | Seçim | Not |
 |--------|-------|-----|

@@ -25,7 +25,7 @@ npm test            # node --test + tsx, tests/*.test.ts
 `npm test`, `npm run build`. Görsel değişiklik ayrıca tarayıcıda 390 ve 1280
 genişlikte, iki temada ve "hareketi azalt" açıkken gözle kontrol edilir.
 
-## Yığın
+## Tech Stack
 
 Next 16 (App Router, Turbopack) · React 19.2 · TypeScript strict ·
 Tailwind 4 · Motion 13 (`motion/react`) · React Three Fiber 9 + three

@@ -4,7 +4,7 @@
 > (Next 14, indigo/emerald, glass, next-themes) anlatıyor ve tarihçe olarak
 > duruyor.** Güncel durumun özeti:
 >
-> - **Yığın:** Next 16.3, React 19.2, Tailwind v4 (`@theme inline`, iki katmanlı
+> - **Tech Stack:** Next 16.3, React 19.2, Tailwind v4 (`@theme inline`, iki katmanlı
 >   token), ESLint 9 flat. Hareket CSS (scroll-driven `view()`) ve View
 >   Transitions; `motion` paketi kurulu ama ana sayfada kullanılmıyor.
 > - **Kimlik:** `signature` palet (Açılış Zili mavisi), varsayılan tema KOYU

@@ -8,7 +8,7 @@
 //   node scripts/build-readme-assets.mjs --check  # farklıysa çık(1)
 //
 // Node 24 TypeScript'i tip silerek doğrudan yükler; ek araç gerekmez.
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { palettes, roles, motion } from '../packages/@ahmet/theme/tokens.ts'
@@ -208,11 +208,55 @@ ${bars}
 `
 }
 
+// ── Sayaç şeridi ───────────────────────────────────────────────────────
+// Sayılar DEPODAN sayılır: README'de elle yazılmış sayı bayatlıyordu ve
+// GitHub tablo genişliğini uygulamadığı için iki kelimelik etiketler
+// ("Kayıtlı Ajan") satıra kırılıp rakamları aynı hizadan çıkarıyordu
+// (3 Ekim 2026). SVG'de hizayı biz kuruyoruz; rakamlar tek taban çizgisinde.
+async function countRepo() {
+  const list = async (dir, re) => (await readdir(join(ROOT, dir))).filter((f) => re.test(f)).length
+  const mistakes = (await readFile(join(ROOT, 'knowledge/mistakes.md'), 'utf8')).match(/^### \d+\./gm)?.length ?? 0
+  return [
+    { value: await list('guides', /^\d{2}-.*\.md$/), label: 'Rehber' },
+    { value: await list('snippets/ui', /\.tsx$/), label: 'Bileşen' },
+    { value: await list('.claude/agents', /\.md$/), label: 'Kayıtlı Ajan' },
+    { value: await list('.claude/commands', /\.md$/), label: 'Komut' },
+    { value: mistakes, label: 'Kayıtlı Hata' },
+  ]
+}
+
+function statsBoard(theme, stats) {
+  const r = roles[theme]
+  const p = palettes.signature[theme]
+  const W = 1280
+  const H = 168
+  const GAP = 16
+  const CARD_W = (W - GAP * (stats.length - 1)) / stats.length
+  const cards = stats
+    .map(({ value, label }, i) => {
+      const x = i * (CARD_W + GAP)
+      return `<g transform="translate(${x.toFixed(1)} 0)">
+  <rect x="0.5" y="0.5" width="${(CARD_W - 1).toFixed(1)}" height="${H - 1}" rx="20" fill="${r.pageBg}"/>
+  <rect x="0.5" y="0.5" width="${(CARD_W - 1).toFixed(1)}" height="${H - 1}" rx="20" ${paint(r.surface)} ${stroke(r.line)}/>
+  <text x="28" y="92" font-family="${FONT}" font-size="64" font-weight="800" letter-spacing="-2" fill="url(#stat-ink)">${value}</text>
+  <text x="30" y="132" font-family="${FONT}" font-size="18" font-weight="600" fill="${r.textBody}">${esc(label)}</text>
+</g>`
+    })
+    .join('\n')
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(stats.map((s) => `${s.value} ${s.label}`).join(', '))}">
+<defs>${gradient('stat-ink', p.displayGradientTight)}</defs>
+${cards}
+</svg>
+`
+}
+
+const stats = await countRepo()
 const files = {}
 for (const t of THEMES) {
   files[`banner-${t}.svg`] = banner(t)
   files[`palettes-${t}.svg`] = paletteBoard(t)
   files[`motion-${t}.svg`] = motionBoard(t)
+  files[`stats-${t}.svg`] = statsBoard(t, stats)
 }
 
 let stale = 0

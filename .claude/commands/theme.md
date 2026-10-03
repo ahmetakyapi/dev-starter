@@ -17,7 +17,7 @@ ls tailwind.config.* 2>/dev/null && echo "v3 — config dosyasi var" || echo "v4
 grep -E '"(tailwindcss|next-themes|motion|framer-motion)"' package.json
 ```
 
-- **v4 (yeni yigin):** `tailwind.config.ts` YOK. Token'lar `app/globals.css`te
+- **v4 (yeni tech stack):** `tailwind.config.ts` YOK. Token'lar `app/globals.css`te
   iki katman: ham rol degiskenleri `:root[data-theme]` (+ `[data-palette]`),
   kopru `@theme inline`. Bu komut yalnizca bu katmanlari duzenler.
 - **v3 (eski proje):** config ve `darkMode: 'class'` vardir. Paleti degistirmek
@@ -44,7 +44,7 @@ katman 1'e isle.
 |------|------|
 | `acilis-zili` | `signature` paletinin kaynagi; tek grotesk aile, ton farkiyla derinlik, glass/glow yok, varsayilan acik |
 | `mimio` | Mavi → cyan imza degradesi, uc katmanli zemin (aurora → grain → cam), varsayilan acik |
-| `ahmetakyapi` | Kisisel site; indigo/cyan/emerald, next-themes (eski yigin) |
+| `ahmetakyapi` | Kisisel site; indigo/cyan/emerald, next-themes (eski tech stack) |
 | `keskealsaydim` | Finans paneli, emerald + cyan, shadcn HSL (Vite + React) |
 | `ramazan-vakitleri` | Yalniz koyu, mor + pembe + mavi, sistem fontu |
 | `digynotes` | ARSIV — proje diskte yok, dogrulanamaz |

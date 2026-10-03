@@ -17,7 +17,7 @@
 #  10. CI/CD workflow
 #  11. Temel dosyalar
 #  12. Tasarim denetimi (degrade, palet disi renk)
-#  13. Yigin uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion)
+#  13. Tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion)
 
 set -euo pipefail
 
@@ -368,8 +368,8 @@ else
   pass "Palet disi renk yok"
 fi
 
-# ─── 13. Yigin Uyumu ─────────────────────────────────────────────────────────
-header "Yigin Uyumu (motion)"
+# ─── 13. Tech Stack Uyumu ─────────────────────────────────────────────────────
+header "Tech Stack Uyumu (motion)"
 
 # framer-motion -> motion: ekosistem `motion/react` import eder. Eski paket
 # ayni API'yi tasir ama ayri bir kopya kurar; LazyMotion baglami iki kopya

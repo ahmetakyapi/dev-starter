@@ -7,11 +7,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [3.0.0] — 2026-10-03
 
-Ekosistem, canlı projelerin bir yıldır kullandığı yığına yetişti. 2.x
+Ekosistem, canlı projelerin bir yıldır kullandığı tech stack'e yetişti. 2.x
 şablonları Next 14 + Tailwind v3 + Framer Motion + next-themes üzerindeydi;
 Açılış Zili, ElevenForge ve Mimio ise çoktan Next 16, Tailwind v4 ve kendi
 tema sistemlerine geçmişti. Her yeni proje ilk gün bir yükseltmeyle
-başlıyordu. Bu sürümle şablonlar, paketler ve belgeler aynı yığını anlatıyor.
+başlıyordu. Bu sürümle şablonlar, paketler ve belgeler aynı tech stack'i anlatıyor.
 
 Aşağıdaki "Yayınlanmamış" başlıklı Ağustos 2026 kayıtları da bu sürümle yayınlanır.
 
@@ -79,7 +79,7 @@ Aşağıdaki "Yayınlanmamış" başlıklı Ağustos 2026 kayıtları da bu sür
 - **`knowledge/patterns.md`** — tema (çerez + `data-theme`), `proxy.ts`,
   motion, "Projelerden Toplanan Desenler" bölümü.
 - **Sözleşme testleri 55** (palet kontrastı WCAG formülüyle); health-check'e
-  yığın uyumu kategorisi (v4, flat config, proxy, motion): 13 kategori, 76 kontrol.
+  tech stack uyumu kategorisi (v4, flat config, proxy, motion): 13 kategori, 76 kontrol.
 
 ### Değişenler (Changed)
 
@@ -92,7 +92,7 @@ Aşağıdaki "Yayınlanmamış" başlıklı Ağustos 2026 kayıtları da bu sür
   seçimi, `agentic-chat` overlay, sonunda install + build + typecheck + lint +
   test), `/theme` (v4 `@theme`, palet), `/snippet`, `/check` (v4 / motion /
   proxy / flat config maddeleri; `darkMode: 'class'` maddesi kaldırıldı),
-  `/review-ui`, `/deploy`, `/release`, `/agentic` yeni yığına göre yazıldı.
+  `/review-ui`, `/deploy`, `/release`, `/agentic` yeni tech stack'e göre yazıldı.
 - **Ajan ve kural belgeleri** — `uiux-agent` (impeccable bölümü → skill'ler
   ve rehberler; "her kartta glass" kalktı), `frontend-agent` (Next 16, v4
   iki katman), `gate-agent` (flat config, build → typecheck sırası),
@@ -100,11 +100,11 @@ Aşağıdaki "Yayınlanmamış" başlıklı Ağustos 2026 kayıtları da bu sür
   `rules/design-tokens.md` (rol token adları, `dark:` yasağı, palet ailesi),
   `phases/planning.md`.
 - **mistakes.md** — #1, #3, #10, #15–17, #28, #29, #36, #47, #49, #51, #53'e
-  yeni yığın notları; #49–57 sırası düzeltildi.
+  yeni tech stack notları; #49–57 sırası düzeltildi.
 - **Belgelerdeki hook yeri düzeltildi** — hook'lar `.claude/settings.json`da
   (paylaşılan), `settings.local.json`da değil. CONTRIBUTING'deki `TOOL_INPUT`
   önerisi `hooks/lib/hook-input.sh` (stdin) ile değiştirildi.
-- **Global kurallar (`machine/CLAUDE.md`)** — yeni yığın, kimlik + palet,
+- **Global kurallar (`machine/CLAUDE.md`)** — yeni tech stack, kimlik + palet,
   çeviri kokan ifade kuralı; kaldırılan skill'lere (gpt-taste ve diğerleri)
   ve impeccable'a atıflar temizlendi.
 - **taste-skill** — yalnızca kullanılan yedi skill kuruluyor; `gpt-taste`,

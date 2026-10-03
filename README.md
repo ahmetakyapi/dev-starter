@@ -14,20 +14,16 @@
 </p>
 
 **dev-starter**, bütün projelerimin başladığı yer ve ortak hafızası. Bir fikri
-piyasa taramasından geçirip plana çeviren ajanlar, güncel yığınla (Next 16,
+piyasa taramasından geçirip plana çeviren ajanlar, güncel tech stack ile (Next 16,
 Tailwind v4, motion) hazır şablonlar, her projede aynı kalan bir marka kimliği,
 kopyalanabilir bileşenler ve ilk günden canlıya kadar sırayla izlenen rehberler
 burada. Yaşanmış her hata, karar ve desen kaydediliyor; komutlar ve ajanlar her
 makinede tek kaynaktan kuruluyor.
 
-<table>
-<tr>
-<td width="25%" align="center"><h3>11</h3>Rehber</td>
-<td width="25%" align="center"><h3>5</h3>Kayıtlı Ajan</td>
-<td width="25%" align="center"><h3>10</h3>Komut</td>
-<td width="25%" align="center"><h3>93</h3>Kayıtlı Hata</td>
-</tr>
-</table>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/stats-dark.svg">
+  <img alt="dev-starter sayıları: rehber, bileşen, kayıtlı ajan, komut, kayıtlı hata" src=".github/readme/stats-light.svg" width="100%">
+</picture>
 
 ---
 
@@ -274,7 +270,7 @@ Her push'ta CI şunları koşar; biri kırmızıysa birleştirme yok.
 | `verify:readme` | Bu sayfadaki görseller token'larla güncel mi |
 | `verify:agentic` | Agentic snippet'ler sabitlenmiş sürümlerle derleniyor mu |
 | `test-hooks.sh` | Commit kancalarının davranışı |
-| `health-check.sh` | Şablonlar yeni yığında mı (Tailwind v4, flat ESLint, `proxy.ts`, `motion`) |
+| `health-check.sh` | Şablonlar yeni tech stack'te mi (Tailwind v4, flat ESLint, `proxy.ts`, `motion`) |
 
 ---
 

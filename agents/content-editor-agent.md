@@ -60,6 +60,42 @@ Ders kitabı gibi değil, basın bülteni gibi hiç değil.
 Teknik terim Türkçesi yerleşmemişse İngilizce kalır ve ilk geçişte kısaca
 açıklanır (`hydration`, `layout shift`). Zorlama çeviri yapılmaz.
 
+## Gündelik, Akıcı Türkçe
+
+Hedef: iyi yazan bir Türk geliştiricinin bir arkadaşına anlatır gibi
+yazdığı metin. Düzgün ve güzel, ama günlük. Okuyan bir kelimede takılıp
+"bu ne demek" dememeli.
+
+- **Yaygın kelime, az bilinenden önce gelir.** Resmî-ağır ya da eskimiş
+  kelimeler gündelik karşılığına döner:
+
+  | ❌ | ✅ |
+  |---|---|
+  | zira, nitekim, keza, binaenaleyh | çünkü, zaten, aynı şekilde, bu yüzden |
+  | söz konusu, ilgili (gereksizse) | bu, o; ya da cümleden çıkar |
+  | gerçekleştirmek, icra etmek | yapmak |
+  | sağlamak (her cümlede) | vermek, getirmek, yapmak |
+  | -mektedir / -maktadır zinciri | -iyor / -ır |
+  | itibarıyla (tarih dışında) | göre, -den beri |
+  | hususunda, noktasında, anlamında (dolgu) | sil ya da "konusunda" |
+  | mütemadiyen, hasebiyle, mezkûr | sürekli, yüzünden, bu |
+
+- **Kısa cümle.** Bir cümle bir fikir taşır. Üç virgülü geçen cümleyi böl.
+- **Konuşma dilinin doğal bağlaçları:** "ama", "yani", "çünkü", "bu yüzden",
+  "sonra". "Ancak", "dolayısıyla", "bu bağlamda" yalnızca gerçekten
+  gerektiğinde.
+- **Teknik kelimede Türk geliştiricinin gerçekten söylediği hâl:** "deploy
+  ettim", "commit attım", "cache'e düştü", "build kırıldı" doğal; "dağıtım
+  yaptım", "önbelleğe düştü" de doğal. Zorlama çeviri ("dağıtıklaştırmak",
+  "derleme zamanı denetimi") ya da zorlama İngilizce ("pipeline'ı refactor
+  ettik ve shipledik") yok. İlk geçişte gerekiyorsa tek cümlelik açıklama.
+- **Projeye özgü jargon gövdeye taşınmaz.** Kod yorumlarında ve arayüzde
+  kullanılan iç terimler ("künye", "mürekkep", "yüzey", "tavan", "ton farkı")
+  yazıda okura açıklanmadan geçmez; mümkünse gündelik karşılığı yazılır
+  ("tarih ve kaynak satırı", "en büyük değer").
+- **Sesli oku testi:** cümleyi yüksek sesle okuduğunda bir insan böyle
+  konuşmuyorsa yeniden yaz.
+
 ## Yazım
 
 - **Başlıklar Title Case** (`~/.claude/CLAUDE.md` → Metin Yazımı): bağlaçlar

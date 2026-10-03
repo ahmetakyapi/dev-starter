@@ -46,7 +46,7 @@ Konumlandırma: … · Kazanç: … · Risk: … · Kalbi: …
 |---|---|---|---|
 | | | | |
 
-Çekirdek yığından sapma: [yok / gerekçe]
+Çekirdek tech stack'ten sapma: [yok / gerekçe]
 
 ## MVP
 

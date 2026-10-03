@@ -80,7 +80,7 @@ satırları seç:
 | İhtiyaç | Seçim | Neden | Alternatif / ne zaman değişir |
 |---|---|---|---|
 
-- Çekirdek yığın (Next 16, TW4, motion, Neon, Drizzle) tartışılmaz; yalnızca
+- Çekirdek tech stack (Next 16, TW4, motion, Neon, Drizzle) tartışılmaz; yalnızca
   saparsan gerekçe yaz.
 - "Dene" halkasındaki bir seçimi öneriyorsan bunu açıkça söyle ve riskini yaz.
 - Fiyat ya da kota kritikse güncel değeri web'den teyit et.
@@ -118,7 +118,7 @@ PRODUCT taslağını doldur, kullanıcıya özetle ve **onay al**. Onaydan sonra
    - Kullanıcı değeri: en çok kullanılan akış hangisi, nerede sürtünme var?
    - Büyüme: SEO, paylaşılabilirlik, geri gelme sebebi var mı?
    - Kalite: performans, erişilebilirlik, hata durumları, test.
-   - Teknik borç: eski yığın (Next 14 / TW3 / framer-motion), tekrar eden kod,
+   - Teknik borç: eski tech stack (Next 14 / TW3 / framer-motion), tekrar eden kod,
      belgesiz kararlar.
 3. **Piyasa:** aynı alandaki 3-4 ürünün son 6 ayda eklediği özellikler.
 4. **Öneri:** "Sıradaki 5 iş" tablosu: iş, etki (1-5), çaba (S/M/L), neden şimdi.

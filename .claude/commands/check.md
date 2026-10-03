@@ -1,5 +1,5 @@
 ---
-description: Proje sağlık kontrolü: build, typecheck, lint, test, token, güvenlik ve yeni yığın (Next 16, Tailwind v4, motion) uyumu
+description: Proje sağlık kontrolü: build, typecheck, lint, test, token, güvenlik ve yeni tech stack (Next 16, Tailwind v4, motion) uyumu
 argument-hint: "[dizin]"
 ---
 
@@ -7,14 +7,14 @@ Projenin saglik durumunu kontrol et (`$ARGUMENTS` verilmisse o dizinde). Her
 adim bir KOMUT calistirir; "bakildi, iyi gorunuyor" sonuc degildir.
 Kurallarin kaynagi: `~/dev-starter/guides/08-quality-and-ship.md`.
 
-## 0. Yigini tespit et
+## 0. Tech Stack'i Tespit Et
 
 ```bash
 grep -E '"(next|react|tailwindcss|motion|framer-motion|next-themes|eslint)"' package.json
 ls proxy.ts middleware.ts eslint.config.* .eslintrc* tailwind.config.* postcss.config.* 2>/dev/null
 ```
 
-Asagidaki "yeni yigin" maddeleri yalnizca Next 16 / Tailwind v4 projelerinde
+Asagidaki "yeni tech stack" maddeleri yalnizca Next 16 / Tailwind v4 projelerinde
 bulgu sayilir; eski projede bilgi olarak raporlanir.
 
 ## 1. Komutlar (sirasi onemli)
@@ -24,7 +24,7 @@ bulgu sayilir; eski projede bilgi olarak raporlanir.
 3. `npm run lint` — config dosyasinin VAR oldugunu da dogrula
 4. `npm test` (varsa)
 
-## 2. Yeni yigin uyumu
+## 2. Yeni Tech Stack Uyumu
 
 - **Next 16:** `middleware.ts` yerine `proxy.ts` (`export function proxy`) var mi?
   Senkron `params` / `cookies()` kullanimi var mi? Segmentte `loading.tsx` var mi
@@ -68,7 +68,7 @@ Build:        ✅ | ❌
 TypeScript:   ✅ | ❌
 Lint:         ✅ | ❌ | ⏭️ (yoksa)
 Tests:        ✅ | ❌ | ⏭️ (yoksa)
-Yigin uyumu:  ✅ | ⚠️ [N madde] | ⏭️ (eski yigin)
+Tech stack:   ✅ | ⚠️ [N madde] | ⏭️ (eski tech stack)
 Design Token: ✅ | ⚠️ [N ihlal]
 Security:     ✅ | ❌
 ━━━━━━━━━━━━━━━━━━━━━━━
