@@ -82,7 +82,7 @@ Tek commit = tek mantıksal değişiklik.
 ```
 feat(auth): add login page with email/password form
 feat(auth): add server action for credential validation
-feat(auth): add protected route middleware
+feat(auth): add protected route proxy
 ```
 
 **Yanlış:**

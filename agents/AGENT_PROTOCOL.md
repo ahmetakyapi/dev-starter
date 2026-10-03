@@ -18,6 +18,9 @@ bkz. `.claude/agents/`). Ana oturum ilgili dosyayı okur ve o rolü üstlenir.
 | Agentic UI | `agentic-ui-agent.md` | LLM tool/state/UI kararları — FE ile BE arasındaki boşluk | **AG** |
 | Gate | `gate-agent.md` | Kalite kontrolü, auto-fix, enforcement | **GATE** |
 | Deploy | `deploy-agent.md` | Vercel, CI/CD, production | **DP** |
+| Strategist | `strategist-agent.md` | Fikirden plana: pazar, yön, palet, MVP; yol haritası | **ST** |
+| Design Reviewer | `design-reviewer-agent.md` | Kurulmuş arayüzü ekrandan ölçer, puanlar | **DR** |
+| Content Editor | `content-editor-agent.md` | Türkçe metin editörlüğü | **CE** |
 
 ---
 
@@ -122,7 +125,7 @@ göster. Çalıştırmadıysan "yaptım" deme — "yapmadım, şu sebeple" de.
 | "Tipler doğru" | `tsc --noEmit`, exit kodunu göster |
 | "Token'a çevirdim, görünüm aynı" | Üretilen CSS'ten eski/yeni değeri karşılaştır |
 | "Paket yayına hazır" | `npm pack --dry-run` + temiz dizinde `require()` |
-| "Detector temiz" | Exit kodunu göster — çıktı stderr'e gidiyor olabilir |
+| "Tarama temiz" | Exit kodunu göster — çıktı stderr'e gidiyor olabilir |
 | "Lint geçiyor" | Config dosyasının **var olduğunu** da doğrula |
 
 ### Bu oturumda bu kuralın yakaladıkları
@@ -154,8 +157,9 @@ script'in gerçekten yakalayıp yakalamadığı bilinmezdi.
 
 ### Araçlar yanılır — detector'ın son sözü yoktur
 
-Impeccable'ın kendi doktrini *"the brief wins"* der. Bir bulgu her zaman hata
-değildir:
+Otomatik tarayıcılar (eskiden impeccable detector'ı, bugün `hooks/quality-scan.sh`
+ve `scripts/audit-project.sh`) yalnızca kalıp görür; brief kazanır. Bir bulgu
+her zaman hata değildir:
 
 - **Yanlış pozitif**: `gray-on-color` alfa kanalını hesaplamıyor —
   `bg-indigo-500/15` neredeyse sayfa zemini, ama saturated sanılıyor
@@ -223,9 +227,11 @@ Kuralların kağıt üstünde kalmaması için bash hook'ları:
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
 | `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Gate PASSED yoksa commit bloklar |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded değer, debug kodu, secret + impeccable slop tarar |
+| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded değer, debug kodu, secret, `@ts-ignore`, kilit dosyası, agentic cast taraması |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP güncelleme hatırlatıcısı |
-| impeccable (plugin) | PostToolUse:Edit/Write, Stop | UI dosyası düzenlendikçe tasarım detector'ını çalıştırır |
+
+Kayıt yeri: `.claude/settings.json` (paylaşılan, versiyonlanır). impeccable
+3.0.0'da kaldırıldı.
 
 Hook'un çalıştığını varsayma — `bash scripts/health-check.sh` ile doğrula.
 
@@ -264,8 +270,8 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 
 | Repo | Tema Dosyası | Stack / Not |
 |------|-------------|-------------|
-| ahmetakyapi.com | `themes/ahmetakyapi.md` | Next.js, Three.js, Framer Motion — **ekosistemin görsel referansı** |
-| Açılış Zili | `themes/acilis-zili.md` | Next 16, Tailwind v4, Neon — **en disiplinli görsel sistem**, örnek alınmalı |
+| ahmetakyapi.com | `themes/ahmetakyapi.md` | Next 14, Three.js, next-themes — kişisel site; eski indigo/emerald paleti |
+| Açılış Zili | `themes/acilis-zili.md` | Next 16, Tailwind v4, motion, Neon — **ekosistemin referansı**: `signature` paleti ve token mimarisi buradan |
 | Mimio | `themes/mimio.md` | Next.js, custom `data-theme`, varsayılan açık |
 | Keskealsaydım | `themes/keskealsaydim.md` | Go backend + `frontend/` içinde Next.js (monorepo) |
 | Ramazan Vakitleri | `themes/ramazan-vakitleri.md` | React + Vite, dark-only, mor–pembe–mavi (token'lı) |
@@ -291,7 +297,9 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 | `/release [patch\|minor\|major]` | npm paketi yayınla | DP |
 | `/new-project [ad]` | Yeni proje sihirbazı | BA |
 | `/clone-website <url>` | Pixel-perfect site klonlama | UI |
-| `/impeccable <komut>` | Tasarım sözlüğü — 23 komut | UI, FE, GATE |
+| `/kickoff [fikir]` | Fikirden plana: pazar, yön, palet, MVP (strategist) | BA |
+| `/roadmap` | Var olan projeye sıradaki işler (strategist) | BA |
+| `/agentic [konu]` | Agentic UI karar ağacı | FE, BE |
 
 ### Doğrulama Komutları
 
@@ -299,7 +307,6 @@ Kontrol listesi okumak yerine bunları **çalıştır**:
 
 | Komut | Ne doğrular | Kim |
 |-------|-------------|-----|
-| `npm run design:detect` | 59 tasarım anti-pattern kuralı | UI, GATE |
 | `bash scripts/audit-project.sh <yol>` | Bir projeyi 8 standarda karşı denetler | UI, GATE, BA |
 | `npm run verify:exports` | Paket manifest'inin vaat ettiği yollar gerçekten var mı | DP, GATE |
 | `bash scripts/health-check.sh` | Ekosistem bütünlüğü — 12 kategori | BA, GATE |
@@ -323,15 +330,19 @@ Kontrol listesi okumak yerine bunları **çalıştır**:
 | ahmetakyapi.com · onepiece-hub · derinay · harfiyen · simayahi · dungeon-mates | 14.2 | 18 | v3.4 |
 | ramazan-vakitleri | *(Vite)* | 18.2 | *(saf CSS)* |
 
-Çoğunluk hâlâ **Next 14 + React 18 + Tailwind v3**. Yeni proje şablonları da
-öyle. Next 16 yalnızca iki projede.
+Çoğunluk hâlâ **Next 14 + React 18 + Tailwind v3**. **Yeni proje şablonları
+3.0.0'dan (2026-10-03) beri Next 16 + React 19.2 + Tailwind v4 + `motion`**:
+yeni kod bu yığına göre yazılır, eski projeler dokunuldukça yükseltilir.
+Yeni yığının kuralları: `guides/` (özellikle `06-nextjs-16.md`).
 
 ### Sürüme göre farklar
 
 **Next 15+** — `params` / `searchParams` `Promise` döner, `await` şart.
 `after()` API'si response sonrası iş için. Next 14'te ikisi de yok.
 
-**Next 16** — `PageProps` ve `RouteContext` tipleri `.next/types` altına
+**Next 16** — `middleware.ts` yerine `proxy.ts` (`export function proxy`, yalnız
+Node); `next lint` yok, ESLint CLI + flat config; Turbopack varsayılan.
+`PageProps` ve `RouteContext` tipleri `.next/types` altına
 **build sırasında** üretiliyor ve gitignore'da. Temiz bir kopyada `npm run
 typecheck` öncesi **`npm run build` çalıştır**, yoksa onlarca sahte
 "Cannot find name 'PageProps'" hatası alırsın (`acilis-zili` CLAUDE.md).
@@ -340,8 +351,12 @@ typecheck` öncesi **`npm run build` çalıştır**, yoksa onlarca sahte
 `useFormStatus`. `ref` artık prop, `forwardRef` gereksiz. React 18
 projelerinde bunların hiçbiri yok.
 
-**Tailwind v4** — `tailwind.config.ts` **yok**; token'lar CSS'te `@theme {}`
-bloğunda. `@import "tailwindcss"`. PostCSS plugin'i değil.
+**Tailwind v4** — `tailwind.config.ts` **yok**; token'lar CSS'te iki katman:
+ham rol değişkenleri `:root[data-theme]`, köprü `@theme inline`. `@import "tailwindcss"`,
+PostCSS eklentisi `@tailwindcss/postcss`. `dark:` kullanılmaz (`guides/02-design-tokens.md`).
+
+**motion** — `motion/react`, kökte `LazyMotion strict` → bileşende `m.*`; `framer-motion`
+yeni projeye kurulmaz (`guides/04-motion.md`).
 **v3'te tam tersi**: config dosyası var, `@tailwind base/components/utilities`
 direktifleri kullanılır ve `postcss.config.js` olmadan utility'ler işlenmez
 (`mistakes.md` #28).

@@ -117,6 +117,11 @@ npx drizzle-kit generate
 npx drizzle-kit migrate
 ```
 
+**Migration deploy'da UYGULANMAZ** — canlıdaki kod migration'dan önce yayına
+inebilir. Yeni özellik var olan tabloya sütun eklemez, kendi tablosunu alır ve
+onu okuyan kod tablo yokken sessizce düşer. `db.ts` tembel (ilk sorguda
+bağlanır). Ayrıntı: `~/dev-starter/guides/07-data-auth-security.md`.
+
 ## API Route Standartları
 
 ### Response Helper
@@ -175,6 +180,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 })
 ```
+
+Credentials sağlayıcısında üç kural (Açılış Zili `auth.ts`):
+1. Hız sınırı `authorize` içinde, bcrypt'ten önce — form action'ındaki sayaç
+   `/api/auth/callback/credentials` çağrılarak atlanır.
+2. Bulunmayan kullanıcıda sahte hash ile `compare` — zamanlama orakülü (#82).
+3. Veritabanı hatası ayrı işaretle fırlatılır, "şifre hatalı" denmez.
+
+Korumalı cron/rutin uçları `checkBearer` ile: üretimde sır yoksa 503 (#83).
+Route koruması Next 16'da `proxy.ts` (çerez varlığı, ucuz ön eleme); gerçek
+yetki her sayfada ve server action'da `auth()` ile.
 
 ## Validasyon (Zod)
 

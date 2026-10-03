@@ -1,36 +1,47 @@
 ---
-description: Hizli bilesen snippet uret — modal, form, drawer, skeleton, toast, confirm, vb.
-argument-hint: "modal | drawer | form | skeleton | toast | confirm | search-bar | animated-number | infinite-scroll | og-image | agent-tool | action-card | agent-approval"
+description: Hazır bileşeni projeye uyarlayarak kopyala: snippets/ui kütüphanesi, reveal, theme-toggle, rolling-number, modal, form, toast ve diğerleri
+argument-hint: "ui/<ad> (data-table, tree-view, dialog, combobox …) | reveal | theme-toggle | rolling-number | modal | toast | form | og-image | agent-tool"
 ---
 
-`$ARGUMENTS` tipinde bir bilesen snippet'i uret.
+`$ARGUMENTS` tipinde bir bilesen snippet'ini mevcut projeye uyarla. Bu komut
+her projeden cagrilabilir; kaynak `~/dev-starter/snippets/`.
 
-Mevcut snippet'ler `snippets/` dizininde:
-- `animated-number` — Sayi animasyonu
-- `infinite-scroll` — Sonsuz kaydirma
-- `og-image` — Open Graph gorsel uretici
-- `search-bar` — Debounced arama kutusu
-- `modal` — Animasyonlu dialog
-- `drawer` — Yandan acilan panel
-- `form` — Server Action uyumlu form
-- `skeleton` — Yukleme placeholder'lari
-- `toast` — Bildirim sistemi
-- `confirm` — Onay dialog'u
-- `agent-tool` — Agent frontend tool'u + widget (AG-UI)
-- `action-card` — Sunucu tool'u karti + Geri Al (AG-UI)
-- `agent-approval` — Geri alinamaz aksiyon onayi / interrupt (AG-UI)
+**Once oku:** `~/dev-starter/guides/05-components.md` § 2 ve bilesen
+kutuphanesi icin `~/dev-starter/guides/10-component-library.md` (`snippets/ui/`:
+dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareket iceriyorsa `~/dev-starter/guides/04-motion.md`.
 
-Istenilen snippet `snippets/` dizininde varsa, o dosyayi oku ve projeye uyarla.
-Yoksa, mevcut snippet'lerin yapisina uygun yeni bir snippet olustur.
+## Adimlar
 
-Kurallar:
-- `'use client'` sadece interaktif bilesenlerde
-- Design token'lar kullan, hardcoded renk YASAK
-- TypeScript interface'leri eksiksiz
-- Framer Motion varyantlari `variants.ts`'ten import et (mumkunse)
-- Dark/light mode parity
-- Erisilebilirlik (aria-label, keyboard navigation)
+1. `ls ~/dev-starter/snippets/ ~/dev-starter/snippets/ui/` ile dosyayi bul ve tamamini oku (`.tsx`, `.ts`;
+   `rolling-number` yaninda `.module.css` de var).
+2. Projenin yiginini kontrol et:
+   ```bash
+   grep -E '"(next|react|tailwindcss|motion|framer-motion)"' package.json
+   grep -rn "LazyMotion" app components 2>/dev/null | head -3
+   ```
+3. Uyarla ve projeye yaz (genellikle `components/ui/` ya da `components/motion/`).
+4. `npm run typecheck && npm run lint` temiz olmadan bitti deme.
+
+## Kurallar
+
+- **Hareket `motion/react`tan.** Kokte `LazyMotion features={domAnimation} strict`
+  varsa bilesende `m.*` (`import * as m from "motion/react-m"`); `motion.*`
+  strict altinda hata verir. `framer-motion` kullanan eski projede import yolunu
+  projeye uydur, yeni paket kurma.
+- `tab-underline` `layout` animasyonu icin kendi `LazyMotion features={domMax}`
+  sarmalayicisini getirir; kokteki `domAnimation`i degistirme.
+- **Token siniflari:** `bg-surface`, `text-strong`, `text-body`, `border-line`,
+  `bg-primary text-on-primary`, `bg-primary-wash text-primary-ink`, `bg-scrim`.
+  Hardcoded renk, hazir palet sinifi (`bg-white`, `text-gray-*`) ve `dark:` yok.
+  Proje farkli rol adlari kullaniyorsa (shadcn `bg-background` gibi) onlara cevir.
+- Sabitler `lib/motion.ts`ten (`EASE`, `DUR`, `SPRING`); yoksa snippet'in
+  icindekini kullan, yeni sihirli sayi ekleme.
+- `'use client'` yalnizca etkilesimli bilesende.
+- Reveal: kahraman/LCP ogesini sarma; reduced-motion'da `initial={false}` yok.
+- Erisilebilirlik: diyaloglarda odak tuzagi + `Esc` + sayacli kaydirma kilidi
+  (`use-scroll-lock`), dokunma hedefi ≥ 44 px, `aria-label` cumle duzeninde.
+- Arayuz metni Turkce Title Case (baslik, dugme), em dash yok.
 
 > `agent-*` ve `action-card` snippet'leri `@copilotkit/react-core@1.69.2` tip
-> tanimlarina karsi `tsc --noEmit` ile dogrulandi. Uyarlarken surum pin'ine
-> dikkat — `knowledge/mistakes.md #70, #71`. Karar icin: `/agentic`
+> tanimlariyla `tsc --noEmit` uzerinden dogrulandi. Uyarlarken surum pin'ine
+> dikkat — `~/dev-starter/knowledge/mistakes.md` #70, #71. Karar icin: `/agentic`

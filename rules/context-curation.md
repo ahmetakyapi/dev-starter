@@ -110,7 +110,7 @@ AGENT_HANDOFF
     - story: docs/stories/STORY-005-dashboard-charts.md
     - architecture: docs/ARCHITECTURE.md#api-endpoints (sadece chart API)
     - patterns: knowledge/patterns.md#recharts
-    - existing: src/components/ui/GlassCard.tsx (pattern referansı)
+    - existing: components/ui/Panel.tsx (pattern referansı)
   NOT_NEEDED:
     - Diğer story dosyaları
     - DB schema detayları

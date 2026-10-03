@@ -15,13 +15,28 @@ dev-starter ekosistemini gelistirmek icin bu rehberi takip edin.
 
 ## Yeni Tema Eklemek
 
-1. `knowledge/themes/[proje-adi].md` dosyasi olusturun
+1. `knowledge/themes/[proje-adi].md` dosyasi olusturun (sablon: `templates/docs/DESIGN.template.md`)
 2. Icerigi doldurun:
    - Renk paleti (primary, secondary, accent, surface, text)
    - Tipografi (font-family, weight'ler, boyutlar)
    - Bilesen stilleri (card, button, input)
    - Ozel kurallar (dark-only, data-theme, vb.)
 3. `agents/AGENT_PROTOCOL.md` → "Ahmet'in Repo'lari" tablosuna ekleyin
+
+---
+
+## Rehber Guncellemek
+
+`guides/` "ne yapilir"i sirayla anlatir; `knowledge/` "neden"i saklar. Bir
+hata kaydi eklediginizde, o hatayi bir sonraki projede hic yasatmayacak adimi
+ilgili rehbere de yazin (kod ornegi + ✅/❌ + bir cumlelik neden + hangi proje).
+
+---
+
+## Global Kurallar
+
+`~/.claude/CLAUDE.md` depodaki `machine/CLAUDE.md`ye symlink'tir; degisikligi
+orada yapin ve commit'leyin.
 
 ---
 
@@ -97,8 +112,12 @@ dev-starter ekosistemini gelistirmek icin bu rehberi takip edin.
    ---
    ```
 3. Icerikte: Ne yaptigini, hangi adimlari izledigini, cikti formatini tanimlayin
-4. `agents/AGENT_PROTOCOL.md` → Skills tablosuna ekleyin
-5. Commit: `feat(skills): add /[skill-adi] command`
+4. **Yollar mutlak**: komutlar `machine/bootstrap.sh` ile `~/.claude/commands/`a
+   symlink'lenir ve her projeden cagrilir. `templates/...` degil
+   `~/dev-starter/templates/...` yazin
+5. `bash machine/bootstrap.sh` ile baglayin
+6. `agents/AGENT_PROTOCOL.md` → Skills tablosuna ekleyin
+7. Commit: `feat(skills): add /[skill-adi] command`
 
 ---
 
@@ -109,8 +128,10 @@ dev-starter ekosistemini gelistirmek icin bu rehberi takip edin.
    - Dosya basinda JSDoc comment (aciklama + kullanim ornegi)
    - TypeScript interface'leri
    - `'use client'` sadece interaktif ise
-   - Design token'lar kullanin (hardcoded renk yok)
-   - Dark/light mode destegi
+   - Rol token siniflari (`bg-surface`, `text-strong`...); hardcoded renk ve `dark:` yok
+   - Hareket `motion/react` + `m.*` (kokte LazyMotion strict varsayilir)
+   - Iki temada (acik/koyu) kontrol
+   - Katalog: `guides/05-components.md` ya da `guides/10-component-library.md`
 3. Commit: `feat(snippets): add [snippet-adi] component`
 
 ---
@@ -130,11 +151,16 @@ dev-starter ekosistemini gelistirmek icin bu rehberi takip edin.
 1. `hooks/[hook-adi].sh` dosyasi olusturun
 2. Bash best practice:
    - `set -euo pipefail`
-   - `TOOL_INPUT` kontrolu (Claude Code hook'lari icin)
+   - Girdiyi stdin'den JSON olarak okuyun: `source hooks/lib/hook-input.sh`.
+     `TOOL_INPUT` diye bir ortam degiskeni YOK; ona bakan hook hic calismaz
+     (`knowledge/mistakes.md` #52)
    - Temiz cikis kodlari (0=ok, 2=block)
-3. `.claude/settings.local.json` → hooks bolumune ekleyin
-4. `agents/AGENT_PROTOCOL.md` → Hook tablosuna ekleyin
-5. Commit: `feat(hooks): add [hook-adi] enforcement hook`
+3. `.claude/settings.json` → `hooks` bolumune ekleyin (paylasilan, versiyonlanir;
+   `settings.local.json` yalnizca makineye ozgu izinler icin)
+4. `scripts/test-hooks.sh`'e gercek payload veren bir davranis testi ekleyin ve
+   once KIRMIZI gordugunuzu dogrulayin
+5. `agents/AGENT_PROTOCOL.md` → Hook tablosuna ekleyin
+6. Commit: `feat(hooks): add [hook-adi] enforcement hook`
 
 ---
 

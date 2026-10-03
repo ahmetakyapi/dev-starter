@@ -25,7 +25,7 @@ Arka plan derin lacivert-siyah tonlarında, üzerinde emerald (yeşil) ve cyan (
   HSL token sistemi; her token'ın açık ve koyu karşılığı var
 - **Efekt sistemi**: Glass yüzeyler `--glass-fill` / `--hairline` kanalları üzerinden
   tanımlı — açık temada beyaz yerine mürekkeple tonlanır, aynı sınıf iki temada da çalışır
-- **Animasyon felsefesi**: Yalnızca giriş animasyonu. `components/Motion.tsx` içindeki
+- **Animasyon felsefesi**: Yalnızca giriş animasyonu (açılış sayfasında Framer Motion, uygulama içinde CSS). `components/Motion.tsx` içindeki
   `FadeIn` / `PageTransition`, marka eğrisiyle (`--ease-brand`), tek seferlik.
   `prefers-reduced-motion` açıkken tamamen devre dışı. Sonsuz ambient animasyon yok
 - **Tema**: Açık ve koyu tam destekli. `index.html`'deki satır içi script depolanan
@@ -285,9 +285,26 @@ backgroundImage: {
 
 **Piyasa Listesi Satırı**
 
-Sonsuz kayan ticker bandı kaldırıldı: dikkat dağıtıyordu, `prefers-reduced-motion`
-ile uyumsuzdu ve okunmak için beklemeyi gerektiriyordu. Yerine sıralanabilir,
-aranabilir statik liste var.
+Ticker bandı **yalnızca açılış sayfasında** (`components/MarketTicker.tsx`), gerçek
+`/api/market/overview` verisiyle. Hover ve klavye odağında durur, `prefers-reduced-motion`
+altında hiç oynamaz, ikinci kopya `aria-hidden` + `tabIndex={-1}` olduğu için her satır
+ekran okuyucuya bir kez okunur.
+
+Uygulama içi Piyasa ekranında ticker **yok**: orada veri okunmak için beklenmemeli,
+sıralanabilir ve aranabilir statik liste var.
+
+**Açılış sayfası bileşenleri** (`components/landing/`):
+`FeatureShowcase` (seçince o ekranın minyatürü görünen özellik listesi),
+`StepsShowcase` (kaydırdıkça sabitlenip değişen görsel; IntersectionObserver ile,
+scroll dinleyicisiyle değil), `TodayMovers` (gerçek piyasa verisinden yükselen/düşen),
+`PopularComparisons` (URL parametreli hazır senaryo bağlantıları),
+`FaqAccordion` (native `<details>` — hidrasyondan önce de çalışır),
+`ProductPreviews` (ekran görüntüsü değil, gerçek token'larla çizilmiş minyatür arayüzler;
+iki temada da doğru kalır ve bayatlamaz).
+
+Hareket `components/Motion.tsx` üzerinden: `Reveal` / `RevealGroup` / `RevealItem`
+(`whileInView` + `once: true` — geri kaydırınca titremesin), `ScrollProgress`.
+Hepsi `prefers-reduced-motion` altında düz render'a düşer.
 
 ```tsx
 <li>
@@ -448,7 +465,9 @@ backgroundImage: {
 
 - Hardcoded renk değeri kullanma — her zaman CSS variable/token
 - `console.log` commit'e gitmemeli
-- Framer Motion kullanma — bu projede CSS animasyonları + Tailwind keyframes
+- Uygulama içi ekranlarda Framer Motion kullanma — orada CSS animasyonları + Tailwind
+  keyframes. Framer Motion yalnızca açılış sayfasında ve `components/Motion.tsx`
+  (`Reveal`, `RevealGroup`, `ScrollProgress`) üzerinden
 - next-themes kullanma — bu proje Next.js değil, React + Vite
 - `any` tipi kullanma — `unknown` tercih et
 - Kart arka planını opak yapma — her zaman glass efekt (düşük opaklıklı)
@@ -546,7 +565,8 @@ renk yazmak açık temayı bozar.
 1. Önce renk token'larını CSS variable olarak tanımla (HSL formatı, shadcn/ui stili)
 2. Glass card stilini base component olarak oluştur — tüm kartlar bundan türesin
 3. Sayısal veri bileşenlerini `tabular-nums` + renk kodlamalı (pozitif/negatif) yap
-4. Animasyonları CSS keyframes ile tanımla — Framer Motion kullanma
+4. Uygulama içi animasyonları CSS keyframes ile tanımla; Framer Motion yalnızca açılış
+   sayfasında, `components/Motion.tsx` sarmalayıcıları üzerinden
 5. Skeleton shimmer'ı her asenkron veri yükleme noktasına ekle
 6. Hover glow varyantlarını kart tipine göre seç (yeşil: kar, mavi: bilgi, kırmızı: uyarı)
 7. Mobil önce test et — `background-attachment` ve sidebar davranışını kontrol et
@@ -561,7 +581,7 @@ renk yazmak açık temayı bozar.
 | Frontend Framework | React + Vite | Next.js DEĞİL — SPA mimarisi |
 | Backend | Go | JWT auth, REST API |
 | Stil | Tailwind CSS v3 | `darkMode: ["class"]` — açık/koyu tam destekli |
-| Animasyon | Framer Motion | Yalnızca giriş; `components/Motion.tsx`, reduced-motion duyarlı |
+| Animasyon | Framer Motion 11 (açılış sayfası) + CSS keyframes (uygulama içi) | `components/Motion.tsx` üzerinden, reduced-motion duyarlı; uygulama ekranlarında kütüphane yok |
 | Tema Sistemi | CSS Variables (HSL, shadcn/ui stili) + Zustand | next-themes yok; flash önleyici satır içi script `index.html`'de |
 | Primitifler | Radix UI | dialog, select, tabs, tooltip, dropdown, separator |
 | State | Zustand (oturum, tema) + TanStack React Query (sunucu) | Sunucu durumunu Zustand'a kopyalama |

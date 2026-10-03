@@ -67,7 +67,8 @@ npm run build
 | `DATABASE_URL`        | Evet    | Production Neon URL (dev ile aynı olmasın!) |
 | `AUTH_SECRET`         | Evet    | `openssl rand -base64 32` ile üret          |
 | `AUTH_URL`            | Hayır   | v5'te opsiyonel — Vercel otomatik algılar   |
-| `NEXT_PUBLIC_APP_URL` | Evet    | Production URL                              |
+| `NEXT_PUBLIC_SITE_URL`| Hayır   | Yoksa `VERCEL_PROJECT_PRODUCTION_URL` (lib/site.ts) |
+| `CRON_SECRET`         | Uç varsa | Yoksa üretimde korumalı uç 503 döner (bilerek) |
 
 ### 3. Vercel Proje Ayarları
 
@@ -75,7 +76,7 @@ npm run build
 Framework Preset: Next.js
 Build Command:    npm run build
 Output Directory: .next (otomatik)
-Node.js Version:  20.x
+Node.js Version:  24.x (.nvmrc ile aynı; Next 16 en az 20.9)
 ```
 
 ### 4. Database Migration (production)

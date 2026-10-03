@@ -42,8 +42,10 @@ Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölüm�
 ## Sürüme Göre Yazma — Önce package.json'a Bak
 
 > **Ekosistem tek sürümde değil.** 12 projenin çoğunluğu hâlâ
-> **Next 14 + React 18 + Tailwind v3**; yalnızca `acilis-zili` ve `elevenforge`
+> **Next 14 + React 18 + Tailwind v3**; `acilis-zili` ve `elevenforge`
 > Next 16 + React 19 + v4'te, `Mimio` ise Next 15 + v4.
+> **Yeni projeler (şablonlar 3.0.0) Next 16 + React 19.2 + Tailwind v4 + `motion`**;
+> kuralları `~/dev-starter/guides/06-nextjs-16.md` ve `04-motion.md`.
 > Tam matris: `AGENT_PROTOCOL.md → Teknoloji Referansları`
 
 ```bash
@@ -55,7 +57,7 @@ node -e "const d={...require('./package.json').dependencies,...require('./packag
 Aşağıdaki API'lerin hiçbiri Next 14 / React 18 projelerinde **yoktur**.
 Yanlış sürümde kullanmak derleme hatası değil, sessiz kırılma üretir.
 
-### React 19 (yalnızca acilis-zili, elevenforge)
+### React 19 (acilis-zili, elevenforge ve yeni şablonlar)
 
 ```ts
 // use() hook — Suspense ile async data
@@ -72,7 +74,7 @@ const [optimisticItems, addOptimistic] = useOptimistic(items, updateFn)
 function Input({ ref, ...props }) { return <input ref={ref} {...props} /> }
 ```
 
-### Next 15+ (Mimio, acilis-zili, elevenforge)
+### Next 15+ (Mimio, acilis-zili, elevenforge, yeni şablonlar)
 
 ```ts
 // params artık Promise — await et. Next 14'te DÜZ NESNE, await etme.
@@ -97,7 +99,19 @@ npm run typecheck  # SONRA
 ```
 
 Kodda sorun olduğu için değil, tipler henüz üretilmediği için. `acilis-zili`
-CLAUDE.md'sinde kayıtlı.
+CLAUDE.md'sinde kayıtlı. Build almadan tip üretmek için `npx next typegen`.
+
+### Next 16 — diğer değişiklikler
+
+- `middleware.ts` → `proxy.ts`, fonksiyon `export function proxy`; yalnız Node
+  çalışma zamanı. Proxy çerez varlığına bakan ucuz ön elemedir; yetki sayfada
+  ve her server action'da `auth()` ile yeniden kontrol edilir.
+- `cookies()`, `headers()` senkron erişim tamamen kalktı.
+- `next lint` yok: `"lint": "eslint"` + `eslint.config.mjs` (flat).
+- `revalidateTag(tag, "max")` ikinci argüman zorunlu; yazdığını okumak için
+  server action'da `updateTag`.
+- Segmentte `loading.tsx` koyma: `notFound()` 200 döner (soft 404).
+  Ayrıntı: `~/dev-starter/guides/06-nextjs-16.md`.
 
 ### Tailwind v4 (Mimio, acilis-zili, elevenforge)
 
@@ -105,11 +119,20 @@ CLAUDE.md'sinde kayıtlı.
 /* globals.css — bu projelerde tailwind.config.ts YOK */
 @import "tailwindcss";
 
-@theme {
-  --color-brand: #6366f1;
-  --font-sans: 'Plus Jakarta Sans', sans-serif;
+/* Katman 1: ham rol değişkenleri, temaya göre */
+:root, :root[data-theme="light"] { --primary: #0d74c4; --text-strong: #101c2b; }
+:root[data-theme="dark"]         { --primary: #35b8ff; --text-strong: #eaf1f8; }
+
+/* Katman 2: köprü — inline, yoksa tema değişince sınıf dönmez */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-strong: var(--text-strong);
+  --font-sans: var(--font-body-face), system-ui, sans-serif; /* next/font adı farklı (mistakes #78) */
 }
 ```
+
+`dark:` yazılmaz; özel punto adları `cn()` içinde `extendTailwindMerge` ile
+kayıtlı olmalı (`mistakes.md` #75). Ayrıntı: `~/dev-starter/guides/02-design-tokens.md`.
 
 ### Tailwind v3 (diğer 6 proje)
 
@@ -145,7 +168,7 @@ CLAUDE.md'de belgeliydi, üretilen CSS'te yoktu.
 
 ```text
 Varsayılan: Server Component
-Client gerekiyorsa: useState, useEffect, event handler, browser API, Framer Motion
+Client gerekiyorsa: useState, useEffect, event handler, browser API, motion (`m.*`)
 
 Kontrol: Bu bileşen gerçekten interaktif mi?
 → Hayır → Server Component bırak
@@ -172,9 +195,11 @@ Paralel route → app/@modal/
 ## Kritik Kurallar (mistakes.md'den)
 
 - `suppressHydrationWarning` — layout.tsx `<html>` tag'inde şart
-- `mounted` guard — theme-bağımlı UI için
+- Tema çerezden sunucuda (`data-theme`); `mounted` guard yalnızca next-themes kullanan eski projelerde
+- `"use client"` modülden dışa aktarılan DEĞER sunucuda referansa döner — sabitler nötr modülde (#84)
+- Sayfa içi filtre/sıralama bağlantıları `scroll={false}`
 - Three.js → `dynamic(..., { ssr: false })`
-- `params` → Next.js 15'te await edilmeli
+- `params`, `searchParams`, `cookies()`, `headers()` → Next 15+'ta await edilmeli (16'da zorunlu)
 - `useSearchParams` → Suspense boundary içinde
 
 ## TypeScript Standartları

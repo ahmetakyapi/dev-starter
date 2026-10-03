@@ -118,7 +118,8 @@ P6: Dev Readiness Check
 ## Stack
 | Katman | Teknoloji | Neden |
 |--------|-----------|-------|
-| Frontend | Next.js 15 | SSR + App Router |
+| Frontend | Next.js 16 + React 19.2 | App Router, proxy.ts, Turbopack |
+| Stil | Tailwind v4 + `motion/react` | İki katmanlı token, palet (`guides/00`) |
 | Database | PostgreSQL (Neon) | Serverless uyumlu |
 | ORM | Drizzle | Type-safe, lightweight |
 | Auth | next-auth v5 | App Router native |
@@ -150,7 +151,7 @@ P6: Dev Readiness Check
 1. Route listesi çıkar
 2. Her ekran için ASCII wireframe veya açıklama
 3. Paylaşılan bileşenleri belirle
-4. Design token'ları tanımla (varsa `knowledge/themes/` referans al)
+4. Paleti ve varsayılan temayı seç (`/kickoff` çıktısı ya da `~/dev-starter/guides/00-brand-identity.md`), token'ları tanımla (varsa `knowledge/themes/` referans al)
 
 **Çıktı**: `docs/SCREENS.md`
 

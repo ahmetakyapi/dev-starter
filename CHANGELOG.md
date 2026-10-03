@@ -5,6 +5,122 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ---
 
+## [3.0.0] — 2026-10-03
+
+Ekosistem, canlı projelerin bir yıldır kullandığı yığına yetişti. 2.x
+şablonları Next 14 + Tailwind v3 + Framer Motion + next-themes üzerindeydi;
+Açılış Zili, ElevenForge ve Mimio ise çoktan Next 16, Tailwind v4 ve kendi
+tema sistemlerine geçmişti. Her yeni proje ilk gün bir yükseltmeyle
+başlıyordu. Bu sürümle şablonlar, paketler ve belgeler aynı yığını anlatıyor.
+
+Aşağıdaki "Yayınlanmamış" başlıklı Ağustos 2026 kayıtları da bu sürümle yayınlanır.
+
+### Kırıcı Değişiklikler (Breaking)
+
+- **`@ahmetakyapi/theme` 3.0.0 — Tailwind v4.** v3 preset'i
+  (`@ahmetakyapi/theme/tailwind`) ve `ahmet-*` renk sınıfları kaldırıldı.
+  Yerine `@import "@ahmetakyapi/theme/theme.css";`: sistem rolleri
+  (`:root[data-theme]`) + palet katmanı (`[data-palette]`: `signature`
+  varsayılan, `verdant`, `ember`, `iris`, her biri açık/koyu) + `@theme inline`
+  köprüsü. `:root` varsayılanı artık **açık tema**.
+- **`tokens.ts`:** `roles` sistem aynası; `primary` / `primaryInk` / `lineFocus`
+  → `palettes[ad][tema]`. Yeni `palettes`, `PaletteName`, `colors.brand`,
+  `gradients.brand`. `colors.bg`, `colors.accent`, `gradients.signature` @deprecated.
+- **CSS sınıfları:** `.glass` ve `.surface` token tabanlı; `.surface` artık
+  bulanık değil, `.glass` opt-in. Yeni `.display-ink(-tight)`, `.app-bg` (palet
+  ışığı), `bg-brand`. `bg-signature` eski ad olarak duruyor ve artık mavi.
+  `animate-float`, `animate-blink`, `animate-border-rotate` kaldırıldı.
+- **`@ahmetakyapi/ui` 3.0.0 — `motion/react`.** Bileşenler `m.*` kullanır:
+  uygulama kökünde `<LazyMotion features={domAnimation} strict>` ŞART. Peer
+  `framer-motion` ve `next-themes` kaldırıldı; peer `motion >= 12`,
+  `react >= 19`. `GlassCard` → `Surface` (eski ad geçici takma ad). `Button`a
+  `secondary` ve `danger`. `cn()` `extendTailwindMerge` ile özel punto adlarını
+  tanıyor. Varyantlara `DUR`, `SPRING`, `STAGGER`.
+- **Şablonlar Next 16.** `nextjs-fullstack` ve `landing`: Next ^16.3,
+  React 19.2, Tailwind v4 (`postcss.config.mjs`, config dosyası yok),
+  `motion`, ESLint 9 flat config (`"lint": "eslint"`; `next lint` yok),
+  `proxy.ts` (middleware değil), tema çerez + `data-theme` (next-themes yok),
+  `node --test` + tsx. Yer tutucular `PROJECT_NAME` ve `PROJECT_DESCRIPTION`.
+- **impeccable kaldırıldı.** `design:detect` script'leri, CI adımı,
+  `hooks/quality-scan.sh` içindeki tarama adımı, `.impeccable/` ve
+  `PUPPETEER_SKIP_DOWNLOAD`. Yerini rehberler, `design-reviewer` alt ajanı ve
+  health-check'in tasarım denetimi aldı.
+
+### Eklenenler (Added)
+
+- **`guides/`** — projeye başlarken gereken her şey, sırayla: `00-brand-identity`
+  (kimlik değişmezleri + palet seçimi), `01-kickoff`, `02-design-tokens`,
+  `03-theming`, `04-motion`, `05-components`, `06-nextjs-16` (Next'in kendi
+  yükseltme belgesinden doğrulandı), `07-data-auth-security`,
+  `08-quality-and-ship`, `09-typography`, `10-component-library`. Her kural kod
+  örneği, ✅/❌ ve hangi projede yaşandığıyla.
+- **`machine/`** — global `CLAUDE.md`nin depodaki tek kaynağı, `bootstrap.sh`
+  (komut, alt ajan ve skill symlink'leri, taste-skill'in kullanılan yedi
+  skill'i, builtin eklentiler; yedekli ve tekrar çalıştırılabilir) ve kurulum
+  rehberi `machine/README.md`.
+- **Kimlik + palet modeli** — "kimlik ortak, palet projeye göre". Varsayılan
+  palet `signature`: Açılış Zili'nin lacivert → mavi ailesi
+  (`knowledge/decisions.md` → "Palet").
+- **Strateji katmanı** — `strategist` alt ajanı, `/kickoff`, `/roadmap`,
+  `templates/docs/KICKOFF.template.md`, `knowledge/tech-radar.md`.
+- **Yeni alt ajanlar** — `design-reviewer` (arayüzü ekrandan ölçer),
+  `content-editor` (Türkçe editörlük). Kayıtlı alt ajan sayısı 2 → 5.
+- **Snippet'ler** — `reveal`, `theme-toggle`, `rolling-number` (+ `.module.css`),
+  `scroll-progress`, `tab-underline` (kendi `domMax` LazyMotion'ı),
+  `use-scroll-lock`; `snippets/ui/` bileşen kütüphanesi ve `snippets/fonts/`.
+- **`landing`** — yedi kahraman düzeni (`components/heroes/`,
+  `lib/content.ts` → `hero.variant`).
+- **`knowledge/mistakes.md` #74–92** — Next 16 / Tailwind v4 / motion dönemi:
+  katmansız CSS, twMerge özel punto, `--text-*` çakışması, `PageProps` sırası,
+  `next/font` adı, soft 404, `unstable_cache` hatası, kökte `:has()`, sahte
+  bcrypt hash, sırsız açık uç, `"use client"` değer sızıntısı,
+  `replaceState`, iskelet CLS, `initial={false}`, fill-mode ve fixed modal,
+  `position: fixed` zemin, grain harmanlaması, iCloud kopyaları, görsel kotası.
+- **`knowledge/patterns.md`** — tema (çerez + `data-theme`), `proxy.ts`,
+  motion, "Projelerden Toplanan Desenler" bölümü.
+- **Sözleşme testleri 55** (palet kontrastı WCAG formülüyle); health-check'e
+  yığın uyumu kategorisi (v4, flat config, proxy, motion): 13 kategori, 76 kontrol.
+
+### Değişenler (Changed)
+
+- **`knowledge/decisions.md`** — Next 16, motion, Tailwind v4, tema (çerez),
+  palet, glass opt-in, CSP ve auth kapsamı kararları "Değişti (2026-10-03)"
+  alt başlıklarıyla; eski kararlar silinmedi.
+- **Komutlar her projede** — `.claude/commands/*` ve `.claude/agents/*` artık
+  `~/.claude/`a symlink'leniyor; içlerindeki yollar `~/dev-starter/...` mutlak.
+  `/new-project` (mutlak şablon yolları, `rsync` ile nokta dosyaları, palet
+  seçimi, `agentic-chat` overlay, sonunda install + build + typecheck + lint +
+  test), `/theme` (v4 `@theme`, palet), `/snippet`, `/check` (v4 / motion /
+  proxy / flat config maddeleri; `darkMode: 'class'` maddesi kaldırıldı),
+  `/review-ui`, `/deploy`, `/release`, `/agentic` yeni yığına göre yazıldı.
+- **Ajan ve kural belgeleri** — `uiux-agent` (impeccable bölümü → skill'ler
+  ve rehberler; "her kartta glass" kalktı), `frontend-agent` (Next 16, v4
+  iki katman), `gate-agent` (flat config, build → typecheck sırası),
+  `backend-agent` (migration deploy'da uygulanmaz, credentials kuralları),
+  `rules/design-tokens.md` (rol token adları, `dark:` yasağı, palet ailesi),
+  `phases/planning.md`.
+- **mistakes.md** — #1, #3, #10, #15–17, #28, #29, #36, #47, #49, #51, #53'e
+  yeni yığın notları; #49–57 sırası düzeltildi.
+- **Belgelerdeki hook yeri düzeltildi** — hook'lar `.claude/settings.json`da
+  (paylaşılan), `settings.local.json`da değil. CONTRIBUTING'deki `TOOL_INPUT`
+  önerisi `hooks/lib/hook-input.sh` (stdin) ile değiştirildi.
+- **Global kurallar (`machine/CLAUDE.md`)** — yeni yığın, kimlik + palet,
+  çeviri kokan ifade kuralı; kaldırılan skill'lere (gpt-taste ve diğerleri)
+  ve impeccable'a atıflar temizlendi.
+- **taste-skill** — yalnızca kullanılan yedi skill kuruluyor; `gpt-taste`,
+  `design-taste-frontend-v1`, `stitch-design-taste`, `image-to-code`,
+  `industrial-brutalist-ui`, `full-output-enforcement` kaldırıldı.
+- `knowledge/themes/keskealsaydim.md` — "Framer Motion kullanma" ile gerçek
+  kullanım (yalnız açılış sayfası) arasındaki çelişki giderildi.
+
+### Not
+
+Ağustos kaydındaki "Bilinçli olarak YAPILMAYANLAR" listesinde geçen
+`snippets/agent-chat.tsx` hiç yazılmadı; `action-card.tsx` ise sonradan
+doğrulanarak eklendi. Tarihçe olduğu gibi bırakıldı.
+
+---
+
 ## [Yayınlanmamış]
 
 ### CI Regresyonu Onarimi + Gate Pass 7 — 2026-08-27

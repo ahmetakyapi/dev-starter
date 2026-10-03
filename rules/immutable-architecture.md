@@ -61,7 +61,8 @@
 
 - next-auth v5 (App Router uyumlu)
 - Session kontrolü: `auth()` server-side helper
-- Middleware'de auth kontrolü: `auth` wrapper
+- Next 16: `proxy.ts` yalnızca çerez varlığına bakan ön eleme (Next ≤15: `middleware.ts` + `auth` wrapper)
+- Gerçek yetki her sayfada ve her Server Action'da `auth()` ile yeniden kontrol edilir — Server Action herkese açık bir POST ucudur
 - Protected route: layout seviyesinde redirect
 - Token'lar cookie-based (JWT), localStorage'da auth bilgisi YASAK
 

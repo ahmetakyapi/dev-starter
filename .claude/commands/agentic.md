@@ -1,17 +1,17 @@
 ---
-description: Agentic UI karar agaci — tool nereye, kontrol hangi seviyede, model mi kod mu
+description: Agentic arayüz karar ağacı: araç nerede, kontrol hangi seviyede, model mi kod mu
 argument-hint: "tool | kontrol | state | dsl | test | kurulum | denetle"
 ---
 
 `$ARGUMENTS` konusunda agentic UI karari ver.
 
-**Once oku**: `rules/agentic-ui.md` (10 kural), `agents/agentic-ui-agent.md`
-(karar agaclari), `knowledge/patterns.md → Agentic UI`, `knowledge/mistakes.md #58-71`.
+**Once oku**: `~/dev-starter/rules/agentic-ui.md` (10 kural), `~/dev-starter/agents/agentic-ui-agent.md`
+(karar agaclari), `~/dev-starter/knowledge/patterns.md → Agentic UI`, `~/dev-starter/knowledge/mistakes.md #58-73`.
 
 ## Konular
 
 ### `tool` — Tool nereye konur?
-Karar agaci: `agents/agentic-ui-agent.md → Karar Agaci 1`.
+Karar agaci: `~/dev-starter/agents/agentic-ui-agent.md → Karar Agaci 1`.
 Ozet: tarayici state'i → frontend tool. Ekrana cizip turu bitiren → widget
 (`followUp: false` + aciklamaya da yaz). Yetki/para/kalici etki → sunucu tool'u,
 istisnasiz. Paylasilan veri → tool DEGIL, protokolun state kanali.
@@ -42,12 +42,12 @@ Her tool testi CIFT iddia kurar: donus degeri (modelin gordugu) + yan etki
 ```bash
 npm view @copilotkit/react-core@<surum> dependencies.@ag-ui/client   # TAM surumu al
 npm i @copilotkit/react-core@<surum> @ag-ui/client@<pin> @ag-ui/core@<pin> zod
-cp -r templates/agentic-chat/app/* <proje>/app/
+cp -R ~/dev-starter/templates/agentic-chat/app/. <proje>/app/
 ```
 Snippet'ler: `/snippet agent-tool`, `/snippet action-card`, `/snippet agent-approval`.
 
 ### `denetle` — Mevcut agentic kodu incele
-`agents/agentic-ui-agent.md → Teslim Oncesi Kontrol Listesi` maddelerini tek tek
+`~/dev-starter/agents/agentic-ui-agent.md → Teslim Oncesi Kontrol Listesi` maddelerini tek tek
 gec. Ozellikle: tool sonucu cast ediliyor mu (#58), `followUp: false` modele
 soylendi mi (#59), `@ag-ui/*` surumu sabit mi (#71).
 
@@ -62,7 +62,7 @@ npx tsc --noEmit                                   # exit kodunu goster
 npm view <paket>@<surum> dependencies              # pin'i dogrula
 ```
 
-`snippets/agent-*.tsx` ve `snippets/action-card.tsx` boyle yazildi. Yeni snippet
+`~/dev-starter/snippets/agent-*.tsx` ve `action-card.tsx` boyle yazildi. Yeni snippet
 eklerken ayni yolu izle — tahminle yazilan snippet bu repoya girmez.
 
 ## Referans

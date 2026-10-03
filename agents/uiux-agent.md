@@ -31,34 +31,23 @@ Bu agent çalışmadan önce şunları oku:
 | `/theme [proje]`       | Görsel tema uygulama          |
 | `/check`               | Proje sağlık kontrolü         |
 
-### Impeccable — Tasarım Sözlüğü
+### Tasarım Skill'leri ve Rehberler
 
-Kurulu global plugin (`impeccable@impeccable`). Bu agent'ın ortak tasarım dili budur —
-"biraz daha cesur yap" gibi belirsiz yönergeler yerine komut adı kullan.
+impeccable 3.0.0'da (2026-10-03) ekosistemden kaldırıldı. Yerine:
 
-| Komut | Ne Zaman |
-| ----- | -------- |
-| `/impeccable shape [özellik]` | Kod yazmadan önce UX/UI planla |
-| `/impeccable critique [hedef]` | Hiyerarşi, netlik, duygusal rezonans incelemesi |
-| `/impeccable audit [hedef]` | a11y · performans · responsive teknik denetimi |
-| `/impeccable polish [hedef]` | Teslim öncesi son geçiş, design system hizalaması |
-| `/impeccable typeset [hedef]` | Font seçimi, hiyerarşi, boyutlandırma |
-| `/impeccable layout [hedef]` | Boşluk, ritim, hizalama |
-| `/impeccable bolder` / `quieter` | Fazla ölçülü ↔ fazla gürültülü tasarımı ayarla |
-| `/impeccable distill [hedef]` | Öze indir, karmaşıklığı at |
-| `/impeccable harden [hedef]` | Hata durumları, i18n, taşma, uç senaryolar |
-| `/impeccable animate [hedef]` | Amaçlı hareket ekle |
-| `/impeccable document` | Mevcut koddan DESIGN.md üret |
+| Kaynak | Ne Zaman |
+| ------ | -------- |
+| `design-taste-frontend` skill | Tanıtım sayfası, portfolyo, pazarlama yüzeyi; kod yazmadan önce |
+| `redesign-existing-projects` skill | Var olan arayüzü yükseltme ("Redesign — Preserve" modu) |
+| `motion-design` skill | Hareket kararı, zamanlama, koreografi |
+| `~/dev-starter/guides/00-brand-identity.md` | Kimlik değişmezleri ve palet seçimi |
+| `~/dev-starter/guides/02-design-tokens.md` … `05-components.md` | Token, tema, hareket, bileşen kuralları |
+| `design-reviewer` alt ajanı | Kurulmuş arayüzü ekrandan ölçüp puanlamak |
 
-**Detector**: `npm run design:detect` — 59 deterministik anti-pattern kuralı.
-`rules/design-tokens.md → AI-Slop Yasakları` bu 59 kuralın ekosistem için en
-kritik altısını açıklar — aynı liste DEĞİL, alt kümesi. Tam katalog:
-impeccable.style/slop.
-
-**Çakışma kuralı**: Impeccable "the brief wins" der — pinlenmiş palet, font ve
-estetik, doygun-kalıp uyarısını yener. Ahmet'in marka paleti (indigo·blue·cyan·
-emerald·sky) **pinlenmiştir**; detector uyarısı bu paleti değiştirmenin gerekçesi
-değildir. Ama `violet/purple` markanın parçası değildir — o sızıntıdır, temizlenir.
+**Çakışma kuralı**: brief kazanır. Projenin tema dosyası ve seçili paleti
+(`signature` / `verdant` / `ember` / `iris`) **pinlenmiştir**; bir skill'in
+uyarısı paleti değiştirmenin gerekçesi değildir. Paletin dışında kalan renk
+(ör. `signature` projesinde mor) sızıntıdır, temizlenir.
 
 ## Agent İletişimi
 
@@ -71,10 +60,11 @@ Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölüm�
 
 ## Güncel Teknoloji Notları
 
-- **Framer Motion 11+**: `motion()` factory, `useAnimate` hook, layout animations
-- **Tailwind v4**: `@theme {}` bloğu — `tailwind.config.ts` yok; token'ları CSS'e taşı
-- **React 19**: `ref` artık prop olarak geçilebilir, `forwardRef` kaldırılıyor
-- **Next.js 15**: Server Component'lerde `async params` — UI bileşenlerini etkilemez ama sayfalar etkiler
+- **motion 13** (`motion/react`): kökte `LazyMotion features={domAnimation} strict`, bileşende `m.*`; sabitler `lib/motion.ts` (`guides/04-motion.md`)
+- **Tailwind v4**: config yok; iki katmanlı token, `@theme inline` köprüsü, `dark:` yok (`guides/02-design-tokens.md`)
+- **Tema**: `data-theme` + çerez, sunucuda basılır; ThemeToggle view transition'lı (`guides/03-theming.md`)
+- **React 19.2**: `ref` prop, `<ViewTransition>`, `useEffectEvent`
+- **Next.js 16**: `proxy.ts`, async `params` ve `cookies()`; sayfa düzeyi bileşenleri etkiler
 
 ---
 
@@ -83,7 +73,7 @@ Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölüm�
 - Screenshot referanslarından Design DNA çıkar ve yeni ekranlar üret
 - Mevcut tasarımı analiz et, görsel dil tutarlılığını koru
 - Yeni bileşenler, section'lar, landing page'ler tasarla ve kodla
-- Framer Motion animasyonları yaz
+- Hareket yaz: basit olan CSS, orkestrasyon `motion/react` (`m.*`)
 - Dark/light mode implementasyonu
 - Responsive tasarım sorunlarını çöz
 - Custom hooks (useSpotlight, useMagnetic, useCardTilt) kullan veya yeni hook'lar yaz
@@ -114,7 +104,7 @@ Screenshot referansları verildiğinde, kodlamadan önce şu 8 boyutu analiz et:
 
 - Corner radius mantığı
 - Border kullanımı (subtle vs belirgin)
-- Glass / solid surface tercihi
+- Ton farkı mı, glass mı (glass yalnızca altından içerik geçen öğede)
 - Shadow yumuşaklığı
 - Shine/highlight davranışı
 - Content padding ve içerik gruplaması
@@ -192,8 +182,8 @@ Cevap "hayır"sa iyileştir, sonra teslim et.
 Herhangi bir UI kararında şu sırayla düşün:
 
 1. **Hareket**: Ease eğrisi `[0.22, 1, 0.36, 1]` — bu eleman nasıl hareket etmeli?
-2. **Cam**: Glass efekti uygun mu? `.glass` class yeterli mi?
-3. **Işık**: Vurgu rengi nerede? Spotlight/glow/accent line gerekli mi?
+2. **Derinlik**: Ton farkı (`.surface`) yeterli mi? Glass yalnızca altından içerik geçiyorsa
+3. **Işık**: Vurgu rengi nerede? Degrade yalnızca üç yerde (display başlık, birincil eylem, marka karosu)
 4. **Tipografi**: Hiyerarşi net mi? Tracking tightened mi? Weight yeterince bold mu?
 5. **Boşluk**: Nefes alıyor mu? Section rhythm tutarlı mı?
 6. **Koyu/Açık**: Her iki modda da güzel görünüyor mu?
@@ -205,12 +195,12 @@ Herhangi bir UI kararında şu sırayla düşün:
 ### Hero
 
 ```text
-[Ambient glow orbs] + [Grid overlay] + [Mouse spotlight]
+[İsteğe bağlı .app-bg — köşede --primary radial] + [Mouse spotlight yalnız pointer:fine]
 [Chip/badge — animated dot]
 [H1 — font-black, tracking-[-0.03em], vurgu kelimesi solid accent veya fallback'li degrade]
-[Subtitle — slate-400, leading-[1.75]]
-[Primary pill CTA — bg-signature hover katmanı] + [Ghost pill CTA]
-[Product preview / browser mockup — delayed scale entrance]
+[Subtitle — text-body, leading-[1.75]]
+[Primary CTA — --brand-gradient] + [Ghost CTA]
+[Ürün önizlemesi — gerçek token'larla çizilmiş minyatür, sahte ekran görüntüsü değil; LCP öğesi Reveal'e sarılmaz]
 ```
 
 ### Features (Bento)
@@ -218,7 +208,7 @@ Herhangi bir UI kararında şu sırayla düşün:
 ```text
 sm (2-col): large card spans full width | smalls fill below
 lg (3-col): large col-span-2 | first small col-span-1 | 3 smalls row 2
-Each card: .glass + top accent line + tilt+shine on hover
+Each card: .surface + top accent line + tilt+shine on hover (pointer:fine)
 Large card: decorative mini-visual inside
 ```
 
@@ -234,17 +224,17 @@ Title + description below
 ### Metrics
 
 ```text
-Glass container — 4 stats in grid
+Surface container — 4 stats in grid
 Dividers between stats (lg:border-r)
-Radial glow orbs behind
+RollingFigure counters (first screen only)
 Top accent line
 ```
 
 ### CTA
 
 ```text
-Glass container, rounded-3xl
-Radial indigo glow center
+Surface container (glass only over aurora), rounded-3xl
+Radial --primary glow center
 Top + bottom accent lines
 Chip badge → H2 → subtitle → pill CTA + ghost link → footnote
 ```
@@ -255,11 +245,11 @@ Chip badge → H2 → subtitle → pill CTA + ghost link → footnote
 
 Kodlamadan önce kontrol et:
 
-- `lib/variants.ts` — mevcut animasyon varyantları
-- `hooks/` — useSpotlight, useMagnetic, useCardTilt
-- `components/ui/` — GlassCard, Button, Chip
-- `app/globals.css` — .glass, .chip, .surface class'ları
-- `tailwind.config.ts` — tema renkleri ve animasyonlar
+- `lib/motion.ts` — `EASE`, `DUR`, `SPRING`, varyantlar (eski projelerde `lib/variants.ts`)
+- `components/motion/` — MotionProvider, Reveal
+- `components/ui/` — Button, Panel, PageHeader, EmptyState, Skeleton, Field, ThemeToggle
+- `app/globals.css` — token katmanları, `@theme inline`, `.surface`/`.glass`
+- `tailwind.config.ts` varsa proje v3'tedir; yeni projede yok
 
 Mevcut primitifleri yeniden inşa etme — kullan.
 
@@ -268,18 +258,21 @@ Mevcut primitifleri yeniden inşa etme — kullan.
 ## Kesinlikle Yapma
 
 - CSS-in-JS kullanma
-- GSAP kullanma (Framer Motion var)
+- GSAP kullanma (`motion/react` + CSS var)
+- `framer-motion` kurma, `motion.*` yazma (kökte LazyMotion strict → `m.*`)
+- `dark:` varyantı ya da hazır palet sınıfı (`bg-white`, `text-gray-*`)
 - Hardcoded renk koyma — token kullan
 - Magic number kullanma — named constant
 - `@ts-ignore` koyma
 - Generic / template-like UI üretme
 - Tüm kartları aynı boyutta yapma (bento tercih et)
 - Zayıf hero area (görsel eleman olmadan)
-- `rounded-xl` buton (pill: `rounded-full` tercih et)
+- Proje radius ölçeğinin dışında radius
 - Emoji icon (lucide-react kullan)
 - Fallback'siz degrade metin — `@supports` + solid `color` şart, yoksa metin
   desteklenmeyen yerde tamamen görünmez olur
-- Tekrar eden degradeyi elle yazma — token'a taşı (`bg-signature` gibi)
+- Tekrar eden degradeyi elle yazma — token'a taşı (`--brand-gradient`, `--display-gradient`)
+- Her karta glass
 - `width` / `height` animasyonu — `transform: scale()` kullan
 
 > **Degrade yasak değil.** Başlıkta, butonda, metinde kullanılabilir. Bağlayıcı olan
@@ -310,8 +303,8 @@ Her zaman:
 ```tsx
 'use client'  // sadece gerçekten gerekiyorsa
 
-import { motion } from 'framer-motion'
-import { fadeUp, staggerContainer, EASE } from '@/lib/variants'
+import * as m from 'motion/react-m'
+import { fadeUp, EASE, DUR } from '@/lib/motion'
 
 type ComponentNameProps = Readonly<{
   // prop tipleri
@@ -327,7 +320,7 @@ export function ComponentName({ ... }: ComponentNameProps) {
 Uyum notları:
 
 - Props: `Readonly<{...}>` — SonarLint S6759
-- Imports: tek `framer-motion` import — S3863
+- Imports: `motion/react` / `motion/react-m`, tek satır — S3863
 - Keys: array index değil, anlamlı ID — S6479
 - Ambiguous spacing: text node'ları `<span>` ile sar — S6772
 
@@ -355,9 +348,11 @@ token'lar CSS'te `@theme` bloğundadır. Sürüm matrisi: `AGENT_PROTOCOL.md`.
 ## Teslim Öncesi Doğrulama — Zorunlu
 
 ```bash
-npm run design:detect                    # 59 anti-pattern kuralı
-npm run build
+npm run typecheck && npm run lint && npm run build
 ```
+
+Ardından iki temada, 390 ve 1280 genişlikte ekrana bak (smoke betiği ya da
+`design-reviewer` alt ajanı); kontrast iddiası yapma, ölç.
 
 Sonra **üretilen CSS'te doğrula** — kaynakta doğru görünen şey çıktıda olmayabilir:
 
@@ -369,7 +364,7 @@ Bu adım iki kez gerçek hata yakaladı: `bg-signature` token'ının doğru degr
 ürettiği ancak build çıktısından doğrulanabildi, ve `onepiece-hub`da `.link-glow`
 tanımlı olmasına rağmen hiç kullanılmadığı için purge edilmişti.
 
-**Detector bulgusunu körü körüne düzeltme.** Yanlış pozitif üretir ve kasıtlı
+**Tarama bulgusunu körü körüne düzeltme.** Yanlış pozitif üretir ve kasıtlı
 kararları hata sanabilir. Her bulguyu oku; kasıtlıysa gerekçesini yaz ve bırak.
 
 ## Çıktı Standardı

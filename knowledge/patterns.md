@@ -46,6 +46,11 @@ const sql = neon(process.env.DATABASE_URL!)
 export const db = drizzle(sql, { schema })
 ```
 
+> **2026-10-03:** Şablonlar bunun **tembel** sürümünü kullanır: `db` bir
+> Proxy, bağlantı ilk sorguda kurulur ve `DATABASE_URL` yokken build ve
+> veritabanısız sayfalar çalışır. Kod: `guides/07-data-auth-security.md` § 1.
+> Migration deploy'da uygulanmaz → yeni özellik kendi tablosunu alır.
+
 ### Schema Örneği
 ```ts
 // lib/schema.ts
@@ -101,7 +106,32 @@ export async function GET() {
 
 ## UI Desenleri
 
-### next-themes Kurulumu (Doğru)
+### Tema: `data-theme` + Çerez + Sunucuda Çizim (varsayılan, 2026-10-03)
+
+```tsx
+// lib/theme.ts — "use client" DEĞİL
+export const THEME_COOKIE = 'theme'
+export const THEMES = ['dark', 'light'] as const
+export type Theme = (typeof THEMES)[number]
+export const DEFAULT_THEME: Theme = 'dark'
+export const isTheme = (v: unknown): v is Theme =>
+  typeof v === 'string' && (THEMES as readonly string[]).includes(v)
+export async function getTheme(): Promise<Theme> {
+  const v = (await cookies()).get(THEME_COOKIE)?.value
+  return isTheme(v) ? v : DEFAULT_THEME
+}
+
+// app/layout.tsx
+const theme = await getTheme()
+<html lang="tr" data-theme={theme} suppressHydrationWarning>
+```
+
+İstemci `document.documentElement.dataset.theme`ı anında değiştirir, çerezi
+server action ile arkadan yazar. Script yok, `mounted` guard yok, FOUC yok.
+`themeColor` `generateViewport` içinde çerezden. Tam desen, view transition
+ve gerekçe: `guides/03-theming.md`. Snippet: `snippets/theme-toggle.tsx`.
+
+### next-themes Kurulumu (eski projeler — ahmetakyapi.com)
 ```tsx
 // app/layout.tsx
 import { ThemeProvider } from 'next-themes'
@@ -119,7 +149,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-### Mounted Guard (Hydration-Safe)
+### Mounted Guard (Hydration-Safe — yalnız next-themes kullanan projeler)
 ```tsx
 'use client'
 const [mounted, setMounted] = useState(false)
@@ -145,9 +175,9 @@ const ThreeScene = dynamic(() => import('@/components/ThreeScene'), {
 ```bash
 # .env.example — değerler olmadan commit'lenir
 DATABASE_URL=
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+AUTH_SECRET=              # next-auth v5 (NEXTAUTH_SECRET değil) — `npx auth secret`
+CRON_SECRET=              # checkBearer ile korunan uçlar; üretimde yoksa uç 503
+NEXT_PUBLIC_SITE_URL=     # boşsa VERCEL_PROJECT_PRODUCTION_URL → localhost
 
 # GitHub OAuth (auth gerekiyorsa)
 AUTH_GITHUB_ID=
@@ -159,12 +189,19 @@ BLOB_READ_WRITE_TOKEN=
 
 ---
 
-## Framer Motion
+## Motion (`motion/react`)
+
+> **2026-10-03:** Paket `motion`, import `motion/react`. Kökte
+> `LazyMotion features={domAnimation} strict` + `MotionConfig reducedMotion="user"`
+> olduğu için bileşenlerde `motion.*` değil `m.*` kullanılır (`strict` altında
+> `motion.div` hata verir). Sabitler `lib/motion.ts`. Kurallar ve desen
+> kataloğu: `guides/04-motion.md`.
 
 ### Spotlight Hero
 ```tsx
 'use client'
-import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
+import { useMotionTemplate, useMotionValue } from 'motion/react'
+import * as m from 'motion/react-m'
 import { useEffect } from 'react'
 
 // Mouse-takip radial gradient — hooks/useSpotlight.ts ile kullan
@@ -176,47 +213,48 @@ useEffect(() => {
   return () => window.removeEventListener('mousemove', h)
 }, [mx, my])
 const spotlight = useMotionTemplate`radial-gradient(620px circle at ${mx}px ${my}px, rgba(96,165,250,0.07), transparent 78%)`
-// <motion.div style={{ background: spotlight }} />
+// <m.div style={{ background: spotlight }} />
 ```
 
 ### Stagger List
 ```tsx
-import { motion } from 'framer-motion'
+import * as m from 'motion/react-m'
 import { fadeUp, staggerContainer } from '@/lib/variants'
 
-<motion.ul
+<m.ul
   variants={staggerContainer(0.08)}
   initial="hidden"
   whileInView="visible"
   viewport={{ once: true, margin: '-60px' }}
 >
   {items.map(item => (
-    <motion.li key={item.id} variants={fadeUp}>{item.name}</motion.li>
+    <m.li key={item.id} variants={fadeUp}>{item.name}</m.li>
   ))}
-</motion.ul>
+</m.ul>
 ```
 
 ### AnimatePresence Modal
 ```tsx
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m'
 import { modalBackdrop, modalPanel } from '@/lib/variants'
 
 <AnimatePresence>
   {open && (
-    <motion.div
+    <m.div
       variants={modalBackdrop}
       initial="hidden" animate="visible" exit="exit"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-scrim"
       onClick={onClose}
     >
-      <motion.div
+      <m.div
         variants={modalPanel}
-        className="glass w-full max-w-lg rounded-2xl p-6"
+        className="surface w-full max-w-lg rounded-xl p-6 shadow-overlay"
         onClick={e => e.stopPropagation()}
       >
         {children}
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   )}
 </AnimatePresence>
 ```
@@ -261,10 +299,11 @@ export default function robots(): MetadataRoute.Robots {
 }
 ```
 
-### Edge Health Route
+### Health Route
 ```ts
-// app/api/health/route.ts
-export const runtime = 'edge'
+// app/api/health/route.ts — Node çalışma zamanı (varsayılan). Edge'e almak
+// için bir sebep yok; veritabanına dokunan bir sağlık ucu edge'de çalışmaz.
+export const dynamic = 'force-dynamic'
 export function GET() {
   return Response.json({ status: 'ok', timestamp: new Date().toISOString() })
 }
@@ -327,38 +366,40 @@ import { useCardTilt } from '@/hooks/useCardTilt'
 
 const { ref, rx, ry, shine, onMove, onLeave } = useCardTilt(6)
 
-<motion.div
+<m.div
   ref={ref}
   style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
   onMouseMove={onMove}
   onMouseLeave={onLeave}
-  className="glass relative overflow-hidden rounded-2xl p-7"
+  className="surface relative overflow-hidden rounded-2xl p-7"
 >
-  <motion.div className="pointer-events-none absolute inset-0" style={{ background: shine }} />
+  <m.div className="pointer-events-none absolute inset-0" style={{ background: shine }} />
   {/* kart içeriği */}
-</motion.div>
+</m.div>
 ```
 
-Aynı efekti `GlassCard` bileşeniyle de kullanabilirsin: `<GlassCard tilt glow>`.
+Aynı efekt `@ahmetakyapi/ui` 3.0.0'da `<Surface tilt glow>` (eski ad `GlassCard` takma ad olarak duruyor).
+Eğim `prefers-reduced-motion` altında kapanır, parlaklık kalır; yalnızca `pointer: fine`.
 
 ### Magnetic Buton
 
-Fare yaklaştığında buton çekilir efekti.
+Fare yaklaştığında buton çekilir efekti. **Yalnızca `(hover: hover) and
+(pointer: fine)` altında** etkinleştir; dokunmatikte konum yapışıp kalır.
 
 ```tsx
 import { useMagnetic } from '@/hooks/useMagnetic'
 
 const mag = useMagnetic(0.28)
 
-<motion.a
+<m.a
   style={{ x: mag.mx, y: mag.my }}
   onMouseMove={mag.onMove}
   onMouseLeave={mag.onLeave}
   whileTap={{ scale: 0.96 }}
-  className="rounded-full bg-indigo-600 px-7 py-3.5 font-semibold text-white"
+  className="rounded-full bg-primary px-7 py-3.5 font-semibold text-on-primary"
 >
-  Get started
-</motion.a>
+  Hemen Başla
+</m.a>
 ```
 
 ### Marquee Logo Strip (CSS only, Server Component)
@@ -378,7 +419,7 @@ const track = [...LOGOS, ...LOGOS]
 >
   <div className="flex animate-marquee gap-14 whitespace-nowrap">
     {track.map((name, i) => (
-      <span key={`${name}-${i}`} className="text-sm font-semibold text-slate-600">
+      <span key={`${name}-${i}`} className="text-small font-semibold text-muted">
         {name}
       </span>
     ))}
@@ -386,13 +427,20 @@ const track = [...LOGOS, ...LOGOS]
 </div>
 ```
 
-`tailwind.config.ts`'e gerekli keyframe:
-```ts
-marquee: {
-  '0%':   { transform: 'translateX(0%)' },
-  '100%': { transform: 'translateX(-50%)' },
-},
+Tailwind v4'te keyframe `globals.css`teki `@theme` içinde (config dosyası yok):
+```css
+@theme {
+  --animate-marquee: marquee 40s linear infinite;
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+}
+.marquee:hover .animate-marquee,
+.marquee:focus-within .animate-marquee { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .animate-marquee { animation: none; } }
 ```
+Hover ve odakta durur, reduced-motion'da statik. İkinci kopya `aria-hidden`.
+Uygulama içinde (okunması gereken veri) marquee kullanma.
 
 ### Mouse Spotlight
 
@@ -403,26 +451,29 @@ import { useSpotlight } from '@/hooks/useSpotlight'
 
 const spotlight = useSpotlight() // varsayılan: 620px, rgba(96,165,250,0.07)
 
-<motion.div className="pointer-events-none fixed inset-0 z-0" style={{ background: spotlight }} />
+<m.div className="pointer-events-none fixed inset-0 z-0" style={{ background: spotlight }} />
 ```
 
 ### Top Accent Line (Kart Dekorasyon)
 
-Her glass kartın üst kenarına ince gradient çizgi.
+Kartın üst kenarına ince degrade çizgi (dekoratif hairline; degrade kuralı kapsamı dışında).
 
 ```tsx
-<div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
+<div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 ```
 
 ### Radial Glow Orbs (Hero / CTA Arka Plan)
 
-Atmosferik derinlik için pozisyonlanmış blur'd daireler.
+Atmosferik derinlik için konumlandırılmış bulanık daireler. Renkler token'dan
+(`--accent-cyan` / `--accent-emerald` projenin `@theme`inde tanımlı olmalı).
+Sabit zemin için `.app-bg` ya da Mimio'nun `body::before` katmanı daha ucuz
+(`guides/03-theming.md` § 6).
 
 ```tsx
 <div className="pointer-events-none absolute inset-0 overflow-hidden">
-  <div className="absolute -top-1/4 left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full bg-indigo-600/8 blur-[120px]" />
-  <div className="absolute -left-64 top-1/4 h-[600px] w-[600px] rounded-full bg-cyan-500/5 blur-[100px]" />
-  <div className="absolute -right-64 top-1/3 h-[600px] w-[600px] rounded-full bg-violet-500/5 blur-[100px]" />
+  <div className="absolute -top-1/4 left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full bg-primary/8 blur-[120px]" />
+  <div className="absolute -left-64 top-1/4 h-[600px] w-[600px] rounded-full bg-accent-cyan/5 blur-[100px]" />
+  <div className="absolute -right-64 top-1/3 h-[600px] w-[600px] rounded-full bg-accent-emerald/5 blur-[100px]" />
 </div>
 ```
 
@@ -523,9 +574,33 @@ export function ContactForm() {
 
 ---
 
-## Middleware Auth Pattern
+## Proxy Auth Pattern (Next 16)
 
-### next-auth v5 Middleware
+### `proxy.ts` — ucuz ön eleme (varsayılan, 2026-10-03)
+
+```ts
+// proxy.ts — Next 16: dosya ve fonksiyon adı `proxy`, yalnız Node runtime
+import { NextResponse, type NextRequest } from 'next/server'
+
+const PROTECTED = ['/panel', '/hesap'] as const
+const SESSION_COOKIES = ['authjs.session-token', '__Secure-authjs.session-token'] as const
+
+export function proxy(req: NextRequest) {
+  const { pathname } = req.nextUrl
+  if (!PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return NextResponse.next()
+  if (SESSION_COOKIES.some((n) => req.cookies.has(n))) return NextResponse.next()
+  return NextResponse.redirect(new URL(`/giris?next=${encodeURIComponent(pathname)}`, req.url))
+}
+
+export const config = { matcher: ['/((?!_next|api/auth|.*\\..*).*)'] }
+```
+
+Yalnızca çerezin VARLIĞINA bakar: JWT çözmez, veritabanına gitmez. Gerçek
+yetki sayfada ve her server action'da `auth()` ile yeniden kontrol edilir.
+Neredeyse her şeyi oturum isteyen üründe tersini yap: varsayılan korumalı +
+açık rota izin listesi (ElevenForge). Ayrıntı: `guides/06-nextjs-16.md` § 1.
+
+### next-auth v5 Middleware (Next 15 ve öncesi — eski projeler)
 
 ```ts
 // middleware.ts
@@ -684,7 +759,8 @@ const config = {
 ```tsx
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { AnimatePresence, useInView } from 'motion/react'
+import * as m from 'motion/react-m'
 
 const STEPS = [
   { id: 'step1', title: 'Adım 1', desc: 'Açıklama...' },
@@ -707,29 +783,29 @@ function Demo() {
       <div className="space-y-2">
         {STEPS.map((step, i) => (
           <button key={step.id} onClick={() => setActive(i)}
-            className={cn('w-full text-left rounded-2xl p-5', active === i ? 'glass' : '')}
+            className={cn('w-full text-left rounded-2xl p-5', active === i && 'surface')}
           >
             <h3>{step.title}</h3>
             <AnimatePresence mode="wait">
               {active === i && (
-                <motion.p initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }} exit={{ opacity:0, height:0 }}>
+                <m.p initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}>
                   {step.desc}
-                </motion.p>
+                </m.p>
               )}
             </AnimatePresence>
             {active === i && (
-              <motion.div className="h-0.5 bg-white/[0.06] mt-3">
-                <motion.div className="h-full bg-gradient-to-r from-indigo-500 to-cyan-400"
-                  initial={{ width: '0%' }} animate={{ width: '100%' }}
+              <m.div className="h-0.5 bg-line mt-3 overflow-hidden">
+                <m.div className="h-full origin-left bg-primary"
+                  initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
                   transition={{ duration: 4, ease: 'linear' }} key={`p-${active}`}
                 />
-              </motion.div>
+              </m.div>
             )}
           </button>
         ))}
       </div>
-      <div className="glass rounded-3xl p-1">
-        <div className="rounded-[20px] bg-[#060a14] aspect-[4/3] relative">
+      <div className="surface rounded-3xl p-1">
+        <div className="rounded-[20px] bg-surface-sunken aspect-[4/3] relative">
           <AnimatePresence mode="wait">
             {active === 0 && <StepVisual1 key="s1" />}
             {active === 1 && <StepVisual2 key="s2" />}
@@ -745,6 +821,9 @@ function Demo() {
 - `useInView` ile sadece görünürken auto-advance yap
 - Progress bar ile aktif adım göster
 - `AnimatePresence mode="wait"` ile geçişler
+- İlerleme çubuğu `scaleX` ile (width animasyonu her karede yerleşim hesaplatır, `mistakes.md` #44);
+  açılan açıklama yükseklik değil opaklıkla. Yükseklik gerekiyorsa `grid-template-rows: 0fr → 1fr`
+- Otomatik ilerleme `prefers-reduced-motion` altında durur
 - SVG çizim animasyonu: `strokeDasharray` + `strokeDashoffset`
 
 ### SVG Path Drawing Animation
@@ -763,6 +842,96 @@ useEffect(() => {
   return () => anim.cancel()
 }, [])
 ```
+
+---
+
+## Projelerden Toplanan Desenler (2026-10-03)
+
+Canlı projelerde kendini kanıtlamış, kısa desenler. Uzun gerekçe ilgili
+rehberde; burada yalnızca kopyalanacak çekirdek.
+
+### Türkçe ve Okunaklılık İçin CSS Tabanı (Açılış Zili)
+```css
+@layer base {
+  html, body { overflow-x: clip; }                     /* hidden değil: sticky bozulmaz */
+  html { scroll-padding-block: 76px 24px; }            /* yapışkan başlık odağı örtmesin (WCAG 2.4.11) */
+  h1, h2, h3 { text-wrap: balance; }
+  p, li { text-wrap: pretty; }                         /* yetim kelime yok */
+  :focus-visible { outline: 2px solid var(--line-focus); outline-offset: 2px; }
+  .overflow-hidden :focus-visible { outline-offset: -2px; } /* kırpan kapta halka içeri */
+}
+@media (pointer: coarse) {
+  input, select, textarea { font-size: 16px; }         /* altında iOS yakınlaştırır */
+}
+```
+
+### `cn()` + Özel Punto Kaydı
+`extendTailwindMerge` ile `text-micro`…`text-hero` font-size grubuna kayıtlı;
+yoksa `cn("text-small", "text-strong")` puntoyu siler. Kod: `guides/02-design-tokens.md` § 3.
+
+### Görünmez 44 px Dokunma Hedefi
+`.tap-44::after` ile; kod `guides/05-components.md` § 5.
+
+### JS'siz Yuvarlanan Sayı (RollingFigure)
+Sunucuda çizilir, rakam başına 0–9 şeridi, CSS kaydırır; genişlik son rakamın
+görünmez kopyasından. Snippet: `snippets/rolling-number.tsx`.
+
+### Gecikmeli Gezinme Göstergesi (RouteProgress)
+Tıklamadan 420 ms sonra görünür; daha hızlı gelen sayfada hiç görünmez.
+Sığ adres güncelleyen denetimler gezinme sürerken kendini kapatır
+(`useRouteNavigating`), çünkü `history.replaceState` bekleyen gezinmeyi iptal eder.
+
+### Ölçülen Sekme Hapı (ahmetakyapi.com)
+`layoutId` yerine: aktif sekmenin `offsetLeft/offsetWidth`ini `--pill-x` /
+`--pill-w` değişkenlerine yaz, hap `transform: translateX(var(--pill-x))` +
+`width: var(--pill-w)` ile CSS geçişiyle kayar. `domMax` indirmez.
+Snippet: `snippets/tab-underline.tsx`.
+
+### İmleç Parlaması `--mx/--my` (ahmetakyapi.com)
+```tsx
+onPointerMove={(e) => {
+  const r = e.currentTarget.getBoundingClientRect()
+  e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
+  e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`)
+}}
+```
+```css
+.glow { background: radial-gradient(320px circle at var(--mx) var(--my), var(--primary-wash), transparent 70%); }
+```
+React state yok, her `mousemove`da yeniden çizim yok.
+
+### Site Adresi Geri Düşme Sırası (simayahi)
+```ts
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000')
+```
+Önizleme dağıtımında da canonical ve OG üretim alanına işaret eder.
+
+### JSON-LD Kaçışı (simayahi)
+`JSON.stringify(data).replace(/</g, '\\u003c')` — `</script>` içeren veri bloğu kapatamaz.
+
+### Izgara Hücresi `minmax(0, 1fr)` (simayahi)
+`grid-cols-[repeat(3,minmax(0,1fr))]`; düz `1fr` uzun kelimede kolonu genişletip yatay taşma yaratır.
+
+### i18n Sözlüğü Tipten Türer (Açılış Zili)
+```ts
+export const tr = { nav: { home: 'Ana Sayfa' } } as const
+export const en: typeof tr = { nav: { home: 'Home' } }   // tr'ye anahtar eklenince en derlenmez
+```
+Her özellik kendi ad alanında (`about`, `pairs`…); paralel işler aynı anahtarı ellemez.
+
+### Admin Formu Yalnız Değişeni Gönderir (simayahi)
+Ayar formu tüm nesneyi değil `dirty` alanları gönderir; iki sekmede açık
+panelin biri ötekinin değişikliğini ezmez.
+
+### Önbellekte Hata Dışarıda
+`unstable_cache` içinde `try/catch` yok; sarmalayan fonksiyonda. Yoksa düşen
+veritabanının boş listesi saklanır. `guides/06-nextjs-16.md` § 7.
+
+### Smoke Betiği
+Rota × 390/1280 × dil; HTTP kodu (soft 404), konsol hatası, yatay taşma.
+`guides/08-quality-and-ship.md` § 2.
 
 ---
 
@@ -1008,3 +1177,5 @@ type FrontendTool<T> = {
 ---
 
 *Yeni desenler eklendikçe bu dosya güncellenir.*
+
+*Son güncelleme: 2026-10-03*

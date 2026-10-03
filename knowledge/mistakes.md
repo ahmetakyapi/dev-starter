@@ -9,6 +9,9 @@ Yeni bir projeye başlamadan önce bu dosya okunmalı.
 
 ### 1. next-themes Hydration Mismatch
 
+> **2026-10-03:** Yeni projelerde next-themes yok: tema çerezden sunucuda basılır (`guides/03-theming.md`), `mounted` guard gerekmez. Bu kayıt next-themes kullanan eski projeler (ahmetakyapi.com) için geçerli.
+
+
 **Hata**: `Warning: Text content did not match. Server: "dark" Client: "light"`
 
 **Sebep**: `<html>` tag'ine `suppressHydrationWarning` eklenmemiş
@@ -43,6 +46,9 @@ const ThreeBackground = dynamic(() => import('@/components/ThreeBackground'), { 
 **Kural**: Three.js, canvas, WebGL kullanan tüm bileşenler `dynamic` ile import edilmeli.
 
 ### 3. App Router'da `params` await Edilmemesi
+
+> **2026-10-03:** Next 16'da senkron erişim tamamen kalktı; `cookies()`, `headers()`, `draftMode()` ve metadata görsel fonksiyonlarının `params`ı da Promise. Tip için global `PageProps<"/r">` (#77).
+
 
 **Hata**: Next.js 15'te `params` bir Promise oldu
 
@@ -98,7 +104,7 @@ npx prisma generate
 
 ---
 
-## Framer Motion
+## Motion (eski adıyla Framer Motion)
 
 ### 8. `layoutId` Key Çakışmaları
 
@@ -121,6 +127,9 @@ npx prisma generate
 ```
 
 ### 10. Server Component'te Framer Motion
+
+> **2026-10-03:** Paket artık `motion`, import `motion/react`. Kökte `LazyMotion strict` varsa bileşende `m.*` kullanılır; `'use client'` şartı aynen geçerli.
+
 
 **Hata**: `You're importing a component that needs useState...`
 
@@ -172,6 +181,9 @@ const EASE = [0.22, 1, 0.36, 1] as const  // readonly [0.22, 1, 0.36, 1]
 
 ### 15. Tailwind Dark Mode Sınıf Karışıklığı
 
+> **2026-10-03:** Tailwind v4 + token mimarisinde `dark:` hiç kullanılmaz; tema `data-theme` ile katman 1 token'larını yeniden tanımlayarak döner (`guides/02-design-tokens.md` § 8). `darkMode: 'class'` diye bir ayar da yok.
+
+
 **Hata**: `dark:bg-gray-900` çalışmıyor
 
 **Sebep**: `tailwind.config` içinde `darkMode: 'class'` yok veya `<html>` üzerinde `.dark` class eksik
@@ -183,6 +195,9 @@ const EASE = [0.22, 1, 0.36, 1] as const  // readonly [0.22, 1, 0.36, 1]
 ## Mimio'dan Öğrenilenler (next-themes Alternatifleri)
 
 ### 16. next-themes Olmadan FOUC Önleme
+
+> **2026-10-03:** Satır içi script yerine artık çerez + sunucuda `data-theme` (`guides/03-theming.md`); script yalnızca çerezi okuyamayan statik sitede gerekir.
+
 
 **Hata**: `next-themes` kullanmadan dark mode — sayfa ilk açılışta beyaz çakar
 
@@ -199,6 +214,9 @@ const EASE = [0.22, 1, 0.36, 1] as const  // readonly [0.22, 1, 0.36, 1]
 **Not**: Bu pattern `suppressHydrationWarning` yerine `data-theme` attribute kullanır. next-themes olmadan hydration mismatch olmaz.
 
 ### 17. Tailwind v4: `tailwind.config.ts` Yok
+
+> **2026-10-03:** Ekosistem varsayılanı artık v4. Token'lar iki katmanlı: ham rol değişkenleri `:root[data-theme]`, köprü `@theme inline` (inline olmadan değer derleme anında sabitlenir, tema değişince sınıf dönmez).
+
 
 **Hata**: v4 projesinde `tailwind.config.ts` oluşturmaya çalışmak
 
@@ -358,6 +376,9 @@ Finance/istatistik uygulamalarında her sayı gösterimi için.
 
 ### 28. `postcss.config.js` Eksikliği — Tailwind Utility'leri Çalışmaz
 
+> **2026-10-03:** v4'te yapılandırma `postcss.config.mjs` → `{ plugins: { "@tailwindcss/postcss": {} } }`, CSS'te `@import "tailwindcss";`. `tailwindcss` + `autoprefixer` eklentisi v3'e özgü. Ders aynı: config yoksa utility sessizce hiç üretilmez.
+
+
 **Hata**: Sayfada dark background var, gradient text çalışıyor ama flex/grid/padding gibi utility class'ları hiç uygulanmıyor
 
 **Sebep**: Next.js, `postcss.config.js` olmadan `tailwind.config.ts`'i otomatik işlemiyor. `@tailwind base/components/utilities` directive'leri tarayıcıya ham olarak gidiyor ve ignore ediliyor. `@layer` içindeki custom CSS ise native CSS Cascade Layers olarak çalışmaya devam ediyor — bu yüzden `.glass`, `.text-gradient` gibi class'lar çalışıyor ama utility class'lar çalışmıyor.
@@ -373,6 +394,9 @@ module.exports = {
 **Kural**: Yeni Next.js + Tailwind kurulumlarında `postcss.config.js`'i kontrol et.
 
 ### 29. `enableSystem: true` ile Hydration Mismatch
+
+> **2026-10-03:** next-themes kullanılmayan yeni projelerde bu sorun yok; `enableSystem` yerine varsayılan tema ürün sorusundan seçilir.
+
 
 **Hata**: `Error: Text content does not match server-rendered HTML`
 
@@ -503,6 +527,9 @@ ALTER TABLE posts DROP COLUMN status;
 - Edge limitleri: 128KB bundle, 30s timeout, sınırlı API
 
 ### 36. Framer Motion Bundle Size Şişmesi
+
+> **2026-10-03:** Import yolu `motion/react` (+ `motion/react-m`), `framer-motion` değil. `LazyMotion` `strict` ile: yanlışlıkla yazılan `motion.div` çalışma anında hata verir, paketi sessizce büyütmez (`guides/04-motion.md` § 1).
+
 
 **Hata**: Client bundle'da Framer Motion ~40KB gzip yer kaplıyor
 
@@ -670,6 +697,9 @@ Kural yazılmıştı, template'e uygulanmamıştı.
 12. kategori + `hooks/quality-scan.sh` 6. adım bu kuralları commit anında zorlar.
 
 ### 47. Impeccable — npm CLI ile Plugin Versiyonu Aynı Değil
+
+> **2026-10-03:** impeccable 3.0.0'da ekosistemden kaldırıldı (`design:detect`, hook adımı ve `.impeccable/` silindi). Kayıt tarihçe olarak duruyor.
+
 **Hata**: Claude Code plugin'i GitHub'dan geliyor ve `4.1.1`; npm'deki `impeccable` CLI ise
 `3.6.0`. `"impeccable": "^4.1.1"` yazınca `npm install` → `ETARGET no matching version`.
 **Çözüm**: devDependency'yi npm'deki sürüme pinle (`^3.6.0`), plugin'i ayrı güncelle:
@@ -703,102 +733,10 @@ gerçekten yüklüyor:
 npm run verify:exports
 ```
 
-### 56. Flat ESLint Config'te `dist/` İç İçe Dizinleri Kapsamaz
-**Hata**: `ignores: ['dist/']` yazıldı, ama flat config'te bu YALNIZCA kök seviyedeki
-`dist/`'i eşleştirir. `packages/@ahmet/ui/dist` lint'lendi ve derlenmiş bundle
-üzerinden 57 sahte hata üretti (`'window' is not defined`, `'prop' is already defined`).
-**Çözüm**: İç içe dizinler için `**/` öneki şart — `'**/dist/**'`.
-**Kural**: Flat config'te her ignore kalıbını en az bir iç içe dizinle test et.
-
-### 55. Maskelenmiş CI Adımı = Olmayan CI Adımı
-**Hata**: CI'da `npx eslint packages/ snippets/ --max-warnings 0 || true`.
-`|| true` yüzünden adım hiçbir koşulda kırmızıya düşemiyordu. Dahası, `eslint` ve
-`typescript-eslint` **devDependencies'te hiç yoktu** — `eslint.config.js` onları
-import ediyordu ama kurulu değillerdi. Yani lint diye bir şey yoktu; ne yerelde
-ne CI'da. health-check ise config dosyasının varlığını görüp ✅ diyordu.
-İlk gerçek `npm run lint` koşusu 128 bulgu verdi.
-**Çözüm**: `|| true` kaldırıldı, bağımlılıklar eklendi ve **v9'a pinlendi**
-(`npx` 10.x çekiyordu; sürüm her koşuda değişince sonuç deterministik olmuyor).
-**Kural**: `|| true` taşıyan bir CI adımı dokümantasyondur, kapı değildir.
-Bir kapının kapı olduğunu, onu bilerek kırmızıya düşürerek kanıtla.
-
-### 54. `! grep ... || echo "temiz"` Ters Çalışır
-**Hata**: CI'ın güvenlik taraması bu idiomu kullanıyordu:
-```bash
-! grep -rnE '(password|secret|api_key)\s*[:=]\s*"[^"]{8,}' . || echo "No secrets found"
-```
-Sızıntı **varken** çıktı şu oluyordu:
-```
-leak.ts:1:const api_key = "SUPERSECRETVALUE123"
-No secrets found
-exit=0
-```
-Yani eşleşen satırı basıp hemen ardından "temiz" diyor ve **yeşil geçiyordu**.
-Temiz koşuda ise hiçbir şey basmıyordu — "No secrets found" satırının görünmesi
-zaten sızıntı işaretiydi, tam tersi okunuyordu.
-**Çözüm**: Açık `if` + `exit 1`:
-```bash
-if grep -rnE '...' .; then echo "❌ secret"; exit 1; fi
-echo "✅ temiz"
-```
-**Kural**: Güvenlik kontrolünü `!` ve `||` ile kurma. Her tarayıcıyı bilinen-kötü
-bir fixture ile bir kez kırmızıya düşür — geçtiğini görmek yetmez.
-
-### 53. Template'de `postcss.config.js` Yoksa Tailwind Sessizce Hiç Derlenmez
-**Hata**: `templates/nextjs-fullstack`'te `postcss.config.js` hiç var olmamıştı.
-`globals.css` `@tailwind` direktiflerini içeriyor, `tailwindcss` devDependency
-kurulu — ama PostCSS yapılandırması olmayınca **tek bir utility bile üretilmiyor**.
-Proje açılıyor, çalışıyor, sadece tamamen stilsiz.
-**Neden fark edilmedi**: `next build`, `tsc --noEmit` ve `next lint` ÜÇÜ DE yeşil
-verir. Bu sınıf hata hiçbir derleyici kapısına takılmaz.
-(Aynı ders `templates/landing`'de öğrenilmiş — bkz. #28 — ama buraya taşınmamıştı.)
-**Çözüm**: Yapısal invaryant — `health-check.sh` artık şunu zorunlu kılıyor:
-bir template'in `globals.css`'i `@tailwind` içeriyorsa `postcss.config.*` VAR olmalı.
-**Kural**: Derleyicinin göremediği hatayı invaryantla yakala. "Build geçiyor"
-bir stil hattının çalıştığının kanıtı değildir.
-
-### 52. Claude Code Hook'ları Girdiyi STDIN'den JSON Alır — `TOOL_INPUT` Diye Bir Şey Yok
-**Hata**: `gate-guard.sh` ve `quality-scan.sh` şöyle başlıyordu:
-```bash
-TOOL_INPUT="${TOOL_INPUT:-}"
-if ! echo "$TOOL_INPUT" | grep -qE 'git\s+commit'; then exit 0; fi
-```
-Claude Code hook'a girdiyi **stdin'den JSON** olarak verir:
-`{"tool_name":"Bash","tool_input":{"command":"git commit -m ..."}}`.
-`TOOL_INPUT` hiçbir zaman set edilmedi, hep boş geldi, her çağrı ilk satırda
-`exit 0` verdi. Yani secret taraması, `.env` kontrolü, `@ts-ignore` ve impeccable
-taramaları **5 ay boyunca bir kez bile çalışmadı**.
-İkinci hata: `awk -F'|' '{print $NF}'` — markdown tablo satırının son alanı kapanış
-borusundan sonraki BOŞ dizedir, `$(NF-1)` olmalı. Hook çalışsaydı bile Gate PASSED
-olan story'yi bloklayacaktı.
-**Neden fark edilmedi**: `health-check.sh` dosyanın VARLIĞINI test ediyordu
-(`[ -f hooks/gate-guard.sh ]` → "✅ mevcut"). 58 başarılı, 0 hata raporluyordu.
-**Çözüm**: stdin okuma `hooks/lib/hook-input.sh`'e alındı (jq → python3 fallback).
-`scripts/test-hooks.sh` eklendi: gerçek payload verip **exit kodunu** doğrulayan
-9 davranış testi. health-check artık bu testi çalıştırıyor.
-**Kural**: Bir enforcement katmanını **davranışla** doğrula, varlıkla değil.
-Testin geçerli olduğunu, düzeltmeden önce çalıştırıp KIRMIZI gördüğünde bilirsin —
-bu suite eski kodda 3/9 başarısız veriyor.
-
-### 51. `npm ci --omit=optional` Build'i Kırar
-**Hata**: impeccable puppeteer'ı opsiyonel bağımlılık olarak çekiyor (~150MB Chrome).
-CI'da atlamak için `npm ci --omit=optional` denendi — build şu hatayla kırıldı:
-```
-Error: Cannot find module @rollup/rollup-darwin-arm64
-```
-**Sebep**: Rollup'ın platforma özel native binary'si de bir `optionalDependency`.
-`--omit=optional` onu da atıyor, `tsup --dts` rollup'a dayandığı için build ölüyor.
-Aynısı esbuild ve swc için de geçerli — hepsi platform binary'sini optional tutar.
-**Çözüm**: Optional'ları toptan atma; sadece asıl ağır olan indirmeyi atla:
-```yaml
-- run: npm ci
-  env:
-    PUPPETEER_SKIP_DOWNLOAD: 'true'
-```
-**Kural**: `--omit=optional` modern JS toolchain'inde neredeyse her zaman yanlıştır —
-platform binary'leri optional olarak dağıtılır.
-
 ### 49. Template'de Lint Script Var, Config Yok
+
+> **2026-10-03:** Next 16'da `next lint` kaldırıldı ve `.eslintrc.json` artık doğru çözüm değil: şablonlar flat config `eslint.config.mjs` (`eslint-config-next/core-web-vitals` + `/typescript`) ve `"lint": "eslint"` taşır. `next build` lint çalıştırmaz; CI'da ayrı adım. Genel kural aynen geçerli.
+
 **Hata**: Her iki şablonda da `"lint": "next lint"` script'i ve `eslint` +
 `eslint-config-next` bağımlılıkları vardı, ama **ESLint config dosyası yoktu**.
 Sonuç: üretilen her projede `npm run lint` linting yapmak yerine interaktif kurulum
@@ -825,6 +763,107 @@ olduğu için doğrusu key'i index'ten kurtarmaktır:
 const track = ['a', 'b'].flatMap((lap) => LOGOS.map((name) => ({ id: `${lap}-${name}`, name })))
 {track.map(({ id, name }) => <span key={id}>{name}</span>)}
 ```
+
+### 51. `npm ci --omit=optional` Build'i Kırar
+
+> **2026-10-03:** impeccable kaldırıldığı için CI'daki `PUPPETEER_SKIP_DOWNLOAD` de kalktı; `--omit=optional` dersi geçerli.
+
+**Hata**: impeccable puppeteer'ı opsiyonel bağımlılık olarak çekiyor (~150MB Chrome).
+CI'da atlamak için `npm ci --omit=optional` denendi — build şu hatayla kırıldı:
+```
+Error: Cannot find module @rollup/rollup-darwin-arm64
+```
+**Sebep**: Rollup'ın platforma özel native binary'si de bir `optionalDependency`.
+`--omit=optional` onu da atıyor, `tsup --dts` rollup'a dayandığı için build ölüyor.
+Aynısı esbuild ve swc için de geçerli — hepsi platform binary'sini optional tutar.
+**Çözüm**: Optional'ları toptan atma; sadece asıl ağır olan indirmeyi atla:
+```yaml
+- run: npm ci
+  env:
+    PUPPETEER_SKIP_DOWNLOAD: 'true'
+```
+**Kural**: `--omit=optional` modern JS toolchain'inde neredeyse her zaman yanlıştır —
+platform binary'leri optional olarak dağıtılır.
+
+### 52. Claude Code Hook'ları Girdiyi STDIN'den JSON Alır — `TOOL_INPUT` Diye Bir Şey Yok
+**Hata**: `gate-guard.sh` ve `quality-scan.sh` şöyle başlıyordu:
+```bash
+TOOL_INPUT="${TOOL_INPUT:-}"
+if ! echo "$TOOL_INPUT" | grep -qE 'git\s+commit'; then exit 0; fi
+```
+Claude Code hook'a girdiyi **stdin'den JSON** olarak verir:
+`{"tool_name":"Bash","tool_input":{"command":"git commit -m ..."}}`.
+`TOOL_INPUT` hiçbir zaman set edilmedi, hep boş geldi, her çağrı ilk satırda
+`exit 0` verdi. Yani secret taraması, `.env` kontrolü, `@ts-ignore` ve impeccable
+taramaları **5 ay boyunca bir kez bile çalışmadı**.
+İkinci hata: `awk -F'|' '{print $NF}'` — markdown tablo satırının son alanı kapanış
+borusundan sonraki BOŞ dizedir, `$(NF-1)` olmalı. Hook çalışsaydı bile Gate PASSED
+olan story'yi bloklayacaktı.
+**Neden fark edilmedi**: `health-check.sh` dosyanın VARLIĞINI test ediyordu
+(`[ -f hooks/gate-guard.sh ]` → "✅ mevcut"). 58 başarılı, 0 hata raporluyordu.
+**Çözüm**: stdin okuma `hooks/lib/hook-input.sh`'e alındı (jq → python3 fallback).
+`scripts/test-hooks.sh` eklendi: gerçek payload verip **exit kodunu** doğrulayan
+9 davranış testi. health-check artık bu testi çalıştırıyor.
+**Kural**: Bir enforcement katmanını **davranışla** doğrula, varlıkla değil.
+Testin geçerli olduğunu, düzeltmeden önce çalıştırıp KIRMIZI gördüğünde bilirsin —
+bu suite eski kodda 3/9 başarısız veriyor.
+
+### 53. Template'de `postcss.config.js` Yoksa Tailwind Sessizce Hiç Derlenmez
+
+> **2026-10-03:** v4'te aynı invaryant: `@import "tailwindcss"` varsa `postcss.config.mjs` ve `@tailwindcss/postcss` VAR olmalı.
+
+**Hata**: `templates/nextjs-fullstack`'te `postcss.config.js` hiç var olmamıştı.
+`globals.css` `@tailwind` direktiflerini içeriyor, `tailwindcss` devDependency
+kurulu — ama PostCSS yapılandırması olmayınca **tek bir utility bile üretilmiyor**.
+Proje açılıyor, çalışıyor, sadece tamamen stilsiz.
+**Neden fark edilmedi**: `next build`, `tsc --noEmit` ve `next lint` ÜÇÜ DE yeşil
+verir. Bu sınıf hata hiçbir derleyici kapısına takılmaz.
+(Aynı ders `templates/landing`'de öğrenilmiş — bkz. #28 — ama buraya taşınmamıştı.)
+**Çözüm**: Yapısal invaryant — `health-check.sh` artık şunu zorunlu kılıyor:
+bir template'in `globals.css`'i `@tailwind` içeriyorsa `postcss.config.*` VAR olmalı.
+**Kural**: Derleyicinin göremediği hatayı invaryantla yakala. "Build geçiyor"
+bir stil hattının çalıştığının kanıtı değildir.
+
+### 54. `! grep ... || echo "temiz"` Ters Çalışır
+**Hata**: CI'ın güvenlik taraması bu idiomu kullanıyordu:
+```bash
+! grep -rnE '(password|secret|api_key)\s*[:=]\s*"[^"]{8,}' . || echo "No secrets found"
+```
+Sızıntı **varken** çıktı şu oluyordu:
+```
+leak.ts:1:const api_key = "SUPERSECRETVALUE123"
+No secrets found
+exit=0
+```
+Yani eşleşen satırı basıp hemen ardından "temiz" diyor ve **yeşil geçiyordu**.
+Temiz koşuda ise hiçbir şey basmıyordu — "No secrets found" satırının görünmesi
+zaten sızıntı işaretiydi, tam tersi okunuyordu.
+**Çözüm**: Açık `if` + `exit 1`:
+```bash
+if grep -rnE '...' .; then echo "❌ secret"; exit 1; fi
+echo "✅ temiz"
+```
+**Kural**: Güvenlik kontrolünü `!` ve `||` ile kurma. Her tarayıcıyı bilinen-kötü
+bir fixture ile bir kez kırmızıya düşür — geçtiğini görmek yetmez.
+
+### 55. Maskelenmiş CI Adımı = Olmayan CI Adımı
+**Hata**: CI'da `npx eslint packages/ snippets/ --max-warnings 0 || true`.
+`|| true` yüzünden adım hiçbir koşulda kırmızıya düşemiyordu. Dahası, `eslint` ve
+`typescript-eslint` **devDependencies'te hiç yoktu** — `eslint.config.js` onları
+import ediyordu ama kurulu değillerdi. Yani lint diye bir şey yoktu; ne yerelde
+ne CI'da. health-check ise config dosyasının varlığını görüp ✅ diyordu.
+İlk gerçek `npm run lint` koşusu 128 bulgu verdi.
+**Çözüm**: `|| true` kaldırıldı, bağımlılıklar eklendi ve **v9'a pinlendi**
+(`npx` 10.x çekiyordu; sürüm her koşuda değişince sonuç deterministik olmuyor).
+**Kural**: `|| true` taşıyan bir CI adımı dokümantasyondur, kapı değildir.
+Bir kapının kapı olduğunu, onu bilerek kırmızıya düşürerek kanıtla.
+
+### 56. Flat ESLint Config'te `dist/` İç İçe Dizinleri Kapsamaz
+**Hata**: `ignores: ['dist/']` yazıldı, ama flat config'te bu YALNIZCA kök seviyedeki
+`dist/`'i eşleştirir. `packages/@ahmet/ui/dist` lint'lendi ve derlenmiş bundle
+üzerinden 57 sahte hata üretti (`'window' is not defined`, `'prop' is already defined`).
+**Çözüm**: İç içe dizinler için `**/` öneki şart — `'**/dist/**'`.
+**Kural**: Flat config'te her ignore kalıbını en az bir iç içe dizinle test et.
 
 ### 57. Kilit Dosyasını Üreten npm ile CI'ın npm'i Aynı Major Olmalı
 **Hata**: `package-lock.json` yerelde **Node 24 / npm 11** ile üretildi; CI `.nvmrc`
@@ -1233,8 +1272,226 @@ doğru soruyu sorduğu anlamına gelmez. Burada sorulan soru *"yeni kod çalış
 mu"* idi; sorulması gereken *"CI hâlâ yeşil mi"*. İkisi aynı şey değil ve
 aradaki fark bir commit'e sığdı.
 
+---
+
+## Next 16 · Tailwind v4 · motion Dönemi (Açılış Zili, ElevenForge, Mimio, simayahi)
+
+> 2026 projelerinden toplanan kayıtlar. Her birinin rehberdeki karşılığı
+> parantez içinde; rehber "ne yap"ı, bu dosya "neden"i taşır.
+
+### 74. Katmansız CSS Kuralı Tailwind Utility'sini Ezer
+
+**Hata**: `a { color: var(--primary) }` ya da `h2 { font-size: ... }` yazılınca
+sayfadaki `text-strong`, `text-title` sınıfları hiç uygulanmadı.
+
+**Sebep**: Tailwind v4 yardımcıları `@layer utilities` içinde. Cascade
+Layers kuralı: katmansız her bildirim, katmandaki her bildirimden güçlüdür;
+özgüllük bakılmaz.
+
+**Çözüm**: Element varsayılanları `@layer base`, bileşen sınıfları
+`@layer components` içinde. (Açılış Zili `globals.css` "Temel" bölümü;
+`guides/02-design-tokens.md` § 9)
+
+**Kural**: `globals.css`te katmansız kalan her kural bilerek her şeyi ezmesi
+gereken bir kuraldır (ör. reduced-motion kısaltması) ve yorumunda öyle yazar.
+
+### 75. `twMerge` Özel Punto Adlarını Renk Sanar
+
+**Hata**: Çipler, rozetler, künyeler olması gerekenden büyük çizildi; kodda
+`text-small` yazıyordu.
+
+**Sebep**: `cn("text-small font-semibold", "text-body")` →
+`"font-semibold text-body"`. `tailwind-merge` tanımadığı `text-*` adını renk
+sayar; iki "renk"ten sonuncusu kazanır ve punto sessizce silinir.
+
+**Çözüm**: `extendTailwindMerge({ extend: { classGroups: { "font-size": [{ text: [...TEXT_SIZES] }] } } })`.
+Renkler listeye eklenmez. (Açılış Zili `lib/utils.ts`; `guides/02-design-tokens.md` § 3)
+
+### 76. `--text-*` Ad Alanı Çakışması
+
+**Hata**: Gövde puntosuna `--text-body` adı verilince renk token'ı
+`--text-body` ile çakıştı; `text-body` sınıfı ya punto ya renk oldu.
+
+**Sebep**: Tailwind v4'te `@theme` içindeki `--text-*` PUNTO demektir.
+
+**Çözüm**: Gövde puntosu `--text-read`; renkler katman 2'de `--color-*`
+olarak köprülenir (`--color-body: var(--text-body)`).
+
+### 77. Temiz Kopyada "Cannot find name 'PageProps'"
+
+**Hata**: `npm run typecheck` onlarca `PageProps` / `RouteContext` hatası verdi.
+
+**Sebep**: Next 16 global rota tiplerini `.next/types` altına build ya da
+`next typegen` sırasında üretir; `.next` gitignore'da. Kod sağlam, tip yok.
+
+**Çözüm**: Önce `npm run build` (ya da `npx next typegen`), sonra typecheck.
+CI'da sıra build → typecheck. Rota tipleri bozulursa `rm -rf .next`.
+(`guides/06-nextjs-16.md` § 3)
+
+### 78. `next/font` Değişken Adı `@theme` Token'ıyla Aynı Olamaz
+
+**Hata**: Font yüklenmedi, sistem fontuna düştü.
+
+**Sebep**: `Manrope({ variable: "--font-sans" })` ile `@theme { --font-sans: var(--font-sans), ... }`
+öz-referans oldu.
+
+**Çözüm**: Font değişkenine ayrı ad (`--font-body-face`), köprüde bağla:
+`--font-sans: var(--font-body-face), system-ui`. (Açılış Zili `app/layout.tsx`)
+
+### 79. Segment `loading.tsx` → Soft 404
+
+**Hata**: Olmayan bir şirket sayfası "bulunamadı" yazdı ama HTTP 200 döndü;
+arama motoru boş sayfayı dizine aldı.
+
+**Sebep**: `loading.tsx` sayfayı Suspense içinde akış olarak gönderir;
+başlıklar ilk baytla 200 olarak gider, sonradan çağrılan `notFound()` durum
+kodunu değiştiremez.
+
+**Çözüm**: Segmentte `loading.tsx` yok; yavaş parça kendi `<Suspense>`inde.
+Smoke betiği olmayan adresin 404 döndüğünü her koşuda doğrular.
+(`guides/06-nextjs-16.md` § 9)
+
+### 80. `unstable_cache` İçinde Yakalanan Hata Önbelleğe Girer
+
+**Hata**: Veritabanı kısa bir süre düştü; tatil listesi bir gün boyunca boş kaldı.
+
+**Sebep**: `try/catch` önbelleğe alınan fonksiyonun içindeydi; hata yakalanıp
+`[]` döndü ve boş liste "başarılı sonuç" olarak saklandı.
+
+**Çözüm**: Hata önbelleğin DIŞINDA yakalanır: `unstable_cache` ham sorguyu
+sarar, `try/catch` onu çağıran fonksiyonda. (Açılış Zili `lib/data.ts`)
+
+### 81. Kökte `html:has()` — Her DOM Değişikliğinde Tüm Belge
+
+**Hata**: Ana sayfa 4x yavaş CPU'da yükleme boyunca 126 tam belge stil
+hesabı yaptı, 2,1 saniye (24 Eylül 2026, ölçüldü).
+
+**Sebep**: `html:has(.page)` belgedeki her DOM değişikliğinde yeniden
+değerlendirilir ve kökten bütün belgenin stilini geçersiz kılar. Geri sayım
+her saniye bir rakam ekliyordu.
+
+**Çözüm**: Köke bağlı kural gerekiyorsa sayfa `<html>`e öznitelik basar
+ya da kural sayfanın kendi kabına bağlanır. (Açılış Zili)
+
+### 82. Bulunmayan Kullanıcıda bcrypt Atlanırsa Kullanıcı Adları Sızar
+
+**Hata**: `authorize()` kullanıcıyı bulamayınca hemen dönüyordu; var olan
+kullanıcıda cost 12 bcrypt çalışıyordu. Fark ~216 ms (ölçüldü).
+
+**Sebep**: Zamanlama orakülü: tek istekle "bu ad kayıtlı mı" okunur.
+
+**Çözüm**: Kullanıcı yoksa sabit bir `DUMMY_HASH` ile `compare` çalıştır,
+sonucu at. Hız sınırı `authorize` içinde, bcrypt'ten önce.
+(Açılış Zili `auth.ts`; `guides/07-data-auth-security.md` § 3)
+
+### 83. Sır Tanımsızken Korumalı Uç Herkese Açık Kaldı
+
+**Hata**: `if (secret && auth !== \`Bearer ${secret}\`) return 401` —
+`CRON_SECRET` tanımsızken koşul hiç çalışmadı; veritabanına yazan cron ucu açıktı.
+
+**Çözüm**: `checkBearer`: geliştirmede sırsız açık, **üretimde sır yoksa 503**;
+karşılaştırma `timingSafeEqual`. Yanlış yapılandırma sessiz bir açık kapı
+değil görünür bir hata olur. (Açılış Zili `lib/api-auth.ts`)
+
+### 84. `"use client"` Modülden Dışa Aktarılan Değer Sunucuda Referansa Döner
+
+**Hata**: Sunucu bileşeni, istemci bileşen dosyasından import ettiği renk
+sabitini okuyamadı; ne derleme ne çalışma zamanı hata verdi.
+
+**Sebep**: Next, `"use client"` modülünün dışa aktardığı her şeyi istemci
+referansına çevirir; bileşen dışındaki değerler sunucuda gerçek değer değildir.
+
+**Çözüm**: Paylaşılan sabitler nötr modülde (`lib/chart-series.ts`,
+`lib/motion.ts`), `"use client"` olmadan.
+
+### 85. `history.replaceState` Uçuştaki Gezinmeyi Öldürür
+
+**Hata**: Kullanıcı bir bağlantıya bastı, sayfa hiç değişmedi.
+
+**Sebep**: Aynı anda bir denetim adresi sığ güncelledi; Next'in yamalı
+`replaceState`i bekleyen gezinmeyi sessizce iptal eder (hata yok, yeniden
+deneme yok).
+
+**Çözüm**: Sığ güncelleme yapan denetim gezinme sürerken kendini kapatır
+(`useRouteNavigating`). Ayrıca: sığ güncelleme geçmiş girdisini tazelemez,
+adresten okunan durum adresten başlatılır. (Açılış Zili `RouteProgress.tsx`)
+
+### 86. Yapıya Uymayan İskelet — CLS 0,25
+
+**Hata**: Genel bir iskelet bloğu içerik gelince farklı yükseklikte kaldı;
+CLS 0,25 (eşik 0,1).
+
+**Çözüm**: İskelet içeriğin yapısını taklit eder: aynı satır sayısı, aynı
+yükseklik, aynı ızgara. (`guides/05-components.md` § 1)
+
+### 87. Reduced-Motion'da `initial={false}` → İçerik Kalıcı Görünmez
+
+**Hata**: Hareketi azaltan kullanıcıda bölümler hiç görünmedi.
+
+**Sebep**: SSR HTML'i `opacity: 0` ile geldi; `initial={false}` kütüphaneye
+"zaten hedefte" dedirtti ve `whileInView` hiç tetiklenmedi.
+
+**Çözüm**: `initial` hedefini değiştir: `initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y }}`.
+(simayahi `components/Reveal.tsx`, Playwright ile teşhis; `guides/04-motion.md` § 4)
+
+### 88. Sayfa Girişinde `fill-mode: both` → Modallar Yanlış Yerde
+
+**Hata**: Uygulamadaki bütün diyaloglar görünümün değil `<main>`in içinde
+konumlandı; sayfanın aşağısında açıldı.
+
+**Sebep**: Animasyonun son karesi `transform: translateY(0)` kalıcı uygulandı.
+Sıfır bile olsa bir transform, içindeki `position: fixed` öğeler için
+kapsayıcı blok oluşturur.
+
+**Çözüm**: Sayfa giriş animasyonunda fill-mode yok. `filter`,
+`backdrop-filter`, `perspective`, `will-change: transform`, `contain: paint`
+aynı hatayı geri getirir. (ElevenForge `globals.css`)
+
+### 89. `background-attachment: fixed` Yerine `position: fixed` Katman
+
+**Hata**: Zemin degradesi iOS'ta kaydırırken titredi ve her tema için
+yeniden yazılması gerekti.
+
+**Çözüm**: Zemin `body::before` / `body::after` üzerinde `position: fixed;
+inset: 0; z-index: -1`. Zemin RENGİ `html`de: `z-index: -1` pseudo-element
+kendi elemanının arka planının arkasına düşer. (Mimio; #18'in kalıcı hâli)
+
+### 90. Tam Ekran Grain'de `mix-blend-mode` Kaydırmayı Kasar
+
+**Hata**: Zayıf makinelerde kaydırma takıldı.
+
+**Sebep**: Sabit, tam ekran ve harmanlanan katman compositor'ı her karede
+tüm görünümü geri okumaya zorlar; altındaki aurora animasyonlu olduğu için
+hiçbir karede atlanamaz.
+
+**Çözüm**: Harmanlama yok; tema başına tek renk gürültü (koyuda beyaz,
+açıkta siyah tane), alfa gürültünün kendisinden. Aurora yalnızca kahraman
+ekrandayken sürüklenir. (Mimio)
+
+### 91. iCloud Kopyaları (`alpaca 2.ts`) — TS6200
+
+**Hata**: Kodda değişiklik yokken derleme `TS6200: Definitions … conflict` ile kırıldı.
+
+**Sebep**: Depo iCloud ile eşitlenen Masaüstü'nde; eşitleme iki yerde
+değişmiş gördüğü dosyanın ikinci kopyasını bıraktı. `.next/types` altındaki
+kopya TypeScript'e girdi.
+
+**Çözüm**: typecheck/build öncesi kopyaları silen betik + `.gitignore`
+deseni; kalıcısı: "Masaüstü ve Belgeler Klasörleri" eşitlemesini kapat.
+(Açılış Zili `scripts/clean-sync-dupes.mjs`)
+
+### 92. Vercel Görsel Optimizasyonu Kotası → 402
+
+**Hata**: Görseller bir anda kırıldı; `/_next/image` 402 döndü.
+
+**Sebep**: Ücretsiz plandaki görsel optimizasyon kotası doldu.
+
+**Çözüm**: Kullanıcı ya da harici kaynaklı yoğun görselde
+`images.unoptimized: true` ya da kaynağında boyutlandırılmış dosya. Uzak
+görseller için `remotePatterns`a `hostname: "**"` yazma: `/_next/image`
+herkesin kullanabileceği bir görsel vekiline döner.
 
 ---
 
-*Son güncelleme: 2026-08-27*
+*Son güncelleme: 2026-10-03*
 *Yeni hata eklemek için bu dosyayı düzenle.*

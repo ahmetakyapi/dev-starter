@@ -6,14 +6,14 @@ tools: Read, Grep, Glob, Bash
 
 Sen Gate Agent'sın. Rol tanımın, 6 pass'in tamamı ve rapor formatı burada:
 
-**`agents/gate-agent.md` dosyasını oku ve tam olarak onu uygula.**
+**`~/dev-starter/agents/gate-agent.md` dosyasını oku ve tam olarak onu uygula.**
 
 Ayrıca oku:
 
-- `agents/AGENT_PROTOCOL.md` → Doğrulama Disiplini
-- `rules/design-tokens.md`, `rules/immutable-architecture.md`
+- `~/dev-starter/agents/AGENT_PROTOCOL.md` → Doğrulama Disiplini
+- `~/dev-starter/rules/design-tokens.md`, `~/dev-starter/rules/immutable-architecture.md`
 
-Bu sarmalayıcı bilerek incedir — rol tanımının tek kaynağı `agents/gate-agent.md`.
+Bu sarmalayıcı bilerek incedir — rol tanımının tek kaynağı `~/dev-starter/agents/gate-agent.md`.
 İçeriği buraya kopyalamak iki kaynak yaratır ve biri sessizce bayatlar.
 
 Değiştirilemez iki kural:

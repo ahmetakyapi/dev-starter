@@ -82,9 +82,13 @@ npx tsc --noEmit ; echo "exit=$?"    # exit kodunu RAPORLA
 npm run lint                          # config dosyası var mı, önce onu doğrula
 ```
 
-- **Lint script'i varsa ESLint config'i de olmalı.** Yoksa `next lint`
-  linting yapmaz, interaktif kuruluma düşer — yani hiç çalışmamış olur
-  (`mistakes.md` #49). `ls -a | grep -i eslint` ile doğrula.
+- **Lint script'i varsa ESLint config'i de olmalı.** Next 16'da `next lint`
+  yok; script `eslint` ve config flat `eslint.config.mjs` olmalı. Config
+  yoksa lint ya hiç çalışmaz ya da yanlış dosyaları tarar (`mistakes.md` #49).
+  `ls eslint.config.* .eslintrc* 2>/dev/null` ile doğrula; `.eslintrc*` varsa
+  ve proje Next 16'daysa bulgu.
+- Next 16 projesinde typecheck'ten önce build (ya da `npx next typegen`):
+  `PageProps` tipleri yoksa hata koddan değil sıradan gelir (`mistakes.md` #77).
 - TypeScript strict hataları, unused import, circular dep
 - Naming: PascalCase bileşen, camelCase fonksiyon, kebab-case dosya
 
@@ -129,13 +133,17 @@ npm run build 2>&1 | tail -25    # bundle boyutlarını rapora al
 ### Pass 6: UI Quality (UI değişikliği varsa)
 
 ```bash
-npm run design:detect                          # 59 anti-pattern kuralı
-bash ~/dev-starter/scripts/audit-project.sh .  # 8 standart
+bash ~/dev-starter/scripts/audit-project.sh .  # standartlar
+grep -rnE 'dark:|bg-white|text-(gray|slate)-[0-9]|#[0-9a-fA-F]{6}' app components --include='*.tsx'
+grep -rn "from ['\"]framer-motion" app components                  # yeni projede olmamalı
 ```
 
-- **Bulguları körü körüne düzeltme.** Detector yanlış pozitif üretir
-  (`gray-on-color` alfa kanalını hesaplamıyor) ve kasıtlı kararları hata
-  sanabilir. Her bulguyu oku, kasıtlıysa gerekçesini rapora yaz.
+- **Bulguları körü körüne düzeltme.** Kalıp taraması yanlış pozitif üretir ve
+  kasıtlı kararları hata sanabilir. Her bulguyu oku, kasıtlıysa gerekçesini
+  rapora yaz. Ekranın kendisini ölçmek için `design-reviewer` alt ajanı.
+- **Glass yalnızca altından içerik geçen öğede**, degrade yalnızca üç yerde
+  (display başlık, birincil eylem, marka karosu) — `guides/00-brand-identity.md`
+- **Reveal**: kahraman/LCP sarılı değil, reduced-motion'da `initial={false}` yok (`mistakes.md` #87)
 - **Degrade metin fallback'i** — `@supports` + solid `color` var mı?
   Yoksa metin desteklenmeyen yerde tamamen görünmez olur (`mistakes.md` #42)
 - **Tekrar eden degrade token'dan mı geliyor?** Elle yazılmışsa token'a taşı
@@ -242,11 +250,11 @@ Her pass'te **çalıştırılan komut ve sonucu** yazılır. Komut yoksa pass ge
 [Bulgular]
 
 #### 5. Performance: ✅ | ⚠️ | ❌
-`npm run build` → [First Load JS: N kB]
+`npm run build` → [build süresi, uyarılar] (Next 16 sayfa başına First Load JS yazmıyor)
 [Bulgular]
 
 #### 6. UI Quality: ✅ | ⚠️ | ❌
-`npm run design:detect` → [N bulgu] · her bulgu: düzeltildi / kasıtlı (gerekçe)
+`audit-project.sh` + token taraması → [N bulgu] · her bulgu: düzeltildi / kasıtlı (gerekçe)
 [Bulgular]
 
 ### Auto-Fix Uygulandı

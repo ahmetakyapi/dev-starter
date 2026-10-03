@@ -185,8 +185,8 @@ UI/UX veya Frontend Agent çıktısı inceleniyorsa ek olarak:
 - [ ] Light + dark modda test edildi mi?
 - [ ] `postcss.config.js` mevcut mu? (yeni Next.js projelerinde)
 - [ ] `enableSystem` kullanılıyor mu? (hydration riski)
-- [ ] Dark-only renk class'ları kullanılmış mı? (`text-slate-100` vs `text-slate-900 dark:text-slate-100`)
-- [ ] Dekoratif elementlerde dark: prefix'li varyant var mı?
+- [ ] Renkler token'dan mı? (`text-strong`, `bg-surface`; hazır palet sınıfı ve `dark:` yok)
+- [ ] Ekran iki temada da gözle kontrol edildi mi? (dekoratif öğeler dahil)
 - [ ] `suppressHydrationWarning` `<html>`'de var mı?
 - [ ] `.next` cache sorunu olabilir mi?
 

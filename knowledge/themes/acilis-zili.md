@@ -155,12 +155,21 @@ satırları, boş durum ve hata gövdeleri, ölçü altı mikro künyeler
 
 ## 4. Component Stylings
 
-### Marka karesi
-Ekosistemdeki "marka döşemesi" karşılığı — projenin **tek** degrade kullanımı:
+### Marka karesi — "Gece Mavisi" (Eylül 2026)
+Lacivert karo, beyaz tören zili, ağız çubuğu marka mavisinde. İki temada
+**aynı karo** (sekme / ana ekran ikonu temayı bilemiyor); yalnızca iç kenar
+ve gölge temaya uyar. Önceki açık mavi degrade accent'le aynı aileden
+geldiği için işaret bir düğme gibi okunuyordu.
 ```css
---mark-gradient: linear-gradient(145deg, #4fb3f5 0%, #1f7fd4 48%, #0a4d9e 100%);
---mark-shadow: 0 1px 2px rgb(13 92 182 / .28), 0 4px 10px rgb(13 92 182 / .22);
+--mark-gradient: linear-gradient(135deg, #17345c 0%, #0a1a31 100%);
+--mark-edge: rgb(159 212 255 / .2);   /* koyu temada .3 */
+--mark-ink: #ffffff;                   /* --on-primary DEĞİL: koyuda koyu */
+--mark-lip: #35b8ff;
+--mark-shadow: 0 1px 2px rgb(10 26 49 / .3), 0 4px 10px rgb(10 26 49 / .18);
 ```
+Geometri ve gerekçe: `components/brand/BellMark.tsx`. Sekme, apple, PWA ve
+OG ikonları aynı sabitleri okur; `npm run build:favicon` PNG/ICO üretir.
+Marka adında kelime aralığı `-0.07em` (ş + Z yan boşlukları ayrı duruyordu).
 
 ### `.display-ink` — manşet mürekkebi
 Sayfa başlıkları ve geri sayım bu degradeyle yazılır. **Ekosistemin
