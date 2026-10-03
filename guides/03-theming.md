@@ -79,6 +79,45 @@ değiştirir, çerez arkadan yazılır. O arada React bir yeniden çizim yaparsa
 ❌ `localStorage` + satır içi script (Mimio'nun eski yolu): çalışır ama sunucu
    temayı bilemez, `themeColor` ve OG görseli yanlış temada kalır.
 
+### 2b. İçerik Sitesi: Statik Sayfa + Çerez Betiği
+
+Yukarıdaki kurulumun bir bedeli var: kök layout `cookies()` okuduğu için
+**bütün rotalar dinamik** olur (`next build` çıktısında her satır `ƒ`).
+Kullanıcıya göre değişen bir ürün için (Açılış Zili, panolar) bu zaten
+böyle; portfolyo, tanıtım sayfası ya da blog içinse yanlış takas: içerik
+değişmiyor, her ziyaret bir fonksiyon çağrısına dönüyor ve Hobby planında
+fonksiyon kotası sınırlı.
+
+ahmetakyapi.com'da ölçüldü (3 Ekim 2026): `getTheme()` kaldırılıp yerine
+aşağıdaki betik konunca ana sayfa, `/projeler`, `/blog` statik (`○`), yazılar
+SSG (`●`) oldu; açık tema çereziyle ilk boyama yine açık, konsol temiz.
+
+```ts
+// lib/theme.ts — ilk boyamadan ÖNCE çalışır, çerezden temayı yazar
+export const THEME_SCRIPT = `(function(){try{
+  var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(dark|light)/);
+  var t=m?m[1]:"${DEFAULT_THEME}";document.documentElement.dataset.theme=t;
+}catch(e){}})()`;
+```
+
+```tsx
+// app/layout.tsx — async DEĞİL, cookies() YOK
+<html lang="tr" data-theme={DEFAULT_THEME} suppressHydrationWarning>
+  <head><script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} /></head>
+```
+
+- Tema düğmesi `useSyncExternalStore(subscribe, readDomTheme, () => DEFAULT_THEME)`:
+  hidrasyondan hemen sonra doğru ikona geçer, `mounted` bekçisi gerekmez.
+- `themeColor` varsayılan temayla statik; betik `meta[name=theme-color]`'ı da
+  günceller (DOMContentLoaded'da tekrar, meta betikten sonra basılabiliyor).
+- CSP'de `script-src` satır içi betiğe izin vermeli (`'unsafe-inline'` ya da
+  betiğin hash'i).
+- Sunucu temayı bilmediği için LCP görselinde varsayılan temanınkini öne al
+  (`ThemedImage theme={DEFAULT_THEME}`).
+
+**Karar kuralı:** sayfa kullanıcıya göre değişiyorsa (oturum, kişisel veri)
+zaten dinamiktir → sunucuda çerez. Değişmiyorsa → statik + betik.
+
 ---
 
 ## 3. ThemeToggle ve View Transition

@@ -1,5 +1,28 @@
 # Görsel Hafıza: ahmetakyapi.com
 
+> **⚠️ 3 Ekim 2026'da yeniden tasarlandı; aşağıdaki 9 bölüm ESKİ tasarımı
+> (Next 14, indigo/emerald, glass, next-themes) anlatıyor ve tarihçe olarak
+> duruyor.** Güncel durumun özeti:
+>
+> - **Yığın:** Next 16.3, React 19.2, Tailwind v4 (`@theme inline`, iki katmanlı
+>   token), ESLint 9 flat. Hareket CSS (scroll-driven `view()`) ve View
+>   Transitions; `motion` paketi kurulu ama ana sayfada kullanılmıyor.
+> - **Kimlik:** `signature` palet (Açılış Zili mavisi), varsayılan tema KOYU
+>   (`#070d16`), açık `#f7f9fb`. Schibsted Grotesk + IBM Plex Mono. Derinlik
+>   tonla; glass yalnız sticky başlıkta. Degrade üç yerde: isim imzası
+>   (`.display-ink`), birincil düğme, logo.
+> - **Tema:** çerez `theme` + `<head>`'deki `THEME_SCRIPT`; sayfalar STATİK
+>   (`guides/03-theming.md` § 2b, `mistakes.md` #93).
+> - **Unvan:** "Full-Stack & AI Developer" (`lib/nav.ts` → `JOB_TITLE`).
+> - **Sayfalar:** ana sayfa (künye ızgarası + isim imzası + küre, proje
+>   şeridi, sticky-stack, kinetik paragraf, marquee, editoryal liste),
+>   `/projeler` + `/projeler/[slug]` vaka sayfaları (kart ↔ kahraman morfu),
+>   `/blog` + sunucuda çizilen yazı sayfası.
+> - **Görseller:** `public/projects/<slug>/{desktop,desktop-2,mobile}-{light,dark}.webp`,
+>   envanter `lib/content/project-shots.ts`.
+> - Ayrıntılı spesifikasyon bu dosyaya henüz taşınmadı; kaynak kodun
+>   kendisi ve commit e25d425'in gövdesi.
+
 > **Kaynak:** `/Users/ahmet/Desktop/Projects/ahmetakyapi.com/app/globals.css` — doğrulandı 2026-08-17
 
 > Bu dosya DESIGN.md 9-section formatını takip eder.

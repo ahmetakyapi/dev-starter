@@ -25,7 +25,7 @@ makinede tek kaynaktan kuruluyor.
 <td width="25%" align="center"><h3>11</h3>Rehber</td>
 <td width="25%" align="center"><h3>5</h3>Kayıtlı Ajan</td>
 <td width="25%" align="center"><h3>10</h3>Komut</td>
-<td width="25%" align="center"><h3>92</h3>Kayıtlı Hata</td>
+<td width="25%" align="center"><h3>93</h3>Kayıtlı Hata</td>
 </tr>
 </table>
 
@@ -253,7 +253,7 @@ ve **her projede** kullanılabilir. Rol tanımlarının tek kaynağı [`agents/`
 
 | Dosya | İçerik |
 |---|---|
-| [`knowledge/mistakes.md`](knowledge/mistakes.md) | 92 yaşanmış hata: belirti, sebep, çözüm, hangi projede |
+| [`knowledge/mistakes.md`](knowledge/mistakes.md) | 93 yaşanmış hata: belirti, sebep, çözüm, hangi projede |
 | [`knowledge/patterns.md`](knowledge/patterns.md) | 55 desen, projelerden toplanmış |
 | [`knowledge/decisions.md`](knowledge/decisions.md) | Ekosistem kararları ve neden değiştikleri |
 | [`knowledge/tech-radar.md`](knowledge/tech-radar.md) | İhtiyaç → teknoloji: benimse / dene / bekle |

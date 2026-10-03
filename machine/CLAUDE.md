@@ -6,7 +6,7 @@ Bu dosya tüm projelerde geçerlidir. Proje seviyesindeki CLAUDE.md dosyaları b
 
 ## Kimlik
 
-Ahmet Akyapı — Frontend odaklı full-stack geliştirici.
+Ahmet Akyapı — Full-Stack & AI Developer (web ürünleri + yapay zekâ katmanı: Claude API, ajan arayüzleri).
 Kişisel projeler: ahmetakyapi.com, Açılış Zili, Mimio, Keskealsaydım, ElevenForge, simayahi
 Ekosistem referansı: `~/dev-starter/`
 

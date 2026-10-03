@@ -1493,5 +1493,20 @@ herkesin kullanabileceği bir görsel vekiline döner.
 
 ---
 
+### 93. Kök Layout'ta `cookies()` → Bütün Site Dinamik
+
+**Hata**: ahmetakyapi.com Next 16'ya taşınınca build çıktısında her rota `ƒ`
+(dinamik) oldu; daha önce statikti.
+
+**Sebep**: Tema çerezini sunucuda okumak için kök layout `await cookies()`
+çağırıyordu. Kök layout'taki bir dinamik API, altındaki her rotayı dinamik
+yapar.
+
+**Çözüm**: İçeriği kullanıcıya göre değişmeyen sitede tema `<head>`'deki
+küçük bir betikle çerezden okunur, layout statik kalır (bkz.
+`guides/03-theming.md` § 2b). Proje: ahmetakyapi.com, 3 Ekim 2026.
+
+---
+
 *Son güncelleme: 2026-10-03*
 *Yeni hata eklemek için bu dosyayı düzenle.*
