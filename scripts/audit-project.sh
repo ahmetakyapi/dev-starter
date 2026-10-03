@@ -159,6 +159,25 @@ done
 report "framer-motion importu ('motion/react' kullan)" \
   "$(grep -rn "${EXCLUDES[@]}" --include=*.ts --include=*.tsx -E "from ['\"]framer-motion['\"]" "$TARGET" 2>/dev/null)" 3
 
+# ─── 9. Mobil üst kenar (iOS 26 Safari "buğulu üst") ─────────────────────────
+# Derinay, 3 Ekim 2026: sayfanın üstü telefonda buğulu görünüyordu. İki
+# sebep: (1) sabit/yapışkan başlık en üstte SAYDAM başlıyordu; iOS 26 Safari
+# saydam üst katmanda durum çubuğunun altına kendi bulanık kenar efektini
+# uyguluyor. (2) Fareyi izleyen spotlight kaba imleçte de dinliyordu; iOS
+# dokunuşta mousemove gönderdiği için ışık dokunulan yerde takılı kalıyordu.
+section "Mobil ust kenar (saydam sabit baslik, dokunmatikte spotlight)"
+# Başlığın sınıfı çoğu zaman bir sonraki satırdaki koşulda; dosyanın tamamı
+# değil, `top-0` satırı ve onu izleyen 3 satır aranır (dosya düzeyinde arama
+# sekme noktası gibi küçük öğelerdeki bg-transparent'ı da yakalıyordu).
+TOP_TRANSPARENT=$(grep -rn -A3 "${EXCLUDES[@]}" --include=*.tsx -E "(fixed|sticky)[^\"'\`]*top-0" "$TARGET" 2>/dev/null \
+  | grep -E "(^|[\"'\` ])bg-transparent([\"'\` ]|$)" \
+  | grep -vE "(sm|md|lg|xl):bg-transparent" \
+  | sed -E 's/^([^:]+)[-:][0-9]+[-:].*/\1/' | sed "s#^$TARGET/##" | sort -u || true)
+report "Sabit/yapışkan başlık telefonda saydam başlıyor (telefonda opak zemin ver, saydamlık md: ile)" "$TOP_TRANSPARENT"
+SPOT_ANY=$(grep -rln "${EXCLUDES[@]}" --include=*.ts --include=*.tsx "addEventListener('mousemove'" "$TARGET" 2>/dev/null \
+  | xargs grep -L "pointer: fine\|pointer:fine" 2>/dev/null || true)
+report "mousemove dinleyicisi ince imleç kontrolü olmadan ((hover: hover) and (pointer: fine))" "$SPOT_ANY"
+
 echo ""
 echo "  ─────────────────────────────────────────────"
 if [ $FINDINGS -eq 0 ]; then

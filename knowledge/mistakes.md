@@ -1508,5 +1508,34 @@ küçük bir betikle çerezden okunur, layout statik kalır (bkz.
 
 ---
 
+### 94. Telefonda Sayfanın Üstü Buğulu ("Kenar Efekti" ve Takılı Spotlight)
+
+**Hata**: Derinay'da iPhone'da sayfanın en üstü, durum çubuğundan başlığın
+altına kadar sisli ve bulanık görünüyordu.
+
+**Sebep**: Üç şey üst üste biniyordu:
+1. Sabit başlık en üstte `bg-transparent` başlıyordu. iOS 26 Safari saydam
+   üst katmanda durum çubuğunun altına kendi yumuşak bulanıklık efektini
+   uyguluyor ve altından geçen içeriği bulanıklaştırıyor.
+2. Fareyi izleyen spotlight (`useSpotlight`) kaba imleçte de dinliyordu. iOS
+   dokunuşta da `mousemove` gönderdiği için ışık dokunulan yerde takılı
+   kalıyordu. Başlangıç konumu -600 olduğundan 620 piksellik ışığın kenarı
+   köşeye taşabiliyordu.
+3. Hero'nun üstündeki `blur-3xl` renk lekeleri telefonda başlığın arkasına
+   düşüyordu.
+
+**Çözüm**:
+- Sabit/yapışkan başlık telefonda en üstte de **opak sayfa zemininde**
+  (`bg-page md:bg-transparent`); saydamlık yalnız masaüstünde.
+- İmleç izleyen her efekt yalnız `(hover: hover) and (pointer: fine)` ise
+  dinler; başlangıç konumu ekranın çok dışında (-10000).
+- Dekoratif bulanık lekeler telefonda gizli ya da başlığın altında başlar.
+- `scripts/audit-project.sh` § 9 bu iki deseni her projede yakalar.
+
+Kaynak: `packages/@ahmet/ui/src/hooks/useSpotlight.ts` (Derinay ve One
+Piece Hub'a buradan kopyalanmıştı), landing şablonu `SiteHeader.tsx`.
+
+---
+
 *Son güncelleme: 2026-10-03*
 *Yeni hata eklemek için bu dosyayı düzenle.*

@@ -45,7 +45,9 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
       data-scrolled={toned}
       className={cn(
         "site-header sticky top-0 z-30 pt-[env(safe-area-inset-top)]",
-        toned ? "bg-overlay" : "bg-transparent",
+        // Telefonda en üstte de opak: saydam üst katmanda iOS 26 Safari durum
+        // çubuğunun altını bulanıklaştırıyor ("buğulu üst", mistakes.md #94).
+        toned ? "bg-overlay" : "bg-page md:bg-transparent",
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
