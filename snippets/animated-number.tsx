@@ -1,26 +1,33 @@
 /**
- * Animated Number — Sayı animasyonu
+ * Animated Number — değer DEĞİŞİNCE yaya bağlı sayan sayı
  *
- * Sayı değiştiğinde yukarı/aşağı kayan animasyon.
- * Finance dashboard'ları, istatistik kartları için.
+ * Panolarda canlı güncellenen değerler için (sayaç, toplam). İlk yüklemede
+ * oynayan display sayısı için `rolling-number.tsx` (JS'siz, sunucuda
+ * çizilir) daha doğru: bu bileşen hidrasyonu bekler ve ara karelerde
+ * yarım değerler basar.
+ *
+ * Hareketi azaltan okuyucuda yay atlanır, değer doğrudan yazılır.
+ * Ekran okuyucu ara kareleri değil son değeri okur (sr-only kopya).
  *
  * Kullanım:
- *   <AnimatedNumber value={1337} prefix="$" suffix=" USD" decimals={2} />
- *   <AnimatedNumber value={count} className="text-4xl font-bold" />
+ *   <AnimatedNumber value={1337} suffix=" ₺" decimals={2} />
+ *   <AnimatedNumber value={count} className="text-display font-bold" />
  */
 
 'use client'
 
-import { useEffect } from 'react'
-import { useMotionValue, useSpring, useTransform, motion } from 'framer-motion'
+import { useEffect, useMemo } from 'react'
+import { m, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
 
-interface AnimatedNumberProps {
+type AnimatedNumberProps = {
   value: number
   prefix?: string
   suffix?: string
   decimals?: number
   className?: string
 }
+
+const SPRING = { stiffness: 100, damping: 20 } as const
 
 export function AnimatedNumber({
   value,
@@ -29,25 +36,29 @@ export function AnimatedNumber({
   decimals = 0,
   className,
 }: AnimatedNumberProps) {
-  const motionValue = useMotionValue(value)
-  const spring = useSpring(motionValue, { stiffness: 100, damping: 20 })
-  const display = useTransform(spring, (v) =>
-    `${prefix}${v.toLocaleString('tr-TR', {
+  const reduceMotion = useReducedMotion()
+  const target = useMotionValue(value)
+  const spring = useSpring(target, SPRING)
+
+  const format = useMemo(() => {
+    const nf = new Intl.NumberFormat('tr-TR', {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
-    })}${suffix}`,
-  )
+    })
+    return (v: number) => `${prefix}${nf.format(v)}${suffix}`
+  }, [prefix, suffix, decimals])
+
+  const display = useTransform(spring, format)
 
   useEffect(() => {
-    motionValue.set(value)
-  }, [value, motionValue])
+    if (reduceMotion) spring.jump(value)
+    else target.set(value)
+  }, [value, reduceMotion, target, spring])
 
   return (
-    <motion.span
-      className={className}
-      style={{ fontVariantNumeric: 'tabular-nums', ...({ style: display } as object) }}
-    >
-      {display}
-    </motion.span>
+    <span className={className} style={{ fontVariantNumeric: 'tabular-nums' }}>
+      <span className="sr-only">{format(value)}</span>
+      <m.span aria-hidden>{display}</m.span>
+    </span>
   )
 }

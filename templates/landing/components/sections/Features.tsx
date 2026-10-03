@@ -1,191 +1,55 @@
-'use client'
+import { RevealItem } from "@/components/motion/Reveal";
+import { TiltCard } from "@/components/motion/TiltCard";
+import { features, type Feature } from "@/lib/content";
+import { cn } from "@/lib/utils";
+import { SectionHeading } from "./SectionHeading";
 
-import { motion } from 'framer-motion'
-import { Cpu, Zap, Shield, BarChart3, Globe } from 'lucide-react'
-import { fadeUp, staggerContainer, EASE } from '@/lib/variants'
-import { useCardTilt } from '@/hooks/useCardTilt'
+/*
+ * Özellikler: beş hücreli bento. Masaüstünde üst satırda geniş + dar,
+ * altta üç hücre; tablette iki sütun (geniş hücre tam satır), telefonda tek
+ * sütun. Hücre sayısı içerikle aynı; boş hücre yok.
+ *
+ * Yüzeyler bilerek farklı: ilki vurgu yıkaması, ikincisi nokta dokusu,
+ * kalanı düz yüzey. Hepsi ton farkıyla; degrade yok.
+ */
+const SPANS = ["sm:col-span-2", "", "", "", ""] as const;
+const TONES = ["bg-primary-wash border border-line", "surface dot-grid", "surface", "surface", "surface"] as const;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-type FeatureDef = {
-  id: string
-  icon: typeof Cpu
-  iconBg: string
-  iconColor: string
-  title: string
-  desc: string
-  size: 'lg' | 'sm'
+function FeatureCard({ feature, big }: { feature: Feature; big: boolean }) {
+  const Icon = feature.icon;
+  return (
+    <>
+      <span className="grid size-11 place-items-center rounded-md bg-surface-raised text-primary-ink [&_svg]:size-5">
+        <Icon aria-hidden />
+      </span>
+      <h3 className={cn("mt-6 font-semibold", big ? "text-heading" : "text-title")}>{feature.title}</h3>
+      <p className={cn("mt-2 text-soft", big ? "max-w-md text-read" : "text-base")}>{feature.body}</p>
+      {feature.tags ? (
+        <ul className="mt-6 flex flex-wrap gap-2">
+          {feature.tags.map((tag) => (
+            <li key={tag} className="rounded-full border border-line bg-page px-3 py-1 text-small font-semibold text-strong">
+              {tag}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </>
+  );
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const FEATURES: FeatureDef[] = [
-  {
-    id: 'f1',
-    icon: Cpu,
-    iconBg: 'bg-indigo-500/10 border-indigo-500/20',
-    iconColor: 'text-indigo-400',
-    title: 'Real-time Analytics',
-    desc: 'Watch events stream in as they happen. Every click, conversion and drop-off, visible live on your dashboard.',
-    size: 'lg',
-  },
-  {
-    id: 'f2',
-    icon: Zap,
-    iconBg: 'bg-amber-500/10 border-amber-500/20',
-    iconColor: 'text-amber-400',
-    title: 'Lightning Fast',
-    desc: 'Queries resolve in under 50ms. No waiting, no loading spinners — just instant answers when you need them.',
-    size: 'sm',
-  },
-  {
-    id: 'f3',
-    icon: Shield,
-    iconBg: 'bg-emerald-500/10 border-emerald-500/20',
-    iconColor: 'text-emerald-400',
-    title: 'Privacy First',
-    desc: 'GDPR-compliant by default. No third-party cookies, no personal data stored without explicit consent.',
-    size: 'sm',
-  },
-  {
-    id: 'f4',
-    icon: BarChart3,
-    iconBg: 'bg-cyan-500/10 border-cyan-500/20',
-    iconColor: 'text-cyan-400',
-    title: 'Custom Dashboards',
-    desc: 'Drag, drop and arrange your metrics. Build the view your team actually wants to open every morning.',
-    size: 'sm',
-  },
-  {
-    id: 'f5',
-    icon: Globe,
-    iconBg: 'bg-blue-500/10 border-blue-500/20',
-    iconColor: 'text-blue-400',
-    title: 'Global Coverage',
-    desc: 'Data collected across 12 edge regions worldwide. Sub-100ms latency for 95% of your users, anywhere.',
-    size: 'sm',
-  },
-]
-
-// Mini chart bars inside the large card (decorative)
-const MINI_BARS = [
-  { id: 'mb-1', h: 40 }, { id: 'mb-2', h: 65 }, { id: 'mb-3', h: 50 },
-  { id: 'mb-4', h: 80 }, { id: 'mb-5', h: 55 }, { id: 'mb-6', h: 90 },
-  { id: 'mb-7', h: 68 }, { id: 'mb-8', h: 100 }, { id: 'mb-9', h: 74 },
-  { id: 'mb-10', h: 88 }, { id: 'mb-11', h: 62 }, { id: 'mb-12', h: 95 },
-]
-
-// ─── Feature Card ─────────────────────────────────────────────────────────────
-function FeatureCard({ feature, className = '' }: Readonly<{ feature: FeatureDef; className?: string }>) {
-  const { ref, rx, ry, shine, onMove, onLeave } = useCardTilt(6)
-  const Icon = feature.icon
-
+export function Features() {
   return (
-    <motion.div
-      ref={ref}
-      variants={{
-        hidden:  { opacity: 0, y: 32 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-      }}
-      style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className={`glass relative overflow-hidden rounded-2xl p-7 transition-shadow hover:shadow-xl hover:shadow-indigo-500/5 ${className}`}
-    >
-      {/* Holographic shine */}
-      <motion.div className="pointer-events-none absolute inset-0" style={{ background: shine }} />
-
-      {/* Top accent line */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
-
-      {/* Icon */}
-      <div className={`mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border ${feature.iconBg}`}>
-        <Icon className={`h-5 w-5 ${feature.iconColor}`} />
-      </div>
-
-      <h3 className="mb-2.5 text-[15px] font-semibold text-slate-900 dark:text-slate-100">{feature.title}</h3>
-      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{feature.desc}</p>
-
-      {/* Large card: decorative mini-chart preview */}
-      {feature.size === 'lg' && (
-        <div className="mt-7 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-20 rounded-sm bg-white/10" />
-              <div className="h-1.5 w-10 rounded-sm bg-white/[0.06]" />
-            </div>
-            <div className="flex gap-1">
-              <div className="rounded px-2 py-0.5 bg-indigo-500/20 text-[9px] font-medium text-indigo-300">Live</div>
-            </div>
-          </div>
-          <div className="flex h-16 items-end gap-1">
-            {MINI_BARS.map(({ id, h }, i) => (
-              <div
-                key={id}
-                className="flex-1 rounded-t-sm"
-                style={{
-                  height: `${h}%`,
-                  background: i >= MINI_BARS.length - 3
-                    ? `rgba(99,102,241,${0.5 + (i - MINI_BARS.length + 3) * 0.2})`
-                    : `rgba(99,102,241,${0.08 + i * 0.018})`,
-                }}
-              />
-            ))}
-          </div>
-          <div className="mt-2.5 flex items-center justify-between">
-            {['Jan', 'Mar', 'May', 'Jul'].map((m) => (
-              <span key={m} className="text-[9px] text-slate-600">{m}</span>
-            ))}
-          </div>
-        </div>
-      )}
-    </motion.div>
-  )
-}
-
-// ─── Section ──────────────────────────────────────────────────────────────────
-export default function Features() {
-  const [large, ...small] = FEATURES
-
-  return (
-    <section id="features" className="relative z-10 mx-auto max-w-6xl px-6 py-28">
-
-      {/* Section header */}
-      <motion.div
-        variants={staggerContainer(0.08)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-80px' }}
-        className="mb-16 text-center"
-      >
-        <motion.div variants={fadeUp} className="mb-4 flex justify-center">
-          <span className="chip">Features</span>
-        </motion.div>
-        <motion.h2
-          variants={fadeUp}
-          className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl"
-        >
-          Everything you need to move fast
-        </motion.h2>
-        <motion.p variants={fadeUp} className="mx-auto max-w-xl text-slate-500 dark:text-slate-400">
-          Built for modern teams who ship weekly and need reliable data, not spreadsheet gymnastics.
-        </motion.p>
-      </motion.div>
-
-      {/* Bento grid
-          sm (2-col): large spans full width, smalls fill below
-          lg (3-col): large spans 2 cols, first small fills col 3, remaining 3 fill row 2
-      */}
-      <motion.div
-        variants={staggerContainer(0.07)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-60px' }}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        <FeatureCard feature={large} className="sm:col-span-2 lg:col-span-2" />
-        {small.map((f) => (
-          <FeatureCard key={f.id} feature={f} />
+    <section aria-labelledby="ozellikler-baslik" id="ozellikler" className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <SectionHeading id="ozellikler-baslik" title={features.title} description={features.description} />
+      <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {features.items.map((feature, index) => (
+          <RevealItem key={feature.title} as="li" index={index} className={cn("min-w-0", SPANS[index])}>
+            <TiltCard className={cn("h-full rounded-lg p-6 sm:p-7", TONES[index])}>
+              <FeatureCard feature={feature} big={index === 0} />
+            </TiltCard>
+          </RevealItem>
         ))}
-      </motion.div>
+      </ul>
     </section>
-  )
+  );
 }

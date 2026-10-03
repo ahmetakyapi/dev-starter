@@ -26,7 +26,7 @@ const TPL = join(REPO, 'templates/agentic-chat')
 // Pin'ler TEK KAYNAKTAN gelir: template'in package.json'i.
 // Burada tekrar yazsaydik ikisi sessizce ayrisirdi.
 const pins = JSON.parse(readFileSync(join(TPL, 'package.json'), 'utf8')).dependencies
-const DEV = ['typescript@5', 'vitest@3', 'react@19', 'react-dom@19', '@types/react@19', '@types/node', 'framer-motion']
+const DEV = ['typescript@5', 'vitest@3', 'react@19', 'react-dom@19', '@types/react@19', '@types/node', 'motion@13']
 
 const fail = (msg) => {
   console.error(`\n❌ ${msg}`)

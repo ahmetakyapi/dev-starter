@@ -63,26 +63,7 @@ if [ -n "$TS_IGNORE" ]; then
   WARNINGS=$((WARNINGS + 1))
 fi
 
-# 6. Impeccable — AI-slop ve tasarım anti-pattern taraması (staged UI dosyaları)
-UI_STAGED=$(echo "$STAGED" | grep -E '\.(tsx?|jsx?|css|html)$' || true)
-if [ -n "$UI_STAGED" ]; then
-  if [ -x "node_modules/.bin/impeccable" ]; then
-    set +e
-    SLOP_OUT=$(echo "$UI_STAGED" | xargs node_modules/.bin/impeccable detect 2>/dev/null)
-    SLOP_CODE=$?
-    set -e
-    if [ $SLOP_CODE -ne 0 ] && [ -n "$SLOP_OUT" ]; then
-      echo "⚠️  IMPECCABLE: Tasarım anti-pattern bulundu:"
-      echo "$SLOP_OUT" | head -20 | sed 's/^/   /'
-      echo "   Detay: npm run design:detect"
-      WARNINGS=$((WARNINGS + 1))
-    fi
-  else
-    echo "ℹ️  impeccable bulunamadı — 'npm install' sonrası tasarım taraması devreye girer"
-  fi
-fi
-
-# 7. Lockfile tutarlılığı — package.json/package-lock.json stage'lendiyse
+# 6. Lockfile tutarlılığı — package.json/package-lock.json stage'lendiyse
 # Kilit manifest'le senkron değilse CI'ın İLK adımı (`npm ci`) patlar ve
 # hiçbir kontrol çalışmaz. Yerelde `npm install` çalıştığı için commit anında
 # hiçbir belirti yoktur; bu yüzden uyarı değil HATA. Bkz. mistakes.md #57
@@ -101,7 +82,7 @@ if [ -n "$LOCK_TOUCHED" ]; then
   fi
 fi
 
-# 8. Agentic: tool sonucu doğrulanmadan cast ediliyor mu?
+# 7. Agentic: tool sonucu doğrulanmadan cast ediliyor mu?
 # Tel üzerinde tool sonucu STRING'dir; JSON.parse -> unknown döner.
 # Doğrudan cast etmek temenniden ibarettir. -> knowledge/mistakes.md #58
 AGENTIC_FILES=$(echo "$STAGED" | grep -E '\.tsx?$' | xargs grep -ln 'useRenderTool\|useFrontendTool\|useHumanInTheLoop\|toolCall' 2>/dev/null || true)
@@ -115,7 +96,7 @@ if [ -n "$AGENTIC_FILES" ]; then
   fi
 fi
 
-# 9. Agentic: @ag-ui/client sürümü sabitlenmiş mi?
+# 8. Agentic: @ag-ui/client sürümü sabitlenmiş mi?
 # CopilotKit bu paketi TAM sürüme sabitler. Aralık (^/~) yazmak ikinci bir
 # kopya yaratır ve HttpAgent tipi AbstractAgent'a atanamaz. -> mistakes.md #71
 AGUI_PKG=$(echo "$STAGED" | grep -E '(^|/)package\.json$' || true)

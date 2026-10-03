@@ -1,13 +1,12 @@
 {
   "name": "@ahmetakyapi/ui",
-  "version": "2.1.0",
-  "description": "Kişisel proje UI bileşen kütüphanesi — glass, chip, cursor, spotlight",
+  "version": "3.0.0",
+  "description": "Kişisel proje UI bileşen kütüphanesi — Surface, Button, Chip, imleç ve Motion yardımcıları",
   "keywords": [
     "react",
     "ui",
     "components",
-    "framer-motion",
-    "glassmorphism",
+    "motion",
     "tailwind",
     "design-system"
   ],
@@ -36,27 +35,29 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18",
-    "framer-motion": ">=11",
-    "next-themes": ">=0.3",
-    "tailwindcss": ">=3"
+    "react": ">=19",
+    "react-dom": ">=19",
+    "motion": ">=12",
+    "tailwindcss": ">=4"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
-    "@types/react": "^18"
+    "@types/react": "^19"
   },
   "dependencies": {
-    "@ahmetakyapi/theme": "^2.1.0",
-    "clsx": "^2.1.0",
-    "tailwind-merge": "^2.3.0"
+    "@ahmetakyapi/theme": "^3.0.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.6.0"
   }
 }

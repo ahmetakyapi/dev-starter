@@ -21,7 +21,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'motion/react'
 import { useRenderTool } from '@copilotkit/react-core/v2'
 import { z } from 'zod'
 
@@ -105,19 +105,19 @@ function BookFlightCard({ status, parameters, result, undoBooking }: CardProps) 
   const canUndo = !undone && !pending && parsed?.ok === true && flightId !== undefined
 
   return (
-    <motion.article
+    <m.article
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.28, ease: EASE }}
-      className="rounded-xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-lg"
+      className="rounded-lg border border-line bg-surface p-4"
     >
-      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/40">
+      <p className="font-mono text-micro uppercase tracking-[0.14em] text-muted">
         Rezervasyon
       </p>
-      <p className="mt-1 text-base font-semibold">
+      <p className="mt-1 text-read font-semibold text-strong">
         {flightId !== undefined ? `Ucus #${flightId}` : 'Ucus'}
       </p>
-      <p className="mt-1 text-sm text-white/60">{label}</p>
+      <p className="mt-1 text-base text-soft">{label}</p>
 
       {canUndo && (
         <button
@@ -132,12 +132,12 @@ function BookFlightCard({ status, parameters, result, undoBooking }: CardProps) 
               setPending(false)
             }
           }}
-          className="mt-3 rounded-lg border border-white/15 px-3 py-1.5 text-sm
-                     transition hover:bg-white/5 disabled:opacity-50"
+          className="mt-3 min-h-11 rounded-md border border-line-strong px-3 text-base text-body
+                     transition hover:bg-surface-raised disabled:opacity-50"
         >
           Geri Al
         </button>
       )}
-    </motion.article>
+    </m.article>
   )
 }

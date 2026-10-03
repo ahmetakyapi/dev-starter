@@ -6,14 +6,14 @@
 #   bash scripts/audit-project.sh ~/Desktop/Projects/*/     # toplu
 #
 # Neyi kontrol eder (rules/design-tokens.md):
-#   1. Impeccable detector (59 anti-pattern kurali)
-#   2. Degrade metin  — bg-clip-text
-#   3. Elle yazilmis renk degradesi — tek imza token'i disi
-#   4. violet/purple/fuchsia sizintisi
-#   5. width/height animasyonu — layout thrash
-#   6. Emoji ikon
-#   7. ESLint yapilandirmasi (lint script'i varsa)
-#   8. Isik modu kontrasti — dark: esi olmayan acik metin
+#   1. Degrade metin  — bg-clip-text
+#   2. Elle yazilmis renk degradesi — tek imza token'i disi
+#   3. violet/purple/fuchsia sizintisi
+#   4. width/height animasyonu — layout thrash
+#   5. Emoji ikon
+#   6. ESLint yapilandirmasi (flat config, `next lint` yok)
+#   7. Isik modu kontrasti — dark: esi olmayan acik metin
+#   8. Yigin uyumu — Tailwind v4, Next 16 proxy.ts, motion/react
 #
 # Cikis kodu: bulgu varsa 1, temizse 0
 
@@ -53,99 +53,63 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  $NAME"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# ─── 1. Impeccable detector ──────────────────────────────────────────────────
-section "Impeccable detector"
-SCAN_DIRS=()
-for d in app src components lib pages; do
-  [ -d "$TARGET/$d" ] && SCAN_DIRS+=("$TARGET/$d")
-done
-# Monorepo: kokte konvansiyonel dizin yoksa bir kat asagi bak. Yoksa detector
-# hicbir sey taramazken grep'ler tum agaci tariyor ve rapor tutarsiz cikiyor
-# (keskealsaydim: Go backend + frontend/src icinde Next.js).
-if [ ${#SCAN_DIRS[@]} -eq 0 ]; then
-  for sub in frontend web client apps/*; do
-    for d in app src components; do
-      [ -d "$TARGET/$sub/$d" ] && SCAN_DIRS+=("$TARGET/$sub/$d")
-    done
-  done
-fi
-if [ ${#SCAN_DIRS[@]} -eq 0 ]; then
-  echo "     ℹ️  taranacak kaynak dizini yok"
-else
-  # Yerel binary varsa onu kullan — npx her cagrida indirme denemesi yapiyor
-  REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-  if [ -x "$REPO_ROOT/node_modules/.bin/impeccable" ]; then
-    IMP=("$REPO_ROOT/node_modules/.bin/impeccable")
-  elif command -v impeccable >/dev/null 2>&1; then
-    IMP=(impeccable)
-  else
-    IMP=(npx -y impeccable@latest)
-  fi
-  # --json zorunlu: insan-okunur cikti stderr'e gidiyor, stdout bos kaliyor
-  # ve tarama sessizce "temiz" gorunuyor
-  DETECT_JSON=$("${IMP[@]}" detect --json "${SCAN_DIRS[@]}" 2>/dev/null)
-  SUMMARY=$(printf '%s' "$DETECT_JSON" | node -e "
-    let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{
-      let arr=[];try{arr=Object.values(JSON.parse(s||'{}'))}catch{}
-      if(!arr.length){console.log('CLEAN');return}
-      const by={};arr.forEach(f=>{const k=f.antipattern+' ['+f.category+']';by[k]=(by[k]||0)+1});
-      console.log('TOTAL:'+arr.length);
-      Object.entries(by).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>console.log(v+'x  '+k));
-      arr.slice(0,3).forEach(f=>console.log('@ '+f.file.split('/').slice(-2).join('/')+':'+f.line));
-    })" 2>/dev/null)
-  if [ "$SUMMARY" = "CLEAN" ] || [ -z "$SUMMARY" ]; then
-    ok "0 bulgu"
-  else
-    hit "$(printf '%s' "$SUMMARY" | head -1 | sed 's/TOTAL:/bulgu: /')"
-    printf '%s\n' "$SUMMARY" | tail -n +2 | sed 's/^/          /'
-  fi
-fi
-
-# ─── 2. Degrade metin ────────────────────────────────────────────────────────
+# ─── 1. Degrade metin ────────────────────────────────────────────────────────
 section "Degrade metin (AI tell)"
 report "bg-clip-text / background-clip:text" \
   "$(grep -rn "${EXCLUDES[@]}" "${INCLUDES[@]}" -E 'bg-clip-text|background-clip:\s*text' "$TARGET" 2>/dev/null)"
 
-# ─── 3. Elle yazilmis renk degradesi ─────────────────────────────────────────
+# ─── 2. Elle yazilmis renk degradesi ─────────────────────────────────────────
 section "Elle yazilmis renk degradesi"
 report "from-X (via-Y) to-Z — token disi" \
   "$(grep -rn "${EXCLUDES[@]}" "${INCLUDES[@]}" -E 'from-[a-z]+-[0-9]+ +(via-[a-z]+-[0-9]+ +)?to-[a-z]+-[0-9]+' "$TARGET" 2>/dev/null)" 4
 
-# ─── 4. Violet/purple sizintisi ──────────────────────────────────────────────
+# ─── 3. Violet/purple sizintisi ──────────────────────────────────────────────
 section "Marka disi renk (violet/purple/fuchsia)"
 report "violet/purple/fuchsia" \
   "$(grep -rn "${EXCLUDES[@]}" "${INCLUDES[@]}" -E '(bg|from|via|to|text|border|ring|shadow)-(violet|purple|fuchsia)-[0-9]+' "$TARGET" 2>/dev/null)" 4
 
-# ─── 5. Layout animasyonu ────────────────────────────────────────────────────
+# ─── 4. Layout animasyonu ────────────────────────────────────────────────────
 section "Layout property animasyonu"
 report "transition: width/height" \
   "$(grep -rn "${EXCLUDES[@]}" "${INCLUDES[@]}" -E "transition:[^;\"']*(width|height)|transition-\[[^]]*(width|height)" "$TARGET" 2>/dev/null)"
 
-# ─── 6. Emoji ikon ───────────────────────────────────────────────────────────
+# ─── 5. Emoji ikon ───────────────────────────────────────────────────────────
 section "Emoji ikon"
 report "JSX icinde emoji" \
   "$(grep -rnP "${EXCLUDES[@]}" --include=*.tsx --include=*.jsx \
      '(?<![\w-])[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]' "$TARGET" 2>/dev/null)" 4
 
-# ─── 7. ESLint yapilandirmasi ────────────────────────────────────────────────
+# ─── 6. ESLint yapilandirmasi ────────────────────────────────────────────────
 section "ESLint yapilandirmasi"
 if [ -f "$TARGET/package.json" ] && grep -q '"lint"' "$TARGET/package.json" 2>/dev/null; then
   # Her deseni ayri dene: `ls a* b*` eslesmeyen desen yuzunden non-zero doner
   # ve mevcut config'i gormezden gelir
+  # ESLint 9 yalnizca flat config okur: eslint.config.{mjs,js,ts,cjs}.
+  # .eslintrc.* tek basina varsa sessizce yok sayilir — config YOK gibi.
   ESLINT_CFG=""
-  for pattern in "$TARGET"/.eslintrc "$TARGET"/.eslintrc.* "$TARGET"/eslint.config.*; do
+  for pattern in "$TARGET"/eslint.config.*; do
     [ -f "$pattern" ] && { ESLINT_CFG=$(basename "$pattern"); break; }
   done
+  LEGACY_CFG=""
+  for pattern in "$TARGET"/.eslintrc "$TARGET"/.eslintrc.*; do
+    [ -f "$pattern" ] && { LEGACY_CFG=$(basename "$pattern"); break; }
+  done
   if [ -n "$ESLINT_CFG" ]; then
-    ok "lint script'i + config mevcut ($ESLINT_CFG)"
+    ok "lint script'i + flat config mevcut ($ESLINT_CFG)"
+  elif [ -n "$LEGACY_CFG" ]; then
+    hit "yalnizca $LEGACY_CFG var — ESLint 9 okumaz, eslint.config.mjs'e tasi"
   else
-    hit "lint script'i var ama ESLint config YOK — 'next lint' sihirbaza duser"
+    hit "lint script'i var ama ESLint config YOK"
+  fi
+  # Next 16'da `next lint` komutu kaldirildi
+  if grep -qE '"lint"[[:space:]]*:[[:space:]]*"next lint' "$TARGET/package.json"; then
+    hit "\"lint\": \"next lint\" — Next 16'da yok, \"eslint\" kullan"
   fi
 else
   echo "     ℹ️  lint script'i yok"
 fi
 
-# ─── 8. Isik modu kontrasti ──────────────────────────────────────────────────
+# ─── 7. Isik modu kontrasti ──────────────────────────────────────────────────
 section "Isik modu kontrasti"
 # Olcut: tema DEGISTIRICISI var mi — `darkMode: 'class'` tek basina yetmez,
 # dark-only projeler de onu tanimliyor. Tek temali bir projede `text-white`
@@ -170,6 +134,30 @@ if grep -rqE "setTheme|toggleTheme|useTheme\(\)" \
 else
   echo "     ℹ️  tema sistemi saptanmadi, atlandi"
 fi
+
+# ─── 8. Yigin uyumu ──────────────────────────────────────────────────────────
+section "Yigin uyumu (Tailwind v4, Next 16, motion)"
+if [ -f "$TARGET/package.json" ] && grep -q '"tailwindcss"' "$TARGET/package.json"; then
+  # Tailwind v4: `@import "tailwindcss"` + @tailwindcss/postcss. v3'un
+  # `@tailwind` direktifi v4'te hicbir utility uretmez — build yine yesildir.
+  V3_DIRECTIVE=$(grep -rln "${EXCLUDES[@]}" --include=*.css -E '^[[:space:]]*@tailwind ' "$TARGET" 2>/dev/null || true)
+  if [ -n "$V3_DIRECTIVE" ]; then
+    report "v3 @tailwind direktifi (v4'te '@import \"tailwindcss\";')" "$V3_DIRECTIVE"
+  elif grep -rqsE "${EXCLUDES[@]}" --include=*.css "@import ['\"]tailwindcss['\"]" "$TARGET"; then
+    if grep -qs '@tailwindcss/postcss' "$TARGET"/postcss.config.* 2>/dev/null; then
+      ok "Tailwind v4 (@import + @tailwindcss/postcss)"
+    else
+      hit "@import \"tailwindcss\" var ama postcss.config'te @tailwindcss/postcss yok"
+    fi
+  fi
+fi
+for mw in middleware.ts middleware.js src/middleware.ts src/middleware.js; do
+  if [ -f "$TARGET/$mw" ]; then
+    hit "$mw — Next 16'da proxy.ts (export function proxy) olmali"
+  fi
+done
+report "framer-motion importu ('motion/react' kullan)" \
+  "$(grep -rn "${EXCLUDES[@]}" --include=*.ts --include=*.tsx -E "from ['\"]framer-motion['\"]" "$TARGET" 2>/dev/null)" 3
 
 echo ""
 echo "  ─────────────────────────────────────────────"

@@ -1,8 +1,10 @@
 /**
  * Skeleton — Yukleme durumu placeholder bilesenleri
  *
- * Server Component uyumlu — 'use client' gerektirmez.
- * Shimmer animasyonlu loading state.
+ * Sunucu bileşeni uyumlu, 'use client' gerektirmez. Yapıya uyan iskelet
+ * kur: gerçek içeriğin satır sayısı ve yüksekliğiyle. Uymayan iskelet
+ * içerik inince kayma (CLS) üretir. Hareketi azaltan okuyucuda nabız
+ * tema paketinin global kısaltmasıyla durur.
  *
  * Kullanim:
  *   <Skeleton className="h-10 w-48" />
@@ -16,15 +18,16 @@ function cn(...classes: (string | undefined | false)[]) {
 }
 
 // --- Base Skeleton ---
-interface SkeletonProps {
+type SkeletonProps = {
   className?: string
 }
 
 export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
+      aria-hidden
       className={cn(
-        'animate-pulse rounded-xl bg-slate-200 dark:bg-slate-700/50',
+        'animate-pulse rounded-md bg-surface-raised',
         className,
       )}
     />
@@ -34,7 +37,7 @@ export function Skeleton({ className }: SkeletonProps) {
 // --- Skeleton Card ---
 export function SkeletonCard({ className }: SkeletonProps) {
   return (
-    <div className={cn('glass rounded-2xl p-6 space-y-4', className)}>
+    <div className={cn('space-y-4 rounded-xl border border-line bg-surface p-6', className)}>
       <Skeleton className="h-4 w-2/3" />
       <Skeleton className="h-3 w-full" />
       <Skeleton className="h-3 w-5/6" />
@@ -47,7 +50,7 @@ export function SkeletonCard({ className }: SkeletonProps) {
 }
 
 // --- Skeleton List ---
-interface SkeletonListProps {
+type SkeletonListProps = {
   count?: number
   className?: string
 }
@@ -69,7 +72,7 @@ export function SkeletonList({ count = 3, className }: SkeletonListProps) {
 }
 
 // --- Skeleton Avatar ---
-interface SkeletonAvatarProps {
+type SkeletonAvatarProps = {
   size?: 'sm' | 'md' | 'lg'
   className?: string
 }
@@ -85,7 +88,7 @@ export function SkeletonAvatar({ size = 'md', className }: SkeletonAvatarProps) 
 }
 
 // --- Skeleton Table ---
-interface SkeletonTableProps {
+type SkeletonTableProps = {
   rows?: number
   cols?: number
   className?: string

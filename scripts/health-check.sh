@@ -16,7 +16,8 @@
 #   9. Design token ihlalleri (UI paketi)
 #  10. CI/CD workflow
 #  11. Temel dosyalar
-#  12. Impeccable tasarim anti-pattern taramasi
+#  12. Tasarim denetimi (degrade, palet disi renk)
+#  13. Yigin uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion)
 
 set -euo pipefail
 
@@ -108,12 +109,12 @@ fi
 # ─── 5. Snippet Files ────────────────────────────────────────────────────────
 header "Snippet Dosyalari"
 
-SNIPPETS=("animated-number" "infinite-scroll" "og-image" "search-bar" "modal" "drawer" "form" "skeleton" "toast" "confirm" "agent-tool" "action-card" "agent-approval")
+SNIPPETS=("animated-number.tsx" "infinite-scroll.tsx" "og-image.tsx" "search-bar.tsx" "modal.tsx" "drawer.tsx" "form.tsx" "skeleton.tsx" "toast.tsx" "confirm.tsx" "agent-tool.tsx" "action-card.tsx" "agent-approval.tsx" "reveal.tsx" "theme-toggle.tsx" "rolling-number.tsx" "rolling-number.module.css" "scroll-progress.tsx" "tab-underline.tsx" "use-scroll-lock.ts")
 for snippet in "${SNIPPETS[@]}"; do
-  if [ -f "snippets/${snippet}.tsx" ]; then
-    pass "$snippet.tsx mevcut"
+  if [ -f "snippets/${snippet}" ]; then
+    pass "$snippet mevcut"
   else
-    fail "$snippet.tsx EKSIK"
+    fail "$snippet EKSIK"
   fi
 done
 
@@ -141,26 +142,51 @@ for tpl_dir in "nextjs-fullstack" "landing"; do
     fail "templates/$tpl_dir/ EKSIK"
   fi
 
-  # Lint script'i varsa ESLint config'i de gelmeli — yoksa 'next lint'
-  # interaktif kurulum sihirbazina duser (mistakes.md #49)
+  # Lint script'i varsa ESLint config'i de gelmeli. ESLint 9 yalnizca flat
+  # config okur (eslint.config.{js,mjs,ts}); .eslintrc.* sessizce yok sayilir.
   if grep -q '"lint"' "templates/${tpl_dir}/package.json" 2>/dev/null; then
-    if [ -f "templates/${tpl_dir}/.eslintrc.json" ] || [ -f "templates/${tpl_dir}/eslint.config.js" ]; then
-      pass "templates/$tpl_dir/ ESLint yapilandirmasi mevcut"
+    ESLINT_CFG=""
+    for cfg in eslint.config.mjs eslint.config.js eslint.config.ts; do
+      [ -f "templates/${tpl_dir}/${cfg}" ] && { ESLINT_CFG="$cfg"; break; }
+    done
+    if [ -n "$ESLINT_CFG" ]; then
+      pass "templates/$tpl_dir/ ESLint flat config mevcut ($ESLINT_CFG)"
+    elif ls "templates/${tpl_dir}"/.eslintrc* >/dev/null 2>&1; then
+      warn "templates/$tpl_dir/ yalnizca .eslintrc var — ESLint 9 onu okumaz, eslint.config.mjs'e tasi"
     else
       warn "templates/$tpl_dir/ lint script'i var ama ESLint config yok"
     fi
+    # Next 16'da `next lint` komutu kaldirildi; script `eslint` olmali
+    if grep -qE '"lint"[[:space:]]*:[[:space:]]*"next lint' "templates/${tpl_dir}/package.json"; then
+      warn "templates/$tpl_dir/ \"lint\": \"next lint\" — Next 16'da yok, \"eslint\" kullan"
+    fi
   fi
 
-  # @tailwind direktifi kullanan bir template'te postcss.config ZORUNLU.
-  # Yoksa Tailwind hicbir utility uretmez ve build + tsc + lint UCU DE yesil
-  # verir — bu sinif hata ancak yapisal bir invaryantla yakalanir.
-  # nextjs-fullstack'te tam olarak bu oldu (mistakes.md #28, #53)
-  if grep -rqs '@tailwind' "templates/${tpl_dir}/app/globals.css"; then
-    if ls "templates/${tpl_dir}"/postcss.config.* >/dev/null 2>&1; then
-      pass "templates/$tpl_dir/ postcss yapilandirmasi mevcut (Tailwind derlenir)"
+  # Tailwind v4: `@import "tailwindcss"` + @tailwindcss/postcss. Ikisinden
+  # biri eksikse hicbir utility uretilmez ve build + tsc + lint UCU DE yesil
+  # verir — bu sinif hata ancak yapisal bir invaryantla yakalanir
+  # (mistakes.md #28, #53).
+  GLOBALS="templates/${tpl_dir}/app/globals.css"
+  if [ -f "$GLOBALS" ]; then
+    if grep -qs '@tailwind ' "$GLOBALS"; then
+      fail "templates/$tpl_dir/ globals.css v3 '@tailwind' direktifi kullaniyor — v4'te '@import \"tailwindcss\";'"
+    elif grep -qsE "@import ['\"]tailwindcss['\"]" "$GLOBALS"; then
+      if grep -qs '@tailwindcss/postcss' "templates/${tpl_dir}"/postcss.config.* 2>/dev/null; then
+        pass "templates/$tpl_dir/ Tailwind v4 (@import + @tailwindcss/postcss)"
+      else
+        fail "templates/$tpl_dir/ @import \"tailwindcss\" var ama postcss.config'te @tailwindcss/postcss YOK — hicbir stil derlenmez"
+      fi
     else
-      fail "templates/$tpl_dir/ @tailwind kullaniyor ama postcss.config YOK — hicbir stil derlenmez"
+      warn "templates/$tpl_dir/ globals.css Tailwind'i import etmiyor"
     fi
+  fi
+  if ls "templates/${tpl_dir}"/tailwind.config.* >/dev/null 2>&1; then
+    warn "templates/$tpl_dir/ tailwind.config.* var — v4'te token'lar globals.css @theme blogunda"
+  fi
+
+  # Next 16: middleware.ts -> proxy.ts (export function proxy)
+  if [ -f "templates/${tpl_dir}/middleware.ts" ]; then
+    warn "templates/$tpl_dir/middleware.ts — Next 16'da proxy.ts (export function proxy) olmali"
   fi
 done
 
@@ -250,15 +276,22 @@ if [ -f ".nvmrc" ] && command -v node >/dev/null 2>&1; then
 fi
 
 # ─── 9. Design Token Violations ──────────────────────────────────────────────
-header "Design Token Kontrolu (UI Paketi)"
+header "Design Token Kontrolu (UI Paketi + Snippet'ler)"
 
-if [ -d "packages/@ahmet/ui/src" ]; then
-  VIOLATIONS=$(grep -rnE 'bg-(white|black|gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]' packages/@ahmet/ui/src/ 2>/dev/null | grep -v '\.test\.\|\.spec\.' | grep -v 'dark:' || true)
+# v3: renk YALNIZCA token sinifindan (bg-surface, text-strong, border-line).
+# Tema `data-theme` ile dondugu icin `dark:` varyanti da artik bir ihlal —
+# eskiden bu satirlar `grep -v dark:` ile eleniyordu.
+TOKEN_DIRS=()
+for d in packages/@ahmet/ui/src snippets; do [ -d "$d" ] && TOKEN_DIRS+=("$d"); done
+if [ ${#TOKEN_DIRS[@]} -gt 0 ]; then
+  PALETTE='(bg|text|border|ring|from|via|to|fill|stroke|outline|shadow|placeholder)-(white|black|gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[0-9]+|/|\b)'
+  VIOLATIONS=$(grep -rnE "$PALETTE|\bdark:|['\"]#[0-9a-fA-F]{3,8}['\"]|rgba?\([0-9]" "${TOKEN_DIRS[@]}" \
+    --include='*.ts' --include='*.tsx' 2>/dev/null | grep -v '\.test\.\|\.spec\.' || true)
   if [ -n "$VIOLATIONS" ]; then
-    warn "Olasi design token ihlali:"
-    echo "$VIOLATIONS" | head -5 | sed 's/^/     /'
+    warn "Olasi design token ihlali (sabit renk / dark: varyanti):"
+    echo "$VIOLATIONS" | head -8 | sed 's/^/     /'
   else
-    pass "Hardcoded Tailwind renk sinifi bulunamadi"
+    pass "Sabit renk ve dark: varyanti yok — renkler token'dan"
   fi
 fi
 
@@ -292,14 +325,8 @@ for f in "CLAUDE.md" "CONTRIBUTING.md" "CHANGELOG.md" ".editorconfig" ".prettier
   fi
 done
 
-# ─── 12. Impeccable — Tasarim Anti-Pattern Taramasi ──────────────────────────
-header "Impeccable Tasarim Denetimi"
-
-if [ -f ".impeccable/config.json" ]; then
-  pass ".impeccable/config.json mevcut"
-else
-  warn ".impeccable/config.json eksik — detector proje ayarlarini okuyamaz"
-fi
+# ─── 12. Tasarim Denetimi ────────────────────────────────────────────────────
+header "Tasarim Denetimi"
 
 # Imza degradesi tek token'dan mi geliyor?
 STRAY_GRADIENT=$(grep -rnE 'from-(indigo|violet|purple|fuchsia|cyan|sky|blue)-[0-9]+ (via-[a-z]+-[0-9]+ )?to-[a-z]+-[0-9]+' \
@@ -341,20 +368,19 @@ else
   pass "Palet disi renk yok"
 fi
 
-# Detector'i calistir (impeccable kuruluysa)
-if [ -x "node_modules/.bin/impeccable" ]; then
-  set +e
-  DETECT_OUT=$(node_modules/.bin/impeccable detect packages templates snippets 2>/dev/null)
-  DETECT_CODE=$?
-  set -e
-  if [ $DETECT_CODE -eq 0 ]; then
-    pass "Impeccable detector temiz (0 bulgu)"
-  else
-    warn "Impeccable detector bulgu raporladi:"
-    echo "$DETECT_OUT" | head -10 | sed 's/^/     /'
-  fi
+# ─── 13. Yigin Uyumu ─────────────────────────────────────────────────────────
+header "Yigin Uyumu (motion)"
+
+# framer-motion -> motion: ekosistem `motion/react` import eder. Eski paket
+# ayni API'yi tasir ama ayri bir kopya kurar; LazyMotion baglami iki kopya
+# arasinda paylasilmaz ve `m.*` bilesenleri sessizce animasyonsuz kalir.
+FM_IMPORTS=$(grep -rnE "from ['\"]framer-motion['\"]" packages snippets templates \
+  --include='*.ts' --include='*.tsx' --exclude-dir=node_modules --exclude-dir=dist 2>/dev/null || true)
+if [ -n "$FM_IMPORTS" ]; then
+  warn "framer-motion importu — 'motion/react' kullan:"
+  echo "$FM_IMPORTS" | head -5 | sed 's/^/     /'
 else
-  warn "impeccable kurulu degil — 'npm install' ile detector aktiflesir"
+  pass "Animasyon importlari motion/react'ten"
 fi
 
 # ─── Summary ─────────────────────────────────────────────────────────────────

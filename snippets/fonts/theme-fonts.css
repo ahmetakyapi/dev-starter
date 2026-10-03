@@ -1,0 +1,53 @@
+/* ==========================================================================
+   Font köprüsü: fonts.ts ile birlikte globals.css'e eklenir.
+
+   Şablonun `@theme inline` bloğunda `--font-sans` ve `--font-mono` zaten
+   var; eklenen tek şey `--font-display`. Preset başlık ailesi vermiyorsa
+   (`signature`, `studio`, `product`…) `--font-display-face` tanımsız kalır ve
+   başlık gövde fontuyla çizilir: yedek zinciri bunu kendisi çözer, ayrıca
+   koşul yazmaya gerek yok.
+
+   AD ÇAKIŞMASI: `--font-display: var(--font-display)` yazma; değişken
+   kendine başvurur ve sessizce geçersiz olur. next/font tarafı `-face`
+   sonekli, Tailwind tarafı soneksiz.
+   ========================================================================== */
+
+@theme inline {
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face, var(--font-sans-face)), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* Başlıklar display ailesini alır; katmanlı, yoksa `text-*` yardımcılarını ezer. */
+@layer base {
+  h1,
+  h2,
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  /* Şablonun başlık harf aralığı (-0.02em) grotesk için ayarlı. Serif
+     display (editorial, longform) ile başlıkları gözle kontrol et; sıkışık
+     duruyorsa aralığı gevşet:
+     h1, h2 { letter-spacing: -0.005em; } */
+}
+
+/* --------------------------------------------------------------------------
+   YALNIZCA GÖVDESİ SCHIBSTED GROTESK OLAN PRESETTE (`signature`) AÇ.
+
+   Schibsted'de `tnum` (tabular-nums) virgülü ve noktayı da RAKAM
+   GENİŞLİĞİNE çeker: ölçüldü, 100 piksellik puntoda virgül 27'den 63'e
+   çıkıyor ve "8,97" ekranda "8 , 97" okunuyor (Açılış Zili'nde yaşandı).
+   Öteki dokuz presette virgül dar kalıyor; orada bu blok GEREKSİZ.
+
+   snippets/ui bileşenleri sayı sütunlarında `tabular-nums` kullanır. Bu
+   blok yardımcıyı ezer. Bedeli: basamaklar tam alt alta gelmez ve canlı
+   değişen sayı hafifçe titrer; sütunlar sağa yaslı olduğu için toplam hiza
+   korunur (Açılış Zili'nin seçtiği yol). Tailwind v4'te
+   `@utility` çekirdek yardımcıya bildirimi SONA ekler ve kazanır (derlenerek
+   doğrulandı).
+
+@utility tabular-nums {
+  font-variant-numeric: normal;
+}
+   -------------------------------------------------------------------------- */

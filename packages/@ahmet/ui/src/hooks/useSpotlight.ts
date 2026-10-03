@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useMotionTemplate, useMotionValue } from 'framer-motion'
+import { useMotionTemplate, useMotionValue } from 'motion/react'
 
 /**
  * Mouse pozisyonunu takip eden radial gradient spotlight.
@@ -11,7 +11,10 @@ import { useMotionTemplate, useMotionValue } from 'framer-motion'
  *   const spotlight = useSpotlight()
  *   <motion.div style={{ background: spotlight }} />
  */
-export function useSpotlight(radius = 620, color = 'rgba(96, 165, 250, 0.07)') {
+// Varsayılan renk token'dan türetilir; düz bir rgba temayla dönmezdi
+const DEFAULT_COLOR = 'color-mix(in srgb, var(--primary) 7%, transparent)'
+
+export function useSpotlight(radius = 620, color = DEFAULT_COLOR) {
   const mx = useMotionValue(-600)
   const my = useMotionValue(-600)
 

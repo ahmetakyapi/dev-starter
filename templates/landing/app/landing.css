@@ -1,0 +1,252 @@
+/* ==========================================================================
+   LANDING KATMANI
+
+   `globals.css` sistem dosyasıdır ve nextjs-fullstack ile birebir aynı
+   kalır; landing'e özgü hareket ve yerleşim burada. Renk değeri YOK: her şey
+   token okur (`var(--primary)`, `var(--line)`), palet değişince kendiliğinden
+   döner.
+
+   Kurallar `@layer components` içinde: katmansız bir kural Tailwind'in
+   katmanlı yardımcılarını ezer ve aynı öğedeki `hidden` gibi sınıflar
+   sessizce işlemez. Katman adları belge genelinde ortak, Tailwind'in
+   `components` katmanına katılır.
+
+   Her animasyon yalnızca `transform` ve `opacity` dokunur. Hareketi azaltan
+   okuyucu için iki kat koruma var: globals.css'teki genel kısaltma ve
+   aşağıdaki `no-preference` kapıları (animasyon hiç tanımlanmaz).
+   ========================================================================== */
+
+@layer components {
+  /* Sabit başlığın altında çapaya inen bölüm başlığı gizlenmesin. */
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* ── Hero başlığı: satır satır maskeli açılış ─────────────────────────
+     LCP KURALI: başlık ilk karede GÖRÜNÜR. Opaklık hiç değişmez; satır
+     maskenin içinde yarım satır aşağıdan başlar, yani ilk karede üst yarısı
+     zaten boyanmış durumdadır ve tarayıcı LCP'yi bekletmez. Animasyon CSS'te:
+     hidrasyonu beklemez, JavaScript kapalıyken de oynar.
+     Maskenin alt payı (padding-bottom) Türkçe kuyruklu harfleri (ğ, ş, ç, y)
+     kırpmasın diye; aynı pay negatif kenar boşluğuyla geri alınır. */
+  .line-mask {
+    display: block;
+    overflow: clip;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+
+  .line-rise {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .line-rise {
+      animation: line-rise 0.9s var(--ease-brand) both;
+      animation-delay: calc(var(--line, 0) * 90ms + 60ms);
+    }
+  }
+
+  /* Statement düzeninin dev başlığı: ölçeğin `hero` basamağının bir üstü,
+     yalnızca bu düzende. Satır yüksekliği maskenin payıyla birlikte ölçüldü:
+     1.0'ın altında iki satır birbirinin kuyruğuna değiyor. */
+  .statement-title {
+    font-size: clamp(2.75rem, 9.5vw, 7.25rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  /* ── Başlık çubuğu: kaydırınca ton değiştirir ───────────────────────── */
+  .site-header {
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 240ms,
+      border-color 240ms;
+  }
+
+  .site-header[data-scrolled="true"] {
+    border-bottom-color: var(--line-soft);
+  }
+
+  /* ── Hero zemini: R3F sahnesinin CSS karşılığı ──────────────────────────
+     Her zaman çizilir. Sahne yalnızca masaüstünde, hareket serbestken bunun
+     ÜSTÜNE biner; telefonda ve hareketi azaltanda tek görünen budur. */
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(48rem 30rem at 85% 10%, var(--glow), transparent 65%),
+      radial-gradient(40rem 26rem at 0% 90%, var(--glow), transparent 60%);
+  }
+
+  /* Zemin katmanı (ışıma + sahne) ilk ekran boyunda kesilir; alt kenarı
+     yumuşak bitsin, logo şeridinin üstünde sert bir çizgi kalmasın. */
+  .hero-backdrop {
+    mask-image: linear-gradient(to bottom, #000 65%, transparent);
+  }
+
+  /* Bento hücresi deseni: düz yüzeyler arasında dokulu bir hücre. Renk
+     degradesi değil, çizgi tonunda nokta ızgarası. */
+  .dot-grid {
+    background-image: radial-gradient(var(--line-strong) 1px, transparent 1.5px);
+    background-size: 1rem 1rem;
+  }
+
+  /* ── Logo şeridi ────────────────────────────────────────────────────────
+     İki özdeş tur yan yana, şerit kendi genişliğinin yarısı kadar kayar:
+     dikiş görünmez. Üzerine gelince ya da içine klavyeyle girilince DURUR
+     (WCAG 2.2.2: beş saniyeden uzun hareket durdurulabilmeli). */
+  /* Maskede renk değil ALFA okunur: #000 "tam görünür" demek, temaya bağlı değil. */
+  .marquee {
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-track {
+      animation: marquee 40s linear infinite;
+    }
+
+    .marquee:hover .marquee-track,
+    .marquee:focus-within .marquee-track {
+      animation-play-state: paused;
+    }
+  }
+
+  /* ── Nasıl çalışır: kaydırmaya bağlı ilerleme çizgisi ───────────────────
+     JavaScript'siz, `animation-timeline: view()`. Liste görünümde ilerledikçe
+     çizgi yukarıdan aşağı dolar. Desteklemeyen tarayıcıda ve hareketi
+     azaltanda çizgi baştan dolu durur: bilgi kaybı yok, süs eksik. */
+  .steps-rail {
+    transform-origin: top;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .steps-rail {
+        animation: rail-fill linear both;
+        animation-timeline: view();
+        animation-range: cover 15% cover 65%;
+      }
+    }
+  }
+
+  /* ── Ürün çerçevesi (product-frame) ────────────────────────────────────── */
+  .frame-stage {
+    perspective: 1600px;
+  }
+
+  /* Hareketi azaltan okuyucu: çerçeve baştan düz. Kural CSS'te, çünkü
+     sunucu çizimi tercihi bilemez; yoksa hidrasyona kadar eğik görünürdü. */
+  @media (prefers-reduced-motion: reduce) {
+    .frame-tilt {
+      transform: none !important;
+    }
+  }
+
+  /* ── Sahne (scroll-stage) ────────────────────────────────────────────────
+     Bölüm üç ekran boyu; içindeki sahne yapışkan, cümleler aynı ızgara
+     hücresinde üst üste (en uzunu kabın boyunu belirler, mutlak konum yok).
+     Hareketi azaltan okuyucuda yükseklik normale döner ve üç cümle alt alta
+     dizilir; karar CSS'te verildiği için ilk karede doğru, hidrasyondan
+     sonra yerleşim zıplamaz. */
+  .stage {
+    height: 300dvh;
+  }
+
+  .stage-pin {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+  }
+
+  .stage-lines {
+    display: grid;
+  }
+
+  .stage-line {
+    grid-area: 1 / 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage {
+      height: auto;
+    }
+
+    .stage-pin {
+      position: static;
+      height: auto;
+    }
+
+    .stage-lines {
+      gap: 0.75rem;
+    }
+
+    .stage-line {
+      grid-area: auto;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+}
+
+@keyframes line-rise {
+  from {
+    transform: translate3d(0, 0.55em, 0);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes rail-fill {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+/* KATMANSIZ: bu blok logo listesindeki Tailwind yardımcılarını (`shrink-0`,
+   `pr-12`) ezmek ZORUNDA; katman içindeki bir kural utilities katmanına
+   her zaman yenilir. */
+/* Hareketi azaltan okuyucu: şerit durur, ikinci tur gizlenir, işaretler
+   sarılarak sığar. Maskeleme de kalkar, kenardaki işaret soluk kalmasın. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    mask-image: none;
+  }
+
+  .marquee-track {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
+  }
+
+  /* Tur listesi kendi içinde de sarılır; yoksa tek satır kabı taşar ve
+     ortalanınca ilk işaret soldan kesilir (390 ve 1280'de ölçüldü). */
+  .marquee-track > ul {
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem 2rem;
+    padding-inline: 1rem;
+  }
+}

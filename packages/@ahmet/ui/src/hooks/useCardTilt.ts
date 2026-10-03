@@ -7,7 +7,8 @@ import {
   useSpring,
   useTransform,
   useReducedMotion,
-} from 'framer-motion'
+} from 'motion/react'
+import { SPRING } from '../variants'
 
 /**
  * 3D kart eğimi + holografik parlaklık efekti.
@@ -31,8 +32,8 @@ export function useCardTilt(intensity = 8) {
   const tilt = reduceMotion ? 0 : intensity
 
   const ref = useRef<HTMLDivElement>(null)
-  const rx = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
-  const ry = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
+  const rx = useSpring(useMotionValue(0), SPRING.snappy)
+  const ry = useSpring(useMotionValue(0), SPRING.snappy)
   const brightness = useMotionValue(1)
   const mouseX = useMotionValue(0.5)
   const mouseY = useMotionValue(0.5)
@@ -62,8 +63,9 @@ export function useCardTilt(intensity = 8) {
 
   const shineX = useTransform(mouseX, [0, 1], ['0%', '100%'])
   const shineY = useTransform(mouseY, [0, 1], ['0%', '100%'])
-  const shine = useMotionTemplate`radial-gradient(400px circle at ${shineX} ${shineY}, rgba(99,102,241,0.12), rgba(139,92,246,0.06), transparent 70%)`
-  const borderShine = useMotionTemplate`radial-gradient(300px circle at ${shineX} ${shineY}, rgba(99,102,241,0.5), rgba(139,92,246,0.2), transparent 70%)`
+  // Renk token'dan (`--primary`): tema değişince parlaklık da döner
+  const shine = useMotionTemplate`radial-gradient(400px circle at ${shineX} ${shineY}, color-mix(in srgb, var(--primary) 12%, transparent), transparent 70%)`
+  const borderShine = useMotionTemplate`radial-gradient(300px circle at ${shineX} ${shineY}, color-mix(in srgb, var(--primary) 50%, transparent), transparent 70%)`
 
   return { ref, rotateX: rx, rotateY: ry, brightness, shine, borderShine, onMove, onLeave }
 }

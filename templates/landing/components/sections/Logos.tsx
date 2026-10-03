@@ -1,42 +1,71 @@
-// Server Component — pure CSS marquee, no client JS needed
+import { logos } from "@/lib/content";
 
-const LOGOS = [
-  'Vercel', 'Stripe', 'Linear', 'Notion', 'Figma',
-  'Shopify', 'Slack', 'GitHub', 'Loom', 'Raycast',
-]
+/*
+ * Logo şeridi: sayfadaki TEK kayan şerit. CSS animasyonu, JavaScript yok.
+ * Üzerine gelince durur; hareketi azaltanda durağan ve sarılı (app/landing.css).
+ *
+ * İşaretler uydurma müşteri adlarından ÜRETİLİR: baş harf + dört basit
+ * geometriden biri. Gerçek müşteriler gelince `LogoMark` yerine onların SVG
+ * logoları konur (tek renk, `currentColor`, iki temada aynı dosya).
+ */
 
-export default function Logos() {
-  // Seamless infinite loop — iki tur çizilir. Her öğeye tur öneki verilir ki
-  // key index'e dayanmasın (react/no-array-index-key disable'ına gerek kalmaz).
-  const track = ['a', 'b'].flatMap((lap) =>
-    LOGOS.map((name) => ({ id: `${lap}-${name}`, name })),
-  )
+const SHAPES = ["circle", "square", "diamond", "ring"] as const;
 
+function LogoMark({ name, index }: { name: string; index: number }) {
+  const shape = SHAPES[index % SHAPES.length];
+  const initial = name.charAt(0).toLocaleUpperCase("tr-TR");
+  const filled = shape !== "ring";
   return (
-    <section className="relative z-10 border-y border-slate-800/40 py-14">
-      <p className="mb-10 animate-[fade-in_0.8s_ease_forwards] text-center text-[11px] font-semibold uppercase tracking-widest text-slate-600">
-        Trusted by teams at
-      </p>
+    <span className="flex shrink-0 items-center gap-2.5 text-muted transition-colors hover:text-strong">
+      <svg viewBox="0 0 28 28" aria-hidden className="size-7">
+        {shape === "circle" ? <circle cx="14" cy="14" r="13" fill="currentColor" /> : null}
+        {shape === "square" ? <rect x="1" y="1" width="26" height="26" rx="7" fill="currentColor" /> : null}
+        {shape === "diamond" ? <rect x="5" y="5" width="18" height="18" rx="4" transform="rotate(45 14 14)" fill="currentColor" /> : null}
+        {shape === "ring" ? <circle cx="14" cy="14" r="12" fill="none" stroke="currentColor" strokeWidth="2" /> : null}
+        <text
+          x="14"
+          y="14"
+          dy="0.35em"
+          textAnchor="middle"
+          fontSize="13"
+          fontWeight="700"
+          // Dolu şeklin üstünde harf zemin renginde: iki temada da okunur.
+          style={{ fill: filled ? "var(--page-bg)" : "currentColor" }}
+        >
+          {initial}
+        </text>
+      </svg>
+      <span className="text-read font-semibold whitespace-nowrap">{name}</span>
+    </span>
+  );
+}
 
-      {/* Marquee — mask-image for theme-independent fade edges */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
-        }}
-      >
-        <div className="flex animate-marquee gap-14 whitespace-nowrap">
-          {track.map(({ id, name }) => (
-            <span
-              key={id}
-              className="text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-slate-400"
-            >
-              {name}
-            </span>
-          ))}
+function Lap({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center gap-12 pr-12">
+      {logos.names.map((name, index) => (
+        <li key={name}>
+          <LogoMark name={name} index={index} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function Logos() {
+  return (
+    <section aria-labelledby="logolar" className="border-y border-line-soft py-10 sm:py-12">
+      <h2 id="logolar" className="px-4 text-center text-base font-semibold text-muted">
+        {logos.title}
+      </h2>
+      <div className="marquee mt-7 overflow-clip">
+        {/* İki özdeş tur: şerit yarısı kadar kayınca başa döner, dikiş görünmez.
+            İkinci tur ekran okuyucuya gizli; isimler bir kez okunur. */}
+        <div className="marquee-track gap-y-6">
+          <Lap />
+          <Lap hidden />
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,14 +1,9 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site";
+
+/** Tek sayfalık landing; yeni sayfa eklendikçe buraya. Bölüm çapaları (#) site haritasına girmez. */
+const ROUTES = ["/"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? 'https://PROJECT_NAME.vercel.app'
-
-  return [
-    {
-      url: base,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-  ]
+  return ROUTES.map((path) => ({ url: `${SITE_URL}${path}`, changeFrequency: "monthly", priority: 1 }));
 }

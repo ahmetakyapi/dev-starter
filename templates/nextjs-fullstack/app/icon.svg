@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Marka karosu: --brand-gradient (signature). Sekme ikonu temayı bilemez,
+       iki temada aynı karo. Palet değişirse buradaki üç durak da değişir. -->
+  <defs>
+    <linearGradient id="g" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#5cc4ff"/>
+      <stop offset="0.48" stop-color="#1f86e0"/>
+      <stop offset="1" stop-color="#0b3f86"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#g)"/>
+  <path d="M32 17 15 25.5 32 34l17-8.5L32 17Z" fill="none" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="m15 33 17 8.5L49 33M15 40.5 32 49l17-8.5" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

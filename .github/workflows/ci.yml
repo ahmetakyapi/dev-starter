@@ -31,13 +31,9 @@ jobs:
         run: npm run verify:lock
 
       # --omit=optional KULLANMA: rollup'in platform native binary'si de
-      # optionalDependency, onsuz tsup --dts kirilir. Bunun yerine sadece
-      # puppeteer'in Chrome indirmesi atlanir — detector yerel dosya
-      # taramasinda tarayiciya ihtiyac duymaz (mistakes.md #51)
+      # optionalDependency, onsuz tsup --dts kirilir (mistakes.md #51)
       - name: Install dependencies
         run: npm ci
-        env:
-          PUPPETEER_SKIP_DOWNLOAD: 'true'
 
       # `|| true` YOK. Bu adim eskiden maskeliydi ve eslint bagimliliklari hic
       # kurulu olmadigi icin zaten hicbir zaman calismamisti — CI yesildi,
@@ -64,8 +60,10 @@ jobs:
       - name: Verify package exports
         run: npm run verify:exports
 
-      - name: Design anti-pattern scan
-        run: npm run design:detect
+      # README gorselleri tokens.ts'ten uretiliyor. Token degisip gorsel
+      # yeniden uretilmezse README eski paleti gosterirdi; burada kirilir.
+      - name: Verify README assets
+        run: npm run verify:readme
 
       # DIKKAT: buradaki adimlar bir zamanlar `! grep ... || echo "temiz"` idiomunu
       # kullaniyordu. O idiom TERS calisir — sizinti VARKEN hem eslesen satiri basar
@@ -92,12 +90,14 @@ jobs:
           fi
           echo "✅ No .env files"
 
+      # v3: renk yalnizca token sinifindan. Tema `data-theme` ile dondugu icin
+      # `dark:` varyanti da ihlal; eskiden bu satirlar filtreyle eleniyordu.
       - name: Design token violations
         run: |
-          echo "--- Checking UI package for hardcoded colors ---"
-          VIOLATIONS=$(grep -rnE 'bg-(white|black|gray)-[0-9]|text-(white|black|gray)-[0-9]' \
-            packages/@ahmet/ui/src/ 2>/dev/null \
-            | grep -v '\.test\.\|dark:' || true)
+          echo "--- Checking UI package and snippets for hardcoded colors ---"
+          VIOLATIONS=$(grep -rnE '(bg|text|border|ring)-(white|black|gray|slate|zinc|neutral|red|amber|emerald|blue|indigo)(-[0-9]|/)|\bdark:' \
+            packages/@ahmet/ui/src/ snippets/ --include='*.ts' --include='*.tsx' 2>/dev/null \
+            | grep -v '\.test\.' || true)
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ Design token violations found:"
             echo "$VIOLATIONS"
@@ -138,8 +138,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # health-check 12. kategorisi detector'i calistirir; node_modules
-      # olmadan o adim "kurulu degil" uyarisina duser
+      # health-check kilit dogrulamasini ve hook davranis testini kosar;
+      # ikisi de kurulu node_modules ister
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -147,8 +147,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        env:
-          PUPPETEER_SKIP_DOWNLOAD: 'true'
 
       - name: Run health check
         run: bash scripts/health-check.sh

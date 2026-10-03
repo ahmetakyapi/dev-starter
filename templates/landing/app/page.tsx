@@ -1,41 +1,46 @@
-'use client'
+import { Hero } from "@/components/heroes";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
+import { ScrollProgress } from "@/components/motion/ScrollProgress";
+import { Faq } from "@/components/sections/Faq";
+import { Features } from "@/components/sections/Features";
+import { FinalCta } from "@/components/sections/FinalCta";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { Logos } from "@/components/sections/Logos";
+import { Pricing } from "@/components/sections/Pricing";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { hero, isHeroVariant, type HeroVariant } from "@/lib/content";
+import { getTheme } from "@/lib/theme";
 
-import dynamic from 'next/dynamic'
-import Header      from '@/components/layout/Header'
-import Footer      from '@/components/layout/Footer'
-import Hero        from '@/components/sections/Hero'
-import Logos       from '@/components/sections/Logos'
-import Features    from '@/components/sections/Features'
-import HowItWorks  from '@/components/sections/HowItWorks'
-import Metrics     from '@/components/sections/Metrics'
-import Testimonials from '@/components/sections/Testimonials'
-import Pricing     from '@/components/sections/Pricing'
-import CtaSection  from '@/components/sections/CTA'
-import CustomCursor from '@/components/CustomCursor'
+/*
+ * `?hero=statement` yalnızca GELİŞTİRMEDE okunur: yedi düzeni aynı sunucuda
+ * yan yana denemek için. Üretimde parametre yok sayılır; yoksa aynı sayfa
+ * yedi farklı adreste yedi farklı içerikle dizine girebilirdi.
+ */
+async function resolveVariant(searchParams: PageProps<"/">["searchParams"]): Promise<HeroVariant> {
+  if (process.env.NODE_ENV !== "development") return hero.variant;
+  const requested = (await searchParams).hero;
+  return isHeroVariant(requested) ? requested : hero.variant;
+}
 
-// Three.js SSR disabled — mistakes.md #2
-const SceneBackground = dynamic(() => import('@/components/SceneBackground'), {
-  ssr: false,
-  loading: () => null,
-})
+export default async function HomePage({ searchParams }: PageProps<"/">) {
+  const [theme, variant] = await Promise.all([getTheme(), resolveVariant(searchParams)]);
 
-export default function Home() {
   return (
     <>
-      <CustomCursor />
-      <SceneBackground />
-      <Header />
-      <main>
-        <Hero />
+      <ScrollProgress />
+      <SiteHeader initialTheme={theme} />
+      <main id="icerik">
+        <Hero variant={variant} />
         <Logos />
         <Features />
         <HowItWorks />
-        <Metrics />
         <Testimonials />
         <Pricing />
-        <CtaSection />
+        <Faq />
+        <FinalCta />
       </main>
-      <Footer />
+      <SiteFooter />
     </>
-  )
+  );
 }

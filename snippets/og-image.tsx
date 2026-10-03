@@ -1,25 +1,32 @@
 /**
- * OpenGraph Görsel Üretici
- * Kullanım: app/api/og/route.tsx olarak kopyala
+ * OpenGraph görsel üretici
  *
- * Kurulum:
- *   npm install @vercel/og
+ * Kullanım: app/opengraph-image.tsx (dosya kuralı) ya da app/api/og/route.tsx
+ * olarak kopyala. `next/og` Next'in içinde gelir; ayrı paket gerekmez.
  *
- * Erişim:
- *   /api/og?title=Başlık&subtitle=Alt+başlık
+ *   /api/og?title=Başlık&subtitle=Alt+Başlık
  *
- * meta tag:
- *   <meta property="og:image" content="/api/og?title=..." />
+ * RENKLER NEDEN JS'TEN: OG görselini Satori çiziyor ve Satori CSS değişkeni
+ * çözmüyor; `var(--page-bg)` yazılırsa zemin boş çıkar. Değerler
+ * @ahmetakyapi/theme'in `roles` (sistem) ve `palettes` (palet) aynasından
+ * gelir; theme.css ile ayrışmadıkları tests/contract.test.ts'te doğrulanır.
+ * Projenin paleti `signature` değilse `PALETTE`'i değiştir. Paket kurulu değilse
+ * aynı değerleri projenin lib/theme.ts'inden oku, buraya hex yazma.
  */
 
-import { ImageResponse } from '@vercel/og'
-import { NextRequest } from 'next/server'
+import { ImageResponse } from 'next/og'
+import { palettes, roles } from '@ahmetakyapi/theme'
 
-export const runtime = 'edge'
+const SIZE = { width: 1200, height: 630 } as const
+// Paylaşılan görsel koyu zeminde: sosyal akışların çoğu koyu ya da nötr
+const THEME = 'dark'
+const PALETTE = 'signature'
+const C = roles[THEME]
+const P = palettes[PALETTE][THEME]
 
-export function GET(req: NextRequest) {
+export function GET(req: Request) {
   const { searchParams } = new URL(req.url)
-  const title    = searchParams.get('title')    ?? 'PROJECT_NAME'
+  const title = searchParams.get('title') ?? 'PROJECT_NAME'
   const subtitle = searchParams.get('subtitle') ?? 'PROJECT_DESCRIPTION'
 
   return new ImageResponse(
@@ -32,69 +39,63 @@ export function GET(req: NextRequest) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#04070d',
+          background: C.pageBg,
+          // .app-bg ile aynı: köşede paletin düşük opaklıklı ışığı
+          backgroundImage: `radial-gradient(circle at 12% 0%, ${P.appGlow}, transparent 45%)`,
           fontFamily: 'sans-serif',
-          padding: '80px',
-          position: 'relative',
+          padding: 80,
         }}
       >
-        {/* Arka plan radyal gradient'lar */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'radial-gradient(circle at 20% 20%, rgba(79,70,229,0.25) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(34,211,238,0.15) 0%, transparent 50%)',
-        }} />
-
-        {/* Logo */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 64, height: 64,
-          borderRadius: 16,
-          background: 'linear-gradient(135deg, #6366f1, #3b82f6, #22d3ee)',
-          marginBottom: 40,
-          fontSize: 28,
-          fontWeight: 800,
-          color: 'white',
-        }}>
+        {/* Marka döşemesi: imza degradesinin üç izinli yerinden biri */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 64,
+            height: 64,
+            borderRadius: 16,
+            backgroundImage: P.brandGradient,
+            marginBottom: 40,
+            fontSize: 28,
+            fontWeight: 800,
+            color: P.onPrimary,
+          }}
+        >
           P
         </div>
 
-        {/* Başlık */}
-        <div style={{
-          fontSize: 64,
-          fontWeight: 800,
-          color: '#f1f5f9',
-          textAlign: 'center',
-          lineHeight: 1.1,
-          marginBottom: 24,
-          letterSpacing: '-2px',
-        }}>
+        <div
+          style={{
+            fontSize: 64,
+            fontWeight: 800,
+            color: C.textStrong,
+            textAlign: 'center',
+            lineHeight: 1.1,
+            marginBottom: 24,
+            letterSpacing: '-2px',
+          }}
+        >
           {title}
         </div>
 
-        {/* Alt başlık */}
-        <div style={{
-          fontSize: 28,
-          color: 'rgba(148,163,184,0.8)',
-          textAlign: 'center',
-          maxWidth: 700,
-          lineHeight: 1.4,
-        }}>
+        <div
+          style={{
+            fontSize: 28,
+            color: C.textSoft,
+            textAlign: 'center',
+            maxWidth: 700,
+            lineHeight: 1.4,
+          }}
+        >
           {subtitle}
         </div>
 
-        {/* URL */}
-        <div style={{
-          position: 'absolute',
-          bottom: 48,
-          fontSize: 20,
-          color: 'rgba(99,102,241,0.7)',
-        }}>
+        <div style={{ position: 'absolute', bottom: 48, fontSize: 20, color: P.primaryInk }}>
           PROJECT_NAME.com
         </div>
       </div>
     ),
-    { width: 1200, height: 630 },
+    SIZE,
   )
 }

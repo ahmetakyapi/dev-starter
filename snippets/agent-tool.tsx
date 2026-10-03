@@ -98,17 +98,17 @@ export function useFlightWidget() {
         // Streaming sirasinda args PARTIAL gelir — alan alan doldugu icin
         // her alani ayri kontrol et, `args.from &&` gibi.
         if (status === ToolCallStatus.InProgress) {
-          return <div className="h-24 animate-pulse rounded-xl bg-white/5" />
+          return <div className="h-24 animate-pulse rounded-lg bg-surface-raised" />
         }
         return (
-          <article className="rounded-xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-lg">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/40">
+          <article className="rounded-lg border border-line bg-surface p-4">
+            <p className="font-mono text-micro uppercase tracking-[0.14em] text-muted">
               {args.status === 'booked' ? 'Rezerve' : 'Musait'}
             </p>
-            <p className="mt-1 text-base font-semibold">
+            <p className="mt-1 text-read font-semibold text-strong">
               {args.from} &rarr; {args.to}
             </p>
-            <p className="text-sm text-white/60">{args.date}</p>
+            <p className="text-base text-soft">{args.date}</p>
           </article>
         )
       },

@@ -1,71 +1,58 @@
-'use client'
+import Link from "next/link";
+import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
-import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
-import { useMagnetic } from '@/hooks/useMagnetic'
+/**
+ * Düğme. `asChild` YOK: bağlantı görünümlü düğme için `ButtonLink`, düğme
+ * görünümlü başka bir öğe için `buttonClass()`.
+ *
+ * `brand` degrade taşır ve ekranda en fazla bir kez kullanılır (degrade
+ * disiplini, app/globals.css başı). Geri kalan vurgulu düğmeler `primary`. Tek bir bileşenin iki öğe
+ * gibi davranması tip güvenliğini ve erişilebilirliği bulanıklaştırır.
+ *
+ * DOKUNMA HEDEFİ: dokunmatik işaretçide her boy en az 44px. `sm` yalnızca
+ * hassas işaretçide (fare) 36px'e iner.
+ */
 
-type Variant = 'primary' | 'ghost' | 'outline'
-type Size    = 'sm' | 'md' | 'lg'
+const BASE =
+  "inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-md font-semibold transition-[background-color,color,border-color,box-shadow,transform] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant
-  size?: Size
-  magnetic?: boolean
-}
+export const BUTTON_VARIANTS = {
+  /* Ekranın TEK birincil eylemi: marka degradesi. Bir ekranda ikinci bir
+     `brand` düğme görüyorsan biri `primary` olmalı. */
+  brand: "bg-cta text-on-brand shadow-raised hover:brightness-90",
+  primary: "bg-primary text-on-primary hover:bg-primary-hover",
+  secondary: "border border-line-strong bg-surface-raised text-strong hover:bg-surface-sunken",
+  ghost: "text-body hover:bg-primary-wash hover:text-strong",
+  danger: "bg-danger-wash text-danger hover:bg-danger hover:text-on-primary",
+} as const;
 
-const variants: Record<Variant, string> = {
-  primary: 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 hover:bg-indigo-500 hover:shadow-indigo-500/40',
-  ghost:   'glass text-slate-300 hover:text-white',
-  outline: 'border border-slate-600/60 text-slate-300 hover:border-indigo-500/60 hover:text-indigo-300',
-}
+export const BUTTON_SIZES = {
+  sm: "min-h-11 px-3 text-small pointer-fine:min-h-9",
+  md: "min-h-11 px-4 text-base",
+  lg: "min-h-12 px-6 text-read",
+  icon: "size-11",
+} as const;
 
-const sizes: Record<Size, string> = {
-  sm: 'px-4 py-2 text-xs',
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-8 py-4 text-base',
-}
+export type ButtonVariant = keyof typeof BUTTON_VARIANTS;
+export type ButtonSize = keyof typeof BUTTON_SIZES;
 
-export function Button({
-  variant = 'primary',
-  size = 'md',
-  magnetic = false,
+export function buttonClass({
+  variant = "primary",
+  size = "md",
   className,
-  children,
-  ...props
-}: ButtonProps) {
-  const { mx, my, onMove, onLeave } = useMagnetic(0.26)
+}: { variant?: ButtonVariant; size?: ButtonSize; className?: string } = {}) {
+  return cn(BASE, BUTTON_VARIANTS[variant], BUTTON_SIZES[size], className);
+}
 
-  if (magnetic) {
-    return (
-      <motion.button
-        style={{ x: mx, y: my }}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        whileTap={{ scale: 0.96 }}
-        className={cn(
-          'rounded-xl font-semibold transition-all active:scale-95',
-          variants[variant],
-          sizes[size],
-          className,
-        )}
-        {...(props as React.ComponentPropsWithoutRef<typeof motion.button>)}
-      >
-        {children}
-      </motion.button>
-    )
-  }
+type ButtonProps = ComponentProps<"button"> & { variant?: ButtonVariant; size?: ButtonSize };
 
-  return (
-    <button
-      className={cn(
-        'rounded-xl font-semibold transition-all active:scale-95',
-        variants[variant],
-        sizes[size],
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </button>
-  )
+export function Button({ variant, size, className, type = "button", ...props }: ButtonProps) {
+  return <button type={type} className={buttonClass({ variant, size, className })} {...props} />;
+}
+
+type ButtonLinkProps = ComponentProps<typeof Link> & { variant?: ButtonVariant; size?: ButtonSize };
+
+export function ButtonLink({ variant = "secondary", size, className, ...props }: ButtonLinkProps) {
+  return <Link className={buttonClass({ variant, size, className })} {...props} />;
 }

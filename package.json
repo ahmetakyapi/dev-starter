@@ -1,6 +1,6 @@
 {
   "name": "dev-starter",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "private": true,
   "workspaces": [
     "packages/@ahmet/*"
@@ -9,8 +9,6 @@
     "build": "npm run build --workspaces --if-present",
     "dev:theme": "npm run dev --workspace=packages/@ahmet/theme",
     "dev:ui": "npm run dev --workspace=packages/@ahmet/ui",
-    "design:detect": "impeccable detect packages templates snippets",
-    "design:detect:json": "impeccable detect --json packages templates snippets",
     "verify:exports": "node scripts/verify-package-exports.mjs",
     "verify:lock": "node scripts/verify-lockfile.mjs",
     "health": "bash scripts/health-check.sh",
@@ -18,14 +16,16 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit --project packages/@ahmet/ui/tsconfig.json",
     "verify:hooks": "bash scripts/test-hooks.sh",
-    "verify:agentic": "node scripts/verify-agentic.mjs"
+    "verify:agentic": "node scripts/verify-agentic.mjs",
+    "readme:assets": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs",
+    "verify:readme": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs --check"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
     "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
     "eslint": "^9.39.5",
-    "impeccable": "^3.6.0",
+    "motion": "^13.2.0",
     "vitest": "^3.2.7"
   },
   "description": "Ahmet Akyapı — kişisel geliştirme ekosistemi. Tema tokenları, UI bileşenleri, proje şablonları ve Claude Code kural seti.",

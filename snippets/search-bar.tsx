@@ -4,7 +4,7 @@
  * URL search param'ını günceller, debounce ile gereksiz sorguları önler.
  *
  * Kullanım:
- *   <SearchBar placeholder="Ara..." debounce={400} />
+ *   <SearchBar placeholder="Ara…" debounce={400} />
  *
  * URL: ?q=arama-terimi
  * Değeri okuma: const q = searchParams.get('q') ?? ''
@@ -17,7 +17,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface SearchBarProps {
+type SearchBarProps = {
   placeholder?: string
   debounce?: number
   className?: string
@@ -25,7 +25,7 @@ interface SearchBarProps {
 }
 
 export function SearchBar({
-  placeholder = 'Ara...',
+  placeholder = 'Ara…',
   debounce = 400,
   className,
   paramKey = 'q',
@@ -55,20 +55,23 @@ export function SearchBar({
 
   return (
     <div className={cn('relative', className)}>
-      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+      <Search aria-hidden className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
       <input
+        type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="surface h-10 w-full rounded-xl py-2 pl-9 pr-9 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500/50"
+        aria-label={placeholder}
+        className="h-11 w-full rounded-md border border-line bg-surface-sunken py-2 pl-9 pr-11 text-base text-strong placeholder:text-muted transition-colors focus:border-line-focus focus:outline-none"
       />
       {value && (
         <button
+          type="button"
           onClick={() => setValue('')}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
-          aria-label="Temizle"
+          className="absolute right-0 top-0 grid size-11 place-items-center text-muted transition-colors hover:text-strong"
+          aria-label="Aramayı Temizle"
         >
-          <X className="h-3.5 w-3.5" />
+          <X aria-hidden className="size-3.5" />
         </button>
       )}
     </div>

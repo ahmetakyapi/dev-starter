@@ -1,19 +1,23 @@
 /**
- * Modal — Animasyonlu dialog bileşeni
+ * Modal — animasyonlu diyalog
  *
- * AnimatePresence + backdrop blur ile modal.
- * Keyboard (Escape) ve backdrop click ile kapanır.
+ * Escape ve arka plana tıklama ile kapanır, açıkken sayfa kaymaz
+ * (`use-scroll-lock.ts`, sayaçlı: üstüne açılan onay diyaloğu kilidi
+ * erken çözmez). MotionProvider (LazyMotion + domAnimation) altında çalışır;
+ * bu yüzden `motion.*` değil `m.*`.
  *
- * Kullanim:
- *   <Modal open={open} onClose={() => setOpen(false)} title="Baslik">
- *     <p>Modal icerigi</p>
+ * Kullanım:
+ *   <Modal open={open} onClose={() => setOpen(false)} title="Yeni Kayıt">
+ *     <p>İçerik</p>
  *   </Modal>
  */
 
 'use client'
 
-import { useEffect, useCallback } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useId } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { X } from 'lucide-react'
+import { useScrollLock } from './use-scroll-lock'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -25,11 +29,11 @@ const backdrop = {
 
 const panel = {
   hidden: { opacity: 0, scale: 0.96, y: -16 },
-  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.25, ease: EASE } },
-  exit: { opacity: 0, scale: 0.96, y: -16, transition: { duration: 0.15 } },
+  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.28, ease: EASE } },
+  exit: { opacity: 0, scale: 0.96, y: -16, transition: { duration: 0.16 } },
 }
 
-interface ModalProps {
+type ModalProps = {
   open: boolean
   onClose: () => void
   title?: string
@@ -38,64 +42,55 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children, className }: ModalProps) {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    },
-    [onClose],
-  )
+  const titleId = useId()
+  useScrollLock(open)
 
   useEffect(() => {
-    if (open) {
-      document.addEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'hidden'
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
     }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = ''
-    }
-  }, [open, handleKeyDown])
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open, onClose])
 
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           variants={backdrop}
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim px-4"
           onClick={onClose}
-          aria-modal="true"
-          role="dialog"
         >
-          <motion.div
+          <m.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={title ? titleId : undefined}
             variants={panel}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className={`glass w-full max-w-lg rounded-2xl p-6 mx-4 ${className ?? ''}`}
+            className={`w-full max-w-lg rounded-xl border border-line bg-overlay p-6 shadow-overlay ${className ?? ''}`}
             onClick={(e) => e.stopPropagation()}
           >
             {title && (
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <h2 id={titleId} className="text-title font-semibold text-strong">
                   {title}
                 </h2>
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="rounded-lg p-1 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  className="-mr-2 grid size-11 place-items-center rounded-md text-muted transition-colors hover:bg-surface-raised hover:text-strong"
                   aria-label="Kapat"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <X className="size-5" aria-hidden />
                 </button>
               </div>
             )}
             {children}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

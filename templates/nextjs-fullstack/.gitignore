@@ -1,34 +1,31 @@
-# Dependencies
+# Bağımlılıklar
 node_modules/
-.pnp
-.pnp.js
 
 # Next.js
 .next/
 out/
-
-# Production
 build/
+next-env.d.ts
+*.tsbuildinfo
 
-# Env — asla commit'leme
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Ortam: yalnızca örnek dosya commit'lenir
+.env*
+!.env.example
 
-# Debug
+# Yerel notlar ve geçici ölçüm betikleri (.tmp-shot.mjs gibi)
+*.local.md
+.tmp-*
+
+# Hata ayıklama
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Vercel
 .vercel
 
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
+# macOS ve iCloud senkron kopyaları ("dosya 2.ts")
+.DS_Store
+* [0-9].*
+* [0-9]
 
-# Drizzle — migration'lar COMMIT'LENIR, ignore edilmez.
-# Bir kez deploy edilmiş migration asla değiştirilmez; geçmiş versiyonlanmalı.
-# Bkz. rules/immutable-architecture.md §3
+# Drizzle migration'ları COMMIT'LENİR: bir kez uygulanmış migration
+# değiştirilmez, geçmiş sürümlenir. `drizzle/` burada bilerek yok.

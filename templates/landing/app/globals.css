@@ -1,127 +1,499 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap&subset=latin-ext');
+/* ==========================================================================
+   TOKEN SİSTEMİ: KİMLİK ORTAK, PALET PROJEYE GÖRE
 
+   Katman 1, ham rol değişkenleri, iki parça:
+     • SİSTEM (tema başına): gölge, örtü, durum renkleri, odak halkası ve
+       paletten TÜREYEN yüzeyler (`--surface-solid`, `--glass-bg`, `--glow`).
+       Palet değişkenlerini okur, kendisi renk ailesi seçmez.
+     • PALET (`<html data-palette="signature">`): zemin ve metin tonu, vurgu
+       ailesi (`--primary*`), degradeler. Şablonda yalnızca `signature`
+       (Açılış Zili mavi ailesi) tanımlı.
+   Renk değeri YALNIZCA burada yazılır; bileşenlerde hex, rgb ya da
+   Tailwind'in hazır paleti yok.
+
+   PALET DEĞİŞTİRMEK: aşağıdaki iki `signature` bloğunu (açık + koyu) ez ya
+   da yerine yenisini yaz; adlar aynı kalır, sistem katmanına dokunma. Hazır
+   alternatifler (`verdant` zümrüt, `ember` kehribar, `iris` mor-indigo)
+   `@ahmetakyapi/theme` paketinde. Yeni palet `tests/palette.test.ts`ten
+   geçmeli: o test bu dosyayı okuyup WCAG oranlarını HESAPLAR.
+
+   Katman 2, `@theme inline`: rolleri Tailwind sınıflarına bağlar
+   (`bg-page text-strong border-line bg-primary text-on-primary`).
+   Tema `data-theme` ile döner, `dark:` varyantı KULLANILMAZ.
+
+   DEGRADE DİSİPLİNİ: degrade yalnızca üç yerde. Kısa display başlık
+   (`.display-ink`), ekranın tek birincil CTA'sı (`Button variant="brand"`)
+   ve marka karosu (`bg-brand`). Veri yüzeyi ve gövde metni degrade taşımaz;
+   degradeler tek renk ailesi içinde kalır.
+
+   AD ÇAKIŞMASI TUZAĞI: katman 2'deki ad katman 1'dekiyle aynı olursa
+   (`--shadow-sm: var(--shadow-sm)`) değişken kendine başvurur ve sessizce
+   geçersiz olur. Bu yüzden gölgeler `shadow-raised/floating/modal`, gövde
+   puntosu `text-read`, font değişkenleri `-face` sonekli.
+   ========================================================================== */
+
+/* --- Sistem: açık (varsayılan) --------------------------------------------- */
 :root {
-  --font-sans: 'Manrope';
-  --font-mono: 'IBM Plex Mono';
-  --bg-dark:  #04070d;
-  --bg-light: #f5f7fb;
+  color-scheme: light;
+
+  --scrim: rgb(16 32 52 / 0.4);
+  /* Derinlik gölgeyle değil TON FARKIYLA kurulur; gölge yalnızca gerçekten
+     sayfanın üstünde yüzen katmanda (açılır pencere, menü). */
+  --shadow-sm: 0 1px 2px rgb(16 32 52 / 0.05);
+  --shadow-md: 0 8px 24px -10px rgb(16 32 52 / 0.16);
+  --shadow-overlay: 0 24px 60px rgb(16 32 52 / 0.18);
+
+  --success: #0c7350;
+  --success-wash: rgb(12 115 80 / 0.1);
+  --warning: #a4720f;
+  --warning-wash: rgb(164 114 15 / 0.1);
+  --danger: #c01a3d;
+  --danger-wash: rgb(192 26 61 / 0.08);
+  /* Sıcak ikincil vurgu (Açılış Zili "brass"); seyrek, tek nokta. */
+  --accent-warm: #a4720f;
+
+  /* Degrade düğme ve karo üstündeki metin her palette beyaz; CTA degradesi
+     buna göre koyu yarıdan seçilir (test ölçer). */
+  --on-brand: #ffffff;
+
+  /* Paletten türeyenler. */
+  --line-focus: var(--primary);
+  --surface-solid: color-mix(in srgb, var(--page-bg) 92%, var(--text-strong));
+  --overlay: color-mix(in srgb, var(--page-bg) 96%, transparent);
+  --glass-bg: color-mix(in srgb, var(--page-bg) 72%, transparent);
+  --glow: color-mix(in srgb, var(--primary) 6%, transparent);
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+/* --- Sistem: koyu ---------------------------------------------------------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  --scrim: rgb(0 0 0 / 0.6);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.5);
+  --shadow-overlay: 0 24px 60px rgb(0 0 0 / 0.5);
 
-body {
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.01em;
-  transition: background-color 0.25s ease, color 0.25s ease;
-  background:
-    radial-gradient(circle at 18% 12%, rgba(79,70,229,0.14), transparent 30%),
-    radial-gradient(circle at 82% 10%, rgba(34,211,238,0.09), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(16,185,129,0.05), transparent 28%),
-    var(--bg-dark);
-  color: #e2e8f0;
+  --success: #3ddc97;
+  --success-wash: rgb(61 220 151 / 0.14);
+  --warning: #d3a04a;
+  --warning-wash: rgb(211 160 74 / 0.14);
+  --danger: #ff5c7a;
+  --danger-wash: rgb(255 92 122 / 0.14);
+  --accent-warm: #d3a04a;
+
+  --surface-solid: color-mix(in srgb, var(--page-bg) 90%, var(--text-strong));
+  --glow: color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
-html:not(.dark) body {
-  background:
-    radial-gradient(circle at 14% 12%, rgba(59,130,246,0.12), transparent 30%),
-    radial-gradient(circle at 82% 8%,  rgba(14,165,233,0.10), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(16,185,129,0.06), transparent 28%),
-    var(--bg-light);
-  color: #0f172a;
+/* --- Palet: signature (VARSAYILAN, Açılış Zili mavi ailesi) ---------------- */
+:root,
+:root[data-palette="signature"] {
+  --page-bg: #f7f9fb;
+  --surface: rgb(16 32 52 / 0.028);
+  --surface-raised: rgb(16 32 52 / 0.07);
+  --surface-sunken: rgb(16 32 52 / 0.045);
+
+  --text-strong: #101c2b;
+  --text-body: #54677c;
+  --text-soft: #54677c;
+  --text-muted: #586a7c;
+
+  --line: rgb(16 32 52 / 0.1);
+  --line-soft: rgb(16 32 52 / 0.06);
+  --line-strong: rgb(16 32 52 / 0.17);
+
+  --primary: #0d74c4;
+  --primary-hover: #0a5a9a;
+  --primary-soft: #3a93d6;
+  --primary-wash: rgb(13 116 196 / 0.1);
+  --primary-ink: #0c69b1;
+  --on-primary: #ffffff;
+
+  --display-gradient: linear-gradient(112deg, #0a2140 0%, #0e4a8f 44%, #1272c9 76%, #2493dd 100%);
+  --display-gradient-tight: linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%);
+  /* Marka karosu: açık ucu beyaz metinle AA'yı geçmez, üstüne yazı konmaz. */
+  --brand-gradient: linear-gradient(150deg, #5cc4ff 0%, #1f86e0 48%, #0b3f86 100%);
+  /* Birincil CTA: aynı ailenin koyu yarısı, beyaz metinle her noktada AA. */
+  --cta-gradient: linear-gradient(150deg, #1673c4 0%, #0b3f86 100%);
 }
 
-::selection { background: rgba(56,189,248,0.24); color: inherit; }
+:root[data-theme="dark"],
+:root[data-theme="dark"][data-palette="signature"] {
+  --page-bg: #070d16;
+  --surface: rgb(255 255 255 / 0.05);
+  --surface-raised: rgb(255 255 255 / 0.12);
+  --surface-sunken: rgb(0 0 0 / 0.3);
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.28); border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.5); }
+  --text-strong: #eaf1f8;
+  --text-body: #94a7ba;
+  --text-soft: #94a7ba;
+  --text-muted: #8497a9;
 
-/* Kural CustomCursor'a bağlı: bileşen mount olunca <html>'e
-   data-custom-cursor yazar. Koşulsuz `cursor: none` kullanan sayfada
-   bileşen kaldırılırsa imleç tamamen kaybolur. */
-@media (pointer: fine) and (hover: hover) {
-  html[data-custom-cursor],
-  html[data-custom-cursor] *,
-  html[data-custom-cursor] *::before,
-  html[data-custom-cursor] *::after { cursor: none; }
+  --line: rgb(255 255 255 / 0.11);
+  --line-soft: rgb(255 255 255 / 0.07);
+  --line-strong: rgb(255 255 255 / 0.2);
+
+  --primary: #35b8ff;
+  --primary-hover: #7fd2ff;
+  --primary-soft: #6bc9ff;
+  --primary-wash: rgb(53 184 255 / 0.14);
+  --primary-ink: #35b8ff;
+  --on-primary: #06121f;
+
+  --display-gradient: linear-gradient(112deg, #f2f7fc 0%, #b6e2ff 44%, #74caff 76%, #3fbcff 100%);
+  --display-gradient-tight: linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%);
 }
 
-/* ─── Erişilebilirlik: hareket azaltma ─────────────────────────────────── */
+/* Varsayılan paletler ve ölçekler TEMİZLENİR: `bg-red-500`, `text-sm`,
+   `rounded-2xl` derlenmez. Kural yazıyla değil derleyiciyle korunur. */
+@theme {
+  --color-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+
+  /* Punto ölçeği: adlar rol, piksel değil. */
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1rem;
+  --text-small: 0.75rem;
+  --text-small--line-height: 1.125rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.375rem;
+  --text-read: 1rem;
+  --text-read--line-height: 1.65;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.6;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.4;
+  --text-heading: 1.5rem;
+  --text-heading--line-height: 1.25;
+  --text-display: 2.25rem;
+  --text-display--line-height: 1.1;
+  --text-hero: clamp(2.5rem, 6vw, 4.5rem);
+  --text-hero--line-height: 1.02;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Her `transition-*` sınıfı marka eğrisini kendiliğinden alır. */
+  --default-transition-timing-function: var(--ease-brand);
+  --default-transition-duration: 180ms;
+}
+
+@theme inline {
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
+
+  --color-page: var(--page-bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-overlay: var(--overlay);
+  --color-scrim: var(--scrim);
+
+  --color-strong: var(--text-strong);
+  --color-body: var(--text-body);
+  --color-soft: var(--text-soft);
+  --color-muted: var(--text-muted);
+
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
+  --color-line-focus: var(--line-focus);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-wash: var(--primary-wash);
+  --color-primary-ink: var(--primary-ink);
+  --color-on-primary: var(--on-primary);
+
+  --color-surface-solid: var(--surface-solid);
+  --color-accent-warm: var(--accent-warm);
+  --color-on-brand: var(--on-brand);
+
+  --color-success: var(--success);
+  --color-success-wash: var(--success-wash);
+  --color-warning: var(--warning);
+  --color-warning-wash: var(--warning-wash);
+  --color-danger: var(--danger);
+  --color-danger-wash: var(--danger-wash);
+
+  --shadow-raised: var(--shadow-sm);
+  --shadow-floating: var(--shadow-md);
+  --shadow-modal: var(--shadow-overlay);
+}
+
+/* --------------------------------------------------------------------------
+   Temel
+
+   Element varsayılanları @layer base içinde: katmansız bir `h1 { ... }`
+   kuralı Tailwind'in katmanlı yardımcılarını EZER ve sayfadaki
+   `text-display` hiç uygulanmaz.
+   -------------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    /* `hidden` değil `clip`: hidden bir kaydırma kabı yaratır ve içerideki
+       `position: sticky` öğeleri bozar. */
+    overflow-x: clip;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+
+  body {
+    background-color: var(--page-bg);
+    color: var(--text-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    /* Son satırda tek kelime kalmasın. */
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--text-strong);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--primary-wash);
+    color: var(--text-strong);
+  }
+
+  /* Tarayıcının varsayılan halkası yerine token'lı halka; yalnızca klavyede. */
+  :focus-visible {
+    outline: 2px solid var(--line-focus);
+    outline-offset: 2px;
+  }
+
+  /* Kırpan kabın içinde halka içeri alınır, yoksa ata onu keser (WCAG 2.4.11). */
+  :where(.overflow-hidden, .overflow-clip, .overflow-auto, .overflow-x-auto) :focus-visible {
+    outline-offset: -2px;
+  }
+
+  /* iOS Safari 16px altı girişte odaklanınca yakınlaştırır ve geri dönmez.
+     Eşik genişlik değil işaretçi türü: iPad ve yatay telefon da kapsanır. */
+  @media (pointer: coarse) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Yüzeyler
+
+   `.surface` VARSAYILAN: derinlik ton farkı ve tek piksellik çizgiyle kurulur.
+   `.glass` İSTEĞE BAĞLI: arkasında gerçekten hareket eden içerik varsa (yapışkan
+   başlık, açılır katman). Desteklenmiyorsa ya da kullanıcı saydamlığı
+   azaltmışsa opak yüzeye döner.
+   -------------------------------------------------------------------------- */
+@utility surface {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+}
+
+@utility glass {
+  background-color: var(--surface-solid);
+  border: 1px solid var(--line-soft);
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background-color: var(--glass-bg);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    background-color: var(--surface-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Köşelerde vurgu renginin düşük opaklıklı ışıması (açıkta %6, koyuda %12). İsteğe bağlı: `<body class="app-bg">`.
+   `fixed` katman sözde öğede; `background-attachment: fixed` mobilde kırılır. */
+@utility app-bg {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60rem 40rem at 0% 0%, var(--glow), transparent 60%),
+      radial-gradient(56rem 40rem at 100% 100%, var(--glow), transparent 60%);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Degradeler: yalnızca üç yer (başlıktaki disiplin notu).
+   -------------------------------------------------------------------------- */
+
+/* Marka karosu: logo ya da baş harf taşıyan küçük kare. Üstüne metin
+   yazılmaz; açık ucu beyaz metinle AA'yı geçmez. */
+@utility bg-brand {
+  background-image: var(--brand-gradient);
+}
+
+/* Birincil CTA zemini: aynı ailenin koyu yarısı, beyaz metin her noktada AA.
+   Üzerine gelince parlaklık değil koyuluk artar: metin kontrastı düşmez. */
+@utility bg-cta {
+  background-image: var(--cta-gradient);
+}
+
+/* Degrade başlık. Yalnızca KISA display metinde (sayfa başlığı, kahraman):
+   küçük puntoda degradenin açık ucu kontrastı düşürür, orada `-tight`.
+   Desteklemeyen tarayıcıda düz `--text-strong` kalır. */
+@layer components {
+  .display-ink {
+    color: var(--text-strong);
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .display-ink {
+      background-image: var(--display-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      /* Degrade metnin altına inen harfleri (g, y, ş, ç) kırpmasın. */
+      padding-bottom: 0.06em;
+    }
+
+    .display-ink-tight {
+      background-image: var(--display-gradient-tight);
+    }
+
+    /* TUZAK: `.display-ink` içindeki bir çocuğa opacity, transform ya da
+       filter vermek onu ayrı bir kompozit katmana taşır ve kapsayıcının
+       background-clip bölgesinden ÇIKARIR; çocuğun metni tümden kaybolur.
+       Bu ağaçta ayrım punto ve ağırlıkla kurulur. */
+  }
+
+  /* Ekran okuyucu ve yüksek kontrast modunda degrade yok, sistem rengi var. */
+  @media (forced-colors: active) {
+    .display-ink {
+      background: none;
+      -webkit-text-fill-color: currentColor;
+      color: CanvasText;
+    }
+  }
+}
+
+/* Yükleme iskeleti: içerik yapısına uyan blokların nabzı. */
+@utility skeleton {
+  /* Yüzey tonları birbirine çok yakın; iskelet çizgi rengini alır ki iki
+     temada da panelin üstünde seçilsin. */
+  background-color: var(--line);
+  animation: skeleton-pulse 1.6s var(--ease-brand) infinite;
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Kaydırmaya bağlı giriş, JavaScript'siz. Desteklemeyen tarayıcıda öğe
+   zaten görünür durur; sınıf yalnızca bir süsleme. */
+@supports (animation-timeline: view()) {
+  .scroll-reveal {
+    animation: scroll-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tema geçişi
+
+   ThemeToggle `document.startViewTransition` ile çağırır: eski ekranın
+   fotoğrafı yerinde durur, yenisi tıklanan noktadan büyüyen bir dairenin
+   içinde açılır. İki fotoğraf karışmaz; karışım iki temanın ara tonunu,
+   hiçbir temaya ait olmayan bir griyi gösterirdi. `theme-switching` sınıfı
+   animasyonu yalnızca bu geçişe bağlar.
+   -------------------------------------------------------------------------- */
+html.theme-switching::view-transition-old(root),
+html.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.theme-switching::view-transition-new(root) {
+  animation: theme-reveal 0.5s var(--ease-brand);
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
+  }
+  to {
+    clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Kaydırma çubuğu (WebKit). Firefox `html` üzerindeki scrollbar-* ile.
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Hareketi azalt: CSS tarafı. Motion tarafı `MotionConfig reducedMotion="user"`.
+   -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 
-  html[data-custom-cursor],
-  html[data-custom-cursor] * { cursor: auto; }
-}
-@media (max-width: 640px) { body { background-attachment: scroll; } }
-
-@layer components {
-  .glass {
-    background: linear-gradient(180deg, rgba(8,12,22,0.72), rgba(6,10,18,0.46));
-    border: 1px solid rgba(148,163,184,0.1);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 14px 34px rgba(2,6,23,0.14);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-  html:not(.dark) .glass {
-    background: linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,255,255,0.72));
-    border-color: rgba(148,163,184,0.2);
-    box-shadow: 0 16px 44px rgba(148,163,184,0.14);
-  }
-  .chip {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    border-radius: 999px; border: 1px solid rgba(148,163,184,0.14);
-    background: rgba(7,11,20,0.56); padding: 0.6rem 1rem;
-    font-size: 0.78rem; font-weight: 600; color: #e2e8f0;
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
-  }
-  html:not(.dark) .chip {
-    background: rgba(255,255,255,0.72);
-    border-color: rgba(148,163,184,0.2);
-    color: #334155;
-  }
-}
-
-@layer utilities {
-  /*
-   * Vurgu kelimesi — degrade DEĞİL, solid marka rengi.
-   *
-   * `.text-gradient` / `.text-gradient-warm` kaldırıldı: metne degrade
-   * kırpmak en tanınır AI tell'lerinden biri (impeccable `gradient-text`) ve
-   * responsive'de satır kırılması öngörülemez oluyordu (mistakes.md #42).
-   * Degrade kullanılacaksa solid fallback şart — bkz. rules/design-tokens.md
-   */
-  .text-accent {
-    color: rgb(79, 70, 229);
-  }
-  .dark .text-accent {
-    color: rgb(129, 140, 248);
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-16px); }
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
-  }
-  @keyframes shimmer {
-    0%   { background-position: 200% 50%; }
-    100% { background-position: -200% 50%; }
+  .scroll-reveal {
+    animation: none;
   }
 }

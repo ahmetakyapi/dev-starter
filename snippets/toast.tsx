@@ -1,69 +1,66 @@
 /**
- * Toast — Bildirim sistemi
+ * Toast — bildirim sistemi
  *
- * Context + AnimatePresence ile global toast yonetimi.
- * Success, error, warning, info varyantlari.
+ * Context + AnimatePresence ile genel bildirim yönetimi.
+ * Durum renkleri token'dan (`success`/`danger`/`warning`);
+ * ikonlar lucide, emoji değil. Bölge `aria-live="polite"`: ekran okuyucu
+ * mesajı okur ama sürmekte olan konuşmayı kesmez.
  *
- * Kullanim:
- *   // layout.tsx'e ekle:
+ * Kullanım:
+ *   // layout.tsx:
  *   <ToastProvider>{children}</ToastProvider>
  *
- *   // Herhangi bir client component'te:
+ *   // İstemci bileşeninde:
  *   const toast = useToast()
- *   toast.success('Kaydedildi!')
- *   toast.error('Bir hata olustu')
- *   toast.warning('Dikkat!')
- *   toast.info('Bilgi mesaji')
+ *   toast.success('Kaydedildi')
+ *   toast.error('Bir hata oluştu')
  */
 
 'use client'
 
-import { createContext, useContext, useCallback, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { AlertTriangle, CheckCircle2, Info, XCircle, type LucideIcon } from 'lucide-react'
 
-// --- Types ---
 type ToastVariant = 'success' | 'error' | 'warning' | 'info'
 
-interface Toast {
+type Toast = {
   id: string
   message: string
   variant: ToastVariant
 }
 
-interface ToastContextValue {
-  success: (message: string) => void
-  error: (message: string) => void
-  warning: (message: string) => void
-  info: (message: string) => void
+type ToastContextValue = Record<ToastVariant, (message: string) => void>
+
+const EASE = [0.22, 1, 0.36, 1] as const
+
+// Zemin opak `overlay`: yarı saydam bir durum rengi, altında kayan içerikle
+// birlikte okunmaz hâle geliyordu. Durumu kenarlık ve ikon taşır.
+const variantStyles: Record<ToastVariant, { border: string; icon: string }> = {
+  success: { border: 'border-success/40', icon: 'text-success' },
+  error: { border: 'border-danger/40', icon: 'text-danger' },
+  warning: { border: 'border-warning/40', icon: 'text-warning' },
+  info: { border: 'border-primary/40', icon: 'text-primary-ink' },
 }
 
-// --- Variants ---
-const variantStyles: Record<ToastVariant, string> = {
-  success: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400',
-  error: 'border-red-500/30 bg-red-500/10 text-red-400',
-  warning: 'border-amber-500/30 bg-amber-500/10 text-amber-400',
-  info: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+const icons: Record<ToastVariant, LucideIcon> = {
+  success: CheckCircle2,
+  error: XCircle,
+  warning: AlertTriangle,
+  info: Info,
 }
 
-const icons: Record<ToastVariant, string> = {
-  success: '\u2713',
-  error: '\u2717',
-  warning: '\u26A0',
-  info: '\u2139',
-}
-
-// --- Context ---
 const ToastContext = createContext<ToastContextValue | null>(null)
 
 export function useToast() {
   const ctx = useContext(ToastContext)
-  if (!ctx) throw new Error('useToast must be used within ToastProvider')
+  if (!ctx) throw new Error('useToast, ToastProvider içinde kullanılmalı')
   return ctx
 }
 
-// --- Provider ---
-interface ToastProviderProps {
+type ToastProviderProps = {
   children: React.ReactNode
+  /** Görünme süresi (ms) */
   duration?: number
 }
 
@@ -81,31 +78,41 @@ export function ToastProvider({ children, duration = 4000 }: ToastProviderProps)
     [duration],
   )
 
-  const value: ToastContextValue = {
-    success: useCallback((msg: string) => addToast('success', msg), [addToast]),
-    error: useCallback((msg: string) => addToast('error', msg), [addToast]),
-    warning: useCallback((msg: string) => addToast('warning', msg), [addToast]),
-    info: useCallback((msg: string) => addToast('info', msg), [addToast]),
-  }
+  const value = useMemo<ToastContextValue>(
+    () => ({
+      success: (msg) => addToast('success', msg),
+      error: (msg) => addToast('error', msg),
+      warning: (msg) => addToast('warning', msg),
+      info: (msg) => addToast('info', msg),
+    }),
+    [addToast],
+  )
 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2">
+      <div
+        aria-live="polite"
+        className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-[100] flex flex-col gap-2"
+      >
         <AnimatePresence>
-          {toasts.map((toast) => (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, y: 16, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.96 }}
-              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className={`flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm font-medium shadow-lg backdrop-blur-md ${variantStyles[toast.variant]}`}
-            >
-              <span className="text-base">{icons[toast.variant]}</span>
-              {toast.message}
-            </motion.div>
-          ))}
+          {toasts.map((toast) => {
+            const Icon = icons[toast.variant]
+            return (
+              <m.div
+                key={toast.id}
+                role="status"
+                initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                transition={{ duration: 0.2, ease: EASE }}
+                className={`flex items-center gap-2.5 rounded-lg border bg-overlay px-4 py-3 text-base font-medium text-strong shadow-md ${variantStyles[toast.variant].border}`}
+              >
+                <Icon className={`size-4 shrink-0 ${variantStyles[toast.variant].icon}`} aria-hidden />
+                {toast.message}
+              </m.div>
+            )
+          })}
         </AnimatePresence>
       </div>
     </ToastContext.Provider>

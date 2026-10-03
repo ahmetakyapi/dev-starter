@@ -1,19 +1,22 @@
 /**
- * Drawer — Yandan acilan panel
+ * Drawer — yandan açılan panel
  *
- * Mobilde tam genislik, desktop'ta sabit genislik.
- * Sag veya sol yonlu, keyboard + backdrop destegi.
+ * Telefonda tam genişlik, masaüstünde sabit genişlik. Sağ ya da sol,
+ * Escape ve arka plan desteği. Kilit sayaçlı (`use-scroll-lock.ts`).
+ * MotionProvider (LazyMotion + domAnimation) altında çalışır.
  *
- * Kullanim:
- *   <Drawer open={open} onClose={() => setOpen(false)} side="right" title="Menu">
+ * Kullanım:
+ *   <Drawer open={open} onClose={() => setOpen(false)} side="right" title="Menü">
  *     <nav>...</nav>
  *   </Drawer>
  */
 
 'use client'
 
-import { useEffect, useCallback } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useId } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { X } from 'lucide-react'
+import { useScrollLock } from './use-scroll-lock'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -23,7 +26,7 @@ const backdrop = {
   exit: { opacity: 0, transition: { duration: 0.15 } },
 }
 
-interface DrawerProps {
+type DrawerProps = {
   open: boolean
   onClose: () => void
   side?: 'left' | 'right'
@@ -32,78 +35,65 @@ interface DrawerProps {
   className?: string
 }
 
-export function Drawer({
-  open,
-  onClose,
-  side = 'right',
-  title,
-  children,
-  className,
-}: DrawerProps) {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    },
-    [onClose],
-  )
+export function Drawer({ open, onClose, side = 'right', title, children, className }: DrawerProps) {
+  const titleId = useId()
+  useScrollLock(open)
 
   useEffect(() => {
-    if (open) {
-      document.addEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'hidden'
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
     }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = ''
-    }
-  }, [open, handleKeyDown])
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open, onClose])
 
+  const offscreen = side === 'right' ? '100%' : '-100%'
   const panelVariants = {
-    hidden: { x: side === 'right' ? '100%' : '-100%' },
+    hidden: { x: offscreen },
     visible: { x: 0, transition: { duration: 0.3, ease: EASE } },
-    exit: { x: side === 'right' ? '100%' : '-100%', transition: { duration: 0.2 } },
+    exit: { x: offscreen, transition: { duration: 0.2 } },
   }
 
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           variants={backdrop}
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 bg-scrim"
           onClick={onClose}
-          aria-modal="true"
-          role="dialog"
         >
-          <motion.div
+          <m.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={title ? titleId : undefined}
             variants={panelVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className={`surface fixed inset-y-0 ${side === 'right' ? 'right-0' : 'left-0'} w-full max-w-sm p-6 ${className ?? ''}`}
+            // Güvenli alan: sayfa viewport-fit=cover ile açılıyorsa çentik
+            // ve ana ekran çubuğu paneli kesmesin
+            className={`fixed inset-y-0 ${side === 'right' ? 'right-0 border-l' : 'left-0 border-r'} w-full max-w-sm overflow-y-auto border-line bg-overlay px-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-overlay ${className ?? ''}`}
             onClick={(e) => e.stopPropagation()}
           >
             {title && (
-              <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              <div className="mb-6 flex items-center justify-between gap-4">
+                <h2 id={titleId} className="text-title font-semibold text-strong">
                   {title}
                 </h2>
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="rounded-lg p-1 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  className="-mr-2 grid size-11 place-items-center rounded-md text-muted transition-colors hover:bg-surface-raised hover:text-strong"
                   aria-label="Kapat"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <X className="size-5" aria-hidden />
                 </button>
               </div>
             )}
             {children}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

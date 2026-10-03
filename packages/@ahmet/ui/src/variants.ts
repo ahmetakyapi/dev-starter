@@ -1,12 +1,31 @@
 /**
- * @ahmetakyapi/ui — Framer Motion Animasyon Varyantları
+ * @ahmetakyapi/ui — Motion animasyon varyantları (`motion/react`)
  *
  * Tüm projelerde tutarlı geçişler için standart varyantlar.
- * Kaynak: ahmetakyapi.com pattern analizi
+ * Bu dosya `'use client'` DEĞİL ve hiçbir şey import etmez: sabitler
+ * sunucu bileşeninden de gerçek değer olarak okunabilsin. `'use client'`
+ * bir modülden dışa aktarılan değer sunucuya istemci referansı olarak gelir.
  */
 
-// Temel ease curve — hızlı başlayıp yumuşak biten
+// Temel ease curve — hızlı başlayıp yumuşak biten. CSS karşılığı `--ease-brand`.
 export const EASE = [0.22, 1, 0.36, 1] as const
+
+// Süre ölçeği (saniye). Mikro etkileşim `fast`, panel `base`, bölüm `slow`.
+export const DUR = { fast: 0.16, base: 0.28, slow: 0.5, page: 0.6 } as const
+
+export const SPRING = {
+  snappy: { type: 'spring', stiffness: 500, damping: 40 },
+  soft: { type: 'spring', stiffness: 120, damping: 22, mass: 0.8 },
+} as const
+
+// Kardeşler arası gecikme — liste girişleri
+export const STAGGER = 0.06
+
+/** Kapsayıcı varyantı: çocukları `STAGGER` aralığıyla sırayla açar. */
+export const stagger = (delay = 0) => ({
+  hidden: {},
+  visible: { transition: { staggerChildren: STAGGER, delayChildren: delay } },
+})
 
 // ─── Fade ──────────────────────────────────────────────────────────────────
 export const fadeIn = {

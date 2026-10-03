@@ -1,21 +1,35 @@
-import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { clsx, type ClassValue } from "clsx";
+import { extendTailwindMerge } from "tailwind-merge";
 
-/** Tailwind class birleştirici — clsx + twMerge */
+/**
+ * Kendi punto adlarımız (`app/globals.css` → `--text-*`).
+ *
+ * twMerge'e TANITILMAK ZORUNDA. Birleştirici `text-sm` gibi kendi bildiği
+ * adları punto sayar; tanımadığı `text-small`ı ise RENK sanar. Renk
+ * token'larımız da aynı önekle yazıldığı için (`text-strong`, `text-muted`)
+ * ikisi tek gruba düşer ve sonuncusu kazanır:
+ *
+ *     cn("text-small", "text-strong")  →  "text-strong"   (punto sessizce gider)
+ *
+ * Renkler listede YOK, olmamalı: tanınmayan `text-*` zaten renk sayılıyor.
+ * Ölçeğe yeni bir basamak eklersen buraya da ekle; testi `tests/utils.test.ts`.
+ */
+export const TEXT_SIZES = [
+  "micro",
+  "small",
+  "base",
+  "read",
+  "lead",
+  "title",
+  "heading",
+  "display",
+  "hero",
+] as const;
+
+const twMerge = extendTailwindMerge({
+  extend: { classGroups: { "font-size": [{ text: [...TEXT_SIZES] }] } },
+});
+
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
-/** Tarihi formatla: "15 Mart 2026" */
-export function formatDate(date: Date | string, locale = 'tr-TR'): string {
-  return new Intl.DateTimeFormat(locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(date))
-}
-
-/** Metni kısalt */
-export function truncate(str: string, length: number): string {
-  return str.length > length ? str.slice(0, length) + '…' : str
+  return twMerge(clsx(inputs));
 }

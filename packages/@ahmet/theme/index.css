@@ -1,86 +1,158 @@
 /**
- * @ahmetakyapi/theme — Global CSS
- * Import bu dosyayı globals.css'in başına:  @import '@ahmetakyapi/theme/css';
+ * @ahmetakyapi/theme — taban stiller ve opt-in yüzey sınıfları
  *
- * Kaynak: ahmetakyapi.com görsel dili
+ * Kullanım (app/globals.css), theme.css'ten SONRA:
+ *   @import "tailwindcss";
+ *   @import "@ahmetakyapi/theme/theme.css";
+ *   @import "@ahmetakyapi/theme/css";
+ *
+ * Bu dosya renk yazmaz; her değer theme.css'teki rol değişkenlerinden gelir.
+ * Google Fonts @import'u v3'te kaldırıldı: render'ı bloklayan bir dış istekti
+ * ve font yüklenince metin kayıyordu. Fontu next/font yükler (theme.css başı).
  */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap&subset=latin-ext');
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
 
-/* ─── CSS Variables ─────────────────────────────────────────────────────── */
-:root {
-  --font-sans: 'Manrope';
-  --font-mono: 'IBM Plex Mono';
-  --font-fallback: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  body {
+    background-color: var(--page-bg);
+    color: var(--text-body);
+    font-family: var(--font-sans);
+    font-size: var(--text-read);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 
-  --bg-dark: #04070d;
-  --bg-light: #f5f7fb;
+  ::selection {
+    background: var(--primary-soft);
+    color: inherit;
+  }
 
-  /* Accent */
-  --accent-indigo:  rgba(79, 70, 229, 1);
-  --accent-cyan:    rgba(34, 211, 238, 1);
-  --accent-emerald: rgba(16, 185, 129, 1);
+  :focus-visible {
+    outline: 2px solid var(--line-focus);
+    outline-offset: 2px;
+  }
 
-  /* Border */
-  --border-dark:  rgba(148, 163, 184, 0.1);
-  --border-light: rgba(148, 163, 184, 0.2);
-
-  /* Transition */
-  --transition-theme: background-color 0.25s ease, color 0.25s ease;
+  /* İnce kaydırma çubuğu */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
 }
 
-/* ─── Base ──────────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+@layer components {
+  /* Varsayılan yüzey: ton farkı + hairline. Derinliği gölge değil zemin ile
+     yüzey arasındaki ton farkı taşır; bu yüzden iki temada da okunur. */
+  .surface {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
+  /* Cam OPT-IN. Bulanıklık her karede arkadaki katmanı yeniden çizdirir ve
+     metin kontrastını arkadaki içeriğe bağlar; yalnızca bilinçli olarak
+     yüzen öğelerde (sabit başlık, açılır panel) kullan.
+     Önce opak taban: backdrop-filter yoksa yarı saydam yüzey okunmaz.
+     Taban `--overlay`: `--surface` kendisi yarı saydam bir ton katmanı ve
+     camın altında içerik kayınca okunmaz olurdu. */
+  .glass {
+    background-color: var(--overlay);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background-color: color-mix(in srgb, var(--overlay) 72%, transparent);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      backdrop-filter: blur(16px) saturate(140%);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .glass {
+      background-color: var(--overlay);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  /* Köşelerde --primary'nin çok düşük opaklıklı ışığı (açıkta %6, koyuda
+     %12). Opt-in: veri yoğun ekranda gürültüdür. */
+  .app-bg {
+    background:
+      radial-gradient(circle at 12% 0%, var(--app-glow), transparent 38%),
+      radial-gradient(circle at 92% 8%, var(--app-glow), transparent 30%),
+      var(--page-bg);
+  }
+
+  /* Degrade display metni — YALNIZCA kısa başlıkta. Önce düz renk: kırpma
+     desteklenmezse metin görünmez olurdu. `padding-bottom` alt uzantıları
+     (g, ğ, y, ş) kırpılmaktan korur. Küçük puntoda `.display-ink-tight`. */
+  .display-ink,
+  .display-ink-tight {
+    color: var(--text-strong);
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .display-ink,
+    .display-ink-tight {
+      background-image: var(--display-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding-bottom: 0.06em;
+    }
+
+    .display-ink-tight {
+      background-image: var(--display-gradient-tight);
+    }
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background-color: var(--surface-raised);
+    padding: 0.375rem 0.75rem;
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--text-body);
+  }
 }
 
-body {
-  font-family: var(--font-sans), var(--font-fallback);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  letter-spacing: -0.01em;
-  transition: var(--transition-theme);
-  background:
-    radial-gradient(circle at 18% 12%, rgba(79, 70, 229, 0.14), transparent 30%),
-    radial-gradient(circle at 82% 10%, rgba(34, 211, 238, 0.09), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.05), transparent 28%),
-    var(--bg-dark);
-  color: #e2e8f0;
+/* ─── Tema geçişi (View Transitions) ───────────────────────────────────── */
+/* ThemeToggle `--vt-x` / `--vt-y` değişkenlerini tıklanan noktaya yazar;
+   yeni tema o noktadan büyüyen bir daireyle açılır. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-html:not(.dark) body {
-  background:
-    radial-gradient(circle at 14% 12%, rgba(59, 130, 246, 0.12), transparent 30%),
-    radial-gradient(circle at 82% 8%,  rgba(14, 165, 233, 0.10), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.06), transparent 28%),
-    var(--bg-light);
-  color: #0f172a;
+::view-transition-new(root) {
+  animation: theme-reveal 0.5s var(--ease-brand, ease-out);
 }
 
-/* ─── Selection ─────────────────────────────────────────────────────────── */
-::selection {
-  background: rgba(56, 189, 248, 0.24);
-  color: inherit;
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0%));
+  }
 }
 
-/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.28);
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.5); }
-
-/* ─── Pointer: custom cursor mode ──────────────────────────────────────── */
-/* KANCAYA BAĞLI. Eskiden koşulsuzdu: paketi yalnızca token için kuran bir
-   tüketicide bile imleci gizliyordu ve `!important` yüzünden geri alınamıyordu.
-   Kural artık yalnızca <CustomCursor /> mount olduğunda devreye girer —
-   bileşen `data-custom-cursor` özniteliğini <html>'e yazar/siler. */
+/* ─── Özel imleç: kancaya bağlı ────────────────────────────────────────── */
+/* Kural yalnızca <CustomCursor /> mount olduğunda devreye girer; bileşen
+   `data-custom-cursor` özniteliğini <html>'e yazar/siler. Koşulsuz olsaydı
+   paketi yalnızca token için kuran tüketicide de imleç kaybolurdu. */
 @media (pointer: fine) and (hover: hover) {
   html[data-custom-cursor],
   html[data-custom-cursor] *,
@@ -91,114 +163,29 @@ html:not(.dark) body {
 }
 
 /* ─── Erişilebilirlik: hareket azaltma ─────────────────────────────────── */
-/* Hareket yoğun bir tasarım sisteminde bu blok pazarlık konusu değildir.
-   Vestibüler bozukluğu olan kullanıcı için sürekli dönen/yüzen öğeler
-   fiziksel rahatsızlık kaynağıdır. Süreyi sıfırlamak yerine ~0'a çekiyoruz ki
-   `onAnimationEnd`/`onTransitionEnd`'e bağlı mantık kırılmasın. */
+/* Süre sıfır değil ~0: `onAnimationEnd`/`onTransitionEnd`'e bağlı mantık
+   kırılmasın. */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+  }
 
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 
-  /* Sonsuz döngüler tamamen durur — tek geçişleri bile dikkat dağıtıcı */
-  .animate-float,
-  .animate-blink,
-  .animate-border-rotate { animation: none !important; }
+  ::view-transition-new(root) {
+    animation: none;
+  }
 
-  /* Özel imleç kapanır: takip eden nesne doğrudan hareket kaynağıdır */
   html[data-custom-cursor],
   html[data-custom-cursor] *,
   html[data-custom-cursor] *::before,
   html[data-custom-cursor] *::after {
     cursor: auto;
   }
-}
-
-/* ─── Components ────────────────────────────────────────────────────────── */
-
-/* Glassmorphism card */
-.glass {
-  background: linear-gradient(180deg, rgba(8, 12, 22, 0.72), rgba(6, 10, 18, 0.46));
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 14px 34px rgba(2, 6, 23, 0.14);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-html:not(.dark) .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.72));
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  box-shadow: 0 16px 44px rgba(148, 163, 184, 0.14);
-}
-
-/* Pill / chip badge */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(7, 11, 20, 0.56);
-  padding: 0.75rem 1rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #e2e8f0;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-html:not(.dark) .chip {
-  background: rgba(255, 255, 255, 0.72);
-  border-color: rgba(148, 163, 184, 0.2);
-  color: #334155;
-}
-
-/* Surface (modal / panel arka yüzü) */
-.surface {
-  background: linear-gradient(180deg, rgba(8, 12, 22, 0.88), rgba(4, 7, 13, 0.96));
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 24px 48px rgba(2, 6, 23, 0.3);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-html:not(.dark) .surface {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.62));
-  border-color: rgba(148, 163, 184, 0.18);
-  box-shadow: 0 14px 34px rgba(148, 163, 184, 0.12);
-}
-
-/* ─── Animations ────────────────────────────────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-16px); }
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
-@keyframes shimmer-text {
-  0%, 100% { background-position: 0% 50%; }
-  50%       { background-position: 100% 50%; }
-}
-@keyframes border-rotate {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-float        { animation: float 6s ease-in-out infinite; }
-.animate-blink        { animation: blink 1.1s step-end infinite; }
-.animate-border-rotate {
-  animation: border-rotate 4s linear infinite;
-  background-size: 300% 300%;
 }

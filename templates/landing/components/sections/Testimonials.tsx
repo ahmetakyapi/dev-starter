@@ -1,113 +1,60 @@
-'use client'
+import { Reveal, RevealItem } from "@/components/motion/Reveal";
+import { testimonials, type Testimonial } from "@/lib/content";
+import { SectionHeading } from "./SectionHeading";
 
-import { motion } from 'framer-motion'
-import { Star, Quote } from 'lucide-react'
-import { fadeUp, staggerContainer, EASE } from '@/lib/variants'
+/*
+ * Görüşler: bir büyük alıntı, yanında iki küçük. Kart yok; alıntılar sayfa
+ * zemininde, ayrım çizgi ve puntoyla. Avatar fotoğrafı yoksa baş harfler
+ * düz bir yüzeyde (degrade ya da sahte yüz yok).
+ */
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toLocaleUpperCase("tr-TR");
+}
 
-const TESTIMONIALS = [
-  {
-    id: 't1',
-    name:     'Alex Morgan',
-    role:     'Head of Product, Vercel',
-    initials: 'AM',
-    // Solid marka rengi — avatarlar veri yüzeyidir, degrade taşımaz.
-    // 600/700 tonu beyaz metinle WCAG AA kontrastı sağlar (degrade bunu garanti edemiyordu).
-    avatarBg: 'bg-indigo-600',
-    text:     'We replaced three different tools with Pulse. The real-time view alone saved us hours every week during our last launch.',
-    stars: 5,
-  },
-  {
-    id: 't2',
-    name:     'Berk Kaya',
-    role:     'CTO, Linear',
-    initials: 'BK',
-    avatarBg: 'bg-cyan-700',
-    text:     'Setup took fifteen minutes, not two sprints. Our whole engineering team looks at the same dashboard now — no more data silos.',
-    stars: 5,
-  },
-  {
-    id: 't3',
-    name:     'Maya Chen',
-    role:     'Growth Lead, Notion',
-    initials: 'MC',
-    avatarBg: 'bg-emerald-700',
-    text:     'The funnel builder is so intuitive. I stopped needing to ask engineers for custom queries — I just build what I need myself.',
-    stars: 5,
-  },
-] as const
-
-export default function Testimonials() {
+function Person({ person }: { person: Testimonial }) {
   return (
-    <section id="testimonials" className="relative z-10 mx-auto max-w-6xl px-6 pb-28">
-      <motion.div
-        variants={staggerContainer(0.08)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-60px' }}
-      >
-        {/* Header */}
-        <div className="mb-16 text-center">
-          <motion.div variants={fadeUp} className="mb-4 flex justify-center">
-            <span className="chip">Testimonials</span>
-          </motion.div>
-          <motion.h2
-            variants={fadeUp}
-            className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl"
-          >
-            Loved by product teams
-          </motion.h2>
-          <motion.p variants={fadeUp} className="mx-auto max-w-lg text-slate-500 dark:text-slate-400">
-            From early-stage startups to growth-stage companies — teams trust Pulse to answer their hardest questions.
-          </motion.p>
-        </div>
+    <figcaption className="mt-5 flex items-center gap-3">
+      <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-surface-raised text-small font-bold text-strong">
+        {initials(person.name)}
+      </span>
+      <span className="min-w-0">
+        <span className="block text-base font-semibold text-strong">{person.name}</span>
+        <span className="block text-small text-muted">{person.role}</span>
+      </span>
+    </figcaption>
+  );
+}
 
-        {/* Cards */}
-        <div className="grid gap-5 md:grid-cols-3">
-          {TESTIMONIALS.map((t) => (
-            <motion.div
-              key={t.id}
-              variants={{
-                hidden:  { opacity: 0, y: 28 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-              }}
-              className="glass relative flex flex-col overflow-hidden rounded-2xl p-6 transition-shadow hover:shadow-xl hover:shadow-indigo-500/5"
-            >
-              {/* Top accent */}
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-              {/* Quote icon */}
-              <Quote className="mb-4 h-6 w-6 text-indigo-500/40" />
-
-              {/* Stars */}
-              <div className="mb-3 flex gap-0.5">
-                {Array.from({ length: t.stars }).map((_, i) => (
-                  // Star ratings are positional — index key is appropriate here
-                  // eslint-disable-next-line react/no-array-index-key
-                  <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-
-              {/* Text */}
-              <p className="mb-6 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                &ldquo;{t.text}&rdquo;
-              </p>
-
-              {/* Person */}
-              <div className="flex items-center gap-3 border-t border-white/[0.06] pt-5">
-                <div
-                  className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${t.avatarBg} text-xs font-bold text-white shadow-md`}
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-500">{t.role}</p>
-                </div>
-              </div>
-            </motion.div>
+export function Testimonials() {
+  const [featured, ...rest] = testimonials.items;
+  return (
+    <section aria-labelledby="gorusler-baslik" className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <SectionHeading id="gorusler-baslik" title={testimonials.title} />
+      <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-16">
+        {featured ? (
+          <Reveal className="lg:col-span-7">
+            <figure className="border-l-2 border-primary pl-6 sm:pl-8">
+              <blockquote className="text-title font-semibold text-strong sm:text-heading">“{featured.quote}”</blockquote>
+              <Person person={featured} />
+            </figure>
+          </Reveal>
+        ) : null}
+        <ul className="divide-y divide-line-soft lg:col-span-5">
+          {rest.map((person, index) => (
+            <RevealItem key={person.name} as="li" index={index + 1} className="py-6 first:pt-0 last:pb-0">
+              <figure>
+                <blockquote className="text-read text-body">“{person.quote}”</blockquote>
+                <Person person={person} />
+              </figure>
+            </RevealItem>
           ))}
-        </div>
-      </motion.div>
+        </ul>
+      </div>
     </section>
-  )
+  );
 }

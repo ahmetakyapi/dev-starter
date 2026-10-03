@@ -1,16 +1,18 @@
 /**
- * Confirm — Onay dialog bileseni
+ * Confirm — onay diyaloğu
  *
- * Tehlikeli islemler icin (silme, iptal, vb.) onay modal'i.
- * Animasyonlu, keyboard destekli, renk varyantli.
+ * Geri alınamayan işlemler (silme, iptal) için. Escape ile vazgeçilir,
+ * odak açılışta VAZGEÇ düğmesine gider: Enter'a refleksle basan kullanıcı
+ * yanlışlıkla silmesin. Kilit sayaçlı (`use-scroll-lock.ts`): bir modalın
+ * üstünde açılıp kapanınca alttaki modalın kilidi yerinde kalır.
  *
- * Kullanim:
+ * Kullanım:
  *   <Confirm
  *     open={showConfirm}
  *     onConfirm={handleDelete}
  *     onCancel={() => setShowConfirm(false)}
- *     title="Silmek istediginize emin misiniz?"
- *     description="Bu islem geri alinamaz."
+ *     title="Kaydı Sil"
+ *     description="Bu işlem geri alınamaz."
  *     variant="danger"
  *     confirmText="Sil"
  *   />
@@ -18,8 +20,9 @@
 
 'use client'
 
-import { useEffect, useCallback } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useId, useRef } from 'react'
+import { AnimatePresence, m } from 'motion/react'
+import { useScrollLock } from './use-scroll-lock'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -31,19 +34,20 @@ const backdrop = {
 
 const panel = {
   hidden: { opacity: 0, scale: 0.96, y: -16 },
-  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.25, ease: EASE } },
-  exit: { opacity: 0, scale: 0.96, y: -16, transition: { duration: 0.15 } },
+  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.28, ease: EASE } },
+  exit: { opacity: 0, scale: 0.96, y: -16, transition: { duration: 0.16 } },
 }
 
 type Variant = 'danger' | 'warning' | 'default'
 
+// Renk yalnızca token sınıfından; tema `data-theme` ile döner
 const confirmStyles: Record<Variant, string> = {
-  danger: 'bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-500/20',
-  warning: 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg shadow-amber-500/20',
-  default: 'bg-ahmet-indigo hover:brightness-110 text-white shadow-lg shadow-ahmet-indigo/20',
+  danger: 'bg-danger text-on-primary hover:opacity-90',
+  warning: 'bg-warning text-page hover:opacity-90',
+  default: 'bg-primary text-on-primary hover:bg-primary-hover',
 }
 
-interface ConfirmProps {
+type ConfirmProps = {
   open: boolean
   onConfirm: () => void
   onCancel: () => void
@@ -62,74 +66,74 @@ export function Confirm({
   title,
   description,
   confirmText = 'Onayla',
-  cancelText = 'İptal',
+  cancelText = 'Vazgeç',
   variant = 'default',
   loading = false,
 }: ConfirmProps) {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel()
-    },
-    [onCancel],
-  )
+  const titleId = useId()
+  const descId = useId()
+  const cancelRef = useRef<HTMLButtonElement>(null)
+  useScrollLock(open)
 
   useEffect(() => {
-    if (open) {
-      document.addEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'hidden'
+    if (!open) return
+    cancelRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel()
     }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = ''
-    }
-  }, [open, handleKeyDown])
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open, onCancel])
 
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           variants={backdrop}
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim px-4"
           onClick={onCancel}
-          aria-modal="true"
-          role="alertdialog"
         >
-          <motion.div
+          <m.div
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={description ? descId : undefined}
             variants={panel}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="glass w-full max-w-md rounded-2xl p-6 mx-4"
+            className="w-full max-w-md rounded-xl border border-line bg-overlay p-6 shadow-overlay"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h2 id={titleId} className="text-title font-semibold text-strong">
               {title}
             </h2>
             {description && (
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+              <p id={descId} className="mt-2 text-base text-soft">
                 {description}
               </p>
             )}
             <div className="mt-6 flex justify-end gap-3">
               <button
+                ref={cancelRef}
+                type="button"
                 onClick={onCancel}
-                className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="h-11 rounded-md px-4 text-base font-medium text-soft transition-colors hover:bg-surface-raised hover:text-strong"
               >
                 {cancelText}
               </button>
               <button
+                type="button"
                 onClick={onConfirm}
                 disabled={loading}
-                className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all disabled:opacity-50 ${confirmStyles[variant]}`}
+                aria-busy={loading}
+                className={`h-11 rounded-md px-4 text-base font-semibold transition disabled:opacity-50 ${confirmStyles[variant]}`}
               >
-                {loading ? 'Yükleniyor...' : confirmText}
+                {loading ? 'İşleniyor…' : confirmText}
               </button>
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

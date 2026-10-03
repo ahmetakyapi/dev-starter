@@ -106,7 +106,19 @@ for (const pkgDir of PACKAGES) {
     }
   }
 
-  // 5. Kaynak 'use client' istiyorsa dist'in İLK satırında da olmalı.
+  // 5. v3: animasyon `motion/react`ten gelir. Dist'te `framer-motion` importu
+  //    kalırsa tüketici iki ayrı motion kopyası kurar ve LazyMotion bağlamı
+  //    paylaşılmaz (paketin `m.*` bileşenleri animasyonsuz kalır).
+  for (const field of ['main', 'module']) {
+    const target = pkg[field]
+    if (!target || !existsSync(resolve(pkgDir, target))) continue
+    const code = await readFile(resolve(pkgDir, target), 'utf8')
+    if (/from\s*['"]framer-motion['"]|require\(['"]framer-motion['"]\)/.test(code)) {
+      fail(`${pkg.name}: ${target} hâlâ 'framer-motion' import ediyor — 'motion/react' kullan`)
+    }
+  }
+
+  // 6. Kaynak 'use client' istiyorsa dist'in İLK satırında da olmalı.
   //    tsup bundle ederken direktifi düşürür; banner ile geri konmazsa paket
   //    App Router'da kırılır ve build + tsc + yükleme testleri bunu GÖREMEZ
   //    (yayındaki 2.1.0 tam olarak böyleydi — bkz. mistakes.md #52).

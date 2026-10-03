@@ -1,38 +1,29 @@
-# dependencies
+# Bağımlılıklar
 node_modules/
-.pnp
-.pnp.js
 
-# testing
-/coverage
+# Next.js
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
 
-# next.js
-/.next/
-/out/
+# Ortam: yalnızca örnek dosya commit'lenir
+.env*
+!.env.example
 
-# production
-/build
+# Yerel notlar ve geçici ölçüm betikleri (.tmp-shot.mjs gibi)
+*.local.md
+.tmp-*
 
-# misc
-.DS_Store
-*.pem
-Thumbs.db
-
-# debug
+# Hata ayıklama
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# env files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# vercel
+# Vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# macOS ve iCloud senkron kopyaları ("dosya 2.ts")
+.DS_Store
+* [0-9].*
+* [0-9]
+

@@ -1,53 +1,104 @@
-import type { Metadata } from 'next'
-import { Manrope, IBM_Plex_Mono } from 'next/font/google'
-import { ThemeProvider } from 'next-themes'
-import './globals.css'
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Mono, Manrope } from "next/font/google";
+import type { ReactNode } from "react";
+import { MotionProvider } from "@/components/motion/MotionProvider";
+import { organization } from "@/lib/content";
+import { INDEXABLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { jsonLd } from "@/lib/structured-data";
+import { PALETTE, THEME_COLOR, getTheme } from "@/lib/theme";
+import "./globals.css";
+// Landing'e özgü hareket ve yerleşim kuralları; sistem dosyası (globals.css)
+// nextjs-fullstack ile birebir aynı kalsın diye ayrı dosyada.
+import "./landing.css";
 
-const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-sans',
-  display: 'swap',
-})
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
-  display: 'swap',
-})
+/*
+ * TUZAK: next/font `variable` adı @theme'deki adla aynı olursa
+ * (`--font-sans: var(--font-sans)`) değişken kendine başvurur ve font
+ * sessizce sistem yazı tipine düşer. Bu yüzden `-face` soneki.
+ * Manrope değişken bir aile: `weight` verilmez, eksen tek dosyada gelir.
+ */
+const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans-face", display: "swap" });
+const mono = IBM_Plex_Mono({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500"],
+  variable: "--font-mono-face",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Pulse — Product Analytics (Demo)',
-    template: '%s | Pulse',
-  },
-  description: 'Real-time product analytics for modern teams. Track users, revenue and engagement from one beautiful dashboard.',
-  openGraph: {
-    title:       'Pulse — Product Analytics',
-    description: 'Real-time product analytics for modern teams.',
-    type:        'website',
-    locale:      'tr_TR',
-  },
-  twitter: {
-    card:        'summary_large_image',
-    title:       'Pulse — Product Analytics',
-    description: 'Real-time product analytics for modern teams.',
-  },
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: SITE_NAME, locale: "tr_TR", url: "/" },
+  twitter: { card: "summary_large_image" },
+  robots: INDEXABLE ? { index: true, follow: true } : { index: false, follow: false },
+};
+
+/* Tarayıcı çubuğunun rengi işletim sisteminden değil SİTENİN temasından. */
+export async function generateViewport(): Promise<Viewport> {
+  const theme = await getTheme();
+  return {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
+    themeColor: THEME_COLOR[theme],
+  };
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+/* Organization + WebSite, tek grafikte; `@id` ile birbirine bağlı. */
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: organization.name,
+      url: SITE_URL,
+      logo: `${SITE_URL}/icon.svg`,
+      ...(organization.sameAs.length ? { sameAs: organization.sameAs } : {}),
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      description: SITE_DESCRIPTION,
+      url: SITE_URL,
+      inLanguage: "tr-TR",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+    },
+  ],
+};
+
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Tema sunucuda, çerezden: ilk HTML doğru temayla gelir, satır içi betik yok.
+  const theme = await getTheme();
+
   return (
-    <html lang="tr" suppressHydrationWarning className={`${manrope.variable} ${ibmPlexMono.variable}`}>
-      <body className={manrope.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
-          <div className="flex items-center justify-center gap-2 border-b border-indigo-100 bg-indigo-50/80 px-4 py-1.5 text-center text-xs text-indigo-600 backdrop-blur-sm dark:border-indigo-900/20 dark:bg-indigo-950/30 dark:text-indigo-400">
-            <span className="rounded-full bg-indigo-600 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white dark:bg-indigo-500">Demo</span>
-            <span>Bu sayfa bir şablon demosu — tüm içerik örnek amaçlıdır.</span>
-          </div>
-          {children}
-        </ThemeProvider>
+    <html
+      lang="tr"
+      data-theme={theme}
+      data-palette={PALETTE}
+      // Tema düğmesi özniteliği istemcide değiştirir; sonraki sunucu çizimi
+      // aynı değeri basar ama araya giren kısa farkı React raporlamasın.
+      suppressHydrationWarning
+      className={`${sans.variable} ${mono.variable}`}
+    >
+      <body className="min-h-dvh bg-page font-sans text-body antialiased">
+        <a
+          href="#icerik"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-3 focus:text-base focus:font-semibold focus:text-on-primary"
+        >
+          İçeriğe Geç
+        </a>
+        <MotionProvider>{children}</MotionProvider>
+        {/* JavaScript yoksa Reveal öğeleri opacity 0'da kalmasın; sahne cümleleri alt alta dizilsin. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}.stage{height:auto!important}.stage-pin{position:static!important;height:auto!important}.stage-lines{gap:.75rem}.stage-line{grid-area:auto!important;opacity:1!important;transform:none!important}.frame-tilt{transform:none!important}`}</style>
+        </noscript>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(STRUCTURED_DATA) }} />
       </body>
     </html>
-  )
+  );
 }

@@ -1,29 +1,36 @@
 'use client'
 
+import { m } from 'motion/react'
 import { cn } from '../utils'
-import { motion } from 'framer-motion'
 import { useMagnetic } from '../hooks/useMagnetic'
 
-type Variant = 'primary' | 'ghost' | 'outline'
-type Size    = 'sm' | 'md' | 'lg'
+type Variant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
+type Size = 'sm' | 'md' | 'lg'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: Variant
   size?: Size
   magnetic?: boolean
 }
 
+// Renk yalnızca token sınıfından: tema `data-theme` ile döner, koyu tema varyantı yazılmaz
 const variants: Record<Variant, string> = {
-  primary: 'bg-ahmet-indigo text-white shadow-lg shadow-ahmet-indigo/20 hover:brightness-110 hover:shadow-ahmet-indigo/40',
-  ghost:   'glass text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white',
-  outline: 'border border-slate-300/60 dark:border-slate-600/60 text-slate-600 dark:text-slate-300 hover:border-ahmet-indigo/60 hover:text-ahmet-indigo dark:hover:text-indigo-300',
+  primary: 'bg-primary text-on-primary shadow-sm hover:bg-primary-hover',
+  secondary: 'border border-line bg-surface-raised text-strong hover:border-line-strong',
+  ghost: 'text-soft hover:bg-surface-raised hover:text-strong',
+  outline: 'border border-line-strong text-body hover:border-primary hover:text-primary-ink',
+  danger: 'bg-danger-wash text-danger hover:bg-danger hover:text-on-primary',
 }
 
+// md ve lg 44 px dokunma hedefini karşılar; sm yoğun araç çubukları için
 const sizes: Record<Size, string> = {
-  sm: 'px-4 py-2 text-xs',
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-8 py-4 text-base',
+  sm: 'h-9 px-3.5 text-small',
+  md: 'h-11 px-5 text-base',
+  lg: 'h-12 px-6 text-read',
 }
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,transform] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
 
 export function Button({
   variant = 'primary',
@@ -31,40 +38,30 @@ export function Button({
   magnetic = false,
   className,
   children,
+  type = 'button',
   ...props
 }: ButtonProps) {
   const { mx, my, onMove, onLeave } = useMagnetic(0.26)
+  const classes = cn(base, variants[variant], sizes[size], className)
 
   if (magnetic) {
     return (
-      <motion.button
+      <m.button
+        type={type}
         style={{ x: mx, y: my }}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
         whileTap={{ scale: 0.96 }}
-        className={cn(
-          'rounded-xl font-semibold transition-all active:scale-95',
-          variants[variant],
-          sizes[size],
-          className,
-        )}
-        {...(props as React.ComponentPropsWithoutRef<typeof motion.button>)}
+        className={classes}
+        {...(props as React.ComponentPropsWithoutRef<typeof m.button>)}
       >
         {children}
-      </motion.button>
+      </m.button>
     )
   }
 
   return (
-    <button
-      className={cn(
-        'rounded-xl font-semibold transition-all active:scale-95',
-        variants[variant],
-        sizes[size],
-        className,
-      )}
-      {...props}
-    >
+    <button type={type} className={classes} {...props}>
       {children}
     </button>
   )
