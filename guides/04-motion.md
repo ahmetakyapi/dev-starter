@@ -89,6 +89,22 @@ Açılış Zili'nde 114 `transition-colors` iki farklı ritimde çalışıyordu
 (Tailwind varsayılanı ve marka eğrisi); varsayılanı değiştirmek hepsini tek
 satırda hizaladı.
 
+**Tuzak: modül CSS'i bu varsayılanı ALMAZ.** `--default-transition-*` yalnız
+Tailwind'in `transition-*` yardımcılarına gider; `.module.css`te eğrisiz
+yazılmış `transition: opacity 200ms` tarayıcının `ease`ine düşer. Açılış
+Zili'nde 43 dosyada 318 geçiş böyleydi (12 Ekim 2026). Modül CSS'inde eğri
+her zaman açık yazılır. Eğri ailesi dört token, elle `cubic-bezier` yok:
+
+```css
+--ease-brand:    cubic-bezier(0.22, 1, 0.36, 1);  /* giriş, ease-out-quint */
+--ease-brand-in: cubic-bezier(0.64, 0, 0.78, 0);  /* çıkış, ease-in-quint */
+--ease-loop:     cubic-bezier(0.37, 0, 0.63, 1);  /* simetrik döngü, ease-in-out-sine */
+--ease-move:     cubic-bezier(0.76, 0, 0.24, 1);  /* ekran boyunca taşıma, ease-in-out-quart */
+```
+
+JS'te çıkış tek yardımcıdan: `exitOf(girişSaniyesi)` → süre girişin %55'i,
+eğri ease-in. motion'da `exit={{ opacity: 0, transition: exitOf(0.16) }}`.
+
 ---
 
 ## 3. Süre Tablosu
@@ -100,7 +116,7 @@ satırda hizaladı.
 | Sayfa | 400–600 ms | Kahraman girişi, rota geçişi, tema dairesi |
 | Ortam | ≥ 8 s, döngü | Aurora sürüklenmesi (yalnız görünürken) |
 
-- Çıkış girişten kısa (~%70): kapanan şey beklenmez.
+- Çıkış girişten kısa (%50–60) ve ease-in: kapanan şey beklenmez, hızlanarak gider.
 - Kullanıcının tetiklediği hareket 300 ms'yi nadiren geçer; geçerse "yavaş
   site" diye okunur.
 - Bir ekranda en fazla **bir** sayfa ölçeğinde hareket.
@@ -271,6 +287,11 @@ CSS şeridi son rakama kaydırır.
 Snippet: `snippets/rolling-number.tsx`. Değer **değiştiğinde** sayan sayaç
 (hesap makinesi sonucu) üçüncü bir iştir: `useSpring` ile, `animated-number`.
 
+**Veri değeri 0'dan sayılmaz.** Seri değişince 0'dan yuvarlanan makro rakamı
+(faiz 4,33) ekranda 0,8 ve 2,1 gibi hiç yayımlanmamış değerleri 0,7 saniye
+okutuyordu (Açılış Zili, 12 Ekim 2026). Sayaç ancak boyutsuz bir puanda ve
+dolan bir halka/şeritle birlikte meşru; ölçülmüş bir değer yerinde durur.
+
 ---
 
 ## 10. Mikro Etkileşimler
@@ -349,5 +370,9 @@ Her birinin sınırı yanında:
 - [ ] Kahraman/LCP Reveal'e sarılı değil
 - [ ] Reduced-motion'da `initial` hedefi değişiyor, `initial={false}` yok
 - [ ] Sayfa giriş animasyonunda fill-mode yok
-- [ ] Yalnızca `transform` ve `opacity` animasyonu
+- [ ] Yalnızca `transform` ve `opacity` animasyonu (`left` değil: `translate`, gerekirse `cqw`)
+- [ ] Modül CSS'inde her `transition`/`animation` eğrisini yazıyor, elle `cubic-bezier` yok
+- [ ] Çıkış girişin %50–60'ı, ease-in (`exitOf`)
+- [ ] Her gezinmede oynayan giriş 200–500 ms bandında; kademede tek kahraman
+- [ ] Ölçülmüş veri 0'dan sayılmıyor
 - [ ] Magnetic/imleç efektleri `pointer: fine` altında

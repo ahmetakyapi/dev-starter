@@ -7,6 +7,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — motion-film
 
+### Eklendi — 2026-10-12 (dördüncü geçiş: arayüz denetimi)
+
+- **`motion-film` 1.3.0** — skill'in sayıları Açılış Zili'nin 125
+  animasyonuna uygulandı; yöntem ve tuzaklar geri yazıldı:
+  - `reference/arayuz-denetimi.md` (yeni): envanter → sınıf → sayı → ölçüm,
+    sınıf başına süre/eğri tablosu, ölçümle bulunan tuzaklar (modül CSS'i
+    varsayılan eğriyi almıyor, `left` → `translate`/`cqw`, 0'dan sayan veri,
+    uzun kademe), son kareyi basan figür deseni (`PlayOnView`).
+  - SKILL § 7c ve teslim listesine bir madde.
+- **`guides/04-motion.md`**: modül CSS tuzağı, dört eğri token'ı
+  (`--ease-brand`, `-in`, `--ease-loop`, `--ease-move`), `exitOf`, çıkış
+  %50–60 ease-in, "veri değeri 0'dan sayılmaz", kontrol listesine dört madde.
+
 ### Eklendi — 2026-10-11 (üçüncü geçiş: sıfat değil sayı)
 
 - **`motion-film` 1.2.0** — Florence'ın "Opus 5.5 Motion Lab" makalesinden:

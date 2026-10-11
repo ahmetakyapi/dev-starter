@@ -15,7 +15,7 @@ description: >
 license: MIT
 metadata:
   author: Ahmet Akyapı (dev-starter)
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Motion Film — kodla hareket filmi
@@ -151,6 +151,20 @@ Bir sistemin nasıl çalıştığını anlatan figür ya da sayfa içi film içi
 İzometrik, çok parçalı SVG makine, WebGL ateş/su/ışık ya da 3D dönen parça
 gerekiyorsa anatomy skill'inin kendisini kullan (`machine/bootstrap.sh` kurar).
 
+## 7c. Bütün arayüzün hareketini denetlemek (ayrıntı: `reference/arayuz-denetimi.md`)
+
+Skill'in sayıları yalnız filme değil, çalışan bir arayüzün her animasyonuna
+uygulanır: envanter → sınıf → sayı → ölçüm.
+
+- **Modül CSS'i varsayılan eğriyi almaz**; eğrisiz `transition` tarayıcının
+  `ease`ine düşer. Eğri dört token: giriş, çıkış (`-in`), döngü, taşıma.
+- **Çıkış girişin %55'i, ease-in** (`exitOf`). Her gezinmede oynayan giriş
+  ≤ 500 ms. Kayan-beliren giriş yalnız kahramanda; gerisi opaklık.
+- **`left` değil `translate`** (gerekirse `cqw`); veri değeri 0'dan sayılmaz.
+- **Kaydırmaya bağlı animasyon doğrusal kalır**: ilerleme kaydırmanın kendisi.
+- **Sayfadaki figür son kareyi basar**; yalnız ekran dışındayken kurulur,
+  görünce bir kez oynar (`PlayOnView` deseni).
+
 ## 8. Kopyalanacak kod
 
 | Dosya | Ne |
@@ -182,6 +196,7 @@ kesmesiz geçiş).
 | `reference/video-uretimi.md` | Sözleşme, belirlilik, MP4, alt kare bulanıklığı, loudness |
 | `reference/sayilar.md` | Eğri tablosu, ζ, süre ve kademe, hiyerarşi, vuruş ızgarası, bekleme, kamera, WCAG, sıfat → sayı çevirisi |
 | `reference/aciklayici-figur.md` | Nesne-açıklama, figür kartı, canlı künye, sahne çipleri, hareket ve erişilebilirlik kuralları, inceleme (anatomy) |
+| `reference/arayuz-denetimi.md` | Bütün arayüzün animasyonlarını sayıyla denetleme: yöntem, sınıf başına sayı, ölçümle bulunan tuzaklar, son kareyi basan figür deseni |
 | `reference/prompt-kaliplari.md` | Sekiz satırlık yönlendirilmiş prompt, yasak listesi, kare numaralı inceleme notları, belirti → düzeltme tablosu, film tretmanı iskeleti |
 | `reference/kaynaklar.md` | Açık kaynaklar ve makaleler, lisansları ve neyin nereden alındığı |
 
@@ -197,6 +212,7 @@ hareketi azaltana son kare. Skill ilham ve teknik verir, kimliği değiştirmez.
 - [ ] Eğriler token'dan; çıkış girişten kısa; doğrusal yalnız dönüş/ilerleme/faz; opaklık ve renk zıplamıyor
 - [ ] Her planda tek kahraman; yazı kelime başına 0,3 + 0,5 sn bekliyor; saniyede ≤ 3 parlama
 - [ ] Döngüyse 0..N−1, faz tam devirli, 0. kare bitmiş kompozisyon
+- [ ] Arayüzde: modül CSS'inde eğrisiz geçiş yok, `left` animasyonu yok, veri 0'dan sayılmıyor, figür son kareyi basıyor
 - [ ] Tretman yazıldı; okumaların süresi var, üst üste binmiyor
 - [ ] İlk 3 sn'de kanca; son açılışla kafiyeli; tek yerli hamle doruğa yakın
 - [ ] Her dikişte geçiş; kesme yalnız bilinçli
