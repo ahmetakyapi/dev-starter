@@ -41,7 +41,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 92 kayıt (#58–73 agentic, #74–92 Next 16 / v4 / motion)
+│   ├── mistakes.md            → 97 kayıt (#58–73 agentic, #74–94 Next 16 / v4 / motion, #95–97 hareket filmi)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
