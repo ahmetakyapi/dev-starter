@@ -26,6 +26,15 @@
  *   --wait=ms        canlıda tıklamadan önce bekleme (800)
  *   --allow-errors   sayfa hatasında yine de çık 0
  *
+ * Animatör görünümleri (Florence, "Opus 5.5 Motion Lab"):
+ *   --onion          seçilen kareleri %25 opaklıkla TEK görüntüde üst üste bindirir.
+ *                    Eşit aralık = robotik; anahtar karelere yaklaşırken sıklaşan
+ *                    aralık = eğri çalışıyor.  örn. --strip=1:2 --onion
+ *   --probe="ifade"  her karede sayfada bir JS ifadesi ölçer (sayı ya da sayı
+ *                    dizisi) ve değer + kare başına değişim grafiği çizer.
+ *                    Düz çizgi = doğrusal hareket, keskin köşe = ölü duruş/kalkış.
+ *                    örn. --range=0:3:0.0417 --probe="document.querySelector('.hero').getBoundingClientRect().x"
+ *
  * Tarayıcı: CHROME_PATH ya da bilinen yerler; kütüphane çalıştırdığın
  * projeden çözülür (puppeteer-core / puppeteer / playwright-core / playwright).
  */
@@ -112,6 +121,9 @@ await page.goto(url, { waitUntil: env.kind === "playwright" ? "networkidle" : "n
 
 const list = times();
 const shots = [];
+const probes = [];
+const probe = args.probe ? String(args.probe) : null;
+const measure = async () => probe ? probes.push(await page.evaluate((expr) => { const v = (0, eval)(expr); return Array.isArray(v) ? v.map(Number) : [Number(v)]; }, probe)) : 0;
 let timing = null;
 if (args.live) {
   await sleep(Number(args.wait || 800));
@@ -122,33 +134,64 @@ if (args.live) {
     const wait = t * 1000 - (Date.now() - t0);
     if (wait > 0) await sleep(wait);
     shots.push({ t, data: await b64(page, args.selector) });
+    await measure();
   }
   timing = await page.evaluate(() => { const f = window.__frames.slice(5).sort((a, b) => a - b); return f.length ? { n: f.length, p50: f[f.length >> 1], p95: f[Math.floor(f.length * 0.95)], max: f[f.length - 1] } : null; });
 } else {
-  await page.waitForFunction("window.READY === true && typeof window.render === 'function'", { timeout: 20_000 });
+  await page.waitForFunction("window.READY === true && (typeof window.renderAt === 'function' || typeof window.render === 'function')", { timeout: 20_000 });
   for (const t of list) {
-    await page.evaluate(tt => window.render(tt), t);
+    await page.evaluate(tt => (window.renderAt ?? window.render)(tt), t);
     shots.push({ t, data: await b64(page, args.selector) });
+    await measure();
   }
 }
 
 // Döşeme: ayrı bir sayfada ızgara, her karenin köşesinde saniyesi.
 // Düşük başlangıç yüksekliği: tam sayfa görüntüsü içerik kadar uzar, altta boşluk kalmaz.
-const sheet = await newPage(env, cols * (thumb + 8) + 8, 60, 1);
-await sheet.setContent(`<!doctype html><style>
+const onion = Boolean(args.onion);
+const sheet = await newPage(env, onion ? thumb * 2 + 16 : cols * (thumb + 8) + 8, 60, 1);
+const chart = probes.length ? chartSvg(list, probes) : "";
+await sheet.setContent(onion ? `<!doctype html><style>
+  body{margin:0;padding:8px;background:#fff;font:600 12px ui-monospace,monospace}
+  .o{position:relative;width:${thumb * 2}px} .o img{position:absolute;inset:0;width:100%;opacity:.25;mix-blend-mode:multiply}
+  .o img:first-child{position:relative} p{margin:6px 0 0}
+</style><div class="o">${shots.map(s => `<img src="data:image/png;base64,${s.data}">`).join("")}</div><p>onion ${shots[0]?.t}–${shots.at(-1)?.t} sn · ${shots.length} kare</p>${chart}` : `<!doctype html><style>
   body{margin:0;padding:8px;background:#0e1013;font:600 12px ui-monospace,monospace;color:#fff}
   .g{display:grid;grid-template-columns:repeat(${cols},${thumb}px);gap:8px}
   figure{margin:0;position:relative} img{width:${thumb}px;display:block;border-radius:6px}
   figcaption{position:absolute;left:6px;top:6px;padding:2px 6px;border-radius:4px;background:#c0262d}
-</style><div class="g">${shots.map(s => `<figure><img src="data:image/png;base64,${s.data}"><figcaption>${s.t}s</figcaption></figure>`).join("")}</div>`);
+</style><div class="g">${shots.map(s => `<figure><img src="data:image/png;base64,${s.data}"><figcaption>${s.t}s</figcaption></figure>`).join("")}</div>${chart}`);
 await sheet.waitForFunction("[...document.images].every(i => i.complete)");
 mkdirSync(dirname(out), { recursive: true });
 await sheet.screenshot({ path: out, fullPage: true });
 await env.browser.close();
 
 console.log(`${shots.length} kare → ${out}`);
+if (probes.length) {
+  const deltas = probes.slice(1).map((p, i) => Math.abs(p[0] - probes[i][0]));
+  const still = deltas.filter(d => d < 1e-3).length, max = Math.max(...deltas);
+  console.log(`probe: ${probes.length} ölçüm · en büyük kare adımı ${max.toFixed(3)} · durağan kare ${still}`);
+}
 if (timing) console.log(`kare süresi: p50 ${timing.p50.toFixed(1)} ms · p95 ${timing.p95.toFixed(1)} ms · en kötü ${timing.max.toFixed(1)} ms (${timing.n} kare)`);
 if (errors.length) {
   console.error(`sayfa hataları (${errors.length}):\n  ` + errors.slice(0, 10).join("\n  "));
   if (!args["allow-errors"]) process.exit(1);
+}
+
+/** Değer (üst) ve kare başına değişim (alt) grafiği: hız grafiği okunur — doğrusal kesim düz, ölü duruş köşe. */
+function chartSvg(ts, rows) {
+  const W = 960, H = 220, pad = 28, series = rows[0].length;
+  const plot = (vals, y0, h, color) => {
+    const lo = Math.min(...vals), hi = Math.max(...vals), span = hi - lo || 1;
+    const pts = vals.map((v, i) => `${(pad + (i / Math.max(1, vals.length - 1)) * (W - 2 * pad)).toFixed(1)},${(y0 + h - ((v - lo) / span) * h).toFixed(1)}`).join(" ");
+    return `<polyline fill="none" stroke="${color}" stroke-width="1.6" points="${pts}"/><text x="${pad}" y="${y0 - 4}" font-size="11">${lo.toFixed(2)} … ${hi.toFixed(2)}</text>`;
+  };
+  const colors = ["#1f6feb", "#c2353b", "#0f8a5f", "#a4720f"];
+  let g = "";
+  for (let k = 0; k < series; k++) {
+    const vals = rows.map(r => r[k]);
+    const d = vals.slice(1).map((v, i) => v - vals[i]);
+    g += plot(vals, 24, 70, colors[k % 4]) + plot(d.length ? d : [0], 130, 70, colors[k % 4]);
+  }
+  return `<svg width="${W}" height="${H}" style="display:block;margin-top:8px;background:#fff;font-family:ui-monospace,monospace"><text x="${W - pad}" y="16" text-anchor="end" font-size="11">değer · ${ts[0]}–${ts.at(-1)} sn</text><text x="${W - pad}" y="122" text-anchor="end" font-size="11">kare başına değişim (hız)</text>${g}</svg>`;
 }

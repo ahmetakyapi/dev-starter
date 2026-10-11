@@ -10,12 +10,12 @@ description: >
   kinetic type sequence, cinematic loading screen, visual explainer / animated
   figure that shows how a system works, or to "push the limits" of an animation;
   or to render an HTML animation to video. Kaynaklar: awesome-opus5-5-videos,
-  lemo-opuscar, ClaudeAnimationBase, shipvideo, PDoomVideo, wheresryan22/anatomy
-  + Açılış Zili filmi.
+  lemo-opuscar, ClaudeAnimationBase, shipvideo, PDoomVideo, wheresryan22/anatomy,
+  Florence "Opus 5.5 Motion Lab" + Açılış Zili filmi.
 license: MIT
 metadata:
   author: Ahmet Akyapı (dev-starter)
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Motion Film — kodla hareket filmi
@@ -30,6 +30,23 @@ Bu dosya bir harita: kurallar burada kısa, gerekçe ve ayrıntı `reference/`ta
 referans → kodu kopyala → inceleme döngüsü.
 
 ---
+
+## 0. Sıfat değil sayı (ayrıntı: `reference/sayilar.md`, `reference/prompt-kaliplari.md`)
+
+**Sıfat, varsayılan görünümün yaşadığı yerdir.** "Premium, modern, havalı"
+diyen 3 sıfatlık prompt lacivert uzay, ışıyan halka, bloom ve parçacık
+getirir; her sıfatı bir sayıyla değiştirdiğin yerde kararı geri alırsın
+(Florence'ın A/B deneyi). Kod yazmadan önce sekiz satır:
+**GOAL · OUTPUT · TIME · LOOK · MOTION · SHOTS · BANNED · QA.**
+
+- Eğri adıyla (`assets/motion-tokens.ts`): giriş ease-out, çıkış ease-in ve
+  %40–50 kısa, ekran boyunca ease-in-out; doğrusal yalnız dönüş/ilerleme/faz.
+- Yay tek sayı: sönüm oranı ζ (0,7–0,85 premium). **Opaklık ve renk zıplamaz.**
+- Süreler karede (24 fps'te 400 ms = 10 kare); sonraki öğe öncekinin %30–50'sinde başlar.
+- **Planda tek kahraman**; ikinciller %50–70 yol, 100–200 ms geç; ortam < %5.
+- Yazı kelime başına 0,3 sn + 0,5 sn bekler; okunurken kıpırdamaz.
+- Vuruş `fps·60/BPM`, her vuruş tek tek yuvarlanır; vuruşta kes, ölçüde yerleşimi değiştir.
+- Yasak listesi ADIYLA ve canlı: ilk render'ın kullandığı her varsayılanı ekle.
 
 ## 1. Önce karar: film nerede yaşıyor?
 
@@ -98,7 +115,14 @@ node $S/film-sheet.mjs film.html --strip=3.2:3.8 --out=out/strip.png          # 
 node $S/film-sheet.mjs http://localhost:3000/x --live --click="[data-start]" \
      --times=0.3,1,2,4,8 --selector=main --size=390x844 --dark                 # gerçek bileşen + kare süresi
 node $S/film-video.mjs film.html --fps=24 --subframes=4 --out=out/film.mp4    # video
+node $S/film-video.mjs film.html --gif --out=out/film.mp4                     # GIF, 25 fps, tek palet
+node $S/film-sheet.mjs film.html --strip=1:2 --onion --out=out/onion.png      # soğan kabuğu
+node $S/film-sheet.mjs film.html --range=0:3:0.0417 --probe="hero.offsetLeft"  # hız grafiği
 ```
+
+Notlar his değil **kare numarası** taşır ("84. karede tepe geç, 2 kare öne
+al"); turda bir-iki not; tutmayan düzeltmede iki komşu kareyi yan yana
+çıkar ve farkı listele. Tutan düzeltme render sözleşmesine eklenir.
 
 Her geçişin ilk ve son 0,5 sn'si, iki tema, telefon + masaüstü, hareketi
 azaltma ve kare süresi (p95 ≤ 16,8 ms) ölçülür. Görüntüye bakmadan "oldu" denmez.
@@ -135,6 +159,7 @@ gerekiyorsa anatomy skill'inin kendisini kullan (`machine/bootstrap.sh` kurar).
 | `assets/film-kit.ts` | `kinetic`, `tag`, `followCamera`, `withCamera`, `penTiming`, `penShadow`, `floodPath`, `inverted`, `teardrop`, `seal`, `fibres`, `cuesBetween` |
 | `assets/film-sound.ts` | Web Audio tarifleri: damla, vuruş, kalem, yükseliş, sel, daktilo, çan; tercih + başlatma |
 | `assets/film-page.html` | Sözleşme sayfası (DUR, render, READY, EV), `?t=` ile kare, boşluk/ok tuşları |
+| `assets/motion-tokens.ts` | Sayılar tek dosyada: `EASE` (reveal/enter/move/exit/pop), `MS`, `STAGGER`, `dampingRatio`, kapalı biçim `spring(t, ζ, f)`, JS `bezier()`, `beatFrame`, `holdFor`, `RANK`, `cascade`, `loopPhase` |
 | `assets/figure-kit.ts` | Çalışma zamanı: `watchVisibility` (son kayıt), `loop` (dt kırpılmış, görünmezken durur), `follow`, `spring`, `settle`, `burst`, `idleTour`, `quietAnnouncer`, `cueWindow` |
 | `scripts/film-sheet.mjs` | Temas sayfası / şerit / canlı ölçüm (puppeteer ya da playwright) |
 | `scripts/film-video.mjs` | Kareler → ffmpeg → MP4, alt kare bulanıklığı, olay dosyası |
@@ -155,9 +180,10 @@ kesmesiz geçiş).
 | `reference/ses.md` | Sayfa içi ses kuralları, tarifler, video miksi |
 | `reference/inceleme-dongusu.md` | Temas sayfası, şerit, canlı ölçüm, matris, ölçümle bulunan tuzaklar |
 | `reference/video-uretimi.md` | Sözleşme, belirlilik, MP4, alt kare bulanıklığı, loudness |
+| `reference/sayilar.md` | Eğri tablosu, ζ, süre ve kademe, hiyerarşi, vuruş ızgarası, bekleme, kamera, WCAG, sıfat → sayı çevirisi |
 | `reference/aciklayici-figur.md` | Nesne-açıklama, figür kartı, canlı künye, sahne çipleri, hareket ve erişilebilirlik kuralları, inceleme (anatomy) |
-| `reference/prompt-kaliplari.md` | Bir ajana film yaptırmak için prompt iskeleti |
-| `reference/kaynaklar.md` | Altı açık kaynak, lisansları ve neyin nereden alındığı |
+| `reference/prompt-kaliplari.md` | Sekiz satırlık yönlendirilmiş prompt, yasak listesi, kare numaralı inceleme notları, belirti → düzeltme tablosu, film tretmanı iskeleti |
+| `reference/kaynaklar.md` | Açık kaynaklar ve makaleler, lisansları ve neyin nereden alındığı |
 
 ## 9. Proje kuralları her zaman üstte
 
@@ -167,6 +193,10 @@ hareketi azaltana son kare. Skill ilham ve teknik verir, kimliği değiştirmez.
 
 ## 10. Teslimden önce
 
+- [ ] Sekiz satır dolu (GOAL…QA); her sıfat bir sayıya çevrildi; yasak listesi adlarla
+- [ ] Eğriler token'dan; çıkış girişten kısa; doğrusal yalnız dönüş/ilerleme/faz; opaklık ve renk zıplamıyor
+- [ ] Her planda tek kahraman; yazı kelime başına 0,3 + 0,5 sn bekliyor; saniyede ≤ 3 parlama
+- [ ] Döngüyse 0..N−1, faz tam devirli, 0. kare bitmiş kompozisyon
 - [ ] Tretman yazıldı; okumaların süresi var, üst üste binmiyor
 - [ ] İlk 3 sn'de kanca; son açılışla kafiyeli; tek yerli hamle doruğa yakın
 - [ ] Her dikişte geçiş; kesme yalnız bilinçli

@@ -23,6 +23,35 @@
 Her karede sor: izleyici şu an nereye bakıyor, anladı mı? Bir okuma kaç
 kare alıyor (24 kare = 1 sn)? Birkaç karelik okuma kaçırılır.
 
+## Animatörün iki görünümü
+
+- **Soğan kabuğu (onion skin):** kareleri %25 opaklıkla üst üste. Eşit aralık
+  robotik hareket; anahtar karelere yaklaşırken sıklaşan aralık eğrinin çalıştığı.
+  ```bash
+  node $S/film-sheet.mjs film.html --strip=1:2 --onion --out=out/onion.png
+  ```
+- **Hız grafiği:** kahramanın konumu ve kare başına değişimi. Düz çizgi
+  doğrusal hareket, keskin köşe ölü kalkış/duruş.
+  ```bash
+  node $S/film-sheet.mjs film.html --range=0:3:0.0417 \
+    --probe="[hero.getBoundingClientRect().x, hero.getBoundingClientRect().width]" --out=out/hiz.png
+  ```
+
+## Sayısal denetim
+
+Gözle bakmanın yetmediği yerde canlı sahneyi her karede okuyup prompt'un
+sayılarıyla karşılaştır (Motion Lab'in maskot döngüsü: 480 karede 71 denetim,
+ilk koşuda 6'sı kaldı). Etiketleri karelere bağla: geç kalan hareket, ekranda
+hareketinden önce yanan bir etiket olarak görünür. Yinelerken kare
+sayacı/oynatma kafası açık, son render'da kapalı.
+
+## Döngü: render → bak → düzelt
+
+İlk render taslaktır. Durağan kareler çıkar, bak, **kare numaralı** not
+yaz, düzelt, yalnız değişeni yeniden render et. İki-dört tur normaldir.
+Yaratıcı takipleri say (görünüşü ya da hareketi değiştiren her not);
+teknik düzeltmeler ayrı listede.
+
 ## Matris
 
 İki tema × iki genişlik (390 telefon, 1280 masaüstü) × iki dil (varsa) ×

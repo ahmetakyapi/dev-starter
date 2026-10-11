@@ -7,6 +7,27 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — motion-film
 
+### Eklendi — 2026-10-11 (üçüncü geçiş: sıfat değil sayı)
+
+- **`motion-film` 1.2.0** — Florence'ın "Opus 5.5 Motion Lab" makalesinden:
+  - § 0 "Sıfat değil sayı": sekiz satırlık yönlendirilmiş prompt (GOAL · OUTPUT ·
+    TIME · LOOK · MOTION · SHOTS · BANNED · QA), tek kahraman hiyerarşisi.
+  - `reference/sayilar.md` (yeni): eğri tablosu, sönüm oranı ζ, süre ve kademe,
+    vuruş ızgarası, bekleme, kamera, WCAG, sıfat → sayı çevirisi.
+  - `reference/prompt-kaliplari.md`: yönlendirilmiş prompt, canlı yasak listesi,
+    kare numaralı inceleme notları, belirti → düzeltme tablosu, fiş tutmak.
+  - `reference/video-uretimi.md`: render sözleşmesi (`renderAt(t)`, 0..N−1,
+    `?t` dondurma), döngü kuralları, GIF/X biçimleri. `ses.md`: ses ölçülür
+    (1 kare sonra, kosinüs fazı, telefon bandı, −14 LUFS / −2,2 dBTP).
+    `inceleme-dongusu.md`: soğan kabuğu, hız grafiği, sayısal denetim.
+  - `assets/motion-tokens.ts` (yeni): `EASE`, `MS`, `STAGGER`, kapalı biçim
+    `spring(t, ζ, f)`, JS `bezier()`, `beatFrame`, `holdFor`, `RANK`, `loopPhase`.
+  - `assets/film-page.html`: `renderAt(t)` (CSS/WAAPI animasyonlarını da dondurur),
+    `?counter` kare sayacı, ilk kare fontlardan sonra.
+  - `scripts/film-sheet.mjs`: `--onion`, `--probe` (değer + hız grafiği).
+    `scripts/film-video.mjs`: `--gif` (25 fps, tek palet); borudan girdi
+    kodlayıcısı açık (`mjpeg`) — önceden ffmpeg 6'da "no stream" ile düşüyordu.
+
 ### Eklendi — 2026-10-11 (ikinci geçiş: açıklayıcı figür)
 
 - **`motion-film` 1.1.0** — wheresryan22/anatomy'den (MIT) damıtılan açıklayıcı

@@ -14,6 +14,10 @@
  *                "4 subframes, tmix" tarifi). Süre N katı.
  * --from=a --to=b  yalnız bir aralık (hızlı deneme).
  * --events        DUR ve EV'yi out yanına .events.json olarak yazar (miks için).
+ * --gif           MP4 yerine tek paletli GIF (out .gif). GIF gecikmeleri yüzde bir
+ *                 saniyedir: 24 fps (41,7 ms) yazılamaz, 40'a yuvarlanınca döngü %4
+ *                 hızlı koşar ve vuruştan kayar. Bu yüzden GIF 25 fps'e (tam 40 ms)
+ *                 sabitlenir. Tek palet kareler arası renk titremesini önler.
  * ffmpeg: PATH'te ya da FFMPEG ortam değişkeni. Tarayıcı: film-sheet.mjs ile aynı.
  */
 import { createRequire } from "node:module";
@@ -29,7 +33,10 @@ const target = process.argv.slice(2).find(a => !a.startsWith("--"));
 if (!target) { console.error("Kullanım: film-video.mjs <html|url> [--fps=24] [--size=1920x1080] [--subframes=1] [--out=out/film.mp4]"); process.exit(2); }
 const url = /^https?:/.test(target) ? target : pathToFileURL(resolve(target)).href + "?capture";
 const [W, H] = String(args.size || "1920x1080").split("x").map(Number);
-const fps = Number(args.fps || 24), sub = Math.max(1, Number(args.subframes || 1));
+const gif = Boolean(args.gif);
+/** Asıl çıktı: GIF kipinde uzantı .gif. */
+const outOf = (o) => (gif ? o.replace(/\.mp4$/, ".gif") : o);
+const fps = gif ? 25 : Number(args.fps || 24), sub = Math.max(1, Number(args.subframes || 1));
 const out = resolve(args.out || "out/film.mp4");
 
 const req = createRequire(resolve(process.cwd(), "package.json"));
@@ -54,16 +61,20 @@ if (!page) { console.error("puppeteer(-core) ya da playwright(-core) yok: `npm i
 const errors = [];
 page.on("pageerror", e => errors.push(String(e.message || e)));
 await page.goto(url, { waitUntil: "load", timeout: 120_000 });
-await page.waitForFunction("window.READY === true && typeof window.render === 'function'", { timeout: 20_000 });
+await page.waitForFunction("window.READY === true && (typeof window.renderAt === 'function' || typeof window.render === 'function')", { timeout: 20_000 });
 const { DUR, EV } = await page.evaluate(() => ({ DUR: window.DUR, EV: window.EV ?? [] }));
 const from = Number(args.from ?? 0), to = Math.min(Number(args.to ?? DUR), DUR);
 mkdirSync(dirname(out), { recursive: true });
 if (args.events) writeFileSync(out.replace(/\.mp4$/, ".events.json"), JSON.stringify({ DUR, EV }, null, 2));
 
-const vf = sub > 1 ? ["-vf", `tmix=frames=${sub}:weights='${Array(sub).fill(1).join(" ")}',fps=${fps}`] : [];
+const blur = sub > 1 ? `tmix=frames=${sub}:weights='${Array(sub).fill(1).join(" ")}',fps=${fps}` : "";
+const encode = gif
+  ? ["-filter_complex", `[0:v]${blur ? blur + "," : ""}split[a][b];[a]palettegen=stats_mode=full[p];[b][p]paletteuse=dither=sierra2_4a`, "-loop", "0", outOf(out)]
+  : [...(blur ? ["-vf", blur] : []), "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "medium", "-movflags", "+faststart", out];
 const ff = spawn(process.env.FFMPEG || "ffmpeg", [
-  "-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(fps * sub), "-i", "-",
-  ...vf, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "medium", "-movflags", "+faststart", out,
+  // Girdi kodlayıcısı AÇIK (mjpeg): verilmezse ffmpeg borudan akışı tanıyamadı ve
+  // "Output file does not contain any stream" ile düştü (11 Ekim, ffmpeg 6).
+  "-y", "-loglevel", "error", "-f", "image2pipe", "-c:v", "mjpeg", "-framerate", String(fps * sub), "-i", "-", ...encode,
 ], { stdio: ["pipe", "inherit", "inherit"] });
 const done = new Promise((ok, fail) => ff.on("close", c => (c === 0 ? ok() : fail(new Error(`ffmpeg ${c}`)))));
 
@@ -71,7 +82,7 @@ const total = Math.round((to - from) * fps * sub);
 const started = Date.now();
 for (let i = 0; i < total; i++) {
   const t = from + i / (fps * sub);
-  await page.evaluate(tt => window.render(tt), t);
+  await page.evaluate(tt => (window.renderAt ?? window.render)(tt), t);
   const buf = await page.screenshot({ type: "jpeg", quality: 92 });
   if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once("drain", r));
   if (i % (fps * sub) === 0) process.stdout.write(`\r${(i / total * 100).toFixed(0)}% (${t.toFixed(1)}/${to} sn)`);
@@ -79,5 +90,5 @@ for (let i = 0; i < total; i++) {
 ff.stdin.end();
 await done;
 await browser.close();
-console.log(`\r${total} kare (${kind}) → ${out} · ${((Date.now() - started) / 1000).toFixed(1)} sn`);
+console.log(`\r${total} kare (${kind}) → ${outOf(out)} · ${((Date.now() - started) / 1000).toFixed(1)} sn`);
 if (errors.length) { console.error(`sayfa hataları:\n  ${errors.slice(0, 10).join("\n  ")}`); process.exit(1); }

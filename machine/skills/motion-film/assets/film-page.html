@@ -66,10 +66,25 @@
     ctx.fillText("Hazır", cx, cy + 150 + 70 * (1 - k)); ctx.restore();
   };
 
+  /* renderAt(t): render sözleşmesinin ortak adı (Florence, "Opus 5.5 Motion Lab").
+     Tuvali çizer VE sayfadaki CSS/WAAPI animasyonlarını aynı ana dondurur:
+     DOM'la yapılmış bir film de kare kare yakalanır. */
+  window.renderAt = (t) => {
+    window.render(t);
+    document.getAnimations().forEach((a) => { a.pause(); a.currentTime = t * 1000; });
+    if (counter) counter.textContent = `${Math.round(t * 24)} · ${t.toFixed(2)} sn`;
+  };
+  /* ?counter: köşede kare sayacı. Notlar kare numarasıyla yazılsın ("84. karede
+     tepe geç"); son kayıttan önce kaldır. */
+  const counter = new URLSearchParams(location.search).has("counter")
+    ? document.body.appendChild(Object.assign(document.createElement("div"), { style: "position:fixed;right:10px;top:8px;font:600 12px ui-monospace,monospace;opacity:.6" }))
+    : null;
+
   // Önizleme: oynat, ?t= ile atla, boşluk ile durdur.
   const q = new URLSearchParams(location.search);
   let playing = !q.has("t"), t = Number(q.get("t") || 0), last = performance.now();
-  const loop = (now) => { if (playing) { t = (t + (now - last) / 1000) % window.DUR; } last = now; window.render(t); requestAnimationFrame(loop); };
+  // Döngü: kareler 0..N−1; N. kare 0. karedir (ikisini birden göstermek ekteki tekleme).
+  const loop = (now) => { if (playing) { t = (t + (now - last) / 1000) % window.DUR; } last = now; window.renderAt(t); requestAnimationFrame(loop); };
   addEventListener("keydown", (e) => {
     if (e.key === " ") { playing = !playing; e.preventDefault(); }
     if (e.key === "ArrowRight") { playing = false; t = Math.min(window.DUR, t + 1 / 24); }
@@ -77,7 +92,8 @@
   });
   // Betikler kendi saatleriyle çizer: önizleme döngüsünü kapatır (?capture).
   if (!q.has("capture")) requestAnimationFrame(loop);
-  document.fonts.ready.then(() => { window.READY = true; });
+  // Font gelmeden ilk kare çizilmez (yedek font yanlış genişlik verir).
+  document.fonts.ready.then(() => { if (q.has("t")) window.renderAt(t); window.READY = true; });
 })();
 </script>
 </body>
