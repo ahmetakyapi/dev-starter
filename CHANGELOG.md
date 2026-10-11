@@ -7,6 +7,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — motion-film
 
+### Eklendi — 2026-10-11 (ikinci geçiş: açıklayıcı figür)
+
+- **`motion-film` 1.1.0** — wheresryan22/anatomy'den (MIT) damıtılan açıklayıcı
+  figür kuralları (Meng To'nun "visual explainer" paylaşımı):
+  - `reference/aciklayici-figur.md`: nesne açıklamanın kendisidir, boyut
+    (Figür/Kahraman/Destan), doğru önce (saf model), figür kartı ve canlı
+    künye, sahne çipleri, hareket (dt kırpma, takip, yay, settle, burst, boşta
+    tur, ekran dışında durma ve SON kayıt tuzağı), erişilebilirlik, çizim
+    zanaatı, inceleme; Açılış Zili'nde uygulananlar.
+  - `assets/figure-kit.ts`: `watchVisibility`, `loop`, `follow`, `spring`,
+    `settle`, `burst`, `idleTour`, `quietAnnouncer`, `cueWindow` (tsc --strict temiz).
+  - `SKILL.md` § 7b, kod ve referans tabloları, teslim listesine üç madde;
+    `kaynaklar.md`ye anatomy satırı.
+- `machine/bootstrap.sh`: anatomy skill'ini `~/.claude/skills/anatomy`ye klonlar
+  (varsa `pull --ff-only`, git deposu değilse dokunmaz); `machine/README.md`.
+
 ### Eklendi — 2026-10-11
 
 - **`machine/skills/motion-film/`** — kodla hareket filmi skill'i (bootstrap

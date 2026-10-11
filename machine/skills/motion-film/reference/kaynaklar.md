@@ -1,6 +1,6 @@
 # Kaynaklar — neyi nereden öğrendik
 
-Bu skill beş açık çalışmanın rehberlerinden ve Açılış Zili'nin bekleme
+Bu skill altı açık çalışmanın rehberlerinden ve Açılış Zili'nin bekleme
 filminden (Ekim 2026) damıtıldı. Metinler kendi sözlerimizle; kod
 `assets/`te ve Açılış Zili'nden (sahibinin kendi kodu). Lisansı olmayan
 iki repodan kod alınmadı, yalnız fikirleri anlatıldı.
@@ -12,6 +12,7 @@ iki repodan kod alınmadı, yalnız fikirleri anlatıldı.
 | [JohnHeibel/ClaudeAnimationBase](https://github.com/JohnHeibel/ClaudeAnimationBase) | MIT | `ANIMATION_GUIDE.md`: üç hedef (elle yapılmış, canlı, tek parça), boil + `boilSeed`, "okumalar" ile zamanlama, animasyon ilkeleri, geçiş her dikişte, storyboard biçimi, temas sayfası/şerit/kırpma inceleme döngüsü, yaygın hatalar. |
 | [diggerhq/shipvideo](https://github.com/diggerhq/shipvideo) | yok — yalnız fikir | URL/prompt → tek HTML film → sanal saatle (`__seek(t)`) kare kare Chromium → ffmpeg (libx264, crf 18, yuv420p, faststart). Sahnede `Math.random`, CSS transition, `<video>` yasak; render öncesi `check_scene` (JS hatası + her anın görünen metni). |
 | [JohnHeibel/PDoomVideo](https://github.com/JohnHeibel/PDoomVideo) | yok — yalnız fikir | Model önce `STORYBOARD.md` yazdı, alt ajanlara `ANIMATION_GUIDE.md` ile brif verdi; dokuz bölüm paralel; şarkı sözü ekrana yazılmadan *oynandı*. |
+| [wheresryan22/anatomy](https://github.com/wheresryan22/anatomy) | MIT | Açıklayıcı figür: "nesne açıklamanın kendisidir", Figür/Kahraman/Destan boyutu, doğruyu saf modelde tutmak, figür kartı (Fig n, başlık, ipucu, canlı künye), hareket kuralları (dt kırpma, takip, alt adımlı yay, `settle`, `burst`, boşta tur, ekran dışında durma ve SON kayıt tuzağı), erişilebilirlik (künye ≠ erişilebilir değer), çizgilerin bir şeyde bitmesi, 4× inceleme. `assets/figure-kit.ts` bu kuralların bizim yazdığımız kodu; anatomy'nin kendi kiti (izometrik SVG, lathe/tube, WebGL, 3D) bootstrap'le ayrıca kurulur. |
 | prompt-motion.com derlemesi | — | İyi prompt'ların ortak paydası: tek öğe hiç kesilmez (morph), kamera ölçek değiştirir, dev kinetik yazı, sert açık/koyu geçiş, her 1,5–2 sn yeni fikir, gerçek easing + squash/stretch + stagger + overlap + smear, "her from-state t=0'da (seek-safe)". |
 | Açılış Zili bekleme filmi | sahibinin | Bütün tekniklerin sınanmış hâli; ölçümle bulunan hatalar `inceleme-dongusu.md` § tuzaklar. |
 

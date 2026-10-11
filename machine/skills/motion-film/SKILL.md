@@ -7,13 +7,15 @@ description: >
   render(t) filmler: kamera, dev kinetik yazı, mürekkep ve kâğıt dokusu, boil,
   sel geçişi, mühür finali, Web Audio sesi; temas sayfası ve MP4 üretim betikleri.
   Use when asked to make a motion design film, animated explainer, launch video,
-  kinetic type sequence, cinematic loading screen, or to "push the limits" of an
-  animation; or to render an HTML animation to video. Kaynaklar: awesome-opus5-5-videos,
-  lemo-opuscar, ClaudeAnimationBase, shipvideo, PDoomVideo + Açılış Zili filmi.
+  kinetic type sequence, cinematic loading screen, visual explainer / animated
+  figure that shows how a system works, or to "push the limits" of an animation;
+  or to render an HTML animation to video. Kaynaklar: awesome-opus5-5-videos,
+  lemo-opuscar, ClaudeAnimationBase, shipvideo, PDoomVideo, wheresryan22/anatomy
+  + Açılış Zili filmi.
 license: MIT
 metadata:
   author: Ahmet Akyapı (dev-starter)
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Motion Film — kodla hareket filmi
@@ -101,6 +103,30 @@ node $S/film-video.mjs film.html --fps=24 --subframes=4 --out=out/film.mp4    # 
 Her geçişin ilk ve son 0,5 sn'si, iki tema, telefon + masaüstü, hareketi
 azaltma ve kare süresi (p95 ≤ 16,8 ms) ölçülür. Görüntüye bakmadan "oldu" denmez.
 
+## 7b. Açıklayıcı figür ve canlı künye (ayrıntı: `reference/aciklayici-figur.md`)
+
+Bir sistemin nasıl çalıştığını anlatan figür ya da sayfa içi film için
+(wheresryan22/anatomy, MIT; Meng To'nun "visual explainer" figürü):
+
+- **Nesne açıklamanın kendisidir:** kutu-ok-etiket değil, mekanizması kavrama
+  bire bir oturan gerçek bir makine (kilit, çekmeceli dolap, terazi, ölçü tezgâhı).
+  1×'te tek net nesne, 4×'te her bölgede bulunacak doğru bir parça.
+- **Kart anatomisi:** sol üst `Fig n`, sağ üst kısa başlık, sol alt etkileşim
+  ipucu, sağ alt **canlı künye**; altında adlı **sahne çipleri** (her sahnede
+  kamera anlatılan şeye yaklaşır), lejant ve doğru açıklama kartın altında.
+- **Künye modelden:** çizimi çizen veriden, bulunulan yerden (hedeften değil),
+  evre sözcüğü ile sayı aynı anın aynı kaynağından. Bilinmeyen ilerleme
+  uydurulmaz: "Geçen 00:21", "%60" değil.
+- **Döngü:** dt kırpılmış, hedefe üstel takip ya da gerçek yay, aşmaması
+  gereken değer `settle`, tek seferlik olay `burst` zarfı; **ekran dışında ve
+  yerleşince durur** (`IntersectionObserver`, SON kayıt); boşta tur 1,4 sn'de
+  başlar, dokununca durur, 3,6 sn sessizlikte döner; kaçırılan sesler çalmaz.
+- **Erişilebilirlik:** görsel künye ≠ erişilebilir değer; canlı bölge yalnız
+  evreleri, girdi 700 ms durulunca söyler; `aria-valuetext` döngüden yazılmaz.
+
+İzometrik, çok parçalı SVG makine, WebGL ateş/su/ışık ya da 3D dönen parça
+gerekiyorsa anatomy skill'inin kendisini kullan (`machine/bootstrap.sh` kurar).
+
 ## 8. Kopyalanacak kod
 
 | Dosya | Ne |
@@ -109,6 +135,7 @@ azaltma ve kare süresi (p95 ≤ 16,8 ms) ölçülür. Görüntüye bakmadan "ol
 | `assets/film-kit.ts` | `kinetic`, `tag`, `followCamera`, `withCamera`, `penTiming`, `penShadow`, `floodPath`, `inverted`, `teardrop`, `seal`, `fibres`, `cuesBetween` |
 | `assets/film-sound.ts` | Web Audio tarifleri: damla, vuruş, kalem, yükseliş, sel, daktilo, çan; tercih + başlatma |
 | `assets/film-page.html` | Sözleşme sayfası (DUR, render, READY, EV), `?t=` ile kare, boşluk/ok tuşları |
+| `assets/figure-kit.ts` | Çalışma zamanı: `watchVisibility` (son kayıt), `loop` (dt kırpılmış, görünmezken durur), `follow`, `spring`, `settle`, `burst`, `idleTour`, `quietAnnouncer`, `cueWindow` |
 | `scripts/film-sheet.mjs` | Temas sayfası / şerit / canlı ölçüm (puppeteer ya da playwright) |
 | `scripts/film-video.mjs` | Kareler → ffmpeg → MP4, alt kare bulanıklığı, olay dosyası |
 
@@ -128,8 +155,9 @@ kesmesiz geçiş).
 | `reference/ses.md` | Sayfa içi ses kuralları, tarifler, video miksi |
 | `reference/inceleme-dongusu.md` | Temas sayfası, şerit, canlı ölçüm, matris, ölçümle bulunan tuzaklar |
 | `reference/video-uretimi.md` | Sözleşme, belirlilik, MP4, alt kare bulanıklığı, loudness |
+| `reference/aciklayici-figur.md` | Nesne-açıklama, figür kartı, canlı künye, sahne çipleri, hareket ve erişilebilirlik kuralları, inceleme (anatomy) |
 | `reference/prompt-kaliplari.md` | Bir ajana film yaptırmak için prompt iskeleti |
-| `reference/kaynaklar.md` | Beş açık kaynak, lisansları ve neyin nereden alındığı |
+| `reference/kaynaklar.md` | Altı açık kaynak, lisansları ve neyin nereden alındığı |
 
 ## 9. Proje kuralları her zaman üstte
 
@@ -147,3 +175,6 @@ hareketi azaltana son kare. Skill ilham ve teknik verir, kimliği değiştirmez.
 - [ ] Temas sayfası + kritik anların şeridi iki temada, iki genişlikte incelendi
 - [ ] Kare süresi ölçüldü; hareketi azaltana son kare; ses varsayılan kapalı
 - [ ] Veri gerçek: filmdeki sayı ekrandaki sayıyla aynı kaynaktan
+- [ ] Canlı künye çizimle aynı veriden; bilinmeyen ilerleme uydurulmadı
+- [ ] Ekran dışında döngü duruyor (son kayıt okunuyor); dönüşte kaçırılan sesler çalmıyor
+- [ ] Canlı bölge yalnız evre değişince konuşuyor; künye ekran okuyucuya sayı seli değil

@@ -92,6 +92,17 @@ echo "▸ taste-skill"
 # `-s` virgüllü listeyi tek ad sanıyor ("No matching skills"); adlar ayrı argüman.
 run npx -y skills add Leonxlnx/taste-skill -g -a claude-code -s "${TASTE_SKILLS[@]}" -y
 
+echo "▸ anatomy (açıklayıcı figür skill'i, wheresryan22/anatomy, MIT)"
+# İzometrik SVG figür, WebGL ve 3D kiti; motion-film'in `reference/aciklayici-figur.md`si
+# ne zaman bunu kullanacağını söylüyor. Varsa yalnız ileri sarılır, yerel değişiklik ezilmez.
+if [[ -d "$CLAUDE_DIR/skills/anatomy/.git" ]]; then
+  run git -C "$CLAUDE_DIR/skills/anatomy" pull --ff-only --quiet
+elif [[ ! -e "$CLAUDE_DIR/skills/anatomy" ]]; then
+  run git clone --depth 1 --quiet https://github.com/wheresryan22/anatomy "$CLAUDE_DIR/skills/anatomy"
+else
+  echo "  ~/.claude/skills/anatomy git deposu değil; dokunulmadı"
+fi
+
 echo "▸ Eklentiler"
 for p in "${BUILTIN_PLUGINS[@]}"; do
   run claude plugin enable "$p"
