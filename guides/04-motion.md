@@ -5,6 +5,11 @@ beklendiğini. Taşımıyorsa süs olur ve süs, okuyucunun beklediği her
 milisaniyede vergi keser. Ekosistem kuralı: **basit şey CSS'le, orkestrasyon
 `motion/react` ile.** GSAP yok.
 
+> Bu rehber arayüz hareketi içindir (giriş, geri bildirim, geçiş). Saniyelerce
+> süren, izlenen bir **film** (bekleme/açılış filmi, tanıtım videosu, kinetik
+> yazı sekansı, HTML → MP4) için `motion-film` skill'i:
+> `~/dev-starter/machine/skills/motion-film/SKILL.md`.
+
 ---
 
 ## 1. Kütüphane: `motion/react`, LazyMotion + `m`

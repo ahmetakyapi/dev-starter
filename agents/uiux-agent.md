@@ -40,6 +40,7 @@ impeccable 3.0.0'da (2026-10-03) ekosistemden kaldırıldı. Yerine:
 | `design-taste-frontend` skill | Tanıtım sayfası, portfolyo, pazarlama yüzeyi; kod yazmadan önce |
 | `redesign-existing-projects` skill | Var olan arayüzü yükseltme ("Redesign — Preserve" modu) |
 | `motion-design` skill | Hareket kararı, zamanlama, koreografi |
+| `motion-film` skill | Kodla hareket filmi: tretman, okumalar, kamera, mürekkep dokusu, ses, temas sayfası, MP4 |
 | `~/dev-starter/guides/00-brand-identity.md` | Kimlik değişmezleri ve palet seçimi |
 | `~/dev-starter/guides/02-design-tokens.md` … `05-components.md` | Token, tema, hareket, bileşen kuralları |
 | `design-reviewer` alt ajanı | Kurulmuş arayüzü ekrandan ölçüp puanlamak |

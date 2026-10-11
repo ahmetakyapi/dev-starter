@@ -220,7 +220,7 @@ Kurulu ve tüm oturumlarda açık: `~/.agents/skills/` → `~/.claude/skills/`
 yedisi (`machine/bootstrap.sh` → `TASTE_SKILLS`): `design-taste-frontend`,
 `redesign-existing-projects`, `high-end-visual-design`, `minimalist-ui`,
 `brandkit`, `imagegen-frontend-web`, `imagegen-frontend-mobile`. Depodan ayrıca
-`motion-design`. Paketin geri kalanı ve impeccable 3 Ekim 2026'da kaldırıldı.
+`motion-design` ve `motion-film`. Paketin geri kalanı ve impeccable 3 Ekim 2026'da kaldırıldı.
 
 > **VARSAYILAN — her projede geçerli.** `design-taste-frontend` (taste-skill v2)
 > tanıtım sayfası, portfolyo ve pazarlama sayfası içeren **her** frontend işinde
@@ -242,6 +242,7 @@ yedisi (`machine/bootstrap.sh` → `TASTE_SKILLS`): `design-taste-frontend`,
 | Marka rehberi, logo sistemi | `brandkit` |
 | Görsel referans üretimi (web / mobil) | `imagegen-frontend-web` / `-mobile` |
 | Hareket kararı, zamanlama | `motion-design` + `~/dev-starter/guides/04-motion.md` |
+| Hareket filmi: bekleme/açılış filmi, tanıtım videosu, kinetik yazı, HTML → MP4 | `motion-film` |
 | Sade editoryal arayüz | `minimalist-ui` |
 
 **Mevcut projeye girerken — mod tespiti (skill §11.A) ŞART**

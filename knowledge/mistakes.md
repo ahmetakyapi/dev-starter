@@ -1535,7 +1535,46 @@ altına kadar sisli ve bulanık görünüyordu.
 Kaynak: `packages/@ahmet/ui/src/hooks/useSpotlight.ts` (Derinay ve One
 Piece Hub'a buradan kopyalanmıştı), landing şablonu `SiteHeader.tsx`.
 
+### 95. Kinetik Başlık Görünmüyor (Degrade Metin + Ayrı Taşınan Harfler)
+
+**Hata**: Açılış Zili'nde harf harf yükselen dev başlık ekranda hiç
+görünmüyordu; yer kaplıyor, metin yok.
+
+**Sebep**: Sitenin başlıkları varsayılan olarak degrade mürekkeple
+(`background-clip: text` + `-webkit-text-fill-color: transparent`)
+basılıyor. Degrade ebeveyne uygulanınca `inline-block` + `translate` ile ayrı
+taşınan harflere boyanmıyor; dolgu rengi ise mirasla saydam kalıyor.
+
+**Çözüm**: Kinetik başlıkta degradeyi kapat (Açılış Zili: `data-ink="plain"`),
+düz renk kullan. Ayrıntı: `machine/skills/motion-film/reference/kinetik-yazi.md`.
+
 ---
 
-*Son güncelleme: 2026-10-03*
+### 96. `aspect-ratio` + `min-height` Genişliği de Büyütür
+
+**Hata**: Telefonda film kutusu ekranın sağından taşıyordu.
+
+**Sebep**: Kutuya hem `aspect-ratio: 4 / 5` hem de ölçülen `min-height`
+verilince tarayıcı oranı tersine işletip asgari GENİŞLİĞİ de büyütüyor.
+
+**Çözüm**: Boy elle verildiğinde `aspect-ratio: auto`. Her yeni sabit kutuyu
+390 genişlikte `scrollWidth > innerWidth` ile ölç.
+
+---
+
+### 97. Takip Kamerası Hızlı Nesneyi Kaçırır (Boş Kare)
+
+**Hata**: Bekleme filminde 3,4–3,6 sn arası kare bomboştu.
+
+**Sebep**: 2,6 kat yakınlıkta damla saniyede ~2000 ekran pikseli gidiyordu;
+geniş pencereli (−0,55…+0,4 sn) ortalamayla izleyen kamera hem geride kaldı
+hem önden kaçtı.
+
+**Çözüm**: Hızlı yolda pencereyi daralt (−0,12…+0,08 sn) ve kamerayı aç
+(z 2,6 → 1,6); kamera nesnenin yolunu nesneyle AYNI formülle (kavis dahil)
+hesaplasın. Ayrıntı: `machine/skills/motion-film/reference/kamera.md`.
+
+---
+
+*Son güncelleme: 2026-10-11*
 *Yeni hata eklemek için bu dosyayı düzenle.*

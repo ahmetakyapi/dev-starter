@@ -5,6 +5,33 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ---
 
+## [Yayınlanmamış] — motion-film
+
+### Eklendi — 2026-10-11
+
+- **`machine/skills/motion-film/`** — kodla hareket filmi skill'i (bootstrap
+  her makinede `~/.claude/skills/`e bağlar). Beş açık çalışmadan
+  (awesome-opus5-5-videos, lemo-opuscar, ClaudeAnimationBase, shipvideo,
+  PDoomVideo) ve Açılış Zili'nin bekleme filminden damıtıldı:
+  - `SKILL.md`: ortam kararı, yönetmenlik (kanca, okumalar, kafiyeli son,
+    yerli hamle, doruktan önce durgunluk), hareket ilkeleri, doku, yazı,
+    ses, inceleme döngüsü, teslim listesi.
+  - `reference/`: yönetmenlik, kamera, mürekkep ve kâğıt, kinetik yazı, ses,
+    inceleme döngüsü (ölçümle bulunan tuzaklar), video üretimi, prompt
+    kalıpları, kaynaklar ve lisanslar.
+  - `assets/`: `ink-engine.ts` (boil + basınçlı fırça), `film-kit.ts`
+    (kinetik yazı, takip kamerası, kalem zamanı, sel, damla, mühür, lifler,
+    ses olayları), `film-sound.ts` (Web Audio tarifleri), `film-page.html`
+    (render(t) sözleşmesi).
+  - `scripts/`: `film-sheet.mjs` (temas sayfası, şerit, canlı ölçüm + kare
+    süresi), `film-video.mjs` (MP4, alt kare bulanıklığı, olay dosyası).
+- `knowledge/mistakes.md` #95–97: degrade metinde kinetik harfler, oran +
+  asgari boy, hızlı nesne ve takip kamerası.
+- Skill listeleri: kök `CLAUDE.md`, `machine/CLAUDE.md`, `machine/README.md`,
+  `agents/uiux-agent.md`, `guides/04-motion.md`.
+
+---
+
 ## [3.0.0] — 2026-10-03
 
 Ekosistem, canlı projelerin bir yıldır kullandığı tech stack'e yetişti. 2.x

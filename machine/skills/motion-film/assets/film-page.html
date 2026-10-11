@@ -1,0 +1,84 @@
+<!doctype html>
+<!--
+  Film sözleşmesi — başlangıç sayfası.
+
+  Her film bu dört şeyi açar (lemo-opuscar TECHNIQUE § 2'deki sözleşmenin
+  sadeleştirilmiş hâli; scripts/film-sheet.mjs ve film-video.mjs bunu okur):
+
+    window.DUR     film süresi (sn)
+    window.render  (t) => void — t anının karesini çizer; SAF, sırasız çağrılabilir
+    window.READY   fontlar ve görseller hazır olunca true
+    window.EV      [{ t, kind, ... }] — ses/işaret olayları (isteğe bağlı)
+
+  Tarayıcıda açınca oynar. ?t=2.5 o kareye atlar ve durur; boşluk tuşu
+  oynat/durdur; ok tuşları 1/24 sn adım. Kendi filminde render() gövdesini
+  değiştir; TS kitini (assets/film-kit.ts, ink-engine.ts) esbuild ile bundle
+  edip <script> olarak ekle:
+    npx esbuild film.ts --bundle --format=iife --global-name=Film --outfile=film.js
+-->
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Film</title>
+<style>
+  :root { --paper:#f3efe6; --ink:#1d1a17; --accent:#a4720f; }
+  @media (prefers-color-scheme: dark) { :root { --paper:#121418; --ink:#ece7dc; --accent:#d3a04a; } }
+  html,body { margin:0; height:100%; background:var(--paper); }
+  canvas { display:block; width:100vw; height:100vh; }
+</style>
+</head>
+<body>
+<canvas id="film" aria-hidden="true"></canvas>
+<script>
+(() => {
+  const canvas = document.getElementById("film");
+  const ctx = canvas.getContext("2d");
+  const css = getComputedStyle(document.documentElement);
+  const pal = { ink: css.getPropertyValue("--ink").trim(), paper: css.getPropertyValue("--paper").trim(), accent: css.getPropertyValue("--accent").trim() };
+  const span = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+  const easeOut = x => 1 - Math.pow(1 - x, 3);
+  const easeInOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+
+  window.DUR = 4;
+  window.EV = [{ t: 0.6, kind: "drop" }, { t: 2.2, kind: "thump" }];
+
+  /** Örnek: damla düşer, ezilir, yayılıp bir halka çizer, bir kelime yükselir. Kendi filminle değiştir. */
+  window.render = (t) => {
+    const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight;
+    if (canvas.width !== Math.round(w * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const cx = w / 2, cy = h / 2;
+    // Damla: düşerken uzar (squash/stretch), değince yayvanlaşır.
+    const fall = span(t, 0, 0.6), land = t - 0.6;
+    const y = cy - h * 0.4 * (1 - fall * fall);
+    const sq = fall < 1 ? 1 + fall * 0.5 : 1 - Math.sin(land * 18) * Math.exp(-land * 7) * 0.4;
+    ctx.fillStyle = pal.ink;
+    ctx.beginPath(); ctx.ellipse(cx, y, 9 / sq, 9 * sq, 0, 0, Math.PI * 2); ctx.fill();
+    // Halka: değişte yayılır.
+    const ring = easeInOut(span(t, 0.65, 1.6));
+    if (ring > 0) { ctx.strokeStyle = pal.accent; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, 70, -Math.PI / 2, -Math.PI / 2 + ring * Math.PI * 2); ctx.stroke(); }
+    // Kelime: maskeden yükselir.
+    const k = easeOut(span(t, 1.8, 2.5));
+    ctx.save(); ctx.beginPath(); ctx.rect(0, cy + 90, w, 80); ctx.clip();
+    ctx.font = "800 56px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.fillStyle = pal.ink;
+    ctx.fillText("Hazır", cx, cy + 150 + 70 * (1 - k)); ctx.restore();
+  };
+
+  // Önizleme: oynat, ?t= ile atla, boşluk ile durdur.
+  const q = new URLSearchParams(location.search);
+  let playing = !q.has("t"), t = Number(q.get("t") || 0), last = performance.now();
+  const loop = (now) => { if (playing) { t = (t + (now - last) / 1000) % window.DUR; } last = now; window.render(t); requestAnimationFrame(loop); };
+  addEventListener("keydown", (e) => {
+    if (e.key === " ") { playing = !playing; e.preventDefault(); }
+    if (e.key === "ArrowRight") { playing = false; t = Math.min(window.DUR, t + 1 / 24); }
+    if (e.key === "ArrowLeft") { playing = false; t = Math.max(0, t - 1 / 24); }
+  });
+  // Betikler kendi saatleriyle çizer: önizleme döngüsünü kapatır (?capture).
+  if (!q.has("capture")) requestAnimationFrame(loop);
+  document.fonts.ready.then(() => { window.READY = true; });
+})();
+</script>
+</body>
+</html>

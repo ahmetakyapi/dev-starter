@@ -30,7 +30,9 @@ dev-starter/
 │   ├── CLAUDE.md              → Global kurallar (tek kaynak)
 │   ├── README.md              → Yeni makine kurulumu, taşınmayanlar, skill listesi
 │   ├── bootstrap.sh           → Komut/ajan/skill symlink'leri + taste-skill kurulumu
-│   └── skills/motion-design/  → Depoda taşınan skill
+│   └── skills/                → Depoda taşınan skill'ler
+│       ├── motion-design/     → UI hareketi: zamanlama, easing, koreografi (LottieFiles, MIT)
+│       └── motion-film/       → Kodla hareket filmi: yönetmenlik, kamera, mürekkep, ses, MP4
 │
 ├── packages/@ahmet/
 │   ├── theme/      → Tailwind v4 theme.css (sistem + palet + @theme inline köprüsü) + tokens.ts aynası

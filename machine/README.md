@@ -9,7 +9,7 @@ yarım saatte aynı çalışma düzenine dönmek ve iki makine arasında kuralla
 |-------|----|
 | `CLAUDE.md` | Global kurallar; `~/.claude/CLAUDE.md` buna symlink'lenir. **Tek kaynak burası** |
 | `bootstrap.sh` | Kurulum betiği; tekrar çalıştırmak güvenli |
-| `skills/` | Depoda taşınan skill'ler (bugün: `motion-design`) |
+| `skills/` | Depoda taşınan skill'ler (bugün: `motion-design`, `motion-film`) |
 
 > Global `CLAUDE.md`yi düzenlerken `~/.claude/CLAUDE.md`yi değil bu dosyayı
 > düzenle (symlink zaten buraya gider) ve depoya commit'le. Diğer makine
@@ -128,7 +128,7 @@ eski sürüm; `stitch-design-taste`, `image-to-code`, `industrial-brutalist-ui`,
 eklentisi de aynı gün kaldırıldı; yerini rehberler ve `design-reviewer` alt
 ajanı aldı.
 
-**Depodan:** `motion-design` (`machine/skills/`). Proje düzeyinde ayrıca
+**Depodan:** `motion-design` ve `motion-film` (`machine/skills/`). Proje düzeyinde ayrıca
 `.claude/skills/clone-website` (yalnızca dev-starter içinde).
 
 **Builtin eklenti:** `cc-plugin-you-should-know@builtin`.
