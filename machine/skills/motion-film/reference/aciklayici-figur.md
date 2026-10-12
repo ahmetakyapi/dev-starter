@@ -168,5 +168,19 @@ geçmiş raporlar, sekiz satırlık yönlendirme bileşenin başında).
   `IntersectionObserver` yalnız rAF yolunu durduruyor: ekran dışındayken de
   çizmeye devam ediyor.
 
-anatomy'nin kendi kiti (izometrik SVG makine, WebGL, 3D) Açılış Zili'nde
-henüz hiçbir figürde kullanılmadı; alınanlar bu sayfadaki kurallar.
+Aynı gün anatomy kitinin kendisiyle iki figür (dallarda, yayın sahibinin onayında):
+
+- **Kural Tezgâhı** (`components/figures/rule-bench`, hisse seçimi raporu):
+  hisse bir iş parçası olarak yedi istasyondan geçer, her kural bir lamba.
+  Ölçümle bulunan iki hata: kol sırt çizgisi vidaya 1,8 px kala bitiyordu
+  (lines.mjs), imleç yalnız yatay mesafeye bakıp komşu istasyonu seçiyordu
+  (izometride gövde ile yoklayıcı farklı x'te; ekranda 2B en yakın).
+- **Seans Zili** (`components/figures/session-bell`, ana sayfa): 24 saatlik
+  kadran, asıl seansın uçlarında kontak, bobin ve dövücü, `lathe.mjs` ile
+  döndürülmüş çan. Bulunanlar: canlıda 0,02°lik ibre hareketi için ~40
+  karelik takip döngüsü (doğrudan yerine koy, döngüyü yalnız olayda uyandır);
+  arka ayağın vidaları ön katmanda çizilip çanın üstüne biniyordu (3× bakış);
+  sivri karşı ağırlık ok ucu gibi okunup ibreyi ters gösteriyordu.
+
+İkisinde de sunucu son pozu/canlı anı basıyor, ekran dışında 0 çizim,
+hareketi azaltana tur yok. Kurulum `scripts/add-figure-kit.mjs` (`--lathe`).

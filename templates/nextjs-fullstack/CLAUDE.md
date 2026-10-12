@@ -159,6 +159,7 @@ izometrik SVG figür. Kit şablonda YOK, tek komutla gelir:
 ```
 node ~/dev-starter/scripts/add-figure-kit.mjs .            # components/iso + CSS importları
 node ~/dev-starter/scripts/add-figure-kit.mjs . --example  # + çalışan örnek (test-rig)
+node ~/dev-starter/scripts/add-figure-kit.mjs . --lathe    # + döner parçalar (çan, kubbe, küre)
 ```
 
 - Şablon hazır: `<html class="iso">` (kit `.iso[data-theme="light"]` ile

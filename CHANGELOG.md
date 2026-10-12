@@ -7,6 +7,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — agent-feed
 
+### Eklendi — 2026-10-12 (üçüncü geçiş: döner parçalar)
+
+- `scripts/add-figure-kit.mjs --lathe`: `kit/lathe.mjs` + `kit/iso-kit.mjs` →
+  `components/iso/` (çan, kubbe, flanş, küre). Açılış Zili'nin Seans Zili
+  figürü bununla çizildi. `verify:anatomy` artık `--lathe` ile kuruyor ve bir
+  döner parçayı da derleyip render ediyor.
+- Şablonların figür ESLint ayarına `@typescript-eslint/no-unused-expressions`
+  (lathe.mjs'in kısa devre ifadesi; uyarısız lint için).
+- `aciklayici-figur.md` § 9: Kural Tezgâhı ve Seans Zili, ölçümle bulunan hatalar.
+
 ### Eklendi — 2026-10-12 (ikinci geçiş: şablonlar)
 
 - **`nextjs-fullstack` → `/akis`**: AI akışı uçtan uca. `lib/schema.ts` →

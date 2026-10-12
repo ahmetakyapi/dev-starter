@@ -62,12 +62,22 @@ if (args.includes('--local')) {
 }
 
 // Figürü gösteren sayfa: şablonun vitrinine dokunmadan ayrı bir rota.
-const FIGURE_PAGE = `import { TestRigFigure } from "@/components/figures/test-rig/figure";
+// Döner parça da (lathe.mjs) derlenmeli: tip, lint ve build allowJs üzerinden geçer.
+const FIGURE_PAGE = `import * as G from "@/components/iso/lathe.mjs";
+import { fitProjection, type SolidPaths } from "@/components/iso/iso-kit";
+import { IsoFigure, Solid } from "@/components/iso/react/draw";
+import { TestRigFigure } from "@/components/figures/test-rig/figure";
+
+const P = fitProjection([[-30, -30, 0], [30, 30, 40]], 200, 160, { pad: 12 });
+const BELL = G.solidOf([[0, 22], [3, 21, 1], [20, 15, 1], [36, 9, 1], [40, 0]], G.frameOf([0, 0, 0], [0, 0, 1], [1, 0, 0], [0, 1, 0]), P) as SolidPaths;
 
 export default function FigurePage() {
   return (
     <main id="icerik" className="mx-auto max-w-3xl px-4 py-16">
       <TestRigFigure />
+      <IsoFigure width={200} height={160} label="Döner parça denemesi">
+        <Solid paths={BELL} tone="hi" lit />
+      </IsoFigure>
     </main>
   );
 }
@@ -78,7 +88,7 @@ for (const name of targets) {
   const dir = join(work, name)
   cpSync(join(REPO, 'templates', name), dir, { recursive: true, filter: (p) => !p.includes('node_modules') && !p.includes('/.next') })
 
-  run('node', [join(REPO, 'scripts/add-figure-kit.mjs'), dir, '--example', '--source', source], dir, 'add-figure-kit --example')
+  run('node', [join(REPO, 'scripts/add-figure-kit.mjs'), dir, '--example', '--lathe', '--source', source], dir, 'add-figure-kit --example --lathe')
   mkdirSync(join(dir, 'app/figur'), { recursive: true })
   writeFileSync(join(dir, 'app/figur/page.tsx'), FIGURE_PAGE)
 

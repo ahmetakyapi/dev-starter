@@ -20,6 +20,8 @@ const eslintConfig = defineConfig([
       "react-hooks/immutability": "off",
       "react-hooks/set-state-in-effect": "off",
       "react-hooks/exhaustive-deps": "off",
+      // lathe.mjs (--lathe ile kopyalanan kit) kısa devre ifadesi kullanıyor.
+      "@typescript-eslint/no-unused-expressions": "off",
     },
   },
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),

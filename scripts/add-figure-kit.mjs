@@ -2,7 +2,7 @@
 /**
  * add-figure-kit — anatomy'nin figür kitini bir Next projesine kurar
  *
- *   node ~/dev-starter/scripts/add-figure-kit.mjs <proje> [--example] [--source <anatomy dizini>]
+ *   node ~/dev-starter/scripts/add-figure-kit.mjs <proje> [--example] [--lathe] [--source <anatomy dizini>]
  *
  * Ne yapar (tekrar çalıştırmak güvenli; yalnız kit dosyalarının üzerine yazar):
  *   1. kit/iso-kit.ts, kit/iso.css, kit/react/{draw,live}.tsx → components/iso/
@@ -10,6 +10,9 @@
  *   2. components/iso/bridge.css: kitin mono fontu projenin fontuna bağlanır
  *   3. app/layout.tsx: iki CSS importu (`./globals.css` satırının altına)
  *   4. --example: examples/test-rig → components/figures/test-rig (yoksa)
+ *   5. --lathe: kit/lathe.mjs + kit/iso-kit.mjs → components/iso/ (döner parçalar:
+ *      çan, kubbe, flanş, küre; `import * as G from "@/components/iso/lathe.mjs"`).
+ *      Açılış Zili'nin seans zili figürü bununla çizildi (12 Ekim).
  *
  * Neden kopya, paket değil: anatomy bir npm paketi değil, bir skill. Kit
  * projeye kopyalanır (references/react.md "Copy kit/ into the project").
@@ -39,7 +42,7 @@ const fail = (msg) => {
 }
 
 const project = positional[0] && resolve(positional[0])
-if (!project) fail('Kullanım: node add-figure-kit.mjs <proje> [--example] [--source <anatomy dizini>]')
+if (!project) fail('Kullanım: node add-figure-kit.mjs <proje> [--example] [--lathe] [--source <anatomy dizini>]')
 const layoutPath = join(project, 'app/layout.tsx')
 if (!existsSync(layoutPath)) fail(`${layoutPath} yok — Next App Router projesi değil mi?`)
 
@@ -61,6 +64,8 @@ mkdirSync(join(iso, 'react'), { recursive: true })
 for (const f of ['iso-kit.ts', 'iso.css']) cpSync(join(source, 'kit', f), join(iso, f))
 for (const f of ['draw.tsx', 'live.tsx']) cpSync(join(source, 'kit/react', f), join(iso, 'react', f))
 if (existsSync(join(source, 'LICENSE'))) cpSync(join(source, 'LICENSE'), join(iso, 'LICENSE'))
+// lathe.mjs, iso-kit.mjs'i göreli yoldan içe aktarır: ikisi aynı dizinde durmalı.
+if (flag('--lathe')) for (const f of ['lathe.mjs', 'iso-kit.mjs']) cpSync(join(source, 'kit', f), join(iso, f))
 writeFileSync(
   join(iso, 'SOURCE.md'),
   `# Figür kiti — wheresryan22/anatomy (MIT)
