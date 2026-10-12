@@ -158,17 +158,15 @@ figür ekranın altındaysa görününce bir kez oynar) ve onu kullanan
 `hisse/[symbol]/_panels/ExpectedMoveFigure.tsx` (beklenen hareket bandı +
 geçmiş raporlar, sekiz satırlık yönlendirme bileşenin başında).
 
-**Açık kalan iki sapma** (12 Ekim denetimi, kod okunarak):
+**Denetimde bulunan iki sapma, aynı gün düzeltildi ve yayında** (`35b50f0`):
 
-- IV. perdenin çipi 5 sn'de dolup tam kalıyor (`ACT_MS` son değer 5000), oysa
-  IV Claude bitene kadar sürüyor. Dolu çizgi "bitti" diye okunur: "bilmediğin
-  şeyin ilerlemesini uydurma" kuralına aykırı. Son perdede dolum yerine
-  belirsiz bir nabız ya da yalnız künyedeki "Geçen" süresi.
-- Hareketi azaltılmış yolda dura kare her 500 ms yeniden çiziliyor ve
-  `IntersectionObserver` yalnız rAF yolunu durduruyor: ekran dışındayken de
-  çizmeye devam ediyor.
+- IV. perdenin çipi 5 sn'de dolup tam kalıyordu, oysa IV Claude bitene kadar
+  sürüyor; dolu çizgi "bitti" diye okunur. Artık açık uçlu: çizgide gidip
+  gelen kısa bir parça, süre künyedeki "Geçen"de.
+- Hareketi azaltılmış yolda dura kare ekran dışında da 500 ms'de bir
+  çiziliyordu; artık görünmezken tuvale dokunmuyor.
 
-Aynı gün anatomy kitinin kendisiyle iki figür (dallarda, yayın sahibinin onayında):
+Aynı gün anatomy kitinin kendisiyle iki figür (12 Ekim yayında, `9346152`, `2435ed4`):
 
 - **Kural Tezgâhı** (`components/figures/rule-bench`, hisse seçimi raporu):
   hisse bir iş parçası olarak yedi istasyondan geçer, her kural bir lamba.
