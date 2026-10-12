@@ -1,6 +1,6 @@
 ---
 description: Agentic arayüz karar ağacı: araç nerede, kontrol hangi seviyede, model mi kod mu
-argument-hint: "tool | kontrol | state | dsl | test | kurulum | denetle"
+argument-hint: "tool | kontrol | state | dsl | feed | test | kurulum | denetle"
 ---
 
 `$ARGUMENTS` konusunda agentic UI karari ver.
@@ -30,6 +30,15 @@ sohbet gecmisini kart cop'une ceviriyorsa yanlis kanaldasin.
 Cikti buyuk/tekrar eden/sablonlasabilir ise DSL siniri koy: model kompakt
 tarifi uretir, kod yapiyi deterministik derler. Kazanc iki katli — performans
 ve kontrol. Bedel: DSL'in ongormedigi istek imkansiz.
+
+### `feed` — Sohbet mi, akis mi?
+Kullanici ne isteyecegini biliyorsa sohbet. Sistem kullaniciyi taniyor ve
+siradaki isi kendisi bulabiliyorsa akis: ajan hazirlar (taslak, ozet, cozum
+onerisi), kullanici onaylar / duzenler / gecer / sohbete atlar. Uc kulvar:
+`needs-you` (kart = onden onay), `suggestion`, `handled` (yalniz geri
+alinabilir is + Geri Al). Siralama ve oncelik KOD; model yalniz metni yazar.
+Sponsorlu oge ayri bolumde, etiketli, aksiyonsuz.
+`/snippet agent-feed` · `~/dev-starter/knowledge/patterns.md → AI Feed`.
 
 ### `test` — Neyi test edebilirim?
 Model non-deterministik, onu cagiran kod degil. Uc dikis: mock'lanmis agent,

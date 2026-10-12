@@ -1,6 +1,6 @@
 ---
 description: Hazır bileşeni projeye uyarlayarak kopyala: snippets/ui kütüphanesi, reveal, theme-toggle, rolling-number, modal, form, toast ve diğerleri
-argument-hint: "ui/<ad> (data-table, tree-view, dialog, combobox …) | reveal | theme-toggle | rolling-number | modal | toast | form | og-image | agent-tool"
+argument-hint: "ui/<ad> (data-table, tree-view, dialog, combobox …) | reveal | theme-toggle | rolling-number | modal | toast | form | og-image | agent-tool | agent-feed"
 ---
 
 `$ARGUMENTS` tipinde bir bilesen snippet'ini mevcut projeye uyarla. Bu komut
@@ -45,3 +45,8 @@ dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareke
 > `agent-*` ve `action-card` snippet'leri `@copilotkit/react-core@1.69.2` tip
 > tanimlariyla `tsc --noEmit` uzerinden dogrulandi. Uyarlarken surum pin'ine
 > dikkat — `~/dev-starter/knowledge/mistakes.md` #70, #71. Karar icin: `/agentic`
+
+> `agent-feed` CopilotKit gerektirmez: `agent-feed.tsx` (arayuz) +
+> `agent-feed-core.ts` (sozlesme, reducer, siralama) + `agent-feed.test.ts`.
+> Uc dosyayi birlikte kopyala; `runAction`/`undoAction` projenin server
+> action'laridir ve yetkiyi ORADA dogrular. Desen: `patterns.md → AI Feed`.

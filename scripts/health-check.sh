@@ -109,7 +109,7 @@ fi
 # ─── 5. Snippet Files ────────────────────────────────────────────────────────
 header "Snippet Dosyalari"
 
-SNIPPETS=("animated-number.tsx" "infinite-scroll.tsx" "og-image.tsx" "search-bar.tsx" "modal.tsx" "drawer.tsx" "form.tsx" "skeleton.tsx" "toast.tsx" "confirm.tsx" "agent-tool.tsx" "action-card.tsx" "agent-approval.tsx" "reveal.tsx" "theme-toggle.tsx" "rolling-number.tsx" "rolling-number.module.css" "scroll-progress.tsx" "tab-underline.tsx" "use-scroll-lock.ts")
+SNIPPETS=("animated-number.tsx" "infinite-scroll.tsx" "og-image.tsx" "search-bar.tsx" "modal.tsx" "drawer.tsx" "form.tsx" "skeleton.tsx" "toast.tsx" "confirm.tsx" "agent-tool.tsx" "action-card.tsx" "agent-approval.tsx" "agent-feed.tsx" "agent-feed-core.ts" "agent-feed.test.ts" "reveal.tsx" "theme-toggle.tsx" "rolling-number.tsx" "rolling-number.module.css" "scroll-progress.tsx" "tab-underline.tsx" "use-scroll-lock.ts")
 for snippet in "${SNIPPETS[@]}"; do
   if [ -f "snippets/${snippet}" ]; then
     pass "$snippet mevcut"

@@ -5,6 +5,29 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ---
 
+## [Yayınlanmamış] — agent-feed
+
+### Eklendi — 2026-10-12
+
+- **`snippets/agent-feed.tsx`** — proaktif AI akışı: ajan hazırlar, kullanıcı
+  karar verir. Selamlama + "N iş seni bekliyor. Gerisi halledildi." başlığı;
+  karar kartı (kaynak · durum, başlık, gerekçe satırı, taslak / metrik gövdesi,
+  aksiyonlar, Düzenle, Şimdi Değil, Sohbette Aç); halledilenler tek satır +
+  Geri Al; etiketli, aksiyonsuz "Senin İçin De" sponsorlu bölümü. CopilotKit
+  gerektirmez; aksiyonlar projenin server action'larıdır.
+- **`snippets/agent-feed-core.ts`** — bağımlılıksız sözleşme ve saf mantık:
+  `parseFeedItem` (gerekçesiz, aksiyonsuz ya da bozuk aksiyonlu öğe kart
+  olmaz), `parseSponsoredItem` (aksiyon taşıyan ya da https olmayan reklam
+  reddedilir), `parseActionResult` (özetsiz `ok: true` başarı sayılmaz),
+  `feedReducer`, `selectFeed` (sıralama kodda, sponsor tavanı ve boş akış
+  tabanı), `greetingFor`, `feedHeadline`.
+- **`snippets/agent-feed.test.ts`** — 26 test, kök `npm test` ile koşar.
+- `knowledge/patterns.md → AI Feed`: üç kulvar, üretim hattı, `feed_items`
+  Drizzle iskeleti, sponsorlu öğe kuralları, ne zaman değil.
+- `/agentic feed`, `/snippet agent-feed`; `rules/agentic-ui.md`,
+  `agents/agentic-ui-agent.md`, `guides/05-components.md`, `tech-radar.md`,
+  `health-check.sh` ve `verify-agentic.mjs` (tsc) listelerine eklendi.
+
 ## [Yayınlanmamış] — motion-film
 
 ### Eklendi — 2026-10-12 (dördüncü geçiş: arayüz denetimi)

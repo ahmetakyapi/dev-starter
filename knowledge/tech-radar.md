@@ -79,6 +79,7 @@ Son gözden geçirme: 2026-10-03
 | Metin üretimi / analiz | Claude API (`@anthropic-ai/sdk`) | Benimse | Açılış Zili'nde canlı. Model kimliği ve fiyat için `claude-api` skill'ini yükle, ezberden yazma. |
 | Sohbet arayüzü / akış | Vercel AI SDK ya da doğrudan SDK akışı | Dene | Tek sağlayıcıysa doğrudan SDK yeter. |
 | Ajan arayüzü (araç çağrısı UI'ı) | AG-UI + CopilotKit (`templates/agentic-chat`) | Dene | Kurallar `rules/agentic-ui.md`. |
+| Proaktif ajan akışı (ajan hazırlar, kullanıcı onaylar) | `snippets/agent-feed.tsx` + server action + cron üretici | Dene | Kullanıcı verisi yoksa değil: yeni hesapta akış boş kalır, ilk günü sohbet taşır. |
 | Vektör arama | pgvector (Neon) | Dene | Ayrı vektör veritabanı ancak milyonlarca kayıtta. |
 | Yapay zekâ çıktısını yayımlamak | Önce doğrulama şeması, sonra yazma | Benimse | Açılış Zili `lib/content-write.ts`: tek yazma yolu, sürüm fotoğrafı. |
 

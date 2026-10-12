@@ -69,7 +69,7 @@ dev-starter/
 │   └── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
 │
 ├── scripts/
-│   ├── health-check.sh        → Ekosistem bütünlüğü (13 kategori, 76 kontrol)
+│   ├── health-check.sh        → Ekosistem bütünlüğü (13 kategori, 79 kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
 │   ├── test-hooks.sh          → Hook davranış testleri (17)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
@@ -90,11 +90,11 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── snippets/                  → 19 hazır parça + ui/ kütüphanesi + fonts/
+├── snippets/                  → 20 hazır parça + ui/ kütüphanesi + fonts/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form
 │   ├── skeleton · search-bar · infinite-scroll · og-image
-│   └── agent-tool · action-card · agent-approval (tsc ✓)
+│   └── agent-tool · action-card · agent-approval (tsc ✓) · agent-feed (test ✓)
 │
 ├── eslint.config.js · .prettierrc · .editorconfig · .nvmrc (24)
 ├── CHANGELOG.md · CONTRIBUTING.md
@@ -179,7 +179,7 @@ kaldırıldı.
 bash scripts/health-check.sh   # veya: npm run health
 ```
 
-13 kategori, 76 kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
+13 kategori, 79 kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
 testiyle), snippet'ler, şablonlar, knowledge base, paket tutarlılığı, token
 ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade, palet dışı renk),
 tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion).
@@ -320,6 +320,7 @@ Her agent sadece ihtiyacı olan bilgiyi alır (`rules/context-curation.md`):
 /snippet agent-tool
 /snippet action-card
 /snippet agent-approval
+/snippet agent-feed
 ```
 
 ### Website Klonla

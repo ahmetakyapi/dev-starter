@@ -1172,10 +1172,92 @@ type FrontendTool<T> = {
 `snippets/agent-approval.tsx` — üçü de derlendi. İskelet:
 `templates/agentic-chat/`.
 
+---
+
+### AI Feed — Ajan Hazırlar, Kullanıcı Karar Verir
+
+> Kaynak: Nicolas Bustamante, "the AI feed will be the form factor of 2027"
+> (X, Ekim 2026). Snippet: `snippets/agent-feed.tsx` + `agent-feed-core.ts`
+> (26 test, kök `npm test`).
+
+**Sorun:** sohbet, kullanıcıdan emek ister: ajanın ne yapabildiğini keşfet,
+işi anlat, bağlamı ver, tekrarla. Çoğu insan ne yazacağını bilmez ve karmaşık
+bir iş akışına prompt yazarak varmaz. Akış bunu tersine çevirir: kullanıcıyı
+tanıyan sistem sıradaki yararlı işi **hazırlanmış** olarak getirir (cevap
+taslağı yazılmış e-posta, gönderilmeye hazır rakam özeti). Kullanıcı onaylar,
+düzenler, geçer ya da sohbete atlayıp derinleşir. Ajanın neler yapabildiğini
+prompt icat etmeden böyle keşfeder.
+
+**Akış sohbetin yerine geçmez, girişidir.** Her kartta "Sohbette Aç" var:
+kart bağlam olarak sohbete taşınır.
+
+**Üç kulvar, üç kontrol seviyesi** (`rules/agentic-ui.md` kural 4'ün akıştaki hâli):
+
+| Kulvar | Ne | Kontrol | Örnek |
+|--------|----|---------|-------|
+| `needs-you` | Kullanıcının kararı olmadan ilerlemeyen iş | Kart = önden onay | Çakışan toplantı, gönderilecek taslak |
+| `suggestion` | Yapılsa iyi olur, yapılmasa bir şey bozulmaz | Tek tık + Şimdi Değil | Cuma odak bloğu |
+| `handled` | Ajanın kendisinin yaptığı **geri alınabilir** iş | Yap, göster, Geri Al | "Özeti ekibinle paylaştım" |
+
+Geri alınamaz iş (e-posta gönderimi) **asla** `handled`'a düşmez; kart
+"Bu işlem geri alınamaz" notunu taşır ve kullanıcı taslağın tamamını görüp basar.
+
+**Üretim sunucuda, sıralama kodda:**
+
+```text
+cron / webhook (yeni e-posta, takvim değişikliği, gece gelen veri)
+  → üretici: kural tabanlı tespit (çakışma, cevapsız thread, yeni rapor)
+  → LLM yalnız METNİ yazar (taslak, başlık, gerekçe) — tool sonucu doğrulanır
+  → feed_items tablosuna yazılır (lane, priority, reason, actions, payload)
+  → sayfa: parseFeedItem → selectFeed → <AgentFeed>
+```
+
+- `priority` ve kulvarı **kod** belirler; model "bu önemli" diye karar vermez
+  (kural 7). Rakamlar sunucuda biçimlenir: `value: "4,2 Mn $"`.
+- Her öğe `reason` taşır: **neden şimdi, neden burada.** Gerekçesiz öğe
+  `parseFeedItem`'da reddedilir (kural 10).
+- Aksiyon sunucuda çalışır: istemci yalnızca `{ itemId, actionId, draftText }`
+  gönderir. Sunucu öğeyi **kendi** tablosundan okur, sahibini ve aksiyonun o
+  öğeye ait olduğunu doğrular; alıcı adresini istemciden almaz (kural 1, 2).
+- Sonuç `parseActionResult`'tan geçer; `ok: true` ama özetsiz sonuca "yapıldı"
+  denmez (kural 5, `mistakes.md #58`).
+- Geri Al modele uğramaz: `undoToken` ile doğrudan, süresi sunucuda dolar.
+
+```ts
+// Drizzle — feed_items (iskelet)
+export const feedItems = pgTable('feed_items', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  lane: text('lane', { enum: ['needs-you', 'suggestion', 'handled'] }).notNull(),
+  priority: smallint('priority').notNull().default(0),
+  item: jsonb('item').notNull(),            // FeedItem (istemciye giden)
+  payload: jsonb('payload').notNull(),      // aksiyonun gerçek girdisi (istemciye GİTMEZ)
+  dismissedAt: timestamp('dismissed_at'),   // "Şimdi Değil": erteleme, silme değil
+  resolvedAt: timestamp('resolved_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (t) => [index('feed_user_open').on(t.userId, t.resolvedAt)])
+```
+
+**Sponsorlu öğe kuralları** — akışın iş modeli reklamsa:
+
+- Ayrı tip (`SponsoredItem`), ayrı bölüm ("Senin İçin De"), organik kartların
+  **altında**. Karar kulvarına asla karışmaz.
+- Her kartta görünür "Sponsorlu · <marka>" etiketi; bağlantı `rel="sponsored"`.
+- Tipi gereği aksiyon taşıyamaz: reklam kullanıcı adına hiçbir şey tetiklemez.
+  `actions` alanı olan ya da `https` olmayan sponsorlu öğe reddedilir.
+- Tavan (varsayılan 2) ve taban: organik öğe sayısı 2'nin altındaysa reklam
+  gösterilmez. Boş akış reklamla doldurulmaz.
+- `reason` zorunlu ("Perşembe Contoso ziyaretin var"). Kullanıcının planından
+  çıkarım yapılıyorsa bu, gizlilik politikasında yazılı olmalı.
+
+**Ne zaman değil:** kullanıcının verisi yoksa (yeni hesap) akış boş kalır;
+ilk günü sohbet ya da kurulum sihirbazı taşır. Akış, sistemin kullanıcıyı
+tanıdığı kadar iyidir.
+
 
 
 ---
 
 *Yeni desenler eklendikçe bu dosya güncellenir.*
 
-*Son güncelleme: 2026-10-03*
+*Son güncelleme: 2026-10-12*

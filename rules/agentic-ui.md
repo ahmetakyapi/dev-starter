@@ -205,6 +205,8 @@ npm view @copilotkit/react-core@<surum> dependencies.@ag-ui/client
 - `snippets/agent-tool.tsx` — frontend tool + widget
 - `snippets/action-card.tsx` — sunucu tool'u kartı + Undo + güvenli sonuç çözümü
 - `snippets/agent-approval.tsx` — geri alınamaz aksiyon onayı
+- `snippets/agent-feed.tsx` + `agent-feed-core.ts` — proaktif AI akışı: üç kulvar,
+  kart = onay, Geri Al, etiketli sponsorlu bölüm (`patterns.md → AI Feed`)
 
 Kural 6'nın (üretilen kod sandbox'ta çalışır) hazır implementasyonu React
 tarafında mevcut: `CopilotKitProvider`'ın `openGenerativeUI.sandboxFunctions`

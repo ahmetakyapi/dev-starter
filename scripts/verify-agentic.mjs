@@ -79,7 +79,7 @@ try {
 mkdirSync(join(work, 'src/lib'), { recursive: true })
 mkdirSync(join(work, 'src/app'), { recursive: true })
 mkdirSync(join(work, 'src/__tests__'), { recursive: true })
-for (const f of ['agent-tool.tsx', 'action-card.tsx', 'agent-approval.tsx', 'agent-tool.test.ts']) {
+for (const f of ['agent-tool.tsx', 'action-card.tsx', 'agent-approval.tsx', 'agent-tool.test.ts', 'agent-feed.tsx', 'agent-feed-core.ts']) {
   cpSync(join(REPO, 'snippets', f), join(work, 'src', f))
 }
 cpSync(join(TPL, 'lib/agui-scenarios.ts'), join(work, 'src/lib/agui-scenarios.ts'))
