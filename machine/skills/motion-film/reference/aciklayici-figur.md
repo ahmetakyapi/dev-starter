@@ -149,5 +149,24 @@ Sahibi kusuru yakınlaştırarak bulur; önce sen yakınlaştır.
   III `5 Manşet`, IV `Geçen 00:21`. Ekran okuyucuya okunmaz (`aria-hidden`).
 - **Adlı perde çipleri** ilerleme çizgisinin üstünde; telefonda yalnız I–IV.
 - **Ekran dışında durur** (en yeni kayıt kuralı; ölçüldü: aşağı kaydırınca 0 çizim/sn),
-  geri gelince geçen zamandan sürer; kaçırılan sesler çalmaz.
+  geri gelince geçen zamandan sürer. (Ses 12 Ekim'de filmden tamamen kalktı;
+  `cueWindow` maddesi orada artık geçersiz.)
 - Tuvalin alt payı altyazı bloğuna göre yeniden ölçüldü (149/150 px → pay 172/180).
+
+12 Ekim ekleri: `components/motion/PlayOnView.tsx` (sunucu son kareyi basar,
+figür ekranın altındaysa görününce bir kez oynar) ve onu kullanan
+`hisse/[symbol]/_panels/ExpectedMoveFigure.tsx` (beklenen hareket bandı +
+geçmiş raporlar, sekiz satırlık yönlendirme bileşenin başında).
+
+**Açık kalan iki sapma** (12 Ekim denetimi, kod okunarak):
+
+- IV. perdenin çipi 5 sn'de dolup tam kalıyor (`ACT_MS` son değer 5000), oysa
+  IV Claude bitene kadar sürüyor. Dolu çizgi "bitti" diye okunur: "bilmediğin
+  şeyin ilerlemesini uydurma" kuralına aykırı. Son perdede dolum yerine
+  belirsiz bir nabız ya da yalnız künyedeki "Geçen" süresi.
+- Hareketi azaltılmış yolda dura kare her 500 ms yeniden çiziliyor ve
+  `IntersectionObserver` yalnız rAF yolunu durduruyor: ekran dışındayken de
+  çizmeye devam ediyor.
+
+anatomy'nin kendi kiti (izometrik SVG makine, WebGL, 3D) Açılış Zili'nde
+henüz hiçbir figürde kullanılmadı; alınanlar bu sayfadaki kurallar.
