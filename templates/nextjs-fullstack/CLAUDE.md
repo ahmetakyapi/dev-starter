@@ -129,6 +129,47 @@ gelirse büyür. `text-transform: capitalize` ve `title()` KULLANMA, `i → I`
 
 Arayüz metninde uzun tire (em dash) yok; ayraç virgül, iki nokta ya da `·`.
 
+## AI akışı (`/akis`)
+
+Ajan hazırlar, kullanıcı karar verir: sohbet kutusu yerine karara hazır
+kartlar (taslak e-posta, çakışma çözümü, rakam özeti). Desen:
+`~/dev-starter/knowledge/patterns.md → AI Feed`.
+
+- **Parçalar:** `components/feed/` (arayüz + sözleşme, `~/dev-starter/snippets/`
+  ile bayt bayt aynı; orada düzelt, buraya kopyala), `lib/feed-rules.ts` (yetki,
+  saf, `tests/feed.test.ts`), `lib/feed.ts` (okuma, `addFeedItem`),
+  `lib/feed-handlers.ts` (aksiyonların gerçek işi), `app/akis/actions.ts`.
+- **Demo:** geliştirmede veritabanı ya da oturum yokken sayfa örnek öğelerle
+  açılır, aksiyonlar hiçbir şeye dokunmaz. Üretimde demo yok.
+- **Üretici** öğeyi yalnızca `addFeedItem` ile yazar (yazmadan önce doğrular).
+  Tespit kuraldır; model yalnızca metni yazar. Öncelik ve kulvar koddan.
+- **Yetki:** istemci yalnız `{ itemId, actionId, draftText }` gönderir; alıcı,
+  tutar, kimlik `feed_items.payload`tan okunur. Kartta olmayan ya da
+  `FEED_HANDLERS`ta işleyicisi olmayan aksiyon çalışmaz.
+- **Geri alınamaz iş** (gönderim, ödeme) işleyicide `undo` taşımaz, kartta
+  `reversibility: "irreversible"`; ajan bunu `handled` kulvarına kendisi yazamaz.
+- Ürün akış istemiyorsa sil: `app/akis/`, `components/feed/`, `lib/feed*.ts`,
+  `tests/feed.test.ts`, `lib/schema.ts` → `feedItems`.
+
+## Açıklayıcı figür (anatomy, isteğe bağlı)
+
+Ürünün nasıl çalıştığını kutu ve okla değil, çalışan bir makineyle anlatan
+izometrik SVG figür. Kit şablonda YOK, tek komutla gelir:
+
+```
+node ~/dev-starter/scripts/add-figure-kit.mjs .            # components/iso + CSS importları
+node ~/dev-starter/scripts/add-figure-kit.mjs . --example  # + çalışan örnek (test-rig)
+```
+
+- Şablon hazır: `<html class="iso">` (kit `.iso[data-theme="light"]` ile
+  açık temaya geçer, ThemeToggle figürü de çevirir) ve `components/iso/**`,
+  `components/figures/**` için ESLint ayarı. Figür kare başına ref'e yazar;
+  react-hooks 7 bunu hata sayardı (`~/dev-starter/knowledge/mistakes.md #98`).
+- Figürü anatomy skill'i yazar: `components/figures/<ad>/` (geometri saf `.ts`,
+  statik çizim sunucu bileşeni, tek `"use client"` canlı bileşen).
+- `components/iso/` elle düzenlenmez; projeye özgü stil `bridge.css`e.
+- React Compiler açılırsa figürün canlı bileşenine `"use no memo"`.
+
 ## Güvenlik ve veri
 
 - Sunucu eylemi girdisi `lib/validation.ts` → `validate()` ile doğrulanır;

@@ -36,8 +36,10 @@ Sırayla:
 6. **Depodaki skill'ler** — `machine/skills/*` → `~/.claude/skills/`.
 7. **taste-skill** — `npx skills add Leonxlnx/taste-skill -g` yalnızca
    kullanılan yedi skill ile (liste aşağıda).
-8. **anatomy** — `git clone wheresryan22/anatomy ~/.claude/skills/anatomy`
-   (açıklayıcı figür skill'i, MIT); varsa yalnız ileri sarılır.
+8. **anatomy** — `wheresryan22/anatomy` → `~/.claude/skills/anatomy`
+   (açıklayıcı figür skill'i, MIT), `bootstrap.sh` → `ANATOMY_REF` commit'ine
+   sabitli. Yerel değişiklik varsa dokunulmaz; ağ hatası kurulumu durdurmaz.
+   Kiti bir projeye kurmak: `node ~/dev-starter/scripts/add-figure-kit.mjs <proje>`.
 9. **Eklentiler** — builtin eklentiler etkinleştirilir.
 
 Hedefte farklı bir dosya varsa üzerine yazılmaz: önce
@@ -132,7 +134,8 @@ ajanı aldı.
 
 **Depodan:** `motion-design` ve `motion-film` (`machine/skills/`). **Dış depodan:**
 `anatomy` (wheresryan22/anatomy, MIT; izometrik açıklayıcı figür, WebGL, 3D —
-ne zaman kullanılacağı `motion-film/reference/aciklayici-figur.md`de). Proje düzeyinde ayrıca
+ne zaman kullanılacağı `motion-film/reference/aciklayici-figur.md`de; projeye
+kurulumu `scripts/add-figure-kit.mjs`, şablon uyumu `npm run verify:anatomy`). Proje düzeyinde ayrıca
 `.claude/skills/clone-website` (yalnızca dev-starter içinde).
 
 **Builtin eklenti:** `cc-plugin-you-should-know@builtin`.

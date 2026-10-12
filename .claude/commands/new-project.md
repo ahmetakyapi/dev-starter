@@ -29,6 +29,17 @@ KICKOFF.md yoksa sor:
   LLM sohbeti. Once `/agentic kurulum` ile karar ver; kurulum
   `~/dev-starter/templates/agentic-chat/README.md`
 
+Iki parca sablonla HAZIR gelir ya da tek komutla eklenir:
+
+- **AI akisi** (`nextjs-fullstack` icinde, `/akis`): ajan hazirlar, kullanici
+  onaylar. Gelistirmede veritabanisiz demo moduyla acilir. Urunde akis yoksa
+  sil: `app/akis/`, `components/feed/`, `lib/feed*.ts`, `tests/feed.test.ts`
+  ve `lib/schema.ts` → `feedItems`. Karar: `/agentic feed`.
+- **Aciklayici figur** (anatomy, iki sablon): urun "nasil calisir" diye
+  anlatilacaksa `node ~/dev-starter/scripts/add-figure-kit.mjs "$TARGET"`
+  (kit `components/iso/`). Sablon hazir: `<html class="iso">`, figur dizinleri
+  icin ESLint ayari. Figuru anatomy skill'i yazar.
+
 ## 2. Sablonu kopyala
 
 ```bash

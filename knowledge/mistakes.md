@@ -1576,5 +1576,24 @@ hesaplasın. Ayrıntı: `machine/skills/motion-film/reference/kamera.md`.
 
 ---
 
-*Son güncelleme: 2026-10-11*
+### 98. anatomy Figür Kiti Next 16 Şablonunda Lint'ten Düşer
+
+**Hata**: anatomy kiti ve örnek figür şablona kopyalandı; `next build` ve
+`tsc` temizdi, `npm run lint` 28 hatayla düştü. CI kırmızıya döner.
+
+**Sebep**: `eslint-config-next` 16, `react-hooks` 7'nin derleyici kurallarını
+getiriyor (`react-hooks/refs`, `immutability`, `set-state-in-effect`).
+Figürün canlı bileşeni bilerek React'in dışında hareket eder: kare başına
+ref'e yazar, yeniden çizmez. Kural bu deseni hata sayar.
+
+**Çözüm**: İki şablonun `eslint.config.mjs`inde yalnız `components/iso/**` ve
+`components/figures/**` için bu dört kural kapalı (satır içi `eslint-disable`
+yok). React Compiler açılırsa figürün canlı bileşenine `"use no memo"`.
+Kurulum `scripts/add-figure-kit.mjs`, kanıt `npm run verify:anatomy` (build +
+typecheck + uyarısız lint + test, iki şablonda). Ders: "derlendi" ile "CI
+yeşil" aynı şey değil; kopyalanan kodu şablonun KENDİ CI sırasından geçir.
+
+---
+
+*Son güncelleme: 2026-10-12*
 *Yeni hata eklemek için bu dosyayı düzenle.*

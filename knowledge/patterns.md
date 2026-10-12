@@ -1178,7 +1178,9 @@ type FrontendTool<T> = {
 
 > Kaynak: Nicolas Bustamante, "the AI feed will be the form factor of 2027"
 > (X, Ekim 2026). Snippet: `snippets/agent-feed.tsx` + `agent-feed-core.ts`
-> (26 test, kök `npm test`).
+> (26 test, kök `npm test`). **Çalışan uygulama:** `templates/nextjs-fullstack`
+> → `/akis` (şema, sunucu eylemleri, yetki kuralları + 14 test, geliştirmede
+> veritabanısız demo modu).
 
 **Sorun:** sohbet, kullanıcıdan emek ister: ajanın ne yapabildiğini keşfet,
 işi anlat, bağlamı ver, tekrarla. Çoğu insan ne yazacağını bilmez ve karmaşık

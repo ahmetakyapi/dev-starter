@@ -198,7 +198,7 @@ function FeedCard({ entry, onAct, onDismiss, onEdit, onOpenChat }: CardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: reduce ? 1 : 0.98 }}
       transition={{ duration: 0.24, ease: EASE }}
-      className="rounded-lg border border-line bg-overlay p-5 shadow-sm"
+      className="rounded-lg border border-line bg-overlay p-5"
       aria-busy={busy}
     >
       <div className="flex items-center justify-between gap-3">
@@ -370,7 +370,7 @@ function HandledRow({ entry, onUndo }: { entry: FeedEntry; onUndo: (entry: FeedE
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.24, ease: EASE }}
-      className="flex items-center gap-3 rounded-lg border border-line bg-overlay px-5 py-3 shadow-sm"
+      className="flex items-center gap-3 rounded-lg border border-line bg-overlay px-5 py-3"
     >
       <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-primary text-on-primary">
         <CheckIcon />

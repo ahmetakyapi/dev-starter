@@ -41,7 +41,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 97 kayıt (#58–73 agentic, #74–94 Next 16 / v4 / motion, #95–97 hareket filmi)
+│   ├── mistakes.md            → 98 kayıt (#58–73 agentic, #74–94 Next 16 / v4 / motion, #95–97 hareket filmi, #98 figür kiti)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
@@ -69,12 +69,14 @@ dev-starter/
 │   └── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
 │
 ├── scripts/
-│   ├── health-check.sh        → Ekosistem bütünlüğü (13 kategori, 79 kontrol)
+│   ├── health-check.sh        → Ekosistem bütünlüğü (13 kategori, 83 kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
 │   ├── test-hooks.sh          → Hook davranış testleri (17)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
-│   └── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
+│   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
+│   ├── add-figure-kit.mjs     → anatomy figür kitini bir projeye kurar (components/iso)
+│   └── verify-anatomy.mjs     → Figür kiti iki şablonda build/tip/lint/test temiz mi (opt-in)
 │
 ├── tests/contract.test.ts     → Paket sözleşmesi (palet kontrastı WCAG formülüyle)
 │
@@ -85,7 +87,7 @@ dev-starter/
 │   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
 │
 ├── templates/
-│   ├── nextjs-fullstack/      → Next 16 + Drizzle/Neon + next-auth v5 + proxy.ts + tema + bileşenler
+│   ├── nextjs-fullstack/      → Next 16 + Drizzle/Neon + next-auth v5 + proxy.ts + tema + bileşenler + /akis (AI akışı)
 │   ├── landing/               → Yedi kahraman düzeni (hero.variant), hareket kataloğu, SEO
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
@@ -179,7 +181,7 @@ kaldırıldı.
 bash scripts/health-check.sh   # veya: npm run health
 ```
 
-13 kategori, 79 kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
+13 kategori, 83 kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
 testiyle), snippet'ler, şablonlar, knowledge base, paket tutarlılığı, token
 ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade, palet dışı renk),
 tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion).
@@ -194,6 +196,16 @@ npm run verify:agentic
 Geçici bir dizinde pin'li bağımlılıkları kurar, `tsc --noEmit` + `vitest run`
 çalıştırır ve `@ag-ui/client` pin'inin CopilotKit'le aynı olduğunu doğrular
 (`mistakes.md #71`). CopilotKit yükseltmesinden sonra **önce bunu çalıştır**.
+
+Açıklayıcı figür kiti (anatomy) için aynısı:
+
+```bash
+node scripts/add-figure-kit.mjs <proje> [--example]   # kiti projeye kur
+npm run verify:anatomy                                # iki şablonda build/tip/lint/test
+```
+
+anatomy `machine/bootstrap.sh` → `ANATOMY_REF` commit'ine sabitli. Yükseltme:
+SHA'yı değiştir, **önce** `verify:anatomy`, sonra commit (`mistakes.md #98`).
 
 ### Canlı Proje Denetimi
 

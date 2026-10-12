@@ -83,7 +83,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       // Tema düğmesi özniteliği istemcide değiştirir; sonraki sunucu çizimi
       // aynı değeri basar ama araya giren kısa farkı React raporlamasın.
       suppressHydrationWarning
-      className={`${sans.variable} ${mono.variable}`}
+      // `iso`: anatomy figür kitinin token kapsamı. Kit `.iso[data-theme="light"]`
+      // ile açık temaya geçer; tema bu öğede olduğu için ThemeToggle figürü de
+      // çevirir. Kit kurulmadıysa (scripts/add-figure-kit.mjs) sınıfın etkisi yok.
+      className={`iso ${sans.variable} ${mono.variable}`}
     >
       <body className="min-h-dvh bg-page font-sans text-body antialiased">
         <a

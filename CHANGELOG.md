@@ -7,6 +7,35 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — agent-feed
 
+### Eklendi — 2026-10-12 (ikinci geçiş: şablonlar)
+
+- **`nextjs-fullstack` → `/akis`**: AI akışı uçtan uca. `lib/schema.ts` →
+  `feedItems` (görünüm `item`, gerçek girdi `payload`, Geri Al anahtarı ve
+  süresi, erteleme, kapanış özeti); `lib/feed-rules.ts` (saf yetki kuralları:
+  başkasının öğesi ile olmayan öğe aynı cevabı alır, kartta olmayan aksiyon
+  uydurulamaz, sabit sürede anahtar karşılaştırma); `lib/feed.ts`
+  (`currentFeedUser`, `getFeed`, doğrulayan tek yazma yolu `addFeedItem`);
+  `lib/feed-handlers.ts`; `app/akis/actions.ts` (önce sahiplen, sonra çalıştır;
+  iki sekmeden çift gönderim yok); geliştirmede veritabanısız demo modu;
+  `tests/feed.test.ts` (14 test). `components/feed/` snippet'le bayt bayt aynı,
+  health-check denetler.
+- **anatomy figür kiti şablonlarda**: `scripts/add-figure-kit.mjs` (kit →
+  `components/iso/`, CSS importları, font köprüsü, `--example`);
+  `scripts/verify-anatomy.mjs` + `npm run verify:anatomy` + CI işi (iki
+  şablonda build, typecheck, uyarısız lint, test). Şablonlar hazır:
+  `<html class="iso">` tema geçişini kite taşır, figür dizinleri için ESLint
+  ayarı.
+
+### Düzeltildi — 2026-10-12
+
+- anatomy figür kiti şablonda `npm run lint`ten 28 hatayla düşüyordu
+  (react-hooks 7 derleyici kuralları, `mistakes.md #98`).
+- `machine/bootstrap.sh`: anatomy her çalıştırmada son commit'e ilerliyordu ve
+  ağ hatası (`set -e`) bütün kurulumu durduruyordu. Artık `ANATOMY_REF`
+  commit'ine sabitli, yerel değişikliğe dokunmaz, ağ hatası yalnız uyarı.
+- `snippets/agent-feed.tsx`: şablonlarda olmayan `shadow-sm` sınıfı kalktı
+  (derinlik ton farkıyla).
+
 ### Eklendi — 2026-10-12
 
 - **`snippets/agent-feed.tsx`** — proaktif AI akışı: ajan hazırlar, kullanıcı

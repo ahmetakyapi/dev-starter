@@ -16,6 +16,12 @@ künye, adlı perde çipleri, ekran dışında durma — 11 Ekim 2026).
 | Bir sistemin NASIL çalıştığını anlatan figür (blog, belge, ürün sayfası) | Bu sayfa + gerekirse anatomy |
 | İzometrik, çok parçalı, gölgeli SVG makine; WebGL ateş/su/ışık; 3D dönen parça | anatomy skill'i (`machine/README.md` → kurulum) |
 
+Şablondan doğan bir Next projesinde anatomy figürü: önce
+`node ~/dev-starter/scripts/add-figure-kit.mjs <proje>` (kit `components/iso/`,
+CSS importları, font köprüsü). Şablon hazır gelir: `<html class="iso">` tema
+geçişini kite taşır, figür dizinleri için ESLint ayarı var (`mistakes.md #98`).
+Figür `components/figures/<ad>/` altına.
+
 ## 1. Nesne açıklamanın kendisidir
 
 Kutu, ok ve etiket çizme. Kavramın çalışması **gerçek, iyi yapılmış bir

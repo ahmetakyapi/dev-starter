@@ -118,6 +118,20 @@ for snippet in "${SNIPPETS[@]}"; do
   fi
 done
 
+# Sablona kopyalanan snippet'ler kaynagindan ayrismasin: iki kaynak olunca biri
+# sessizce bayatlar. Sablondaki kopya snippet'le BAYT BAYT ayni olmali.
+for pair in "agent-feed.tsx:templates/nextjs-fullstack/components/feed/agent-feed.tsx" \
+            "agent-feed-core.ts:templates/nextjs-fullstack/components/feed/agent-feed-core.ts"; do
+  SRC="snippets/${pair%%:*}"; DST="${pair#*:}"
+  if [ ! -f "$DST" ]; then
+    fail "$DST EKSIK"
+  elif cmp -s "$SRC" "$DST"; then
+    pass "$DST snippet ile ayni"
+  else
+    fail "$DST snippet'ten AYRISMIS — cp $SRC $DST"
+  fi
+done
+
 # ─── 6. Template Files ───────────────────────────────────────────────────────
 header "Template Dosyalari"
 
@@ -261,6 +275,19 @@ if [ -f "scripts/verify-agentic.mjs" ]; then
   esac
 else
   fail "scripts/verify-agentic.mjs EKSIK"
+fi
+
+# Figur kiti (anatomy): kurulum + dogrulama betikleri ve sabit commit.
+# Tam dogrulama ag + iki npm install ister; opt-in: npm run verify:anatomy
+if [ -f "scripts/add-figure-kit.mjs" ] && [ -f "scripts/verify-anatomy.mjs" ]; then
+  pass "scripts/add-figure-kit.mjs + verify-anatomy.mjs mevcut"
+else
+  fail "figur kiti betikleri EKSIK (scripts/add-figure-kit.mjs, verify-anatomy.mjs)"
+fi
+if grep -qE '^ANATOMY_REF="[0-9a-f]{40}"' machine/bootstrap.sh; then
+  pass "anatomy tam commit'e sabitlenmis (bootstrap.sh ANATOMY_REF)"
+else
+  fail "machine/bootstrap.sh: ANATOMY_REF 40 haneli sha degil — verify:anatomy kaynagi belirsiz"
 fi
 
 # Yerel Node major'i .nvmrc ile ayni mi? Farkliysa bir sonraki npm install

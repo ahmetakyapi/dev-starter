@@ -39,6 +39,8 @@ onerisi), kullanici onaylar / duzenler / gecer / sohbete atlar. Uc kulvar:
 alinabilir is + Geri Al). Siralama ve oncelik KOD; model yalniz metni yazar.
 Sponsorlu oge ayri bolumde, etiketli, aksiyonsuz.
 `/snippet agent-feed` · `~/dev-starter/knowledge/patterns.md → AI Feed`.
+Calisan uygulama: `nextjs-fullstack` sablonunda `/akis` (sema, sunucu
+eylemleri, `lib/feed-rules.ts` yetki kurallari + testleri, demo modu).
 
 ### `test` — Neyi test edebilirim?
 Model non-deterministik, onu cagiran kod degil. Uc dikis: mock'lanmis agent,

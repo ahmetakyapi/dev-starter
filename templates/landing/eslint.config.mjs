@@ -8,6 +8,20 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    // Açıklayıcı figürler (anatomy kiti, scripts/add-figure-kit.mjs) bilinçli
+    // olarak React'in dışında hareket eder: kare başına ref'e yazar, yeniden
+    // çizmez. react-hooks 7'nin derleyici kuralları bu deseni hata sayar
+    // (mistakes.md #98). Kapsam yalnız figür dizinleri; React Compiler
+    // açılırsa figürün canlı bileşenine "use no memo" yazılır.
+    files: ["components/iso/**", "components/figures/**"],
+    rules: {
+      "react-hooks/refs": "off",
+      "react-hooks/immutability": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/exhaustive-deps": "off",
+    },
+  },
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
 ]);
 

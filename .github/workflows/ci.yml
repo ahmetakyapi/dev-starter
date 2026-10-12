@@ -131,6 +131,25 @@ jobs:
       - name: Verify agentic snippets and template
         run: npm run verify:agentic
 
+  anatomy:
+    name: Figure Kit Verification
+    runs-on: ubuntu-latest
+
+    # Neden ayri is: anatomy figur kiti bir npm paketi degil, sabit bir commit'ten
+    # (machine/bootstrap.sh ANATOMY_REF) iki sablona kopyalaniyor. Burada kit
+    # sablonlara kurulur ve sablonun kendi CI sirasi kosar: build, typecheck,
+    # uyarisiz lint, test. -> knowledge/mistakes.md #98
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify figure kit in both templates
+        run: npm run verify:anatomy
+
   ecosystem:
     name: Ecosystem Health
     runs-on: ubuntu-latest

@@ -25,6 +25,13 @@ BACKUP="$CLAUDE_DIR/backups/bootstrap-$(date +%Y%m%d-%H%M%S)"
 # 3 Ekim 2026 denetiminde kaldırıldı; tam paket yerine bu liste kurulur.
 TASTE_SKILLS=(design-taste-frontend redesign-existing-projects high-end-visual-design minimalist-ui brandkit imagegen-frontend-web imagegen-frontend-mobile)
 
+# anatomy (açıklayıcı figür skill'i) SABİT bir commit'e kurulur: depo neredeyse
+# her gün değişiyor ve figür kiti şablonlara kopyalanıyor. Bu commit
+# `npm run verify:anatomy` ile iki şablonda derlenip lint/test'ten geçti.
+# Yükseltme: yeni SHA'yı yaz, önce verify:anatomy, sonra commit. Tek kaynak
+# burası; verify betiği SHA'yı bu satırdan okur.
+ANATOMY_REF="689dcf966e63d92be10a5d593c6e19e10acd4422"
+
 # Builtin eklentiler: pazar yeri gerekmez, yalnızca etkinleştirilir.
 BUILTIN_PLUGINS=("cc-plugin-you-should-know@builtin")
 
@@ -92,13 +99,30 @@ echo "▸ taste-skill"
 # `-s` virgüllü listeyi tek ad sanıyor ("No matching skills"); adlar ayrı argüman.
 run npx -y skills add Leonxlnx/taste-skill -g -a claude-code -s "${TASTE_SKILLS[@]}" -y
 
-echo "▸ anatomy (açıklayıcı figür skill'i, wheresryan22/anatomy, MIT)"
+echo "▸ anatomy (açıklayıcı figür skill'i, wheresryan22/anatomy, MIT) @ ${ANATOMY_REF:0:7}"
 # İzometrik SVG figür, WebGL ve 3D kiti; motion-film'in `reference/aciklayici-figur.md`si
-# ne zaman bunu kullanacağını söylüyor. Varsa yalnız ileri sarılır, yerel değişiklik ezilmez.
-if [[ -d "$CLAUDE_DIR/skills/anatomy/.git" ]]; then
-  run git -C "$CLAUDE_DIR/skills/anatomy" pull --ff-only --quiet
-elif [[ ! -e "$CLAUDE_DIR/skills/anatomy" ]]; then
-  run git clone --depth 1 --quiet https://github.com/wheresryan22/anatomy "$CLAUDE_DIR/skills/anatomy"
+# ne zaman bunu kullanacağını söylüyor. Ağ hatası kurulumu DURDURMAZ: figür
+# skill'i isteğe bağlı, eklentiler ve sonraki adımlar yine kurulur.
+ANATOMY_DIR="$CLAUDE_DIR/skills/anatomy"
+anatomy_checkout() {
+  git -C "$ANATOMY_DIR" fetch --quiet origin "$ANATOMY_REF" 2>/dev/null \
+    || git -C "$ANATOMY_DIR" fetch --quiet origin
+  git -C "$ANATOMY_DIR" -c advice.detachedHead=false checkout --quiet "$ANATOMY_REF"
+}
+if [[ -d "$ANATOMY_DIR/.git" ]]; then
+  if [[ -n "$(git -C "$ANATOMY_DIR" status --porcelain 2>/dev/null)" ]]; then
+    echo "  ~/.claude/skills/anatomy içinde yerel değişiklik var; dokunulmadı"
+  elif [[ "$(git -C "$ANATOMY_DIR" rev-parse HEAD 2>/dev/null)" == "$ANATOMY_REF" ]]; then
+    echo "  = anatomy zaten ${ANATOMY_REF:0:7}"
+  else
+    run anatomy_checkout || echo "  ⚠️  anatomy güncellenemedi (ağ?); eski sürüm yerinde kaldı"
+  fi
+elif [[ ! -e "$ANATOMY_DIR" ]]; then
+  if run git clone --quiet https://github.com/wheresryan22/anatomy "$ANATOMY_DIR"; then
+    run anatomy_checkout || echo "  ⚠️  ${ANATOMY_REF:0:7} bulunamadı; varsayılan dalda kaldı"
+  else
+    echo "  ⚠️  anatomy klonlanamadı (ağ?); sonra tekrar çalıştır"
+  fi
 else
   echo "  ~/.claude/skills/anatomy git deposu değil; dokunulmadı"
 fi

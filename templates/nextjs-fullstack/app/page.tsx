@@ -78,6 +78,10 @@ const NEXT_STEPS = [
     body: "AUTH_SECRET ve bir sağlayıcının anahtarlarını ekle. Korunan önekler proxy.ts içinde.",
   },
   {
+    title: "Akışı Dene",
+    body: "/akis geliştirmede demo verisiyle açılır. Gerçek öğeleri lib/feed.ts içindeki addFeedItem yazar.",
+  },
+  {
     title: "Bu Sayfayı Sil",
     body: "app/page.tsx bir vitrin; ilk gerçek ekran onun yerini alsın.",
   },

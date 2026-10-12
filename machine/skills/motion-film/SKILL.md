@@ -149,7 +149,8 @@ Bir sistemin nasıl çalıştığını anlatan figür ya da sayfa içi film içi
   evreleri, girdi 700 ms durulunca söyler; `aria-valuetext` döngüden yazılmaz.
 
 İzometrik, çok parçalı SVG makine, WebGL ateş/su/ışık ya da 3D dönen parça
-gerekiyorsa anatomy skill'inin kendisini kullan (`machine/bootstrap.sh` kurar).
+gerekiyorsa anatomy skill'inin kendisini kullan (`machine/bootstrap.sh` kurar;
+şablon projesine kit: `~/dev-starter/scripts/add-figure-kit.mjs`).
 
 ## 7c. Bütün arayüzün hareketini denetlemek (ayrıntı: `reference/arayuz-denetimi.md`)
 

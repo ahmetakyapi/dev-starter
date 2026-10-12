@@ -269,6 +269,7 @@ Her push'ta CI şunları koşar; biri kırmızıysa birleştirme yok.
 | `verify:exports` · `verify:lock` | Paket giriş noktaları, kilit dosyası tutarlılığı |
 | `verify:readme` | Bu sayfadaki görseller token'larla güncel mi |
 | `verify:agentic` | Agentic snippet'ler sabitlenmiş sürümlerle derleniyor mu |
+| `verify:anatomy` | anatomy figür kiti iki şablonda build, tip, lint ve testten geçiyor mu |
 | `test-hooks.sh` | Commit kancalarının davranışı |
 | `health-check.sh` | Şablonlar yeni tech stack'te mi (Tailwind v4, flat ESLint, `proxy.ts`, `motion`) |
 

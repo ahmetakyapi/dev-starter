@@ -158,6 +158,25 @@ Arayüz metninde uzun tire (em dash) yok; ayraç virgül, iki nokta ya da `·`.
 `lib/site.ts`ten okur; önizleme dağıtımları dizine girmez. Üretimde
 `NEXT_PUBLIC_SITE_URL` tanımlı olmalı.
 
+## Açıklayıcı figür (anatomy, isteğe bağlı)
+
+Ürünün nasıl çalıştığını kutu ve okla değil, çalışan bir makineyle anlatan
+izometrik SVG figür. Kit şablonda YOK, tek komutla gelir:
+
+```
+node ~/dev-starter/scripts/add-figure-kit.mjs .            # components/iso + CSS importları
+node ~/dev-starter/scripts/add-figure-kit.mjs . --example  # + çalışan örnek (test-rig)
+```
+
+- Şablon hazır: `<html class="iso">` (kit `.iso[data-theme="light"]` ile
+  açık temaya geçer, ThemeToggle figürü de çevirir) ve `components/iso/**`,
+  `components/figures/**` için ESLint ayarı. Figür kare başına ref'e yazar;
+  react-hooks 7 bunu hata sayardı (`~/dev-starter/knowledge/mistakes.md #98`).
+- Figürü anatomy skill'i yazar: `components/figures/<ad>/` (geometri saf `.ts`,
+  statik çizim sunucu bileşeni, tek `"use client"` canlı bileşen).
+- `components/iso/` elle düzenlenmez; projeye özgü stil `bridge.css`e.
+- React Compiler açılırsa figürün canlı bileşenine `"use no memo"`.
+
 ## Next 16 tuzakları
 
 - `searchParams`, `cookies()`, `headers()` Promise'tir, await edilir. Sayfa
