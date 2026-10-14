@@ -198,23 +198,21 @@ BLOB_READ_WRITE_TOKEN=
 > kataloğu: `guides/04-motion.md`.
 
 ### Spotlight Hero
-```tsx
-'use client'
-import { useMotionTemplate, useMotionValue } from 'motion/react'
-import * as m from 'motion/react-m'
-import { useEffect } from 'react'
 
-// Mouse-takip radial gradient — hooks/useSpotlight.ts ile kullan
-const mx = useMotionValue(-600)
-const my = useMotionValue(-600)
-useEffect(() => {
-  const h = (e: MouseEvent) => { mx.set(e.clientX); my.set(e.clientY) }
-  window.addEventListener('mousemove', h)
-  return () => window.removeEventListener('mousemove', h)
-}, [mx, my])
-const spotlight = useMotionTemplate`radial-gradient(620px circle at ${mx}px ${my}px, rgba(96,165,250,0.07), transparent 78%)`
-// <m.div style={{ background: spotlight }} />
+Kod kopyalama — **tek kaynak paket**: `@ahmetakyapi/ui` → `useSpotlight`.
+
+```tsx
+import { useSpotlight } from '@ahmetakyapi/ui'
+
+const spotlight = useSpotlight() // 620px, token'lı renk
+// <m.div className="pointer-events-none fixed inset-0" style={{ background: spotlight }} />
 ```
+
+Elle kurmak zorundaysan **#94'ün tuzakları** geçerli: dinleyici yalnız
+`(hover: hover) and (pointer: fine)` eşleşince takılır (iOS dokunuşta da
+`mousemove` gönderir, ışık takılı kalır); başlangıç konumu ekranın çok
+dışında (−10000, −600 değil — 620px ışığın kenarı köşeye taşar); renk
+token'dan gelir, `rgba(96,165,250,…)` gibi sabit yazılmaz.
 
 ### Stagger List
 ```tsx
@@ -444,12 +442,14 @@ Uygulama içinde (okunması gereken veri) marquee kullanma.
 
 ### Mouse Spotlight
 
-Hero veya sayfa arka planında fare takip eden radial gradient.
+Hero veya sayfa arka planında fare takip eden radial gradient. Tek kaynak
+paketteki hook (ince ayrıntıları — pointer-fine kapısı, −10000 başlangıcı —
+o çözer, bkz. mistakes.md #94).
 
 ```tsx
-import { useSpotlight } from '@/hooks/useSpotlight'
+import { useSpotlight } from '@ahmetakyapi/ui'
 
-const spotlight = useSpotlight() // varsayılan: 620px, rgba(96,165,250,0.07)
+const spotlight = useSpotlight() // varsayılan: 620px, token'lı renk
 
 <m.div className="pointer-events-none fixed inset-0 z-0" style={{ background: spotlight }} />
 ```

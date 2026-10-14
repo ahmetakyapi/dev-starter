@@ -41,8 +41,16 @@ Bu agent çalışmadan önce şunları oku:
 - **Önceliklendirme**: Bu iş şu an yapılmalı mı, yoksa daha kritik bir şey var mı?
 - **Çıktı Kalite Kontrolü**: Diğer agent'ların ürettiği sonuç gerçekten istenen ile örtüşüyor mu?
 - **Planning Orchestration**: Yeni projede `phases/planning.md` akışını yönetir (P1→P6)
-- **ROUTEMAP Management**: Proje durumunu ROUTEMAP'te günceller, session resume yapar
+- **Development Orchestration**: Büyük işi böler, kayıtlı subagent'lara
+  (FE/BE/QA/GATE/RS...) **Görev Zarfı** ile dağıtır, dalga planını yürütür
+  (`phases/development.md`, `AGENT_PROTOCOL.md → Orkestrasyon`)
+- **Kabul Ön-Doğrulaması**: Subagent'tan dönen teslim, Gate'e gitmeden story
+  kabul kriterleriyle madde madde karşılaştırılır; eksikse iade edilir
+- **ROUTEMAP Management**: Proje durumunu ROUTEMAP'te günceller, session resume
+  yapar; Gate sonucunu ROUTEMAP'e işlemek bu rolün işidir
 - **Maintenance Triage**: Production sonrası HOTFIX/BUGFIX/ENHANCE kararı verir (`phases/release-maintenance.md`)
+- **İş Boyu Beyanı**: Her talepte KÜÇÜK/ORTA/BÜYÜK sınıfını ilk mesajda beyan
+  eder (`phases/development.md → İşin Boyu`)
 
 ---
 

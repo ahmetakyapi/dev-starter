@@ -1,9 +1,12 @@
 # Gate Agent
 
-**Rol**: Senior Quality Engineer — Kod kalitesinin son kapısı. Her teslimattan önce 6 boyutlu otomatik doğrulama yapar, bulduğu sorunları kendi düzeltir, sadece mimari sorunları escalate eder.
+**Rol**: Senior Quality Engineer — Kod kalitesinin son kapısı. Her teslimattan önce 6+1 boyutlu doğrulama yapar; bulguyu kanıtla raporlar, düzeltme talimatı üretir.
 
-> Bu agent "geçti/kaldı" demez — bulduğu her sorunu aktif olarak düzeltir.
-> Yalnızca mimari kırılma veya kullanıcı kararı gerektiren durumları escalate eder.
+> Bu agent **kod yazmaz, düzeltmez** — denetleyen, denetlediğini değiştirmez.
+> Her bulgu kanıt + somut düzeltme talimatıyla ilgili agent'a (FE/BE/QA) gider;
+> mimari kırılma ve kullanıcı kararı gerektiren durumlar BA'ya escalate edilir.
+> (Eski "auto-fix" tanımı kaldırıldı: kayıtlı subagent'ın Edit/Write yetkisi
+> yok ve bu bilinçli — `.claude/agents/gate.md` ile artık çelişmiyor.)
 
 ---
 
@@ -187,21 +190,24 @@ tipleri kırar (`mistakes.md #71`).
 
 ---
 
-## Auto-Fix Protokolü
+## Düzeltme Yönlendirme Protokolü
 
 Gate Agent sorun bulduğunda:
 
 ```
-1. Sorunun severity'sini belirle
-2. CRITICAL veya HIGH ise:
-   a. Düzeltmeyi uygula
-   b. Düzeltmeyi Gate raporuna kaydet
-   c. Testleri çalıştır (regression kontrolü)
-3. Düzeltme yapılamıyorsa:
-   a. AGENT_ERROR formatında ilgili agent'a gönder
-   b. Spesifik düzeltme talimatı ver
-4. Max 2 fix döngüsü — 2 denemede düzelmiyor ise escalate
+1. Sorunun severity'sini belirle (CRITICAL/HIGH/MEDIUM/LOW)
+2. Bulguyu GATE_FAILED formatında yapılandır
+   (AGENT_PROTOCOL.md → Hata Yönetimi: beklenen / bulunan / kök neden /
+    düzeltme / kaçın) ve story dosyasının GATE-LOG bölümüne ekle
+3. İlgili agent (FE/BE/QA) düzeltir — bir sonraki denemeden önce GATE-LOG'u okur
+4. ROUTEMAP Gate kolonu ana oturumca ilerletilir: FAILED → FIX_1 → FIX_2
+5. FIX_2 sonrasında hâlâ FAILED → ESCALATED: BA kullanıcıya seçenekli özet sunar
 ```
+
+**Sonucun kaydı**: rapor `docs/gate/<story>.md` dosyasına yazılır (bu dizin
+yoksa ana oturum oluşturur); PASSED/FAILED değerini ROUTEMAP'teki Gate
+kolonuna **ana oturum** işler. `hooks/gate-guard.sh` commit'i bu kayda göre
+açar — kayıt yazılmadan commit denemek kapıya takılır.
 
 ---
 
@@ -226,7 +232,7 @@ Gate Agent sorun bulduğunda:
 
 ### Özet
 - Toplam kontrol: [N]
-- Otomatik düzeltme: [N]
+- Bulgu (düzeltme talimatlı): [N]
 - Uyarı: [N]
 - Escalation: [N]
 
@@ -257,13 +263,15 @@ Her pass'te **çalıştırılan komut ve sonucu** yazılır. Komut yoksa pass ge
 `audit-project.sh` + token taraması → [N bulgu] · her bulgu: düzeltildi / kasıtlı (gerekçe)
 [Bulgular]
 
-### Auto-Fix Uygulandı
-- [düzeltme 1]
-- [düzeltme 2]
+### Önerilen Düzeltmeler (ilgili agent'a)
+- [bulgu → somut düzeltme talimatı + hangi agent]
 
 ### Escalation (varsa)
 - [sorun + sebep]
 ```
+
+Rapor adresi: `docs/gate/<story>.md`. Özet (sonuç + madde sayıları) ana
+oturuma üç satırla döner; rapor gövdesi sohbete yapıştırılmaz.
 
 ---
 

@@ -82,9 +82,13 @@ orada yapin ve commit'leyin.
    - Agent Iletisimi (kimden alir, kime verir)
    - Gorev Kapsami
    - Cikti Standardi
-3. `agents/AGENT_PROTOCOL.md` → Agent Ekibi tablosuna ekleyin
+3. `agents/AGENT_PROTOCOL.md` → Agent Ekibi tablosuna ekleyin (tur: rol mu,
+   kayitli subagent mi)
 4. `rules/context-curation.md` → Context matrisine ekleyin
-5. Commit: `feat(agents): add [agent-adi] agent`
+5. Kayitli subagent olacaksa: `.claude/agents/[ad].md` INCE sarmalayici
+   (rol dosyasini `~/dev-starter/agents/...` mutlak yoluyla okur, icerik
+   KOPYALANMAZ) + `scripts/health-check.sh` → `WRAPPERS` listesine ekleyin
+6. Commit: `feat(agents): add [agent-adi] agent`
 
 ---
 
@@ -104,6 +108,9 @@ orada yapin ve commit'leyin.
 
 ## Yeni Skill Eklemek
 
+0. **Ortusme denetimi**: once mevcut 18 komutu tarayin — yeni komut var
+   olanla ayni isi yapiyorsa komut degil, var olana bir mod ekleyin
+   (/check ↔ /gate siniri gibi: kesisiyorlarsa sinir cumlesi yazin)
 1. `.claude/commands/[skill-adi].md` dosyasi olusturun
 2. Frontmatter:
    ```yaml
@@ -116,7 +123,9 @@ orada yapin ve commit'leyin.
    symlink'lenir ve her projeden cagrilir. `templates/...` degil
    `~/dev-starter/templates/...` yazin
 5. `bash machine/bootstrap.sh` ile baglayin
-6. `agents/AGENT_PROTOCOL.md` → Skills tablosuna ekleyin
+6. `agents/AGENT_PROTOCOL.md` → Skills tablosuna, kok `CLAUDE.md` komut
+   tablosuna ve `scripts/health-check.sh` → `COMMANDS` listesine ekleyin
+   (health-check listelenmemis komutu uyari olarak yakalar)
 7. Commit: `feat(skills): add /[skill-adi] command`
 
 ---

@@ -5,6 +5,72 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ---
 
+## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
+
+### Eklendi — 2026-10-14
+
+- **Gerçek alt ajan orkestrasyonu.** Kayıtlı subagent sayısı 5 → 9:
+  `frontend`, `backend`, `qa` (yeni rol: test-first mühendis), `researcher`
+  (yeni rol: "benzer ürünler nasıl çözmüş" kaynaklı taraması). Ana oturum (BA)
+  orkestratör: iş **Görev Zarfı** ile dağıtılır, dönüş **referansla** (dosya +
+  üç satır özet), paralelde `isolation: worktree`. `AGENT_PROTOCOL.md`ye
+  Orkestrasyon bölümü (efor ölçekleme, çıktı adresleri, onay noktaları);
+  karar kaydı `knowledge/decisions.md → Orkestrasyon Modeli`.
+- **`phases/development.md`** — fazın eksik playbook'u: iş boyu
+  (KÜÇÜK/ORTA/BÜYÜK), story seçimi, dalga planı, Gate döngüsü
+  (FIX_1→FIX_2→ESCALATED), faz ritüelleri ve çıkış kriterleri.
+- **8 yeni komut**: `/plan` (P1→P6), `/story` (uçtan uca), `/gate` (commit
+  kapısını açan denetim), `/fix` (TDD bugfix), `/research`, `/status`,
+  `/retro`, `/evolve`. `/check`e sınır notu: Gate kolonuna yazılmaz.
+- **`hooks/session-brief.sh`** (SessionStart): ROUTEMAP özeti + sıradaki iş
+  önerisi oturum bağlamına basılır — session resume ritüeli fiziksel oldu.
+- **Enforcement şablonlara taşındı**: `templates/*/.claude/settings.json`
+  hook'ları `~/dev-starter/hooks/`tan mutlak yolla çağırır; `/new-project`e
+  hook davranış doğrulaması adımı. `audit-project.sh`e "ekosistem disiplini"
+  bölümü (hook kaydı, ROUTEMAP, test altyapısı).
+- **`rules/self-improvement.md`** — öğrenme kanalları, onay ilkesi (ajan
+  taslak önerir, onaysız yazamaz), terfi merdiveni (mistakes → rules → hooks
+  → snippets), bilgi dosyası boy tavanları. `rules/dev-cycle.md`ye 8. adım
+  **Compound**; `release-maintenance.md`ye **Knowledge Capture (4.5)** ve
+  **Proaktif Bakım** bölümleri.
+- **`templates/docs/STORY.template.md`** — öncelik + gerekçe, bağımsız test,
+  Verildiğinde/Olduğunda/O zaman senaryoları, kilitli kabul kriterleri,
+  Test Planı tablosu, GATE-LOG bölümü. ROUTEMAP şablonuna Orkestrasyon
+  Durumu tablosu ve ESCALATED durumu; tanımsız "Documentation" fazı kalktı.
+- **`knowledge/mistakes.md`ye makine-okunur indeks** (kategori → kayıt →
+  etiket) + numara sözleşmesi; health-check numara benzersizliğini ve indeks
+  kapsamını denetliyor.
+- health-check: 83 → 130+ kontrol. Yeni: orkestrasyon bütünlüğü (sarmalayıcı
+  ↔ rol dosyası ↔ protokol listesi, komut ↔ tablo), şablon hook kaydı,
+  bilgi tavanları, `hooks/lib/` varlığı; depo köküne `cd` (her yerden çalışır).
+
+### Düzeltildi — 2026-10-14
+
+- **`hooks/gate-guard.sh` Gate yerine Assign kolonunu okuyordu** (resmi 7
+  kolonlu şablonda `$(NF-1)` son dolu kolona düşer) ve Faz Durumu
+  tablosundaki `IN_PROGRESS` satırını story sanıyordu; davranış testi 4
+  kolonlu uydurma fixture kullandığı için görmedi → `knowledge/mistakes.md
+  #99`. Kolonlar artık başlıktan ada göre bulunur (`hooks/lib/routemap.sh`,
+  üç hook paylaşır); test fixture'ları şablonun birebir düzeninde; IN_REVIEW
+  da denetleniyor; yalnız-doküman commit'leri muaf; yanıltıcı `--no-verify`
+  önerisi kaldırıldı (PreToolUse hook'unu atlatmıyordu).
+- `quality-scan.sh` stdin'i iki kez okumaya çalışıyordu (komut ikamesi
+  önbelleği ana kabuğa taşımaz) — komut metni artık bir kez yakalanıyor.
+- `quality-scan.sh` güvenlik taraması genişledi: iç içe `.env` dosyaları,
+  AWS anahtarı, PEM özel anahtar, iki parçalı JWT, URL içinde
+  kullanıcı:parola (ERROR); TDD'siz `fix:` commit'i, conventional format
+  dışı mesaj ve test zayıflatma (`.only`/`.skip` eklenmesi) uyarıları.
+- `routemap-sync.sh` artık içerik değişmezi de denetliyor: DONE ⇒ Gate
+  PASSED; `audit-project.sh`te boş `xargs grep -L`in ürettiği
+  "(standard input)" sahte bulgusu giderildi.
+- `agents/gate-agent.md` ↔ `.claude/agents/gate.md` çelişkisi: rol tanımı
+  "auto-fix yapar" diyordu, sarmalayıcıda Edit/Write yok. Gate artık bulgu +
+  düzeltme talimatı üretir (`docs/gate/<story>.md`); PASSED'i ROUTEMAP'e ana
+  oturum işler. `knowledge/patterns.md`deki Spotlight deseni #94'ün
+  düzelttiği hatayı öğretmeyi bıraktı (tek kaynak: `@ahmetakyapi/ui`).
+- `/new-project`: macOS'a özgü `sed -i ''` → taşınabilir `sed -i.bak`;
+  hedef dizin `PROJECTS_DIR` değişkenine bağlandı.
+
 ## [Yayınlanmamış] — agent-feed
 
 ### Eklendi — 2026-10-12 (üçüncü geçiş: döner parçalar)

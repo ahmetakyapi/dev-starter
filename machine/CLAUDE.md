@@ -275,7 +275,10 @@ korunur; dial'lar sitenin kendi okumasından çıkarılır. Skill'i greenfield g
 ```
 /kickoff       — fikirden plana: pazar, yön, palet, MVP (strategist)
 /new-project   — şablon seç ve kur (nextjs-fullstack · landing · + agentic-chat)
-/theme         — palet ya da görsel tema uygula
+/plan          — P1→P6: belgeler + story'ler · /theme — palet/tema uygula
+/story         — story'yi uçtan uca işle (dağıt → gate → commit)
+/status        — kaldığın yer + sıradaki işler · /gate — commit kapısı
+/fix           — TDD bugfix · /research — benzer çözümler · /retro — ders kaydı
 /check         — sağlık kontrolü · /deploy — Vercel checklist · /roadmap — sıradaki işler
 ```
 

@@ -2,6 +2,19 @@
 
 **Her feature/story implementasyonu bu pipeline'ı takip eder.**
 
+> Fazın kendisi (story seçimi, boy, alt ajanlara dağıtım, dalga planı):
+> `phases/development.md`. Bu dosya TEK story'nin iç akışıdır.
+
+---
+
+## İşin Boyu
+
+Pipeline işe göre ölçeklenir (`phases/development.md → İşin Boyu`):
+
+- **KÜÇÜK** (tek dosya/kozmetik): story yok; Develop → Self-Check → Gate (hafif) → Commit
+- **ORTA** (tek story): bu pipeline'ın tamamı
+- **BÜYÜK** (çok alan): dalga planı; adım 3 kayıtlı subagent'lara dağıtılır
+
 ---
 
 ## Pipeline Akışı
@@ -13,15 +26,17 @@
     ↓
 2. VALIDATE — Plan yeterli mi? (Plan Quality Gate)
     ↓
-3. DEVELOP — Kod yaz, test yaz
+3. DEVELOP — Test yaz (önce), kod yaz
     ↓
 4. SELF-CHECK — Developer kendi çıktısını kontrol eder
     ↓
-5. GATE — Gate Agent 6-pass kalite kontrolü
+5. GATE — Gate Agent 6+1 pass kalite kontrolü (/gate)
     ↓
 6. COMMIT — Conventional commit ile kaydet
     ↓
 7. REVIEW — BA Agent çıktıyı inceler
+    ↓
+8. COMPOUND — Ders var mı? (mistakes / patterns / decisions taslağı)
     ↓
 [Tamamlandı]
 ```
@@ -137,12 +152,22 @@ git commit -m "feat(scope): description"
 
 ### 7. Review
 
-BA Agent final inceleme yapar:
+BA Agent final inceleme yapar; sonucu tek satırla ROUTEMAP Kararlar Logu'na düşer:
 
-- Görev kapsamla örtüşüyor mu?
+- Görev kapsamla örtüşüyor mu? → **APPROVED** | **REWORK** (gerekçeyle ilgili ajana)
 - Over-engineering var mı?
 - Kullanıcı değeri sağlanmış mı?
 - Bir sonraki adım ne?
+
+### 8. Compound
+
+İş bittikten sonra üç soru (`rules/self-improvement.md`):
+
+1. Bu işte düzeltilen hata `mistakes.md`lik mi?
+2. Bulunan desen `patterns.md`lik mi?
+3. Değişen karar `decisions.md`lik mi?
+
+Evet'ler için taslak öner — **onaysız yazma**. Koşu başına en fazla 1-2 ders.
 
 ---
 

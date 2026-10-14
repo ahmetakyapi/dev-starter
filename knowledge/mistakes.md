@@ -1,7 +1,32 @@
 # Öğrenilen Hatalar — Tekrarlama
 
 Her proje sonrası tespit edilen hatalar buraya eklenir.
-Yeni bir projeye başlamadan önce bu dosya okunmalı.
+
+**Nasıl okunur**: Tamamını değil, İNDEKSİ oku; projenin stack'ine ve işine
+değen kategorilerin kayıtlarını aç (`rules/context-curation.md` bütçeleri).
+**Numara sözleşmesi**: yeni kayıt = dosyadaki en büyük numara + 1; numara
+asla yeniden kullanılmaz (çapraz referanslar `#N`ye bağlıdır). Bayatlayan
+kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alır.
+
+## İndeks
+
+| Kategori | Kayıtlar | Etiketler |
+|----------|----------|-----------|
+| Next.js | 1–4 | next, hydration, tema, dynamic |
+| PostgreSQL / Database | 5–7 | db, neon, serverless, migration |
+| Motion (eski adıyla Framer Motion) | 8–10 | motion, animasyon |
+| TypeScript | 11 | ts |
+| Vercel / Deployment | 12–13 | deploy, env |
+| Genel | 14–15, 26–27 | süreç |
+| Mimio'dan Öğrenilenler | 16–18 | tema, next-themes |
+| DigyNotes'tan Öğrenilenler | 19–21 | tema, css |
+| Keskealsaydım'dan Öğrenilenler | 22–25 | monorepo, shadcn |
+| Landing Template | 28–32, 38–41 | landing, tailwind, hero, seo |
+| Server Component & Async Context | 33–37 | next, rsc, async |
+| Impeccable Denetiminden | 42–57 | denetim, doğrulama, ci, kilit, hook |
+| Agentic UI / AG-UI (önleyici) | 58–73 | agentic, tool, copilotkit, güvenlik |
+| Next 16 · Tailwind v4 · motion Dönemi | 74–98 | next16, v4, motion, figür, film |
+| Ekosistem Altyapısı (hook, test, script) | 99 | hook, test-fixture, enforcement |
 
 ---
 
@@ -1595,5 +1620,36 @@ yeşil" aynı şey değil; kopyalanan kodu şablonun KENDİ CI sırasından geç
 
 ---
 
-*Son güncelleme: 2026-10-12*
-*Yeni hata eklemek için bu dosyayı düzenle.*
+## Ekosistem Altyapısı (hook, test, script)
+
+### 99. Hook Yanlış Kolonu Okudu, Test Fixture'ı Şablondan Saptığı İçin Görünmedi
+
+**Hata**: `hooks/gate-guard.sh` Gate durumunu `awk $(NF-1)` ile (son dolu
+kolon) okuyordu. Resmi `ROUTEMAP.template.md` story tablosu 7 kolon ve son
+dolu kolon **Assign** — hook Gate yerine Assign'ı okuyor, "FE" ≠ "PASSED"
+olduğu için şablona uyan her projede commit'i yanlış gerekçeyle bloklayacaktı
+(ya da Assign'a PASSED yazılırsa yanlış açacaktı). Ayrıca `IN_PROGRESS`
+grep'i Faz Durumu tablosundaki `| Development | IN_PROGRESS |` satırını da
+story sanıyordu.
+
+**Sebep**: İki katmanlı: (1) kolon konumdan okunuyordu, adından değil;
+(2) `scripts/test-hooks.sh`teki fixture 4 kolonlu UYDURMA bir düzendi —
+davranış testi vardı ama yanlış gerçekliği test ediyordu. #52'nin dersi
+("varlık testi yetmez, davranışı test et") eksik kalmış: davranış testinin
+fixture'ı da GERÇEK formatla aynı olmalı.
+
+**Çözüm**: `hooks/lib/routemap.sh` — kolonlar başlık satırından ada göre
+bulunur; story tablosu "Durum" ve "Gate" kolonlarını birlikte taşıyan tablo
+olarak tanınır. gate-guard, routemap-sync ve session-brief aynı ayrıştırıcıyı
+paylaşır. test-hooks.sh fixture'ları artık şablonun birebir kolon düzenini
+kullanır (+ faz tablosu yanlış-pozitif testi).
+
+**Kural**: Bir dosya formatını ayrıştıran her kontrol, O FORMATIN ŞABLONUYLA
+test edilir; fixture şablondan saparsa test "geçiyor" demek hiçbir şey demek
+değildir. Ayrıştırıcı birden fazla hook'ta gerekiyorsa `hooks/lib/`te tek
+kopya yaşar.
+
+---
+
+*Son güncelleme: 2026-10-14*
+*Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

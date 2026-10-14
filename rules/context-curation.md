@@ -2,6 +2,20 @@
 
 **Kural**: Her agent sadece ihtiyacı olan bilgiyi alır. Full context vermek token israfıdır ve kaliteyi düşürür.
 
+> İki katman: token bütçesi **kayıtlı subagent'larda** fizikseldir (ayrı
+> context penceresi); ana oturum rollerinde (BA/UI/AG) okuma-sırası
+> disiplinidir. Ekip listesi: `agents/AGENT_PROTOCOL.md → Agent Ekibi`.
+
+---
+
+## Referansla Aktar
+
+Subagent çıktısı DOSYAYA yazılır (`AGENT_PROTOCOL.md → Çıktı Adresleri`);
+ana oturuma yalnız **yol + üç satır özet** döner. Rapor/kod gövdesini sohbete
+yapıştırmak iki kez ödetir: önce üretirken, sonra her compaction'da.
+Görev zarfının `oku:` alanı da aynı ilkeyle doldurulur: belge değil, belgenin
+İLGİLİ BÖLÜMÜNÜN adresi.
+
 ---
 
 ## Neden?
@@ -68,6 +82,29 @@
 | patterns.md | ✅ (DB + API bölümü) | Onaylı desenler |
 | mistakes.md | ✅ (DB + auth bölümü) | Bilinen hatalar |
 | SCREENS.md | ❌ | UI bilmesine gerek yok |
+
+### QA Agent
+**Context seviyesi**: TASK-SPECIFIC — Test odaklı
+
+| Kaynak | Oku | Neden |
+|--------|-----|-------|
+| Story dosyası | ✅ (sadece aktif) | Kabul kriterleri = test planı girdisi |
+| tests/ dizini + test scriptleri | ✅ | Mevcut altyapı ve desen |
+| rules/bugfix-protocol.md | ✅ | TDD akışı |
+| mistakes.md | ✅ (indeksten ilgili kayıtlar) | Regression listesi |
+| ARCHITECTURE.md | ✅ (API bölümü) | Sözleşme testleri |
+| SCREENS.md | ❌ | Görsel test kapsamı DR'de |
+
+### Researcher Agent
+**Context seviyesi**: TASK-SPECIFIC — Soru odaklı
+
+| Kaynak | Oku | Neden |
+|--------|-----|-------|
+| Araştırma sorusu + PRODUCT özeti | ✅ | Bağlam |
+| tech-radar.md | ✅ | Mevcut varsayılanlar |
+| decisions.md | ✅ | Çelişki kontrolü |
+| patterns.md | ✅ (başlık düzeyi) | Çözülmüşü yeniden önermemek |
+| Kod dosyaları | ❌ | Kod yazmıyor |
 
 ### Gate Agent
 **Context seviyesi**: REVIEW — Story + plan + implementasyon

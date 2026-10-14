@@ -5,7 +5,9 @@ argument-hint: "<proje-adı>"
 
 `$ARGUMENTS` adinda yeni bir proje olustur. Bu komut her projeden cagrilabilir;
 butun kaynak yollari mutlaktir (`~/dev-starter/...`). Hedef dizin varsayilan
-olarak `~/Desktop/Projects/$ARGUMENTS`; kullanici baska bir yer soylediyse orasi.
+olarak `$PROJECTS_DIR` (tanimsizsa `~/Desktop/Projects`) altinda proje adi;
+dizin yoksa kullaniciya sor, varsayima gomulme. Kullanici baska bir yer
+soylediyse orasi.
 
 **Rehber:** `~/dev-starter/guides/01-kickoff.md` adim adim izlenir. Bu komut
 onun ilk adimlarini otomatiklestirir; kalanlari (Neon, Vercel, CI, alan adi)
@@ -68,13 +70,13 @@ Iki yer tutucu var: `PROJECT_NAME` (kebab-case paket adi) ve
 ```bash
 cd "$TARGET"
 grep -rl --exclude-dir=node_modules -e PROJECT_NAME -e PROJECT_DESCRIPTION . | while read -r f; do
-  sed -i '' -e "s/PROJECT_NAME/$ARGUMENTS/g" -e "s/PROJECT_DESCRIPTION/<aciklama>/g" "$f"
+  sed -i.bak -e "s/PROJECT_NAME/$ARGUMENTS/g" -e "s/PROJECT_DESCRIPTION/<aciklama>/g" "$f" && rm -f "$f.bak"
 done
 grep -rn --exclude-dir=node_modules -e PROJECT_NAME -e PROJECT_DESCRIPTION . || echo "yer tutucu kalmadi"
 ```
 
-Aciklamada `/`, `&` gibi `sed` ozel karakterleri varsa kacir. (`sed -i ''`
-macOS sozdizimi; Linux'ta `sed -i`.)
+Aciklamada `/`, `&` gibi `sed` ozel karakterleri varsa kacir. (`sed -i.bak`
+hem macOS hem Linux'ta ayni calisir; `sed -i ''` yalniz macOS'tur.)
 
 ## 4. Palet ve tema
 
@@ -129,7 +131,19 @@ npm test
 Biri kirmiziysa duzelt; sablon kaynakli bir hataysa kullaniciya soyle ve
 sablonun kendisinin (`~/dev-starter/templates/<sablon>/`) duzeltilmesi gerektigini not et.
 
-## 7. Git
+## 7. Enforcement dogrulamasi
+
+Sablon `.claude/settings.json` ile gelir: gate-guard, quality-scan,
+routemap-sync ve session-brief hook'lari `~/dev-starter/hooks/`tan mutlak
+yolla calisir. Varligini degil DAVRANISINI dogrula (mistakes.md #52, #99):
+
+```bash
+test -f "$TARGET/.claude/settings.json" && grep -q gate-guard "$TARGET/.claude/settings.json"
+cd "$TARGET" && printf '{"tool_name":"Bash","tool_input":{"command":"git commit -m x"}}' \
+  | bash ~/dev-starter/hooks/gate-guard.sh; echo "exit=$? (0 beklenir: ROUTEMAP'te aktif story yok)"
+```
+
+## 8. Git
 
 ```bash
 git init -b main && git add -A && git commit -m "chore: initialize $ARGUMENTS"
@@ -137,10 +151,11 @@ git init -b main && git add -A && git commit -m "chore: initialize $ARGUMENTS"
 
 `git status` ile `.env.local` ve `node_modules`un girmedigini dogrula.
 
-## 8. Ozet ve kalan adimlar
+## 9. Ozet ve kalan adimlar
 
-Olusturulan dosyalari kisaca listele, sonra `~/dev-starter/guides/01-kickoff.md`den
-kalanlari kontrol listesi olarak ver:
+Olusturulan dosyalari kisaca listele ve yonlendir: **"Sirada `/plan` —
+P1→P6 ile story'leri cikaralim mi?"** Sonra
+`~/dev-starter/guides/01-kickoff.md`den kalanlari kontrol listesi olarak ver:
 
 - [ ] `.env.local` dolduruldu (`AUTH_SECRET`: `npx auth secret`)
 - [ ] Neon projesi (eu-central-1) + gelistirme dali, `npm run db:migrate`

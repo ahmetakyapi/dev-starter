@@ -14,6 +14,8 @@
 #   6. ESLint yapilandirmasi (flat config, `next lint` yok)
 #   7. Isik modu kontrasti — dark: esi olmayan acik metin
 #   8. Tech stack uyumu — Tailwind v4, Next 16 proxy.ts, motion/react
+#   9. Mobil ust kenar (iOS saydam baslik, dokunmatik spotlight)
+#  10. Ekosistem disiplini — hook kaydi, ROUTEMAP, test altyapisi
 #
 # Cikis kodu: bulgu varsa 1, temizse 0
 
@@ -174,9 +176,44 @@ TOP_TRANSPARENT=$(grep -rn -A3 "${EXCLUDES[@]}" --include=*.tsx -E "(fixed|stick
   | grep -vE "(sm|md|lg|xl):bg-transparent" \
   | sed -E 's/^([^:]+)[-:][0-9]+[-:].*/\1/' | sed "s#^$TARGET/##" | sort -u || true)
 report "Sabit/yapışkan başlık telefonda saydam başlıyor (telefonda opak zemin ver, saydamlık md: ile)" "$TOP_TRANSPARENT"
-SPOT_ANY=$(grep -rln "${EXCLUDES[@]}" --include=*.ts --include=*.tsx "addEventListener('mousemove'" "$TARGET" 2>/dev/null \
-  | xargs grep -L "pointer: fine\|pointer:fine" 2>/dev/null || true)
+# xargs boş girdiyle grep'i stdin'e düşürür ve "(standard input)" sahte
+# bulgusu üretir; önce liste boş mu diye bak (GNU -r bayrağı BSD'de yok).
+SPOT_FILES=$(grep -rln "${EXCLUDES[@]}" --include=*.ts --include=*.tsx "addEventListener('mousemove'" "$TARGET" 2>/dev/null || true)
+SPOT_ANY=""
+if [ -n "$SPOT_FILES" ]; then
+  SPOT_ANY=$(printf '%s\n' "$SPOT_FILES" | xargs grep -L "pointer: fine\|pointer:fine" 2>/dev/null || true)
+fi
 report "mousemove dinleyicisi ince imleç kontrolü olmadan ((hover: hover) and (pointer: fine))" "$SPOT_ANY"
+
+# ─── 10. Ekosistem disiplini ─────────────────────────────────────────────────
+# Tasarim kurallari kadar surec kurallari da denetlenir: hook'suz proje
+# kurallari yalniz kagitta tasir (bkz. mistakes.md #99 cevresi).
+section "Ekosistem disiplini (hook, ROUTEMAP, test altyapisi)"
+
+if [ -f "$TARGET/.claude/settings.json" ] && grep -qs "gate-guard" "$TARGET/.claude/settings.json"; then
+  ok "Claude Code hook'lari kayitli (.claude/settings.json)"
+else
+  hit "Hook kaydi yok — gate-guard/quality-scan bu projede calismiyor (sablon .claude/settings.json'u kopyala)"
+fi
+
+if [ -f "$TARGET/docs/ROUTEMAP.md" ] || [ -f "$TARGET/ROUTEMAP.md" ]; then
+  RM="$TARGET/docs/ROUTEMAP.md"; [ -f "$RM" ] || RM="$TARGET/ROUTEMAP.md"
+  if grep -qs '| *Gate *|' "$RM"; then
+    ok "ROUTEMAP mevcut ve Gate kolonu ayristirabilir"
+  else
+    hit "ROUTEMAP var ama story tablosunda Gate kolonu yok — gate-guard calisamaz (sablon: templates/docs/ROUTEMAP.template.md)"
+  fi
+else
+  hit "docs/ROUTEMAP.md yok — durum takibi ve session resume calismaz"
+fi
+
+for script in test typecheck lint; do
+  if grep -qs "\"$script\"" "$TARGET/package.json"; then
+    ok "package.json '$script' script'i var"
+  else
+    hit "package.json '$script' script'i yok — /check ve Gate bu adimi kosamaz"
+  fi
+done
 
 echo ""
 echo "  ─────────────────────────────────────────────"

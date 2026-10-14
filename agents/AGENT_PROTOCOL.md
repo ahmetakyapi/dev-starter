@@ -1,26 +1,88 @@
 # Agent Haberleşme Protokolü
 
-Bu dosya tüm agent'ların nasıl iletişim kurduğunu tanımlar.
-Bu dosyalar ana oturumun **üstlendiği rol tanımlarıdır** — `.claude/agents/`
-altında kayıtlı Claude Code subagent'ı DEĞİLDİR (istisna: `gate` ve `deploy`,
-bkz. `.claude/agents/`). Ana oturum ilgili dosyayı okur ve o rolü üstlenir.
+Bu dosya tüm agent'ların nasıl iletişim kurduğunu tanımlar. İki tür agent var:
+
+- **Kayıtlı subagent** (`.claude/agents/` altında ince sarmalayıcı; bootstrap
+  ile `~/.claude/agents/`a symlink'lenir): `strategist`, `gate`, `deploy`,
+  `design-reviewer`, `content-editor`, `frontend`, `backend`, `qa`,
+  `researcher`. Kendi context penceresinde, kısıtlı tool setiyle çalışır;
+  paralel dağıtılabilir.
+- **Ana oturum rolü**: BA, UI ve AG — ana oturum ilgili rol dosyasını okur ve
+  o rolü üstlenir. BA aynı zamanda **orkestratördür** (aşağıda).
 
 ---
 
 ## Agent Ekibi
 
-| Agent | Dosya | Alan | Kısaltma |
-|-------|-------|------|----------|
-| Business Analyst | `business-analyst-agent.md` | Planlama, onay, yönlendirme | **BA** |
-| UI/UX | `uiux-agent.md` | Tasarım, animasyon, görsel sistem | **UI** |
-| Frontend | `frontend-agent.md` | Next.js, React, TypeScript | **FE** |
-| Backend | `backend-agent.md` | DB, API, auth | **BE** |
-| Agentic UI | `agentic-ui-agent.md` | LLM tool/state/UI kararları — FE ile BE arasındaki boşluk | **AG** |
-| Gate | `gate-agent.md` | Kalite kontrolü, auto-fix, enforcement | **GATE** |
-| Deploy | `deploy-agent.md` | Vercel, CI/CD, production | **DP** |
-| Strategist | `strategist-agent.md` | Fikirden plana: pazar, yön, palet, MVP; yol haritası | **ST** |
-| Design Reviewer | `design-reviewer-agent.md` | Kurulmuş arayüzü ekrandan ölçer, puanlar | **DR** |
-| Content Editor | `content-editor-agent.md` | Türkçe metin editörlüğü | **CE** |
+| Agent | Dosya | Alan | Kısaltma | Tür |
+|-------|-------|------|----------|-----|
+| Business Analyst | `business-analyst-agent.md` | Planlama, onay, yönlendirme, orkestrasyon | **BA** | rol |
+| UI/UX | `uiux-agent.md` | Tasarım, animasyon, görsel sistem | **UI** | rol |
+| Frontend | `frontend-agent.md` | Next.js, React, TypeScript | **FE** | subagent |
+| Backend | `backend-agent.md` | DB, API, auth | **BE** | subagent |
+| Agentic UI | `agentic-ui-agent.md` | LLM tool/state/UI kararları — FE ile BE arasındaki boşluk | **AG** | rol |
+| QA | `qa-agent.md` | Test stratejisi, test-first, regression | **QA** | subagent |
+| Gate | `gate-agent.md` | 6+1 pass kalite denetimi, rapor | **GATE** | subagent |
+| Deploy | `deploy-agent.md` | Vercel, CI/CD, production | **DP** | subagent |
+| Strategist | `strategist-agent.md` | Fikirden plana: pazar, yön, palet, MVP; yol haritası | **ST** | subagent |
+| Researcher | `researcher-agent.md` | Teknik araştırma: benzer çözümler, kütüphane seçimi | **RS** | subagent |
+| Design Reviewer | `design-reviewer-agent.md` | Kurulmuş arayüzü ekrandan ölçer, puanlar | **DR** | subagent |
+| Content Editor | `content-editor-agent.md` | Türkçe metin editörlüğü | **CE** | subagent |
+
+---
+
+## Orkestrasyon — İşi Kim, Nasıl Dağıtır
+
+Ana oturum (BA rolü) orkestratördür: işi böler, kayıtlı subagent'lara dağıtır,
+sonuçları birleştirir, ROUTEMAP'i günceller. Dalga planı ve faz kuralları:
+`phases/development.md`.
+
+### Efor Ölçekleme
+
+| İş | Yürütme |
+|----|---------|
+| Tek dosyalık düzeltme, kozmetik | Ana oturum kendisi yapar — subagent açma |
+| Tek story, tek alan | İlgili rol ana oturumda ya da tek subagent |
+| Çok story / çok alan / dosya çakışması riski | Paralel subagent'lar, gerekirse `isolation: worktree` |
+| Belirsiz / keşif | Önce `researcher` ya da `/kickoff` — uygulama sonra |
+
+Paralelde aynı anda en fazla 3-4 subagent: koordinasyon maliyeti dağıtım
+kazancını yutmasın.
+
+### Görev Zarfı (subagent'a dağıtırken ZORUNLU)
+
+```text
+GOREV_ZARFI
+  to:    [FE | BE | QA | GATE | DP | ST | RS | DR | CE]
+  task:  [tek cümle görev tanımı]
+  oku:   [story dosyası + yalnız gereken bağlam adresleri — context-curation tablosuna göre]
+  sinir: [dokunulmayacak dosyalar/alanlar; kapsam story kadardır]
+  cikti: [beklenen adres — kod için değişen dosya listesi, rapor için dosya yolu]
+  kabul: [story'nin kabul kriterleri ya da işin bitti tanımı]
+```
+
+### Referansla Aktarım
+
+Subagent üretimini DOSYAYA yazar; ana oturuma yalnız **yol + üç satır özet**
+döner. Rapor/kod gövdesi sohbete yapıştırılmaz — context bütçesi korunur,
+session resume dosyadan devam eder.
+
+### Çıktı Adresleri
+
+| Üretici | Adres |
+|---------|-------|
+| GATE raporu | `docs/gate/<story>.md` |
+| RS araştırması | `docs/research/<konu>.md` |
+| DR denetimi | `docs/review/<tarih>-<kapsam>.md` |
+| ST kickoff/yol haritası | `docs/KICKOFF.md` / `docs/ROADMAP-ONERI.md` |
+| FE/BE/QA kodu | doğrudan dosyalar; teslimde değişen dosya listesi |
+| Kararlar | `docs/ROUTEMAP.md → Kararlar Logu` |
+
+### Onay Noktaları
+
+Faz çıktıları (KICKOFF, PRODUCT, ARCHITECTURE, SCREENS, story listesi) ve
+ESCALATED durumlar kullanıcıya sunulur; onay ROUTEMAP Kararlar Logu'na işlenir.
+Geri dönüşü zor işler (migration, deploy, silme) onaysız yürütülmez.
 
 ---
 
@@ -71,17 +133,18 @@ Bug bildirimi
 
 ## Standart Handoff Mesajı
 
-Agent'tan agent'a iş geçerken bu formatta ilet:
+Ana oturum rolleri (BA/UI/AG) arasında iş geçerken bu formatta ilet; kayıtlı
+subagent'a dağıtımda bunun yerine **Görev Zarfı** kullanılır (yukarıda):
 
 ```text
 AGENT_HANDOFF
-  from: [BA | UI | FE | BE | GATE | DP]
-  to:   [BA | UI | FE | BE | GATE | DP]
+  from: [BA | UI | FE | BE | AG | QA | GATE | DP | ST | RS | DR | CE]
+  to:   [BA | UI | FE | BE | AG | QA | GATE | DP | ST | RS | DR | CE]
   task: [tek cümle görev tanımı]
   context:
     - proje: [proje adı]
     - ilgili dosyalar: [dosya yolları]
-    - bağımlılıklar: [önceki agent çıktısı varsa özet]
+    - bağımlılıklar: [önceki agent çıktısı varsa yol + özet]
   acceptance_criteria:
     - [kriter 1]
     - [kriter 2]
@@ -91,22 +154,24 @@ AGENT_HANDOFF
 
 ## Paralel Çalışma Kuralı
 
-BA Agent'ın bir işi birden fazla agent'a yönlendirmesi durumunda:
+Dalga planının tamamı `phases/development.md`dedir. Özet:
 
 ```text
-Wave 1 (paralel):
-  → UI Agent: [görsel kısım]
-  → BE Agent: [API/DB kısım]
+Wave 1 (paralel, kayıtlı subagent'lar — Görev Zarfı ile):
+  → backend: API/DB + testleri
+  → qa:      test planı + failing testler
+  → UI rolü: tasarım kararları (ana oturum)
 
-Wave 2 (Wave 1 bittikten sonra):
-  → FE Agent: UI + API entegrasyonu
+Wave 2 (Wave 1 çıktıları girince):
+  → frontend: UI + API entegrasyonu
 
 Wave 3:
-  → Gate Agent: Kalite kontrolü
-  → BA Agent: Review
+  → gate: 6+1 pass → docs/gate/<story>.md
+  → ana oturum: sonucu ROUTEMAP'e işler, commit, review
 ```
 
-Wave arası: Build kontrolü yap, çakışma varsa çöz.
+Wave arası: build + typecheck; dosya çakışması riski varsa subagent'lar
+`isolation: worktree` ile açılır ve Gate PASSED sonrası merge edilir.
 
 ---
 
@@ -205,8 +270,8 @@ Proje bu fazları sırasıyla takip eder:
 | Faz | Protokol Dosyası | Yöneten Agent |
 |-----|-----------------|---------------|
 | **Planning** (P1→P6) | `phases/planning.md` | BA Agent |
-| **Development** | `rules/dev-cycle.md` | BA → FE/BE/UI → GATE |
-| **E2E & Polish** (E0→E5) | `phases/e2e-polish.md` | BA + GATE |
+| **Development** | `phases/development.md` (story içi: `rules/dev-cycle.md`) | BA (orkestratör) → FE/BE/QA/UI → GATE |
+| **E2E & Polish** (E0→E5) | `phases/e2e-polish.md` | BA + QA + GATE |
 | **Release & Maintenance** | `phases/release-maintenance.md` | BA + DP |
 
 ### Session Resume
@@ -226,9 +291,10 @@ Kuralların kağıt üstünde kalmaması için bash hook'ları:
 
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
-| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Gate PASSED yoksa commit bloklar |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Hardcoded değer, debug kodu, secret, `@ts-ignore`, kilit dosyası, agentic cast taraması |
-| `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP güncelleme hatırlatıcısı |
+| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse commit bloklar (kolonu başlıktan bulur, docs-only muaf) |
+| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Secret (AWS/PEM/JWT/URL dahil), .env, debug kodu, `@ts-ignore`, kilit, agentic cast, TDD/commit-format/test-zayıflatma uyarıları |
+| `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE⇒Gate PASSED değişmezi |
+| `hooks/session-brief.sh` | SessionStart | ROUTEMAP özetini ve sıradaki iş önerisini bağlama basar |
 
 Kayıt yeri: `.claude/settings.json` (paylaşılan, versiyonlanır). impeccable
 3.0.0'da kaldırıldı.
@@ -247,8 +313,17 @@ Her agent sadece ihtiyacı olan bilgiyi alır (`rules/context-curation.md`):
 | UI | FOCUSED | ~15k | Tema + ekranlar |
 | FE | TASK-SPECIFIC | ~10k | Story + ilgili dosyalar |
 | BE | TASK-SPECIFIC | ~10k | Story + schema + API |
+| QA | TASK-SPECIFIC | ~10k | Story + tests/ + bugfix-protocol |
+| AG | FOCUSED | ~15k | Story + agentic-ui kuralları + tool şemaları |
 | GATE | REVIEW | ~20k | Story + diff + rules |
+| RS | TASK-SPECIFIC | ~10k | Soru + tech-radar + decisions |
+| ST | FULL | ~30k | Ürün belgeleri + radar + canlı durum |
+| DR | FOCUSED | ~15k | Tema belgesi + ekran görüntüleri |
+| CE | TASK-SPECIFIC | ~10k | İncelenen metin + yazım kuralları |
 | DP | MINIMAL | ~5k | Config + env |
+
+Token bütçesi yalnız **kayıtlı subagent'larda** fiziksel sınırdır; ana oturum
+rollerinde (BA/UI/AG) okuma-sırası disiplinidir.
 
 ---
 
@@ -300,6 +375,14 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 | `/kickoff [fikir]` | Fikirden plana: pazar, yön, palet, MVP (strategist) | BA |
 | `/roadmap` | Var olan projeye sıradaki işler (strategist) | BA |
 | `/agentic [konu]` | Agentic UI karar ağacı | FE, BE |
+| `/plan` | Planning fazını yürüt (P1→P6) | BA |
+| `/story [id]` | Tek story'yi uçtan uca işle (dalga planıyla) | BA |
+| `/gate [story]` | Gate denetimi + sonucu ROUTEMAP'e işle | GATE, BA |
+| `/fix [tarif]` | Bugfix protokolü (TDD) | QA, FE, BE |
+| `/research [konu]` | Benzer çözümleri araştır (researcher) | RS |
+| `/status` | Kaldığın yer + sıradaki iş önerisi | BA |
+| `/retro` | Oturum/iş retrospektifi → bilgi tabanı taslakları | BA |
+| `/evolve` | Ekosistemin kendi bakım/gelişim turu | BA, RS |
 
 ### Doğrulama Komutları
 
@@ -394,16 +477,23 @@ AGENT_ERROR
 
 Bu mesajı BA Agent'a ilet, yeniden yönlendirme yapacaktır.
 
-Gate Agent FAILED döndürdüğünde:
+Gate Agent FAILED döndürdüğünde rapor yapılandırılmıştır ve story dosyasının
+altına **GATE-LOG** bölümü olarak eklenir (bir sonraki deneme bunu OKUR —
+aynı kök nedene ikinci kez düşmek başlı başına bulgudur):
 
 ```text
 GATE_FAILED
   story: [görev adı]
   pass: [hangi pass fail etti]
   severity: [CRITICAL | HIGH]
-  issue: [sorun açıklaması]
-  attempted_fix: [denenen auto-fix]
-  needs: [agent'tan ne bekleniyor]
+  beklenen: [ne olmalıydı]
+  bulunan: [ne bulundu — komut + çıktı]
+  kok_neden: [sınıf: tip hatası | eksik test | token ihlali | kapsam dışı | ...]
+  duzeltme: [ilgili agent'tan beklenen somut adım]
+  kacin: [bir sonraki denemede yapılmaması gereken]
 ```
 
-Bu mesaj ilgili agent'a (FE/BE) iletilir, max 2 düzeltme döngüsü sonra BA Agent'a escalate.
+Döngü sayacı ROUTEMAP Gate kolonunda tutulur: FAILED → FIX_1 → FIX_2 →
+ESCALATED. ESCALATED'da ana oturum durur, kullanıcıya seçenekli özet sunar.
+Gate sonucunu ROUTEMAP'e **ana oturum** işler (gate'in Write yetkisi yok —
+denetleyen, denetlediği kaydı değiştirmez).

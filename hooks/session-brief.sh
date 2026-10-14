@@ -11,25 +11,21 @@
 
 set -euo pipefail
 
-ROUTEMAP=""
-for f in docs/ROUTEMAP.md ROUTEMAP.md; do
-  if [ -f "$f" ]; then
-    ROUTEMAP="$f"
-    break
-  fi
-done
-[ -z "$ROUTEMAP" ] && exit 0
+# shellcheck source=lib/routemap.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/routemap.sh"
+
+ROUTEMAP=$(routemap_find) || exit 0
 
 echo "📍 Session Brief — $ROUTEMAP (tek gerçek kaynak, önce tamamını oku):"
 
 # Proje adı ve genel durum
 grep -E '^\*\*(Proje|Durum)\*\*' "$ROUTEMAP" | head -2 | sed 's/^/   /' || true
 
-# Aktif işler: IN_PROGRESS / IN_REVIEW / BLOCKED satırları
-ACTIVE=$(grep -E '^\|.*\|[[:space:]]*(IN_PROGRESS|IN_REVIEW|BLOCKED)[[:space:]]*\|' "$ROUTEMAP" || true)
+# Aktif işler: story tablosundan IN_PROGRESS / IN_REVIEW / BLOCKED satırları
+ACTIVE=$(routemap_story_rows "$ROUTEMAP" | awk -F'\t' '$2 ~ /^(IN_PROGRESS|IN_REVIEW|BLOCKED)$/' || true)
 if [ -n "$ACTIVE" ]; then
   echo "   Aktif işler:"
-  echo "$ACTIVE" | head -5 | sed 's/^/     /'
+  echo "$ACTIVE" | head -5 | awk -F'\t' '{ printf "     - %s  durum=%s  gate=%s\n", $1, $2, ($3 == "" ? "—" : $3) }'
   BLOCKED=$(echo "$ACTIVE" | grep -c 'BLOCKED' || true)
   [ "${BLOCKED:-0}" -gt 0 ] && echo "   ⚠️  $BLOCKED iş BLOCKED — önce blokajı çöz ya da kullanıcıya sor."
 else

@@ -9,8 +9,13 @@ set -euo pipefail
 # shellcheck source=lib/hook-input.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/hook-input.sh"
 
+# Komut metnini BİR KEZ yakala: hook_command stdin'i komut ikamesinde
+# (subshell) okur, önbellek ana kabuğa taşınmaz — ikinci çağrı boş döner.
+# Aşağıdaki kontroller (#9, #10) da bu metni kullanır.
+CMD_TEXT=$(hook_command)
+
 # Sadece git commit komutlarını yakala
-hook_is_git_commit || exit 0
+printf '%s' "$CMD_TEXT" | grep -qE 'git[[:space:]]+([^|;&]*[[:space:]])?commit' || exit 0
 
 WARNINGS=0
 ERRORS=0
@@ -47,8 +52,23 @@ if [ -n "$SECRET_HITS" ]; then
   ERRORS=$((ERRORS + 1))
 fi
 
+# 3b. Güvenlik: bilinen sır biçimleri (anahtar deseninden bağımsız)
+# AWS access key, PEM özel anahtar, iki parçalı JWT, URL içinde kullanıcı:parola.
+# Bunlar "password=..." kalıbına girmeden sızar; ayrı desenle taranır.
+# scripts/test-hooks.sh hariç: tarayıcının kendi test paketi, fixture olarak
+# sahte sır taşımak zorunda (AKIA...EXAMPLE).
+KNOWN_SECRETS=$(echo "$STAGED" | grep -vE '\.(md|example|template|lock)$|\.test\.|\.spec\.|package-lock\.json|(^|/)scripts/test-hooks\.sh$' \
+  | xargs grep -lnE 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{10,}\.eyJ|[a-z][a-z0-9+.-]*://[^/@[:space:]"]+:[^@[:space:]"]+@' 2>/dev/null || true)
+if [ -n "$KNOWN_SECRETS" ]; then
+  echo "❌ SECURITY: Bilinen sır biçimi bulundu (AWS/PEM/JWT/URL kimlik bilgisi):"
+  echo "$KNOWN_SECRETS" | sed 's/^/   /'
+  ERRORS=$((ERRORS + 1))
+fi
+
 # 4. .env dosyası commit edilmeye çalışılıyor mu?
-ENV_HITS=$(echo "$STAGED" | grep -E '^\.env$|^\.env\.local$|^\.env\.production$' || true)
+# Kök dizinle sınırlı değil: config/.env.production da sızdırır. İzinli olanlar
+# yalnız .env.example ve .env.template (değer taşımazlar).
+ENV_HITS=$(echo "$STAGED" | grep -E '(^|/)\.env(\.[A-Za-z0-9._-]+)?$' | grep -vE '\.env\.(example|template)$' || true)
 if [ -n "$ENV_HITS" ]; then
   echo "❌ SECURITY: .env dosyası commit edilmeye çalışılıyor!"
   echo "$ENV_HITS" | sed 's/^/   /'
@@ -106,6 +126,44 @@ if [ -n "$AGUI_PKG" ]; then
     echo "⚠️  AGENTIC: @ag-ui/* sürümü aralıkla yazılmış (^ veya ~):"
     echo "$LOOSE_AGUI" | sed 's/^/   /'
     echo "   CopilotKit tam sürüme sabitler; aralık çift kopya üretir → mistakes.md #71"
+    WARNINGS=$((WARNINGS + 1))
+  fi
+fi
+
+# 9. Commit mesajı conventional format'ta mı? (rules/commit-conventions.md)
+# Mesaj komut metninden çıkarılır; heredoc/karmaşık tırnaklamada ayrıştırma
+# garantisi yok, bu yüzden yalnız UYARI: desen komutun hiçbir yerinde yoksa.
+if printf '%s' "$CMD_TEXT" | grep -qE '(^|[[:space:]])(-m|--message)([[:space:]]|=)'; then
+  if ! printf '%s' "$CMD_TEXT" | grep -qE '(feat|fix|hotfix|refactor|style|perf|test|docs|chore|ci)(\([a-z0-9_.-]+\))?: |Merge |Revert '; then
+    echo "⚠️  COMMIT: Mesaj conventional format'a uymuyor görünüyor:"
+    echo "   beklenen: <tip>(<scope>): <açıklama> — rules/commit-conventions.md"
+    WARNINGS=$((WARNINGS + 1))
+  fi
+fi
+
+# 10. fix commit'inde test değişikliği var mı? (rules/bugfix-protocol.md: TDD —
+# önce failing test). Kod değişen ama test dosyası içermeyen fix → uyarı.
+if printf '%s' "$CMD_TEXT" | grep -qE '(fix|hotfix)(\([a-z0-9_.-]+\))?:'; then
+  FIX_CODE=$(echo "$STAGED" | grep -E '\.(tsx?|jsx?)$' | grep -vE '\.test\.|\.spec\.|(^|/)tests?/' || true)
+  FIX_TESTS=$(echo "$STAGED" | grep -E '\.test\.|\.spec\.|(^|/)tests?/' || true)
+  if [ -n "$FIX_CODE" ] && [ -z "$FIX_TESTS" ]; then
+    echo "⚠️  BUGFIX: fix commit'inde test değişikliği yok (rules/bugfix-protocol.md)."
+    echo "   Önce failing test, sonra düzeltme. Test yazılamıyorsa gerekçesi commit gövdesine."
+    echo "   Kalıcı ders varsa: ~/dev-starter/knowledge/mistakes.md (/retro ile)."
+    WARNINGS=$((WARNINGS + 1))
+  fi
+fi
+
+# 11. Test zayıflatma: diff'e .only/.skip/xit/xdescribe EKLENMESİ.
+# .only kalan test suite'in tamamını sessizce devre dışı bırakır; .skip yeşili
+# yalandan üretir. Meşru kullanım olabilir → uyarı, blok değil.
+TEST_FILES=$(echo "$STAGED" | grep -E '\.test\.|\.spec\.|(^|/)tests?/' || true)
+if [ -n "$TEST_FILES" ]; then
+  WEAKENED=$(echo "$TEST_FILES" | tr '\n' '\0' | xargs -0 git diff --cached -U0 -- 2>/dev/null \
+    | grep -E '^\+.*(\.(only|skip)\(|\b(xit|xdescribe|xtest)\()' || true)
+  if [ -n "$WEAKENED" ]; then
+    echo "⚠️  TEST: diff test atlatan çağrı ekliyor (.only/.skip/xit):"
+    echo "$WEAKENED" | head -5 | sed 's/^/   /'
     WARNINGS=$((WARNINGS + 1))
   fi
 fi

@@ -100,6 +100,25 @@ Production'da çalıştır:
 
 ---
 
+## 4.5 Knowledge Capture — Bilgi Toplama
+
+Yayın "bitti" demek değildir; öğrenilen kayda geçmeden faz kapanmaz
+(`rules/self-improvement.md`). `/retro` bu adımı yürütür:
+
+- [ ] `knowledge/themes/<proje>.md` dolduruldu (şablon: `templates/docs/DESIGN.template.md`)
+- [ ] Proje boyunca yaşanan ama kaydedilmemiş hatalar `knowledge/mistakes.md`ye
+      (+ önleyici adım ilgili `guides/` dosyasına)
+- [ ] Kendini kanıtlamış yeni desenler `knowledge/patterns.md`ye
+- [ ] "Dene" halkasında kullanılan teknoloji canlıya çıktıysa
+      `knowledge/tech-radar.md`de terfi
+- [ ] Değişen kararlar `knowledge/decisions.md`ye ("Değişti (tarih)" başlığıyla)
+- [ ] Süreç notu: bu projede zinciri yavaşlatan adım neydi — tek paragraf,
+      ROUTEMAP Kararlar Logu'na
+
+Hepsi taslak olarak sunulur; kullanıcı onaylar (`/retro` akışı).
+
+---
+
 ## 5. Maintenance Mode
 
 Release sonrası mimari **dondurulur** (`rules/immutable-architecture.md` Production kuralları aktif):
@@ -147,6 +166,19 @@ Production bug
 8. ROUTEMAP: maintenance log güncelle
 9. mistakes.md güncelle
 ```
+
+### Proaktif Bakım
+
+Reaktif triage yetmez; canlı proje sessizce çürür. Aylık tur (ya da `/evolve`
+çağrısıyla):
+
+- [ ] `bash ~/dev-starter/scripts/audit-project.sh <proje>` — çıktı
+      `knowledge/live-projects-audit.md`ye tarih damgasıyla
+- [ ] `npm outdated` + `npm audit` — kritik güvenlik yaması varsa HOTFIX
+      triage'ına girer
+- [ ] Vercel panosunda hata oranı / CWV bozulması var mı
+- [ ] `/api/health` hâlâ 200 mü (uptime kontrolü)
+- [ ] Neon yedekleri ve migration durumu
 
 ### Maintenance Logu
 

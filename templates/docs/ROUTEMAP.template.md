@@ -5,19 +5,18 @@
 
 **Proje**: [proje adı]
 **Başlangıç**: [tarih]
-**Durum**: PLANNING | DEVELOPMENT | E2E_POLISH | DOCUMENTATION | RELEASED | MAINTENANCE
+**Durum**: PLANNING | DEVELOPMENT | E2E_POLISH | RELEASED | MAINTENANCE
 
 ---
 
 ## Faz Durumu
 
-| Faz | Durum | Başlangıç | Bitiş |
-|-----|-------|-----------|-------|
-| Planning | NOT_STARTED | | |
-| Development | NOT_STARTED | | |
-| E2E & Polish | NOT_STARTED | | |
-| Documentation | NOT_STARTED | | |
-| Release | NOT_STARTED | | |
+| Faz | Durum | Başlangıç | Bitiş | Protokol |
+|-----|-------|-----------|-------|----------|
+| Planning | NOT_STARTED | | | `phases/planning.md` |
+| Development | NOT_STARTED | | | `phases/development.md` |
+| E2E & Polish | NOT_STARTED | | | `phases/e2e-polish.md` |
+| Release & Maintenance | NOT_STARTED | | | `phases/release-maintenance.md` |
 
 ---
 
@@ -44,15 +43,27 @@
 - `NOT_STARTED` — Henüz başlanmadı
 - `IN_PROGRESS` — Aktif geliştirme
 - `IN_REVIEW` — Gate Agent'ta
-- `DONE` — Gate PASSED + commit yapıldı
+- `DONE` — Gate PASSED + commit yapıldı (hooks/routemap-sync.sh bu değişmezi denetler)
 - `BLOCKED` — Bağımlılık veya karar bekliyor
 
 ### Gate Durumları
 - `—` — Henüz Gate'e gönderilmedi
-- `PASSED` — 6-pass tamamlandı
+- `PASSED` — 6+1 pass tamamlandı (rapor: `docs/gate/<story>.md`)
 - `PASSED_WITH_WARNINGS` — Uyarılarla geçti
-- `FAILED` — Düzeltme gerekiyor
+- `FAILED` — Düzeltme gerekiyor (bulgular story dosyasının GATE-LOG bölümünde)
 - `FIX_1` / `FIX_2` — Düzeltme döngüsünde
+- `ESCALATED` — 2 döngüde çözülmedi; kullanıcı kararı bekliyor
+
+---
+
+## Orkestrasyon Durumu
+
+> Yalnız BÜYÜK işlerde dolar (`phases/development.md`). Session resume bu
+> tablodan hangi alt ajanın ne beklediğini okur; sohbet geçmişine bağımlı kalmaz.
+
+| Alt Ajan | Görev (zarf özeti) | Beklenen Çıktı | Durum |
+|----------|--------------------|----------------|-------|
+| | | | |
 
 ---
 

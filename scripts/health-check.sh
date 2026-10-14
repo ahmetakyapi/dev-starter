@@ -18,8 +18,14 @@
 #  11. Temel dosyalar
 #  12. Tasarim denetimi (degrade, palet disi renk)
 #  13. Tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion)
+#  14. Orkestrasyon butunlugu (sarmalayici <-> rol dosyasi, komut <-> tablo)
+#  15. Bilgi tabani butunlugu (mistakes numaralari, satir tavanlari)
 
 set -euo pipefail
+
+# Nereden cagrilirsa cagrilsin depo kokunde calis
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT"
 
 PASS=0
 WARN=0
@@ -33,7 +39,7 @@ header() { echo ""; echo "━━━ $1 ━━━"; }
 # ─── 1. Agent Files ──────────────────────────────────────────────────────────
 header "Agent Dosyalari"
 
-AGENTS=("AGENT_PROTOCOL" "business-analyst-agent" "uiux-agent" "frontend-agent" "backend-agent" "agentic-ui-agent" "gate-agent" "deploy-agent")
+AGENTS=("AGENT_PROTOCOL" "business-analyst-agent" "uiux-agent" "frontend-agent" "backend-agent" "agentic-ui-agent" "qa-agent" "gate-agent" "deploy-agent" "strategist-agent" "researcher-agent" "design-reviewer-agent" "content-editor-agent")
 for agent in "${AGENTS[@]}"; do
   if [ -f "agents/${agent}.md" ]; then
     pass "$agent.md mevcut"
@@ -45,7 +51,7 @@ done
 # ─── 2. Rule Files ───────────────────────────────────────────────────────────
 header "Kural Dosyalari"
 
-RULES=("immutable-architecture" "design-tokens" "commit-conventions" "bugfix-protocol" "dev-cycle" "routemap-discipline" "context-curation" "agentic-ui")
+RULES=("immutable-architecture" "design-tokens" "commit-conventions" "bugfix-protocol" "dev-cycle" "routemap-discipline" "context-curation" "agentic-ui" "self-improvement")
 for rule in "${RULES[@]}"; do
   if [ -f "rules/${rule}.md" ]; then
     pass "$rule.md mevcut"
@@ -57,7 +63,7 @@ done
 # ─── 3. Phase Files ──────────────────────────────────────────────────────────
 header "Faz Dosyalari"
 
-PHASES=("planning" "e2e-polish" "release-maintenance")
+PHASES=("planning" "development" "e2e-polish" "release-maintenance")
 for phase in "${PHASES[@]}"; do
   if [ -f "phases/${phase}.md" ]; then
     pass "$phase.md mevcut"
@@ -69,7 +75,14 @@ done
 # ─── 4. Hook Files ───────────────────────────────────────────────────────────
 header "Hook Dosyalari"
 
-HOOKS=("gate-guard" "quality-scan" "routemap-sync")
+HOOKS=("gate-guard" "quality-scan" "routemap-sync" "session-brief")
+for lib in "lib/hook-input" "lib/routemap"; do
+  if [ -f "hooks/${lib}.sh" ]; then
+    pass "hooks/$lib.sh mevcut"
+  else
+    fail "hooks/$lib.sh EKSIK — hook'lar ortak ayristiriciyi kaybetti"
+  fi
+done
 for hook in "${HOOKS[@]}"; do
   if [ -f "hooks/${hook}.sh" ]; then
     if [ -x "hooks/${hook}.sh" ]; then
@@ -105,6 +118,22 @@ elif grep -qs "gate-guard" ".claude/settings.local.json"; then
 else
   fail "Hook'lar Claude Code'a BAGLI DEGIL — hicbiri calismaz"
 fi
+if grep -qs "session-brief" ".claude/settings.json"; then
+  pass "session-brief SessionStart'a bagli"
+else
+  fail "session-brief .claude/settings.json'da kayitli degil"
+fi
+
+# Enforcement SABLONLARA tasiniyor mu? /new-project ciktisi hook'suz dogarsa
+# kurallarin tamami yalniz bu depoda yasar (5 ay fark edilmedi, #99 çevresi).
+for tpl_dir in "nextjs-fullstack" "landing"; do
+  TPL_SET="templates/${tpl_dir}/.claude/settings.json"
+  if [ -f "$TPL_SET" ] && grep -qs "dev-starter/hooks/gate-guard" "$TPL_SET" && grep -qs "session-brief" "$TPL_SET"; then
+    pass "templates/$tpl_dir hook'lari ekosistemden aliyor (settings.json)"
+  else
+    fail "templates/$tpl_dir/.claude/settings.json eksik ya da dev-starter hook'larina bagli degil"
+  fi
+done
 
 # ─── 5. Snippet Files ────────────────────────────────────────────────────────
 header "Snippet Dosyalari"
@@ -135,7 +164,7 @@ done
 # ─── 6. Template Files ───────────────────────────────────────────────────────
 header "Template Dosyalari"
 
-TEMPLATES=("docs/ROUTEMAP.template" "docs/PRODUCT.template" "docs/ARCHITECTURE.template" "docs/SCREENS.template")
+TEMPLATES=("docs/ROUTEMAP.template" "docs/PRODUCT.template" "docs/ARCHITECTURE.template" "docs/SCREENS.template" "docs/STORY.template" "docs/KICKOFF.template" "docs/DESIGN.template")
 for tpl in "${TEMPLATES[@]}"; do
   if [ -f "templates/${tpl}.md" ]; then
     pass "$tpl.md mevcut"
@@ -409,6 +438,89 @@ if [ -n "$FM_IMPORTS" ]; then
 else
   pass "Animasyon importlari motion/react'ten"
 fi
+
+# ─── 14. Orkestrasyon Butunlugu ──────────────────────────────────────────────
+header "Orkestrasyon Butunlugu"
+
+# Kayitli subagent sarmalayicilari: beklenen liste + her biri rol dosyasini
+# MUTLAK yolla okumali (kopya = iki kaynak, biri bayatlar)
+WRAPPERS=("strategist" "gate" "deploy" "design-reviewer" "content-editor" "frontend" "backend" "qa" "researcher")
+for w in "${WRAPPERS[@]}"; do
+  WF=".claude/agents/${w}.md"
+  if [ ! -f "$WF" ]; then
+    fail "$WF EKSIK (kayitli subagent sarmalayicisi)"
+  elif grep -qs '~/dev-starter/agents/' "$WF"; then
+    pass "$w sarmalayicisi rol dosyasina mutlak yolla bagli"
+  else
+    warn "$WF rol dosyasini ~/dev-starter/agents/ yolundan okumuyor"
+  fi
+done
+
+# Sarmalayici <-> AGENT_PROTOCOL senkronu: protokol kayitli subagent olarak
+# ne ilan ediyorsa dosyasi olmali, dosyasi olan ilan edilmis olmali
+for w in "${WRAPPERS[@]}"; do
+  if ! grep -qs "\`${w}\`" agents/AGENT_PROTOCOL.md; then
+    warn "AGENT_PROTOCOL.md kayitli subagent '${w}'i anmiyor — liste bayatlamis olabilir"
+  fi
+done
+for f in .claude/agents/*.md; do
+  base=$(basename "$f" .md)
+  case " ${WRAPPERS[*]} " in
+    *" $base "*) : ;;
+    *) warn "Listelenmemis sarmalayici: $base — health-check + AGENT_PROTOCOL guncellenmeli" ;;
+  esac
+done
+
+# Komutlar: beklenen liste CLAUDE.md tablosu + bootstrap symlink'leriyle ayni evren
+COMMANDS=("kickoff" "roadmap" "new-project" "plan" "story" "gate" "fix" "research" "status" "retro" "evolve" "theme" "snippet" "check" "review-ui" "deploy" "release" "agentic")
+for c in "${COMMANDS[@]}"; do
+  if [ -f ".claude/commands/${c}.md" ]; then
+    pass "/$c komutu mevcut"
+  else
+    fail "/.claude/commands/${c}.md EKSIK"
+  fi
+done
+for f in .claude/commands/*.md; do
+  base=$(basename "$f" .md)
+  case " ${COMMANDS[*]} " in
+    *" $base "*) : ;;
+    *) warn "Listelenmemis komut: /$base — health-check + CLAUDE.md tablosu guncellenmeli" ;;
+  esac
+done
+
+# ─── 15. Bilgi Tabani Butunlugu ──────────────────────────────────────────────
+header "Bilgi Tabani Butunlugu"
+
+# mistakes.md numaralari: tekrar yok (capraz referans agi tek anahtara dayanir)
+NUMS=$(grep -oE '^### [0-9]+\.' knowledge/mistakes.md | grep -oE '[0-9]+')
+DUP=$(echo "$NUMS" | sort -n | uniq -d)
+if [ -z "$DUP" ]; then
+  pass "mistakes.md kayit numaralari benzersiz ($(echo "$NUMS" | wc -l | tr -d ' ') kayit)"
+else
+  fail "mistakes.md'de TEKRARLANAN numara: $(echo "$DUP" | tr '\n' ' ')"
+fi
+# Indeks tablosu (dosyanin basindaki ilk tablo) en yeni kaydi anmali
+MAXNUM=$(echo "$NUMS" | sort -n | tail -1)
+if sed -n '/^## İndeks/,/^---/p' knowledge/mistakes.md | grep -q "$MAXNUM"; then
+  pass "mistakes.md indeksi en yeni kaydi (#$MAXNUM) kapsiyor"
+else
+  warn "mistakes.md indeksi #$MAXNUM'u kapsamiyor — indeks satirini guncelle"
+fi
+
+# Satir tavanlari (rules/self-improvement.md): sismis bilgi context butcesini yer
+check_cap() {
+  local file="$1" cap="$2" lines
+  [ -f "$file" ] || return 0
+  lines=$(wc -l < "$file")
+  if [ "$lines" -gt "$cap" ]; then
+    warn "$file $lines satir (tavan $cap) — katmanla: knowledge/archive/ + indeks satiri"
+  else
+    pass "$file $lines satir (tavan $cap)"
+  fi
+}
+check_cap knowledge/mistakes.md 2200
+check_cap knowledge/patterns.md 1600
+check_cap CLAUDE.md 520
 
 # ─── Summary ─────────────────────────────────────────────────────────────────
 echo ""

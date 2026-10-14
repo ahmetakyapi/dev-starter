@@ -7,6 +7,9 @@ Projenin saglik durumunu kontrol et (`$ARGUMENTS` verilmisse o dizinde). Her
 adim bir KOMUT calistirir; "bakildi, iyi gorunuyor" sonuc degildir.
 Kurallarin kaynagi: `~/dev-starter/guides/08-quality-and-ship.md`.
 
+> **Sinir**: /check teknik sagliktir, ROUTEMAP'in Gate kolonuna YAZILMAZ.
+> Commit kapisini acan denetim `/gate`tir; /check onun hazirlik turudur.
+
 ## 0. Tech Stack'i Tespit Et
 
 ```bash

@@ -15,6 +15,12 @@ Halkalar:
   dersini `mistakes.md` / `patterns.md`'ye yazar.
 - **Bekle:** bilinçli olarak seçmiyoruz; gerekçesi satırda.
 
+**Sahip:** `strategist` (okur VE günceller — kullanıcı onayıyla,
+`rules/self-improvement.md`). İki tetikleyici: "Dene" halkasındaki teknoloji
+canlıya çıkınca → Benimse'ye terfi + ders kaydı; kickoff'ta radar dışı seçim
+yapılınca → yeni satır ya da Bekle gerekçesi. Tazelik denetimi `/evolve`da
+(60+ gün uyarısı).
+
 Son gözden geçirme: 2026-10-03
 
 ---

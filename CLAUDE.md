@@ -2,7 +2,7 @@
 
 Bu, Ahmet'in kişisel geliştirme ekosistemi. Yeni proje başlatmak, tema uygulamak veya deploy etmek için buradan başla.
 
-**Versiyon**: 3.0.0 — Next 16 · React 19.2 · Tailwind v4 · `motion/react` · Drizzle + Neon · next-auth v5
+**Versiyon**: 3.0.0 (+ yayınlanmamış: orkestrasyon) — Next 16 · React 19.2 · Tailwind v4 · `motion/react` · Drizzle + Neon · next-auth v5 · gerçek alt ajan orkestrasyonu (9 kayıtlı subagent, Görev Zarfı, dalga planı)
 
 Projeye başlarken sırayla izlenecek rehber: `guides/` (00 kimlik → 01 ilk gün → 08 yayına çıkış).
 Global kuralların tek kaynağı: `machine/CLAUDE.md` (`~/.claude/CLAUDE.md` ona symlink).
@@ -46,27 +46,31 @@ dev-starter/
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
 │
-├── agents/                    → 10 rol tanımı + AGENT_PROTOCOL.md
-│   ├── AGENT_PROTOCOL.md      → Haberleşme, akış, context curation, hook'lar
+├── agents/                    → 12 rol tanımı + AGENT_PROTOCOL.md
+│   ├── AGENT_PROTOCOL.md      → Haberleşme, orkestrasyon (Görev Zarfı), context curation, hook'lar
 │   ├── strategist-agent.md    → Fikirden plana, yol haritası, teknoloji kararı
-│   ├── business-analyst-agent.md → Planlama, onay, yönlendirme, ROUTEMAP
+│   ├── business-analyst-agent.md → Planlama, onay, orkestrasyon, ROUTEMAP
 │   ├── uiux-agent.md          → Tasarım ve hareket kararları
 │   ├── design-reviewer-agent.md → Kurulmuş arayüzü ekrandan ölçer, puanlar
 │   ├── frontend-agent.md      → Next.js ve React uygulaması
 │   ├── backend-agent.md       → DB, API, auth
 │   ├── agentic-ui-agent.md    → Agentic UI: tool, kontrol, state, DSL
+│   ├── qa-agent.md            → Test stratejisi, test-first, regression
+│   ├── researcher-agent.md    → Benzer çözümler, kütüphane seçimi (kaynaklı)
 │   ├── content-editor-agent.md → Türkçe metin editörlüğü
-│   ├── gate-agent.md          → 6+1 geçişli kalite kontrolü
+│   ├── gate-agent.md          → 6+1 geçişli kalite denetimi (rapor: docs/gate/)
 │   └── deploy-agent.md        → Vercel deployment ve yayın
 │
-├── rules/                     → 8 kural dosyası (aşağıdaki tablo)
-├── phases/                    → planning (P1→P6), e2e-polish (E0→E5), release-maintenance
+├── rules/                     → 9 kural dosyası (aşağıdaki tablo)
+├── phases/                    → planning (P1→P6), development (dalga planı), e2e-polish (E0→E5), release-maintenance
 │
 ├── hooks/
-│   ├── gate-guard.sh          → Commit öncesi Gate PASSED kontrolü
-│   ├── quality-scan.sh        → Sır, .env, debug kodu, @ts-ignore, kilit, agentic cast
-│   ├── routemap-sync.sh       → ROUTEMAP hatırlatıcısı
-│   └── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
+│   ├── gate-guard.sh          → Commit öncesi Gate PASSED kontrolü (kolon başlıktan, #99)
+│   ├── quality-scan.sh        → Sır (AWS/PEM/JWT dahil), .env, debug, @ts-ignore, kilit, agentic cast, TDD/format uyarıları
+│   ├── routemap-sync.sh       → ROUTEMAP tazelik + DONE⇒PASSED değişmezi
+│   ├── session-brief.sh       → SessionStart: ROUTEMAP özeti + sıradaki iş önerisi
+│   ├── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
+│   └── lib/routemap.sh        → ROUTEMAP tablo ayrıştırıcı — kolon ada göre (#99)
 │
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (13 kategori, 83 kontrol)
@@ -128,10 +132,14 @@ Fikir → pazar taraması, yön seçenekleri, palet ve teknoloji kararları, MVP
 | P5 | Story Writing | stories/ |
 | P6 | Dev Readiness Check | checklist |
 
-### Development (`rules/dev-cycle.md`)
+### Development (`phases/development.md`)
+
+Fazın playbook'u: iş boyu (KÜÇÜK/ORTA/BÜYÜK), story seçimi, alt ajanlara
+dalga planıyla dağıtım (Görev Zarfı), Gate döngüsü ve eskalasyon. Tek
+story'nin iç akışı `rules/dev-cycle.md`:
 
 ```text
-Plan → Validate → Develop → Self-Check → Gate → Commit → Review
+Plan → Validate → Develop → Self-Check → Gate → Commit → Review → Compound
 ```
 
 ### E2E & Polish (`phases/e2e-polish.md`)
@@ -164,14 +172,17 @@ Kurallar kağıt üstünde kalmaz — bash hook'ları ile fiziksel olarak uygula
 
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
-| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Gate PASSED yoksa commit'i bloklar |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Sır, `.env`, debug kodu, `@ts-ignore`, kilit dosyası, agentic cast taraması |
-| `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP güncelleme hatırlatıcısı |
+| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse bloklar (kolon başlıktan bulunur, docs-only muaf — #99) |
+| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Sır (AWS/PEM/JWT/URL dahil), `.env` (iç içe dahil), debug kodu, `@ts-ignore`, kilit, agentic cast; TDD'siz fix, format dışı mesaj, test zayıflatma uyarıları |
+| `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE ⇒ Gate PASSED değişmezi |
+| `hooks/session-brief.sh` | SessionStart | ROUTEMAP özeti + sıradaki iş önerisi bağlama basılır |
 
 Entegrasyon: **`.claude/settings.json`** içindeki `hooks` bloğu (paylaşılan,
 versiyonlanır). `.claude/settings.local.json` yalnızca makineye özgü izinler
 içindir ve gitignore'dadır. impeccable eklentisi ve `.impeccable/` 3.0.0'da
-kaldırıldı.
+kaldırıldı. **Şablonlar da aynı hook'ları taşır**: `templates/*/.claude/settings.json`
+hook'ları `~/dev-starter/hooks/`tan mutlak yolla çağırır — yeni proje ilk
+gününden denetimli doğar, kopya yok (tek kaynak).
 
 ---
 
@@ -233,7 +244,15 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 |-------|----------|-------|
 | `/kickoff [fikir]` | Fikirden plana: pazar, yön, palet, teknoloji, MVP (strategist) | `.claude/commands/kickoff.md` |
 | `/roadmap` | Var olan projeye sıradaki işler (strategist) | `.claude/commands/roadmap.md` |
-| `/new-project [ad]` | Şablon + yer tutucular + palet/tema + belgeler + doğrulama | `.claude/commands/new-project.md` |
+| `/new-project [ad]` | Şablon + yer tutucular + palet/tema + belgeler + hook doğrulama | `.claude/commands/new-project.md` |
+| `/plan [adım]` | Planning fazını yürüt (P1→P6): belgeler + story'ler | `.claude/commands/plan.md` |
+| `/story [id]` | Story'yi uçtan uca işle: dağıt → Gate → commit → ROUTEMAP | `.claude/commands/story.md` |
+| `/gate [story]` | 6+1 pass denetim; sonuç ROUTEMAP Gate kolonuna — commit kapısı | `.claude/commands/gate.md` |
+| `/fix [tarif]` | Bugfix protokolü: triage → failing test → fix → kayıt | `.claude/commands/fix.md` |
+| `/research [konu]` | Benzer çözümler taraması (researcher) → docs/research/ | `.claude/commands/research.md` |
+| `/status` | Kaldığın yer + sıradaki en değerli 3 iş | `.claude/commands/status.md` |
+| `/retro [kapsam]` | Dersleri onayla bilgi tabanına işle | `.claude/commands/retro.md` |
+| `/evolve [odak]` | Ekosistemin kendi gelişim turu: sağlık + tazelik + dış tarama | `.claude/commands/evolve.md` |
 | `/theme [palet\|proje]` | Palet ya da referans tema uygula (Tailwind v4) | `.claude/commands/theme.md` |
 | `/snippet [tip]` | Hazır parçayı projeye uyarla | `.claude/commands/snippet.md` |
 | `/check` | Sağlık: build, tip, lint, test, tech stack uyumu, token, güvenlik | `.claude/commands/check.md` |
@@ -250,9 +269,12 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 
 ### Kayıtlı Subagent'lar
 
-`agents/*.md` dosyalarının çoğu ana oturumun **üstlendiği rol tanımlarıdır**.
-Beşi izolasyondan gerçekten fayda gördüğü için kayıtlı alt ajandır ve
-bootstrap ile `~/.claude/agents/`a symlink'lenir (her projede kullanılabilir):
+Karar rolleri (BA, UI, AG) ana oturumun **üstlendiği rol tanımlarıdır** —
+bağlamın tamamını görmeleri gerekir. Uygulayıcı ve denetleyici dokuz rol,
+izolasyondan gerçekten fayda gördüğü için kayıtlı alt ajandır ve bootstrap
+ile `~/.claude/agents/`a symlink'lenir (her projede kullanılabilir). Dağıtım
+kuralları: `agents/AGENT_PROTOCOL.md → Orkestrasyon` (Görev Zarfı, efor
+ölçekleme, referansla aktarım):
 
 | Subagent | Sarmalayıcı | Rol tanımı |
 |----------|-------------|------------|
@@ -261,6 +283,10 @@ bootstrap ile `~/.claude/agents/`a symlink'lenir (her projede kullanılabilir):
 | `deploy` | `.claude/agents/deploy.md` | `agents/deploy-agent.md` |
 | `design-reviewer` | `.claude/agents/design-reviewer.md` | `agents/design-reviewer-agent.md` |
 | `content-editor` | `.claude/agents/content-editor.md` | `agents/content-editor-agent.md` |
+| `frontend` | `.claude/agents/frontend.md` | `agents/frontend-agent.md` |
+| `backend` | `.claude/agents/backend.md` | `agents/backend-agent.md` |
+| `qa` | `.claude/agents/qa.md` | `agents/qa-agent.md` |
+| `researcher` | `.claude/agents/researcher.md` | `agents/researcher-agent.md` |
 
 Sarmalayıcılar bilerek incedir; rol tanımını kopyalamazlar ve onu
 `~/dev-starter/agents/...` mutlak yoluyla okurlar. İki kaynak olursa biri
@@ -278,8 +304,13 @@ Her agent sadece ihtiyacı olan bilgiyi alır (`rules/context-curation.md`):
 | UI | FOCUSED | Tema + ekranlar |
 | FE | TASK-SPECIFIC | Story + ilgili dosyalar |
 | BE | TASK-SPECIFIC | Story + schema + API |
+| QA | TASK-SPECIFIC | Story + tests/ + bugfix-protocol |
+| RS | TASK-SPECIFIC | Soru + tech-radar + decisions |
 | GATE | REVIEW | Story + diff + rules |
 | DP | MINIMAL | Config + env |
+
+Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet döner
+(`rules/context-curation.md → Referansla Aktar`).
 
 ---
 
@@ -295,6 +326,17 @@ Her agent sadece ihtiyacı olan bilgiyi alır (`rules/context-curation.md`):
 
 ```text
 /kickoff "ergoterapistler için seans takip uygulaması"
+```
+
+### Günlük Döngü
+
+```text
+/status                → kaldığın yer + sıradaki 3 iş
+/story STORY-004       → story'yi uçtan uca işle (dağıt → gate → commit)
+/gate                  → commit kapısını aç
+/fix "panel boş geliyor"  → TDD bugfix
+/research "takvim senkronu" → benzer çözümler + öneri
+/retro                 → dersleri bilgi tabanına işle
 ```
 
 ### Palet ya da Tema Uygula
@@ -402,8 +444,9 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 | `bugfix-protocol.md` | TDD: failing test → fix → green → regression → document |
 | `dev-cycle.md` | Plan → Dev → Gate → Commit → Review pipeline |
 | `routemap-discipline.md` | ROUTEMAP tek kaynak, session resume, durum geçişleri |
-| `context-curation.md` | Agent bazlı filtered context, token bütçesi |
+| `context-curation.md` | Agent bazlı filtered context, token bütçesi, referansla aktarım |
 | `agentic-ui.md` | LLM tool çağırıyorsa: guardrail sunucuda, model yetkilendirmez, sandbox, token bütçesi, tool testi |
+| `self-improvement.md` | Öğrenme kanalları, onay ilkesi (ajan taslak önerir, onaysız yazamaz), terfi merdiveni, boy tavanları |
 
 ---
 
@@ -411,7 +454,8 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 
 - **Yeni hata keşfedilince**: `knowledge/mistakes.md` + o hatayı bir daha yaşatmayacak adım ilgili `guides/` dosyasına
 - **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur — şablon:
-  `templates/docs/DESIGN.template.md` (YAML frontmatter token şeması + 9 bölümlük görsel hafıza)
+  `templates/docs/DESIGN.template.md` (YAML frontmatter token şeması + 9 bölümlük görsel hafıza);
+  retro ritüeli `/retro` (Knowledge Capture, `phases/release-maintenance.md § 4.5`)
 - **Yeni desen bulununca**: `knowledge/patterns.md`
 - **Karar değişince**: `knowledge/decisions.md` — eskisini silme, "Değişti (tarih)" alt başlığı
 - **Paket versiyonu güncellenince**: `packages/@ahmet/*/package.json` + `CHANGELOG.md`

@@ -318,7 +318,39 @@ POC için hazır; karar hâlâ açık.
 
 ---
 
+## Orkestrasyon Modeli — Kayıtlı Subagent + Ana Oturum Orkestratörü (2026-10-14)
+
+**Tercih edildi:** Ana oturum (BA rolü) orkestratör; uygulayıcılar
+(`frontend`, `backend`, `qa`, `researcher` + mevcut 5) kayıtlı subagent.
+Dağıtım **Görev Zarfı** ile, dönüş **referansla** (dosya + üç satır özet),
+durum ROUTEMAP'te (dosya tabanlı paylaşılan bellek).
+**Alternatifler:** her rolü subagent yapmak; hiçbirini yapmayıp tek oturum;
+harici orkestrasyon çatısı (claude-flow tarzı SQLite hive-mind).
+
+**Gerekçe:**
+- Anthropic'in orchestrator-worker deseni: lider bağlamı tutar, işçiler kendi
+  penceresinde çalışır, yoğunlaştırılmış sonuç döndürür
+- BA/UI/AG ana oturumda kalır: karar rolleri bağlamın TAMAMINI görmeli;
+  uygulayıcılar görmemeli (context curation zaten bunu istiyordu)
+- Dosya tabanlı durum (ROUTEMAP + docs/gate + docs/research) session resume
+  ve compaction'a dayanıklı; SQLite'lı dış çatıya gerek bırakmıyor
+- Gate'in Write yetkisizliği KORUNDU ve gerekçeye bağlandı: denetleyen,
+  denetlediği kaydı değiştirmez; PASSED'i ROUTEMAP'e ana oturum işler
+
+**Ne zaman değişir:** Paralel dalgalar pratikte 3-4 subagent sınırını
+zorlarsa ya da zarf/dönüş disiplini elle taşınamaz hale gelirse — o zaman
+durum deposu yapılandırılmış dosyaya (JSON) taşınır.
+
+**Bilinçli ertelenenler (2026-10-14):** şablonlara Playwright E2E iskeleti,
+auth dikey dilimi (giriş sayfası + korunan rota), `scripts/seed.ts`, e-posta
+katmanı (Resend), Upstash rate-limit adaptörü, Lighthouse CI. Hepsi şablon
+KODU değiştirir ve `verify:*` zinciriyle (npm install + build + test)
+doğrulanmadan girmez — "kanıtsız değişiklik yok" kuralı şablonlar için de
+geçerli. Sırası gelince `/evolve` listesinden tek tek, doğrulanarak.
+
+---
+
 *Yeni bir teknoloji benimsendiğinde bu dosya güncellenir. Eski karar silinmez;
 altına "Değişti (tarih)" başlığıyla yenisi ve gerekçesi yazılır.*
 
-*Son güncelleme: 2026-10-03*
+*Son güncelleme: 2026-10-14*
