@@ -29,3 +29,6 @@ npm-debug.log*
 
 # Drizzle migration'ları COMMIT'LENİR: bir kez uygulanmış migration
 # değiştirilmez, geçmiş sürümlenir. `drizzle/` burada bilerek yok.
+
+# Claude Code: paylasilan ayarlar commit'lenir, makineye ozgu olan edilmez
+.claude/settings.local.json

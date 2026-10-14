@@ -333,6 +333,57 @@ CODE=$?
 [ $CODE -eq 0 ] && ok "PostToolUse payload → hata vermeden çalışır" || no "routemap-sync çalışmalı" 0 "$CODE"
 
 echo
+# ─────────────────────────────────────────────────────────────
+# session-brief.sh — SessionStart: ROUTEMAP özeti bağlama girer
+# ─────────────────────────────────────────────────────────────
+echo "session-brief.sh"
+
+# (n) ROUTEMAP + aktif story → özet basmalı (exit 0)
+mkdir -p "$SANDBOX/brief/docs" && cd "$SANDBOX/brief" || exit 1
+cat > docs/ROUTEMAP.md <<'EOF'
+**Proje**: test-projesi
+**Durum**: DEVELOPMENT
+
+| ID | Başlık | Faz | Öncelik | Durum | Gate |
+|----|--------|-----|---------|-------|------|
+| STORY-001 | Giriş ekranı | 1 | HIGH | IN_PROGRESS | — |
+EOF
+OUT=$(printf '{"hook_event_name":"SessionStart","source":"startup"}' | bash "$HOOKS/session-brief.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'STORY-001'; then
+  ok "ROUTEMAP + aktif story → özet basar (exit 0)"
+else
+  no "aktif story özette olmalı" "exit 0 + STORY-001" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (o) Aktif story yoksa → sıradaki işi önermeli
+cat > docs/ROUTEMAP.md <<'EOF'
+**Proje**: test-projesi
+**Durum**: PLANNING
+
+| ID | Başlık | Faz | Öncelik | Durum | Gate |
+|----|--------|-----|---------|-------|------|
+| STORY-001 | Giriş ekranı | 1 | HIGH | NOT_STARTED | — |
+EOF
+OUT=$(printf '{"hook_event_name":"SessionStart","source":"resume"}' | bash "$HOOKS/session-brief.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'Aktif iş yok'; then
+  ok "aktif story yok → sıradaki işi önerir"
+else
+  no "sıradaki iş önerisi olmalı" "exit 0 + 'Aktif iş yok'" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (p) ROUTEMAP yoksa → sessiz no-op (exit 0, çıktı yok)
+mkdir -p "$SANDBOX/brief-bos" && cd "$SANDBOX/brief-bos" || exit 1
+OUT=$(printf '{"hook_event_name":"SessionStart","source":"startup"}' | bash "$HOOKS/session-brief.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && [ -z "$OUT" ]; then
+  ok "ROUTEMAP yok → sessiz geçer (exit 0, çıktı yok)"
+else
+  no "ROUTEMAP'siz dizinde susmalı" "exit 0, çıktı boş" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+echo
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ $FAIL -gt 0 ]; then
   echo "  SONUC: $PASS geçti, $FAIL BAŞARISIZ"

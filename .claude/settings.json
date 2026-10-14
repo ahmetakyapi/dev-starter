@@ -26,6 +26,16 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/session-brief.sh"
+          }
+        ]
+      }
     ]
   }
 }
