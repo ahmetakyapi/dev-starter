@@ -11,11 +11,22 @@ ROUTEMAP=$(routemap_find) || exit 0
 
 # 1. İçerik değişmezi: DONE story'nin Gate'i PASSED olmalı
 # (rules/routemap-discipline.md: "Gate PASSED olmadan story DONE yapılamaz")
+#
+# PostToolUse'ta exit 0 + stdout YALNIZ transcript'te görünür — model görmez.
+# Değişmez ihlali modele ulaşmalı: jq varsa {"decision":"block","reason":...}
+# JSON'u basılır (Claude gerekçeyi görür ve düzeltir); jq yoksa düz metin
+# (en azından transcript'te iz kalır).
 BROKEN=$(routemap_done_without_gate "$ROUTEMAP")
 if [ -n "$BROKEN" ]; then
-  echo "⚠️  ROUTEMAP tutarsız: DONE ama Gate PASSED değil:"
-  echo "$BROKEN" | awk -F'\t' '{ printf "   - %s  gate=%s\n", $1, ($3 == "" ? "—" : $3) }'
-  echo "   Ya Gate'i çalıştır (/gate) ya durumu IN_REVIEW'a çek."
+  REASON="ROUTEMAP tutarsız ($ROUTEMAP): DONE ama Gate PASSED değil:
+$(echo "$BROKEN" | awk -F'\t' '{ printf "- %s  gate=%s\n", $1, ($3 == "" ? "—" : $3) }')
+Ya Gate'i çalıştır (/gate) ya durumu IN_REVIEW'a çek."
+  if command -v jq >/dev/null 2>&1; then
+    jq -n --arg reason "$REASON" '{"decision": "block", "reason": $reason}'
+  else
+    echo "⚠️  $REASON"
+  fi
+  exit 0
 fi
 
 # 2. Tazelik: 30 dakikadan uzun süredir güncellenmemişse hatırlat

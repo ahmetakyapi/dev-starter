@@ -6,6 +6,12 @@
 
 set -euo pipefail
 
+# Tüm çıktı stderr'e: PreToolUse hook'u exit 2 verdiğinde Claude yalnız
+# STDERR'i görür — gerekçe stdout'ta kalırsa blok sebepsiz görünür
+# ("No stderr output"). Exit 0'daki uyarılar için davranış değişmez
+# (stdout da zaten yalnız transcript'te görünüyordu).
+exec 1>&2
+
 # shellcheck source=lib/hook-input.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/hook-input.sh"
 

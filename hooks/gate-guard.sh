@@ -35,15 +35,19 @@ if [ -n "$STAGED" ] && ! echo "$STAGED" | grep -qvE '\.(md|txt)$'; then
   exit 0
 fi
 
-# Her aktif story Gate'den geçmiş olmalı
+# Her aktif story Gate'den geçmiş olmalı.
+# Gerekçe STDERR'e: exit 2'de Claude yalnız stderr'i görür; stdout'ta kalan
+# blok sebebi "No stderr output" diye kaybolur.
 FAILED_ROWS=$(echo "$ACTIVE" | awk -F'\t' '$3 != "PASSED" && $3 != "PASSED_WITH_WARNINGS"')
 if [ -n "$FAILED_ROWS" ]; then
-  echo "❌ GATE GUARD: Commit bloklandı!"
-  echo "   Gate'den geçmemiş aktif story var ($ROUTEMAP):"
-  echo "$FAILED_ROWS" | awk -F'\t' '{ printf "   - %s  durum=%s  gate=%s\n", $1, $2, ($3 == "" ? "—" : $3) }'
-  echo ""
-  echo "   Yol: /gate çalıştır → sonuç ROUTEMAP'teki Gate kolonuna işlenir →"
-  echo "   PASSED ise commit açılır. Yalnız doküman değişen commit'ler muaf."
+  {
+    echo "❌ GATE GUARD: Commit bloklandı!"
+    echo "   Gate'den geçmemiş aktif story var ($ROUTEMAP):"
+    echo "$FAILED_ROWS" | awk -F'\t' '{ printf "   - %s  durum=%s  gate=%s\n", $1, $2, ($3 == "" ? "—" : $3) }'
+    echo ""
+    echo "   Yol: /gate çalıştır → sonuç ROUTEMAP'teki Gate kolonuna işlenir →"
+    echo "   PASSED ise commit açılır. Yalnız doküman değişen commit'ler muaf."
+  } >&2
   exit 2
 fi
 
