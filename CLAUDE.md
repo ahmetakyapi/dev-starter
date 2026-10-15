@@ -75,7 +75,7 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
-│   ├── test-hooks.sh          → Hook davranış testleri (39, fixture'lar resmi şablon düzeninde)
+│   ├── test-hooks.sh          → Hook davranış testleri (52, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)

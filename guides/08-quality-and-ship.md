@@ -20,6 +20,13 @@ npm run build
 Dördü de temiz olmadan commit yok. Görsel bir değişiklikse ayrıca tarayıcıda
 **ölçülmüş** olmalı: "sığıyor gibi duruyor" bir doğrulama değil.
 
+**Dört komut Gate'in ön koşuludur, yerine geçmez.** Aktif story'si olan
+projede commit kapısını `/gate` açar: 6+1 pass çalışır, sonuç ROUTEMAP'in
+Gate kolonuna işlenir ve `hooks/gate-guard.sh` PASSED olmayan aktif story
+varken commit'i fiziksel olarak bloklar (şablonlar bu hook'la doğar —
+`templates/*/.claude/settings.json`). Yalnız doküman değiştiren commit'ler
+muaftır; akış `phases/development.md`.
+
 Testler için ek çatı yok: Node'un kendi test koşucusu + `tsx`.
 
 ```ts

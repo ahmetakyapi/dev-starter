@@ -42,22 +42,63 @@ except Exception:
   fi
 }
 
+# Komut metnini commit algılama için normalize eder:
+# 1) HEREDOC GÖVDELERİ ATILIR — `cat > doc.md <<'EOF'` gövdesinde ya da
+#    gh pr --body içinde satır başında geçen "git commit" masum metindir;
+#    atılmazsa her satır başı komut çapasına dönüşüp yanlış blok üretiyordu.
+# 2) Satır devamı (sonu ters bölü) bir sonraki satırla BİRLEŞİR
+#    ("git \<newline>commit" kaçışı kapanır).
+# 3) Düz yeni satır kabuğun gördüğü gibi komut AYRACI (;) olur —
+#    "git add .<newline>git commit" yakalanmaya devam eder.
+# 4) TIRNAKLI BÖLGELER SİLİNİR — `grep "git commit"` gibi metin anmaları
+#    kaybolur, `VAR="Ahmet Akyapı" git commit` gibi tırnaklı/boşluklu env
+#    atamaları da sadeleşip önek olarak tanınır.
+hook_normalize_command() {
+  printf '%s' "$1" \
+    | awk -v SQ="'" '
+        BEGIN { tagre = "<<-?[ \t]*[\"" SQ "]?[A-Za-z_][A-Za-z_0-9]*" }
+        intag != "" { if ($0 == intag) intag = ""; next }
+        {
+          if (match($0, tagre)) {
+            t = substr($0, RSTART, RLENGTH)
+            sub(/<<-?[ \t]*/, "", t); gsub("[\"" SQ "]", "", t)
+            intag = t
+          }
+          if (sub(/\\$/, "")) printf "%s ", $0; else print
+        }
+      ' \
+    | tr '\n' ';' \
+    | sed -E "s/'[^']*'//g; s/\"[^\"]*\"//g"
+}
+
 # Verilen metin bir git commit çağrısı mı?
-# - Çok satırlı komut normalize edilir: satır devamı (sonu ters bölü) bir
-#   sonraki satırla BİRLEŞİR ("git \<newline>commit" kaçışı kapanır), düz
-#   yeni satır ise kabuğun gördüğü gibi komut AYRACI (;) olur — "git add
-#   .<newline>git commit" yakalanmaya devam eder.
 # - "git" komut BAŞINDA aranır (satır başı, ; & | ( ` ayracı, env ataması
-#   ya da `command` öneki sonrası): `grep -rn "git commit" docs/` gibi
-#   metin olarak anan komutlar artık commit sanılmaz.
+#   ya da `command` öneki sonrası).
 # - "commit" tam sözcük okunur: "git show --stat commit-abc" ya da
 #   "git commit-graph" commit sayılmaz (yanlış blok üretiyordu).
 # Desen tabanlı algılama tamamen kapatılamaz (alias, $g commit, script'e
 # yazıp çalıştırma kalır); bu bilinen ve kabul edilmiş bir sınırdır.
 hook_text_is_git_commit() {
-  printf '%s' "$1" \
-    | awk '{ if (sub(/\\$/, "")) printf "%s ", $0; else print }' | tr '\n' ';' \
+  hook_normalize_command "$1" \
     | grep -qE '(^|[;&|(`]|&&|\|\|)[[:space:]]*([A-Za-z_][A-Za-z_0-9]*=[^[:space:]]*[[:space:]]+)*(command[[:space:]]+)?git[[:space:]]+([^|;&]*[[:space:]])?commit([^a-zA-Z-]|$)'
+}
+
+# Commit, hook anındaki index'in DIŞINA taşacak mı? Üç işaret:
+# (1) -a/-i türevi ya da --all/--include bayrağı (dosyaları commit anında
+#     stage'ler), (2) aynı komut zincirinde `git add` (hook add'den önce
+#     koşar, index'i commit'ten önce dolduramaz), (3) commit'e pozisyonel
+#     pathspec verilmesi (`git commit dosya.ts -m ...`). Pathspec tespiti
+#     yaklaşıktır (tırnaklar silinmiş metinde commit'ten sonra bayrak
+#     olmayan sözcük) ve şüphede GENİŞ tarar — yanlış pozitifin maliyeti
+#     fazladan tarama, yanlış negatifin maliyeti kaçan sırdır.
+hook_commit_touches_worktree() {
+  local norm
+  norm=$(hook_normalize_command "$1")
+  printf '%s' "$norm" | grep -qE '(^|[[:space:]])(-[a-zA-Z]*[ai][a-zA-Z]*|--all|--include)([[:space:]=]|$)' && return 0
+  printf '%s' "$norm" | grep -qE '(^|[;&|(`]|&&|\|\|)[[:space:]]*git[[:space:]]+add([^a-zA-Z-]|$)' && return 0
+  printf '%s' "$norm" \
+    | grep -oE 'git[[:space:]]+([^|;&]*[[:space:]])?commit[^;|&]*' \
+    | sed -E 's/^.*commit//' | tr ' ' '\n' | grep -vE '^$|^-' | grep -q .
 }
 
 # Bu payload bir git commit çağrısı mı? (stdin'i BİR kez okur; komut metni

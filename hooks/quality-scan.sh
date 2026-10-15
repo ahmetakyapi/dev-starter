@@ -31,8 +31,12 @@ ERRORS=0
 # boş liste denetimden kaçışa dönüşür. Komutta -a/--all/--include görülürse
 # çalışma ağacındaki izlenen değişiklikler de listeye katılır.
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
-if printf '%s' "$CMD_TEXT" | grep -qE '(^|[[:space:]])(-[a-zA-Z]*a[a-zA-Z]*|--all|--include)([[:space:]=]|$)'; then
-  WORKTREE=$(git diff HEAD --name-only --diff-filter=ACMR 2>/dev/null || true)
+# Üç işaretten biri varsa (bayrak, zincirde `git add`, pathspec — lib) ya da
+# index boşsa, çalışma ağacındaki değişmiş + İZLENMEYEN dosyalar da taranır:
+# `git add x && git commit` zinciri ve `git commit dosya.ts` hook'tan SONRA
+# stage'ler; untracked .env/sır yalnız `git diff HEAD`le görünmüyordu.
+if hook_commit_touches_worktree "$CMD_TEXT" || [ -z "$STAGED" ]; then
+  WORKTREE=$(git ls-files -mo --exclude-standard 2>/dev/null || true)
   STAGED=$(printf '%s\n%s\n' "$STAGED" "$WORKTREE" | grep -v '^$' | sort -u || true)
 fi
 if [ -z "$STAGED" ]; then

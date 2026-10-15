@@ -461,6 +461,31 @@ payload "git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
 CODE=$?
 [ $CODE -eq 2 ] && ok "CRLF'li ROUTEMAP → tablo tanınır, bloklanır" || no "CRLF kontrolü kapatmamalı" 2 "$CODE"
 
+# (u10) Pathspec'li commit, yalnız .md staged → muafiyet YOK, bloklamalı
+# ("1 .md stage'le, kodu `git commit code.ts` ile geçir" açığı)
+cd "$SANDBOX/gatedoc" || exit 1
+git add README.md 2>/dev/null
+payload "git commit -m 'docs: x' code.ts" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "pathspec'li commit → muafiyet yok, bloklanır" || no "pathspec muafiyeti delmemeli" 2 "$CODE"
+
+# (u11) Zincirde `git add` + yalnız .md staged → muafiyet YOK, bloklamalı
+payload "git add -A && git commit -m 'docs: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "add && commit zinciri → muafiyet yok, bloklanır" || no "add zinciri muafiyeti delmemeli" 2 "$CODE"
+git rm -q --cached README.md 2>/dev/null || true
+
+# (u12) Heredoc GÖVDESİNDE 'git commit' geçen doküman yazımı → dokunmamalı
+# (yanlış alarm commit'i değil, Bash çağrısının kendisini blokluyordu)
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"cat > docs/kurulum.md <<'"'"'EOF'"'"'\nAdım: git commit -m mesaj\nEOF"}}' | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "heredoc gövdesindeki 'git commit' → commit sanılmaz" || no "heredoc yanlış bloklanmamalı" 0 "$CODE"
+
+# (u13) Tırnaklı/boşluklu env ataması önekli commit → yakalanmalı
+payload "GIT_AUTHOR_NAME=\"Ahmet Akyapı\" git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "tırnaklı env önekli commit → yakalanır, bloklanır" || no "env önekli commit yakalanmalı" 2 "$CODE"
+
 # (u9) Gate kolonu eklenmiş FAZ tablosu (ID yok) → story sanılmamalı
 cat > docs/ROUTEMAP.md <<'EOF'
 | Faz | Durum | Gate | Bitiş |
@@ -579,6 +604,25 @@ printf 'const key = "AKIAIOSFODNN7EXAMPLE"\n' > izli.ts
 payload "git commit -am 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
 CODE=$?
 [ $CODE -eq 2 ] && ok "commit -a + stage'lenmemiş secret → bloklanır" || no "-a ile secret kaçmamalı" 2 "$CODE"
+git checkout -q -- izli.ts
+
+# (v5) İZLENMEYEN .env + `git add -A && git commit` zinciri → bloklamalı
+# (hook add'den önce koşar; untracked dosya diff HEAD'de de görünmüyordu)
+printf 'DATABASE_URL=postgres://u:gercekparola@db/x\n' > .env
+OUT=$(payload "git add -A && git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 2 ] && printf '%s' "$OUT" | grep -q '\.env'; then
+  ok "untracked .env + add&&commit zinciri → bloklanır"
+else
+  no "add zincirindeki .env kaçmamalı" "exit 2 + .env" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+rm -f .env
+
+# (v6) İzlenen ama STAGE'LENMEMİŞ sır + pathspec'li commit → bloklamalı
+printf 'const key = "AKIAIOSFODNN7EXAMPLE"\n' > izli.ts
+payload "git commit -m 'feat: x' izli.ts" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "pathspec'li commit'teki sır → bloklanır" || no "pathspec'li sır kaçmamalı" 2 "$CODE"
 git checkout -q -- izli.ts
 
 # (z2) Düzensiz commit mesajı → uyarmalı

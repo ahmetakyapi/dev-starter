@@ -34,13 +34,13 @@ ACTIVE=$(routemap_active_stories "$ROUTEMAP" 2>/dev/null) || {
 [ -z "$ACTIVE" ] && exit 0
 
 # Yalnız doküman değişen commit Gate istemez (dev-cycle.md: docs → Pass 1-2).
-# İki durumda muafiyet UYGULANMAZ: staged liste boşsa ve komutta -a/--all/
-# --include ya da pathspec görünüyorsa — bunlar dosyaları commit ANINDA
-# stage'ler, hook'un gördüğü index o an eksiktir (1 .md stage'leyip
-# `commit -a` ile kod geçirme açığı).
+# İki durumda muafiyet UYGULANMAZ: staged liste boşsa ve commit index dışına
+# taşıyorsa (-a/-i/--all/--include, zincirde `git add`, pathspec — lib'deki
+# hook_commit_touches_worktree). Bunlar dosyaları commit ANINDA stage'ler;
+# hook'un gördüğü index eksiktir ("1 .md stage'le, kodu aynı komutta geçir"
+# açığı pathspec ve add-zinciriyle de deneniyordu).
 STAGED=$(git diff --cached --name-only 2>/dev/null || true)
-COMMITS_WORKTREE=$(printf '%s' "$CMD_TEXT" | grep -qE '(^|[[:space:]])(-[a-zA-Z]*a[a-zA-Z]*|--all|--include)([[:space:]=]|$)' && echo yes || true)
-if [ -n "$STAGED" ] && [ -z "$COMMITS_WORKTREE" ] && ! echo "$STAGED" | grep -qvE '\.(md|txt)$'; then
+if [ -n "$STAGED" ] && ! hook_commit_touches_worktree "$CMD_TEXT" && ! echo "$STAGED" | grep -qvE '\.(md|txt)$'; then
   echo "ℹ️  Yalnız doküman değişiyor — Gate kontrolü uygulanmadı ($ROUTEMAP)."
   exit 0
 fi

@@ -356,9 +356,15 @@ skills` tedarik zinciri pin'i. Hook'ların her Bash çağrısında fork edilmesi
 (performans) da burada. Aynı kural: şablon/altyapı değişikliği doğrulanarak,
 `/evolve` sırasından.
 
+> **Girdi (2026-10-15):** bu beş madde aynı gün doğrulanarak kapandı —
+> CI `permissions` + `persist-credentials` üç workflow'da, bootstrap pin'i,
+> trustHost/XFF kod içi karar kaydı + `AUTH_URL`; hook fork maliyeti ölçüldü
+> (~17 ms/çağrı, iş yok). Ayrıntı CHANGELOG → "ikinci geçiş". Liste tarihçe
+> olarak kalıyor.
+
 ---
 
 *Yeni bir teknoloji benimsendiğinde bu dosya güncellenir. Eski karar silinmez;
 altına "Değişti (tarih)" başlığıyla yenisi ve gerekçesi yazılır.*
 
-*Son güncelleme: 2026-10-14*
+*Son güncelleme: 2026-10-15*

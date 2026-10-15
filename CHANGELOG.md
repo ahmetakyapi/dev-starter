@@ -104,6 +104,31 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   context-curation), machine/README ajan listesi, token bütçesi tek kaynağa
   indirildi. test-hooks: 33 → 46 davranış testi.
 
+### Düzeltildi — 2026-10-15 (kapanış taraması: main'e almadan önce)
+
+- **Commit algılama artık komutu normalize ediyor** (`hook_normalize_command`):
+  heredoc gövdesindeki "git commit" metni yanlış blok üretmiyor, `git \` +
+  satır devamı + `commit` yakalanıyor, `FOO="git x" git commit` gibi tırnaklı
+  env öneki şaşırtmıyor (tırnaklı bölgeler ayrıştırmadan önce silinir).
+- **`git add && git commit` zinciri ve pathspec'li commit** (`git commit -m
+  msg dosya.ts`) index'e bakmadan kaçabiliyordu: `hook_commit_touches_worktree`
+  üç işareti (bayrak, zincirdeki `git add`, pathspec) tanır; quality-scan bu
+  yollarda `git ls-files -mo` ile untracked dahil çalışma ağacını tarar
+  (untracked `.env` + `git add -A` kaçağı kapandı), gate-guard docs
+  muafiyetini uygulamaz. test-hooks: 46 → 52 davranış testi.
+- **agent-feed "Geri Al" sunucuya da işliyor**: yeni `undismissFeedItem`
+  server action + `undismissAction` prop. Önceden yalnız yerel listeyi
+  düzeltiyordu; sayfa yenilenince öğe yine geçilmiş sayılıyordu. Sponsorlu
+  kartın render guard'ı parser'la aynı ölçüte (URL çözümü) hizalandı; şablon
+  kopyası bayt bayt.
+- **agentic-chat interrupt senaryosunda suspend id'si gerçek tool çağrısını
+  gösteriyor**: `ctx.id` sayaç tabanlıyken (route.ts öyle) ikinci çağrı
+  farklı id üretiyor, suspend var olmayan çağrıyı işaret ediyordu. Id artık
+  olaydan okunur; sayaç-ctx'li regresyon testi eklendi (verify:agentic ✅).
+- Doküman netliği: `guides/08` § 1 "dört komut Gate'in ön koşuludur, yerine
+  geçmez"; iki şablon CLAUDE.md'sine Gate kapısı paragrafı; bayat sayılar
+  (52 test, 7 şablon test dosyası) ve decisions.md ertelenenler girdisi.
+
 ### Düzeltildi — 2026-10-14
 
 - **`hooks/gate-guard.sh` Gate yerine Assign kolonunu okuyordu** (resmi 7

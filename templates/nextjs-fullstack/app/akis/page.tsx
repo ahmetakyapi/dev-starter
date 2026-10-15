@@ -10,6 +10,8 @@ import {
   dismissFeedItem,
   runDemoFeedAction,
   runFeedAction,
+  undismissDemoFeedItem,
+  undismissFeedItem,
   undoDemoFeedAction,
   undoFeedAction,
 } from "./actions";
@@ -52,6 +54,7 @@ export default async function FeedPage() {
           runAction={runDemoFeedAction}
           undoAction={undoDemoFeedAction}
           dismissAction={dismissDemoFeedItem}
+          undismissAction={undismissDemoFeedItem}
         />
       </main>
     );
@@ -69,6 +72,7 @@ export default async function FeedPage() {
         runAction={runFeedAction}
         undoAction={undoFeedAction}
         dismissAction={dismissFeedItem}
+        undismissAction={undismissFeedItem}
       />
     </main>
   );

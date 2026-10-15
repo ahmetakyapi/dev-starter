@@ -113,7 +113,7 @@ SSR'da görünür kalır. → [`guides/04-motion.md`](guides/04-motion.md)
 
 | Şablon | Ne Zaman | İçinde |
 |---|---|---|
-| [`nextjs-fullstack`](templates/nextjs-fullstack) | Ürün, panel, kullanıcılı uygulama | Next 16 · Auth.js v5 + `proxy.ts` · Neon + Drizzle (tembel bağlantı) · zod env · güvenlik başlıkları · 6 test dosyası · CI |
+| [`nextjs-fullstack`](templates/nextjs-fullstack) | Ürün, panel, kullanıcılı uygulama | Next 16 · Auth.js v5 + `proxy.ts` · Neon + Drizzle (tembel bağlantı) · zod env · güvenlik başlıkları · 7 test dosyası · CI |
 | [`landing`](templates/landing) | Tanıtım sayfası, portfolyo | Aynı sistem katmanı · 7 hero düzeni · içerik tek dosyada (`lib/content.ts`) · JSON-LD · OG |
 | [`agentic-chat`](templates/agentic-chat) | Yapay zekâ ajanı arayüzü (overlay) | AG-UI + CopilotKit, sabitlenmiş sürümler, senaryo testleri |
 | [`docs/`](templates/docs) | Her proje | KICKOFF · PRODUCT · ROUTEMAP · ARCHITECTURE · SCREENS · DESIGN |

@@ -132,16 +132,21 @@ export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
         finished(ctx),
       ]
 
-    case 'interrupt':
+    case 'interrupt': {
       // Run TEMIZCE biter; cevap bir SONRAKI run'a resume olarak girer.
+      // toolCallId OLAYDAN okunur: ctx.id sayac tabanli olabilir (route.ts
+      // oyle) ve ikinci bir ctx.id cagrisi BASKA id uretir — suspend o zaman
+      // var olmayan bir tool cagrisini gosterir.
+      const call = toolCall(ctx, 'cancelFlight', { flightId: DEMO_FLIGHT.id })
+      const toolCallId = (call[0] as BaseEvent & { toolCallId: string }).toolCallId
       return [
         started(ctx),
-        ...toolCall(ctx, 'cancelFlight', { flightId: DEMO_FLIGHT.id }),
+        ...call,
         finished(ctx, {
           type: 'interrupt',
           interrupts: [
             {
-              id: `suspend:${ctx.runId}:${ctx.id('call-cancelFlight')}`,
+              id: `suspend:${ctx.runId}:${toolCallId}`,
               reason: 'tool_suspended',
               // Cevap yalnizca secenek KIMLIGI: id -> anlam eslemesi sunucuda
               // sabittir (accept = onay). Secenege payload koymak, modele
@@ -166,6 +171,7 @@ export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
           ],
         }),
       ]
+    }
 
     case 'steps':
       return [

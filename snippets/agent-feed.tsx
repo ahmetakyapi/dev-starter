@@ -20,6 +20,7 @@
  *     runAction={runFeedAction}              // 'use server' — yetki ORADA
  *     undoAction={undoFeedAction}
  *     dismissAction={dismissFeedItem}
+ *     undismissAction={undismissFeedItem}
  *   />
  *
  * Guvenlik: runAction istemciden yalnizca { itemId, actionId, draftText } alir.
@@ -62,10 +63,16 @@ type AgentFeedProps = {
   undoAction: UndoAction
   /**
    * Gecilen ogeyi sunucuda hatirla — ayni oneri yarin tekrar gelmesin.
-   * "Simdi Degil" bir ertelemedir, silme degil: Geri Al yalnizca yerel listeyi
-   * geri getirir; sunucu bu sinyali siralama icin kullanir, ogeyi yok etmez.
+   * "Simdi Degil" bir ertelemedir, silme degil: sunucu bu sinyali siralama
+   * icin kullanir, ogeyi yok etmez.
    */
   dismissAction?: (itemId: string) => Promise<void>
+  /**
+   * "Geri Al"in sunucu ayagi: erteleme isareti kalkar. Verilmezse Geri Al
+   * yalnizca yerel listeyi geri getirir, isaret sunucuda kalir — sayfa
+   * yenilenince oge yine gecilmis sayilir.
+   */
+  undismissAction?: (itemId: string) => Promise<void>
   /** "Sohbette Aç": ogeyi baglam olarak sohbete tasir */
   onOpenChat?: (item: FeedItem) => void
 }
@@ -79,6 +86,7 @@ export function AgentFeed({
   runAction,
   undoAction,
   dismissAction,
+  undismissAction,
   onOpenChat,
 }: AgentFeedProps) {
   const [state, dispatch] = useReducer(feedReducer, initialItems, initFeed)
@@ -161,7 +169,11 @@ export function AgentFeed({
           Son geçilen: {view.lastDismissed.item.title}
           <button
             type="button"
-            onClick={() => view.lastDismissed && dispatch({ type: 'undo', id: view.lastDismissed.item.id })}
+            onClick={() => {
+              if (!view.lastDismissed) return
+              dispatch({ type: 'undo', id: view.lastDismissed.item.id })
+              void undismissAction?.(view.lastDismissed.item.id)
+            }}
             className="min-h-11 rounded-md px-2 text-primary-ink underline-offset-4 hover:underline"
           >
             Geri Al
@@ -404,9 +416,17 @@ function HandledRow({ entry, onUndo }: { entry: FeedEntry; onUndo: (entry: FeedE
 function SponsoredRail({ items }: { items: SponsoredItem[] }) {
   // https kontrolu parseSponsoredItem'da VAR ama prop tip olarak geldigi icin
   // parser'i atlayan bir cagiran (reklam verisini cast eden kod) javascript:
-  // adresini karta tasiyabilirdi. Son savunma render'da: https disi adres
+  // adresini karta tasiyabilirdi. Son savunma render'da ve parser'la AYNI
+  // olcutle (URL cozumu; metin on-eki "HTTPS://" buyuk harfi, "https://"
+  // tek basina gibi uclarda parser'dan ayri dusuyordu): https disi adres
   // kart BASILMAZ (sessizce atlanir; reklamin eksigi hata degildir).
-  const safe = items.filter((ad) => ad.href.startsWith('https://'))
+  const safe = items.filter((ad) => {
+    try {
+      return new URL(ad.href).protocol === 'https:'
+    } catch {
+      return false
+    }
+  })
   if (safe.length === 0) return null
   return (
     <section aria-labelledby="feed-sponsored" className="mt-10">

@@ -27,6 +27,12 @@ npm run db:studio
 `npm test`, `npm run build`. Görsel değişiklik ayrıca tarayıcıda iki temada
 gözle kontrol edilir.
 
+Aktif story'si olan işte commit kapısını `/gate` açar: sonuç
+`docs/ROUTEMAP.md`'nin Gate kolonuna işlenir ve `gate-guard` hook'u PASSED
+olmayan aktif story varken commit'i bloklar (`.claude/settings.json` →
+`~/dev-starter/hooks/`). Yukarıdaki komutlar Gate'in ön koşuludur, yerine
+geçmez; yalnız doküman değiştiren commit muaftır.
+
 ## Tech Stack
 
 Next 16 (App Router, Turbopack) · React 19.2 · TypeScript strict ·

@@ -71,6 +71,21 @@ describe('agui-scenarios', () => {
     expect(last.outcome?.interrupts[0]?.responseSchema).toBeDefined()
   })
 
+  it('suspend id akistaki tool cagrisini gosterir (sayac tabanli id ureticide de)', () => {
+    // route.ts gibi: ayni etiketle her cagri FARKLI id uretir. Senaryo id'yi
+    // ikinci bir ctx.id cagrisiyla turetseydi bu test yakalardi.
+    let seq = 0
+    const counterCtx = { threadId: 't-1', runId: 'r-1', id: (l: string) => `${l}-${seq++}` }
+    const events = buildScenario('interrupt', counterCtx)
+    const start = events.find((e) => e.type === agui.EventType.TOOL_CALL_START) as unknown as {
+      toolCallId: string
+    }
+    const last = events[events.length - 1] as unknown as {
+      outcome?: { interrupts: Array<{ id: string }> }
+    }
+    expect(last.outcome?.interrupts[0]?.id).toBe(`suspend:r-1:${start.toolCallId}`)
+  })
+
   it('SSE kodlamasi tel bicimine uyar (data: + bos satir)', () => {
     const encoded = encodeSse(buildScenario('text', ctx))
     expect(encoded.endsWith('\n\n')).toBe(true)

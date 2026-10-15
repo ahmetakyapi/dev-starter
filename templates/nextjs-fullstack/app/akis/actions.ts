@@ -161,6 +161,21 @@ export async function dismissFeedItem(input: unknown): Promise<void> {
     .where(and(eq(feedItems.id, parsed.data), eq(feedItems.userId, user.id), isNull(feedItems.resolvedAt)));
 }
 
+/**
+ * "Geri Al"ın sunucu ayağı: erteleme işareti kalkar. Bu olmadan Geri Al
+ * yalnız istemci listesini düzeltiyordu; sayfa yenilenince öğe yine geçilmiş
+ * sayılırdı. Kapanmış (resolved) satıra dokunulmaz.
+ */
+export async function undismissFeedItem(input: unknown): Promise<void> {
+  const user = await currentFeedUser();
+  const parsed = uuidSchema.safeParse(input);
+  if (!user || !parsed.success) return;
+  await db
+    .update(feedItems)
+    .set({ dismissedAt: null })
+    .where(and(eq(feedItems.id, parsed.data), eq(feedItems.userId, user.id), isNull(feedItems.resolvedAt)));
+}
+
 /* ── Demo: yalnız geliştirmede, veritabanı ya da oturum yokken ───────────── */
 
 function demoAllowed(): boolean {
@@ -182,3 +197,5 @@ export async function undoDemoFeedAction(): Promise<ActionResult> {
 }
 
 export async function dismissDemoFeedItem(): Promise<void> {}
+
+export async function undismissDemoFeedItem(): Promise<void> {}
