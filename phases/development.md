@@ -62,8 +62,8 @@ Wave 2 (Wave 1 çıktıları girince):
   → frontend subagent: UI + API entegrasyonu (BE'nin sözleşmesine karşı)
 
 Wave 3:
-  → gate subagent:     6+1 pass → rapor docs/gate/<story>.md
-  → ana oturum:        Gate sonucunu ROUTEMAP'e işler, commit
+  → gate subagent:     6+1 pass → rapor gövdesini döndürür (Write yetkisi bilinçli yok)
+  → ana oturum:        raporu docs/gate/<story>.md'ye yazar, sonucu ROUTEMAP'e işler, commit
 ```
 
 - **Paralel dosya çakışması riski varsa** subagent `isolation: worktree` ile

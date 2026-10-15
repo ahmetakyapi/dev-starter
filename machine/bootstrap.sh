@@ -97,7 +97,13 @@ done
 
 echo "▸ taste-skill"
 # `-s` virgüllü listeyi tek ad sanıyor ("No matching skills"); adlar ayrı argüman.
-run npx -y skills add Leonxlnx/taste-skill -g -a claude-code -s "${TASTE_SKILLS[@]}" -y
+# CLI sürümü SABİT: `npx -y skills` her koşuda en günceli indirip ÇALIŞTIRIR —
+# kurulan skill'ler her oturumda talimat olarak okunduğundan bu bir tedarik
+# zinciri kapısıdır. Yükseltme: sürümü bilerek değiştir, kurulumu gözden geçir.
+# (Kaynak depo Leonxlnx/taste-skill hâlâ HEAD'den gelir; skills CLI'ı ref
+# pin'i desteklemiyor. Kalıcı çözüm anatomy gibi vendor'lamak — tech-radar.)
+SKILLS_CLI_VERSION="1.7.2"
+run npx -y "skills@${SKILLS_CLI_VERSION}" add Leonxlnx/taste-skill -g -a claude-code -s "${TASTE_SKILLS[@]}" -y
 
 echo "▸ anatomy (açıklayıcı figür skill'i, wheresryan22/anatomy, MIT) @ ${ANATOMY_REF:0:7}"
 # İzometrik SVG figür, WebGL ve 3D kiti; motion-film'in `reference/aciklayici-figur.md`si
@@ -119,7 +125,13 @@ if [[ -d "$ANATOMY_DIR/.git" ]]; then
   fi
 elif [[ ! -e "$ANATOMY_DIR" ]]; then
   if run git clone --quiet https://github.com/wheresryan22/anatomy "$ANATOMY_DIR"; then
-    run anatomy_checkout || echo "  ⚠️  ${ANATOMY_REF:0:7} bulunamadı; varsayılan dalda kaldı"
+    # Pin'e oturtulamayan taze klon SKILL OLARAK BIRAKILMAZ: HEAD içeriği
+    # denetlenmemiştir ve her oturumda talimat olarak okunur. Pin'in tüm
+    # amacı buydu; checkout düşerse klon silinir, kurulum yapılmamış sayılır.
+    run anatomy_checkout || {
+      echo "  ⚠️  ${ANATOMY_REF:0:7} bulunamadı; anatomy KURULMADI (pin'siz içerik bağlanmaz)"
+      run rm -rf "$ANATOMY_DIR"
+    }
   else
     echo "  ⚠️  anatomy klonlanamadı (ağ?); sonra tekrar çalıştır"
   fi

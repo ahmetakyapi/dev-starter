@@ -1,5 +1,11 @@
 name: CI
 
+# GITHUB_TOKEN en dar yetkiyle ve checkout sonrasinda diskte tutulmaz:
+# npm install sirasinda kosan herhangi bir (ele gecirilmis) bagimlilik
+# post-install'u yazma yetkili token bulamasin.
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
@@ -13,6 +19,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # .nvmrc yerel gelistirme surumuyle AYNI major olmali. Farkli npm
       # major'lari ayni package.json'dan farkli kilit uretir: npm 11
@@ -123,6 +131,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -142,6 +152,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -156,6 +168,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # health-check kilit dogrulamasini ve hook davranis testini kosar;
       # ikisi de kurulu node_modules ister

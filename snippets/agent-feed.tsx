@@ -402,6 +402,12 @@ function HandledRow({ entry, onUndo }: { entry: FeedEntry; onUndo: (entry: FeedE
 // --- Sponsorlu: ayri bolum, her zaman etiketli, aksiyonsuz -----------------------
 
 function SponsoredRail({ items }: { items: SponsoredItem[] }) {
+  // https kontrolu parseSponsoredItem'da VAR ama prop tip olarak geldigi icin
+  // parser'i atlayan bir cagiran (reklam verisini cast eden kod) javascript:
+  // adresini karta tasiyabilirdi. Son savunma render'da: https disi adres
+  // kart BASILMAZ (sessizce atlanir; reklamin eksigi hata degildir).
+  const safe = items.filter((ad) => ad.href.startsWith('https://'))
+  if (safe.length === 0) return null
   return (
     <section aria-labelledby="feed-sponsored" className="mt-10">
       <h2 id="feed-sponsored" className="text-read font-semibold text-strong">
@@ -409,7 +415,7 @@ function SponsoredRail({ items }: { items: SponsoredItem[] }) {
         <span className="ml-1 text-small font-normal text-muted">Planlarına göre iş ortaklarından öneriler</span>
       </h2>
       <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-        {items.map((ad) => (
+        {safe.map((ad) => (
           <li key={ad.id}>
             <a
               href={ad.href}

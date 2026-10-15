@@ -295,9 +295,12 @@ fi
 # template pin'inin CopilotKit'in bagimliligiyla ayni major/exact olmasi.
 if [ -f "scripts/verify-agentic.mjs" ]; then
   pass "scripts/verify-agentic.mjs mevcut"
-  AGUI_PIN=$(node -p "JSON.parse(require('fs').readFileSync('templates/agentic-chat/package.json','utf8')).dependencies['@ag-ui/client']" 2>/dev/null || echo "")
+  # Anahtar hic yoksa node -p 'undefined' STRING'i basar ve eski case yanlis
+  # PASS veriyordu; devDependencies'e tasinirsa da yanlis FAIL. Iki sozluk
+  # birlesik okunur, yokluk bos dizeye dusurulur.
+  AGUI_PIN=$(node -p "(p=>({...p.dependencies,...p.devDependencies})['@ag-ui/client'] ?? '')(JSON.parse(require('fs').readFileSync('templates/agentic-chat/package.json','utf8')))" 2>/dev/null || echo "")
   case "$AGUI_PIN" in
-    ""|*[\^~]*)
+    ""|undefined|*[\^~]*)
       fail "templates/agentic-chat: @ag-ui/client pin'i sabit degil ('$AGUI_PIN') — mistakes.md #71" ;;
     *)
       pass "@ag-ui/client tam surume sabitlenmis ($AGUI_PIN)" ;;
@@ -386,7 +389,7 @@ header "Tasarim Denetimi"
 
 # Imza degradesi tek token'dan mi geliyor?
 STRAY_GRADIENT=$(grep -rnE 'from-(indigo|violet|purple|fuchsia|cyan|sky|blue)-[0-9]+ (via-[a-z]+-[0-9]+ )?to-[a-z]+-[0-9]+' \
-  templates packages --include="*.tsx" 2>/dev/null || true)
+  templates packages --include="*.tsx" --exclude-dir=node_modules --exclude-dir=.next 2>/dev/null || true)
 if [ -n "$STRAY_GRADIENT" ]; then
   warn "Elle yazilmis degrade — tekrar ediyorsa token'a tasi ('bg-signature'):"
   echo "$STRAY_GRADIENT" | head -5 | sed 's/^/     /'
@@ -397,7 +400,7 @@ fi
 # Degrade metin fallback'i — kirpma desteklenmezse metin gorunmez olur.
 # Degradenin kendisi yasak DEGIL; fallback'siz olani hatadir.
 GRADIENT_TEXT=$(grep -rlE 'bg-clip-text|background-clip:\s*text' \
-  templates packages --include="*.tsx" --include="*.css" 2>/dev/null || true)
+  templates packages --include="*.tsx" --include="*.css" --exclude-dir=node_modules --exclude-dir=.next 2>/dev/null || true)
 if [ -n "$GRADIENT_TEXT" ]; then
   UNGUARDED=""
   while IFS= read -r f; do
@@ -416,7 +419,7 @@ fi
 # Violet/purple — marka paletinde yok. Yasak degil, gozlem: gorunuyorsa
 # ya palete eklenmeli ya sizintidir (bkz. rules/design-tokens.md)
 VIOLET_LEAK=$(grep -rnE '(bg|from|via|to|text|border)-(violet|purple|fuchsia)-[0-9]+' \
-  templates packages --include="*.tsx" --include="*.css" 2>/dev/null || true)
+  templates packages --include="*.tsx" --include="*.css" --exclude-dir=node_modules --exclude-dir=.next 2>/dev/null || true)
 if [ -n "$VIOLET_LEAK" ]; then
   warn "Palet disi violet/purple — token'a ekle veya kaldir:"
   echo "$VIOLET_LEAK" | head -5 | sed 's/^/     /'
@@ -492,19 +495,26 @@ done
 header "Bilgi Tabani Butunlugu"
 
 # mistakes.md numaralari: tekrar yok (capraz referans agi tek anahtara dayanir)
-NUMS=$(grep -oE '^### [0-9]+\.' knowledge/mistakes.md | grep -oE '[0-9]+')
-DUP=$(echo "$NUMS" | sort -n | uniq -d)
-if [ -z "$DUP" ]; then
-  pass "mistakes.md kayit numaralari benzersiz ($(echo "$NUMS" | wc -l | tr -d ' ') kayit)"
+# Boru zinciri bos sonucla exit 1 doner; korumasiz birakmak set -e altinda
+# script'i OZETSIZ olduruyordu — bosluk acik bir FAIL'dir, olum degil.
+NUMS=$(grep -oE '^### [0-9]+\.' knowledge/mistakes.md 2>/dev/null | grep -oE '[0-9]+' || true)
+if [ -z "$NUMS" ]; then
+  fail "mistakes.md basliklari ayristirilamadi ('### N.' bicimi bekleniyor)"
 else
-  fail "mistakes.md'de TEKRARLANAN numara: $(echo "$DUP" | tr '\n' ' ')"
-fi
-# Indeks tablosu (dosyanin basindaki ilk tablo) en yeni kaydi anmali
-MAXNUM=$(echo "$NUMS" | sort -n | tail -1)
-if sed -n '/^## İndeks/,/^---/p' knowledge/mistakes.md | grep -q "$MAXNUM"; then
-  pass "mistakes.md indeksi en yeni kaydi (#$MAXNUM) kapsiyor"
-else
-  warn "mistakes.md indeksi #$MAXNUM'u kapsamiyor — indeks satirini guncelle"
+  DUP=$(echo "$NUMS" | sort -n | uniq -d)
+  if [ -z "$DUP" ]; then
+    pass "mistakes.md kayit numaralari benzersiz ($(echo "$NUMS" | wc -l | tr -d ' ') kayit)"
+  else
+    fail "mistakes.md'de TEKRARLANAN numara: $(echo "$DUP" | tr '\n' ' ')"
+  fi
+  # Indeks tablosu en yeni kaydi anmali. Grep capali: '16' araniyorsa
+  # 'next16' etiketi yanlis PASS vermesin.
+  MAXNUM=$(echo "$NUMS" | sort -n | tail -1)
+  if sed -n '/^## İndeks/,/^---/p' knowledge/mistakes.md | grep -qE "(^|[^0-9])${MAXNUM}([^0-9]|$)"; then
+    pass "mistakes.md indeksi en yeni kaydi (#$MAXNUM) kapsiyor"
+  else
+    warn "mistakes.md indeksi #$MAXNUM'u kapsamiyor — indeks satirini guncelle"
+  fi
 fi
 
 # Satir tavanlari (rules/self-improvement.md): sismis bilgi context butcesini yer

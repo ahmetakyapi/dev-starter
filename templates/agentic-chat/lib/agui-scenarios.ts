@@ -143,18 +143,22 @@ export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
             {
               id: `suspend:${ctx.runId}:${ctx.id('call-cancelFlight')}`,
               reason: 'tool_suspended',
+              // Cevap yalnizca secenek KIMLIGI: id -> anlam eslemesi sunucuda
+              // sabittir (accept = onay). Secenege payload koymak, modele
+              // "Vazgec" etiketine onay yukleme kapisi acardi
+              // (snippets/agent-approval.tsx ayni sozlesmeyi uygular).
               responseSchema: {
                 type: 'object',
-                properties: { approved: { type: 'boolean' } },
-                required: ['approved'],
+                properties: { optionId: { type: 'string', enum: ['accept', 'decline'] } },
+                required: ['optionId'],
                 additionalProperties: false,
               },
               metadata: {
                 suspendPayload: {
                   message: `Ucus ${DEMO_FLIGHT.id} iptal edilsin mi?`,
                   options: [
-                    { id: 'accept', label: 'Onayla', payload: { approved: true }, variant: 'danger' },
-                    { id: 'decline', label: 'Vazgec', payload: { approved: false } },
+                    { id: 'accept', label: 'Onayla', variant: 'danger' },
+                    { id: 'decline', label: 'Vazgec' },
                   ],
                 },
               },

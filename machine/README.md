@@ -31,8 +31,9 @@ Sırayla:
    symlink. `/kickoff`, `/new-project`, `/theme`, `/check`, `/deploy`... her
    projede bu sürümler çalışır.
 5. **Alt ajanlar** — `.claude/agents/*.md` → `~/.claude/agents/` (`gate`,
-   `deploy`, `strategist`, `design-reviewer`, `content-editor`). Sarmalayıcılar
-   ince; rol tanımlarını `~/dev-starter/agents/` altından okurlar.
+   `deploy`, `strategist`, `design-reviewer`, `content-editor`, `frontend`,
+   `backend`, `qa`, `researcher`). Sarmalayıcılar ince; rol tanımlarını
+   `~/dev-starter/agents/` altından okurlar.
 6. **Depodaki skill'ler** — `machine/skills/*` → `~/.claude/skills/`.
 7. **taste-skill** — `npx skills add Leonxlnx/taste-skill -g` yalnızca
    kullanılan yedi skill ile (liste aşağıda).

@@ -37,7 +37,7 @@ Bu agent `rules/dev-cycle.md` pipeline'ını takip eder:
 - **→ BA Agent**: Implementasyon bitti, inceleme için hazır
 - **→ UI Agent**: Görsel karar gerekiyor, yönlendir
 
-Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölümünü kullan.
+Bu agent kayıtlı subagent'tır: iş ona **Görev Zarfı** ile gelir (`AGENT_PROTOCOL.md → Orkestrasyon`); Standart Handoff yalnız ana oturum rolleri arasındadır.
 
 ## Sürüme Göre Yazma — Önce package.json'a Bak
 

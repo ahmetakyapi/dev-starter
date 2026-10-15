@@ -92,7 +92,10 @@ for (const name of targets) {
   mkdirSync(join(dir, 'app/figur'), { recursive: true })
   writeFileSync(join(dir, 'app/figur/page.tsx'), FIGURE_PAGE)
 
-  run('npm', ['install', '--no-audit', '--no-fund', '--silent'], dir, 'npm install')
+  // --ignore-scripts: kilitsiz kurulumda post-install calismasin (tedarik
+  // zinciri). Next/SWC binary'leri optionalDependencies'ten gelir, script
+  // istemez; bu kosunun kendisi aksini aninda gosterir.
+  run('npm', ['install', '--no-audit', '--no-fund', '--silent', '--ignore-scripts'], dir, 'npm install')
   // Şablonun kendi CI sırası (ci.yml): build önce, PageProps tipleri build'de üretilir.
   run('npm', ['run', 'build'], dir, 'build', { SKIP_ENV_VALIDATION: '1', AUTH_SECRET: 'verify-placeholder' })
   run('npm', ['run', 'typecheck'], dir, 'typecheck')

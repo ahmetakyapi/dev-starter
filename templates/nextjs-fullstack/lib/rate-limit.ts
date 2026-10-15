@@ -44,7 +44,16 @@ export function rateLimit(
   return { ok: true, remaining: limit - bucket.count, retryAfterMs: 0 };
 }
 
-/** İstemci IP'si; Vercel `x-forwarded-for`un ilk değerini gerçek istemci yapar. */
+/**
+ * İstemci IP'si; Vercel `x-forwarded-for`un ilk değerini gerçek istemci yapar.
+ *
+ * VERCEL DIŞINDA BU BAŞLIK SAHTELENEBİLİR: `next start`a doğrudan ya da
+ * başlığı yeniden yazmayan bir vekil arkasında saldırgan her istekte farklı
+ * bir XFF göndererek IP tabanlı sınırı aşar (ve her sahte IP yeni kova açar).
+ * Kendi sunucunda ya vekilin XFF'i yeniden yazdığını doğrula ya da sınır
+ * anahtarını IP yerine oturumdaki kullanıcı kimliğiyle kur
+ * (`rateLimit(\`x:${userId}\`, ...)` — akış eylemleri zaten böyle yapıyor).
+ */
 export function clientIp(headers: Headers): string {
   const forwarded = headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0]?.trim() || "unknown";

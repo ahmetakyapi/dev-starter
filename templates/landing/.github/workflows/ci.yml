@@ -1,5 +1,11 @@
 name: CI
 
+# GITHUB_TOKEN en dar yetkiyle ve checkout sonrasinda diskte tutulmaz:
+# npm install sirasinda kosan herhangi bir (ele gecirilmis) bagimlilik
+# post-install'u yazma yetkili token bulamasin.
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
@@ -14,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc

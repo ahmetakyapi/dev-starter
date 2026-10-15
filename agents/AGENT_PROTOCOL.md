@@ -67,6 +67,10 @@ Subagent üretimini DOSYAYA yazar; ana oturuma yalnız **yol + üç satır özet
 döner. Rapor/kod gövdesi sohbete yapıştırılmaz — context bütçesi korunur,
 session resume dosyadan devam eder.
 
+> **Tek istisna — GATE**: gate'in Write yetkisi bilinçli olarak yok
+> (denetleyen, kayıt değiştirmez). Gate rapor gövdesini döndürür; ana oturum
+> `docs/gate/<story>.md`ye yazar ve ROUTEMAP'i günceller (`/gate` adım 3).
+
 ### Çıktı Adresleri
 
 | Üretici | Adres |
@@ -104,7 +108,7 @@ Kullanıcı talebi
       ↓
   Gate Agent — 6+1 pass kalite kontrolü
       ↓
-  PASSED? ─── Hayır ──→ Auto-fix veya agent'a geri gönder (max 2 döngü)
+  PASSED? ─── Hayır ──→ İlgili agent'a düzeltme talimatıyla geri gönder (max 2 döngü)
       │
       Evet
       ↓
@@ -392,7 +396,7 @@ Kontrol listesi okumak yerine bunları **çalıştır**:
 |-------|-------------|-----|
 | `bash scripts/audit-project.sh <yol>` | Bir projeyi 8 standarda karşı denetler | UI, GATE, BA |
 | `npm run verify:exports` | Paket manifest'inin vaat ettiği yollar gerçekten var mı | DP, GATE |
-| `bash scripts/health-check.sh` | Ekosistem bütünlüğü — 12 kategori | BA, GATE |
+| `bash scripts/health-check.sh` | Ekosistem bütünlüğü — 15 kategori | BA, GATE |
 | `npm pack --dry-run -w <paket>` | Yayınlanacak tarball içeriği | DP |
 
 ---

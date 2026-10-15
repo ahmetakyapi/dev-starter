@@ -64,7 +64,10 @@ const run = (cmd, args, label) => {
 writeFileSync(join(work, 'package.json'), JSON.stringify({ name: 'verify-agentic', private: true, type: 'module' }))
 console.log(`\n📦 Bagimliliklar kuruluyor (${work})...`)
 const specs = Object.entries(pins).map(([n, v]) => `${n}@${v}`)
-run('npm', ['install', '--no-audit', '--no-fund', '--silent', ...specs, ...DEV], 'bagimliliklar kuruldu')
+// --ignore-scripts: kilitsiz kurulumda gecisli bagimliliklarin post-install
+// script'leri calismasin (tedarik zinciri). tsc ve vitest'in calismasi icin
+// script gerekmiyor; gerektigi gun bu dogrulama kosusu kendisi soyler.
+run('npm', ['install', '--no-audit', '--no-fund', '--silent', '--ignore-scripts', ...specs, ...DEV], 'bagimliliklar kuruldu')
 
 // CopilotKit ic kopya birakti mi? Biraktiysa tipler nominal olarak ayrisir.
 try {

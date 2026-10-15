@@ -23,21 +23,32 @@ Sırasıyla kontrol et:
 
 ## Durum Geçişleri
 
+İki ayrı kolon, iki ayrı makine (şablondaki kolon adlarıyla; hook'lar kolonu
+ada göre bulur — `hooks/lib/routemap.sh`, mistakes.md #99):
+
+**Durum kolonu** (story'nin yaşam döngüsü):
+
 ```
 NOT_STARTED → IN_PROGRESS → IN_REVIEW → DONE
-                    ↓              ↓
-                 BLOCKED        FAILED → FIX_1 → FIX_2 → ESCALATED
+                    ↓
+                 BLOCKED
+```
+
+**Gate kolonu** (denetimin sonucu ve düzeltme döngüsü):
+
+```
+— → FAILED → FIX_1 → FIX_2 → ESCALATED
+         └────────┴──────┴──→ PASSED | PASSED_WITH_WARNINGS
 ```
 
 ### Kurallar
 
 - `NOT_STARTED → IN_PROGRESS`: Agent göreve başladığında
-- `IN_PROGRESS → IN_REVIEW`: Developer self-check tamamladığında, Gate Agent'a gönderildiğinde
-- `IN_REVIEW → DONE`: Gate PASSED + commit yapıldığında
-- `IN_REVIEW → FAILED`: Gate FAILED döndüğünde
-- `FAILED → FIX_1`: İlk düzeltme döngüsü
-- `FIX_1 → FIX_2`: İkinci düzeltme döngüsü
-- `FIX_2 → ESCALATED`: 2 döngüde çözülemedi, BA Agent'a
+- `IN_PROGRESS → IN_REVIEW`: Developer self-check tamamladığında, Gate'e gönderildiğinde
+- `IN_REVIEW → DONE`: Gate kolonu PASSED + commit yapıldığında (Durum FAILED değeri almaz)
+- Gate `— → FAILED`: Gate FAILED döndüğünde (bulgular story'nin GATE-LOG'una)
+- Gate `FAILED → FIX_1 → FIX_2`: düzeltme döngüleri (ana oturum ilerletir)
+- Gate `FIX_2 → ESCALATED`: 2 döngüde çözülemedi; BA kullanıcıya seçenekli özet sunar
 
 ---
 
@@ -47,7 +58,7 @@ Yeni session başladığında:
 
 ```
 1. ROUTEMAP oku
-2. Aktif faz ne? (Planning / Development / E2E / Docs / Maintenance)
+2. Aktif faz ne? (Planning / Development / E2E / Release-Maintenance)
 3. Son tamamlanan story/adım hangisi?
 4. Bekleyen blocker var mı?
 5. Kullanıcıya özet sun:

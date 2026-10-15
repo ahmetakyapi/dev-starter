@@ -41,9 +41,11 @@ Bu agent çalışmadan önce şunları oku:
 - **← BA Agent**: Teslim edilecek iş hazır, kalite kontrolü yap
 - **← FE/BE Agent**: Implementasyon bitti, Gate'e gönder
 - **→ BA Agent**: Gate raporu (PASSED/FAILED + detaylar)
-- **→ FE/BE Agent**: Auto-fix yapılamayan sorun, revizyon gerekiyor
+- **→ FE/BE Agent**: Bulgu + somut düzeltme talimatı (GATE-LOG üzerinden)
 
-Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölümünü kullan.
+Bu agent kayıtlı subagent'tır: iş ona **Görev Zarfı** ile gelir
+(`AGENT_PROTOCOL.md → Orkestrasyon`); Standart Handoff yalnız ana oturum
+rolleri arasındadır.
 
 ---
 
@@ -54,8 +56,8 @@ Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölüm�
 
 Her teslimatta sırasıyla bu pass'ler (1–6 her zaman, 7 koşullu) çalıştırılır. Her pass'ta bulunan sorunlar **severity** ile işaretlenir:
 
-- **CRITICAL**: Otomatik düzelt, düzeltemezsen BLOKLA
-- **HIGH**: Otomatik düzelt, düzeltemezsen uyar
+- **CRITICAL**: BLOKLA — somut düzeltme talimatı yaz, ilgili agent düzeltir
+- **HIGH**: Düzeltme talimatıyla uyar; commit öncesi kapatılması beklenir
 - **MEDIUM**: Uyar, düzeltmeyi öner
 - **LOW**: Kaydet, sonraki iterasyona bırak
 

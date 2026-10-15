@@ -29,6 +29,13 @@ const EASE = [0.22, 1, 0.36, 1] as const
 // Sunucu, sorusunu ve secenekleri BURADAN gonderir. Istemci secenekleri
 // bilmez — bu sayede yeni tool'lar ve yeni secenekler ISTEMCI DEGISIKLIGI
 // GEREKTIRMEZ.
+//
+// SECENEKTE PAYLOAD YOK, BILEREK: cevap yalnizca secenegin KIMLIGIDIR
+// (optionId) ve id -> anlam eslemesi SUNUCUDA sabittir. Payload da modelden
+// gelseydi, prompt-injection'a ugramis bir model "Vazgec" etiketli dugmeye
+// { approved: true } yukleyebilir ve kullanicinin reddi onay olarak islenirdi.
+// Model etiketi yazar ama ANLAMI yazamaz (rules/agentic-ui.md — guardrail
+// sunucuda, model yetkilendirmez).
 const approvalParams = z.object({
   message: z.string().describe('kullaniciya sorulacak soru'),
   options: z
@@ -36,7 +43,6 @@ const approvalParams = z.object({
       z.object({
         id: z.string(),
         label: z.string(),
-        payload: z.record(z.string(), z.unknown()),
         variant: z.enum(['default', 'danger']).optional(),
       }),
     )
@@ -45,8 +51,8 @@ const approvalParams = z.object({
 })
 
 const FALLBACK_OPTIONS = [
-  { id: 'accept', label: 'Onayla', payload: { approved: true }, variant: 'default' as const },
-  { id: 'decline', label: 'Vazgec', payload: { approved: false }, variant: 'default' as const },
+  { id: 'accept', label: 'Onayla', variant: 'default' as const },
+  { id: 'decline', label: 'Vazgec', variant: 'default' as const },
 ]
 
 export function useCancelFlightApproval() {
@@ -82,8 +88,9 @@ export function useCancelFlightApproval() {
                 <button
                   key={option.id}
                   type="button"
-                  // respond() cevabi resume olarak yollar ve YENI bir run baslatir
-                  onClick={() => void respond(option.payload)}
+                  // respond() cevabi resume olarak yollar ve YENI bir run baslatir.
+                  // Yalnizca id gider; anlamini (onay/ret) sunucu cozer.
+                  onClick={() => void respond({ optionId: option.id })}
                   className={
                     option.variant === 'danger'
                       ? 'min-h-11 rounded-md bg-danger px-3 text-base text-on-primary transition hover:opacity-90'

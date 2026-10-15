@@ -119,18 +119,17 @@ Herhangi biri fail ediyorsa → önce düzelt, Gate'e gönderme.
 
 ### 5. Gate
 
-Gate Agent'a handoff:
+Gate kayıtlı subagent'tır; iş ona **Görev Zarfı** ile gider
+(`AGENT_PROTOCOL.md → Orkestrasyon`):
 
 ```
-AGENT_HANDOFF
-  from: [FE | BE]
-  to: GATE
-  task: [görev adı] kalite kontrolü
-  context:
-    - değişen dosyalar: [liste]
-    - kabul kriterleri: [plan'dan]
-  acceptance_criteria:
-    - 6+1 pass Gate PASSED
+GOREV_ZARFI
+  to:    GATE
+  task:  [görev adı] kalite kontrolü
+  oku:   [story dosyası + değişen dosya listesi]
+  sinir: [kod değiştirme — bulgu + düzeltme talimatı üret]
+  cikti: [rapor gövdesi; ana oturum docs/gate/<story>.md'ye yazar]
+  kabul: 6+1 pass çalıştı, her pass'te komut + exit kodu raporda
 ```
 
 Gate sonuçları:

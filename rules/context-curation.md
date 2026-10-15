@@ -136,33 +136,28 @@ Görev zarfının `oku:` alanı da aynı ilkeyle doldurulur: belge değil, belge
 
 ## Context Verme Tekniği
 
-Agent'a görev verirken handoff mesajında context'i belirt:
+Kayıtlı subagent'a görev verirken bağlam **Görev Zarfı'nın `oku:` alanıdır**
+(`AGENT_PROTOCOL.md → Orkestrasyon`); belge değil, belgenin ilgili bölümünün
+adresi verilir:
 
 ```text
-AGENT_HANDOFF
-  from: BA
-  to: FE
-  task: Dashboard chart bileşeni implementasyonu
-  context:
-    - story: docs/stories/STORY-005-dashboard-charts.md
-    - architecture: docs/ARCHITECTURE.md#api-endpoints (sadece chart API)
-    - patterns: knowledge/patterns.md#recharts
-    - existing: components/ui/Panel.tsx (pattern referansı)
-  NOT_NEEDED:
-    - Diğer story dosyaları
-    - DB schema detayları
-    - Auth akışı
+GOREV_ZARFI
+  to:    FE
+  task:  Dashboard chart bileşeni implementasyonu
+  oku:
+    - docs/stories/STORY-005-dashboard-charts.md
+    - docs/ARCHITECTURE.md#api-endpoints (sadece chart API)
+    - knowledge/patterns.md#recharts
+    - components/ui/Panel.tsx (pattern referansı)
+  sinir: diğer story'ler, DB şema detayları ve auth akışı KAPSAM DIŞI
+  cikti: değişen dosya listesi + üç satır özet
+  kabul: [story'nin kriterleri]
 ```
 
 ---
 
 ## Token Bütçesi Rehberi
 
-| Agent | Hedef Context | Max |
-|-------|--------------|-----|
-| BA Agent | ~50k token | Full docs |
-| UI Agent | ~15k token | Tema + ekranlar |
-| FE Agent | ~10k token | Story + ilgili dosyalar |
-| BE Agent | ~10k token | Story + schema + API |
-| Gate Agent | ~20k token | Story + diff + rules |
-| Deploy Agent | ~5k token | Config + env |
+Bütçelerin tek kaynağı `agents/AGENT_PROTOCOL.md → Context Curation`
+tablosudur (12 ajanın tamamı, seviye + max token). Burada kopyası tutulmaz —
+iki tablo ayrışınca biri sessizce bayatlıyordu.

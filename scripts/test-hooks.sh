@@ -310,15 +310,17 @@ else
   no "@ag-ui aralık → uyarmalı" "AGENTIC @ag-ui uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 fi
 
-# (m) @ag-ui/* sabit sürüm → uyarı VERMEMELİ
+# (m) @ag-ui/* sabit sürüm → uyarı VERMEMELİ (exit kodu da temiz:
+# yalnız çıktı yokluğuna bakmak, bloklayan bir regresyonu yeşil geçirir)
 printf '{"dependencies":{"@ag-ui/client":"0.0.57"}}
 ' > package.json
 git add package.json
 OUT=$(payload "git commit -m 'chore: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
-if ! printf '%s' "$OUT" | grep -q 'AGENTIC.*@ag-ui'; then
-  ok "@ag-ui/* sabit sürüm → uyarı yok"
+CODE=$?
+if [ $CODE -eq 0 ] && ! printf '%s' "$OUT" | grep -q 'AGENTIC.*@ag-ui'; then
+  ok "@ag-ui/* sabit sürüm → uyarı yok (exit 0)"
 else
-  no "sabit sürüm → uyarmamalı" "AGENTIC @ag-ui uyarısı YOK" "çıktı: $(printf '%s' "$OUT" | head -3)"
+  no "sabit sürüm → uyarmamalı" "exit 0 + AGENTIC uyarısı YOK" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 fi
 
 echo
@@ -436,6 +438,39 @@ printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git \\\ncommit -m \"fe
 CODE=$?
 [ $CODE -eq 2 ] && ok "çok satırlı 'git \\<newline>commit' → yakalanır, bloklanır" || no "çok satırlı commit yakalanmalı" 2 "$CODE"
 
+# (u5) 'git commit' yalnızca METİN olarak geçen komut → dokunmamalı
+# (grep/echo/sed içindeki anma commit değildir; eski desen bloklardı)
+payload "grep -rn \"git commit\" docs/" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "metin içinde 'git commit' → commit sanılmaz (exit 0)" || no "grep komutu bloklanmamalı" 0 "$CODE"
+
+# (u6) Zincirde gerçek commit (cd x && git commit) → yakalanmalı
+payload "cd . && git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "zincirdeki gerçek commit → yakalanır, bloklanır" || no "zincirli commit yakalanmalı" 2 "$CODE"
+
+# (u7) Çok komutlu satırlar (git add↵git commit) → yakalanmalı
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git add .\ngit commit -m \"feat: x\""}}' | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "yeni satırla ayrılmış commit → yakalanır, bloklanır" || no "çok komutlu commit yakalanmalı" 2 "$CODE"
+
+# (u8) CRLF kaydedilmiş ROUTEMAP → Gate kontrolü yine çalışmalı
+mkdir -p "$SANDBOX/gatecrlf/docs" && cd "$SANDBOX/gatecrlf" || exit 1
+printf '| ID | Başlık | Faz | Öncelik | Durum | Gate | Assign |\r\n|----|--------|-----|---------|-------|------|--------|\r\n| STORY-001 | Giriş | 1 | HIGH | IN_PROGRESS | FAILED | FE |\r\n' > docs/ROUTEMAP.md
+payload "git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "CRLF'li ROUTEMAP → tablo tanınır, bloklanır" || no "CRLF kontrolü kapatmamalı" 2 "$CODE"
+
+# (u9) Gate kolonu eklenmiş FAZ tablosu (ID yok) → story sanılmamalı
+cat > docs/ROUTEMAP.md <<'EOF'
+| Faz | Durum | Gate | Bitiş |
+|-----|-------|------|-------|
+| Development | IN_PROGRESS | — | |
+EOF
+payload "git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "ID'siz Gate'li faz tablosu → story sanılmaz (exit 0)" || no "faz tablosu bloklamamalı" 0 "$CODE"
+
 echo
 # ─────────────────────────────────────────────────────────────
 # quality-scan.sh — güvenlik ve TDD kontrolleri (yeni desenler)
@@ -481,14 +516,15 @@ else
   no "fix testsiz → uyarmalı" "exit 0 + BUGFIX uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 fi
 
-# (y2) fix commit'i test değişikliğiyle → BUGFIX uyarısı olmamalı
+# (y2) fix commit'i test değişikliğiyle → BUGFIX uyarısı olmamalı (exit 0 da)
 printf 'test("bug", () => {})\n' > bug.test.ts
 git add bug.test.ts
 OUT=$(payload "git commit -m 'fix: hata giderildi'" | bash "$HOOKS/quality-scan.sh" 2>&1)
-if ! printf '%s' "$OUT" | grep -q 'BUGFIX'; then
-  ok "fix + test birlikte → BUGFIX uyarısı yok"
+CODE=$?
+if [ $CODE -eq 0 ] && ! printf '%s' "$OUT" | grep -q 'BUGFIX'; then
+  ok "fix + test birlikte → BUGFIX uyarısı yok (exit 0)"
 else
-  no "fix+test uyarmamalı" "BUGFIX uyarısı YOK" "çıktı: $(printf '%s' "$OUT" | head -3)"
+  no "fix+test uyarmamalı" "exit 0 + BUGFIX uyarısı YOK" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 fi
 git rm -q --cached bug.ts bug.test.ts && rm -f bug.ts bug.test.ts
 
@@ -520,6 +556,22 @@ payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&
 CODE=$?
 [ $CODE -eq 2 ] && ok "boşluklu dosya adındaki secret → bloklanır" || no "boşluklu addaki secret bloklanmalı" 2 "$CODE"
 git rm -q --cached "gizli anahtar.ts" && rm -f "gizli anahtar.ts"
+
+# (v3b) .md dosyasındaki SERT sır (AKIA) → bloklamalı (README sızıntısı da sızıntı)
+printf '# Notlar\nAKIAIOSFODNN7EXAMPLE\n' > sir-notu.md
+git add sir-notu.md
+payload "git commit -m 'docs: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok ".md içindeki AWS anahtarı → bloklanır" || no ".md'deki sert sır bloklanmalı" 2 "$CODE"
+git rm -q --cached sir-notu.md && rm -f sir-notu.md
+
+# (v3c) .md içindeki örnek DSN (user:pass@) → geçmeli (doküman örneği meşru)
+printf '# Kurulum\npostgres://user:pass@localhost/db\n' > kurulum.md
+git add kurulum.md
+payload "git commit -m 'docs: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok ".md'deki örnek DSN → geçer" || no ".md DSN örneği bloklanmamalı" 0 "$CODE"
+git rm -q --cached kurulum.md && rm -f kurulum.md
 
 # (v4) commit -a: stage'LENMEMİŞ secret → bloklamalı (index boş diye kaçmaz)
 printf 'temiz\n' > izli.ts && git add izli.ts && git commit -qm "chore: taban" >/dev/null 2>&1

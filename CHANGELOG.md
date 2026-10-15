@@ -44,6 +44,27 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   ↔ rol dosyası ↔ protokol listesi, komut ↔ tablo), şablon hook kaydı,
   bilgi tavanları, `hooks/lib/` varlığı; depo köküne `cd` (her yerden çalışır).
 
+### Eklendi — 2026-10-15 (ikinci geçiş: ertelenenler doğrulanarak girdi)
+
+- **Şablon sertleştirmeleri** (hepsi şablonda build + typecheck + lint +
+  41/41 test ile doğrulandı): `app/hesap/page.tsx` — proxy'nin dayandığı
+  "asıl kapı `await auth()`" deseninin çalışan iskeleti; `undoFeedAction`
+  geri alma anahtarını artık ATOMİK tüketiyor (iki sekmeden çifte iade
+  yarışı kapandı); `trustHost`/`AUTH_URL` ve `clientIp`/XFF sahtelenebilirliği
+  kod içi karar kaydıyla belgelendi, `.env.example`e `AUTH_URL` satırı.
+- **HITL onayında anlam artık sunucuda**: `agent-approval` snippet'i ve
+  agentic-chat senaryosu yalnız `optionId` gönderiyor — prompt-injection'lı
+  model "Vazgeç" etiketine `approved: true` yükleyemez (verify:agentic ✅).
+- **Sponsorlu kart adresi render'da da korunuyor**: https dışı `href` kart
+  basmaz (parser'ı atlayan çağırana karşı son savunma); şablon kopyası bayt
+  bayt eşitlendi.
+- **CI/tedarik zinciri**: üç workflow'a `permissions: contents: read` +
+  `persist-credentials: false`; verify betikleri `--ignore-scripts` ile
+  kuruyor (verify:agentic ile kanıtlandı); bootstrap'ta `skills` CLI sürüme
+  sabit, pin'e oturtulamayan anatomy klonu artık skill olarak BAĞLANMIYOR.
+- Ölçüldü, iyi: hook çifti commit-olmayan Bash çağrısına ~17 ms,
+  health-check 3,4 sn — optimizasyon gereksiz.
+
 ### Düzeltildi — 2026-10-15 (güvenlik review'unun doğrulanan bulguları)
 
 - **`git commit -a` / pathspec denetimden kaçırıyordu**: hook commit'ten önce
@@ -65,10 +86,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - **Okunamayan ROUTEMAP her commit'i bloklamasın**: `routemap_find` artık
   `-r` de arar; ayrıştırma düşerse gate-guard uyarıyla geçer (fail-open,
   sır taraması quality-scan'de ayrı).
+- CRLF kaydedilmiş ROUTEMAP'te tablo tanınmıyor ve Gate kontrolü sessizce
+  kapanıyordu; `commit` sözcüğünü metin olarak anan komutlar
+  (`grep "git commit"`) yanlışlıkla bloklanıyordu (komut-başı çapası);
+  Gate kolonu eklenmiş bir Faz tablosu story sanılıp her commit'i
+  kilitleyebiliyordu (tablo tanıma artık ID başlığını da şart koşar);
+  health-check'te @ag-ui pin kontrolü anahtar yokken `undefined` ile yanlış
+  PASS veriyordu ve mistakes başlıkları ayrıştırılamazsa script özetsiz
+  ölüyordu; .md dosyaları sert sır taramasından muaftı (artık AKIA/PEM/JWT
+  .md'de de ERROR; örnek DSN'ler için URL-kimlik deseni .md dışı), uzantı
+  bazlı `.lock` muafiyeti adla sınırlandı.
 - Bayat referans temizliği: "6-pass" → "6+1 pass" (6 dosya), CLAUDE.md ve
   README sayıları (18 komut, 9 sarmalayıcı, 12 rol, 99 kayıt, 15 kategori /
-  130+ kontrol, 39 hook testi), README komut tablosu + mermaid'e qa/researcher,
-  istatistik SVG'leri yeniden üretildi. test-hooks: 33 → 39 davranış testi.
+  130+ kontrol), README komut tablosu + mermaid'e qa/researcher, istatistik
+  SVG'leri yeniden üretildi; routemap-discipline'da Durum/Gate ayrı makineler,
+  gate-agent'tan auto-fix kalıntıları, Görev Zarfı örnekleri (dev-cycle,
+  context-curation), machine/README ajan listesi, token bütçesi tek kaynağa
+  indirildi. test-hooks: 33 → 46 davranış testi.
 
 ### Düzeltildi — 2026-10-14
 

@@ -34,9 +34,14 @@ routemap_find() {
 # gezer, her veri satırı için "ID<TAB>DURUM<TAB>GATE" basar.
 routemap_story_rows() {
   awk -F'|' '
-    function trim(s) { gsub(/^[ \t]+|[ \t]+$/, "", s); return s }
+    function trim(s) { gsub(/^[ \t\r]+|[ \t\r]+$/, "", s); return s }
+    # CRLF kaydedilmiş dosyada son hücre "Gate\r" olur ve tablo hiç
+    # tanınmazdı — satır başında \r temizlenir, trim de \r kırpar.
+    { sub(/\r$/, "") }
     /^\|/ {
-      # Başlık satırı: Durum ve Gate kolonlarını birlikte taşıyan tablo
+      # Başlık satırı: ID + Durum + Gate kolonlarını BİRLİKTE taşıyan tablo.
+      # ID şartı bilinçli: Gate kolonu eklenmiş bir Faz tablosu (ID yok)
+      # story tablosu sanılıp tüm commit`leri bloklayabiliyordu.
       if (!intable) {
         dc = 0; gc = 0; idc = 0
         for (i = 1; i <= NF; i++) {
@@ -45,7 +50,7 @@ routemap_story_rows() {
           if (h == "Gate")  gc = i
           if (h == "ID")    idc = i
         }
-        if (dc && gc) { intable = 1; if (!idc) idc = 2 }
+        if (dc && gc && idc) intable = 1
         next
       }
       # Ayraç satırı: |----|----|

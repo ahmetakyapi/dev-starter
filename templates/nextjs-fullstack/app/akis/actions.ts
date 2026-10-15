@@ -1,7 +1,7 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, gt, isNull } from "drizzle-orm";
 import { z } from "zod";
 import type { ActionResult } from "@/components/feed/agent-feed-core";
 import { db } from "@/lib/db";
@@ -108,6 +108,26 @@ export async function undoFeedAction(input: unknown): Promise<ActionResult> {
   const handler = row.performedAction ? FEED_HANDLERS[row.performedAction] : undefined;
   if (!handler?.undo) return fail("Bu iş geri alınamıyor");
 
+  // Anahtar ÖNCE atomik tüketilir (ana aksiyon yolundaki koşullu UPDATE
+  // deseniyle aynı): iki sekmeden aynı anahtarla gelen iki istek yarışırsa
+  // yalnız biri satırı yakalar, handler.undo (iade/iptal) bir kez koşar.
+  // authorizeUndo yukarıda sabit sürede karşılaştırdı; buradaki SQL eşitliği
+  // yalnız yarışı çözer. Handler düşerse anahtar bilinçli geri yazılmaz:
+  // yarım kalmış bir geri almayı ikinci kez koşturmak, kaybetmekten pahalı.
+  const [claimed] = await db
+    .update(feedItems)
+    .set({ undoToken: null, undoExpiresAt: null })
+    .where(
+      and(
+        eq(feedItems.id, row.id),
+        eq(feedItems.userId, user.id),
+        eq(feedItems.undoToken, parsed.data.undoToken),
+        gt(feedItems.undoExpiresAt, now),
+      ),
+    )
+    .returning({ id: feedItems.id });
+  if (!claimed) return fail("Geri alma süresi doldu");
+
   try {
     await handler.undo({ userId: user.id, row });
   } catch (error) {
@@ -122,8 +142,8 @@ export async function undoFeedAction(input: unknown): Promise<ActionResult> {
     .update(feedItems)
     .set(
       reopened
-        ? { resolvedAt: null, summary: null, performedAction: null, undoToken: null, undoExpiresAt: null }
-        : { summary: `Geri alındı: ${row.summary ?? ""}`.trim(), undoToken: null, undoExpiresAt: null },
+        ? { resolvedAt: null, summary: null, performedAction: null }
+        : { summary: `Geri alındı: ${row.summary ?? ""}`.trim() },
     )
     .where(eq(feedItems.id, row.id));
 

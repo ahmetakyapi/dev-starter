@@ -43,15 +43,21 @@ except Exception:
 }
 
 # Verilen metin bir git commit çağrısı mı?
-# - Çok satırlı komut normalize edilir: satır sonu ters bölüler silinir,
-#   yeni satırlar boşluğa çevrilir ("git \<newline>commit" kaçışı kapanır).
+# - Çok satırlı komut normalize edilir: satır devamı (sonu ters bölü) bir
+#   sonraki satırla BİRLEŞİR ("git \<newline>commit" kaçışı kapanır), düz
+#   yeni satır ise kabuğun gördüğü gibi komut AYRACI (;) olur — "git add
+#   .<newline>git commit" yakalanmaya devam eder.
+# - "git" komut BAŞINDA aranır (satır başı, ; & | ( ` ayracı, env ataması
+#   ya da `command` öneki sonrası): `grep -rn "git commit" docs/` gibi
+#   metin olarak anan komutlar artık commit sanılmaz.
 # - "commit" tam sözcük okunur: "git show --stat commit-abc" ya da
 #   "git commit-graph" commit sayılmaz (yanlış blok üretiyordu).
-# Desen tabanlı algılama tamamen kapatılamaz (alias, $g commit gibi yollar
-# kalır); bu bilinen ve kabul edilmiş bir sınırdır.
+# Desen tabanlı algılama tamamen kapatılamaz (alias, $g commit, script'e
+# yazıp çalıştırma kalır); bu bilinen ve kabul edilmiş bir sınırdır.
 hook_text_is_git_commit() {
-  printf '%s' "$1" | sed 's/\\$//' | tr '\n' ' ' \
-    | grep -qE 'git[[:space:]]+([^|;&]*[[:space:]])?commit([^a-zA-Z-]|$)'
+  printf '%s' "$1" \
+    | awk '{ if (sub(/\\$/, "")) printf "%s ", $0; else print }' | tr '\n' ';' \
+    | grep -qE '(^|[;&|(`]|&&|\|\|)[[:space:]]*([A-Za-z_][A-Za-z_0-9]*=[^[:space:]]*[[:space:]]+)*(command[[:space:]]+)?git[[:space:]]+([^|;&]*[[:space:]])?commit([^a-zA-Z-]|$)'
 }
 
 # Bu payload bir git commit çağrısı mı? (stdin'i BİR kez okur; komut metni

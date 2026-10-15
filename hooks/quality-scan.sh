@@ -75,12 +75,20 @@ if [ -n "$SECRET_HITS" ]; then
 fi
 
 # 3b. Güvenlik: bilinen sır biçimleri (anahtar deseninden bağımsız)
-# AWS access key, PEM özel anahtar, iki parçalı JWT, URL içinde kullanıcı:parola.
-# Bunlar "password=..." kalıbına girmeden sızar; ayrı desenle taranır.
-# scripts/test-hooks.sh hariç: tarayıcının kendi test paketi, fixture olarak
-# sahte sır taşımak zorunda (AKIA...EXAMPLE).
-KNOWN_SECRETS=$(echo "$STAGED" | grep -vE '\.(md|example|template|lock)$|\.test\.|\.spec\.|package-lock\.json|(^|/)scripts/test-hooks\.sh$' \
-  | grep . | tr '\n' '\0' | xargs -0 grep -lnE -e 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{10,}\.eyJ|[a-z][a-z0-9+.-]*://[^/@[:space:]"]+:[^@[:space:]"]+@' -- 2>/dev/null || true)
+# İki katman: SERT sırlar (AWS anahtarı, PEM, iki parçalı JWT) .md DAHİL her
+# yerde aranır — README'ye yapıştırılan anahtar da sızıntıdır. URL içindeki
+# kullanıcı:parola ise dokümanlarda örnek DSN olarak meşrudur
+# (postgres://user:pass@localhost); o desen .md dışında taranır.
+# Muafiyetler dar: yalnız bilinen kilit DOSYA ADLARI (uzantı bazlı .lock
+# muafiyeti secrets.lock gibi gerçek sırları kaçırıyordu), örnek/şablon
+# dosyaları, test dosyaları ve tarayıcının kendi test paketi
+# (fixture olarak sahte sır taşımak zorunda).
+SEC_EXCL='\.(example|template)$|\.test\.|\.spec\.|(^|/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml)$|(^|/)scripts/test-hooks\.sh$'
+HARD_HITS=$(printf '%s\n' "$STAGED" | grep -vE "$SEC_EXCL" \
+  | grep . | tr '\n' '\0' | xargs -0 grep -lnE -e 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{10,}\.eyJ' -- 2>/dev/null || true)
+URL_HITS=$(printf '%s\n' "$STAGED" | grep -vE "$SEC_EXCL|\.md$" \
+  | grep . | tr '\n' '\0' | xargs -0 grep -lnE -e '[a-z][a-z0-9+.-]*://[^/@[:space:]"]+:[^@[:space:]"]+@' -- 2>/dev/null || true)
+KNOWN_SECRETS=$(printf '%s\n%s\n' "$HARD_HITS" "$URL_HITS" | grep . | sort -u || true)
 if [ -n "$KNOWN_SECRETS" ]; then
   echo "❌ SECURITY: Bilinen sır biçimi bulundu (AWS/PEM/JWT/URL kimlik bilgisi):"
   echo "$KNOWN_SECRETS" | sed 's/^/   /'
@@ -194,7 +202,8 @@ fi
 if [ $ERRORS -gt 0 ]; then
   echo ""
   echo "❌ Quality scan FAILED — $ERRORS hata, $WARNINGS uyarı"
-  echo "   Hataları düzeltin veya bypass: git commit --no-verify"
+  echo "   Hataları düzeltin ya da ilgili dosyayı stage dışına alın"
+  echo "   (git restore --staged <dosya>). --no-verify bu hook'u ATLATMAZ."
   exit 2
 fi
 
