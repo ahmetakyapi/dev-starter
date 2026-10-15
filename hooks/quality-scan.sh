@@ -20,22 +20,34 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/hook-input.sh"
 # Aşağıdaki kontroller (#9, #10) da bu metni kullanır.
 CMD_TEXT=$(hook_command)
 
-# Sadece git commit komutlarını yakala
-printf '%s' "$CMD_TEXT" | grep -qE 'git[[:space:]]+([^|;&]*[[:space:]])?commit' || exit 0
+# Sadece git commit komutlarını yakala (normalize + tam sözcük: lib)
+hook_text_is_git_commit "$CMD_TEXT" || exit 0
 
 WARNINGS=0
 ERRORS=0
 
-# Staged dosyaları al
+# Staged dosyaları al. `git commit -a` / pathspec dosyaları commit ANINDA
+# stage'ler; hook commit'ten ÖNCE koştuğu için index o an eksik olabilir ve
+# boş liste denetimden kaçışa dönüşür. Komutta -a/--all/--include görülürse
+# çalışma ağacındaki izlenen değişiklikler de listeye katılır.
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
+if printf '%s' "$CMD_TEXT" | grep -qE '(^|[[:space:]])(-[a-zA-Z]*a[a-zA-Z]*|--all|--include)([[:space:]=]|$)'; then
+  WORKTREE=$(git diff HEAD --name-only --diff-filter=ACMR 2>/dev/null || true)
+  STAGED=$(printf '%s\n%s\n' "$STAGED" "$WORKTREE" | grep -v '^$' | sort -u || true)
+fi
 if [ -z "$STAGED" ]; then
   exit 0
 fi
 
+# Dosya listesini xargs'a HEP NUL ayraçlı ver: boşluklu/`-` ile başlayan
+# adlar varsayılan xargs'ta bölünür ya da seçenek sanılır ve 2>/dev/null
+# hatayı yutar — güvenlik taraması sessizce boş döner.
+staged0() { printf '%s\n' "$STAGED" | grep -E "$1" | tr '\n' '\0'; }
+
 # 1. Hardcoded hex renk kontrolü (tsx/ts dosyalarında)
 # Test dosyaları token DEĞERLERİNİ doğrular — hex barındırmaları beklenir.
 # Diğer kontroller zaten test dosyalarını dışlıyor; bu satır o tutarlılığı kurar.
-HEX_HITS=$(echo "$STAGED" | grep -E '\.(tsx?|css)$' | xargs grep -ln '#[0-9a-fA-F]\{3,8\}' 2>/dev/null | grep -v 'globals.css\|tailwind\|theme\|\.config\.\|\.test\.\|\.spec\.' || true)
+HEX_HITS=$(staged0 '\.(tsx?|css)$' | xargs -0 grep -ln -e '#[0-9a-fA-F]\{3,8\}' -- 2>/dev/null | grep -vE 'globals\.css|tailwind|theme|\.config\.|\.test\.|\.spec\.' || true)
 if [ -n "$HEX_HITS" ]; then
   echo "⚠️  DESIGN TOKEN: Hardcoded hex renk bulundu:"
   echo "$HEX_HITS" | sed 's/^/   /'
@@ -43,7 +55,7 @@ if [ -n "$HEX_HITS" ]; then
 fi
 
 # 2. console.log kontrolü
-LOG_HITS=$(echo "$STAGED" | grep -E '\.(tsx?|jsx?)$' | xargs grep -ln 'console\.\(log\|debug\|warn\)' 2>/dev/null | grep -v '\.test\.\|\.spec\.\|\.config\.' || true)
+LOG_HITS=$(staged0 '\.(tsx?|jsx?)$' | xargs -0 grep -lnE -e 'console\.(log|debug|warn)' -- 2>/dev/null | grep -vE '\.test\.|\.spec\.|\.config\.' || true)
 if [ -n "$LOG_HITS" ]; then
   echo "⚠️  DEBUG: console.log/debug/warn bulundu:"
   echo "$LOG_HITS" | sed 's/^/   /'
@@ -51,7 +63,11 @@ if [ -n "$LOG_HITS" ]; then
 fi
 
 # 3. Güvenlik: Hardcoded secret kontrolü
-SECRET_HITS=$(echo "$STAGED" | xargs grep -lniE '(password|secret|api_key|apikey|token)\s*[:=]\s*["\x27][^"\x27]{8,}' 2>/dev/null | grep -v '\.example\|\.template\|\.test\.\|\.spec\.\|\.md$' || true)
+# Desen bir değişkende ve apostrof GERÇEK: ERE köşeli parantezinde \x27
+# hex kaçışı DEĞİL üç ayrı karakterdir (x,2,7) — eski desen tek tırnaklı
+# secret'ları hiç yakalamıyordu. \s de GNU'ya özgü; [[:space:]] iki tarafta da çalışır.
+SECRET_RE="(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"']{8,}"
+SECRET_HITS=$(staged0 '.' | xargs -0 grep -lniE -e "$SECRET_RE" -- 2>/dev/null | grep -vE '\.example|\.template|\.test\.|\.spec\.|\.md$' || true)
 if [ -n "$SECRET_HITS" ]; then
   echo "❌ SECURITY: Olası hardcoded secret bulundu:"
   echo "$SECRET_HITS" | sed 's/^/   /'
@@ -64,7 +80,7 @@ fi
 # scripts/test-hooks.sh hariç: tarayıcının kendi test paketi, fixture olarak
 # sahte sır taşımak zorunda (AKIA...EXAMPLE).
 KNOWN_SECRETS=$(echo "$STAGED" | grep -vE '\.(md|example|template|lock)$|\.test\.|\.spec\.|package-lock\.json|(^|/)scripts/test-hooks\.sh$' \
-  | xargs grep -lnE 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{10,}\.eyJ|[a-z][a-z0-9+.-]*://[^/@[:space:]"]+:[^@[:space:]"]+@' 2>/dev/null || true)
+  | grep . | tr '\n' '\0' | xargs -0 grep -lnE -e 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{10,}\.eyJ|[a-z][a-z0-9+.-]*://[^/@[:space:]"]+:[^@[:space:]"]+@' -- 2>/dev/null || true)
 if [ -n "$KNOWN_SECRETS" ]; then
   echo "❌ SECURITY: Bilinen sır biçimi bulundu (AWS/PEM/JWT/URL kimlik bilgisi):"
   echo "$KNOWN_SECRETS" | sed 's/^/   /'
@@ -82,7 +98,7 @@ if [ -n "$ENV_HITS" ]; then
 fi
 
 # 5. @ts-ignore / any kontrolü
-TS_IGNORE=$(echo "$STAGED" | grep -E '\.tsx?$' | xargs grep -ln '@ts-ignore\|@ts-expect-error\|: any\b' 2>/dev/null | grep -v '\.test\.\|\.spec\.\|\.d\.ts$' || true)
+TS_IGNORE=$(staged0 '\.tsx?$' | xargs -0 grep -lnE -e '@ts-ignore|@ts-expect-error|: any([^a-zA-Z_]|$)' -- 2>/dev/null | grep -vE '\.test\.|\.spec\.|\.d\.ts$' || true)
 if [ -n "$TS_IGNORE" ]; then
   echo "⚠️  TYPESCRIPT: @ts-ignore veya 'any' type bulundu:"
   echo "$TS_IGNORE" | sed 's/^/   /'
@@ -111,9 +127,9 @@ fi
 # 7. Agentic: tool sonucu doğrulanmadan cast ediliyor mu?
 # Tel üzerinde tool sonucu STRING'dir; JSON.parse -> unknown döner.
 # Doğrudan cast etmek temenniden ibarettir. -> knowledge/mistakes.md #58
-AGENTIC_FILES=$(echo "$STAGED" | grep -E '\.tsx?$' | xargs grep -ln 'useRenderTool\|useFrontendTool\|useHumanInTheLoop\|toolCall' 2>/dev/null || true)
+AGENTIC_FILES=$(staged0 '\.tsx?$' | xargs -0 grep -lnE -e 'useRenderTool|useFrontendTool|useHumanInTheLoop|toolCall' -- 2>/dev/null || true)
 if [ -n "$AGENTIC_FILES" ]; then
-  UNSAFE_PARSE=$(echo "$AGENTIC_FILES" | xargs grep -ln 'JSON\.parse(.*) as ' 2>/dev/null | grep -v '\.test\.\|\.spec\.' || true)
+  UNSAFE_PARSE=$(printf '%s\n' "$AGENTIC_FILES" | grep . | tr '\n' '\0' | xargs -0 grep -ln -e 'JSON\.parse(.*) as ' -- 2>/dev/null | grep -vE '\.test\.|\.spec\.' || true)
   if [ -n "$UNSAFE_PARSE" ]; then
     echo "⚠️  AGENTIC: Tool sonucu doğrulanmadan cast ediliyor:"
     echo "$UNSAFE_PARSE" | sed 's/^/   /'
@@ -127,7 +143,7 @@ fi
 # kopya yaratır ve HttpAgent tipi AbstractAgent'a atanamaz. -> mistakes.md #71
 AGUI_PKG=$(echo "$STAGED" | grep -E '(^|/)package\.json$' || true)
 if [ -n "$AGUI_PKG" ]; then
-  LOOSE_AGUI=$(echo "$AGUI_PKG" | xargs grep -ln '"@ag-ui/[a-z]*": *"[\^~]' 2>/dev/null || true)
+  LOOSE_AGUI=$(printf '%s\n' "$AGUI_PKG" | grep . | tr '\n' '\0' | xargs -0 grep -ln -e '"@ag-ui/[a-z]*": *"[\^~]' -- 2>/dev/null || true)
   if [ -n "$LOOSE_AGUI" ]; then
     echo "⚠️  AGENTIC: @ag-ui/* sürümü aralıkla yazılmış (^ veya ~):"
     echo "$LOOSE_AGUI" | sed 's/^/   /'

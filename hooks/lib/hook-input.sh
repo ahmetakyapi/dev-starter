@@ -42,7 +42,21 @@ except Exception:
   fi
 }
 
-# Bu payload bir git commit çağrısı mı?
+# Verilen metin bir git commit çağrısı mı?
+# - Çok satırlı komut normalize edilir: satır sonu ters bölüler silinir,
+#   yeni satırlar boşluğa çevrilir ("git \<newline>commit" kaçışı kapanır).
+# - "commit" tam sözcük okunur: "git show --stat commit-abc" ya da
+#   "git commit-graph" commit sayılmaz (yanlış blok üretiyordu).
+# Desen tabanlı algılama tamamen kapatılamaz (alias, $g commit gibi yollar
+# kalır); bu bilinen ve kabul edilmiş bir sınırdır.
+hook_text_is_git_commit() {
+  printf '%s' "$1" | sed 's/\\$//' | tr '\n' ' ' \
+    | grep -qE 'git[[:space:]]+([^|;&]*[[:space:]])?commit([^a-zA-Z-]|$)'
+}
+
+# Bu payload bir git commit çağrısı mı? (stdin'i BİR kez okur; komut metni
+# ayrıca gerekiyorsa önce CMD_TEXT=$(hook_command) yakala ve
+# hook_text_is_git_commit kullan — ikinci okuma boş döner.)
 hook_is_git_commit() {
-  printf '%s' "$(hook_command)" | grep -qE 'git[[:space:]]+([^|;&]*[[:space:]])?commit'
+  hook_text_is_git_commit "$(hook_command)"
 }

@@ -41,7 +41,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 98 kayıt (#58–73 agentic, #74–94 Next 16 / v4 / motion, #95–97 hareket filmi, #98 figür kiti)
+│   ├── mistakes.md            → 99 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
@@ -73,9 +73,9 @@ dev-starter/
 │   └── lib/routemap.sh        → ROUTEMAP tablo ayrıştırıcı — kolon ada göre (#99)
 │
 ├── scripts/
-│   ├── health-check.sh        → Ekosistem bütünlüğü (13 kategori, 83 kontrol)
+│   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
-│   ├── test-hooks.sh          → Hook davranış testleri (17)
+│   ├── test-hooks.sh          → Hook davranış testleri (39, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
@@ -86,8 +86,8 @@ dev-starter/
 │
 ├── .claude/
 │   ├── settings.json          → Hook entegrasyonu (paylaşılan, versiyonlanır)
-│   ├── commands/              → 10 komut — bootstrap ile ~/.claude/commands'a symlink
-│   ├── agents/                → 5 alt ajan sarmalayıcısı — ~/.claude/agents'a symlink
+│   ├── commands/              → 18 komut — bootstrap ile ~/.claude/commands'a symlink
+│   ├── agents/                → 9 alt ajan sarmalayıcısı — ~/.claude/agents'a symlink
 │   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
 │
 ├── templates/
@@ -192,10 +192,12 @@ gününden denetimli doğar, kopya yok (tek kaynak).
 bash scripts/health-check.sh   # veya: npm run health
 ```
 
-13 kategori, 83 kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
-testiyle), snippet'ler, şablonlar, knowledge base, paket tutarlılığı, token
-ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade, palet dışı renk),
-tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion).
+15 kategori, 130+ kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
+testiyle), snippet'ler, şablonlar (hook kaydı dahil), knowledge base, paket
+tutarlılığı, token ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade,
+palet dışı renk), tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy,
+motion), orkestrasyon bütünlüğü (sarmalayıcı ↔ rol ↔ protokol, komut ↔ tablo)
+ve bilgi tabanı bütünlüğü (mistakes numaraları, indeks kapsamı, satır tavanları).
 
 Agentic snippet ve şablonların **derlenip test edildiğini** kanıtlamak ayrı
 bir komuttur (ağ + `npm install` gerektirir, bu yüzden opt-in):

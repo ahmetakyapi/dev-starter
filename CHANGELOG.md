@@ -44,6 +44,32 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   ↔ rol dosyası ↔ protokol listesi, komut ↔ tablo), şablon hook kaydı,
   bilgi tavanları, `hooks/lib/` varlığı; depo köküne `cd` (her yerden çalışır).
 
+### Düzeltildi — 2026-10-15 (güvenlik review'unun doğrulanan bulguları)
+
+- **`git commit -a` / pathspec denetimden kaçırıyordu**: hook commit'ten önce
+  koştuğu için index o an boş/eksik kalıyor, quality-scan `exit 0` ile hiçbir
+  kontrol koşmadan geçiyordu; gate-guard'ın docs muafiyeti de "1 .md stage'le,
+  kodu -a ile geçir" açığına izin veriyordu. Komutta `-a/--all/--include`
+  görülürse çalışma ağacındaki izlenen değişiklikler de taranır; muafiyet
+  uygulanmaz.
+- **Tek tırnaklı secret'lar hiç yakalanmıyordu**: ERE köşeli parantezinde
+  `\x27` hex kaçışı değil üç ayrı karakterdir — apostrof sınıfta yoktu.
+  Desen gerçek apostrofla ve `[[:space:]]` ile (BSD grep'te `\s` da ölüydü)
+  yeniden yazıldı; BRE `\|` GNU'culukları `-E`ye çevrildi.
+- **Dosya listeleri xargs'a NUL ayraçlı gidiyor**: boşluklu ya da `-` ile
+  başlayan dosya adı taramayı sessizce boşa düşürüyordu (`2>/dev/null`
+  hatayı yutuyor). Tüm zincirler `tr '\n' '\0' | xargs -0 ... --` deseninde.
+- **Commit algılama normalize edildi**: `git \` + yeni satır + `commit`
+  kaçışı kapandı; `commit` tam sözcük okunuyor — `git show --stat commit-abc`
+  artık yanlışlıkla bloklanmıyor.
+- **Okunamayan ROUTEMAP her commit'i bloklamasın**: `routemap_find` artık
+  `-r` de arar; ayrıştırma düşerse gate-guard uyarıyla geçer (fail-open,
+  sır taraması quality-scan'de ayrı).
+- Bayat referans temizliği: "6-pass" → "6+1 pass" (6 dosya), CLAUDE.md ve
+  README sayıları (18 komut, 9 sarmalayıcı, 12 rol, 99 kayıt, 15 kategori /
+  130+ kontrol, 39 hook testi), README komut tablosu + mermaid'e qa/researcher,
+  istatistik SVG'leri yeniden üretildi. test-hooks: 33 → 39 davranış testi.
+
 ### Düzeltildi — 2026-10-14
 
 - **`hooks/gate-guard.sh` Gate yerine Assign kolonunu okuyordu** (resmi 7

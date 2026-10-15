@@ -14,23 +14,33 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/hook-input.sh"
 # shellcheck source=lib/routemap.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/routemap.sh"
 
-# Sadece git commit komutlarını yakala
-hook_is_git_commit || exit 0
+# Sadece git commit komutlarını yakala (komut metni BİR kez okunur; stdin
+# ikinci okumada boş döner — bkz. lib/hook-input.sh)
+CMD_TEXT=$(hook_command)
+hook_text_is_git_commit "$CMD_TEXT" || exit 0
 
-# ROUTEMAP yoksa uyarı ver ama bloklamadan devam et
+# ROUTEMAP yoksa/okunamıyorsa uyarı ver ama bloklamadan devam et
 ROUTEMAP=$(routemap_find) || {
   echo "⚠️  ROUTEMAP bulunamadı. Gate kontrolü atlanıyor."
   exit 0
 }
 
-# Aktif story var mı?
-ACTIVE=$(routemap_active_stories "$ROUTEMAP")
+# Aktif story var mı? Ayrıştırma beklenmedik biçimde düşerse commit'i sebepsiz
+# bloklamak yerine uyarıyla geç (fail-open; sır taraması quality-scan'de ayrı).
+ACTIVE=$(routemap_active_stories "$ROUTEMAP" 2>/dev/null) || {
+  echo "⚠️  ROUTEMAP ayrıştırılamadı — Gate kontrolü atlandı." >&2
+  exit 0
+}
 [ -z "$ACTIVE" ] && exit 0
 
 # Yalnız doküman değişen commit Gate istemez (dev-cycle.md: docs → Pass 1-2).
-# Staged liste boşsa (ör. commit -a) muafiyet uygulanmaz, tam kontrol çalışır.
+# İki durumda muafiyet UYGULANMAZ: staged liste boşsa ve komutta -a/--all/
+# --include ya da pathspec görünüyorsa — bunlar dosyaları commit ANINDA
+# stage'ler, hook'un gördüğü index o an eksiktir (1 .md stage'leyip
+# `commit -a` ile kod geçirme açığı).
 STAGED=$(git diff --cached --name-only 2>/dev/null || true)
-if [ -n "$STAGED" ] && ! echo "$STAGED" | grep -qvE '\.(md|txt)$'; then
+COMMITS_WORKTREE=$(printf '%s' "$CMD_TEXT" | grep -qE '(^|[[:space:]])(-[a-zA-Z]*a[a-zA-Z]*|--all|--include)([[:space:]=]|$)' && echo yes || true)
+if [ -n "$STAGED" ] && [ -z "$COMMITS_WORKTREE" ] && ! echo "$STAGED" | grep -qvE '\.(md|txt)$'; then
   echo "ℹ️  Yalnız doküman değişiyor — Gate kontrolü uygulanmadı ($ROUTEMAP)."
   exit 0
 fi

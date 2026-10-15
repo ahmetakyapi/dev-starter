@@ -413,6 +413,28 @@ git add util.ts
 payload "git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
 CODE=$?
 [ $CODE -eq 2 ] && ok "kod staged + Gate yok → bloklanır" || no "kodlu commit bloklanmalı" 2 "$CODE"
+git rm -q --cached util.ts && rm -f util.ts
+
+# (u2) 1 .md staged + commit -a → muafiyet UYGULANMAZ, bloklamalı
+# (-a kodu commit anında stage'ler; "1 doküman göster, kodu -a ile geçir" açığı)
+git add README.md
+payload "git commit -am 'docs: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok ".md staged ama -a var → muafiyet yok, bloklanır" || no "-a'lı commit muaf olmamalı" 2 "$CODE"
+
+# (u3) commit OLMAYAN ama 'commit' sözcüğü geçen komut → dokunmamalı
+payload "git show --stat commit-abc" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "git show ... commit-abc → commit sanılmaz (exit 0)" || no "show komutu bloklanmamalı" 0 "$CODE"
+
+# (u4) Satır sonu ters bölüyle bölünmüş commit → yine yakalanmalı
+# (payload() çok satırlı girdiyi JSON'a çeviremez; JSON elle kurulur:
+#  komut metni = `git \` + yeni satır + `commit -m "feat: x"`.
+#  Önce index temizlenir — u2'den kalan .md docs muafiyetini tetiklemesin.)
+git rm -q --cached README.md 2>/dev/null || true
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git \\\ncommit -m \"feat: x\""}}' | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "çok satırlı 'git \\<newline>commit' → yakalanır, bloklanır" || no "çok satırlı commit yakalanmalı" 2 "$CODE"
 
 echo
 # ─────────────────────────────────────────────────────────────
@@ -481,6 +503,31 @@ else
   no ".only → uyarmalı" "exit 0 + TEST uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 fi
 git rm -q --cached odak.test.ts && rm -f odak.test.ts
+
+# (v2) TEK tırnaklı secret → bloklamalı (eski desen [\"\x27] apostrofu
+# sınıfa hiç almıyordu — ERE'de \x27 üç ayrı karakterdir; mistakes.md #99 sınıfı)
+printf "const password = 'cokgizlisifre123'\n" > tek.ts
+git add tek.ts
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "tek tırnaklı secret → bloklanır" || no "tek tırnaklı secret bloklanmalı" 2 "$CODE"
+git rm -q --cached tek.ts && rm -f tek.ts
+
+# (v3) Boşluklu dosya adındaki secret → bloklamalı (NUL'suz xargs adı bölüyordu)
+printf 'const api_key = "gizlideger12345"\n' > "gizli anahtar.ts"
+git add "gizli anahtar.ts"
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "boşluklu dosya adındaki secret → bloklanır" || no "boşluklu addaki secret bloklanmalı" 2 "$CODE"
+git rm -q --cached "gizli anahtar.ts" && rm -f "gizli anahtar.ts"
+
+# (v4) commit -a: stage'LENMEMİŞ secret → bloklamalı (index boş diye kaçmaz)
+printf 'temiz\n' > izli.ts && git add izli.ts && git commit -qm "chore: taban" >/dev/null 2>&1
+printf 'const key = "AKIAIOSFODNN7EXAMPLE"\n' > izli.ts
+payload "git commit -am 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "commit -a + stage'lenmemiş secret → bloklanır" || no "-a ile secret kaçmamalı" 2 "$CODE"
+git checkout -q -- izli.ts
 
 # (z2) Düzensiz commit mesajı → uyarmalı
 printf 'export const a = 1\n' > duz.ts

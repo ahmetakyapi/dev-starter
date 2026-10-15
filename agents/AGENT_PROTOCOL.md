@@ -102,7 +102,7 @@ Kullanıcı talebi
       ↓
   FE/BE Agent self-check
       ↓
-  Gate Agent — 6-pass kalite kontrolü
+  Gate Agent — 6+1 pass kalite kontrolü
       ↓
   PASSED? ─── Hayır ──→ Auto-fix veya agent'a geri gönder (max 2 döngü)
       │

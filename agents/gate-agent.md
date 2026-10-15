@@ -52,7 +52,7 @@ Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölüm�
 > Pass 1–6 her zaman çalışır. Pass 7 koşulludur: yalnızca diff'te agentic
 > kod varsa. Koşullu bir pass'in atlanması raporda **açıkça** yazılır.
 
-Her teslimatta sırasıyla şu 6 pass çalıştırılır. Her pass'ta bulunan sorunlar **severity** ile işaretlenir:
+Her teslimatta sırasıyla bu pass'ler (1–6 her zaman, 7 koşullu) çalıştırılır. Her pass'ta bulunan sorunlar **severity** ile işaretlenir:
 
 - **CRITICAL**: Otomatik düzelt, düzeltemezsen BLOKLA
 - **HIGH**: Otomatik düzelt, düzeltemezsen uyar

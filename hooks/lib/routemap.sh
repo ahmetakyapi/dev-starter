@@ -17,10 +17,12 @@
 #   routemap_done_without_gate "$ROUTEMAP"
 
 # ROUTEMAP dosyasını bul: stdout'a yolu basar; yoksa 1 döner.
+# -r da aranır: okunamayan dosya awk'ı fatal düşürür ve set -e altında hook
+# exit 2 ile ölür — PreToolUse'ta bu, her commit'in sebepsiz BLOKlanmasıdır.
 routemap_find() {
   local f
   for f in docs/ROUTEMAP.md ROUTEMAP.md; do
-    if [ -f "$f" ]; then
+    if [ -f "$f" ] && [ -r "$f" ]; then
       printf '%s' "$f"
       return 0
     fi

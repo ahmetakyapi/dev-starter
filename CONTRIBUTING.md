@@ -7,7 +7,7 @@ dev-starter ekosistemini gelistirmek icin bu rehberi takip edin.
 ## Genel Kurallar
 
 - Conventional commit kullanin (`rules/commit-conventions.md`)
-- Her degisiklik Gate Agent 6-pass kontrolunden gecmeli
+- Her degisiklik Gate Agent 6+1 pass kontrolunden gecmeli
 - Hardcoded renk/deger YASAK — semantic token kullanin (`rules/design-tokens.md`)
 - Turkce dokumantasyon, Ingilizce kod
 

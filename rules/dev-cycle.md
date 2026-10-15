@@ -130,7 +130,7 @@ AGENT_HANDOFF
     - değişen dosyalar: [liste]
     - kabul kriterleri: [plan'dan]
   acceptance_criteria:
-    - 6-pass Gate PASSED
+    - 6+1 pass Gate PASSED
 ```
 
 Gate sonuçları:

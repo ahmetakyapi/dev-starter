@@ -209,10 +209,11 @@ projede yaşandığı yazar.
 flowchart TB
     subgraph Önden["Önden Gidenler"]
         ST["strategist<br/><sub>pazar · yön · teknoloji · MVP</sub>"]
-        BA["business-analyst<br/><sub>kapsam ve risk sorgusu</sub>"]
+        RS["researcher<br/><sub>benzer çözümler, kaynaklı</sub>"]
+        BA["business-analyst<br/><sub>kapsam sorgusu · orkestrasyon</sub>"]
     end
     subgraph Kuranlar["Kuranlar"]
-        UX["uiux"] --- FE["frontend"] --- BE["backend"] --- AG["agentic-ui"]
+        UX["uiux"] --- FE["frontend"] --- BE["backend"] --- AG["agentic-ui"] --- QA["qa"]
     end
     subgraph Ölçenler["Ölçenler"]
         DR["design-reviewer<br/><sub>ekran × tema × genişlik</sub>"]
@@ -230,7 +231,15 @@ flowchart TB
 |---|---|
 | `/kickoff [fikir]` | Fikri pazar taraması, yön seçenekleri, teknoloji kararları ve MVP planına çevirir |
 | `/roadmap [odak]` | Var olan projede sıradaki en değerli 5 işi, fırsatları ve dokunulmayacakları önerir |
-| `/new-project` | Şablon + palet + tema + belgeler + ilk doğrulama |
+| `/new-project` | Şablon + palet + tema + belgeler + hook doğrulama |
+| `/plan` | Planning fazını yürütür (P1→P6): belgeler + story'ler |
+| `/story [id]` | Story'yi uçtan uca işler: alt ajanlara dağıt → Gate → commit |
+| `/gate [story]` | 6+1 pass denetim; sonuç ROUTEMAP'e — commit kapısını açar |
+| `/fix [tarif]` | Bugfix protokolü: triage → failing test → düzeltme → kayıt |
+| `/research [konu]` | Benzer çözümlerin kaynaklı taraması → docs/research/ |
+| `/status` | Kaldığın yer + sıradaki en değerli 3 iş |
+| `/retro` | Dersleri onayla bilgi tabanına işler |
+| `/evolve` | Ekosistemin kendi gelişim turu: sağlık + tazelik + dış tarama |
 | `/theme` | Paleti ve temayı uygular ya da günceller |
 | `/snippet <ad>` | Bileşeni projeye uyarlayarak kopyalar |
 | `/review-ui` | Token, kimlik, iki tema, ekran düzeni, a11y ve hareket incelemesi |
@@ -239,9 +248,12 @@ flowchart TB
 | `/deploy` | Vercel yayın listesi |
 | `/release` | Sürüm, changelog, etiket |
 
-`.claude/agents/` altındaki beş ajan (`strategist`, `design-reviewer`,
-`content-editor`, `gate`, `deploy`) bootstrap ile `~/.claude/agents`'a bağlanır
-ve **her projede** kullanılabilir. Rol tanımlarının tek kaynağı [`agents/`](agents).
+`.claude/agents/` altındaki dokuz ajan (`strategist`, `design-reviewer`,
+`content-editor`, `gate`, `deploy`, `frontend`, `backend`, `qa`, `researcher`)
+bootstrap ile `~/.claude/agents`'a bağlanır ve **her projede** kullanılabilir.
+Ana oturum orkestratördür: işi Görev Zarfı ile dağıtır, sonucu ROUTEMAP'e
+işler ([`agents/AGENT_PROTOCOL.md`](agents/AGENT_PROTOCOL.md) → Orkestrasyon).
+Rol tanımlarının tek kaynağı [`agents/`](agents).
 
 ---
 
@@ -305,14 +317,14 @@ dev-starter/
 ├── packages/@ahmet/
 │   ├── theme/         theme.css (sistem + palet) · tokens.ts · index.css
 │   └── ui/            Surface · Button · motion varyantları · cn()
-├── agents/            10 rol tanımı + AGENT_PROTOCOL
+├── agents/            12 rol tanımı + AGENT_PROTOCOL
 ├── .claude/
-│   ├── agents/        strategist · design-reviewer · content-editor · gate · deploy
-│   └── commands/      10 komut
+│   ├── agents/        strategist · design-reviewer · content-editor · gate · deploy · frontend · backend · qa · researcher
+│   └── commands/      18 komut
 ├── knowledge/         mistakes · patterns · decisions · tech-radar · themes
-├── rules/             8 kural
-├── phases/            planlama · uçtan uca cila · yayın ve bakım
-├── hooks/             gate-guard · quality-scan · routemap-sync
+├── rules/             9 kural
+├── phases/            planlama · geliştirme · uçtan uca cila · yayın ve bakım
+├── hooks/             gate-guard · quality-scan · routemap-sync · session-brief
 ├── scripts/           health-check · audit-project · verify-* · build-readme-assets
 └── machine/           bootstrap.sh · global CLAUDE.md · taşınan skill'ler
 ```

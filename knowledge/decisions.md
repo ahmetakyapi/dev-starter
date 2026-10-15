@@ -348,6 +348,14 @@ KODU değiştirir ve `verify:*` zinciriyle (npm install + build + test)
 doğrulanmadan girmez — "kanıtsız değişiklik yok" kuralı şablonlar için de
 geçerli. Sırası gelince `/evolve` listesinden tek tek, doğrulanarak.
 
+**Ertelenenlere ek (2026-10-15, güvenlik review'u):** şablon sertleştirme
+adayları — `trustHost: true`un üretimde Host başlığına güveni,
+`x-forwarded-for`dan okunan istemci IP'sinin rate-limit anahtarı olması,
+şablon CI workflow'larına açık `permissions` bloğu, bootstrap'taki `npx -y
+skills` tedarik zinciri pin'i. Hook'ların her Bash çağrısında fork edilmesi
+(performans) da burada. Aynı kural: şablon/altyapı değişikliği doğrulanarak,
+`/evolve` sırasından.
+
 ---
 
 *Yeni bir teknoloji benimsendiğinde bu dosya güncellenir. Eski karar silinmez;
