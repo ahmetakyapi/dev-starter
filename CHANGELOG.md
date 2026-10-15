@@ -7,6 +7,24 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Eklendi — 2026-10-15
+
+- **`guides/11-vps-email-push.md`** — Açılış Zili'nde canlıya çıkan düzen:
+  VPS'e deploy (Actions → SSH → sürüm dizini, atomik bağ, sağlık + geri
+  dönüş), Actions hijyeni (sabit `checkout@v5` / `setup-node@v5` /
+  `ubuntu-24.04`, host key, ortak `concurrency`), ortam değişkenlerinin
+  GitHub Secrets/Variables'tan izin listeli senkronu, çalışma anı ↔
+  derleme anı tablosu, arama motoru açılışı ve Search Console kurulumu,
+  Resend ile işlem e-postası (DMARC, yanıt almayan gönderen, hesap
+  sızdırmama, markalı HTML şablonu ve GIF), Web Push (VAPID).
+- **`knowledge/mistakes.md` #100–101** — canlı sitenin `SITE_INDEXABLE=false`
+  ile Google'a kapalı derlenmesi; sunucuya elle konan anahtarın servise
+  ulaşmaması. İndekse "VPS · Ortam Değişkeni · Yayın" satırı.
+- **`knowledge/patterns.md`** — "GitHub Secrets → Sunucu Ortamı" ve
+  "Markalı İşlem E-postası" desenleri.
+- **`knowledge/tech-radar.md`** — İşlem e-postası Resend (SDK'sız)
+  Benimse'ye terfi; Barındırma ve Push satırlarına Açılış Zili notları.
+
 ### Eklendi — 2026-10-14
 
 - **Gerçek alt ajan orkestrasyonu.** Kayıtlı subagent sayısı 5 → 9:

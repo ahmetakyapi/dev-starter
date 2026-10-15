@@ -25,6 +25,7 @@ Vercel. Şablonlar `~/dev-starter/templates/` altında, bu sözleşmeye uyar.
 | 8 | [08-quality-and-ship.md](08-quality-and-ship.md) | Her commit ve her deploy öncesi |
 | 9 | [09-typography.md](09-typography.md) | Font seçimi: preset'ler, `next/font` kurulumu |
 | 10 | [10-component-library.md](10-component-library.md) | Şablonda olmayan bileşen gerektiğinde: `snippets/ui/` kütüphanesi |
+| 11 | [11-vps-email-push.md](11-vps-email-push.md) | Vercel dışı (VPS) deploy, ortam değişkeni senkronu, arama motoru açılışı, e-posta ve Web Push |
 
 Fikir aşamasındaysan önce `/kickoff` (strateji, pazar, MVP), sonra 01.
 Acelen varsa: 01 → 08 → gerisi ihtiyaç anında.

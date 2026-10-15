@@ -933,6 +933,35 @@ veritabanının boş listesi saklanır. `guides/06-nextjs-16.md` § 7.
 Rota × 390/1280 × dil; HTTP kodu (soft 404), konsol hatası, yatay taşma.
 `guides/08-quality-and-ship.md` § 2.
 
+### GitHub Secrets → Sunucu Ortamı (Açılış Zili)
+VPS'teki `/etc/<app>.env`i elle değil deploy'dan yaz. Runner'da yalnız
+TANIMLI değerlerden JSON kur, SSH stdin'iyle köke ilet; sunucudaki küçük
+Python yardımcısı izin listesi + biçim denetimi yapar, hepsi ya da hiçbiri
+yazar, değeri basmadan doğrular.
+```bash
+payload=$(python3 -c 'import json,os;n=["RESEND_API_KEY","EMAIL_FROM","VAPID_PUBLIC_KEY","VAPID_PRIVATE_KEY","VAPID_SUBJECT","SITE_INDEXABLE"];print(json.dumps({k:os.environ[k] for k in n if os.environ.get(k,"").strip()}))')
+[ "$payload" = "{}" ] && exit 0                       # tanımsız = sunucuya dokunma
+printf '%s' "$payload" | ssh "${ssh_args[@]}" "sudo -n python3 -c $(printf %q "$(cat set-app-env.py)")"
+```
+Yardımcıda: `ALLOWED = {ad: re.compile(...)}`; değerde `" \ $ ` + satır sonu
+yasak (systemd ile bash aynı okusun, enjeksiyon olmasın); geçici dosya +
+`os.replace` + `fsync`; sembolik bağ reddedilir. İş akışında
+`secrets.X` (gizli) ve `vars.X` (bayrak) ayrı. Kod:
+`acilis-zili/deploy/{sync-app-env.sh,set-app-env.py}`, testler
+`tests/deploy/test_app_env.py`. Neden: `mistakes.md #100–101`.
+
+### Markalı İşlem E-postası (Açılış Zili)
+Tek kap (`lib/email-layout.ts`) her postayı giydirir: marka satırı → koyu
+kahraman bandı (GIF + başlık + tek cümle) → gövde (selam, paragraf,
+düğme, künye çipleri, kopyalanabilir adres, kenarlı not) → dip ("yanıt
+almayan adres" + site/KVKK bağlantıları). Kurallar: tablo + satır içi
+stil; animasyon GIF (Gmail CSS animasyonunu siler); GIF zemini bantla aynı
+düz renk; `bgcolor` + degradeli kurşun geçirmez düğme; preheader; düz metin
+sürümü aynı sırada; `<style>` yalnız ilerleme (koyu tema, ışık,
+`prefers-reduced-motion`). GIF betikle: sharp ile SVG kareleri →
+`sharp(frames, { join: { animated: true } }).gif({ delay, loop: 0 })`
+(`scripts/build-email-assets.mjs`). Rehber: `guides/11-vps-email-push.md § 5`.
+
 ---
 
 ## Agentic UI (AG-UI / CopilotKit)

@@ -27,6 +27,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Agentic UI / AG-UI (önleyici) | 58–73 | agentic, tool, copilotkit, güvenlik |
 | Next 16 · Tailwind v4 · motion Dönemi | 74–98 | next16, v4, motion, figür, film |
 | Ekosistem Altyapısı (hook, test, script) | 99 | hook, test-fixture, enforcement |
+| VPS · Ortam Değişkeni · Yayın | 100–101 | vps, env, seo, robots, e-posta, github-actions |
 
 ---
 
@@ -1651,5 +1652,61 @@ kopya yaşar.
 
 ---
 
-*Son güncelleme: 2026-10-14*
+## VPS · Ortam Değişkeni · Yayın
+
+### 100. Canlı Site Arama Motorlarına Kapalı Derlendi, Kimse Görmedi
+
+**Hata**: aciliszili.com canlıda `robots.txt` → `Disallow: /` ve her
+sayfada `<meta name="robots" content="noindex, nofollow">` basıyordu. Site
+Google'a fiilen kapalıydı; fark, Search Console kurulumuna hazırlanırken
+dışarıdan `curl` ile bakınca ortaya çıktı (Açılış Zili, 2026-10-15).
+
+**Sebep**: Sunucudaki `/etc/acilis-zili.env` içinde `SITE_INDEXABLE=false`
+duruyordu (ikinci kopya için doğru değer, asıl alan adında yanlış). Bayrak
+**derlemede** okunuyor: `robots.ts` statik üretiliyor. `deploy/update.sh` bu
+durumu uyarı olarak basıyordu ama uyarı Actions logunda, kimse okumuyordu.
+Bootstrap var olan değeri bilerek koruduğu için yanlış değer kendiliğinden
+düzelmedi.
+
+**Çözüm**: Değer GitHub **Variables**'a taşındı (`SITE_INDEXABLE=true`),
+deploy derlemeden önce sunucuya yazıyor (izin listesinde yalnız
+`true|false`). Yeniden deploy → `Allow: /`, `index, follow`, site haritası
+1732 URL.
+
+**Kural**: Siteyi dizinden çekebilen her bayrak (a) versiyonlanan bir
+yerde durur (repo değişkeni), sunucuda elle değil; (b) deploy sonrası
+dışarıdan doğrulanır (`curl robots.txt`). Log'a basılan uyarı kontrol
+değildir. Derleme anı değişkeni değişince yeniden başlatma değil yeniden
+deploy gerekir. Rehber: `guides/11-vps-email-push.md § 3–4`.
+
+### 101. Sunucuya Elle Konan Anahtar Servise Ulaşmadı
+
+**Hata**: E-posta anahtarları (`RESEND_API_KEY`, `EMAIL_FROM`) sunucudaki
+ortam dosyasına elle eklendi ve servis yeniden başlatıldı; buna rağmen
+`/sifremi-unuttum` 404 dönmeye devam etti (özellik iki anahtar birden
+doluysa açılıyor). Ardından bir gönderen adres değişikliği daha geldi —
+yine sunucuya girmek gerekiyordu.
+
+**Sebep**: Dosyanın içi dışarıdan görülemiyor; olası nedenler `export`
+önekli satır (systemd `EnvironmentFile` tanımaz), tekrarlanan satır, ya da
+yanlış dosya. "Koydum, yeniden başlattım" doğrulama değildi. Ayrıca GitHub'a
+eklenen bir değişken önce yanlış sekmeye (Secrets ↔ Variables) gitti ve iş
+akışında "tanımsız" göründü.
+
+**Çözüm**: Tek yazma yolu — GitHub Secrets/Variables → deploy (ya da
+"Sync App Env") → izin listeli betik satırları temiz biçimde yeniden yazar
+(`export`li ve tekrarlı satırlar dahil), servisi yeniden başlatır. Aynı
+koşumdan sonra `/sifremi-unuttum` 200 döndü, canlı formla gönderilen
+sıfırlama postası Gmail'e ulaştı.
+
+**Kural**: Sunucu ortamı elle düzenlenmez; değerler tek yerden, betikle ve
+biçim denetimiyle yazılır, tanımsız olan sunucudakine dokunmaz. Her özellik
+dışarıdan görünen bir "açık mı" işareti taşır ve deploy sonrası o işarete
+bakılır. Servisin gördüğü değişken ADLARI değer basılmadan
+`/proc/<pid>/environ`dan okunur. Rehber: `guides/11-vps-email-push.md § 3`;
+desen: `patterns.md → GitHub Secrets → Sunucu Ortamı`.
+
+---
+
+*Son güncelleme: 2026-10-15*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

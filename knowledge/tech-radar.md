@@ -37,7 +37,7 @@ Son gözden geçirme: 2026-10-03
 | Veritabanı | Neon Postgres (serverless) | Benimse | Kimlik bilgisi olmadan yerel geliştirme için PGlite yedeği (ElevenForge deseni). |
 | ORM | Drizzle | Benimse | Prisma yalnızca zaten kullanan projede. |
 | Doğrulama | zod 4 | Benimse | Env, form, API gövdesi, aynı şema. |
-| Barındırma | Vercel | Benimse | Uzun süren iş, WebSocket sunucusu ya da kalıcı disk gerekiyorsa VPS/Fly/Railway (Açılış Zili VPS'te). |
+| Barındırma | Vercel | Benimse | Uzun süren iş, WebSocket sunucusu ya da kalıcı disk gerekiyorsa VPS/Fly/Railway (Açılış Zili VPS'te: Actions → SSH → sürüm dizini, env GitHub'dan senkron — `guides/11-vps-email-push.md`). |
 | Paket yöneticisi | npm | Benimse | — |
 
 ## Kimlik ve Kullanıcı
@@ -66,9 +66,9 @@ Son gözden geçirme: 2026-10-03
 
 | İhtiyaç | Varsayılan | Halka | Not / ne zaman değil |
 |---|---|---|---|
-| İşlem e-postası | Resend + React Email | Dene | Doğrulama, şifre sıfırlama, bildirim. |
+| İşlem e-postası | Resend (SDK'sız `fetch`) | Benimse | Açılış Zili'nde canlı (2026-10-15): şifre sıfırlama, tablo + satır içi stil şablonu ve GIF; React Email gerekmedi. DMARC katıysa gönderen tam `@alan`; gönderen yanıt almaz, iletişim adresi ayrı. `guides/11-vps-email-push.md § 5`. |
 | Bülten / toplu e-posta | Resend Broadcasts ya da Buttondown | Dene | KVKK açık rıza metni şart. |
-| Push bildirim | Web Push (VAPID) | Dene | PWA yüklü değilse iOS'ta çalışmaz; beklentiyi buna göre kur. |
+| Push bildirim | Web Push (VAPID) | Dene | PWA yüklü değilse iOS'ta çalışmaz; beklentiyi buna göre kur. Açılış Zili'nde anahtarlar canlıda (2026-10-15), kullanıcıyla uçtan uca test bekliyor; anahtar değişirse abonelikler düşer. `guides/11-vps-email-push.md § 6`. |
 
 ## Para
 

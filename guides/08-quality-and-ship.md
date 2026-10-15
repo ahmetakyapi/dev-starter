@@ -190,6 +190,10 @@ eşitlenmeyen bir klasörde tut.
 Geri alma: Vercel → Deployments → önceki dağıtım → "Promote to Production".
 Migration geri alınmaz; ters SQL'i önceden hazırla.
 
+VPS'te yayın (GitHub Actions → SSH → sürüm dizini), ortam değişkenlerinin
+GitHub'dan senkronu ve deploy sonrası `robots.txt` kontrolü:
+`11-vps-email-push.md`.
+
 ---
 
 ## 9. Commit Kuralı

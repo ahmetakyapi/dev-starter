@@ -13,7 +13,7 @@ Global kuralların tek kaynağı: `machine/CLAUDE.md` (`~/.claude/CLAUDE.md` ona
 
 ```text
 dev-starter/
-├── guides/                    → Projeye başlarken: sırayla okunan 11 rehber + README
+├── guides/                    → Projeye başlarken: sırayla okunan 12 rehber + README
 │   ├── 00-brand-identity.md   → Kimlik değişmezleri + palet seçimi (signature/verdant/ember/iris)
 │   ├── 01-kickoff.md          → İlk gün / ilk hafta (/kickoff → /new-project → Neon → Vercel → CI)
 │   ├── 02-design-tokens.md    → İki katmanlı token, punto ölçeği, twMerge, kontrast, degrade istisnası
@@ -24,7 +24,8 @@ dev-starter/
 │   ├── 07-data-auth-security.md → Neon/Drizzle, migration, next-auth, checkBearer, başlıklar
 │   ├── 08-quality-and-ship.md → Commit kapısı, smoke, CWV, a11y, veri dürüstlüğü, deploy
 │   ├── 09-typography.md       → Font preset'leri (snippets/fonts/fonts.ts)
-│   └── 10-component-library.md → snippets/ui/ kopyala-yapıştır kütüphanesi
+│   ├── 10-component-library.md → snippets/ui/ kopyala-yapıştır kütüphanesi
+│   └── 11-vps-email-push.md   → VPS deploy, env senkronu (GitHub → sunucu), SEO açılışı, Resend, Web Push
 │
 ├── machine/
 │   ├── CLAUDE.md              → Global kurallar (tek kaynak)
@@ -41,7 +42,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 99 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı)
+│   ├── mistakes.md            → 101 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
