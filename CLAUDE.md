@@ -456,6 +456,8 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 ## Bu Dosyaları Güncelleme
 
 - **Yeni hata keşfedilince**: `knowledge/mistakes.md` + o hatayı bir daha yaşatmayacak adım ilgili `guides/` dosyasına
+- **Sayı değişince** (rehber, bileşen, ajan, komut ya da mistakes kaydı eklenince/silinince): `npm run readme:assets` —
+  README istatistik görselleri bu sayıları basar; unutulursa CI `verify:readme`de kırılır (health-check de yakalar)
 - **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur — şablon:
   `templates/docs/DESIGN.template.md` (YAML frontmatter token şeması + 9 bölümlük görsel hafıza);
   retro ritüeli `/retro` (Knowledge Capture, `phases/release-maintenance.md § 4.5`)

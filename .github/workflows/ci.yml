@@ -6,6 +6,10 @@ name: CI
 permissions:
   contents: read
 
+# Aksiyon ve runner surumleri sabit (guides/11 § 2): v4'un Node 20 calisma
+# zamani kullanimdan kalkti, ubuntu-latest ana surumu sessizce atlar.
+# Yukseltme bilincli bir commit olsun.
+
 on:
   push:
     branches: [main]
@@ -15,10 +19,10 @@ on:
 jobs:
   quality:
     name: Quality Checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
 
@@ -27,7 +31,7 @@ jobs:
       # chromium-bidi'nin devtools-protocol PEER bagimliligi icin tepe seviye
       # girdi yazmaz, npm 10 onu sart kosar. Kilit yerelde gecerli, CI'da
       # gecersiz olur ve her is npm ci'da olur. Bkz. mistakes.md #57
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -118,7 +122,7 @@ jobs:
 
   agentic:
     name: Agentic Verification
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     # Neden ayri is: snippets/agent-* ve templates/agentic-chat/ dosyalari
     # @copilotkit/react-core + @ag-ui/* gerektirir. Bunlar bilincli olarak kok
@@ -130,11 +134,11 @@ jobs:
     # calisirdi — yani pratikte hic. -> knowledge/mistakes.md #55
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
 
@@ -143,7 +147,7 @@ jobs:
 
   anatomy:
     name: Figure Kit Verification
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     # Neden ayri is: anatomy figur kiti bir npm paketi degil, sabit bir commit'ten
     # (machine/bootstrap.sh ANATOMY_REF) iki sablona kopyalaniyor. Burada kit
@@ -151,11 +155,11 @@ jobs:
     # uyarisiz lint, test. -> knowledge/mistakes.md #98
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
 
@@ -164,16 +168,16 @@ jobs:
 
   ecosystem:
     name: Ecosystem Health
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
 
       # health-check kilit dogrulamasini ve hook davranis testini kosar;
       # ikisi de kurulu node_modules ister
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: npm

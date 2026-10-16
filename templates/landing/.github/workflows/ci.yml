@@ -6,6 +6,10 @@ name: CI
 permissions:
   contents: read
 
+# Aksiyon ve runner surumleri sabit (guides/11 § 2): v4'un Node 20 calisma
+# zamani kullanimdan kalkti, ubuntu-latest ana surumu sessizce atlar.
+# Yukseltme bilincli bir commit olsun.
+
 on:
   push:
     branches: [main]
@@ -17,12 +21,12 @@ concurrency:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: npm

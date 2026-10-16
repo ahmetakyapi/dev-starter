@@ -532,6 +532,19 @@ check_cap knowledge/mistakes.md 2200
 check_cap knowledge/patterns.md 1600
 check_cap CLAUDE.md 520
 
+# README istatistik gorselleri rehber ve kayit SAYISINI basar: yeni bir
+# rehber ya da mistakes kaydi ekleyip `readme:assets`i unutan commit CI'da
+# verify:readme'de kirilir. Bu kontrol yokken health-check "temiz" diyor,
+# CI kirmiziya dusuyordu (iki kez: #97 ve #101 kayitlarinda).
+README_OUT=$(npm run -s verify:readme 2>&1 || true)
+if echo "$README_OUT" | grep -q "güncel"; then
+  pass "README gorselleri sayilarla guncel (verify:readme)"
+elif echo "$README_OUT" | grep -q "bayat"; then
+  fail "README gorselleri bayat — 'npm run readme:assets' calistirip commit'le"
+else
+  warn "README gorselleri denetlenemedi (Node tip ayiklama gerekir) — 'npm run verify:readme'"
+fi
+
 # ─── Summary ─────────────────────────────────────────────────────────────────
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

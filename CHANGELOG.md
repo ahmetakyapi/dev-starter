@@ -7,6 +7,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Düzeltildi — 2026-10-16
+
+- **CI kırmızıydı (`verify:readme`)**: rehber 11 ve mistakes #100–101
+  eklenince README istatistik görselleri yeniden üretilmemişti (12 rehber,
+  101 kayıt). Aynı kırılma #97'de de yaşanmıştı ve ikisinde de yerel
+  health-check "temiz" demişti: health-check artık `verify:readme`i koşuyor
+  (bayatta FAIL), CLAUDE.md güncelleme listesine "Sayı değişince →
+  `npm run readme:assets`" adımı eklendi.
+- **CI rehberin kendi kuralına uymuyordu**: `guides/11 § 2` `checkout@v5` /
+  `setup-node@v5` / `ubuntu-24.04` sabitlemesini söylerken dev-starter'ın ve
+  iki şablonun CI'ı `@v4` + `ubuntu-latest` kullanıyordu (CI kaydında
+  "Node.js 20 is deprecated" uyarısı). Üç workflow hizalandı; yeni projeler
+  sabit sürümlerle doğuyor.
+
 ### Eklendi — 2026-10-15
 
 - **`guides/11-vps-email-push.md`** — Açılış Zili'nde canlıya çıkan düzen:
