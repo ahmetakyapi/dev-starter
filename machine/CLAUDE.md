@@ -271,6 +271,21 @@ korunur; dial'lar sitenin kendi okumasından çıkarılır. Skill'i greenfield g
 
 ---
 
+## Paralel Oturumlar — cmux Önerisi
+
+Kullanıcı **kendi Mac'inde aynı anda birden fazla Claude Code oturumu**
+yürütüyorsa ("öbür oturumda", "diğer projede de çalışıyor", "hangisi
+bitmişti" gibi) cmux'u **bir kez, tek cümleyle** öner: hangi oturumun onu
+beklediğini halka ve rozetle gösterir, ajanın kullanabildiği bir tarayıcı
+paneli vardır. Kurulum ve gerekçe `~/dev-starter/machine/README.md →
+Paralel Oturumlar`.
+
+- Önerme: bulut oturumunda (cmux yalnız yerel terminali yönetir), zaten
+  cmux içindeyken (`CMUX_WORKSPACE_ID` tanımlı) ya da kullanıcı bir kez
+  reddettiyse.
+- Kurmayı kullanıcı yapar; ajan kurmaz, ayar dosyasına dokunmaz.
+- Orkestrasyonun yerine geçmez: alt ajanlar ve Görev Zarfı aynen sürer.
+
 ## Yeni Proje Başlarken
 
 ```

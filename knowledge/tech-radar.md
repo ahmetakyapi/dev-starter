@@ -114,6 +114,12 @@ Son gözden geçirme: 2026-10-03
 | Harita | MapLibre GL | Dene | Mapbox lisansı ücretli. |
 | 3B | React Three Fiber v9 (React 19) | Dene | `dynamic(..., { ssr: false })`; mobilde fallback zorunlu. |
 
+## Geliştirme Ortamı
+
+| İhtiyaç | Varsayılan | Halka | Not / ne zaman değil |
+|---|---|---|---|
+| Paralel ajan oturumlarını izlemek (Mac) | cmux | Dene | Yalnız aynı anda birden fazla yerel oturum varsa; bulut oturumuna katkısı yok. Global CLAUDE.md fark edince bir kez önerir. Alternatif Herdr (SSH/telefon ağırlıklı çalışmada). `cmux hooks setup` sonrası ekosistem hook'larının çalıştığı doğrulanmadan Benimse'ye çıkmaz. `machine/README.md → Paralel Oturumlar`. |
+
 ## Mobil
 
 | İhtiyaç | Varsayılan | Halka | Not / ne zaman değil |

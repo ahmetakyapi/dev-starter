@@ -9,6 +9,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ### Eklendi — 2026-10-16
 
+- **Paralel oturumlar için cmux önerisi**: global CLAUDE.md, kullanıcının
+  Mac'te aynı anda birden fazla Claude Code oturumu yürüttüğünü fark edince
+  cmux'u bir kez önerir (bulut oturumunda, zaten cmux içindeyken ya da
+  reddedildiyse önermez; kurmaz). Kurulum ve hook uyarısı
+  `machine/README.md`, radar satırı "Dene" halkasında; Herdr alternatif.
+
 - **Tasarım referans kataloğu + `/reference` komutu**: "Claude'la yapılan
   siteler hep aynı görünüyor" sorununa karşı, hazır şablon yerine gerçek bir
   sitenin bölümünü referans verme akışı. `knowledge/design-references.md`

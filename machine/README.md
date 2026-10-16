@@ -147,6 +147,30 @@ olan eklenti ve skill'ler (ör. design, engineering, data eklentileri,
 
 ---
 
+## Paralel Oturumlar (isteğe bağlı: cmux)
+
+Mac'te aynı anda birden fazla Claude Code oturumu açılıyorsa önerilir;
+tek oturumla ya da yalnız bulut oturumlarıyla çalışılıyorsa gereksiz.
+Global CLAUDE.md bu durumu fark edince bir kez önerir.
+
+```bash
+brew tap manaflow-ai/cmux
+brew install --cask cmux
+```
+
+- **Ne kazandırır:** ajan bekleyince panel mavi halka alır, kenar çubuğunda
+  okunmamış rozeti çıkar; her çalışma alanında git dalı, port ve son
+  bildirim görünür. Uygulama içi tarayıcıyı ajan kullanabilir (dev
+  sunucusuna bakmak, tıklamak) — `design-reviewer` ve `/reference`
+  işlerinde başsız Chrome'a ek bir yol; o yol kalkmaz.
+- **Dikkat:** `cmux hooks setup` Claude Code'a kendi hook'larını ekler.
+  Çalıştırdıktan sonra `~/.claude/settings.json`a bak ve bir projede
+  commit deneyip gate-guard ile quality-scan'ın hâlâ tetiklendiğini gör.
+- Lisans: masaüstü uygulaması GPL-3.0, ücretsiz (Manaflow). Yalnız macOS.
+- Alternatif: **Herdr** (`brew install herdr`) — her terminalin içinde
+  çalışır, işler arka planda sürer, SSH ile telefondan bağlanılır; sunucuda
+  çalışma ağır basıyorsa o. İkisi birden kurulmaz.
+
 ## Değişiklik Yaparken
 
 - Yeni bir global komut: `.claude/commands/<ad>.md` ekle, `bootstrap.sh`yi
