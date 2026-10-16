@@ -241,6 +241,7 @@ yedisi (`machine/bootstrap.sh` → `TASTE_SKILLS`): `design-taste-frontend`,
 | Mevcut arayüzü premium'a çekme | `redesign-existing-projects` |
 | Marka rehberi, logo sistemi | `brandkit` |
 | Görsel referans üretimi (web / mobil) | `imagegen-frontend-web` / `-mobile` |
+| Yeni bölüm (menü, CTA, alt bilgi, 404, bento) ya da kullanıcı "bu yapıyı kendi renklerimle kur" diye ekran görüntüsü verdi | `/reference` — galeri `~/dev-starter/knowledge/design-references.md`; yapı alınır, renk/metin/logo alınmaz |
 | Hareket kararı, zamanlama | `motion-design` + `~/dev-starter/guides/04-motion.md` |
 | Hareket filmi: bekleme/açılış filmi, tanıtım videosu, kinetik yazı, HTML → MP4 | `motion-film` |
 | Sade editoryal arayüz | `minimalist-ui` |

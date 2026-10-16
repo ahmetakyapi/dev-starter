@@ -27,8 +27,8 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
   (`git fetch --depth 1 origin <sha> && git checkout FETCH_HEAD`). Dal ucunu
   klonlamak yarış açar: push X'in deploy'u koşarken gelen push Y ortak
   `concurrency` grubunda bekler, ama X'in klonu dal ucunda Y'yi bulur ve Y
-  kendi verify'ı koşmadan canlıya çıkar. (Açılış Zili'nin `update.sh`'ı şu
-  an dal ucunu klonluyor — bu madde oradaki açığı da anlatır.)
+  kendi verify'ı koşmadan canlıya çıkar. (Açılış Zili 16 Ekim'e kadar dal
+  ucunu klonluyordu; düzeltmesi `deploy/update.sh` başında.)
 - **Kod sunucuya kopyalanmaz**, sunucu kendi `git clone`unu yapar. Derleme
   canlı dizinde yapılmaz: dakikalar süren build sırasında çalışan sürümün
   parça dosyaları altından çekilir (sayfa açılır, script'ler 404).

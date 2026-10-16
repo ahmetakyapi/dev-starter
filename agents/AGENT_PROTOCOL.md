@@ -370,6 +370,7 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 |-------|----------|-------------|
 | `/check` | Proje sağlık kontrolü | BA, FE, BE, GATE, DP |
 | `/review-ui` | UI/UX kod incelemesi | UI, FE, GATE |
+| `/reference <bölüm>` | Gerçek sitenin bölümünden yapı al, kendi token'larınla kur | UI, FE |
 | `/snippet [tip]` | Hızlı bileşen üret | UI, FE |
 | `/theme [proje]` | Görsel tema uygula | UI |
 | `/deploy` | Vercel deploy checklist | DP, BA |

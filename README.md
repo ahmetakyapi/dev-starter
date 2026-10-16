@@ -243,6 +243,7 @@ flowchart TB
 | `/evolve` | Ekosistemin kendi gelişim turu: sağlık + tazelik + dış tarama |
 | `/theme` | Paleti ve temayı uygular ya da günceller |
 | `/snippet <ad>` | Bileşeni projeye uyarlayarak kopyalar |
+| `/reference <bölüm>` | Gerçek bir sitenin bölümünü (menü, CTA, alt bilgi…) referans alır, yapısını projenin token'larıyla kurar |
 | `/review-ui` | Token, kimlik, iki tema, ekran düzeni, a11y ve hareket incelemesi |
 | `/check` | Build, typecheck, lint, test, token ve güvenlik sağlık kontrolü |
 | `/agentic` | Yapay zekâ arayüzünde aracın nerede, kontrolün hangi seviyede olacağı |
@@ -321,8 +322,8 @@ dev-starter/
 ├── agents/            12 rol tanımı + AGENT_PROTOCOL
 ├── .claude/
 │   ├── agents/        strategist · design-reviewer · content-editor · gate · deploy · frontend · backend · qa · researcher
-│   └── commands/      18 komut
-├── knowledge/         mistakes · patterns · decisions · tech-radar · themes
+│   └── commands/      19 komut
+├── knowledge/         mistakes · patterns · decisions · tech-radar · design-references · themes
 ├── rules/             9 kural
 ├── phases/            planlama · geliştirme · uçtan uca cila · yayın ve bakım
 ├── hooks/             gate-guard · quality-scan · routemap-sync · session-brief

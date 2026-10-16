@@ -44,6 +44,7 @@ impeccable 3.0.0'da (2026-10-03) ekosistemden kaldırıldı. Yerine:
 | `~/dev-starter/guides/00-brand-identity.md` | Kimlik değişmezleri ve palet seçimi |
 | `~/dev-starter/guides/02-design-tokens.md` … `05-components.md` | Token, tema, hareket, bileşen kuralları |
 | `design-reviewer` alt ajanı | Kurulmuş arayüzü ekrandan ölçüp puanlamak |
+| `/reference` + `~/dev-starter/knowledge/design-references.md` | Yeni bölüm (menü, CTA, alt bilgi, 404, bento) şablondan değil gerçek bir siteden: ücretsiz galeri → ekran görüntüsü → yapı |
 
 **Çakışma kuralı**: brief kazanır. Projenin tema dosyası ve seçili paleti
 (`signature` / `verdant` / `ember` / `iris`) **pinlenmiştir**; bir skill'in
@@ -83,7 +84,10 @@ Handoff formatı için `AGENT_PROTOCOL.md → Standart Handoff Mesajı` bölüm�
 
 ## Design DNA Analiz Süreci
 
-Screenshot referansları verildiğinde, kodlamadan önce şu 8 boyutu analiz et:
+Screenshot referansları verildiğinde, kodlamadan önce şu 8 boyutu analiz et.
+Referans yoksa ve iş yeni bir bölümse önce `/reference` ile bir tane bul.
+Referanstan yalnız **yapı** boyutları (1, 5, 6, 7) alınır; tipografi, kart,
+renk ve ton (2, 3, 4, 8) projenin tema dosyasından gelir — referans paleti ezmez:
 
 ### 1. Visual Hierarchy
 

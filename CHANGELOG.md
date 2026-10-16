@@ -7,6 +7,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Eklendi — 2026-10-16
+
+- **Tasarım referans kataloğu + `/reference` komutu**: "Claude'la yapılan
+  siteler hep aynı görünüyor" sorununa karşı, hazır şablon yerine gerçek bir
+  sitenin bölümünü referans verme akışı. `knowledge/design-references.md`
+  yalnız **tamamen ücretsiz** galerileri tutar: navbar.gallery, cta.gallery,
+  footer.design, 404s.design, bentogrids.com — her biri açılıp fiyat ve şart
+  sayfasıyla doğrulandı, hepsi örneğin geldiği siteye bağlanıyor. Ücretli ya
+  da freemium olanlar (scrolltide, unsection, 60fps) gerekçesiyle "Bilinçli
+  Olarak Dışarıda". `/reference <bölüm> [görsel|url]` referansın yalnız
+  yapısını alır, renk/metin/logo projeden gelir; üçüncü taraf ekran görüntüsü
+  `.tmp-references/`te kalır, depoya girmez. Bağlantılar: uiux (Design DNA'da
+  yapı ↔ kimlik ayrımı), design-reviewer (Karakter ekseni), planning P4,
+  SCREENS şablonu (`**Referans**:`), global CLAUDE.md skill tablosu, `/evolve`
+  tazelik denetimi, health-check.
+
 ### Düzeltildi — 2026-10-16
 
 - **CI kırmızıydı (`verify:readme`)**: rehber 11 ve mistakes #100–101

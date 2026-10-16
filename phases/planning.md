@@ -150,7 +150,7 @@ P6: Dev Readiness Check
 **Süreç**:
 1. Route listesi çıkar
 2. Her ekran için ASCII wireframe veya açıklama
-3. Paylaşılan bileşenleri belirle
+3. Paylaşılan bileşenleri belirle; menü, CTA, alt bilgi gibi bölümler için gerçek bir referans seç (`/reference`, galeri `~/dev-starter/knowledge/design-references.md`)
 4. Paleti ve varsayılan temayı seç (`/kickoff` çıktısı ya da `~/dev-starter/guides/00-brand-identity.md`), token'ları tanımla (varsa `knowledge/themes/` referans al)
 
 **Çıktı**: `docs/SCREENS.md`

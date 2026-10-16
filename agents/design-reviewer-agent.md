@@ -53,7 +53,7 @@ Her eksene 1-5 puan ve en fazla 3 kanıtlı bulgu:
 | Durumlar | Boş, yükleniyor, hata, uzun metin, tek öğe, çok öğe |
 | Erişilebilirlik | Odak, kontrast, hedef boyutu, `aria` cümleleri, başlık sırası |
 | Duyarlılık | 390'da taşma, kırılan tablolar, gizlenen kaydırma |
-| Karakter | Şablon gibi mi duruyor? Projeye özgü bir imza var mı? (taste-skill denetim listesi: eyebrow tavanı, kahraman disiplini, bölüm düzeni tekrarı, sahte ekran görüntüsü) |
+| Karakter | Şablon gibi mi duruyor? Projeye özgü bir imza var mı? (taste-skill denetim listesi: eyebrow tavanı, kahraman disiplini, bölüm düzeni tekrarı, sahte ekran görüntüsü). `docs/references/` varsa: yapı referans gibi okunuyor mu, referansın rengi ya da metni sızmış mı? |
 
 ## 4. Rapor
 

@@ -13,6 +13,7 @@
 
 ### Landing (/)
 **Layout**: Public (Header + Footer)
+**Referans**: [bölüm başına kaynak site + `docs/references/<bölüm>.md` — `/reference`; yoksa "yok"]
 **Bileşenler**:
 - Hero section (başlık + CTA)
 - Features grid

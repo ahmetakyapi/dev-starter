@@ -45,6 +45,7 @@ dev-starter/
 │   ├── mistakes.md            → 101 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
+│   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
 │
 ├── agents/                    → 12 rol tanımı + AGENT_PROTOCOL.md
@@ -87,7 +88,7 @@ dev-starter/
 │
 ├── .claude/
 │   ├── settings.json          → Hook entegrasyonu (paylaşılan, versiyonlanır)
-│   ├── commands/              → 18 komut — bootstrap ile ~/.claude/commands'a symlink
+│   ├── commands/              → 19 komut — bootstrap ile ~/.claude/commands'a symlink
 │   ├── agents/                → 9 alt ajan sarmalayıcısı — ~/.claude/agents'a symlink
 │   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
 │
@@ -259,6 +260,7 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 | `/theme [palet\|proje]` | Palet ya da referans tema uygula (Tailwind v4) | `.claude/commands/theme.md` |
 | `/snippet [tip]` | Hazır parçayı projeye uyarla | `.claude/commands/snippet.md` |
 | `/check` | Sağlık: build, tip, lint, test, tech stack uyumu, token, güvenlik | `.claude/commands/check.md` |
+| `/reference <bölüm> [görsel\|url]` | Gerçek sitenin bölümünü referans al, yapısını kendi token'larınla kur (galeri: `knowledge/design-references.md`) | `.claude/commands/reference.md` |
 | `/review-ui` | UI incelemesi: token, kimlik, iki tema, düzen, a11y, hareket | `.claude/commands/review-ui.md` |
 | `/deploy` | Vercel deployment checklist | `.claude/commands/deploy.md` |
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
@@ -354,6 +356,13 @@ Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet dön
 
 ```text
 /deploy
+```
+
+### Referanstan Kur
+
+```text
+/reference navbar                       → uygun ücretsiz galeriyi öner
+/reference cta ~/Desktop/cta.png        → ekran görüntüsünün yapısını kendi renklerinle kur
 ```
 
 ### UI İnceleme

@@ -236,7 +236,7 @@ done
 # ─── 7. Knowledge Base ───────────────────────────────────────────────────────
 header "Knowledge Base"
 
-for kb in "mistakes" "patterns"; do
+for kb in "mistakes" "patterns" "design-references"; do
   if [ -f "knowledge/${kb}.md" ]; then
     LINES=$(wc -l < "knowledge/${kb}.md")
     pass "$kb.md mevcut ($LINES satir)"
@@ -475,7 +475,7 @@ for f in .claude/agents/*.md; do
 done
 
 # Komutlar: beklenen liste CLAUDE.md tablosu + bootstrap symlink'leriyle ayni evren
-COMMANDS=("kickoff" "roadmap" "new-project" "plan" "story" "gate" "fix" "research" "status" "retro" "evolve" "theme" "snippet" "check" "review-ui" "deploy" "release" "agentic")
+COMMANDS=("kickoff" "roadmap" "new-project" "plan" "story" "gate" "fix" "research" "status" "retro" "evolve" "theme" "snippet" "check" "review-ui" "reference" "deploy" "release" "agentic")
 for c in "${COMMANDS[@]}"; do
   if [ -f ".claude/commands/${c}.md" ]; then
     pass "/$c komutu mevcut"
