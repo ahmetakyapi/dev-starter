@@ -20,6 +20,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   iki şablonun CI'ı `@v4` + `ubuntu-latest` kullanıyordu (CI kaydında
   "Node.js 20 is deprecated" uyarısı). Üç workflow hizalandı; yeni projeler
   sabit sürümlerle doğuyor.
+- **Rehber 11 ve bilgi tabanı denetlendi** (üç göz: teknik doğruluk,
+  tutarlılık, güvenlik; 20 bulgunun 17'si bağımsız doğrulayıcıyla teyit
+  edildi). Rehberde: sunucu dal ucunu değil doğrulanan SHA'yı derlemeli
+  (art arda iki push'ta doğrulanmamış commit canlıya çıkıyordu); ortak
+  `concurrency` grubuna `queue: max` (yoksa elle tetiklenen iş bekleyen
+  yayını sessizce iptal ediyor); trap `current`ın gösterdiği dizini asla
+  silmemeli (SSH kopunca canlı sürüm siliniyordu — yerelde denendi); env
+  dosyası bash'te `set -a` ile okunmalı; `0640` grup izni `npm ci`
+  postinstall'larına açık (`--ignore-scripts` ya da iki dosya); şifre
+  değişince/sıfırlanınca eski JWT oturumları düşmeli (`sessionVersion`,
+  rehber 07'ye de not); Resend teslim durumu Emails'te, "Rejected" değil
+  "Bounced"; Gmail iOS koyu temada tam ters çevirir; ubuntu-latest geçişi
+  geçmiş zaman değil, 19 Ekim–19 Kasım kademeli. Desen örneği `printf %q`
+  yerine `shlex.quote` (dash'te SyntaxError veriyordu) ve atomik yazımda
+  izin adımı. README rehber tablosu/harita, çürümüş sayılar, tech-radar
+  halka tanımı, agentic-ui ajanının kayıt aralığı düzeltildi.
 
 ### Eklendi — 2026-10-15
 

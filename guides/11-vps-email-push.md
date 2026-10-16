@@ -35,7 +35,12 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
 - **`current` bağı atomik çevrilir**: `ln -sfn yeni current.tmp && mv -T current.tmp current`.
   Sağlık kontrolü geçmezse bağ önceki sürüme döner, betik sıfırdan farklı çıkar.
 - **Canlıya çıkmamış sürüm dizini silinir** (trap); yoksa budama sağlam
-  sürümü silip bozuğu tutabilir.
+  sürümü silip bozuğu tutabilir. "Canlı mı" sorusunu bayrak değil **bağın
+  hedefi** cevaplar: trap, `current`ın gösterdiği dizini asla silmez
+  (`[[ $(readlink -e "$APP_ROOT/current") == "$release" ]] && return 0`).
+  Bağ çevrildikten sonra, sağlık kontrolü bitmeden SSH koparsa (iş iptali,
+  ağ) sonraki çıktıda gelen SIGPIPE/SIGHUP da EXIT trap'ini koşturur; bayrak
+  sağlık kontrolünden sonra kalkıyorsa trap canlı dizini siler.
 - Duman testi ayrı iş akışı, kapı değil.
 - Örnek: `deploy/update.sh`, `.github/workflows/deploy.yml`.
 
@@ -47,14 +52,18 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
 - **Sürümleri sabitle**: `actions/checkout@v5`, `actions/setup-node@v5`
   (Node 24 çalışma zamanı; v4'ün Node 20'si kullanımdan kalktı) ve
   `runs-on: ubuntu-24.04` — `ubuntu-latest` sessizce ana sürüm atlar
-  (19 Ekim 2026'da 26'ya geçti). Yükseltme bilinçli bir commit olsun.
+  (19 Ekim–19 Kasım 2026 arasında kademeli olarak Ubuntu 26.04'e geçiyor;
+  GitHub changelog, 17 Eylül 2026). Yükseltme bilinçli bir commit olsun.
 - **SSH host anahtarını sabitle**: `VPS_HOST_KEY` repo değişkeni (bir kez
   `ssh-keyscan <host>` çıktısı) `~/.ssh/known_hosts`a yazılır,
   `StrictHostKeyChecking=yes`. Tanımsızken `accept-new` her koşumda "her
   anahtarı kabul et" demektir.
 - Sunucuya dokunan bütün iş akışları aynı `concurrency` grubunda
-  (`deploy-vps`, `cancel-in-progress: false`): env yazımı ile yayın aynı
-  anda servisi yeniden başlatmasın.
+  (`deploy-vps`, `cancel-in-progress: false`, **`queue: max`**): env yazımı
+  ile yayın aynı anda servisi yeniden başlatmasın. `queue: max` şart: o
+  olmadan grupta yalnız BİR koşum bekler ve yeni gelen (ör. elle tetiklenen
+  "Sync App Env") bekleyen yayını sessizce iptal eder — son commit bir
+  sonraki push'a kadar yayına inmez, iz yalnız Actions'taki "canceled".
 
 ## 3. Ortam Değişkenleri: Tek Dosya, Tek Yazma Yolu
 
@@ -64,6 +73,17 @@ set +a`: `set -a` olmadan düz `source` yalnız kabuk değişkeni kurar, değerl
 `npm run build`e geçmez ve derleme anı bayrağı sessizce varsayılana düşer
 (#100'ün kardeşi). İkisinin ortak paydası
 **tırnak içinde, `$` `` ` `` `\` `"` içermeyen** değer.
+
+**Grup okuma izni kurulum aşamasına da açık.** systemd `EnvironmentFile`ı
+root olarak okur; `0640`taki grup biti yalnız deploy betiğinin okuması için.
+Ama `npm ci` de aynı uygulama kullanıcısıyla koşuyorsa her bağımlılığın
+postinstall'u `cat /etc/<uygulama>.env` ile bütün sırları okur — ortamı
+`npm ci`den *sonra* yüklemek bunu engellemez, dosya diskte zaten okunur.
+Sunucuda `npm ci --ignore-scripts` (Next/SWC, sharp, esbuild platform
+paketleriyle çalışır; önce bir kez dene). Daha sıkısı iki dosya: çalışma
+anı sırları `root:root 0600` (yalnız systemd okur), derlemenin istediği
+değerler (`NEXT_PUBLIC_*`, `SITE_INDEXABLE`) ayrı `root:<uygulama> 0640`
+dosyada; serviste iki `EnvironmentFile=` satırı.
 
 **Elle düzenleme yerine GitHub'dan senkron** (`deploy/sync-app-env.sh` +
 `deploy/set-app-env.py`):
@@ -147,10 +167,18 @@ sayfada `noindex` (#100). Derlemede okunur.
 - **Hesap varlığını sızdırma**: her adrese aynı yanıt; token yazımı ve
   gönderim `after()` ile yanıttan **sonra** (yanıt süresi de eşit olsun).
   Hız sınırı hem IP hem adres başına.
-- **Metin söz vermez**: posta yalnız kodun gerçekten yaptığını söyler. Şifre
-  değişince JWT oturumları düşmüyorsa "tüm cihazlarda çıkış yapıldı" yazılmaz.
+- **Şifre değişince eski oturumlar düşer** (sıfırlama dahil — sıfırlamanın
+  var olma sebebi çalınmış hesap; OWASP Forgot Password Cheat Sheet). JWT'de
+  oturum tablosu yok: `users`a `sessionVersion` koy, şifre değişince ya da
+  sıfırlanınca artır; girişte token'a yaz, `jwt` callback'inde veritabanıyla
+  karşılaştır (her istekte değil, token'daki `checkedAt` ile birkaç dakikada
+  bir), uyuşmazsa `null` dön.
+- **Metin söz vermez**: posta yalnız kodun gerçekten yaptığını söyler; bu
+  yapılmadıysa "tüm cihazlarda çıkış yapıldı" yazılmaz.
 - **Test**: canlı formu kendi adresinle gönder → gelen kutusu + Resend →
-  Logs ("Delivered"; "Rejected" ise DMARC/DKIM). Site her adrese aynı
+  **Emails** ("Delivered"; "Bounced" ise alıcı sunucu reddetti — ayrıntıda
+  DMARC/DKIM gerekçesine bak). Logs yalnız API isteklerini gösterir (ör.
+  doğrulanmamış alan adında 403). Site her adrese aynı
   yanıtı verdiği için teslimi dışarıdan göremezsin.
 
 **HTML şablonu** — web değil, istemcilerin en dar ortak paydası
@@ -191,11 +219,12 @@ sayfada `noindex` (#100). Derlemede okunur.
 ## Kontrol Listesi
 
 - [ ] Deploy: verify → SSH → **doğrulanan SHA** → sürüm dizini → atomik bağ → sağlık → geri dönüş
-- [ ] Actions: `contents: read`, `persist-credentials: false`, sabit sürümler, host key, ortak `concurrency`
+- [ ] Actions: `contents: read`, `persist-credentials: false`, sabit sürümler, host key, ortak `concurrency` + `queue: max`
 - [ ] Sırlar GitHub Secrets'ta, bayraklar Variables'ta; sunucuya izin listeli senkronla
 - [ ] Derleme anı değişkeni değişti → yeniden deploy; çalışma anı → yeniden başlat
 - [ ] Deploy sonrası `robots.txt` ve `meta robots` dışarıdan kontrol
 - [ ] Search Console: alan adı mülkü (DNS TXT), site haritası, URL denetimi
 - [ ] E-posta: alan adı doğrulu, gönderen `@<alan>`, "yanıtlama" notu, iletişim adresi ayrı
 - [ ] E-posta özelliği anahtarsızken görünmüyor; varken canlı formla test edildi
+- [ ] Şifre değişince/sıfırlanınca eski oturumlar düşüyor (`sessionVersion`)
 - [ ] Push: VAPID üç değişken, deneme bildirimi geldi

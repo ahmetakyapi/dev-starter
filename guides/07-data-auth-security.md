@@ -168,6 +168,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 5. JWT stratejisi: oturum tablosu yok, her istekte veritabanına gidilmez.
    Yetki değişikliği (rol, silinmiş hesap) bir sonraki doğrulamaya kadar
    gecikir; hassas action'da kullanıcıyı veritabanından yeniden oku.
+   Şifre değişikliği ve sıfırlama bu gecikmeye bırakılmaz: sürüm sayacıyla
+   eski token'lar düşürülür (`11-vps-email-push.md § 5`).
 
 Tek bir yönetici varsa (kişisel panel) next-auth fazladır: HMAC imzalı bir
 çerez yeter (Mimio). Birden çok kullanıcı ve OAuth varsa next-auth.

@@ -948,8 +948,11 @@ printf '%s' "$payload" | ssh "${ssh_args[@]}" "$remote"
 ```
 Yardımcıda: `ALLOWED = {ad: re.compile(...)}`; değerde `" \ $ ` + satır sonu
 yasak (systemd ile bash aynı okusun, enjeksiyon olmasın; bash `set -a; . dosya;
-set +a` ile okur, yoksa değer `npm run build`e geçmez); geçici dosya +
-`os.replace` + `fsync`; sembolik bağ reddedilir. İş akışında
+set +a` ile okur, yoksa değer `npm run build`e geçmez); geçici dosya aynı
+dizinde `mkstemp`, YAZMADAN önce `fchmod(0o640)` + `fchown(root, <uygulama>)`
+(`os.replace` geçici dosyanın iznini taşır: unutulursa `root:root 0600` olur,
+uygulama kullanıcısı okuyamaz) → yaz + `fsync` → `os.replace` → dizin
+`fsync`; sembolik bağ reddedilir. İş akışında
 `secrets.X` (gizli) ve `vars.X` (bayrak) ayrı. Kod:
 `acilis-zili/deploy/{sync-app-env.sh,set-app-env.py}`, testler
 `tests/deploy/test_app_env.py`. Neden: `mistakes.md #100–101`.
