@@ -200,6 +200,7 @@ projede yaşandığı yazar.
 | 08 | [Kalite ve Yayın](guides/08-quality-and-ship.md) | Commit kapıları, smoke betiği, CWV, erişilebilirlik, deploy listesi |
 | 09 | [Tipografi](guides/09-typography.md) | Font eşleşmeleri, Türkçe glif kontrolü, punto ölçeği |
 | 10 | [Bileşen Kütüphanesi](guides/10-component-library.md) | Başsız kütüphane kararı, klavye haritaları, a11y listesi |
+| 11 | [VPS, E-posta, Push](guides/11-vps-email-push.md) | Vercel dışı deploy (Actions → SSH → sürüm dizini), env senkronu, arama motoru açılışı, Resend, Web Push |
 
 ---
 
@@ -261,8 +262,8 @@ Rol tanımlarının tek kaynağı [`agents/`](agents).
 
 | Dosya | İçerik |
 |---|---|
-| [`knowledge/mistakes.md`](knowledge/mistakes.md) | 93 yaşanmış hata: belirti, sebep, çözüm, hangi projede |
-| [`knowledge/patterns.md`](knowledge/patterns.md) | 55 desen, projelerden toplanmış |
+| [`knowledge/mistakes.md`](knowledge/mistakes.md) | Yaşanmış hatalar: belirti, sebep, çözüm, hangi projede (sayı yukarıdaki görselde) |
+| [`knowledge/patterns.md`](knowledge/patterns.md) | Projelerden toplanmış, test edilmiş desenler |
 | [`knowledge/decisions.md`](knowledge/decisions.md) | Ekosistem kararları ve neden değiştikleri |
 | [`knowledge/tech-radar.md`](knowledge/tech-radar.md) | İhtiyaç → teknoloji: benimse / dene / bekle |
 | [`knowledge/themes/`](knowledge/themes) | 6 projenin görsel hafızası |
@@ -304,7 +305,7 @@ taşınmaz; claude.ai eklentileri girişle kendiliğinden gelir.
 
 ```text
 dev-starter/
-├── guides/            00-10 · projeye başlarken sırayla okunan rehberler
+├── guides/            00-11 · projeye başlarken sırayla okunan rehberler
 ├── templates/
 │   ├── nextjs-fullstack/   Next 16 · Auth.js · Neon/Drizzle · CI
 │   ├── landing/            7 hero düzeni · içerik tek dosyada

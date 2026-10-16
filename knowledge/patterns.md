@@ -941,10 +941,14 @@ yazar, değeri basmadan doğrular.
 ```bash
 payload=$(python3 -c 'import json,os;n=["RESEND_API_KEY","EMAIL_FROM","VAPID_PUBLIC_KEY","VAPID_PRIVATE_KEY","VAPID_SUBJECT","SITE_INDEXABLE"];print(json.dumps({k:os.environ[k] for k in n if os.environ.get(k,"").strip()}))')
 [ "$payload" = "{}" ] && exit 0                       # tanımsız = sunucuya dokunma
-printf '%s' "$payload" | ssh "${ssh_args[@]}" "sudo -n python3 -c $(printf %q "$(cat set-app-env.py)")"
+# printf %q DEĞİL: çok satırlı metni bash'e özgü $'...' ile tırnaklar, uzak
+# kullanıcının kabuğu dash ise (useradd varsayılanı /bin/sh) SyntaxError.
+remote=$(python3 -c 'import pathlib,shlex,sys;print("sudo -n python3 -c "+shlex.quote(pathlib.Path(sys.argv[1]).read_text()))' set-app-env.py)
+printf '%s' "$payload" | ssh "${ssh_args[@]}" "$remote"
 ```
 Yardımcıda: `ALLOWED = {ad: re.compile(...)}`; değerde `" \ $ ` + satır sonu
-yasak (systemd ile bash aynı okusun, enjeksiyon olmasın); geçici dosya +
+yasak (systemd ile bash aynı okusun, enjeksiyon olmasın; bash `set -a; . dosya;
+set +a` ile okur, yoksa değer `npm run build`e geçmez); geçici dosya +
 `os.replace` + `fsync`; sembolik bağ reddedilir. İş akışında
 `secrets.X` (gizli) ve `vars.X` (bayrak) ayrı. Kod:
 `acilis-zili/deploy/{sync-app-env.sh,set-app-env.py}`, testler

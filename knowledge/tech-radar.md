@@ -11,13 +11,14 @@ kaynak saymaz.
 
 Halkalar:
 - **Benimse:** ekosistemde en az bir canlı projede denendi, varsayılan.
-- **Dene:** mantıklı, ama henüz bizde canlıda yok. İlk kullanan proje
+- **Dene:** mantıklı, ama henüz bizde canlıda yok ya da canlıda olup uçtan
+  uca doğrulanmadı. İlk kullanan proje
   dersini `mistakes.md` / `patterns.md`'ye yazar.
 - **Bekle:** bilinçli olarak seçmiyoruz; gerekçesi satırda.
 
 **Sahip:** `strategist` (okur VE günceller — kullanıcı onayıyla,
 `rules/self-improvement.md`). İki tetikleyici: "Dene" halkasındaki teknoloji
-canlıya çıkınca → Benimse'ye terfi + ders kaydı; kickoff'ta radar dışı seçim
+canlıya çıkıp uçtan uca doğrulanınca → Benimse'ye terfi + ders kaydı; kickoff'ta radar dışı seçim
 yapılınca → yeni satır ya da Bekle gerekçesi. Tazelik denetimi `/evolve`da
 (60+ gün uyarısı).
 
@@ -68,7 +69,7 @@ Son gözden geçirme: 2026-10-03
 |---|---|---|---|
 | İşlem e-postası | Resend (SDK'sız `fetch`) | Benimse | Açılış Zili'nde canlı (2026-10-15): şifre sıfırlama, tablo + satır içi stil şablonu ve GIF; React Email gerekmedi. DMARC katıysa gönderen tam `@alan`; gönderen yanıt almaz, iletişim adresi ayrı. `guides/11-vps-email-push.md § 5`. |
 | Bülten / toplu e-posta | Resend Broadcasts ya da Buttondown | Dene | KVKK açık rıza metni şart. |
-| Push bildirim | Web Push (VAPID) | Dene | PWA yüklü değilse iOS'ta çalışmaz; beklentiyi buna göre kur. Açılış Zili'nde anahtarlar canlıda (2026-10-15), kullanıcıyla uçtan uca test bekliyor; anahtar değişirse abonelikler düşer. `guides/11-vps-email-push.md § 6`. |
+| Push bildirim | Web Push (VAPID) | Dene | PWA yüklü değilse iOS'ta çalışmaz; beklentiyi buna göre kur. Açılış Zili'nde anahtarlar canlıda (2026-10-15) ama uçtan uca doğrulanmadı — deneme bildirimi gerçek bir cihaza ulaşınca Benimse'ye terfi; anahtar değişirse abonelikler düşer. `guides/11-vps-email-push.md § 6`. |
 
 ## Para
 

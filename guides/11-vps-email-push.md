@@ -1,7 +1,8 @@
 # 11 · VPS'e Deploy, Ortam Değişkenleri, E-posta ve Web Push
 
-Varsayılan barındırma Vercel (`08-quality-and-ship.md § 7–8`). Uzun süren iş,
-cron, kalıcı disk ya da tek sunucuda tam kontrol gerekince VPS
+Varsayılan barındırma Vercel (`08-quality-and-ship.md § 7–8`; zamanlanmış iş
+de orada: Vercel Cron). Uzun süren iş, WebSocket sunucusu, kalıcı disk ya da
+tek sunucuda tam kontrol gerekince VPS
 (`knowledge/tech-radar.md → Barındırma`). Bu rehber Açılış Zili'nde
 (aciliszili.com, Ekim 2026) çalışan düzeni anlatır; dosya yolları o depoya
 (`ahmetakyapi/acilis-zili`, herkese açık) aittir ve kopyalanabilir.
@@ -21,6 +22,13 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
             → servisi yeniden başlat → sağlık kontrolü → geçmezse eski sürüme dön
 ```
 
+- **Sunucu doğrulanan commit'i derler, dal ucunu değil.** Deploy işi
+  `${{ github.sha }}`yı betiğe geçer, betik tam o SHA'yı çeker
+  (`git fetch --depth 1 origin <sha> && git checkout FETCH_HEAD`). Dal ucunu
+  klonlamak yarış açar: push X'in deploy'u koşarken gelen push Y ortak
+  `concurrency` grubunda bekler, ama X'in klonu dal ucunda Y'yi bulur ve Y
+  kendi verify'ı koşmadan canlıya çıkar. (Açılış Zili'nin `update.sh`'ı şu
+  an dal ucunu klonluyor — bu madde oradaki açığı da anlatır.)
 - **Kod sunucuya kopyalanmaz**, sunucu kendi `git clone`unu yapar. Derleme
   canlı dizinde yapılmaz: dakikalar süren build sırasında çalışan sürümün
   parça dosyaları altından çekilir (sayfa açılır, script'ler 404).
@@ -51,7 +59,10 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
 ## 3. Ortam Değişkenleri: Tek Dosya, Tek Yazma Yolu
 
 Sunucuda tek dosya: `/etc/<uygulama>.env` (`root:<uygulama> 0640`), hem
-systemd `EnvironmentFile` hem bash `source` okur. İkisinin ortak paydası
+systemd `EnvironmentFile` hem bash okur — bash'te `set -a; . /etc/<uygulama>.env;
+set +a`: `set -a` olmadan düz `source` yalnız kabuk değişkeni kurar, değerler
+`npm run build`e geçmez ve derleme anı bayrağı sessizce varsayılana düşer
+(#100'ün kardeşi). İkisinin ortak paydası
 **tırnak içinde, `$` `` ` `` `\` `"` içermeyen** değer.
 
 **Elle düzenleme yerine GitHub'dan senkron** (`deploy/sync-app-env.sh` +
@@ -151,8 +162,11 @@ sayfada `noindex` (#100). Derlemede okunur.
   GIF betikle üretilir (`scripts/build-email-assets.mjs`, sharp
   `join: { animated: true }`), elle değil. 1,4 sn vuruş + uzun duraklama.
 - GIF zemini **düz renk** ve etrafındaki bant aynı renk (saydam GIF kenarı
-  tırtıklar). Koyu bant Gmail koyu temasında çevrilmez; açık kartı Gmail
-  kendisi koyulaştırır.
+  tırtıklar). Gmail web ve Android koyu bandı çevirmez, açık kartı kendisi
+  koyulaştırır; **Gmail iOS tam ters çevirir**: koyu bant açılır, GIF
+  çevrilmez ve bant içinde dikdörtgen olarak görünür. Testte iOS Gmail'e de
+  bak; uyuşmazlığı ya kabul edip yaz ya da GIF kenarını bantla eritecek
+  biçimde üret.
 - "Kurşun geçirmez" düğme: dolgulu `<a>`, arka plan `bgcolor` + degrade.
 - Gizli önizleme satırı (preheader) + düz metin sürümü aynı sırada.
 - Görseller mutlak adresle (bağlantının `origin`inden).
@@ -176,7 +190,7 @@ sayfada `noindex` (#100). Derlemede okunur.
 
 ## Kontrol Listesi
 
-- [ ] Deploy: verify → SSH → sürüm dizini → atomik bağ → sağlık → geri dönüş
+- [ ] Deploy: verify → SSH → **doğrulanan SHA** → sürüm dizini → atomik bağ → sağlık → geri dönüş
 - [ ] Actions: `contents: read`, `persist-credentials: false`, sabit sürümler, host key, ortak `concurrency`
 - [ ] Sırlar GitHub Secrets'ta, bayraklar Variables'ta; sunucuya izin listeli senkronla
 - [ ] Derleme anı değişkeni değişti → yeniden deploy; çalışma anı → yeniden başlat

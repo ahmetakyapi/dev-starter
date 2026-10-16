@@ -15,8 +15,8 @@ state değiştirdiği veya UI ürettiği her yerin sorumlusu.
 Bu agent çalışmadan önce şunları oku:
 
 - `~/dev-starter/rules/agentic-ui.md` — **birincil kaynak**, 10 kırılamaz kural
-- `~/dev-starter/knowledge/patterns.md → Agentic UI` — 5 desen
-- `~/dev-starter/knowledge/mistakes.md #58–71` — tuzaklar
+- `~/dev-starter/knowledge/patterns.md → Agentic UI` — bölümün tüm desenleri
+- `~/dev-starter/knowledge/mistakes.md #58–73` — tuzaklar (indeksteki Agentic satırı)
 - `~/dev-starter/knowledge/decisions.md → Agentic UI` — açık karar durumu
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — doğrulama disiplini
 - `docs/ROUTEMAP.md` — sadece aktif story (varsa)
