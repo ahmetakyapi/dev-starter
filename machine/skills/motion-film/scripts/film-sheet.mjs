@@ -25,6 +25,10 @@
  *   --reduced-motion  hareketi azaltma taklidi    --cookie=ad=değer (çoklu)
  *   --wait=ms        canlıda tıklamadan önce bekleme (800)
  *   --allow-errors   sayfa hatasında yine de çık 0
+ *   --crop=x,y,w,h   yalnız bu bölge (mantıksal px), tam çözünürlükte: --scale=2 ile
+ *                    kıl çizgi, gren ve harf kenarı küçültülmeden görülür
+ *   --cuts[=k]       window.TIMELINE'daki her sahne sınırının iki yanından k kare (2);
+ *                    her satır bir kesme. --fps=24 kare ızgarası
  *
  * Animatör görünümleri (Florence, "Opus 5.5 Motion Lab"):
  *   --onion          seçilen kareleri %25 opaklıkla TEK görüntüde üst üste bindirir.
@@ -38,28 +42,22 @@
  * Tarayıcı: CHROME_PATH ya da bilinen yerler; kütüphane çalıştırdığın
  * projeden çözülür (puppeteer-core / puppeteer / playwright-core / playwright).
  */
-import { createRequire } from "node:module";
-import { existsSync, mkdirSync } from "node:fs";
+import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
+import { filmUrl, launch, newPage as openPage, parseArgs, renderAt, waitReady, watchPage } from "./film-browser.mjs";
 
-const args = Object.fromEntries(process.argv.slice(2).filter(a => a.startsWith("--")).map(a => {
-  const [k, ...v] = a.slice(2).split("="); return [k, v.length ? v.join("=") : true];
-}));
-const target = process.argv.slice(2).find(a => !a.startsWith("--"));
-if (!target) { console.error("Kullanım: film-sheet.mjs <html|url> [--times|--range|--strip] [--out=...]"); process.exit(2); }
-/** Sorgu dosya adına gömülmesin: pathToFileURL `?`i %3F yapar, film.html?counter yok bir dosyaya gider.
-    Sözleşme kipinde http hedefi de ?capture alır; almazsa önizleme döngüsü renderAt(t) ile
-    ekran görüntüsü arasında tuvali önizleme saatiyle yeniden çizer. */
-const filmUrl = (target, capture) => {
-  const [p, q = ""] = target.split(/\?(.*)/s);
-  const u = /^https?:/.test(target) ? new URL(target) : new URL(pathToFileURL(resolve(p)).href + (q ? "?" + q : ""));
-  if (capture) u.searchParams.set("capture", "");
-  return u.href;
-};
+const { args, target } = parseArgs();
+if (!target) { console.error("Kullanım: film-sheet.mjs <html|url> [--times|--range|--strip|--cuts] [--crop=x,y,w,h] [--out=...]"); process.exit(2); }
 const url = filmUrl(target, !args.live);
 const [W, H] = String(args.size || "1280x720").split("x").map(Number);
-const scale = Number(args.scale || 1), cols = Number(args.cols || 4), thumb = Number(args.thumb || 480);
+const scale = Number(args.scale || 1);
+const crop = args.crop ? String(args.crop).split(",").map(Number) : null;
+if (crop && (crop.length !== 4 || crop.some(n => !Number.isFinite(n)) || crop[2] <= 0 || crop[3] <= 0)) { console.error("--crop=x,y,w,h (mantıksal px)"); process.exit(2); }
+const cutK = args.cuts ? (args.cuts === true ? 2 : Math.max(1, Number(args.cuts))) : 0;
+const cutFps = Number(args.fps || 24);
+let cutEdges = [];
+// Kırpılmış kare küçültülürse kırpmanın anlamı kalmaz: varsayılan küçük resim kırpmanın fiziksel genişliği.
+const cols = Number(args.cols || (cutK ? cutK * 2 : 4)), thumb = Number(args.thumb || (crop ? Math.round(crop[2] * scale) : 480));
 const out = resolve(args.out || "out/film-sheet.png");
 
 function times() {
@@ -71,56 +69,23 @@ function times() {
   return list;
 }
 
-/** Tarayıcı bağdaştırıcısı: puppeteer ya da playwright, aynı küçük yüzey. */
-async function launch() {
-  const req = createRequire(resolve(process.cwd(), "package.json"));
-  const chrome = process.env.CHROME_PATH || [
-    "/opt/pw-browsers/chromium", "/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser",
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  ].find(p => existsSync(p));
-  for (const name of ["puppeteer-core", "puppeteer"]) {
-    try {
-      const pptr = req(name);
-      const browser = await pptr.launch({ executablePath: chrome, headless: true, args: ["--no-sandbox", "--autoplay-policy=no-user-gesture-required"] });
-      return { browser, kind: "puppeteer" };
-    } catch (e) { if (e.code !== "MODULE_NOT_FOUND") throw e; }
-  }
-  for (const name of ["playwright-core", "playwright"]) {
-    try {
-      const { chromium } = req(name);
-      const browser = await chromium.launch({ executablePath: chrome, headless: true, args: ["--no-sandbox"] });
-      return { browser, kind: "playwright" };
-    } catch (e) { if (e.code !== "MODULE_NOT_FOUND") throw e; }
-  }
-  throw new Error("puppeteer(-core) ya da playwright(-core) bulunamadı: projede `npm i -D puppeteer-core` (ya da playwright).");
-}
-
-async function newPage({ browser, kind }, w, h, dpr) {
-  if (kind === "playwright") {
-    const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: dpr, colorScheme: args.dark ? "dark" : args.light ? "light" : undefined, reducedMotion: args["reduced-motion"] ? "reduce" : undefined });
-    return ctx.newPage();
-  }
-  const page = await browser.newPage();
-  await page.setViewport({ width: w, height: h, deviceScaleFactor: dpr });
-  const feats = [];
-  if (args.dark || args.light) feats.push({ name: "prefers-color-scheme", value: args.dark ? "dark" : "light" });
-  if (args["reduced-motion"]) feats.push({ name: "prefers-reduced-motion", value: "reduce" });
-  if (feats.length) await page.emulateMediaFeatures(feats);
-  return page;
-}
+const newPage = (env, w, h, dpr) => openPage(env, { w, h, dpr,
+  colorScheme: args.dark ? "dark" : args.light ? "light" : undefined, reducedMotion: args["reduced-motion"] ? "reduce" : undefined });
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const b64 = async (page, sel) => {
-  const el = sel ? await page.$(sel) : null;
-  const buf = el ? await el.screenshot({ type: "png" }) : await page.screenshot({ type: "png" });
+  // Kırpma tüm sayfadan alınır ve seçiciden önce gelir: ayrıntı, öğenin sınırında kesilmesin.
+  const el = sel && !crop ? await page.$(sel) : null;
+  const buf = el ? await el.screenshot({ type: "png" })
+    : await page.screenshot({ type: "png", ...(crop ? { clip: { x: crop[0], y: crop[1], width: crop[2], height: crop[3] } } : {}) });
   return Buffer.from(buf).toString("base64");
 };
 
 const env = await launch();
 const page = await newPage(env, W, H, scale);
-const errors = [];
-page.on("pageerror", e => errors.push(String(e.message || e)));
-page.on("console", m => { if (m.type() === "error") errors.push(m.text()); });
+// Hatalar toplanır, render durmaz: temas sayfası hatalı filmi de göstermeli (--allow-errors).
+const watch = watchPage(page);
+const errors = watch.errors;
 // args tekrar eden bayrağın yalnız sonuncusunu tutar; --cookie çoklu verilir, argv'den toplanır.
 const cookies = process.argv.slice(2).filter(a => a.startsWith("--cookie=")).map(a => a.slice("--cookie=".length)).filter(Boolean);
 if (cookies.length && /^https?:/.test(url)) {
@@ -131,7 +96,7 @@ if (cookies.length && /^https?:/.test(url)) {
 // Ağ susana kadar: canlı sayfada fontlar ve logolar insin (puppeteer ve playwright adları farklı).
 await page.goto(url, { waitUntil: env.kind === "playwright" ? "networkidle" : "networkidle0", timeout: 120_000 });
 
-const list = times();
+let list = times();
 const shots = [];
 const probes = [];
 const probe = args.probe ? String(args.probe) : null;
@@ -150,10 +115,12 @@ if (args.live) {
   }
   timing = await page.evaluate(() => { const f = window.__frames.slice(5).sort((a, b) => a - b); return f.length ? { n: f.length, p50: f[f.length >> 1], p95: f[Math.floor(f.length * 0.95)], max: f[f.length - 1] } : null; });
 } else {
-  await page.waitForFunction("window.READY === true && (typeof window.renderAt === 'function' || typeof window.render === 'function')", { timeout: 20_000 });
+  try { await waitReady(page, env.kind, watch); }
+  catch (e) { console.error(String(e.message)); await env.browser.close(); process.exit(1); }
+  if (cutK) list = await cutTimes();
   for (const t of list) {
-    await page.evaluate(tt => (window.renderAt ?? window.render)(tt), t);
-    shots.push({ t, data: await b64(page, args.selector) });
+    await renderAt(page, t);
+    shots.push({ t, data: await b64(page, args.selector), label: cutK ? cutLabel(t) : null });
     await measure();
   }
 }
@@ -161,7 +128,7 @@ if (args.live) {
 // Döşeme: ayrı bir sayfada ızgara, her karenin köşesinde saniyesi.
 // Düşük başlangıç yüksekliği: tam sayfa görüntüsü içerik kadar uzar, altta boşluk kalmaz.
 const onion = Boolean(args.onion);
-const sheet = await newPage(env, onion ? thumb * 2 + 16 : cols * (thumb + 8) + 8, 60, 1);
+const sheet = await newPage(env, onion ? thumb * 2 + 16 : Math.max(1, Math.min(cols, shots.length)) * (thumb + 8) + 8, 60, 1);
 const chart = probes.length ? chartSvg(list, probes) : "";
 await sheet.setContent(onion ? `<!doctype html><style>
   body{margin:0;padding:8px;background:#fff;font:600 12px ui-monospace,monospace}
@@ -169,10 +136,10 @@ await sheet.setContent(onion ? `<!doctype html><style>
   .o img:first-child{position:relative} p{margin:6px 0 0}
 </style><div class="o">${shots.map(s => `<img src="data:image/png;base64,${s.data}">`).join("")}</div><p>onion ${shots[0]?.t}–${shots.at(-1)?.t} sn · ${shots.length} kare</p>${chart}` : `<!doctype html><style>
   body{margin:0;padding:8px;background:#0e1013;font:600 12px ui-monospace,monospace;color:#fff}
-  .g{display:grid;grid-template-columns:repeat(${cols},${thumb}px);gap:8px}
+  .g{display:grid;grid-template-columns:repeat(${Math.max(1, Math.min(cols, shots.length))},${thumb}px);gap:8px}
   figure{margin:0;position:relative} img{width:${thumb}px;display:block;border-radius:6px}
   figcaption{position:absolute;left:6px;top:6px;padding:2px 6px;border-radius:4px;background:#c0262d}
-</style><div class="g">${shots.map(s => `<figure><img src="data:image/png;base64,${s.data}"><figcaption>${s.t}s</figcaption></figure>`).join("")}</div>${chart}`);
+</style><div class="g">${shots.map(s => `<figure><img src="data:image/png;base64,${s.data}"><figcaption>${s.label ?? s.t + "s"}</figcaption></figure>`).join("")}</div>${chart}`);
 await sheet.waitForFunction("[...document.images].every(i => i.complete)");
 mkdirSync(dirname(out), { recursive: true });
 await sheet.screenshot({ path: out, fullPage: true });
@@ -188,6 +155,26 @@ if (timing) console.log(`kare süresi: p50 ${timing.p50.toFixed(1)} ms · p95 ${
 if (errors.length) {
   console.error(`sayfa hataları (${errors.length}):\n  ` + errors.slice(0, 10).join("\n  "));
   if (!args["allow-errors"]) process.exit(1);
+}
+
+/**
+ * Kesme anları: her sahne sınırının (TIMELINE start/end, 0 ve DUR hariç) iki
+ * yanından k kare, kare ızgarasında. Sınır karesi yeni sahnenin ilk karesidir;
+ * satır "öncekinin son k karesi | yeninin ilk k karesi" diye okunur.
+ */
+async function cutTimes() {
+  const { TL, DUR } = await page.evaluate(() => ({ TL: Array.isArray(window.TIMELINE) ? window.TIMELINE : null, DUR: window.DUR }));
+  if (!TL) { console.error("--cuts window.TIMELINE ister: [{ id, start, end }] (video-uretimi.md)."); await env.browser.close(); process.exit(2); }
+  const edges = [...new Set(TL.flatMap(e => [e.start, e.end]).map(b => Math.round(b * cutFps)))]
+    .filter(f => f > 0 && f < Math.round(DUR * cutFps)).sort((a, b) => a - b);
+  if (!edges.length) { console.error("TIMELINE'da 0 ile DUR arasında sahne sınırı yok."); await env.browser.close(); process.exit(2); }
+  cutEdges = edges;
+  return edges.flatMap(f => Array.from({ length: cutK * 2 }, (_, i) => Math.max(0, f - cutK + i) / cutFps));
+}
+/** Kesme karesinin etiketi: kare numarası ve sınırın hangi yanında olduğu. */
+function cutLabel(t) {
+  const f = Math.round(t * cutFps), b = cutEdges.reduce((best, e) => (Math.abs(e - f) < Math.abs(best - f) ? e : best), cutEdges[0]);
+  return `${f < b ? "◀" : "▶"} ${f}. kare · ${(f / cutFps).toFixed(3)}s`;
 }
 
 /** Değer (üst) ve kare başına değişim (alt) grafiği: hız grafiği okunur — doğrusal kesim düz, ölü duruş köşe. */
