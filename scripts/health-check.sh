@@ -123,15 +123,39 @@ if grep -qs "session-brief" ".claude/settings.json"; then
 else
   fail "session-brief .claude/settings.json'da kayitli degil"
 fi
+# Varlik yalniz gate-guard ve session-brief icin aranirsa, sir ve kilit
+# taramasinin TEK sahibi quality-scan'in kaydi silindiginde de ✅ cikar (#52).
+MISSING=""
+for h in "${HOOKS[@]}"; do
+  grep -qs "hooks/$h\.sh" ".claude/settings.json" || MISSING="$MISSING $h"
+done
+if [ -z "$MISSING" ]; then
+  pass "${#HOOKS[@]} hook'un hepsi .claude/settings.json'da kayitli"
+else
+  fail ".claude/settings.json'da kayitli olmayan hook:$MISSING"
+fi
+# Hook Claude'un o anki dizininde kosar; goreli yol bir `cd` sonrasi bulunamaz,
+# exit 127 bloklamaz ve commit taramasiz gecer.
+if grep -qE '"bash hooks/' ".claude/settings.json" 2>/dev/null; then
+  fail "Hook komutlari goreli yolda — cd sonrasi calismaz; \$CLAUDE_PROJECT_DIR/hooks/... kullan"
+else
+  pass "Hook komutlari cd'den bagimsiz yolda (\$CLAUDE_PROJECT_DIR)"
+fi
 
 # Enforcement SABLONLARA tasiniyor mu? /new-project ciktisi hook'suz dogarsa
 # kurallarin tamami yalniz bu depoda yasar (5 ay fark edilmedi, #99 çevresi).
 for tpl_dir in "nextjs-fullstack" "landing"; do
   TPL_SET="templates/${tpl_dir}/.claude/settings.json"
-  if [ -f "$TPL_SET" ] && grep -qs "dev-starter/hooks/gate-guard" "$TPL_SET" && grep -qs "session-brief" "$TPL_SET"; then
-    pass "templates/$tpl_dir hook'lari ekosistemden aliyor (settings.json)"
+  MISSING=""
+  for h in "${HOOKS[@]}"; do
+    grep -qs "dev-starter/hooks/$h\.sh" "$TPL_SET" || MISSING="$MISSING $h"
+  done
+  if [ ! -f "$TPL_SET" ]; then
+    fail "templates/$tpl_dir/.claude/settings.json eksik — yeni proje hook'suz dogar"
+  elif [ -z "$MISSING" ]; then
+    pass "templates/$tpl_dir ${#HOOKS[@]} hook'un hepsini ekosistemden aliyor (settings.json)"
   else
-    fail "templates/$tpl_dir/.claude/settings.json eksik ya da dev-starter hook'larina bagli degil"
+    fail "templates/$tpl_dir/.claude/settings.json dev-starter hook'larina bagli degil:$MISSING"
   fi
 done
 
@@ -232,6 +256,40 @@ for tpl_dir in "nextjs-fullstack" "landing"; do
     warn "templates/$tpl_dir/middleware.ts — Next 16'da proxy.ts (export function proxy) olmali"
   fi
 done
+
+# Iki Next sablonunun ortak dosyalari BAYT BAYT ayni kalmali: biri duzeltilip
+# digeri unutulunca yeni proje hangi sablondan dogduguna gore eski hatayi
+# tasir. Liste bilerek ACIK: yeni ortak dosya eklenince buraya da yazilir.
+# Bilerek ayrisanlar disarida: lib/theme.ts (landing statik, THEME_SCRIPT;
+# fullstack sunucuda, lib/theme.server.ts), app/{layout,page}.tsx, app/sitemap.ts,
+# lib/env.ts ve tests/{env,security}.test.ts (fullstack'te veritabani, oturum,
+# makine ucu), CLAUDE.md, .env.example, package.json, eslint.config.mjs, CI ve
+# .gitignore. AGENTS.md'yi `next dev` yazar, o da disarida.
+SHARED_TEMPLATE_FILES=(
+  ".claude/settings.json" ".nvmrc" "tsconfig.json" "postcss.config.mjs" "next.config.ts" "instrumentation.ts"
+  "app/globals.css" "app/icon.svg" "app/error.tsx" "app/global-error.tsx" "app/not-found.tsx"
+  "app/opengraph-image.tsx" "app/manifest.ts" "app/robots.ts" "app/api/health/route.ts"
+  "components/motion/MotionProvider.tsx" "components/motion/Reveal.tsx"
+  "components/ui/Button.tsx" "components/ui/EmptyState.tsx" "components/ui/Field.tsx"
+  "components/ui/PageHeader.tsx" "components/ui/Panel.tsx" "components/ui/Skeleton.tsx"
+  "components/ui/ThemeToggle.tsx" "hooks/useMotionPreference.ts"
+  "lib/motion.ts" "lib/rate-limit.ts" "lib/site.ts" "lib/structured-data.ts" "lib/utils.ts" "lib/validation.ts"
+  "tests/palette.test.ts" "tests/theme.test.ts" "tests/utils.test.ts" "tests/validation.test.ts"
+)
+DRIFTED=0
+for f in "${SHARED_TEMPLATE_FILES[@]}"; do
+  L="templates/landing/$f"; F="templates/nextjs-fullstack/$f"
+  if [ ! -f "$L" ] || [ ! -f "$F" ]; then
+    fail "$f iki sablondan birinde EKSIK (landing ya da nextjs-fullstack)"
+    DRIFTED=$((DRIFTED + 1))
+  elif ! cmp -s "$L" "$F"; then
+    fail "$L nextjs-fullstack'tan AYRISMIS — diff $L $F; dogru olani ikisine de uygula"
+    DRIFTED=$((DRIFTED + 1))
+  fi
+done
+if [ "$DRIFTED" -eq 0 ]; then
+  pass "Iki Next sablonunun ${#SHARED_TEMPLATE_FILES[@]} ortak dosyasi bayt bayt ayni"
+fi
 
 # ─── 7. Knowledge Base ───────────────────────────────────────────────────────
 header "Knowledge Base"

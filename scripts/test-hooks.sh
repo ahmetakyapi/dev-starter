@@ -18,6 +18,11 @@ set -uo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HOOKS="$REPO_ROOT/hooks"
 
+# Hook'lar önce CLAUDE_PROJECT_DIR'a sabitlenir; kabukta dışa aktarılmış bir
+# değer testleri sandbox yerine o dizine gönderirdi. Gereken testler onu
+# kendisi verir.
+unset CLAUDE_PROJECT_DIR
+
 PASS=0
 FAIL=0
 
@@ -137,7 +142,8 @@ CODE=$?
 [ $CODE -eq 0 ] && ok "temiz içerik → geçer (exit 0)" || no "temiz içerik → geçmeli" 0 "$CODE"
 
 # (h) commit dışı komut → dokunmamalı (secret staged olsa bile)
-printf 'const password = "hunter2hunter2"\n' > leak2.ts
+PW_NAME='password'
+printf 'const %s = "%s"\n' "$PW_NAME" 'hunter2hunter2' > leak2.ts
 git add leak2.ts
 OUT=$(payload "ls -la" | bash "$HOOKS/quality-scan.sh" 2>&1)
 CODE=$?
@@ -152,15 +158,15 @@ echo
 # ─────────────────────────────────────────────────────────────
 # quality-scan.sh — lockfile kontrolü (mistakes.md #57)
 #
-# Sandbox gerçek verifier'ı kullanır; kopya mantık test edilirse test
-# geçerken üretimdeki script bozuk kalabilir.
+# Sandbox'ta scripts/ YOK — gerçek şablon projelerinde de yok. Hook gerçek
+# verifier'ı kendi ağacından bulmalı; eskiden test onu sandbox'a kopyalıyordu
+# ve kontrolün şablon projelerinde hiç çalışmadığı bu yüzden görünmedi.
 # ─────────────────────────────────────────────────────────────
 echo "quality-scan.sh — kilit tutarlılığı"
 
-mkdir -p "$SANDBOX/lock/scripts" && cd "$SANDBOX/lock" || exit 1
+mkdir -p "$SANDBOX/lock" && cd "$SANDBOX/lock" || exit 1
 git init -q . 2>/dev/null
 git config user.email t@t.t && git config user.name t
-cp "$REPO_ROOT/scripts/verify-lockfile.mjs" scripts/verify-lockfile.mjs
 
 # (i) kırık kilit stage'lendi → bloklamalı
 #     puppeteer kilitte var, devtools-protocol bağımlılığı yok — CI'ı düşüren
@@ -237,8 +243,40 @@ OUT=$(payload "git commit -m 'chore: deps'" | bash "$HOOKS/quality-scan.sh" 2>&1
 CODE=$?
 [ $CODE -eq 0 ] && ok "tutarlı kilit → geçer (exit 0)" || no "tutarlı kilit → geçmeli" 0 "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 
+# (k2) workspace manifest'ine eklenip kilide yazılmayan bağımlılık → bloklamalı
+# (doğrulayıcı eskiden yalnız kök manifest'e bakıyordu: ✅ deyip npm ci'da
+# "Missing: … from lock file" ile düşüyordu)
+mkdir -p packages/a
+printf '{ "name": "fixture", "version": "1.0.0", "workspaces": ["packages/*"] }\n' > package.json
+printf '{ "name": "a", "version": "1.0.0", "dependencies": { "left-pad": "^1.3.0" } }\n' > packages/a/package.json
+cat > package-lock.json <<'EOF'
+{
+  "name": "fixture",
+  "lockfileVersion": 3,
+  "packages": {
+    "": { "name": "fixture", "version": "1.0.0", "workspaces": ["packages/*"] },
+    "node_modules/a": { "resolved": "packages/a", "link": true },
+    "packages/a": { "name": "a", "version": "1.0.0" }
+  }
+}
+EOF
+git add package.json package-lock.json packages/a/package.json
+OUT=$(payload "git commit -m 'chore: deps'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 2 ] && printf '%s' "$OUT" | grep -q 'left-pad'; then
+  ok "workspace'teki kilitsiz bağımlılık → bloklanır (exit 2)"
+else
+  no "workspace manifest'i de kilitle karşılaştırılmalı" "exit 2 + left-pad" "exit $CODE"
+fi
+git rm -q --cached packages/a/package.json && rm -rf packages
+
 # (l) kilit dosyasına dokunulmayan commit → kontrol hiç çalışmamalı
+# Çalışma ağacına stage'lenmemiş SENKRONSUZ kilit yazılır: kontrol yanlışlıkla
+# koşarsa exit 2 verir. Tutarlı kilitle "atlandı" ile "koştu ve geçti" ayırt
+# edilemiyordu (doğrulayıcı yalnız hatada çıktı basar).
 git rm -q --cached package.json package-lock.json
+printf '{ "name": "fixture", "version": "1.0.0", "devDependencies": { "vitest": "^3.2.7" } }\n' > package.json
+printf '{ "name": "fixture", "lockfileVersion": 3, "packages": { "": { "name": "fixture", "version": "1.0.0", "devDependencies": {} } } }\n' > package-lock.json
 printf 'export const x = 1\n' > other.ts
 git add other.ts
 OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
@@ -486,6 +524,108 @@ payload "GIT_AUTHOR_NAME=\"Ahmet Akyapı\" git commit -m 'feat: x'" | bash "$HOO
 CODE=$?
 [ $CODE -eq 2 ] && ok "tırnaklı env önekli commit → yakalanır, bloklanır" || no "env önekli commit yakalanmalı" 2 "$CODE"
 
+# (u14) Çift tırnak içindeki apostrof + sonra tek tırnak → commit yine görülmeli
+# (iki ayrı geçişli tırnak silme "Ahmet'in"in apostrofunu sonraki tek tırnakla
+# eşleyip aradaki `git commit`i de siliyordu; iki hook da exit 0 veriyordu)
+payload "echo \"Ahmet'in\" ; git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "\"Ahmet'in\" + tek tırnaklı mesaj → commit yakalanır" || no "apostrof commit'i gizlememeli" 2 "$CODE"
+
+# (u15) Aynı açık Claude'un standart heredoc commit'inde (<<'EOF')
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git add \"src/Ahmet'"'"'in.ts\" && git commit -m \"$(cat <<'"'"'EOF'"'"'\nfeat: giriş ekranı\nEOF\n)\""}}' | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "apostroflu yol + <<'EOF' heredoc commit → yakalanır" || no "heredoc commit apostrofla kaçmamalı" 2 "$CODE"
+
+# (u16) if/then içindeki commit → yakalanmalı (önek listesi yalnız VAR= ve
+# `command` tanıyordu; then/do/{/!/time/env/exec ve /usr/bin/git kaçıyordu)
+payload "if ! git diff --cached --quiet; then git commit -m 'feat: x'; fi" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "if ...; then git commit → yakalanır" || no "then önekli commit yakalanmalı" 2 "$CODE"
+
+# (u17) <<- heredoc'u sekmeli sonlandırıcıyla kapanır, sonraki commit görülmeli
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"cat <<-EOF > notlar.txt\n\tgövde\n\tEOF\ngit commit -m \"feat: x\""}}' | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "<<- heredoc sonrası commit → yakalanır" || no "<<- heredoc commit'i yutmamalı" 2 "$CODE"
+
+# (u18) Tırnaklı pathspec (Next route grubu) + yalnız .md staged → muafiyet YOK
+# (tırnaklı bölge silinince pathspec görünmez oluyordu; `git commit <yol>`
+# çalışma ağacındaki hâli commit'ler)
+git add README.md
+payload "git commit -m 'docs: notlar' 'app/(panel)/page.tsx'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "tırnaklı pathspec ('app/(panel)/...') → muafiyet yok, bloklanır" || no "tırnaklı pathspec muafiyeti delmemeli" 2 "$CODE"
+
+# (u19) Yalnız .md staged + heredoc mesajı → muafiyet KALMALI (mesaj, -m'nin
+# değeri; pathspec sayılırsa her doküman commit'i Gate ister)
+printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git commit -m \"$(cat <<'"'"'EOF'"'"'\ndocs: notlar\nEOF\n)\""}}' | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok ".md + heredoc mesajı → docs muafiyeti sürer (exit 0)" || no "-m değeri pathspec sayılmamalı" 0 "$CODE"
+git rm -q --cached README.md 2>/dev/null || true
+
+# (u19b) ASCII dışı adlı doküman → muafiyet yine uygulanmalı (core.quotePath
+# varsayılanı adı "notlar/\303\266neriler.md" diye tırnaklı verir; .md ile bitmez)
+mkdir -p notlar && echo "# öneri" > 'notlar/öneriler.md' && git add 'notlar/öneriler.md'
+payload "git commit -m 'docs: öneriler'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "Türkçe adlı .md → docs muafiyeti uygulanır" || no "ASCII dışı .md muaf olmalı" 0 "$CODE"
+git rm -q --cached 'notlar/öneriler.md' && rm -rf notlar
+
+# (u20) Alt klasörden commit → ROUTEMAP proje kökünde bulunmalı
+# (hook Claude'un o anki dizininde koşar; `cd src` sonrası Gate atlanıyordu.
+#  docs/ seçilmez: oradan göreli ROUTEMAP.md yine bulunur, açık görünmez.)
+mkdir -p "$SANDBOX/gatedoc/src"
+OUT=$( (cd "$SANDBOX/gatedoc/src" && payload "git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh") 2>&1 )
+CODE=$?
+[ $CODE -eq 2 ] && ok "alt klasörden commit → git köküne sabitlenir, bloklanır" || no "alt klasör Gate'i atlatmamalı" 2 "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -2)"
+
+# (u21) git dışı dizinden, CLAUDE_PROJECT_DIR verili → proje köküne sabitlenir
+( cd "$SANDBOX" && payload "git commit -m 'feat: x'" | CLAUDE_PROJECT_DIR="$SANDBOX/gatedoc" bash "$HOOKS/gate-guard.sh" ) >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "CLAUDE_PROJECT_DIR → ROUTEMAP proje kökünden okunur" || no "CLAUDE_PROJECT_DIR'a sabitlenmeli" 2 "$CODE"
+
+# (u21b) Worktree'de commit → worktree'nin ROUTEMAP'i ve index'i okunmalı.
+# CLAUDE_PROJECT_DIR oturumun başladığı kökte SABİT kalır (EnterWorktree, alt
+# ajan `isolation: worktree`); ona gitmek ana checkout'un ROUTEMAP'ini okuyup
+# worktree'deki Gate'siz story'yi geçiriyordu.
+mkdir -p "$SANDBOX/wtana/docs" && cd "$SANDBOX/wtana" || exit 1
+git init -q . 2>/dev/null
+git config user.email t@t.t && git config user.name t
+cat > docs/ROUTEMAP.md <<'EOF'
+| ID | Başlık | Faz | Öncelik | Durum | Gate | Assign |
+|----|--------|-----|---------|-------|------|--------|
+| STORY-001 | Giriş ekranı | 1 | HIGH | DONE | PASSED | FE |
+EOF
+git add -A && git commit -qm "docs: routemap" >/dev/null 2>&1
+git worktree add -q -b panel "$SANDBOX/wtpanel" >/dev/null 2>&1
+cd "$SANDBOX/wtpanel" || exit 1
+printf '| STORY-002 | Panel | 1 | HIGH | IN_PROGRESS | FAILED | FE |\n' >> docs/ROUTEMAP.md
+echo "export const x = 1" > panel.ts && git add -A
+payload "git commit -m 'feat: panel'" | CLAUDE_PROJECT_DIR="$SANDBOX/wtana" bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "worktree'de commit → worktree'nin ROUTEMAP'i okunur, bloklanır" || no "worktree Gate'i ana checkout'tan okumamalı" 2 "$CODE"
+
+# (u21c) Monorepo alt projesi: ROUTEMAP git kökünde değil alt projede
+# → o anki dizinden yukarı çıkılıp en yakın ROUTEMAP bulunmalı (git köküne
+# gitmek ROUTEMAP'i kaçırır, Gate atlanır)
+mkdir -p "$SANDBOX/mono/apps/web/docs" "$SANDBOX/mono/apps/web/src" && cd "$SANDBOX/mono" || exit 1
+git init -q . 2>/dev/null
+git config user.email t@t.t && git config user.name t
+cat > apps/web/docs/ROUTEMAP.md <<'EOF'
+| ID | Başlık | Faz | Öncelik | Durum | Gate | Assign |
+|----|--------|-----|---------|-------|------|--------|
+| STORY-001 | Giriş ekranı | 1 | HIGH | IN_PROGRESS | FAILED | FE |
+EOF
+echo "export const x = 1" > apps/web/src/x.ts && git add -A
+( cd apps/web/src && payload "git commit -m 'feat: x'" | CLAUDE_PROJECT_DIR="$SANDBOX/mono/apps/web" bash "$HOOKS/gate-guard.sh" ) >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "monorepo alt projesi → en yakın ROUTEMAP okunur" || no "alt proje ROUTEMAP'i kaçmamalı" 2 "$CODE"
+# (u21d) Oturum monorepo KÖKÜNDE başladı (CLAUDE_PROJECT_DIR=kök), Claude
+# `cd apps/web` yaptı → alt projenin ROUTEMAP'i yine okunmalı
+( cd apps/web && payload "git commit -m 'feat: x'" | CLAUDE_PROJECT_DIR="$SANDBOX/mono" bash "$HOOKS/gate-guard.sh" ) >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "oturum kökte, cwd alt projede → alt projenin ROUTEMAP'i okunur" || no "kökte başlayan oturum alt proje Gate'ini atlamamalı" 2 "$CODE"
+cd "$SANDBOX/gatedoc" || exit 1
+
 # (u9) Gate kolonu eklenmiş FAZ tablosu (ID yok) → story sanılmamalı
 cat > docs/ROUTEMAP.md <<'EOF'
 | Faz | Durum | Gate | Bitiş |
@@ -495,6 +635,26 @@ EOF
 payload "git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
 CODE=$?
 [ $CODE -eq 0 ] && ok "ID'siz Gate'li faz tablosu → story sanılmaz (exit 0)" || no "faz tablosu bloklamamalı" 0 "$CODE"
+
+# (u22) Büyük staged liste (>64 KB ad) + başta kod dosyası → muafiyet YOK
+# `echo | grep -q` erken çıkınca echo SIGPIPE alıyor, pipefail + `!` bunu
+# "hepsi doküman" diye okuyup kodlu commit'i muaf tutuyordu.
+mkdir -p "$SANDBOX/gatebig/docs" && cd "$SANDBOX/gatebig" || exit 1
+git init -q . 2>/dev/null
+git config user.email t@t.t && git config user.name t
+cat > docs/ROUTEMAP.md <<'EOF'
+| ID | Başlık | Faz | Öncelik | Durum | Gate | Assign |
+|----|--------|-----|---------|-------|------|--------|
+| STORY-001 | Giriş ekranı | 1 | HIGH | IN_PROGRESS | — | FE |
+EOF
+echo "export const x = 1" > app.ts
+LONG=$(printf 'n%.0s' $(seq 200))
+i=0
+while [ $i -lt 450 ]; do echo "# $i" > "docs/$LONG-$i.md"; i=$((i + 1)); done
+git add app.ts docs
+payload "git commit -m 'docs: toplu'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "büyük liste + kod dosyası → SIGPIPE muafiyet açmaz, bloklanır" || no "büyük listede muafiyet olmamalı" 2 "$CODE"
 
 echo
 # ─────────────────────────────────────────────────────────────
@@ -541,6 +701,18 @@ else
   no "fix testsiz → uyarmalı" "exit 0 + BUGFIX uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 fi
 
+# (y1) Aynı uyarı MODELE ulaşmalı: exit 0'da stderr ve düz stdout Claude'a
+# gitmez; uyarılar stdout'ta hookSpecificOutput.additionalContext JSON'u olur.
+OUT=$(payload "git commit -m 'fix: hata giderildi'" | bash "$HOOKS/quality-scan.sh" 2>/dev/null)
+CODE=$?
+CTX=$(printf '%s' "$OUT" | python3 -c 'import json,sys; print(json.load(sys.stdin)["hookSpecificOutput"]["additionalContext"])' 2>/dev/null \
+  || printf '%s' "$OUT" | jq -r '.hookSpecificOutput.additionalContext' 2>/dev/null || true)
+if [ $CODE -eq 0 ] && printf '%s' "$CTX" | grep -q 'BUGFIX'; then
+  ok "uyarı stdout'ta JSON additionalContext → modele ulaşır"
+else
+  no "uyarı modele JSON ile ulaşmalı" "exit 0 + additionalContext içinde BUGFIX" "exit $CODE, stdout: $(printf '%s' "$OUT" | head -3)"
+fi
+
 # (y2) fix commit'i test değişikliğiyle → BUGFIX uyarısı olmamalı (exit 0 da)
 printf 'test("bug", () => {})\n' > bug.test.ts
 git add bug.test.ts
@@ -567,7 +739,7 @@ git rm -q --cached odak.test.ts && rm -f odak.test.ts
 
 # (v2) TEK tırnaklı secret → bloklamalı (eski desen [\"\x27] apostrofu
 # sınıfa hiç almıyordu — ERE'de \x27 üç ayrı karakterdir; mistakes.md #99 sınıfı)
-printf "const password = 'cokgizlisifre123'\n" > tek.ts
+printf "const %s = '%s'\n" "$PW_NAME" 'cokgizlisifre123' > tek.ts
 git add tek.ts
 payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
 CODE=$?
@@ -575,7 +747,7 @@ CODE=$?
 git rm -q --cached tek.ts && rm -f tek.ts
 
 # (v3) Boşluklu dosya adındaki secret → bloklamalı (NUL'suz xargs adı bölüyordu)
-printf 'const api_key = "gizlideger12345"\n' > "gizli anahtar.ts"
+printf 'const %s = "%s"\n' "$KEY_NAME" 'gizlideger12345' > "gizli anahtar.ts"
 git add "gizli anahtar.ts"
 payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
 CODE=$?
@@ -637,6 +809,141 @@ else
 fi
 git rm -q --cached duz.ts && rm -f duz.ts
 
+# (v7) Alt klasörden commit → staged yollar repo köküne göre taranmalı
+# (git diff kök-göreli ad verir; alt klasörden grep hepsini "yok" bulup
+# içerik taramasını sessizce boşaltıyordu)
+mkdir -p alt && printf 'const key = "AKIAIOSFODNN7EXAMPLE"\n' > kok.ts
+git add kok.ts
+( cd alt && payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" ) >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "alt klasörden commit'teki sır → bloklanır" || no "alt klasör taramayı boşaltmamalı" 2 "$CODE"
+git rm -q --cached kok.ts && rm -rf kok.ts alt
+
+# (v7b) Yorumdaki kayıt atfı (mistakes.md #100) → hex uyarısı VERMEMELİ;
+# aynı dosyadaki gerçek hex renk → uyarı vermeli (bloklamaz, exit 0)
+printf '// bkz. mistakes.md #100\nexport const x = 1\n' > atif.ts
+git add atif.ts
+OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+if ! printf '%s' "$OUT" | grep -q 'DESIGN TOKEN'; then ok "mistakes.md #100 atfı → hex sanılmaz"; else no "kayıt atfı hex uyarısı vermemeli" "uyarı yok" "DESIGN TOKEN"; fi
+printf '// bkz. mistakes.md #100\nexport const c = "#a4720f"\n' > atif.ts
+git add atif.ts
+OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+if printf '%s' "$OUT" | grep -q 'DESIGN TOKEN'; then ok "atıf + gerçek hex aynı dosyada → uyarır"; else no "gerçek hex uyarısı kaçmamalı" "DESIGN TOKEN" "uyarı yok"; fi
+git rm -q --cached atif.ts && rm -f atif.ts
+
+# (v8) Tasarım token satırı (token: "surface-raised") → geçmeli
+# (şablonun kendi token sayfası her commit'te "hardcoded secret" diye bloklanıyordu)
+printf '{ token: "surface-raised", className: "bg-surface-raised" },\n' > tokenlar.tsx
+git add tokenlar.tsx
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "token: \"surface-raised\" → sır sanılmaz (exit 0)" || no "kebab token adı bloklanmamalı" 0 "$CODE"
+
+# (v9) Boşluklu arayüz metni (password: "En az 8 karakter olmalı") → geçmeli
+printf '{ %s: "%s" }\n' "$PW_NAME" 'En az 8 karakter olmalı' > mesajlar.ts
+git add mesajlar.ts
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "boşluklu arayüz metni → sır sanılmaz (exit 0)" || no "arayüz metni bloklanmamalı" 0 "$CODE"
+git rm -q --cached mesajlar.ts && rm -f mesajlar.ts
+
+# (v10) Aynı satırda kebab token + gerçek sır → bloklamalı (ayıklama satır
+# değil eşleşme başına; satırı toptan düşürmek gerçek sırrı da kaçırırdı)
+printf '{ token: "surface-raised", %s: "%s" },\n' "$PW_NAME" 'Xyz12345678' > tokenlar.tsx
+git add tokenlar.tsx
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "kebab token + gerçek sır aynı satırda → bloklanır" || no "satırdaki gerçek sır kaçmamalı" 2 "$CODE"
+git rm -q --cached tokenlar.tsx && rm -f tokenlar.tsx
+
+# (v10b) Parola anahtarında kebab değer → bloklamalı (kebab muafiyeti yalnız
+# token anahtarı için; "my-secret-pass" tasarım token adı değil, paroladır)
+printf '{ %s: "%s" }\n' "$PW_NAME" 'my-secret-pass' > ayar.ts
+git add ayar.ts
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "parola anahtarında kebab değer → bloklanır" || no "kebab parola kaçmamalı" 2 "$CODE"
+git rm -q --cached ayar.ts && rm -f ayar.ts
+
+# (v11) Tırnaklı pathspec'teki route grubu + yalnız .md staged → taranmalı
+mkdir -p 'app/(panel)' && printf 'export const x = 1\n' > 'app/(panel)/page.tsx'
+git add 'app/(panel)/page.tsx' && git commit -qm "chore: panel" >/dev/null 2>&1
+printf 'const key = "AKIAIOSFODNN7EXAMPLE"\n' > 'app/(panel)/page.tsx'
+printf '# notlar\n' > NOTLAR.md && git add NOTLAR.md
+payload "git commit -m 'docs: notlar' 'app/(panel)/page.tsx'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "tırnaklı route grubu pathspec'indeki sır → bloklanır" || no "tırnaklı pathspec taramadan kaçmamalı" 2 "$CODE"
+git checkout -q -- 'app/(panel)/page.tsx'
+git rm -q --cached NOTLAR.md && rm -f NOTLAR.md
+
+# (v12) ASCII dışı dosya adındaki sır → bloklamalı (core.quotePath varsayılanı
+# adı "ayarlar/\305\237ifreler.ts" diye tırnaklı verir, grep açamıyordu)
+mkdir -p ayarlar && printf 'const key = "AKIAIOSFODNN7EXAMPLE"\n' > 'ayarlar/şifreler.ts'
+git add 'ayarlar/şifreler.ts'
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "Türkçe dosya adındaki sır → bloklanır" || no "ASCII dışı ad taramadan kaçmamalı" 2 "$CODE"
+git rm -q --cached 'ayarlar/şifreler.ts' && rm -rf ayarlar
+
+# (v13) Sağlayıcı önekli anahtar, anahtar adı ve tırnak olmadan → bloklamalı
+# (YAML'da `GH_TOKEN: ghp_...`). Fixture çalışma zamanında birleştirilir:
+# düz yazılsa GitHub'ın push korumasına da takılırdı.
+mkdir -p .github/workflows
+printf 'env:\n  GH_TOKEN: %s%s\n' 'ghp_' "$(printf 'A%.0s' $(seq 36))" > .github/workflows/sync.yml
+git add .github/workflows/sync.yml
+payload "git commit -m 'ci: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "tırnaksız GitHub token'ı (YAML) → bloklanır" || no "sağlayıcı öneki yakalanmalı" 2 "$CODE"
+git rm -q --cached .github/workflows/sync.yml && rm -rf .github
+
+# (v13b) re_ önekli sıradan tanımlayıcı Resend anahtarı sanılmamalı; gerçek
+# biçimli anahtar (8 + 24) yine bloklanmalı. Fixture çalışma zamanında birleşir.
+printf 'const re_validateEmail_formatAddressString = 1\n' > kimlik.ts
+git add kimlik.ts
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "re_ önekli değişken adı → bloklanmaz" || no "re_ tanımlayıcısı sır sayılmamalı" 0 "$CODE"
+printf 'new Resend("%s%s_%s")\n' 're_' 'Ab12Cd34' "$(printf 'x%.0s' $(seq 24))" > kimlik.ts
+git add kimlik.ts
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "Resend anahtarı → bloklanır" || no "Resend öneki yakalanmalı" 2 "$CODE"
+git rm -q --cached kimlik.ts && rm -f kimlik.ts
+
+# (v13c) NUL baytlı (ikili sayılan) dosyadaki sır → bloklamalı (grep -a)
+printf 'SQLite format 3\000\000\nconst password = "hunter2hunter2"\n' > dev.db
+git add dev.db
+payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "ikili dosyadaki sır → bloklanır" || no "ikili dosya sır taramasından kaçmamalı" 2 "$CODE"
+git rm -q --cached dev.db && rm -f dev.db
+
+# (v14) İzlenen .env'i SİLEN `commit -a` → geçmeli (.env sızmıyor, gidiyor)
+printf 'DB=x\n' > .env && git add -f .env && git commit -qm "chore: kaza" >/dev/null 2>&1
+rm -f .env
+OUT=$(payload "git commit -am 'chore: .env kaldırıldı'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+[ $CODE -eq 0 ] && ok "silinen .env + commit -a → bloklanmaz (exit 0)" || no ".env'i kaldıran commit bloklanmamalı" 0 "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -2)"
+git rm -q --cached .env 2>/dev/null; git commit -qm "chore: .env yok" >/dev/null 2>&1
+
+# (v15) Ekosistemin KENDİ hook dosyaları kendi taramasından geçmeli
+# (yorumdaki örnek DSN ve test paketinin sahte sırları hook bakımını
+# bloklayan her commit'i durduruyordu — mistakes.md #45 sınıfı)
+mkdir -p "$SANDBOX/self" && cd "$SANDBOX/self" || exit 1
+git init -q . 2>/dev/null
+git config user.email t@t.t && git config user.name t
+mkdir -p hooks/lib scripts .claude
+cp "$REPO_ROOT"/hooks/*.sh hooks/ && cp "$REPO_ROOT"/hooks/lib/*.sh hooks/lib/
+cp "$REPO_ROOT/scripts/test-hooks.sh" scripts/ && cp "$REPO_ROOT/.claude/settings.json" .claude/
+git add -A
+OUT=$(payload "git commit -m 'test(hooks): x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && ! printf '%s' "$OUT" | grep -q 'SECURITY'; then
+  ok "hooks/ + test-hooks.sh kendi taramasından geçer"
+else
+  no "hook dosyaları kendilerini bloklamamalı" "exit 0, SECURITY yok" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -4)"
+fi
+
 echo
 # ─────────────────────────────────────────────────────────────
 # routemap-sync.sh — içerik değişmezi
@@ -655,6 +962,52 @@ if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'tutarsız'; then
   ok "DONE + Gate boş → tutarsızlık uyarısı"
 else
   no "DONE+Gate'siz uyarmalı" "exit 0 + tutarsız uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (sync-alt) Alt klasördeki düzenleme → ROUTEMAP proje kökünde bulunmalı
+mkdir -p "$SANDBOX/sync2/src"
+OUT=$( (cd "$SANDBOX/sync2/src" && printf '{"tool_name":"Edit","tool_input":{"file_path":"x.md"}}' | CLAUDE_PROJECT_DIR="$SANDBOX/sync2" bash "$HOOKS/routemap-sync.sh") 2>&1 )
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'STORY-001'; then
+  ok "alt klasörden düzenleme → değişmez yine denetlenir"
+else
+  no "alt klasör değişmezi atlatmamalı" "exit 0 + STORY-001 ihlali" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (sync-wt) Worktree'deki düzenleme → worktree'nin ROUTEMAP'i denetlenmeli
+# (CLAUDE_PROJECT_DIR ana checkout'ta kalır; u21b'nin worktree'si)
+printf '| STORY-003 | Rapor | 1 | HIGH | DONE | — | FE |\n' >> "$SANDBOX/wtpanel/docs/ROUTEMAP.md"
+OUT=$( (cd "$SANDBOX/wtpanel" && printf '{"tool_name":"Edit","tool_input":{"file_path":"docs/ROUTEMAP.md"}}' | CLAUDE_PROJECT_DIR="$SANDBOX/wtana" bash "$HOOKS/routemap-sync.sh") 2>&1 )
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'STORY-003'; then
+  ok "worktree'de düzenleme → worktree'nin ROUTEMAP'i denetlenir"
+else
+  no "worktree değişmezi ana checkout'tan okunmamalı" "exit 0 + STORY-003 ihlali" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (nojq) jq yokken JSON python3 ile kurulmalı — düz metin modele ulaşmaz.
+# PATH'te jq olmayan bir araç dizini kurulur; bash mutlak yolla çağrılır.
+if command -v python3 >/dev/null 2>&1; then
+  mkdir -p "$SANDBOX/nojq"
+  for t in dirname git awk sed grep tr sort cut head xargs stat date cat python3; do
+    TP=$(command -v "$t" 2>/dev/null) && ln -s "$TP" "$SANDBOX/nojq/$t"
+  done
+  OUT=$(printf '{"tool_name":"Edit","tool_input":{"file_path":"x.md"}}' | PATH="$SANDBOX/nojq" "$BASH" "$HOOKS/routemap-sync.sh" 2>/dev/null)
+  if printf '%s' "$OUT" | python3 -c 'import json,sys; d=json.load(sys.stdin); sys.exit(0 if d["decision"] == "block" and "tutarsız" in d["reason"] else 1)' 2>/dev/null; then
+    ok "jq yok → routemap-sync JSON'u python3 ile basar"
+  else
+    no "jq'suz değişmez JSON olmalı" "decision=block JSON" "$(printf '%s' "$OUT" | head -2)"
+  fi
+  OUT=$(cd "$SANDBOX/sec" && printf 'export const b = 1\n' > hata.ts && git add hata.ts \
+    && payload "git commit -m 'fix: x'" | PATH="$SANDBOX/nojq" "$BASH" "$HOOKS/quality-scan.sh" 2>/dev/null)
+  if printf '%s' "$OUT" | python3 -c 'import json,sys; sys.exit(0 if "BUGFIX" in json.load(sys.stdin)["hookSpecificOutput"]["additionalContext"] else 1)' 2>/dev/null; then
+    ok "jq yok → quality-scan uyarı JSON'unu python3 ile basar"
+  else
+    no "jq'suz uyarı JSON olmalı" "additionalContext JSON" "$(printf '%s' "$OUT" | head -2)"
+  fi
+  (cd "$SANDBOX/sec" && git rm -q --cached hata.ts && rm -f hata.ts)
+else
+  echo "  ⏭️  python3 yok — jq'suz JSON yolu test edilmedi"
 fi
 
 echo
@@ -696,6 +1049,16 @@ if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'Aktif iş yok'; then
   ok "aktif story yok → sıradaki işi önerir"
 else
   no "sıradaki iş önerisi olmalı" "exit 0 + 'Aktif iş yok'" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# (o2) resume'da oturum alt klasördeyse → ROUTEMAP proje kökünden okunmalı
+mkdir -p "$SANDBOX/brief/src"
+OUT=$( (cd "$SANDBOX/brief/src" && printf '{"hook_event_name":"SessionStart","source":"resume"}' | CLAUDE_PROJECT_DIR="$SANDBOX/brief" bash "$HOOKS/session-brief.sh") 2>&1 )
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'Aktif iş yok'; then
+  ok "alt klasörde oturum → özet yine basılır"
+else
+  no "alt klasörde özet susmamalı" "exit 0 + 'Aktif iş yok'" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
 fi
 
 # (p) ROUTEMAP yoksa → sessiz no-op (exit 0, çıktı yok)

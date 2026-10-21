@@ -52,15 +52,23 @@ except Exception:
 #    "git add .<newline>git commit" yakalanmaya devam eder.
 # 4) TIRNAKLI BÖLGELER SİLİNİR — `grep "git commit"` gibi metin anmaları
 #    kaybolur, `VAR="Ahmet Akyapı" git commit` gibi tırnaklı/boşluklu env
-#    atamaları da sadeleşip önek olarak tanınır.
+#    atamaları da sadeleşip önek olarak tanınır. İki tırnak türü TEK geçişte
+#    silinir, en soldaki açılış tırnağı kazanır: ayrı geçişte çift tırnak
+#    içindeki apostrof ("Ahmet'in") sonraki tek tırnakla (<<'EOF') eşleşip
+#    aradaki `git commit`i de siliyordu — iki hook da commit'i hiç görmüyordu.
+#    İsteğe bağlı 2. argüman tırnaklı bölgenin yerine yazılır: pathspec
+#    tespiti tırnaklı yolu (`'app/(panel)/page.tsx'`) kaybetmesin diye.
+# <<- heredoc'unun sonlandırıcısı sekmeyle girintili olabilir; tam satır
+# eşitliği onu hiç kapatmıyor, ardından gelen her satırı (commit dahil) atıyordu.
 hook_normalize_command() {
   printf '%s' "$1" \
     | awk -v SQ="'" '
         BEGIN { tagre = "<<-?[ \t]*[\"" SQ "]?[A-Za-z_][A-Za-z_0-9]*" }
-        intag != "" { if ($0 == intag) intag = ""; next }
+        intag != "" { l = $0; if (dash) sub(/^\t+/, "", l); if (l == intag) intag = ""; next }
         {
           if (match($0, tagre)) {
             t = substr($0, RSTART, RLENGTH)
+            dash = (t ~ /^<<-/)
             sub(/<<-?[ \t]*/, "", t); gsub("[\"" SQ "]", "", t)
             intag = t
           }
@@ -68,37 +76,48 @@ hook_normalize_command() {
         }
       ' \
     | tr '\n' ';' \
-    | sed -E "s/'[^']*'//g; s/\"[^\"]*\"//g"
+    | sed -E "s/'[^']*'|\"[^\"]*\"/${2:-}/g"
 }
 
+# Komut başı: ayraç (satır başı, ; & | ( `) + sıfır ya da daha çok önek —
+# env ataması (VAR=değer), command/env/exec/time/nice, if/elif/while/until/
+# then/do/else, `!` ve `{` — ve isteğe bağlı yol (/usr/bin/git). Önek listesi
+# dar tutulursa `if ! git diff --cached --quiet; then git commit ...; fi`
+# gibi sıradan kabuk biçimleri iki hook'tan da kaçıyordu.
+_HOOK_GIT_AT_CMD='(^|[;&|(`]|&&|\|\|)[[:space:]]*(((command|env|exec|time|nice|if|elif|while|until|then|do|else|!|[{])[[:space:]]+)|[A-Za-z_][A-Za-z_0-9]*=[^[:space:]]*[[:space:]]+)*([^[:space:];&|]*/)?git[[:space:]]+'
+
 # Verilen metin bir git commit çağrısı mı?
-# - "git" komut BAŞINDA aranır (satır başı, ; & | ( ` ayracı, env ataması
-#   ya da `command` öneki sonrası).
+# - "git" komut BAŞINDA aranır (_HOOK_GIT_AT_CMD).
 # - "commit" tam sözcük okunur: "git show --stat commit-abc" ya da
 #   "git commit-graph" commit sayılmaz (yanlış blok üretiyordu).
 # Desen tabanlı algılama tamamen kapatılamaz (alias, $g commit, script'e
 # yazıp çalıştırma kalır); bu bilinen ve kabul edilmiş bir sınırdır.
+# grep'e here-string verilir, boru değil: `grep -q` erken çıkınca yazan
+# taraf SIGPIPE alır ve pipefail altında sonuç tersine dönebilir.
 hook_text_is_git_commit() {
-  hook_normalize_command "$1" \
-    | grep -qE '(^|[;&|(`]|&&|\|\|)[[:space:]]*([A-Za-z_][A-Za-z_0-9]*=[^[:space:]]*[[:space:]]+)*(command[[:space:]]+)?git[[:space:]]+([^|;&]*[[:space:]])?commit([^a-zA-Z-]|$)'
+  grep -qE "${_HOOK_GIT_AT_CMD}([^|;&]*[[:space:]])?commit([^a-zA-Z-]|\$)" <<<"$(hook_normalize_command "$1")"
 }
 
 # Commit, hook anındaki index'in DIŞINA taşacak mı? Üç işaret:
-# (1) -a/-i türevi ya da --all/--include bayrağı (dosyaları commit anında
-#     stage'ler), (2) aynı komut zincirinde `git add` (hook add'den önce
-#     koşar, index'i commit'ten önce dolduramaz), (3) commit'e pozisyonel
-#     pathspec verilmesi (`git commit dosya.ts -m ...`). Pathspec tespiti
-#     yaklaşıktır (tırnaklar silinmiş metinde commit'ten sonra bayrak
-#     olmayan sözcük) ve şüphede GENİŞ tarar — yanlış pozitifin maliyeti
-#     fazladan tarama, yanlış negatifin maliyeti kaçan sırdır.
+# (1) -a/-i türevi ya da --all/--include/--only/--pathspec-from-file bayrağı
+#     (dosyaları commit anında stage'ler), (2) aynı komut zincirinde
+#     `git add` (hook add'den önce koşar, index'i commit'ten önce
+#     dolduramaz), (3) commit'e pozisyonel pathspec verilmesi
+#     (`git commit dosya.ts -m ...`). Pathspec tespiti yaklaşıktır ve
+#     şüphede GENİŞ tarar — yanlış pozitifin maliyeti fazladan tarama,
+#     yanlış negatifin maliyeti kaçan sırdır. Tırnaklı bölge burada silinmez,
+#     Q olur: Next yolları (`'app/(panel)/page.tsx'`, `"app/[id]/..."`)
+#     tırnaksız yazılamaz ve silinince pathspec görünmez oluyordu. Değer alan
+#     seçeneklerin değeri (-m Q, -F msg.txt, --author Q) pathspec sayılmaz.
 hook_commit_touches_worktree() {
-  local norm
-  norm=$(hook_normalize_command "$1")
-  printf '%s' "$norm" | grep -qE '(^|[[:space:]])(-[a-zA-Z]*[ai][a-zA-Z]*|--all|--include)([[:space:]=]|$)' && return 0
-  printf '%s' "$norm" | grep -qE '(^|[;&|(`]|&&|\|\|)[[:space:]]*git[[:space:]]+add([^a-zA-Z-]|$)' && return 0
-  printf '%s' "$norm" \
-    | grep -oE 'git[[:space:]]+([^|;&]*[[:space:]])?commit[^;|&]*' \
-    | sed -E 's/^.*commit//' | tr ' ' '\n' | grep -vE '^$|^-' | grep -q .
+  local norm rest
+  norm=$(hook_normalize_command "$1" Q)
+  grep -qE '(^|[[:space:]])(-[a-zA-Z]*[ai][a-zA-Z]*|--all|--include|--only|--pathspec-from-file)([[:space:]=]|$)' <<<"$norm" && return 0
+  grep -qE "${_HOOK_GIT_AT_CMD}add([^a-zA-Z-]|\$)" <<<"$norm" && return 0
+  rest=$(grep -oE 'git[[:space:]]+([^|;&]*[[:space:]])?commit[^;|&]*' <<<"$norm" \
+    | sed -E 's/^.*commit([^a-zA-Z-]|$)/ /; s/(^|[[:space:]])(-[a-zA-Z]*[mFCct]|--(message|file|author|date|template|trailer|reuse-message|reedit-message|fixup|squash|cleanup))[[:space:]]+[^[:space:]]+/ /g' \
+    | tr ' ' '\n' | grep -vE '^$|^-' || true)
+  [ -n "$rest" ]
 }
 
 # Bu payload bir git commit çağrısı mı? (stdin'i BİR kez okur; komut metni

@@ -77,9 +77,16 @@ report "transition: width/height" \
 
 # ─── 5. Emoji ikon ───────────────────────────────────────────────────────────
 section "Emoji ikon"
-report "JSX icinde emoji" \
-  "$(grep -rnP "${EXCLUDES[@]}" --include=*.tsx --include=*.jsx \
-     '(?<![\w-])[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]' "$TARGET" 2>/dev/null)" 4
+# grep -P macOS'ta (BSD grep) yok, GNU'da da UTF-8 olmayan yerelde \x{...}
+# hatasi verir; ikisi de 2>/dev/null ile yutulup "temiz" gorunuyordu. perl
+# macOS'ta hazir gelir. Budanan dizinler EXCLUDES'un aynisi. Satir elle
+# cozulur (-CSD degil): UTF-8 olmayan tek dosyada -CSD perl'u fatal dusurur ve
+# xargs grubundaki sonraki dosyalar hic taranmadan rapor "temiz" cikar.
+EMOJI_HITS=$(find "$TARGET" -mindepth 1 \( -name node_modules -o -name .next -o -name dist -o -name build \
+    -o -name .git -o -name coverage -o -name .turbo -o -name out \) -prune \
+    -o \( -name '*.tsx' -o -name '*.jsx' \) -type f -print0 2>/dev/null \
+  | xargs -0 perl -CSA -ne 'my $l = $_; print "$ARGV:$.:$l" if utf8::decode($l) && $l =~ /(?<![\w-])[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]/; close ARGV if eof' 2>/dev/null)
+report "JSX icinde emoji" "$EMOJI_HITS" 4
 
 # ─── 6. ESLint yapilandirmasi ────────────────────────────────────────────────
 section "ESLint yapilandirmasi"
@@ -190,10 +197,18 @@ report "mousemove dinleyicisi ince imleç kontrolü olmadan ((hover: hover) and 
 # kurallari yalniz kagitta tasir (bkz. mistakes.md #99 cevresi).
 section "Ekosistem disiplini (hook, ROUTEMAP, test altyapisi)"
 
-if [ -f "$TARGET/.claude/settings.json" ] && grep -qs "gate-guard" "$TARGET/.claude/settings.json"; then
+# Dort hook da aranir: yalniz gate-guard'a bakmak, sir ve kilit taramasini
+# yapan quality-scan'in kaydi dusmus projeyi temiz gosteriyordu.
+HOOK_MISSING=""
+for h in gate-guard quality-scan routemap-sync session-brief; do
+  grep -qs "hooks/$h\.sh" "$TARGET/.claude/settings.json" || HOOK_MISSING="$HOOK_MISSING $h"
+done
+if [ -z "$HOOK_MISSING" ]; then
   ok "Claude Code hook'lari kayitli (.claude/settings.json)"
-else
+elif [ "$HOOK_MISSING" = " gate-guard quality-scan routemap-sync session-brief" ]; then
   hit "Hook kaydi yok — gate-guard/quality-scan bu projede calismiyor (sablon .claude/settings.json'u kopyala)"
+else
+  hit "Eksik hook kaydi:$HOOK_MISSING — sablonun .claude/settings.json'uyla karsilastir"
 fi
 
 if [ -f "$TARGET/docs/ROUTEMAP.md" ] || [ -f "$TARGET/ROUTEMAP.md" ]; then

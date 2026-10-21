@@ -19,6 +19,12 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/routemap.sh"
 CMD_TEXT=$(hook_command)
 hook_text_is_git_commit "$CMD_TEXT" || exit 0
 
+# Claude Code hook'u Claude'un O ANKİ dizininde koşturur ve her `cd`yi izler:
+# alt klasörde ROUTEMAP bulunamıyor, Gate sessizce atlanıyordu. Proje köküne
+# sabitlen — git kökü; monorepo alt projesi ve worktree ayrımı lib'de
+# (routemap_project_root).
+cd "$(routemap_project_root)" 2>/dev/null || exit 0
+
 # ROUTEMAP yoksa/okunamıyorsa uyarı ver ama bloklamadan devam et
 ROUTEMAP=$(routemap_find) || {
   echo "⚠️  ROUTEMAP bulunamadı. Gate kontrolü atlanıyor."
@@ -39,8 +45,12 @@ ACTIVE=$(routemap_active_stories "$ROUTEMAP" 2>/dev/null) || {
 # hook_commit_touches_worktree). Bunlar dosyaları commit ANINDA stage'ler;
 # hook'un gördüğü index eksiktir ("1 .md stage'le, kodu aynı komutta geçir"
 # açığı pathspec ve add-zinciriyle de deneniyordu).
-STAGED=$(git diff --cached --name-only 2>/dev/null || true)
-if [ -n "$STAGED" ] && ! hook_commit_touches_worktree "$CMD_TEXT" && ! echo "$STAGED" | grep -qvE '\.(md|txt)$'; then
+# core.quotePath=false: ASCII dışı ad ("notlar/öneriler.md") varsayılanda
+# sekizli kaçışlı ve tırnaklı gelir, .md ile bitmez. Liste grep'e here-string
+# ile verilir: büyük listede `echo | grep -q` erken çıkınca echo SIGPIPE alır,
+# pipefail + `!` bunu "hepsi doküman" diye okuyup kodlu commit'i muaf tutuyordu.
+STAGED=$(git -c core.quotePath=false diff --cached --name-only 2>/dev/null || true)
+if [ -n "$STAGED" ] && ! hook_commit_touches_worktree "$CMD_TEXT" && ! grep -qvE '\.(md|txt)$' <<<"$STAGED"; then
   echo "ℹ️  Yalnız doküman değişiyor — Gate kontrolü uygulanmadı ($ROUTEMAP)."
   exit 0
 fi

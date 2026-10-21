@@ -14,6 +14,11 @@ set -euo pipefail
 # shellcheck source=lib/routemap.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/routemap.sh"
 
+# resume/compact'ta oturumun dizini bir alt klasör olabilir (hook Claude'un
+# o anki dizininde koşar) — ROUTEMAP proje kökünde aranır (lib →
+# routemap_project_root).
+cd "$(routemap_project_root)" 2>/dev/null || exit 0
+
 ROUTEMAP=$(routemap_find) || exit 0
 
 echo "📍 Session Brief — $ROUTEMAP (tek gerçek kaynak, önce tamamını oku):"

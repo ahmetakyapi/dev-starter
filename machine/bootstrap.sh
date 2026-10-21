@@ -40,7 +40,9 @@ run() {
 }
 
 # Hedefi kaynağa symlink'ler. Hedef zaten o kaynağa bağlıysa dokunmaz;
-# başka bir şeyse yedekler.
+# başka bir şeyse yedekler. Yedek $HOME'a göre göreli yolu KORUR: commands/
+# ve agents/ aynı adları taşıyor (gate.md, deploy.md); düz bir yedek dizininde
+# ikincisi birincinin yedeğini sessizce eziyordu.
 link() {
   local src="$1" dst="$2"
   if [[ -L "$dst" && "$(readlink "$dst")" == "$src" ]]; then
@@ -48,9 +50,10 @@ link() {
     return
   fi
   if [[ -e "$dst" || -L "$dst" ]]; then
-    run mkdir -p "$BACKUP"
-    run mv "$dst" "$BACKUP/"
-    echo "  ~ yedeklendi: $dst → $BACKUP/"
+    local rel="${dst#"$HOME"/}"
+    run mkdir -p "$BACKUP/$(dirname "$rel")"
+    run mv "$dst" "$BACKUP/$rel"
+    echo "  ~ yedeklendi: $dst → $BACKUP/$rel"
   fi
   run mkdir -p "$(dirname "$dst")"
   run ln -s "$src" "$dst"

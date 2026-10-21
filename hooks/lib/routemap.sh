@@ -12,6 +12,7 @@
 #
 # Kullanım:
 #   source "$(dirname "${BASH_SOURCE[0]}")/lib/routemap.sh"
+#   cd "$(routemap_project_root)" 2>/dev/null || exit 0
 #   ROUTEMAP=$(routemap_find) || exit 0
 #   routemap_active_stories "$ROUTEMAP"   # ID<TAB>DURUM<TAB>GATE satırları
 #   routemap_done_without_gate "$ROUTEMAP"
@@ -28,6 +29,36 @@ routemap_find() {
     fi
   done
   return 1
+}
+
+# Hook'un sabitleneceği proje kökünü basar (routemap_find bu dizinde aranır).
+# Hook Claude'un O ANKİ dizininde koşar ve bu dizin her `cd`yi ve worktree'ye
+# girişi izler; CLAUDE_PROJECT_DIR ise oturumun başladığı kökte SABİT kalır.
+# Bu yüzden o anki dizinden git köküne doğru yukarı çıkılır ve ROUTEMAP'i
+# taşıyan EN YAKIN dizin seçilir: worktree'de ROUTEMAP ve index worktree'nindir
+# (CLAUDE_PROJECT_DIR ana checkout'un ROUTEMAP'ini okuyup Gate'siz story'yi
+# geçirirdi); monorepoda oturum kökte başlasa da `cd apps/web` sonrası o alt
+# projenin ROUTEMAP'i okunur. Hiçbirinde yoksa git kökü. Git dışında
+# CLAUDE_PROJECT_DIR, o da yoksa o anki dizin.
+routemap_project_root() {
+  local here top dir
+  here=$(pwd -P)
+  top=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    printf '%s' "${CLAUDE_PROJECT_DIR:-$here}"
+    return 0
+  }
+  # macOS'ta /var → /private/var: karşılaştırma iki tarafta da gerçek yolla.
+  top=$(cd "$top" 2>/dev/null && pwd -P) || top=$here
+  dir=$here
+  while :; do
+    if (cd "$dir" && routemap_find >/dev/null); then
+      printf '%s' "$dir"
+      return 0
+    fi
+    case "$dir" in "$top"|/) break ;; esac
+    dir=$(dirname "$dir")
+  done
+  printf '%s' "$top"
 }
 
 # Story tablosunu (başlığında hem Durum hem Gate olan tabloyu) satır satır

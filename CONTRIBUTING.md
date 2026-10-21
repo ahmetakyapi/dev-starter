@@ -165,7 +165,10 @@ orada yapin ve commit'leyin.
      (`knowledge/mistakes.md` #52)
    - Temiz cikis kodlari (0=ok, 2=block)
 3. `.claude/settings.json` → `hooks` bolumune ekleyin (paylasilan, versiyonlanir;
-   `settings.local.json` yalnizca makineye ozgu izinler icin)
+   `settings.local.json` yalnizca makineye ozgu izinler icin). Komut mutlak
+   yolla yazilir: `bash "$CLAUDE_PROJECT_DIR"/hooks/[hook-adi].sh`. Hook
+   Claude'un o anki dizininde kosar; goreli yol (`bash hooks/...`) ilk `cd`den
+   sonra bulunamaz ve commit kapisiz gecer (health-check bunu FAIL sayar)
 4. `scripts/test-hooks.sh`'e gercek payload veren bir davranis testi ekleyin ve
    once KIRMIZI gordugunuzu dogrulayin
 5. `agents/AGENT_PROTOCOL.md` → Hook tablosuna ekleyin

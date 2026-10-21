@@ -1,5 +1,5 @@
 {
-  "$comment": "Paylasilan proje ayarlari — versiyonlanir. Makineye ozgu izinler ve yollar .claude/settings.local.json'a (gitignore'lu) yazilir.",
+  "$comment": "Paylasilan proje ayarlari — versiyonlanir. Makineye ozgu izinler ve yollar .claude/settings.local.json'a (gitignore'lu) yazilir. Hook yollari $CLAUDE_PROJECT_DIR'a bagli: hook Claude'un o anki dizininde kosar, goreli yol bir cd sonrasi bulunamaz (exit 127 bloklamaz, commit taramasiz gecer).",
   "hooks": {
     "PreToolUse": [
       {
@@ -7,11 +7,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash hooks/gate-guard.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/hooks/gate-guard.sh"
           },
           {
             "type": "command",
-            "command": "bash hooks/quality-scan.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/hooks/quality-scan.sh"
           }
         ]
       }
@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash hooks/routemap-sync.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/hooks/routemap-sync.sh"
           }
         ]
       }
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash hooks/session-brief.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/hooks/session-brief.sh"
           }
         ]
       }
