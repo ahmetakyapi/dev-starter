@@ -1,7 +1,11 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 
-/** Tek sayfalık landing; yeni sayfa eklendikçe buraya. Bölüm çapaları (#) site haritasına girmez. */
+/**
+ * Tek sayfalık landing; yeni sayfa eklendikçe buraya ve o sayfanın kendi
+ * metadata'sına `alternates.canonical` (kök layout kanonik vermez). Bölüm
+ * çapaları (#) site haritasına girmez.
+ */
 const ROUTES = ["/"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

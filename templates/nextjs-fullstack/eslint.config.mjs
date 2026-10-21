@@ -2,9 +2,11 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
-/* Next 16'da `next lint` yok; ESLint doğrudan çalışır ("lint": "eslint").
+/* Next 16'da `next lint` yok; ESLint doğrudan çalışır ("lint": "eslint --max-warnings 0").
    Kurallar Next'in iki hazır kümesinden gelir, şablon kendi kuralını eklemez:
-   bir kural rahatsız ediyorsa önce sorunu düzelt, `eslint-disable` yazma. */
+   bir kural rahatsız ediyorsa önce sorunu düzelt, `eslint-disable` yazma.
+   Uyarı bütçesi sıfır: alt-text, aria-*, exhaustive-deps ve async client bileşeni
+   bu kümelerde yalnız "warn"dır; bütçesiz lint onları çıkış 0'la geçirir. */
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,

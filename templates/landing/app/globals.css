@@ -47,11 +47,14 @@
 
   --success: #0c7350;
   --success-wash: rgb(12 115 80 / 0.1);
-  --warning: #a4720f;
-  --warning-wash: rgb(164 114 15 / 0.1);
+  /* `--accent-warm` (brass) tonunun bir basamak koyusu: rozet metni kendi
+     wash'ı kart üstündeyken bile AA (sayfa 5,82 · wash 5,07 · kart+wash 4,82). */
+  --warning: #825a0a;
+  --warning-wash: rgb(130 90 10 / 0.1);
   --danger: #c01a3d;
   --danger-wash: rgb(192 26 61 / 0.08);
-  /* Sıcak ikincil vurgu (Açılış Zili "brass"); seyrek, tek nokta. */
+  /* Sıcak ikincil vurgu (Açılış Zili "brass"); seyrek, tek nokta. Metin
+     rengi DEĞİL: açık zeminde 3,99:1, AA'nın altında. Uyarı metni `text-warning`. */
   --accent-warm: #a4720f;
 
   /* Degrade düğme ve karo üstündeki metin her palette beyaz; CTA degradesi
@@ -259,6 +262,11 @@
     overflow-x: clip;
     /* Son satırda tek kelime kalmasın. */
     text-wrap: pretty;
+    /* viewport-fit=cover (layout.tsx) Safari'nin kenar boşluğunu kaldırır:
+       yatay telefonda çentik ya da ada içerik alanına girer. Yanlardaki
+       güvenli alanı gövde ayırır; masaüstünde ikisi de 0. */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
   h1,
@@ -285,15 +293,17 @@
   :where(.overflow-hidden, .overflow-clip, .overflow-auto, .overflow-x-auto) :focus-visible {
     outline-offset: -2px;
   }
+}
 
-  /* iOS Safari 16px altı girişte odaklanınca yakınlaştırır ve geri dönmez.
-     Eşik genişlik değil işaretçi türü: iPad ve yatay telefon da kapsanır. */
-  @media (pointer: coarse) {
-    input,
-    select,
-    textarea {
-      font-size: 16px;
-    }
+/* iOS Safari 16px altı girişte odaklanınca yakınlaştırır ve geri dönmez.
+   Eşik genişlik değil işaretçi türü: iPad ve yatay telefon da kapsanır.
+   KATMANSIZ, bilerek (mistakes.md #74): `@layer base` içinde her girişteki
+   `text-base` (14px) yardımcısı onu ezer, kural hiçbir alana ulaşmazdı. */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
 }
 
@@ -415,12 +425,14 @@
 }
 
 /* Kaydırmaya bağlı giriş, JavaScript'siz. Desteklemeyen tarayıcıda öğe
-   zaten görünür durur; sınıf yalnızca bir süsleme. */
+   zaten görünür durur; sınıf yalnızca bir süsleme. Aralık `entry 100%`te
+   biter: sayfanın sonundaki öğe de tamamlanır. `cover N%` oraya hiç
+   varamaz, son bölüm yarı saydam ve kaymış kalırdı. */
 @supports (animation-timeline: view()) {
   .scroll-reveal {
     animation: scroll-reveal linear both;
     animation-timeline: view();
-    animation-range: entry 0% cover 30%;
+    animation-range: entry 0% entry 100%;
   }
 }
 

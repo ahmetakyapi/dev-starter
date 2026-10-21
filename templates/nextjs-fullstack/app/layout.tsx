@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { INDEXABLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { jsonLd } from "@/lib/structured-data";
-import { PALETTE, THEME_COLOR, getTheme } from "@/lib/theme";
+import { PALETTE, THEME_COLOR } from "@/lib/theme";
+import { getTheme } from "@/lib/theme.server";
 import "./globals.css";
 
 /*
@@ -12,11 +13,14 @@ import "./globals.css";
  * (`--font-sans: var(--font-sans)`) değişken kendine başvurur ve font
  * sessizce sistem yazı tipine düşer. Bu yüzden `-face` soneki.
  * Manrope değişken bir aile: `weight` verilmez, eksen tek dosyada gelir.
+ * IBM Plex Mono değişken değil: her ağırlık alt küme başına ayrı, önceden
+ * yüklenen bir dosya. Mono yalnızca künye ve etiketlerde, 400'de; kalın mono
+ * gerekirse ağırlığı o gün ekle (guides/09 § 6).
  */
 const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans-face", display: "swap" });
 const mono = IBM_Plex_Mono({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500"],
+  weight: "400",
   variable: "--font-mono-face",
   display: "swap",
 });

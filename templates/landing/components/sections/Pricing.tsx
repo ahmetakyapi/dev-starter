@@ -31,7 +31,10 @@ export function Pricing() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h3 className="text-title font-semibold">{plan.name}</h3>
                 {highlighted ? (
-                  <span className="rounded-full bg-primary-wash px-3 py-1 text-small font-semibold text-primary-ink">
+                  // Dolgu düz `primary`: yükseltilmiş kartın üstünde yarı saydam wash
+                  // iki kat tonla 4,18:1'e iniyordu (12 px, AA altı). Bu çift
+                  // tests/palette.test.ts'te iki temada ölçülüyor.
+                  <span className="rounded-full bg-primary px-3 py-1 text-small font-semibold text-on-primary">
                     {plan.highlight}
                   </span>
                 ) : null}

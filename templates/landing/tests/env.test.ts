@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { parseClientEnv, parseServerEnv } from "../lib/env";
+import { assertSiteUrlForBuild, parseClientEnv, parseServerEnv } from "../lib/env";
 
 test("env: boş dizgi tanımsız sayılır", () => {
   assert.equal(parseClientEnv({ NEXT_PUBLIC_SITE_URL: "" }).NEXT_PUBLIC_SITE_URL, undefined);
@@ -10,6 +10,22 @@ test("env: boş dizgi tanımsız sayılır", () => {
 test("env: geçersiz site adresi reddedilir", () => {
   assert.throws(() => parseClientEnv({ NEXT_PUBLIC_SITE_URL: "adres-değil" }), /NEXT_PUBLIC_SITE_URL/);
   assert.doesNotThrow(() => parseClientEnv({ NEXT_PUBLIC_SITE_URL: "https://ornek.test" }));
+  assert.doesNotThrow(() => parseClientEnv({ NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }));
+});
+
+test("env: site adresi yalnızca http(s)", () => {
+  // Şemasız "host:port" zod'da `localhost:` şeması sayılır ve geçerdi.
+  assert.throws(() => parseClientEnv({ NEXT_PUBLIC_SITE_URL: "localhost:3000" }), /NEXT_PUBLIC_SITE_URL/);
+  assert.throws(() => parseClientEnv({ NEXT_PUBLIC_SITE_URL: "ftp://ornek.test" }), /NEXT_PUBLIC_SITE_URL/);
+});
+
+test("env: üretim derlemesi site adresi olmadan durur", () => {
+  assert.throws(() => assertSiteUrlForBuild({}), /NEXT_PUBLIC_SITE_URL/);
+  assert.throws(() => assertSiteUrlForBuild({ NEXT_PUBLIC_SITE_URL: "  " }), /NEXT_PUBLIC_SITE_URL/);
+  assert.doesNotThrow(() => assertSiteUrlForBuild({ NEXT_PUBLIC_SITE_URL: "https://ornek.test" }));
+  // Vercel'de değişken boşsa üretim alan adı yeter.
+  assert.doesNotThrow(() => assertSiteUrlForBuild({ VERCEL_PROJECT_PRODUCTION_URL: "ornek.vercel.app" }));
+  assert.doesNotThrow(() => assertSiteUrlForBuild({ SKIP_ENV_VALIDATION: "1" }));
 });
 
 test("env: NODE_ENV varsayılanı development", () => {

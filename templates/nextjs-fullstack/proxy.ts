@@ -23,12 +23,23 @@ function isProtected(pathname: string): boolean {
   );
 }
 
+/**
+ * Auth.js ~4 KB'yi aşan oturumu (JWT'ye sağlayıcı jetonu ya da rol eklenince)
+ * `<ad>.0`, `<ad>.1` … çerezlerine böler ve tam adlı çerezi SİLER. Tam adla
+ * `has()` parçalı oturumu görmez, kullanıcı girişe geri döner ve döngüye
+ * girer; `auth()` ise parçaları birleştirip kabul ederdi. Parçalar da oturumdur.
+ */
+function hasSessionCookie(request: NextRequest): boolean {
+  return request.cookies
+    .getAll()
+    .some(({ name }) => SESSION_COOKIES.some((base) => name === base || name.startsWith(`${base}.`)));
+}
+
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   if (!isProtected(pathname)) return NextResponse.next();
 
-  const signedIn = SESSION_COOKIES.some((name) => request.cookies.has(name));
-  if (signedIn) return NextResponse.next();
+  if (hasSessionCookie(request)) return NextResponse.next();
 
   const url = new URL("/api/auth/signin", request.url);
   url.searchParams.set("callbackUrl", `${pathname}${search}`);

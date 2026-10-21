@@ -12,6 +12,7 @@ export default function NotFound() {
         className="w-full"
         icon={<SearchX aria-hidden />}
         title="Sayfa Bulunamadı"
+        titleAs="h1"
         hint="Aradığın adres taşınmış ya da hiç var olmamış olabilir."
         action={<ButtonLink href="/">Ana Sayfaya Dön</ButtonLink>}
       />

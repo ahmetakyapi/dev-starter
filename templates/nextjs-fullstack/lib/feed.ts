@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { and, desc, eq, gt, isNull, or } from "drizzle-orm";
+import { and, desc, eq, gt, isNull, or, sql } from "drizzle-orm";
 import { auth } from "@/auth";
 import { parseFeedItem, type FeedItem } from "@/components/feed/agent-feed-core";
 import { db } from "./db";
@@ -36,7 +36,14 @@ export async function currentFeedUser(): Promise<FeedUser | null> {
   return { id: row.id, firstName: (row.name ?? email.split("@")[0] ?? "").split(" ")[0] ?? "" };
 }
 
-/** Açık işler + son 24 saatte kapananlar; geçilenler hariç. */
+/**
+ * Açık işler + son 24 saatte kapananlar; geçilenler hariç.
+ *
+ * Tavan bu sıradan SONRA uygulanır: önce açık iş (Postgres'te false < true),
+ * sonra öncelik, sonra yenilik. Yalnız yeniliğe göre kesseydik gece yazılan
+ * elli "halledildi" satırı, kullanıcıyı bekleyen eski bir kararı akıştan sessizce
+ * düşürürdü. İstemci yine kulvar ve önceliğe göre dizer.
+ */
 export async function getFeed(userId: string, now: Date): Promise<FeedItem[]> {
   const since = new Date(now.getTime() - HANDLED_VISIBLE_MS);
   const rows = await db
@@ -49,7 +56,7 @@ export async function getFeed(userId: string, now: Date): Promise<FeedItem[]> {
         or(isNull(feedItems.resolvedAt), gt(feedItems.resolvedAt, since)),
       ),
     )
-    .orderBy(desc(feedItems.createdAt))
+    .orderBy(sql`${feedItems.resolvedAt} is not null`, desc(feedItems.priority), desc(feedItems.createdAt))
     .limit(50);
   return rows.map((row) => rowToFeedItem(row, now)).filter((item): item is FeedItem => item !== null);
 }

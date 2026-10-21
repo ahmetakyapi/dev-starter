@@ -65,6 +65,8 @@ test("içerik: alıntılar kısa (en fazla 160 karakter)", () => {
 });
 
 test("içerik: hero tarihi geçerli ISO günü", () => {
-  assert.match(content.hero.stats.asOf, /^\d{4}-\d{2}-\d{2}$/);
-  assert.ok(!Number.isNaN(Date.parse(content.hero.stats.asOf)));
+  const asOf = content.hero.stats.asOf;
+  assert.match(asOf, /^\d{4}-\d{2}-\d{2}$/);
+  // Date.parse("2026-02-31") NaN değil 3 Mart verir; gidiş-dönüş aynı günü vermeli.
+  assert.equal(new Date(`${asOf}T00:00:00Z`).toISOString().slice(0, 10), asOf);
 });

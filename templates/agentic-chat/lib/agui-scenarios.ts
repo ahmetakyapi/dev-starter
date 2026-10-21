@@ -19,7 +19,7 @@ export type ScenarioName =
   | 'tool'      // sunucu tool'u: cagri + sonuc + metin  (seffaflik)
   | 'widget'    // frontend tool cagrisi -> useFrontendTool render
   | 'card'      // sunucu tool'u + sonuc  -> useRenderTool (action card)
-  | 'interrupt' // RUN_FINISHED + outcome -> useHumanInTheLoop
+  | 'interrupt' // onay: sonucsuz frontend tool cagrisi -> useHumanInTheLoop
   | 'steps'     // STEP_* workflow ilerlemesi
   | 'state'     // STATE_SNAPSHOT paylasilan state
 
@@ -29,6 +29,18 @@ export const SCENARIOS: readonly ScenarioName[] = [
 
 export function isScenario(value: string | null): value is ScenarioName {
   return value !== null && (SCENARIOS as readonly string[]).includes(value)
+}
+
+/**
+ * Istenen senaryo + gelen gecmis -> yayinlanacak senaryo.
+ *
+ * Son mesaj bir TOOL sonucuysa bu, frontend tool'unun (onay cevabi, arama)
+ * takip run'idir: metinle kapat. Yoksa `?scenario=interrupt` sabitken her onay
+ * cevabi YENI bir onay sorusu dogurur ve sohbet sonsuz donguye girer.
+ */
+export function pickScenario(requested: string | null, lastRole: string | undefined): ScenarioName {
+  if (lastRole === 'tool') return 'text'
+  return isScenario(requested) ? requested : 'text'
 }
 
 interface Ctx {
@@ -41,13 +53,8 @@ interface Ctx {
 const started = (c: Ctx): BaseEvent =>
   ({ type: EventType.RUN_STARTED, threadId: c.threadId, runId: c.runId }) as BaseEvent
 
-const finished = (c: Ctx, outcome?: unknown): BaseEvent =>
-  ({
-    type: EventType.RUN_FINISHED,
-    threadId: c.threadId,
-    runId: c.runId,
-    ...(outcome ? { outcome } : {}),
-  }) as BaseEvent
+const finished = (c: Ctx): BaseEvent =>
+  ({ type: EventType.RUN_FINISHED, threadId: c.threadId, runId: c.runId }) as BaseEvent
 
 /** Metni parca parca yayinlar — streaming'i gorunur kilar. */
 function textMessage(c: Ctx, text: string, chunks = 3): BaseEvent[] {
@@ -101,7 +108,7 @@ const DEMO_FLIGHT = {
 export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
   switch (name) {
     case 'text':
-      return [started(ctx), ...textMessage(ctx, 'Merhaba. Nasil yardimci olabilirim?'), finished(ctx)]
+      return [started(ctx), ...textMessage(ctx, 'Merhaba. Nasıl yardımcı olabilirim?'), finished(ctx)]
 
     case 'tool':
       return [
@@ -115,7 +122,7 @@ export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
       // Frontend tool: sonuc YOK. Istemci calistirir, render eder.
       return [
         started(ctx),
-        ...textMessage(ctx, 'Iste ucusun:'),
+        ...textMessage(ctx, 'İşte uçuşun:'),
         ...toolCall(ctx, 'flightWidget', DEMO_FLIGHT),
         finished(ctx),
       ]
@@ -126,52 +133,28 @@ export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
         started(ctx),
         ...toolCall(ctx, 'bookFlight', { flightId: DEMO_FLIGHT.id }, {
           ok: true,
-          result: `Ucus ${DEMO_FLIGHT.id} rezerve edildi.`,
+          result: `Uçuş ${DEMO_FLIGHT.id} rezerve edildi.`,
         }),
-        ...textMessage(ctx, 'Rezervasyonu tamamladim.'),
+        ...textMessage(ctx, 'Rezervasyonu tamamladım.'),
         finished(ctx),
       ]
 
-    case 'interrupt': {
-      // Run TEMIZCE biter; cevap bir SONRAKI run'a resume olarak girer.
-      // toolCallId OLAYDAN okunur: ctx.id sayac tabanli olabilir (route.ts
-      // oyle) ve ikinci bir ctx.id cagrisi BASKA id uretir — suspend o zaman
-      // var olmayan bir tool cagrisini gosterir.
-      const call = toolCall(ctx, 'cancelFlight', { flightId: DEMO_FLIGHT.id })
-      const toolCallId = (call[0] as BaseEvent & { toolCallId: string }).toolCallId
+    case 'interrupt':
+      // Onay = SONUCSUZ frontend tool cagrisi (snippets/agent-approval.tsx).
+      // Istemci soruyu cizer; cevap ({ optionId }) bir SONRAKI run'a TOOL
+      // MESAJI olarak girer, anlami sunucu sabit eslemeyle cozer (accept = onay).
+      // Argumanlar onay semasina uyar: hedef + aciklama; dugmeler istemcide sabit.
+      // RUN_FINISHED'a interrupt outcome KONMAZ: useHumanInTheLoop `resume`
+      // gondermez, acik kalan interrupt sonraki her run'i "pending interrupt(s)
+      // not addressed by resume" ile durdurur (CopilotKit 1.69.2'de olculdu).
       return [
         started(ctx),
-        ...call,
-        finished(ctx, {
-          type: 'interrupt',
-          interrupts: [
-            {
-              id: `suspend:${ctx.runId}:${toolCallId}`,
-              reason: 'tool_suspended',
-              // Cevap yalnizca secenek KIMLIGI: id -> anlam eslemesi sunucuda
-              // sabittir (accept = onay). Secenege payload koymak, modele
-              // "Vazgec" etiketine onay yukleme kapisi acardi
-              // (snippets/agent-approval.tsx ayni sozlesmeyi uygular).
-              responseSchema: {
-                type: 'object',
-                properties: { optionId: { type: 'string', enum: ['accept', 'decline'] } },
-                required: ['optionId'],
-                additionalProperties: false,
-              },
-              metadata: {
-                suspendPayload: {
-                  message: `Ucus ${DEMO_FLIGHT.id} iptal edilsin mi?`,
-                  options: [
-                    { id: 'accept', label: 'Onayla', variant: 'danger' },
-                    { id: 'decline', label: 'Vazgec' },
-                  ],
-                },
-              },
-            },
-          ],
+        ...toolCall(ctx, 'cancelFlight', {
+          flightId: DEMO_FLIGHT.id,
+          message: 'Kullanıcı bu rezervasyonun iptalini istedi.',
         }),
+        finished(ctx),
       ]
-    }
 
     case 'steps':
       return [
@@ -182,7 +165,7 @@ export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
         { type: EventType.STEP_STARTED, stepName: 'findHotels' } as BaseEvent,
         { type: EventType.STEP_FINISHED, stepName: 'findHotels' } as BaseEvent,
         { type: EventType.STEP_STARTED, stepName: 'finalize' } as BaseEvent,
-        ...textMessage(ctx, 'Plan hazir.'),
+        ...textMessage(ctx, 'Plan hazır.'),
         { type: EventType.STEP_FINISHED, stepName: 'finalize' } as BaseEvent,
         finished(ctx),
       ]
@@ -195,12 +178,12 @@ export function buildScenario(name: ScenarioName, ctx: Ctx): BaseEvent[] {
         {
           type: EventType.STATE_SNAPSHOT,
           snapshot: {
-            summary: 'Graz -> Roma, 3 gun',
+            summary: 'Graz → Roma, 3 gün',
             flights: [DEMO_FLIGHT],
             hotels: [{ id: 'grand-hotel-rom', city: 'Roma', stars: 5 }],
           },
         } as BaseEvent,
-        ...textMessage(ctx, 'Oteli degistirdim.'),
+        ...textMessage(ctx, 'Oteli değiştirdim.'),
         finished(ctx),
       ]
   }

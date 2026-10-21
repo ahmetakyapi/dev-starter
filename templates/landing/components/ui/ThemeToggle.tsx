@@ -2,8 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore, type MouseEvent } from "react";
-import { setThemeAction } from "@/app/actions/theme";
-import type { Theme } from "@/lib/theme";
+import { DEFAULT_THEME, THEME_COLOR, THEME_COOKIE, THEME_COOKIE_MAX_AGE, isTheme, type Theme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 /*
@@ -12,13 +11,29 @@ import { cn } from "@/lib/utils";
  * gösterir ve sunucunun bastığı değerle hidrasyon uyuşmazlığı çıkmaz.
  */
 function readTheme(): Theme {
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  const value = document.documentElement.dataset.theme;
+  return isTheme(value) ? value : DEFAULT_THEME;
 }
 
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   return () => observer.disconnect();
+}
+
+/*
+ * Çerez İSTEMCİDE yazılır, server action ile değil: action içinde
+ * `cookies().set()` Next'e "veri değişti" der; yanıt bütün sayfayı sunucuda
+ * yeniden çizer (`x-action-revalidated`, sayfadaki sorgular dahil) ve
+ * istemcinin ön yükleme önbelleğini boşaltır. Kozmetik bir tıklama için
+ * fazla. Değer gizli değil, httpOnly gerekmez; bir sonraki yüklemede onu kimin
+ * okuduğu `lib/theme.ts`in başında yazar. Sunucuya gidilmediği için tarayıcı
+ * çubuğunun rengini (`theme-color`) de burası günceller.
+ */
+function setThemeCookie(theme: Theme) {
+  const secure = location.protocol === "https:" ? "; secure" : "";
+  document.cookie = `${THEME_COOKIE}=${theme}; path=/; max-age=${THEME_COOKIE_MAX_AGE}; samesite=lax${secure}`;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[theme]);
 }
 
 /* Üst üste iki tıklamada sınıfı yalnızca SON geçiş kaldırır; yoksa ilk
@@ -36,8 +51,7 @@ export function ThemeToggle({ initialTheme, className }: { initialTheme: Theme; 
     const apply = () => {
       root.dataset.theme = next;
     };
-    // Görsel değişim tıklama anında, çerez arkada: sunucuyu beklemek düğmeyi dondurur.
-    void setThemeAction(next);
+    setThemeCookie(next);
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!document.startViewTransition || reduce) {

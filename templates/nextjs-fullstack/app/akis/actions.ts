@@ -37,6 +37,12 @@ const undoSchema = z.object({ itemId: uuidSchema, undoToken: z.string().min(1).m
 /** Dakikada otuz aksiyon: akışı hızla temizleyen insana bol, döngüdeki betiğe dar. */
 const LIMIT = 30;
 const WINDOW_MS = 60_000;
+/**
+ * Erteleme ayrı kovada ve daha geniş: hızlı bir ayıklama (art arda "Şimdi
+ * Değil") gerçek aksiyon bütçesini tüketmesin. İstemci bu eylemleri sonucunu
+ * beklemeden çağırır; sınır yalnız döngüdeki betiği durdurmaya yetecek kadar.
+ */
+const DISMISS_LIMIT = 120;
 
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
@@ -48,6 +54,9 @@ export async function runFeedAction(input: unknown): Promise<ActionResult> {
   const parsed = validate(runSchema, input);
   if (!parsed.ok) return fail("Geçersiz istek");
   const { itemId, actionId, draftText } = parsed.data;
+  // Öğe yaratılırken boş taslak reddedilir (parseFeedItem); düzenleme yolu da
+  // aynı kurala uyar. Şemada `.trim()` yok, bilerek: kullanıcının metni değişmez.
+  if (draftText !== undefined && draftText.trim() === "") return fail("Taslak boş olamaz");
 
   const now = new Date();
   const row = await findOwnFeedRow(user.id, itemId);
@@ -80,15 +89,23 @@ export async function runFeedAction(input: unknown): Promise<ActionResult> {
 
   // Geri alınamaz aksiyon işleyicisi `undo` taşımaz; o zaman anahtar da yok.
   const undoToken = handler.undo && decision.action.reversibility === "reversible" ? randomUUID() : null;
-  await db
-    .update(feedItems)
-    .set({
-      summary,
-      performedAction: actionId,
-      undoToken,
-      undoExpiresAt: undoToken ? new Date(now.getTime() + UNDO_WINDOW_MS) : null,
-    })
-    .where(eq(feedItems.id, row.id));
+  try {
+    await db
+      .update(feedItems)
+      .set({
+        summary,
+        performedAction: actionId,
+        undoToken,
+        undoExpiresAt: undoToken ? new Date(now.getTime() + UNDO_WINDOW_MS) : null,
+      })
+      .where(eq(feedItems.id, row.id));
+  } catch (error) {
+    // İş YAPILDI, yalnız kapanış kaydı yazılamadı. Burada hata dönmek istemciye
+    // "tekrar dene" dedirtir: yapılmış (belki geri alınamaz, gönderilmiş) işi
+    // tekrar ettirmeye çağırır. Anahtar kaydedilmediği için Geri Al sunulmaz.
+    console.error("feed action bookkeeping failed", { actionId, itemId, error });
+    return { ok: true, summary };
+  }
 
   return { ok: true, summary, undoToken: undoToken ?? undefined };
 }
@@ -153,8 +170,10 @@ export async function undoFeedAction(input: unknown): Promise<ActionResult> {
 /** "Şimdi Değil": erteleme. Satır silinmez; üretici bu sinyali sıralamada kullanır. */
 export async function dismissFeedItem(input: unknown): Promise<void> {
   const user = await currentFeedUser();
+  if (!user) return;
+  if (!rateLimit(`feed-dismiss:${user.id}`, DISMISS_LIMIT, WINDOW_MS).ok) return;
   const parsed = uuidSchema.safeParse(input);
-  if (!user || !parsed.success) return;
+  if (!parsed.success) return;
   await db
     .update(feedItems)
     .set({ dismissedAt: new Date() })
@@ -168,8 +187,10 @@ export async function dismissFeedItem(input: unknown): Promise<void> {
  */
 export async function undismissFeedItem(input: unknown): Promise<void> {
   const user = await currentFeedUser();
+  if (!user) return;
+  if (!rateLimit(`feed-dismiss:${user.id}`, DISMISS_LIMIT, WINDOW_MS).ok) return;
   const parsed = uuidSchema.safeParse(input);
-  if (!user || !parsed.success) return;
+  if (!parsed.success) return;
   await db
     .update(feedItems)
     .set({ dismissedAt: null })

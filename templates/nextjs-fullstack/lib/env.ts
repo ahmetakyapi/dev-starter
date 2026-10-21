@@ -22,6 +22,14 @@ const blankToUndefined = (value: unknown) =>
 const optionalString = z.preprocess(blankToUndefined, z.string().optional());
 const optionalUrl = z.preprocess(blankToUndefined, z.url().optional());
 
+/*
+ * Yalnızca http(s): zod'un `z.url()`ı her şemayı kabul eder; "localhost:3000"
+ * (`localhost:` şeması sanılır) ya da "ftp://..." geçer ve kanonik adres,
+ * site haritası, OG olarak yayına çıkardı. `DATABASE_URL` `postgres://` olduğu
+ * için genel `optionalUrl`de kalır.
+ */
+const optionalHttpUrl = z.preprocess(blankToUndefined, z.url({ protocol: /^https?$/ }).optional());
+
 export const serverSchema = z
   .object({
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
@@ -48,7 +56,7 @@ export const serverSchema = z
   });
 
 export const clientSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: optionalUrl,
+  NEXT_PUBLIC_SITE_URL: optionalHttpUrl,
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
@@ -86,6 +94,32 @@ export function parseServerEnv(source: Source): ServerEnv {
 export function parseClientEnv(source: Source): ClientEnv {
   if (shouldSkip(source)) return looseParse<ClientEnv>(clientSchema, source);
   return parseWith(clientSchema, source, "İstemci");
+}
+
+/**
+ * Üretim DERLEMESİNDE site adresi zorunlu. Yoksa `lib/site.ts` sessizce
+ * http://localhost:3000'e düşer; kanonik adres, site haritası, robots, OG ve
+ * JSON-LD onunla yayına çıkar, derleme yine yeşil biter (mistakes.md #100
+ * sınıfı: kendi sunucunda değişkeni unutmak ya da yanlış sekmeye koymak).
+ * Vercel'de üretim alan adı yeter.
+ *
+ * Şemada değil burada, çünkü yalnızca `next build`te çağrılır
+ * (next.config.ts → PHASE_PRODUCTION_BUILD): değer derlemede gömülür,
+ * `next start` ortamında olmaması hata değildir.
+ */
+export function assertSiteUrlForBuild(source: Source): void {
+  if (shouldSkip(source)) return;
+  const candidates = [
+    source.NEXT_PUBLIC_SITE_URL,
+    source.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL,
+    source.VERCEL_PROJECT_PRODUCTION_URL,
+  ];
+  if (candidates.some((value) => blankToUndefined(value) !== undefined)) return;
+  throw new Error(
+    "NEXT_PUBLIC_SITE_URL üretim derlemesinde zorunlu: yoksa kanonik adres ve site haritası " +
+      "localhost'a düşer. Yerel deneme için .env.local'a NEXT_PUBLIC_SITE_URL=http://localhost:3000, " +
+      "CI derlemesinde SKIP_ENV_VALIDATION=1.",
+  );
 }
 
 /**

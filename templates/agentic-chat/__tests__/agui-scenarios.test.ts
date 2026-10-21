@@ -9,7 +9,7 @@
 import { describe, expect, it } from 'vitest'
 import * as agui from '@ag-ui/core'
 
-import { buildScenario, encodeSse, SCENARIOS, isScenario } from '@/lib/agui-scenarios'
+import { buildScenario, encodeSse, SCENARIOS, isScenario, pickScenario } from '@/lib/agui-scenarios'
 
 // EventType degerinden ilgili Zod semasina: TOOL_CALL_START -> ToolCallStartEventSchema
 function schemaFor(type: string): { safeParse: (v: unknown) => { success: boolean; error?: unknown } } | undefined {
@@ -61,29 +61,29 @@ describe('agui-scenarios', () => {
     expect(card.some((e) => e.type === agui.EventType.TOOL_CALL_RESULT)).toBe(true)
   })
 
-  it('interrupt senaryosu RUN_FINISHED icinde responseSchema tasir', () => {
+  it('onay senaryosu useHumanInTheLoop sozlesmesine uyar: sonucsuz cagri, outcome yok', () => {
     const events = buildScenario('interrupt', ctx)
-    const last = events[events.length - 1] as unknown as {
-      outcome?: { type: string; interrupts: Array<{ responseSchema?: unknown }> }
+    // Cevabi istemci uretir (tool mesaji) — sunucu sonuc GONDERMEZ
+    expect(events.some((e) => e.type === agui.EventType.TOOL_CALL_RESULT)).toBe(false)
+    // Acik interrupt outcome'u, resume gondermeyen istemcide thread'i kilitler
+    const last = events[events.length - 1] as unknown as { outcome?: unknown }
+    expect(last.outcome).toBeUndefined()
+
+    // Argumanlar onay kartinin semasina uyar: hedef + aciklama, secenek YOK
+    // (dugmeler ve id -> anlam istemcide sabit; snippets/agent-approval.tsx)
+    const start = events.find((e) => e.type === agui.EventType.TOOL_CALL_START) as unknown as {
+      toolCallName: string
     }
-    expect(last.outcome?.type).toBe('interrupt')
-    // Sema yalnizca dokumantasyon degil: jenerik bir istemci ondan girdi uretebilir
-    expect(last.outcome?.interrupts[0]?.responseSchema).toBeDefined()
+    const args = events.find((e) => e.type === agui.EventType.TOOL_CALL_ARGS) as unknown as { delta: string }
+    expect(start.toolCallName).toBe('cancelFlight')
+    expect(JSON.parse(args.delta)).toEqual({ flightId: expect.any(Number), message: expect.any(String) })
   })
 
-  it('suspend id akistaki tool cagrisini gosterir (sayac tabanli id ureticide de)', () => {
-    // route.ts gibi: ayni etiketle her cagri FARKLI id uretir. Senaryo id'yi
-    // ikinci bir ctx.id cagrisiyla turetseydi bu test yakalardi.
-    let seq = 0
-    const counterCtx = { threadId: 't-1', runId: 'r-1', id: (l: string) => `${l}-${seq++}` }
-    const events = buildScenario('interrupt', counterCtx)
-    const start = events.find((e) => e.type === agui.EventType.TOOL_CALL_START) as unknown as {
-      toolCallId: string
-    }
-    const last = events[events.length - 1] as unknown as {
-      outcome?: { interrupts: Array<{ id: string }> }
-    }
-    expect(last.outcome?.interrupts[0]?.id).toBe(`suspend:r-1:${start.toolCallId}`)
+  it('tool sonucuyla gelen takip run i metinle kapanir — onay sonsuz donguye girmez', () => {
+    expect(pickScenario('interrupt', 'tool')).toBe('text')
+    expect(pickScenario('interrupt', 'user')).toBe('interrupt')
+    expect(pickScenario('gecersiz', 'user')).toBe('text')
+    expect(pickScenario(null, undefined)).toBe('text')
   })
 
   it('SSE kodlamasi tel bicimine uyar (data: + bos satir)', () => {

@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 type EmptyStateProps = {
   /** Title Case başlık: "Henüz Kayıt Yok". */
   title: ReactNode;
+  /** Başlığın etiketi. Sayfanın tek içeriğiyse (404) `h1`: sayfa başlıksız kalmasın. */
+  titleAs?: "p" | "h1" | "h2" | "h3";
   /** Cümle düzeninde yardım metni: ne olacağını ya da ne yapılacağını söyler. */
   hint?: ReactNode;
   action?: ReactNode;
@@ -11,7 +13,7 @@ type EmptyStateProps = {
   className?: string;
 };
 
-export function EmptyState({ title, hint, action, icon, className }: EmptyStateProps) {
+export function EmptyState({ title, titleAs: Title = "p", hint, action, icon, className }: EmptyStateProps) {
   return (
     <div
       className={cn(
@@ -24,7 +26,7 @@ export function EmptyState({ title, hint, action, icon, className }: EmptyStateP
           {icon}
         </div>
       ) : null}
-      <p className="text-read font-semibold text-strong">{title}</p>
+      <Title className="text-read font-semibold text-strong">{title}</Title>
       {hint ? <p className="mt-2 max-w-sm text-base text-muted">{hint}</p> : null}
       {action ? <div className="mt-5">{action}</div> : null}
     </div>

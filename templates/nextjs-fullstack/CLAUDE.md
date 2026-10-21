@@ -21,6 +21,9 @@ npm run db:studio
 ```
 
 İlk kurulum: `cp .env.example .env.local`, `npm install`, `npm run dev`.
+Yerelde `npm run build` için `.env.local`e
+`NEXT_PUBLIC_SITE_URL=http://localhost:3000` ve `AUTH_SECRET` (`npx auth secret`):
+üretim derlemesi ikisi olmadan durur (aşağıda SEO, `lib/env.ts`).
 `package-lock.json` projede commit'lenir (CI `npm ci` kullanır).
 
 **Commit öncesi dördü de temiz olmalı:** `npm run typecheck`, `npm run lint`,
@@ -55,6 +58,8 @@ Auth.js v5 (JWT) · zod 4 · lucide-react.
 - **`"use client"` modülden dışa aktarılan DEĞER sunucuya gerçek değer olarak
   gelmez**, istemci referansına dönüşür ve hata vermez. Paylaşılan sabitler
   `"use client"` taşımayan dosyalarda durur (`lib/motion.ts`, `lib/theme.ts`).
+  O dosyalar `next/headers` da içe aktarmaz: istemci paketine girdikleri an
+  derleme kırılır. Çerez okuyan yardımcı ayrı dosyada (`lib/theme.server.ts`).
 - **İstemci ortam değişkeni adıyla okunur:** `process.env.NEXT_PUBLIC_X`.
   `process.env` nesnesini toptan geçirmek tarayıcıda boş nesne verir.
 
@@ -95,8 +100,10 @@ Tokenlar `app/globals.css` içinde, iki katman:
   **Radius:** `rounded-sm md lg xl` (+ `rounded-full`).
 - **Yüzey:** `surface` varsayılan (ton farkı + hairline). `glass` isteğe bağlı,
   yalnızca arkasında hareket eden içerik varsa. `app-bg` köşe ışımaları.
-- Tema çerezden sunucuda basılır (`lib/theme.ts`, `app/actions/theme.ts`);
-  varsayılan açık, next-themes yok, satır içi betik yok, FOUC yok.
+- Tema çerezden sunucuda basılır (`lib/theme.ts`, `lib/theme.server.ts`);
+  varsayılan açık, next-themes yok, satır içi betik yok, FOUC yok. Çerezi
+  ThemeToggle istemcide yazar: server action içinde `cookies().set()` bütün
+  sayfayı sunucuda yeniden çizer ve ön yükleme önbelleğini boşaltır.
 - CSS değişkeni okuyamayan yerler (OG görseli, `global-error`, manifest,
   viewport rengi) değeri sabit yazar ve kaynağını yorumda söyler.
 
@@ -176,6 +183,18 @@ node ~/dev-starter/scripts/add-figure-kit.mjs . --lathe    # + döner parçalar 
   statik çizim sunucu bileşeni, tek `"use client"` canlı bileşen).
 - `components/iso/` elle düzenlenmez; projeye özgü stil `bridge.css`e.
 - React Compiler açılırsa figürün canlı bileşenine `"use no memo"`.
+
+## SEO
+
+`app/layout.tsx`: ortak metadata (OG, Twitter) ve JSON-LD (WebSite,
+`lib/structured-data.ts` ile `<` kaçışlı). Kanonik adres SAYFADA
+(`app/page.tsx`): layout'ta olsa her yeni sayfaya miras kalır ve sayfa kendini
+ana sayfanın kopyası ilan eder; yeni sayfa kendi `alternates.canonical`ını
+verir. `app/sitemap.ts`, `app/robots.ts`, `app/opengraph-image.tsx` adresi
+`lib/site.ts`ten okur; önizleme dağıtımları ve `SITE_INDEXABLE=false` kopyası
+dizine girmez. `NEXT_PUBLIC_SITE_URL` (yalnızca http/https) Vercel dışında
+tanımsızsa `next build` durur (`lib/env.ts` → `assertSiteUrlForBuild`); CI
+`SKIP_ENV_VALIDATION=1` ile geçer.
 
 ## Güvenlik ve veri
 

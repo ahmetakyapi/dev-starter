@@ -102,8 +102,11 @@
 
   /* ── Logo şeridi ────────────────────────────────────────────────────────
      İki özdeş tur yan yana, şerit kendi genişliğinin yarısı kadar kayar:
-     dikiş görünmez. Üzerine gelince ya da içine klavyeyle girilince DURUR
-     (WCAG 2.2.2: beş saniyeden uzun hareket durdurulabilmeli). */
+     dikiş görünmez. Üzerine gelince ya da altındaki "Şeridi Durdur"
+     işaretlenince DURUR (WCAG 2.2.2: beş saniyeden uzun hareket
+     durdurulabilmeli). `:focus-within` burada işe yaramaz: işaretler
+     bağlantı değil, şeritte odaklanacak öğe yok. Klavye ve dokunmatik için
+     tek yol görünür denetim. */
   /* Maskede renk değil ALFA okunur: #000 "tam görünür" demek, temaya bağlı değil. */
   .marquee {
     mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
@@ -119,8 +122,10 @@
       animation: marquee 40s linear infinite;
     }
 
+    /* `:has` bölümün kendi kabında: kökte (`html:has`) her DOM
+       değişikliğinde bütün belge yeniden eşlenirdi (mistakes.md #81). */
     .marquee:hover .marquee-track,
-    .marquee:focus-within .marquee-track {
+    .marquee-section:has(.marquee-pause :checked) .marquee-track {
       animation-play-state: paused;
     }
   }

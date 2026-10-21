@@ -36,8 +36,49 @@ export const HANDLED_VISIBLE_MS = 24 * 60 * 60_000;
 /** Kullanıcı başına saat dilimi gelene kadar tek varsayılan. */
 export const FEED_TIME_ZONE = "Europe/Istanbul";
 
-const timeFormat = (timeZone: string) =>
-  new Intl.DateTimeFormat("tr-TR", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone });
+/** Altı günden eski öğede gün adı yetmez ("Paz" geçen haftanın da pazarı olabilir). */
+const WEEKDAY_WINDOW_MS = 6 * 24 * 60 * 60_000;
+
+/*
+ * Biçimleyiciler saat dilimi başına BİR kez kurulur: Intl kurulumu biçimlemenin
+ * yüz katı pahalı ve getFeed her istekte elli satıra kadar biçimler. Dilimler
+ * koddan gelir (FEED_TIME_ZONE), kullanıcı girdisinden değil; harita sınırlı kalır.
+ */
+type TimeFormats = {
+  day: Intl.DateTimeFormat;
+  time: Intl.DateTimeFormat;
+  weekday: Intl.DateTimeFormat;
+  date: Intl.DateTimeFormat;
+};
+const formats = new Map<string, TimeFormats>();
+
+function timeFormats(timeZone: string): TimeFormats {
+  let f = formats.get(timeZone);
+  if (!f) {
+    const time = { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone } as const;
+    f = {
+      // Takvim günü karşılaştırması için sıralanabilir YYYY-MM-DD
+      day: new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone }),
+      time: new Intl.DateTimeFormat("tr-TR", time),
+      weekday: new Intl.DateTimeFormat("tr-TR", { ...time, weekday: "short" }),
+      date: new Intl.DateTimeFormat("tr-TR", { ...time, day: "numeric", month: "short" }),
+    };
+    formats.set(timeZone, f);
+  }
+  return f;
+}
+
+/**
+ * Kartın zaman etiketi. Açık iş akışta süresiz kalır: üç gün önceki çakışma
+ * yalnız "08:02" yazsaydı bugün gelmiş gibi okunurdu. Bugün → "08:02", bu hafta
+ * → "Paz 08:02", daha eski → "11 Eki 08:02".
+ */
+export function timeLabelFor(createdAt: Date, now: Date, timeZone = FEED_TIME_ZONE): string {
+  const f = timeFormats(timeZone);
+  if (f.day.format(createdAt) === f.day.format(now)) return f.time.format(createdAt);
+  const recent = now.getTime() - createdAt.getTime() < WEEKDAY_WINDOW_MS;
+  return (recent ? f.weekday : f.date).format(createdAt);
+}
 
 export function undoOpen(row: Pick<FeedRow, "undoToken" | "undoExpiresAt">, now: Date): boolean {
   return Boolean(row.undoToken && row.undoExpiresAt && row.undoExpiresAt.getTime() > now.getTime());
@@ -45,26 +86,32 @@ export function undoOpen(row: Pick<FeedRow, "undoToken" | "undoExpiresAt">, now:
 
 /**
  * Satır → istemciye giden öğe. Bozuk `item` JSON'u `null` döner ve akışa
- * girmez: yarım kart çizmektense hiç çizme. Kapanmış iş `handled` kulvarına
- * düşer, başlığı kapanış özetidir ve düğmesi yoktur.
+ * girmez: yarım kart çizmektense hiç çizme.
+ *
+ * Kapanmış iş "halledildi" satırı olarak açılır. Ajanın kendi işi (`handled`)
+ * başlık yerine kapanış özetini taşır, düğmesi yoktur. Kapanmış KARAR ise
+ * kulvarını, başlığını ve aksiyonlarını korur, özeti `resolvedSummary`de
+ * gelir: Geri Al sunucuda kararı yeniden açar (`undoFeedAction`) ve istemci
+ * reducer'ı aynı kartı, sayfa yenilendikten sonra da, karara döndürebilir.
  */
 export function rowToFeedItem(row: FeedRow, now: Date, timeZone = FEED_TIME_ZONE): FeedItem | null {
   const stored = typeof row.item === "object" && row.item !== null ? row.item : {};
   const closed = row.resolvedAt !== null;
+  const summary = row.summary ?? (stored as { title?: unknown }).title;
+  const undoToken = undoOpen(row, now) ? row.undoToken : undefined;
   return parseFeedItem({
     ...stored,
     id: row.id,
-    lane: closed ? "handled" : row.lane,
+    lane: row.lane,
     priority: row.priority,
     createdAt: row.createdAt.toISOString(),
-    timeLabel: timeFormat(timeZone).format(row.createdAt),
+    timeLabel: timeLabelFor(row.createdAt, now, timeZone),
     ...(closed
-      ? {
-          title: row.summary ?? (stored as { title?: unknown }).title,
-          actions: [],
-          undoToken: undoOpen(row, now) ? row.undoToken : undefined,
-        }
-      : {}),
+      ? row.lane === "handled"
+        ? { title: summary, actions: [], undoToken }
+        : { resolvedSummary: summary, undoToken }
+      : // Kapanış alanları yalnız sütunlardan gelir; `item` JSON'u onları taşıyamaz.
+        { resolvedSummary: undefined, undoToken: undefined }),
   });
 }
 

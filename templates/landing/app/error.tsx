@@ -1,7 +1,7 @@
 "use client";
 
 import { RotateCw } from "lucide-react";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Panel } from "@/components/ui/Panel";
 
 /**
@@ -35,9 +35,13 @@ export default function ErrorBoundary({
             <RotateCw aria-hidden />
             Tekrar Dene
           </Button>
-          <ButtonLink href="/" variant="ghost">
+          {/* TAM yükleme: aynı adrese yumuşak gezinme (Link) hata sınırını
+              sıfırlamaz; hata ana sayfadaysa (tek sayfalık sitede hep) düğme
+              hiçbir şey yapmazdı. Eski dağıtımın parçası (ChunkLoadError) da
+              ancak böyle tazelenir. */}
+          <Button variant="ghost" onClick={() => window.location.assign(new URL("/", window.location.origin))}>
             Ana Sayfaya Dön
-          </ButtonLink>
+          </Button>
         </div>
         {error.digest ? (
           <p className="mt-6 font-mono text-small text-muted">Hata Kimliği {error.digest}</p>

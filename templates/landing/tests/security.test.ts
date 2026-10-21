@@ -14,6 +14,17 @@ test("rateLimit: sınırdan sonra reddeder, pencere dolunca açılır", () => {
   assert.equal(rateLimit("k", 2, 100, now + 100).ok, true);
 });
 
+test("rateLimit: pencere içindeki anahtar seli haritayı tavanda tutar, en eski kova düşer", () => {
+  resetRateLimits();
+  const now = 1_000;
+  assert.equal(rateLimit("kurban", 1, 60_000, now).ok, true);
+  assert.equal(rateLimit("kurban", 1, 60_000, now).ok, false);
+  // Sahte XFF ile her istekte yeni anahtar: hiçbirinin süresi dolmadı.
+  for (let i = 0; i < 10_000; i += 1) rateLimit(`sahte:${i}`, 1, 60_000, now);
+  // Harita sınırsız büyümedi: tavan en eski kovayı (kurban) düşürdü.
+  assert.equal(rateLimit("kurban", 1, 60_000, now).ok, true);
+});
+
 test("jsonLd: '<' kaçırılır, script erken kapanamaz", () => {
   const out = jsonLd({ name: "</script><script>alert(1)</script>" });
   assert.equal(out.includes("<"), false);

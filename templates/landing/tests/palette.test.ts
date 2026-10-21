@@ -5,7 +5,7 @@ import { test } from "node:test";
 /**
  * Palet kontrastı ÖLÇÜLÜR, tahmin edilmez.
  *
- * `app/globals.css`teki palet bloklarını okur, WCAG göreli parlaklık
+ * `app/globals.css`teki palet ve sistem bloklarını okur, WCAG göreli parlaklık
  * formülüyle oranları hesaplar. Yarı saydam değerler (`rgb(... / .1)`)
  * altındaki zemine karıştırılarak ölçülür. Palet değiştirince bu test
  * geçmeden commit atılmaz.
@@ -62,6 +62,7 @@ const AA = 4.5;
 const light = block(':root,\n:root[data-palette="signature"]');
 const dark = { ...light, ...block(':root[data-theme="dark"],\n:root[data-theme="dark"][data-palette="signature"]') };
 const system = block(":root");
+const systemDark = { ...system, ...block(':root[data-theme="dark"]') };
 
 for (const [name, palette] of [
   ["açık", light],
@@ -101,3 +102,28 @@ test("signature: CTA degradesinin her durağı beyaz metinle AA", () => {
     assert.ok(ratio >= AA, `cta durağı ${ratio.toFixed(2)}:1 < ${AA}:1`);
   }
 });
+
+/* Durum renkleri SİSTEM katmanında (kimlik), palet değişse de aynı kalır;
+   yine de metin olarak kullanılırlar (rozet, uyarı satırı), ölçülür. En dar
+   durum: kendi wash'ı kartın (yüzey) üstündeyken. */
+for (const [name, sys, palette] of [
+  ["açık", system, light],
+  ["koyu", systemDark, dark],
+] as const) {
+  test(`sistem ${name}: durum renkleri zeminde ve kendi wash'ında AA`, () => {
+    const page = parseColor(palette["--page-bg"]);
+    const card = over(parseColor(palette["--surface"]), page);
+    for (const role of ["success", "warning", "danger"]) {
+      const fg = parseColor(sys[`--${role}`]);
+      const wash = parseColor(sys[`--${role}-wash`]);
+      for (const [label, ground] of [
+        ["page", page],
+        ["wash", over(wash, page)],
+        ["kart+wash", over(wash, card)],
+      ] as const) {
+        const ratio = contrast(fg, ground);
+        assert.ok(ratio >= AA, `${name}: ${role}/${label} ${ratio.toFixed(2)}:1 < ${AA}:1`);
+      }
+    }
+  });
+}

@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
 // Ortam değişkenleri derlemenin ilk saniyesinde doğrulanır (kaçış: SKIP_ENV_VALIDATION=1).
-import "./lib/env";
+import { assertSiteUrlForBuild } from "./lib/env";
 
 /**
  * Güvenlik başlıkları: "kırılma riski sıfıra yakın, faydası somut" kümesi.
@@ -41,4 +42,9 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+/* Site adresi yalnızca DERLEMEDE aranır: `next start` ve `next dev` aynı
+   dosyayı okur, ama gömülü değer onlarda ortamda olmayabilir. */
+export default function config(phase: string): NextConfig {
+  if (phase === PHASE_PRODUCTION_BUILD) assertSiteUrlForBuild(process.env);
+  return nextConfig;
+}

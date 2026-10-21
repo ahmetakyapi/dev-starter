@@ -19,6 +19,9 @@ npm test            # node --test + tsx, tests/*.test.ts
 ```
 
 İlk kurulum: `cp .env.example .env.local`, `npm install`, `npm run dev`.
+Yerelde `npm run build` için `.env.local`e
+`NEXT_PUBLIC_SITE_URL=http://localhost:3000`: üretim derlemesi site adresi
+olmadan durur (aşağıda SEO).
 `package-lock.json` projede commit'lenir (CI `npm ci` kullanır).
 
 **Commit öncesi dördü de temiz olmalı:** `npm run typecheck`, `npm run lint`,
@@ -62,7 +65,9 @@ Her bölüm ayrı bir düzen ailesi; aynı aileyi ikinci kez kullanma.
   adrese gider; test bunu denetler.
 - **`brand` (degradeli) düğme ekranda bir kez:** hero ve kapanış. İkisi aynı
   ekrana hiç düşmez. Başlıktaki ve fiyattaki düğmeler `primary`.
-- **Tek kayan şerit** (logo). Üzerine gelince durur, hareketi azaltanda durağan.
+- **Tek kayan şerit** (logo). Üzerine gelince ve altındaki "Şeridi Durdur"
+  kutusuyla durur (WCAG 2.2.2; klavye ve dokunmatiğin tek yolu), hareketi
+  azaltanda durağan ve denetim gizli.
 
 ## Landing hareketi
 
@@ -81,8 +86,11 @@ Her bölüm ayrı bir düzen ailesi; aynı aileyi ikinci kez kullanma.
 ## Parçacık sahnesi (R3F)
 
 `components/scene/`. `SceneLayer` kapı: sahne yalnızca hassas işaretçi, en az
-768 piksel ve hareket serbestken İNDİRİLİR (`dynamic(..., { ssr: false })`).
+768 piksel ve hareket serbestken, tarayıcı boşa çıkınca İNDİRİLİR
+(`dynamic(..., { ssr: false })`; ilk tıklamanın önüne uzun görev düşmesin).
 Telefonda ve hareketi azaltanda yalnızca `.hero-glow` CSS ışıması kalır.
+WebGL açılamazsa ya da parça inmezse `SceneBoundary` yalnızca sahneyi
+düşürür; sayfa hata ekranına gitmez, ışıma kalır.
 Renk `--primary`den okunur, tema değişince yenilenir. Hero ekrandan çıkınca
 ya da sekme arka plandayken çizim durur. İstemiyorsan `hero.scene: false`;
 tamamen çıkarmak için klasörü, iki paketi ve `HeroShell`deki satırı sil.
@@ -124,8 +132,12 @@ Tokenlar `app/globals.css` içinde, iki katman:
   **Radius:** `rounded-sm md lg xl` (+ `rounded-full`).
 - **Yüzey:** `surface` varsayılan (ton farkı + hairline). `glass` isteğe bağlı,
   yalnızca arkasında hareket eden içerik varsa. `app-bg` köşe ışımaları.
-- Tema çerezden sunucuda basılır (`lib/theme.ts`, `app/actions/theme.ts`);
-  varsayılan açık, next-themes yok, satır içi betik yok, FOUC yok.
+- Tema çerezde, sayfa yine statik (`○`): layout varsayılanı basar,
+  `<head>`deki küçük betik (`lib/theme.ts` → `THEME_SCRIPT`) ilk boyamadan
+  önce çerezdeki temayı ve `theme-color`ı yazar (guides/03 § 2b). Düğme
+  çerezi istemcide yazar. Varsayılan açık, next-themes yok, FOUC yok.
+  Layout ya da sayfa `cookies()`/`headers()` okursa her ziyaret sunucu
+  çizimine döner (`ƒ`); build çıktısında `○ /` kalmalı.
 - CSS değişkeni okuyamayan yerler (OG görseli, `global-error`, manifest,
   viewport rengi) değeri sabit yazar ve kaynağını yorumda söyler.
 
@@ -158,11 +170,15 @@ Arayüz metninde uzun tire (em dash) yok; ayraç virgül, iki nokta ya da `·`.
 
 ## SEO
 
-`app/layout.tsx`: metadata (kanonik adres, OG, Twitter) ve JSON-LD
+`app/layout.tsx`: ortak metadata (OG, Twitter) ve JSON-LD
 (Organization + WebSite, `lib/structured-data.ts` ile `<` kaçışlı).
-`app/sitemap.ts`, `app/robots.ts`, `app/opengraph-image.tsx` adresi
-`lib/site.ts`ten okur; önizleme dağıtımları dizine girmez. Üretimde
-`NEXT_PUBLIC_SITE_URL` tanımlı olmalı.
+Kanonik adres SAYFADA (`app/page.tsx`): layout'ta olsa her yeni sayfaya miras
+kalır ve sayfa kendini ana sayfanın kopyası ilan eder; yeni sayfa kendi
+`alternates.canonical`ını verir. `app/sitemap.ts`, `app/robots.ts`,
+`app/opengraph-image.tsx` adresi `lib/site.ts`ten okur; önizleme dağıtımları
+ve `SITE_INDEXABLE=false` kopyası dizine girmez. `NEXT_PUBLIC_SITE_URL`
+(yalnızca http/https) Vercel dışında tanımsızsa `next build` durur
+(`lib/env.ts` → `assertSiteUrlForBuild`); CI `SKIP_ENV_VALIDATION=1` ile geçer.
 
 ## Açıklayıcı figür (anatomy, isteğe bağlı)
 

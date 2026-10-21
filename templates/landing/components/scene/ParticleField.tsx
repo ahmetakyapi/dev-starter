@@ -121,6 +121,10 @@ export default function ParticleField() {
         dpr={[1, 1.75]}
         camera={{ position: [0, 0, 8], fov: 60 }}
         gl={{ antialias: false, alpha: true, powerPreference: "low-power" }}
+        // Tam alan süs katmanı, R3F olayı yok: kaydırmada konum ölçmeye gerek
+        // yok. Varsayılan (`scroll: true`) pencereye scroll dinleyicisi takar
+        // ve her kaydırma durağında Canvas'ı yeniden yapılandırır.
+        resize={{ scroll: false }}
       >
         <Cloud color={color} />
       </Canvas>

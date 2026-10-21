@@ -1,8 +1,10 @@
+import { Pause, Play } from "lucide-react";
 import { logos } from "@/lib/content";
 
 /*
  * Logo şeridi: sayfadaki TEK kayan şerit. CSS animasyonu, JavaScript yok.
- * Üzerine gelince durur; hareketi azaltanda durağan ve sarılı (app/landing.css).
+ * Üzerine gelince ve altındaki "Şeridi Durdur" işaretlenince durur; hareketi
+ * azaltanda durağan ve sarılı, denetim de gizli (app/landing.css).
  *
  * İşaretler uydurma müşteri adlarından ÜRETİLİR: baş harf + dört basit
  * geometriden biri. Gerçek müşteriler gelince `LogoMark` yerine onların SVG
@@ -54,7 +56,7 @@ function Lap({ hidden = false }: { hidden?: boolean }) {
 
 export function Logos() {
   return (
-    <section aria-labelledby="logolar" className="border-y border-line-soft py-10 sm:py-12">
+    <section aria-labelledby="logolar" className="marquee-section border-y border-line-soft py-10 sm:py-12">
       <h2 id="logolar" className="px-4 text-center text-base font-semibold text-muted">
         {logos.title}
       </h2>
@@ -66,6 +68,16 @@ export function Logos() {
           <Lap hidden />
         </div>
       </div>
+      {/* WCAG 2.2.2: beş saniyeden uzun kendiliğinden hareket sayfada
+          durdurulabilmeli. Üzerine gelme klavyede ve dokunmatikte yok, şeritte
+          odaklanacak öğe de yok (`:focus-within` hiç tetiklenmez); gerçek
+          denetim bu kutu. JavaScript'siz: işaretlenince CSS durdurur. */}
+      <label className="marquee-pause mx-auto mt-5 flex min-h-11 w-fit cursor-pointer items-center gap-2 rounded-full px-3 text-small font-semibold text-muted transition-colors hover:text-strong has-checked:text-strong has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-line-focus motion-reduce:hidden [&_svg]:size-4">
+        <input type="checkbox" className="peer sr-only" />
+        <Pause aria-hidden className="peer-checked:hidden" />
+        <Play aria-hidden className="hidden peer-checked:block" />
+        {logos.pause}
+      </label>
     </section>
   );
 }

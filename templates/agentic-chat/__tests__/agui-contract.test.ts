@@ -83,7 +83,7 @@ describe('AG-UI contract', () => {
 
     const assistant = agent.messages.find((m) => m.role === 'assistant')
     // Parca parca gelen delta'lar tek metinde birlesmis olmali
-    expect(assistant?.content).toBe('Merhaba. Nasil yardimci olabilirim?')
+    expect(assistant?.content).toBe('Merhaba. Nasıl yardımcı olabilirim?')
   })
 
   it('GELEN: sunucu tool cagrisi ve sonucu gecmise duser', async () => {
@@ -101,6 +101,34 @@ describe('AG-UI contract', () => {
     const toolMessage = agent.messages.find((m) => m.role === 'tool')
     expect(typeof toolMessage?.content).toBe('string')
     expect(JSON.parse(toolMessage!.content as string)).toMatchObject({ ok: true })
+  })
+
+  it('onay cevabi bir sonraki run a TOOL MESAJI olarak gider; thread kilitlenmez', async () => {
+    // useHumanInTheLoop `resume` gondermez: senaryo bir interrupt outcome'u
+    // birakirsa @ag-ui/client takip run'ini "pending interrupt" ile reddeder.
+    const { agent, sent } = makeAgent('interrupt')
+
+    agent.addMessage({ id: 'm-1', role: 'user', content: 'ucusu iptal et' })
+    await agent.runAgent({ runId: 'run-1' })
+
+    const call = agent.messages
+      .filter((m) => m.role === 'assistant')
+      .flatMap((m) => ('toolCalls' in m ? (m.toolCalls ?? []) : []))
+      .find((c) => c.function.name === 'cancelFlight')
+    expect(call).toBeDefined()
+
+    // Istemcinin cevabi: yalnizca secenek kimligi
+    agent.addMessage({
+      id: 'm-2',
+      role: 'tool',
+      toolCallId: call!.id,
+      content: JSON.stringify({ optionId: 'decline' }),
+    })
+    await agent.runAgent({ runId: 'run-2' })
+
+    const toolMessage = sent()!.messages.find((m) => m.role === 'tool')
+    expect(toolMessage?.content).toBe('{"optionId":"decline"}')
+    expect('resume' in sent()!).toBe(false)
   })
 
   it('abone olay akisini sirayla gorur', async () => {

@@ -2,7 +2,7 @@
 
 import { Layers, Menu, X } from "lucide-react";
 import { AnimatePresence, m, useMotionValueEvent, useScroll } from "motion/react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { buttonClass } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { nav } from "@/lib/content";
@@ -26,13 +26,20 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const menu = useRef<HTMLElement>(null);
 
   useMotionValueEvent(scrollY, "change", (value) => setScrolled(value > SCROLL_THRESHOLD));
 
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      // Odak kapanan menünün içindeyse öğesiyle birlikte silinir ve body'ye
+      // düşer; klavye kullanıcısı sayfanın başına atılmasın, açan düğmeye döner.
+      const inside = menu.current?.contains(document.activeElement);
+      setOpen(false);
+      if (inside) menuButton.current?.focus();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -80,6 +87,7 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
             {nav.cta.label}
           </a>
           <button
+            ref={menuButton}
             type="button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
@@ -95,8 +103,17 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
       <AnimatePresence>
         {open ? (
           <m.nav
+            ref={menu}
             id={menuId}
             aria-label="Mobil menü"
+            // Odak menüden çıkınca (son öğeden Tab) menü kapanır: açık kalsa
+            // sıradaki odak, örtünün altında kalan hero düğmesine düşer ve
+            // görünmez (WCAG 2.4.11). Açan düğmeye dönen odak menüyü kapatmaz;
+            // pencere odağı kaybedince `relatedTarget` boş gelir, o da kapatmaz.
+            onBlur={(event) => {
+              const next = event.relatedTarget;
+              if (next && !event.currentTarget.contains(next) && next !== menuButton.current) setOpen(false);
+            }}
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}

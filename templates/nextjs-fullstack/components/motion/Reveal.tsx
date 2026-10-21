@@ -16,12 +16,25 @@ import { DUR, EASE, STAGGER } from "@/lib/motion";
  * Kahraman başlığı ve LCP öğesi Reveal'e sarılmaz: ilk boyamayı geciktirir.
  * JavaScript kapalıyken `data-reveal` taşıyan öğeler kök layout'taki
  * `<noscript>` kuralıyla görünür olur.
+ *
+ * `viewport`ta negatif `margin` YOK: Motion onu IntersectionObserver
+ * `rootMargin`i yapar ve "-80px" kökü DÖRT kenardan daraltır. Sayfanın ilk ya
+ * da son 80 pikseline düşen (alt bilgi satırı, son kart) ya da telefonda
+ * kenara yaslı küçük öğe hiç kesişmez ve opacity 0'da kalır. `amount` eşiği
+ * de çözüm değil: ekranın birkaç katı uzun blok o oranı hiç göremez.
  */
+
+/**
+ * Kademe tavanı: toplam ≤ 400 ms (guides/04-motion.md § 5). Her öğenin kendi
+ * gözlemcisi var; tavansız uzun listede 40. öğe görünüme girdikten 2,4 s
+ * sonra belirirdi.
+ */
+const MAX_STAGGER_STEPS = 6;
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  /** Saniye. Liste içinde `index * STAGGER` vermek için `RevealItem` kullan. */
+  /** Saniye. Liste içinde sıraya göre kademe için `RevealItem` kullan (tavanlı). */
   delay?: number;
   /** Başlangıç kayması, piksel. */
   y?: number;
@@ -37,7 +50,7 @@ export function Reveal({ children, className, delay = 0, y = 16, as = "div" }: R
       className={className}
       initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true }}
       transition={{ duration: reduce ? 0 : DUR.slow, delay: reduce ? 0 : delay, ease: EASE }}
     >
       {children}
@@ -45,10 +58,10 @@ export function Reveal({ children, className, delay = 0, y = 16, as = "div" }: R
   );
 }
 
-/** Liste öğesi: sırası kadar gecikmeyle gelir. `<ul>` içinde `as="li"` ile. */
+/** Liste öğesi: sırası kadar (en fazla 6 basamak) gecikmeyle gelir. `<ul>` içinde `as="li"` ile. */
 export function RevealItem({
   index,
   ...props
 }: Omit<RevealProps, "delay"> & { index: number }) {
-  return <Reveal delay={index * STAGGER} {...props} />;
+  return <Reveal delay={Math.min(index, MAX_STAGGER_STEPS) * STAGGER} {...props} />;
 }

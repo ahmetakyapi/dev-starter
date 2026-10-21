@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowUpRight, Inbox, Layers, Plus, Settings } from "lucide-react";
 import { ExampleForm } from "@/components/ExampleForm";
 import { RevealItem } from "@/components/motion/Reveal";
@@ -8,7 +9,8 @@ import { Panel, PanelHeader } from "@/components/ui/Panel";
 import { Skeleton, SkeletonLines } from "@/components/ui/Skeleton";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
-import { PALETTE, getTheme } from "@/lib/theme";
+import { PALETTE } from "@/lib/theme";
+import { getTheme } from "@/lib/theme.server";
 
 /*
  * Başlangıç sayfası: şablonun kendi vitrini. Token'ları, bileşenleri ve
@@ -17,6 +19,11 @@ import { PALETTE, getTheme } from "@/lib/theme";
  * Sınıf adları DİZİ İÇİNDE TAM yazılı (`"bg-surface-raised"`): Tailwind
  * kaynağı metin olarak tarar, `bg-${ad}` gibi birleştirilmiş bir ad derlenmez.
  */
+
+/* Kanonik adres SAYFA düzeyinde: kök layout'a yazılsa her alt rota "/"ye
+   kanonikleşirdi. Herkese açık her yeni sayfa kendi yolunu verir. Burada
+   `openGraph` YOK: üst düzey anahtar sığ birleşir, layout'unkini silerdi. */
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 /* Palet: projeye göre değişen tonlar. */
 const PALETTE_SWATCHES = [

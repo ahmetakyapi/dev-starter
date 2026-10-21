@@ -1,8 +1,12 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Panel, PanelHeader } from "@/components/ui/Panel";
+
+/* Her sayfa kendi başlığını verir; vermezse sekmede ana sayfayla aynı adı taşır. */
+export const metadata: Metadata = { title: "Hesap" };
 
 /**
  * Korunan rotanın İSKELETİ — asıl kapı burası. `proxy.ts` yalnızca çerezin
@@ -16,12 +20,12 @@ export default async function HesapPage() {
   if (!session?.user) redirect("/api/auth/signin?callbackUrl=/hesap");
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10">
+    <main id="icerik" className="mx-auto w-full max-w-3xl px-4 py-10">
       <PageHeader
         title="Hesap"
         description="Oturumun sunucuda doğrulandı; bu sayfa korunan rotaların şablonu."
       />
-      <Panel>
+      <Panel className="mt-10">
         <PanelHeader title="Oturum" />
         <dl className="mt-3 grid gap-2 text-read text-body">
           <div className="flex justify-between gap-4">

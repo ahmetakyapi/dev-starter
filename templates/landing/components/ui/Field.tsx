@@ -14,7 +14,8 @@ type FieldProps = Omit<ComponentProps<"input">, "id"> & {
  * bağlıdır; ekran okuyucu alana gelince ikisini de okur.
  *
  * Doğrulama sunucuda (`lib/validation.ts`); tarayıcı doğrulaması yalnızca
- * ilk savunma. Kullanım örneği: `components/ExampleForm.tsx`.
+ * ilk savunma. Kullanım örneği: nextjs-fullstack şablonundaki
+ * `components/ExampleForm.tsx`.
  */
 export function Field({ label, error, hint, className, name, ...props }: FieldProps) {
   const id = useId();

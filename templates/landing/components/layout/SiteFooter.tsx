@@ -3,6 +3,8 @@ import { footer } from "@/lib/content";
 import { SITE_NAME } from "@/lib/site";
 
 export function SiteFooter() {
+  // Sayfa statik (`○`): yıl DERLEMEDE basılır, yılbaşından sonraki ilk
+  // deploy'a kadar eski yıl görünür. İstemcide hesaplamak hidrasyon farkı demek.
   const year = new Date().getFullYear();
   return (
     <footer className="border-t border-line-soft pb-[max(2rem,env(safe-area-inset-bottom))]">

@@ -149,6 +149,8 @@ export const hero = {
 export const logos = {
   title: "Bu Ekipler Her Gün Kullanıyor",
   names: ["Kuzey Lojistik", "Mavera", "Atlas Gıda", "Pervane", "Lodos Yazılım", "Demirhan", "Selvi Sağlık", "Karafil"],
+  /** Şeridin altındaki durdurma denetimi (WCAG 2.2.2). */
+  pause: "Şeridi Durdur",
 } as const;
 
 /* ── Özellikler (bento) ────────────────────────────────────────────────── */

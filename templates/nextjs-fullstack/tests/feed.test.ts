@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { parseActionResult, parseSponsoredItem } from "../components/feed/agent-feed-core";
+import { feedReducer, initFeed, parseActionResult, parseSponsoredItem, selectFeed } from "../components/feed/agent-feed-core";
 import { demoFeed } from "../lib/feed-demo";
 import {
   UNDO_WINDOW_MS,
@@ -8,6 +8,7 @@ import {
   authorizeUndo,
   feedClock,
   rowToFeedItem,
+  timeLabelFor,
   type FeedRow,
 } from "../lib/feed-rules";
 
@@ -46,15 +47,51 @@ test("rowToFeedItem: açık iş kart olur, saat kullanıcının diliminde", () =
   assert.equal(item?.actions.length, 1);
 });
 
-test("rowToFeedItem: kapanan iş 'handled' satırı olur, başlığı özettir, düğmesi yoktur", () => {
+test("rowToFeedItem: kapanan karar kulvarını ve aksiyonlarını korur, özeti ayrı gelir", () => {
   const item = rowToFeedItem(
     row({ resolvedAt: NOW, summary: "Perşembeye taşıdım", undoToken: "t", undoExpiresAt: new Date(NOW.getTime() + 1000) }),
     NOW,
   );
+  assert.equal(item?.lane, "needs-you");
+  assert.equal(item?.resolvedSummary, "Perşembeye taşıdım");
+  assert.equal(item?.title, "Toplantı çakışıyor");
+  assert.equal(item?.actions.length, 1);
+  assert.equal(item?.undoToken, "t");
+});
+
+test("rowToFeedItem: ajanın kendi işi 'handled' satırıdır, başlığı özettir, düğmesi yoktur", () => {
+  const item = rowToFeedItem(
+    row({
+      lane: "handled",
+      resolvedAt: NOW,
+      summary: "Özeti paylaştım",
+      undoToken: "t",
+      undoExpiresAt: new Date(NOW.getTime() + 1000),
+    }),
+    NOW,
+  );
   assert.equal(item?.lane, "handled");
-  assert.equal(item?.title, "Perşembeye taşıdım");
+  assert.equal(item?.title, "Özeti paylaştım");
   assert.deepEqual(item?.actions, []);
   assert.equal(item?.undoToken, "t");
+});
+
+test("yenilemeden sonra Geri Al: sunucunun yeniden açtığı karar istemcide de açılır", () => {
+  const item = rowToFeedItem(
+    row({ resolvedAt: NOW, summary: "Perşembeye taşıdım", undoToken: "t", undoExpiresAt: new Date(NOW.getTime() + 1000) }),
+    NOW,
+  );
+  assert.ok(item);
+  let state = initFeed([item]);
+  assert.equal(selectFeed(state).handled.length, 1);
+  state = feedReducer(state, { type: "undo", id: item.id });
+  assert.deepEqual(selectFeed(state).needsYou.map((e) => e.item.id), [item.id]);
+});
+
+test("timeLabelFor: bugün saat, bu hafta gün adı, daha eskisi tarih", () => {
+  assert.equal(timeLabelFor(new Date("2026-10-14T05:02:00Z"), NOW), "08:02");
+  assert.equal(timeLabelFor(new Date("2026-10-11T05:02:00Z"), NOW), "Paz 08:02");
+  assert.equal(timeLabelFor(new Date("2026-10-01T05:02:00Z"), NOW), "1 Eki 08:02");
 });
 
 test("rowToFeedItem: süresi dolan Geri Al istemciye gitmez", () => {
