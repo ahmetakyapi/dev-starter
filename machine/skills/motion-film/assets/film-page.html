@@ -46,7 +46,9 @@
   /** Örnek: damla düşer, ezilir, yayılıp bir halka çizer, bir kelime yükselir. Kendi filminle değiştir. */
   window.render = (t) => {
     const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight;
-    if (canvas.width !== Math.round(w * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
+    // İki boyut da bakılır: yalnız yükseklik değişince (alta yapışık DevTools) bitmap esner, daire elips olur.
+    const cw = Math.round(w * dpr), ch = Math.round(h * dpr);
+    if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
     const cx = w / 2, cy = h / 2;

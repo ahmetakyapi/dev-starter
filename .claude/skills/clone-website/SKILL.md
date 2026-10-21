@@ -198,7 +198,7 @@ JSON.stringify({
     alt: img.alt,
     width: img.naturalWidth,
     height: img.naturalHeight,
-    parentClasses: img.parentElement?.className,
+    parentClasses: img.parentElement?.getAttribute('class'),
     siblings: img.parentElement ? [...img.parentElement.querySelectorAll('img')].length : 0,
     position: getComputedStyle(img).position,
     zIndex: getComputedStyle(img).zIndex
@@ -215,10 +215,12 @@ JSON.stringify({
     return bg && bg !== 'none';
   }).map(el => ({
     url: getComputedStyle(el).backgroundImage,
-    element: el.tagName + '.' + el.className?.split(' ')[0]
+    // getAttribute, not className: on SVG elements className is an SVGAnimatedString
+    element: el.tagName + '.' + (el.getAttribute('class') ?? '').trim().split(/\s+/)[0]
   })),
   svgCount: document.querySelectorAll('svg').length,
-  fonts: [...new Set([...document.querySelectorAll('*')].slice(0, 200).map(el => getComputedStyle(el).fontFamily))],
+  // Every element, not a sample: a face used only in the footer or a code block counts too
+  fonts: [...new Set([...document.querySelectorAll('body, body *')].map(el => getComputedStyle(el).fontFamily))],
   favicons: [...document.querySelectorAll('link[rel*="icon"]')].map(l => ({ href: l.href, sizes: l.sizes?.toString() }))
 });
 ```
@@ -269,7 +271,7 @@ For each section, use browser MCP to extract everything:
     const children = [...element.children];
     return {
       tag: element.tagName.toLowerCase(),
-      classes: element.className?.toString().split(' ').slice(0, 5).join(' '),
+      classes: (element.getAttribute('class') ?? '').trim().split(/\s+/).slice(0, 5).join(' '),
       text: element.childNodes.length === 1 && element.childNodes[0].nodeType === 3 ? element.textContent.trim().slice(0, 200) : null,
       styles: extractStyles(element),
       images: element.tagName === 'IMG' ? { src: element.src, alt: element.alt, naturalWidth: element.naturalWidth, naturalHeight: element.naturalHeight } : null,

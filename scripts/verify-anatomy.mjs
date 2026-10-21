@@ -19,6 +19,7 @@
  */
 
 import { execFileSync } from 'node:child_process'
+import { randomBytes } from 'node:crypto'
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -46,6 +47,9 @@ const run = (cmd, cmdArgs, cwd, label, env = {}) => {
 
 const work = mkdtempSync(join(tmpdir(), 'verify-anatomy-'))
 process.on('exit', () => rmSync(work, { recursive: true, force: true }))
+// Dinleyicisiz SIGINT/SIGTERM'de Node 'exit' yaymaz: npm install sırasında
+// Ctrl-C iki node_modules ağacını (GB mertebesi) tmpdir'de bırakıyordu.
+for (const sig of ['SIGINT', 'SIGTERM']) process.once(sig, () => process.exit(130))
 
 // Kaynak: sabit commit (bootstrap.sh) ya da --local
 let source
@@ -97,9 +101,11 @@ for (const name of targets) {
   // istemez; bu kosunun kendisi aksini aninda gosterir.
   run('npm', ['install', '--no-audit', '--no-fund', '--silent', '--ignore-scripts'], dir, 'npm install')
   // Şablonun kendi CI sırası (ci.yml): build önce, PageProps tipleri build'de üretilir.
-  run('npm', ['run', 'build'], dir, 'build', { SKIP_ENV_VALIDATION: '1', AUTH_SECRET: 'verify-placeholder' })
+  run('npm', ['run', 'build'], dir, 'build', { SKIP_ENV_VALIDATION: '1', AUTH_SECRET: randomBytes(32).toString('hex') })
   run('npm', ['run', 'typecheck'], dir, 'typecheck')
-  run('npm', ['run', 'lint', '--', '--max-warnings=0'], dir, 'lint (uyarısız)')
+  // Uyarı bütçesi şablonun kendi script'inde (--max-warnings 0): burada ayrıca
+  // verilseydi şablon bütçesiz kalsa da bu kontrol yeşil görünürdü.
+  run('npm', ['run', 'lint'], dir, 'lint (uyarısız)')
   run('npm', ['test'], dir, 'test')
 }
 

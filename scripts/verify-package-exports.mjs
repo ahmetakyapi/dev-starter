@@ -24,6 +24,16 @@ import { pathToFileURL } from 'node:url'
 
 const PACKAGES = ['packages/@ahmet/theme', 'packages/@ahmet/ui']
 
+/**
+ * Sunucu-güvenli girişler ve dışa aktarmak ZORUNDA oldukları adlar.
+ * Ana giriş `'use client'` banner'lı tek bundle; oradan gelen değer Server
+ * Component'te istemci referansıdır (`cn()` prerender'da kırılır, `DUR.fast`
+ * sessizce `undefined`). Bu girişler banner taşımaz — bkz. mistakes.md #84.
+ */
+const SERVER_SAFE = {
+  '@ahmetakyapi/ui': { './core': ['cn', 'EASE', 'DUR', 'SPRING', 'STAGGER', 'stagger', 'fadeUp', 'fadeIn'] },
+}
+
 /** src/ altında herhangi bir dosya `'use client'` ile başlıyor mu? */
 async function sourceDeclaresUseClient(srcDir) {
   if (!existsSync(srcDir)) return false
@@ -137,6 +147,47 @@ for (const pkgDir of PACKAGES) {
         )
       }
     }
+  }
+
+  // 7. Sunucu-güvenli giriş: ilk satırda 'use client' OLMAMALI ve vaat
+  //    edilen adlar gerçek değer olarak yüklenmeli. Biri tsup.config.ts'te
+  //    banner'ı bu girişe de verirse ya da core.ts'ten bir ad düşerse burada
+  //    kırılır; build, tsc ve yukarıdaki yükleme testleri bunu GÖREMEZ.
+  for (const [subpath, names] of Object.entries(SERVER_SAFE[pkg.name] ?? {})) {
+    const entry = pkg.exports?.[subpath]
+    if (!entry || typeof entry !== 'object') {
+      fail(`${pkg.name}: exports["${subpath}"] YOK — sunucu bileşeni sabitleri istemci referansı olarak alır`)
+      continue
+    }
+    for (const cond of ['import', 'require']) {
+      const target = entry[cond]
+      if (!target || !existsSync(resolve(pkgDir, target))) continue
+      const firstLine = (await readFile(resolve(pkgDir, target), 'utf8')).split('\n')[0]
+      if (/^['"]use client['"]/.test(firstLine.trim())) {
+        fail(`${pkg.name}: ${subpath} (${target}) 'use client' ile başlıyor — sunucuda değerler referansa döner (#84)`)
+      } else {
+        pass(`${subpath} ${cond} 'use client' taşımıyor — sunucu güvenli`)
+      }
+    }
+    try {
+      const esm = await import(pathToFileURL(resolve(pkgDir, entry.import)).href)
+      const cjs = createRequire(import.meta.url)(resolve(pkgDir, entry.require))
+      const missing = names.filter((n) => esm[n] === undefined || cjs[n] === undefined)
+      if (missing.length > 0) fail(`${pkg.name}: ${subpath} şunları dışa aktarmıyor: ${missing.join(', ')}`)
+      else if (esm.cn('p-2', 'p-4') !== 'p-4') fail(`${pkg.name}: ${subpath} cn() çakışan sınıfı birleştirmiyor`)
+      else pass(`${subpath} yüklendi — ${names.length} zorunlu ad gerçek değer`)
+    } catch (err) {
+      fail(`${pkg.name}: ${subpath} yüklenemedi — ${err.message}`)
+    }
+  }
+
+  // 8. Tailwind kaynak kaydı: v4 node_modules'u taramaz. `./source.css`
+  //    vaat edilip içinde `@source` yoksa bileşen sınıfları tüketicide hiç
+  //    derlenmez ve Button düz metin gibi çizilir; hiçbir build bunu görmez.
+  if (pkg.exports?.['./source.css']) {
+    const css = await readFile(resolve(pkgDir, pkg.exports['./source.css']), 'utf8').catch(() => '')
+    if (/@source\s+["']\.\/dist["']/.test(css)) pass(`source.css dist'i Tailwind'e taratıyor`)
+    else fail(`${pkg.name}: source.css içinde @source "./dist" YOK — bileşen sınıfları derlenmez`)
   }
 }
 

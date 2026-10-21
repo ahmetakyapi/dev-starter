@@ -85,9 +85,21 @@ jobs:
       - name: Security scan
         run: |
           echo "--- Checking for hardcoded secrets ---"
-          if grep -rnE '(password|secret|api_key|apikey)\s*[:=]\s*["\x27][^"\x27]{8,}' \
-            packages/ snippets/ templates/ \
-            --include='*.ts' --include='*.tsx' --include='*.js' \
+          # Desen hooks/quality-scan.sh § 3 ile AYNI: hook yalniz Claude Code'un
+          # commit'lerinde kosar, elle atilan commit'in tek kapisi burasi. ERE
+          # koseli parantezinde \x27 apostrof DEGIL uc ayri karakterdir (x,2,7):
+          # eski desen tek tirnakli (Prettier varsayilani) sirlari hic yakalamiyor,
+          # -i olmadigi icin apiKey/API_KEY'i de kaciriyordu. Deger bosluksuz ve
+          # kapanan tirnakli: arayuz metni sir degildir. YALNIZ token anahtarindaki
+          # kucuk harfli kebab deger (token: "surface-raised") tasarim token adidir;
+          # parola anahtarindaki kebab deger yine sirdir. Ayiklama eslesme basina (-o),
+          # ayni satirdaki gercek sir onunla birlikte dusmesin.
+          SECRET_RE="(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"'[:space:]]{8,}[\"']"
+          SECRET_SAFE=":[Tt]oken[[:space:]]*[:=][[:space:]]*[\"'][a-z]+(-[a-z0-9]+)+[\"']\$"
+          if grep -rnoiE "$SECRET_RE" packages/ snippets/ templates/ \
+            --include='*.ts' --include='*.tsx' --include='*.js' --include='*.mjs' \
+            --exclude-dir=node_modules \
+            | grep -vE "$SECRET_SAFE" \
             | grep -v '\.example\|\.template\|\.test\.\|\.spec\.'; then
             echo "❌ Possible hardcoded secret — see matches above"
             exit 1
@@ -95,8 +107,12 @@ jobs:
           echo "✅ No hardcoded secrets"
 
           echo "--- Checking for .env files ---"
-          if find . -name '.env' -not -name '.env.example' \
-            -not -path './node_modules/*' -not -path './.git/*' | grep .; then
+          # hooks/quality-scan.sh § 4 ile ayni kural: yalniz `.env` degil,
+          # .env.local ve config/.env.production da sizdirir. Izinli olanlar
+          # deger tasimayan .env.example ve .env.template.
+          if find . \( -name '.env' -o -name '.env.*' \) \
+            ! -name '.env.example' ! -name '.env.template' \
+            -not -path '*/node_modules/*' -not -path './.git/*' | grep .; then
             echo "❌ .env file committed — see paths above"
             exit 1
           fi
@@ -104,12 +120,17 @@ jobs:
 
       # v3: renk yalnizca token sinifindan. Tema `data-theme` ile dondugu icin
       # `dark:` varyanti da ihlal; eskiden bu satirlar filtreyle eleniyordu.
+      # Desen scripts/health-check.sh § 9 ile AYNI. Oradaki yalniz uyarir;
+      # build'i kiran tek yer burasi. Eski dar desen ton soneki (-500, /)
+      # istiyor, 4 onek ve 11 renkle sinirliydi: bg-white, text-green-600,
+      # fill-* ve hex sabitler hicbir yerde kirmiziya dusmuyordu.
       - name: Design token violations
         run: |
           echo "--- Checking UI package and snippets for hardcoded colors ---"
-          VIOLATIONS=$(grep -rnE '(bg|text|border|ring)-(white|black|gray|slate|zinc|neutral|red|amber|emerald|blue|indigo)(-[0-9]|/)|\bdark:' \
+          PALETTE='(bg|text|border|ring|from|via|to|fill|stroke|outline|shadow|placeholder)-(white|black|gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[0-9]+|/|\b)'
+          VIOLATIONS=$(grep -rnE "$PALETTE|\bdark:|['\"]#[0-9a-fA-F]{3,8}['\"]|rgba?\([0-9]" \
             packages/@ahmet/ui/src/ snippets/ --include='*.ts' --include='*.tsx' 2>/dev/null \
-            | grep -v '\.test\.' || true)
+            | grep -v '\.test\.\|\.spec\.' || true)
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ Design token violations found:"
             echo "$VIOLATIONS"
@@ -130,7 +151,7 @@ jobs:
     # `npm test` onlari dislar. Buradaki is gecici bir dizinde pin'li kurulum
     # yapip tsc --noEmit + vitest run calistirir.
     #
-    # Bu is olmasaydi 25 agentic test yalnizca birinin elle komut yazmasiyla
+    # Bu is olmasaydi 28 agentic test yalnizca birinin elle komut yazmasiyla
     # calisirdi — yani pratikte hic. -> knowledge/mistakes.md #55
 
     steps:

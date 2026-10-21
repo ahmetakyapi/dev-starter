@@ -3,8 +3,8 @@
  * Lockfile Integrity Verification
  *
  * package-lock.json'un `npm ci` tarafindan KABUL EDILEBILIR oldugunu dogrular:
- * manifest ile kilidin ayni seyi soyledigini ve kilitteki her bagimlilik
- * kenarinin kilit icinde cozulebildigini kontrol eder.
+ * manifest'lerin (kok + her workspace) kilitle ayni seyi soyledigini ve
+ * kilitteki her bagimlilik kenarinin kilit icinde cozulebildigini kontrol eder.
  *
  * Neden var: 2026-08-17'de CI'in iki isi de `npm ci` adiminda oldu —
  * "Missing: devtools-protocol from lock file". Kilit yerelde npm 11 (Node 24)
@@ -23,7 +23,7 @@
  *   npm run verify:lock
  */
 
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
@@ -60,9 +60,14 @@ function resolveDep(loc, dep, packages) {
 }
 
 /** Bir lock girdisinin dogrulanmasi gereken bagimlilik kenarlari */
-function edgesOf(entry) {
+function edgesOf(entry, loc) {
   const edges = []
-  for (const field of ['dependencies', 'optionalDependencies']) {
+  // devDependencies kok ve workspace girdilerinde (node_modules disi) kurulur;
+  // node_modules altindaki bir paketin dev bagimliligi agaca hic girmez.
+  const fields = loc.includes('node_modules/')
+    ? ['dependencies', 'optionalDependencies']
+    : ['dependencies', 'devDependencies', 'optionalDependencies']
+  for (const field of fields) {
     for (const name of Object.keys(entry[field] ?? {})) edges.push(name)
   }
   // Peer bagimliliklar: npm 7+ bunlari agaca kurar, yani kilitte bulunmalari
@@ -74,6 +79,59 @@ function edgesOf(entry) {
     edges.push(name)
   }
   return edges
+}
+
+/**
+ * Bir manifest ile kilitteki girdisi ayni bagimliliklari ayni araliklarla mi
+ * soyluyor? Anahtar anahtar bakilir: npm alanlari kendi sirasiyla yazar, sira
+ * farki uyusmazlik degildir.
+ */
+function compareDeps(manifest, entry, fields, file, label) {
+  for (const field of fields) {
+    const fromManifest = manifest[field] ?? {}
+    const fromLock = entry[field] ?? {}
+    for (const [name, spec] of Object.entries(fromManifest)) {
+      if (!(name in fromLock)) {
+        problem(`${name} ${file}'da var, kilidin ${label} girdisinde yok`, `${field}: "${spec}"`)
+      } else if (fromLock[name] !== spec) {
+        problem(`${name} surum araligi uyusmuyor`, `${file}: "${spec}" · kilit: "${fromLock[name]}"`)
+      }
+    }
+    for (const name of Object.keys(fromLock)) {
+      if (!(name in fromManifest)) {
+        problem(`${name} kilidin ${label} girdisinde var, ${file}'da yok`, field)
+      }
+    }
+  }
+}
+
+/**
+ * Kok manifest'in `workspaces` desenlerini dizinlere acar. Yalniz duz yol ve
+ * sonu `/*` olan desen (packages/@ahmet/*) acilir; daha karmasik bir glob ya
+ * da `!` dislamasi varsa liste bos doner. Acilamayan desen kacirilmis bulgudur,
+ * yanlis acilan desen ise commit'i bloklayan yanlis alarm.
+ */
+function workspaceDirs(manifest) {
+  const patterns = Array.isArray(manifest.workspaces) ? manifest.workspaces : (manifest.workspaces?.packages ?? [])
+  if (patterns.some((p) => p.startsWith('!'))) return []
+  const dirs = []
+  for (const raw of patterns) {
+    const pattern = raw.replace(/^\.\//, '').replace(/\/+$/, '')
+    const wildcard = pattern.endsWith('/*')
+    const parent = wildcard ? pattern.slice(0, -2) : pattern
+    if (/[*?[\]{}]/.test(parent)) continue
+    const candidates = !wildcard
+      ? [parent]
+      : existsSync(resolve(ROOT, parent))
+        ? readdirSync(resolve(ROOT, parent), { withFileTypes: true })
+            .filter((d) => d.isDirectory() && !d.name.startsWith('.'))
+            .map((d) => `${parent}/${d.name}`)
+        : []
+    for (const dir of candidates) {
+      if (existsSync(resolve(ROOT, dir, 'package.json'))) dirs.push(dir)
+    }
+  }
+  return dirs
 }
 
 async function readJson(path) {
@@ -97,22 +155,25 @@ async function main() {
   // ── 1. Kok manifest ile kilidin kok girdisi ayni mi? ───────────────────────
   // `npm ci`nin en sik verdigi EUSAGE nedeni: package.json'a bagimlilik
   // eklenip kilit yenilenmemesi.
-  const rootEntry = packages[''] ?? {}
-  for (const field of DEP_FIELDS) {
-    const fromManifest = manifest[field] ?? {}
-    const fromLock = rootEntry[field] ?? {}
-    for (const [name, spec] of Object.entries(fromManifest)) {
-      if (!(name in fromLock)) {
-        problem(`${name} package.json'da var, kilidin kok girdisinde yok`, `${field}: "${spec}"`)
-      } else if (fromLock[name] !== spec) {
-        problem(`${name} surum araligi uyusmuyor`, `package.json: "${spec}" · kilit: "${fromLock[name]}"`)
-      }
+  compareDeps(manifest, packages[''] ?? {}, DEP_FIELDS, 'package.json', 'kok')
+
+  // ── 1b. Her workspace manifest'i kilitteki kendi girdisiyle ayni mi? ───────
+  // Kok karsilastirmasi packages/@ahmet/ui/package.json'a eklenen bagimliligi
+  // gormez; adim 2 de kilidin kendi (eski) kayitlarini yurudugu icin onu hic
+  // bilmez. Sonuc: ✅ ve ardindan npm ci "Missing: ... from lock file".
+  for (const dir of workspaceDirs(manifest)) {
+    if (!packages[dir]) {
+      problem(`${dir} workspace ama kilitte girdisi yok`, 'npm ci "Missing: ... from lock file" ile patlar')
     }
-    for (const name of Object.keys(fromLock)) {
-      if (!(name in fromManifest)) {
-        problem(`${name} kilidin kok girdisinde var, package.json'da yok`, field)
-      }
+  }
+  for (const [loc, entry] of Object.entries(packages)) {
+    if (loc === '' || entry.link === true || loc.includes('node_modules/')) continue
+    const wsManifest = resolve(ROOT, loc, 'package.json')
+    if (!existsSync(wsManifest)) {
+      problem(`${loc} kilitte workspace olarak var, package.json'u yok`, 'npm install kilidi yeniden yazar')
+      continue
     }
+    compareDeps(await readJson(wsManifest), entry, [...DEP_FIELDS, 'peerDependencies'], `${loc}/package.json`, loc)
   }
 
   // ── 2. Kilitteki her bagimlilik kenari kilit icinde cozulebiliyor mu? ──────
@@ -124,7 +185,7 @@ async function main() {
     // tasir; burada tekrar dogrulamak cift sayim olur.
     if (entry.link === true) continue
 
-    for (const dep of edgesOf(entry)) {
+    for (const dep of edgesOf(entry, loc)) {
       edgeCount++
       if (!resolveDep(loc, dep, packages)) {
         const from = loc === '' ? '(kok)' : loc

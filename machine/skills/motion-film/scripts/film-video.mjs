@@ -31,7 +31,14 @@ const args = Object.fromEntries(process.argv.slice(2).filter(a => a.startsWith("
 }));
 const target = process.argv.slice(2).find(a => !a.startsWith("--"));
 if (!target) { console.error("Kullanım: film-video.mjs <html|url> [--fps=24] [--size=1920x1080] [--subframes=1] [--out=out/film.mp4]"); process.exit(2); }
-const url = /^https?:/.test(target) ? target : pathToFileURL(resolve(target)).href + "?capture";
+/** film-sheet.mjs ile aynı: sorgu dosya adına gömülmez, http hedefi de ?capture alır (önizleme döngüsü kapanır). */
+const filmUrl = (target, capture) => {
+  const [p, q = ""] = target.split(/\?(.*)/s);
+  const u = /^https?:/.test(target) ? new URL(target) : new URL(pathToFileURL(resolve(p)).href + (q ? "?" + q : ""));
+  if (capture) u.searchParams.set("capture", "");
+  return u.href;
+};
+const url = filmUrl(target, true);
 const [W, H] = String(args.size || "1920x1080").split("x").map(Number);
 const gif = Boolean(args.gif);
 /** Asıl çıktı: GIF kipinde uzantı .gif. */
@@ -65,7 +72,8 @@ await page.waitForFunction("window.READY === true && (typeof window.renderAt ===
 const { DUR, EV } = await page.evaluate(() => ({ DUR: window.DUR, EV: window.EV ?? [] }));
 const from = Number(args.from ?? 0), to = Math.min(Number(args.to ?? DUR), DUR);
 mkdirSync(dirname(out), { recursive: true });
-if (args.events) writeFileSync(out.replace(/\.mp4$/, ".events.json"), JSON.stringify({ DUR, EV }, null, 2));
+// Uzantı ne olursa olsun değiştirilir: yalnız .mp4 değişseydi --out=x.gif'te JSON videonun yoluna yazılır, ffmpeg -y onu ezerdi.
+if (args.events) writeFileSync(out.replace(/\.[^./\\]+$/, "") + ".events.json", JSON.stringify({ DUR, EV }, null, 2));
 
 const blur = sub > 1 ? `tmix=frames=${sub}:weights='${Array(sub).fill(1).join(" ")}',fps=${fps}` : "";
 const encode = gif

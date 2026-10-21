@@ -15,7 +15,7 @@
  */
 
 import { execFileSync } from 'node:child_process'
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -33,23 +33,33 @@ const fail = (msg) => {
   process.exit(1)
 }
 
-// @ag-ui/* pin'i CopilotKit'in bagimliligiyla ayni mi? -> mistakes.md #71
+// @ag-ui/* pin'leri CopilotKit'in bagimliliklariyla ayni mi? -> mistakes.md #71
+// core da karsilastirilir: client'i yukseltip core'u unutmak ikinci bir core
+// kopyasi kurar ve skipLibCheck .d.ts uyusmazligini gizler.
+const AG_UI = ['@ag-ui/client', '@ag-ui/core']
 const ckVersion = pins['@copilotkit/react-core']
-let expected
+let ckDeps
 try {
-  expected = execFileSync('npm', ['view', `@copilotkit/react-core@${ckVersion}`, 'dependencies.@ag-ui/client'], {
+  ckDeps = JSON.parse(execFileSync('npm', ['view', `@copilotkit/react-core@${ckVersion}`, 'dependencies', '--json'], {
     encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
-  }).trim()
+  }))
 } catch {
   console.warn('⚠️  npm view basarisiz (ag yok?) — pin kontrolu atlandi')
 }
-if (expected && pins['@ag-ui/client'] !== expected) {
-  fail(`@ag-ui/client pin'i uyusmuyor: template "${pins['@ag-ui/client']}", CopilotKit ${ckVersion} "${expected}" istiyor.\n   -> knowledge/mistakes.md #71`)
+for (const name of AG_UI) {
+  const expected = ckDeps?.[name]
+  if (!expected) continue
+  if (pins[name] !== expected) {
+    fail(`${name} pin'i uyusmuyor: template "${pins[name]}", CopilotKit ${ckVersion} "${expected}" istiyor.\n   -> knowledge/mistakes.md #71`)
+  }
+  console.log(`✅ ${name} pin'i CopilotKit ${ckVersion} ile uyumlu (${expected})`)
 }
-if (expected) console.log(`✅ @ag-ui/client pin'i CopilotKit ${ckVersion} ile uyumlu (${expected})`)
 
 const work = mkdtempSync(join(tmpdir(), 'verify-agentic-'))
 process.on('exit', () => rmSync(work, { recursive: true, force: true }))
+// Dinleyicisiz SIGINT/SIGTERM'de Node 'exit' yaymaz: kurulum sirasinda
+// Ctrl-C gecici dizini node_modules'uyle birlikte tmpdir'de birakiyordu.
+for (const sig of ['SIGINT', 'SIGTERM']) process.once(sig, () => process.exit(130))
 
 const run = (cmd, args, label) => {
   try {
@@ -69,14 +79,32 @@ const specs = Object.entries(pins).map(([n, v]) => `${n}@${v}`)
 // script gerekmiyor; gerektigi gun bu dogrulama kosusu kendisi soyler.
 run('npm', ['install', '--no-audit', '--no-fund', '--silent', '--ignore-scripts', ...specs, ...DEV], 'bagimliliklar kuruldu')
 
-// CopilotKit ic kopya birakti mi? Biraktiysa tipler nominal olarak ayrisir.
-try {
-  readFileSync(join(work, 'node_modules/@copilotkit/react-core/node_modules/@ag-ui/client/package.json'))
-  fail('@ag-ui/client CIFT KOPYA — HttpAgent tipi AbstractAgent\'a atanamaz.\n   -> knowledge/mistakes.md #71')
-} catch (error) {
-  if (error.message?.startsWith('@ag-ui')) throw error
-  console.log('✅ @ag-ui/client tek surum (cift kopya yok)')
+// Ic kopya kaldi mi? Kaldiysa tipler nominal olarak ayrisir (ayni surumun iki
+// kopyasi da). Yalniz react-core'un altina bakmak yetmez: @copilotkit/core,
+// shared ve web-inspector de @ag-ui/client'a bagimli; farkli pin'leyen bir
+// surum kopyayi KENDI node_modules'una koyar. Butun agac taranir.
+const copies = Object.fromEntries(AG_UI.map((name) => [name, []]))
+const scan = (nodeModules) => {
+  for (const name of AG_UI) {
+    const manifest = join(nodeModules, name, 'package.json')
+    if (existsSync(manifest)) copies[name].push(`${JSON.parse(readFileSync(manifest, 'utf8')).version} (${manifest.slice(work.length + 1)})`)
+  }
+  for (const entry of readdirSync(nodeModules)) {
+    const dirs = entry.startsWith('@')
+      ? readdirSync(join(nodeModules, entry)).map((n) => join(nodeModules, entry, n))
+      : [join(nodeModules, entry)]
+    for (const dir of dirs) {
+      if (existsSync(join(dir, 'node_modules'))) scan(join(dir, 'node_modules'))
+    }
+  }
 }
+scan(join(work, 'node_modules'))
+for (const name of AG_UI) {
+  if (copies[name].length > 1) {
+    fail(`${name} CIFT KOPYA — HttpAgent tipi AbstractAgent'a atanamaz:\n   ${copies[name].join('\n   ')}\n   -> knowledge/mistakes.md #71`)
+  }
+}
+console.log('✅ @ag-ui/client + @ag-ui/core tek kopya (cift kopya yok)')
 
 // Kaynaklari topla: snippet'ler + template
 mkdirSync(join(work, 'src/lib'), { recursive: true })

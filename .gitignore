@@ -5,3 +5,9 @@ packages/@ahmet/*/dist/
 
 # Claude Code — makineye ozgu ayarlar (paylasilan: .claude/settings.json)
 .claude/settings.local.json
+
+# Ortam dosyalari: yalnizca deger tasimayan ornekler commit'lenir
+# (hooks/quality-scan.sh § 4 ve CI "Security scan" ile ayni kural)
+.env*
+!.env.example
+!.env.template

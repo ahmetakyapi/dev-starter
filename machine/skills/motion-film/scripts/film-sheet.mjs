@@ -48,7 +48,16 @@ const args = Object.fromEntries(process.argv.slice(2).filter(a => a.startsWith("
 }));
 const target = process.argv.slice(2).find(a => !a.startsWith("--"));
 if (!target) { console.error("Kullanım: film-sheet.mjs <html|url> [--times|--range|--strip] [--out=...]"); process.exit(2); }
-const url = /^https?:/.test(target) ? target : pathToFileURL(resolve(target)).href + (args.live ? "" : (target.includes("?") ? "&" : "?") + "capture");
+/** Sorgu dosya adına gömülmesin: pathToFileURL `?`i %3F yapar, film.html?counter yok bir dosyaya gider.
+    Sözleşme kipinde http hedefi de ?capture alır; almazsa önizleme döngüsü renderAt(t) ile
+    ekran görüntüsü arasında tuvali önizleme saatiyle yeniden çizer. */
+const filmUrl = (target, capture) => {
+  const [p, q = ""] = target.split(/\?(.*)/s);
+  const u = /^https?:/.test(target) ? new URL(target) : new URL(pathToFileURL(resolve(p)).href + (q ? "?" + q : ""));
+  if (capture) u.searchParams.set("capture", "");
+  return u.href;
+};
+const url = filmUrl(target, !args.live);
 const [W, H] = String(args.size || "1280x720").split("x").map(Number);
 const scale = Number(args.scale || 1), cols = Number(args.cols || 4), thumb = Number(args.thumb || 480);
 const out = resolve(args.out || "out/film-sheet.png");
@@ -112,10 +121,13 @@ const page = await newPage(env, W, H, scale);
 const errors = [];
 page.on("pageerror", e => errors.push(String(e.message || e)));
 page.on("console", m => { if (m.type() === "error") errors.push(m.text()); });
-const cookies = [].concat(args.cookie || []).filter(Boolean);
-if (cookies.length && env.kind === "puppeteer" && /^https?:/.test(url)) {
-  await page.setCookie(...cookies.map(c => { const [name, ...v] = String(c).split("="); return { name, value: v.join("="), url }; }));
-}
+// args tekrar eden bayrağın yalnız sonuncusunu tutar; --cookie çoklu verilir, argv'den toplanır.
+const cookies = process.argv.slice(2).filter(a => a.startsWith("--cookie=")).map(a => a.slice("--cookie=".length)).filter(Boolean);
+if (cookies.length && /^https?:/.test(url)) {
+  const list = cookies.map(c => { const [name, ...v] = c.split("="); return { name, value: v.join("="), url }; });
+  if (env.kind === "puppeteer") await page.setCookie(...list);
+  else await page.context().addCookies(list);
+} else if (cookies.length) console.warn("--cookie yalnız http(s) hedefte uygulanır; yok sayıldı.");
 // Ağ susana kadar: canlı sayfada fontlar ve logolar insin (puppeteer ve playwright adları farklı).
 await page.goto(url, { waitUntil: env.kind === "playwright" ? "networkidle" : "networkidle0", timeout: 120_000 });
 
