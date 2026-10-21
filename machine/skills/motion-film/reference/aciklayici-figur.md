@@ -60,6 +60,40 @@ bir modül** yaz (`rig.ts`, `model.mjs`). Hareket, künye, açıklama yazısı v
 erişilebilir değer hep o modülden okur. Filmde de aynı: Açılış Zili'nin
 künyesindeki "60 Seans · Son Kapanış 124,77 $" tuvaldeki mumların AYNISIDIR.
 
+### Kanıt ve veri dürüstlüğü
+
+Gerçek bir şey söyleyen film ya da figür (istatistik, tarih, ürün iddiası)
+proje klasöründe bir **`FACTS.md`** tutar ve onunla teslim edilir
+(kaynak: lemo-opuscar `TECHNIQUE.md` § 11, `styles/data-physical/STYLE.md`,
+`styles/archive-lighttable/demo/FACTS.md`, MIT):
+
+```
+| # | Ekrandaki sayı / söylenen iddia | Kaynak (URL, veri seti, sürüm, erişim tarihi) | Alıntı (kaynağın kendi sözü ya da satırı) | Türetme |
+|---|------|------|------|------|
+| F1 | anlatıcı: "En uzunu 57 saniye." | <telgrafın arşiv URL'si> | "longest 57 seconds" | doğrudan |
+| F2 | künye "852 ft · 59 sn" | <katalog kaydının URL'si> | "852 feet covered in 59 seconds" | doğrudan |
+| F3 | karar: "2 sn eksik" | F1, F2 | — | 59 − 57; nedeni çıkarılmadı |
+```
+
+- **Her** ekrandaki sayı, tarih, ad ve söylenen iddia bir satırdır. Türetilmiş
+  değer (oran, fark, parça başına birim) nasıl hesaplandığını yazar.
+- **Kaynak satırı veriyle birlikte kadrajda** durur (küçük, ~%60 mürekkep,
+  altyazıdan uzak bir köşede): ilk okumadan özete kadar. Yalnız jenerikte değil.
+- **Sayaç zamana göre değil, inen nesneye göre döner.** Ekranda 37 parça
+  oturduysa sayaç 37 der; zamanla dolan sayaç parçalar gecikince yalan söyler.
+- **Yuvarlama yakın iki değerin sırasını değiştirebilir.** İki değer bir
+  birim içindeyse bunu ekranda söyle ya da daha ince birim seç.
+- **Örnekleme, ölçüm değil:** gösterim için yapılan her şey (perspektif
+  ölçeği, sayaç animasyonu, nesnenin kaydırılması) `FACTS.md`'de "örnekleme"
+  başlığı altında yazılır, gerekiyorsa ekranda "(örnekleme)" etiketi.
+- **Lisans:** CC0, kamu malı ve CC BY bir künyeyle olur. **ODbL, CC BY-SA,
+  "bilinen kısıtlama yok" ve "ticari olmayan kullanım"** CC0 değildir:
+  koşullarını (atıf, aynı lisansla paylaşım) kullanıcıya söyle ve **sor**.
+- **Kullanıcının kendi sayıları** (ciro, rapor, satış): iste, geldiği belgeyi
+  de iste. **Asla uydurma**, daha iyi hikâye için yuvarlama; üretilmiş
+  görsel gerçek verinin yerine geçmez. Sayı yoksa yer tutucu ekranda yer
+  tutucu olarak görünür ("— $").
+
 ## 4. Figür kartının anatomisi
 
 Figür bir kartın içinde durur; dört köşe sabit görevlidir:

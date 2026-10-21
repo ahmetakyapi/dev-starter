@@ -14,7 +14,7 @@ kinetic(ctx, word, { x: cx, y: cy + size * 0.36, size, family, color: pal.ink, t
 
 - Harfler satırın **maskesinden** sırayla yükselir (`ease.out`, taşma yok),
   çıkışta önce hafif çöker (`backIn`) sonra yukarı kaçar.
-- Harf yerleri ön ekin ölçüsünden: `measureText(text.slice(0, i))` — kerning korunur.
+- Harf yerleri `glyphX`ten (aşağıda): ön ekin ölçüsü kerning'i düşürür.
 - Hızlı harfin arkasında iki soluk kopya (α 0,3 ve 0,16, hızın 1,1 ve 2,2 katı
   geride): bulanıksız hareket izi (smear).
 - Maske üstte 1,02em, altta 0,3em: Türkçe imler (İ, Ü, Ö) ve kuyruklar (ğ, ş, ç) kesilmez.
@@ -22,6 +22,63 @@ kinetic(ctx, word, { x: cx, y: cy + size * 0.36, size, family, color: pal.ink, t
 - Değişken aile varsa ağırlık 800–900; Title Case; Türkçe büyük harf `toLocaleUpperCase("tr-TR")`.
 - Dönen kelimeler (bekleyen perde): her 1,9 sn'de bir, `slot = floor(since / 1.9)`;
   düşen öğelerin yoluyla kesişmeyen bir bantta.
+
+## Kelimeyi parça parça çizmek: kerning tuzağı
+
+Harf harf giriş, söylenen/söylenmemiş iki renk, kırpılmış silme — hepsinde
+koşu parçalara bölünür ve her parçanın x'i gerekir.
+
+- **YANLIŞ:** `x0 + measureText(text.slice(0, i)).width`. Ön ek i−1. harfte
+  biter, sonraki harfi görmez; (i−1, i) kerning çifti düşer. Her harf kendi
+  sol çiftini kaybeder: "AV", "Yo", "Ta", "Ve" arası açılır, aralık düzensiz
+  okunur. Ön eklerin ilerlemelerini toplamak da aynı hata, yalnız biriktirir.
+- **DOĞRU (Canvas 2D):** harfi ön eke kat, kendi ilerlemesini çıkar —
+  `x_i = W(text[0..i]) − W(text[i])`. Çift ölçünün içinde kalır; her x tek
+  ölçüden geldiği için hata birikmez ve son harfin x'i + ilerlemesi bütün
+  koşunun genişliğine eşittir (`film-kit.ts → glyphX`; kaynak:
+  mexicat/pdoom-video, MIT).
+- **`actualBoundingBox*` konum değildir:** harfin mürekkep kutusu, başlangıç
+  noktasına göre (italikte sola taşar, "j" kuyruğu geri döner). Konum
+  ilerlemeden (`width`), maske ve kırpma payı mürekkep kutusundan: i. harfin
+  sağ kenarı `x_i + measureText(text[i]).actualBoundingBoxRight`. Ligatürsüz
+  harfte tek başına ölçülen kutu koşudakiyle aynıdır; kerning yalnız konumu kaydırır.
+- **Silmede koşuyu hiç bölme:** bütün satırı soluk renkte çiz, sonra aynı
+  satırı parlak renkte `clip()` dikdörtgeniyle yeniden çiz; dikdörtgenin sağ
+  kenarı `x0 + glyphX(k) + kesir × harf genişliği`. Harfler hep tek koşuda
+  çizildiği için kerning, ligatür (fi, fl) ve bağlamsal biçimler bozulmaz.
+  Harf harf ayrı çizim yalnız harfler ayrı hareket ediyorsa (yükselme,
+  dağılma) gerekir; o zaman konum `glyphX`ten.
+- Ölçerken `ctx.letterSpacing = "0px"`; izleme isteniyorsa `i × izleme` elle
+  eklenir (aralık eklenmiş tek harfin ölçüsü çıkarmayı bozar). Ölçüm ve
+  çizim AYNI `ctx.font` ve `fontKerning` ile.
+- Ölçek değişiyorsa (dev yazı büyüyor) harfleri ölçekli ölçme: sabit bir
+  puntoda ölç, dönüşümle büyüt — ilerlemeler puntoyla tam orantılı değil
+  (ipuçlama, alt piksel konumlama), her karede başka puntoda ölçülen x'ler titreyebilir.
+
+## Şarkı sözü (karaoke)
+
+Sözcük düzeyinde zamanlanmış söz (`muzik-klibi.md`) kinetik yazıyla
+oynanırken. Kurallar (kaynak: mexicat/pdoom-video, MIT):
+
+- **Vurgu sesin önüne asla geçmez.** Kelime `start`ında tam 0, `end`inde tam
+  1 (`wordProgress`); hece zamanı varsa hece hece, heceler arasında bekler.
+  Erken parlayan kelime, geç parlayandan çok daha "yanlış" okunur.
+- **Ön gösterim soluk ve kısa:** satır sesten en çok **0,4 sn** önce soluk
+  (α ~0,3) görünebilir; okuyan göz önden gitsin, ama vurgu sese bağlı kalsın.
+  Satırı daha erken gösterme: izleyici okuyup sesi beklemeye başlar.
+- **Başlık güvenli alan ≥ 96 px** (1080p'de; 4K'da 192): söz kenara, köşedeki
+  künyeye ya da kontrol çubuğuna değmez. Sosyal medya kırpması varsa
+  9:16 güvenli alanını ayrıca dene.
+- **Söz görüntünün İÇİNDE, altyazı DEĞİL.** Her sahne sözü kendi nesnesiyle
+  taşır: kalemle yazılır, eğri üstünde kayar, forma damgalanır, kumaşa
+  dokunur, haritaya etiket olur. Ekranın altında ortalanmış satır klip değil,
+  karaoke makinesidir. Erişilebilirlik ve arama için ayrıca `.srt`/WebVTT ver.
+- Tekrarlanan nakarat aynı yazıyla dönmez: aynı motif, her nakaratta değişmiş hâli.
+- Kesme sözden türer: satırın ilk kelimesinden önceki son vuruş (`cutAt`);
+  ekrandaki satır sahne değişmeden önce yarıda kalmaz.
+- Okuma süresi kuralı (harf ÷ 15 + 1,5 sn) burada şarkıya teslim
+  olur: süreyi şarkı verir. Satır okunamayacak kadar hızlıysa yazıyı küçült
+  ya da kelimeyi tek tek göster, sesi bekletme.
 
 ## DOM'da (`KineticText`)
 
@@ -50,6 +107,9 @@ export function KineticText({ text, delay = 0, stagger = 32 }: { text: string; d
 
 - Ekran okuyucu metni bir kez düz okur (`sr-only`); harfler `aria-hidden`.
 - Kelime bölünmez, satır kelime arasında kırılır.
+- Her harf ayrı `inline-block` olduğu için harfler arası kerning kaybolur
+  (kutu sınırı çifti böler). Gövde puntosunda görünmez; dev başlıkta "Ta",
+  "Yo" açılırsa hareketi kelime düzeyine al ya da çifte elle negatif `margin` ver.
 - Gecikmeyi render sırasında sayaç artırarak verme (`index++`): React derleyici
   kuralına takılır; önek toplamıyla hesapla.
 - **TUZAK — degrade başlık:** `background-clip: text` + `-webkit-text-fill-color:

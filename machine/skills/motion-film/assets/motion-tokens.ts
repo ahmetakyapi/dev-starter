@@ -68,8 +68,12 @@ export function bezier([x1, y1, x2, y2]: readonly [number, number, number, numbe
 /** n. vuruşun karesi — HER vuruş zamandan hesaplanır ve tek tek yuvarlanır (eklenen yuvarlama 32 vuruşta 2 kare kayar). */
 export const beatFrame = (n: number, bpm: number, fps: number) => Math.round((n * 60 * fps) / bpm);
 
-/** Ekrandaki yazının asgari bekleme süresi (sn): kelime başına 0,3 + 0,5. */
-export const holdFor = (text: string) => 0.3 * text.trim().split(/\s+/).filter(Boolean).length + 0.5;
+/**
+ * Ekrandaki yazının asgari bekleme süresi (sn): boşluksuz harf ÷ 15 + 1,5.
+ * Kelime değil harf: Türkçe kelime uzun, kelime sayısı süreyi kısa tahmin eder.
+ * `scripts/film-read.mjs` aynı kuralla denetler.
+ */
+export const holdFor = (text: string) => text.replace(/\s+/g, '').length / 15 + 1.5;
 
 /**
  * Hiyerarşi: ikincil hareket kahramanın yolunun %50–70'i kadar gider ve

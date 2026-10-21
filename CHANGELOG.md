@@ -7,6 +7,54 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### motion-film 1.4.0 — sekiz açık video deposundan — 2026-10-21
+
+Opus 5.5 ile kodla film yapan sekiz popüler depo (awesome-opus5-5-videos,
+lemo-opuscar, pdoom-video, PDoomVideo, mg-styles-15, ClaudeAnimationBase,
+awesome-claude-5-5-videos, opus-video-prompts) skill'le karşılaştırıldı.
+MIT/CC BY kaynaklardan atıfla uyarlandı; lisanssız iki depodan yalnız fikir
+alındı; şarkı, söz, font ve Clawd karakteri gibi kapsam dışı varlıklar
+alınmadı (`reference/kaynaklar.md`).
+
+#### Düzeltildi
+
+- **Hareket bulanıklığı belgede yazanı yapmıyordu**: alt kareler karenin
+  arkasına 360° yayılıyor, kayan pencereyle sRGB'de ortalanıyordu. Artık
+  `--shutter` (varsayılan 0,5) karenin ortasında, sabit gruplar doğrusal
+  ışıkta ortalanır (iki ayrı inceleme bağımsız buldu; merkez 579,51 / 579,50
+  px ölçüldü). Boil tohumu `floor(t * 12)` bu perdede çift pozlama verirdi:
+  yeni `boilFrame(t, fps)` kare sırasından türetir.
+- **Renk kayması**: MP4 BT.709 ile dönüştürülüp etiketlenir; etiketsiz HD
+  oynatıcıda BT.601 sanılıp kırmızıyı 191→177 kaydırıyordu.
+- **Kerning**: kinetik yazı harf konumunu `measureText(slice)` ile alıyordu,
+  parçalar arasındaki kerning kayboluyordu → `glyphX`.
+- **Okuma süresi iki farklı kuraldı** (kelime × 0,3 + 0,5 ↔ harf ÷ 15 + 1,5);
+  Türkçe için harf kuralı tek kural.
+- **Render hatası** yarım ama bitmiş görünen MP4 bırakıyordu; sayfa hatası
+  bütün film çizildikten sonra fark ediliyordu.
+
+#### Eklendi
+
+- `scripts/film-read.mjs` (okuma süresi + kadraj dışı yazı denetimi),
+  `scripts/film-browser.mjs` (ortak tarayıcı katmanı: sRGB, anında hata,
+  tanı); `film-video.mjs`: `--audio` miks, `--grain`, `--scale` (gerçek 4K),
+  `--workers` (işçi başına ayrı tarayıcı), kaldığı yerden sürme;
+  `film-sheet.mjs`: `--crop`, `--cuts`; `film-page.html`: `?audio=` ile ses
+  saatine kilitli önizleme.
+- `reference/muzik-klibi.md`: şarkıdan film — ölçülmüş vuruş ızgarası,
+  sözden türeyen kesme, sözcük düzeyinde hizalama hattı, mp3 kodlayıcı
+  gecikmesi tuzağı, hak durumu; `film-kit.ts` müzik yardımcıları.
+- `reference/karakter.md` + `assets/character-kit.ts`: çizilmiş görünüşler,
+  veri olarak duygular, oynanan duygu geçişi, kol ucunda prop (kendi
+  karakterimiz "Mürekkep").
+- `reference/stil-tarifleri.md`: morph, çizgi, sıvı, Bauhaus, piksel
+  tarifleri sayılarla; film stili kartı ve değişikliğin üç kovası.
+- İnceleme: en zor 2–4 sn kapısı + sıra-bağımsızlık testi, bağımsız jüri
+  (7 boyut, sabit çapalar), 17 satırlık saha tuzakları tablosu, temaslar.
+- Kanıt filmi için `FACTS.md` ve veri dürüstlüğü; kısa film sayıları;
+  anlatım/TTS ve ses senkron noktaları; tür iskeletleri ve "önce girdiler"
+  açılışı; Canvas dışı üretim yolları tablosu.
+
 ### Kapsamlı kod denetimi — 2026-10-20
 
 Depo yedi alanda (iki şablon, agentic, UI paketi, snippet'ler, hook'lar,

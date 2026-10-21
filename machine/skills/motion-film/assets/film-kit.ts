@@ -17,6 +17,12 @@
  *   seal           oyma yazılı mühür, basılınca ezilip toparlanır
  *   fibres         dünyaya bağlı kâğıt lifleri
  *   cuesBetween    (t0, t1] aralığındaki ses olayları
+ *   glyphX         kerning'li koşuda i. harfin x'i (parça parça çizim, silme)
+ *   beatAt / timeOfBeat   ölçülmüş vuruş ızgarasında zaman ↔ kesirli vuruş
+ *   hit            onset listesinden sönen darbe (vuruşa tepki, durumsuz)
+ *   wordProgress   kelimenin söylenen kesri, hece hece parçalı
+ *   lyric          sözü İÇERİĞİYLE bul; yoksa fırlat
+ *   cutAt / downbeatAfter  kurgu sınırını sözden ve ızgaradan türet
  */
 import { clamp, damped, ease, noise1, rng, span, splatter, type Point } from "./ink-engine";
 
@@ -39,8 +45,8 @@ export function fitSize(ctx: Ctx, family: string, text: string, width: number, m
 
 /**
  * Kinetik kelime: harfler satırın maskesinden sırayla yükselir; çıkışta önce
- * hafifçe çöker (anticipation) sonra yukarı kaçar. Harf yerleri ön ekin
- * ölçüsünden (kerning korunur). Hızlı harfin arkasında iki soluk kopya:
+ * hafifçe çöker (anticipation) sonra yukarı kaçar. Harf yerleri `glyphX`ten:
+ * sol komşusuyla kerning çifti dahil. Hızlı harfin arkasında iki soluk kopya:
  * hareket bulanıklığının bulanıksız karşılığı (smear).
  *
  * Maske: üstte 1,02em, altta 0,3em — Türkçe imler (İ, Ü, Ö) ve kuyruklar
@@ -72,7 +78,7 @@ export function kinetic(ctx: Ctx, text: string, o: {
   for (let i = 0; i < text.length; i++) {
     if (text[i] === " ") continue;
     const now = at(o.t, i), v = at(o.t + 0.03, i).y - now.y;
-    const lx = x0 + ctx.measureText(text.slice(0, i)).width;
+    const lx = x0 + glyphX(ctx, text, i);
     const a = (o.alpha ?? 1) * (0.35 + 0.65 * ease.out(now.k));
     if (Math.abs(v) > o.size * 0.02) for (const [m, ga] of [[2.2, 0.16], [1.1, 0.3]] as const) {
       ctx.globalAlpha = a * ga; ctx.fillText(text[i], lx, o.y + now.y - v * m);
@@ -82,6 +88,24 @@ export function kinetic(ctx: Ctx, text: string, o: {
   }
   ctx.restore();
   return { x0, width: total };
+}
+
+/**
+ * Tek kerning'li koşu olarak dizilmiş `text`te i. harfin başladığı x (font
+ * `ctx.font`ta kurulu olmalı). `text[i..]` ayrı çizilecekse oraya konur.
+ *
+ * `measureText(text.slice(0, i))` YANLIŞ: ön ek i−1'de biter ve sonraki harfi
+ * görmez, (i−1, i) kerning çifti düşer ("AV", "Yo", "Ta" arası açılır). Harfi
+ * ön eke katıp kendi ilerlemesini çıkarınca çift ölçünün içinde kalır. Her
+ * harf tek ölçüden hesaplandığı için hata birikmez; son harfin x'i + ilerlemesi
+ * bütün koşunun genişliğine eşittir. Ligatür (fi, fl) ve bağlamsal biçim
+ * bölünmez: silme gerekiyorsa koşuyu parçalama, bütününü kırp (kinetik-yazi.md).
+ * `ctx.letterSpacing` ölçerken "0px" kalsın; izleme gerekiyorsa `i × izleme` ekle.
+ */
+export function glyphX(ctx: Ctx, text: string, i: number) {
+  if (i <= 0) return 0;
+  if (i >= text.length) return ctx.measureText(text).width;
+  return ctx.measureText(text.slice(0, i + 1)).width - ctx.measureText(text[i]).width;
 }
 
 /** Küçük künye: maskeden yükselen tek satır, altında kâğıt renginde hale (çizgi içinden geçse de okunur). */
@@ -322,4 +346,144 @@ export function cuesBetween(t0: number, t1: number, fixed: Cue[], periodic: { ki
     }
   }
   return out.sort((a, b) => a.at - b.at);
+}
+
+/* ----------------------------------------------------------------------- */
+/* Müzik: ölçülmüş ızgara, sözler, vuruş darbesi (reference/muzik-klibi.md)  */
+/* kaynak: mexicat/pdoom-video, MIT — API fikri; kod bizim                   */
+/* ----------------------------------------------------------------------- */
+
+/**
+ * Şarkı analizinden gelen vuruş ızgarası (saniye, gapless çözüm zamanında).
+ * `beats` ölçülür, elle BPM'den üretilmez: elle yazılan tempo birkaç ms'lik
+ * hatayı her vuruşta biriktirir, şarkının sonunda kesmeler vuruştan kayar.
+ */
+export type BeatGrid = { beats: readonly number[]; downbeats: readonly number[]; bpm?: number };
+
+/** Izgaranın ortalama periyodu; uçların dışına bununla uzatılır (tek vuruşlu ızgarada `bpm`). */
+function beatPeriod(g: BeatGrid) {
+  const b = g.beats, n = b.length;
+  if (n > 1) return (b[n - 1] - b[0]) / (n - 1);
+  return 60 / (g.bpm ?? 120);
+}
+
+/** İkili arama: `list[i] <= t` olan son i (yoksa −1). Liste artan sırada olmalı. */
+function lastAtOrBefore(list: readonly number[], t: number) {
+  let lo = 0, hi = list.length;
+  while (lo < hi) { const m = (lo + hi) >> 1; if (list[m] <= t) lo = m + 1; else hi = m; }
+  return lo - 1;
+}
+
+/**
+ * Sürekli vuruş sırası: ilk vuruşta 0, aradaki zamanda kesirli (iki ölçülmüş
+ * vuruş arasında doğrusal — tempo hafif kayıyorsa ızgara onu izler). Uçların
+ * dışında ortalama periyotla uzatılır. `floor(beatAt(t))` = içinde bulunulan vuruş.
+ */
+export function beatAt(t: number, g: BeatGrid) {
+  const b = g.beats, n = b.length;
+  if (n === 0) return (t * (g.bpm ?? 120)) / 60;
+  const p = beatPeriod(g);
+  if (t <= b[0]) return (t - b[0]) / p;
+  if (t >= b[n - 1]) return n - 1 + (t - b[n - 1]) / p;
+  const i = lastAtOrBefore(b, t);
+  return i + (t - b[i]) / (b[i + 1] - b[i]);
+}
+
+/** `beatAt`ın tersi: (kesirli) vuruş sırasının zamanı. `timeOfBeat(beatAt(t)) === t` (ızgara içinde). */
+export function timeOfBeat(n: number, g: BeatGrid) {
+  const b = g.beats, len = b.length;
+  if (len === 0) return (n * 60) / (g.bpm ?? 120);
+  const p = beatPeriod(g);
+  if (n <= 0) return b[0] + n * p;
+  if (n >= len - 1) return b[len - 1] + (n - (len - 1)) * p;
+  const k = Math.floor(n);
+  return b[k] + (b[k + 1] - b[k]) * (n - k);
+}
+
+/** Onset: [zaman, güç 0..1]. Analizden gelir (kick, snare, hat, vokal), zamana göre artan. */
+export type Onset = readonly [t: number, strength: number];
+
+/**
+ * Vuruşa tepki: t'den önceki onset'lerin üstel sönen darbelerinin en büyüğü
+ * (onset anında güç, her `halfLife` saniyede yarıya). Durumsuz: kare sırası,
+ * ileri-geri sarma ve alt kare örneklemesi aynı sonucu verir — "her kickte
+ * değeri artır" gibi kare sayan tepkinin tersine. Toplam değil en büyük:
+ * sık hat darbeleri üst üste binip doymasın. Yarı ömür tipik: kick 0,12,
+ * snare 0,14, hat 0,06, vokal 0,15 sn.
+ */
+export function hit(onsets: readonly Onset[], t: number, halfLife = 0.11) {
+  let lo = 0, hi = onsets.length;
+  while (lo < hi) { const m = (lo + hi) >> 1; if (onsets[m][0] <= t) lo = m + 1; else hi = m; }
+  let v = 0;
+  for (let i = lo - 1; i >= 0; i--) {
+    const dt = t - onsets[i][0];
+    if (dt > halfLife * 8) break; // 2^-8 < 0,004: görünmez
+    v = Math.max(v, onsets[i][1] * Math.pow(0.5, dt / halfLife));
+  }
+  return v;
+}
+
+/** Hizalanmış söz verisi (lyrics.json). `syl`: hece [başla, bit] çiftleri; `conf`: 0..1 hizalama güveni. */
+export type LyricWord = { w: string; start: number; end: number; conf?: number; syl?: readonly (readonly [number, number])[] };
+export type LyricLine = { text: string; start: number; end: number; words: readonly LyricWord[] };
+
+/**
+ * Kelimenin söylenen kesri: başlangıçta tam 0, bitişte tam 1 (vurgu sesin
+ * önüne geçmez, kelime sesle birlikte biter). Hece zamanı varsa parçalı:
+ * her hece kendi aralığında ilerler, heceler arası boşlukta vurgu bekler —
+ * uzun tutulan hecede silme sesle birlikte yavaşlar. `weights` heceye düşen
+ * pay (ör. harf sayısı; verilmezse eşit), görsel silmeyi harflere oturtur.
+ */
+export function wordProgress(word: LyricWord, t: number, weights?: readonly number[]) {
+  if (t <= word.start) return 0;
+  if (t >= word.end) return 1;
+  const syl = word.syl;
+  if (!syl || syl.length < 2) return (t - word.start) / Math.max(1e-3, word.end - word.start);
+  const wsum = syl.reduce((s, _, i) => s + (weights?.[i] ?? 1), 0);
+  let done = 0;
+  for (let i = 0; i < syl.length; i++) {
+    const [a, b] = syl[i], share = (weights?.[i] ?? 1) / wsum;
+    if (t < a) return done;
+    if (t < b) return done + share * ((t - a) / Math.max(1e-3, b - a));
+    done += share;
+  }
+  return Math.min(1, done);
+}
+
+/** Karşılaştırma için katla: Türkçe küçük harf, düz/kıvrık tırnak bir, boşluk tek. */
+const foldLyric = (s: string) =>
+  s.toLocaleLowerCase("tr-TR").replace(/[\u2018\u2019\u02BC]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/\s+/g, " ").trim();
+
+/**
+ * Sözü İÇERİĞİYLE bul: metninde `query` geçen `nth`. satır (tekrarlanan nakarat
+ * için 0, 1, 2…). Bulamazsa FIRLATIR — hizalama yeniden koşup zamanlar
+ * değişince ya da söz düzeltilince kurgu sessizce yanlış yere kaymasın,
+ * yazarken patlasın. Kodda saniye yazma; sahne sınırı buradan türer.
+ */
+export function lyric(lines: readonly LyricLine[], query: string, nth = 0): LyricLine {
+  const q = foldLyric(query);
+  const hits = lines.filter(l => foldLyric(l.text).includes(q));
+  const l = hits[nth];
+  if (!l) throw new Error(`söz bulunamadı: "${query}" (${nth}. eşleşme; ${hits.length} eşleşme var)`);
+  return l;
+}
+
+/**
+ * Kesme: satırın ilk kelimesinden önceki (ya da onunla aynı) SON vuruş — kesme
+ * kelimeyi asla ortadan bölmez, görüntü sesten önce değişir. `tol` vuruşun
+ * hemen ardından (onset gecikmesi kadar) başlayan kelimeyi o vuruşa bağlar.
+ */
+export function cutAt(line: LyricLine, g: BeatGrid, tol = 0.02) {
+  const s = line.words[0]?.start ?? line.start;
+  return timeOfBeat(Math.floor(beatAt(s + tol, g)), g);
+}
+
+/**
+ * Satır bittikten sonraki ilk ölçü başı (downbeat). Uzun tutulan son hece
+ * ölçüyü taşabilir; sınır sesten önce gelmesin diye "en yakın" değil "sonraki".
+ * Izgaranın sonundaysa satır sonu döner.
+ */
+export function downbeatAfter(line: LyricLine, g: BeatGrid, tol = 0.02) {
+  const d = g.downbeats, i = lastAtOrBefore(d, line.end - tol) + 1;
+  return i < d.length ? d[i] : line.end;
 }

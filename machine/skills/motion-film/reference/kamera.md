@@ -16,6 +16,24 @@ yazılmaz.
 | Nefes | dönen/bekleyen sahne ölü durmasın | `z *= 1 + 0.025 * sin(2πt / 7)` |
 | Durgunluk itişi | doruktan önce | 0,35 sn, merkez doruk öğesine %50 |
 
+## Her planın bir nedeni var
+
+(kaynak: lemo-opuscar `DIRECTOR.md` § 8, MIT)
+
+- Filmde **en az dört farklı kamera hareketi** ve gerçek kadraj değişimi:
+  2D'nin de kamerası var (itiş, geri çekiliş, paralaks, odak kaydırma,
+  kadraj içinde kadraj). Yukarıdaki sözlükten dördü + bir başkası.
+- **Bir imza plan:** akılda kalan tek plan. Kesmesiz uzun plan (oner),
+  ölçek açılışı (her şey tek bir nesnenin parçasıymış), ortamın kendisinden
+  yapılmış geçiş (mürekkep seli, büyüyen çizgi). Doruğa yakın, bir kez.
+- Geçişler ortamın içinden ve TEK gramerle; varsayılan soluklaşma ve düz
+  kesme yok (`yonetmenlik.md` § 4).
+- **Kilit anlarda özne kare yüksekliğinin en az 1/3'ü**; sahneleme net,
+  siluet okunur. Telefonda bunun da %10–30 üstü (`sayilar.md` § telefon boyu).
+
+Tretmanın plan listesinde her planın yanına hareketini yaz; aynı hareket
+art arda iki planda tekrar ediyorsa birini değiştir.
+
 ## Takip formülü
 
 ```ts

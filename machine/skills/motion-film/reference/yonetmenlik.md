@@ -1,5 +1,20 @@
 # Yönetmenlik — hikâye, okumalar, ilkeler, geçişler
 
+## 0. Önce çıta: 1–2 referans eser
+
+Tretmandan önce bu stil **ve bu konu** için çıtayı koyan bir-iki eser seç
+(film, jenerik, oyun, reklam); örnek filmden değil, kullanıcının filmi için
+(kaynak: lemo-opuscar `DIRECTOR.md` § 2, MIT). Her biri için iki satır yaz:
+
+```
+Referans:      <eser, yıl>
+Öğrenilecek:   kompozisyon / tempo / kamera dili / renk mantığı / müziğin yapısı — hangisi, somut
+Alınmayacak:   karakterleri, tasarımları, melodileri, belirli planları, logoları, fontları
+```
+
+Referans bir histir, stil değil: ölçeğini, havasını, ritmini al; görüntüsünü
+kopyalama ve filmde adını anma. Bu adım kuralların hepsinden çok kaliteyi yükseltir.
+
 ## 1. Tretman (kod yazmadan önce, `TREATMENT.md` ya da yorum bloğu)
 
 ```
@@ -23,6 +38,13 @@ gereksiz yazı var mı?
 Üç yapı adayı yaz (tek yolculuk, önce/sonra, geri sayım, dönüşen liste…),
 birini seç ve nedenini yaz. Akla ilk gelen, stilin klişesidir.
 
+**"Yine örnek film" değil.** Tretman bitince elindeki örnek filmle (Açılış
+Zili'nin bekleme filmi, bir stilin demo'su, ilham aldığın prompt'un videosu)
+altı özelliği yan yana koy: **yapı, açılış, imza plan, kamera rotası,
+müziğin biçimi, kapanış.** En az **dördü farklı** olmalı; benzeyenleri yeniden
+düşün. Teslimden önce temas sayfanı örneğin posterinin yanına koy: son
+kontrol (lemo-opuscar `DIRECTOR.md` § 11).
+
 ## 2. Zamanlama: izleyiciyi modelle
 
 Sen kodu yazdın, ne olacağını biliyorsun; izleyici bir kez, tam hızda görür.
@@ -36,7 +58,7 @@ Sen kodu yazdın, ne olacağını biliyorsun; izleyici bir kez, tam hızda gör�
 - **Gözü yönlendir:** önemli okumadan önce göz oraya gitsin (kamera gider, o şey
   önce kıpırdar ya da parlar, bir karakter ona bakar).
 - **Uzunluğu okumalar belirler.** Son okuma da oturacak kadar dursun.
-- Yazı: animasyonu bittikten sonra ~(harf ÷ 15 + 1,5) sn ekranda; alt yazı ≥ 1,8 sn.
+- Yazı: animasyonu bittikten sonra en az (boşluksuz harf ÷ 15 + 1,5) sn ekranda; alt yazı ≥ 1,8 sn (`sayilar.md` § bekleme).
 - Sayfa içi bekleme filminde perdeyi gerçek iş sırasına bağla ama süreyi
   okumalar belirlesin (Açılış Zili: 6 / 5,5 / 6,5 sn, sonra sonuca kadar dönen perde).
 
@@ -91,3 +113,28 @@ hareket üstünde ya da bilinçli şok kesme.
 - Ekranda hikâyeyi tekrar eden yazı ("Kayboldum" levhası)
 - Kamera hızlı nesneyi kaçırıyor; kadrajda boş kare (bkz. `kamera.md`)
 - Künyeler birbirinin, düğmenin ya da çizginin üstünde (bkz. `inceleme-dongusu.md`)
+
+lemo-opuscar'ın en sık gördükleri (`DIRECTOR.md` § 10):
+
+- Özne fazla küçük, fazla uzak ya da kadraj kenarına itilmiş — kilit anlarda kare yüksekliğinin en az 1/3'ü
+- Okunmayacak kadar karanlık ya da **renk aynı rengin üstünde** (kırmızı üstüne kırmızı, mavi zemin üstünde mavi vurgu)
+- **Altyazı öznenin üstünde** — altyazı şeridi ile kilit hareket aynı bölgede olmaz
+- Anlaşılamayacak kadar hızlı biten şaka ya da başarısızlık
+- **Geçişlerde boş kare** — giden sahne geçişin altında çizilmeye devam eder
+- Kamera kıpırdayınca özneyi izlemeyen zamanlı efekt (iris, zoom, takip) — hepsi tek dünya → ekran fonksiyonundan
+
+## 7. Çok ajanlı yapım
+
+Sahneler alt ajanlara paralel dağıtılıyorsa (PDoomVideo'nun dokuz bölümü,
+bir Opus + dokuz Sonnet örneği; kaynak: athemeroy/awesome-claude-5-5-videos
+`docs/workflow-analysis.md`, CC BY 4.0) iki şey ortaktır ve önce yazılır:
+
+- **Tek ses zaman çizelgesi:** vuruş haritası, anlatıcı zaman damgaları ve
+  olay listesi (EV) tek dosyada; her sahne `t`yi oradan okur, kendi saatini tutmaz.
+- **Tek arayüz:** sahne imzası (`render(ctx, t, lt, dur)`), dünya → ekran
+  fonksiyonu, palet token'ları, yazı fontu, giriş/çıkış durumu (bir sahnenin
+  son karesi sonrakinin ilk karesi). Dikişleri ana oturum birleştirir ve
+  temas sayfasıyla denetler.
+
+İlk istekten sonraki otomatik düzeltmeler de yapımın parçasıdır; fişe
+(`prompt-kaliplari.md` § fiş) ayrı sayılır.

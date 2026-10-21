@@ -67,7 +67,17 @@ export function tone(at: number, freq: number, o: { peak: number; attack?: numbe
   osc.connect(g).connect(master); osc.start(at); osc.stop(at + (o.attack ?? 0.004) + o.decay + 0.05);
 }
 
-/** Tarifler: her biri `at` (AudioContext zamanı) alır. Yenilerini aynı yapı taşlarıyla ekle. */
+/**
+ * Tarifler: her biri `at` (AudioContext zamanı) alır. Yenilerini aynı yapı taşlarıyla ekle.
+ *
+ * `at` sesin BAŞLANGICIDIR, senkron noktası değil. Vuruşlu tariflerde
+ * (drop, thump, type) ikisi aynı ana düşer. Kabaran seslerde tepe sonradadır:
+ * `rise` başlangıçtan 0,12 sn, `swellIn` 0,55 sn sonra doruğa varır.
+ * Zaman çizelgesine yalnız GÖRSEL olayın anı yazılır (yazının oturduğu, selin
+ * kapladığı kare); atak, sesi çalan yerde tarifin kendi süresinden çıkarılır.
+ * Çizelgeye önceden kaydırılmış zaman yazılmaz: tarifin atağı değişince ses
+ * olaydan sessizce kayar (reference/ses.md § senkron noktası).
+ */
 export const RECIPES = {
   /** Mürekkep damlası / cam "tink" + ıslak vuruş. */
   drop: (at: number, freq = 2100, peak = 0.16) => {
@@ -91,9 +101,9 @@ export const RECIPES = {
     g.gain.linearRampToValueAtTime(0.0001, at + duration + 0.05);
     src.connect(f).connect(g).connect(master); src.start(at); src.stop(at + duration + 0.1);
   },
-  /** Yükselen hava (dev yazının girişi). */
+  /** Yükselen hava (dev yazının girişi). Tepe `at + 0,12`: yazı oturduğunda doruk. */
   rise: (at: number) => noiseBurst(at, { type: "bandpass", freq: 600, q: 0.6, peak: 0.05, attack: 0.12, decay: 0.25, sweepTo: 2400 }),
-  /** Sel gelir / çekilir: süzgeci açılan / kapanan gürültü (metal whoosh değil). */
+  /** Sel gelir / çekilir: süzgeci açılan / kapanan gürültü (metal whoosh değil). `swellIn` tepesi `at + 0,55`. */
   swellIn: (at: number) => noiseBurst(at, { type: "lowpass", freq: 220, peak: 0.16, attack: 0.55, decay: 0.6, sweepTo: 1500 }),
   swellOut: (at: number) => noiseBurst(at, { type: "lowpass", freq: 1500, peak: 0.12, attack: 0.3, decay: 0.8, sweepTo: 200 }),
   /** Daktilo: altı kısa tık. */

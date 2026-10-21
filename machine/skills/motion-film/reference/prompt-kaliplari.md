@@ -82,6 +82,74 @@ altında, yavaş sinüs, hiç durmaz. Gerisi bekler ya da %40'a kısılır.
 </başlangıç>
 ```
 
+## Açılış: önce girdileri sor, sonra vuruş listesi
+
+İyi çalışan prompt'ların çoğu kodla başlamaz (@twoclipping, @raphaelaubryy,
+@thegrootdev, @flxrnc'nin prompt'larında ortak):
+
+1. **Girdileri sor**, eksik kalan için varsayılanı söyle: ürün adı, tek
+   satırlık vaat, gösterilecek 3–5 an, tek vurgu rengi, kullanıcının
+   SAHİP OLDUĞU klip/görseller, lisansı ticari kullanıma izin veren şarkı.
+2. **Koddan önce vuruş/plan listesini göster:** her an vuruş ızgarasında,
+   4–8 adlı durağan kareyle (açılış, doruk, kapanış…). Onay gelmeden render yok.
+3. İlk render'dan sonra her vuruşun çevresinde 5 kareye bak, düzelt, SONRA tam render.
+
+## Tür iskeletleri
+
+Her biri bir başlangıç; sekiz satırı (GOAL…QA) yine doldur. Prompt'lar
+yaratıcılarına aittir; burada yapıları kendi sözlerimizle.
+
+**İş anlatımı, 30 sn, 5 sahne** (@alex_prompter): müşterinin sorunu → ne
+yapıyorsun → 3 adımda nasıl çalışıyor → tek kanıt → adın. Sonra her turda
+TEK not ("biraz yavaş", "fiyat sahnesi ekle"); yedi not birden yeniden yazıma döner.
+
+**Tarif / süreç** (@Ror_Fly, Negroni): boş bardaktan bitmiş içkiye; her
+malzeme girerken ölçüsü (ml/oz) ekranda, adım sayacı + ilerleme çizgisi, son
+kartta formül ("1:1:1"). Sayaç dökülen sıvıyla döner, saatle değil.
+
+**On'un kuvvetleri yakınlaşması** (Taelin): oda → bilgisayar → çip →
+atom → kuark. Tek kamera dalışı, her ölçek bir öncekinin İÇİNDEN açılır
+(merkez dışı noktaya zoom değil, noktayı aç: `inceleme-dongusu.md` § saha
+tuzakları); her ölçekte künye ölçeği yazar (`1 m → 1 cm → 10 nm`).
+
+**Uzun tarih / sinematik** (@WinterArc2125, Austerlitz): önce **araştır**
+ve olay sırasını `FACTS.md`'ye yaz (`aciklayici-figur.md` § kanıt); hikâyeyi,
+tempoyu ve stratejinin anlatımını model kursun. Ekli referanslar (resim,
+fotoğraf) **his olarak, stil olarak değil**: ölçeği, havayı, kalabalığı al;
+daha güçlü bir görsel dil bulursa onu kullansın. "İnfografik ya da strateji
+oyunu gibi durmasın" yasak listesine.
+
+**Gerçek repodan ürün tanıtımı** (athemeroy `prompt-playbook` § 3'ün yapısı):
+repo + ekran görüntüsü + marka kuralları verilir. Model önce kodu ve ürün
+belgesini okur, **gerçekten gösterilebilen 3 yeteneği** listeler; 5 planlık
+storyboard, her planda tek cümle mesaj + onu kanıtlayan GERÇEK ekran. Yalnız
+repoda hakkı olan ikon, font, görüntü ve metin; uydurma özellik, kullanıcı
+verisi, yorum yok. **Önce düşük çözünürlüklü önizleme** onaya, sonra MP4.
+Teslimde: yeniden kullanılan varlıklar, modelin yazdığı grafik, üçüncü taraf
+ses, ürün ekibinin doğrulaması gereken iddialar ayrı listede.
+
+**Şartname prompt'u** (Majid Manzarpour, piksel büyücü): başlıklı bloklar
+(RENDERING · CHARACTER · ANIMATION · SCENE · QUALITY BAR), her satır ölçülebilir:
+mantıksal çözünürlük, tam sayı büyütme, palet sayısı, okunan fps
+(`stil-tarifleri.md` § 5). Son satır **QUALITY BAR:** neye benzemesi, neye
+benzememesi gerektiği tek cümlede ("16-bit sprite gibi; küçültülmüş vektör
+gibi değil"). Fiziksel kısıtları OLUMSUZ yaz (@vib3coded'in 3D adası):
+"ayaklar yerde, kaymaz, yere ya da birbirine girmez; deniz hayvanı gittiği
+yöne bakar" — model olumsuz kısıtı kontrol listesi gibi okur.
+
+## Tek cümlelik A/B tabanı
+
+Yapılı prompt'un ne kazandırdığını görmek için aynı konuyu bir de tek
+cümleyle dene. İşe yarayan tek cümle beş şey taşır (@akokoi1'in tek cümlelik
+tarih özeti): **konu + ton + ortam + müzik + izleyiciyi tutma talebi.**
+
+```
+<Konu>yu hızlıca özetleyen bir animasyon yap. Ton hafif ve eğlenceli,
+çizim tek çizgi, uygun bir müzik ekle, izleyiciyi sonuna kadar tutsun.
+```
+
+İki sonucu aynı temas sayfasıyla yan yana koy; farkı sıfat değil sayı olarak yaz.
+
 ## Kısa sürüm (hızlı deneme)
 
 ```
@@ -123,7 +191,7 @@ duraklatma (`film-page.html?counter`); son kayıttan önce kaldır.
 | Takılma, düşen kare | Yalnız transform ve opaklık; genişlik/yükseklik/top/left yok. |
 | GIF'te bantlaşma | Degrade yok; düz renk ya da paleti dither'la. |
 | Bulanık/titreyen yazı | Duran yazıyı tam piksele oturt; 2× çiz, küçült. |
-| Yazı okunmadan kıpırdıyor | Her yazı hâli kelime başına 0,3 sn + 0,5 sn beklesin. |
+| Yazı okunmadan kıpırdıyor | Her yazı hâli animasyonu bittikten sonra boşluksuz harf ÷ 15 + 1,5 sn beklesin (`film-read.mjs`). |
 | Her şey aynı anda | Tek seferde tek kahraman; gerisi 150 ms sonra, yolunun %60'ı. |
 
 **Düzeltme tutunca render sözleşmesine ekle.** Sözleşme laboratuvarın
@@ -134,6 +202,24 @@ belleğidir: her satırı bir daha görmeyeceğin bir hatadır.
 Takip prompt'larını say ve işle birlikte paylaş. Gerçekçi sayılar: kısa bir
 döngü 4–15 yaratıcı takip, ses ayrıca 0–12. "Tek prompt" iddiası şüphe
 uyandırır; üç prompt iyi bir sayıdır.
+
+**"Tek seferde" çoğunlukla 2+ koşu demektir:** yayımlanan sonuç, atılan
+denemelerin ve modelin kendi içinde reddettiği ara sonuçların üstünde durur.
+Üç sayıyı AYRI kaydet (kaynak: athemeroy/awesome-claude-5-5-videos
+`docs/workflow-analysis.md`, `research-guide.md`, CC BY 4.0):
+
+| Sayı | Ne |
+|------|----|
+| İnsan prompt'u | kullanıcının yazdığı mesaj sayısı (ilk istek + takipler) |
+| İç geçişler | modelin ya da alt ajanların kendi render → bak → düzelt turları, jüri turları |
+| Kabule kadar süre | ilk istekten kabul edilen sürüme duvar saati; ilk taslak süresi ayrı |
+
+Maliyet ve render süresi örnekleri **yaratıcının beyanıdır, doğrulanmamıştır**:
+"1 dk, ~2 $" (@deedydas, tek cümlelik istek), aynı sahne için Haiku/Opus
+2,19 $ / 3,04 $ (@Solomonrojie), dört GPU'da dokuz günlük ürün filmi
+(@nicceasy). Bunları ortalayıp model sıralaması çıkarma: teslim, girdi ve
+kabul ölçütü farklı. Kendi fişinde nakit (model, servis, varlık) ile
+insan/makine zamanını ayrı yaz.
 
 ## Prompt seçerken
 

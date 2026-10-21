@@ -143,6 +143,17 @@ export function transform(
 /* Fırça                                                                     */
 /* ----------------------------------------------------------------------- */
 
+/**
+ * Boil karesi: saniyede `rate` kez yeniden çizim, KARE SIRASINDAN türer.
+ * `Math.floor(t * 12)` karenin tam anında değişir; merkezli obtüratörde
+ * (`film-video.mjs --shutter`) alt karelerin yarısı bir çizimi, yarısı
+ * ötekini basar ve her ikinci karede çift pozlama olur. `Math.round(t * fps)`
+ * bir karenin bütün obtüratörü boyunca sabittir.
+ */
+export function boilFrame(t: number, fps: number, rate = 12): number {
+  return Math.floor((Math.round(t * fps) * rate) / fps);
+}
+
 export type BrushOptions = {
   width: number;
   /** Çizginin ne kadarı çizildi (0…1) — "yazılıyor" etkisi. */
@@ -159,7 +170,7 @@ export type BrushOptions = {
   dry?: number;
   /**
    * Kaynama (boil): elle çizilmiş animasyonda her çizim karesi çizgiyi biraz
-   * farklı çizer. Değer çizim karesinin sırası (ör. `floor(t * 12)`); yalnız
+   * farklı çizer. Değer çizim karesinin sırası: `boilFrame(t, fps)`; yalnız
    * KENAR gürültüsünü kaydırır — kuru fırça izleri ve basınç sabit kalır ki
    * izler sürünmesin (lemo-opuscar ink-wash: "small boil on the width noise").
    */

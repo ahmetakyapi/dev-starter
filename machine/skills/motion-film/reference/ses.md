@@ -33,6 +33,112 @@ DIRECTOR § 6). Ama ortam ikiye ayrılır:
 Ana çıkış: kazanç 0,55 → kompresör (−18 dB, 4:1). Sesler kısa ve alçak;
 film sessizken de anlaşılır olmalı.
 
+## Senkron noktası: efekte olayın anını ver
+
+Her ses bir tampon + tamponun içinde bir **senkron noktası**dır; yerleştirirken
+o nokta görsel olayın anına konur (kaynak: mg-styles-15, MIT):
+
+| Ses | Senkron noktası |
+|-----|-----------------|
+| tık, vuruş, darbe, damga | geçici (transient), yani başı |
+| whoosh / swish | **geçiş tepesi** (nesnenin kameranın önünden geçtiği an), başı değil |
+| riser, ters zil, şarj, kabarma | **sonu** — vardığı darbe |
+| geçiş (whoosh → darbe) | darbe |
+
+- Zaman çizelgesine **görsel olayın anı** yazılır; "0,7 sn'lik whoosh'un tepesi
+  0,42'de, öyleyse 0,42 erken başlat" hesabını çizelgeye gömme. Ofset sesi
+  yerleştiren kodda sesin kendi senkron noktasından çıkarılır; ses değişince
+  ya da süresi uzayınca senkron kendiliğinden doğru kalır. `film-sound.ts`teki
+  sayfa içi tarifler başlangıçtan çalar; kabaranların tepe süresi yorumunda.
+- Whoosh süresi ≈ nesnenin ekrandaki yolculuk süresi; yönü ekran yönü, tepesi
+  merkezi geçtiği an.
+- Bir karede en çok ~3 efekt üst üste; kahraman darbe katmanlı (darbe + alt
+  bas), önüne riser.
+- Bazı araçlar sesi bir kare ÖNE alır (geçici o kareye "otursun" diye). Bizde
+  yapma: insan sesin öne kaçmasını gecikmesinden çok daha erken fark eder
+  (yayın eşiği kabaca +45 / −125 ms), kuralımız aşağıda: resim önce, ses 1 kare sonra.
+
+## Efekt düzeyi: önce normalize, sonra niyet
+
+- Her efekt **loudness'a göre normalize** edilir (ör. kısa süreli ≈ −18 LUFS,
+  tepe ≤ −1 dBFS); kazanç 0'da bütün efektler aynı algılanan düzeyde, müzik
+  yatağının ~2 dB üstünde. Sentezin ham genliği (tepe değeri) düzey değildir:
+  kısa tık tepeye vurur ama sessiz duyulur, uzun gürültü tersi.
+- Sonra kazanç yalnız **niyet** söyler: −6 dB ince, 0 olağan, +2 dB kahraman.
+  "Bu tık neden bu kadar yüksek" sorusu kazançtan okunabilmeli.
+- Stereo sesin loudness'ı kanal güçlerinin ortalamasıyla ölçülür (BS.1770);
+  mono toplamla ölçmek geniş sesi düşük okur.
+- Çalgılar normalize edilmez; izlerine LUFS hedefi verilir.
+
+## Mono güvenliği
+
+Telefon çoğu zaman mono çalar; sol-sağ farkı orada yok olur ya da birbirini siler.
+
+- Genişletme **M/S** ile (`L = m + s`, `R = m − s`); tek kanala gecikmeli kopya
+  (Haas) KOYMA — monoda tarak süzgeci olur, ses içi boş ve metalik çıkar.
+- 120 Hz altı mono; stereo örnek kaydı (aralıklı çift mikrofon) yüklerken
+  kanallar zamanda hizalanır.
+- Ölç: L/R korelasyonu **> 0,3** sağlıklı, **< 0** faz sorunu. Mono toplamın
+  loudness'ı stereodan 3 dB'den fazla düşükse bir şey birbirini siliyor.
+
+## Tempo: müziği resme uydur
+
+Film önce çizildiyse (vuruş noktaları resimde) tempo seçilir, resim kaydırılmaz:
+
+- Görsel darbe zamanlarına **8'lik ızgarası en iyi oturan BPM**'i tara
+  (tür aralığında 0,05 adımla; hata = darbelerin ızgaraya karesel ortalama
+  uzaklığı, en kötüsünü de raporla). En kötü hata < 1 kare değilse en uzak
+  darbeyi resimde ızgaraya çek (resim oynar, ses değil).
+- Izgaranın çapası: **0. ölçü dropta başlar** (filmin kahraman anı). Akor
+  yürüyüşü de dropta başlar; giriş onun sonunu (dönüş) çalar. Bölümler:
+  giriş → yükseliş → drop → çıkış, sınırlar ölçü başında.
+- Kontrol: her darbenin ızgaraya uzaklığını ms olarak listele, 0 ms hedef
+  (lemo-opuscar `cuecheck`, MIT: yalnız bilerek ızgara dışı bırakılan
+  "nefes"ler muaf, adıyla).
+- Şarkı hazırsa tersi: ızgara ölçülür, resim ona uyar — `muzik-klibi.md`.
+
+## Anlatım ve TTS
+
+- **Anahtar `.env`'de**, kodda, sayfada, betik argümanında değil; `.env`
+  gitignore'da, örneği `.env.example`'da boş. Sayfa tarayıcıda çalışır:
+  sağlayıcıyı sayfadan çağırma, sesi derleme anında üret, WAV'ı sakla.
+- **Zamanlama gerçek süreden.** Her satırı ayrı WAV olarak üret, süresini
+  ölç (sessizliği kırp), sahne sürelerini bu dosyadan türet. Senaryodan
+  tahmin edilen süre (kelime/sn) TTS'in hızıyla tutmaz; tahminle kurulan
+  film her satırda biraz kayar.
+- **Sayılar TTS metninde yazıyla, altyazıda rakamla:** TTS "yüzde kırk iki",
+  altyazı "%42"; "2024'te" → "iki bin yirmi dörtte". Türkçede kısaltma ve
+  ek birleşimi (TL, ABD'de, 3'üncü) TTS'in en sık yanlış okuduğu yer.
+- **Model duyamaz; geri yazdırarak doğrula.** Her WAV'ı konuşmadan metne
+  (ör. Whisper, `language="tr"`) geri çevir, senaryoyla kelime kelime
+  karşılaştır, tutmayanı yeniden üret; aynı geçiş kelime zamanlarını da
+  verir (altyazı ve vurgu yerleşimi için). **Türkçe telaffuz ayrıca
+  işaretlenmeli:** STT doğru kelimeyi duyup yanlış vurguyu, ı/i, ğ ve uzun
+  ünlüyü kaçırabilir; çok dilli ya da İngilizce öncelikli sesler özel adları
+  ve alıntı kelimeleri İngilizce okur. Özel ad, sayı ve yabancı kelime içeren
+  satırları teslimde "insan dinlesin" diye listele; ana dili Türkçe olan ses seç.
+- **Anlatıcı durunca resim durmaz:** cümle arası ve nefeste kamera nefes
+  alır, ikincil hareket sürer, bir sonraki okumanın hazırlığı başlar. Sesle
+  birlikte donan film slayt gösterisi gibi okunur.
+- TTS'in tepe/ortalama oranı yüksek: önce sesi sıkıştır, sonra RMS/LUFS ile
+  dengele.
+
+### Anlatım ile müzik arası düzey
+
+Eski kuralımız "müzik ~5 dB altına", lemo-opuscar "ses müziğin ~10 dB
+üstünde (RMS, sıkıştırılmış sesle)". İkisi farklı şeyi ölçüyordu: 5 dB çoğu
+zaman müziğin konuşma girince **ne kadar kısıldığı** (ducking), 10 dB
+konuşmanın kısılmış müziğin **üstündeki farkı**. Tek ölçüyle hedef:
+
+- Konuşma bölümlerinde ses izi, müzik izinden **8–12 dB** yüksek (ikisi ayrı
+  stem, aynı ölçü: K-ağırlıklı kısa süreli loudness, yalnız konuşulan aralıklar).
+- Alt uç (8): seyrek, sözsüz, 1–4 kHz'i boş müzik. Üst uç (10–12): yoğun ya
+  da sözlü müzik, telefon hoparlörü, TTS, ikinci dilde dinleyen.
+- 6 dB'nin altı anlaşılırlığı kaybettirir (en çok Türkçe ekler, cümle sonları
+  yutulur); 14'ün üstünde müzik yok olur, konuşmasız aralara geçişte sıçrar.
+- Müziği konuşma boyunca yumuşak ducking ile kıs (atak ~80 ms, bırakma
+  ~300 ms), kelime kelime pompalatma.
+
 ## Video — ses ölçülür, dinlenmez
 
 Model duyamaz; senkronu ve dengeyi **çözülmüş sesi ölçerek** kurar (Florence,
@@ -62,9 +168,12 @@ Model duyamaz; senkronu ve dengeyi **çözülmüş sesi ölçerek** kurar (Flore
   efekt ve kontrol betikleri aynı sayılardan okur. Görsel vuruş ile müzik
   işaretinin farkı 0 ms hedef.
 - `window.EV = [{ t, kind }]` → `film-video.mjs --events` olay dosyası → çevrimdışı miks.
-- Üç katman: ortam, foley, müzik; konuşma varsa müzik ~5 dB altına.
+- Üç katman: ortam, foley, müzik; konuşma varsa konuşma müziğin 8–12 dB
+  üstünde (yukarıda § anlatım ile müzik arası düzey).
 - En az iki gerçek sessizlik (doruktan önce); sessizlikten sonraki ilk ses filmin en önemlilerinden.
 - En az iki kez sesle geçiş (J-cut / L-cut).
 - Ustalaştırma: iki geçişli loudnorm, −14 LUFS, gerçek tepe sınırı; son dosyada
   `ffmpeg -af ebur128` ve `blackdetect`.
-- Telifli müzik yok; CC0 ya da sentez, kaynaklar `CREDITS`'te.
+- Telifli müzik yok; CC0 ya da sentez, kaynaklar `CREDITS`'te. Hazır bir
+  şarkıya klip (sözler, vuruş ızgarası, kelime hizalama): `muzik-klibi.md`;
+  şarkının ve sözlerin hakkı kullanıcıda olmalı.

@@ -9,13 +9,15 @@ description: >
   Use when asked to make a motion design film, animated explainer, launch video,
   kinetic type sequence, cinematic loading screen, visual explainer / animated
   figure that shows how a system works, or to "push the limits" of an animation;
-  or to render an HTML animation to video. Kaynaklar: awesome-opus5-5-videos,
-  lemo-opuscar, ClaudeAnimationBase, shipvideo, PDoomVideo, wheresryan22/anatomy,
-  Florence "Opus 5.5 Motion Lab" + Açılış Zili filmi.
+  or to render an HTML animation to video; music video / lyric sync, character
+  animation, explainer with narration. Kaynaklar: awesome-opus5-5-videos,
+  lemo-opuscar, ClaudeAnimationBase, shipvideo, PDoomVideo, mexicat/pdoom-video,
+  mg-styles-15, athemeroy/awesome-claude-5-5-videos, opus-video-prompts,
+  wheresryan22/anatomy, Florence "Opus 5.5 Motion Lab" + Açılış Zili filmi.
 license: MIT
 metadata:
   author: Ahmet Akyapı (dev-starter)
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Motion Film — kodla hareket filmi
@@ -44,7 +46,7 @@ getirir; her sıfatı bir sayıyla değiştirdiğin yerde kararı geri alırsın
 - Yay tek sayı: sönüm oranı ζ (0,7–0,85 premium). **Opaklık ve renk zıplamaz.**
 - Süreler karede (24 fps'te 400 ms = 10 kare); sonraki öğe öncekinin %30–50'sinde başlar.
 - **Planda tek kahraman**; ikinciller %50–70 yol, 100–200 ms geç; ortam < %5.
-- Yazı kelime başına 0,3 sn + 0,5 sn bekler; okunurken kıpırdamaz.
+- Yazı ekranda harf sayısı ÷ 15 + 1,5 sn kalır (boşluksuz; Türkçe kelime uzun olduğu için kelime değil harf); okunurken kıpırdamaz. `scripts/film-read.mjs` denetler.
 - Vuruş `fps·60/BPM`, her vuruş tek tek yuvarlanır; vuruşta kes, ölçüde yerleşimi değiştir.
 - Yasak listesi ADIYLA ve canlı: ilk render'ın kullandığı her varsayılanı ekle.
 
@@ -118,6 +120,11 @@ node $S/film-video.mjs film.html --fps=24 --subframes=4 --out=out/film.mp4    # 
 node $S/film-video.mjs film.html --gif --out=out/film.mp4                     # GIF, 25 fps, tek palet
 node $S/film-sheet.mjs film.html --strip=1:2 --onion --out=out/onion.png      # soğan kabuğu
 node $S/film-sheet.mjs film.html --range=0:3:0.0417 --probe="hero.offsetLeft"  # hız grafiği
+node $S/film-sheet.mjs film.html --cuts --fps=24 --out=out/cuts.png           # her sahne sınırının iki yanı
+node $S/film-sheet.mjs film.html --times=4.2 --crop=800,300,400,300 --scale=2 # yüz/yazı ayrıntısı
+node $S/film-read.mjs film.html                                               # okuma süresi; 2 = denetlenmedi
+node $S/film-video.mjs film.html --fps=24 --subframes=8 --shutter=0.5 \
+     --audio=mix.wav --scale=2 --workers=3 --out=out/film-4k.mp4               # son render
 ```
 
 Notlar his değil **kare numarası** taşır ("84. karede tepe geç, 2 kare öne
@@ -126,6 +133,12 @@ al"); turda bir-iki not; tutmayan düzeltmede iki komşu kareyi yan yana
 
 Her geçişin ilk ve son 0,5 sn'si, iki tema, telefon + masaüstü, hareketi
 azaltma ve kare süresi (p95 ≤ 16,8 ms) ölçülür. Görüntüye bakmadan "oldu" denmez.
+
+Tam render'dan önce **en zor 2–4 sn** ayrı render'lanır ve aynı kareler farklı
+sırayla aranarak yeniden üretilip bayt bayt karşılaştırılır. Teslimden önce
+**bağımsız jüri** (`design-reviewer`): 7 boyut, sabit çapalar, ilk render
+çoğunlukla 5–7; zaman kodlu, sayılı 5–10 düzeltme. Revizyon N. sürümü saklar
+ve jürinin saydığı güçlü yanları geriletmez.
 
 ## 7b. Açıklayıcı figür ve canlı künye (ayrıntı: `reference/aciklayici-figur.md`)
 
@@ -171,13 +184,16 @@ uygulanır: envanter → sınıf → sayı → ölçüm.
 | Dosya | Ne |
 |-------|----|
 | `assets/ink-engine.ts` | tohumlu rng, gürültü, `span/ease/damped`, değişken basınçlı `brush` (boil + pressure), `blot`, `splatter`, `paperGrain` |
-| `assets/film-kit.ts` | `kinetic`, `tag`, `followCamera`, `withCamera`, `penTiming`, `penShadow`, `floodPath`, `inverted`, `teardrop`, `seal`, `fibres`, `cuesBetween` |
+| `assets/film-kit.ts` | `kinetic` (kerning'li `glyphX`), `tag`, `followCamera`, `withCamera`, `penTiming`, `penShadow`, `floodPath`, `inverted`, `teardrop`, `seal`, `fibres`, `cuesBetween`; müzik: `beatAt`, `timeOfBeat`, `hit`, `wordProgress`, `lyric`, `cutAt`, `downbeatAfter` |
+| `assets/character-kit.ts` | Karakter kuklası (ClaudeAnimationBase mimarisi, MIT; karakter bizim): `VIEWS`, `spinView`, `turn`, `EMO`, `feel`, `take`, `emotions`, `drawCharacter` (kol/gövde kancaları), `handAt`, `readPalette` |
 | `assets/film-sound.ts` | Web Audio tarifleri: damla, vuruş, kalem, yükseliş, sel, daktilo, çan; tercih + başlatma |
-| `assets/film-page.html` | Sözleşme sayfası (DUR, render, READY, EV), `?t=` ile kare, boşluk/ok tuşları |
+| `assets/film-page.html` | Sözleşme sayfası (DUR, render, READY, EV), `?t=` ile kare, `?audio=` ile ses saatine kilitli önizleme, boşluk/ok tuşları |
 | `assets/motion-tokens.ts` | Sayılar tek dosyada: `EASE` (reveal/enter/move/exit/pop), `MS`, `STAGGER`, `dampingRatio`, kapalı biçim `spring(t, ζ, f)`, JS `bezier()`, `beatFrame`, `holdFor`, `RANK`, `cascade`, `loopPhase` |
 | `assets/figure-kit.ts` | Çalışma zamanı: `watchVisibility` (son kayıt), `loop` (dt kırpılmış, görünmezken durur), `follow`, `spring`, `settle`, `burst`, `idleTour`, `quietAnnouncer`, `cueWindow` |
-| `scripts/film-sheet.mjs` | Temas sayfası / şerit / canlı ölçüm (puppeteer ya da playwright) |
-| `scripts/film-video.mjs` | Kareler → ffmpeg → MP4, alt kare bulanıklığı, olay dosyası |
+| `scripts/film-sheet.mjs` | Temas sayfası / şerit / canlı ölçüm, `--crop` ayrıntı, `--cuts` sahne sınırları (puppeteer ya da playwright) |
+| `scripts/film-video.mjs` | Kareler → ffmpeg → MP4: ortalanmış perdeli alt kare bulanıklığı (`--shutter`), BT.709 etiketi, `--audio` miks, `--scale`, `--workers`, kaldığı yerden sürer, hatada yarım dosya bırakmaz |
+| `scripts/film-browser.mjs` | Üç betiğin ortak tarayıcı katmanı (CLI değil): sRGB renk profili, sayfa hatasında anında dur, READY zaman aşımında tanı, SwiftShader uyarısı |
+| `scripts/film-read.mjs` | Okuma süresi denetimi (`window.TEXTS`): harf ÷ 15 + 1,5 sn, kadraj dışında kalan yazı; 0 geçti · 1 ihlal · 2 denetlenmedi |
 
 Çalışan büyük örnek: Açılış Zili `lib/ink/analysis-film.ts` (beş perdelik
 bekleme filmi), `components/ai/AnalysisFilm.tsx` (oynatıcı, ses düğmesi,
@@ -188,17 +204,20 @@ kesmesiz geçiş).
 
 | Dosya | Ne zaman |
 |-------|----------|
-| `reference/yonetmenlik.md` | Tretman, okumalar, animasyon ilkeleri, geçiş grameri, sık hatalar |
-| `reference/kamera.md` | Takip, dalış, nefes, hızlı nesne kuralı |
+| `reference/yonetmenlik.md` | Tretman, okumalar, animasyon ilkeleri, geçiş grameri, sık hatalar, çıta eserleri, "yine örnek film değil", çok ajanlı yapım |
+| `reference/kamera.md` | Takip, dalış, nefes, hızlı nesne kuralı, ≥ 4 hareket + imza plan, özne ≥ 1/3 |
 | `reference/murekkep-ve-kagit.md` | Fırça, boil, kalem, kâğıt, sel, damla, mühür, renk |
-| `reference/kinetik-yazi.md` | Tuval ve DOM kinetik yazı, künye, degrade tuzağı |
-| `reference/ses.md` | Sayfa içi ses kuralları, tarifler, video miksi |
-| `reference/inceleme-dongusu.md` | Temas sayfası, şerit, canlı ölçüm, matris, ölçümle bulunan tuzaklar |
-| `reference/video-uretimi.md` | Sözleşme, belirlilik, MP4, alt kare bulanıklığı, loudness |
-| `reference/sayilar.md` | Eğri tablosu, ζ, süre ve kademe, hiyerarşi, vuruş ızgarası, bekleme, kamera, WCAG, sıfat → sayı çevirisi |
-| `reference/aciklayici-figur.md` | Nesne-açıklama, figür kartı, canlı künye, sahne çipleri, hareket ve erişilebilirlik kuralları, inceleme (anatomy) |
+| `reference/kinetik-yazi.md` | Tuval ve DOM kinetik yazı, kerning'li parça konumu, karaoke kuralları, künye, degrade tuzağı |
+| `reference/ses.md` | Sayfa içi ses kuralları, tarifler, video miksi, senkron noktaları, mono güvenliği, anlatım/TTS |
+| `reference/muzik-klibi.md` | Şarkıdan film: ölçülmüş vuruş ızgarası, sözden türeyen kesme, sözcük düzeyinde hizalama hattı, mp3 gecikme tuzağı, hak durumu |
+| `reference/inceleme-dongusu.md` | Temas sayfası, şerit, canlı ölçüm, matris, en zor 2–4 sn kapısı ve sıra-bağımsızlık testi, bağımsız jüri (7 boyut), temaslar, ölçümle ve sahada bulunan tuzaklar |
+| `reference/video-uretimi.md` | Sözleşme, belirlilik, MP4, alt kare bulanıklığı, renk etiketi, mantıksal düzen/fiziksel piksel, durumlu ön sarma, loudness, Canvas dışı yollar |
+| `reference/sayilar.md` | Eğri tablosu, ζ, süre ve kademe, hiyerarşi, vuruş ızgarası, bekleme (harf ÷ 15 + 1,5), kısa film satırı, zemin parlaklığı, kamera, WCAG, sıfat → sayı çevirisi |
+| `reference/aciklayici-figur.md` | Nesne-açıklama, figür kartı, canlı künye, sahne çipleri, hareket ve erişilebilirlik kuralları, inceleme (anatomy), FACTS.md ve veri dürüstlüğü |
+| `reference/karakter.md` | Karakter kuklası: çizilmiş görünüşler, oynanan duygu geçişi, plana göre boy, temaslar (ayak, el, atış) |
+| `reference/stil-tarifleri.md` | Morph, çizgi, sıvı, Bauhaus, piksel tarifleri (sayılarla); film stili kartı, değişikliğin üç kovası, CHANGES.md + deneme filmi |
 | `reference/arayuz-denetimi.md` | Bütün arayüzün animasyonlarını sayıyla denetleme: yöntem, sınıf başına sayı, ölçümle bulunan tuzaklar, son kareyi basan figür deseni |
-| `reference/prompt-kaliplari.md` | Sekiz satırlık yönlendirilmiş prompt, yasak listesi, kare numaralı inceleme notları, belirti → düzeltme tablosu, film tretmanı iskeleti |
+| `reference/prompt-kaliplari.md` | Sekiz satırlık yönlendirilmiş prompt, yasak listesi, kare numaralı inceleme notları, belirti → düzeltme tablosu, film tretmanı iskeleti, önce girdiler/vuruş listesi, tür iskeletleri, tek cümlelik A/B tabanı, fiş |
 | `reference/kaynaklar.md` | Açık kaynaklar ve makaleler, lisansları ve neyin nereden alındığı |
 
 ## 9. Proje kuralları her zaman üstte
@@ -211,7 +230,7 @@ hareketi azaltana son kare. Skill ilham ve teknik verir, kimliği değiştirmez.
 
 - [ ] Sekiz satır dolu (GOAL…QA); her sıfat bir sayıya çevrildi; yasak listesi adlarla
 - [ ] Eğriler token'dan; çıkış girişten kısa; doğrusal yalnız dönüş/ilerleme/faz; opaklık ve renk zıplamıyor
-- [ ] Her planda tek kahraman; yazı kelime başına 0,3 + 0,5 sn bekliyor; saniyede ≤ 3 parlama
+- [ ] Her planda tek kahraman; yazı harf ÷ 15 + 1,5 sn bekliyor (`film-read.mjs` 0 döndü); saniyede ≤ 3 parlama
 - [ ] Döngüyse 0..N−1, faz tam devirli, 0. kare bitmiş kompozisyon
 - [ ] Arayüzde: modül CSS'inde eğrisiz geçiş yok, `left` animasyonu yok, veri 0'dan sayılmıyor, figür son kareyi basıyor
 - [ ] Tretman yazıldı; okumaların süresi var, üst üste binmiyor
@@ -225,3 +244,10 @@ hareketi azaltana son kare. Skill ilham ve teknik verir, kimliği değiştirmez.
 - [ ] Canlı künye çizimle aynı veriden; bilinmeyen ilerleme uydurulmadı
 - [ ] Ekran dışında döngü duruyor (son kayıt okunuyor); dönüşte kaçırılan sesler çalmıyor
 - [ ] Canlı bölge yalnız evre değişince konuşuyor; künye ekran okuyucuya sayı seli değil
+- [ ] En zor 2–4 sn ayrı render'landı; aynı kareler farklı sırada bayt bayt aynı
+- [ ] Bağımsız jüri puanladı; revizyon güçlü yanları geriletmedi
+- [ ] Kısa filmde (≤ 15 sn) kanca ≤ 0,5 sn, doruk %60–75'te, son kare 0,8–1,2 sn canlı
+- [ ] Gerçek iddia varsa `FACTS.md` var; kaynak satırı veriyle aynı kadrajda
+- [ ] Şarkı varsa zamanlama ölçüldü (vuruş + sözcük), tahmin değil; son nakarat kaymıyor
+- [ ] Karakter varsa: ayak yerde, tutulan şey elde, atılan şey elden çıkıyor
+- [ ] MP4 BT.709 etiketli; bulanıklık perdesi karenin ortasında

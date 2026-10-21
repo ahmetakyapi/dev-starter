@@ -18,9 +18,13 @@ izleri), **`boil`**, **`pressure`**.
 ## Boil — 12 karede bir yeniden çizim
 
 ```ts
-const bo = Math.floor(t * 12);
+const bo = boilFrame(t, FPS); // saniyede 12, kare sırasından
 brush(ctx, line, { width: 2.6, seed: 11, boil: bo, color: pal.ink });
 ```
+
+- `Math.floor(t * 12)` YAZMA: karenin tam anında değişir ve bulanıklıklı
+  render'da (`--shutter`) her ikinci karede çift pozlama verir
+  (`video-uretimi.md` § kare sırası kuralı).
 
 - Yalnız KENAR gürültüsü kayar (`noise1(seed + bo * 7919, …)`). Kuru fırça
   izleri ve basınç sabit kalır; yoksa izler "sürünür" (ink-wash: "small boil
