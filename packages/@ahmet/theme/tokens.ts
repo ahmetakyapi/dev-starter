@@ -155,7 +155,9 @@ export const animation = {
 
 export const gradients = {
   /**
-   * Marka degradesi (signature paleti) — birincil eylem ve marka karosu.
+   * Marka karosu degradesi (signature paleti). Üstüne metin yazılmaz: açık
+   * ucu beyaz metinle AA'yı geçmez. Birincil eylem `palettes.*.ctaGradient`
+   * (CSS `bg-cta text-on-brand`).
    * İki temada aynı: sekme ve ana ekran ikonu temayı bilemez.
    * CSS karşılığı `--brand-gradient` / `bg-brand`.
    */
@@ -212,8 +214,8 @@ export const roles = {
     lineStrong: 'rgb(16 32 52 / 0.17)',
     success: '#0c7350',
     successWash: 'rgb(12 115 80 / 0.1)',
-    warning: '#a4720f',
-    warningWash: 'rgb(164 114 15 / 0.12)',
+    warning: '#825a0a',
+    warningWash: 'rgb(130 90 10 / 0.12)',
     danger: '#c01a3d',
     dangerWash: 'rgb(192 26 61 / 0.08)',
     accentWarm: '#a4720f',
@@ -245,6 +247,8 @@ export const roles = {
 /**
  * Palet katmanı — theme.css bölüm 2'nin JS aynası (`--palette-*`).
  * `signature` varsayılan; `<html data-palette="...">` ile seçilir.
+ * `ctaGradient` birincil eylem zemini: üstündeki metin `#ffffff`
+ * (theme.css `--on-brand`), her durağı AA ölçülür.
  */
 export const palettes = {
   signature: {
@@ -259,6 +263,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #0a2140 0%, #0e4a8f 44%, #1272c9 76%, #2493dd 100%)',
       displayGradientTight: 'linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%)',
       brandGradient: 'linear-gradient(150deg, #5cc4ff 0%, #1f86e0 48%, #0b3f86 100%)',
+      ctaGradient: 'linear-gradient(150deg, #1673c4 0%, #0b3f86 100%)',
     },
     dark: {
       primary: '#35b8ff',
@@ -271,6 +276,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #f2f7fc 0%, #b6e2ff 44%, #74caff 76%, #3fbcff 100%)',
       displayGradientTight: 'linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%)',
       brandGradient: 'linear-gradient(150deg, #5cc4ff 0%, #1f86e0 48%, #0b3f86 100%)',
+      ctaGradient: 'linear-gradient(150deg, #1673c4 0%, #0b3f86 100%)',
     },
   },
   verdant: {
@@ -285,6 +291,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #062a1f 0%, #0b5a42 44%, #0f7a5a 76%, #1f9a74 100%)',
       displayGradientTight: 'linear-gradient(100deg, #06301f 0%, #137a5c 100%)',
       brandGradient: 'linear-gradient(150deg, #6ee7b7 0%, #14a37a 48%, #08523c 100%)',
+      ctaGradient: 'linear-gradient(150deg, #0f7a5a 0%, #08523c 100%)',
     },
     dark: {
       primary: '#34d399',
@@ -297,6 +304,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #f0faf6 0%, #b4f0d8 44%, #6ee0b4 76%, #34d399 100%)',
       displayGradientTight: 'linear-gradient(100deg, #eefaf5 0%, #4fdcaa 100%)',
       brandGradient: 'linear-gradient(150deg, #6ee7b7 0%, #14a37a 48%, #08523c 100%)',
+      ctaGradient: 'linear-gradient(150deg, #0f7a5a 0%, #08523c 100%)',
     },
   },
   ember: {
@@ -311,6 +319,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #3b1a04 0%, #7a3606 44%, #b45309 76%, #d97706 100%)',
       displayGradientTight: 'linear-gradient(100deg, #431d05 0%, #a14a08 100%)',
       brandGradient: 'linear-gradient(150deg, #fcd34d 0%, #e07a0c 48%, #7a3306 100%)',
+      ctaGradient: 'linear-gradient(150deg, #b45309 0%, #7a3306 100%)',
     },
     dark: {
       primary: '#fbbf24',
@@ -323,6 +332,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #fdf8ee 0%, #fde3a7 44%, #fcd062 76%, #fbbf24 100%)',
       displayGradientTight: 'linear-gradient(100deg, #fdf6e8 0%, #fbbf24 100%)',
       brandGradient: 'linear-gradient(150deg, #fcd34d 0%, #e07a0c 48%, #7a3306 100%)',
+      ctaGradient: 'linear-gradient(150deg, #b45309 0%, #7a3306 100%)',
     },
   },
   iris: {
@@ -337,6 +347,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #1b1550 0%, #3a2d9e 44%, #5b4bd6 76%, #7d70e0 100%)',
       displayGradientTight: 'linear-gradient(100deg, #1e1858 0%, #5243c8 100%)',
       brandGradient: 'linear-gradient(150deg, #c7d2fe 0%, #6d5fe0 48%, #2e2490 100%)',
+      ctaGradient: 'linear-gradient(150deg, #5b4bd6 0%, #2e2490 100%)',
     },
     dark: {
       primary: '#a5b4fc',
@@ -349,6 +360,7 @@ export const palettes = {
       displayGradient: 'linear-gradient(112deg, #f4f5fe 0%, #d9defe 44%, #bcc6fd 76%, #a5b4fc 100%)',
       displayGradientTight: 'linear-gradient(100deg, #f1f3fe 0%, #a5b4fc 100%)',
       brandGradient: 'linear-gradient(150deg, #c7d2fe 0%, #6d5fe0 48%, #2e2490 100%)',
+      ctaGradient: 'linear-gradient(150deg, #5b4bd6 0%, #2e2490 100%)',
     },
   },
 } as const

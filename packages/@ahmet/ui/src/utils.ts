@@ -14,8 +14,9 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       text: [...FONT_SIZES],
-      // `shadow-overlay` kaydedilmezse gölge RENGİ sanılır ve `shadow-md` ile çakışmaz
-      shadow: ['overlay'],
+      // Kaydedilmeyen gölge adı gölge RENGİ sanılır ve `shadow-md` ile çakışmaz.
+      // raised/floating/modal şablonlarla ortak adlar (theme.css köprüsü).
+      shadow: ['overlay', 'raised', 'floating', 'modal'],
     },
   },
 })

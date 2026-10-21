@@ -9,27 +9,33 @@ import {
   useReducedMotion,
 } from 'motion/react'
 import { SPRING } from '../variants'
+import { useFinePointer } from './useFinePointer'
 
 /**
  * 3D kart eğimi + holografik parlaklık efekti.
  * Projects kartlarında kullanılır.
  *
- * Kullanım:
+ * Kullanım (`m.*`: kökteki LazyMotion strict altında `motion.*` hata verir).
+ * `transformPerspective` şart: perspektifsiz döndürme düz izdüşüm verir,
+ * birkaç derecelik eğim ekranda görünmez.
  *   const tilt = useCardTilt(8)
- *   <motion.div
+ *   <m.div
  *     ref={tilt.ref}
- *     style={{ rotateX: tilt.rotateX, rotateY: tilt.rotateY }}
+ *     style={{ rotateX: tilt.rotateX, rotateY: tilt.rotateY, transformPerspective: 800 }}
  *     onMouseMove={tilt.onMove}
  *     onMouseLeave={tilt.onLeave}
  *   >
- *     <motion.div style={{ background: tilt.shine }} />
- *   </motion.div>
+ *     <m.div style={{ background: tilt.shine }} />
+ *   </m.div>
  */
 export function useCardTilt(intensity = 8) {
   // 3B eğim vestibüler rahatsızlık kaynağıdır — hareket azaltma isteyen
   // kullanıcıda eğim sıfırlanır, parlaklık takibi (renk) korunur.
   const reduceMotion = useReducedMotion()
   const tilt = reduceMotion ? 0 : intensity
+  // Dokunmatikte hiçbiri: dokunuşun mousemove'u eğimi ve parlaklığı
+  // dokunulan yerde dondurur, mouseleave ancak başka yere dokununca gelir.
+  const fine = useFinePointer()
 
   const ref = useRef<HTMLDivElement>(null)
   const rx = useSpring(useMotionValue(0), SPRING.snappy)
@@ -40,7 +46,7 @@ export function useCardTilt(intensity = 8) {
 
   const onMove = useCallback(
     (e: React.MouseEvent) => {
-      if (!ref.current) return
+      if (!fine || !ref.current) return
       const r = ref.current.getBoundingClientRect()
       const nx = (e.clientY - r.top) / r.height - 0.5
       const ny = (e.clientX - r.left) / r.width - 0.5
@@ -50,7 +56,7 @@ export function useCardTilt(intensity = 8) {
       mouseX.set((e.clientX - r.left) / r.width)
       mouseY.set((e.clientY - r.top) / r.height)
     },
-    [rx, ry, brightness, mouseX, mouseY, tilt],
+    [rx, ry, brightness, mouseX, mouseY, tilt, fine],
   )
 
   const onLeave = useCallback(() => {

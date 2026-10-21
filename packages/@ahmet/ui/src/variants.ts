@@ -5,6 +5,10 @@
  * Bu dosya `'use client'` DEĞİL ve hiçbir şey import etmez: sabitler
  * sunucu bileşeninden de gerçek değer olarak okunabilsin. `'use client'`
  * bir modülden dışa aktarılan değer sunucuya istemci referansı olarak gelir.
+ *
+ * Sunucu kodu bunları `@ahmetakyapi/ui/core`tan import eder. Ana giriş
+ * (`@ahmetakyapi/ui`) banner'lı tek bundle: oradan gelen `DUR.fast`
+ * Server Component'te hata vermeden `undefined` olur (mistakes.md #84).
  */
 
 // Temel ease curve — hızlı başlayıp yumuşak biten. CSS karşılığı `--ease-brand`.
@@ -80,7 +84,7 @@ export const slideDown = {
 // ─── Modal / Command Palette ───────────────────────────────────────────────
 export const modalBackdrop = {
   hidden:  { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.2 } },
+  visible: { opacity: 1, transition: { duration: 0.2, ease: EASE } },
   exit:    { opacity: 0, transition: { duration: 0.15 } },
 }
 

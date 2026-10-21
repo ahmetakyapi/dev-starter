@@ -25,7 +25,10 @@ export function CustomCursor() {
 
   useEffect(() => {
     setMounted(true)
-    if (window.matchMedia('(pointer: coarse)').matches) { setIsTouch(true); return }
+    // Sorgu theme/index.css'te sistem imlecini gizleyen kuralla AYNI olmalı.
+    // Yalnızca `(pointer: coarse)` sorulursa hover'sız ince işaretçide (kalem)
+    // özel imleç çizilir ama sistem imleci gizlenmez, ikisi üst üste görünür.
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) { setIsTouch(true); return }
     if (reduceMotion) return
 
     // Sistem imlecini gizleyen CSS kuralı bu kancaya bağlı. Bileşen mount

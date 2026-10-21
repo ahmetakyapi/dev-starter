@@ -7,9 +7,9 @@ import { useMotionTemplate, useMotionValue } from 'motion/react'
  * Mouse pozisyonunu takip eden radial gradient spotlight.
  * Hero section veya sayfa arka planına uygulanır.
  *
- * Kullanım:
+ * Kullanım (`m.*`: kökteki LazyMotion strict altında `motion.*` hata verir):
  *   const spotlight = useSpotlight()
- *   <motion.div style={{ background: spotlight }} />
+ *   <m.div style={{ background: spotlight }} />
  */
 // Varsayılan renk token'dan türetilir; düz bir rgba temayla dönmezdi
 const DEFAULT_COLOR = 'color-mix(in srgb, var(--primary) 7%, transparent)'

@@ -7,7 +7,10 @@ import { useMagnetic } from '../hooks/useMagnetic'
 type Variant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
 type Size = 'sm' | 'md' | 'lg'
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+// `ComponentProps<'button'>`: React 19'da `ref` sıradan prop, tipte de kabul edilir.
+// Tip tam kalır: düz <button> yolu `onDragStart` gibi DOM işleyicilerini olduğu
+// gibi geçirir; motion'la çakışanlar yalnızca mıknatıslı yolda ayıklanır.
+export type ButtonProps = React.ComponentProps<'button'> & {
   variant?: Variant
   size?: Size
   magnetic?: boolean
@@ -29,8 +32,24 @@ const sizes: Record<Size, string> = {
   lg: 'h-12 px-6 text-read',
 }
 
+// Basış `active:scale-*` ile: v4 bunu bağımsız `scale` özelliğine derler, geçiş
+// listesinde `transform` değil `scale` olmalı. `transform` listede olursa
+// mıknatıslı düğmede motion'ın her kare yazdığı transform'u CSS bir kez daha
+// yumuşatır ve çekim imlecin gerisinde kalır.
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,transform] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
+  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,scale] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
+
+// motion bu adları jest ve animasyon geri çağrısı olarak yeniden tanımlar,
+// DOM imzasıyla m.button'a yayılamazlar: mıknatıslı yolda çağrılmazlar.
+const MOTION_CONFLICTS = ['onAnimationStart', 'onDrag', 'onDragStart', 'onDragEnd'] as const
+
+function withoutMotionConflicts<T extends object>(
+  props: T,
+): Omit<T, (typeof MOTION_CONFLICTS)[number]> {
+  const copy = { ...props } as Record<string, unknown>
+  for (const key of MOTION_CONFLICTS) delete copy[key]
+  return copy as Omit<T, (typeof MOTION_CONFLICTS)[number]>
+}
 
 export function Button({
   variant = 'primary',
@@ -39,21 +58,33 @@ export function Button({
   className,
   children,
   type = 'button',
+  style,
+  onMouseMove,
+  onMouseLeave,
   ...props
 }: ButtonProps) {
   const { mx, my, onMove, onLeave } = useMagnetic(0.26)
   const classes = cn(base, variants[variant], sizes[size], className)
 
   if (magnetic) {
+    const motionSafe = withoutMotionConflicts(props)
+    // Tüketicinin stili ve fare işleyicileri mıknatısı ezmez, onunla birleşir:
+    // prop birleştiren bir tetikleyici (tooltip, popover) `onMouseLeave`
+    // verse de sıfırlama çalışır ve düğme imlecin son konumunda kalmaz.
     return (
       <m.button
         type={type}
-        style={{ x: mx, y: my }}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        whileTap={{ scale: 0.96 }}
+        style={{ ...style, x: mx, y: my }}
+        onMouseMove={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onMove(e)
+          onMouseMove?.(e)
+        }}
+        onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onLeave()
+          onMouseLeave?.(e)
+        }}
         className={classes}
-        {...(props as React.ComponentPropsWithoutRef<typeof m.button>)}
+        {...motionSafe}
       >
         {children}
       </m.button>
@@ -61,7 +92,14 @@ export function Button({
   }
 
   return (
-    <button type={type} className={classes} {...props}>
+    <button
+      type={type}
+      style={style}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className={classes}
+      {...props}
+    >
       {children}
     </button>
   )

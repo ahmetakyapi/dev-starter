@@ -5,6 +5,7 @@
  *   @import "tailwindcss";
  *   @import "@ahmetakyapi/theme/theme.css";
  *   @import "@ahmetakyapi/theme/css";
+ *   @import "@ahmetakyapi/ui/source.css";   (yalnızca @ahmetakyapi/ui kuruluysa)
  *
  * Bu dosya renk yazmaz; her değer theme.css'teki rol değişkenlerinden gelir.
  * Google Fonts @import'u v3'te kaldırıldı: render'ı bloklayan bir dış istekti
@@ -27,14 +28,47 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Seçim zemini açık wash, metin en koyu ton: `--primary-soft` orta ton
+     dolgu ve miras kalan gövde rengiyle seçili metin 1,3–1,8:1'e düşer.
+     Şablonların globals.css'iyle aynı kural. */
   ::selection {
-    background: var(--primary-soft);
-    color: inherit;
+    background: var(--primary-wash);
+    color: var(--text-strong);
+  }
+
+  /* Dolgulu yüzeyde wash dolguyu boyayamaz ve text-strong dolgunun rengine
+     düşer (koyu temada birincil düğmede 1,5–2:1). Dolgunun kendi çifti
+     kullanılır: birincilde ters çevrilir (on-primary / primary, sözleşmede
+     AA), CTA degradesinde düz ters renk yok, beyaz metin kalır ve zemin
+     bir tık aydınlanır (sözleşme: her durakta ≥ 3:1). */
+  .text-on-primary::selection,
+  .text-on-primary ::selection {
+    background: var(--on-primary);
+    color: var(--primary);
+  }
+
+  .text-on-brand::selection,
+  .text-on-brand ::selection {
+    background: color-mix(in srgb, var(--on-brand) 18%, transparent);
+    color: var(--on-brand);
   }
 
   :focus-visible {
     outline: 2px solid var(--line-focus);
     outline-offset: 2px;
+  }
+
+  /* Kırpan kabı dolduran öğenin (kartı kaplayan `absolute inset-0` bağlantı)
+     dış halkasını ata keser (WCAG 2.4.11); <Surface> her zaman
+     overflow-hidden. Halka yalnızca orada ya da `.focus-inset` ile içeri
+     alınır: içerideki halka öğenin kendi zeminine çizilir, `bg-primary` /
+     `bg-cta` dolgulu düğmede dolguyla aynı renk olur ve odak kaybolur.
+     Üstteki kuraldan SONRA gelmeli (eşit özgüllük). */
+  :where(
+      .focus-inset,
+      :where(.overflow-hidden, .overflow-clip, .overflow-auto, .overflow-x-auto) .absolute.inset-0
+    ):focus-visible {
+    outline-offset: -2px;
   }
 
   /* İnce kaydırma çubuğu */
@@ -129,14 +163,16 @@
 
 /* ─── Tema geçişi (View Transitions) ───────────────────────────────────── */
 /* ThemeToggle `--vt-x` / `--vt-y` değişkenlerini tıklanan noktaya yazar;
-   yeni tema o noktadan büyüyen bir daireyle açılır. */
-::view-transition-old(root),
-::view-transition-new(root) {
+   yeni tema o noktadan büyüyen bir daireyle açılır. `theme-switching` sınıfı
+   animasyonu yalnızca tema geçişine bağlar: sınıfsız kural projenin her
+   `startViewTransition`ını (sayfa geçişi, liste düzeni) bu daireye çevirirdi. */
+html.theme-switching::view-transition-old(root),
+html.theme-switching::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
 
-::view-transition-new(root) {
+html.theme-switching::view-transition-new(root) {
   animation: theme-reveal 0.5s var(--ease-brand, ease-out);
 }
 
@@ -178,7 +214,7 @@
     transition-duration: 0.01ms !important;
   }
 
-  ::view-transition-new(root) {
+  html.theme-switching::view-transition-new(root) {
     animation: none;
   }
 

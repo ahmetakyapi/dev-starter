@@ -13,15 +13,15 @@ import {
   DUR,
   SPRING,
   STAGGER,
-  fadeUp,
-  fadeIn,
   stagger,
   staggerContainer,
 } from '../packages/@ahmet/ui/src/variants'
+import * as variantModule from '../packages/@ahmet/ui/src/variants'
 import { cn } from '../packages/@ahmet/ui/src/utils'
 import { animation, gradients, colors, motion, roles, palettes } from '../packages/@ahmet/theme/tokens'
 
 const THEME_CSS = readFileSync(new URL('../packages/@ahmet/theme/theme.css', import.meta.url), 'utf8')
+const INDEX_CSS = readFileSync(new URL('../packages/@ahmet/theme/index.css', import.meta.url), 'utf8')
 
 /** theme.css'ten bir seçici bloğunun gövdesini çıkarır (seçici ` {` ile biter) */
 function cssBlock(selector: string): string {
@@ -73,11 +73,17 @@ function parseColor(value: string): { rgb: RGB; alpha: number } {
   throw new Error(`çözülemeyen renk: ${value}`)
 }
 
-/** Yarı saydam rengi zeminle harmanlar — wash gerçekte zeminin üstünde görünür */
-function over(value: string, background: string): RGB {
+/** Yarı saydam rengi zeminle harmanlar — wash gerçekte zeminin üstünde görünür.
+ *  Zemin zaten harmanlanmış olabilir (wash ∘ kart ∘ sayfa). */
+function over(value: string, background: string | RGB): RGB {
   const fg = parseColor(value)
-  const bg = parseColor(background).rgb
+  const bg = typeof background === 'string' ? parseColor(background).rgb : background
   return fg.rgb.map((c, i) => c * fg.alpha + bg[i] * (1 - fg.alpha)) as RGB
+}
+
+/** Degradenin hex duraklarını sırayla çıkarır */
+function gradientStops(value: string): RGB[] {
+  return [...value.matchAll(/#[0-9a-f]{6}/gi)].map((match) => parseColor(match[0]).rgb)
 }
 
 function luminance([r, g, b]: RGB) {
@@ -94,6 +100,8 @@ function contrast(a: RGB, b: RGB) {
 }
 
 const AA = 4.5
+// index.css → .text-on-brand ::selection karışım oranı
+const CTA_SELECTION_MIX = 18
 
 describe('imza ease eğrisi', () => {
   // Ekosistemin tek geçiş eğrisi. Değişirse her projedeki her animasyonun
@@ -106,10 +114,17 @@ describe('imza ease eğrisi', () => {
     expect([...animation.ease]).toEqual([...EASE])
   })
 
-  it('tüm hazır varyantlar imza eğrisini kullanır', () => {
-    for (const v of [fadeUp, fadeIn]) {
-      const t = (v.visible as { transition?: { ease?: unknown } }).transition
-      expect(t?.ease).toEqual(EASE)
+  it('tüm hazır giriş varyantları imza eğrisini kullanır', () => {
+    // Liste elle yazılmaz, modül taranır: yeni varyant kendiliğinden kapsamda.
+    // `exit` bilerek dışarıda: çıkış ease-in (guides/04-motion.md → exitOf).
+    // Fabrikalar (stagger, staggerContainer) yalnızca sıralar, eğri taşımaz.
+    const entries = Object.entries(variantModule).filter(
+      ([, v]) => typeof v === 'object' && v !== null && 'visible' in v,
+    )
+    expect(entries.map(([name]) => name)).toEqual(expect.arrayContaining(['fadeUp', 'fadeIn', 'modalBackdrop']))
+    for (const [name, v] of entries) {
+      const t = (v as { visible: { transition?: { ease?: unknown } } }).visible.transition
+      expect(t?.ease, name).toEqual(EASE)
     }
   })
 
@@ -215,6 +230,24 @@ describe('theme.css ↔ tokens.ts', () => {
     expect(cssVar(block, '--primary')).toBe('var(--palette-primary)')
     expect(cssVar(block, '--line-focus')).toBe('var(--palette-primary)')
     expect(cssVar(block, '--brand-gradient')).toBe('var(--palette-brand-gradient)')
+    expect(cssVar(block, '--cta-gradient')).toBe('var(--palette-cta-gradient)')
+  })
+
+  // Şablonlar ve snippets/ui bu adlarla yazar. Paket köprüsünde yoksa sınıf
+  // pakete kurulmuş projede hiç derlenmez: diyalog gölgesiz, CTA zeminsiz
+  // kalır ve hiçbir araç uyarmaz.
+  it('şablonun sınıf adları paket köprüsünde de var', () => {
+    for (const name of [
+      '--shadow-raised',
+      '--shadow-floating',
+      '--shadow-modal',
+      '--color-accent-warm',
+      '--color-on-brand',
+    ]) {
+      expect(THEME_CSS, name).toMatch(new RegExp(`@theme inline \\{[^}]*${name}:`))
+    }
+    expect(THEME_CSS).toMatch(/@utility bg-cta \{\s*background-image: var\(--cta-gradient\)/)
+    expect(THEME_CSS).toContain('--text-hero--line-height:')
   })
 
   it('varsayılan marka signature paletiyle aynı', () => {
@@ -235,8 +268,39 @@ describe('theme.css ↔ tokens.ts', () => {
   })
 
   it('Google Fonts @import yok (font next/font ile yüklenir)', () => {
-    const indexCss = readFileSync(new URL('../packages/@ahmet/theme/index.css', import.meta.url), 'utf8')
-    for (const css of [THEME_CSS, indexCss]) expect(css).not.toMatch(/@import\s+url\(['"]?https:\/\/fonts\.googleapis/)
+    // `url(...)` ve düz dize biçimi ikisi de render'ı bloklar
+    const googleFonts = /@import\s+(?:url\(\s*)?['"]?https?:\/\/fonts\.(?:googleapis|gstatic)\.com/
+    for (const sample of [
+      '@import url("https://fonts.googleapis.com/css2?family=Manrope");',
+      '@import url(https://fonts.googleapis.com/css2?family=Manrope);',
+      '@import "https://fonts.googleapis.com/css2?family=Manrope";',
+    ]) {
+      expect(sample).toMatch(googleFonts)
+    }
+    for (const css of [THEME_CSS, INDEX_CSS]) expect(css).not.toMatch(googleFonts)
+  })
+
+  it('seçim zemini wash, metni text-strong (kontrastı aşağıda ölçülür)', () => {
+    const selection = /::selection \{([^}]*)\}/.exec(INDEX_CSS)?.[1] ?? ''
+    expect(selection).toContain('background: var(--primary-wash)')
+    expect(selection).toContain('color: var(--text-strong)')
+  })
+
+  // Genel kural dolgulu yüzeyde dolguya düşer: dolgu kendi çiftini taşır
+  it('dolgulu yüzeyde seçim dolgunun kendi rengini kullanır', () => {
+    const onPrimary = /\.text-on-primary ::selection \{([^}]*)\}/.exec(INDEX_CSS)?.[1] ?? ''
+    expect(onPrimary).toContain('background: var(--on-primary)')
+    expect(onPrimary).toContain('color: var(--primary)')
+    const onBrand = /\.text-on-brand ::selection \{([^}]*)\}/.exec(INDEX_CSS)?.[1] ?? ''
+    expect(onBrand).toContain(`background: color-mix(in srgb, var(--on-brand) ${CTA_SELECTION_MIX}%, transparent)`)
+    expect(onBrand).toContain('color: var(--on-brand)')
+  })
+
+  // İçe alınan halka öğenin kendi zeminine çizilir: dolgulu düğmede dolguyla
+  // aynı renk olur. Kırpan kabın HER torununa uygulanan kural odağı siler.
+  it('odak halkası yalnızca kartı dolduran öğede ya da .focus-inset ile içeride', () => {
+    expect(INDEX_CSS).not.toMatch(/overflow-x-auto\)\s*:focus-visible/)
+    expect(INDEX_CSS).toMatch(/\.focus-inset,\s*:where\([^)]*\) \.absolute\.inset-0\s*\):focus-visible \{\s*outline-offset: -2px/)
   })
 })
 
@@ -258,6 +322,53 @@ describe('WCAG kontrastı — her palet × tema', () => {
 
       it(`${name}/${theme}: primary-ink / (wash ∘ page-bg) ≥ ${AA}`, () => {
         expect(contrast(parseColor(p.primaryInk).rgb, over(p.primaryWash, page))).toBeGreaterThanOrEqual(AA)
+      })
+
+      // index.css ::selection: seçili metin seçili olmayandan okunaksız olmaz
+      it(`${name}/${theme}: seçim — text-strong / (wash ∘ page-bg) ≥ ${AA}`, () => {
+        const strong = parseColor(roles[theme].textStrong).rgb
+        expect(contrast(strong, over(p.primaryWash, page))).toBeGreaterThanOrEqual(AA)
+      })
+
+      // Dışarıdaki halka (`--line-focus` = primary) sayfa zemininde görünür
+      it(`${name}/${theme}: odak halkası / page-bg ≥ 3`, () => {
+        expect(contrast(parseColor(p.primary).rgb, pageRgb)).toBeGreaterThanOrEqual(3)
+      })
+
+      // Seçili CTA metni: beyaz metin, zemin on-brand ile bir tık aydınlanır.
+      // Her durakta en az 3:1 (seçim geçici durum; düz CTA zaten AA).
+      it(`${name}/${theme}: seçim — on-brand / (on-brand ∘ cta durağı) ≥ 3`, () => {
+        const onBrandHex = cssVar(cssBlock(':root'), '--on-brand') ?? ''
+        const onBrand = parseColor(onBrandHex).rgb
+        for (const stop of gradientStops(p.ctaGradient)) {
+          const mixed = onBrand.map((c, i) => c * (CTA_SELECTION_MIX / 100) + stop[i] * (1 - CTA_SELECTION_MIX / 100)) as RGB
+          expect(contrast(onBrand, mixed)).toBeGreaterThanOrEqual(3)
+        }
+      })
+
+      // Birincil eylem `bg-cta text-on-brand`: degradenin HER durağı ölçülür,
+      // ortalama değil. Açık ucu geçmeyen degrade CTA olamaz (bg-brand bu yüzden karo).
+      it(`${name}/${theme}: on-brand / cta-gradient her durak ≥ ${AA}`, () => {
+        const onBrand = parseColor(cssVar(cssBlock(':root'), '--on-brand') ?? '').rgb
+        const stops = gradientStops(p.ctaGradient)
+        expect(stops.length).toBeGreaterThanOrEqual(2)
+        for (const stop of stops) expect(contrast(onBrand, stop)).toBeGreaterThanOrEqual(AA)
+      })
+    }
+  }
+
+  // Durum renkleri sistem katmanında: palet değişse de aynı. Rozet 12 px
+  // metni kendi wash'ı üstünde yazar, çoğu zaman bir kartın içinde.
+  for (const theme of ['light', 'dark'] as const) {
+    const r = roles[theme]
+    const card = over(r.surface, r.pageBg)
+    for (const status of ['success', 'warning', 'danger'] as const) {
+      const wash = r[`${status}Wash`]
+      it(`sistem/${theme}: ${status} / page-bg, (wash ∘ page-bg), (wash ∘ kart) ≥ ${AA}`, () => {
+        const ink = parseColor(r[status]).rgb
+        expect(contrast(ink, parseColor(r.pageBg).rgb), 'page').toBeGreaterThanOrEqual(AA)
+        expect(contrast(ink, over(wash, r.pageBg)), 'wash').toBeGreaterThanOrEqual(AA)
+        expect(contrast(ink, over(wash, card)), 'kart').toBeGreaterThanOrEqual(AA)
       })
     }
   }

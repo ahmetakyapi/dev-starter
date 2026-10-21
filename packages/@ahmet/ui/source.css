@@ -1,0 +1,15 @@
+/**
+ * @ahmetakyapi/ui — Tailwind kaynak kaydı
+ *
+ * Kullanım (app/globals.css), tema importlarından SONRA:
+ *   @import "@ahmetakyapi/ui/source.css";
+ *
+ * Tailwind v4'ün otomatik taraması node_modules'a hiç girmez. Bu dosya
+ * olmadan Button, Surface, CustomCursor ve Chip noktasının yardımcı
+ * sınıfları (`bg-primary`, `h-11`, `fixed`, `z-[9999]`…) yalnızca projenin
+ * kendi kodu aynı adı tesadüfen kullanıyorsa derlenir; bileşen stilsiz
+ * çizilir ve ne build ne tsc bunu görür.
+ *
+ * Yol bu dosyaya göredir: paketin derlenmiş çıktısını taratır.
+ */
+@source "./dist";
