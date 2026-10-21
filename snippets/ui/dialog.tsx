@@ -24,7 +24,14 @@ import { cn } from "@/lib/utils";
  * Desteklemeyen tarayıcıda diyalog animasyonsuz açılır, bozulmaz.
  *
  * İlk odak: tarayıcı ilk odaklanabilir öğeye gider. Başka bir öğe istiyorsan
- * ona `autoFocus` ver. Yıkıcı bir onayda ilk odak "Vazgeç"te olmalı.
+ * ona `data-autofocus` ver. `autoFocus` DEĞİL: React istemcide `autofocus`
+ * özniteliğini yazmaz (yalnızca sunucu çiziminde), bağlanırken çağırdığı
+ * `focus()` da kapalı diyalogda boşa gider; istemci gezinmesinden sonra ilk
+ * odak Kapat düğmesine düşerdi. Yıkıcı bir onayda `data-autofocus` "Vazgeç"te.
+ *
+ * Yerel kapanış da duruma yansır (`<form method="dialog">`, tarayıcının
+ * zorla kapatması): yoksa `open` açık kalır, kaydırma kilidi çözülmez ve
+ * diyalog bir daha açılmaz.
  */
 
 let lockCount = 0;
@@ -80,6 +87,7 @@ export function Dialog({
 }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLElement | null>(null);
+  const pressedBackdrop = useRef(false);
   const titleId = useId();
   const descriptionId = useId();
 
@@ -88,6 +96,11 @@ export function Dialog({
     if (!dialog || !open) return;
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (!dialog.open) dialog.showModal();
+    // Kapalı iç içe bir diyaloğun içeriği de DOM'da durur; ilk eşleşme onun
+    // görünmez düğmesi olursa odak hiçbir yere gitmez. Yalnız bu diyaloğun kendi hedefi.
+    [...dialog.querySelectorAll<HTMLElement>("[data-autofocus]")]
+      .find((el) => el.closest("dialog") === dialog)
+      ?.focus();
     lockScroll();
     return () => {
       dialog.close();
@@ -108,9 +121,21 @@ export function Dialog({
         event.preventDefault();
         onOpenChange(false);
       }}
+      onClose={(event) => {
+        // Öğe React'i atlayarak kapandı. `!currentTarget.open`: StrictMode'un
+        // kapat-aç provasından geç gelen `close` olayı açık diyaloğu kapatmasın.
+        if (open && !event.currentTarget.open) onOpenChange(false);
+      }}
+      onPointerDown={(event) => {
+        // Basışın başladığı yer: içeride metin seçip arka planda bırakmak da
+        // diyaloğun kendisine `click` düşürür (ortak ata); yazılmış form gitmesin.
+        pressedBackdrop.current = event.target === event.currentTarget;
+      }}
       onClick={(event) => {
-        // Diyaloğun kendisine (iç kabın dışına, yani arka plana) tıklandı.
-        if (dismissible && event.target === event.currentTarget) onOpenChange(false);
+        // Diyaloğun kendisine (iç kabın dışına, yani arka plana) basılıp bırakıldı.
+        const backdrop = pressedBackdrop.current && event.target === event.currentTarget;
+        pressedBackdrop.current = false;
+        if (dismissible && backdrop) onOpenChange(false);
       }}
       className={cn(
         "m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-line-strong bg-overlay p-0 text-body shadow-modal",

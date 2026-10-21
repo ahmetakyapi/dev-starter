@@ -12,9 +12,15 @@
  * aynı kimliği paylaşırsa çizgi bir çubuktan ötekine uçar. Kimlik
  * `useId` ile her örneğe ayrı üretilir.
  *
- * Erişilebilirlik: `tablist` / `tab` rolleri, `aria-selected`, ok tuşlarıyla
- * gezinme (yalnızca seçili sekme Tab sırasında). Hareketi azaltan okuyucuda
- * MotionConfig reducedMotion="user" kaymayı anlık konum değişimine çevirir.
+ * Erişilebilirlik: `tablist` / `tab` rolleri, `aria-selected`, ok tuşları
+ * ve Home/End ile gezinme (yalnızca seçili sekme Tab sırasında). Sekme
+ * paneline `idPrefix` + `tabPanelProps` ile bağlanır (`aria-controls` ↔
+ * `aria-labelledby`); bağlanmayan sekme ekran okuyucuda hiçbir şeyi
+ * denetlemeyen bir sekmedir. Hareketi azaltan okuyucuda MotionConfig
+ * reducedMotion="user" kaymayı anlık konum değişimine çevirir.
+ *
+ * Panelleri de kendisi çizen, `domMax` gerektirmeyen tam sekme bileşeni:
+ * `snippets/ui/tabs.tsx`. Bu dosya kayan çizginin kendisi gerektiğinde.
  *
  * Kullanım:
  *   const [tab, setTab] = useState('genel')
@@ -22,7 +28,9 @@
  *     tabs={[{ id: 'genel', label: 'Genel' }, { id: 'ayarlar', label: 'Ayarlar' }]}
  *     value={tab}
  *     onChange={setTab}
+ *     idPrefix="profil"
  *   />
+ *   <div {...tabPanelProps('profil', tab)}>…</div>
  */
 
 'use client'
@@ -38,18 +46,38 @@ type TabUnderlineProps = {
   tabs: readonly Tab[]
   value: string
   onChange: (id: string) => void
+  /** Panelleri bağlar; aynı önek `tabPanelProps`a verilir. Sayfada tekil olmalı. */
+  idPrefix?: string
   className?: string
 }
 
-export function TabUnderline({ tabs, value, onChange, className }: TabUnderlineProps) {
-  const layoutId = `tab-underline-${useId()}`
+/** Seçili sekmenin paneli: `<div {...tabPanelProps(idPrefix, value)}>` */
+export function tabPanelProps(idPrefix: string, id: string) {
+  return {
+    role: 'tabpanel',
+    id: `${idPrefix}-panel-${id}`,
+    'aria-labelledby': `${idPrefix}-tab-${id}`,
+    // Odaklanabilir içerik yoksa panel Tab sırasında kendisi durak olur
+    tabIndex: 0,
+  } as const
+}
+
+export function TabUnderline({ tabs, value, onChange, idPrefix, className }: TabUnderlineProps) {
+  const uid = useId()
+  const layoutId = `tab-underline-${uid}`
+  const prefix = idPrefix ?? uid
   const refs = useRef<(HTMLButtonElement | null)[]>([])
 
   function onKeyDown(e: React.KeyboardEvent, index: number) {
-    const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
-    if (!step) return
+    const last = tabs.length - 1
+    const nextIndex =
+      e.key === 'ArrowRight' ? (index === last ? 0 : index + 1)
+      : e.key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : -1
+    if (nextIndex < 0) return
     e.preventDefault()
-    const nextIndex = (index + step + tabs.length) % tabs.length
     onChange(tabs[nextIndex].id)
     refs.current[nextIndex]?.focus()
   }
@@ -67,6 +95,9 @@ export function TabUnderline({ tabs, value, onChange, className }: TabUnderlineP
               }}
               type="button"
               role="tab"
+              id={`${prefix}-tab-${tab.id}`}
+              // Panel yokken var olmayan kimliğe işaret etmesin: yalnızca önek verilince
+              aria-controls={idPrefix ? `${idPrefix}-panel-${tab.id}` : undefined}
               aria-selected={selected}
               tabIndex={selected ? 0 : -1}
               onClick={() => onChange(tab.id)}

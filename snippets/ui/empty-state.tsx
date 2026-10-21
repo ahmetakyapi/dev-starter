@@ -26,12 +26,16 @@ type EmptyStateProps = {
   icon?: ReactNode;
   scene?: ReactNode;
   variant?: "icon" | "scene" | "inline";
-  /** Başlığın düzeyi: sayfa düzeyinde boş durum h1 ya da h2 olabilir. */
-  as?: "p" | "h2" | "h3";
+  /**
+   * Başlığın düzeyi: sayfa düzeyinde boş durum h1 ya da h2 olabilir. Ad
+   * şablondaki `EmptyState` ile aynı; bu dosya onun yerine geçince çağrılar
+   * değişmez.
+   */
+  titleAs?: "p" | "h1" | "h2" | "h3";
   className?: string;
 };
 
-export function EmptyState({ title, hint, action, icon, scene, variant = "icon", as: Title = "p", className }: EmptyStateProps) {
+export function EmptyState({ title, hint, action, icon, scene, variant = "icon", titleAs: Title = "p", className }: EmptyStateProps) {
   if (variant === "inline") {
     return (
       <div className={cn("flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3", className)}>

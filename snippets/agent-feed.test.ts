@@ -109,6 +109,14 @@ describe('parseFeedItem', () => {
     expect(parseFeedItem({ ...conflict, undoToken: 'x' })?.undoToken).toBeUndefined()
   })
 
+  it('kapanmis karar kulvarini ve aksiyonlarini korur, Geri Al tasir', () => {
+    const closed = parseFeedItem({ ...conflict, resolvedSummary: 'Perşembeye taşıdım', undoToken: 'u1' })
+    expect(closed).toMatchObject({ lane: 'needs-you', resolvedSummary: 'Perşembeye taşıdım', undoToken: 'u1' })
+    expect(closed?.actions).toHaveLength(1)
+    // handled ogede kapanis ozeti alani anlamsiz: baslik zaten ozettir
+    expect(parseFeedItem({ ...autoHandled, resolvedSummary: 'x' })?.resolvedSummary).toBeUndefined()
+  })
+
   it('onceligi 0..3 araligina kirpar', () => {
     expect(parseFeedItem({ ...conflict, priority: 99 })?.priority).toBe(3)
   })
@@ -222,6 +230,35 @@ describe('feedReducer', () => {
     expect(selectFeed(s).lastDismissed?.item.id).toBe('cal-2')
     s = feedReducer(s, { type: 'undo', id: 'cal-2' })
     expect(selectFeed(s).suggestions.map((e) => e.item.id)).toEqual(['cal-2'])
+  })
+
+  it('son gecilen EN SON gecilendir, listedeki son oge degil', () => {
+    // Ekranda yukaridan asagi gecmek liste sirasinin tersine gidebilir
+    let s = feedReducer(initFeed(items), { type: 'dismiss', id: 'cal-2' })
+    s = feedReducer(s, { type: 'dismiss', id: 'cal-1' })
+    expect(selectFeed(s).lastDismissed?.item.id).toBe('cal-1')
+    s = feedReducer(s, { type: 'undo', id: 'cal-1' })
+    expect(selectFeed(s).lastDismissed?.item.id).toBe('cal-2')
+  })
+
+  it('yeniden yuklenen kapanmis karar Geri Al ile karara doner', () => {
+    // Sunucu karari yeniden acar; istemci de acmali (sayfa yenilendikten sonra da)
+    const closed = parseFeedItem({ ...conflict, resolvedSummary: 'Perşembeye taşıdım', undoToken: 'u1' })!
+    let s = initFeed([closed])
+    expect(selectFeed(s).handled[0]).toMatchObject({ summary: 'Perşembeye taşıdım', undoToken: 'u1' })
+    expect(selectFeed(s).needsYou).toEqual([])
+    s = feedReducer(s, { type: 'undo', id: 'cal-1' })
+    expect(selectFeed(s).needsYou.map((e) => e.item.id)).toEqual(['cal-1'])
+    expect(selectFeed(s).handled).toEqual([])
+  })
+
+  it('basarisiz Geri Al satirda gorunur hata birakir, basarili olan temizler', () => {
+    let s = feedReducer(initFeed(items), { type: 'undo-fail', id: 'xls-1', error: 'Geri alma süresi doldu' })
+    expect(selectFeed(s).handled[0]).toMatchObject({ error: 'Geri alma süresi doldu', undoToken: 'u-xls-1' })
+    s = feedReducer(s, { type: 'undo', id: 'xls-1' })
+    expect(selectFeed(s).handled[0]?.error).toBeUndefined()
+    // Acik karta "geri alma hatasi" yazilmaz
+    expect(feedReducer(s, { type: 'undo-fail', id: 'cal-1', error: 'x' }).entries[0]?.error).toBeUndefined()
   })
 
   it('yalnizca taslak ogeler duzenlenir', () => {

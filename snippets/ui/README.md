@@ -84,7 +84,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `stepper.tsx` | Çok adımlı akışta konum | lucide | Hayır | `<ol>`, `aria-current="step"`, gizli "Tamamlandı" |
 | `file-dropzone.tsx` | Dosya yükleme | yok | Evet | Klavyeyle açılır, reddedilen dosya nedeniyle okunur; SVG varsayılan RED |
 | `timeline.tsx` | Tarihli olaylar | yok | Hayır | `<ol>` + `<time dateTime>` |
-| `empty-state.tsx` | Boş durum: ikon / sahne / satır | yok | Hayır | Sahne `aria-hidden`; başlık düzeyi `as` ile |
+| `empty-state.tsx` | Boş durum: ikon / sahne / satır | yok | Hayır | Sahne `aria-hidden`; başlık düzeyi `titleAs` ile |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -101,4 +101,5 @@ JavaScript'siz de çalışır.
   ister (Chrome, Safari 26+). Firefox'ta solma yok, kaydırma çubuğu var.
 - **`tree-table.tsx` dar ekranda kayar** ama `data-table`daki solmayı taşımaz.
 - **`segmented-control.tsx`** düzen animasyonu için `domMax` yükler
-  (`domAnimation`dan büyük özellik paketi; yalnızca o denetim görününce).
+  (`domAnimation`dan büyük özellik paketi; onu içe aktaran rotalarda, denetim
+  çizilmese de iner). Gerçekten gerekince indirme yolu dosyanın başında.

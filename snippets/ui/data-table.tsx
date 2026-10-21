@@ -126,11 +126,15 @@ export function DataTable<Row>({
   className,
 }: DataTableProps<Row>) {
   const cellY = density === "compact" ? "py-2" : "py-3";
+  // Çubuk ölçeği sütun başına BİR kez: hücre döngüsünde taramak satır² çağrı
+  // demek. `reduce`, çok uzun dizide `Math.max(...dizi)`nin yığın taşmasını önler.
   const maxima = new Map<string, number>();
+  const signedColumns = new Set<string>();
   for (const column of columns) {
     if (!column.bar) continue;
-    const values = rows.map((row) => Math.abs(column.bar!.value(row) ?? 0));
-    maxima.set(column.key, Math.max(0, ...values));
+    const values = rows.map((row) => column.bar!.value(row) ?? 0);
+    maxima.set(column.key, values.reduce((max, value) => Math.max(max, Math.abs(value)), 0));
+    if (values.some((value) => value < 0)) signedColumns.add(column.key);
   }
   const message =
     state === "error" ? error : state === "ready" && rows.length === 0 ? empty : null;
@@ -238,7 +242,7 @@ export function DataTable<Row>({
                             <ScaleBar
                               value={column.bar.value(row)}
                               max={maxima.get(column.key) ?? 0}
-                              signed={rows.some((r) => (column.bar!.value(r) ?? 0) < 0)}
+                              signed={signedColumns.has(column.key)}
                               tone={column.bar.tone}
                             />
                           ) : null}
@@ -307,7 +311,15 @@ export function parseSort(
   return key && sortable.includes(key) ? { key, dir } : fallback;
 }
 
-/** Sunucuda sıralama. Boş değerler yönden bağımsız olarak SONA gider. */
+/**
+ * Boş: değer yok ya da sayıya çevrilemedi (`Number("—")` → NaN). NaN
+ * karşılaştırıcıyı tutarsız yapar ve yalnızca kendi satırını değil bütün
+ * sütunun sırasını bozar.
+ */
+const isEmpty = (value: number | string | null | undefined) =>
+  value === null || value === undefined || (typeof value === "number" && Number.isNaN(value));
+
+/** Sunucuda sıralama. Boş değerler (NaN dahil) yönden bağımsız olarak SONA gider. */
 export function sortRows<Row>(rows: readonly Row[], columns: readonly Column<Row>[], sort?: SortState): Row[] {
   const column = sort && columns.find((c) => c.key === sort.key);
   if (!sort || !column?.sortValue) return [...rows];
@@ -316,8 +328,8 @@ export function sortRows<Row>(rows: readonly Row[], columns: readonly Column<Row
   return [...rows].sort((a, b) => {
     const x = read(a);
     const y = read(b);
-    if (x === null || x === undefined) return 1;
-    if (y === null || y === undefined) return -1;
+    if (isEmpty(x)) return isEmpty(y) ? 0 : 1;
+    if (isEmpty(y)) return -1;
     if (typeof x === "number" && typeof y === "number") return (x - y) * factor;
     return String(x).localeCompare(String(y), "tr-TR") * factor;
   });

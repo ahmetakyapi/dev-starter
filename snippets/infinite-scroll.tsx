@@ -3,12 +3,19 @@
  *
  * IntersectionObserver tabanlı, sonsuz liste yükleme.
  *
+ * `ref` bir geri çağırma ref'i: nöbetçi öğe ilk çizimde yoksa (yüklenirken
+ * erken dönen iskelet, boş durum) da sonradan geldiği an gözlenir. Nesne
+ * ref'iyle etki ilk çizimde `null` görüp bir daha çalışmıyor, liste 1.
+ * sayfada sessizce duruyordu.
+ *
  * Kullanım:
  *   const { ref, inView } = useInfiniteScroll()
  *
+ *   // Tüm bağımlılıklar şart: sayfa yüklendikten sonra nöbetçi hâlâ
+ *   // görünürse `inView` değişmez, değişen tek şey `isFetchingNextPage`
  *   useEffect(() => {
- *     if (inView && hasNextPage) fetchNextPage()
- *   }, [inView])
+ *     if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage()
+ *   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
  *
  *   <ul>{items.map(...)}</ul>
  *   <div ref={ref}>{isFetchingNextPage && <Spinner />}</div>
@@ -16,7 +23,7 @@
 
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface UseInfiniteScrollOptions {
   threshold?: number  // 0-1 arası, ne kadar görününce tetiklensin
@@ -27,11 +34,12 @@ export function useInfiniteScroll({
   threshold = 0.1,
   rootMargin = '0px 0px 200px 0px',  // 200px önceden tetikle
 }: UseInfiniteScrollOptions = {}) {
-  const ref = useRef<HTMLDivElement>(null)
+  // Öğe durumda tutulur: değişince (sonradan gelince, yeniden kurulunca) etki
+  // yeniden çalışır ve gözlemci yeni öğeye bağlanır
+  const [el, ref] = useState<HTMLElement | null>(null)
   const [inView, setInView] = useState(false)
 
   useEffect(() => {
-    const el = ref.current
     if (!el) return
 
     const observer = new IntersectionObserver(
@@ -41,9 +49,10 @@ export function useInfiniteScroll({
 
     observer.observe(el)
     return () => observer.disconnect()
-  }, [threshold, rootMargin])
+  }, [el, threshold, rootMargin])
 
-  return { ref, inView }
+  // Nöbetçi kalktıysa son ölçüm bayattır
+  return { ref, inView: el ? inView : false }
 }
 
 

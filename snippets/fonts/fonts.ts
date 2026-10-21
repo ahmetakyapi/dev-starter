@@ -61,8 +61,8 @@ import {
  * ÖLÇÜLDÜ (Next 16.3, üretim derlemesi): next/font, modülde TANIMLI her
  * yükleyiciyi sayfaya bağlar; hangi `variable`ın kullanıldığına bakmaz. Bu
  * dosyayı olduğu gibi içe aktarıp yalnızca `signature`ı kullanan bir sayfa
- * 32 woff2 ön yüklemesi (`Link` başlığı) ve 80 `@font-face` kuralı aldı;
- * yalnızca iki aile yükleyen şablon sayfası 6 ön yükleme. Kopyaladıktan
+ * 30 woff2 ön yüklemesi (`Link` başlığı) ve 75 `@font-face` kuralı aldı;
+ * yalnızca iki aile yükleyen şablon sayfası 4 ön yükleme. Kopyaladıktan
  * sonra seçtiğin presetin yükleyicileri dışındakileri SİL.
  */
 
@@ -97,7 +97,9 @@ const newsreader = Newsreader({
 const bricolage = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], axes: ["opsz"], variable: "--font-display-face", display: "swap" });
 
 /* --- Mono (--font-mono-face) --------------------------------------------- */
-const plexMono = IBM_Plex_Mono({ subsets: ["latin", "latin-ext"], weight: ["400", "500"], variable: "--font-mono-face", display: "swap" });
+// Plex Mono değişken değil: her ağırlık alt küme başına ayrı, önceden yüklenen
+// bir dosya. Mono künye ve etikette 400'de; kalın mono gerekirse o gün ekle.
+const plexMono = IBM_Plex_Mono({ subsets: ["latin", "latin-ext"], weight: "400", variable: "--font-mono-face", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-face", display: "swap" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-face", display: "swap" });
 

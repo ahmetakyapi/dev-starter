@@ -129,7 +129,11 @@ export function RouteProgress({ label = "Yükleniyor", className }: RouteProgres
     };
 
     const onPopState = () => {
-      if (`${window.location.pathname}?${window.location.search.slice(1)}` !== settled.current) startRouteProgress();
+      // Anahtar `useSearchParams().toString()` ile AYNI biçimde kurulur. Ham
+      // `location.search` virgülü, boşluğu farklı kodlar; yalnızca çapası değişen
+      // bir Geri gezinme sanılır ve çubuğu ancak emniyet freni söndürürdü.
+      const search = new URLSearchParams(window.location.search).toString();
+      if (`${window.location.pathname}?${search}` !== settled.current) startRouteProgress();
     };
 
     document.addEventListener("click", onClick, { capture: true });

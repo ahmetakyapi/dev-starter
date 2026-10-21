@@ -33,4 +33,18 @@ describe('findFlights tool', () => {
     // dondurmek her arama icin token yakar; liste zaten ekranda.
     expect(JSON.stringify(result).length).toBeLessThan(120)
   })
+
+  it('bozuk argumanda arama YAPMAZ ve modele basari DEMEZ', async () => {
+    // CopilotKit argumani semaya karsi dogrulamaz; model `to`yu unutabilir
+    // ya da sayi yazabilir. Handler kendisi dogrular.
+    const onSearch = vi.fn()
+    const handler = createFindFlightsHandler(onSearch)
+
+    for (const raw of [{ from: 'Graz' }, { from: 42, to: 'Roma' }, { from: '', to: 'Roma' }, null]) {
+      // 1) modelin gordugu: hata, "searched" yok
+      expect(await handler(raw)).toMatchObject({ ok: false })
+    }
+    // 2) kullanicinin gordugu: hicbir yonlendirme olmadi
+    expect(onSearch).not.toHaveBeenCalled()
+  })
 })

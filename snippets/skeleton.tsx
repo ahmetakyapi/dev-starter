@@ -6,6 +6,15 @@
  * içerik inince kayma (CLS) üretir. Hareketi azaltan okuyucuda nabız
  * tema paketinin global kısaltmasıyla durur.
  *
+ * Şablon projesinde `snippets/ui/skeleton.tsx`i tercih et: şablonun
+ * `.skeleton` yardımcısını kullanır. Bu dosya o yardımcı olmayan (paketle
+ * kurulmuş) proje için; orada `cn` `@ahmetakyapi/ui/core`dan alınır (kök
+ * giriş 'use client' taşır, sunucu bileşeninde çağrılamaz).
+ *
+ * `cn` birleştiren (twMerge) olmalı: düz birleştirmede tabanın `rounded-md`si
+ * çağıranın `rounded-full`unun yanında kalır, Tailwind v4 `rounded-md`yi
+ * sonra bastığı için avatar daire değil köşeli kare çıkar.
+ *
  * Kullanim:
  *   <Skeleton className="h-10 w-48" />
  *   <SkeletonCard />
@@ -13,9 +22,7 @@
  *   <SkeletonAvatar size="lg" />
  */
 
-function cn(...classes: (string | undefined | false)[]) {
-  return classes.filter(Boolean).join(' ')
-}
+import { cn } from '@/lib/utils'
 
 // --- Base Skeleton ---
 type SkeletonProps = {

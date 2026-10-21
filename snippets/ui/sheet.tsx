@@ -19,6 +19,10 @@ import { cn } from "@/lib/utils";
  *
  * Güvenli alan: alt kenardaki dolgu `env(safe-area-inset-bottom)` taşır;
  * yoksa ana ekran çubuğu son düğmenin üstüne biner.
+ *
+ * İlk odak ve yerel kapanış `dialog.tsx` ile aynı: başka bir öğe için
+ * `data-autofocus` (`autoFocus` istemcide işlemez), `<form method="dialog">`
+ * gibi React'i atlayan kapanış da duruma yansır.
  */
 
 /** Bu kadar aşağı sürüklenirse kapanır. */
@@ -28,12 +32,20 @@ let lockCount = 0;
 
 function lockScroll() {
   lockCount += 1;
-  if (lockCount === 1) document.documentElement.style.overflow = "hidden";
+  if (lockCount === 1) {
+    const gap = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.overflow = "hidden";
+    // Kaydırma çubuğu kaybolunca sayfa yana kaymasın (yan panel masaüstünde açılır).
+    if (gap > 0) document.documentElement.style.paddingRight = `${gap}px`;
+  }
 }
 
 function unlockScroll() {
   lockCount = Math.max(0, lockCount - 1);
-  if (lockCount === 0) document.documentElement.style.removeProperty("overflow");
+  if (lockCount === 0) {
+    document.documentElement.style.removeProperty("overflow");
+    document.documentElement.style.removeProperty("padding-right");
+  }
 }
 
 type SheetProps = {
@@ -63,6 +75,7 @@ export function Sheet({
   const ref = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLElement | null>(null);
   const dragStart = useRef<number | null>(null);
+  const pressedBackdrop = useRef(false);
   const [drag, setDrag] = useState(0);
   const titleId = useId();
   const descriptionId = useId();
@@ -72,6 +85,11 @@ export function Sheet({
     if (!dialog || !open) return;
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (!dialog.open) dialog.showModal();
+    // Kapalı iç içe bir diyaloğun içeriği de DOM'da durur; ilk eşleşme onun
+    // görünmez düğmesi olursa odak hiçbir yere gitmez. Yalnız bu diyaloğun kendi hedefi.
+    [...dialog.querySelectorAll<HTMLElement>("[data-autofocus]")]
+      .find((el) => el.closest("dialog") === dialog)
+      ?.focus();
     lockScroll();
     return () => {
       dialog.close();
@@ -109,8 +127,18 @@ export function Sheet({
         event.preventDefault();
         onOpenChange(false);
       }}
+      onClose={(event) => {
+        if (open && !event.currentTarget.open) onOpenChange(false);
+      }}
+      onPointerDown={(event) => {
+        // Arka plan yalnızca basış ORADA başladıysa kapatır: içeride metin
+        // seçip dışarıda bırakmak da diyaloğun kendisine `click` düşürür.
+        pressedBackdrop.current = event.target === event.currentTarget;
+      }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onOpenChange(false);
+        const backdrop = pressedBackdrop.current && event.target === event.currentTarget;
+        pressedBackdrop.current = false;
+        if (backdrop) onOpenChange(false);
       }}
       style={drag ? { translate: `0 ${drag}px`, transition: "none" } : undefined}
       className={cn(

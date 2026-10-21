@@ -70,8 +70,17 @@ export type FeedItem = {
   priority: number
   body: FeedBody
   actions: FeedAction[]
-  /** handled kulvarinda: ajanin yaptigi is geri alinabiliyorsa */
+  /**
+   * handled kulvarinda ya da kapanmis kararda: yapilan is geri alinabiliyorsa
+   */
   undoToken?: string
+  /**
+   * Kapanmis KARAR (needs-you/suggestion): kapanis ozeti. Oge kendi kulvarini,
+   * basligini ve aksiyonlarini KORUR, 'handled' satiri olarak acilir; Geri Al
+   * karti karara dondurur. Kulvar 'handled'a cevrilseydi sayfa yenilendikten
+   * sonra geri alma, sunucunun yeniden actigi karari istemcide kaybederdi.
+   */
+  resolvedSummary?: string
 }
 
 export type SponsoredItem = {
@@ -161,6 +170,7 @@ export function parseFeedItem(raw: unknown): FeedItem | null {
   if (actions.some((a) => a === null)) return null
 
   const priority = typeof raw.priority === 'number' ? Math.min(3, Math.max(0, Math.round(raw.priority))) : 0
+  const resolvedSummary = lane !== 'handled' ? str(raw.resolvedSummary) : undefined
 
   const item: FeedItem = {
     id,
@@ -174,7 +184,9 @@ export function parseFeedItem(raw: unknown): FeedItem | null {
     priority,
     body,
     actions: actions as FeedAction[],
-    undoToken: lane === 'handled' ? str(raw.undoToken) : undefined,
+    // Acik karar Geri Al tasimaz: geri alinacak bir sey henuz yapilmadi
+    undoToken: lane === 'handled' || resolvedSummary ? str(raw.undoToken) : undefined,
+    resolvedSummary,
   }
 
   // Karar bekleyen oge aksiyonsuz olamaz; handled oge aksiyon tasimaz
@@ -235,6 +247,8 @@ export type FeedEntry = {
   undoToken?: string
   /** Kullanicinin duzenledigi taslak metni */
   draftText?: string
+  /** Gecilme sirasi: "Son gecilen" listedeki son ogeyi degil, EN SON geceni gostersin */
+  dismissedSeq?: number
 }
 
 export type FeedState = { entries: FeedEntry[] }
@@ -245,13 +259,14 @@ export type FeedEvent =
   | { type: 'fail'; id: string; error: string }
   | { type: 'dismiss'; id: string }
   | { type: 'undo'; id: string }
+  | { type: 'undo-fail'; id: string; error: string }
   | { type: 'edit'; id: string; text: string }
 
 export function initFeed(items: readonly FeedItem[]): FeedState {
   return {
     entries: items.map((item) =>
-      item.lane === 'handled'
-        ? { item, phase: 'handled', summary: item.title, undoToken: item.undoToken }
+      item.lane === 'handled' || item.resolvedSummary !== undefined
+        ? { item, phase: 'handled', summary: item.resolvedSummary ?? item.title, undoToken: item.undoToken }
         : { item, phase: 'idle' },
     ),
   }
@@ -293,22 +308,31 @@ export function feedReducer(state: FeedState, event: FeedEvent): FeedState {
       return patch(state, event.id, (e) =>
         e.phase === 'pending' ? { ...e, phase: 'error', error: event.error, actionId: undefined } : e,
       )
-    case 'dismiss':
+    case 'dismiss': {
+      // Sayac state'ten gelir (Date.now degil): reducer saf kalir, test sabit
+      const seq = Math.max(0, ...state.entries.map((e) => e.dismissedSeq ?? 0)) + 1
       return patch(state, event.id, (e) =>
-        e.phase === 'idle' || e.phase === 'error' ? { ...e, phase: 'dismissed', error: undefined } : e,
+        e.phase === 'idle' || e.phase === 'error'
+          ? { ...e, phase: 'dismissed', error: undefined, dismissedSeq: seq }
+          : e,
       )
+    }
     case 'undo':
       return patch(state, event.id, (e) => {
-        if (e.phase === 'dismissed') return { ...e, phase: 'idle' }
+        if (e.phase === 'dismissed') return { ...e, phase: 'idle', dismissedSeq: undefined }
         if (e.phase !== 'handled' || !e.undoToken) return e
         // Kullanicinin onayladigi is geri alininca kart karar beklemeye doner
         if (e.item.lane !== 'handled') {
-          return { ...e, phase: 'idle', summary: undefined, undoToken: undefined }
+          return { ...e, phase: 'idle', summary: undefined, undoToken: undefined, error: undefined }
         }
         // Ajanin kendi yaptigi is: satir yerinde kalir, geri alindigini soyler.
         // Acilan karar (ornegin cakisma) bir sonraki uretimde yeni oge olarak gelir.
-        return { ...e, summary: `Geri alındı: ${e.summary ?? e.item.title}`, undoToken: undefined }
+        return { ...e, summary: `Geri alındı: ${e.summary ?? e.item.title}`, undoToken: undefined, error: undefined }
       })
+    case 'undo-fail':
+      // Satir yerinde kalir, hata GORUNUR olur: yalniz ekran okuyucuya soylenen
+      // hata, gorende "dugme yanip sondu, bir sey olmadi" hissi birakir.
+      return patch(state, event.id, (e) => (e.phase === 'handled' ? { ...e, error: event.error } : e))
     case 'edit':
       return patch(state, event.id, (e) =>
         e.item.body.type === 'draft' && (e.phase === 'idle' || e.phase === 'error') ? { ...e, draftText: event.text } : e,
@@ -348,7 +372,10 @@ export function selectFeed(
   // handled: akista kalan sira korunur (yeni cozulen alta degil, listedeki yerine)
   const handled = state.entries.filter((e) => e.phase === 'handled')
   const organic = needsYou.length + suggestions.length + handled.length
-  const dismissed = state.entries.filter((e) => e.phase === 'dismissed')
+  // Liste sirasi gecilme zamani DEGIL (ilk sira korunur): en son gecilen sayactan bulunur
+  const dismissed = state.entries
+    .filter((e) => e.phase === 'dismissed')
+    .sort((a, b) => (a.dismissedSeq ?? 0) - (b.dismissedSeq ?? 0))
 
   return {
     needsYou,

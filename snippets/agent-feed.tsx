@@ -33,7 +33,7 @@
 
 'use client'
 
-import { useId, useReducer, useState } from 'react'
+import { useEffect, useId, useReducer, useRef, useState } from 'react'
 import { AnimatePresence, m, useReducedMotion } from 'motion/react'
 
 import {
@@ -52,6 +52,14 @@ const EASE = [0.22, 1, 0.36, 1] as const
 
 type RunAction = (input: { itemId: string; actionId: string; draftText?: string }) => Promise<unknown>
 type UndoAction = (input: { itemId: string; undoToken: string }) => Promise<unknown>
+
+/**
+ * Odak nereye gitsin? Basilan dugmenin karti DOM'dan cikinca (gecildi,
+ * halledildi, geri alindi) odak <body>'ye duser ve klavye kullanicisi her
+ * kararda sayfanin basindan baslar (WCAG 2.4.3). `seq` ayni hedefe ikinci
+ * istegi de yeni istek yapar; odak yalnizca effect'te verilir.
+ */
+type FocusTarget = { to: 'card' | 'handled' | 'undo-dismiss'; id: string; seq: number }
 
 type AgentFeedProps = {
   name: string
@@ -91,7 +99,16 @@ export function AgentFeed({
 }: AgentFeedProps) {
   const [state, dispatch] = useReducer(feedReducer, initialItems, initFeed)
   const [announcement, setAnnouncement] = useState('')
+  const [focus, setFocus] = useState<FocusTarget>()
+  const undoDismissRef = useRef<HTMLButtonElement>(null)
   const view = selectFeed(state, sponsored)
+
+  const moveFocus = (to: FocusTarget['to'], id: string) => setFocus((f) => ({ to, id, seq: (f?.seq ?? 0) + 1 }))
+  const focusKey = (to: FocusTarget['to'], id: string) => (focus?.to === to && focus.id === id ? focus.seq : undefined)
+
+  useEffect(() => {
+    if (focus?.to === 'undo-dismiss') undoDismissRef.current?.focus()
+  }, [focus])
 
   async function act(entry: FeedEntry, actionId: string) {
     const id = entry.item.id
@@ -105,27 +122,34 @@ export function AgentFeed({
     if (result.ok) {
       dispatch({ type: 'succeed', id, summary: result.summary, undoToken: result.undoToken })
       setAnnouncement(result.summary)
+      moveFocus('handled', id)
     } else {
+      // Hata kartta role="alert" ile okunur; canli bolgeye ikinci kez yazilmaz
       dispatch({ type: 'fail', id, error: result.error })
-      setAnnouncement(result.error)
     }
   }
 
   async function undo(entry: FeedEntry) {
     if (!entry.undoToken) return
+    const id = entry.item.id
     // Geri Al MODELE UGRAMAZ: dogrudan, deterministik, token'siz
-    const result = parseActionResult(await undoAction({ itemId: entry.item.id, undoToken: entry.undoToken }).catch(() => null))
+    const result = parseActionResult(await undoAction({ itemId: id, undoToken: entry.undoToken }).catch(() => null))
     if (result.ok) {
-      dispatch({ type: 'undo', id: entry.item.id })
-      setAnnouncement(result.summary)
+      dispatch({ type: 'undo', id })
+      // Konu eklenir: sunucu her seferinde ayni "Geri alındı"yi doner ve ayni
+      // metin canli bolgede ikinci kez OKUNMAZ (React ayni state'te guncellemez)
+      setAnnouncement(`${result.summary}: ${entry.summary ?? entry.item.title}`)
+      // Onaylanan karar karta doner (basligina), ajanin isi satirda kalir
+      moveFocus(entry.item.lane === 'handled' ? 'handled' : 'card', id)
     } else {
-      setAnnouncement(result.error)
+      dispatch({ type: 'undo-fail', id, error: result.error })
     }
   }
 
   function dismiss(entry: FeedEntry) {
     dispatch({ type: 'dismiss', id: entry.item.id })
-    setAnnouncement('Geçildi')
+    setAnnouncement(`Geçildi: ${entry.item.title}`)
+    moveFocus('undo-dismiss', entry.item.id)
     void dismissAction?.(entry.item.id)
   }
 
@@ -153,13 +177,18 @@ export function AgentFeed({
       <ul className="mt-6 flex flex-col gap-3">
         <AnimatePresence initial={false}>
           {view.needsYou.map((entry) => (
-            <FeedCard key={entry.item.id} entry={entry} {...cardProps} />
+            <FeedCard key={entry.item.id} entry={entry} focusKey={focusKey('card', entry.item.id)} {...cardProps} />
           ))}
           {view.suggestions.map((entry) => (
-            <FeedCard key={entry.item.id} entry={entry} {...cardProps} />
+            <FeedCard key={entry.item.id} entry={entry} focusKey={focusKey('card', entry.item.id)} {...cardProps} />
           ))}
           {view.handled.map((entry) => (
-            <HandledRow key={entry.item.id} entry={entry} onUndo={undo} />
+            <HandledRow
+              key={entry.item.id}
+              entry={entry}
+              focusKey={focusKey('handled', entry.item.id)}
+              onUndo={undo}
+            />
           ))}
         </AnimatePresence>
       </ul>
@@ -168,11 +197,14 @@ export function AgentFeed({
         <p className="mt-3 flex items-center gap-2 text-small text-muted">
           Son geçilen: {view.lastDismissed.item.title}
           <button
+            ref={undoDismissRef}
             type="button"
             onClick={() => {
               if (!view.lastDismissed) return
-              dispatch({ type: 'undo', id: view.lastDismissed.item.id })
-              void undismissAction?.(view.lastDismissed.item.id)
+              const { id } = view.lastDismissed.item
+              dispatch({ type: 'undo', id })
+              moveFocus('card', id)
+              void undismissAction?.(id)
             }}
             className="min-h-11 rounded-md px-2 text-primary-ink underline-offset-4 hover:underline"
           >
@@ -190,19 +222,29 @@ export function AgentFeed({
 
 type CardProps = {
   entry: FeedEntry
+  /** Degistiginde kart basligina odaklanir */
+  focusKey?: number
   onAct: (entry: FeedEntry, actionId: string) => void
   onDismiss: (entry: FeedEntry) => void
   onEdit: (id: string, text: string) => void
   onOpenChat?: (item: FeedItem) => void
 }
 
-function FeedCard({ entry, onAct, onDismiss, onEdit, onOpenChat }: CardProps) {
+function FeedCard({ entry, focusKey, onAct, onDismiss, onEdit, onOpenChat }: CardProps) {
   const { item, phase } = entry
   const reduce = useReducedMotion()
   const [editing, setEditing] = useState(false)
+  const headingRef = useRef<HTMLHeadingElement>(null)
   const noteId = useId()
   const busy = phase === 'pending'
   const hasIrreversible = item.actions.some((a) => a.reversibility === 'irreversible')
+  // Bos taslak gonderilmez (sunucu da reddeder): silip yeniden yazmaya baslayan
+  // kullanicinin yanlislikla bastigi Gonder geri alinamaz bir bos e-postadir.
+  const blankDraft = item.body.type === 'draft' && entry.draftText !== undefined && entry.draftText.trim() === ''
+
+  useEffect(() => {
+    if (focusKey !== undefined) headingRef.current?.focus()
+  }, [focusKey])
 
   return (
     <m.li
@@ -222,7 +264,9 @@ function FeedCard({ entry, onAct, onDismiss, onEdit, onOpenChat }: CardProps) {
         {item.timeLabel && <p className="text-micro text-muted">{item.timeLabel}</p>}
       </div>
 
-      <h2 className="mt-2 text-read font-semibold text-strong">{item.title}</h2>
+      <h2 ref={headingRef} tabIndex={-1} className="mt-2 text-read font-semibold text-strong">
+        {item.title}
+      </h2>
 
       {/* Seffaflik: NEDEN bu kart burada — kural 10 */}
       <p className="mt-1 flex gap-1.5 text-small text-soft">
@@ -243,7 +287,7 @@ function FeedCard({ entry, onAct, onDismiss, onEdit, onOpenChat }: CardProps) {
           <button
             key={action.id}
             type="button"
-            disabled={busy}
+            disabled={busy || blankDraft}
             aria-describedby={action.reversibility === 'irreversible' ? noteId : undefined}
             onClick={() => {
               setEditing(false)
@@ -372,12 +416,28 @@ function FeedBodyView({
 
 // --- Halledilenler: tek satir + Geri Al --------------------------------------------
 
-function HandledRow({ entry, onUndo }: { entry: FeedEntry; onUndo: (entry: FeedEntry) => void }) {
+function HandledRow({
+  entry,
+  focusKey,
+  onUndo,
+}: {
+  entry: FeedEntry
+  /** Degistiginde satira odaklanir: ekran okuyucu ozeti okur */
+  focusKey?: number
+  onUndo: (entry: FeedEntry) => Promise<void>
+}) {
   const reduce = useReducedMotion()
   const [pending, setPending] = useState(false)
+  const rowRef = useRef<HTMLLIElement>(null)
+
+  useEffect(() => {
+    if (focusKey !== undefined) rowRef.current?.focus()
+  }, [focusKey])
 
   return (
     <m.li
+      ref={rowRef}
+      tabIndex={-1}
       initial={{ opacity: 0, y: reduce ? 0 : 6 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
@@ -387,12 +447,25 @@ function HandledRow({ entry, onUndo }: { entry: FeedEntry; onUndo: (entry: FeedE
       <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-primary text-on-primary">
         <CheckIcon />
       </span>
-      <p className="min-w-0 flex-1 text-base font-medium text-strong">{entry.summary}</p>
+      <div className="min-w-0 flex-1">
+        <p className="text-base font-medium text-strong">{entry.summary}</p>
+        {/* Deneme surerken eski hata kalkar: ayni metin ikinci kez gelse de
+            alert DOM'a yeniden girer ve yeniden okunur. Yerinde kalsaydi
+            metin degismedigi icin ekran okuyucu ikinci basarisizligi duymazdi. */}
+        {entry.error && !pending && (
+          <p role="alert" className="mt-1 text-small text-danger">
+            {entry.error}
+          </p>
+        )}
+      </div>
       {entry.undoToken ? (
+        // disabled DEGIL: odaktaki dugme devre disi kalinca odak <body>'ye
+        // duser; basarisiz denemeden sonra klavye kullanicisi yerini kaybeder
         <button
           type="button"
-          disabled={pending}
+          aria-disabled={pending || undefined}
           onClick={async () => {
+            if (pending) return
             setPending(true)
             try {
               await onUndo(entry)
@@ -400,7 +473,7 @@ function HandledRow({ entry, onUndo }: { entry: FeedEntry; onUndo: (entry: FeedE
               setPending(false)
             }
           }}
-          className="min-h-11 rounded-md px-2 text-small text-primary-ink underline-offset-4 hover:underline disabled:opacity-60"
+          className="min-h-11 rounded-md px-2 text-small text-primary-ink underline-offset-4 hover:underline aria-disabled:opacity-60"
         >
           Geri Al
         </button>

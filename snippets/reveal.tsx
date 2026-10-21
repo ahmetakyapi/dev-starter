@@ -33,7 +33,11 @@ import { m } from 'motion/react'
 const EASE = [0.22, 1, 0.36, 1] as const
 const DUR = { base: 0.28, slow: 0.5 } as const
 const STAGGER = 0.06
-const VIEWPORT = { once: true, margin: '-80px' } as const
+// Negatif `margin` YOK: Motion onu IntersectionObserver `rootMargin`i yapar ve
+// '-80px' kökü DÖRT kenardan daraltır. Sayfanın ilk ya da son 80 pikseline
+// düşen ya da telefonda kenara yaslı küçük öğe (bölüm künyesi çipi) hiç
+// kesişmez, opacity 0'da kalır. Şablonun `components/motion/Reveal.tsx`iyle aynı.
+const VIEWPORT = { once: true } as const
 
 const QUERY = '(prefers-reduced-motion: reduce)'
 

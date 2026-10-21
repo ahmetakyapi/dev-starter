@@ -1,17 +1,33 @@
 /**
- * OpenGraph görsel üretici
+ * OpenGraph görsel üretici (rota ucu)
  *
- * Kullanım: app/opengraph-image.tsx (dosya kuralı) ya da app/api/og/route.tsx
- * olarak kopyala. `next/og` Next'in içinde gelir; ayrı paket gerekmez.
+ * Kullanım: `app/api/og/route.tsx` olarak kopyala. `next/og` Next'in içinde
+ * gelir; ayrı paket gerekmez. `opengraph-image.tsx` dosya kuralı
+ * varsayılan dışa aktarım ister ve sorgu parametresi okumaz; bu dosya `GET`
+ * verir. Dosya kuralının örneği şablondaki `app/opengraph-image.tsx`.
  *
  *   /api/og?title=Başlık&subtitle=Alt+Başlık
+ *
+ * Mümkünse serbest metin alma: sayfa başına `opengraph-image.tsx` başlığı
+ * sayfanın kendi verisinden okur (`knowledge/tech-radar.md`). Serbest metin
+ * şartsa parametreleri imzala (`sig`, HMAC) ya da `lib/rate-limit` uygula;
+ * aşağıdaki kırpma yalnızca en ucuz savunma.
  *
  * RENKLER NEDEN JS'TEN: OG görselini Satori çiziyor ve Satori CSS değişkeni
  * çözmüyor; `var(--page-bg)` yazılırsa zemin boş çıkar. Değerler
  * @ahmetakyapi/theme'in `roles` (sistem) ve `palettes` (palet) aynasından
  * gelir; theme.css ile ayrışmadıkları tests/contract.test.ts'te doğrulanır.
- * Projenin paleti `signature` değilse `PALETTE`'i değiştir. Paket kurulu değilse
- * aynı değerleri projenin lib/theme.ts'inden oku, buraya hex yazma.
+ * Projenin paleti `signature` değilse `PALETTE`'i değiştir. Paket kurulu
+ * değilse (şablon projeleri) değerleri `app/globals.css`teki paletin koyu
+ * bloğundan sabit yaz ve kaynağını yorumda söyle, şablondaki
+ * `app/opengraph-image.tsx` gibi.
+ *
+ * KALINLIK: `next/og` yalnızca Geist Regular gömer; `fonts` verilmezse
+ * `fontWeight` yok sayılır. Kalın başlık için fontu projeden oku, `GET`i
+ * `async` yap ve ver:
+ *   const bold = await readFile(join(process.cwd(), 'assets/Brand-Bold.ttf'))
+ *   new ImageResponse(el, { ...SIZE, fonts: [{ name: 'Brand', data: bold, weight: 700 }] })
+ * sonra başlığa `fontWeight: 700` ekle.
  */
 
 import { ImageResponse } from 'next/og'
@@ -24,10 +40,22 @@ const PALETTE = 'signature'
 const C = roles[THEME]
 const P = palettes[PALETTE][THEME]
 
+// Sorgu metni güvenilmez ve uzunluğu bedava değil: Satori + resvg her
+// istekte senkron CPU yakar (kısa başlık ≈ 15 ms, 5 000 karakter ≈ 250 ms)
+// ve her farklı sorgu önbelleği ıskalar. Kod noktasıyla kırpılır, emoji
+// ortadan bölünmez; kontrol karakterleri atılır.
+function clip(value: string | null, max: number) {
+  return Array.from(value?.trim() ?? '')
+    .filter((ch) => ch >= ' ' && ch !== '\u007f')
+    .slice(0, max)
+    .join('')
+}
+
 export function GET(req: Request) {
   const { searchParams } = new URL(req.url)
-  const title = searchParams.get('title') ?? 'PROJECT_NAME'
-  const subtitle = searchParams.get('subtitle') ?? 'PROJECT_DESCRIPTION'
+  // 90 karakter 64 pikselde zaten üç satır; fazlası kartı taşırır
+  const title = clip(searchParams.get('title'), 90) || 'PROJECT_NAME'
+  const subtitle = clip(searchParams.get('subtitle'), 160) || 'PROJECT_DESCRIPTION'
 
   return new ImageResponse(
     (
@@ -58,7 +86,6 @@ export function GET(req: Request) {
             backgroundImage: P.brandGradient,
             marginBottom: 40,
             fontSize: 28,
-            fontWeight: 800,
             color: P.onPrimary,
           }}
         >
@@ -68,7 +95,6 @@ export function GET(req: Request) {
         <div
           style={{
             fontSize: 64,
-            fontWeight: 800,
             color: C.textStrong,
             textAlign: 'center',
             lineHeight: 1.1,

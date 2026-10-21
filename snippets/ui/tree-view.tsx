@@ -186,7 +186,10 @@ export function TreeView({ nodes, defaultExpanded = [], selectedId, onSelect, cl
           onFocus={(event) => {
             if (event.target === event.currentTarget) setFocusedId(node.id);
           }}
-          className="group/item outline-none"
+          // Halka yalnızca öğenin KENDİ satırına (`>div`). `group-focus-visible`
+          // alt öğe seçicisiyle derlenir; açık bir ebeveyn odaklanınca bütün
+          // torun satırlar da halka çizer, odağın nerede olduğu okunmazdı.
+          className="outline-none [&:focus-visible>div]:outline-2 [&:focus-visible>div]:outline-offset-[-2px] [&:focus-visible>div]:outline-line-focus [&:focus-visible>div]:outline-solid"
         >
           <div
             onClick={(event) => {
@@ -198,7 +201,6 @@ export function TreeView({ nodes, defaultExpanded = [], selectedId, onSelect, cl
             style={{ paddingLeft: `${(level - 1) * 1.25 + 0.5}rem` }}
             className={cn(
               "flex min-h-11 cursor-pointer items-center gap-2 rounded-md pr-2.5 text-base transition-colors select-none pointer-fine:min-h-9",
-              "group-focus-visible/item:outline-2 group-focus-visible/item:outline-offset-[-2px] group-focus-visible/item:outline-line-focus group-focus-visible/item:outline-solid",
               isSelected ? "bg-primary-wash font-medium text-strong" : "text-body hover:bg-surface hover:text-strong",
             )}
           >

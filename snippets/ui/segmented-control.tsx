@@ -13,9 +13,13 @@ import { cn } from "@/lib/utils";
  * GÖSTERGE `layoutId` İLE KAYAR ve bunun bir bedeli var: düzen animasyonu
  * `domAnimation`da YOK, `domMax` ister. Şablonun MotionProvider'ı
  * `domAnimation` yükler; bu bileşen kendi ağacı için `domMax`ı açar
- * (iç içe LazyMotion; ek paket yalnızca bu denetim görününce iner). Sayfada çok
- * sayıda düzen animasyonu varsa kök sağlayıcıyı `domMax`a çevirmek daha
- * ucuz olur; tek denetim için bu yerel yükleme yeter.
+ * (iç içe LazyMotion). İçe aktarma DURAĞAN: `domMax` bu bileşeni içe aktaran
+ * rotanın paketine girer, denetim kapalı bir açılır kutuda dursa bile iner.
+ * Gerçekten gerekince indirmek için `lib/motion-max.ts`
+ * (`export { domMax as default } from "motion/react"`) ve
+ * `features={() => import("@/lib/motion-max").then((mod) => mod.default)}`.
+ * Sayfada çok sayıda düzen animasyonu varsa kök sağlayıcıyı `domMax`a
+ * çevirmek daha ucuz olur; tek denetim için bu yerel yükleme yeter.
  *
  * `layoutId` SAYFADA TEKİL OLMALI: aynı adı taşıyan iki gösterge birbirine
  * uçar. Ad `useId`den türüyor; iki denetim yan yana durabilir.

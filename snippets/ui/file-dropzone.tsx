@@ -11,10 +11,24 @@ import { cn } from "@/lib/utils";
  * okuyucu etiketi ve kabul edilen türleri okur.
  *
  * İZİN LİSTESİ (`accept`): yalnızca listedeki MIME türleri kabul edilir.
+ * `image/*` gibi joker kabul edilir ama SVG'yi KAPSAMAZ (açıkça yazılmalı).
+ * Uzantı (`.pdf`) değil MIME yaz: uzantıyı yerel seçici anlar, buradaki
+ * denetim anlamaz; seçicinin sunduğu dosya listede reddedilmiş görünürdü.
  * SVG VARSAYILAN OLARAK REDDEDİLİR: SVG bir görsel değil bir belge; içinde
  * betik taşıyabilir ve aynı kökenden sunulursa saklı XSS olur. Gerçekten
  * gerekiyorsa listeye bilerek ekle ve sunucuda temizle (ya da ayrı bir
  * kökenden, `Content-Disposition: attachment` ile sun).
+ *
+ * FORM GÖNDERİMİ (`name`): giriş, ekranda kabul edilen listeyle eşitlenir.
+ * Sürükle-bırak girişi kendiliğinden doldurmaz, seçicinin reddedilen
+ * dosyası da girişte kalırdı; form ekranın söylediğini göndermezdi.
+ *
+ * ÜST SINIR TAŞIYICIYLA EŞLEŞMELİ: sunucu eylemi gövdesi varsayılan 1 MB
+ * (`next.config` → `experimental.serverActions.bodySizeLimit`), Vercel
+ * istek gövdesi 4,5 MB, nginx `client_max_body_size` varsayılanı 1 MB.
+ * `maxBytes`ı bu sınırların altında tut; yoksa burada kabul edilen dosya
+ * gönderimde belirsiz bir hatayla düşer. Daha büyük dosya imzalı URL ile
+ * doğrudan depoya gider.
  *
  * İSTEMCİ DENETİMİ BİR KOLAYLIK, GÜVENLİK DEĞİL. Tarayıcının bildirdiği tür
  * dosya uzantısından tahmin; değiştirilebilir. Sunucu dosyayı yeniden
@@ -26,7 +40,7 @@ import { cn } from "@/lib/utils";
 
 /** Varsayılan izin listesi: yaygın görseller ve PDF. SVG bilerek YOK. */
 const DEFAULT_ACCEPT = ["image/png", "image/jpeg", "image/webp", "application/pdf"] as const;
-/** Varsayılan üst sınır: 5 MB. */
+/** Varsayılan üst sınır: 5 MB. Taşıyıcının sınırı daha düşük olabilir (yukarıdaki not). */
 const DEFAULT_MAX_BYTES = 5 * 1024 * 1024;
 
 export type RejectedFile = { file: File; reason: "type" | "size" };
@@ -45,6 +59,16 @@ type FileDropzoneProps = {
 
 const formatBytes = (bytes: number) =>
   new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 1 }).format(bytes / (1024 * 1024)) + " MB";
+
+/** Tam MIME ya da `tür/*` joker. Joker SVG'yi kapsamaz: SVG yalnızca adıyla girer. */
+const allowed = (accept: readonly string[], type: string) =>
+  accept.some(
+    (entry) =>
+      entry === type || (entry.endsWith("/*") && type.startsWith(entry.slice(0, -1)) && type !== "image/svg+xml"),
+  );
+
+/** Liste anahtarı: farklı klasörlerden aynı adlı iki dosya çakışmasın. */
+const fileKey = (file: File) => `${file.name}-${file.size}-${file.lastModified}`;
 
 export function FileDropzone({
   label = "Dosya Yükle",
@@ -70,9 +94,16 @@ export function FileDropzone({
     const ok: File[] = [];
     const bad: RejectedFile[] = [];
     for (const file of files) {
-      if (!accept.includes(file.type)) bad.push({ file, reason: "type" });
+      if (!allowed(accept, file.type)) bad.push({ file, reason: "type" });
       else if (file.size > maxBytes) bad.push({ file, reason: "size" });
       else ok.push(file);
+    }
+    // Form ekranda kabul edilen ne ise onu göndersin: bırakılan dosya girişe
+    // yazılır, reddedilen girişten çıkar. Atama `change` tetiklemez, döngü yok.
+    if (input.current) {
+      const transfer = new DataTransfer();
+      for (const file of ok) transfer.items.add(file);
+      input.current.files = transfer.files;
     }
     setAccepted(ok);
     setRejected(bad);
@@ -121,12 +152,12 @@ export function FileDropzone({
       </label>
       <div role="status" aria-live="polite" className="grid gap-1.5">
         {accepted.map((file) => (
-          <p key={file.name} className="truncate text-small text-body">
+          <p key={fileKey(file)} className="truncate text-small text-body">
             {file.name} <span className="text-muted tabular-nums">· {formatBytes(file.size)}</span>
           </p>
         ))}
         {rejected.map(({ file, reason }) => (
-          <p key={file.name} className="flex items-start gap-2 text-small text-danger">
+          <p key={fileKey(file)} className="flex items-start gap-2 text-small text-danger">
             <FileWarning aria-hidden className="mt-0.5 size-4 shrink-0" strokeWidth={1.75} />
             <span className="min-w-0">
               <span className="font-semibold">{file.name}</span>: {reason === "type" ? typeMessage : sizeMessage}.

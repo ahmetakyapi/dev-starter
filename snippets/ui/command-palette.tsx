@@ -12,6 +12,13 @@ import { cn } from "@/lib/utils";
  *
  * Diyalog yerel: odak tuzağı ve Escape tarayıcıdan, odak kapanınca açan
  * öğeye döner. Başlıktaki bir düğmeden açmak için `openCommandPalette()`.
+ * Modal `<dialog>` arkadaki sayfanın kaymasını durdurmaz; sayaçlı kaydırma
+ * kilidi `dialog.tsx` ile aynı, yalnızca başka katmanın tuttuğu kilide
+ * dokunmaz. Dosya tek başına kopyalanabilsin diye burada da var; ikisi
+ * birlikteyse kilidi tek modüle (`use-scroll-lock.ts`) taşı.
+ *
+ * Satırlar gruplanarak çizilir; ok tuşları da EKRANDAKİ sırayı izler, girdi
+ * dizisinin sırasını değil (bir grubun komutları dağınık gelse bile).
  *
  * Komutlar veri: `onSelect` içinde ne yapılacağını çağıran bilir
  * (`router.push`, tema değişimi). Palet gezinmeyi kendisi yapmaz, bu yüzden
@@ -45,6 +52,32 @@ export function openCommandPalette() {
 
 const fold = (value: string) => value.toLocaleLowerCase("tr-TR");
 
+let lockCount = 0;
+// Palet genel kısayolla açık bir Dialog'un ÜSTÜNDE de açılır. Sayfa zaten
+// kilitliyse kilit o katmanın: palet ona dokunmaz, kapanırken de sökmez;
+// yoksa Dialog açık dururken arkadaki sayfa kaymaya başlardı.
+let ownsLock = false;
+
+function lockScroll() {
+  lockCount += 1;
+  if (lockCount === 1) {
+    ownsLock = document.documentElement.style.overflow !== "hidden";
+    if (!ownsLock) return;
+    const gap = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.overflow = "hidden";
+    // Kaydırma çubuğu kaybolunca sayfa yana kaymasın.
+    if (gap > 0) document.documentElement.style.paddingRight = `${gap}px`;
+  }
+}
+
+function unlockScroll() {
+  lockCount = Math.max(0, lockCount - 1);
+  if (lockCount === 0 && ownsLock) {
+    document.documentElement.style.removeProperty("overflow");
+    document.documentElement.style.removeProperty("padding-right");
+  }
+}
+
 type CommandPaletteProps = {
   commands: readonly Command[];
   placeholder?: string;
@@ -65,6 +98,7 @@ export function CommandPalette({
   const dialog = useRef<HTMLDialogElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const opener = useRef<HTMLElement | null>(null);
+  const pressedBackdrop = useRef(false);
   const listId = useId();
 
   const results = useMemo(() => {
@@ -80,6 +114,9 @@ export function CommandPalette({
     for (const command of results) map.set(command.group, [...(map.get(command.group) ?? []), command]);
     return [...map.entries()];
   }, [results]);
+
+  // Ekrandaki sıra; `active` bu dizinin indeksi.
+  const ordered = useMemo(() => groups.flatMap(([, items]) => items), [groups]);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -109,8 +146,10 @@ export function CommandPalette({
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (!node.open) node.showModal();
     input.current?.focus();
+    lockScroll();
     return () => {
       node.close();
+      unlockScroll();
       if (opener.current?.isConnected) opener.current.focus();
     };
   }, [open]);
@@ -127,7 +166,7 @@ export function CommandPalette({
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    const last = results.length - 1;
+    const last = ordered.length - 1;
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setActive((index) => (index >= last ? 0 : index + 1));
@@ -140,7 +179,7 @@ export function CommandPalette({
       setActive(last);
     } else if (event.key === "Enter") {
       event.preventDefault();
-      run(results[active]);
+      run(ordered[active]);
     }
   }
 
@@ -154,8 +193,15 @@ export function CommandPalette({
         event.preventDefault();
         close();
       }}
+      onPointerDown={(event) => {
+        // Arka plan yalnızca basış ORADA başladıysa kapatır: arama metnini
+        // seçip dışarıda bırakmak da diyaloğun kendisine `click` düşürür.
+        pressedBackdrop.current = event.target === event.currentTarget;
+      }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) close();
+        const backdrop = pressedBackdrop.current && event.target === event.currentTarget;
+        pressedBackdrop.current = false;
+        if (backdrop) close();
       }}
       className={cn(
         "mx-auto mt-[12dvh] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-xl border border-line-strong bg-overlay p-0 text-body shadow-modal",
@@ -197,7 +243,7 @@ export function CommandPalette({
                 {group}
               </p>
               {items.map((command) => {
-                const index = results.indexOf(command);
+                const index = ordered.indexOf(command);
                 const selected = index === active;
                 return (
                   <div
