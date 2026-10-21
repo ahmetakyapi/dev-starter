@@ -40,6 +40,9 @@ dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareke
 - Reveal: kahraman/LCP ogesini sarma; reduced-motion'da `initial={false}` yok.
 - Erisilebilirlik: diyaloglarda odak tuzagi + `Esc` + sayacli kaydirma kilidi
   (`use-scroll-lock`), dokunma hedefi ≥ 44 px, `aria-label` cumle duzeninde.
+  `modal`, `drawer`, `confirm` `./use-scroll-lock`tan `useScrollLock` +
+  `useLayer` (katman yigini, odak, Escape) alir: o dosyayi yanina birlikte
+  kopyala, katman basina ayri kilit ya da Escape dinleyicisi yazma.
 - Arayuz metni Turkce Title Case (baslik, dugme), em dash yok.
 
 > `agent-*` ve `action-card` snippet'leri `@copilotkit/react-core@1.69.2` tip

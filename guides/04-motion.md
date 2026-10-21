@@ -138,7 +138,7 @@ export function Reveal({ children, delay = 0, y = 16 }: { children: React.ReactN
     <m.div
       initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true }}
       transition={{ duration: reduce ? 0 : DUR.slow, delay: reduce ? 0 : delay, ease: EASE }}
     >
       {children}
@@ -147,7 +147,7 @@ export function Reveal({ children, delay = 0, y = 16 }: { children: React.ReactN
 }
 ```
 
-Üç kural, üçü de yaşandı:
+Dört kural, dördü de yaşandı:
 
 1. **Reduced-motion'da `initial={false}` KULLANMA.** SSR HTML'i `opacity: 0`
    ile gelir; `initial={false}` kütüphaneye "zaten hedefte" der ve
@@ -159,6 +159,11 @@ export function Reveal({ children, delay = 0, y = 16 }: { children: React.ReactN
    ile, `opacity` 0'dan değil 0,01'den başlayarak.
 3. **`once: true`.** Geri kaydırınca tekrar oynayan içerik titrer gibi okunur
    (keskealsaydim).
+4. **Negatif `margin` verme.** Motion onu IntersectionObserver `rootMargin`i
+   yapar ve kökü dört kenardan daraltır: sayfanın başına ya da sonuna düşen
+   küçük öğe (alt bilgi satırı, son kart) hiç kesişmez, `opacity: 0`da kalır.
+   `amount` eşiği de çözüm değil; ekranın birkaç katı uzun blok o oranı hiç
+   göremez.
 
 JavaScript kapalıyken de içerik görünmeli: kritik metni Reveal'in dışında
 tut ya da CSS sürümünü kullan (§ 7).
@@ -213,7 +218,7 @@ Paylaşılan öğe geçişi (sekme alt çizgisi, seçili hap):
     .reveal-on-scroll {
       animation: rise linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% entry 100%;
     }
   }
 }
@@ -221,6 +226,8 @@ Paylaşılan öğe geçişi (sekme alt çizgisi, seçili hap):
 ```
 
 Desteklemeyen tarayıcı öğeyi olduğu gibi görür; hiçbir şey gizli kalmaz.
+Aralık `entry 100%`te biter: `cover N%` sayfanın sonundaki öğe için hiç
+gelmez, son bölüm yarı saydam ve kaymış kalır (şablonların `.scroll-reveal`ı).
 ahmetakyapi.com bütün reveal'lerini böyle yapar, sıfır JS.
 
 **Değere bağlı hareket** (paralaks, ilerleme çubuğu) için `useScroll`:
@@ -347,7 +354,7 @@ Her birinin sınırı yanında:
 | **Maskeli görsel açılışı** | `clip-path: inset(100% 0 0 0) → inset(0)`, 600 ms | Kahraman görseli değilse; LCP görseli maskelenmez |
 | **Magnetic düğme** | İmlece doğru `x/y` yay, güç 0,2–0,3 | Yalnızca `(hover: hover) and (pointer: fine)`; dokunmatikte kapalı |
 | **Paralaks** | `useScroll` + `useTransform`, ±40 px | Bir ekranda tek katman; reduced-motion'da sıfır |
-| **Marquee** | CSS `translateX(-50%)` döngüsü, iki kopya | Hover ve odakta durur, ikinci kopya `aria-hidden` + `tabIndex={-1}`, reduced-motion'da statik |
+| **Marquee** | CSS `translateX(-50%)` döngüsü, iki kopya | Görünür durdurma denetimi şart (WCAG 2.2.2; hover klavyede ve dokunmatikte yok), ek olarak hover'da durur; ikinci kopya `aria-hidden` (+ `tabIndex={-1}` bağlantıysa), reduced-motion'da statik |
 | **Sayaç** | `RollingFigure` | İlk ekranda bir kez |
 | **İmleç takibi** | `--mx/--my` ile radyal parlama | Yalnızca `pointer: fine` |
 | **Sekme göstergesi** | `layoutId` ya da ölçülen `--pill-x` | Panel süresi, 240 ms |
@@ -356,9 +363,12 @@ Her birinin sınırı yanında:
 @media (hover: hover) and (pointer: fine) {
   .magnetic { /* yalnızca burada etkinleşir */ }
 }
+/* Durdurma: <label class="marquee-pause"><input type="checkbox" class="sr-only"> Şeridi Durdur</label>.
+   :has bölümün kabında, kökte değil (mistakes.md #81). :focus-within yalnızca
+   logolar bağlantıysa çalışır; düz işaretlerde hiç tetiklenmez. */
 .marquee:hover .track,
-.marquee:focus-within .track { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { .marquee .track { animation: none; } }
+.marquee-section:has(.marquee-pause :checked) .track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .marquee .track { animation: none; } .marquee-pause { display: none; } }
 ```
 
 ---

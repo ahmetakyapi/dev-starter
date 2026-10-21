@@ -102,6 +102,7 @@ projeye dokunulduğunda hangi yöne gidileceğini söyler.
    | `--on-primary` üstünde `--primary` dolgu | ≥ 4,5:1 |
    | `--primary-ink` metni `--primary-wash` zemin üstünde | ≥ 4,5:1 |
    | `--text-muted` `--page-bg` ve kart zemini üstünde | ≥ 4,5:1 |
+   | `--on-brand` (beyaz) `--cta-gradient`in her durağı üstünde | ≥ 4,5:1 |
    | `--line-focus` zemin üstünde | ≥ 3:1 |
 
    Ölçüm bir betik ya da testle (WCAG göreli parlaklık formülü); sonuç
@@ -112,6 +113,9 @@ projeye dokunulduğunda hangi yöne gidileceğini söyler.
    metin kontrastı tutmaz; `signature` koyuda `#06121f` kullanır.
 6. **Degradeler aynı aileden:** `--display-gradient` koyudan açığa aynı ton,
    küçük punto için ayrı `-tight` sürüm (açık ucu AA sınırında durur).
+   Birincil eylemin `--cta-gradient`i ailenin koyu yarısından seçilir:
+   `--brand-gradient`in açık ucu beyaz metni taşımaz. Yazılmazsa palet
+   `:root`taki signature mavisini miras alır.
 7. Her iki temada bir ekranı yan yana aç; biri "bitmemiş" görünüyorsa o
    temanın kendi kararı eksik.
 

@@ -107,7 +107,7 @@ CLAUDE.md'sinde kayıtlı. Build almadan tip üretmek için `npx next typegen`.
   çalışma zamanı. Proxy çerez varlığına bakan ucuz ön elemedir; yetki sayfada
   ve her server action'da `auth()` ile yeniden kontrol edilir.
 - `cookies()`, `headers()` senkron erişim tamamen kalktı.
-- `next lint` yok: `"lint": "eslint"` + `eslint.config.mjs` (flat).
+- `next lint` yok: `"lint": "eslint --max-warnings 0"` + `eslint.config.mjs` (flat).
 - `revalidateTag(tag, "max")` ikinci argüman zorunlu; yazdığını okumak için
   server action'da `updateTag`.
 - Segmentte `loading.tsx` koyma: `notFound()` 200 döner (soft 404).

@@ -117,8 +117,8 @@ ve `data-theme` ile birleşir:
 
 Palete giren token'lar: `--primary` ailesi (`-hover`, `-soft`, `-wash`,
 `-ink`, `--on-primary`, `--line-focus`), `--display-gradient(-tight)`,
-`--brand-gradient`, zemin ve metnin hafif renk eğilimi. Geri kalan her şey
-kimliktir, palet değiştirmez. Hangi ürüne hangi palet ve yeni paletin nasıl
+`--brand-gradient`, `--cta-gradient`, zemin ve metnin hafif renk eğilimi.
+Geri kalan her şey kimliktir, palet değiştirmez. Hangi ürüne hangi palet ve yeni paletin nasıl
 ölçülerek türetileceği: [00-brand-identity.md](00-brand-identity.md).
 
 ---
@@ -140,7 +140,7 @@ Sözleşmedeki tam liste:
 | Kenarlık | `--line` `--line-soft` `--line-strong` `--line-focus` |
 | Vurgu | `--primary` `--primary-hover` `--primary-soft` `--primary-wash` `--primary-ink` `--on-primary` |
 | Durum | `--success` `--warning` `--danger` (+ `-wash`) |
-| Gölge | `--shadow-sm` `--shadow-md` `--shadow-overlay` |
+| Gölge | `--shadow-sm` `--shadow-md` `--shadow-overlay` (sınıf: `shadow-raised` `shadow-floating` `shadow-modal`) |
 
 ### `-wash`, `-ink`, `on-*`
 
@@ -310,14 +310,19 @@ Varsayılan: metin düz renktir. İstisna yalnızca kısa display metninde ve d�
 - `.display-ink` içindeki bir çocuğa `opacity`/`transform` verme: yeni
   stacking context kırpmayı bozar.
 - Degrade yalnızca **üç yerde**: kısa display başlık (`.display-ink`),
-  birincil eylem düğmesi ve marka karosu. Veri gösteren paneller ve gövde
-  metni degrade taşımaz (Açılış Zili ve Mimio kuralı).
+  birincil eylem düğmesi (`bg-cta text-on-brand`) ve marka karosu
+  (`bg-brand`). Veri gösteren paneller ve gövde metni degrade taşımaz
+  (Açılış Zili ve Mimio kuralı).
+- Marka degradesinin açık ucu beyaz metinle AA'yı geçmez (signature
+  1,95:1): karoya metin yazılmaz. CTA ayrı degrade, ailenin koyu yarısı;
+  her durağı `--on-brand` ile ölçülür (`tests/contract.test.ts`).
 
 ```css
 :root, :root[data-theme="light"] {
   --display-gradient: linear-gradient(112deg, #0a2140 0%, #0e4a8f 44%, #1272c9 76%, #2493dd 100%);
   --display-gradient-tight: linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%); /* 13–16 px, açık uç AA sınırında */
-  --brand-gradient: linear-gradient(150deg, #5cc4ff 0%, #1f86e0 48%, #0b3f86 100%); /* CTA + marka karosu */
+  --brand-gradient: linear-gradient(150deg, #5cc4ff 0%, #1f86e0 48%, #0b3f86 100%); /* marka karosu, metin yok */
+  --cta-gradient: linear-gradient(150deg, #1673c4 0%, #0b3f86 100%);                  /* birincil eylem, beyaz metin 4,90+ */
 }
 :root[data-theme="dark"] {
   --display-gradient: linear-gradient(112deg, #f2f7fc 0%, #b6e2ff 44%, #74caff 76%, #3fbcff 100%);

@@ -49,18 +49,27 @@ TARGET=~/Desktop/Projects/$ARGUMENTS
 mkdir -p "$TARGET"
 rsync -a --exclude node_modules --exclude .next \
   ~/dev-starter/templates/<sablon>/ "$TARGET"/
+[ -f "$TARGET"/.env.local ] || cp "$TARGET"/.env.example "$TARGET"/.env.local
 ```
 
 Nokta dosyalari (`.env.example`, `.gitignore`, `.nvmrc`) da kopyalanmali;
-`rsync -a kaynak/ hedef/` bunlari tasir, `cp kaynak/*` tasimaz.
+`rsync -a kaynak/ hedef/` bunlari tasir, `cp kaynak/*` tasimaz. `.env.local`
+burada dogar (gitignore'da) ki overlay ona ekleyebilsin ve 6. adim yerel
+degerleri yazabilsin; varsa ezilmez.
 
 Overlay secildiyse sablondan sonra:
 
 ```bash
 cp -R ~/dev-starter/templates/agentic-chat/app/. "$TARGET"/app/
+mkdir -p "$TARGET"/lib && cp ~/dev-starter/templates/agentic-chat/lib/agui-scenarios.ts "$TARGET"/lib/
+cat ~/dev-starter/templates/agentic-chat/.env.example >> "$TARGET"/.env.local   # EKLE, ezme
 ```
 
 ve README'deki pin'li `npm i` komutu (`@ag-ui/*` surumu TAM pin, aralik yok).
+`route.ts` `@/lib/agui-scenarios`i import eder; `lib/` kopyalanmazsa build
+"Module not found" ile durur. `CopilotProvider` kok layout'a DEGIL, yalnizca
+sohbetin oldugu segmentin layout'una girer
+(`~/dev-starter/templates/agentic-chat/README.md` → Baglama).
 
 ## 3. Yer tutuculari degistir
 
@@ -121,6 +130,14 @@ olcu). `ROUTEMAP.md` yalnizca durum tutar. Buyuk projede istenirse
 
 ```bash
 cd "$TARGET"
+# Uretim derlemesi site adresi olmadan durur (lib/env.ts → assertSiteUrlForBuild,
+# sessizce localhost yayinlamasin). Yerel deneme adresi; gercek alan adi yayin
+# ortaminin env'ine yazilir, .env.local oraya gitmez.
+sed -i.bak -e 's|^NEXT_PUBLIC_SITE_URL=$|NEXT_PUBLIC_SITE_URL=http://localhost:3000|' .env.local && rm -f .env.local.bak
+# Yalniz nextjs-fullstack: AUTH_SECRET uretimde zorunlu ve `next build` uretimdir
+if grep -q '^AUTH_SECRET=$' .env.local; then
+  sed -i.bak "s|^AUTH_SECRET=\$|AUTH_SECRET=$(openssl rand -base64 32)|" .env.local && rm -f .env.local.bak
+fi
 npm install
 npm run build        # once build: PageProps/RouteContext tipleri .next/types'a uretilir
 npm run typecheck
@@ -157,7 +174,8 @@ Olusturulan dosyalari kisaca listele ve yonlendir: **"Sirada `/plan` —
 P1→P6 ile story'leri cikaralim mi?"** Sonra
 `~/dev-starter/guides/01-kickoff.md`den kalanlari kontrol listesi olarak ver:
 
-- [ ] `.env.local` dolduruldu (`AUTH_SECRET`: `npx auth secret`)
+- [ ] `.env.local` dolduruldu (`DATABASE_URL`, istenirse OAuth; yerel
+      `AUTH_SECRET` 6. adimda uretildi, uretiminki ayri: `npx auth secret`)
 - [ ] Neon projesi (eu-central-1) + gelistirme dali, `npm run db:migrate`
 - [ ] `vercel link`, env Vercel'e eklendi, bos sayfayla ilk deploy
 - [ ] CI yesil ve bir kez bilerek kirmiziya dusuruldu

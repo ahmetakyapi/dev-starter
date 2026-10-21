@@ -18,7 +18,8 @@ istisnasiz. Paylasilan veri → tool DEGIL, protokolun state kanali.
 
 ### `kontrol` — Onay mi, Action Card mi, hic mi?
 Geri alinabilir → Action Card + Undo (sorma, yap, geri almayi sun).
-Geri alinamaz → onden onay (`useHumanInTheLoop`).
+Geri alinamaz → onden onay (`useHumanInTheLoop`). Dugmeler ve id → anlam KODDA
+sabit; model yalniz hedefi ve aciklamayi yazar, arguman `safeParse` edilir.
 Kirmizi cizgi → tool'u agent'a verme; yonlendiren bir tool ver.
 
 ### `state` — Tool mu, protokol mu?
@@ -54,13 +55,18 @@ Her tool testi CIFT iddia kurar: donus degeri (modelin gordugu) + yan etki
 npm view @copilotkit/react-core@<surum> dependencies.@ag-ui/client   # TAM surumu al
 npm i @copilotkit/react-core@<surum> @ag-ui/client@<pin> @ag-ui/core@<pin> zod
 cp -R ~/dev-starter/templates/agentic-chat/app/. <proje>/app/
+mkdir -p <proje>/lib && cp ~/dev-starter/templates/agentic-chat/lib/agui-scenarios.ts <proje>/lib/
+cat ~/dev-starter/templates/agentic-chat/.env.example >> <proje>/.env.local   # EKLE, ezme
 ```
+Provider'i kok layout'a degil, sohbetin oldugu segmente koy (her sayfaya
+~2,4 MB JS eklemesin): `~/dev-starter/templates/agentic-chat/README.md → Baglama`.
 Snippet'ler: `/snippet agent-tool`, `/snippet action-card`, `/snippet agent-approval`.
 
 ### `denetle` — Mevcut agentic kodu incele
 `~/dev-starter/agents/agentic-ui-agent.md → Teslim Oncesi Kontrol Listesi` maddelerini tek tek
 gec. Ozellikle: tool sonucu cast ediliyor mu (#58), `followUp: false` modele
-soylendi mi (#59), `@ag-ui/*` surumu sabit mi (#71).
+soylendi mi (#59), `@ag-ui/*` surumu sabit mi (#71), tool argumani `safeParse`
+ediliyor mu, onay dugmeleri modelden mi geliyor.
 
 ## Dogrulama Disiplini
 

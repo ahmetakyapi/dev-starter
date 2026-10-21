@@ -42,7 +42,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 101 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın)
+│   ├── mistakes.md            → 106 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur
@@ -68,7 +68,7 @@ dev-starter/
 │
 ├── hooks/
 │   ├── gate-guard.sh          → Commit öncesi Gate PASSED kontrolü (kolon başlıktan, #99)
-│   ├── quality-scan.sh        → Sır (AWS/PEM/JWT dahil), .env, debug, @ts-ignore, kilit, agentic cast, TDD/format uyarıları
+│   ├── quality-scan.sh        → Sır (AWS/PEM/JWT + sağlayıcı anahtarları), .env, debug, @ts-ignore, kilit, agentic cast, TDD/format uyarıları
 │   ├── routemap-sync.sh       → ROUTEMAP tazelik + DONE⇒PASSED değişmezi
 │   ├── session-brief.sh       → SessionStart: ROUTEMAP özeti + sıradaki iş önerisi
 │   ├── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
@@ -77,7 +77,7 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
-│   ├── test-hooks.sh          → Hook davranış testleri (52, fixture'lar resmi şablon düzeninde)
+│   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
@@ -175,7 +175,7 @@ Kurallar kağıt üstünde kalmaz — bash hook'ları ile fiziksel olarak uygula
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
 | `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse bloklar (kolon başlıktan bulunur, docs-only muaf — #99) |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Sır (AWS/PEM/JWT/URL dahil), `.env` (iç içe dahil), debug kodu, `@ts-ignore`, kilit, agentic cast; TDD'siz fix, format dışı mesaj, test zayıflatma uyarıları |
+| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Sır (AWS/PEM/JWT/URL + Anthropic/GitHub/npm/Resend/Stripe/Slack önekleri), `.env` (iç içe dahil), debug kodu, `@ts-ignore`, kilit, agentic cast; TDD'siz fix, format dışı mesaj, test zayıflatma uyarıları |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE ⇒ Gate PASSED değişmezi |
 | `hooks/session-brief.sh` | SessionStart | ROUTEMAP özeti + sıradaki iş önerisi bağlama basılır |
 
@@ -424,6 +424,7 @@ npm install @ahmetakyapi/theme @ahmetakyapi/ui motion
 @import "tailwindcss";
 @import "@ahmetakyapi/theme/theme.css";   /* sistem + palet + @theme inline */
 @import "@ahmetakyapi/theme/css";         /* isteğe bağlı: .surface, .glass, .display-ink, .app-bg */
+@import "@ahmetakyapi/ui/source.css";     /* ui sınıflarını taratır — Tailwind node_modules'u taramaz */
 ```
 
 ```tsx
@@ -434,10 +435,14 @@ npm install @ahmetakyapi/theme @ahmetakyapi/ui motion
 ```ts
 // Kökte <LazyMotion features={domAnimation} strict> ŞART — bileşenler m.* kullanır
 import { Surface, Button, Chip, CustomCursor } from '@ahmetakyapi/ui'
-import { useSpotlight, useMagnetic, useCardTilt } from '@ahmetakyapi/ui'
-import { EASE, DUR, SPRING, STAGGER, fadeUp, fadeIn } from '@ahmetakyapi/ui'
-import { cn } from '@ahmetakyapi/ui'
+import { useSpotlight, useMagnetic, useCardTilt, useFinePointer } from '@ahmetakyapi/ui'
+// Sabitler ve cn() /core'dan: 'use client' taşımaz, sunucu bileşeninde de gerçek değer
+import { EASE, DUR, SPRING, STAGGER, fadeUp, fadeIn, cn } from '@ahmetakyapi/ui/core'
 ```
+
+Birincil eylem `bg-cta text-on-brand` (her durak AA); `bg-brand` yalnızca
+marka karosu, üstüne metin yazılmaz. Gölge sınıfları şablonlarla ortak:
+`shadow-raised` · `shadow-floating` · `shadow-modal`.
 
 v3 preset'i (`@ahmetakyapi/theme/tailwind`) 3.0.0'da kaldırıldı. Ayrıntı:
 `guides/02-design-tokens.md`, `guides/00-brand-identity.md`.
@@ -479,6 +484,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 - **Yeni komut eklenince**: `.claude/commands/` altında `.md` — yollar `~/dev-starter/...` mutlak; `bash machine/bootstrap.sh`
 - **Yeni alt ajan eklenince**: `.claude/agents/[ad].md` (ince) + `agents/[ad]-agent.md`
 - **Yeni snippet eklenince**: `snippets/` altında, `guides/05-components.md` ya da `10-component-library.md` kataloğuna
+- **İki Next şablonuna ortak dosya eklenince**: `scripts/health-check.sh` → `SHARED_TEMPLATE_FILES` (bayt bayt aynılık `cmp` ile denetlenir; biri düzelip öteki bayatlamasın)
 - **Global kural değişince**: `machine/CLAUDE.md` (symlink hedefi)
 - **Katkı rehberi**: `CONTRIBUTING.md`
 

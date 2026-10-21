@@ -28,6 +28,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Next 16 · Tailwind v4 · motion Dönemi | 74–98 | next16, v4, motion, figür, film |
 | Ekosistem Altyapısı (hook, test, script) | 99 | hook, test-fixture, enforcement |
 | VPS · Ortam Değişkeni · Yayın | 100–101 | vps, env, seo, robots, e-posta, github-actions |
+| Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 
 ---
 
@@ -968,8 +969,10 @@ function parseToolResult(complete: boolean, raw: string | undefined) {
 }
 ```
 
-**Kural**: Tool argümanları şema sayesinde tiplidir; **tool sonucu değildir.**
-Asimetri buradadır ve kolayca gözden kaçar.
+**Kural**: Tool argümanlarının tipi yalnız derleme zamanındadır; CopilotKit
+şemayı modele gönderir ama gelen argümanı doğrulamaz (yalnız `JSON.parse`)
+→ handler ve render'da `safeParse`. **Tool sonucu hiç tipli değildir.**
+Asimetri buradadır ve kolayca gözden kaçar (`rules/agentic-ui.md` § 5).
 
 ### 59. `followUp: false` Bayrağını Yeterli Sanmak
 
@@ -1064,7 +1067,10 @@ const base64 = dataUrl.slice(dataUrl.indexOf(',') + 1)   // ← öneki at
 patlıyor.
 
 **Çözüm**: `@ag-ui/client`'ın tarayıcı-güvenli `randomUUID`'sini kullan, ya da
-native `crypto.randomUUID()`.
+native `crypto.randomUUID()`. Dikkat: native olan yalnız güvenli bağlamda
+(HTTPS, `localhost`) tanımlı; telefondan `http://192.168.x.x:3000` ile açılan
+geliştirme sunucusunda `undefined`'dır ve ilk çağrıda patlar. Yalnız istemcide
+yaşayan kimlik (toast, liste anahtarı) için sayaç yeter.
 
 **Kural**: Agent SDK'ları Node ekosisteminden geliyor. İstemcide kullanılan her
 yardımcının tarayıcı-güvenli olduğunu **varsayma, doğrula**.
@@ -1708,5 +1714,121 @@ desen: `patterns.md → GitHub Secrets → Sunucu Ortamı`.
 
 ---
 
-*Son güncelleme: 2026-10-15*
+## Kapsamlı Kod Denetimi (2026-10-20)
+
+Depo genelinde 173 bulgunun her biri çekişmeli doğrulamadan geçti; aşağıdakiler
+bir sonraki projede de yaşanacak türden olanlar.
+
+### 102. Hook Claude'un `cd`sini İzledi, Commit Kapısı Sessizce Açıldı
+
+**Hata**: Oturumda bir kez `cd components` (ya da `cd packages/@ahmet/ui &&
+npm run build`) yapıldıktan sonra her commit denetimsiz geçti: gate-guard
+"ROUTEMAP bulunamadı" deyip çıktı, quality-scan staged dosyaların hiçbirini
+açamadı ve AWS anahtarı içeren dosya geçti. dev-starter'ın kendi
+`.claude/settings.json`'u hook'u göreli yolla (`bash hooks/...`) çağırdığı
+için alt klasörde hook hiç başlamadı (exit 127, commit geçti). Ayrıca çift
+tırnak içindeki apostrof (`"Ahmet'in"`) sonraki `<<'EOF'` tırnağıyla eşleşip
+normalizasyonda `git commit`i siliyordu.
+
+**Sebep**: Claude Code hook'u Claude'un O ANKİ dizininde çalıştırır ve bu
+dizin her `cd`yi izler; `CLAUDE_PROJECT_DIR` ise oturumun başladığı kökte
+sabit kalır (worktree'de bile). `git diff --cached --name-only` kök-göreli
+yol verir; cwd'ye göre grep'lenince her dosya "yok" çıkar ve `2>/dev/null`
+bunu "temiz"e çevirir. Tırnaklar iki ayrı sed geçişinde siliniyordu.
+
+**Çözüm**: Kayıt `bash "$CLAUDE_PROJECT_DIR"/hooks/<ad>.sh` (health-check
+göreli kaydı FAIL sayar). Her hook işe başlamadan köke sabitlenir
+(`hooks/lib/routemap.sh` → `routemap_project_root`, quality-scan git köküne);
+ekosistem kökü `cd`den ÖNCE `BASH_SOURCE`tan. Tırnaklar tek geçişte, en soldaki
+açılış kazanır. Testler hook'u alt klasörden ve apostroflu komutla çağırır.
+
+**Kural**: Hook yol çözen hiçbir şeyi cwd'ye bırakmaz. Hata akışını yutan
+tarama "dosya açılamadı"yı "temiz"den ayırmalı. Türkçe metin (apostrof) her
+ayrıştırıcının test girdisinde bulunur.
+
+### 103. Tailwind v4 Paketin Sınıflarını Hiç Derlemedi
+
+**Hata**: `@ahmetakyapi/ui`'nin Button, Surface, CustomCursor ve Chip'i
+belgelenen kurulumla stilsiz çizildi; `bg-primary`, `h-11`, `fixed` gibi
+sınıflar CSS'te yoktu. build, tsc ve `verify:exports` yeşildi. Aynı paketten
+sunucu bileşeninde `cn()` çağrısı prerender'da kırıldı, `DUR.fast` sessizce
+`undefined` okundu.
+
+**Sebep**: v4'ün otomatik kaynak taraması `node_modules`a girmez; paket bir
+`@source` kaydı göndermiyordu. Paket tek bundle ve `'use client'` banner'lı:
+saf değerler de istemci referansına dönüşüyordu (#84).
+
+**Çözüm**: `@ahmetakyapi/ui/source.css` (`@source "./dist"`) — tüketici tema
+importlarından sonra içe aktarır; `@ahmetakyapi/ui/core` banner'sız
+sunucu-güvenli giriş (varyantlar, sabitler, `cn`). `verify:exports` ikisini de
+denetler.
+
+**Kural**: Sınıf adı taşıyan paket kaynağını tüketicinin Tailwind'ine kendisi
+kaydettirir. "Derlendi" ile "stillendi" aynı şey değil: paket, gerçek bir
+tüketici derlemesinde render edilip CSS çıktısına bakılarak doğrulanır.
+
+### 104. Tema Çerezini Server Action'la Yazmak Her Tıklamada Sayfayı Yeniden Çizdirdi
+
+**Hata**: ThemeToggle her tıklamada POST atıp 33–49 KB'lık bir RSC yeniden
+çizimi indirdi ve istemcinin ön yükleme önbelleği boşaldı (`/akis`ta veritabanı
+sorguları da yeniden koştu). landing şablonu her ziyarette sunucuda çizildi
+(`ƒ /`, `Cache-Control: no-store`), oysa içeriği herkes için aynıydı.
+
+**Sebep**: Next 16'da action içinde `cookies().set()` yolu "yeniden doğrulandı"
+sayar: yanıt sayfayı yeniden çizer (`x-action-revalidated: 1`), istemci bütün
+prefetch önbelleğini atar. Yorum bunu "çerez arkada yazılır" diye ucuz
+sanıyordu. landing kök layout'ta `cookies()` okuyordu; `guides/03 § 2b` ve #93
+kuralı yazıldığı gün şablona uygulanmamıştı.
+
+**Çözüm**: Çerez istemcide (`document.cookie`) yazılır, `theme-color` meta'sı
+elle güncellenir; fullstack çerezi `lib/theme.server.ts`ten okur
+(`lib/theme.ts` istemci-güvenli). landing statik: `data-theme` varsayılanla
+basılır, `<head>`deki `THEME_SCRIPT` ilk boyamadan önce çerezi uygular
+(`○ /`, `s-maxage=31536000`).
+
+**Kural**: Kozmetik tercih server action'a gitmez. Bir rehber kuralı
+yazıldığında onu ihlal eden şablon aynı commit'te düzeltilir.
+
+### 105. React 19 Formu Doğrulama Hatasında Kullanıcının Yazdığını Sildi
+
+**Hata**: `snippets/form.tsx` ile kurulan formda tek alan hatalı olunca bütün
+alanlar boşaldı. Gönderirken `disabled` olan düğme odaktayken devre dışı
+kaldı, klavye kullanıcısı `<body>`'ye düştü.
+
+**Sebep**: React 19 `<form action>` eylem bitince kontrolsüz alanları sıfırlar
+(başarılı ya da başarısız); eylem girilen değerleri geri döndürmüyordu.
+Odaktaki öğeyi `disabled` yapmak odağı belgeye atar.
+
+**Çözüm**: Eylem hata dönerken `values`ı da döndürür, alan
+`defaultValue={state.values?.ad}` ile geri alır. Düğme `aria-disabled` +
+`onSubmit`te bekleme koruması; hata dönünce odak ilk `aria-invalid` alana
+(`ExampleForm.tsx`, `snippets/form.tsx`, `guides/05`).
+
+**Kural**: Her form "hata dön, yazılanlar yerinde mi, odak nerede" diye
+klavyeyle denenir.
+
+### 106. Onay Kartında Düğmenin Anlamını Model Seçiyordu
+
+**Hata**: `snippets/agent-approval.tsx` seçenekleri (`id` + etiket) modelin
+tool argümanlarından çiziyordu. Model ya da modeli yönlendiren bir enjeksiyon
+`accept` id'sini "Vazgeç" etiketinin arkasına koyabilir, ret seçeneğini hiç
+vermeyebilirdi; kullanıcı vazgeçtiğini sanırken geri alınamaz işi onaylardı.
+
+**Sebep**: `useHumanInTheLoop` render'ına gelen `args` modelin yazdığı JSON'dur;
+CopilotKit zod şemasını modele gönderir ama gelen argümanı doğrulamaz (yalnız
+`JSON.parse`). 2026-10-15'teki "anlam sunucuda" önlemi yükü kaldırmış,
+id → etiket eşlemesini modelde bırakmıştı.
+
+**Çözüm**: Model yalnız `{ flightId, message }` yazar; düğme seti ve
+id → anlam tablosu kodda sabit; argüman `safeParse`, geçersizse kart `decline`
+ile kapanır. Sunucu yalnız aynı `toolCallId`nin sonucu `accept` çözülürse ve
+sahiplik doğrulanırsa iş yapar.
+
+**Kural**: İnsan onayı arayüzünde onayın ANLAMI ile görünen etiketi aynı
+güvenilmeyen kaynaktan gelmez. Modelin yazdığı her argüman çalışma anında
+doğrulanır (#58).
+
+---
+
+*Son güncelleme: 2026-10-20*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

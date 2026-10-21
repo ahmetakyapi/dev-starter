@@ -20,31 +20,42 @@ kalır (ahmetakyapi.com).
 **Bedel bilerek kabul edilir:** kök layout `cookies()` okuduğu için statik
 önbelleğe giremez. Açılış Zili ve Mimio bu bedeli ödüyor; karşılığında
 FOUC, `mounted` titremesi ve "koyu çubuk, açık sayfa" uyumsuzluğu yok.
-Tamamen statik bir vitrin (landing) için istersen çerezi okumadan
-varsayılanı basıp yalnızca istemcide değiştirmek de bir seçenek; o zaman
-ilk karede çerezin teması değil varsayılan görünür.
+İçeriği herkese aynı olan bir vitrin için bu bedel gereksiz: `landing`
+şablonu § 2b'yi uygular (statik sayfa + `<head>`de çerez betiği), ilk kare
+yine çerezin temasıyla gelir.
 
 ---
 
 ## 2. Kurulum
 
 ```ts
-// lib/theme.ts — "use client" DEĞİL, iki taraftan da okunur
-import { cookies } from "next/headers";
-
+// lib/theme.ts — "use client" DEĞİL, iki taraftan da okunur; next/headers YOK
 export const THEME_COOKIE = "theme";
 export const THEMES = ["dark", "light"] as const;
 export type Theme = (typeof THEMES)[number];
 export const DEFAULT_THEME: Theme = "light"; // şablon varsayılanı; portfolyo/oyun → "dark"
+export const THEME_COLOR = { dark: "#070d16", light: "#f7f9fb" } as const; // globals.css --page-bg ile eş
+export const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export const isTheme = (v: unknown): v is Theme =>
   typeof v === "string" && (THEMES as readonly string[]).includes(v);
+```
+
+```ts
+// lib/theme.server.ts — yalnızca sunucuda
+import { cookies } from "next/headers";
+import { DEFAULT_THEME, THEME_COOKIE, isTheme, type Theme } from "@/lib/theme";
 
 export async function getTheme(): Promise<Theme> {
   const v = (await cookies()).get(THEME_COOKIE)?.value;
   return isTheme(v) ? v : DEFAULT_THEME;
 }
 ```
+
+**Neden iki dosya:** tema düğmesi sabitleri (`THEME_COOKIE`, `THEME_COLOR`,
+`isTheme`) istemcide okur. `next/headers` içe aktaran bir modül istemci
+paketine girdiği an derleme kırılır; sabitler o modülde kalırsa düğme onları
+elle kopyalar ve üçüncü bir tema (§ 5) sessizce "light"a düşer.
 
 ```tsx
 // app/layout.tsx
@@ -59,22 +70,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 ```
 
 ```ts
-// app/actions/theme.ts
-"use server";
-import { cookies } from "next/headers";
-import { THEME_COOKIE, isTheme } from "@/lib/theme";
-
-const ONE_YEAR = 60 * 60 * 24 * 365;
-
-export async function setTheme(next: unknown) {
-  if (!isTheme(next)) return;
-  (await cookies()).set(THEME_COOKIE, next, { maxAge: ONE_YEAR, sameSite: "lax", path: "/" });
+// components/ui/ThemeToggle.tsx ("use client") — çerez İSTEMCİDE yazılır
+function setThemeCookie(theme: Theme) {
+  const secure = location.protocol === "https:" ? "; secure" : "";
+  document.cookie = `${THEME_COOKIE}=${theme}; path=/; max-age=${THEME_COOKIE_MAX_AGE}; samesite=lax${secure}`;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[theme]);
 }
 ```
 
+❌ Çerezi server action ile yazmak (`cookies().set()`). Action içinde çerez
+yazmak Next'e "veri değişti" der: yanıt bütün sayfayı sunucuda yeniden çizer
+(`x-action-revalidated: 1`, sayfadaki veritabanı sorguları dahil; şablonda
+ölçüldü, her tıklama ana sayfanın RSC'sini baştan indiriyordu) ve istemcinin
+ön yükleme önbelleğini boşaltır, bir sonraki tıklama soğuk istek olur.
+Kozmetik bir tıklama için fazla. Değer gizli değil, `httpOnly` gerekmez;
+sunucu onu bir sonraki istekte okur. O yeniden çizimin getirdiği tek şey
+tarayıcı çubuğunun rengiydi, onu düğme kendisi günceller.
+
 `suppressHydrationWarning` neden hâlâ var: istemci temayı DOM'da anında
-değiştirir, çerez arkadan yazılır. O arada React bir yeniden çizim yaparsa
-`data-theme` farkı uyarı üretmesin.
+değiştirir, sunucu yeni değeri ancak bir sonraki istekte görür. O arada
+React bir yeniden çizim yaparsa `data-theme` farkı uyarı üretmesin.
 
 ❌ `localStorage` + satır içi script (Mimio'nun eski yolu): çalışır ama sunucu
    temayı bilemez, `themeColor` ve OG görseli yanlış temada kalır.
@@ -93,15 +108,20 @@ aşağıdaki betik konunca ana sayfa, `/projeler`, `/blog` statik (`○`), yazı
 SSG (`●`) oldu; açık tema çereziyle ilk boyama yine açık, konsol temiz.
 
 ```ts
-// lib/theme.ts — ilk boyamadan ÖNCE çalışır, çerezden temayı yazar
+// lib/theme.ts — ilk boyamadan ÖNCE çalışır, çerezden temayı ve çubuk rengini yazar
 export const THEME_SCRIPT = `(function(){try{
-  var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(dark|light)/);
-  var t=m?m[1]:"${DEFAULT_THEME}";document.documentElement.dataset.theme=t;
+  var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(${THEMES.join("|")})(?:;|$)/);
+  var t=m?m[1]:${JSON.stringify(DEFAULT_THEME)};var c=${JSON.stringify(THEME_COLOR)}[t];
+  document.documentElement.dataset.theme=t;
+  var f=function(){var e=document.querySelector('meta[name="theme-color"]');if(e)e.setAttribute("content",c)};
+  f();document.addEventListener("DOMContentLoaded",f);
 }catch(e){}})()`;
 ```
 
 ```tsx
-// app/layout.tsx — async DEĞİL, cookies() YOK
+// app/layout.tsx — async DEĞİL, cookies() YOK; viewport da statik
+export const viewport: Viewport = { themeColor: THEME_COLOR[DEFAULT_THEME] };
+
 <html lang="tr" data-theme={DEFAULT_THEME} suppressHydrationWarning>
   <head><script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} /></head>
 ```
@@ -114,9 +134,15 @@ export const THEME_SCRIPT = `(function(){try{
   betiğin hash'i).
 - Sunucu temayı bilmediği için LCP görselinde varsayılan temanınkini öne al
   (`ThemedImage theme={DEFAULT_THEME}`).
+- Çerezi düğme yazar (§ 2'deki `setThemeCookie`); sunucu onu hiç okumaz,
+  bir sonraki yüklemede betik okur. Sayfa (`page.tsx`) da `cookies()`
+  okumaz, düğmeye `initialTheme={DEFAULT_THEME}` verir.
 
 **Karar kuralı:** sayfa kullanıcıya göre değişiyorsa (oturum, kişisel veri)
 zaten dinamiktir → sunucuda çerez. Değişmiyorsa → statik + betik.
+Şablonlarda: `nextjs-fullstack` sunucuda çerez, `landing` statik + betik
+(ölçüldü, 20 Ekim 2026: `ƒ /` → `○ /`, `/` yanıtı `no-store`dan
+`s-maxage=31536000`a geçti).
 
 ---
 
@@ -125,7 +151,8 @@ zaten dinamiktir → sunucuda çerez. Değişmiyorsa → statik + betik.
 Şablondaki `components/ui/ThemeToggle.tsx` dört şey yapar:
 
 1. `document.documentElement.dataset.theme`ı **anında** değiştirir.
-2. `setTheme()` server action'ını arkadan çağırır (beklemez).
+2. Çerezi `document.cookie` ile yazar ve `meta[name=theme-color]`ı günceller
+   (`setThemeCookie`, § 2; server action DEĞİL).
 3. `document.startViewTransition` varsa yeni temayı **tıklanan noktadan
    büyüyen bir daire** olarak açar.
 4. `prefers-reduced-motion: reduce` altında geçişi atlar.
@@ -135,6 +162,7 @@ function apply(next: Theme, event?: React.MouseEvent<HTMLElement>) {
   const root = document.documentElement;
   const swap = () => { root.dataset.theme = next; };
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setThemeCookie(next); // erken dönüşten ÖNCE: hareketi azaltan kullanıcıda da yazılsın
 
   if (!document.startViewTransition || reduce) { swap(); return; }
   if (event) {
@@ -145,7 +173,6 @@ function apply(next: Theme, event?: React.MouseEvent<HTMLElement>) {
   root.classList.add("theme-switching");
   const t = document.startViewTransition(swap);
   void t.finished.finally(() => root.classList.remove("theme-switching"));
-  void setTheme(next);
 }
 ```
 
@@ -173,14 +200,15 @@ silinir ve tarayıcının varsayılan solması araya girer.
 ## 4. `themeColor` — Ürünün Temasından
 
 ```ts
-// app/layout.tsx
-const PAGE_BG = { light: "#f7f9fb", dark: "#070d16" } as const; // globals.css --page-bg ile eş
-
+// app/layout.tsx — THEME_COLOR lib/theme.ts'te (§ 2), globals.css --page-bg ile eş
 export async function generateViewport(): Promise<Viewport> {
   const theme = await getTheme();
-  return { themeColor: PAGE_BG[theme] };
+  return { themeColor: THEME_COLOR[theme] };
 }
 ```
+
+Tıklamada sunucuya gidilmediği için çubuğun rengini düğme günceller
+(`setThemeCookie`, § 2); sonraki istekte sunucu aynı değeri basar.
 
 ❌ `themeColor: [{ media: "(prefers-color-scheme: dark)", color: ... }]`
 
@@ -321,7 +349,9 @@ tesadüf değil.
 
 ## Kontrol Listesi
 
-- [ ] Tema çerezden, sunucuda basılıyor; satır içi tema script'i yok
+- [ ] Dinamik üründe tema çerezden sunucuda basılıyor (satır içi betik yok); statik vitrinde § 2b: `<head>`de `THEME_SCRIPT`, viewport statik
+- [ ] Çerezi düğme istemcide yazıyor; tema için server action yok
+- [ ] `lib/theme.ts` `next/headers` içe aktarmıyor (`getTheme` → `lib/theme.server.ts`)
 - [ ] `DEFAULT_THEME` ürün sorusuna göre seçildi (01 § 0)
 - [ ] `themeColor` ürünün temasından
 - [ ] ThemeToggle reduced-motion altında anlık

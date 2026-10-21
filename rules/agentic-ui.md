@@ -61,7 +61,7 @@ prompt'a değil harness'a yaz.
 | Aksiyon | Desen | Neden |
 |---------|-------|-------|
 | Geri alınabilir | **Action Card + Undo** | Onay yorgunluğunu önler; Undo modele uğramaz |
-| Geri alınamaz | **Önden onay (interrupt)** | Bir kez yapıldı mı dönüşü yok |
+| Geri alınamaz | **Önden onay (`useHumanInTheLoop`)** | Bir kez yapıldı mı dönüşü yok |
 | Kırmızı çizgi | **Tool verme** | Hızlıca tıklanmış bir "Tamam" yeterli koruma değil |
 
 - Karar **uygulama** seviyesinde değil, **aksiyon** seviyesinde verilir
@@ -69,11 +69,21 @@ prompt'a değil harness'a yaz.
   ve deseni var eden kontrolü yok eder
 - Acil durdurma (`abortRun`) her zaman erişilebilir olmalı — tek satırlık
   implementasyonun güvene etkisi büyüktür
+- **Onay kartında model yalnız hedefi ve açıklamayı yazar.** Soruyu, düğme
+  setini ve id → anlam eşlemesini **kod** kurar. Seçenekleri (id + etiket) model
+  yazarsa, enjeksiyona uğramış bir model `accept`i "Vazgeç" etiketinin
+  arkasına koyar ya da ret seçeneğini hiç vermez. Okunamayan onay isteği
+  kapalı başarısız olur (ret). Sunucu yalnız **aynı** tool çağrısının sonucu
+  `accept` ise ve hedef o kullanıcınınsa işi yapar → `snippets/agent-approval.tsx`
 
 ## 5. Tool Sonucu Tel Üzerinde String'dir
 
-- Tool **argümanları** şema sayesinde tiplidir; **sonuçlar değildir**
-- `JSON.parse` → `unknown`. Doğrulamadan domain nesnesi gibi davranmak yasak
+- Tool **argümanlarının** tipi şemadan yalnız **derleme zamanında** gelir:
+  CopilotKit şemayı modele gönderir ama gelen argümanı ona karşı doğrulamaz
+  (yalnız `JSON.parse`). Handler ve render, yan etkiden ve çizimden önce
+  `safeParse` eder; bozuk argüman modele hata olarak döner, "başardım" denmez
+- **Sonuçlar** hiç tipli değildir: `JSON.parse` → `unknown`. Doğrulamadan
+  domain nesnesi gibi davranmak yasak
 - Üç durumu ayrı ele al: henüz tamamlanmadı / geçerli JSON değil / geçerli ama
   beklenen alanlar yok
 - Kullanıcıya bir sonucu **onaylayan** her UI (rezervasyon kartı, "kaydedildi"
@@ -188,10 +198,10 @@ Bu ekosistemde agentic bir özellik yazılırken varsayılan tech stack:
 
 | Katman | Seçim | Not |
 |--------|-------|-----|
-| İstemci | `@copilotkit/react-core@1.69.2` **`/v2` girişi** | v2 AG-UI-native; v1 farklı imzalara sahip, karıştırma |
+| İstemci | `@copilotkit/react-core@1.69.2` **`/v2` girişi** | v2 AG-UI-native; v1 farklı imzalara sahip, karıştırma. `selfManagedAgents` lisans uyarısı basar → `templates/agentic-chat/README.md → Lisans notu` |
 | Protokol | `@ag-ui/client` + `@ag-ui/core`, **CopilotKit'in pin'lediği sürüm** | Aralık (`^`/`~`) yazma → `mistakes.md #71` |
 | Şema | Zod v4 | `parameters` Standard Schema V1 alır, Zod doğrudan çalışır |
-| Sunucu | Açık — Mastra / LangGraph / kendi route'un | AG-UI arkasında olduğu sürece istemci umursamaz |
+| Sunucu | Açık — Mastra / LangGraph / kendi route'un | AG-UI arkasında olduğu sürece istemci umursamaz. Tarayıcı aynı kökene konuşur; dış agent'a kimlik doğrulayan route vekil olur (kural 1, 2, 9) |
 
 Doğru pin'i **her zaman** komutla al, ezberden yazma:
 

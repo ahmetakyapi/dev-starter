@@ -109,13 +109,15 @@ export async function GET() {
 ### Tema: `data-theme` + Çerez + Sunucuda Çizim (varsayılan, 2026-10-03)
 
 ```tsx
-// lib/theme.ts — "use client" DEĞİL
+// lib/theme.ts — "use client" DEĞİL, next/headers YOK (düğme de okur)
 export const THEME_COOKIE = 'theme'
 export const THEMES = ['dark', 'light'] as const
 export type Theme = (typeof THEMES)[number]
 export const DEFAULT_THEME: Theme = 'dark'
 export const isTheme = (v: unknown): v is Theme =>
   typeof v === 'string' && (THEMES as readonly string[]).includes(v)
+
+// lib/theme.server.ts — çerezi okuyan tek yer
 export async function getTheme(): Promise<Theme> {
   const v = (await cookies()).get(THEME_COOKIE)?.value
   return isTheme(v) ? v : DEFAULT_THEME
@@ -127,9 +129,15 @@ const theme = await getTheme()
 ```
 
 İstemci `document.documentElement.dataset.theme`ı anında değiştirir, çerezi
-server action ile arkadan yazar. Script yok, `mounted` guard yok, FOUC yok.
+de istemcide (`document.cookie`) yazar: server action'da `cookies().set()`
+sayfayı sunucuda yeniden çizer ve ön yükleme önbelleğini boşaltır
+(2026-10-20). Script yok, `mounted` guard yok, FOUC yok.
 `themeColor` `generateViewport` içinde çerezden. Tam desen, view transition
 ve gerekçe: `guides/03-theming.md`. Snippet: `snippets/theme-toggle.tsx`.
+İçeriği herkese aynı olan site (landing şablonu) bunun yerine statik sayfa +
+`<head>`de çerez betiği (`THEME_SCRIPT`, temayı ve `theme-color`ı yazar)
+kullanır: kök layout'ta `cookies()` her rotayı `ƒ` yapar (`guides/03` § 2b,
+`mistakes.md #93`).
 
 ### next-themes Kurulumu (eski projeler — ahmetakyapi.com)
 ```tsx
@@ -223,7 +231,7 @@ import { fadeUp, staggerContainer } from '@/lib/variants'
   variants={staggerContainer(0.08)}
   initial="hidden"
   whileInView="visible"
-  viewport={{ once: true, margin: '-60px' }}
+  viewport={{ once: true }}
 >
   {items.map(item => (
     <m.li key={item.id} variants={fadeUp}>{item.name}</m.li>
@@ -247,7 +255,7 @@ import { modalBackdrop, modalPanel } from '@/lib/variants'
     >
       <m.div
         variants={modalPanel}
-        className="surface w-full max-w-lg rounded-xl p-6 shadow-overlay"
+        className="surface w-full max-w-lg rounded-xl p-6 shadow-modal"
         onClick={e => e.stopPropagation()}
       >
         {children}
@@ -360,13 +368,13 @@ Asimetrik feature grid — büyük kart `col-span-2`, küçükler tek hücre.
 Fare konumuna göre 3D eğim + holografik parlaklık.
 
 ```tsx
-import { useCardTilt } from '@/hooks/useCardTilt'
+import { useCardTilt } from '@ahmetakyapi/ui'
 
-const { ref, rx, ry, shine, onMove, onLeave } = useCardTilt(6)
+const { ref, rotateX, rotateY, shine, onMove, onLeave } = useCardTilt(6)
 
 <m.div
   ref={ref}
-  style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
+  style={{ rotateX, rotateY, transformPerspective: 800 }}
   onMouseMove={onMove}
   onMouseLeave={onLeave}
   className="surface relative overflow-hidden rounded-2xl p-7"
@@ -376,16 +384,22 @@ const { ref, rx, ry, shine, onMove, onLeave } = useCardTilt(6)
 </m.div>
 ```
 
-Aynı efekt `@ahmetakyapi/ui` 3.0.0'da `<Surface tilt glow>` (eski ad `GlassCard` takma ad olarak duruyor).
-Eğim `prefers-reduced-motion` altında kapanır, parlaklık kalır; yalnızca `pointer: fine`.
+`transformPerspective` şart: perspektifsiz döndürme düz izdüşüm verir, birkaç
+derecelik eğim görünmez (`preserve-3d` bunu çözmez, `overflow-hidden` onu
+zaten düzleştirir). Aynı efekt `@ahmetakyapi/ui` 3.0.0'da `<Surface tilt glow>`
+(eski ad `GlassCard` takma ad olarak duruyor). Eğim `prefers-reduced-motion`
+altında kapanır, parlaklık kalır; ikisi de yalnızca `(hover: hover) and
+(pointer: fine)` iken çalışır (hook kapıyı kendisi uygular, `useFinePointer`).
 
 ### Magnetic Buton
 
 Fare yaklaştığında buton çekilir efekti. **Yalnızca `(hover: hover) and
 (pointer: fine)` altında** etkinleştir; dokunmatikte konum yapışıp kalır.
+Paketin `useMagnetic`i (ve `<Button magnetic>`) bu kapıyı kendisi uygular;
+elle kurarken `useFinePointer` ile sen uygula.
 
 ```tsx
-import { useMagnetic } from '@/hooks/useMagnetic'
+import { useMagnetic } from '@ahmetakyapi/ui'
 
 const mag = useMagnetic(0.28)
 
@@ -408,21 +422,28 @@ Sonsuz döngü için track ikiye katlanır, mask-image ile kenarlar solar.
 // Server Component — 'use client' gerekmez
 const track = [...LOGOS, ...LOGOS]
 
-<div
-  className="relative overflow-hidden"
-  style={{
-    maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
-    WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
-  }}
->
-  <div className="flex animate-marquee gap-14 whitespace-nowrap">
-    {track.map((name, i) => (
-      <span key={`${name}-${i}`} className="text-small font-semibold text-muted">
-        {name}
-      </span>
-    ))}
+<section className="marquee-section">
+  <div
+    className="marquee relative overflow-hidden"
+    style={{
+      maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+      WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+    }}
+  >
+    <div className="flex animate-marquee gap-14 whitespace-nowrap">
+      {track.map((name, i) => (
+        <span key={`${name}-${i}`} className="text-small font-semibold text-muted">
+          {name}
+        </span>
+      ))}
+    </div>
   </div>
-</div>
+  {/* JavaScript'siz durdurma denetimi; odak halkası etikette */}
+  <label className="marquee-pause mx-auto mt-5 flex min-h-11 w-fit items-center gap-2 text-small font-semibold text-muted has-checked:text-strong has-focus-visible:outline-2 has-focus-visible:outline-line-focus motion-reduce:hidden">
+    <input type="checkbox" className="sr-only" />
+    Şeridi Durdur
+  </label>
+</section>
 ```
 
 Tailwind v4'te keyframe `globals.css`teki `@theme` içinde (config dosyası yok):
@@ -434,10 +455,15 @@ Tailwind v4'te keyframe `globals.css`teki `@theme` içinde (config dosyası yok)
   }
 }
 .marquee:hover .animate-marquee,
-.marquee:focus-within .animate-marquee { animation-play-state: paused; }
+.marquee-section:has(.marquee-pause :checked) .animate-marquee { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .animate-marquee { animation: none; } }
 ```
-Hover ve odakta durur, reduced-motion'da statik. İkinci kopya `aria-hidden`.
+Hover'da ve "Şeridi Durdur" işaretlenince durur, reduced-motion'da statik.
+İkinci kopya `aria-hidden`. Görünür denetim ŞART (WCAG 2.2.2, sonsuz döngü):
+hover klavyede ve dokunmatikte yok, `:focus-within` de yalnızca şeritte
+odaklanacak bir bağlantı varsa tetiklenir; düz isim ya da logo işaretinde
+hiç çalışmaz (landing şablonu, 2026-10-20). `:has` bölümün kabında, kökte
+değil (`mistakes.md #81`).
 Uygulama içinde (okunması gereken veri) marquee kullanma.
 
 ### Mouse Spotlight
@@ -537,12 +563,23 @@ const schema = z.object({
   message: z.string().min(10, 'Mesaj en az 10 karakter olmali'),
 })
 
-type FormState = { success: boolean; message: string; errors?: Record<string, string[]> }
+type FormState = {
+  success: boolean
+  message: string
+  errors?: Record<string, string[]>
+  values?: Record<string, string>
+}
 
 export async function submitContact(prev: FormState, formData: FormData): Promise<FormState> {
   const result = schema.safeParse(Object.fromEntries(formData))
   if (!result.success) {
-    return { success: false, message: 'Validasyon hatasi', errors: result.error.flatten().fieldErrors }
+    // React 19 eylem bitince formu SIFIRLAR, hata donse bile: girilenleri geri
+    // ver. Yalniz metin alanlari; parola istemciye geri gonderilmez.
+    const values: Record<string, string> = {}
+    for (const [key, value] of formData.entries()) {
+      if (typeof value === 'string' && key !== 'password') values[key] = value
+    }
+    return { success: false, message: 'Validasyon hatasi', errors: result.error.flatten().fieldErrors, values }
   }
   // ... kaydet
   return { success: true, message: 'Mesajiniz alindi!' }
@@ -552,25 +589,42 @@ export async function submitContact(prev: FormState, formData: FormData): Promis
 ```tsx
 // components/ContactForm.tsx
 'use client'
-import { useActionState } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
 import { submitContact } from '@/app/actions/contact'
 
 export function ContactForm() {
   const [state, action, isPending] = useActionState(submitContact, { success: false, message: '' })
+  const formRef = useRef<HTMLFormElement>(null)
 
+  // Hata donunce odak ilk gecersiz alana
+  useEffect(() => {
+    if (state.success || !state.errors) return
+    formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+  }, [state])
+
+  // `disabled` YOK: odaktaki dugme devre disi kalinca odak <body>'ye duser.
+  // Ikinci gonderimi onSubmit keser (React 19 preventDefault gorunce eylemi cagirmaz).
   return (
-    <form action={action}>
-      <input name="name" required disabled={isPending} />
-      {state.errors?.name && <p className="text-red-400 text-xs">{state.errors.name[0]}</p>}
+    <form ref={formRef} action={action} onSubmit={(e) => { if (isPending) e.preventDefault() }}>
+      <input
+        name="name"
+        required
+        defaultValue={state.values?.name}
+        aria-invalid={state.errors?.name ? true : undefined}
+      />
+      {state.errors?.name && <p className="text-small text-danger">{state.errors.name[0]}</p>}
       {/* ... diger alanlar */}
-      <button type="submit" disabled={isPending}>
+      <button type="submit" aria-disabled={isPending || undefined}>
         {isPending ? 'Gonderiliyor...' : 'Gonder'}
       </button>
-      {state.message && <p className={state.success ? 'text-emerald-400' : 'text-red-400'}>{state.message}</p>}
+      {state.message && <p className={state.success ? 'text-success' : 'text-danger'}>{state.message}</p>}
     </form>
   )
 }
 ```
+
+Kaynak: `templates/nextjs-fullstack/components/ExampleForm.tsx` (`Field` ile
+`aria-describedby` bağlı hata metni dahil).
 
 ---
 
@@ -588,7 +642,9 @@ const SESSION_COOKIES = ['authjs.session-token', '__Secure-authjs.session-token'
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
   if (!PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return NextResponse.next()
-  if (SESSION_COOKIES.some((n) => req.cookies.has(n))) return NextResponse.next()
+  // Büyük JWT `.0`, `.1` diye parçalanır; tam adlı çerez o zaman hiç yoktur
+  if (req.cookies.getAll().some(({ name }) => SESSION_COOKIES.some((b) => name === b || name.startsWith(`${b}.`))))
+    return NextResponse.next()
   return NextResponse.redirect(new URL(`/giris?next=${encodeURIComponent(pathname)}`, req.url))
 }
 
@@ -1175,7 +1231,7 @@ aynı modeli birebir sunar. Aşağıdaki tablo `1.69.2` sürümünün tip tanım
 | `connectAgentContext` | `useAgentContext({ description, value })` |
 | A2UI / MCP Apps activity renderer | `useRenderActivityMessage` (A2UI yerleşik) |
 | headless mod | `@copilotkit/react-core/v2/headless` |
-| `AppHttpAgent` (self-managed) | `selfManagedAgents={{ id: new HttpAgent({ url }) }}` |
+| `AppHttpAgent` (self-managed) | `selfManagedAgents={{ default: new HttpAgent({ url }) }}` — `CopilotChat`/`useAgent` `agentId` verilmezse `'default'`u arar |
 
 **`FrontendTool` gerçek şekli** — `parameters` Standard Schema V1 kabul eder,
 yani Zod v4 doğrudan çalışır:
@@ -1204,6 +1260,17 @@ type FrontendTool<T> = {
 `useRenderTool` string literal verir, `useFrontendTool` enum → `mistakes.md #70`.
 `@ag-ui/client` sürümü CopilotKit'inkine sabitlenmeli → `mistakes.md #71`.
 
+**Üç tuzak daha** — üçü de 1.69.2'nin kaynağında okundu:
+- Hook deps'i `JSON.stringify(deps)` ile karşılaştırılır; fonksiyon `null` olur.
+  `[onSearch]` yeniden kaydı hiç tetiklemez, tool ilk render'ın closure'ını
+  tutar. Kayıt bir kez (`[]`), güncel callback ref'ten okunur.
+- `parameters` yalnız modele giden JSON şemasıdır; handler ve render'a gelen
+  argüman şemaya karşı **doğrulanmaz** (yalnız `JSON.parse`). Yan etkiden ve
+  çizimden önce `safeParse`.
+- `useHumanInTheLoop` cevabı bir sonraki run'a **tool mesajı** olarak gider,
+  `resume` göndermez. Onayın düğmeleri ve id → anlam eşlemesi kodda sabit
+  kalmalı: model seçenek de yazarsa `accept`i "Vazgeç"in arkasına koyabilir.
+
 **Çalışan referans**: `snippets/agent-tool.tsx`, `snippets/action-card.tsx`,
 `snippets/agent-approval.tsx` — üçü de derlendi. İskelet:
 `templates/agentic-chat/`.
@@ -1214,8 +1281,8 @@ type FrontendTool<T> = {
 
 > Kaynak: Nicolas Bustamante, "the AI feed will be the form factor of 2027"
 > (X, Ekim 2026). Snippet: `snippets/agent-feed.tsx` + `agent-feed-core.ts`
-> (26 test, kök `npm test`). **Çalışan uygulama:** `templates/nextjs-fullstack`
-> → `/akis` (şema, sunucu eylemleri, yetki kuralları + 14 test, geliştirmede
+> (30 test, kök `npm test`). **Çalışan uygulama:** `templates/nextjs-fullstack`
+> → `/akis` (şema, sunucu eylemleri, yetki kuralları + 17 test, geliştirmede
 > veritabanısız demo modu).
 
 **Sorun:** sohbet, kullanıcıdan emek ister: ajanın ne yapabildiğini keşfet,
@@ -1260,6 +1327,8 @@ cron / webhook (yeni e-posta, takvim değişikliği, gece gelen veri)
 - Sonuç `parseActionResult`'tan geçer; `ok: true` ama özetsiz sonuca "yapıldı"
   denmez (kural 5, `mistakes.md #58`).
 - Geri Al modele uğramaz: `undoToken` ile doğrudan, süresi sunucuda dolar.
+  Kapanmış karar kulvarını ve aksiyonlarını korur, özeti `resolvedSummary`de
+  gelir: sayfa yenilendikten sonra da Geri Al kartı karara döndürür.
 
 ```ts
 // Drizzle — feed_items (iskelet)

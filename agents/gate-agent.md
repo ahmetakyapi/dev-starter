@@ -100,9 +100,14 @@ npm run lint                          # config dosyası var mı, önce onu doğr
 ### Pass 3: Security Scan
 
 ```bash
-git diff --cached --name-only | xargs grep -lniE \
-  '(password|secret|api_key|apikey|token)\s*[:=]\s*["\x27][^"\x27]{8,}' 2>/dev/null
-git diff --cached --name-only | grep -E '^\.env$|^\.env\.local$'
+# Desen hooks/quality-scan.sh § 3 ile aynı. ERE köşeli parantezinde \x27
+# apostrof DEĞİL (x,2,7); \s GNU'ya özgü. Kebab değerli `token:` tasarım
+# token adıdır, eşleşme başına ayıklanır.
+SECRET_RE="(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"'[:space:]]{8,}[\"']"
+git -c core.quotePath=false diff --cached --name-only -z --diff-filter=ACMR \
+  | xargs -0 grep -HnoiE -e "$SECRET_RE" -- 2>/dev/null \
+  | grep -vE ":[Tt]oken[[:space:]]*[:=][[:space:]]*[\"'][a-z]+(-[a-z0-9]+)+[\"']\$"
+git -c core.quotePath=false diff --cached --name-only | grep -E '(^|/)\.env($|\.)' | grep -vE '\.(example|template)$'
 grep -rn "dangerouslySetInnerHTML" --include="*.tsx" .
 ```
 

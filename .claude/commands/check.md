@@ -33,7 +33,7 @@ bulgu sayilir; eski projede bilgi olarak raporlanir.
   Senkron `params` / `cookies()` kullanimi var mi? Segmentte `loading.tsx` var mi
   (soft 404 riski)? `revalidateTag` tek argumanla mi cagriliyor?
 - **ESLint:** `next lint` script'i ya da `.eslintrc*` varsa bulgu; dogrusu
-  `"lint": "eslint"` + `eslint.config.mjs` (flat, `eslint-config-next/core-web-vitals` + `/typescript`).
+  `"lint": "eslint --max-warnings 0"` + `eslint.config.mjs` (flat, `eslint-config-next/core-web-vitals` + `/typescript`).
 - **Tailwind v4:** `tailwind.config.*` olmamali; `postcss.config.mjs` →
   `@tailwindcss/postcss`; `globals.css`te `@import "tailwindcss"` ve `@theme inline` koprusu.
   `@import "tailwindcss"` var ama PostCSS eklentisi yoksa CRITICAL (utility'ler hic uretilmez).
@@ -54,8 +54,11 @@ Kaynak: `~/dev-starter/rules/design-tokens.md`. Token tanim dosyalari (`globals.
 ## 4. Guvenlik
 
 ```bash
-git ls-files | grep -E '^\.env($|\.)' | grep -v example
-grep -rnE "(password|secret|api_key|token)\s*[:=]\s*['\"][^'\"]{8,}" app lib components --include='*.ts' --include='*.tsx'
+git ls-files | grep -E '(^|/)\.env($|\.)' | grep -vE '\.(example|template)$'
+# Desen hooks/quality-scan.sh § 3 ile ayni (tek tirnak, buyuk/kucuk harf, kebab token ayiklamasi)
+SECRET_RE="(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"'[:space:]]{8,}[\"']"
+grep -rnoiE "$SECRET_RE" app lib components --include='*.ts' --include='*.tsx' \
+  | grep -vE ":[Tt]oken[[:space:]]*[:=][[:space:]]*[\"'][a-z]+(-[a-z0-9]+)+[\"']\$"
 grep -rn "console.log" app lib components --include='*.ts' --include='*.tsx'
 ```
 

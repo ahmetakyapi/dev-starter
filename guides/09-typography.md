@@ -34,6 +34,12 @@ Kaynak dosyalar:
    `@theme inline` bloğuna taşı (`--font-display` eklenir; sans ve mono
    şablonda zaten var).
 5. Gövde Schibsted ise (`signature`) aynı dosyanın son bloğunu aç (§ 5).
+6. Paylaşım görseli de değişir: `app/opengraph-image.tsx` → `FONT_FAMILY`
+   presetin başlık ailesi olur, Google Fonts'taki adıyla
+   (`"Schibsted Grotesk"`). Satori next/font'u görmez; dosyadaki `loadFonts`
+   fontu derlemede `wght@400;700` ile Google'dan ister. Ad tutmazsa next/og'un gömülü Geist'ine
+   düşer; derleme kırılmaz, uyarı da basılmaz. 700'ü olmayan aile
+   (Instrument Serif) başlığı 400 ile çizer.
 
 ---
 
@@ -165,8 +171,9 @@ virgül, yüzde işareti önde (`%4,2`). Eksi işareti kısa çizgi değil U+221
 - **Kullanmadığın yükleyiciyi sil (ölçüldü).** next/font modülde TANIMLI her
   yükleyiciyi o modülü içe aktaran sayfaya bağlar; hangi `variable`ın
   kullanıldığına bakmaz. `fonts.ts`in tamamını içe aktarıp yalnızca
-  `signature` kullanan sayfa 32 woff2 ön yüklemesi ve 80 `@font-face` kuralı
-  aldı; iki aile yükleyen şablon sayfası 6 ön yükleme.
+  `signature` kullanan sayfa 30 woff2 ön yüklemesi ve 75 `@font-face` kuralı
+  aldı; iki aile yükleyen şablon sayfası 4 ön yükleme (Manrope ve Plex Mono
+  400, ikişer alt küme).
 - **Seçenekler değişmez yazılır.** `subsets: [...LATIN]` gibi bir yayılım
   Turbopack derlemesini "Unexpected spread" ile kırar (denendi).
 - **Aynı aile iki rolde iki kez iner.** Başlık ve gövde için iki ayrı
@@ -266,6 +273,7 @@ Getiri Eğrisi".
 ## Kontrol Listesi
 
 - [ ] Preset § 4'ten seçildi, kullanılmayan yükleyiciler silindi
+- [ ] `app/opengraph-image.tsx` → `FONT_FAMILY` presetin başlık ailesi
 - [ ] `subsets: ["latin", "latin-ext"]`, değişken fontta `weight` yok
 - [ ] Değişken adları `-face` sonekli, köprü `@theme inline`da
 - [ ] TL tutarı varsa preset ₺ taşıyor ya da birim "TL"

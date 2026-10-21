@@ -116,6 +116,12 @@ koymak "tanımsız" demektir ve senkron sessizce hiçbir şey yapmaz.
 | Çalışma anı (`process.env` istek içinde) | `RESEND_API_KEY`, `EMAIL_FROM`, `VAPID_*` | servisi yeniden başlat (Sync App Env) |
 | Derleme anı (statik rota, `NEXT_PUBLIC_*`, modül seviyesinde okunan bayrak) | `SITE_INDEXABLE` (robots.txt statik), `NEXT_PUBLIC_SITE_URL` | **yeniden deploy** |
 
+`NEXT_PUBLIC_SITE_URL` şablonlarda derlemede ZORUNLU: Vercel dışında boşken
+`npm run build` durur (`lib/env.ts` → `assertSiteUrlForBuild`), kanonik
+adresi ve site haritasını sessizce localhost'la yayınlamaz. Derlemeyi koşan
+kabuk değeri görmeli (yukarıdaki `set -a`); `SKIP_ENV_VALIDATION=1` CI
+derlemesi içindir, sunucuda bu korumayı da kapatır.
+
 **Dışarıdan doğrula.** "Anahtarı koydum, servisi yeniden başlattım" yetmez
 (#101): özelliğin dışarıdan görünen bir işareti olsun (e-posta yoksa
 `/sifremi-unuttum` 404, varsa 200) ve deploy sonrası `curl` ile bak.
@@ -126,11 +132,19 @@ sudo cat /proc/$(systemctl show -p MainPID --value <servis>)/environ \
   | tr '\0' '\n' | grep -oE '^(RESEND_API_KEY|EMAIL_FROM|VAPID_[A-Z_]+)='
 ```
 
+Derleme anı değeri için de aynı: gömülen site adresine dışarıdan bak.
+
+```bash
+curl -s https://<alan>/sitemap.xml | grep -q localhost && echo "HATA: site haritası localhost"
+```
+
 ## 4. Arama Motoruna Açık mı?
 
 `SITE_INDEXABLE=false` ikinci kopya (staging) için doğru, asıl alan adında
 **sitenin tamamını** Google'dan çeker: `robots.txt` `Disallow: /`, her
-sayfada `noindex` (#100). Derlemede okunur.
+sayfada `noindex` (#100). Derlemede okunur. Şablonlarda okuyan yer
+`lib/site.ts` → `INDEXABLE`: bayrak yalnız tam `false` iken KAPATIR (yanlış
+yazım asıl siteyi dizinden çekmez), Vercel önizlemesini de açamaz.
 
 - Değer GitHub **Variables**'ta (`SITE_INDEXABLE=true`), deploy yazar.
 - Her deploy sonrası: `curl -s https://<alan>/robots.txt` → `Allow: /` +
@@ -222,7 +236,7 @@ sayfada `noindex` (#100). Derlemede okunur.
 - [ ] Actions: `contents: read`, `persist-credentials: false`, sabit sürümler, host key, ortak `concurrency` + `queue: max`
 - [ ] Sırlar GitHub Secrets'ta, bayraklar Variables'ta; sunucuya izin listeli senkronla
 - [ ] Derleme anı değişkeni değişti → yeniden deploy; çalışma anı → yeniden başlat
-- [ ] Deploy sonrası `robots.txt` ve `meta robots` dışarıdan kontrol
+- [ ] Deploy sonrası `robots.txt`, `meta robots` ve site haritası (localhost yok) dışarıdan kontrol
 - [ ] Search Console: alan adı mülkü (DNS TXT), site haritası, URL denetimi
 - [ ] E-posta: alan adı doğrulu, gönderen `@<alan>`, "yanıtlama" notu, iletişim adresi ayrı
 - [ ] E-posta özelliği anahtarsızken görünmüyor; varken canlı formla test edildi

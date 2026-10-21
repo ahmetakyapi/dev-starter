@@ -213,6 +213,52 @@ projelerde (ahmetakyapi.com) kalır.
 **Varsayılan tema projeye göre:** gündüz kullanılan araç/veri ürünü açık
 (Açılış Zili, Mimio), portfolyo/oyun koyu. Ayrıntı: `guides/03-theming.md`.
 
+### Değişti (2026-10-20) — tema çerezi istemcide yazılır
+
+**Önceki karar:** istemci DOM'u değiştirir, çerezi bir server action
+(`app/actions/theme.ts`) "arkadan" yazar.
+**Yeni karar:** çerezi ThemeToggle `document.cookie` ile yazar ve
+`meta[name=theme-color]`ı kendisi günceller; tema için server action yok.
+`lib/theme.ts` iki taraftan okunan sabitler + `isTheme` (next/headers YOK),
+çerezi okuyan `getTheme()` `lib/theme.server.ts`te.
+
+**Neden değişti:**
+- Varsayım yanlıştı: Next 16'da action içinde `cookies().set()` isteği
+  "veri değişti" sayar. Yanıt bütün sayfayı sunucuda yeniden çizer
+  (`x-action-revalidated: 1`, sayfadaki sorgular dahil) ve istemci bütün ön
+  yükleme önbelleğini boşaltır. Şablonda ölçüldü: her tıklama bir POST ve
+  ana sayfanın tam RSC'si. Kozmetik bir tıklamanın bedeli değil.
+- `lib/theme.ts` `next/headers` içe aktardığı için istemci ondan değer
+  alamıyordu; düğme tema ayrıştırmayı elle kopyalıyordu (üçüncü tema
+  sessizce "light"a düşerdi).
+- Çerez gizli değil, `httpOnly` gerekmez; sunucu onu bir sonraki istekte
+  okur. FOUC'suz ilk kare kararı aynen duruyor.
+
+**Bedel:** tarayıcı çubuğunun rengi elle güncelleniyor; tıklamadan önce
+önbelleğe alınmış bir sayfa başı geri gelirse çubuk kısa süre eski renkte
+kalabilir, sonraki sunucu çizimi düzeltir.
+
+### Değişti (2026-10-20) — landing şablonu statik + çerez betiği
+
+**Önceki karar:** iki şablon da temayı kök layout'ta `cookies()` ile okur;
+`landing` dahil satır içi betik yok.
+**Yeni karar:** `landing` `<html data-theme={DEFAULT_THEME}>` basar;
+`<head>`deki `THEME_SCRIPT` (`lib/theme.ts`) ilk boyamadan önce çerezdeki
+temayı ve `theme-color`ı yazar. Viewport statik, tema için server action
+yok. `nextjs-fullstack` çerezi sunucuda okumaya devam eder.
+
+**Neden değişti:**
+- Vitrinin içeriği her ziyaretçiye aynı; `cookies()` her rotayı dinamik
+  (`ƒ`) yapıp CDN önbelleğini kapatıyordu. Şablonda ölçüldü: `ƒ /` → `○ /`,
+  `/` yanıtı `no-store` → `s-maxage=31536000` (`guides/03-theming.md` § 2b,
+  `mistakes.md` #93).
+- Oturumlu üründe sayfa zaten dinamik; orada betiğin kazandıracağı bir şey
+  yok, ilk karenin sunucudan doğru gelmesi daha değerli.
+
+**Bedel:** satır içi betik geri geldi; tam CSP açılırsa `script-src` onun
+hash'ini ister ("Güvenlik Başlıkları" kararı). JavaScript kapalıyken
+çerezdeki tema uygulanmaz, varsayılan tema görünür.
+
 ---
 
 ## Palet — Varsayılan Renk Ailesi
@@ -293,7 +339,7 @@ getirdiği karmaşıklık orada karşılığını vermiyor.
 okundu ve çıkarılabilir desenler `knowledge/patterns.md → Agentic UI` ile
 `rules/agentic-ui.md` altına işlendi. Kod yazılmadı.
 
-**Kararı bekleten üç soru:**
+**Kararı bekleten dört soru:**
 
 1. **Vercel süre limiti.** Agent run'ları saniyelerden dakikalara sürebiliyor.
    Next.js Route Handler SSE stream'leyebilir ama serverless fonksiyonun bir
@@ -307,6 +353,12 @@ okundu ve çıkarılabilir desenler `knowledge/patterns.md → Agentic UI` ile
    chat yok, agent döngüsü yok, protokol yok. Bir vision çağrısı, bir Zod
    şeması, bir form ön doldurma ve **insan onayı**. Adayları: DigyNotes'ta
    not/görsel içe aktarma, keskealsaydim'de portföy ekran görüntüsü içe aktarma.
+4. **CopilotKit lisans katmanı (2026-10-20).** 1.69.2, `selfManagedAgents`
+   için "Enterprise Intelligence" uyarısı basar ve üretimde
+   `publicLicenseKey` ister. Paket MIT, bugün hiçbir şey kilitlenmiyor; ama
+   yayından önce seçilmeli: lisans anahtarı, `runtimeUrl` + CopilotRuntime ya
+   da CopilotKit'in React katmanı olmadan `@ag-ui/client`.
+   → `templates/agentic-chat/README.md` → Lisans notu
 
 **Not (2026-10-03):** `templates/agentic-chat` overlay'i ve `/agentic` komutu
 POC için hazır; karar hâlâ açık.
@@ -367,4 +419,4 @@ skills` tedarik zinciri pin'i. Hook'ların her Bash çağrısında fork edilmesi
 *Yeni bir teknoloji benimsendiğinde bu dosya güncellenir. Eski karar silinmez;
 altına "Değişti (tarih)" başlığıyla yenisi ve gerekçesi yazılır.*
 
-*Son güncelleme: 2026-10-15*
+*Son güncelleme: 2026-10-20*

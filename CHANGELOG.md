@@ -7,6 +7,128 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Kapsamlı kod denetimi — 2026-10-20
+
+Depo yedi alanda (iki şablon, agentic, UI paketi, snippet'ler, hook'lar,
+araç zinciri) iki mercekle (güvenlik + doğruluk, performans + iyi uygulama)
+tarandı. 173 bulgunun her biri ayrı bir ajanca çürütülmeye çalışıldı; yüksek
+dereceli güvenlik bulgularına ikinci görüş alındı. Düzeltmeler grup grup
+uygulandı, her grubu bağımsız bir gözden geçirici denetledi. Kalıcı dersler
+`knowledge/mistakes.md` #102–106.
+
+#### Eklendi
+
+- **`@ahmetakyapi/ui/source.css`**: Tailwind v4 `node_modules`u taramadığı
+  için paketin sınıfları belgelenen kurulumla hiç derlenmiyordu (Button,
+  Surface, CustomCursor stilsiz). Tüketici tema importlarından sonra içe
+  aktarır (#103).
+- **`@ahmetakyapi/ui/core`**: `'use client'` taşımayan sunucu-güvenli giriş
+  (`cn`, `EASE`, `DUR`, `SPRING`, varyantlar); ana girişten alınan sabit
+  sunucu bileşeninde istemci referansına dönüşüyordu (#84). `typesVersions`
+  yedeği dahil; `verify:exports` iki yeni girişi de denetler.
+- **`useFinePointer`** (paket): mıknatıs, eğim ve parıltı efektleri artık
+  dokunmatikte kapalı; dokunulan düğme yerinde takılı kalmıyordu.
+- **Paket temasında `bg-cta` + `--on-brand`**, `shadow-raised/floating/modal`
+  ve punto satır yükseklikleri: paket token API'si şablonlarla aynı adları
+  taşır.
+- **health-check**: iki Next şablonu arasında bayt bayt aynı olması gereken
+  35 dosya `cmp` ile denetlenir (`SHARED_TEMPLATE_FILES`); dört hook'un da
+  kaydı ve kaydın mutlak yolla yapıldığı denetlenir.
+- **Hook testleri 52 → 87**: alt klasörden commit, apostroflu komut, tırnaklı
+  route grubu pathspec'i, Türkçe dosya adı, sağlayıcı anahtarları, workspace
+  kilidi, uyarıların modele ulaşması.
+- **Şablon testleri**: `tests/proxy.test.ts` (parçalı oturum çerezi), hız
+  sınırı tavanı, ortam doğrulaması (http(s) ve derleme kapısı).
+
+#### Değişti
+
+- **landing şablonu statik** (`ƒ /` → `○ /`, `Cache-Control: s-maxage`):
+  tema çerezi `<head>`deki `THEME_SCRIPT` ile ilk boyamadan önce uygulanır
+  (`guides/03 § 2b`, #93). Server action ve `app/actions/theme.ts` kalktı.
+- **Tema çerezi istemcide yazılır** (iki şablon + snippet): action içinde
+  `cookies().set()` her tıklamada sayfayı sunucuda yeniden çiziyor ve ön
+  yükleme önbelleğini boşaltıyordu. fullstack çerezi `lib/theme.server.ts`ten
+  okur; `lib/theme.ts` istemci-güvenli (#104, `decisions.md` Değişti
+  2026-10-20).
+- **Hook kaydı mutlak yolla**: `bash "$CLAUDE_PROJECT_DIR"/hooks/<ad>.sh`;
+  hook'lar işe başlamadan proje köküne sabitlenir (#102).
+- **quality-scan uyarıları modele ulaşır**: exit 0'daki uyarılar
+  `additionalContext` olarak döner; eskiden kimse görmüyordu.
+- **Şablon lint'i `--max-warnings 0`**: a11y ve hooks uyarıları yeni projede
+  CI'dan geçiyordu.
+- **Açık tema `--warning` #825a0a**: metin olarak kart üstündeki yıkamada da
+  AA (eskisi sayfa üstünde 3.99:1). Kontrat testi durum renklerini artık
+  ölçer.
+- **`snippets/ui/empty-state.tsx` prop'u `as` → `titleAs`** (KIRICI): şablondaki
+  `EmptyState` ile aynı ad, `"h1"` de kabul eder; kopyalayan projede
+  `as=` çağrıları `titleAs=` olur.
+- **Overlay snippet'leri** (modal, drawer, confirm): `document.body`'ye
+  portal, odak taşıma/tuzak/geri verme, Escape yalnız en üst katmanı kapatır,
+  scrim yalnız basış da bırakış da üstündeyse kapatır (`useLayer`).
+
+#### Düzeltildi — güvenlik
+
+- **Onay kartında düğmenin anlamını model seçiyordu** (`agent-approval`):
+  `accept` id'si "Vazgeç" etiketinin arkasına konabiliyordu. Düğme seti ve
+  id → anlam kodda sabit, argümanlar `safeParse`, geçersizse ret (#106).
+- **Commit kapısı kaçışları**: `cd` sonrası gate ve sır taraması boşa
+  dönüyordu; apostroflu komut ve tırnaklı pathspec tespiti siliyordu; büyük
+  commit'te SIGPIPE docs muafiyeti veriyordu; Türkçe dosya adları taranmıyordu.
+- **Sır desenleri** (hook, CI, gate ajanı, `/check`): `\x27` köşeli parantezde
+  apostrof değildi, tek tırnaklı sırlar hiç yakalanmıyordu; Anthropic,
+  GitHub, npm, Resend, Stripe ve Slack önekleri eklendi. `.env*` CI'da ve
+  `.gitignore`da her derinlikte.
+- **Hız sınırı**: 5.000 canlı anahtardan sonra her istek bütün haritayı
+  geziyordu (sahte XFF ile O(n²) CPU); süpürme saniyede bire indi, harita
+  10.000'de tavanlı.
+- **Agentic**: model argümanları her handler'da çalışma anında doğrulanır;
+  `NEXT_PUBLIC_AGENT_URL` yalnız aynı köken; mock ucu gövdeyi doğrular;
+  `/akis` oturum açıkken kullanıcı satırı yoksa giriş döngüsüne girmiyor;
+  boş taslak gönderilemez; geri alma/geç eylemleri hız sınırında.
+- **OG snippet'i** sorgu metnini sınırsız ve denetimsiz basıyordu: kırpılır,
+  kontrol karakterleri atılır.
+- **`instrumentation.ts`** Drizzle hatasının SQL parametrelerini (kişisel
+  veri) günlüğe yazıyordu.
+
+#### Düzeltildi — doğruluk ve erişilebilirlik
+
+- **proxy.ts** parçalı Auth.js çerezini (`.0`, `.1`) görmüyor, büyük JWT'li
+  kullanıcıyı `/hesap`tan sonsuz girişe atıyordu.
+- **Form snippet'i** doğrulama hatasında bütün alanları siliyordu (React 19
+  sıfırlaması); gönder düğmesi odağı `<body>`'ye düşürüyordu (#105).
+- **Reveal** negatif kenar boşluğu sayfa sonundaki küçük öğeyi hiç
+  göstermiyordu; kademe gecikmesi tavanlı; `.scroll-reveal` sayfa sonunda
+  tamamlanıyor.
+- **landing**: WebGL hatası bütün sayfayı hata ekranına atıyordu (sahne artık
+  yalnız kendini düşürür, boşta yüklenir); logo şeridi klavye ve dokunmayla
+  durdurulabilir; mobil menü Escape ve Tab'da odağı kaybetmiyor; fiyat rozeti
+  AA; kök layout'taki canonical her rotaya miras kalıyordu.
+- **Site adresi**: Vercel dışında adres tanımsızken üretim derlemesi
+  sitemap/OG/canonical'ı `localhost`a basıp yeşil bitiyordu; artık durur.
+  `SITE_INDEXABLE` (rehber 11) gerçekten okunuyor.
+- **iOS yakınlaştırma koruması** `@layer base`te `text-base`e yeniliyordu;
+  yatay çentik için safe-area dolgusu; OG başlığı gerçekten kalın; 404 ve
+  `/hesap` başlıklı, atlama bağlantısı hedefli.
+- **snippets/ui**: FileDropzone bırakılan dosyayı forma koymuyor, reddedileni
+  gönderiyordu; Dialog/Sheet'te seçim sürüklemesi ve yerel kapanış durumu
+  bozuyordu; komut paleti ok tuşları gruplu sırayı izlemiyordu; DataTable
+  sıralamada NaN, satır başına O(n²) hesap; RouteProgress hayalet çubuk;
+  TreeView odak halkası; Kbd erişilebilir adı.
+- **Diğer snippet'ler**: SearchBar URL'yi bayat değerle eziyordu;
+  useInfiniteScroll sonradan gelen gözcüyü görmüyordu; toast güvenli olmayan
+  bağlamda çöküyordu, hata bildirimi kendiliğinden kayboluyordu; theme-toggle
+  şablondaki düzeltilmiş sürümle eşitlendi.
+- **Paket**: `::selection` metni 1.3–1.8:1'e düşürüyordu; kırpan yüzeyde odak
+  halkası görünmüyordu; Surface eğimi perspektifsiz olduğu için etkisizdi.
+- **Araçlar**: `verify-lockfile` workspace manifest'lerini denetlemiyordu;
+  `verify-*` betikleri Ctrl-C'de GB'lık geçici dizin bırakıyordu; kilit
+  kontrolü şablon projelerinde hiç çalışmıyordu; bootstrap aynı adlı komut ve
+  ajan dosyasının yedeğini eziyordu; `audit-project` emoji taraması macOS'ta
+  her zaman "temiz" diyordu; motion-film betiklerinde dört URL/çıktı hatası.
+- **Kurulum belgeleri**: agentic overlay talimatı derlenmeyen proje
+  üretiyordu (`lib/agui-scenarios.ts` kopyalanmıyordu, `.env.local` eziliyordu,
+  sağlayıcı kök layout'a bağlanıp her rotaya ~2,4 MB yüklüyordu).
+
 ### Eklendi — 2026-10-16
 
 - **Paralel oturumlar için cmux önerisi**: global CLAUDE.md, kullanıcının

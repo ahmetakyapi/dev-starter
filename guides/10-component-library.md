@@ -118,12 +118,14 @@ kaldığı için erişilebilirlik açığı değil.
   `domMax` ister ve bileşen kendi `LazyMotion`ını açar; kökteki
   `domAnimation`a dokunma.
 - **CopyButton**: sonuç ekran okuyucuya da söylenir; izin yoksa "Kopyalanamadı".
-- **Kbd**: kısayol ipucu. Dokunmatikte gizle (`pointer-fine:`).
+- **Kbd**: kısayol ipucu. Dokunmatikte gizle (`pointer-fine:`). Simgeli
+  tuşa `label` ("Command"): görünmez metin olarak okunur, simge gizlenir.
 
 ### Katmanlar
 
 - **Dialog**: onay, kısa form, yıkıcı eylem. Yıkıcı onayda ilk odak
-  "Vazgeç"te (`autoFocus`). Uzun form için ayrı sayfa.
+  "Vazgeç"te (`data-autofocus`; `autoFocus` istemci çiziminde işlemez).
+  Uzun form için ayrı sayfa.
 - **Sheet**: telefonda filtre ve ayrıntı. Sürükleme tek kapatma yolu değil.
 - **Popover**: sayfayı kilitlemeyen küçük kutu. İçinde form varsa
   `modal="trap-focus"` ve bir `PopoverClose`.
@@ -167,9 +169,12 @@ kaldığı için erişilebilirlik açığı değil.
   gerektirmez; uzak avatar için `remotePatterns`a joker host yazmak
   `/_next/image`ı herkese açık bir görsel vekiline çevirirdi.
 - **Stepper**: çok adımlı akışta konum. Gezinme değil.
-- **FileDropzone**: MIME izin listesi; SVG varsayılan REDDEDİLİR (betik
-  taşıyabilir). İstemci denetimi kolaylık; sunucu boyutu ve sihirli baytları
-  yeniden doğrular.
+- **FileDropzone**: MIME izin listesi (`image/*` joker SVG'yi kapsamaz); SVG
+  varsayılan REDDEDİLİR (betik taşıyabilir). İstemci denetimi kolaylık; sunucu
+  boyutu ve sihirli baytları yeniden doğrular. Bırakılan dosya da form
+  girişine yazılır, reddedilen çıkarılır. `maxBytes` taşıyıcının sınırını
+  aşmasın: sunucu eylemi varsayılan 1 MB
+  (`experimental.serverActions.bodySizeLimit`), Vercel 4,5 MB, nginx 1 MB.
 - **Timeline**: tarihli olaylar. Görünen zamanı çağıran biçimler (göreli
   zaman sunucu ile istemcide farklı çıkar).
 - **EmptyState**: `icon` panel içi, `scene` sayfa düzeyi, `inline` tek satır.

@@ -104,6 +104,12 @@ Gerekenler" bölümlerini projeye göre düzelt.
 cp .env.example .env.local
 ```
 
+Yerelde `npm run build` için `.env.local`e
+`NEXT_PUBLIC_SITE_URL=http://localhost:3000`, `nextjs-fullstack`te bir de
+`AUTH_SECRET` (`npx auth secret`): üretim derlemesi ikisi olmadan durur
+(`/new-project` 6. adımda yazar). `npm run dev` ikisi olmadan da açılır;
+girişi denemek için `AUTH_SECRET` yine gerekir (yoksa Auth.js `MissingSecret`).
+
 Şablonda `lib/env.ts` zod ile doğrular:
 
 ```ts
@@ -188,9 +194,11 @@ verir; kod sağlamdır, tipler henüz yoktur (Açılış Zili). Alternatif:
 
 - Vercel → Domains → alan adını ekle, `www` → kök alan adı (apex) yönlendirmesi.
 - `NEXT_PUBLIC_SITE_URL=https://alanadi.com` — `lib/site.ts` sırayla
-  `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` → `localhost`
-  okur. **Neden sıra:** önizleme dağıtımlarında OG görseli ve canonical
-  adres önizleme alanına değil, üretime işaret etmeli (simayahi).
+  `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` (istemci paketinde
+  `NEXT_PUBLIC_` eşi) → `localhost` okur; üretim derlemesinde ilk ikisi de
+  yoksa derleme durur, localhost yayına çıkmaz. **Neden sıra:** önizleme
+  dağıtımlarında OG görseli ve canonical adres önizleme alanına değil,
+  üretime işaret etmeli (simayahi).
 
 ---
 
@@ -219,9 +227,10 @@ eklersen bu değişir.
 
 | Dosya | Görev |
 |-------|-------|
-| `app/layout.tsx` → `metadata` | `metadataBase`, `title.template`, açıklama, `alternates.canonical` |
+| `app/layout.tsx` → `metadata` | `metadataBase`, `title.template`, açıklama |
+| `page.tsx` (herkese açık her sayfa) | `alternates.canonical` kendi yolu; kök layout'a yazılırsa her alt rota "/"ye kanonikleşir |
 | `app/sitemap.ts` | Herkese açık rotalar |
-| `app/robots.ts` | Önizleme ortamında `disallow: "/"` |
+| `app/robots.ts` | Önizleme ortamında ve `SITE_INDEXABLE=false` kopyada `disallow: "/"` |
 | `app/opengraph-image.tsx` | Tek OG şablonu, metin temadan |
 | `app/icon.svg`, `app/manifest.ts` | Sekme ikonu, PWA künyesi |
 

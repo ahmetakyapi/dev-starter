@@ -296,7 +296,7 @@ Kuralların kağıt üstünde kalmaması için bash hook'ları:
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
 | `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse commit bloklar (kolonu başlıktan bulur, docs-only muaf) |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Secret (AWS/PEM/JWT/URL dahil), .env, debug kodu, `@ts-ignore`, kilit, agentic cast, TDD/commit-format/test-zayıflatma uyarıları |
+| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Secret (AWS/PEM/JWT/URL + Anthropic/GitHub/npm/Resend/Stripe/Slack önekleri), .env, debug kodu, `@ts-ignore`, kilit, agentic cast, TDD/commit-format/test-zayıflatma uyarıları |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE⇒Gate PASSED değişmezi |
 | `hooks/session-brief.sh` | SessionStart | ROUTEMAP özetini ve sıradaki iş önerisini bağlama basar |
 

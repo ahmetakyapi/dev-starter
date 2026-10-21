@@ -280,6 +280,12 @@ await put(`avatars/${userId}/${crypto.randomUUID()}.${ext}`, file, { access: "pu
 - **İzin listesi**, yasak listesi değil. SVG listede yok: içinde betik taşıyabilir.
 - Dosya adı istemciden alınmaz; uzantı MIME'dan, ad rastgele.
 - `file.type` istemcinin beyanıdır; kritikse ilk baytlara bak (sihirli sayı).
+- Örnekteki 2 MB, sunucu eyleminin varsayılan gövde sınırını (1 MB) aşar:
+  `next.config.ts` → `experimental: { serverActions: { bodySizeLimit: "3mb" } }`
+  (sınır ham gövdeye uygulanır, multipart başlıkları için pay bırak). VPS'te
+  nginx `client_max_body_size` de varsayılan 1 MB'tır; Vercel işlev gövdesi en
+  fazla 4,5 MB. Daha büyük dosya sunucudan geçmez, imzalı URL ile doğrudan
+  depolamaya yüklenir.
 - Vercel görsel optimizasyonu kotalıdır; aşılınca `/_next/image` 402 döner
   ve görseller kırılır. Kullanıcı görselleri yoğunsa `images.unoptimized: true`
   ya da kaynağında boyutlandırılmış dosya.

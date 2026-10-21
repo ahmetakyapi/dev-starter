@@ -90,14 +90,22 @@ Açılış Zili'nde genel bir iskelet CLS'i 0,25'e çıkarmıştı (eşik 0,1).
 "use client";
 const [state, action, pending] = useActionState(signUp, initial);
 
-<form action={action}>
-  <Field label="E-Posta" name="email" type="email" autoComplete="email" error={state.errors?.email} />
-  <Button type="submit" disabled={pending}>Hesap Oluştur</Button>
+<form action={action} onSubmit={(e) => { if (pending) e.preventDefault(); }}>
+  <Field label="E-Posta" name="email" type="email" autoComplete="email" defaultValue={state.values?.email} error={state.errors?.email} />
+  <Button type="submit" aria-disabled={pending || undefined}>Hesap Oluştur</Button>
 </form>
 ```
 
 Etiket her zaman görünür (yer tutucu etiket değildir), hata alanın altında
 ve `aria-describedby` ile bağlı, `aria-invalid` hata varken açık.
+
+React 19 eylem bitince formu sıfırlar, eylem hata dönse bile: eylem hata
+dönerken girilenleri `values` olarak da döndürür (şablonda `formToObject`;
+parola alanı varsa ondan çıkarılır, istemciye geri gitmez), alan onları
+`defaultValue` ile geri alır. Düğme `disabled` değil `aria-disabled`:
+odaktaki düğme devre dışı kalınca odak `<body>`ye düşer; ikinci gönderimi
+`onSubmit` keser, hata dönünce bir `useEffect` odağı ilk `aria-invalid`
+alana taşır (`components/ExampleForm.tsx`).
 
 ### ThemeToggle
 
@@ -119,6 +127,10 @@ alınır, paket olarak kurulmaz:
   `reveal.tsx`, `theme-toggle.tsx`, `rolling-number.tsx`, `animated-number.tsx`,
   `scroll-progress.tsx`, `tab-underline.tsx`, `use-scroll-lock.ts`. Kuralları
   [04-motion.md](04-motion.md) ve [03-theming.md](03-theming.md).
+- **Hareketli katmanlar** — `modal.tsx`, `drawer.tsx`, `confirm.tsx`: body'ye
+  portal, sayaçlı kilit ve katman yığını (`use-scroll-lock.ts` → `useLayer`).
+  Yerel `<dialog>` tabanlısı `snippets/ui/dialog.tsx`; iki aileyi üst üste
+  açma, Escape sırasını ortak tutmazlar.
 - **Fontlar** — `~/dev-starter/snippets/fonts/fonts.ts` preset'leri:
   [09-typography.md](09-typography.md).
 - **Agentic UI** — `agent-tool.tsx`, `action-card.tsx`, `agent-approval.tsx`;
@@ -134,6 +146,9 @@ alınır, paket olarak kurulmaz:
 üstünde bir onay diyaloğu) ilki kapanınca kilit erken çözülmesin. Kilit
 sayısı sıfıra inmeden sayfa serbest kalmaz (Mimio `useScrollLock`). `position: fixed` ile
 kilitlenen gövde kaydırma konumunu kaybeder, geri yazılmalı (`mistakes.md` #21).
+Aynı durumun klavye yarısı `useLayer`: Escape ve Tab yalnızca en üstteki
+katmanda işler. Her katman kendi dinleyicisini koşulsuz kurunca onaydaki tek
+Escape alttaki formlu modalı da kapatıyordu.
 
 ---
 
@@ -211,6 +226,8 @@ Veri gösteren her panelin dört hâli vardır; tasarımda dördü de çizilir:
 - İki hedef arasında en az 8 px. Satır içi bağlantılar istisna.
 - Dokunmatikte input puntosu ≥ 16 px; altında iOS sayfayı yakınlaştırır:
   `@media (pointer: coarse) { input, select, textarea { font-size: 16px; } }`
+  (katmansız yazılır: `@layer base` içinde kalsa her girişteki `text-base`
+  yardımcısı onu ezer, `mistakes.md` #74)
 
 ---
 

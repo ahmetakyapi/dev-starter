@@ -31,7 +31,9 @@ grep -E '"(tailwindcss|next-themes|motion|framer-motion)"' package.json
 - Kurulu degilse: palet blogunu (`:root[data-palette]`, acik ve koyu) projenin
   `globals.css`ine yaz; degerler `~/dev-starter/packages/@ahmet/theme/theme.css`ten.
 - Yalnizca palet token'lari degisir (`--primary` ailesi, `--display-gradient(-tight)`,
-  `--brand-gradient`, zemin/metin egilimi). Kimlik katmanina dokunma.
+  `--brand-gradient`, `--cta-gradient`, zemin/metin egilimi). Kimlik katmanina dokunma.
+  `--cta-gradient` yazilmazsa birincil eylem (`bg-cta`) signature mavisinde kalir;
+  `--on-brand` her duragi ustunde ≥ 4,5:1 olmali (guides/00).
 
 ## 2b. Proje temasi verildiyse (`acilis-zili`, `mimio` ...)
 

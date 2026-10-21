@@ -22,7 +22,10 @@ const SESSION_COOKIES = ["authjs.session-token", "__Secure-authjs.session-token"
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return NextResponse.next();
-  const hasSession = SESSION_COOKIES.some((n) => request.cookies.has(n));
+  // Büyük JWT `.0`, `.1` diye parçalanır; o zaman tam adlı çerez hiç yoktur.
+  const hasSession = request.cookies
+    .getAll()
+    .some(({ name }) => SESSION_COOKIES.some((b) => name === b || name.startsWith(`${b}.`)));
   if (hasSession) return NextResponse.next();
   const url = new URL("/giris", request.url);
   url.searchParams.set("next", pathname);
@@ -40,6 +43,10 @@ export const config = { matcher: ["/((?!_next|api/auth|.*\\..*).*)"] };
 - **Proxy bir ön elemedir, yetkilendirme değil.** Yalnızca çerezin VARLIĞINA
   bakar, ucuzdur. Gerçek kontrol sayfada ve her server action'da `auth()`
   ile tekrar yapılır; çerez sahte olabilir.
+- **Parçalı oturum da oturumdur.** Auth.js ~4 KB'yi aşan JWT'yi (sağlayıcı
+  jetonu, roller) `authjs.session-token.0`, `.1` … çerezlerine böler ve tam
+  adlı çerezi siler. Tam adla `has()` bunu görmez; kullanıcı girişe döner,
+  giriş aynı parçaları yazar, döngü. `auth()` parçaları birleştirir.
 
 Varsayılan açık + korunan önek listesi (şablon) ile varsayılan korumalı +
 açık izin listesi (ElevenForge) arasındaki seçim: herkese açık sayfası çok
@@ -131,7 +138,7 @@ export default config;
 
 ```json
 // package.json
-"scripts": { "lint": "eslint" }
+"scripts": { "lint": "eslint --max-warnings 0" }
 ```
 
 ```js
@@ -149,6 +156,8 @@ export default defineConfig([
 
 - `.eslintrc.json` artık şablona girmez (`mistakes.md` #49 bu yüzden güncellendi).
 - Build lint çalıştırmadığı için CI'da `npm run lint` **ayrı bir adımdır**.
+  Uyarı bütçesi script'te sıfır: `alt-text`, `aria-*`, `exhaustive-deps` ve
+  async client bileşeni kuralları Next kümelerinde yalnız uyarıdır.
 - Flat config'te iç içe dizinleri yok saymak için `**/` öneki şart
   (`mistakes.md` #56).
 
@@ -300,22 +309,31 @@ import { useFormStatus } from "react-dom";
 
 function SubmitButton() {
   const { pending } = useFormStatus();            // en yakın <form>un durumu
-  return <Button type="submit" disabled={pending}>{pending ? "Kaydediliyor" : "Kaydet"}</Button>;
+  return <Button type="submit" aria-disabled={pending || undefined}>{pending ? "Kaydediliyor" : "Kaydet"}</Button>;
 }
 
 export function NoteForm({ notes }: { notes: Note[] }) {
   const [optimistic, addOptimistic] = useOptimistic(notes, (s, n: Note) => [n, ...s]);
-  const [state, action] = useActionState(async (prev: State, data: FormData) => {
+  const [state, action, pending] = useActionState(async (prev: State, data: FormData) => {
     addOptimistic({ id: "tmp", text: String(data.get("text")) });
     return createNote(prev, data);
   }, { ok: true } as State);
 
-  return <form action={action}>...<SubmitButton /></form>;
+  return (
+    <form action={action} onSubmit={(e) => { if (pending) e.preventDefault(); }}>
+      ...<SubmitButton />
+    </form>
+  );
 }
 ```
 
 - `useFormStatus` **formun içindeki** bir bileşende çağrılır; formu basan
   bileşende çağrılırsa hep `pending: false` döner.
+- Gönder düğmesi `disabled` değil `aria-disabled`: odaktaki düğme devre dışı
+  kalınca odak `<body>`ye düşer, klavye kullanıcısı sayfanın başına döner.
+  İkinci gönderimi formun `onSubmit`i keser (React 19 `preventDefault`
+  görünce eylemi çağırmaz); hata dönünce bir `useEffect` odağı ilk
+  `aria-invalid` alana taşır (`components/ExampleForm.tsx`; 05).
 - `useOptimistic` iyimser durumu yalnızca bir geçiş (action) sürerken tutar;
   action bitince gerçek değere döner. Hata olursa ayrıca geri alma gerekmez.
 - **Async `startTransition` Promise döndürmeli.** Geçiş, içindeki `await`
