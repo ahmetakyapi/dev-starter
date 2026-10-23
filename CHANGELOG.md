@@ -27,6 +27,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   "kanca" → "hook", "başsız" → "headless", "Görev Zarfı" → "standart görev
   tanımı", "Depo Haritası" → "Klasör Yapısı" ve benzerleri. README görsellerindeki
   "Kayıtlı Ajan" ve alt başlık da güncellendi (`npm run readme:assets`).
+- **Depo genelinde aynı dil** (121 dosya: rehberler, kurallar, fazlar, agent
+  rol tanımları, komutlar, bilgi tabanı, skill'ler, şablonlar ve kod yorumları):
+  "ajan" / "alt ajan" → "agent" / "subagent", "Görev Zarfı" → "Görev Tanımı"
+  (`GOREV_ZARFI` bloğu `GOREV_TANIMI`), "sarmalayıcı" → "wrapper", "betik" →
+  "script", "kanca" → "hook" (React hook'u, film açılışı, çizim hook'u),
+  "commit kapısı" → "commit kontrolü", "6+1 pass" → "6+1 adım", "pazar taraması"
+  → "pazar araştırması". Gerçek anlamında kalanlar: ses ve hareketteki "zarf"
+  (envelope), ğ/ş harflerinin kancaları, "ajans", "açık kapı" deyimi.
+  `CHANGELOG` geçmişi değişmedi. lint, typecheck, test (157), hook testleri
+  (87) ve health-check temiz.
 
 ### motion-film 1.4.0 — sekiz açık video deposundan — 2026-10-21
 

@@ -2,7 +2,7 @@
 
 Bu dosya tüm agent'ların nasıl iletişim kurduğunu tanımlar. İki tür agent var:
 
-- **Kayıtlı subagent** (`.claude/agents/` altında ince sarmalayıcı; bootstrap
+- **Kayıtlı subagent** (`.claude/agents/` altında ince wrapper; bootstrap
   ile `~/.claude/agents/`a symlink'lenir): `strategist`, `gate`, `deploy`,
   `design-reviewer`, `content-editor`, `frontend`, `backend`, `qa`,
   `researcher`. Kendi context penceresinde, kısıtlı tool setiyle çalışır;
@@ -22,7 +22,7 @@ Bu dosya tüm agent'ların nasıl iletişim kurduğunu tanımlar. İki tür agen
 | Backend | `backend-agent.md` | DB, API, auth | **BE** | subagent |
 | Agentic UI | `agentic-ui-agent.md` | LLM tool/state/UI kararları — FE ile BE arasındaki boşluk | **AG** | rol |
 | QA | `qa-agent.md` | Test stratejisi, test-first, regression | **QA** | subagent |
-| Gate | `gate-agent.md` | 6+1 pass kalite denetimi, rapor | **GATE** | subagent |
+| Gate | `gate-agent.md` | 6+1 adımlı kalite denetimi, rapor | **GATE** | subagent |
 | Deploy | `deploy-agent.md` | Vercel, CI/CD, production | **DP** | subagent |
 | Strategist | `strategist-agent.md` | Fikirden plana: pazar, yön, palet, MVP; yol haritası | **ST** | subagent |
 | Researcher | `researcher-agent.md` | Teknik araştırma: benzer çözümler, kütüphane seçimi | **RS** | subagent |
@@ -49,10 +49,10 @@ sonuçları birleştirir, ROUTEMAP'i günceller. Dalga planı ve faz kuralları:
 Paralelde aynı anda en fazla 3-4 subagent: koordinasyon maliyeti dağıtım
 kazancını yutmasın.
 
-### Görev Zarfı (subagent'a dağıtırken ZORUNLU)
+### Görev Tanımı (subagent'a dağıtırken ZORUNLU)
 
 ```text
-GOREV_ZARFI
+GOREV_TANIMI
   to:    [FE | BE | QA | GATE | DP | ST | RS | DR | CE]
   task:  [tek cümle görev tanımı]
   oku:   [story dosyası + yalnız gereken bağlam adresleri — context-curation tablosuna göre]
@@ -106,7 +106,7 @@ Kullanıcı talebi
       ↓
   FE/BE Agent self-check
       ↓
-  Gate Agent — 6+1 pass kalite kontrolü
+  Gate Agent — 6+1 adımlı kalite kontrolü
       ↓
   PASSED? ─── Hayır ──→ İlgili agent'a düzeltme talimatıyla geri gönder (max 2 döngü)
       │
@@ -138,7 +138,7 @@ Bug bildirimi
 ## Standart Handoff Mesajı
 
 Ana oturum rolleri (BA/UI/AG) arasında iş geçerken bu formatta ilet; kayıtlı
-subagent'a dağıtımda bunun yerine **Görev Zarfı** kullanılır (yukarıda):
+subagent'a dağıtımda bunun yerine **Görev Tanımı** kullanılır (yukarıda):
 
 ```text
 AGENT_HANDOFF
@@ -161,7 +161,7 @@ AGENT_HANDOFF
 Dalga planının tamamı `phases/development.md`dedir. Özet:
 
 ```text
-Wave 1 (paralel, kayıtlı subagent'lar — Görev Zarfı ile):
+Wave 1 (paralel, kayıtlı subagent'lar — Görev Tanımı ile):
   → backend: API/DB + testleri
   → qa:      test planı + failing testler
   → UI rolü: tasarım kararları (ana oturum)
@@ -170,7 +170,7 @@ Wave 2 (Wave 1 çıktıları girince):
   → frontend: UI + API entegrasyonu
 
 Wave 3:
-  → gate: 6+1 pass → docs/gate/<story>.md
+  → gate: 6+1 adım → docs/gate/<story>.md
   → ana oturum: sonucu ROUTEMAP'e işler, commit, review
 ```
 

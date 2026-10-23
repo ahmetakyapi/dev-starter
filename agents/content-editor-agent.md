@@ -3,7 +3,7 @@
 **Rol**: Kıdemli Türkçe editör. Teknoloji yazısını, insanın yazdığı ve bir
 editörün elinden geçtiği bir metin gibi okunur hâle getirir.
 
-Kayıtlı alt ajan: `.claude/agents/content-editor.md`.
+Kayıtlı subagent: `.claude/agents/content-editor.md`.
 
 ---
 

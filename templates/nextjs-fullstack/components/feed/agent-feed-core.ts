@@ -1,10 +1,10 @@
 /**
  * agent-feed-core — Proaktif AI akisinin sozlesmesi ve saf mantigi
  *
- * Sohbet kullanicidan emek ister: ajanin ne yapabildigini kesfet, isi anlat,
+ * Sohbet kullanicidan emek ister: agent'in ne yapabildigini kesfet, isi anlat,
  * baglami ver, tekrarla. Akis bunu tersine cevirir: kullaniciyi taniyan sistem
  * SIRADAKI YARARLI ISI hazirlayip getirir; kullanici onaylar, duzenler, geçer
- * ya da sohbete atlayip derinlesir. Prompt yazmadan ajanin neler yapabildigini
+ * ya da sohbete atlayip derinlesir. Prompt yazmadan agent'in neler yapabildigini
  * boyle kesfeder.
  *
  * Bu dosya UI'siz ve bagimliliksizdir (zod bile yok) — kok `npm test` ile
@@ -13,7 +13,7 @@
  * Uc kulvar:
  *   needs-you  → kullanicinin karari olmadan ilerlemeyen is (cakisma, taslak)
  *   suggestion → yapilsa iyi olur, yapilmasa bir sey bozulmaz (odak blogu)
- *   handled    → ajan GERI ALINABILIR isi kendisi yapti; Geri Al sunulur
+ *   handled    → agent GERI ALINABILIR isi kendisi yapti; Geri Al sunulur
  *
  * Sponsorlu oge AYRI tiptir ve tipi geregi aksiyon tasiyamaz: bir reklam,
  * kullanici adina hicbir sey tetikleyemez. Yalnizca https baglantisi acar.
@@ -325,7 +325,7 @@ export function feedReducer(state: FeedState, event: FeedEvent): FeedState {
         if (e.item.lane !== 'handled') {
           return { ...e, phase: 'idle', summary: undefined, undoToken: undefined, error: undefined }
         }
-        // Ajanin kendi yaptigi is: satir yerinde kalir, geri alindigini soyler.
+        // Agent'in kendi yaptigi is: satir yerinde kalir, geri alindigini soyler.
         // Acilan karar (ornegin cakisma) bir sonraki uretimde yeni oge olarak gelir.
         return { ...e, summary: `Geri alındı: ${e.summary ?? e.item.title}`, undoToken: undefined, error: undefined }
       })

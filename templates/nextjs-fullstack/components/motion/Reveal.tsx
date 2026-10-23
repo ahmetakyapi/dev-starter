@@ -6,7 +6,7 @@ import { useMotionPreference } from "@/hooks/useMotionPreference";
 import { DUR, EASE, STAGGER } from "@/lib/motion";
 
 /**
- * Görünüme girince beliren sarmalayıcı.
+ * Görünüme girince beliren wrapper.
  *
  * TUZAK: hareketi azaltan kullanıcıda `initial={false}` YAZMA. Sunucu HTML'i
  * `opacity: 0` ile gelir; `initial={false}` Motion'a "zaten hedefte" dedirtir,

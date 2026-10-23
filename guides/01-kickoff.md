@@ -12,7 +12,7 @@ hep iki kat pahalıya geldi. Bu sayfa sırayla yürünür; her madde bir kutu.
 /kickoff "ergoterapistler için seans takip uygulaması"
 ```
 
-Kod yazmayan ilk adım. `strategist` ajanı en fazla beş soru sorar, pazarı
+Kod yazmayan ilk adım. `strategist` agent'ı en fazla beş soru sorar, pazarı
 tarar, yön seçenekleri ve MVP planı çıkarır; sonuç `docs/KICKOFF.md` ve
 taslak `docs/PRODUCT.md` olur. Teknoloji önerisi
 [../knowledge/tech-radar.md](../knowledge/tech-radar.md) dışına çıkıyorsa
@@ -260,8 +260,8 @@ yeniden açmak demek:
 - [ ] Varsayılan tema **ve** öteki tema gözle kontrol edildi (03)
 - [ ] Token sözlüğü projeye göre düzenlendi, tek hardcoded renk yok (02)
 - [ ] `PageHeader` / `Panel` / `EmptyState` ilk ekranda kullanıldı (05)
-- [ ] Smoke betiği: rotalar × 390/1280, soft 404, konsol hatası, yatay taşma (08)
-- [ ] CI yeşil ve **bilerek bir kez kırmızıya düşürüldü** (kapının kapı
+- [ ] Smoke script'i: rotalar × 390/1280, soft 404, konsol hatası, yatay taşma (08)
+- [ ] CI yeşil ve **bilerek bir kez kırmızıya düşürüldü** (kontrolün gerçekten kontrol
       olduğunu ancak böyle bilirsin, `mistakes.md` #55)
 - [ ] `docs/ROUTEMAP.md` güncel
 - [ ] İlk kayıt `knowledge/themes/<proje>.md` için açıldı (proje bitince

@@ -28,7 +28,7 @@ varsayılan metin prop ile değişir, `"use client"` yalnızca gerekene.
 
 ---
 
-## 2. Başsız Kütüphane Kararı
+## 2. Headless Kütüphane Kararı
 
 **Seçim: Base UI (`@base-ui/react`, 1.8.0).** Kullanıldığı yerler: Popover,
 Tooltip, DropdownMenu, Select, Combobox, Avatar. Diyalog, çekmece ve komut
@@ -58,7 +58,7 @@ Ekim 2026 itibarıyla doğrulananlar (npm kayıtları ve paket belgeleri):
    bileşenle birleştirirken `render={<IconButton … />}` kullanıyor, tek
    bileşenin iki öğe gibi davranması gerekmiyor.
 3. **Belge pakette.** `node_modules/@base-ui/react/docs/` altında her
-   bileşenin Markdown belgesi var; bir ajan ya da geliştirici kurulu sürümün
+   bileşenin Markdown belgesi var; bir agent ya da geliştirici kurulu sürümün
    API'sini ağa çıkmadan okur. Bu kütüphane o belgelerle yazıldı.
 4. **Ekip.** Radix, Floating UI ve MUI'nin yazarlarından; konumlama Floating
    UI ile aynı motor.
@@ -69,7 +69,7 @@ projede (shadcn tabanlı projeler) kütüphane değiştirilmez; oraya alınan bi
 Radix'e uyarlanır.
 
 **Kurulum:** `npm install @base-ui/react`. Positioner'lar `z-50` taşır; kök
-layout'ta gövde sarmalayıcısına `isolate` vermek popup'ların başka bir yığın
+layout'ta gövde wrapper'ına `isolate` vermek popup'ların başka bir yığın
 bağlamının altında kalmasını önler.
 
 ---
@@ -170,7 +170,7 @@ kaldığı için erişilebilirlik açığı değil.
   `/_next/image`ı herkese açık bir görsel vekiline çevirirdi.
 - **Stepper**: çok adımlı akışta konum. Gezinme değil.
 - **FileDropzone**: MIME izin listesi (`image/*` joker SVG'yi kapsamaz); SVG
-  varsayılan REDDEDİLİR (betik taşıyabilir). İstemci denetimi kolaylık; sunucu
+  varsayılan REDDEDİLİR (script taşıyabilir). İstemci denetimi kolaylık; sunucu
   boyutu ve sihirli baytları yeniden doğrular. Bırakılan dosya da form
   girişine yazılır, reddedilen çıkarılır. `maxBytes` taşıyıcının sınırını
   aşmasın: sunucu eylemi varsayılan 1 MB

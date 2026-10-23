@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * gezer, Home/End uçlara gider, harf yazmak o harfle başlayan öğeye atlar,
  * Escape kapatır ve odak TETİKLEYİCİYE döner, Tab menüyü kapatıp sıradaki
  * öğeye geçer. Elle yazılan menülerin hemen hepsi bunlardan en az birini
- * unutuyor; o yüzden burada başsız kütüphane var.
+ * unutuyor; o yüzden burada headless kütüphane var.
  *
  *   <DropdownMenu>
  *     <DropdownMenuTrigger render={<Button variant="secondary" />}>Eylemler</DropdownMenuTrigger>

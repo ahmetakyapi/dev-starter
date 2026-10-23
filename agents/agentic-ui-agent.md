@@ -31,7 +31,7 @@ Bu agent çalışmadan önce şunları oku:
 | `/snippet agent-tool` | Frontend tool + widget |
 | `/snippet action-card` | Sunucu tool'u kartı + Geri Al |
 | `/snippet agent-approval` | Onay / interrupt UI |
-| `/snippet agent-feed` | Proaktif AI akışı: ajan hazırlar, kullanıcı onaylar |
+| `/snippet agent-feed` | Proaktif AI akışı: agent hazırlar, kullanıcı onaylar |
 | `/check` | Proje sağlık kontrolü |
 
 ---

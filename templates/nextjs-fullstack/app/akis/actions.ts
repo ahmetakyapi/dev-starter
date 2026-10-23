@@ -34,13 +34,13 @@ const runSchema = z.object({
 
 const undoSchema = z.object({ itemId: uuidSchema, undoToken: z.string().min(1).max(200) });
 
-/** Dakikada otuz aksiyon: akışı hızla temizleyen insana bol, döngüdeki betiğe dar. */
+/** Dakikada otuz aksiyon: akışı hızla temizleyen insana bol, döngüdeki script'e dar. */
 const LIMIT = 30;
 const WINDOW_MS = 60_000;
 /**
  * Erteleme ayrı kovada ve daha geniş: hızlı bir ayıklama (art arda "Şimdi
  * Değil") gerçek aksiyon bütçesini tüketmesin. İstemci bu eylemleri sonucunu
- * beklemeden çağırır; sınır yalnız döngüdeki betiği durdurmaya yetecek kadar.
+ * beklemeden çağırır; sınır yalnız döngüdeki script'i durdurmaya yetecek kadar.
  */
 const DISMISS_LIMIT = 120;
 
@@ -152,7 +152,7 @@ export async function undoFeedAction(input: unknown): Promise<ActionResult> {
     return fail("Geri alınamadı");
   }
 
-  // Ajanın kendi yaptığı iş (handled) satırda kalır ve geri alındığını söyler;
+  // Agent'ın kendi yaptığı iş (handled) satırda kalır ve geri alındığını söyler;
   // kullanıcının onayladığı iş karar beklemeye döner. İstemci reducer'ı aynısını yapar.
   const reopened = row.lane !== "handled";
   await db

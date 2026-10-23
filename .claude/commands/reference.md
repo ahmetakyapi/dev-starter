@@ -28,7 +28,7 @@ gelir. Kaynak listesi ve kullanım şartları:
 Kataloğun **Bölüm → Kaynak** tablosundan o bölüm için en fazla iki galeri
 öner ve kullanıcıdan beğendiği örneğin ekran görüntüsünü ya da örneğin
 geldiği sitenin adresini iste. Seçim kullanıcınındır: bu bir zevk kararı,
-ajan galeriyi tarayıp "en iyisini" seçmez.
+agent galeriyi tarayıp "en iyisini" seçmez.
 
 ## 2. Referansı yakala
 
@@ -36,8 +36,8 @@ ajan galeriyi tarayıp "en iyisini" seçmez.
 - Site adresi verildiyse (galerideki örnek çoğu zaman yalnız masaüstü
   görüntüsüdür; telefondaki davranışı ancak asıl site gösterir) 1280 ve 390
   genişlikte yakala: Playwright MCP varsa onunla, yoksa sistemdeki Chrome ile
-  `puppeteer-core` betiği (`.tmp-reference.mjs`). Yerleşim görüntüsü
-  `prefers-reduced-motion: reduce` taklidiyle alınır: başsız Chrome çalışan
+  `puppeteer-core` script'i (`.tmp-reference.mjs`). Yerleşim görüntüsü
+  `prefers-reduced-motion: reduce` taklidiyle alınır: headless Chrome çalışan
   animasyonu ilk karesinde çeker. Hareketi görüntüyle değil sayıyla oku
   (`document.getAnimations()`, kaydırmada iki konumda ölçüm).
 - Görüntüler `.tmp-references/` altına (şablonlarda `.tmp-*` gitignore'da).
@@ -73,8 +73,8 @@ Renk, yazı tipi, metin, logo, ikon seti, görsel, birebir ölçü, kod.
 
 ## 4. Kur
 
-- `uiux` rolü kurar ya da işi `frontend` alt ajanına Görev Zarfı ile verir;
-  zarfa görüntüyü değil `docs/references/<bölüm>.md` yolunu koy.
+- `uiux` rolü kurar ya da işi `frontend` subagent'ına Görev Tanımı ile verir;
+  görev tanımına görüntüyü değil `docs/references/<bölüm>.md` yolunu koy.
 - Token dışı renk yok, Title Case, ekranda tek `primary`, şablon bileşenleri
   (`Button`/`ButtonLink`, `Panel`). Telefondaki menü `snippets/ui/sheet.tsx`
   üstüne kurulur: odak içeride döner, Escape kapatır, odak açan düğmeye
@@ -86,7 +86,7 @@ Renk, yazı tipi, metin, logo, ikon seti, görsel, birebir ölçü, kod.
 
 ## 5. Ölç
 
-- `design-reviewer` alt ajanı: 390 ve 1280, iki tema, referansla yan yana.
+- `design-reviewer` subagent'ı: 390 ve 1280, iki tema, referansla yan yana.
   Sorular: yapı referans gibi okunuyor mu, kimlik projenin mi, referansın
   rengi ya da metni sızmış mı?
 - `docs/SCREENS.md`te ilgili ekrana `**Referans**:` satırını yaz (kaynak

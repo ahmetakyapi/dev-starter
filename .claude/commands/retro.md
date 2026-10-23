@@ -7,7 +7,7 @@ argument-hint: "[kapsam — boşsa bu oturum; 'story STORY-NNN' ya da 'faz' olab
 
 Kapsam: **$ARGUMENTS** (boşsa bu oturum).
 
-Kuralların kaynağı: `~/dev-starter/rules/self-improvement.md` — ajan taslak
+Kuralların kaynağı: `~/dev-starter/rules/self-improvement.md` — agent taslak
 önerir, **onaysız yazamaz**; koşu başına en fazla 1-2 damıtılmış ders.
 
 1. **Sinyal topla** (kanıtla):

@@ -1,8 +1,8 @@
 # Self-Improvement — Sürekli Öğrenme Kuralları
 
-**Kural**: Ekosistem her işten ders çıkarır; ama ajan, bilgi ve kural
+**Kural**: Ekosistem her işten ders çıkarır; ama agent, bilgi ve kural
 dosyalarını **onaysız değiştiremez**. Modelin öz-değerlendirmesi yanlıdır —
-otomatik "gece dersi çıkarma" cazip ve yanlış. Ajan taslak üretir, insan seçer.
+otomatik "gece dersi çıkarma" cazip ve yanlış. Agent taslak üretir, insan seçer.
 
 ---
 
@@ -19,7 +19,7 @@ otomatik "gece dersi çıkarma" cazip ve yanlış. Ajan taslak üretir, insan se
 
 ## Onay İlkesi
 
-- Ajan `knowledge/`, `rules/`, `guides/`, `CLAUDE.md` ve `machine/CLAUDE.md`
+- Agent `knowledge/`, `rules/`, `guides/`, `CLAUDE.md` ve `machine/CLAUDE.md`
   için **taslak önerir**; kullanıcı onaylamadan yazmaz. Tek istisna:
   kullanıcının o anda açıkça istediği güncelleme.
 - Her taslak kanıt taşır: hangi olay/commit/çıktı bu dersi doğurdu.

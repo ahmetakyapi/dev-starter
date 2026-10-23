@@ -4,7 +4,7 @@ import { runInNewContext } from "node:vm";
 import { DEFAULT_THEME, THEME_COLOR, THEME_SCRIPT } from "../lib/theme";
 
 /**
- * `<head>`deki tema betiği bir dizgi: tip denetimi onu görmez, bozulursa
+ * `<head>`deki tema script'i bir dizgi: tip denetimi onu görmez, bozulursa
  * yalnızca ilk karede yanlış tema olarak ortaya çıkar. Sahte bir belgede
  * koşturulur: `<html>` özniteliği ve head'in başına eklenen theme-color
  * meta'sı. Sunucunun metasına dokunulmaz (lib/theme.ts → THEME_SCRIPT).

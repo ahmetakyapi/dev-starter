@@ -75,7 +75,7 @@ Kapıdan geçmeden tam render yok: hatanın en pahalı yeri tam render'dır.
 ## Bağımsız jüri
 
 Filmi yapan oturum kendi filmine iyi not verir. Puanı **ayrı bir oturum ya
-da alt ajan** verir: ekosistemde `design-reviewer` (kaynak:
+da subagent** verir: ekosistemde `design-reviewer` (kaynak:
 Vincentwei1021/mg-styles-15 `rubric.md`, MIT). Jüriye yalnız şunları ver:
 film dosyası ve prompt'un stil, çıktı ve imza özellikleri bölümü; yapım
 konuşmasını verme.
@@ -93,7 +93,7 @@ aralık yok, görsel vuruşlar ses başlangıçlarıyla aynı karede.
 | Boyut | Ne aranır |
 |-------|-----------|
 | Stil sadakati | stil tek bakışta tanınıyor; her imza özelliği ve tekniği var ve doğru |
-| Konsept / wow | net bir fikir, ilk 0,5 sn'de kanca, şaşmaz bir doruk anı, tatmin eden son kare |
+| Konsept / wow | net bir fikir, ilk 0,5 sn'de hook, şaşmaz bir doruk anı, tatmin eden son kare |
 | Hareket zanaatı | eğri, aralık, örtüşme, hazırlık ve takip, kavis, geçişler, hareket bulanıklığı; ölü ya da titrek hareket yok |
 | Tasarım & tipografi | kompozisyon, hiyerarşi, ızgara, dizgi, palet, boşluk |
 | Bitiş | ışık, doku, gren, ayrıntı stile uygun; bantlaşma, merdiven, kusur yok |
@@ -180,17 +180,17 @@ sözlerimizle; her prompt yaratıcısına aittir (handle ile anıldı).
 | Video `<video>`da ileri sarılmıyor | `python -m http.server` aralık isteğini (Range) desteklemiyor; blob URL ya da aralık destekli sunucu | @twoclipping |
 | Maske bütün kutuyu dolduruyor | Siluet ALFA kanalında olsun; kare kenarında kesilen uzuv düz kenar verir, maskeyi kadrajın dışına uzat | @twoclipping |
 | Aynı öğeyi gösteren iki sahne arasında atlama | O sahnelere **ortak bir zoom fonksiyonu**; giden sahneyi geçişin altında çiz | @twoclipping |
-| 3D kartın iki yüzü birden görünüyor | `preserve-3d` öğesine opaklık ya da süzgeç verme (düzleşir); sarmalayıcıyı söndür | @raphaelaubryy |
+| 3D kartın iki yüzü birden görünüyor | `preserve-3d` öğesine opaklık ya da süzgeç verme (düzleşir); wrapper'ı söndür | @raphaelaubryy |
 | Eşleşen kesmede öğe kayıyor | Konumları **çalışma anında ölç** (`getBoundingClientRect`), elle yazma | @raphaelaubryy |
 | İmleç hedefi ıskalıyor, sıçrıyor | İmleci hedefin **varacağı** yere nişanla; hız **< 65 px/kare** | @flxrnc |
 | Döngü ekinde tekleme ya da çift kare | `[0, süre)` dışa aktar, son kare ilk kareyi tekrarlamaz; sesi de döngüle | @thegrootdev |
 | Anlatıcı susunca film donuyor | Anlatıcının duraklamasında görüntü hareket etmeye devam eder; sayaç donarsa render bozuktur | @notdwd |
 
-## Başsız tarayıcı notları
+## Headless tarayıcı notları
 
 - `el.screenshot()` çalışan CSS animasyonunu başa sarılmış karede çekebilir;
   yerleşimi hareketi azaltma taklidiyle çek, animasyonu sayıyla doğrula
   (`getAnimations()`), görüntüyle değil.
 - Font yüklenmeden ölçülen yazı yanlış genişlikte: `document.fonts.load(...)`.
-- `pkill -f "next dev"` gibi desenler betiğin kendi kabuğunu da öldürebilir;
+- `pkill -f "next dev"` gibi desenler script'in kendi kabuğunu da öldürebilir;
   sunucuyu PID dosyasıyla ya da `ss -ltnp | grep :PORT` ile durdur.

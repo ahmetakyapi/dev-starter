@@ -225,7 +225,7 @@ const config: NextConfig = {
 };
 ```
 
-**Tam CSP bilinçli olarak yok.** Next'in satır içi betikleri yüzünden
+**Tam CSP bilinçli olarak yok.** Next'in satır içi script'leri yüzünden
 `script-src` ancak her istekte üretilen bir nonce ile sıkı yazılabilir; nonce
 da her sayfayı dinamik yapar. `'unsafe-inline'` içeren yarım bir CSP güvenlik
 vaat eder ama sağlamaz. Karar: **ya nonce'lu tam CSP ya hiç** (yalnızca
@@ -277,7 +277,7 @@ const ext = ALLOWED.get(file.type);
 await put(`avatars/${userId}/${crypto.randomUUID()}.${ext}`, file, { access: "public" });
 ```
 
-- **İzin listesi**, yasak listesi değil. SVG listede yok: içinde betik taşıyabilir.
+- **İzin listesi**, yasak listesi değil. SVG listede yok: içinde script taşıyabilir.
 - Dosya adı istemciden alınmaz; uzantı MIME'dan, ad rastgele.
 - `file.type` istemcinin beyanıdır; kritikse ilk baytlara bak (sihirli sayı).
 - Örnekteki 2 MB, sunucu eyleminin varsayılan gövde sınırını (1 MB) aşar:
@@ -300,7 +300,7 @@ await put(`avatars/${userId}/${crypto.randomUUID()}.${ext}`, file, { access: "pu
 ❌ <script type="application/ld+json">{JSON.stringify(data)}</script>
 ```
 
-Veride `</script>` geçen bir başlık (kullanıcı adı, yorum) betik bloğunu
+Veride `</script>` geçen bir başlık (kullanıcı adı, yorum) script bloğunu
 kapatıp sayfaya HTML enjekte eder. `<` kaçışı bunu kapatır (simayahi).
 
 ---

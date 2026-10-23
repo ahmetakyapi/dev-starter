@@ -211,7 +211,7 @@ describe('feedReducer', () => {
     expect(selectFeed(s).needsYou.map((e) => e.item.id)).toContain('cal-1')
   })
 
-  it('ajanin kendi yaptigi isi geri alinca satir kalir, Geri Al kaybolur', () => {
+  it("agent'in kendi yaptigi isi geri alinca satir kalir, Geri Al kaybolur", () => {
     const s = feedReducer(initFeed(items), { type: 'undo', id: 'xls-1' })
     const row = selectFeed(s).handled.find((e) => e.item.id === 'xls-1')
     expect(row?.undoToken).toBeUndefined()

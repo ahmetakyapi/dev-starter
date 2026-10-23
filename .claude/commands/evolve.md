@@ -1,5 +1,5 @@
 ---
-description: Ekosistemin kendi gelişim turu — health-check + canlı proje denetimi + bilgi tazeliği + web taraması ("benzer araçlar ne ekledi"). Öncelikli iyileştirme listesi üretir; onaylananları uygular. dev-starter'ın kendisini geliştirir.
+description: Ekosistemin kendi gelişim turu — health-check + canlı proje denetimi + bilgi tazeliği + web araştırması ("benzer araçlar ne ekledi"). Öncelikli iyileştirme listesi üretir; onaylananları uygular. dev-starter'ın kendisini geliştirir.
 argument-hint: "[odak — boşsa tam tur: altyapı | bilgi | rakip]"
 ---
 
@@ -21,7 +21,7 @@ Odak: **$ARGUMENTS** (boşsa üç eksen de). Bu komut `~/dev-starter` deposunda
      hâlâ tamamen ücretsiz mi bak; ücretli olan "Bilinçli Olarak Dışarıda"ya iner
    - `patterns.md` ↔ `mistakes.md` çelişkisi: yeni kayıtların düzelttiği şeyi
      hâlâ öğreten desen var mı
-3. **Dış tarama** (`researcher` alt ajanı): Claude Code ekosistemi ve benzer
+3. **Dış tarama** (`researcher` subagent'ı): Claude Code ekosistemi ve benzer
    starter/orkestrasyon projelerinde (spec-kit, BMAD, agent-os, claude-flow
    vb.) son dönemde öne çıkan desenler; her bulgu kaynaklı ve "dev-starter'a
    uyarlanırsa ne kazandırır" cümlesiyle. Çıktı:

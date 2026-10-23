@@ -585,7 +585,7 @@ CODE=$?
 
 # (u21b) Worktree'de commit → worktree'nin ROUTEMAP'i ve index'i okunmalı.
 # CLAUDE_PROJECT_DIR oturumun başladığı kökte SABİT kalır (EnterWorktree, alt
-# ajan `isolation: worktree`); ona gitmek ana checkout'un ROUTEMAP'ini okuyup
+# agent `isolation: worktree`); ona gitmek ana checkout'un ROUTEMAP'ini okuyup
 # worktree'deki Gate'siz story'yi geçiriyordu.
 mkdir -p "$SANDBOX/wtana/docs" && cd "$SANDBOX/wtana" || exit 1
 git init -q . 2>/dev/null

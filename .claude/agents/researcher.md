@@ -13,7 +13,7 @@ Ayrıca oku:
 - `~/dev-starter/knowledge/tech-radar.md` — mevcut varsayılanlar
 - `~/dev-starter/knowledge/decisions.md` — çelişki kontrolü için
 
-Bu sarmalayıcı bilerek incedir — rol tanımının tek kaynağı
+Bu wrapper bilerek incedir — rol tanımının tek kaynağı
 `~/dev-starter/agents/researcher-agent.md`. Kopyalamak iki kaynak yaratır,
 biri sessizce bayatlar.
 

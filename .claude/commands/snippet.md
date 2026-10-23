@@ -29,7 +29,7 @@ dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareke
   strict altinda hata verir. `framer-motion` kullanan eski projede import yolunu
   projeye uydur, yeni paket kurma.
 - `tab-underline` `layout` animasyonu icin kendi `LazyMotion features={domMax}`
-  sarmalayicisini getirir; kokteki `domAnimation`i degistirme.
+  wrapper'ini getirir; kokteki `domAnimation`i degistirme.
 - **Token siniflari:** `bg-surface`, `text-strong`, `text-body`, `border-line`,
   `bg-primary text-on-primary`, `bg-primary-wash text-primary-ink`, `bg-scrim`.
   Hardcoded renk, hazir palet sinifi (`bg-white`, `text-gray-*`) ve `dark:` yok.

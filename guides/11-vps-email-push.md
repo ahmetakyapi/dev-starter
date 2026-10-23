@@ -23,7 +23,7 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
 ```
 
 - **Sunucu doğrulanan commit'i derler, dal ucunu değil.** Deploy işi
-  `${{ github.sha }}`yı betiğe geçer, betik tam o SHA'yı çeker
+  `${{ github.sha }}`yı script'e geçer, script tam o SHA'yı çeker
   (`git fetch --depth 1 origin <sha> && git checkout FETCH_HEAD`). Dal ucunu
   klonlamak yarış açar: push X'in deploy'u koşarken gelen push Y ortak
   `concurrency` grubunda bekler, ama X'in klonu dal ucunda Y'yi bulur ve Y
@@ -33,7 +33,7 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
   canlı dizinde yapılmaz: dakikalar süren build sırasında çalışan sürümün
   parça dosyaları altından çekilir (sayfa açılır, script'ler 404).
 - **`current` bağı atomik çevrilir**: `ln -sfn yeni current.tmp && mv -T current.tmp current`.
-  Sağlık kontrolü geçmezse bağ önceki sürüme döner, betik sıfırdan farklı çıkar.
+  Sağlık kontrolü geçmezse bağ önceki sürüme döner, script sıfırdan farklı çıkar.
 - **Canlıya çıkmamış sürüm dizini silinir** (trap); yoksa budama sağlam
   sürümü silip bozuğu tutabilir. "Canlı mı" sorusunu bayrak değil **bağın
   hedefi** cevaplar: trap, `current`ın gösterdiği dizini asla silmez
@@ -41,7 +41,7 @@ main'e push → Actions "verify" (build + typecheck + lint, runner'da)
   Bağ çevrildikten sonra, sağlık kontrolü bitmeden SSH koparsa (iş iptali,
   ağ) sonraki çıktıda gelen SIGPIPE/SIGHUP da EXIT trap'ini koşturur; bayrak
   sağlık kontrolünden sonra kalkıyorsa trap canlı dizini siler.
-- Duman testi ayrı iş akışı, kapı değil.
+- Smoke testi ayrı iş akışı, zorunlu kontrol değil.
 - Örnek: `deploy/update.sh`, `.github/workflows/deploy.yml`.
 
 ## 2. Actions Hijyeni
@@ -75,7 +75,7 @@ set +a`: `set -a` olmadan düz `source` yalnız kabuk değişkeni kurar, değerl
 **tırnak içinde, `$` `` ` `` `\` `"` içermeyen** değer.
 
 **Grup okuma izni kurulum aşamasına da açık.** systemd `EnvironmentFile`ı
-root olarak okur; `0640`taki grup biti yalnız deploy betiğinin okuması için.
+root olarak okur; `0640`taki grup biti yalnız deploy script'inin okuması için.
 Ama `npm ci` de aynı uygulama kullanıcısıyla koşuyorsa her bağımlılığın
 postinstall'u `cat /etc/<uygulama>.env` ile bütün sırları okur — ortamı
 `npm ci`den *sonra* yüklemek bunu engellemez, dosya diskte zaten okunur.
@@ -201,7 +201,7 @@ yazım asıl siteyi dizinden çekmez), Vercel önizlemesini de açamaz.
 - Düzen tablo, stil satır içi; `<style>` yalnız ilerleme (Apple Mail koyu
   tema renkleri, düğme ışığı, `prefers-reduced-motion`).
 - **Animasyon GIF**: Gmail CSS animasyonunu ve SVG'yi siler, GIF'i oynatır.
-  GIF betikle üretilir (`scripts/build-email-assets.mjs`, sharp
+  GIF script'le üretilir (`scripts/build-email-assets.mjs`, sharp
   `join: { animated: true }`), elle değil. 1,4 sn vuruş + uzun duraklama.
 - GIF zemini **düz renk** ve etrafındaki bant aynı renk (saydam GIF kenarı
   tırtıklar). Gmail web ve Android koyu bandı çevirmez, açık kartı kendisi

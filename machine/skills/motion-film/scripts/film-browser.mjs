@@ -1,6 +1,6 @@
 /**
  * film-browser — film-sheet, film-video ve film-read'in ortak tarayıcı katmanı.
- * Komut değil, modül: üç betik aynı tarayıcıyı aynı bayraklarla açsın ki temas
+ * Komut değil, modül: üç script aynı tarayıcıyı aynı bayraklarla açsın ki temas
  * sayfasında görülen kare videodaki kareyle aynı olsun.
  *
  * Fail-fast, READY tanısı ve yazılım WebGL uyarısı lemo-opuscar'ın
@@ -11,7 +11,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-/** `--k=v` ve çıplak `--k` (true). Tekrar eden bayrağın sonuncusu kalır; çoklu bayrağı betik argv'den toplar. */
+/** `--k=v` ve çıplak `--k` (true). Tekrar eden bayrağın sonuncusu kalır; çoklu bayrağı script argv'den toplar. */
 export function parseArgs(argv = process.argv.slice(2)) {
   const args = Object.fromEntries(argv.filter(a => a.startsWith("--")).map(a => {
     const [k, ...v] = a.slice(2).split("="); return [k, v.length ? v.join("=") : true];
@@ -73,7 +73,7 @@ export async function newPage({ browser, kind }, { w, h, dpr = 1, colorScheme, r
 const FATAL_TYPES = new Set(["script", "document"]);
 
 /**
- * Sayfayı dinler. `fatal(msg)` verilirse JS hatası ve gelmeyen betik onu hemen
+ * Sayfayı dinler. `fatal(msg)` verilirse JS hatası ve gelmeyen script onu hemen
  * çağırır: bütün film çizilip sonda "sayfa hataları" demek, bozuk ama bitmiş
  * görünen bir MP4 bırakıyordu. Verilmezse hatalar `errors`a toplanır.
  */

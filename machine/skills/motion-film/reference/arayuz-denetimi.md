@@ -7,17 +7,17 @@ geçişin yöntemi, kuralları ve ölçümle bulunan tuzaklarıdır.
 
 ## Yöntem: envanter → sınıf → sayı → ölçüm
 
-1. **Envanter.** Bir alt ajana tara: `@keyframes`, `animation:`,
+1. **Envanter.** Bir subagent'a tara: `@keyframes`, `animation:`,
    `transition:`, motion `initial/animate/exit`, `element.animate`,
    `requestAnimationFrame`, `animation-timeline`. Her satır için dosya:satır,
    ne hareket ediyor, süre, eğri, tetik, döngü mü.
 2. **Sınıfla.** Giriş · çıkış · geri bildirim · döngü · kaydırmaya bağlı ·
    sayaç · figür. Her sınıfın sayısı farklı.
-3. **Sayıyla düzelt** (aşağıdaki tablo). Toplu iş için betik yaz; örnek
+3. **Sayıyla düzelt** (aşağıdaki tablo). Toplu iş için script yaz; örnek
    diff'leri gözle kontrol et.
 4. **Ölç.** Tarayıcıda `getAnimations()` ile süre ve gecikme, konum için
    `getBoundingClientRect`, ara kare için animasyonları duraklatıp
-   `currentTime` ver ve çek (başsız Chrome çalışan animasyonu başa sarılmış
+   `currentTime` ver ve çek (headless Chrome çalışan animasyonu başa sarılmış
    karede yakalar). Yatay taşma her genişlikte.
 
 ## Sınıf başına sayı

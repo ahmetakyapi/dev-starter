@@ -134,7 +134,7 @@ alınır, paket olarak kurulmaz:
 - **Fontlar** — `~/dev-starter/snippets/fonts/fonts.ts` preset'leri:
   [09-typography.md](09-typography.md).
 - **Agentic UI** — `agent-tool.tsx`, `action-card.tsx`, `agent-approval.tsx`;
-  proaktif akış (ajan hazırlar, kullanıcı onaylar) için `agent-feed.tsx`;
+  proaktif akış (agent hazırlar, kullanıcı onaylar) için `agent-feed.tsx`;
   karar için `/agentic`.
 - **Tanıtım sayfası kahramanı** — `landing` şablonunda yedi düzen
   (`components/heroes/`: editorial-split, statement, product-frame, live-data,

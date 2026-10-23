@@ -238,10 +238,10 @@ projelerde (ahmetakyapi.com) kalır.
 önbelleğe alınmış bir sayfa başı geri gelirse çubuk kısa süre eski renkte
 kalabilir, sonraki sunucu çizimi düzeltir.
 
-### Değişti (2026-10-20) — landing şablonu statik + çerez betiği
+### Değişti (2026-10-20) — landing şablonu statik + çerez script'i
 
 **Önceki karar:** iki şablon da temayı kök layout'ta `cookies()` ile okur;
-`landing` dahil satır içi betik yok.
+`landing` dahil satır içi script yok.
 **Yeni karar:** `landing` `<html data-theme={DEFAULT_THEME}>` basar;
 `<head>`deki `THEME_SCRIPT` (`lib/theme.ts`) ilk boyamadan önce çerezdeki
 temayı ve `theme-color`ı yazar. Viewport statik, tema için server action
@@ -252,10 +252,10 @@ yok. `nextjs-fullstack` çerezi sunucuda okumaya devam eder.
   (`ƒ`) yapıp CDN önbelleğini kapatıyordu. Şablonda ölçüldü: `ƒ /` → `○ /`,
   `/` yanıtı `no-store` → `s-maxage=31536000` (`guides/03-theming.md` § 2b,
   `mistakes.md` #93).
-- Oturumlu üründe sayfa zaten dinamik; orada betiğin kazandıracağı bir şey
+- Oturumlu üründe sayfa zaten dinamik; orada script'in kazandıracağı bir şey
   yok, ilk karenin sunucudan doğru gelmesi daha değerli.
 
-**Bedel:** satır içi betik geri geldi; tam CSP açılırsa `script-src` onun
+**Bedel:** satır içi script geri geldi; tam CSP açılırsa `script-src` onun
 hash'ini ister ("Güvenlik Başlıkları" kararı). JavaScript kapalıyken
 çerezdeki tema uygulanmaz, varsayılan tema görünür.
 
@@ -317,7 +317,7 @@ en okunaklı projesi.
 **Karar:** şablonlarda nosniff, Referrer-Policy, Permissions-Policy, HSTS,
 `X-Frame-Options: DENY` + `frame-ancestors 'none'`. Tam `script-src` CSP yok.
 
-**Neden:** Next'in satır içi betikleri yüzünden sıkı CSP yalnızca istek
+**Neden:** Next'in satır içi script'leri yüzünden sıkı CSP yalnızca istek
 başına nonce ile mümkün, o da her sayfayı dinamik yapar. `'unsafe-inline'`
 taşıyan yarım CSP koruma vaat eder ama sağlamaz. Nonce'un bedeli kabul
 edilen projede (ahmetakyapi.com) tam CSP yazılır.
@@ -374,7 +374,7 @@ POC için hazır; karar hâlâ açık.
 
 **Tercih edildi:** Ana oturum (BA rolü) orkestratör; uygulayıcılar
 (`frontend`, `backend`, `qa`, `researcher` + mevcut 5) kayıtlı subagent.
-Dağıtım **Görev Zarfı** ile, dönüş **referansla** (dosya + üç satır özet),
+Dağıtım **Görev Tanımı** ile, dönüş **referansla** (dosya + üç satır özet),
 durum ROUTEMAP'te (dosya tabanlı paylaşılan bellek).
 **Alternatifler:** her rolü subagent yapmak; hiçbirini yapmayıp tek oturum;
 harici orkestrasyon çatısı (claude-flow tarzı SQLite hive-mind).
@@ -390,7 +390,7 @@ harici orkestrasyon çatısı (claude-flow tarzı SQLite hive-mind).
   denetlediği kaydı değiştirmez; PASSED'i ROUTEMAP'e ana oturum işler
 
 **Ne zaman değişir:** Paralel dalgalar pratikte 3-4 subagent sınırını
-zorlarsa ya da zarf/dönüş disiplini elle taşınamaz hale gelirse — o zaman
+zorlarsa ya da görev tanımı/teslim disiplini elle taşınamaz hale gelirse — o zaman
 durum deposu yapılandırılmış dosyaya (JSON) taşınır.
 
 **Bilinçli ertelenenler (2026-10-14):** şablonlara Playwright E2E iskeleti,

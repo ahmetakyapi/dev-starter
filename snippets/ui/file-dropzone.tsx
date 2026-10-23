@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  * Uzantı (`.pdf`) değil MIME yaz: uzantıyı yerel seçici anlar, buradaki
  * denetim anlamaz; seçicinin sunduğu dosya listede reddedilmiş görünürdü.
  * SVG VARSAYILAN OLARAK REDDEDİLİR: SVG bir görsel değil bir belge; içinde
- * betik taşıyabilir ve aynı kökenden sunulursa saklı XSS olur. Gerçekten
+ * script taşıyabilir ve aynı kökenden sunulursa saklı XSS olur. Gerçekten
  * gerekiyorsa listeye bilerek ekle ve sunucuda temizle (ya da ayrı bir
  * kökenden, `Content-Disposition: attachment` ile sun).
  *

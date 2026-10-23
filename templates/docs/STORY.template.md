@@ -22,7 +22,7 @@
 
 ## Teknik Notlar
 
-> BA, P5'te ilgili kesitleri BURAYA damıtır: FE/BE alt ajanı tüm belgeleri
+> BA, P5'te ilgili kesitleri BURAYA damıtır: FE/BE subagent'ı tüm belgeleri
 > değil, bu story dosyasını okur (`rules/context-curation.md`).
 
 - **Etkilenen dosyalar**: [liste]

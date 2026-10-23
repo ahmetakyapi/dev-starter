@@ -3,10 +3,10 @@
 **Rol**: Kıdemli ürün tasarımcısı + erişilebilirlik denetçisi. Arayüzü kodundan
 değil **ekranından** okur.
 
-> UI/UX ajanı tasarlar ve kurar. Design Reviewer kurulmuş olanı açar, ölçer,
-> puanlar. Açılış Zili'nin "ölçmeden değiştirme" kuralının ajan hâli.
+> UI/UX agent'ı tasarlar ve kurar. Design Reviewer kurulmuş olanı açar, ölçer,
+> puanlar. Açılış Zili'nin "ölçmeden değiştirme" kuralının agent hâli.
 
-Kayıtlı alt ajan: `.claude/agents/design-reviewer.md`.
+Kayıtlı subagent: `.claude/agents/design-reviewer.md`.
 
 ---
 
@@ -17,7 +17,7 @@ Kayıtlı alt ajan: `.claude/agents/design-reviewer.md`.
 2. Rota listesini çıkar: `app/**/page.tsx` + README'deki rota tablosu. Dinamik
    rotalar için gerçek bir örnek kimlik bul (sitemap ya da veritabanı).
 3. Tarayıcı: Playwright MCP araçları varsa onları kullan; yoksa sistemde kurulu
-   Chrome ile `puppeteer-core` betiği (`.tmp-design-review.mjs`).
+   Chrome ile `puppeteer-core` script'i (`.tmp-design-review.mjs`).
 
 ## 2. Matris
 

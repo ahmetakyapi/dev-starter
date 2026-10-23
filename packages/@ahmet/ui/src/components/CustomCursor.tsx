@@ -31,7 +31,7 @@ export function CustomCursor() {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) { setIsTouch(true); return }
     if (reduceMotion) return
 
-    // Sistem imlecini gizleyen CSS kuralı bu kancaya bağlı. Bileşen mount
+    // Sistem imlecini gizleyen CSS kuralı bu hook'a bağlı. Bileşen mount
     // olmadan hiçbir tüketicide imleç kaybolmaz — @ahmetakyapi/theme'i yalnızca
     // token için kuran proje etkilenmez.
     document.documentElement.dataset.customCursor = ''

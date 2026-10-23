@@ -2,7 +2,7 @@ import type { LucideIcon, LucideProps } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * lucide-react sarmalayıcısı: tek boyut ölçeği, tek çizgi kalınlığı.
+ * lucide-react wrapper'ı: tek boyut ölçeği, tek çizgi kalınlığı.
  *
  * VARSAYILAN `aria-hidden`. İkonların çoğu yanındaki metnin süsü; ekran
  * okuyucu "görüntü" diye okumamalı. İkon TEK BAŞINA anlam taşıyorsa (tablo

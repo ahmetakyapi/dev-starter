@@ -49,7 +49,7 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  // Tema sunucuda, çerezden: ilk HTML doğru temayla gelir, satır içi betik yok.
+  // Tema sunucuda, çerezden: ilk HTML doğru temayla gelir, satır içi script yok.
   const theme = await getTheme();
 
   return (

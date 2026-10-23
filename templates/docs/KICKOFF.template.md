@@ -1,6 +1,6 @@
 # Kickoff — [Proje Adı]
 
-> `strategist` ajanının çıktısı. Kararlar burada gerekçesiyle durur; proje
+> `strategist` agent'ının çıktısı. Kararlar burada gerekçesiyle durur; proje
 > büyüdükçe PRODUCT.md ve ARCHITECTURE.md'ye taşınır, bu dosya tarih olarak kalır.
 > Tarih: [YYYY-AA-GG]
 

@@ -19,7 +19,7 @@
  * Kaynak varsayılan olarak bootstrap'in kurduğu `~/.claude/skills/anatomy`;
  * şablon zaten hazır: <html class="iso"> ve figür dizinleri için ESLint ayarı.
  *
- * Doğrulama: `npm run verify:anatomy` bu betiği iki şablonda koşar ve
+ * Doğrulama: `npm run verify:anatomy` bu script'i iki şablonda koşar ve
  * build + typecheck + lint + test'in temiz kaldığını kanıtlar.
  */
 
@@ -73,7 +73,7 @@ writeFileSync(
 Kaynak commit: \`${commit}\`
 
 Bu dizin \`~/dev-starter/scripts/add-figure-kit.mjs\` ile kopyalandı. Elle
-düzenleme: betik yeniden çalışınca \`iso-kit.ts\`, \`iso.css\` ve \`react/\`
+düzenleme: script yeniden çalışınca \`iso-kit.ts\`, \`iso.css\` ve \`react/\`
 üzerine yazılır. Projeye özgü stil \`bridge.css\`e ya da figürün kendi CSS'ine.
 
 Figür yazmak: anatomy skill'i (\`/anatomy\` ya da "bunu açıklayan bir figür çiz").

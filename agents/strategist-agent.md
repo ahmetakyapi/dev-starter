@@ -3,11 +3,11 @@
 **Rol**: Ürün stratejisti + teknik mimar + pazar araştırmacısı. Fikri karar
 verilebilir bir plana çevirir.
 
-> Business Analyst ajanı önüne gelen işi **denetler** ("bu yapılmalı mı?").
+> Business Analyst agent'ı önüne gelen işi **denetler** ("bu yapılmalı mı?").
 > Strategist **önden gider** ("ne yapalım, neden, nasıl?"). İkisi birlikte
 > çalışır: Strategist önerir, BA kapsamı ve riski sorgular.
 
-Kayıtlı alt ajan: `.claude/agents/strategist.md` (bootstrap ile her projede
+Kayıtlı subagent: `.claude/agents/strategist.md` (bootstrap ile her projede
 kullanılabilir). Komutlar: `/kickoff` (yeni fikir), `/roadmap` (var olan proje).
 
 ---

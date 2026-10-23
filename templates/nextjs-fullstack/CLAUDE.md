@@ -30,7 +30,7 @@ Yerelde `npm run build` için `.env.local`e
 `npm test`, `npm run build`. Görsel değişiklik ayrıca tarayıcıda iki temada
 gözle kontrol edilir.
 
-Aktif story'si olan işte commit kapısını `/gate` açar: sonuç
+Aktif story'si olan işte commit iznini `/gate` açar: sonuç
 `docs/ROUTEMAP.md`'nin Gate kolonuna işlenir ve `gate-guard` hook'u PASSED
 olmayan aktif story varken commit'i bloklar (`.claude/settings.json` →
 `~/dev-starter/hooks/`). Yukarıdaki komutlar Gate'in ön koşuludur, yerine
@@ -101,7 +101,7 @@ Tokenlar `app/globals.css` içinde, iki katman:
 - **Yüzey:** `surface` varsayılan (ton farkı + hairline). `glass` isteğe bağlı,
   yalnızca arkasında hareket eden içerik varsa. `app-bg` köşe ışımaları.
 - Tema çerezden sunucuda basılır (`lib/theme.ts`, `lib/theme.server.ts`);
-  varsayılan açık, next-themes yok, satır içi betik yok, FOUC yok. Çerezi
+  varsayılan açık, next-themes yok, satır içi script yok, FOUC yok. Çerezi
   ThemeToggle istemcide yazar: server action içinde `cookies().set()` bütün
   sayfayı sunucuda yeniden çizer ve ön yükleme önbelleğini boşaltır.
 - CSS değişkeni okuyamayan yerler (OG görseli, `global-error`, manifest,
@@ -144,7 +144,7 @@ Arayüz metninde uzun tire (em dash) yok; ayraç virgül, iki nokta ya da `·`.
 
 ## AI akışı (`/akis`)
 
-Ajan hazırlar, kullanıcı karar verir: sohbet kutusu yerine karara hazır
+Agent hazırlar, kullanıcı karar verir: sohbet kutusu yerine karara hazır
 kartlar (taslak e-posta, çakışma çözümü, rakam özeti). Desen:
 `~/dev-starter/knowledge/patterns.md → AI Feed`.
 
@@ -160,7 +160,7 @@ kartlar (taslak e-posta, çakışma çözümü, rakam özeti). Desen:
   tutar, kimlik `feed_items.payload`tan okunur. Kartta olmayan ya da
   `FEED_HANDLERS`ta işleyicisi olmayan aksiyon çalışmaz.
 - **Geri alınamaz iş** (gönderim, ödeme) işleyicide `undo` taşımaz, kartta
-  `reversibility: "irreversible"`; ajan bunu `handled` kulvarına kendisi yazamaz.
+  `reversibility: "irreversible"`; agent bunu `handled` kulvarına kendisi yazamaz.
 - Ürün akış istemiyorsa sil: `app/akis/`, `components/feed/`, `lib/feed*.ts`,
   `tests/feed.test.ts`, `lib/schema.ts` → `feedItems`.
 

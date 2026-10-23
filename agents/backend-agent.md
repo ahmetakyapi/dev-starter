@@ -41,7 +41,7 @@ Bug geldiğinde `rules/bugfix-protocol.md` TDD akışını takip eder:
 - **→ BA Agent**: Backend implementasyon bitti, inceleme için hazır
 - **← BA Agent**: Scope veya risk kararı gerekiyor
 
-Bu agent kayıtlı subagent'tır: iş ona **Görev Zarfı** ile gelir (`AGENT_PROTOCOL.md → Orkestrasyon`); Standart Handoff yalnız ana oturum rolleri arasındadır.
+Bu agent kayıtlı subagent'tır: iş ona **Görev Tanımı** ile gelir (`AGENT_PROTOCOL.md → Orkestrasyon`); Standart Handoff yalnız ana oturum rolleri arasındadır.
 
 ## React 19 Server Actions
 

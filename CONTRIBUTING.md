@@ -7,7 +7,7 @@ dev-starter ekosistemini gelistirmek icin bu rehberi takip edin.
 ## Genel Kurallar
 
 - Conventional commit kullanin (`rules/commit-conventions.md`)
-- Her degisiklik Gate Agent 6+1 pass kontrolunden gecmeli
+- Her degisiklik Gate Agent 6+1 adim kontrolunden gecmeli
 - Hardcoded renk/deger YASAK — semantic token kullanin (`rules/design-tokens.md`)
 - Turkce dokumantasyon, Ingilizce kod
 
@@ -85,7 +85,7 @@ orada yapin ve commit'leyin.
 3. `agents/AGENT_PROTOCOL.md` → Agent Ekibi tablosuna ekleyin (tur: rol mu,
    kayitli subagent mi)
 4. `rules/context-curation.md` → Context matrisine ekleyin
-5. Kayitli subagent olacaksa: `.claude/agents/[ad].md` INCE sarmalayici
+5. Kayitli subagent olacaksa: `.claude/agents/[ad].md` INCE wrapper
    (rol dosyasini `~/dev-starter/agents/...` mutlak yoluyla okur, icerik
    KOPYALANMAZ) + `scripts/health-check.sh` → `WRAPPERS` listesine ekleyin
 6. Commit: `feat(agents): add [agent-adi] agent`

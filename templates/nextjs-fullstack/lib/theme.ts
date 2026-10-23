@@ -1,6 +1,6 @@
 /**
  * Tema tek kaynaktan: çerez. Sunucu `<html data-theme>` özniteliğini ilk
- * yanıtta basar; satır içi betik yok, ilk boyamada yanlış tema (FOUC) yok.
+ * yanıtta basar; satır içi script yok, ilk boyamada yanlış tema (FOUC) yok.
  * next-themes bu yüzden kullanılmıyor: o, temayı istemcide sonradan yazar.
  *
  * Bu dosya İKİ TARAFTAN okunur (ThemeToggle çerezi istemcide yazar), o yüzden

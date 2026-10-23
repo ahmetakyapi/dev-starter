@@ -1,11 +1,11 @@
 # Teknoloji Radarı — İhtiyaç → Seçim
 
-`strategist` ajanı ve `/kickoff` buradan önerir. Amaç: aynı ihtiyaca her
+`strategist` agent'ı ve `/kickoff` buradan önerir. Amaç: aynı ihtiyaca her
 projede başka bir kütüphaneyle cevap verip ekosistemi dağıtmamak.
 
 **Okuma:** Her satırda bir **varsayılan** var. Ondan sapmak serbest, ama
 sapmanın gerekçesi projenin `docs/KICKOFF.md` → "Teknoloji Kararları"
-bölümüne yazılır. Fiyatlar, ücretsiz kotalar ve sürümler değişir: ajan bir
+bölümüne yazılır. Fiyatlar, ücretsiz kotalar ve sürümler değişir: agent bir
 satırı önermeden önce güncel durumu web'den teyit eder, bu dosyayı kesin
 kaynak saymaz.
 
@@ -85,8 +85,8 @@ Son gözden geçirme: 2026-10-03
 |---|---|---|---|
 | Metin üretimi / analiz | Claude API (`@anthropic-ai/sdk`) | Benimse | Açılış Zili'nde canlı. Model kimliği ve fiyat için `claude-api` skill'ini yükle, ezberden yazma. |
 | Sohbet arayüzü / akış | Vercel AI SDK ya da doğrudan SDK akışı | Dene | Tek sağlayıcıysa doğrudan SDK yeter. |
-| Ajan arayüzü (araç çağrısı UI'ı) | AG-UI + CopilotKit (`templates/agentic-chat`) | Dene | Kurallar `rules/agentic-ui.md`. |
-| Proaktif ajan akışı (ajan hazırlar, kullanıcı onaylar) | `nextjs-fullstack` → `/akis` (`snippets/agent-feed.tsx` + server action + cron üretici) | Dene | Kullanıcı verisi yoksa değil: yeni hesapta akış boş kalır, ilk günü sohbet taşır. |
+| Agent arayüzü (araç çağrısı UI'ı) | AG-UI + CopilotKit (`templates/agentic-chat`) | Dene | Kurallar `rules/agentic-ui.md`. |
+| Proaktif agent akışı (agent hazırlar, kullanıcı onaylar) | `nextjs-fullstack` → `/akis` (`snippets/agent-feed.tsx` + server action + cron üretici) | Dene | Kullanıcı verisi yoksa değil: yeni hesapta akış boş kalır, ilk günü sohbet taşır. |
 | Vektör arama | pgvector (Neon) | Dene | Ayrı vektör veritabanı ancak milyonlarca kayıtta. |
 | Yapay zekâ çıktısını yayımlamak | Önce doğrulama şeması, sonra yazma | Benimse | Açılış Zili `lib/content-write.ts`: tek yazma yolu, sürüm fotoğrafı. |
 | Açıklayıcı figür ("nasıl çalışır") | anatomy skill'i + `scripts/add-figure-kit.mjs` | Dene | Bootstrap sabit commit'e kurar; uyum `npm run verify:anatomy`. Basit akış şeması gerekiyorsa değil. |
@@ -96,7 +96,7 @@ Son gözden geçirme: 2026-10-03
 | İhtiyaç | Varsayılan | Halka | Not / ne zaman değil |
 |---|---|---|---|
 | Blog / rehber | Depoda TS ya da MDX dosyası | Benimse | Yazar tek kişiyse CMS gereksiz. Birden fazla editör varsa veritabanı + panel (Açılış Zili mercek). |
-| Başsız CMS | Sanity ya da Payload | Bekle | Müşteri kendi içeriğini girecekse yeniden değerlendir. |
+| Headless CMS | Sanity ya da Payload | Bekle | Müşteri kendi içeriğini girecekse yeniden değerlendir. |
 | Çok dil | Kendi sözlüğümüz (`const en: typeof tr`) | Benimse | Eksik anahtar derlemeyi kırar. next-intl yalnızca çoğul/tarih kuralları ağırsa. |
 | OG görseli | `opengraph-image.tsx` + tek `OgFrame` şablonu | Benimse | Satori CSS değişkeni çözmez, sabit palet. |
 | Analitik | Vercel Analytics | Benimse | Çerezsiz; KVKK banner'ı gerekmez. Ürün analitiği (huni, kohort) gerekiyorsa PostHog. |
@@ -118,7 +118,7 @@ Son gözden geçirme: 2026-10-03
 
 | İhtiyaç | Varsayılan | Halka | Not / ne zaman değil |
 |---|---|---|---|
-| Paralel ajan oturumlarını izlemek (Mac) | cmux | Dene | Yalnız aynı anda birden fazla yerel oturum varsa; bulut oturumuna katkısı yok. Global CLAUDE.md fark edince bir kez önerir. Alternatif Herdr (SSH/telefon ağırlıklı çalışmada). `cmux hooks setup` sonrası ekosistem hook'larının çalıştığı doğrulanmadan Benimse'ye çıkmaz. `machine/README.md → Paralel Oturumlar`. |
+| Paralel agent oturumlarını izlemek (Mac) | cmux | Dene | Yalnız aynı anda birden fazla yerel oturum varsa; bulut oturumuna katkısı yok. Global CLAUDE.md fark edince bir kez önerir. Alternatif Herdr (SSH/telefon ağırlıklı çalışmada). `cmux hooks setup` sonrası ekosistem hook'larının çalıştığı doğrulanmadan Benimse'ye çıkmaz. `machine/README.md → Paralel Oturumlar`. |
 
 ## Mobil
 

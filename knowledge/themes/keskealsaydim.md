@@ -566,7 +566,7 @@ renk yazmak açık temayı bozar.
 2. Glass card stilini base component olarak oluştur — tüm kartlar bundan türesin
 3. Sayısal veri bileşenlerini `tabular-nums` + renk kodlamalı (pozitif/negatif) yap
 4. Uygulama içi animasyonları CSS keyframes ile tanımla; Framer Motion yalnızca açılış
-   sayfasında, `components/Motion.tsx` sarmalayıcıları üzerinden
+   sayfasında, `components/Motion.tsx` wrapper'ları üzerinden
 5. Skeleton shimmer'ı her asenkron veri yükleme noktasına ekle
 6. Hover glow varyantlarını kart tipine göre seç (yeşil: kar, mavi: bilgi, kırmızı: uyarı)
 7. Mobil önce test et — `background-attachment` ve sidebar davranışını kontrol et

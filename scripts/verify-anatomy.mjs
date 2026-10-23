@@ -3,7 +3,7 @@
  * verify-anatomy — anatomy figür kiti iki şablonda HÂLÂ sorunsuz mu?
  *
  * NEDEN VAR: anatomy bir npm paketi değil, neredeyse her gün değişen bir
- * skill deposu. Kiti şablona kopyalayan betik (add-figure-kit.mjs) bir kez
+ * skill deposu. Kiti şablona kopyalayan script (add-figure-kit.mjs) bir kez
  * çalıştı diye her sürümde çalışacağı söylenemez. İlk denemede derleme ve
  * tip kontrolü geçti, lint 28 hatayla düştü (mistakes.md #98): "derlendi"
  * ile "CI yeşil" aynı şey değil.

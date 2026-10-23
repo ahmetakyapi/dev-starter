@@ -31,7 +31,7 @@ sınırının iki yanındaki kareleri yan yana döşer (eşleşen kesme tutuyor 
 sel tek karede mi geçiyor).
 
 Başlangıç: `assets/film-page.html` (`?t=2.5` kareye atla, boşluk oynat/durdur,
-ok tuşları 1/24 sn; `?audio=mix.wav` saati sesten alır; betikler `?capture`
+ok tuşları 1/24 sn; `?audio=mix.wav` saati sesten alır; script'ler `?capture`
 ile önizleme döngüsünü kapatır).
 TS kitini bundle et: `npx esbuild film.ts --bundle --format=iife --global-name=Film --outfile=film.js`.
 
@@ -51,7 +51,7 @@ Döngü: yalnız 0..N−1 kareleri; N−1. kare 0. kareye akar.
 `assets/film-page.html` hem `render(t)` hem `renderAt(t)` açar; `renderAt`
 sayfadaki CSS/WAAPI animasyonlarını da aynı ana dondurur
 (`document.getAnimations()` → `pause()`, `currentTime = t·1000`), yani DOM'la
-yapılmış bir film de kare kare yakalanır. Betikler önce `renderAt`'i arar.
+yapılmış bir film de kare kare yakalanır. Script'ler önce `renderAt`'i arar.
 `?t=2.5` o kareyi dondurur — model ekran görüntüsünü alıp okuyabilir.
 
 Üç tuzak, üçü de en az bir kez başına gelecek: saat ya da zamanlayıcı (84.
@@ -103,12 +103,12 @@ node $S/film-read.mjs film.html                                                 
   baştan çizilir (http hedefte dosya değişikliği görülmez: sayfayı
   değiştirdiysen dizini sil). Başarıda dizin silinir (`--keep-frames` tutar).
   Tek işçide `--frames-dir=yol` aynı devam edebilirliği açar.
-- **Hata erken durdurur:** sayfa hatası ya da gelmeyen betik/belge render'ı
+- **Hata erken durdurur:** sayfa hatası ya da gelmeyen script/belge render'ı
   hemen keser; READY gelmezse sayfanın durumu ve görülen hatalar yazılır. ffmpeg
   gizli bir `.partial` dosyasına yazar, yalnız başarıda asıl ada taşınır: yarım
   kalmış ama bitmiş görünen MP4 kalmaz, önceki iyi çıktı da ezilmez.
 - Tarayıcı `--force-color-profile=srgb` ve `--font-render-hinting=none` ile
-  açılır (üç betikte aynı): temas sayfasındaki kare videodaki kareyle aynı renkte
+  açılır (üç script'te aynı): temas sayfasındaki kare videodaki kareyle aynı renkte
   ve aynı yazı genişliğinde. WebGL yazılımla çiziliyorsa (SwiftShader) bir kez uyarır.
 
 ### Hareket bulanıklığı: merkezli obtüratör

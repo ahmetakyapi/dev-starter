@@ -185,7 +185,7 @@ html.theme-switching::view-transition-new(root) {
   }
 }
 
-/* ─── Özel imleç: kancaya bağlı ────────────────────────────────────────── */
+/* ─── Özel imleç: hook'a bağlı ────────────────────────────────────────── */
 /* Kural yalnızca <CustomCursor /> mount olduğunda devreye girer; bileşen
    `data-custom-cursor` özniteliğini <html>'e yazar/siler. Koşulsuz olsaydı
    paketi yalnızca token için kuran tüketicide de imleç kaybolurdu. */

@@ -2,7 +2,7 @@
 
 **Her feature/story implementasyonu bu pipeline'ı takip eder.**
 
-> Fazın kendisi (story seçimi, boy, alt ajanlara dağıtım, dalga planı):
+> Fazın kendisi (story seçimi, boy, subagent'lara dağıtım, dalga planı):
 > `phases/development.md`. Bu dosya TEK story'nin iç akışıdır.
 
 ---
@@ -30,7 +30,7 @@ Pipeline işe göre ölçeklenir (`phases/development.md → İşin Boyu`):
     ↓
 4. SELF-CHECK — Developer kendi çıktısını kontrol eder
     ↓
-5. GATE — Gate Agent 6+1 pass kalite kontrolü (/gate)
+5. GATE — Gate Agent 6+1 adımlı kalite kontrolü (/gate)
     ↓
 6. COMMIT — Conventional commit ile kaydet
     ↓
@@ -119,17 +119,17 @@ Herhangi biri fail ediyorsa → önce düzelt, Gate'e gönderme.
 
 ### 5. Gate
 
-Gate kayıtlı subagent'tır; iş ona **Görev Zarfı** ile gider
+Gate kayıtlı subagent'tır; iş ona **Görev Tanımı** ile gider
 (`AGENT_PROTOCOL.md → Orkestrasyon`):
 
 ```
-GOREV_ZARFI
+GOREV_TANIMI
   to:    GATE
   task:  [görev adı] kalite kontrolü
   oku:   [story dosyası + değişen dosya listesi]
   sinir: [kod değiştirme — bulgu + düzeltme talimatı üret]
   cikti: [rapor gövdesi; ana oturum docs/gate/<story>.md'ye yazar]
-  kabul: 6+1 pass çalıştı, her pass'te komut + exit kodu raporda
+  kabul: 6+1 adım çalıştı, her pass'te komut + exit kodu raporda
 ```
 
 Gate sonuçları:
@@ -153,7 +153,7 @@ git commit -m "feat(scope): description"
 
 BA Agent final inceleme yapar; sonucu tek satırla ROUTEMAP Kararlar Logu'na düşer:
 
-- Görev kapsamla örtüşüyor mu? → **APPROVED** | **REWORK** (gerekçeyle ilgili ajana)
+- Görev kapsamla örtüşüyor mu? → **APPROVED** | **REWORK** (gerekçeyle ilgili agent'a)
 - Over-engineering var mı?
 - Kullanıcı değeri sağlanmış mı?
 - Bir sonraki adım ne?

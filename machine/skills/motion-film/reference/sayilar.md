@@ -80,12 +80,12 @@ Kaynak: Vincentwei1021/mg-styles-15 `prompts/*` "How to work" (MIT).
 
 | Ne | Sayı |
 |----|------|
-| Kanca | **≤ 0,5 sn**; açılışta **0,3 sn'den uzun** boş ya da siyah kare yok |
+| Hook | **≤ 0,5 sn**; açılışta **0,3 sn'den uzun** boş ya da siyah kare yok |
 | Doruk (kahraman anı) | sürenin **%60–75'inde** (10 sn'de 6,0–7,5 sn) |
 | Son kare | **0,8–1,2 sn** tutulur, küçük canlı hareketle (%2 itiş, nefes, kaynama); donmuş son kare hata gibi okunur |
 | Planlar | 6–10 anahtar anda durağan kare, her biri tek başına poster olabilmeli |
 
-Uzun filmde kanca ilk 3 sn'de (`yonetmenlik.md` § 5); kısa filmde 0,5 sn.
+Uzun filmde hook ilk 3 sn'de (`yonetmenlik.md` § 5); kısa filmde 0,5 sn.
 
 ## Bekleme (hold)
 

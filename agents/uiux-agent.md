@@ -43,7 +43,7 @@ impeccable 3.0.0'da (2026-10-03) ekosistemden kaldırıldı. Yerine:
 | `motion-film` skill | Kodla hareket filmi: tretman, okumalar, kamera, mürekkep dokusu, ses, temas sayfası, MP4 |
 | `~/dev-starter/guides/00-brand-identity.md` | Kimlik değişmezleri ve palet seçimi |
 | `~/dev-starter/guides/02-design-tokens.md` … `05-components.md` | Token, tema, hareket, bileşen kuralları |
-| `design-reviewer` alt ajanı | Kurulmuş arayüzü ekrandan ölçüp puanlamak |
+| `design-reviewer` subagent'ı | Kurulmuş arayüzü ekrandan ölçüp puanlamak |
 | `/reference` + `~/dev-starter/knowledge/design-references.md` | Yeni bölüm (menü, CTA, alt bilgi, 404, bento) şablondan değil gerçek bir siteden: ücretsiz galeri → ekran görüntüsü → yapı |
 
 **Çakışma kuralı**: brief kazanır. Projenin tema dosyası ve seçili paleti
@@ -356,8 +356,8 @@ token'lar CSS'te `@theme` bloğundadır. Sürüm matrisi: `AGENT_PROTOCOL.md`.
 npm run typecheck && npm run lint && npm run build
 ```
 
-Ardından iki temada, 390 ve 1280 genişlikte ekrana bak (smoke betiği ya da
-`design-reviewer` alt ajanı); kontrast iddiası yapma, ölç.
+Ardından iki temada, 390 ve 1280 genişlikte ekrana bak (smoke script'i ya da
+`design-reviewer` subagent'ı); kontrast iddiası yapma, ölç.
 
 Sonra **üretilen CSS'te doğrula** — kaynakta doğru görünen şey çıktıda olmayabilir:
 

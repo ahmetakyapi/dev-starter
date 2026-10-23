@@ -59,7 +59,7 @@ test("rowToFeedItem: kapanan karar kulvarını ve aksiyonlarını korur, özeti 
   assert.equal(item?.undoToken, "t");
 });
 
-test("rowToFeedItem: ajanın kendi işi 'handled' satırıdır, başlığı özettir, düğmesi yoktur", () => {
+test("rowToFeedItem: agent'ın kendi işi 'handled' satırıdır, başlığı özettir, düğmesi yoktur", () => {
   const item = rowToFeedItem(
     row({
       lane: "handled",

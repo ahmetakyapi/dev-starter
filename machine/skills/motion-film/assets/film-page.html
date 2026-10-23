@@ -120,7 +120,7 @@
     if (e.key === "ArrowLeft") { if (playing) toggle(); seek(Math.max(0, t - 1 / 24)); }
   });
   if (audio) addEventListener("pointerdown", toggle);
-  // Betikler kendi saatleriyle çizer: önizleme döngüsünü kapatır (?capture).
+  // Script'ler kendi saatleriyle çizer: önizleme döngüsünü kapatır (?capture).
   if (!q.has("capture")) requestAnimationFrame(loop);
   // Font gelmeden ilk kare çizilmez (yedek font yanlış genişlik verir).
   document.fonts.ready.then(() => { if (q.has("t")) window.renderAt(t); window.READY = true; });

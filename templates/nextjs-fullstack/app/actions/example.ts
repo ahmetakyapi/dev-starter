@@ -17,7 +17,7 @@ export type ExampleState =
   | { status: "error"; message: string; fieldErrors: Record<string, string>; values: Record<string, string> }
   | { status: "success"; message: string };
 
-/** Dakikada beş deneme: insan için bol, döngüdeki betik için dar. */
+/** Dakikada beş deneme: insan için bol, döngüdeki script için dar. */
 const LIMIT = 5;
 const WINDOW_MS = 60_000;
 

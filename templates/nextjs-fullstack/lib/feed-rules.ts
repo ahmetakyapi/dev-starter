@@ -88,7 +88,7 @@ export function undoOpen(row: Pick<FeedRow, "undoToken" | "undoExpiresAt">, now:
  * Satır → istemciye giden öğe. Bozuk `item` JSON'u `null` döner ve akışa
  * girmez: yarım kart çizmektense hiç çizme.
  *
- * Kapanmış iş "halledildi" satırı olarak açılır. Ajanın kendi işi (`handled`)
+ * Kapanmış iş "halledildi" satırı olarak açılır. Agent'ın kendi işi (`handled`)
  * başlık yerine kapanış özetini taşır, düğmesi yoktur. Kapanmış KARAR ise
  * kulvarını, başlığını ve aksiyonlarını korur, özeti `resolvedSummary`de
  * gelir: Geri Al sunucuda kararı yeniden açar (`undoFeedAction`) ve istemci

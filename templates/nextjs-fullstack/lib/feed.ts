@@ -76,7 +76,7 @@ export type AddFeedItemOptions = {
   /** Aksiyonun gerçek girdisi (alıcı, takvim kimliği). İstemciye gitmez. */
   payload?: Record<string, unknown>;
   /**
-   * Yalnız `handled` kulvarı: ajanın kendi yaptığı işin işleyici adı.
+   * Yalnız `handled` kulvarı: agent'ın kendi yaptığı işin işleyici adı.
    * İşleyicinin `undo`su varsa kart Geri Al sunar.
    */
   performedAction?: string;
@@ -87,7 +87,7 @@ export type AddFeedItemOptions = {
  * şekliyle doğrulanır: gerekçesiz, aksiyonsuz ya da bozuk aksiyonlu öğe
  * tabloya hiç girmez.
  *
- * `handled`: ajan işi KENDİSİ yaptı. Yalnız geri alınabilir iş buraya
+ * `handled`: agent işi KENDİSİ yaptı. Yalnız geri alınabilir iş buraya
  * yazılır (rules/agentic-ui.md 4); geri alınamaz iş `needs-you` kartıdır.
  */
 export async function addFeedItem(userId: string, input: NewFeedItem, options: AddFeedItemOptions = {}) {
@@ -110,7 +110,7 @@ export async function addFeedItem(userId: string, input: NewFeedItem, options: A
       item,
       payload: options.payload ?? {},
       ...(handled ? { resolvedAt: now, summary: item.title, performedAction: options.performedAction ?? null } : {}),
-      // Ajanın gece yaptığı iş sabah görülür: Geri Al penceresi görünür kaldığı süre kadar.
+      // Agent'ın gece yaptığı iş sabah görülür: Geri Al penceresi görünür kaldığı süre kadar.
       ...(undoable ? { undoToken: randomUUID(), undoExpiresAt: new Date(now.getTime() + HANDLED_VISIBLE_MS) } : {}),
     })
     .returning({ id: feedItems.id });

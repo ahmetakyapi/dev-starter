@@ -34,7 +34,7 @@ ve kontrol. Bedel: DSL'in ongormedigi istek imkansiz.
 
 ### `feed` — Sohbet mi, akis mi?
 Kullanici ne isteyecegini biliyorsa sohbet. Sistem kullaniciyi taniyor ve
-siradaki isi kendisi bulabiliyorsa akis: ajan hazirlar (taslak, ozet, cozum
+siradaki isi kendisi bulabiliyorsa akis: agent hazirlar (taslak, ozet, cozum
 onerisi), kullanici onaylar / duzenler / gecer / sohbete atlar. Uc kulvar:
 `needs-you` (kart = onden onay), `suggestion`, `handled` (yalniz geri
 alinabilir is + Geri Al). Siralama ve oncelik KOD; model yalniz metni yazar.

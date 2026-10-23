@@ -5,7 +5,7 @@
 > Planning'in (P1→P6) çıktısı story'lerdir; bu faz onları çalışan, Gate'den
 > geçmiş, commit'lenmiş koda çevirir. Tek story'nin iç akışı
 > `rules/dev-cycle.md`dedir; bu dosya **fazın kendisini** yönetir: story
-> seçimi, işin boyu, alt ajanlara dağıtım, dalga (wave) yürütme ve faz çıkışı.
+> seçimi, işin boyu, subagent'lara dağıtım, dalga (wave) yürütme ve faz çıkışı.
 
 ---
 
@@ -45,16 +45,16 @@ dosya kesişimi yoksa açılır (merge çatışması davetiyesi).
 
 ---
 
-## Dalga (Wave) Yürütme — Alt Ajanlara Dağıtım
+## Dalga (Wave) Yürütme — Subagent'lara Dağıtım
 
 Büyük işte ana oturum **orkestratördür** (BA rolü): işi böler, kayıtlı
 subagent'lara dağıtır, sonuçları birleştirir. Dağıtım kuralları
-`agents/AGENT_PROTOCOL.md → Orkestrasyon` bölümündedir (Görev Zarfı, efor
+`agents/AGENT_PROTOCOL.md → Orkestrasyon` bölümündedir (Görev Tanımı, efor
 ölçekleme, referansla aktarım). Özet akış:
 
 ```text
 Wave 1 (paralel, bağımsız alanlar):
-  → backend subagent:  schema + API + testleri   (Görev Zarfı ile)
+  → backend subagent:  schema + API + testleri   (Görev Tanımı ile)
   → uiux rolü:         ekran/tasarım kararları    (ana oturum)
   → qa subagent:       story'nin test planı + failing testler
 
@@ -62,7 +62,7 @@ Wave 2 (Wave 1 çıktıları girince):
   → frontend subagent: UI + API entegrasyonu (BE'nin sözleşmesine karşı)
 
 Wave 3:
-  → gate subagent:     6+1 pass → rapor gövdesini döndürür (Write yetkisi bilinçli yok)
+  → gate subagent:     6+1 adım → rapor gövdesini döndürür (Write yetkisi bilinçli yok)
   → ana oturum:        raporu docs/gate/<story>.md'ye yazar, sonucu ROUTEMAP'e işler, commit
 ```
 

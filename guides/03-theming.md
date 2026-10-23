@@ -21,7 +21,7 @@ kalır (ahmetakyapi.com).
 önbelleğe giremez. Açılış Zili ve Mimio bu bedeli ödüyor; karşılığında
 FOUC, `mounted` titremesi ve "koyu çubuk, açık sayfa" uyumsuzluğu yok.
 İçeriği herkese aynı olan bir vitrin için bu bedel gereksiz: `landing`
-şablonu § 2b'yi uygular (statik sayfa + `<head>`de çerez betiği), ilk kare
+şablonu § 2b'yi uygular (statik sayfa + `<head>`de çerez script'i), ilk kare
 yine çerezin temasıyla gelir.
 
 ---
@@ -94,7 +94,7 @@ React bir yeniden çizim yaparsa `data-theme` farkı uyarı üretmesin.
 ❌ `localStorage` + satır içi script (Mimio'nun eski yolu): çalışır ama sunucu
    temayı bilemez, `themeColor` ve OG görseli yanlış temada kalır.
 
-### 2b. İçerik Sitesi: Statik Sayfa + Çerez Betiği
+### 2b. İçerik Sitesi: Statik Sayfa + Çerez Script'i
 
 Yukarıdaki kurulumun bir bedeli var: kök layout `cookies()` okuduğu için
 **bütün rotalar dinamik** olur (`next build` çıktısında her satır `ƒ`).
@@ -104,7 +104,7 @@ değişmiyor, her ziyaret bir fonksiyon çağrısına dönüyor ve Hobby planın
 fonksiyon kotası sınırlı.
 
 ahmetakyapi.com'da ölçüldü (3 Ekim 2026): `getTheme()` kaldırılıp yerine
-aşağıdaki betik konunca ana sayfa, `/projeler`, `/blog` statik (`○`), yazılar
+aşağıdaki script konunca ana sayfa, `/projeler`, `/blog` statik (`○`), yazılar
 SSG (`●`) oldu; açık tema çereziyle ilk boyama yine açık, konsol temiz.
 
 ```ts
@@ -128,19 +128,19 @@ export const viewport: Viewport = { themeColor: THEME_COLOR[DEFAULT_THEME] };
 
 - Tema düğmesi `useSyncExternalStore(subscribe, readDomTheme, () => DEFAULT_THEME)`:
   hidrasyondan hemen sonra doğru ikona geçer, `mounted` bekçisi gerekmez.
-- `themeColor` varsayılan temayla statik; betik `meta[name=theme-color]`'ı da
-  günceller (DOMContentLoaded'da tekrar, meta betikten sonra basılabiliyor).
-- CSP'de `script-src` satır içi betiğe izin vermeli (`'unsafe-inline'` ya da
-  betiğin hash'i).
+- `themeColor` varsayılan temayla statik; script `meta[name=theme-color]`'ı da
+  günceller (DOMContentLoaded'da tekrar, meta script'ten sonra basılabiliyor).
+- CSP'de `script-src` satır içi script'e izin vermeli (`'unsafe-inline'` ya da
+  script'in hash'i).
 - Sunucu temayı bilmediği için LCP görselinde varsayılan temanınkini öne al
   (`ThemedImage theme={DEFAULT_THEME}`).
 - Çerezi düğme yazar (§ 2'deki `setThemeCookie`); sunucu onu hiç okumaz,
-  bir sonraki yüklemede betik okur. Sayfa (`page.tsx`) da `cookies()`
+  bir sonraki yüklemede script okur. Sayfa (`page.tsx`) da `cookies()`
   okumaz, düğmeye `initialTheme={DEFAULT_THEME}` verir.
 
 **Karar kuralı:** sayfa kullanıcıya göre değişiyorsa (oturum, kişisel veri)
-zaten dinamiktir → sunucuda çerez. Değişmiyorsa → statik + betik.
-Şablonlarda: `nextjs-fullstack` sunucuda çerez, `landing` statik + betik
+zaten dinamiktir → sunucuda çerez. Değişmiyorsa → statik + script.
+Şablonlarda: `nextjs-fullstack` sunucuda çerez, `landing` statik + script
 (ölçüldü, 20 Ekim 2026: `ƒ /` → `○ /`, `/` yanıtı `no-store`dan
 `s-maxage=31536000`a geçti).
 
@@ -349,7 +349,7 @@ tesadüf değil.
 
 ## Kontrol Listesi
 
-- [ ] Dinamik üründe tema çerezden sunucuda basılıyor (satır içi betik yok); statik vitrinde § 2b: `<head>`de `THEME_SCRIPT`, viewport statik
+- [ ] Dinamik üründe tema çerezden sunucuda basılıyor (satır içi script yok); statik vitrinde § 2b: `<head>`de `THEME_SCRIPT`, viewport statik
 - [ ] Çerezi düğme istemcide yazıyor; tema için server action yok
 - [ ] `lib/theme.ts` `next/headers` içe aktarmıyor (`getTheme` → `lib/theme.server.ts`)
 - [ ] `DEFAULT_THEME` ürün sorusuna göre seçildi (01 § 0)

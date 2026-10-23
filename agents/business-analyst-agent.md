@@ -42,7 +42,7 @@ Bu agent çalışmadan önce şunları oku:
 - **Çıktı Kalite Kontrolü**: Diğer agent'ların ürettiği sonuç gerçekten istenen ile örtüşüyor mu?
 - **Planning Orchestration**: Yeni projede `phases/planning.md` akışını yönetir (P1→P6)
 - **Development Orchestration**: Büyük işi böler, kayıtlı subagent'lara
-  (FE/BE/QA/GATE/RS...) **Görev Zarfı** ile dağıtır, dalga planını yürütür
+  (FE/BE/QA/GATE/RS...) **Görev Tanımı** ile dağıtır, dalga planını yürütür
   (`phases/development.md`, `AGENT_PROTOCOL.md → Orkestrasyon`)
 - **Kabul Ön-Doğrulaması**: Subagent'tan dönen teslim, Gate'e gitmeden story
   kabul kriterleriyle madde madde karşılaştırılır; eksikse iade edilir

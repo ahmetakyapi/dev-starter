@@ -18,7 +18,7 @@
 #  11. Temel dosyalar
 #  12. Tasarim denetimi (degrade, palet disi renk)
 #  13. Tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy, motion)
-#  14. Orkestrasyon butunlugu (sarmalayici <-> rol dosyasi, komut <-> tablo)
+#  14. Orkestrasyon butunlugu (wrapper <-> rol dosyasi, komut <-> tablo)
 #  15. Bilgi tabani butunlugu (mistakes numaralari, satir tavanlari)
 
 set -euo pipefail
@@ -367,12 +367,12 @@ else
   fail "scripts/verify-agentic.mjs EKSIK"
 fi
 
-# Figur kiti (anatomy): kurulum + dogrulama betikleri ve sabit commit.
+# Figur kiti (anatomy): kurulum + dogrulama script'leri ve sabit commit.
 # Tam dogrulama ag + iki npm install ister; opt-in: npm run verify:anatomy
 if [ -f "scripts/add-figure-kit.mjs" ] && [ -f "scripts/verify-anatomy.mjs" ]; then
   pass "scripts/add-figure-kit.mjs + verify-anatomy.mjs mevcut"
 else
-  fail "figur kiti betikleri EKSIK (scripts/add-figure-kit.mjs, verify-anatomy.mjs)"
+  fail "figur kiti script'leri EKSIK (scripts/add-figure-kit.mjs, verify-anatomy.mjs)"
 fi
 if grep -qE '^ANATOMY_REF="[0-9a-f]{40}"' machine/bootstrap.sh; then
   pass "anatomy tam commit'e sabitlenmis (bootstrap.sh ANATOMY_REF)"
@@ -503,21 +503,21 @@ fi
 # ─── 14. Orkestrasyon Butunlugu ──────────────────────────────────────────────
 header "Orkestrasyon Butunlugu"
 
-# Kayitli subagent sarmalayicilari: beklenen liste + her biri rol dosyasini
+# Kayitli subagent wrapper'lari: beklenen liste + her biri rol dosyasini
 # MUTLAK yolla okumali (kopya = iki kaynak, biri bayatlar)
 WRAPPERS=("strategist" "gate" "deploy" "design-reviewer" "content-editor" "frontend" "backend" "qa" "researcher")
 for w in "${WRAPPERS[@]}"; do
   WF=".claude/agents/${w}.md"
   if [ ! -f "$WF" ]; then
-    fail "$WF EKSIK (kayitli subagent sarmalayicisi)"
+    fail "$WF EKSIK (kayitli subagent wrapper'i)"
   elif grep -qs '~/dev-starter/agents/' "$WF"; then
-    pass "$w sarmalayicisi rol dosyasina mutlak yolla bagli"
+    pass "$w wrapper'i rol dosyasina mutlak yolla bagli"
   else
     warn "$WF rol dosyasini ~/dev-starter/agents/ yolundan okumuyor"
   fi
 done
 
-# Sarmalayici <-> AGENT_PROTOCOL senkronu: protokol kayitli subagent olarak
+# wrapper <-> AGENT_PROTOCOL senkronu: protokol kayitli subagent olarak
 # ne ilan ediyorsa dosyasi olmali, dosyasi olan ilan edilmis olmali
 for w in "${WRAPPERS[@]}"; do
   if ! grep -qs "\`${w}\`" agents/AGENT_PROTOCOL.md; then
@@ -528,7 +528,7 @@ for f in .claude/agents/*.md; do
   base=$(basename "$f" .md)
   case " ${WRAPPERS[*]} " in
     *" $base "*) : ;;
-    *) warn "Listelenmemis sarmalayici: $base — health-check + AGENT_PROTOCOL guncellenmeli" ;;
+    *) warn "Listelenmemis wrapper: $base — health-check + AGENT_PROTOCOL guncellenmeli" ;;
   esac
 done
 

@@ -8,8 +8,8 @@ tek başına bir projeye kopyalanır ve yalnızca şunlara dayanır:
 - `app/globals.css` token sınıfları (`bg-page`, `text-strong`, `border-line`,
   `bg-primary-wash`, `text-primary-ink`, `shadow-modal`, `.skeleton`, `.surface`…)
 - `lucide-react`, `next/link`
-- Altı dosyada `@base-ui/react` (başsız katman; karar ve gerekçe:
-  [guides/10](../../guides/10-component-library.md#2-başsız-kütüphane-kararı))
+- Altı dosyada `@base-ui/react` (headless katman; karar ve gerekçe:
+  [guides/10](../../guides/10-component-library.md#2-headless-kütüphane-kararı))
 
 Sabit renk, hex, Tailwind'in hazır paleti ve `dark:` yok; tema token'la döner.
 Hepsinde `focus-visible` halkası (globals.css), dokunmatikte ≥ 44 piksel hedef,

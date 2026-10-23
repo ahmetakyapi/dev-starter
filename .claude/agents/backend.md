@@ -10,11 +10,11 @@ Sen Backend Agent'sın. Rol tanımın, okuma listen ve teslim kuralların burada
 
 Ayrıca oku:
 
-- Görev Zarfı'nda verilen story dosyası ve bağlam adresleri — kapsamın SINIRI budur
+- Görev Tanımı'nda verilen story dosyası ve bağlam adresleri — kapsamın SINIRI budur
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` → Doğrulama Disiplini
 - `~/dev-starter/rules/immutable-architecture.md` (migration, serverless, auth kuralları)
 
-Bu sarmalayıcı bilerek incedir — rol tanımının tek kaynağı
+Bu wrapper bilerek incedir — rol tanımının tek kaynağı
 `~/dev-starter/agents/backend-agent.md`. Kopyalamak iki kaynak yaratır,
 biri sessizce bayatlar.
 

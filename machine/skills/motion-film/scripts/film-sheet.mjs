@@ -3,7 +3,7 @@
  * film-sheet — bir filmin karelerini tek görüntüde döşer (temas sayfası / şerit).
  *
  * Hareket kod okuyarak görülmez; bakılarak görülür (ClaudeAnimationBase,
- * ANIMATION_GUIDE "review loop"). Bu betik iki kipte kare toplar:
+ * ANIMATION_GUIDE "review loop"). Bu script iki kipte kare toplar:
  *
  *   SÖZLEŞME (varsayılan): sayfa window.render(t) + window.READY açar
  *   (assets/film-page.html). Her kare render(t) ile, sırasız ve kesin.

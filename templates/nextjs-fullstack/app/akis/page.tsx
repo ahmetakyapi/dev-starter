@@ -19,7 +19,7 @@ import {
 } from "./actions";
 
 /*
- * AI akışı: ajan hazırlar, kullanıcı karar verir (knowledge/patterns.md → AI Feed).
+ * AI akışı: agent hazırlar, kullanıcı karar verir (knowledge/patterns.md → AI Feed).
  *
  * DEMO MODU yalnız geliştirmede: veritabanı ya da oturum yokken sayfa örnek
  * öğelerle açılır ve aksiyonlar hiçbir şeye dokunmaz. Üretimde demo yok;

@@ -17,7 +17,7 @@ Kendi karakterini kuracaksan tabloları değiştir, mimariyi tut.
 | `EMO` | duygu = VERİ: gözler, ağız, ton (TOKEN ADI, hex değil), yanak, işaret, tepki boyu (`take`), boşta beden `body(t)` | Yeni duygu bir satırdır; hiçbir duygu donmaz. |
 | `feel(ad, t)` | o duygu, t anında canlı | `drawCharacter(ctx, t, x, y, u, feel("happy", t), pal)` |
 | `emotions(t, keys)` | oynanan duygu çizelgesi | Yüzler değişmez, oynar (§3). |
-| `drawCharacter` | tek kare: gölge → arka kol → ayaklar → gövde + ton → yüz → ön kol → `draw` kancası → işaret | Ressam sırası tablodan gelir, elle yazılmaz. |
+| `drawCharacter` | tek kare: gölge → arka kol → ayaklar → gövde + ton → yüz → ön kol → `draw` hook'u → işaret | Ressam sırası tablodan gelir, elle yazılmaz. |
 | `handAt` | elin dünya konumu, çizimle AYNI dönüşümden | Atılan şey elden çıkar (§5). |
 
 **Seçenekler yayarak birleşir, ezerek değil:**
@@ -100,7 +100,7 @@ Kodla çizilen karakterde en sık görünen kusur "havada kalan" şeydir (Claude
 
 - **Ayak yerde.** Duruşta ayak tabanı `y`de; yürürken yalnız kalkan ayak
   yerden ayrılır, basan ayak kaymaz. Zıplamada gölge küçülür, inişte squash.
-- **Tutulan şey elde.** Aksesuarı `armL` / `armR` kancasında kol ucunda
+- **Tutulan şey elde.** Aksesuarı `armL` / `armR` hook'unda kol ucunda
   (kol uzayında +x dışa) çiz; kolla birlikte döner, ezilir, çevrilir. İki elle
   tutulan şey iki avucun **arasında**, derinliği iki kolun arasında; elden
   ele geçiş bir avuçtan öbürüne ara değerlenir.

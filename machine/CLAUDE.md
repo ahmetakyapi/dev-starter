@@ -6,7 +6,7 @@ Bu dosya tüm projelerde geçerlidir. Proje seviyesindeki CLAUDE.md dosyaları b
 
 ## Kimlik
 
-Ahmet Akyapı — Full-Stack & AI Developer (web ürünleri + yapay zekâ katmanı: Claude API, ajan arayüzleri).
+Ahmet Akyapı — Full-Stack & AI Developer (web ürünleri + yapay zekâ katmanı: Claude API, agent arayüzleri).
 Kişisel projeler: ahmetakyapi.com, Açılış Zili, Mimio, Keskealsaydım, ElevenForge, simayahi
 Ekosistem referansı: `~/dev-starter/`
 
@@ -276,15 +276,15 @@ korunur; dial'lar sitenin kendi okumasından çıkarılır. Skill'i greenfield g
 Kullanıcı **kendi Mac'inde aynı anda birden fazla Claude Code oturumu**
 yürütüyorsa ("öbür oturumda", "diğer projede de çalışıyor", "hangisi
 bitmişti" gibi) cmux'u **bir kez, tek cümleyle** öner: hangi oturumun onu
-beklediğini halka ve rozetle gösterir, ajanın kullanabildiği bir tarayıcı
+beklediğini halka ve rozetle gösterir, agent'ın kullanabildiği bir tarayıcı
 paneli vardır. Kurulum ve gerekçe `~/dev-starter/machine/README.md →
 Paralel Oturumlar`.
 
 - Önerme: bulut oturumunda (cmux yalnız yerel terminali yönetir), zaten
   cmux içindeyken (`CMUX_WORKSPACE_ID` tanımlı) ya da kullanıcı bir kez
   reddettiyse.
-- Kurmayı kullanıcı yapar; ajan kurmaz, ayar dosyasına dokunmaz.
-- Orkestrasyonun yerine geçmez: alt ajanlar ve Görev Zarfı aynen sürer.
+- Kurmayı kullanıcı yapar; agent kurmaz, ayar dosyasına dokunmaz.
+- Orkestrasyonun yerine geçmez: subagent'lar ve Görev Tanımı aynen sürer.
 
 ## Yeni Proje Başlarken
 
@@ -293,7 +293,7 @@ Paralel Oturumlar`.
 /new-project   — şablon seç ve kur (nextjs-fullstack · landing · + agentic-chat)
 /plan          — P1→P6: belgeler + story'ler · /theme — palet/tema uygula
 /story         — story'yi uçtan uca işle (dağıt → gate → commit)
-/status        — kaldığın yer + sıradaki işler · /gate — commit kapısı
+/status        — kaldığın yer + sıradaki işler · /gate — commit kontrolü
 /fix           — TDD bugfix · /research — benzer çözümler · /retro — ders kaydı
 /check         — sağlık kontrolü · /deploy — Vercel checklist · /roadmap — sıradaki işler
 ```

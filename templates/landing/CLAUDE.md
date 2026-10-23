@@ -28,7 +28,7 @@ olmadan durur (aşağıda SEO).
 `npm test`, `npm run build`. Görsel değişiklik ayrıca tarayıcıda 390 ve 1280
 genişlikte, iki temada ve "hareketi azalt" açıkken gözle kontrol edilir.
 
-Aktif story'si olan işte commit kapısını `/gate` açar: sonuç
+Aktif story'si olan işte commit iznini `/gate` açar: sonuç
 `docs/ROUTEMAP.md`'nin Gate kolonuna işlenir ve `gate-guard` hook'u PASSED
 olmayan aktif story varken commit'i bloklar (`.claude/settings.json` →
 `~/dev-starter/hooks/`). Yukarıdaki komutlar Gate'in ön koşuludur, yerine
@@ -133,7 +133,7 @@ Tokenlar `app/globals.css` içinde, iki katman:
 - **Yüzey:** `surface` varsayılan (ton farkı + hairline). `glass` isteğe bağlı,
   yalnızca arkasında hareket eden içerik varsa. `app-bg` köşe ışımaları.
 - Tema çerezde, sayfa yine statik (`○`): layout varsayılanı basar,
-  `<head>`deki küçük betik (`lib/theme.ts` → `THEME_SCRIPT`) ilk boyamadan
+  `<head>`deki küçük script (`lib/theme.ts` → `THEME_SCRIPT`) ilk boyamadan
   önce çerezdeki temayı ve `theme-color`ı yazar (guides/03 § 2b). Düğme
   çerezi istemcide yazar. Varsayılan açık, next-themes yok, FOUC yok.
   Layout ya da sayfa `cookies()`/`headers()` okursa her ziyaret sunucu

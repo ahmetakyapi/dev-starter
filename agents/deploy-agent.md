@@ -29,7 +29,7 @@ Bu agent çalışmadan önce şunları oku:
 - **→ BA Agent**: Deploy başarılı/başarısız raporu
 - **← BE Agent**: Migration gerekiyor, koordine et
 
-Bu agent kayıtlı subagent'tır: iş ona **Görev Zarfı** ile gelir (`AGENT_PROTOCOL.md → Orkestrasyon`); Standart Handoff yalnız ana oturum rolleri arasındadır.
+Bu agent kayıtlı subagent'tır: iş ona **Görev Tanımı** ile gelir (`AGENT_PROTOCOL.md → Orkestrasyon`); Standart Handoff yalnız ana oturum rolleri arasındadır.
 
 ## Görev Kapsamı
 

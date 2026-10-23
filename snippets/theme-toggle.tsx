@@ -2,7 +2,7 @@
  * ThemeToggle — çerezli tema değiştirici, dairesel görünüm geçişiyle
  *
  * Tema SUNUCUDA basılır: layout `theme` çerezini okur ve
- * `<html data-theme={theme} suppressHydrationWarning>` yazar. Inline betik
+ * `<html data-theme={theme} suppressHydrationWarning>` yazar. Inline script
  * yok, ilk karede yanlış tema (FOUC) yok. Bu düğme yalnızca:
  *
  *   1. `<html data-theme>`ı ANINDA değiştirir (sunucuya gidiş beklenmez),

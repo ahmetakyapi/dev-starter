@@ -105,7 +105,7 @@ projeye dokunulduğunda hangi yöne gidileceğini söyler.
    | `--on-brand` (beyaz) `--cta-gradient`in her durağı üstünde | ≥ 4,5:1 |
    | `--line-focus` zemin üstünde | ≥ 3:1 |
 
-   Ölçüm bir betik ya da testle (WCAG göreli parlaklık formülü); sonuç
+   Ölçüm bir script ya da testle (WCAG göreli parlaklık formülü); sonuç
    token yorumuna yazılır.
 4. **`-ink` kuralı:** wash üstünde `--primary` AA'yı tutmuyorsa `-ink` bir
    basamak koyulaştırılır; koyu temada genellikle `--primary`nin kendisi yeter.

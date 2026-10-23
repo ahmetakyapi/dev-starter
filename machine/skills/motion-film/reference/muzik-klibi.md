@@ -27,7 +27,7 @@ biriken hata şarkının sonunda kesmeleri vuruştan, silmeyi sesten koparır.
 ## 1. Veri: iki JSON, bütün film onları okur
 
 ```ts
-// data/audio.json — analiz betiği üretir, elle düzeltilmez
+// data/audio.json — analiz script'i üretir, elle düzeltilmez
 type AudioData = {
   duration: number; bpm: number;          // bpm yalnız bilgi; zaman beats'ten
   beats: number[]; downbeats: number[];    // saniye, gapless çözüm zamanında
@@ -70,7 +70,7 @@ bütün şarkı boyunca 23 ms geç kalır — sözün iki-üç karesi.
   Şarkının başında, ortasında, sonunda ayrı ölç: sabitse tek kaydırma,
   değilse örnek hızı karışmıştır (44,1 ↔ 48 kHz).
 - Kaydırmayı yükleyen tek fonksiyonda uygula (stem'i okurken baştan örnek
-  kes), her betik o fonksiyondan okusun; JSON'a "zaman = gapless mp3 çözümü"
+  kes), her script o fonksiyondan okusun; JSON'a "zaman = gapless mp3 çözümü"
   notunu yaz.
 - Videoda sesi muxlarken de aynı dosya: başka bir kodlama (AAC) kendi
   dolgusunu ekler; çözülmüş MP4'te bir vuruşun ofsetini ölç (`ses.md`).

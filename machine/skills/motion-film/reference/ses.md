@@ -99,7 +99,7 @@ Film önce çizildiyse (vuruş noktaları resimde) tempo seçilir, resim kaydır
 
 ## Anlatım ve TTS
 
-- **Anahtar `.env`'de**, kodda, sayfada, betik argümanında değil; `.env`
+- **Anahtar `.env`'de**, kodda, sayfada, script argümanında değil; `.env`
   gitignore'da, örneği `.env.example`'da boş. Sayfa tarayıcıda çalışır:
   sağlayıcıyı sayfadan çağırma, sesi derleme anında üret, WAV'ı sakla.
 - **Zamanlama gerçek süreden.** Her satırı ayrı WAV olarak üret, süresini
@@ -165,7 +165,7 @@ Model duyamaz; senkronu ve dengeyi **çözülmüş sesi ölçerek** kurar (Flore
 - Kontrol: MP4'ü tarayıcıda çöz, her vuruşu karesiyle hizala (ofset ms, vuruş başına).
 
 - Tek zaman çizelgesi (bölüm, tempo, vuruş) JSON'a çıkar; görüntü, müzik,
-  efekt ve kontrol betikleri aynı sayılardan okur. Görsel vuruş ile müzik
+  efekt ve kontrol script'leri aynı sayılardan okur. Görsel vuruş ile müzik
   işaretinin farkı 0 ms hedef.
 - `window.EV = [{ t, kind }]` → `film-video.mjs --events` olay dosyası → çevrimdışı miks.
 - Üç katman: ortam, foley, müzik; konuşma varsa konuşma müziğin 8–12 dB

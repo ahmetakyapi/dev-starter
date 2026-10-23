@@ -90,7 +90,7 @@ Bug'ı `knowledge/mistakes.md`'ye ekle:
 
 ### 7. Gate
 
-Gate Agent'a gönder — normal 6+1 pass kalite kontrolü uygulanır.
+Gate Agent'a gönder — normal 6+1 adımlı kalite kontrolü uygulanır.
 
 ---
 

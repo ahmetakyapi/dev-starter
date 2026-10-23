@@ -95,9 +95,9 @@ metin girişi taşmaz.
 Kural: her dikişte bir geçiş; filmin girişi ve çıkışı da. Düz kesme yalnız
 hareket üstünde ya da bilinçli şok kesme.
 
-## 5. Kanca, kafiye, doruk
+## 5. Hook, kafiye, doruk
 
-- **Kanca:** ilk 3 sn'de bir olay. Logo tek başına belirmez, bir olayın sonucu olarak gelir.
+- **Hook:** ilk 3 sn'de bir olay. Logo tek başına belirmez, bir olayın sonucu olarak gelir.
 - **Kafiye:** açılış motifinin değişmiş dönüşü (halka → zilin halkası; logo damgası → sembollü mühür).
 - **Doruktan önce durgunluk:** ≥ 0,3 sn her şey yavaşlar, kamera usulca iter; sonra doruk. Ses varsa gerçek sessizlik.
 - **Tek yerli hamle doruğa:** dikkat dağılmasın.
@@ -123,9 +123,9 @@ lemo-opuscar'ın en sık gördükleri (`DIRECTOR.md` § 10):
 - **Geçişlerde boş kare** — giden sahne geçişin altında çizilmeye devam eder
 - Kamera kıpırdayınca özneyi izlemeyen zamanlı efekt (iris, zoom, takip) — hepsi tek dünya → ekran fonksiyonundan
 
-## 7. Çok ajanlı yapım
+## 7. Çok agent'lı yapım
 
-Sahneler alt ajanlara paralel dağıtılıyorsa (PDoomVideo'nun dokuz bölümü,
+Sahneler subagent'lara paralel dağıtılıyorsa (PDoomVideo'nun dokuz bölümü,
 bir Opus + dokuz Sonnet örneği; kaynak: athemeroy/awesome-claude-5-5-videos
 `docs/workflow-analysis.md`, CC BY 4.0) iki şey ortaktır ve önce yazılır:
 

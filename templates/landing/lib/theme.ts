@@ -1,6 +1,6 @@
 /**
  * Tema tek kaynaktan: çerez. Sayfa yine STATİK (`○`): sunucu çerezi okumaz,
- * `<html data-theme>` varsayılanla basılır ve `<head>`deki küçük betik
+ * `<html data-theme>` varsayılanla basılır ve `<head>`deki küçük script
  * (`THEME_SCRIPT`) ilk boyamadan ÖNCE çerezdeki temayı yazar. İçeriği herkese
  * aynı olan bir tanıtım sayfasında kök layout'ta `cookies()` her ziyareti bir
  * fonksiyon çağrısına çevirir ve CDN önbelleğini kapatır; yanlış takas
@@ -24,7 +24,7 @@ export const PALETTE = "signature" as const;
 
 /**
  * Her temanın sayfa zemini, CSS'in okunamadığı yerler için (viewport
- * `themeColor`, onu güncelleyen betik ve ThemeToggle, manifest, paylaşım
+ * `themeColor`, onu güncelleyen script ve ThemeToggle, manifest, paylaşım
  * görseli). Kaynak `app/globals.css` → `--page-bg`; orada değişirse burada
  * da değişir.
  */
@@ -46,6 +46,6 @@ export function isTheme(value: unknown): value is Theme {
  * belge sırasındaki ilk metayı kullanır; ThemeToggle da ilkini günceller.
  * Tanımsız ya da bilinmeyen çerez varsayılana düşer; bir hata sayfanın geri
  * kalanını durdurmasın diye `try`. Sabitler buradan gömülür: üçüncü bir tema
- * (guides/03 § 5) betiğe de girer.
+ * (guides/03 § 5) script'e de girer.
  */
 export const THEME_SCRIPT = `(function(){try{var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(${THEMES.join("|")})(?:;|$)/);var t=m?m[1]:${JSON.stringify(DEFAULT_THEME)};document.documentElement.dataset.theme=t;if(t!==${JSON.stringify(DEFAULT_THEME)}){var e=document.createElement("meta");e.name="theme-color";e.content=${JSON.stringify(THEME_COLOR)}[t];document.head.prepend(e)}}catch(e){}})()`;

@@ -1,13 +1,13 @@
 /**
  * Karakter kiti — kodla çizilen bir karakterin kuklası (rig): görünüşler,
- * duygular, oynanan geçişler, el kancaları. Karakter "Mürekkep": yere
+ * duygular, oynanan geçişler, el hook'ları. Karakter "Mürekkep": yere
  * oturmuş, tepesi arkaya yatan bir mürekkep damlası; iki göz, kısa iki
  * kol, iki ayak. Kendi karakterini kurarken tabloları değiştir, mimariyi tut.
  *
  * Mimari: JohnHeibel/ClaudeAnimationBase `src/clawd.js` + `src/core.js`
  * (MIT © 2026 John Heibel) — çizilmiş görünüş tablosu + sekizde bire
  * oturan dönüş, veri olarak duygu tablosu, oynanan duygu geçişi, kol ucu
- * kancaları, parça başına kaynama tohumu. Oradaki maskotun görünüşü, rengi,
+ * hook'ları, parça başına kaynama tohumu. Oradaki maskotun görünüşü, rengi,
  * adı ve çizimleri ALINMADI; karakter, palet ve kod bizim.
  *
  * Her şey t'nin SAF fonksiyonu (Math.random / Date yok, kareden kareye durum
@@ -18,7 +18,7 @@
  *   EMO / feel                duygu = yüz + renk + kendi boşta hareketi
  *   emotions                  oynanan geçiş: kısılma → yüz değişimi → tepki → oturma → renk → işaret
  *   take                      tepki ezilmesi (hazırlık + sönen squash/stretch)
- *   drawCharacter             bir kare; armL/armR/draw kancaları
+ *   drawCharacter             bir kare; armL/armR/draw hook'ları
  *   handAt                    elin dünya konumu (atılan şey elden çıksın)
  */
 import { blot, boilFrame, brush, clamp, ease, noise1, segment, span, type Point } from "./ink-engine";
@@ -120,7 +120,7 @@ export type EyeKind = "normal" | "wide" | "happy" | "closed" | "narrow" | "sad" 
 export type MouthKind = "none" | "smile" | "frown" | "open" | "o" | "flat" | "wobble";
 /** Boyanmış tepki işaretleri — HARF DEĞİL. */
 export type EmoteKind = "bang" | "question" | "sweat" | "spark" | "heart" | "dots" | "cloud" | "sleep";
-/** Kancalar: kol ucunda kol uzayında (+x kol boyunca dışa), `draw` gövde uzayında. */
+/** Hook'lar: kol ucunda kol uzayında (+x kol boyunca dışa), `draw` gövde uzayında. */
 export type Hook = (ctx: Ctx, u: number, sw: number) => void;
 
 type PoseField = "dx" | "dy" | "sq" | "rot" | "aL" | "aR" | "lookX" | "lookY";

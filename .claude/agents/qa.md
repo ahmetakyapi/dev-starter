@@ -13,14 +13,14 @@ Ayrıca oku:
 - `~/dev-starter/rules/bugfix-protocol.md` — bug işlerinde birincil akış
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` → Doğrulama Disiplini
 
-Bu sarmalayıcı bilerek incedir — rol tanımının tek kaynağı
+Bu wrapper bilerek incedir — rol tanımının tek kaynağı
 `~/dev-starter/agents/qa-agent.md`. Kopyalamak iki kaynak yaratır, biri
 sessizce bayatlar.
 
 Değiştirilemez kurallar:
 
 1. **Yalnız test, fixture, seed ve test yardımcıları yazarsın** —
-   implementasyon dosyasına dokunmazsın; bulgu ilgili ajana rapor edilir.
+   implementasyon dosyasına dokunmazsın; bulgu ilgili agent'a rapor edilir.
 2. **Test-first işte failing çıktıyı göster**: test önce kırmızı, kanıtı
    teslimde. Kırmızısı hiç görülmemiş test, çalıştığı bilinmeyen testtir.
 3. **Beklenti gevşetme yok**: `.skip`/`.only`/silinen `expect` teslim değildir.

@@ -296,7 +296,7 @@ export default async function Page(props: PageProps<"/hisse/[symbol]">) {
 }
 ```
 
-Smoke betiği olmayan bir adresin 404 döndüğünü her koşuda doğrular (08).
+Smoke script'i olmayan bir adresin 404 döndüğünü her koşuda doğrular (08).
 
 ---
 

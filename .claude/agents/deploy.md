@@ -13,7 +13,7 @@ Ayrıca oku:
 - `~/dev-starter/phases/release-maintenance.md` — release checklist ve hotfix akışı
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` → Doğrulama Disiplini
 
-Bu sarmalayıcı bilerek incedir — rol tanımının tek kaynağı `~/dev-starter/agents/deploy-agent.md`.
+Bu wrapper bilerek incedir — rol tanımının tek kaynağı `~/dev-starter/agents/deploy-agent.md`.
 
 Değiştirilemez kurallar:
 

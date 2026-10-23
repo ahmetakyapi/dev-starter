@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  * Base UI Combobox: giriş `role="combobox"`, liste `listbox`, etkin öğe
  * `aria-activedescendant` ile (odak girişte kalır, yazmaya devam edilir),
  * ok tuşları, Enter ile seçim, Escape ile kapanma. Elle yazması en zor
- * kalıplardan biri; burada başsız kütüphane tartışmasız.
+ * kalıplardan biri; burada headless kütüphane tartışmasız.
  *
  * TÜRKÇE SÜZGEÇ: `locale="tr-TR"` karşılaştırmayı Türkçe yapar; "istanbul"
  * yazan "İstanbul"u, "ığdır" yazan "Iğdır"ı bulur. Varsayılan tarayıcının

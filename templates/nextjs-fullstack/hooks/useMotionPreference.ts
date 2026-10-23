@@ -16,7 +16,7 @@ const getServerSnapshot = () => false;
 
 /**
  * "Hareketi azalt" tercihi. Motion'ın `useReducedMotion`u değeri bağlanma
- * anında okur; bu kanca sayfa açıkken değişen tercihi de yakalar.
+ * anında okur; bu hook sayfa açıkken değişen tercihi de yakalar.
  */
 export function useMotionPreference(): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);

@@ -48,7 +48,7 @@
 
 ### Gate Durumları
 - `—` — Henüz Gate'e gönderilmedi
-- `PASSED` — 6+1 pass tamamlandı (rapor: `docs/gate/<story>.md`)
+- `PASSED` — 6+1 adım tamamlandı (rapor: `docs/gate/<story>.md`)
 - `PASSED_WITH_WARNINGS` — Uyarılarla geçti
 - `FAILED` — Düzeltme gerekiyor (bulgular story dosyasının GATE-LOG bölümünde)
 - `FIX_1` / `FIX_2` — Düzeltme döngüsünde
@@ -59,9 +59,9 @@
 ## Orkestrasyon Durumu
 
 > Yalnız BÜYÜK işlerde dolar (`phases/development.md`). Session resume bu
-> tablodan hangi alt ajanın ne beklediğini okur; sohbet geçmişine bağımlı kalmaz.
+> tablodan hangi subagent'ın ne beklediğini okur; sohbet geçmişine bağımlı kalmaz.
 
-| Alt Ajan | Görev (zarf özeti) | Beklenen Çıktı | Durum |
+| Subagent | Görev (görev tanımı özeti) | Beklenen Çıktı | Durum |
 |----------|--------------------|----------------|-------|
 | | | | |
 

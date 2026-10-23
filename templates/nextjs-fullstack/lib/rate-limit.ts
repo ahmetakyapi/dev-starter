@@ -3,7 +3,7 @@
  *
  * SINIRI: Vercel'de her sunucusuz örneğin kendi haritası var ve örnek
  * soğuyunca harita sıfırlanır. Yani bu bir GARANTİ değil, bir fren: "düğmeye
- * basılı tutma" ve döngüdeki basit betik vakalarını keser, Redis bağımlılığı
+ * basılı tutma" ve döngüdeki basit script vakalarını keser, Redis bağımlılığı
  * eklemeden. Tam olarak bir kez olması gereken işler (ödeme, ödül) veritabanı
  * düzeyinde koşullu UPDATE ile korunur; gerçek dağıtık sınır gerekiyorsa
  * Upstash gibi paylaşılan bir depoya taşı, imza aynı kalsın.

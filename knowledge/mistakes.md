@@ -844,7 +844,7 @@ bu suite eski kodda 3/9 başarısız veriyor.
 kurulu — ama PostCSS yapılandırması olmayınca **tek bir utility bile üretilmiyor**.
 Proje açılıyor, çalışıyor, sadece tamamen stilsiz.
 **Neden fark edilmedi**: `next build`, `tsc --noEmit` ve `next lint` ÜÇÜ DE yeşil
-verir. Bu sınıf hata hiçbir derleyici kapısına takılmaz.
+verir. Bu sınıf hata hiçbir derleyici kontrolüne takılmaz.
 (Aynı ders `templates/landing`'de öğrenilmiş — bkz. #28 — ama buraya taşınmamıştı.)
 **Çözüm**: Yapısal invaryant — `health-check.sh` artık şunu zorunlu kılıyor:
 bir template'in `globals.css`'i `@tailwind` içeriyorsa `postcss.config.*` VAR olmalı.
@@ -882,8 +882,8 @@ ne CI'da. health-check ise config dosyasının varlığını görüp ✅ diyordu
 İlk gerçek `npm run lint` koşusu 128 bulgu verdi.
 **Çözüm**: `|| true` kaldırıldı, bağımlılıklar eklendi ve **v9'a pinlendi**
 (`npx` 10.x çekiyordu; sürüm her koşuda değişince sonuç deterministik olmuyor).
-**Kural**: `|| true` taşıyan bir CI adımı dokümantasyondur, kapı değildir.
-Bir kapının kapı olduğunu, onu bilerek kırmızıya düşürerek kanıtla.
+**Kural**: `|| true` taşıyan bir CI adımı dokümantasyondur, kontrol değildir.
+Bir kontrolün gerçekten çalıştığını, onu bilerek kırmızıya düşürerek kanıtla.
 
 ### 56. Flat ESLint Config'te `dist/` İç İçe Dizinleri Kapsamaz
 **Hata**: `ignores: ['dist/']` yazıldı, ama flat config'te bu YALNIZCA kök seviyedeki
@@ -1380,7 +1380,7 @@ başlıklar ilk baytla 200 olarak gider, sonradan çağrılan `notFound()` durum
 kodunu değiştiremez.
 
 **Çözüm**: Segmentte `loading.tsx` yok; yavaş parça kendi `<Suspense>`inde.
-Smoke betiği olmayan adresin 404 döndüğünü her koşuda doğrular.
+Smoke script'i olmayan adresin 404 döndüğünü her koşuda doğrular.
 (`guides/06-nextjs-16.md` § 9)
 
 ### 80. `unstable_cache` İçinde Yakalanan Hata Önbelleğe Girer
@@ -1508,7 +1508,7 @@ ekrandayken sürüklenir. (Mimio)
 değişmiş gördüğü dosyanın ikinci kopyasını bıraktı. `.next/types` altındaki
 kopya TypeScript'e girdi.
 
-**Çözüm**: typecheck/build öncesi kopyaları silen betik + `.gitignore`
+**Çözüm**: typecheck/build öncesi kopyaları silen script + `.gitignore`
 deseni; kalıcısı: "Masaüstü ve Belgeler Klasörleri" eşitlemesini kapat.
 (Açılış Zili `scripts/clean-sync-dupes.mjs`)
 
@@ -1535,7 +1535,7 @@ herkesin kullanabileceği bir görsel vekiline döner.
 yapar.
 
 **Çözüm**: İçeriği kullanıcıya göre değişmeyen sitede tema `<head>`'deki
-küçük bir betikle çerezden okunur, layout statik kalır (bkz.
+küçük bir script'le çerezden okunur, layout statik kalır (bkz.
 `guides/03-theming.md` § 2b). Proje: ahmetakyapi.com, 3 Ekim 2026.
 
 ---
@@ -1700,12 +1700,12 @@ eklenen bir değişken önce yanlış sekmeye (Secrets ↔ Variables) gitti ve i
 akışında "tanımsız" göründü.
 
 **Çözüm**: Tek yazma yolu — GitHub Secrets/Variables → deploy (ya da
-"Sync App Env") → izin listeli betik satırları temiz biçimde yeniden yazar
+"Sync App Env") → izin listeli script satırları temiz biçimde yeniden yazar
 (`export`li ve tekrarlı satırlar dahil), servisi yeniden başlatır. Aynı
 koşumdan sonra `/sifremi-unuttum` 200 döndü, canlı formla gönderilen
 sıfırlama postası Gmail'e ulaştı.
 
-**Kural**: Sunucu ortamı elle düzenlenmez; değerler tek yerden, betikle ve
+**Kural**: Sunucu ortamı elle düzenlenmez; değerler tek yerden, script'le ve
 biçim denetimiyle yazılır, tanımsız olan sunucudakine dokunmaz. Her özellik
 dışarıdan görünen bir "açık mı" işareti taşır ve deploy sonrası o işarete
 bakılır. Servisin gördüğü değişken ADLARI değer basılmadan

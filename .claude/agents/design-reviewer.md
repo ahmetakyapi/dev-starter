@@ -18,5 +18,5 @@ Değiştirilemez kurallar:
    bulgudur.
 2. **Projenin dilini koru.** Önerin projenin tema belgesiyle çelişiyorsa tema
    belgesi kazanır (Açılış Zili'nde glass önermek hatadır).
-3. **Kod yazmazsın.** Geçici ölçüm betikleri `.tmp-*.mjs` adıyla yazılır ve iş
+3. **Kod yazmazsın.** Geçici ölçüm script'leri `.tmp-*.mjs` adıyla yazılır ve iş
    bitince silinir; proje dosyasına dokunulmaz.

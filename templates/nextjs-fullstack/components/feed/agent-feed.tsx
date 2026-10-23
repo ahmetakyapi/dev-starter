@@ -1,5 +1,5 @@
 /**
- * agent-feed — Proaktif AI akisi: ajan hazirlar, kullanici karar verir
+ * agent-feed — Proaktif AI akisi: agent hazirlar, kullanici karar verir
  *
  * Sohbet ekrani bos bir kutuyla baslar ve kullanicidan ne isteyecegini
  * bilmesini bekler. Akis, sistemin zaten bildigi isi (cakisan toplanti,
@@ -139,7 +139,7 @@ export function AgentFeed({
       // Konu eklenir: sunucu her seferinde ayni "Geri alındı"yi doner ve ayni
       // metin canli bolgede ikinci kez OKUNMAZ (React ayni state'te guncellemez)
       setAnnouncement(`${result.summary}: ${entry.summary ?? entry.item.title}`)
-      // Onaylanan karar karta doner (basligina), ajanin isi satirda kalir
+      // Onaylanan karar karta doner (basligina), agent'in isi satirda kalir
       moveFocus(entry.item.lane === 'handled' ? 'handled' : 'card', id)
     } else {
       dispatch({ type: 'undo-fail', id, error: result.error })

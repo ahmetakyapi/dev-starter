@@ -13,7 +13,7 @@
 Subagent çıktısı DOSYAYA yazılır (`AGENT_PROTOCOL.md → Çıktı Adresleri`);
 ana oturuma yalnız **yol + üç satır özet** döner. Rapor/kod gövdesini sohbete
 yapıştırmak iki kez ödetir: önce üretirken, sonra her compaction'da.
-Görev zarfının `oku:` alanı da aynı ilkeyle doldurulur: belge değil, belgenin
+Görev tanımının `oku:` alanı da aynı ilkeyle doldurulur: belge değil, belgenin
 İLGİLİ BÖLÜMÜNÜN adresi.
 
 ---
@@ -136,12 +136,12 @@ Görev zarfının `oku:` alanı da aynı ilkeyle doldurulur: belge değil, belge
 
 ## Context Verme Tekniği
 
-Kayıtlı subagent'a görev verirken bağlam **Görev Zarfı'nın `oku:` alanıdır**
+Kayıtlı subagent'a görev verirken bağlam **Görev Tanımı'nın `oku:` alanıdır**
 (`AGENT_PROTOCOL.md → Orkestrasyon`); belge değil, belgenin ilgili bölümünün
 adresi verilir:
 
 ```text
-GOREV_ZARFI
+GOREV_TANIMI
   to:    FE
   task:  Dashboard chart bileşeni implementasyonu
   oku:
@@ -159,5 +159,5 @@ GOREV_ZARFI
 ## Token Bütçesi Rehberi
 
 Bütçelerin tek kaynağı `agents/AGENT_PROTOCOL.md → Context Curation`
-tablosudur (12 ajanın tamamı, seviye + max token). Burada kopyası tutulmaz —
+tablosudur (12 agent'ın tamamı, seviye + max token). Burada kopyası tutulmaz —
 iki tablo ayrışınca biri sessizce bayatlıyordu.

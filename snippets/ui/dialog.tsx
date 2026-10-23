@@ -5,7 +5,7 @@ import { useEffect, useId, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Diyalog: yerel `<dialog>` + `showModal()`. Başsız kütüphane GEREKMİYOR,
+ * Diyalog: yerel `<dialog>` + `showModal()`. Headless kütüphane GEREKMİYOR,
  * çünkü tarayıcı en zor üç işi kendisi yapıyor:
  *   - odak tuzağı: modal açıkken sayfanın geri kalanı `inert` (Tab dışarı
  *     kaçmaz, ekran okuyucu arkadaki içeriği okumaz);

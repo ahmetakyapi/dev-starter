@@ -1,14 +1,14 @@
 # machine/ — Yeni Makinede Claude Code Ortamı
 
 Bu klasör, Claude Code'un kişisel ortamını (global kurallar, komutlar, alt
-ajanlar, skill'ler) tek bir depodan kurmak için var. Amaç: yeni bir makinede
+agent'lar, skill'ler) tek bir depodan kurmak için var. Amaç: yeni bir makinede
 yarım saatte aynı çalışma düzenine dönmek ve iki makine arasında kuralların
 **ayrışmaması**.
 
 | Dosya | Ne |
 |-------|----|
 | `CLAUDE.md` | Global kurallar; `~/.claude/CLAUDE.md` buna symlink'lenir. **Tek kaynak burası** |
-| `bootstrap.sh` | Kurulum betiği; tekrar çalıştırmak güvenli |
+| `bootstrap.sh` | Kurulum script'i; tekrar çalıştırmak güvenli |
 | `skills/` | Depoda taşınan skill'ler (bugün: `motion-design`, `motion-film`) |
 
 > Global `CLAUDE.md`yi düzenlerken `~/.claude/CLAUDE.md`yi değil bu dosyayı
@@ -30,9 +30,9 @@ Sırayla:
 4. **Komutlar** — `.claude/commands/*.md` her biri `~/.claude/commands/`a
    symlink. `/kickoff`, `/new-project`, `/theme`, `/check`, `/deploy`... her
    projede bu sürümler çalışır.
-5. **Alt ajanlar** — `.claude/agents/*.md` → `~/.claude/agents/` (`gate`,
+5. **Subagent'lar** — `.claude/agents/*.md` → `~/.claude/agents/` (`gate`,
    `deploy`, `strategist`, `design-reviewer`, `content-editor`, `frontend`,
-   `backend`, `qa`, `researcher`). Sarmalayıcılar ince; rol tanımlarını
+   `backend`, `qa`, `researcher`). wrapper'lar ince; rol tanımlarını
    `~/dev-starter/agents/` altından okurlar.
 6. **Depodaki skill'ler** — `machine/skills/*` → `~/.claude/skills/`.
 7. **taste-skill** — `npx skills add Leonxlnx/taste-skill -g` yalnızca
@@ -131,7 +131,7 @@ Paketin geri kalanı (`gpt-taste` GSAP dayatıyordu; `design-taste-frontend-v1`
 eski sürüm; `stitch-design-taste`, `image-to-code`, `industrial-brutalist-ui`,
 `full-output-enforcement` hiç çağrılmadı) 3 Ekim 2026'da kaldırıldı. impeccable
 eklentisi de aynı gün kaldırıldı; yerini rehberler ve `design-reviewer` alt
-ajanı aldı.
+agent'ı aldı.
 
 **Depodan:** `motion-design` ve `motion-film` (`machine/skills/`). **Dış depodan:**
 `anatomy` (wheresryan22/anatomy, MIT; izometrik açıklayıcı figür, WebGL, 3D —
@@ -158,11 +158,11 @@ brew tap manaflow-ai/cmux
 brew install --cask cmux
 ```
 
-- **Ne kazandırır:** ajan bekleyince panel mavi halka alır, kenar çubuğunda
+- **Ne kazandırır:** agent bekleyince panel mavi halka alır, kenar çubuğunda
   okunmamış rozeti çıkar; her çalışma alanında git dalı, port ve son
-  bildirim görünür. Uygulama içi tarayıcıyı ajan kullanabilir (dev
+  bildirim görünür. Uygulama içi tarayıcıyı agent kullanabilir (dev
   sunucusuna bakmak, tıklamak) — `design-reviewer` ve `/reference`
-  işlerinde başsız Chrome'a ek bir yol; o yol kalkmaz.
+  işlerinde headless Chrome'a ek bir yol; o yol kalkmaz.
 - **Dikkat:** `cmux hooks setup` Claude Code'a kendi hook'larını ekler.
   Çalıştırdıktan sonra `~/.claude/settings.json`a bak ve bir projede
   commit deneyip gate-guard ile quality-scan'ın hâlâ tetiklendiğini gör.
@@ -176,7 +176,7 @@ brew install --cask cmux
 - Yeni bir global komut: `.claude/commands/<ad>.md` ekle, `bootstrap.sh`yi
   yeniden çalıştır. Komut başka projeden çağrılacağı için içindeki yollar
   `~/dev-starter/...` biçiminde mutlak olmalı.
-- Yeni bir alt ajan: `.claude/agents/<ad>.md` (ince sarmalayıcı) +
+- Yeni bir subagent: `.claude/agents/<ad>.md` (ince wrapper) +
   `agents/<ad>-agent.md` (rol tanımı).
 - Yeni bir skill'i depoda taşımak: `machine/skills/<ad>/` altına koy.
 - taste-skill listesine ekleme: `TASTE_SKILLS` değişkeni ve bu tablo birlikte.

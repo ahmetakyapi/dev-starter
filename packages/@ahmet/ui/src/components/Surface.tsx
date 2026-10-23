@@ -22,7 +22,7 @@ type MotionConflicts = 'onAnimationStart' | 'onDrag' | 'onDragStart' | 'onDragEn
 /**
  * `div`in kendi öznitelikleri (`id`, `role`, `aria-*`, `data-*`, `ref`,
  * olay işleyicileri) olduğu gibi geçer: bölge ya da etiket için ek
- * sarmalayıcı gerekmez. `style` ve fare işleyicileri eğimle birleşir.
+ * wrapper gerekmez. `style` ve fare işleyicileri eğimle birleşir.
  */
 export type SurfaceProps = Omit<React.ComponentProps<'div'>, 'children' | MotionConflicts> & {
   children: React.ReactNode

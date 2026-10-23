@@ -76,7 +76,7 @@ const STRUCTURED_DATA = {
 
 /*
  * Layout async DEĞİL ve `cookies()` okumaz: sayfa statik (`○`), CDN'den
- * gelir. Tema varsayılanla basılır; `<head>`deki betik ilk boyamadan önce
+ * gelir. Tema varsayılanla basılır; `<head>`deki script ilk boyamadan önce
  * çerezdeki temayı yazar (lib/theme.ts → THEME_SCRIPT, guides/03 § 2b).
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -85,7 +85,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="tr"
       data-theme={DEFAULT_THEME}
       data-palette={PALETTE}
-      // Betik özniteliği hidrasyondan önce, düğme sonra değiştirir; sunucu
+      // Script özniteliği hidrasyondan önce, düğme sonra değiştirir; sunucu
       // HTML'iyle aradaki bu farkı React raporlamasın.
       suppressHydrationWarning
       // `iso`: anatomy figür kitinin token kapsamı. Kit `.iso[data-theme="light"]`

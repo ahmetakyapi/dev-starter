@@ -7,7 +7,7 @@ argument-hint: "[dosya veya dizin]"
 her projeden cagrilabilir; kurallar `~/dev-starter/guides/` altinda. Projenin
 kendi `THEME.md` / `knowledge/themes/<proje>.md` dosyasi varsa o ONCE gelir.
 
-Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` alt ajanini oner.
+Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` subagent'ini oner.
 
 ## Kontrol listesi
 

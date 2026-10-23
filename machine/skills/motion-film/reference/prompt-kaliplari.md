@@ -1,4 +1,4 @@
-# Prompt kalıpları — bir ajana film yaptırırken
+# Prompt kalıpları — bir agent'a film yaptırırken
 
 prompt-motion.com ve awesome-opus5-5-videos'taki yüzlerce prompt'un iyi
 çalışanlarının ortak yapısı. Kısa "showreel yap, sınırlarını zorla" prompt'u
@@ -211,7 +211,7 @@ denemelerin ve modelin kendi içinde reddettiği ara sonuçların üstünde duru
 | Sayı | Ne |
 |------|----|
 | İnsan prompt'u | kullanıcının yazdığı mesaj sayısı (ilk istek + takipler) |
-| İç geçişler | modelin ya da alt ajanların kendi render → bak → düzelt turları, jüri turları |
+| İç geçişler | modelin ya da subagent'ların kendi render → bak → düzelt turları, jüri turları |
 | Kabule kadar süre | ilk istekten kabul edilen sürüme duvar saati; ilk taslak süresi ayrı |
 
 Maliyet ve render süresi örnekleri **yaratıcının beyanıdır, doğrulanmamıştır**:

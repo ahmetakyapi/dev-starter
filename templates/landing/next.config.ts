@@ -6,7 +6,7 @@ import { assertSiteUrlForBuild } from "./lib/env";
 /**
  * Güvenlik başlıkları: "kırılma riski sıfıra yakın, faydası somut" kümesi.
  *
- * TAM CSP BİLİNÇLİ OLARAK YOK. Next'in satır içi önyükleme betiği ve satır
+ * TAM CSP BİLİNÇLİ OLARAK YOK. Next'in satır içi önyükleme script'i ve satır
  * içi stiller `unsafe-inline` ister; o da CSP'nin XSS'e karşı faydasının
  * çoğunu götürür. Doğru CSP nonce tabanlıdır ve her sayfayı dinamik çizime
  * zorlar; ayrı bir karar. Yarım yapılmış hâli yanlış bir güvenlik hissi verir.

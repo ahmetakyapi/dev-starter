@@ -6,7 +6,7 @@ import { useFinePointer } from "@/hooks/useFinePointer";
 import { useMotionPreference } from "@/hooks/useMotionPreference";
 
 /**
- * İmlece doğru hafifçe çekilen sarmalayıcı: birincil eylemi "dokunulabilir"
+ * İmlece doğru hafifçe çekilen wrapper: birincil eylemi "dokunulabilir"
  * gösterir. Konum motion value'da, React durumunda DEĞİL; fare her
  * kıpırdadığında ağaç yeniden çizilmez.
  *

@@ -2,7 +2,7 @@
 
 Bu, Ahmet'in kişisel geliştirme ekosistemi. Yeni proje başlatmak, tema uygulamak veya deploy etmek için buradan başla.
 
-**Versiyon**: 3.0.0 (+ yayınlanmamış: orkestrasyon) — Next 16 · React 19.2 · Tailwind v4 · `motion/react` · Drizzle + Neon · next-auth v5 · gerçek alt ajan orkestrasyonu (9 kayıtlı subagent, Görev Zarfı, dalga planı)
+**Versiyon**: 3.0.0 (+ yayınlanmamış: orkestrasyon) — Next 16 · React 19.2 · Tailwind v4 · `motion/react` · Drizzle + Neon · next-auth v5 · gerçek subagent orkestrasyonu (9 kayıtlı subagent, Görev Tanımı, dalga planı)
 
 Projeye başlarken sırayla izlenecek rehber: `guides/` (00 kimlik → 01 ilk gün → 08 yayına çıkış).
 Global kuralların tek kaynağı: `machine/CLAUDE.md` (`~/.claude/CLAUDE.md` ona symlink).
@@ -22,7 +22,7 @@ dev-starter/
 │   ├── 05-components.md       → Şablon bileşenleri, ekran düzeni sırası, durumlar, Title Case
 │   ├── 06-nextjs-16.md        → proxy.ts, async API, PageProps, önbellek, soft 404, formlar
 │   ├── 07-data-auth-security.md → Neon/Drizzle, migration, next-auth, checkBearer, başlıklar
-│   ├── 08-quality-and-ship.md → Commit kapısı, smoke, CWV, a11y, veri dürüstlüğü, deploy
+│   ├── 08-quality-and-ship.md → Commit kontrolü, smoke, CWV, a11y, veri dürüstlüğü, deploy
 │   ├── 09-typography.md       → Font preset'leri (snippets/fonts/fonts.ts)
 │   ├── 10-component-library.md → snippets/ui/ kopyala-yapıştır kütüphanesi
 │   └── 11-vps-email-push.md   → VPS deploy, env senkronu (GitHub → sunucu), SEO açılışı, Resend, Web Push
@@ -30,7 +30,7 @@ dev-starter/
 ├── machine/
 │   ├── CLAUDE.md              → Global kurallar (tek kaynak)
 │   ├── README.md              → Yeni makine kurulumu, taşınmayanlar, skill listesi
-│   ├── bootstrap.sh           → Komut/ajan/skill symlink'leri + taste-skill kurulumu
+│   ├── bootstrap.sh           → Komut/agent/skill symlink'leri + taste-skill kurulumu
 │   └── skills/                → Depoda taşınan skill'ler
 │       ├── motion-design/     → UI hareketi: zamanlama, easing, koreografi (LottieFiles, MIT)
 │       └── motion-film/       → Kodla hareket filmi: yönetmenlik, kamera, mürekkep, ses, MP4
@@ -49,7 +49,7 @@ dev-starter/
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
 │
 ├── agents/                    → 12 rol tanımı + AGENT_PROTOCOL.md
-│   ├── AGENT_PROTOCOL.md      → Haberleşme, orkestrasyon (Görev Zarfı), context curation, hook'lar
+│   ├── AGENT_PROTOCOL.md      → Haberleşme, orkestrasyon (Görev Tanımı), context curation, hook'lar
 │   ├── strategist-agent.md    → Fikirden plana, yol haritası, teknoloji kararı
 │   ├── business-analyst-agent.md → Planlama, onay, orkestrasyon, ROUTEMAP
 │   ├── uiux-agent.md          → Tasarım ve hareket kararları
@@ -60,7 +60,7 @@ dev-starter/
 │   ├── qa-agent.md            → Test stratejisi, test-first, regression
 │   ├── researcher-agent.md    → Benzer çözümler, kütüphane seçimi (kaynaklı)
 │   ├── content-editor-agent.md → Türkçe metin editörlüğü
-│   ├── gate-agent.md          → 6+1 geçişli kalite denetimi (rapor: docs/gate/)
+│   ├── gate-agent.md          → 6+1 adımlı kalite denetimi (rapor: docs/gate/)
 │   └── deploy-agent.md        → Vercel deployment ve yayın
 │
 ├── rules/                     → 9 kural dosyası (aşağıdaki tablo)
@@ -89,7 +89,7 @@ dev-starter/
 ├── .claude/
 │   ├── settings.json          → Hook entegrasyonu (paylaşılan, versiyonlanır)
 │   ├── commands/              → 19 komut — bootstrap ile ~/.claude/commands'a symlink
-│   ├── agents/                → 9 alt ajan sarmalayıcısı — ~/.claude/agents'a symlink
+│   ├── agents/                → 9 subagent wrapper'ı — ~/.claude/agents'a symlink
 │   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
 │
 ├── templates/
@@ -118,7 +118,7 @@ KICKOFF  →  PLANNING (P1→P6)  →  DEVELOPMENT  →  E2E & POLISH (E0→E5) 
 
 ### Kickoff (`/kickoff`, `agents/strategist-agent.md`)
 
-Fikir → pazar taraması, yön seçenekleri, palet ve teknoloji kararları, MVP.
+Fikir → pazar araştırması, yön seçenekleri, palet ve teknoloji kararları, MVP.
 Çıktı `docs/KICKOFF.md` + taslak `docs/PRODUCT.md`; onaylanınca `/new-project`.
 
 ### Planning (`phases/planning.md`)
@@ -136,8 +136,8 @@ Fikir → pazar taraması, yön seçenekleri, palet ve teknoloji kararları, MVP
 
 ### Development (`phases/development.md`)
 
-Fazın playbook'u: iş boyu (KÜÇÜK/ORTA/BÜYÜK), story seçimi, alt ajanlara
-dalga planıyla dağıtım (Görev Zarfı), Gate döngüsü ve eskalasyon. Tek
+Fazın playbook'u: iş boyu (KÜÇÜK/ORTA/BÜYÜK), story seçimi, subagent'lara
+dalga planıyla dağıtım (Görev Tanımı), Gate döngüsü ve eskalasyon. Tek
 story'nin iç akışı `rules/dev-cycle.md`:
 
 ```text
@@ -194,11 +194,11 @@ gününden denetimli doğar, kopya yok (tek kaynak).
 bash scripts/health-check.sh   # veya: npm run health
 ```
 
-15 kategori, 130+ kontrol: ajan dosyaları, kurallar, fazlar, hook'lar (davranış
+15 kategori, 130+ kontrol: agent dosyaları, kurallar, fazlar, hook'lar (davranış
 testiyle), snippet'ler, şablonlar (hook kaydı dahil), knowledge base, paket
 tutarlılığı, token ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade,
 palet dışı renk), tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy,
-motion), orkestrasyon bütünlüğü (sarmalayıcı ↔ rol ↔ protokol, komut ↔ tablo)
+motion), orkestrasyon bütünlüğü (wrapper ↔ rol ↔ protokol, komut ↔ tablo)
 ve bilgi tabanı bütünlüğü (mistakes numaraları, indeks kapsamı, satır tavanları).
 
 Agentic snippet ve şablonların **derlenip test edildiğini** kanıtlamak ayrı
@@ -251,9 +251,9 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 | `/new-project [ad]` | Şablon + yer tutucular + palet/tema + belgeler + hook doğrulama | `.claude/commands/new-project.md` |
 | `/plan [adım]` | Planning fazını yürüt (P1→P6): belgeler + story'ler | `.claude/commands/plan.md` |
 | `/story [id]` | Story'yi uçtan uca işle: dağıt → Gate → commit → ROUTEMAP | `.claude/commands/story.md` |
-| `/gate [story]` | 6+1 pass denetim; sonuç ROUTEMAP Gate kolonuna — commit kapısı | `.claude/commands/gate.md` |
+| `/gate [story]` | 6+1 adımlı denetim; sonuç ROUTEMAP Gate kolonuna — commit kontrolü | `.claude/commands/gate.md` |
 | `/fix [tarif]` | Bugfix protokolü: triage → failing test → fix → kayıt | `.claude/commands/fix.md` |
-| `/research [konu]` | Benzer çözümler taraması (researcher) → docs/research/ | `.claude/commands/research.md` |
+| `/research [konu]` | Benzer çözümlerin araştırması (researcher) → docs/research/ | `.claude/commands/research.md` |
 | `/status` | Kaldığın yer + sıradaki en değerli 3 iş | `.claude/commands/status.md` |
 | `/retro [kapsam]` | Dersleri onayla bilgi tabanına işle | `.claude/commands/retro.md` |
 | `/evolve [odak]` | Ekosistemin kendi gelişim turu: sağlık + tazelik + dış tarama | `.claude/commands/evolve.md` |
@@ -276,12 +276,12 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 
 Karar rolleri (BA, UI, AG) ana oturumun **üstlendiği rol tanımlarıdır** —
 bağlamın tamamını görmeleri gerekir. Uygulayıcı ve denetleyici dokuz rol,
-izolasyondan gerçekten fayda gördüğü için kayıtlı alt ajandır ve bootstrap
+izolasyondan gerçekten fayda gördüğü için kayıtlı subagent'tır ve bootstrap
 ile `~/.claude/agents/`a symlink'lenir (her projede kullanılabilir). Dağıtım
-kuralları: `agents/AGENT_PROTOCOL.md → Orkestrasyon` (Görev Zarfı, efor
+kuralları: `agents/AGENT_PROTOCOL.md → Orkestrasyon` (Görev Tanımı, efor
 ölçekleme, referansla aktarım):
 
-| Subagent | Sarmalayıcı | Rol tanımı |
+| Subagent | wrapper | Rol tanımı |
 |----------|-------------|------------|
 | `strategist` | `.claude/agents/strategist.md` | `agents/strategist-agent.md` |
 | `gate` | `.claude/agents/gate.md` | `agents/gate-agent.md` |
@@ -293,7 +293,7 @@ kuralları: `agents/AGENT_PROTOCOL.md → Orkestrasyon` (Görev Zarfı, efor
 | `qa` | `.claude/agents/qa.md` | `agents/qa-agent.md` |
 | `researcher` | `.claude/agents/researcher.md` | `agents/researcher-agent.md` |
 
-Sarmalayıcılar bilerek incedir; rol tanımını kopyalamazlar ve onu
+wrapper'lar bilerek incedir; rol tanımını kopyalamazlar ve onu
 `~/dev-starter/agents/...` mutlak yoluyla okurlar. İki kaynak olursa biri
 sessizce bayatlar — bu denetimin en sık bulduğu hata sınıfı buydu.
 
@@ -338,7 +338,7 @@ Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet dön
 ```text
 /status                → kaldığın yer + sıradaki 3 iş
 /story STORY-004       → story'yi uçtan uca işle (dağıt → gate → commit)
-/gate                  → commit kapısını aç
+/gate                  → commit'e izin ver
 /fix "panel boş geliyor"  → TDD bugfix
 /research "takvim senkronu" → benzer çözümler + öneri
 /retro                 → dersleri bilgi tabanına işle
@@ -463,14 +463,14 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 | `routemap-discipline.md` | ROUTEMAP tek kaynak, session resume, durum geçişleri |
 | `context-curation.md` | Agent bazlı filtered context, token bütçesi, referansla aktarım |
 | `agentic-ui.md` | LLM tool çağırıyorsa: guardrail sunucuda, model yetkilendirmez, sandbox, token bütçesi, tool testi |
-| `self-improvement.md` | Öğrenme kanalları, onay ilkesi (ajan taslak önerir, onaysız yazamaz), terfi merdiveni, boy tavanları |
+| `self-improvement.md` | Öğrenme kanalları, onay ilkesi (agent taslak önerir, onaysız yazamaz), terfi merdiveni, boy tavanları |
 
 ---
 
 ## Bu Dosyaları Güncelleme
 
 - **Yeni hata keşfedilince**: `knowledge/mistakes.md` + o hatayı bir daha yaşatmayacak adım ilgili `guides/` dosyasına
-- **Sayı değişince** (rehber, bileşen, ajan, komut ya da mistakes kaydı eklenince/silinince): `npm run readme:assets` —
+- **Sayı değişince** (rehber, bileşen, agent, komut ya da mistakes kaydı eklenince/silinince): `npm run readme:assets` —
   README istatistik görselleri bu sayıları basar; unutulursa CI `verify:readme`de kırılır (health-check de yakalar)
 - **Yeni proje tamamlanınca**: `knowledge/themes/[proje].md` doldur — şablon:
   `templates/docs/DESIGN.template.md` (YAML frontmatter token şeması + 9 bölümlük görsel hafıza);
@@ -482,7 +482,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 - **Yeni faz eklenince**: `phases/` altında dosya
 - **Yeni hook eklenince**: `hooks/` altında script, **`.claude/settings.json`**'a kayıt, `scripts/test-hooks.sh`'e davranış testi
 - **Yeni komut eklenince**: `.claude/commands/` altında `.md` — yollar `~/dev-starter/...` mutlak; `bash machine/bootstrap.sh`
-- **Yeni alt ajan eklenince**: `.claude/agents/[ad].md` (ince) + `agents/[ad]-agent.md`
+- **Yeni subagent eklenince**: `.claude/agents/[ad].md` (ince) + `agents/[ad]-agent.md`
 - **Yeni snippet eklenince**: `snippets/` altında, `guides/05-components.md` ya da `10-component-library.md` kataloğuna
 - **İki Next şablonuna ortak dosya eklenince**: `scripts/health-check.sh` → `SHARED_TEMPLATE_FILES` (bayt bayt aynılık `cmp` ile denetlenir; biri düzelip öteki bayatlamasın)
 - **Global kural değişince**: `machine/CLAUDE.md` (symlink hedefi)

@@ -135,7 +135,7 @@ sayfayı sunucuda yeniden çizer ve ön yükleme önbelleğini boşaltır
 `themeColor` `generateViewport` içinde çerezden. Tam desen, view transition
 ve gerekçe: `guides/03-theming.md`. Snippet: `snippets/theme-toggle.tsx`.
 İçeriği herkese aynı olan site (landing şablonu) bunun yerine statik sayfa +
-`<head>`de çerez betiği (`THEME_SCRIPT`, temayı ve `theme-color`ı yazar)
+`<head>`de çerez script'i (`THEME_SCRIPT`, temayı ve `theme-color`ı yazar)
 kullanır: kök layout'ta `cookies()` her rotayı `ƒ` yapar (`guides/03` § 2b,
 `mistakes.md #93`).
 
@@ -1010,7 +1010,7 @@ panelin biri ötekinin değişikliğini ezmez.
 `unstable_cache` içinde `try/catch` yok; sarmalayan fonksiyonda. Yoksa düşen
 veritabanının boş listesi saklanır. `guides/06-nextjs-16.md` § 7.
 
-### Smoke Betiği
+### Smoke Script'i
 Rota × 390/1280 × dil; HTTP kodu (soft 404), konsol hatası, yatay taşma.
 `guides/08-quality-and-ship.md` § 2.
 
@@ -1046,7 +1046,7 @@ almayan adres" + site/KVKK bağlantıları). Kurallar: tablo + satır içi
 stil; animasyon GIF (Gmail CSS animasyonunu siler); GIF zemini bantla aynı
 düz renk; `bgcolor` + degradeli kurşun geçirmez düğme; preheader; düz metin
 sürümü aynı sırada; `<style>` yalnız ilerleme (koyu tema, ışık,
-`prefers-reduced-motion`). GIF betikle: sharp ile SVG kareleri →
+`prefers-reduced-motion`). GIF script'le: sharp ile SVG kareleri →
 `sharp(frames, { join: { animated: true } }).gif({ delay, loop: 0 })`
 (`scripts/build-email-assets.mjs`). Rehber: `guides/11-vps-email-push.md § 5`.
 
@@ -1302,7 +1302,7 @@ type FrontendTool<T> = {
 
 ---
 
-### AI Feed — Ajan Hazırlar, Kullanıcı Karar Verir
+### AI Feed — Agent Hazırlar, Kullanıcı Karar Verir
 
 > Kaynak: Nicolas Bustamante, "the AI feed will be the form factor of 2027"
 > (X, Ekim 2026). Snippet: `snippets/agent-feed.tsx` + `agent-feed-core.ts`
@@ -1310,12 +1310,12 @@ type FrontendTool<T> = {
 > → `/akis` (şema, sunucu eylemleri, yetki kuralları + 17 test, geliştirmede
 > veritabanısız demo modu).
 
-**Sorun:** sohbet, kullanıcıdan emek ister: ajanın ne yapabildiğini keşfet,
+**Sorun:** sohbet, kullanıcıdan emek ister: agent'ın ne yapabildiğini keşfet,
 işi anlat, bağlamı ver, tekrarla. Çoğu insan ne yazacağını bilmez ve karmaşık
 bir iş akışına prompt yazarak varmaz. Akış bunu tersine çevirir: kullanıcıyı
 tanıyan sistem sıradaki yararlı işi **hazırlanmış** olarak getirir (cevap
 taslağı yazılmış e-posta, gönderilmeye hazır rakam özeti). Kullanıcı onaylar,
-düzenler, geçer ya da sohbete atlayıp derinleşir. Ajanın neler yapabildiğini
+düzenler, geçer ya da sohbete atlayıp derinleşir. Agent'ın neler yapabildiğini
 prompt icat etmeden böyle keşfeder.
 
 **Akış sohbetin yerine geçmez, girişidir.** Her kartta "Sohbette Aç" var:
@@ -1327,7 +1327,7 @@ kart bağlam olarak sohbete taşınır.
 |--------|----|---------|-------|
 | `needs-you` | Kullanıcının kararı olmadan ilerlemeyen iş | Kart = önden onay | Çakışan toplantı, gönderilecek taslak |
 | `suggestion` | Yapılsa iyi olur, yapılmasa bir şey bozulmaz | Tek tık + Şimdi Değil | Cuma odak bloğu |
-| `handled` | Ajanın kendisinin yaptığı **geri alınabilir** iş | Yap, göster, Geri Al | "Özeti ekibinle paylaştım" |
+| `handled` | Agent'ın kendisinin yaptığı **geri alınabilir** iş | Yap, göster, Geri Al | "Özeti ekibinle paylaştım" |
 
 Geri alınamaz iş (e-posta gönderimi) **asla** `handled`'a düşmez; kart
 "Bu işlem geri alınamaz" notunu taşır ve kullanıcı taslağın tamamını görüp basar.

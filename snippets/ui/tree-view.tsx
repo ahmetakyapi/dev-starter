@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Ağaç görünümü: WAI-ARIA "tree" kalıbı (klasör gezgini, kategori ağacı,
- * belge içindekiler). Başsız kütüphanelerin hiçbirinde sağlam bir ağaç
+ * belge içindekiler). Headless kütüphanelerin hiçbirinde sağlam bir ağaç
  * yok; kalıp burada elle ve tam yazıldı.
  *
  * ROLLER: `role="tree"` > `role="treeitem"` (aria-level, aria-setsize,

@@ -29,7 +29,7 @@ TASTE_SKILLS=(design-taste-frontend redesign-existing-projects high-end-visual-d
 # her gün değişiyor ve figür kiti şablonlara kopyalanıyor. Bu commit
 # `npm run verify:anatomy` ile iki şablonda derlenip lint/test'ten geçti.
 # Yükseltme: yeni SHA'yı yaz, önce verify:anatomy, sonra commit. Tek kaynak
-# burası; verify betiği SHA'yı bu satırdan okur.
+# burası; verify script'i SHA'yı bu satırdan okur.
 ANATOMY_REF="689dcf966e63d92be10a5d593c6e19e10acd4422"
 
 # Builtin eklentiler: pazar yeri gerekmez, yalnızca etkinleştirilir.
@@ -87,7 +87,7 @@ for f in "$REPO"/.claude/commands/*.md; do
   link "$f" "$CLAUDE_DIR/commands/$(basename "$f")"
 done
 
-echo "▸ Alt ajanlar (tek kaynak: .claude/agents)"
+echo "▸ Subagent'lar (tek kaynak: .claude/agents)"
 for f in "$REPO"/.claude/agents/*.md; do
   link "$f" "$CLAUDE_DIR/agents/$(basename "$f")"
 done
@@ -102,7 +102,7 @@ echo "▸ taste-skill"
 # `-s` virgüllü listeyi tek ad sanıyor ("No matching skills"); adlar ayrı argüman.
 # CLI sürümü SABİT: `npx -y skills` her koşuda en günceli indirip ÇALIŞTIRIR —
 # kurulan skill'ler her oturumda talimat olarak okunduğundan bu bir tedarik
-# zinciri kapısıdır. Yükseltme: sürümü bilerek değiştir, kurulumu gözden geçir.
+# zinciri kontrolüdür. Yükseltme: sürümü bilerek değiştir, kurulumu gözden geçir.
 # (Kaynak depo Leonxlnx/taste-skill hâlâ HEAD'den gelir; skills CLI'ı ref
 # pin'i desteklemiyor. Kalıcı çözüm anatomy gibi vendor'lamak — tech-radar.)
 SKILLS_CLI_VERSION="1.7.2"

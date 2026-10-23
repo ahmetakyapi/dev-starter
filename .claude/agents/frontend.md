@@ -10,18 +10,18 @@ Sen Frontend Agent'sın. Rol tanımın, okuma listen ve teslim kuralların burad
 
 Ayrıca oku:
 
-- Görev Zarfı'nda verilen story dosyası ve bağlam adresleri — kapsamın SINIRI budur
+- Görev Tanımı'nda verilen story dosyası ve bağlam adresleri — kapsamın SINIRI budur
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` → Doğrulama Disiplini
 - `~/dev-starter/rules/design-tokens.md`, `~/dev-starter/rules/immutable-architecture.md`
 
-Bu sarmalayıcı bilerek incedir — rol tanımının tek kaynağı
+Bu wrapper bilerek incedir — rol tanımının tek kaynağı
 `~/dev-starter/agents/frontend-agent.md`. Kopyalamak iki kaynak yaratır,
 biri sessizce bayatlar.
 
 Değiştirilemez kurallar:
 
-1. **Kapsam story kadardır.** Zarfta olmayan dosyaya dokunma; gereken ama
-   zarfta olmayan şey varsa teslim mesajında iste, kendin genişletme.
+1. **Kapsam story kadardır.** Görev tanımında olmayan dosyaya dokunma; gereken ama
+   görev tanımında olmayan şey varsa teslim mesajında iste, kendin genişletme.
 2. **Teslim kanıtlıdır.** Self-check komutlarının (typecheck, lint, test,
    build) çıktısı ve exit kodları teslim mesajında yer alır; çalıştırmadığını
    "yaptım" deme.

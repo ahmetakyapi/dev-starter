@@ -1,6 +1,6 @@
 # Gate Agent
 
-**Rol**: Senior Quality Engineer — Kod kalitesinin son kapısı. Her teslimattan önce 6+1 boyutlu doğrulama yapar; bulguyu kanıtla raporlar, düzeltme talimatı üretir.
+**Rol**: Senior Quality Engineer — Kod kalitesinin son kontrol noktası. Her teslimattan önce 6+1 boyutlu doğrulama yapar; bulguyu kanıtla raporlar, düzeltme talimatı üretir.
 
 > Bu agent **kod yazmaz, düzeltmez** — denetleyen, denetlediğini değiştirmez.
 > Her bulgu kanıt + somut düzeltme talimatıyla ilgili agent'a (FE/BE/QA) gider;
@@ -43,7 +43,7 @@ Bu agent çalışmadan önce şunları oku:
 - **→ BA Agent**: Gate raporu (PASSED/FAILED + detaylar)
 - **→ FE/BE Agent**: Bulgu + somut düzeltme talimatı (GATE-LOG üzerinden)
 
-Bu agent kayıtlı subagent'tır: iş ona **Görev Zarfı** ile gelir
+Bu agent kayıtlı subagent'tır: iş ona **Görev Tanımı** ile gelir
 (`AGENT_PROTOCOL.md → Orkestrasyon`); Standart Handoff yalnız ana oturum
 rolleri arasındadır.
 
@@ -150,7 +150,7 @@ grep -rn "from ['\"]framer-motion" app components                  # yeni projed
 
 - **Bulguları körü körüne düzeltme.** Kalıp taraması yanlış pozitif üretir ve
   kasıtlı kararları hata sanabilir. Her bulguyu oku, kasıtlıysa gerekçesini
-  rapora yaz. Ekranın kendisini ölçmek için `design-reviewer` alt ajanı.
+  rapora yaz. Ekranın kendisini ölçmek için `design-reviewer` subagent'ı.
 - **Glass yalnızca altından içerik geçen öğede**, degrade yalnızca üç yerde
   (display başlık, birincil eylem, marka karosu) — `guides/00-brand-identity.md`
 - **Reveal**: kahraman/LCP sarılı değil, reduced-motion'da `initial={false}` yok (`mistakes.md` #87)
@@ -214,7 +214,7 @@ Gate Agent sorun bulduğunda:
 **Sonucun kaydı**: rapor `docs/gate/<story>.md` dosyasına yazılır (bu dizin
 yoksa ana oturum oluşturur); PASSED/FAILED değerini ROUTEMAP'teki Gate
 kolonuna **ana oturum** işler. `hooks/gate-guard.sh` commit'i bu kayda göre
-açar — kayıt yazılmadan commit denemek kapıya takılır.
+açar — kayıt yazılmadan commit denemek kontrole takılır.
 
 ---
 

@@ -33,7 +33,7 @@ KICKOFF.md yoksa sor:
 
 Iki parca sablonla HAZIR gelir ya da tek komutla eklenir:
 
-- **AI akisi** (`nextjs-fullstack` icinde, `/akis`): ajan hazirlar, kullanici
+- **AI akisi** (`nextjs-fullstack` icinde, `/akis`): agent hazirlar, kullanici
   onaylar. Gelistirmede veritabanisiz demo moduyla acilir. Urunde akis yoksa
   sil: `app/akis/`, `components/feed/`, `lib/feed*.ts`, `tests/feed.test.ts`
   ve `lib/schema.ts` → `feedItems`. Karar: `/agentic feed`.

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
  * Açılır kutu: bir düğmeye bağlı, sayfayı kilitlemeyen küçük katman
  * (filtre seçenekleri, kısa açıklama, paylaşım bağlantısı).
  *
- * Başsız katman Base UI (`@base-ui/react`, kararı guides/10): konumlama
+ * Headless katman Base UI (`@base-ui/react`, kararı guides/10): konumlama
  * (Floating UI), dış tıklama ve Escape ile kapanma, odağın tetikleyiciye
  * dönmesi, `aria-expanded`/`aria-controls` bağları ondan. Biz yalnızca
  * görünüşü veriyoruz; görünüş token sınıfı.
@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
  *
  * Konum: Positioner `z-50` taşır. Sayfa kökünde `isolation: isolate` yoksa
  * başka bir yığın bağlamının altında kalabilir; kök layout'taki gövde
- * sarmalayıcısına `isolate` ver.
+ * wrapper'ına `isolate` ver.
  */
 
 export const Popover = Base.Root;

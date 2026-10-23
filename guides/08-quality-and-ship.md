@@ -21,7 +21,7 @@ Dördü de temiz olmadan commit yok. Görsel bir değişiklikse ayrıca tarayıc
 **ölçülmüş** olmalı: "sığıyor gibi duruyor" bir doğrulama değil.
 
 **Dört komut Gate'in ön koşuludur, yerine geçmez.** Aktif story'si olan
-projede commit kapısını `/gate` açar: 6+1 pass çalışır, sonuç ROUTEMAP'in
+projede commit iznini `/gate` açar: 6+1 adım çalışır, sonuç ROUTEMAP'in
 Gate kolonuna işlenir ve `hooks/gate-guard.sh` PASSED olmayan aktif story
 varken commit'i fiziksel olarak bloklar (şablonlar bu hook'la doğar —
 `templates/*/.claude/settings.json`). Yalnız doküman değiştiren commit'ler
@@ -42,14 +42,14 @@ test("Türkçe i büyür, I değil", () => {
 
 Neyi test et: saf fonksiyonlar (biçimlendirme, hesap, tarih/saat), zod
 şemaları, server action'ların karar dalları. Bileşen çizimi değil; onu
-smoke betiği yakalar.
+smoke script'i yakalar.
 
 ---
 
-## 2. Smoke Betiği
+## 2. Smoke Script'i
 
 Açılış Zili'nin `scripts/smoke.mjs`i her projeye uyarlanır. Çalışan bir
-kopyaya başsız Chrome ile gider, her rotayı iki genişlikte (390, 1280)
+kopyaya headless Chrome ile gider, her rotayı iki genişlikte (390, 1280)
 açar ve dört şey sorar:
 
 | Kontrol | Neden |
@@ -72,7 +72,7 @@ for (const route of ROUTES) for (const width of [390, 1280]) {
 
 - Yazma akışı (kayıt, giriş, silme) varsayılan kapalı, ayrı bir bayrakla
   (`SMOKE_ALLOW_WRITES=1`); kazara üretim adresinde koşmasın.
-- Geçici ölçüm betikleri `.tmp-*.mjs` adıyla, commit'lenmez. Kalıcı olanı
+- Geçici ölçüm script'leri `.tmp-*.mjs` adıyla, commit'lenmez. Kalıcı olanı
   `scripts/smoke.mjs`.
 
 ---
@@ -178,7 +178,7 @@ eşitlenmeyen bir klasörde tut.
 ```
 
 - [ ] Dört komut temiz (§ 1)
-- [ ] Smoke betiği yerelde temiz
+- [ ] Smoke script'i yerelde temiz
 - [ ] Yeni migration varsa **üretime uygulandı** (`npm run db:migrate`, üretim `DATABASE_URL`)
 - [ ] Yeni env Vercel'de, doğru ortamlarda
 - [ ] `git status` yalnızca amaçlanan dosyaları gösteriyor
