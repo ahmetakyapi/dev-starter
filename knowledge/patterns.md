@@ -265,6 +265,31 @@ import { modalBackdrop, modalPanel } from '@/lib/variants'
 </AnimatePresence>
 ```
 
+### Oynatma: Değer Işınlanmaz (Açılış Zili, Seans Zili)
+
+"Şunu göster" diyen düğme (seansı oynat, günü oynat) değeri hedefe koymaz, bir
+plan başlatır: önce olaysız **taşıma** (başlangıca, kısa yoldan), sonra olaylı
+**yürüyüş** (anlatılan süreç). Olay (zil, bildirim) değer bir işaretin üstünden
+ileri geçince tetiklenir; taşıma ve geri sarma olay üretmez. Bitince birkaç
+saniye beklenir, tek taşımayla "şimdi"ye dönülür. Üst bilgi hedefi değil değeri
+izler. Hareketi azaltana plan yok: değer doğrudan konur, olay yine söylenir.
+
+```ts
+import { carryLeg, walkLeg, planAt, crossings } from "./figure-kit" // motion-film/assets
+
+const start = day.preOpen - 20                              // olayın biraz önü
+const move = carryLeg(shown, start, { period: 1440 })       // zilsiz, kısa yoldan
+const shift = move.to - start                               // aynı turdan devam
+const legs = [move, walkLeg(start + shift, day.afterClose + shift, { perUnit: 0.006, max: 6.5 })]
+
+// her karede
+const at = planAt(legs, t)
+if (at.events) for (const hit of crossings(prev, at.value, [day.open, day.close], 1440)) ring(hit.index)
+```
+
+Kural ve ölçüler: `machine/skills/motion-film/reference/aciklayici-figur.md` → § 5 ve
+§ 9 "Seans Zili, üçüncü sürüm".
+
 ---
 
 ## SEO (Next.js App Router)

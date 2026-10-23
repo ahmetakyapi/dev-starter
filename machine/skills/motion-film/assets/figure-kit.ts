@@ -13,6 +13,9 @@
  *   settle           kritik sönümlü yay: aşmadan varır (renk, parlaklık, frekans)
  *   burst            tek seferlik olayın zarfı: atak + sönüm, pop yok
  *   idleTour         kimse dokunmazken senaryolu tur; dokununca durur, sessizlikte döner
+ *   carryLeg/walkLeg oynatma bacakları: ışınlanma yok, olaysız taşıma + olaylı yürüyüş
+ *   planAt           bacak listesinin t saniyedeki değeri (Günü Oynat, seans oynat)
+ *   crossings        ileri giderken geçilen işaretler (zil anı); geri sarmak olay değil
  *   quietAnnouncer   ekran okuyucuya yalnız durulunca, yalnız değişince söyle
  *   cueWindow        kaçırılan ses olaylarını üst üste çalmamak için aralık
  */
@@ -128,6 +131,92 @@ export function idleTour(o: { startAfter?: number; resumeAfter?: number; period:
     interrupt() { touring = false; touched = true; quiet = 0; },
     get touring() { return touring; },
   };
+}
+
+/* ----------------------------------------------------------------------- */
+/* Oynatma: ışınlanmayan değer                                               */
+/* ----------------------------------------------------------------------- */
+
+/*
+ * Açılış Zili → Seans Zili ("Günü Oynat", 12 Ekim 2026). Sahibinin itirazı:
+ * "tıkladığı gibi değişmesin, smooth olsun; zil çalmak ne işe yarıyor".
+ * Kural: düğme değeri HİÇBİR YERE KOYMAZ, bir PLAN başlatır. Plan bacaklardan
+ * oluşur; her bacak yumuşak başlar, yumuşak durur. İki tür bacak var:
+ *
+ *   taşıma (events: false)  değeri başlangıç noktasına götürür; yolda geçilen
+ *                           işaret OLAY DEĞİL (oraya gitmek zil anı değil)
+ *   yürüyüş (events: true)  anlatılan süreç; yolda geçilen işaret olayı
+ *                           tetikler (çan vurulur, bildirim çıkar)
+ *
+ * Başlangıç noktası anlatılan olayın biraz ÖNÜNDE seçilir (seans başı − 20
+ * dk): olay yürüyüşün ortasında yaşansın, ilk karede değil. Plan bitince
+ * birkaç saniye (4 sn) beklenir, sonra tek taşıma bacağıyla "şimdi"ye dönülür.
+ * Üst bilgi ve imler HEDEFİ değil DEĞERİ izler: saat yolda akar.
+ * Hareketi azaltana plan yok: değer doğrudan hedefe konur, olay yine bildirilir.
+ */
+
+export type Leg = { from: number; to: number; dur: number; events: boolean };
+
+const inOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
+const inOutSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
+const clampTo = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x));
+
+/** Bacağın `t` saniyedeki değeri. Taşıma kübik (çabuk varır), yürüyüş sinüs
+    (uçlarda yumuşak, ortada düz hız: süreç okunur). */
+export function legAt(leg: Leg, t: number) {
+  const p = clampTo(leg.dur > 0 ? t / leg.dur : 1, 0, 1);
+  return leg.from + (leg.to - leg.from) * (leg.events ? inOutSine(p) : inOutCubic(p));
+}
+
+/**
+ * Olaysız taşıma. `period` verilirse (24 saatlik kadran: 1440 dk) KISA YOLDAN
+ * gider ve gece yarısını geçebilir; dönen `to` o tur değeridir, sonraki
+ * bacak aynı turdan devam etmeli (`to - hedef` kadar kaydır). Süre mesafeyle
+ * 0,6–1,4 sn: kısa yol kısa sürer, uzun yol sürüklenmez.
+ */
+export function carryLeg(from: number, to: number, o: { period?: number; min?: number; max?: number } = {}): Leg {
+  const target = o.period ? to + Math.round((from - to) / o.period) * o.period : to;
+  const share = o.period ? Math.abs(target - from) / o.period : Math.min(1, Math.abs(target - from));
+  return { from, to: target, dur: clampTo(0.5 + share * 2.4, o.min ?? 0.6, o.max ?? 1.4), events: false };
+}
+
+/** Olaylı yürüyüş. Süre anlatılan aralığın uzunluğuyla büyür (`perUnit` sn/birim), 2–`max` sn. */
+export function walkLeg(from: number, to: number, o: { perUnit: number; max?: number; min?: number }): Leg {
+  return { from, to, dur: clampTo(1.4 + Math.abs(to - from) * o.perUnit, o.min ?? 2, o.max ?? 4.2), events: true };
+}
+
+/** Planın `t` saniyedeki durumu: değer, hangi bacak, olaylar açık mı, bitti mi. */
+export function planAt(legs: readonly Leg[], t: number) {
+  let rest = t;
+  for (let index = 0; index < legs.length; index++) {
+    const leg = legs[index];
+    const last = index === legs.length - 1;
+    if (rest <= leg.dur || last) {
+      return { value: legAt(leg, rest), leg: index, events: leg.events, done: last && rest >= leg.dur };
+    }
+    rest -= leg.dur;
+  }
+  return { value: 0, leg: -1, events: false, done: true };
+}
+
+export const planLength = (legs: readonly Leg[]) => legs.reduce((sum, leg) => sum + leg.dur, 0);
+
+/**
+ * `from`dan `to`ya İLERİ giderken geçilen işaretler (zil anları), sırayla.
+ * Geri gitmek olay üretmez: kadranı geri sarmak açılışı yeniden yaşatmaz.
+ * `period` verilirse işaretler her turda tekrarlar; bir turdan uzun yol tek
+ * tur sayılır. Her karede `crossings(önceki, şimdiki, ...)`: kare atlasa da
+ * olay kaçmaz. Taşıma bacağında ÇAĞIRMA (`planAt(...).events`).
+ */
+export function crossings(from: number, to: number, marks: readonly number[], period?: number) {
+  if (to <= from) return [];
+  const span = period ? Math.min(to - from, period) : to - from;
+  const out: { at: number; index: number }[] = [];
+  marks.forEach((mark, index) => {
+    const next = period ? mark + Math.ceil((from + 1e-9 - mark) / period) * period : mark;
+    if (next > from && next - from <= span) out.push({ at: next, index });
+  });
+  return out.sort((a, b) => a.at - b.at);
 }
 
 /* ----------------------------------------------------------------------- */

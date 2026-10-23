@@ -138,7 +138,16 @@ Figür bir kartın içinde durur; dört köşe sabit görevlidir:
 - **Boşta tur:** kimse dokunmazken 1,4 sn sonra başlar, dokunuş/odak/basışta durur,
   son etkileşimden 3,6 sn sonra döner; kullanıcının koyacağı hedefleri sürer.
   Turun ortasında basılan adım tuşu turun hedefinden değil görünen değerden adımlar.
-- **Hareketi azalt:** tur, akış ve nabız yok; hedeflere atla ama girdiye yine cevap ver.
+- **Oynatma — değer ışınlanmaz** (`carryLeg`, `walkLeg`, `planAt`, `crossings`):
+  "şunu göster" diyen düğme değeri hedefe KOYMAZ, bir plan başlatır. Plan
+  bacaklardan oluşur: önce olaysız bir **taşıma** (başlangıca, kısa yoldan, 0,6–1,4
+  sn), sonra olaylı bir **yürüyüş** (anlatılan süreç, 2–6,5 sn). Başlangıç anlatılan
+  olayın biraz önünde seçilir ki olay yürüyüşün ortasında yaşansın. Olay, değer bir
+  işaretin üstünden İLERİ geçince tetiklenir; taşıma ve geri sarma olay üretmez.
+  Bitince birkaç saniye beklenir, tek taşımayla "şimdi"ye dönülür. Üst bilgi hedefi
+  değil değeri izler. Ayrıntı ve ölçüler § 9 → Seans Zili, üçüncü sürüm.
+- **Hareketi azalt:** tur, akış, nabız ve yürüyüş yok; hedeflere atla ama girdiye
+  yine cevap ver (oynatılan olay bildirimle yine söylenir).
 - **Ses:** kaçırılan olaylar dönüşte üst üste çalmaz (`cueWindow`).
 
 ## 6. Erişilebilirlik
@@ -216,3 +225,40 @@ Aynı gün anatomy kitinin kendisiyle iki figür (12 Ekim yayında, `9346152`, `
 
 İkisinde de sunucu son pozu/canlı anı basıyor, ekran dışında 0 çizim,
 hareketi azaltana tur yok. Kurulum `scripts/add-figure-kit.mjs` (`--lathe`).
+
+### Seans Zili, üçüncü sürüm: "Günü Oynat" (12 Ekim, `3f12a99`)
+
+Sahibinin itirazı: "tıkladığı gibi değişmesin, smooth olsun; zil çalmak ne işe
+yarıyor anlamadım". İkinci sürümde seans düğmesi ibreyi seansa ışınlıyor, "Zili
+Çal" düğmesi bağlamsız tek vuruş yapıyordu. Zilin ne zaman ve neden çaldığı
+anlaşılmıyordu. Çözüm, zili bir süs düğmesi olmaktan çıkarıp saatin SONUCU yapmak:
+
+| Etkileşim | Plan | Sonuç |
+|---|---|---|
+| İlk görünüş | İbre 00:00'dan şimdiye 3,2 sn (ease-in-out-quart) | Yolda açılış ya da kapanışı geçerse zil çalar |
+| Seans kartı | Taşıma: seans başı − 20 dk (zilsiz) → yürüyüş: seans boyunca | Açılış ve kapanış zili yolda, sırayla |
+| Günü Oynat | Taşıma: ön seans − 20 dk → yürüyüş: akşam seansının sonuna (≤ 6,5 sn) | İki zil sırayla; düğmenin zemini ilerlemeyle dolar |
+| Kadranda gezinme | Üstel takip (τ 0,22 sn), 15 dk çentik | 6 sn hareketsizlikte şimdiye döner |
+| Oynatma bitti | 4 sn bekle → tek taşıma bacağıyla şimdiye | Geri dönüş zilsiz |
+| Canlı saat | 5 sn'de bir doğrudan yerine koy, döngü uyur | Gerçek açılış/kapanış anında döngü uyanır, zil çalar |
+
+Kurallar (`figure-kit.ts` → `carryLeg`, `walkLeg`, `planAt`, `crossings`):
+
+- **Taşıma kübik, yürüyüş sinüs.** Taşıma çabuk varsın; yürüyüş uçlarda yumuşak,
+  ortada düz hızda olsun ki süreç okunur. 24 saatlik kadranda taşıma KISA yoldan
+  gider (gece yarısını geçebilir); sonraki bacak aynı tur değerinden devam eder.
+- **Olay = ileri geçiş.** Her karede `crossings(önceki, şimdiki, işaretler, 1440)`:
+  kare atlasa da zil kaçmaz, geri sarmak açılışı yeniden yaşatmaz, taşıma
+  bacağında hiç sorulmaz (`planAt(...).events`).
+- **Görünen her şey İBREYİ izler**: seans rozeti, iki saat, çizelgedeki "şimdi" imi,
+  düğmenin ilerleme zemini. Hedefi gösteren üst bilgi, ibre daha yoldayken
+  "16:30" yazar ve hareket boşa düşer.
+- **Zil anı söylenir**: sahnede 2,4 sn "Açılış Zili · 16:30 TR" bildirimi, çizelgedeki
+  zil imi pirince döner. Bildirimde yalnız birincil saat (iki saat iki satıra taşıyordu).
+- **Hareketi azaltana** tekrar, yürüyüş ve canlı döngü yok; kart ibreyi doğrudan
+  seansın başına koyar, bildirim yine çıkar.
+
+Testler (Açılış Zili `tests/session-bell.test.ts`): bacak ucunda tam hedef,
+gece yarısında kısa yol, seans oynatmasında iki zil, taşımada zil yok, günde iki
+zil, tatilde plan yok. Ölçüm: 390 ve 1280 genişlik, iki tema, oynatmanın ortasında
+kare; yatay taşma ve konsol hatası yok.

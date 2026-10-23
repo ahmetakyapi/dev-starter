@@ -189,7 +189,7 @@ uygulanır: envanter → sınıf → sayı → ölçüm.
 | `assets/film-sound.ts` | Web Audio tarifleri: damla, vuruş, kalem, yükseliş, sel, daktilo, çan; tercih + başlatma |
 | `assets/film-page.html` | Sözleşme sayfası (DUR, render, READY, EV), `?t=` ile kare, `?audio=` ile ses saatine kilitli önizleme, boşluk/ok tuşları |
 | `assets/motion-tokens.ts` | Sayılar tek dosyada: `EASE` (reveal/enter/move/exit/pop), `MS`, `STAGGER`, `dampingRatio`, kapalı biçim `spring(t, ζ, f)`, JS `bezier()`, `beatFrame`, `holdFor`, `RANK`, `cascade`, `loopPhase` |
-| `assets/figure-kit.ts` | Çalışma zamanı: `watchVisibility` (son kayıt), `loop` (dt kırpılmış, görünmezken durur), `follow`, `spring`, `settle`, `burst`, `idleTour`, `quietAnnouncer`, `cueWindow` |
+| `assets/figure-kit.ts` | Çalışma zamanı: `watchVisibility` (son kayıt), `loop` (dt kırpılmış, görünmezken durur), `follow`, `spring`, `settle`, `burst`, `idleTour`, oynatma (`carryLeg`, `walkLeg`, `planAt`, `crossings`), `quietAnnouncer`, `cueWindow` |
 | `scripts/film-sheet.mjs` | Temas sayfası / şerit / canlı ölçüm, `--crop` ayrıntı, `--cuts` sahne sınırları (puppeteer ya da playwright) |
 | `scripts/film-video.mjs` | Kareler → ffmpeg → MP4: ortalanmış perdeli alt kare bulanıklığı (`--shutter`), BT.709 etiketi, `--audio` miks, `--scale`, `--workers`, kaldığı yerden sürer, hatada yarım dosya bırakmaz |
 | `scripts/film-browser.mjs` | Üç betiğin ortak tarayıcı katmanı (CLI değil): sRGB renk profili, sayfa hatasında anında dur, READY zaman aşımında tanı, SwiftShader uyarısı |
