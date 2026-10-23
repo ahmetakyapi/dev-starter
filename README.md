@@ -14,15 +14,15 @@
 </p>
 
 **dev-starter**, bütün projelerimin başladığı yer ve ortak hafızası. Bir fikri
-piyasa taramasından geçirip plana çeviren ajanlar, güncel tech stack ile (Next 16,
+pazar araştırmasından geçirip plana çeviren agent'lar, güncel tech stack ile (Next 16,
 Tailwind v4, motion) hazır şablonlar, her projede aynı kalan bir marka kimliği,
 kopyalanabilir bileşenler ve ilk günden canlıya kadar sırayla izlenen rehberler
-burada. Yaşanmış her hata, karar ve desen kaydediliyor; komutlar ve ajanlar her
+burada. Yaşanan her hata, karar ve desen kaydediliyor; komutlar ve agent'lar her
 makinede tek kaynaktan kuruluyor.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/readme/stats-dark.svg">
-  <img alt="dev-starter sayıları: rehber, bileşen, kayıtlı ajan, komut, kayıtlı hata" src=".github/readme/stats-light.svg" width="100%">
+  <img alt="dev-starter sayıları: rehber, bileşen, kayıtlı agent, komut, kayıtlı hata" src=".github/readme/stats-light.svg" width="100%">
 </picture>
 
 ---
@@ -30,7 +30,7 @@ makinede tek kaynaktan kuruluyor.
 ## 60 Saniyede Başla
 
 ```bash
-# Yeni makine: komutları, ajanları, global kuralları ve skill'leri kurar
+# Yeni makine: komutları, agent'ları, global kuralları ve skill'leri kurar
 git clone https://github.com/ahmetakyapi/dev-starter ~/Desktop/Projects/dev-starter
 bash ~/Desktop/Projects/dev-starter/machine/bootstrap.sh
 ```
@@ -41,7 +41,7 @@ Sonra herhangi bir klasörde Claude Code içinde:
 /kickoff ergoterapistler için seans takip uygulaması
 ```
 
-`strategist` ajanı birkaç soru sorar, piyasayı tarar, 2-3 yön önerir, teknolojiyi
+`strategist` agent'ı birkaç soru sorar, pazarı araştırır, 2-3 yön önerir, teknolojiyi
 seçer ve `docs/KICKOFF.md` yazar. Onay verdiğinde `/new-project` şablonu kurar,
 paleti uygular ve ilk doğrulamayı koşar.
 
@@ -57,7 +57,7 @@ flowchart LR
     D --> S["/snippet<br/><sub>snippets/ui</sub>"]
     D --> R["design-reviewer<br/><sub>ekranı ölçer</sub>"]
     D --> E["content-editor<br/><sub>metni düzeltir</sub>"]
-    S & R & E --> G["/check + gate<br/><sub>kalite kapısı</sub>"]
+    S & R & E --> G["/check + gate<br/><sub>kalite kontrolü</sub>"]
     G --> P["/deploy<br/><sub>Vercel</sub>"]
     P --> M["/roadmap<br/><sub>sırada ne var?</sub>"]
     M -.-> D
@@ -104,8 +104,32 @@ dosyadan üretiliyor; token değişip görsel güncellenmezse CI kırılıyor.
 </picture>
 
 `motion/react` + `LazyMotion` (yalnızca kullanılan özellikler iner), tüm geçişler
-tek eğriyle, reduced-motion her yerde. LCP başlığı asla görünmez başlamaz; Reveal
+tek eğriyle, reduced-motion her yerde. LCP başlığı hiçbir zaman görünmez başlamaz; Reveal
 SSR'da görünür kalır. → [`guides/04-motion.md`](guides/04-motion.md)
+
+---
+
+## Açıklayıcı Figürler
+
+Bir sistemin nasıl çalıştığını anlatan canlı figürler (Açılış Zili'ndeki Seans
+Zili, Kural Tezgâhı) [anatomy](https://github.com/wheresryan22/anatomy) kitiyle
+çiziliyor (MIT): izometrik SVG, döndürülerek üretilen parçalar (çan, kubbe),
+zamana bağlı hareket. Kit bir npm paketi değil:
+
+| Adım | Nasıl |
+|---|---|
+| Skill olarak kurulum | `machine/bootstrap.sh`, sabit bir commit'ten (`ANATOMY_REF`) |
+| Projeye ekleme | `node scripts/add-figure-kit.mjs <proje> [--lathe]` → `components/iso/` |
+| Doğrulama | `npm run verify:anatomy`: iki şablonda build, tip, lint, test |
+| Figür yazdırma | Claude Code'da `/anatomy` ya da "bunu açıklayan bir figür çiz" |
+
+Hareket kuralları `motion-film` skill'inde: ekran dışında dur, hedefe yumuşak git,
+tek seferlik olayı kısa bir yükselme ve sönümle göster. **Oynatma deseni** de orada (Seans Zili →
+"Günü Oynat"): düğme değeri hedefe ışınlamaz; önce başlangıca taşır, sonra süreci
+yürütür. Zil, ibre açılışın ya da kapanışın üstünden ileri geçtiği an çalar, geri
+sarmak çaldırmaz. Hazır fonksiyonlar `carryLeg`, `walkLeg`, `planAt` ve `crossings`.
+→ [`aciklayici-figur.md`](machine/skills/motion-film/reference/aciklayici-figur.md) ·
+[`figure-kit.ts`](machine/skills/motion-film/assets/figure-kit.ts)
 
 ---
 
@@ -115,7 +139,7 @@ SSR'da görünür kalır. → [`guides/04-motion.md`](guides/04-motion.md)
 |---|---|---|
 | [`nextjs-fullstack`](templates/nextjs-fullstack) | Ürün, panel, kullanıcılı uygulama | Next 16 · Auth.js v5 + `proxy.ts` · Neon + Drizzle (tembel bağlantı) · zod env · güvenlik başlıkları · 8 test dosyası · CI |
 | [`landing`](templates/landing) | Tanıtım sayfası, portfolyo | Aynı sistem katmanı · 7 hero düzeni · içerik tek dosyada (`lib/content.ts`) · JSON-LD · OG |
-| [`agentic-chat`](templates/agentic-chat) | Yapay zekâ ajanı arayüzü (overlay) | AG-UI + CopilotKit, sabitlenmiş sürümler, senaryo testleri |
+| [`agentic-chat`](templates/agentic-chat) | AI agent arayüzü (overlay) | AG-UI + CopilotKit, sabitlenmiş sürümler, senaryo testleri |
 | [`docs/`](templates/docs) | Her proje | KICKOFF · PRODUCT · ROUTEMAP · ARCHITECTURE · SCREENS · DESIGN |
 
 İki uygulama şablonu da temiz kurulumdan `build`, `typecheck`, `lint` ve `test`
@@ -127,8 +151,8 @@ Landing şablonunda yedi hero düzeni var; `lib/content.ts` içinde `hero.varian
 tek satırla değiştirilir. Görseller GitHub temana göre açık ya da koyu gelir.
 
 <table>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-live-data-dark.webp"><img alt="hero-live-data" src=".github/readme/shots/hero-live-data-light.webp" width="100%"></picture><br><b>Canlı Veri</b> · <code>live-data</code><br><sub>Ölçülebilir bir vaat ve sayıların gerçek kaynağı varsa. Varsayılan.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-statement-dark.webp"><img alt="hero-statement" src=".github/readme/shots/hero-statement-light.webp" width="100%"></picture><br><b>Bildiri</b> · <code>statement</code><br><sub>Mesaj tek başına güçlüyse: lansman, manifesto.</sub></td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-editorial-split-dark.webp"><img alt="hero-editorial-split" src=".github/readme/shots/hero-editorial-split-light.webp" width="100%"></picture><br><b>Editoryal İkiye Bölünmüş</b> · <code>editorial-split</code><br><sub>Gösterilecek gerçek bir ürün ekranı ya da fotoğraf varsa.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-product-frame-dark.webp"><img alt="hero-product-frame" src=".github/readme/shots/hero-product-frame-light.webp" width="100%"></picture><br><b>Ürün Çerçevesi</b> · <code>product-frame</code><br><sub>Satışı arayüzün kendisi yapıyorsa; çerçeve kaydırdıkça düzleşir.</sub></td></tr>
+<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-live-data-dark.webp"><img alt="hero-live-data" src=".github/readme/shots/hero-live-data-light.webp" width="100%"></picture><br><b>Canlı Veri</b> · <code>live-data</code><br><sub>Ölçülebilir bir vaat ve sayıların gerçek kaynağı varsa. Varsayılan.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-statement-dark.webp"><img alt="hero-statement" src=".github/readme/shots/hero-statement-light.webp" width="100%"></picture><br><b>Tek Mesaj</b> · <code>statement</code><br><sub>Mesaj tek başına güçlüyse: lansman, manifesto.</sub></td></tr>
+<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-editorial-split-dark.webp"><img alt="hero-editorial-split" src=".github/readme/shots/hero-editorial-split-light.webp" width="100%"></picture><br><b>İki Kolonlu Editoryal</b> · <code>editorial-split</code><br><sub>Gösterilecek gerçek bir ürün ekranı ya da fotoğraf varsa.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-product-frame-dark.webp"><img alt="hero-product-frame" src=".github/readme/shots/hero-product-frame-light.webp" width="100%"></picture><br><b>Ürün Çerçevesi</b> · <code>product-frame</code><br><sub>Satışı arayüzün kendisi yapıyorsa; çerçeve kaydırdıkça düzleşir.</sub></td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-bento-dark.webp"><img alt="hero-bento" src=".github/readme/shots/hero-bento-light.webp" width="100%"></picture><br><b>Bento</b> · <code>bento</code><br><sub>Eşit ağırlıkta 3-5 güçlü yön varsa.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-scroll-stage-dark.webp"><img alt="hero-scroll-stage" src=".github/readme/shots/hero-scroll-stage-light.webp" width="100%"></picture><br><b>Kaydırma Sahnesi</b> · <code>scroll-stage</code><br><sub>Hikâye üç adımda anlatılabiliyorsa.</sub></td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-minimal-dark.webp"><img alt="hero-minimal" src=".github/readme/shots/hero-minimal-light.webp" width="100%"></picture><br><b>Minimal</b> · <code>minimal</code><br><sub>İçerik ağırlıklı sayfalar: blog, belge, rehber.</sub></td><td width="50%" valign="top"></td></tr>
 </table>
@@ -146,7 +170,7 @@ tek satırla değiştirilir. Görseller GitHub temana göre açık ya da koyu ge
 
 ## Bileşenler
 
-Kopyala-yapıştır kütüphane: her dosya tek başına projeye girer, yalnızca token
+Kopyala-yapıştır kütüphane: her dosya tek başına projeye eklenir, yalnızca token
 sınıflarına ve `cn()`'e dayanır, açık/koyu ve dört palette doğru görünür.
 `/snippet <ad>` uyarlayarak kopyalar.
 
@@ -197,29 +221,29 @@ projede yaşandığı yazar.
 | 05 | [Bileşenler](guides/05-components.md) | Şablon bileşenleri, ekran düzeni sırası, boş/yükleme/hata durumları |
 | 06 | [Next.js 16](guides/06-nextjs-16.md) | `proxy.ts`, async API'ler, önbellek katmanları, soft 404, React 19 formları |
 | 07 | [Veri, Kimlik, Güvenlik](guides/07-data-auth-security.md) | Neon/Drizzle, migration disiplini, Auth.js sertleştirme, başlıklar |
-| 08 | [Kalite ve Yayın](guides/08-quality-and-ship.md) | Commit kapıları, smoke betiği, CWV, erişilebilirlik, deploy listesi |
+| 08 | [Kalite ve Yayın](guides/08-quality-and-ship.md) | Commit öncesi kontroller, smoke testi, CWV, erişilebilirlik, deploy listesi |
 | 09 | [Tipografi](guides/09-typography.md) | Font eşleşmeleri, Türkçe glif kontrolü, punto ölçeği |
-| 10 | [Bileşen Kütüphanesi](guides/10-component-library.md) | Başsız kütüphane kararı, klavye haritaları, a11y listesi |
+| 10 | [Bileşen Kütüphanesi](guides/10-component-library.md) | Headless kütüphane kararı, klavye kısayolları, a11y listesi |
 | 11 | [VPS, E-posta, Push](guides/11-vps-email-push.md) | Vercel dışı deploy (Actions → SSH → sürüm dizini), env senkronu, arama motoru açılışı, Resend, Web Push |
 
 ---
 
-## Ajanlar ve Komutlar
+## Agent'lar ve Komutlar
 
 ```mermaid
 flowchart TB
-    subgraph Önden["Önden Gidenler"]
+    subgraph Plan["Planlayanlar"]
         ST["strategist<br/><sub>pazar · yön · teknoloji · MVP</sub>"]
         RS["researcher<br/><sub>benzer çözümler, kaynaklı</sub>"]
-        BA["business-analyst<br/><sub>kapsam sorgusu · orkestrasyon</sub>"]
+        BA["business-analyst<br/><sub>kapsam · iş dağıtımı</sub>"]
     end
-    subgraph Kuranlar["Kuranlar"]
+    subgraph Kuranlar["Geliştirenler"]
         UX["uiux"] --- FE["frontend"] --- BE["backend"] --- AG["agentic-ui"] --- QA["qa"]
     end
-    subgraph Ölçenler["Ölçenler"]
+    subgraph Ölçenler["Kontrol Edenler"]
         DR["design-reviewer<br/><sub>ekran × tema × genişlik</sub>"]
-        CE["content-editor<br/><sub>Türkçe ses ve doğruluk</sub>"]
-        GT["gate<br/><sub>6+1 geçiş, her biri komut</sub>"]
+        CE["content-editor<br/><sub>Türkçe dil ve doğruluk</sub>"]
+        GT["gate<br/><sub>6+1 adımlı kontrol</sub>"]
     end
     DP["deploy"]
     ST --> BA --> Kuranlar --> Ölçenler --> DP
@@ -230,31 +254,31 @@ flowchart TB
 
 | Komut | Ne Yapar |
 |---|---|
-| `/kickoff [fikir]` | Fikri pazar taraması, yön seçenekleri, teknoloji kararları ve MVP planına çevirir |
+| `/kickoff [fikir]` | Fikri pazar araştırması, yön seçenekleri, teknoloji kararları ve MVP planına çevirir |
 | `/roadmap [odak]` | Var olan projede sıradaki en değerli 5 işi, fırsatları ve dokunulmayacakları önerir |
 | `/new-project` | Şablon + palet + tema + belgeler + hook doğrulama |
-| `/plan` | Planning fazını yürütür (P1→P6): belgeler + story'ler |
-| `/story [id]` | Story'yi uçtan uca işler: alt ajanlara dağıt → Gate → commit |
-| `/gate [story]` | 6+1 pass denetim; sonuç ROUTEMAP'e — commit kapısını açar |
-| `/fix [tarif]` | Bugfix protokolü: triage → failing test → düzeltme → kayıt |
-| `/research [konu]` | Benzer çözümlerin kaynaklı taraması → docs/research/ |
+| `/plan` | Planlama aşamasını yürütür (P1→P6): belgeler + story'ler |
+| `/story [id]` | Story'yi baştan sona işler: alt agent'lara dağıtır → gate → commit |
+| `/gate [story]` | 6+1 adımlı kalite kontrolü; sonuç ROUTEMAP'e yazılır, geçerse commit'e izin verilir |
+| `/fix [tarif]` | Bug düzeltme akışı: önceliklendir → önce başarısız test → düzeltme → kayıt |
+| `/research [konu]` | Benzer çözümleri kaynaklarıyla araştırır → docs/research/ |
 | `/status` | Kaldığın yer + sıradaki en değerli 3 iş |
-| `/retro` | Dersleri onayla bilgi tabanına işler |
-| `/evolve` | Ekosistemin kendi gelişim turu: sağlık + tazelik + dış tarama |
+| `/retro` | Çıkarılan dersleri onayınla bilgi tabanına ekler |
+| `/evolve` | Ekosistemin kendini güncelleme turu: sağlık kontrolü, eskiyen kısımlar, yeni araçlar |
 | `/theme` | Paleti ve temayı uygular ya da günceller |
 | `/snippet <ad>` | Bileşeni projeye uyarlayarak kopyalar |
 | `/reference <bölüm>` | Gerçek bir sitenin bölümünü (menü, CTA, alt bilgi…) referans alır, yapısını projenin token'larıyla kurar |
 | `/review-ui` | Token, kimlik, iki tema, ekran düzeni, a11y ve hareket incelemesi |
 | `/check` | Build, typecheck, lint, test, token ve güvenlik sağlık kontrolü |
-| `/agentic` | Yapay zekâ arayüzünde aracın nerede, kontrolün hangi seviyede olacağı |
+| `/agentic` | AI arayüzünde tool'ların nerede duracağı, kontrolün kimde olacağı |
 | `/deploy` | Vercel yayın listesi |
 | `/release` | Sürüm, changelog, etiket |
 
-`.claude/agents/` altındaki dokuz ajan (`strategist`, `design-reviewer`,
+`.claude/agents/` altındaki dokuz agent (`strategist`, `design-reviewer`,
 `content-editor`, `gate`, `deploy`, `frontend`, `backend`, `qa`, `researcher`)
-bootstrap ile `~/.claude/agents`'a bağlanır ve **her projede** kullanılabilir.
-Ana oturum orkestratördür: işi Görev Zarfı ile dağıtır, sonucu ROUTEMAP'e
-işler ([`agents/AGENT_PROTOCOL.md`](agents/AGENT_PROTOCOL.md) → Orkestrasyon).
+bootstrap ile `~/.claude/agents`'a symlink'lenir ve **her projede** kullanılabilir.
+İşi ana oturum yönetir: her agent'a standart bir görev tanımı verir, sonucu
+ROUTEMAP'e yazar ([`agents/AGENT_PROTOCOL.md`](agents/AGENT_PROTOCOL.md) → Orkestrasyon).
 Rol tanımlarının tek kaynağı [`agents/`](agents).
 
 ---
@@ -263,20 +287,20 @@ Rol tanımlarının tek kaynağı [`agents/`](agents).
 
 | Dosya | İçerik |
 |---|---|
-| [`knowledge/mistakes.md`](knowledge/mistakes.md) | Yaşanmış hatalar: belirti, sebep, çözüm, hangi projede (sayı yukarıdaki görselde) |
+| [`knowledge/mistakes.md`](knowledge/mistakes.md) | Yaşanan hatalar: belirti, sebep, çözüm, hangi projede (sayı yukarıdaki görselde) |
 | [`knowledge/patterns.md`](knowledge/patterns.md) | Projelerden toplanmış, test edilmiş desenler |
 | [`knowledge/decisions.md`](knowledge/decisions.md) | Ekosistem kararları ve neden değiştikleri |
-| [`knowledge/tech-radar.md`](knowledge/tech-radar.md) | İhtiyaç → teknoloji: benimse / dene / bekle |
+| [`knowledge/tech-radar.md`](knowledge/tech-radar.md) | İhtiyaç → teknoloji: kullan / dene / bekle |
 | [`knowledge/themes/`](knowledge/themes) | 6 projenin görsel hafızası |
 | [`knowledge/live-projects-audit.md`](knowledge/live-projects-audit.md) | Canlı projelerin denetimi |
 
 ---
 
-## Kalite Kapıları
+## Kalite Kontrolleri
 
-Her push'ta CI şunları koşar; biri kırmızıysa birleştirme yok.
+Her push'ta CI şunları çalıştırır; biri başarısızsa merge yapılmaz.
 
-| Kapı | Ne Doğrular |
+| Kontrol | Ne Doğrular |
 |---|---|
 | `npm test` | Token sözleşmesi, palet × tema kontrastı (WCAG AA), `theme.css` ↔ `tokens.ts` eşitliği |
 | `lint` · `typecheck` · `build` | Paketler sıfır uyarıyla |
@@ -284,17 +308,17 @@ Her push'ta CI şunları koşar; biri kırmızıysa birleştirme yok.
 | `verify:readme` | Bu sayfadaki görseller token'larla güncel mi |
 | `verify:agentic` | Agentic snippet'ler sabitlenmiş sürümlerle derleniyor mu |
 | `verify:anatomy` | anatomy figür kiti iki şablonda build, tip, lint ve testten geçiyor mu |
-| `test-hooks.sh` | Commit kancalarının davranışı |
+| `test-hooks.sh` | Commit hook'larının davranışı |
 | `health-check.sh` | Şablonlar yeni tech stack'te mi (Tailwind v4, flat ESLint, `proxy.ts`, `motion`) |
 
 ---
 
 ## Yeni Makine
 
-[`machine/bootstrap.sh`](machine/bootstrap.sh) tekrar çalıştırılması güvenli bir
-kurulum betiği: global `CLAUDE.md`'yi, komutları, ajanları ve depoda taşınan
-skill'leri `~/.claude`'a **bağlar** (kopyalamaz; tek kaynak burada kalır),
-kullanılan taste-skill parçalarını kurar, üzerine yazdığı her şeyi önce yedekler.
+[`machine/bootstrap.sh`](machine/bootstrap.sh) tekrar tekrar çalıştırılabilen bir
+kurulum script'i: global `CLAUDE.md`'yi, komutları, agent'ları ve depodaki
+skill'leri `~/.claude`'a **symlink'ler** (kopyalamaz; tek kaynak burada kalır),
+kullanılan taste-skill parçalarını ve anatomy figür kitini kurar, üzerine yazdığı her şeyi önce yedekler.
 `--dry-run` ile ne yapacağını önceden gösterir. İzin listesi bilinçli olarak
 taşınmaz; claude.ai eklentileri girişle kendiliğinden gelir.
 → [`machine/README.md`](machine/README.md)
@@ -302,7 +326,7 @@ taşınmaz; claude.ai eklentileri girişle kendiliğinden gelir.
 ---
 
 <details>
-<summary><b>Depo Haritası</b></summary>
+<summary><b>Klasör Yapısı</b></summary>
 
 ```text
 dev-starter/
@@ -319,13 +343,13 @@ dev-starter/
 ├── packages/@ahmet/
 │   ├── theme/         theme.css (sistem + palet) · tokens.ts · index.css
 │   └── ui/            Surface · Button · motion varyantları · cn()
-├── agents/            12 rol tanımı + AGENT_PROTOCOL
+├── agents/            12 agent rol tanımı + AGENT_PROTOCOL
 ├── .claude/
 │   ├── agents/        strategist · design-reviewer · content-editor · gate · deploy · frontend · backend · qa · researcher
 │   └── commands/      19 komut
 ├── knowledge/         mistakes · patterns · decisions · tech-radar · design-references · themes
 ├── rules/             9 kural
-├── phases/            planlama · geliştirme · uçtan uca cila · yayın ve bakım
+├── phases/            planlama · geliştirme · uçtan uca test ve son düzeltmeler · yayın ve bakım
 ├── hooks/             gate-guard · quality-scan · routemap-sync · session-brief
 ├── scripts/           health-check · audit-project · verify-* · build-readme-assets
 └── machine/           bootstrap.sh · global CLAUDE.md · taşınan skill'ler

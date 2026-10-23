@@ -102,7 +102,7 @@ ${gradient('brand', p.brandGradient)}
 </g>
 <text x="184" y="124" font-family="${FONT}" font-size="64" font-weight="800" letter-spacing="-2.4" fill="url(#display)">dev-starter</text>
 <text x="96" y="204" font-family="${FONT}" font-size="26" font-weight="600" fill="${r.textStrong}">Fikirden Canlıya, Aynı Kimlikle</text>
-<text x="96" y="236" font-family="${FONT}" font-size="17" fill="${r.textBody}">Şablonlar, token sistemi, bileşenler, rehberler ve ajanlar · Ahmet Akyapı ekosistemi</text>
+<text x="96" y="236" font-family="${FONT}" font-size="17" fill="${r.textBody}">Şablonlar, token sistemi, bileşenler, rehberler ve agent'lar · Ahmet Akyapı ekosistemi</text>
 ${chips}
 ${dots}
 </svg>
@@ -211,7 +211,7 @@ ${bars}
 // ── Sayaç şeridi ───────────────────────────────────────────────────────
 // Sayılar DEPODAN sayılır: README'de elle yazılmış sayı bayatlıyordu ve
 // GitHub tablo genişliğini uygulamadığı için iki kelimelik etiketler
-// ("Kayıtlı Ajan") satıra kırılıp rakamları aynı hizadan çıkarıyordu
+// ("Kayıtlı Agent") satıra kırılıp rakamları aynı hizadan çıkarıyordu
 // (3 Ekim 2026). SVG'de hizayı biz kuruyoruz; rakamlar tek taban çizgisinde.
 async function countRepo() {
   const list = async (dir, re) => (await readdir(join(ROOT, dir))).filter((f) => re.test(f)).length
@@ -219,7 +219,7 @@ async function countRepo() {
   return [
     { value: await list('guides', /^\d{2}-.*\.md$/), label: 'Rehber' },
     { value: await list('snippets/ui', /\.tsx$/), label: 'Bileşen' },
-    { value: await list('.claude/agents', /\.md$/), label: 'Kayıtlı Ajan' },
+    { value: await list('.claude/agents', /\.md$/), label: 'Kayıtlı Agent' },
     { value: await list('.claude/commands', /\.md$/), label: 'Komut' },
     { value: mistakes, label: 'Kayıtlı Hata' },
   ]

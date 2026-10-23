@@ -7,6 +7,27 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Oynatma deseni ve README dili — 2026-10-23
+
+#### Eklendi
+
+- **Oynatma deseni** (Açılış Zili → Seans Zili, "Günü Oynat"): düğme değeri
+  hedefe ışınlamaz, bacaklardan oluşan bir plan başlatır. `figure-kit.ts`e
+  `carryLeg` (olaysız taşıma, periyotlu değerde kısa yoldan), `walkLeg` (olaylı
+  yürüyüş), `planAt`, `planLength` ve `crossings` (ileri geçilen işaretler; geri
+  sarma olay üretmez) eklendi. Kural ve ölçüler `aciklayici-figur.md` → § 5 ve
+  § 9 "Seans Zili, üçüncü sürüm"; kısa örnek `knowledge/patterns.md`te.
+- **README → Açıklayıcı Figürler**: anatomy kitinin kurulum, projeye ekleme,
+  doğrulama ve kullanım adımları tek tabloda; oynatma desenine bağlantı.
+
+#### Değişti
+
+- **README dili**: Türkçede yaygın olmayan karşılıklar yerine geliştiricilerin
+  kullandığı kelimeler. "Ajan" → "agent", "kalite kapısı" → "kalite kontrolü",
+  "kanca" → "hook", "başsız" → "headless", "Görev Zarfı" → "standart görev
+  tanımı", "Depo Haritası" → "Klasör Yapısı" ve benzerleri. README görsellerindeki
+  "Kayıtlı Ajan" ve alt başlık da güncellendi (`npm run readme:assets`).
+
 ### motion-film 1.4.0 — sekiz açık video deposundan — 2026-10-21
 
 Opus 5.5 ile kodla film yapan sekiz popüler depo (awesome-opus5-5-videos,
