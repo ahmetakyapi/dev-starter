@@ -8,6 +8,34 @@
 
 ---
 
+## Tur 2026-10-26 — slop-scan ile dört proje
+
+Kapsam: Açılış Zili, ahmetakyapi.com, DigyNotes, Derinay (GitHub'daki `main`,
+bulut oturumu). Ölçüm: `audit-project.sh` + yeni `slop-scan.sh`. İlk tarama
+gerçek projelerde 400+ yanlış pozitif üretti (yorum satırındaki ✓/✗, iso-kit'in
+`seamless?: boolean`ı, Açılış Zili'nin bilinçli 800 ağırlığı, `scale: 0 1`
+çizgi çizimi, oyun yazısındaki "oyunun kuralları"); tarayıcı bunlara göre
+ayarlandı ve her vaka `test-slop-scan.sh`e girdi. Aşağıdaki sayılar ayarlı tarayıcıdan.
+
+| Proje | Yığın | slop (yüksek / uyarı) | Durum |
+|-------|-------|------------------------|-------|
+| Açılış Zili | Next 16 · v4 · motion | 0 / 44 (düzeltme sonrası; önce 4 / 46) | `fix/slop-taramasi`: renk seçicide `transition-all`, iki `passive` dinleyici, kasıtlı `href="#"` ve yönetim `confirm`u gerekçeli |
+| ahmetakyapi.com | Next 16 · v4 | 0 / 10 | Uyarılar geçiş dönemindeki ara punto ölçüleri (`text-[0.9375rem]`); dokunulmadı |
+| DigyNotes | Next 14 · v3 · framer-motion | 82 / 509 | Arşiv. 81 `transition-all`, 507 keyfi punto; düzeltme taşıma işiyle birlikte |
+| Derinay | Next 14 · v3 · framer-motion | 82 / 150 | 64 `transition-all`, 10 iki aileli degrade, 7 süs emojisi (ürünün sıcak sesi: karar sahibinin) |
+
+**Ortak süreç açığı (dördü):** `.claude/settings.json` hook kaydı yok; ROUTEMAP
+yok ya da Gate kolonu yok; `test` script'i eksik (Açılış Zili'nde testler var,
+`npx tsx --test` ile elle koşuyor). Hook'u ROUTEMAP'siz projeye eklemek her
+commit'i kilitler: önce ROUTEMAP Gate kolonu, sonra hook.
+
+**Ders:** Kural taraması yazıldığı gün ekosistemin kendi şablonlarında temiz
+çıkar; gerçek kalibrasyon, referans projede (Açılış Zili) ilk koşuda olur.
+Yeni bir tarama kuralı, `live-projects-audit` turundan geçmeden YÜKSEK
+seviyeye alınmaz.
+
+---
+
 ## Yöntem ve Güvenilirlik
 
 Sekiz kontrol çalıştırılır. Hepsi aynı ağırlıkta değil — hangisine ne kadar

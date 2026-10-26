@@ -2,6 +2,10 @@
 
 **Kural**: Tüm commit'ler Conventional Commits standardını takip eder.
 
+**Yazar**: her depoda `Ahmet Akyapı <ahmetakyapii@gmail.com>`; Claude yalnız
+`Co-Authored-By:` satırında. Taze klonda ilk committen önce `git config
+user.name/user.email` (ayrıntı `machine/CLAUDE.md` → Commit Mesajı Formatı).
+
 ---
 
 ## Format

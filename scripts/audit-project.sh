@@ -16,6 +16,8 @@
 #   8. Tech stack uyumu — Tailwind v4, Next 16 proxy.ts, motion/react
 #   9. Mobil ust kenar (iOS saydam baslik, dokunmatik spotlight)
 #  10. Ekosistem disiplini — hook kaydi, ROUTEMAP, test altyapisi
+#  11. AI slop — scripts/slop-scan.sh (tek tarafli serit, olu baglanti,
+#      dolgu sozcugu, yer tutucu, transition-all, gokkusagi degrade...)
 #
 # Cikis kodu: bulgu varsa 1, temizse 0
 
@@ -155,6 +157,10 @@ if [ -f "$TARGET/package.json" ] && grep -q '"tailwindcss"' "$TARGET/package.jso
   elif grep -rqsE "${EXCLUDES[@]}" --include=*.css "@import ['\"]tailwindcss['\"]" "$TARGET"; then
     if grep -qs '@tailwindcss/postcss' "$TARGET"/postcss.config.* 2>/dev/null; then
       ok "Tailwind v4 (@import + @tailwindcss/postcss)"
+    # Turbopack yükleyicisi de geçerli v4 kurulumu: postcss.config hiç yoktur,
+    # CSS next.config'teki turbopack.rules ile derlenir (geo-tour, 2026-10)
+    elif grep -qs '@tailwindcss/turbopack' "$TARGET"/next.config.* 2>/dev/null; then
+      ok "Tailwind v4 (@import + @tailwindcss/turbopack yükleyicisi)"
     else
       hit "@import \"tailwindcss\" var ama postcss.config'te @tailwindcss/postcss yok"
     fi
@@ -229,6 +235,18 @@ for script in test typecheck lint; do
     hit "package.json '$script' script'i yok — /check ve Gate bu adimi kosamaz"
   fi
 done
+
+# ─── 11. AI slop ─────────────────────────────────────────────────────────────
+# Kurallarin tek kaynagi slop-scan.sh; burada yalniz cagrilir ve ozetlenir.
+section "AI slop (scripts/slop-scan.sh)"
+SLOP_OUT=$(bash "$(dirname "$0")/slop-scan.sh" --quiet "$TARGET" 2>&1)
+SLOP_SUM=$(printf '%s\n' "$SLOP_OUT" | grep 'SONUC' | sed 's/.*SONUC: //')
+if printf '%s' "$SLOP_SUM" | grep -q '^0 yuksek, 0 uyari'; then
+  ok "AI slop taramasi — temiz"
+else
+  hit "AI slop taramasi — $SLOP_SUM"
+  printf '%s\n' "$SLOP_OUT" | grep -E '❌|⚠️' | sed 's/^ */          /'
+fi
 
 echo ""
 echo "  ─────────────────────────────────────────────"

@@ -142,7 +142,8 @@ export function Surface({
             stopWatch.current = null
           }
           window.addEventListener('mousemove', watch)
-          window.addEventListener('scroll', bail, true)
+          // passive: bail kaydirmayi engellemez, tarayici beklemeden kaydirir
+          window.addEventListener('scroll', bail, { capture: true, passive: true })
           document.documentElement.addEventListener('mouseleave', bail)
           stopWatch.current = stop
           return

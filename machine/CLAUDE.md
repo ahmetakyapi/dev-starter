@@ -193,6 +193,19 @@ kabul etti, ayrıca uyarma.
 Koruma onay sorusu değil, commit ÖNCESİ kontroldür: `git status` ile yalnızca
 amaçlanan dosyaların girdiğini doğrula, `typecheck` ve `build` çalıştır.
 
+**Commit yazarı her depoda Ahmet.** Yazarı yalnızca "Claude" olan commit
+atılmaz; Claude mesajın sonundaki `Co-Authored-By:` satırıyla görünür. Bulut
+oturumunda ve taze klonda git kimliği varsayılan olarak Claude'dur; ilk
+committen ÖNCE:
+
+```bash
+git config user.name "Ahmet Akyapı"
+git config user.email "ahmetakyapii@gmail.com"
+```
+
+(Kural 9 Ekim 2026'dan beri Açılış Zili'nin CLAUDE.md'sinde yazılıydı ama
+burada değildi; 26 Ekim'de bulut oturumu dev-starter'a iki "Claude" commit'i attı.)
+
 ---
 
 ## Öğrenilen Hatalar

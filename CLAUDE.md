@@ -42,7 +42,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 106 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim)
+│   ├── mistakes.md            → 113 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim, #107–113 Geo Tour)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur
@@ -77,6 +77,8 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
+│   ├── slop-scan.sh           → AI slop taraması (15 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
+│   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
 │   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
@@ -98,8 +100,9 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── snippets/                  → 20 hazır parça + ui/ kütüphanesi + fonts/
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi + fonts/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
+│   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form
 │   ├── skeleton · search-bar · infinite-scroll · og-image
 │   └── agent-tool · action-card · agent-approval (tsc ✓) · agent-feed (test ✓)
@@ -221,6 +224,17 @@ npm run verify:anatomy                                # iki şablonda build/tip/
 
 anatomy `machine/bootstrap.sh` → `ANATOMY_REF` commit'ine sabitli. Yükseltme:
 SHA'yı değiştir, **önce** `verify:anatomy`, sonra commit (`mistakes.md #98`).
+
+### AI Slop Taraması
+
+```bash
+bash scripts/slop-scan.sh app components   # veya: npm run slop -- <yol>
+```
+
+Tek taraflı vurgu şeridi, ölü bağlantı, `transition-all`, `font-black`, yer
+tutucu ve dolgu metni, gökkuşağı degrade, emoji, `scale(0)` gibi kalıpları
+bulur; YÜKSEK bulguda exit 1. Kurallar `rules/design-tokens.md` → AI-Slop
+Yasakları; neyi neden almadığımız `knowledge/decisions.md` → "AI Slop Taraması".
 
 ### Canlı Proje Denetimi
 

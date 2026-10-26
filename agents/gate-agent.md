@@ -144,6 +144,7 @@ npm run build 2>&1 | tail -25    # bundle boyutlarını rapora al
 
 ```bash
 bash ~/dev-starter/scripts/audit-project.sh .  # standartlar
+bash ~/dev-starter/scripts/slop-scan.sh app components   # AI slop; YÜKSEK = bulgu
 grep -rnE 'dark:|bg-white|text-(gray|slate)-[0-9]|#[0-9a-fA-F]{6}' app components --include='*.tsx'
 grep -rn "from ['\"]framer-motion" app components                  # yeni projede olmamalı
 ```
@@ -151,6 +152,7 @@ grep -rn "from ['\"]framer-motion" app components                  # yeni projed
 - **Bulguları körü körüne düzeltme.** Kalıp taraması yanlış pozitif üretir ve
   kasıtlı kararları hata sanabilir. Her bulguyu oku, kasıtlıysa gerekçesini
   rapora yaz. Ekranın kendisini ölçmek için `design-reviewer` subagent'ı.
+- **`slop-ok` gerekçeli mi?** Susturulan her satırda neden yazmalı; gerekçesiz olan bulgudur
 - **Glass yalnızca altından içerik geçen öğede**, degrade yalnızca üç yerde
   (display başlık, birincil eylem, marka karosu) — `guides/00-brand-identity.md`
 - **Reveal**: kahraman/LCP sarılı değil, reduced-motion'da `initial={false}` yok (`mistakes.md` #87)

@@ -234,8 +234,22 @@ const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-manrop
 }
 ```
 
-- **Radius iç içe küçülür:** dış kap `rounded-xl`, iç kart `rounded-lg`. İç
-  radius dıştan büyükse köşede boşluk "şişer".
+- **Radius iç içe küçülür, formülle:** iç öğe dış kabın içinde 32 px'ten
+  az boşlukla duruyorsa **iç radius = dış radius − boşluk**. Sonuç 2 px'in
+  altına düşerse iç köşe düz kalır. Göz kararı "bir basamak küçült" boşluk
+  büyüdükçe yanlışlaşır: iki eğri eş merkezli olmaz, köşede boşluk "şişer".
+
+  | Dış kap | Boşluk | İç öğe |
+  |---------|--------|--------|
+  | `rounded-xl` (24 px) | `p-2` (8 px) | 16 px → `rounded-lg` |
+  | `rounded-xl` (24 px) | `p-3` (12 px) | 12 px → `rounded-md` |
+  | `rounded-lg` (16 px) | `p-2` (8 px) | 8 px → `rounded-sm` |
+  | `rounded-lg` (16 px) | `p-6` (24 px) | 32 px'ten az ama sonuç < 2 → düz |
+  | herhangi | ≥ 32 px | Bağımsız; kendi ölçeğinden seçilir |
+
+  Ölçek basamağına denk gelmeyen sonuç en yakın **alt** basamağa iner.
+  `design-reviewer` bunu ekranda `getComputedStyle` ile ölçer.
+  (Formül: elayadesign/ai-design-skills, MIT; bizim ölçeğe uyarlandı.)
 - **Tek gerçek gölge.** Açılış Zili derinliği gölgeyle değil ton farkıyla
   kurar; gölge yalnızca gerçekten havada duran katmanda (`--shadow-overlay`:
   menü, diyalog). ElevenForge iki katmanlı gölge kullanır (yakın keskin +
@@ -376,3 +390,5 @@ bölümü bu tuzağı başlığına yazar: katmansız `a { color }` ya da
 - [ ] `next/font` değişken adı `@theme` adıyla çakışmıyor
 - [ ] Kontrast oranları ölçülüp token yorumuna yazılmış
 - [ ] Element varsayılanları `@layer base` içinde
+- [ ] İç içe radius formülle: iç = dış − boşluk (boşluk < 32 px)
+- [ ] `bash ~/dev-starter/scripts/slop-scan.sh app components` → 0 yüksek

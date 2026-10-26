@@ -109,6 +109,18 @@ else
   fail "scripts/test-hooks.sh EKSIK — hook'lar dogrulanmiyor"
 fi
 
+# AI slop tarayicisi da ayni ilkeyle: dosya degil davranis. Kirli ornegi
+# yakalamayan ya da temiz ornege bulgu basan desen burada kirilir.
+if [ -f "scripts/test-slop-scan.sh" ]; then
+  if bash scripts/test-slop-scan.sh >/dev/null 2>&1; then
+    pass "slop-scan davranis testi geciyor (scripts/test-slop-scan.sh)"
+  else
+    fail "slop-scan davranis testi BASARISIZ — 'bash scripts/test-slop-scan.sh' calistir"
+  fi
+else
+  fail "scripts/test-slop-scan.sh EKSIK — slop taramasi dogrulanmiyor"
+fi
+
 # Claude Code hook entegrasyonu — paylasilan settings.json tercih edilir,
 # settings.local.json makineye ozgudur ve versiyonlanmaz
 if grep -qs "gate-guard" ".claude/settings.json"; then
@@ -162,7 +174,7 @@ done
 # ─── 5. Snippet Files ────────────────────────────────────────────────────────
 header "Snippet Dosyalari"
 
-SNIPPETS=("animated-number.tsx" "infinite-scroll.tsx" "og-image.tsx" "search-bar.tsx" "modal.tsx" "drawer.tsx" "form.tsx" "skeleton.tsx" "toast.tsx" "confirm.tsx" "agent-tool.tsx" "action-card.tsx" "agent-approval.tsx" "agent-feed.tsx" "agent-feed-core.ts" "agent-feed.test.ts" "reveal.tsx" "theme-toggle.tsx" "rolling-number.tsx" "rolling-number.module.css" "scroll-progress.tsx" "tab-underline.tsx" "use-scroll-lock.ts")
+SNIPPETS=("animated-number.tsx" "infinite-scroll.tsx" "og-image.tsx" "search-bar.tsx" "modal.tsx" "drawer.tsx" "form.tsx" "skeleton.tsx" "toast.tsx" "confirm.tsx" "agent-tool.tsx" "action-card.tsx" "agent-approval.tsx" "agent-feed.tsx" "agent-feed-core.ts" "agent-feed.test.ts" "reveal.tsx" "theme-toggle.tsx" "rolling-number.tsx" "rolling-number.module.css" "scroll-progress.tsx" "tab-underline.tsx" "use-scroll-lock.ts" "tr-text.ts" "tr-text.test.ts" "phrases.tsx")
 for snippet in "${SNIPPETS[@]}"; do
   if [ -f "snippets/${snippet}" ]; then
     pass "$snippet mevcut"
@@ -409,6 +421,23 @@ if [ ${#TOKEN_DIRS[@]} -gt 0 ]; then
     echo "$VIOLATIONS" | head -8 | sed 's/^/     /'
   else
     pass "Sabit renk ve dark: varyanti yok — renkler token'dan"
+  fi
+fi
+
+# Ekosistemin kendi sablonlari ve parcalari slop taramasindan temiz cikar:
+# her yeni proje bunlardan dogar, burada sizan kalip her projeye kopyalanir.
+SLOP_DIRS=()
+for d in templates snippets packages/@ahmet/ui/src; do [ -d "$d" ] && SLOP_DIRS+=("$d"); done
+if [ ${#SLOP_DIRS[@]} -gt 0 ]; then
+  SLOP_OUT=$(bash scripts/slop-scan.sh --quiet "${SLOP_DIRS[@]}" 2>&1)
+  SLOP_CODE=$?
+  SLOP_SUM=$(printf '%s\n' "$SLOP_OUT" | grep 'SONUC' | sed 's/.*SONUC: //')
+  if [ $SLOP_CODE -ne 0 ]; then
+    fail "AI slop bulgusu sablon/snippet'te ($SLOP_SUM) — 'bash scripts/slop-scan.sh templates snippets'"
+  elif printf '%s' "$SLOP_SUM" | grep -q '^0 yuksek, 0 uyari'; then
+    pass "Sablonlar ve snippet'ler AI slop taramasindan temiz"
+  else
+    warn "AI slop uyarisi sablon/snippet'te ($SLOP_SUM) — 'bash scripts/slop-scan.sh templates snippets'"
   fi
 fi
 

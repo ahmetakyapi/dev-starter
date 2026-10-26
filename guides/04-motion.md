@@ -341,6 +341,23 @@ dolan bir halka/şeritle birlikte meşru; ölçülmüş bir değer yerinde durur
 - 4x yavaş CPU ile bir kez dene (DevTools → Performance). Hızlı makinede
   görünmeyen kasılma orada çıkar.
 
+### Geo Tour'dan Kaydırma Performansı Dersleri
+
+| Belirti | Sebep | Çözüm |
+|---------|-------|-------|
+| Giriş hareketinde kasılma, ısınan telefon | `filter: blur()` girişi her karede yeniden boyuyor | Bulanıklık yalnız küçük öğede; fotoğraf ve büyük başlık yalnız `opacity` + `transform` (#107) |
+| Safari'de kaydırırken bölüm kaybolup yeniden çiziliyor | Kaydırmaya bağlı `clip-path` büyük pano üstünde | Pano sabit yuvarlak levha; açılma `transform` ve tek seferlik kırpma (#108) |
+| Paralaks ya da `view()` çizelgesi hiç oynamıyor | Kap `overflow: hidden`: kendi kaydırma kabını kuruyor | Kapta `overflow: clip` (#109) |
+| Kaydırırken ana iş parçacığı dolu | Paralaks JS'ten, her karede stil yazıyor | CSS kaydırma çizelgesi: `animation-timeline: view()` `@supports` içinde |
+| Sabitlenmiş sahne her karede tam ekran fotoğrafı çiziyor | Karartma katmanı fotoğraftan ayrı, ölçek fotoğrafın kendisinde | Ölçek ve opaklık fotoğrafın kartında; karartma aynı katmanda |
+| Kart açılırken komşular zıplıyor | `width` değişiyor | Açılma `transform` + kırpma; kart genişliği sabit |
+| Dönen fotoğraf yarım çizili geliyor | Görsel çözülmeden (decode) gösteriliyor | `await img.decode()` sonra göster; ekran dışındayken gösteriyi durdur |
+
+**Sabitlenmiş adım bölümü** (dağ patikası, üç katman): kaydırma iki adım
+arasında durursa gidilen yöndeki adıma süzülür, bir tekerlek tıkı bir adım
+ilerletir; ilk ve son adımdan bölümden serbestçe çıkılır. Desen:
+`knowledge/patterns.md` → "Geo Tour Desenleri".
+
 ---
 
 ## 13. Desen Kataloğu — Ölçülü Ama Unutulmaz
@@ -373,6 +390,92 @@ Her birinin sınırı yanında:
 
 ---
 
+## 14. Görsel Hikâyesi — Bento ve Ürün Kartları
+
+Bir bento kartının görseli (liste, grafik, takvim, akış, istem kutusu)
+yüklenip öylece durursa "ekran görüntüsü" gibi okunur. Görsel **ne işe
+yaradığını oynar**: gelen kutusuna yeni talep düşer, grafiği bir imleç
+okur, takvim boş saati bulur. Bu, sayfayı canlı gösteren en ucuz harekettir;
+dekoratif parlamadan ve yüzen lekeden farklı olarak ürünü anlatır.
+(Uyarlandı: elayadesign/ai-design-skills → `design-to-motion`, MIT.)
+
+**Önce hikâyeyi tek cümleyle yaz**, sonra kur: "Yeni talep en üste düşer,
+eskiler bir sıra geri çekilir, sonuncusu çıkar."
+
+| Görsel | Hikâye |
+|--------|--------|
+| Yığın (talep, bildirim, dosya) | Yeni öğe üste iner, ötekiler bir basamak geri çekilir, sonuncusu çıkar |
+| Çizgi / alan grafiği | Bir okuyucu çizgi üstünde kayar, nokta eğriyi izler, ipucundaki değer sayar |
+| Çubuk grafik | Çubuklar canlı akış gibi nefes alır, tasarımdaki boylara geri oturur |
+| Tablo, liste | Vurgu satırları sırayla dolaşır, seçilen satırın önizlemesi açılır |
+| Takvim | Vurgu boş saati arar, etkinlik oraya kayar, geri döner |
+| Akış, bağlantı | Darbe bağlantı boyunca akar, geçtiği düğüm yanar |
+| İstem, form | Metin silinip yeniden yazılır, sonuç bulanıktan netleşir |
+| Sayaç | Sayı, onu süren grafikle birlikte sayar (§ 9; ölçülmüş veri 0'dan sayılmaz) |
+
+**Kurallar**
+
+1. **Yalnızca görseli olan kart.** Yalnız metin taşıyan bölüm (başlık
+   bloğu, görüş, SSS, fiyat, kapanış) hikâye almaz; § 4'teki Reveal yeter.
+   Ürün ekranı önizlemesinde içerik yüklenir, hikâye **sorulmadan eklenmez**.
+2. **Tasarımda başlar, tasarımda biter.** Hikâyenin dinlenme karesi kartın
+   statik hâlidir. `prefers-reduced-motion: reduce` yalnızca o kareyi
+   gösterir; hikâye hiç çalışmaz.
+3. **Görünürken oynar.** Kartın %30'u görününce giriş bir kez oynar
+   (`useInView(ref, { amount: 0.3, once: true })`); hikâye ekran dışına
+   çıkınca durur, dönünce kaldığı yerden sürer (`useInView` ikinci kez,
+   `once` olmadan). Kaydırma dinleyicisi yok.
+4. **Bir kart, bir hikâye, 3–8 sn.** Her 1–2 saniyede bir görünür adım;
+   iki saniyede canlı olduğu anlaşılmıyorsa hikâye çekingendir.
+5. **Kartlar aynı anda oynamaz.** Başlangıçları okuma sırasına göre
+   kaydırılır; dikkat ekranda dolaşır. Aynı anda iki büyük hareket yok (§ 11).
+6. **Kartın kendi öğeleriyle.** Hikâyenin gerektirdiği yardımcı (imleç,
+   yığının kopya öğesi) kartın diliyle çizilir ve dinlenme karesinde gizlidir.
+   Tasarımda olmayan şekil eklenmez: kartın üst kenarına "yükleniyor çizgisi"
+   konmaz.
+7. **Metin yalnızca konu oysa değişir:** sayaç, yazma, ipucu değeri.
+   Yazma harf harf adımlanır (45–70 ms), düz silme değil; imleç saniyede bir
+   yanıp söner. Kahraman başlığında yazma efekti yok (§ 11).
+8. **Giriş koreografisi:** öğeler aşağıdan yükselir (`y: 10` → `0`), küçük
+   öğe (satır, rozet, ikon) isterse bulanıktan netleşir (`blur(4px)` →
+   `0`). **Fotoğrafta, büyük başlıkta ve kart boyu yüzeyde bulanıklık yok:**
+   `filter` animasyonu her karede yeniden boyar (geo-tour bu yüzden
+   kaldırdı, `mistakes.md` #107). Kapta okuma sırasıyla: başlık →
+   etiket → değer → görsel, öğeler arası 30–80 ms. **Nesne `scale(0)`dan
+   gelmez** (0.82–0.9'dan); yalnızca çizgi ve çubuk `scaleX/Y(0)`dan çizilir.
+   Çubuk ve ölçer soldan sağa `clip-path` ile ilerleme çubuğu gibi dolar.
+   Başka öğenin altında kalan katman en son gelir, ilk gider.
+9. **Ucuz özellikler:** `transform` ve `opacity`; `clip-path` yalnız küçük
+   öğede ya da tek seferlik açılışta, `filter` yalnız küçük öğede (≤ 4 px). Döngü tek bir saatten (`useAnimationFrame`
+   ya da `animate()` zinciri) sürer; sonsuz CSS keyframe'i ile JS saatini
+   karıştırma.
+10. **Uygulama içinde değil.** Bu desen açılış sayfası ve vitrin içindir;
+    uygulama ekranında okuyucu veriyi bekler (§ 11).
+
+```tsx
+"use client";
+// Yığın hikâyesi: yeni talep üste iner, sonuncusu çıkar. Görünmüyorken durur.
+const ref = useRef<HTMLUListElement>(null);
+const visible = useInView(ref, { amount: 0.3 });
+const reduce = useReducedMotion();
+const [items, setItems] = useState(SEED); // dinlenme karesi = tasarım
+useEffect(() => {
+  if (!visible || reduce) return;
+  const id = setInterval(() => setItems((xs) => [next(xs), ...xs.slice(0, -1)]), 2400);
+  return () => clearInterval(id);
+}, [visible, reduce]);
+// Satırlar sabit yükseklikte ve mutlak konumda: yer değişimi `layout` değil
+// `y` ile, böylece domAnimation yeter (`layout` domMax ister, § 6).
+// <AnimatePresence initial={false}>{items.map((it, i) => (
+//   <m.li key={it.id} className="absolute inset-x-0"
+//     initial={{ opacity: 0, y: -ROW, filter: "blur(4px)" }}
+//     animate={{ opacity: 1, y: i * ROW, filter: "blur(0px)" }}
+//     exit={{ opacity: 0, y: items.length * ROW }} transition={{ duration: DUR.slow, ease: EASE }} />
+// ))}</AnimatePresence>
+```
+
+---
+
 ## Kontrol Listesi
 
 - [ ] `framer-motion` yok, `motion/react` + `m` + LazyMotion `strict`
@@ -386,3 +489,7 @@ Her birinin sınırı yanında:
 - [ ] Her gezinmede oynayan giriş 200–500 ms bandında; kademede tek kahraman
 - [ ] Ölçülmüş veri 0'dan sayılmıyor
 - [ ] Magnetic/imleç efektleri `pointer: fine` altında
+- [ ] Bento görselinin hikâyesi tek cümleyle yazıldı; yalnız metin kartı hikâye almıyor
+- [ ] Hikâye tasarımda başlayıp bitiyor, ekran dışında duruyor, reduced-motion'da statik
+- [ ] Nesne `scale(0)`dan gelmiyor; tasarımda olmayan "yükleniyor çizgisi" yok
+- [ ] Fotoğrafta ve büyük başlıkta `filter` animasyonu yok; `view()` kabı `overflow: clip`

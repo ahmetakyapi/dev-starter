@@ -7,6 +7,69 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Geo Tour'dan öğrenilenler — 2026-10-26
+
+#### Eklendi
+
+- **`snippets/tr-text.ts` + `phrases.tsx`**: Türkçe (ve İngilizce) başlık metni.
+  Anlam öbekleriyle satır kırma (mastar + fiil, sayı + ad, "ve"/"mi" yapışması,
+  son satırda tek kelime yok), dile göre Title Case, dar ekranda punto sığdırma,
+  marka adı için `keep`. geo-tour `lib/text.ts`ten genelleştirildi; 15 vitest
+  testi `snippets/tr-text.test.ts`.
+- `guides/09` § 8 "Anlam Öbekleri", `guides/04` § 12 kaydırma performansı
+  tablosu, `guides/08` § 3 fotoğraf ağırlıklı sitede LCP ve WhatsApp paylaşım
+  görseli.
+- `mistakes.md` #113 ve `guides/08` § 8: Vercel'de ad başkasındaysa takım
+  adresi korumalı kalır, site ziyaretçiye açılmaz; yayın kontrolü gizli
+  pencerede ve `curl` ile.
+- `mistakes.md` #107–112 (bulanık giriş, Safari `clip-path`, `overflow: clip`,
+  WhatsApp JPEG, hidrasyon ve önden yükleme, kırpılmış gözlemci hedefi).
+- `patterns.md` → "Geo Tour Desenleri": açılış kapısı, adım oturtma, iki dil,
+  canlı önizleme, görsel inceleme notu.
+
+#### Değişti
+
+- **Commit yazarı kuralı** `machine/CLAUDE.md` ve `rules/commit-conventions.md`te:
+  her depoda Ahmet, Claude yalnız `Co-Authored-By:` (kural Açılış Zili'nde
+  yazılıydı, ekosistemde değildi).
+- `knowledge/live-projects-audit.md` → "Tur 2026-10-26": dört proje, ayarlı tarayıcı.
+- **slop-scan dört canlı projede ayarlandı**: yorum satırları içerik
+  kontrolüne girmez; `seamless?: boolean` gibi tanımlayıcı dolgu sayılmaz;
+  ★ ✓ ✗ tipografik işaret emoji sayılmaz; 800 ağırlığı serbest (yalnız 900);
+  `prose-*:` varyantları şerit sayılmaz; `scale(0)` yalnız JS hareket
+  nesnesinde (CSS `scale: 0 1` çizgi çizer). Her yanlış pozitif teste girdi.
+- `guides/04` § 14: bulanıktan netleşme yalnız küçük öğede; fotoğraf ve büyük
+  başlıkta `filter` animasyonu yok (aynı gün yazılan kural geo-tour ölçümüyle
+  düzeltildi).
+
+### AI slop taraması — 2026-10-26
+
+[elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)
+(MIT) incelendi; bize uyanlar uyarlandı, uymayanların gerekçesi
+`knowledge/decisions.md` → "AI Slop Taraması".
+
+#### Eklendi
+
+- **`scripts/slop-scan.sh`** (`npm run slop`): arayüzü şablondan çıkmış
+  gösteren 15 kalıbı her projede tarar; YÜKSEK bulguda exit 1, kasıtlı satır
+  `slop-ok: <neden>` ile susturulur. Davranış testi `scripts/test-slop-scan.sh`
+  (`npm run verify:slop`, 18 test). CI'da, health-check'te (şablonlar ve
+  snippet'ler temiz olmalı), `audit-project.sh` § 11'de, Gate Pass 6'da ve
+  `/review-ui`'nin ilk adımında çalışır.
+- **İç içe radius formülü** `guides/02-design-tokens.md` § 4: iç = dış − boşluk.
+- **Görsel hikâyesi** `guides/04-motion.md` § 14: bento kartının görseli işini
+  oynar; tasarımda başlar ve biter, ekran dışında durur, kartlar sırayla.
+- **Örnek içerik ve sistem mesajı** `guides/05-components.md` § 7.
+- **`design-reviewer`**: iç içe radius, tek taraflı şerit, ölü bağlantı /
+  `aria-current` ölçümleri ve hikâyenin ekran dışında durduğunun doğrulaması.
+
+#### Değişti
+
+- `rules/design-tokens.md` → AI-Slop Yasakları: 10 yeni satır; ölçülebilir olanlar slop-scan.sh'e bağlandı.
+- `uiux-agent` kahraman tarifi: `font-black` → 800 tavanı (Açılış Zili gibi); yanıp sönen
+  noktalı rozet yerine tek, noktasız künye.
+- `@ahmetakyapi/ui` `Surface`: kaydırma dinleyicisi `passive`.
+
 ### Oynatma deseni ve README dili — 2026-10-23
 
 #### Eklendi

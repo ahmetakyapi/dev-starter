@@ -143,8 +143,17 @@ grep -rnE '(bg|from|via|to|text|border)-(violet|purple|fuchsia)-[0-9]+' \
 
 ## AI-Slop Yasakları
 
-Bu kalıplar elle ve Gate Pass 6'da aranır (impeccable detector'ı 3.0.0'da
-kaldırıldı; `design-taste-frontend` skill'inin denetim listesi aynı aileyi kapsar).
+Bu kalıpların ölçülebilir olanları **`scripts/slop-scan.sh`** ile aranır
+(Gate Pass 6, `/review-ui`, `audit-project.sh` § 11, CI). Ölçülemeyenler
+(kart içinde kart, ikon karesi) elle ve `design-reviewer`ın ekran ölçümüyle.
+impeccable detector'ı 3.0.0'da kaldırıldı.
+
+```bash
+bash ~/dev-starter/scripts/slop-scan.sh app components   # YÜKSEK bulgu varsa exit 1
+```
+
+Kasıtlı bir satır `slop-ok: <neden>` yorumuyla susturulur. Gerekçesiz
+`slop-ok` Gate'te bulgudur.
 
 | Kalıp | Neden | Doğrusu |
 |-------|-------|---------|
@@ -154,6 +163,16 @@ kaldırıldı; `design-taste-frontend` skill'inin denetim listesi aynı aileyi k
 | Emoji ikon | Cross-platform tutarsız render | `lucide-react` |
 | Kart içinde kart | Hiyerarşi kaybı | Tek seviye + ayırıcı |
 | Her başlığın üstünde yuvarlak ikon karesi | Şablon hissi | Seçici kullan |
+| Kartın tek kenarında renkli şerit (`rounded-xl border-l-4 border-primary`) | Yapay zekâ çıktısının en tanınır izi | Kenarlık dört yanda ya da hiç; vurguyu ton farkı (`bg-primary-wash`) ya da künye taşır. Yuvarlaksız alıntı çizgisi tipografiktir, serbest |
+| `transition-all` | `width`/`height` da animasyona girer, neyin hareket ettiği belirsizleşir | `transition-[transform,opacity]`, `transition-colors` |
+| `font-black` (900) | Slop başlığının imzası; tek ailede kontrastı ağırlık değil punto kurar | Üst sınır 800 ve sıkı tracking (Açılış Zili böyle kullanır); çoğu başlıkta `font-bold` yeter |
+| Kahraman başlığının üstünde yanıp sönen noktalı rozet | Her yapay zekâ açılış sayfasında aynı | En fazla bir kısa künye, noktasız (`hero.eyebrow`) |
+| Ölü bağlantı (`href="#"`) | Hiçbir yere gitmez, klavyede başa zıplar | Gerçek adres, ya da `disabled` düğme; menüde etkin sayfa `aria-current="page"` |
+| `alert()` / `confirm()` | Tasarım dışı, mobilde kaba | Satır içi hata, `snippets/confirm.tsx`, `snippets/toast.tsx` |
+| Gökkuşağı degrade (`from-purple via-pink to-orange`) | Kimlik kuralı 5'i bozar | Tek aile, token'dan |
+| Lorem, "John Doe", "Acme", pazarlama dolgusu ("bir üst seviyeye", "seamless") | Ürün ne yaptığını söylemiyor | Gerçek taslak metin, `guides/05-components.md` § 7 |
+| Nesneyi `scale(0)`'dan büyütmek | Nesne yoktan var olmaz, "patlar" | Nesne `0.82–0.9`dan gelir; yalnızca çizgi ve çubuk `scaleX(0)`dan çizilir |
+| Kaydırmaya kısıtsız dinleyici | Her karede çalışır, mobilde kasar | `useScroll`, `useInView`; elle yazılırsa `{ passive: true }` + rAF |
 
 **Taramanın son sözü yoktur.** Brief kazanır: pinlenmiş estetik, doygun-kalıp
 uyarısını yener. Bir bulgu kasıtlı bir tasarım kararıysa gerekçesini yaz ve
