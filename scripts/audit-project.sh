@@ -157,6 +157,10 @@ if [ -f "$TARGET/package.json" ] && grep -q '"tailwindcss"' "$TARGET/package.jso
   elif grep -rqsE "${EXCLUDES[@]}" --include=*.css "@import ['\"]tailwindcss['\"]" "$TARGET"; then
     if grep -qs '@tailwindcss/postcss' "$TARGET"/postcss.config.* 2>/dev/null; then
       ok "Tailwind v4 (@import + @tailwindcss/postcss)"
+    # Turbopack yükleyicisi de geçerli v4 kurulumu: postcss.config hiç yoktur,
+    # CSS next.config'teki turbopack.rules ile derlenir (geo-tour, 2026-10)
+    elif grep -qs '@tailwindcss/turbopack' "$TARGET"/next.config.* 2>/dev/null; then
+      ok "Tailwind v4 (@import + @tailwindcss/turbopack yükleyicisi)"
     else
       hit "@import \"tailwindcss\" var ama postcss.config'te @tailwindcss/postcss yok"
     fi
