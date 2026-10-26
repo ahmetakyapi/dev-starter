@@ -420,3 +420,43 @@ skills` tedarik zinciri pin'i. Hook'ların her Bash çağrısında fork edilmesi
 altına "Değişti (tarih)" başlığıyla yenisi ve gerekçesi yazılır.*
 
 *Son güncelleme: 2026-10-20*
+
+---
+
+## AI Slop Taraması — Dış Skill'den Seçerek Uyarlama (2026-10-26)
+
+**Kaynak:** [elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)
+(`landing-page-design`, `design-to-motion`; MIT). Metin kopyalanmadı, kurallar
+bizim token, punto ve hareket sistemimize çevrildi.
+
+**Alındı:**
+- **Ölçülebilir kalıplar → `scripts/slop-scan.sh`** (davranış testi
+  `test-slop-scan.sh`; CI, health-check, audit-project § 11, Gate Pass 6,
+  `/review-ui`): tek taraflı vurgu şeridi, ölü bağlantı, `alert()`,
+  `transition-all`, `font-black`, yer tutucu metin, pazarlama dolgusu,
+  gökkuşağı degrade, emoji, `scale(0)`, keyfi punto, sevimli mesaj, şüpheli
+  yuvarlak sayı, Material ikonları. Kural yazılı kaldıkça uygulanmıyordu;
+  hook'larda olduğu gibi (`mistakes.md` #52) davranışla doğrulanır.
+- **İç içe radius formülü** (`iç = dış − boşluk`, boşluk < 32 px) →
+  `guides/02` § 4; göz kararı "bir basamak küçült"ün yerine.
+- **Görsel hikâyesi** (bento kartının görseli işini oynar, tasarımda başlar
+  ve biter, ekran dışında durur) → `guides/04` § 14.
+- **Örnek içerik gerçekçiliği ve sistem mesajı** → `guides/05` § 7.
+
+**Bilerek alınmadı (bizim kuralımız kalır):**
+
+| Onların kuralı | Neden almadık |
+|----------------|---------------|
+| Sentence case başlık ve düğme | Türkçe arayüzde Title Case kimlik değişmezi (00 § 1, #7) |
+| Inter/Roboto yasağı, Geist/Manrope/Poppins listesi | Aile seçimi `snippets/fonts` preset'leriyle ve ürünle yapılır; tek bir yasaklı ad listesi ürün kararını ezmez |
+| İtalik tamamen yasak | Editoryal preset'lerde (Instrument Serif) kasıtlı vurgu |
+| Kahraman başlığında beyaz → gri degrade | Bizde display degradesi tek renk ailesinden, palet token'ı (`--display-gradient`) |
+| Sabit koyu zemin listesi (#181818…) | Zemin palet ve tema token'ından; açık tema yeniden tasarlanır |
+| Arka planda degrade hiç yok | `.app-bg` köşe ışıması kasıtlı ve tek; kural "üç yer + tek aile" |
+| Her sayfada zorunlu "kelime kelime aydınlanan slogan" bölümü | Zorunlu bölüm, kendisi şablon izi olur; desen kataloğunda (04 § 13) seçenek olarak kalabilir |
+| Metinde hiç kısa çizgi (-) yok | Türkçede "E-posta", "Wi-Fi" gibi yazımlarda zorunlu; bizde yasak yalnızca em dash |
+| Sabit 4 px'lik aralık tablosu dışına çıkmama | Tailwind'in 4 px ızgarası zaten aynı işi görüyor (02 § 4) |
+
+**Ne zaman değişir:** Tarayıcı bir projede sürekli `slop-ok` ile
+susturuluyorsa kural yanlıştır: desen daraltılır ya da kaldırılır, kayıt
+buraya "Değişti" alt başlığıyla düşer.

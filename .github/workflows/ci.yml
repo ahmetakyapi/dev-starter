@@ -141,6 +141,13 @@ jobs:
       - name: Hook behaviour tests
         run: bash scripts/test-hooks.sh
 
+      # Tarayici once kendi testinden gecer, sonra ekosistemin sablonlarini
+      # tarar: yeni proje bunlardan dogdugu icin sizan kalip her projeye gider.
+      - name: AI slop scan
+        run: |
+          bash scripts/test-slop-scan.sh
+          bash scripts/slop-scan.sh templates snippets packages/@ahmet/ui/src
+
   agentic:
     name: Agentic Verification
     runs-on: ubuntu-24.04

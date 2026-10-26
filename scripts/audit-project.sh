@@ -16,6 +16,8 @@
 #   8. Tech stack uyumu — Tailwind v4, Next 16 proxy.ts, motion/react
 #   9. Mobil ust kenar (iOS saydam baslik, dokunmatik spotlight)
 #  10. Ekosistem disiplini — hook kaydi, ROUTEMAP, test altyapisi
+#  11. AI slop — scripts/slop-scan.sh (tek tarafli serit, olu baglanti,
+#      dolgu sozcugu, yer tutucu, transition-all, gokkusagi degrade...)
 #
 # Cikis kodu: bulgu varsa 1, temizse 0
 
@@ -229,6 +231,18 @@ for script in test typecheck lint; do
     hit "package.json '$script' script'i yok — /check ve Gate bu adimi kosamaz"
   fi
 done
+
+# ─── 11. AI slop ─────────────────────────────────────────────────────────────
+# Kurallarin tek kaynagi slop-scan.sh; burada yalniz cagrilir ve ozetlenir.
+section "AI slop (scripts/slop-scan.sh)"
+SLOP_OUT=$(bash "$(dirname "$0")/slop-scan.sh" --quiet "$TARGET" 2>&1)
+SLOP_SUM=$(printf '%s\n' "$SLOP_OUT" | grep 'SONUC' | sed 's/.*SONUC: //')
+if printf '%s' "$SLOP_SUM" | grep -q '^0 yuksek, 0 uyari'; then
+  ok "AI slop taramasi — temiz"
+else
+  hit "AI slop taramasi — $SLOP_SUM"
+  printf '%s\n' "$SLOP_OUT" | grep -E '❌|⚠️' | sed 's/^ */          /'
+fi
 
 echo ""
 echo "  ─────────────────────────────────────────────"

@@ -7,6 +7,34 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### AI slop taraması — 2026-10-26
+
+[elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)
+(MIT) incelendi; bize uyanlar uyarlandı, uymayanların gerekçesi
+`knowledge/decisions.md` → "AI Slop Taraması".
+
+#### Eklendi
+
+- **`scripts/slop-scan.sh`** (`npm run slop`): arayüzü şablondan çıkmış
+  gösteren 15 kalıbı her projede tarar; YÜKSEK bulguda exit 1, kasıtlı satır
+  `slop-ok: <neden>` ile susturulur. Davranış testi `scripts/test-slop-scan.sh`
+  (`npm run verify:slop`, 18 test). CI'da, health-check'te (şablonlar ve
+  snippet'ler temiz olmalı), `audit-project.sh` § 11'de, Gate Pass 6'da ve
+  `/review-ui`'nin ilk adımında çalışır.
+- **İç içe radius formülü** `guides/02-design-tokens.md` § 4: iç = dış − boşluk.
+- **Görsel hikâyesi** `guides/04-motion.md` § 14: bento kartının görseli işini
+  oynar; tasarımda başlar ve biter, ekran dışında durur, kartlar sırayla.
+- **Örnek içerik ve sistem mesajı** `guides/05-components.md` § 7.
+- **`design-reviewer`**: iç içe radius, tek taraflı şerit, ölü bağlantı /
+  `aria-current` ölçümleri ve hikâyenin ekran dışında durduğunun doğrulaması.
+
+#### Değişti
+
+- `rules/design-tokens.md` → AI-Slop Yasakları: 10 yeni satır; ölçülebilir olanlar slop-scan.sh'e bağlandı.
+- `uiux-agent` kahraman tarifi: `font-black` → `font-bold` tavanı; yanıp sönen
+  noktalı rozet yerine tek, noktasız künye.
+- `@ahmetakyapi/ui` `Surface`: kaydırma dinleyicisi `passive`.
+
 ### Oynatma deseni ve README dili — 2026-10-23
 
 #### Eklendi

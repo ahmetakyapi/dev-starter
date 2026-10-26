@@ -309,6 +309,7 @@ Her push'ta CI şunları çalıştırır; biri başarısızsa merge yapılmaz.
 | `verify:agentic` | Agentic snippet'ler sabitlenmiş sürümlerle derleniyor mu |
 | `verify:anatomy` | anatomy figür kiti iki şablonda build, tip, lint ve testten geçiyor mu |
 | `test-hooks.sh` | Commit hook'larının davranışı |
+| `test-slop-scan.sh` · `slop-scan.sh` | AI slop tarayıcısı kendi testinden geçiyor, şablonlar ve snippet'ler temiz |
 | `health-check.sh` | Şablonlar yeni tech stack'te mi (Tailwind v4, flat ESLint, `proxy.ts`, `motion`) |
 
 ---
@@ -351,7 +352,7 @@ dev-starter/
 ├── rules/             9 kural
 ├── phases/            planlama · geliştirme · uçtan uca test ve son düzeltmeler · yayın ve bakım
 ├── hooks/             gate-guard · quality-scan · routemap-sync · session-brief
-├── scripts/           health-check · audit-project · verify-* · build-readme-assets
+├── scripts/           health-check · audit-project · slop-scan · verify-* · build-readme-assets
 └── machine/           bootstrap.sh · global CLAUDE.md · taşınan skill'ler
 ```
 

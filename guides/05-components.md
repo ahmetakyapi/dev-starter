@@ -248,6 +248,37 @@ Paragraf, açıklama, hata mesajı gövdesi, yer tutucu, `aria-label`: cümle.
 
 ---
 
+## 7. Örnek İçerik ve Sistem Mesajı
+
+Şablonu "yapay zekâ yaptı" diye ele veren çoğu zaman renk değil, metindir.
+Örnek içerik gerçek bir ürünün gerçek kullanıcılarından geliyormuş gibi
+okunmalı (`templates/landing/lib/content.ts` örnek alınır).
+
+| Konu | Kural | ✅ | ❌ |
+|------|-------|----|----|
+| Metin | Ürünün sesinde gerçek taslak; yer tutucu yok | "Talepler tek gelen kutusunda toplanır." | "Lorem ipsum", "Başlık Buraya" |
+| İnsan | Bölgeye ve kitleye uyan tam ad; bir yüz iki kişide kullanılmaz | Derya Aksoy, Operasyon Müdürü | John Doe, "Kullanıcı 1" |
+| Marka | Ürünün sektörüne uyan uydurma ad | Lojistik aracında "Kuzey Lojistik" | Acme, "Şirket A" |
+| Sayı | Yuvarlak değil, kaynağı ve tarihi olan; gerçek yoksa yayında kaldırılır (08 § 5) | 2.418 · %38 · 4,7 | 10.000+ · %100 · 10x |
+| Tarih | Listede farklı günler | 3 Eki · 17 Eyl · 29 Ağu | Hepsi "Bugün" |
+| Fiyat | Gerçek fiyat gibi | ₺349 / Kişi / Ay | ₺100 · ₺999,99 |
+| Sözcük | Ürünün ne yaptığını söyle | "Haftalık raporu 4 saatten 15 dakikaya indirir" | "devrim yaratın", "bir üst seviyeye taşıyın", "gücünü keşfedin", "zahmetsiz", "seamless" |
+
+**Sistem mesajı sakin ve somuttur.** Onay ne olduğunu söyler: "Fatura
+Dana'ya gönderildi." Hata neyin başarısız olduğunu ve ne yapılacağını
+söyler: "Yükleme başarısız. Dosya 20 MB'tan büyük." Ünlem yok, "Oops",
+"Hay aksi", "Harika!" yok. `alert()` yok; satır içi hata ya da toast.
+
+**Ölü bağlantı yok.** `href="#"` ya gerçek adrese gider ya da düğme
+görünür biçimde `disabled` olur. Menüde etkin sayfa `aria-current="page"`
+ile işaretlenir ve görünür biçimde ayrışır.
+
+Metnin sesi ve kalıpları: `content-editor` subagent'ı. Ölçülebilir olanlar
+`scripts/slop-scan.sh`te (yer tutucu, dolgu sözcüğü, şüpheli yuvarlak sayı,
+sevimli mesaj, ölü bağlantı).
+
+---
+
 ## Kontrol Listesi
 
 - [ ] Ekran sırası: başlık → künye → ana görsel → ölçüler → metin → uyarılar → damga
@@ -256,3 +287,5 @@ Paragraf, açıklama, hata mesajı gövdesi, yer tutucu, `aria-label`: cümle.
 - [ ] Dört veri durumu da çizildi
 - [ ] Dokunma hedefleri ≥ 44 px, dokunmatik input ≥ 16 px
 - [ ] Tüm başlık ve düğmeler Title Case, `capitalize` yok
+- [ ] Örnek içerik gerçekçi (ad, marka, sayı, tarih), dolgu sözcüğü ve yer tutucu yok
+- [ ] Sistem mesajları sakin ve somut; `href="#"` yok, etkin sayfa `aria-current`

@@ -201,8 +201,8 @@ Herhangi bir UI kararında şu sırayla düşün:
 
 ```text
 [İsteğe bağlı .app-bg — köşede --primary radial] + [Mouse spotlight yalnız pointer:fine]
-[Chip/badge — animated dot]
-[H1 — font-black, tracking-[-0.03em], vurgu kelimesi solid accent veya fallback'li degrade]
+[Künye — en fazla bir, kısa, noktasız; yanıp sönen noktalı rozet AI şablonunun izi]
+[H1 — font-bold (üst sınır), tracking-[-0.03em], anlamlı yerden satır kırılımı + text-wrap: balance, vurgu kelimesi solid accent veya fallback'li degrade]
 [Subtitle — text-body, leading-[1.75]]
 [Primary CTA — --brand-gradient] + [Ghost CTA]
 [Ürün önizlemesi — gerçek token'larla çizilmiş minyatür, sahte ekran görüntüsü değil; LCP öğesi Reveal'e sarılmaz]

@@ -11,11 +11,18 @@ Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` subagent'ini oner.
 
 ## Kontrol listesi
 
+0. **Kod taraması** — once calistir, bulgulari asagidaki maddelere dagit:
+   `bash ~/dev-starter/scripts/slop-scan.sh $ARGUMENTS`
+   (tek tarafli serit, olu baglanti, transition-all, font-black, dolgu
+   sozcugu, yer tutucu, gokkusagi degrade, emoji, scale(0), yuvarlak sayi).
+   `slop-ok` ile susturulan satirin gerekcesi var mi?
+
 1. **Token** (`~/dev-starter/guides/02-design-tokens.md`, `rules/design-tokens.md`)
    - Hardcoded hex, hazir palet sinifi (`bg-white`, `text-gray-*`) var mi?
    - `dark:` varyanti var mi? (yeni tech stack'te olmamali; tema token'la doner)
    - Ozel punto sinifi `cn()` icinde birlesiyorsa `extendTailwindMerge` kaydi var mi?
    - Element varsayilanlari `@layer base` icinde mi (katmansiz kural utility'yi ezer)?
+   - Ic ice radius formulle mi: ic = dis − bosluk, bosluk < 32 px (`guides/02` § 4)?
 
 2. **Kimlik ve palet** (`~/dev-starter/guides/00-brand-identity.md`)
    - Derinlik ton farkiyla mi; glass yalnizca altindan icerik gecen ogede mi?
@@ -31,6 +38,8 @@ Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` subagent'ini oner.
    - Sira: baslik → kunye → ana gorsel → olcu izgarasi → metin → uyarilar → damga
    - Her panelin `h2`si var mi? Ekranda tek `primary` dugme mi?
    - Bos / yukleniyor / hata durumlari cizilmis mi; iskelet yapiyla eslesiyor mu?
+   - Ornek icerik gercekci mi (ad, marka, sayi, tarih); sistem mesaji sakin ve
+     somut mu; `href="#"` yok, etkin sayfa `aria-current` (`guides/05` § 7)
    - Izgara hucreleri `minmax(0,1fr)`; sigmayan tablo kaydiriliyor, ezilmiyor
 
 5. **Duyarli tasarim**
@@ -48,6 +57,8 @@ Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` subagent'ini oner.
    - Kahraman/LCP Reveal'e sarili degil; reduced-motion'da `initial={false}` yok
    - Sayfa giris animasyonunda fill-mode yok (fixed modallari kaydirir)
    - Magnetic/imlec efektleri yalnizca `pointer: fine`
+   - Bento gorsel hikayesi: tasarimda basliyor/bitiyor, ekran disinda duruyor,
+     kartlar ayni anda oynamiyor, nesne `scale(0)`dan gelmiyor (`guides/04` § 14)
 
 8. **Bilesen mimarisi**
    - `'use client'` en alt seviyede mi; `"use client"` modulden sabit export ediliyor mu?

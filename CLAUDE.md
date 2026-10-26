@@ -77,6 +77,8 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
+│   ├── slop-scan.sh           → AI slop taraması (15 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
+│   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
 │   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
@@ -221,6 +223,17 @@ npm run verify:anatomy                                # iki şablonda build/tip/
 
 anatomy `machine/bootstrap.sh` → `ANATOMY_REF` commit'ine sabitli. Yükseltme:
 SHA'yı değiştir, **önce** `verify:anatomy`, sonra commit (`mistakes.md #98`).
+
+### AI Slop Taraması
+
+```bash
+bash scripts/slop-scan.sh app components   # veya: npm run slop -- <yol>
+```
+
+Tek taraflı vurgu şeridi, ölü bağlantı, `transition-all`, `font-black`, yer
+tutucu ve dolgu metni, gökkuşağı degrade, emoji, `scale(0)` gibi kalıpları
+bulur; YÜKSEK bulguda exit 1. Kurallar `rules/design-tokens.md` → AI-Slop
+Yasakları; neyi neden almadığımız `knowledge/decisions.md` → "AI Slop Taraması".
 
 ### Canlı Proje Denetimi
 

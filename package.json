@@ -16,6 +16,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit --project packages/@ahmet/ui/tsconfig.json",
     "verify:hooks": "bash scripts/test-hooks.sh",
+    "slop": "bash scripts/slop-scan.sh",
+    "verify:slop": "bash scripts/test-slop-scan.sh",
     "verify:agentic": "node scripts/verify-agentic.mjs",
     "verify:anatomy": "node scripts/verify-anatomy.mjs",
     "readme:assets": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs",
