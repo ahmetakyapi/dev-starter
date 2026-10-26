@@ -220,6 +220,11 @@ eşitlenmeyen bir klasörde tut.
 - [ ] Push sonrası: canlı adreste `/api/health` 200, olmayan adres 404,
       ana akış bir kez elle denendi
 - [ ] Vercel → Logs ilk beş dakikada temiz
+- [ ] Canlı adres **gizli pencerede** açılıyor: Vercel'e giriş yapmış
+      tarayıcı korumalı adresi de açar, ziyaretçi `vercel.com/sso-api`ye
+      düşer (`mistakes.md` #113)
+- [ ] `<proje>.vercel.app` gerçekten senin projen: ad başkasındaysa Vercel
+      `<proje>-<takım>.vercel.app` verir ve o adres varsayılan olarak korumalı
 
 Geri alma: Vercel → Deployments → önceki dağıtım → "Promote to Production".
 Migration geri alınmaz; ters SQL'i önceden hazırla.

@@ -19,6 +19,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - `guides/09` § 8 "Anlam Öbekleri", `guides/04` § 12 kaydırma performansı
   tablosu, `guides/08` § 3 fotoğraf ağırlıklı sitede LCP ve WhatsApp paylaşım
   görseli.
+- `mistakes.md` #113 ve `guides/08` § 8: Vercel'de ad başkasındaysa takım
+  adresi korumalı kalır, site ziyaretçiye açılmaz; yayın kontrolü gizli
+  pencerede ve `curl` ile.
 - `mistakes.md` #107–112 (bulanık giriş, Safari `clip-path`, `overflow: clip`,
   WhatsApp JPEG, hidrasyon ve önden yükleme, kırpılmış gözlemci hedefi).
 - `patterns.md` → "Geo Tour Desenleri": açılış kapısı, adım oturtma, iki dil,

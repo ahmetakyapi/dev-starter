@@ -42,7 +42,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 112 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim, #107–112 Geo Tour)
+│   ├── mistakes.md            → 113 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim, #107–113 Geo Tour)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur

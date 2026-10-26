@@ -29,7 +29,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Ekosistem Altyapısı (hook, test, script) | 99 | hook, test-fixture, enforcement |
 | VPS · Ortam Değişkeni · Yayın | 100–101 | vps, env, seo, robots, e-posta, github-actions |
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
-| Geo Tour'dan Öğrenilenler (2026-10-26) | 107–112 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer |
+| Geo Tour'dan Öğrenilenler (2026-10-26) | 107–113 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection |
 
 ---
 
@@ -1920,6 +1920,29 @@ geri çağırma "görünür" demez.
 
 **Kural**: Görünme gözlemcisi hiçbir zaman başlangıçta gizli, kırpılmış ya da
 `scale(0)` öğeyi izlemez; dış kabı izler, içeriği hareket ettirir.
+
+### 113. Site "Açılmıyor": Ad Başkasındaydı, Kendi Adresi Korumalıydı
+
+**Hata**: geo-tour Vercel'de başarıyla dağıtıldı ("Deployment has completed")
+ama ziyaretçi siteye giremedi. `geo-tour.vercel.app` başka bir şirketin tur
+sitesini açıyordu; projenin kendi adresi `geo-tour-ahmetakyapis-projects.vercel.app`
+ise `302 → vercel.com/sso-api` ile Vercel girişine yönlendiriyordu.
+
+**Sebep**: İki ayrı durum üst üste. (1) `<ad>.vercel.app` ilk alan projeye
+verilir; ad alınmışsa proje yalnız takım ekli adresi alır. (2) Vercel
+Authentication (Standard Protection) varsayılan olarak açık ve takım ekli
+`.vercel.app` adreslerini de korur; yalnız Domains'e eklenen üretim alan
+adları açıktır. Sahibi Vercel'e girişli olduğu için kendi tarayıcısında her
+şey çalışıyor görünür.
+
+**Çözüm**: Vercel → proje → Settings → Deployment Protection → Vercel
+Authentication kapalı (ya da yalnız önizlemeler), ya da Settings → Domains'e
+üretim alan adı (gerçek alan adı ya da boş bir `*.vercel.app`) eklenir ve
+`NEXT_PUBLIC_SITE_URL` ona ayarlanıp yeniden dağıtılır. Teşhis tek komut:
+`curl -sI https://<adres> | grep -i location` → `sso-api` görünüyorsa korumadır.
+
+**Kural**: Yayın kontrolü gizli pencereden ve `curl` ile yapılır; "bende
+açılıyor" kanıt değildir. Proje adı seçilirken `<ad>.vercel.app` boş mu bakılır.
 
 ---
 
