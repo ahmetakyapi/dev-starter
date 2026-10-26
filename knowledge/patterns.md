@@ -1388,8 +1388,63 @@ tanıdığı kadar iyidir.
 
 
 
+## Geo Tour Desenleri (2026-10-26)
+
+Fotoğraf ağırlıklı, iki dilli editoryal site (`ahmetakyapi/geo-tour`). Satır
+kırma `guides/09` § 8'de, performans dersleri `guides/04` § 12 ve
+`mistakes.md` #107–112'de; burada yeniden kullanılabilir yapılar.
+
+### Açılış Kapısı: İçeriği Değil Hareketi Bekletir
+
+İlk ziyarette kısa bir açılış ekranı yazı tipleri, ilk ekrandaki görseller
+inip çözülene (`img.decode()`) ve hidrasyon bitene kadar kalır; kaydırma,
+yumuşak kaydırma ve giriş hareketleri o an başlar. Böylece giriş hareketi yarım
+yüklenmiş fotoğrafın üstünde oynamaz.
+
+- Alt sınır kısa (ilk ziyaret ~900 ms, aynı oturumda ~350 ms), üst sınır sert
+  (görseller 3,2 s'de gelmezse beklemeden açılır).
+- İlk sürümde perde içeriği bekletiyordu ve geri alındı: **HTML ve LCP öğesi
+  perdenin altında zaten çizilir**; kapı yalnız hareketin başlangıcını bekletir.
+- Kapı kalkınca aşağıdaki görseller ekran gelmeden iner (`rootMargin: 250%`)
+  ve yakındakiler çözülür (`100%`): kaydırırken boş kare görünmez.
+- Reduced-motion'da kapı yok.
+
+### Sabitlenmiş Adım Bölümü + Yön Duyarlı Oturma
+
+Sticky sahnede (`position: sticky` + uzun kap) adımlar kaydırma payına bağlı
+(0 = bölüm başı, 1 = sonu). Kaydırma ~200 ms durunca gidilen yöndeki adıma
+0,8 s süzülür; ekranın %6'sından küçük kıpırtı yerine döner. İlk adımdan yukarı
+ve son adımdan aşağı serbest çıkılır; kullanıcı kaydırdığı an oturma kesilir.
+1024 px altında, 740 px'ten kısa ekranda ve reduced-motion'da sahne düz makale
+akışına döner.
+
+### İki Dil: Kökte Türkçe, `/en` Altında İngilizce
+
+- Route grupları: `app/(site)/(tr)/rotalar`, `app/(site)/en/routes`; adresler
+  kendi dilinde. `hreflang` çiftleri ve iki dilli site haritası.
+- İngilizce **uyarlama**, çeviri değil; Title Case kuralları dile göre
+  (`tr-text.ts` → `titleCase(text, "en")`, Chicago düzeni).
+- Panelden girilen içerik çevirisi ayrı tabloda (`content_translations`); boş
+  alan sitede başlangıç çevirisine düşer.
+- Formlar, çerez bandı, 404 ve geçiş perdesi dile göre.
+
+### Yazdıkça Güncellenen Canlı Önizleme (Yönetim Paneli)
+
+Düzenleyici yazdıkça oturuma özel taslak yazar; önizleme sitenin kendisini
+iframe'de, kaydırma yerinde kalarak yeniden çizer. Kaydet yayınlar, her kayıt
+değişiklik geçmişine düşer, tek tıkla geri gelir. Önizlemede bölüme tıklamak
+alanını açar; alana odaklanmak önizlemeyi o bölüme kaydırır.
+
+### Görsel İnceleme Notu (`docs/visual-review.md`)
+
+Her büyük görsel turdan sonra tek dosya: alan → bulgu → değişiklik tablosu,
+içerik ve veri sınırları (uydurulmayan tarih, fiyat, kaynak), doğrulama
+matrisi (320 / 768 / 1440 px, açık/koyu, tek H1, kırık görsel) ve yerel
+Lighthouse sonucu "saha verisi değildir" notuyla. `design-reviewer` raporu
+bu biçime uyar.
+
 ---
 
 *Yeni desenler eklendikçe bu dosya güncellenir.*
 
-*Son güncelleme: 2026-10-12*
+*Son güncelleme: 2026-10-26*

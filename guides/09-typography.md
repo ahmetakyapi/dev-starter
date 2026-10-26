@@ -220,6 +220,41 @@ ad çakışması tuzakları [02 § 3](02-design-tokens.md#3-punto-ölçeği-ve-a
 - Uzun Türkçe birleşik kelime ve URL'de `break-words` (`overflow-wrap:
   break-word`); `break-all` değil, o kelimeyi harf ortasından böler.
 
+### Anlam Öbekleri: `balance` Yetmez
+
+`text-wrap: balance` satırları eşit boya getirir ama Türkçeyi bilmez: dev
+puntoda "Yaşatmak / İstediğimiz Geziler", "Bizi Farklı Kılan Üç / Şey",
+satır sonunda tek başına "ve" bırakır. Geo Tour bunu **birlik kurarak**
+çözdü: birlik içindeki boşluk bölünmez boşluk (U+00A0) olur, tarayıcı
+yalnızca birlikler arasından kırar.
+
+| Birlik | Örnek |
+|--------|-------|
+| Kısa kelime, sayı ve üleştirme sonrakine yapışır | "ve Bir Mühendis", "Üç Şey", "Birer Tohum" |
+| Edat ve soru eki öncekine yapışır | "Gitmek ile", "Bir Yer mi" |
+| Mastar fiille, nesnesi mastarla | "Yaşatmak İstediğimiz", "Orayı Anlamak" |
+| Birleşik fiil adıyla | "Merak Ettiğin", "Davet Ediyoruz" |
+| Marka adı | "Geo Tour" (`keep: ["geo"]`) |
+| Son satırda tek kelime kalmaz | "Bir Jeolog / ve Bir Mühendis" |
+
+Kod: `snippets/tr-text.ts` (→ `lib/text.ts`, testleri `tr-text.test.ts`) ve
+çizimi `snippets/phrases.tsx`:
+
+```tsx
+<h2 className="text-balance"><Phrases text={title} heading /></h2>
+<p className="text-pretty"><Phrases text={intro} glue /></p>
+```
+
+- **Başlığı ekrana sığdır, kesme.** Dar ekranda dev başlık en uzun bölünmez
+  öbeğe göre küçülür: `titleFitEm()` satırın genişliğini harf tablosundan
+  tahmin eder, CSS `min(var(--size), calc(100cqi / var(--fit-em)))` uygular.
+  Tablo başlık ailesine özgüdür (`PLAYFAIR_EM` Playfair için ölçüldü);
+  başka ailede kendi tablonu ver.
+- **Kısa giriş metninde her cümle yeni satır** (`sentences()`): iki üç
+  cümlelik açılış metni paragraf gibi akmaz, şiir gibi okunur.
+- Bu kurallar başlık, künye, kart başlığı ve kısa giriş içindir. Uzun okuma
+  metni `text-pretty` ile serbest akar.
+
 ---
 
 ## 9. Degrade Başlık
@@ -281,3 +316,5 @@ Getiri Eğrisi".
 - [ ] Gövde metni `text-read`, 12 piksel altı yalnızca mono künyede
 - [ ] Degrade yalnızca kısa display başlıkta, `padding-bottom` ile
 - [ ] Title Case elle; `capitalize` ve `toUpperCase()` yok
+- [ ] Türkçe başlık ve kısa metinler `Phrases` ile: "ve" satır sonunda, "Üç / Şey" bölünmüyor
+- [ ] Dev başlık dar ekranda en uzun öbeğe göre küçülüyor, taşmıyor

@@ -22,6 +22,10 @@
  * bloğundan sabit yaz ve kaynağını yorumda söyle, şablondaki
  * `app/opengraph-image.tsx` gibi.
  *
+ * FOTOĞRAFLI GÖRSEL: zemine fotoğraf koyarsan çıktı PNG olarak 1-2 MB olur ve
+ * WhatsApp büyük görselde önizlemeyi atlar. Yanıtı sharp ile JPEG'e çevir
+ * (kalite ~80, 50-120 KB) ve `Content-Type: image/jpeg` ver (mistakes.md #110).
+ *
  * KALINLIK: `next/og` yalnızca Geist Regular gömer; `fonts` verilmezse
  * `fontWeight` yok sayılır. Kalın başlık için fontu projeden oku, `GET`i
  * `async` yap ve ver:

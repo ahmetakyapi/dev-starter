@@ -133,6 +133,9 @@ alınır, paket olarak kurulmaz:
   açma, Escape sırasını ortak tutmazlar.
 - **Fontlar** — `~/dev-starter/snippets/fonts/fonts.ts` preset'leri:
   [09-typography.md](09-typography.md).
+- **Türkçe başlık metni** — `tr-text.ts` (Title Case, anlam öbekleriyle
+  satır kırma, punto sığdırma; testli) ve çizimi `phrases.tsx`:
+  [09-typography.md § 8](09-typography.md#8-satır-uzunluğu-ve-kırılım).
 - **Agentic UI** — `agent-tool.tsx`, `action-card.tsx`, `agent-approval.tsx`;
   proaktif akış (agent hazırlar, kullanıcı onaylar) için `agent-feed.tsx`;
   karar için `/agentic`.

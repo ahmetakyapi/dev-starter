@@ -42,7 +42,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 106 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim)
+│   ├── mistakes.md            → 112 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim, #107–112 Geo Tour)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur
@@ -100,8 +100,9 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── snippets/                  → 20 hazır parça + ui/ kütüphanesi + fonts/
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi + fonts/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
+│   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form
 │   ├── skeleton · search-bar · infinite-scroll · og-image
 │   └── agent-tool · action-card · agent-approval (tsc ✓) · agent-feed (test ✓)

@@ -341,6 +341,23 @@ dolan bir halka/şeritle birlikte meşru; ölçülmüş bir değer yerinde durur
 - 4x yavaş CPU ile bir kez dene (DevTools → Performance). Hızlı makinede
   görünmeyen kasılma orada çıkar.
 
+### Geo Tour'dan Kaydırma Performansı Dersleri
+
+| Belirti | Sebep | Çözüm |
+|---------|-------|-------|
+| Giriş hareketinde kasılma, ısınan telefon | `filter: blur()` girişi her karede yeniden boyuyor | Bulanıklık yalnız küçük öğede; fotoğraf ve büyük başlık yalnız `opacity` + `transform` (#107) |
+| Safari'de kaydırırken bölüm kaybolup yeniden çiziliyor | Kaydırmaya bağlı `clip-path` büyük pano üstünde | Pano sabit yuvarlak levha; açılma `transform` ve tek seferlik kırpma (#108) |
+| Paralaks ya da `view()` çizelgesi hiç oynamıyor | Kap `overflow: hidden`: kendi kaydırma kabını kuruyor | Kapta `overflow: clip` (#109) |
+| Kaydırırken ana iş parçacığı dolu | Paralaks JS'ten, her karede stil yazıyor | CSS kaydırma çizelgesi: `animation-timeline: view()` `@supports` içinde |
+| Sabitlenmiş sahne her karede tam ekran fotoğrafı çiziyor | Karartma katmanı fotoğraftan ayrı, ölçek fotoğrafın kendisinde | Ölçek ve opaklık fotoğrafın kartında; karartma aynı katmanda |
+| Kart açılırken komşular zıplıyor | `width` değişiyor | Açılma `transform` + kırpma; kart genişliği sabit |
+| Dönen fotoğraf yarım çizili geliyor | Görsel çözülmeden (decode) gösteriliyor | `await img.decode()` sonra göster; ekran dışındayken gösteriyi durdur |
+
+**Sabitlenmiş adım bölümü** (dağ patikası, üç katman): kaydırma iki adım
+arasında durursa gidilen yöndeki adıma süzülür, bir tekerlek tıkı bir adım
+ilerletir; ilk ve son adımdan bölümden serbestçe çıkılır. Desen:
+`knowledge/patterns.md` → "Geo Tour Desenleri".
+
 ---
 
 ## 13. Desen Kataloğu — Ölçülü Ama Unutulmaz
@@ -419,14 +436,17 @@ eskiler bir sıra geri çekilir, sonuncusu çıkar."
 7. **Metin yalnızca konu oysa değişir:** sayaç, yazma, ipucu değeri.
    Yazma harf harf adımlanır (45–70 ms), düz silme değil; imleç saniyede bir
    yanıp söner. Kahraman başlığında yazma efekti yok (§ 11).
-8. **Giriş koreografisi:** öğeler aşağıdan yükselir ve bulanıktan netleşir
-   (`y: 10, filter: blur(4px)` → `0`), kapta okuma sırasıyla: başlık →
+8. **Giriş koreografisi:** öğeler aşağıdan yükselir (`y: 10` → `0`), küçük
+   öğe (satır, rozet, ikon) isterse bulanıktan netleşir (`blur(4px)` →
+   `0`). **Fotoğrafta, büyük başlıkta ve kart boyu yüzeyde bulanıklık yok:**
+   `filter` animasyonu her karede yeniden boyar (geo-tour bu yüzden
+   kaldırdı, `mistakes.md` #107). Kapta okuma sırasıyla: başlık →
    etiket → değer → görsel, öğeler arası 30–80 ms. **Nesne `scale(0)`dan
    gelmez** (0.82–0.9'dan); yalnızca çizgi ve çubuk `scaleX/Y(0)`dan çizilir.
    Çubuk ve ölçer soldan sağa `clip-path` ile ilerleme çubuğu gibi dolar.
    Başka öğenin altında kalan katman en son gelir, ilk gider.
-9. **Ucuz özellikler:** `transform`, `opacity`, `clip-path`, `filter`.
-   Animasyonlu bulanıklık ≤ 14 px. Döngü tek bir saatten (`useAnimationFrame`
+9. **Ucuz özellikler:** `transform` ve `opacity`; `clip-path` yalnız küçük
+   öğede ya da tek seferlik açılışta, `filter` yalnız küçük öğede (≤ 4 px). Döngü tek bir saatten (`useAnimationFrame`
    ya da `animate()` zinciri) sürer; sonsuz CSS keyframe'i ile JS saatini
    karıştırma.
 10. **Uygulama içinde değil.** Bu desen açılış sayfası ve vitrin içindir;
@@ -472,3 +492,4 @@ useEffect(() => {
 - [ ] Bento görselinin hikâyesi tek cümleyle yazıldı; yalnız metin kartı hikâye almıyor
 - [ ] Hikâye tasarımda başlayıp bitiyor, ekran dışında duruyor, reduced-motion'da statik
 - [ ] Nesne `scale(0)`dan gelmiyor; tasarımda olmayan "yükleniyor çizgisi" yok
+- [ ] Fotoğrafta ve büyük başlıkta `filter` animasyonu yok; `view()` kabı `overflow: clip`

@@ -29,6 +29,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Ekosistem Altyapısı (hook, test, script) | 99 | hook, test-fixture, enforcement |
 | VPS · Ortam Değişkeni · Yayın | 100–101 | vps, env, seo, robots, e-posta, github-actions |
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
+| Geo Tour'dan Öğrenilenler (2026-10-26) | 107–112 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer |
 
 ---
 
@@ -1830,5 +1831,97 @@ doğrulanır (#58).
 
 ---
 
-*Son güncelleme: 2026-10-20*
+## Geo Tour'dan Öğrenilenler (2026-10-26)
+
+### 107. Bulanıktan Netleşen Giriş Her Karede Sayfayı Yeniden Boyadı
+
+**Hata**: Kelime ve fotoğraf girişleri `filter: blur(8px) → 0` ile açılıyordu;
+telefonda kaydırırken kasılma ve ısınma vardı.
+
+**Sebep**: `filter` animasyonu birleştirici (compositor) dışında kalır: öğe her
+karede yeniden rasterleştirilir. Tam ekran fotoğrafta ve dev başlıkta bu, her
+karede megapiksellerce boyama demek.
+
+**Çözüm**: Girişler yalnız `opacity` + `transform`. Bulanıklık gerekiyorsa küçük
+öğede (satır, rozet, ikon) ve ≤ 4 px.
+
+**Kural**: Fotoğrafa, büyük başlığa ve kart boyu yüzeye `filter` animasyonu
+verilmez (`guides/04-motion.md` § 12, § 14).
+
+### 108. Safari'de Kaydırmaya Bağlı `clip-path` Bölümü Kaybettirdi
+
+**Hata**: Renkli ve fotoğraflı panolar kaydırmayla `clip-path: inset(...)`
+açılıyordu. Safari'de kaydırırken bölüm bir kare kaybolup yeniden çiziliyordu.
+
+**Sebep**: Her karede değişen büyük kırpma alanı, katmanın yeniden boyanmasını
+tetikler; WebKit bunu kaydırma sırasında geç yetiştirir.
+
+**Çözüm**: Pano sabit yuvarlak levha (`border-radius` + `overflow: clip`);
+hareket `transform` ile, kırpma yalnız tek seferlik açılışta.
+
+**Kural**: Kaydırmaya bağlı sürekli animasyon büyük yüzeyde yalnız `transform`
+ve `opacity` kullanır.
+
+### 109. `overflow: hidden` Kap `view()` Çizelgesini ve Paralaksı Öldürdü
+
+**Hata**: `animation-timeline: view()` ile yazılan görsel paralaksı hiç
+oynamıyordu; hata yok, uyarı yok.
+
+**Sebep**: `overflow: hidden` öğeyi bir kaydırma kabı yapar; `view()` en yakın
+kaydırma kabını izler ve o kap hiç kaymaz. Aynı sebep `position: sticky`yi de
+bozar.
+
+**Çözüm**: Kırpması gereken kapta `overflow: clip`: taşanı keser, kaydırma kabı
+kurmaz.
+
+**Kural**: Paralaks, `view()`/`scroll()` çizelgesi ya da sticky içeren kapta
+`overflow: hidden` değil `overflow: clip`.
+
+### 110. Fotoğraflı Paylaşım Görseli WhatsApp'ta Hiç Görünmedi
+
+**Hata**: Her sayfanın `next/og` görseli X ve LinkedIn'de görünüyor, WhatsApp
+bağlantı önizlemesinde görsel çıkmıyordu.
+
+**Sebep**: Satori PNG üretir; fotoğraflı 1200×630 PNG 1-2 MB tutar. WhatsApp
+büyük görselde önizlemeyi sessizce atlar.
+
+**Çözüm**: `ImageResponse` çıktısı sharp ile JPEG'e çevrilir (kalite ~80,
+50-120 KB), `contentType = "image/jpeg"`. Görseller derlemede hazırlanır.
+
+**Kural**: Fotoğraf içeren paylaşım görseli JPEG ve 300 KB altı; yayından önce
+gerçek bir WhatsApp sohbetinde denenir (`guides/08` § 3).
+
+### 111. Görseli Önden Yüklemek Hidrasyon Uyuşmazlığı Üretti
+
+**Hata**: Kaydırmadan önce aşağıdaki görselleri `img.loading = "eager"` ile
+öne alan kod, konsola hidrasyon uyuşmazlığı uyarısı bastı.
+
+**Sebep**: Suspense sınırı sonra hidrate olan bir alt ağaçtaki `<img>`, React
+onu bağlamadan değiştirildi; sunucu HTML'i ile istemci ağacı ayrıştı. Aynı
+sınıftan: "görünme işareti" sınıfı hidrasyondan önce eklenince de oldu.
+
+**Çözüm**: Yalnız React'in bağladığı öğeye dokun (fiber anahtarı ya da
+`useEffect` sonrası); bağlanmamışsa kısa aralıkla yeniden dene. Görünme
+işaretini hidrasyondan sonra ekle.
+
+**Kural**: Hidrasyon bitmeden sunucu HTML'indeki özniteliğe ve sınıfa
+dokunulmaz.
+
+### 112. Tam Kırpılan Gözlemci Hedefi Sıfır Kesişim Verdi, Fotoğraf Gizli Kaldı
+
+**Hata**: Maskeyle açılan görseller bazen hiç açılmadı; fotoğraf sonsuza dek
+gizli kaldı.
+
+**Sebep**: `IntersectionObserver` başlangıçta `clip-path: inset(100% ...)` ile
+tamamen kırpılmış öğeyi izliyordu; kırpılmış alanın kesişimi sıfır sayılır,
+geri çağırma "görünür" demez.
+
+**Çözüm**: Kırpma iç görsele taşındı; gözlemci kırpılmayan dış kutuyu izler.
+
+**Kural**: Görünme gözlemcisi hiçbir zaman başlangıçta gizli, kırpılmış ya da
+`scale(0)` öğeyi izlemez; dış kabı izler, içeriği hareket ettirir.
+
+---
+
+*Son güncelleme: 2026-10-26*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

@@ -91,6 +91,40 @@ for (const route of ROUTES) for (const width of [390, 1280]) {
 - 4x yavaş CPU ile bir kez dene. Açılış Zili'nin kökteki `:has()` maliyeti
   (126 stil hesabı, 2,1 s) yalnızca orada göründü.
 
+### Fotoğraf Ağırlıklı Sitede LCP (Geo Tour)
+
+Geo Tour'un ilk sürümü mobil Lighthouse'ta LCP 4,1 s ölçtü; şunlar indirdi:
+
+```ts
+// next.config.ts
+const IMAGE_CACHE_SECONDS = 60 * 60 * 24 * 31
+images: {
+  formats: ["image/avif", "image/webp"],              // AVIF önce: aynı kalitede JPEG'in yarısı
+  deviceSizes: [640, 828, 1080, 1280, 1600, 2000],    // kaynak 2000 px: daha genişi boşa kodlama
+  qualities: [60, 75],
+  minimumCacheTTL: IMAGE_CACHE_SECONDS,
+},
+experimental: { inlineCss: true },                    // küçük Tailwind çıktısı HTML'e: engelleyici istek yok
+// headers(): /img/:path* → Cache-Control: public, max-age=2678400, stale-while-revalidate=86400
+```
+
+- Kaynak fotoğraf 2000 px'i aşmaz; bulanık yer tutucu derlemede üretilir
+  (`placeholder="blur"` + `blurDataURL`, sharp ile 16 px).
+- Sıradaki kahraman görseli önden yüklenir; kaydırmada aşağıdaki görseller
+  ekrana girmeden iner ve çözülür (`decode()`).
+- **Önden yükleme yalnız React'in bağladığı görsele** dokunur: hidrasyondan
+  önce `loading` özniteliğini değiştirmek uyuşmazlık uyarısı üretir (#111).
+- `inlineCss` CSS'i her HTML'e gömer: CSS büyükse (> ~50 KB) tekrar eden
+  ziyarette önbellek avantajı kaybolur; ölç, sonra aç.
+
+### Paylaşım Görseli WhatsApp'ta Görünmüyor
+
+Fotoğraflı `next/og` çıktısı PNG olarak 1-2 MB'a çıkar; WhatsApp büyük
+görselde önizlemeyi sessizce atlar. Satori PNG'sini sharp ile **JPEG**'e
+çevir (kalite ~80, 50-120 KB), `contentType = "image/jpeg"` (#110). Her sayfa
+kendi fotoğrafı üstünde marka + künye + başlık; ham 2000 px kapağı
+paylaşmak yerine.
+
 ---
 
 ## 4. Erişilebilirlik Denetimi

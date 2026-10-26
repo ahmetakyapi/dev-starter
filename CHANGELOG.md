@@ -7,6 +7,29 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Geo Tour'dan öğrenilenler — 2026-10-26
+
+#### Eklendi
+
+- **`snippets/tr-text.ts` + `phrases.tsx`**: Türkçe (ve İngilizce) başlık metni.
+  Anlam öbekleriyle satır kırma (mastar + fiil, sayı + ad, "ve"/"mi" yapışması,
+  son satırda tek kelime yok), dile göre Title Case, dar ekranda punto sığdırma,
+  marka adı için `keep`. geo-tour `lib/text.ts`ten genelleştirildi; 15 vitest
+  testi `snippets/tr-text.test.ts`.
+- `guides/09` § 8 "Anlam Öbekleri", `guides/04` § 12 kaydırma performansı
+  tablosu, `guides/08` § 3 fotoğraf ağırlıklı sitede LCP ve WhatsApp paylaşım
+  görseli.
+- `mistakes.md` #107–112 (bulanık giriş, Safari `clip-path`, `overflow: clip`,
+  WhatsApp JPEG, hidrasyon ve önden yükleme, kırpılmış gözlemci hedefi).
+- `patterns.md` → "Geo Tour Desenleri": açılış kapısı, adım oturtma, iki dil,
+  canlı önizleme, görsel inceleme notu.
+
+#### Değişti
+
+- `guides/04` § 14: bulanıktan netleşme yalnız küçük öğede; fotoğraf ve büyük
+  başlıkta `filter` animasyonu yok (aynı gün yazılan kural geo-tour ölçümüyle
+  düzeltildi).
+
 ### AI slop taraması — 2026-10-26
 
 [elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)
