@@ -165,7 +165,7 @@ Kasıtlı bir satır `slop-ok: <neden>` yorumuyla susturulur. Gerekçesiz
 | Her başlığın üstünde yuvarlak ikon karesi | Şablon hissi | Seçici kullan |
 | Kartın tek kenarında renkli şerit (`rounded-xl border-l-4 border-primary`) | Yapay zekâ çıktısının en tanınır izi | Kenarlık dört yanda ya da hiç; vurguyu ton farkı (`bg-primary-wash`) ya da künye taşır. Yuvarlaksız alıntı çizgisi tipografiktir, serbest |
 | `transition-all` | `width`/`height` da animasyona girer, neyin hareket ettiği belirsizleşir | `transition-[transform,opacity]`, `transition-colors` |
-| `font-black` / `font-extrabold` | Slop başlığının imzası; tek ailede kontrastı ağırlık değil punto kurar | Üst sınır `font-bold` |
+| `font-black` (900) | Slop başlığının imzası; tek ailede kontrastı ağırlık değil punto kurar | Üst sınır 800 ve sıkı tracking (Açılış Zili böyle kullanır); çoğu başlıkta `font-bold` yeter |
 | Kahraman başlığının üstünde yanıp sönen noktalı rozet | Her yapay zekâ açılış sayfasında aynı | En fazla bir kısa künye, noktasız (`hero.eyebrow`) |
 | Ölü bağlantı (`href="#"`) | Hiçbir yere gitmez, klavyede başa zıplar | Gerçek adres, ya da `disabled` düğme; menüde etkin sayfa `aria-current="page"` |
 | `alert()` / `confirm()` | Tasarım dışı, mobilde kaba | Satır içi hata, `snippets/confirm.tsx`, `snippets/toast.tsx` |

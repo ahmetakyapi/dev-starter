@@ -26,6 +26,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 #### Değişti
 
+- **Commit yazarı kuralı** `machine/CLAUDE.md` ve `rules/commit-conventions.md`te:
+  her depoda Ahmet, Claude yalnız `Co-Authored-By:` (kural Açılış Zili'nde
+  yazılıydı, ekosistemde değildi).
+- `knowledge/live-projects-audit.md` → "Tur 2026-10-26": dört proje, ayarlı tarayıcı.
+- **slop-scan dört canlı projede ayarlandı**: yorum satırları içerik
+  kontrolüne girmez; `seamless?: boolean` gibi tanımlayıcı dolgu sayılmaz;
+  ★ ✓ ✗ tipografik işaret emoji sayılmaz; 800 ağırlığı serbest (yalnız 900);
+  `prose-*:` varyantları şerit sayılmaz; `scale(0)` yalnız JS hareket
+  nesnesinde (CSS `scale: 0 1` çizgi çizer). Her yanlış pozitif teste girdi.
 - `guides/04` § 14: bulanıktan netleşme yalnız küçük öğede; fotoğraf ve büyük
   başlıkta `filter` animasyonu yok (aynı gün yazılan kural geo-tour ölçümüyle
   düzeltildi).
@@ -54,7 +63,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 #### Değişti
 
 - `rules/design-tokens.md` → AI-Slop Yasakları: 10 yeni satır; ölçülebilir olanlar slop-scan.sh'e bağlandı.
-- `uiux-agent` kahraman tarifi: `font-black` → `font-bold` tavanı; yanıp sönen
+- `uiux-agent` kahraman tarifi: `font-black` → 800 tavanı (Açılış Zili gibi); yanıp sönen
   noktalı rozet yerine tek, noktasız künye.
 - `@ahmetakyapi/ui` `Surface`: kaydırma dinleyicisi `passive`.
 

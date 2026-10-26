@@ -52,7 +52,7 @@ expect "[YUKSEK] Tek tarafli vurgu seridi"
 expect "[YUKSEK] Olu baglanti"
 expect "[YUKSEK] window.alert"
 expect "[YUKSEK] transition-all"
-expect "[YUKSEK] Asiri kalin yazi"
+expect "[YUKSEK] Asiri kalin yazi (font-black / 900) — 1 adet"
 expect "[YUKSEK] Yer tutucu metin"
 expect "[YUKSEK] Pazarlama dolgusu sozcukleri — 2 adet"
 expect "[YUKSEK] Gokkusagi degrade"
@@ -81,6 +81,10 @@ export function Temiz() {
       <a href="#ozellikler">Özellikler</a>
       <span className="scale-0 peer-checked:scale-100">radyo noktasi</span>
       <span className="badge">Yayında</span>
+      <h3 className="font-extrabold tracking-tight">Açılış Zili 800 kullanır</h3>
+      <span aria-hidden>★</span> 4,7 · <span>✓</span>
+      <article className="prose prose-blockquote:border-l-4 prose-code:rounded">Metin</article>
+      <div data-seamless="">iso</div>
       <a href="#">Başa Dön</a>{/* slop-ok: kasitli; test susturmayi dogrular */}
     </section>
   );
@@ -91,6 +95,11 @@ export const bar = { initial: { scaleX: 0 }, animate: { scaleX: 1 } };
 export const pop = { initial: { scale: 0.86, opacity: 0 }, animate: { scale: 1, opacity: 1 } };
 export const parlama = ["0%", "100%"];
 export const hata = "Dosya 20 MB'tan büyük. Daha küçük bir dosya seç.";
+export const css = ".track { scale: 0 1; } .dot::after { scale:0; }";
+// Gercek projelerden gelen yanlis pozitifler (2026-10-26 denetimi): her biri bir kez bulgu sayildi
+type Kati = { seamless?: boolean }; // iso-kit: tanimlayici, pazarlama degil
+export const yazi = "Masa oyununun kurallarını sunucu tutar.";
+/** Değer + durum işareti. ✓ var, ✗ yok; seamless bir geçiş, supercharge değil. */
 window.addEventListener("scroll", () => requestAnimationFrame(() => {}), { passive: true });
 EOF
 # Test dosyasi taranmaz: kirli icerik tasisa bile
