@@ -1430,10 +1430,30 @@ akışına döner.
 
 ### Yazdıkça Güncellenen Canlı Önizleme (Yönetim Paneli)
 
+> **2026-10-27:** Kurala terfi etti → `rules/live-preview.md`; projeden bağımsız
+> kit `snippets/live-preview/` (`/snippet live-preview`).
+
 Düzenleyici yazdıkça oturuma özel taslak yazar; önizleme sitenin kendisini
 iframe'de, kaydırma yerinde kalarak yeniden çizer. Kaydet yayınlar, her kayıt
 değişiklik geçmişine düşer, tek tıkla geri gelir. Önizlemede bölüme tıklamak
 alanını açar; alana odaklanmak önizlemeyi o bölüme kaydırır.
+
+- **Gerçek ölçü, küçültülmüş:** iframe 1440 × 900 (ya da 390 × 844) kurulur,
+  `transform: scale()` ile sütuna sığar; düzen gerçek ekrandaki gibi kırılır.
+- **İki şerit:** içerik taslağa yazılır ve `router.refresh()` (köprüde
+  `useTransition` ile; bitince `rendered` haberi) ile çizilir; yazı tipi ve
+  punto `lp:vars` ile köke CSS değişkeni olarak, istek beklemeden.
+- **Yanlış temada görünmez:** iframe `opacity: 0` başlar; köprü tema ve
+  değişkenleri uyguladıktan sonra `paint` (zemin + yazı rengi) gönderir, panel
+  ancak o zaman gösterir. Telefonun durum çubuğu da bu rengi alır.
+- **Durum alanlardan:** `snapshot` (şimdiki) · `pushed` (son gönderilen) ·
+  `saved` (yayındaki) karşılaştırması rozeti verir; ayrı bayrak tutulmaz.
+- **Giriş hareketi tuzağı:** her yeniden çizimde Reveal baştan oynar, yazdıkça
+  eklenen kart saniyelerce görünmez. Köprü 1,8 sn sonra `data-preview-settled`
+  açar, hareketler kısa devre olur.
+- **Geo Tour'dan farkı:** taslak `page_content`e `draft:` önekiyle yazılıyordu
+  ve anahtar yalnız kayıttı (iki sekme birbirini ezer); kitte ayrı
+  `content_drafts` tablosu, `(key, session)` birincil anahtarı ve 24 saatlik süpürme var.
 
 ### Görsel İnceleme Notu (`docs/visual-review.md`)
 
@@ -1447,4 +1467,4 @@ bu biçime uyar.
 
 *Yeni desenler eklendikçe bu dosya güncellenir.*
 
-*Son güncelleme: 2026-10-26*
+*Son güncelleme: 2026-10-27*

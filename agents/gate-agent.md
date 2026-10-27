@@ -159,6 +159,9 @@ grep -rn "from ['\"]framer-motion" app components                  # yeni projed
 - **Degrade metin fallback'i** — `@supports` + solid `color` var mı?
   Yoksa metin desteklenmeyen yerde tamamen görünmez olur (`mistakes.md` #42)
 - **Tekrar eden degrade token'dan mı geliyor?** Elle yazılmışsa token'a taşı
+- **Canlı önizleme** (`rules/live-preview.md`): sitede görünen içeriği, görseli ya da
+  yazı tipini düzenleyen ekran varsa yanında sitenin kendisi; masaüstü + telefon,
+  açık + koyu, yazınca ≤ 0,5 sn, font anında, taslak canlıya sızmıyor. Yoksa FAIL
 - Responsive, dark/light parity, GPU-composited animasyon
 - Erişilebilirlik: `aria-label`, alt text, klavye navigasyonu
 - **Kontrast**: renk çiftini gerçekten hesapla, göz kararı verme

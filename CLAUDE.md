@@ -42,7 +42,7 @@ dev-starter/
 ├── knowledge/
 │   ├── themes/                → 6 projenin görsel hafızası (DESIGN.md 9 bölüm)
 │   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 113 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim, #107–113 Geo Tour)
+│   ├── mistakes.md            → 114 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim, #107–114 Geo Tour)
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur
@@ -63,7 +63,7 @@ dev-starter/
 │   ├── gate-agent.md          → 6+1 adımlı kalite denetimi (rapor: docs/gate/)
 │   └── deploy-agent.md        → Vercel deployment ve yayın
 │
-├── rules/                     → 9 kural dosyası (aşağıdaki tablo)
+├── rules/                     → 10 kural dosyası (aşağıdaki tablo)
 ├── phases/                    → planning (P1→P6), development (dalga planı), e2e-polish (E0→E5), release-maintenance
 │
 ├── hooks/
@@ -100,12 +100,13 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi + fonts/
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form
 │   ├── skeleton · search-bar · infinite-scroll · og-image
-│   └── agent-tool · action-card · agent-approval (tsc ✓) · agent-feed (test ✓)
+│   ├── agent-tool · action-card · agent-approval (tsc ✓) · agent-feed (test ✓)
+│   └── live-preview/ → Panelde yazdıkça güncellenen canlı önizleme (masaüstü + telefon, açık/koyu, font anında)
 │
 ├── eslint.config.js · .prettierrc · .editorconfig · .nvmrc (24)
 ├── CHANGELOG.md · CONTRIBUTING.md
@@ -401,6 +402,7 @@ Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet dön
 /snippet action-card
 /snippet agent-approval
 /snippet agent-feed
+/snippet live-preview   → yönetim paneline canlı önizleme (rules/live-preview.md)
 ```
 
 ### Website Klonla
@@ -477,6 +479,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 | `routemap-discipline.md` | ROUTEMAP tek kaynak, session resume, durum geçişleri |
 | `context-curation.md` | Agent bazlı filtered context, token bütçesi, referansla aktarım |
 | `agentic-ui.md` | LLM tool çağırıyorsa: guardrail sunucuda, model yetkilendirmez, sandbox, token bütçesi, tool testi |
+| `live-preview.md` | İçerik/metin/görsel/yazı tipi düzenleyen her ekranın yanında sitenin kendisi: masaüstü + telefon, açık/koyu, yazdıkça güncellenir, font anında; taslak canlıya sızmaz (kit: `snippets/live-preview/`) |
 | `self-improvement.md` | Öğrenme kanalları, onay ilkesi (agent taslak önerir, onaysız yazamaz), terfi merdiveni, boy tavanları |
 
 ---

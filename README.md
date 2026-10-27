@@ -349,7 +349,7 @@ dev-starter/
 │   ├── agents/        strategist · design-reviewer · content-editor · gate · deploy · frontend · backend · qa · researcher
 │   └── commands/      19 komut
 ├── knowledge/         mistakes · patterns · decisions · tech-radar · design-references · themes
-├── rules/             9 kural
+├── rules/             10 kural
 ├── phases/            planlama · geliştirme · uçtan uca test ve son düzeltmeler · yayın ve bakım
 ├── hooks/             gate-guard · quality-scan · routemap-sync · session-brief
 ├── scripts/           health-check · audit-project · slop-scan · verify-* · build-readme-assets

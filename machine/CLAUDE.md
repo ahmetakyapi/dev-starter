@@ -61,6 +61,14 @@ Proje konfigürasyonu aksini belirtmediği sürece:
 - Client erişimi gereken varlar: `NEXT_PUBLIC_` prefix
 - Vercel'de env varları deploy öncesi ekle
 
+### Yönetim Paneli — Canlı Önizleme Zorunlu
+- Sitede görünen bir şeyi (metin, görsel, sıra, yazı tipi, punto, renk) düzenleyen her ekranın yanında
+  sitenin **kendisi** durur: masaüstü 1440 × 900 + telefon 390 × 844, açık/koyu, yazdıkça güncellenir
+- İçerik ~320 ms sonra taslağa yazılır ve `router.refresh()` ile yeniden çizilir (kaydırma yerinde);
+  yazı tipi/punto CSS değişkeniyle anında. Taslak ayrı tabloda, oturuma özel; canlı siteye sızmaz
+- Ayrı "önizleme bileşeni" yazılmaz, sitenin görünüm bileşeni iframe'de çizilir
+- Kural: `~/dev-starter/rules/live-preview.md` · kit: `~/dev-starter/snippets/live-preview/` (`/snippet live-preview`)
+
 ---
 
 ## Görsel Dil

@@ -29,7 +29,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Ekosistem Altyapısı (hook, test, script) | 99 | hook, test-fixture, enforcement |
 | VPS · Ortam Değişkeni · Yayın | 100–101 | vps, env, seo, robots, e-posta, github-actions |
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
-| Geo Tour'dan Öğrenilenler (2026-10-26) | 107–113 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection |
+| Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
 
 ---
 
@@ -1944,7 +1944,26 @@ Authentication kapalı (ya da yalnız önizlemeler), ya da Settings → Domains'
 **Kural**: Yayın kontrolü gizli pencereden ve `curl` ile yapılır; "bende
 açılıyor" kanıt değildir. Proje adı seçilirken `<ad>.vercel.app` boş mu bakılır.
 
+### 114. Canlı Önizleme Boş Kaldı: Kendi Sitemizi Çerçeveye Almayı Yasaklamıştık
+
+**Hata**: `snippets/live-preview` kiti şablon kopyasına kuruldu; panel açıldı,
+önizleme sonsuza dek "Önizleme Hazırlanıyor" dedi. Konsolda hata yok gibiydi,
+köprü hiç `ready` göndermedi.
+
+**Sebep**: Şablonların `next.config.ts`i her yola `X-Frame-Options: DENY` ve
+`Content-Security-Policy: frame-ancestors 'none'` basar (clickjacking
+koruması). Bu, aynı kökenden iframe'i de engeller. Geo Tour'da bu başlıklar
+olmadığı için kit orada çalışıyordu; ekosistem şablonuna taşınınca kırıldı.
+
+**Çözüm**: Genel kuraldan SONRA yalnız önizleme yoluna `SAMEORIGIN` +
+`frame-ancestors 'self'` (Next aynı anahtarda son eşleşeni uygular). Sitenin
+geri kalanı `DENY` kalır. Kod: `snippets/live-preview/README.md` § 4.
+
+**Kural**: iframe'de kendi sayfasını gösteren her özellik (önizleme, gömülü
+demo) önce `curl -sI <yol> | grep -i frame` ile denetlenir. Güvenlik başlığı
+gevşetilmez, yola özel istisna yazılır.
+
 ---
 
-*Son güncelleme: 2026-10-26*
+*Son güncelleme: 2026-10-27*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

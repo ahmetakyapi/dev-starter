@@ -1,0 +1,468 @@
+/* ==========================================================================
+   Canlı önizleme (site-preview.tsx): sitenin gerçek sayfası, gerçek ölçülü bir
+   tarayıcı penceresinde ya da telefonda, bulunduğu yere sığacak kadar
+   küçültülmüş. Renkler şablon token'larından; pencere ve telefon zeminden ton
+   farkıyla ayrılır, gölge yok. globals.css'ten sonra içe aktar.
+   ========================================================================== */
+
+/* --- Düzenleyici + önizleme düzeni ----------------------------------------
+   Geniş ekranda form solda, önizleme sağda yapışık; önizleme sütunu formdan
+   biraz geniş, masaüstü penceresi okunur kalsın. Dar ekranda önizleme formun
+   altında, kaydet çubuğunda "Önizle" düğmesi tam ekranı açar. */
+.lp-editor {
+  display: grid;
+  gap: 2.5rem;
+  align-items: start;
+}
+.lp-editor-aside:has(> .lp-root[data-expanded]) {
+  position: relative;
+  z-index: 90;
+}
+@media (min-width: 1280px) {
+  .lp-editor {
+    grid-template-columns: minmax(24rem, 0.86fr) minmax(0, 1.2fr);
+    gap: 2.25rem;
+  }
+  .lp-editor-aside {
+    position: sticky;
+    top: 1.25rem;
+  }
+}
+
+/* --- Araç çubuğu ---------------------------------------------------------- */
+.lp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.lp-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+}
+.lp-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary-ink);
+}
+.lp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 1.875rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: var(--color-surface-sunken);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-body);
+  transition: background-color 0.3s, color 0.3s;
+}
+.lp-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-muted);
+}
+.lp-status[data-state="live"] .lp-dot {
+  background: var(--color-success);
+}
+.lp-status[data-state="draft"] {
+  background: var(--color-warning-wash);
+  color: var(--color-strong);
+}
+.lp-status[data-state="draft"] .lp-dot {
+  background: var(--color-warning);
+}
+.lp-status[data-state="error"] {
+  background: var(--color-danger-wash);
+  color: var(--color-danger);
+}
+.lp-status[data-state="error"] .lp-dot {
+  background: var(--color-danger);
+}
+.lp-spin {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+@keyframes lp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lp-spin {
+    animation: lp-spin 0.9s linear infinite;
+  }
+}
+
+/* Cihaz ve tema seçimi: iki düğmelik hap */
+.lp-seg,
+.lp-views {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--color-surface-sunken);
+}
+.lp-seg button,
+.lp-icon {
+  display: grid;
+  place-items: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  border-radius: 999px;
+  color: var(--color-muted);
+  transition: background-color 0.3s, color 0.3s;
+}
+.lp-seg button svg,
+.lp-icon svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.lp-seg button:hover,
+.lp-icon:hover {
+  color: var(--color-strong);
+}
+.lp-icon:hover {
+  background: var(--color-surface-sunken);
+}
+.lp-seg button[aria-pressed="true"],
+.lp-views button[aria-selected="true"] {
+  background: var(--color-page);
+  color: var(--color-strong);
+  box-shadow: 0 0 0 1px var(--color-line);
+}
+.lp-close,
+.lp-close:hover {
+  background: var(--color-strong);
+  color: var(--color-page);
+}
+@media (pointer: coarse) {
+  .lp-seg button,
+  .lp-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
+/* Aynı içeriğin sitede göründüğü yerler (kendi sayfası, liste, ana sayfa) */
+.lp-views {
+  align-self: flex-start;
+  gap: 0.25rem;
+}
+.lp-views button {
+  min-height: 2.25rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* --- Sahne ---------------------------------------------------------------- */
+.lp-stage {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0;
+}
+.lp-stage[data-device="desktop"][data-fill] {
+  height: clamp(26rem, calc(100dvh - 9.5rem), 70rem);
+  overflow: clip;
+}
+.lp-stage[data-device="mobile"] {
+  align-items: center;
+  height: clamp(30rem, calc(100dvh - 12rem), 56rem);
+  border-radius: 1.75rem;
+  background: var(--color-surface-sunken);
+  overflow: clip;
+}
+.lp-placeholder {
+  width: 100%;
+  aspect-ratio: 1440 / 938;
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+.lp-stage[data-device="mobile"] .lp-placeholder {
+  width: min(70%, 18rem);
+  height: 88%;
+  aspect-ratio: auto;
+  border-radius: 2.5rem;
+}
+
+/* Tarayıcı penceresi */
+.lp-browser {
+  overflow: clip;
+  border-radius: 1rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+.lp-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.4rem 0 0.85rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+.lp-lights {
+  display: inline-flex;
+  gap: 0.4rem;
+}
+.lp-lights i {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--color-line-strong);
+}
+.lp-url {
+  display: inline-flex;
+  flex: 1;
+  min-width: 0;
+  max-width: 26rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 1.625rem;
+  margin-inline: auto;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: var(--color-page);
+  font-size: 0.78rem;
+  color: var(--color-strong);
+}
+.lp-url svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+  color: var(--color-muted);
+}
+.lp-open {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  color: var(--color-muted);
+  transition: background-color 0.3s, color 0.3s;
+}
+.lp-open:hover {
+  background: var(--color-surface-sunken);
+  color: var(--color-strong);
+}
+.lp-open svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Telefon: koyu gövde, ekran, ada ve alt çizgi. Gövde panelin mürekkep
+   renginde; koyu panelde açık renkli bir telefon olur, bilerek. */
+.lp-phone {
+  position: relative;
+  flex-shrink: 0;
+  background: var(--color-strong);
+  box-shadow: 0 0 0 1px var(--color-line-strong);
+}
+.lp-island,
+.lp-home {
+  position: absolute;
+  left: 50%;
+  z-index: 3;
+  translate: -50% 0;
+  border-radius: 999px;
+  pointer-events: none;
+}
+.lp-island {
+  background: var(--color-strong);
+}
+.lp-home {
+  background: var(--color-strong);
+  opacity: 0.8;
+}
+.lp-stage[data-theme-preview="dark"] .lp-home {
+  background: var(--color-page);
+}
+
+/* Durum çubuğu: önizlenen sayfanın zemin ve yazı rengini alır (lp:paint) */
+.lp-statusbar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: background-color 0.4s, color 0.4s;
+}
+.lp-statusbar-icons {
+  display: inline-flex;
+  align-items: center;
+}
+.lp-statusbar-icons svg {
+  stroke-width: 2.4;
+}
+
+/* Ekran: iframe gerçek ölçüsünde, transform ile küçültülerek çizilir */
+.lp-screen {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--color-page);
+}
+.lp-screen iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 0;
+  transform-origin: 0 0;
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-brand);
+}
+.lp-screen iframe[data-ready] {
+  opacity: 1;
+}
+.lp-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--color-surface);
+  transition: opacity 0.5s var(--ease-brand), visibility 0s linear 0.5s;
+}
+.lp-loading img {
+  opacity: 0.7;
+  filter: blur(20px);
+  transform: scale(1.12);
+}
+.lp-loading[data-hidden] {
+  opacity: 0;
+  visibility: hidden;
+}
+.lp-loading-note {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: var(--color-page);
+  color: var(--color-strong);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Bölüm çerçeveleri: panel ölçeğinde çizilir, ad etiketi okunaklı kalır */
+.lp-overlay {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.lp-frame {
+  position: absolute;
+  box-shadow: inset 0 0 0 1.5px var(--color-primary-soft);
+  background: var(--color-primary-wash);
+  transition: opacity 0.25s;
+}
+.lp-frame[data-kind="focus"] {
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+}
+.lp-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: calc(100% - 20px);
+  height: 30px;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: var(--color-strong);
+  color: var(--color-page);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity 0.25s;
+}
+.lp-chip[data-kind="focus"] {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.lp-chip svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+}
+@starting-style {
+  .lp-frame,
+  .lp-chip {
+    opacity: 0;
+  }
+}
+
+.lp-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+.lp-hint > svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+/* Büyütülmüş önizleme: ekranı kaplar, pencere sahneyi doldurur */
+.lp-root[data-expanded] {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  padding: clamp(0.75rem, 1.6vw, 1.5rem);
+  background: var(--color-page);
+  transition: opacity 0.3s var(--ease-brand);
+}
+@starting-style {
+  .lp-root[data-expanded] {
+    opacity: 0;
+  }
+}
+.lp-root[data-expanded] .lp-stage {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  align-items: center;
+}
+.lp-root[data-expanded] .lp-stage[data-device="desktop"] {
+  align-items: stretch;
+}
+.lp-root[data-expanded] .lp-hint {
+  justify-content: center;
+}
+
+/* --- Önizlenen sitenin tarafı (sitenin globals.css'ine) --------------------
+   Bölümler tıklanabilir görünür; ilk çizimden sonra giriş hareketleri
+   beklemeden biter: yazdıkça eklenen kelime ya da kart, sıra gecikmesiyle
+   saniyelerce gizli kalmaz. Sınıf listesini projenin hareket sınıflarıyla
+   doldur (Reveal, .rise, .clip-reveal…).
+
+:root[data-preview] [data-edit] { cursor: pointer; }
+:root[data-preview-settled] :is(.reveal, .rise) {
+  animation-duration: 1ms !important;
+  animation-delay: 0ms !important;
+}
+   -------------------------------------------------------------------------- */

@@ -7,6 +7,25 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Canlı önizleme kuralı — 2026-10-27
+
+#### Eklendi
+
+- **`rules/live-preview.md`** (10. kural): sitede görünen içeriği, görseli ya da
+  yazı tipini düzenleyen her ekranın yanında sitenin kendisi; masaüstü 1440 ×
+  900 + telefon 390 × 844, açık/koyu, yazdıkça güncellenir, font ve punto
+  anında, taslak canlıya sızmaz. Gate Pass 6 denetler, P4 planlar.
+- **`snippets/live-preview/`** kiti (Geo Tour panelinden genelleştirildi):
+  `site-preview.tsx` (çerçeve), `preview-bridge.tsx` (iframe köprüsü, `lp:*`
+  protokolü, `lp:vars` ile anında yazı tipi), `use-live-draft.ts` (içerik +
+  görünüm şeridi), `drafts.ts` (`content_drafts`, `(key, session)`),
+  `draft-session.ts`, `live-preview.css` (token'lı) ve kurulum README'si.
+- `/snippet live-preview`, `machine/CLAUDE.md` global kural, `AGENT_PROTOCOL`
+  kural tablosu, frontend/uiux/gate rolleri, `guides/10`, `patterns.md`,
+  `decisions.md` → "Canlı Önizleme Zorunlu", health-check kontrolleri.
+- `mistakes.md` #114: şablonun `frame-ancestors 'none'` başlığı aynı kökenden
+  önizleme iframe'ini de engeller; yalnız önizleme yoluna `'self'` istisnası.
+
 ### Geo Tour'dan öğrenilenler — 2026-10-26
 
 #### Eklendi

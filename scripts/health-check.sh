@@ -51,7 +51,7 @@ done
 # ─── 2. Rule Files ───────────────────────────────────────────────────────────
 header "Kural Dosyalari"
 
-RULES=("immutable-architecture" "design-tokens" "commit-conventions" "bugfix-protocol" "dev-cycle" "routemap-discipline" "context-curation" "agentic-ui" "self-improvement")
+RULES=("immutable-architecture" "design-tokens" "commit-conventions" "bugfix-protocol" "dev-cycle" "routemap-discipline" "context-curation" "agentic-ui" "live-preview" "self-improvement")
 for rule in "${RULES[@]}"; do
   if [ -f "rules/${rule}.md" ]; then
     pass "$rule.md mevcut"
@@ -174,7 +174,7 @@ done
 # ─── 5. Snippet Files ────────────────────────────────────────────────────────
 header "Snippet Dosyalari"
 
-SNIPPETS=("animated-number.tsx" "infinite-scroll.tsx" "og-image.tsx" "search-bar.tsx" "modal.tsx" "drawer.tsx" "form.tsx" "skeleton.tsx" "toast.tsx" "confirm.tsx" "agent-tool.tsx" "action-card.tsx" "agent-approval.tsx" "agent-feed.tsx" "agent-feed-core.ts" "agent-feed.test.ts" "reveal.tsx" "theme-toggle.tsx" "rolling-number.tsx" "rolling-number.module.css" "scroll-progress.tsx" "tab-underline.tsx" "use-scroll-lock.ts" "tr-text.ts" "tr-text.test.ts" "phrases.tsx")
+SNIPPETS=("animated-number.tsx" "infinite-scroll.tsx" "og-image.tsx" "search-bar.tsx" "modal.tsx" "drawer.tsx" "form.tsx" "skeleton.tsx" "toast.tsx" "confirm.tsx" "agent-tool.tsx" "action-card.tsx" "agent-approval.tsx" "agent-feed.tsx" "agent-feed-core.ts" "agent-feed.test.ts" "reveal.tsx" "theme-toggle.tsx" "rolling-number.tsx" "rolling-number.module.css" "scroll-progress.tsx" "tab-underline.tsx" "use-scroll-lock.ts" "tr-text.ts" "tr-text.test.ts" "phrases.tsx" "live-preview/README.md" "live-preview/site-preview.tsx" "live-preview/preview-bridge.tsx" "live-preview/use-live-draft.ts" "live-preview/drafts.ts" "live-preview/draft-session.ts" "live-preview/live-preview.css")
 for snippet in "${SNIPPETS[@]}"; do
   if [ -f "snippets/${snippet}" ]; then
     pass "$snippet mevcut"

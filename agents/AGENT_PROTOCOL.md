@@ -264,6 +264,7 @@ Her agent bu kurallara uyar, istisnası yoktur:
 | `rules/routemap-discipline.md` | ROUTEMAP tek kaynak prensibi | Herkes |
 | `rules/context-curation.md` | Agent bazlı context seviyeleri | Herkes |
 | `rules/agentic-ui.md` | LLM tool çağırıyorsa: guardrail, yetki, sandbox, test | FE, BE, GATE |
+| `rules/live-preview.md` | İçerik düzenleyen ekranın yanında canlı önizleme (masaüstü + telefon, açık/koyu, font anında) | UI, FE, BE, GATE |
 
 ---
 

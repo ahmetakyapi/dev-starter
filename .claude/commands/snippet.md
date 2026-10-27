@@ -1,6 +1,6 @@
 ---
 description: Hazır bileşeni projeye uyarlayarak kopyala: snippets/ui kütüphanesi, reveal, theme-toggle, rolling-number, modal, form, toast ve diğerleri
-argument-hint: "ui/<ad> (data-table, tree-view, dialog, combobox …) | reveal | theme-toggle | rolling-number | modal | toast | form | og-image | agent-tool | agent-feed"
+argument-hint: "ui/<ad> (data-table, tree-view, dialog, combobox …) | reveal | theme-toggle | rolling-number | modal | toast | form | og-image | agent-tool | agent-feed | live-preview"
 ---
 
 `$ARGUMENTS` tipinde bir bilesen snippet'ini mevcut projeye uyarla. Bu komut
@@ -44,6 +44,12 @@ dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareke
   `useLayer` (katman yigini, odak, Escape) alir: o dosyayi yanina birlikte
   kopyala, katman basina ayri kilit ya da Escape dinleyicisi yazma.
 - Arayuz metni Turkce Title Case (baslik, dugme), em dash yok.
+
+> `live-preview` bir **kit**tir (6 dosya): once `~/dev-starter/snippets/live-preview/README.md`
+> ve `~/dev-starter/rules/live-preview.md`i oku, README'deki 1–7 adimini sirayla uygula
+> (sema → gorunum bilesenine `draft` prop'u + `data-edit` → taslak Server Action'i →
+> onizleme rotasi → duzenleyici → yazi tipi seridi), sonunda README'deki Kabul listesini
+> tarayicida tek tek dogrula.
 
 > `agent-*` ve `action-card` snippet'leri `@copilotkit/react-core@1.69.2` tip
 > tanimlariyla `tsc --noEmit` uzerinden dogrulandi. Uyarlarken surum pin'ine

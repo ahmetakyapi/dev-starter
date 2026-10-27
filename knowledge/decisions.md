@@ -460,3 +460,29 @@ bizim token, punto ve hareket sistemimize çevrildi.
 **Ne zaman değişir:** Tarayıcı bir projede sürekli `slop-ok` ile
 susturuluyorsa kural yanlıştır: desen daraltılır ya da kaldırılır, kayıt
 buraya "Değişti" alt başlığıyla düşer.
+
+---
+
+## Canlı Önizleme Zorunlu (2026-10-27)
+
+**Karar:** Sitede görünen bir şeyi (metin, görsel, sıra, yazı tipi, punto,
+renk) düzenleyen her yönetim paneli ekranının yanında sitenin kendisi durur:
+masaüstü + telefon, açık + koyu, yazdıkça güncellenir; yazı tipi ve punto
+anında. Kural `rules/live-preview.md`, kit `snippets/live-preview/`, Gate Pass 6
+denetler, P4 planlar.
+
+**Neden:** Geo Tour panelinde önizleme geldikten sonra "kaydet → siteye git →
+bak → geri dön" döngüsü bitti; düzenleyen kişi telefonda satırın nasıl
+kırıldığını, koyu temada görselin nasıl durduğunu yazarken görüyor. Her
+projede sıfırdan yazılırsa sahte bir önizleme bileşenine kayıyor ve siteden
+ayrışıyor; tek kaynak kit bunu önler.
+
+**Alternatifler:** (1) Formun içinde siteyi taklit eden önizleme bileşeni:
+siteden ayrışır, reddedildi. (2) "Önizle" düğmesiyle yeni sekmede taslak
+sayfası: yazarken göremez, telefon ve koyu tema ayrı iş, reddedildi.
+(3) Draft Mode (`draftMode()`) + iframe: çerez tüm siteyi taslağa açar ve
+oturuma özel değil; kitteki `?oturum=` + ayrı tablo daha dar.
+
+**Ne zaman değişir:** Bir projede içerik bir başlık CMS'te (Sanity, Payload)
+duruyorsa onun kendi canlı önizlemesi kullanılır; değişmezler (gerçek sayfa,
+iki cihaz, iki tema, anında font) aynı kalır.

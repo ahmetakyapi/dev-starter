@@ -11,6 +11,7 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/knowledge/patterns.md`
 - `~/dev-starter/rules/immutable-architecture.md` — mimari kurallar
 - `~/dev-starter/rules/design-tokens.md` — token enforcement
+- `~/dev-starter/rules/live-preview.md` — içerik/yazı tipi düzenleyen ekran varsa (kit: `snippets/live-preview/`)
 - `docs/ROUTEMAP.md` — sadece aktif story (varsa)
 - Aktif story dosyası + `docs/ARCHITECTURE.md` (ilgili bölüm)
 - Mevcut projenin `CLAUDE.md` dosyası

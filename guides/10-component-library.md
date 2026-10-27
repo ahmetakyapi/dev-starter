@@ -180,6 +180,15 @@ kaldığı için erişilebilirlik açığı değil.
 - **EmptyState**: `icon` panel içi, `scene` sayfa düzeyi, `inline` tek satır.
   Panel içine sahne konmaz.
 
+### Yönetim Paneli: Canlı Önizleme
+
+Sitede görünen içeriği düzenleyen her form, [`snippets/live-preview/`](../snippets/live-preview/README.md)
+kitiyle sitenin kendisini yanında gösterir (kural: `rules/live-preview.md`).
+Kit `ui/` bileşenlerinden ayrı durur çünkü tek dosya değil, uçtan uca bir
+akıştır: taslak tablosu, Server Action, önizleme rotası, iframe köprüsü,
+çerçeve. Masaüstü + telefon, açık/koyu, yazdıkça yeniden çizim; yazı tipi ve
+punto CSS değişkeniyle anında.
+
 ---
 
 ## 5. Klavye Haritaları

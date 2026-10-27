@@ -16,6 +16,7 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/knowledge/mistakes.md`
 - `~/dev-starter/knowledge/patterns.md`
 - `~/dev-starter/rules/design-tokens.md` — token enforcement kuralları
+- `~/dev-starter/rules/live-preview.md` — panelde içerik düzenleme ekranı tasarlanıyorsa: form + canlı önizleme düzeni
 - `docs/SCREENS.md` — ekran tasarımları (varsa)
 - `docs/ROUTEMAP.md` — sadece aktif story (varsa)
 - Projenin `CLAUDE.md` dosyası (varsa)
