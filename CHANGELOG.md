@@ -28,8 +28,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   `SAMEORIGIN` + `frame-ancestors 'self'` (site geneli `DENY` kalır);
   `globals.css` `--font-display` köprüsü + `h1, h2, .font-display` + önizlemede
   tıklanır bölüm imleci; `Reveal` önizleme yerleşince yeni öğeyi beklemeden gösterir.
-- Kit düzeltmesi: `use-live-draft.ts` oturumu `useSyncExternalStore` ile alır;
-  `useState(createDraftSession)` hidrasyonda sunucuyla uyuşmuyordu (#418).
+- Kit düzeltmesi: `use-live-draft.ts` → `useDraftSession()`, düzenleyici açılışı
+  başına oturum, `useSyncExternalStore` ile; `useState(createDraftSession)`
+  hidrasyonda sunucuyla uyuşmuyordu (#418), sekme başına oturum ise aynı sekmede
+  yeniden açılan düzenleyiciye eski taslağı sızdırırdı. Geo Tour'a da işlendi.
 - `mistakes.md` #114: şablonun `frame-ancestors 'none'` başlığı aynı kökenden
   önizleme iframe'ini de engeller; yalnız önizleme yoluna `'self'` istisnası.
 

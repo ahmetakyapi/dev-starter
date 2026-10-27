@@ -8,15 +8,20 @@ import type { PreviewStatus, SitePreviewHandle } from "./site-preview";
 const DRAFT_DELAY_MS = 320;
 
 /*
- * Taslak oturumu sekme başına bir tane. useState(createDraftSession) YAZMA: tembel başlangıç
- * hidrasyonda da çalışır, sunucunun boş değeriyle uyuşmaz ve React düzenleyiciyi baştan çizer
- * (#418). Hidrasyonda sunucu değeri (""), hemen ardından gerçek kimlik gelir; önizleme ancak o
- * zaman kurulur (`session ? <SitePreview …/> : null`).
+ * Taslak oturumu düzenleyici açılışı başına: her açılışta yenisi, açık kaldıkça aynısı. Sekme
+ * başına tek oturum olursa aynı sekmede düzenleyiciyi yeniden açınca dünkü kaydedilmemiş taslak
+ * önizlemeye sızar. useState(createDraftSession) da YAZMA: tembel başlangıç hidrasyonda çalışır,
+ * sunucunun boş değeriyle uyuşmaz ve React düzenleyiciyi baştan çizer (#418). Hidrasyonda ""
+ * döner, hemen ardından gerçek kimlik; önizleme ancak o zaman kurulur (`session ? … : null`).
  */
-let pageSession = "";
 const noop = () => () => {};
-const readSession = () => (pageSession ||= createDraftSession());
-const useDraftSession = () => useSyncExternalStore(noop, readSession, () => "");
+export function useDraftSession(): string {
+  const [read] = useState(() => {
+    let session = "";
+    return () => (session ||= createDraftSession());
+  });
+  return useSyncExternalStore(noop, read, () => "");
+}
 
 export type DraftResult = { ok: boolean; message?: string };
 
