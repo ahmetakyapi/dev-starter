@@ -23,6 +23,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - `/snippet live-preview`, `machine/CLAUDE.md` global kural, `AGENT_PROTOCOL`
   kural tablosu, frontend/uiux/gate rolleri, `guides/10`, `patterns.md`,
   `decisions.md` → "Canlı Önizleme Zorunlu", health-check kontrolleri.
+- **Şablonlar canlı önizlemeye hazır** (`nextjs-fullstack` + `landing`,
+  bayt bayt ortak dosyalar): `next.config.ts` `/admin/onizleme/:path*` için
+  `SAMEORIGIN` + `frame-ancestors 'self'` (site geneli `DENY` kalır);
+  `globals.css` `--font-display` köprüsü + `h1, h2, .font-display` + önizlemede
+  tıklanır bölüm imleci; `Reveal` önizleme yerleşince yeni öğeyi beklemeden gösterir.
+- Kit düzeltmesi: `use-live-draft.ts` oturumu `useSyncExternalStore` ile alır;
+  `useState(createDraftSession)` hidrasyonda sunucuyla uyuşmuyordu (#418).
 - `mistakes.md` #114: şablonun `frame-ancestors 'none'` başlığı aynı kökenden
   önizleme iframe'ini de engeller; yalnız önizleme yoluna `'self'` istisnası.
 

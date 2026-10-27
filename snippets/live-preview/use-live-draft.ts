@@ -1,11 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from "react";
 import { createDraftSession } from "./draft-session";
 import type { PreviewStatus, SitePreviewHandle } from "./site-preview";
 
 // Yazmayı bırakınca taslağın gönderilmesi için beklenen süre (her tuşta istek yok)
 const DRAFT_DELAY_MS = 320;
+
+/*
+ * Taslak oturumu sekme başına bir tane. useState(createDraftSession) YAZMA: tembel başlangıç
+ * hidrasyonda da çalışır, sunucunun boş değeriyle uyuşmaz ve React düzenleyiciyi baştan çizer
+ * (#418). Hidrasyonda sunucu değeri (""), hemen ardından gerçek kimlik gelir; önizleme ancak o
+ * zaman kurulur (`session ? <SitePreview …/> : null`).
+ */
+let pageSession = "";
+const noop = () => () => {};
+const readSession = () => (pageSession ||= createDraftSession());
+const useDraftSession = () => useSyncExternalStore(noop, readSession, () => "");
 
 export type DraftResult = { ok: boolean; message?: string };
 
@@ -31,7 +42,7 @@ type Options = {
  * (yayında), son gönderim reddedildi mi (hatalı).
  */
 export function useLiveDraft(key: string, fields: Record<string, string | null>, { save, vars, shared }: Options) {
-  const [ownSession] = useState(createDraftSession);
+  const ownSession = useDraftSession();
   const session = shared?.session ?? ownSession;
   const snapshot = JSON.stringify(fields);
   const [pushed, setPushed] = useState(snapshot);

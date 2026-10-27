@@ -111,11 +111,12 @@ Kaydet eylemi yayındaki kaydı yazdıktan sonra `clearDraft(key, session)` ça�
 
 ## 4. Önizleme rotası
 
-**Önce güvenlik başlığı.** Şablonların `next.config.ts`i her yola
-`X-Frame-Options: DENY` ve `frame-ancestors 'none'` basar: önizleme iframe'i
-boş kalır, panel sonsuza dek "Önizleme Hazırlanıyor" der (`mistakes.md` #114).
-Yalnız önizleme yoluna aynı köken izni, genel kuraldan SONRA (Next aynı
-anahtarda sonuncuyu uygular):
+**Önce güvenlik başlığı.** Şablonlar her yola `X-Frame-Options: DENY` ve
+`frame-ancestors 'none'` basar; aynı kökenden iframe'i de engeller, önizleme
+sonsuza dek "Önizleme Hazırlanıyor" der (`mistakes.md` #114). İki Next şablonu
+(2026-10-27'den beri) `/admin/onizleme/:path*` için istisnayı **hazır taşır**;
+önizleme rotası bu yoldaysa yapılacak bir şey yok. Başka yol ya da eski proje
+için genel kuraldan SONRA (Next aynı anahtarda sonuncuyu uygular):
 
 ```ts
 // next.config.ts → headers()
@@ -197,29 +198,33 @@ export function HomeEditor({ initial }: { initial: HomeCopy }) {
         {/* Dar ekranda kaydet çubuğunda: <button onClick={() => preview.current?.expand()}>Önizle</button> */}
       </form>
       <aside className="lp-editor-aside">
-        <SitePreview
-          ref={preview}
-          status={status}
-          views={[{ id: "home", label: "Ana Sayfa", src, href: "/" }]}
-          onSelect={(section) => openSection(section)}
-        />
+        {session ? (
+          <SitePreview
+            ref={preview}
+            status={status}
+            views={[{ id: "home", label: "Ana Sayfa", src, href: "/" }]}
+            onSelect={(section) => openSection(section)}
+          />
+        ) : null}
       </aside>
     </div>
   );
 }
 ```
 
-`session` ilk istemci çiziminde boş, sonra dolar: `src` oturumla birlikte
-oluşur. Aynı kayıt sitede birkaç yerde görünüyorsa (`kendi sayfası`, `liste`,
+`session` hidrasyonda boş, hemen ardından dolar: `SitePreview`i yalnız
+`session` varken çiz (`session ? <SitePreview …/> : null`), yoksa iframe
+oturumsuz adresi bir kez boşuna yükler. Aynı kayıt sitede birkaç yerde görünüyorsa (`kendi sayfası`, `liste`,
 `ana sayfa`) her biri bir `views` sekmesi.
 
 ## 6. Yazı tipi ve görünüm şeridi
 
-**Ön koşul:** başlıklar bir değişkenden okunmalı. Şablonlarda gövde
-`--font-sans-face`ten gelir ama `--font-display` köprüsü varsayılan olarak
-YOK; `snippets/fonts/theme-fonts.css`teki `@theme inline` + `@layer base`
-bloğu globals.css'e eklenmeden `--font-display-face` değiştirmek hiçbir şeyi
-değiştirmez (ölçüldü). Yalnız gövde fontu seçilecekse hedef `--font-sans-face`.
+**Ön koşul:** başlıklar bir değişkenden okunmalı. Şablonların globals.css'i
+(2026-10-27'den beri) `--font-display` köprüsünü ve `h1, h2, .font-display`
+kuralını taşır; preset başlık ailesi vermezse gövde fontuna düşer. Eski
+projede `snippets/fonts/theme-fonts.css`teki `@theme inline` + `@layer base`
+bloğu eklenmeden `--font-display-face` değiştirmek hiçbir şeyi değiştirmez
+(ölçüldü). Yalnız gövde fontu seçilecekse hedef `--font-sans-face`.
 
 Yazı tipi, punto, satır aralığı, renk vurgusu sunucuya gitmeden değişir. Önizleme
 rotası **seçeneklerin hepsini** yükler (yalnız bu rotada; site seçili olanı),
@@ -252,9 +257,10 @@ sonuç çıkar.
 Önizleme her yeniden çizimde sayfayı yeniden kurar; yazdıkça eklenen kart giriş
 hareketini baştan oynatırsa saniyelerce görünmez. Köprü 1,8 sn sonra kökte
 `data-preview-settled` açar: CSS hareketleri `live-preview.css`in son
-bloğundaki kuralla, motion tabanlı `Reveal` ise
-`document.documentElement.dataset.previewSettled !== undefined` iken
-`initial={false}` ile durur.
+bloğundaki kuralla durur. Şablonların `Reveal`i bayrağı kendisi okur
+(`usePreviewSettled`, hidrasyonda sunucu değeri) ve sonradan bağlanan öğeyi
+hareketi azaltan kullanıcıdaki gibi hedefte başlatır; `initial={false}` YAZMA
+(`mistakes.md` #87). Eski projede aynı satırları Reveal'ine ekle.
 
 ## Doğrulama Kaydı
 
@@ -262,7 +268,10 @@ Next 16.4 + React 19.2 şablon kopyasında (2026-10-27): `build`, `tsc --noEmit`
 `eslint` temiz. Playwright: çerçeve masaüstü ve telefonda yüklendi, koyu tema
 iframe'e geçti, "Uzun Okuma" seçimi başlığı 150 ms içinde Manrope'tan
 Newsreader'a çevirdi (istek yok), veritabanı yokken rozet "Hatalı Alan Var"a
-düştü.
+düştü. İkinci tur, şablonun kendisinde elle düzeltme olmadan: başlık
+istisnası `/admin/onizleme`de `SAMEORIGIN`, `/`de `DENY`; font köprüsü ve
+Reveal hazır geldi; hidrasyon hatası yok (önceki `useState(createDraftSession)`
+#418 veriyordu, `useDraftSession` ile düzeldi).
 
 ## Kabul
 

@@ -1957,7 +1957,8 @@ olmadığı için kit orada çalışıyordu; ekosistem şablonuna taşınınca k
 
 **Çözüm**: Genel kuraldan SONRA yalnız önizleme yoluna `SAMEORIGIN` +
 `frame-ancestors 'self'` (Next aynı anahtarda son eşleşeni uygular). Sitenin
-geri kalanı `DENY` kalır. Kod: `snippets/live-preview/README.md` § 4.
+geri kalanı `DENY` kalır. İki Next şablonu istisnayı `/admin/onizleme/:path*`
+için hazır taşır (2026-10-27); kod: `snippets/live-preview/README.md` § 4.
 
 **Kural**: iframe'de kendi sayfasını gösteren her özellik (önizleme, gömülü
 demo) önce `curl -sI <yol> | grep -i frame` ile denetlenir. Güvenlik başlığı

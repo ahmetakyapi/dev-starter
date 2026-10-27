@@ -205,4 +205,6 @@ tanımsızsa `next build` durur (`lib/env.ts` → `assertSiteUrlForBuild`); CI
 - Her yabancı anahtar `onDelete` söyler. Uygulanmış migration düzenlenmez.
 - Sunucu ortam değişkeni `lib/env.ts` → `env` üzerinden okunur.
 - `next.config.ts` güvenlik başlıklarını basar; tam CSP bilinçli olarak yok
-  (gerekçe dosyada).
+  (gerekçe dosyada). Site çerçeveye alınamaz (`DENY`); tek istisna yönetim
+  panelinin canlı önizlemesi `/admin/onizleme` (`SAMEORIGIN`,
+  `~/dev-starter/rules/live-preview.md`, kit `~/dev-starter/snippets/live-preview/`).

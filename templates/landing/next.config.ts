@@ -13,6 +13,12 @@ import { assertSiteUrlForBuild } from "./lib/env";
  *
  * `frame-ancestors` CSP olarak da veriliyor: modern tarayıcılarda
  * X-Frame-Options'tan önceliklidir, eski tarayıcılar ikincisini okur.
+ *
+ * Tek istisna yönetim panelinin canlı önizlemesi (`/admin/onizleme`): panel
+ * sitenin kendisini AYNI kökenden iframe'de gösterir; `'none'` onu da engeller
+ * ve önizleme boş kalır (~/dev-starter/knowledge/mistakes.md #114,
+ * rules/live-preview.md). Genel kuraldan SONRA gelir: Next aynı anahtarda son
+ * eşleşeni uygular. Sitenin geri kalanı `DENY` kalır.
  */
 const SECURITY_HEADERS = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -21,6 +27,12 @@ const SECURITY_HEADERS = [
   { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
+];
+
+const PREVIEW_HEADERS = [
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+  { key: "X-Robots-Tag", value: "noindex" },
 ];
 
 const nextConfig: NextConfig = {
@@ -38,6 +50,7 @@ const nextConfig: NextConfig = {
           { key: "X-Robots-Tag", value: "noindex" },
         ],
       },
+      { source: "/admin/onizleme/:path*", headers: PREVIEW_HEADERS },
     ];
   },
 };

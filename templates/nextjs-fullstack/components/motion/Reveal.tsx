@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "motion/react";
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import { useMotionPreference } from "@/hooks/useMotionPreference";
 import { DUR, EASE, STAGGER } from "@/lib/motion";
 
@@ -31,6 +31,16 @@ import { DUR, EASE, STAGGER } from "@/lib/motion";
  */
 const MAX_STAGGER_STEPS = 6;
 
+/**
+ * Canlı önizleme (iframe) yerleştiyse: köprü kökte `data-preview-settled`
+ * açar. Panelde yazdıkça eklenen öğe giriş hareketini baştan oynatıp
+ * saniyelerce gizli kalmasın, doğrudan görünür. Hidrasyonda sunucu değeri
+ * (false) kullanılır; etki yalnız sonradan bağlanan öğede.
+ */
+const noop = () => () => {};
+const usePreviewSettled = () =>
+  useSyncExternalStore(noop, () => document.documentElement.dataset.previewSettled !== undefined, () => false);
+
 type RevealProps = {
   children: ReactNode;
   className?: string;
@@ -42,7 +52,9 @@ type RevealProps = {
 };
 
 export function Reveal({ children, className, delay = 0, y = 16, as = "div" }: RevealProps) {
-  const reduce = useMotionPreference();
+  const prefersReduced = useMotionPreference();
+  const settled = usePreviewSettled();
+  const reduce = prefersReduced || settled;
   const Tag = m[as];
   return (
     <Tag

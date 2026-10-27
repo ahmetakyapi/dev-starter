@@ -190,6 +190,9 @@
 
 @theme inline {
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  /* Başlık ailesi: preset vermiyorsa gövde fontuna düşer (snippets/fonts).
+     Canlı önizleme yazı tipini bu değişkenden anında değiştirir. */
+  --font-display: var(--font-display-face, var(--font-sans-face)), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
 
   --color-page: var(--page-bg);
@@ -271,6 +274,12 @@
 
   h1,
   h2,
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  h1,
+  h2,
   h3,
   h4 {
     color: var(--text-strong);
@@ -287,6 +296,11 @@
   :focus-visible {
     outline: 2px solid var(--line-focus);
     outline-offset: 2px;
+  }
+
+  /* Canlı önizlemede (iframe, rules/live-preview.md) düzenlenebilir bölüm tıklanır. */
+  :root[data-preview] [data-edit] {
+    cursor: pointer;
   }
 
   /* Kırpan kabın içinde halka içeri alınır, yoksa ata onu keser (WCAG 2.4.11). */
