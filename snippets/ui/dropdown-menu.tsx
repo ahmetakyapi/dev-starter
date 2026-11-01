@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu as Base } from "@base-ui/react/menu";
-import { Check, Circle } from "lucide-react";
+import { Check } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +24,12 @@ import { cn } from "@/lib/utils";
  *     </DropdownMenuContent>
  *   </DropdownMenu>
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `rounded-xl` + kıl çizgisi +
+ * `shadow-modal`, iç boşluk `p-1.5`. Vurgulu öğe YUMUŞAK GRİ
+ * (`bg-surface-raised`): renkli vurgu her ok tuşunda göz alırdı, gri yalnızca
+ * "buradasın" der. Seçim işareti (onay ya da radyo) SAĞDA, `primary-ink`:
+ * etiketler hizalı kalır, işaret satırın sonunda okunur.
+ *
  * Başka sayfaya giden öğe `DropdownMenuLinkItem` (gerçek `<a>`; orta tık ve
  * yeni sekme çalışır). Menüden diyalog açmak: diyaloğun durumunu dışarıda
  * tut, öğenin `onClick`inde aç (Base UI belgesindeki kalıp).
@@ -35,12 +41,12 @@ export const DropdownMenuGroup = Base.Group;
 export const DropdownMenuRadioGroup = Base.RadioGroup;
 
 const SURFACE =
-  "min-w-52 max-w-[var(--available-width)] rounded-lg border border-line-strong bg-overlay p-1 text-body shadow-modal outline-none origin-(--transform-origin) transition-[opacity,scale] duration-150 data-starting-style:scale-[0.97] data-starting-style:opacity-0 data-ending-style:scale-[0.97] data-ending-style:opacity-0";
+  "min-w-52 max-w-[var(--available-width)] rounded-xl border border-line bg-overlay p-1.5 text-body shadow-modal outline-none origin-(--transform-origin) transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-starting-style:scale-[0.96] data-starting-style:opacity-0 data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150";
 
 /* Dokunmatikte 44, farede 36 piksel satır. Vurgu `data-highlighted`: fare
    ve klavye aynı durumu paylaşır, iki ayrı "seçili" görünmez. */
 const ITEM =
-  "flex min-h-11 cursor-default select-none items-center gap-2.5 rounded-md px-2.5 text-base outline-none pointer-fine:min-h-9 data-highlighted:bg-primary-wash data-highlighted:text-strong data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
+  "flex min-h-11 cursor-default select-none items-center gap-2.5 rounded-md px-2.5 text-base outline-none pointer-fine:min-h-9 data-highlighted:bg-surface-raised data-highlighted:text-strong data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
 
 type ContentProps = Omit<ComponentProps<typeof Base.Popup>, "className"> & {
   side?: "top" | "bottom" | "left" | "right";
@@ -77,13 +83,16 @@ export function DropdownMenuItem({ icon, shortcut, tone = "default", className, 
       {...props}
     >
       {icon ? (
-        <span aria-hidden className="text-muted">
+        <span aria-hidden className={tone === "danger" ? "text-danger" : "text-muted"}>
           {icon}
         </span>
       ) : null}
       <span className="min-w-0 flex-1 truncate">{children}</span>
       {shortcut ? (
-        <span aria-hidden className="font-mono text-micro text-muted">
+        <span
+          aria-hidden
+          className="hidden min-w-5 rounded-[0.3125rem] border border-line bg-overlay px-1.5 text-center font-mono text-micro leading-5 text-muted pointer-fine:inline-block"
+        >
           {shortcut}
         </span>
       ) : null}
@@ -110,13 +119,13 @@ type CheckboxItemProps = Omit<ComponentProps<typeof Base.CheckboxItem>, "classNa
 
 export function DropdownMenuCheckboxItem({ className, children, ...props }: CheckboxItemProps) {
   return (
-    <Base.CheckboxItem className={cn(ITEM, className)} {...props}>
-      <span className="grid size-4 place-items-center">
+    <Base.CheckboxItem className={cn(ITEM, "data-checked:text-strong", className)} {...props}>
+      <span className="min-w-0 flex-1 truncate">{children}</span>
+      <span className="grid size-4 place-items-center text-primary-ink">
         <Base.CheckboxItemIndicator>
-          <Check aria-hidden strokeWidth={2} />
+          <Check aria-hidden strokeWidth={2.25} />
         </Base.CheckboxItemIndicator>
       </span>
-      <span className="min-w-0 flex-1 truncate">{children}</span>
     </Base.CheckboxItem>
   );
 }
@@ -125,21 +134,21 @@ type RadioItemProps = Omit<ComponentProps<typeof Base.RadioItem>, "className"> &
 
 export function DropdownMenuRadioItem({ className, children, ...props }: RadioItemProps) {
   return (
-    <Base.RadioItem className={cn(ITEM, className)} {...props}>
-      <span className="grid size-4 place-items-center">
+    <Base.RadioItem className={cn(ITEM, "data-checked:text-strong", className)} {...props}>
+      <span className="min-w-0 flex-1 truncate">{children}</span>
+      <span className="grid size-4 place-items-center text-primary-ink">
         <Base.RadioItemIndicator>
-          <Circle aria-hidden className="!size-2 fill-current" />
+          <Check aria-hidden strokeWidth={2.25} />
         </Base.RadioItemIndicator>
       </span>
-      <span className="min-w-0 flex-1 truncate">{children}</span>
     </Base.RadioItem>
   );
 }
 
 export function DropdownMenuLabel({ className, ...props }: ComponentProps<typeof Base.GroupLabel> & { className?: string }) {
-  return <Base.GroupLabel className={cn("px-2.5 pt-2 pb-1 text-micro font-semibold text-muted", className)} {...props} />;
+  return <Base.GroupLabel className={cn("px-2.5 pt-2 pb-1 text-micro font-medium text-muted", className)} {...props} />;
 }
 
 export function DropdownMenuSeparator({ className }: { className?: string }) {
-  return <Base.Separator className={cn("mx-1 my-1 h-px bg-line-soft", className)} />;
+  return <Base.Separator className={cn("-mx-1.5 my-1.5 h-px bg-line-soft", className)} />;
 }

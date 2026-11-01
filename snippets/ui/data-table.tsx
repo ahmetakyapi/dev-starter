@@ -35,6 +35,12 @@ import { cn } from "@/lib/utils";
  * şirketlerin hisse fiyatı) çubuk HİÇ verilmez; olmayan bir sıralamayı
  * varmış gibi gösterirdi. Çubuk `aria-hidden`: sayının kopyası.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): başlık satırı soluk (`text-muted`,
+ * orta ağırlık), satırlar arasında kıl çizgisi, üzerine gelinen satır
+ * hafif gri (`bg-surface`). Yapışkan ilk hücre de aynı tonu alır: opak
+ * zeminin üstüne bir ton katmanı daha serilir, yoksa satırın geri kalanı
+ * grileşirken ilk sütun beyaz kalırdı.
+ *
  * Durumlar: `loading` iskelet satır basar, `error` mesaj ve isteğe bağlı
  * eylem, boş veri `empty` metnini gösterir. Üçü de tablonun yerini tutar,
  * sayfa zıplamaz.
@@ -107,6 +113,12 @@ const STICKY_BG = {
   surface: "bg-page bg-[linear-gradient(var(--surface),var(--surface))]",
 } as const;
 
+/* Satır üzerine gelindiğinde yapışkan hücreye eklenen ton katmanı. */
+const STICKY_HOVER = {
+  page: "group-hover/row:bg-[linear-gradient(var(--surface),var(--surface))]",
+  surface: "group-hover/row:bg-[linear-gradient(var(--surface),var(--surface)),linear-gradient(var(--surface),var(--surface))]",
+} as const;
+
 export function DataTable<Row>({
   caption,
   columns,
@@ -175,7 +187,7 @@ export function DataTable<Row>({
                     scope="col"
                     aria-sort={current === "asc" ? "ascending" : current === "desc" ? "descending" : undefined}
                     className={cn(
-                      "px-3 py-2.5 text-small font-semibold whitespace-nowrap text-muted",
+                      "px-3 py-2.5 text-small font-medium whitespace-nowrap text-muted",
                       column.numeric ? "text-end" : "text-start",
                       sticky && cn("sticky left-0 z-[1]", STICKY_BG[on]),
                     )}
@@ -218,7 +230,7 @@ export function DataTable<Row>({
                   </tr>
                 ))
               : rows.map((row) => (
-                  <tr key={rowKey(row)} className="border-b border-line-soft transition-colors last:border-0 hover:bg-surface">
+                  <tr key={rowKey(row)} className="group/row border-b border-line-soft transition-colors duration-100 last:border-0 hover:bg-surface">
                     {columns.map((column, index) => {
                       const content = column.render
                         ? column.render(row)
@@ -234,7 +246,7 @@ export function DataTable<Row>({
                             cellY,
                             column.numeric && "text-end whitespace-nowrap tabular-nums",
                             index === 0 ? "font-medium text-strong" : "text-body",
-                            sticky && cn("sticky left-0 z-[1]", STICKY_BG[on]),
+                            sticky && cn("sticky left-0 z-[1]", STICKY_BG[on], STICKY_HOVER[on]),
                           )}
                         >
                           {content}

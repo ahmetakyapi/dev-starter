@@ -11,6 +11,11 @@ import { cn } from "@/lib/utils";
  * tuşları "+" ile değil boşlukla dizer; kısayolun tamamı için tek bir
  * `aria-label` taşır (`role="img"` sayesinde geçerli).
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz küçük karo (`bg-overlay`), kıl
+ * çizgisi ve kısa gölge; eski kalın alt kenar (`border-b-2`) daktilo tuşu
+ * gibi ağırdı. Yazı mono değil gövde fontu: ↑ ↓ ↵ ⌘ gibi simgeler Inter'de
+ * daha dengeli, harfler aynı genişlikte görünür (`tabular-nums`).
+ *
  * Dokunmatik ekranda klavye kısayolu anlamsız: kısayol ipuçlarını
  * `pointer-fine:` ya da `hidden sm:inline-flex` ile gizlemek çoğu zaman
  * doğru karar.
@@ -20,7 +25,7 @@ export function Kbd({ label, className, children, ...props }: ComponentProps<"kb
   return (
     <kbd
       className={cn(
-        "inline-flex h-5 min-w-5 items-center justify-center rounded-[0.3125rem] border border-line-strong border-b-2 bg-surface px-1 font-mono text-micro font-medium text-soft",
+        "inline-flex h-5 min-w-5 items-center justify-center rounded-[0.3125rem] border border-line bg-overlay px-1.5 font-sans text-micro font-medium text-muted tabular-nums shadow-raised",
         className,
       )}
       {...props}

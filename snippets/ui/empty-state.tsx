@@ -14,6 +14,12 @@ import { cn } from "@/lib/utils";
  * için ("Bu hafta etkinlik yok."). Panel içine sahne konmaz: dar bir
  * kutuda çizim, boşluğun kendisinden büyük bir olay olur.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): `icon` biçimi gri kuyu (`bg-surface`,
+ * `rounded-xl`), ikon kuyunun üstünde beyaz bir karoda (`bg-overlay` +
+ * `shadow-raised`, `rounded-lg`); kesikli çizgi kalktı (kesik kenar
+ * "buraya bırak" der, boş liste bir bırakma alanı değil). Kuyunun içine
+ * kart konmaz; eylem tek düğme.
+ *
  * Başlık Title Case; `hint` cümle düzeninde ve bir sonraki adımı söyler
  * ("İlk kaydı eklediğinde burada listelenecek."), suçlamaz ("Hiç kaydınız
  * yok!" değil).
@@ -53,7 +59,7 @@ export function EmptyState({ title, hint, action, icon, scene, variant = "icon",
     <div
       className={cn(
         "flex flex-col items-center text-center",
-        isScene ? "px-4 py-16 sm:py-24" : "rounded-md border border-dashed border-line-strong bg-surface-sunken px-6 py-10",
+        isScene ? "px-4 py-16 sm:py-24" : "rounded-xl bg-surface px-6 py-10 sm:py-12",
         className,
       )}
     >
@@ -62,11 +68,11 @@ export function EmptyState({ title, hint, action, icon, scene, variant = "icon",
           {scene}
         </div>
       ) : icon ? (
-        <div aria-hidden className="mb-4 grid size-11 place-items-center rounded-full bg-primary-wash text-primary-ink [&_svg]:size-5">
+        <div aria-hidden className="mb-4 grid size-12 place-items-center rounded-lg bg-overlay text-strong shadow-raised [&_svg]:size-5 [&_svg]:stroke-[1.75]">
           {icon}
         </div>
       ) : null}
-      <Title className={cn("font-semibold text-strong", isScene ? "text-heading" : "text-read")}>{title}</Title>
+      <Title className={cn("font-semibold tracking-tight text-strong", isScene ? "text-heading" : "text-read")}>{title}</Title>
       {hint ? <p className={cn("mt-2 max-w-sm text-muted", isScene ? "text-read" : "text-base")}>{hint}</p> : null}
       {action ? <div className="mt-5">{action}</div> : null}
     </div>

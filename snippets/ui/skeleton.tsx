@@ -9,12 +9,48 @@ import { cn } from "@/lib/utils";
  * `.skeleton` yardımcısını (app/globals.css) kullanır. Hareketi azaltan
  * kullanıcıda nabız durur (globals.css'teki genel kural).
  *
+ * PARILTI ("board" dili, 2026-11): nabız yerine soldan sağa geçen bir ışık
+ * şeridi (`::after`, yalnızca `translate`: düzen hesaplatmaz). Şerit bir
+ * RENK degradesi değil, zemin tonunun saydamdan saydama açılıp kapanan bir
+ * parlaklığı; degrade disiplinine (globals.css başı) girmez. Bütün
+ * bloklar AYNI ANDA parlar (süre ve gecikme ortak): satır satır dalga
+ * ekranda kıpırtı yapar. Hareketi azaltan kullanıcıda şerit HİÇ çizilmez
+ * (`no-preference` sorgusu), blok durağan kalır; globals.css'in nabzı da
+ * zaten durur.
+ *
  * Ekran okuyucuya gizli. "Yükleniyor" bilgisini KAP verir:
  *   <section aria-busy="true"> … <SkeletonCard /> … </section>
  */
 
+const SHIMMER = `
+@media (prefers-reduced-motion: no-preference) {
+  .ui-shimmer { position: relative; overflow: hidden; animation: none; }
+  .ui-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    translate: -100% 0;
+    background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--page-bg) 60%, transparent), transparent);
+    animation: ui-shimmer 1.6s var(--ease-brand) infinite;
+  }
+  /* Koyuda sayfa zemini bloktan KOYU: şerit sönük bir gölgeye dönerdi.
+     Orada ışığı yükselmiş yüzey tonu taşır (beyazın %7'si). */
+  :root[data-theme="dark"] .ui-shimmer::after {
+    background-image: linear-gradient(90deg, transparent, var(--surface-raised), transparent);
+  }
+}
+@keyframes ui-shimmer { to { translate: 100% 0; } }
+`;
+
 export function Skeleton({ className }: { className?: string }) {
-  return <span aria-hidden className={cn("skeleton block rounded-sm", className)} />;
+  return (
+    <>
+      <style href="ui-skeleton" precedence="default">
+        {SHIMMER}
+      </style>
+      <span aria-hidden className={cn("skeleton ui-shimmer block rounded-sm", className)} />
+    </>
+  );
 }
 
 /** Paragraf: son satır kısa, gerçek metin gibi biter. */
@@ -45,10 +81,10 @@ export function SkeletonRow({ avatar = true, value = true, className }: { avatar
   );
 }
 
-/** Panel kartı: başlık, künye, metin ve altta düğme yeri. */
+/** Panel kartı: başlık, künye, metin ve altta düğme yeri. Gri kuyu, kenarlıksız. */
 export function SkeletonCard({ lines = 3, action = true, className }: { lines?: number; action?: boolean; className?: string }) {
   return (
-    <span aria-hidden className={cn("surface block rounded-lg p-5 sm:p-6", className)}>
+    <span aria-hidden className={cn("block rounded-xl bg-surface p-5 sm:p-6", className)}>
       <Skeleton className="h-5 w-1/3" />
       <Skeleton className="mt-2 h-3 w-1/4" />
       <SkeletonText lines={lines} className="mt-5" />

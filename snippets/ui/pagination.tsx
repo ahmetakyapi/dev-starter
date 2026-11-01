@@ -14,6 +14,10 @@ import { cn } from "@/lib/utils";
  * Geçerli sayfa `aria-current="page"`, bağlantı değil düz metin: kendine
  * giden bağlantı ekran okuyucuda boş bir durak olur.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): geçerli sayfa BEYAZ KARO (`bg-overlay`
+ * + kıl çizgisi + `shadow-raised`), ötekiler düz; üzerine gelince yumuşak
+ * gri. Dolu vurgu kutusu sayfalamayı ekranın en bağıran öğesi yapıyordu.
+ *
  * `scroll`: liste sayfanın tepesindeyse varsayılan (true) doğru, yeni sayfa
  * başından okunur. Liste sayfanın ortasında bir panelse `scroll={false}` ve
  * listenin başına bir çapa (`#liste`) daha iyi.
@@ -47,7 +51,7 @@ export function Pagination({ page, pageCount, hrefFor, scroll = true, labels = {
 
   const arrow = (target: number, enabled: boolean, label: string, Glyph: typeof ChevronLeft) =>
     enabled ? (
-      <Link href={hrefFor(target)} scroll={scroll} aria-label={label} title={label} className={cn(CELL, "text-body hover:bg-primary-wash hover:text-strong")}>
+      <Link href={hrefFor(target)} scroll={scroll} aria-label={label} title={label} className={cn(CELL, "text-body hover:bg-surface-raised hover:text-strong")}>
         <Glyph aria-hidden className="size-4" strokeWidth={1.75} />
       </Link>
     ) : (
@@ -71,11 +75,11 @@ export function Pagination({ page, pageCount, hrefFor, scroll = true, labels = {
           ) : (
             <li key={n}>
               {n === page ? (
-                <span aria-current="page" className={cn(CELL, "bg-primary text-on-primary")}>
+                <span aria-current="page" className={cn(CELL, "border border-line bg-overlay font-semibold text-strong shadow-raised")}>
                   {n}
                 </span>
               ) : (
-                <Link href={hrefFor(n)} scroll={scroll} aria-label={pageLabel(n)} className={cn(CELL, "text-body hover:bg-primary-wash hover:text-strong")}>
+                <Link href={hrefFor(n)} scroll={scroll} aria-label={pageLabel(n)} className={cn(CELL, "text-muted hover:bg-surface-raised hover:text-strong")}>
                   {n}
                 </Link>
               )}

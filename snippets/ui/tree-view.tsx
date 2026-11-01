@@ -26,6 +26,12 @@ import { cn } from "@/lib/utils";
  *   *            aynı düzeydeki bütün kardeşleri aç
  *   harf yazmak  o harflerle başlayan sonraki görünen öğe (Türkçe küçük harf)
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): seçili öğe yumuşak gri
+ * (`bg-surface-raised`) + orta ağırlık, ikonu `text-strong`; üzerine gelinen
+ * öğe daha da hafif (`bg-surface`). Renkli seçim kalabalık bir ağaçta
+ * her satırı bir bağlantı gibi gösteriyordu. Chevron yayla değil imza
+ * eğrisiyle döner.
+ *
  * Etiketi düz metin olmayan öğelerde yazarak arama için `textValue` ver.
  */
 
@@ -201,16 +207,16 @@ export function TreeView({ nodes, defaultExpanded = [], selectedId, onSelect, cl
             style={{ paddingLeft: `${(level - 1) * 1.25 + 0.5}rem` }}
             className={cn(
               "flex min-h-11 cursor-pointer items-center gap-2 rounded-md pr-2.5 text-base transition-colors select-none pointer-fine:min-h-9",
-              isSelected ? "bg-primary-wash font-medium text-strong" : "text-body hover:bg-surface hover:text-strong",
+              isSelected ? "bg-surface-raised font-medium text-strong" : "text-body hover:bg-surface hover:text-strong",
             )}
           >
             <span aria-hidden className="grid size-4 shrink-0 place-items-center text-muted">
               {hasChildren ? (
-                <ChevronRight className={cn("size-4 transition-transform", isOpen && "rotate-90")} strokeWidth={1.75} />
+                <ChevronRight className={cn("size-4 transition-transform duration-200", isOpen && "rotate-90")} strokeWidth={1.75} />
               ) : null}
             </span>
             {node.icon ? (
-              <span aria-hidden className={cn("shrink-0 [&_svg]:size-4", isSelected ? "text-primary-ink" : "text-muted")}>
+              <span aria-hidden className={cn("shrink-0 transition-colors [&_svg]:size-4", isSelected ? "text-strong" : "text-muted")}>
                 {node.icon}
               </span>
             ) : null}

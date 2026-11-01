@@ -22,6 +22,11 @@ import { cn } from "@/lib/utils";
  * İçinde form varsa ve odak dışarı kaçmamalıysa: `<Popover modal="trap-focus">`
  * ve içeride bir `PopoverClose` (dokunmatik ekran okuyucu çıkış bulsun).
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `bg-overlay`, `rounded-xl`,
+ * kıl çizgisi (`border-line`, eskiden `-strong`: gölge zaten ayırıyor) ve
+ * katmanlı kısa gölge `shadow-modal`. Giriş 0,96'dan ölçek + opaklık,
+ * kaynağı tetikleyici (`--transform-origin`): kutu düğmeden "çıkar".
+ *
  * Konum: Positioner `z-50` taşır. Sayfa kökünde `isolation: isolate` yoksa
  * başka bir yığın bağlamının altında kalabilir; kök layout'taki gövde
  * wrapper'ına `isolate` ver.
@@ -34,7 +39,7 @@ export const PopoverClose = Base.Close;
 /* Base UI katmanlarının ortak yüzeyi; menü ve seçim kutusu aynı dizeyi taşır
    (her dosya tek başına kopyalansın diye paylaşılmıyor). */
 const FLOATING_SURFACE =
-  "rounded-lg border border-line-strong bg-overlay text-body shadow-modal outline-none origin-(--transform-origin) transition-[opacity,scale] duration-150 data-starting-style:scale-[0.97] data-starting-style:opacity-0 data-ending-style:scale-[0.97] data-ending-style:opacity-0";
+  "rounded-xl border border-line bg-overlay text-body shadow-modal outline-none origin-(--transform-origin) transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-starting-style:scale-[0.96] data-starting-style:opacity-0 data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150";
 
 type PopoverContentProps = Omit<ComponentProps<typeof Base.Popup>, "title" | "className"> & {
   title?: ReactNode;
@@ -64,7 +69,7 @@ export function PopoverContent({
         >
           {title ? <Base.Title className="text-base font-semibold text-strong">{title}</Base.Title> : null}
           {description ? (
-            <Base.Description className="mt-1 text-small text-soft">{description}</Base.Description>
+            <Base.Description className="mt-1 text-small text-muted">{description}</Base.Description>
           ) : null}
           {title || description ? <div className="mt-3">{children}</div> : children}
         </Base.Popup>

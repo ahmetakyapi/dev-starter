@@ -20,6 +20,12 @@ import { cn } from "@/lib/utils";
  * Güvenli alan: alt kenardaki dolgu `env(safe-area-inset-bottom)` taşır;
  * yoksa ana ekran çubuğu son düğmenin üstüne biner.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo, açık kenarlarda `rounded-2xl`,
+ * kıl çizgisi ve `shadow-modal`. Kayma imza eğrisiyle (yaysız: büyük bir
+ * yüzeyin aşıp geri gelmesi ekranı sallar); tutamak basılınca koyulaşır
+ * ve hafifçe genişler, sürüklenebilir olduğunu söyler. Eylem satırı
+ * diyalogdaki gibi hafif gri bir kuyu.
+ *
  * İlk odak ve yerel kapanış `dialog.tsx` ile aynı: başka bir öğe için
  * `data-autofocus` (`autoFocus` istemcide işlemez), `<form method="dialog">`
  * gibi React'i atlayan kapanış da duruma yansır.
@@ -142,12 +148,12 @@ export function Sheet({
       }}
       style={drag ? { translate: `0 ${drag}px`, transition: "none" } : undefined}
       className={cn(
-        "fixed m-0 max-w-none overflow-hidden border-line-strong bg-overlay p-0 text-body shadow-modal",
-        "transition-[translate,display,overlay] transition-discrete duration-300",
+        "fixed m-0 max-w-none overflow-hidden border-line bg-overlay p-0 text-body shadow-modal",
+        "transition-[translate,display,overlay] transition-discrete duration-300 ease-[var(--ease-brand)]",
         "backdrop:bg-scrim backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:transition-discrete backdrop:duration-300 open:backdrop:opacity-100 starting:open:backdrop:opacity-0",
         bottom
-          ? "inset-x-0 top-auto bottom-0 max-h-[85dvh] w-full rounded-t-xl border-t translate-y-full open:translate-y-0 starting:open:translate-y-full"
-          : "inset-y-0 right-0 left-auto h-dvh max-h-none w-[min(26rem,calc(100%-2rem))] rounded-l-xl border-l translate-x-full open:translate-x-0 starting:open:translate-x-full",
+          ? "inset-x-0 top-auto bottom-0 max-h-[85dvh] w-full rounded-t-2xl border-t translate-y-full open:translate-y-0 starting:open:translate-y-full"
+          : "inset-y-0 right-0 left-auto h-dvh max-h-none w-[min(26rem,calc(100%-2rem))] rounded-l-2xl border-l translate-x-full open:translate-x-0 starting:open:translate-x-full",
         className,
       )}
     >
@@ -159,18 +165,18 @@ export function Sheet({
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
-            className="flex h-6 shrink-0 cursor-grab touch-none items-center justify-center active:cursor-grabbing"
+            className="group/handle flex h-7 shrink-0 cursor-grab touch-none items-center justify-center active:cursor-grabbing"
           >
-            <span className="h-1 w-10 rounded-full bg-line-strong" />
+            <span className="h-1 w-10 rounded-full bg-line-strong transition-[background-color,scale] group-active/handle:scale-x-125 group-active/handle:bg-muted" />
           </div>
         ) : null}
         <header className={cn("flex items-start gap-4 px-5", bottom ? "pt-1" : "pt-5")}>
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="text-title font-semibold">
+            <h2 id={titleId} className="text-title font-semibold tracking-tight">
               {title}
             </h2>
             {description ? (
-              <p id={descriptionId} className="mt-1 text-base text-soft">
+              <p id={descriptionId} className="mt-1 text-base text-muted">
                 {description}
               </p>
             ) : null}
@@ -180,14 +186,14 @@ export function Sheet({
             onClick={() => onOpenChange(false)}
             aria-label={closeLabel}
             title={closeLabel}
-            className="-mt-2 -mr-2 inline-grid size-11 shrink-0 place-items-center rounded-md text-muted transition-colors hover:bg-primary-wash hover:text-strong [&_svg]:size-[1.125rem]"
+            className="-mt-2 -mr-2 inline-grid size-11 shrink-0 place-items-center rounded-full text-muted transition-[background-color,color,scale] hover:bg-surface-raised hover:text-strong active:scale-95 [&_svg]:size-[1.125rem]"
           >
             <X aria-hidden strokeWidth={1.75} />
           </button>
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">{children}</div>
         {footer ? (
-          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:justify-end [&>*]:w-full sm:[&>*]:w-auto">
+          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:justify-end [&>*]:w-full sm:[&>*]:w-auto">
             {footer}
           </footer>
         ) : (

@@ -20,8 +20,14 @@ import { cn } from "@/lib/utils";
  * (ölçülmüş bir yavaşlık). Kilit sayaçlı: üst üste açılan iki diyalogdan
  * ilki kapanınca kilit çözülmez.
  *
- * Açılış animasyonu yalnızca CSS (`@starting-style` + `transition-discrete`).
- * Desteklemeyen tarayıcıda diyalog animasyonsuz açılır, bozulmaz.
+ * Açılış animasyonu yalnızca CSS (`@starting-style` + `transition-discrete`):
+ * kutu 0,96'dan ölçeklenip belirir, örtü ayrıca solar ("board" dili,
+ * 2026-11). Aşağıdan kayma yerine ölçek: diyalog ekranın ortasında doğar,
+ * bir yerden gelmez. Desteklemeyen tarayıcıda animasyonsuz açılır, bozulmaz.
+ *
+ * GÖRÜNÜŞ: beyaz karo `rounded-2xl` + kıl çizgisi + `shadow-modal`; eylem
+ * satırı kutunun dibinde hafif gri bir kuyu (`bg-surface`): içerikle
+ * eylemleri çizgisiz ayırır.
  *
  * İlk odak: tarayıcı ilk odaklanabilir öğeye gider. Başka bir öğe istiyorsan
  * ona `data-autofocus` ver. `autoFocus` DEĞİL: React istemcide `autofocus`
@@ -138,8 +144,8 @@ export function Dialog({
         if (dismissible && backdrop) onOpenChange(false);
       }}
       className={cn(
-        "m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-line-strong bg-overlay p-0 text-body shadow-modal",
-        "translate-y-2 opacity-0 transition-[opacity,translate,display,overlay] transition-discrete duration-200 open:translate-y-0 open:opacity-100 starting:open:translate-y-2 starting:open:opacity-0",
+        "m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] overflow-hidden rounded-2xl border border-line bg-overlay p-0 text-body shadow-modal",
+        "scale-[0.96] opacity-0 transition-[opacity,scale,display,overlay] transition-discrete duration-200 ease-[var(--ease-brand)] open:scale-100 open:opacity-100 starting:open:scale-[0.96] starting:open:opacity-0",
         "backdrop:bg-scrim backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0",
         SIZES[size],
         className,
@@ -152,11 +158,11 @@ export function Dialog({
       <div className="flex max-h-[calc(100dvh-2rem)] flex-col">
         <header className="flex items-start gap-4 px-5 pt-5 sm:px-6 sm:pt-6">
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="text-title font-semibold">
+            <h2 id={titleId} className="text-title font-semibold tracking-tight">
               {title}
             </h2>
             {description ? (
-              <p id={descriptionId} className="mt-1.5 text-base text-soft">
+              <p id={descriptionId} className="mt-1.5 text-base text-muted">
                 {description}
               </p>
             ) : null}
@@ -166,14 +172,14 @@ export function Dialog({
             onClick={() => onOpenChange(false)}
             aria-label={closeLabel}
             title={closeLabel}
-            className="-mt-2 -mr-2 inline-grid size-11 shrink-0 place-items-center rounded-md text-muted transition-colors hover:bg-primary-wash hover:text-strong [&_svg]:size-[1.125rem]"
+            className="-mt-2 -mr-2 inline-grid size-11 shrink-0 place-items-center rounded-full text-muted transition-[background-color,color,scale] hover:bg-surface-raised hover:text-strong active:scale-95 pointer-fine:size-9 pointer-fine:-mt-1 pointer-fine:-mr-1 [&_svg]:size-[1.125rem]"
           >
             <X aria-hidden strokeWidth={1.75} />
           </button>
         </header>
         {children ? <div className="min-h-0 overflow-y-auto px-5 py-4 sm:px-6">{children}</div> : null}
         {footer ? (
-          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft px-5 py-4 sm:flex-row sm:justify-end sm:px-6 [&>*]:w-full sm:[&>*]:w-auto">
+          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 py-4 sm:flex-row sm:justify-end sm:px-6 [&>*]:w-full sm:[&>*]:w-auto">
             {footer}
           </footer>
         ) : (
