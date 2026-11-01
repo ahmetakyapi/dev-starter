@@ -12,6 +12,33 @@
    bütün değişkenlerini yeniden yazar; koyu temada açık palet kalmaz.
    ========================================================================== */
 
+/* Palet seçici noktaları (snippets/ui/palette-switcher.tsx) */
+:root {
+  --swatch-signature: #0d74c4;
+  --swatch-verdant: #0f7a5a;
+  --swatch-ember: #b45309;
+  --swatch-iris: #5b4bd6;
+  --swatch-cobalt: #2563eb;
+  --swatch-violet: #7c3aed;
+  --swatch-rose: #db2777;
+  --swatch-ruby: #dc2626;
+  --swatch-tangerine: #c2410c;
+  --swatch-jade: #047857;
+}
+
+:root[data-theme="dark"] {
+  --swatch-signature: #35b8ff;
+  --swatch-verdant: #34d399;
+  --swatch-ember: #fbbf24;
+  --swatch-iris: #a5b4fc;
+  --swatch-cobalt: #60a5fa;
+  --swatch-violet: #a78bfa;
+  --swatch-rose: #f472b6;
+  --swatch-ruby: #f87171;
+  --swatch-tangerine: #fb923c;
+  --swatch-jade: #34d399;
+}
+
 /* verdant */
 :root[data-palette="verdant"] {
   --primary: #0f7a5a;

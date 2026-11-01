@@ -35,6 +35,11 @@ let css = `/* ==================================================================
    bütün değişkenlerini yeniden yazar; koyu temada açık palet kalmaz.
    ========================================================================== */
 `
+// Palet seçicinin noktaları: her paletin rengi kendi adıyla `:root`ta. Palet
+// blokları yalnızca <html>e eşleştiği için noktayı sarmalamak işe yaramaz.
+const swatches = (theme) => Object.entries(palettes).map(([n, p]) => `  --swatch-${n}: ${p[theme].primary};`).join('\n')
+css += `\n/* Palet seçici noktaları (snippets/ui/palette-switcher.tsx) */\n:root {\n${swatches('light')}\n}\n\n:root[data-theme="dark"] {\n${swatches('dark')}\n}\n`
+
 for (const [name, p] of Object.entries(palettes)) {
   if (name === 'signature') continue // globals.css'te, varsayılan
   css += `\n/* ${name} */\n` + block(`:root[data-palette="${name}"]`, p.light) + '\n' + block(`:root[data-theme="dark"][data-palette="${name}"]`, p.dark)
