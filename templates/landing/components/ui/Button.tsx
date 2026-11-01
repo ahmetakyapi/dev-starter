@@ -15,15 +15,18 @@ import { cn } from "@/lib/utils";
  */
 
 const BASE =
-  "inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-md font-semibold transition-[background-color,color,border-color,box-shadow,transform] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
+  "inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-md font-semibold transition-[background-color,color,border-color,box-shadow,transform,filter] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
 
 export const BUTTON_VARIANTS = {
   /* Ekranın TEK birincil eylemi: marka degradesi. Bir ekranda ikinci bir
      `brand` düğme görüyorsan biri `primary` olmalı. */
-  brand: "bg-cta text-on-brand shadow-raised hover:brightness-90",
-  primary: "bg-primary text-on-primary hover:bg-primary-hover",
-  secondary: "border border-line-strong bg-surface-raised text-strong hover:bg-surface-sunken",
-  ghost: "text-body hover:bg-primary-wash hover:text-strong",
+  brand: "bg-cta text-on-brand shadow-cta hover:brightness-95",
+  primary: "bg-primary text-on-primary shadow-cta hover:bg-primary-hover",
+  /* Beyaz karo + kıl çizgisi: kuyunun (bg-surface) üstünde de ayrışır. */
+  secondary: "border border-line bg-overlay text-strong shadow-raised hover:bg-surface",
+  /* Vurgunun yıkanmış hali: ikinci derece ama renkli eylem ("Taslağa Kaydet"). */
+  soft: "bg-primary-wash text-primary-ink hover:bg-primary hover:text-on-primary",
+  ghost: "text-body hover:bg-surface-raised hover:text-strong",
   danger: "bg-danger-wash text-danger hover:bg-danger hover:text-on-primary",
 } as const;
 

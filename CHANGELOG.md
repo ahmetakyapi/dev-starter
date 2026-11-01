@@ -7,6 +7,29 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Board görsel dili — 2026-11-01
+
+#### Değişti
+
+- **Sistem katmanı nötr** (`@ahmetakyapi/theme` + iki şablonun `globals.css`i):
+  zemin `#ffffff` / `#121212`, metin ve çizgi grileri mavi tonsuz, kısa
+  katmanlı gölgeler. `text-muted` kuyu kartın üstünde de AA (`#6b6b6b`).
+- `@ahmetakyapi/ui` `Button` `primary`: `bg-cta` + `shadow-cta`; `secondary`
+  beyaz karo. Şablon `Button`: `brand`/`primary` `shadow-cta`, `secondary`
+  beyaz karo, `ghost` nötr.
+
+#### Eklendi
+
+- **Altı parlak palet**: `cobalt`, `violet`, `rose`, `ruby`, `tangerine`,
+  `jade` (CSS + `tokens.ts`, her biri contract testinde WCAG ölçümlü).
+- **Grafik token'ları** `--chart-1…6`, `--chart-track`, `--chart-ink`
+  (`bg-chart-*`, `stroke-chart-*`; `tokens.ts` → `chart`), `--shadow-cta`,
+  `--radius-2xl`.
+- **`board` font preseti**: Inter (opsz) + JetBrains Mono; Türkçe ve ₺ cmap'ten doğrulandı.
+- **`snippets/ui`**: `chart-card.tsx`, `stage-bars.tsx`, `track-bar-chart.tsx`,
+  `ring-chart.tsx` (sunucu bileşeni, JS'siz seri yalıtımı).
+- `decisions.md` → "Board Görsel Dili", `design-references.md` → boardui.com.
+
 ### Canlı önizleme kuralı — 2026-10-27
 
 #### Eklendi

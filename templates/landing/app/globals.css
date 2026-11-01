@@ -15,7 +15,8 @@
 
    PALET DEĞİŞTİRMEK: aşağıdaki iki `signature` bloğunu (açık + koyu) ez ya
    da yerine yenisini yaz; adlar aynı kalır, sistem katmanına dokunma. Hazır
-   alternatifler (`verdant` zümrüt, `ember` kehribar, `iris` mor-indigo)
+   alternatifler (`verdant` zümrüt, `ember` kehribar, `iris` mor-indigo;
+   parlak aile `cobalt`, `violet`, `rose`, `ruby`, `tangerine`, `jade`)
    `@ahmetakyapi/theme` paketinde. Yeni palet `tests/palette.test.ts`ten
    geçmeli: o test bu dosyayı okuyup WCAG oranlarını HESAPLAR.
 
@@ -38,12 +39,27 @@
 :root {
   color-scheme: light;
 
-  --scrim: rgb(16 32 52 / 0.4);
+  --scrim: rgb(0 0 0 / 0.4);
   /* Derinlik gölgeyle değil TON FARKIYLA kurulur; gölge yalnızca gerçekten
      sayfanın üstünde yüzen katmanda (açılır pencere, menü). */
-  --shadow-sm: 0 1px 2px rgb(16 32 52 / 0.05);
-  --shadow-md: 0 8px 24px -10px rgb(16 32 52 / 0.16);
-  --shadow-overlay: 0 24px 60px rgb(16 32 52 / 0.18);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05), 0 1px 3px rgb(0 0 0 / 0.07);
+  --shadow-md: 0 1px 1px rgb(0 0 0 / 0.04), 0 6px 16px -4px rgb(0 0 0 / 0.1);
+  --shadow-overlay: 0 0 0 1px rgb(0 0 0 / 0.04), 0 24px 48px -12px rgb(0 0 0 / 0.18);
+  /* Dolgulu düğme: üst kenarda ince ışık + kısa yer gölgesi. Degradeyle
+     birlikte düğmeye "basılabilir" bir hacim verir; tek başına parlama değil. */
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 1px 2px rgb(0 0 0 / 0.14);
+
+  /* Grafik serileri (snippets/ui/chart-*): veri rengi, METİN DEĞİL. Değer
+     yanında `text-strong` ile yazılır. Sıra sabit, ilk seri chart-1. */
+  --chart-1: #a3e635;
+  --chart-2: #3b82f6;
+  --chart-3: #c084fc;
+  --chart-4: #f472b6;
+  --chart-5: #facc15;
+  --chart-6: #34d399;
+  --chart-track: rgb(0 0 0 / 0.06);
+  /* Pastel dolgunun üstündeki ikon ve hap metni: iki temada da koyu. */
+  --chart-ink: #0a0a0a;
 
   --success: #0c7350;
   --success-wash: rgb(12 115 80 / 0.1);
@@ -74,9 +90,13 @@
   color-scheme: dark;
 
   --scrim: rgb(0 0 0 / 0.6);
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.5);
-  --shadow-overlay: 0 24px 60px rgb(0 0 0 / 0.5);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 1px 1px rgb(0 0 0 / 0.3), 0 8px 20px -6px rgb(0 0 0 / 0.5);
+  --shadow-overlay: 0 0 0 1px rgb(255 255 255 / 0.06), 0 24px 48px -12px rgb(0 0 0 / 0.6);
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 1px 2px rgb(0 0 0 / 0.5);
+
+  --chart-2: #60a5fa;
+  --chart-track: rgb(255 255 255 / 0.08);
 
   --success: #3ddc97;
   --success-wash: rgb(61 220 151 / 0.14);
@@ -93,19 +113,21 @@
 /* --- Palet: signature (VARSAYILAN, Açılış Zili mavi ailesi) ---------------- */
 :root,
 :root[data-palette="signature"] {
-  --page-bg: #f7f9fb;
-  --surface: rgb(16 32 52 / 0.028);
-  --surface-raised: rgb(16 32 52 / 0.07);
-  --surface-sunken: rgb(16 32 52 / 0.045);
+  /* Nötr zemin ("board" dili, 2026-11): saf beyaz sayfa, mavi tonu
+     taşımayan griler. Kart hafif gri kuyu, kuyunun içindeki karo beyaz. */
+  --page-bg: #ffffff;
+  --surface: rgb(0 0 0 / 0.03);
+  --surface-raised: rgb(0 0 0 / 0.06);
+  --surface-sunken: rgb(0 0 0 / 0.045);
 
-  --text-strong: #101c2b;
-  --text-body: #54677c;
-  --text-soft: #54677c;
-  --text-muted: #586a7c;
+  --text-strong: #0a0a0a;
+  --text-body: #525252;
+  --text-soft: #525252;
+  --text-muted: #6b6b6b;
 
-  --line: rgb(16 32 52 / 0.1);
-  --line-soft: rgb(16 32 52 / 0.06);
-  --line-strong: rgb(16 32 52 / 0.17);
+  --line: rgb(0 0 0 / 0.08);
+  --line-soft: rgb(0 0 0 / 0.05);
+  --line-strong: rgb(0 0 0 / 0.14);
 
   --primary: #0d74c4;
   --primary-hover: #0a5a9a;
@@ -124,19 +146,19 @@
 
 :root[data-theme="dark"],
 :root[data-theme="dark"][data-palette="signature"] {
-  --page-bg: #070d16;
-  --surface: rgb(255 255 255 / 0.05);
-  --surface-raised: rgb(255 255 255 / 0.12);
+  --page-bg: #121212;
+  --surface: rgb(255 255 255 / 0.04);
+  --surface-raised: rgb(255 255 255 / 0.08);
   --surface-sunken: rgb(0 0 0 / 0.3);
 
-  --text-strong: #eaf1f8;
-  --text-body: #94a7ba;
-  --text-soft: #94a7ba;
-  --text-muted: #8497a9;
+  --text-strong: #fafafa;
+  --text-body: #a3a3a3;
+  --text-soft: #a3a3a3;
+  --text-muted: #8f8f8f;
 
-  --line: rgb(255 255 255 / 0.11);
-  --line-soft: rgb(255 255 255 / 0.07);
-  --line-strong: rgb(255 255 255 / 0.2);
+  --line: rgb(255 255 255 / 0.09);
+  --line-soft: rgb(255 255 255 / 0.06);
+  --line-strong: rgb(255 255 255 / 0.16);
 
   --primary: #35b8ff;
   --primary-hover: #7fd2ff;
@@ -181,6 +203,7 @@
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
 
   --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
   /* Her `transition-*` sınıfı marka eğrisini kendiliğinden alır. */
@@ -233,6 +256,16 @@
   --shadow-raised: var(--shadow-sm);
   --shadow-floating: var(--shadow-md);
   --shadow-modal: var(--shadow-overlay);
+  --shadow-cta: var(--shadow-button);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-track: var(--chart-track);
+  --color-chart-ink: var(--chart-ink);
 }
 
 /* --------------------------------------------------------------------------

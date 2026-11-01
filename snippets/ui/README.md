@@ -66,6 +66,14 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `pagination.tsx` | Adreste sayfa numarası | `next/link` | Hayır | `aria-current="page"`; telefonda "3 / 12" |
 | `stat.tsx` | Etiket + değer + değişim | lucide | Hayır | Renk tek işaret değil: işaret, ok, "artış/düşüş" |
 | `sparkline.tsx` | Eksensiz mini eğri | yok | Hayır | `role="img"` + `title` |
+| `chart-card.tsx` | Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları | yok | Hayır | `section` + başlık; lejant `dl`; değişim "artış/düşüş" diye okunur |
+| `stage-bars.tsx` | Huni aşamaları, iz üstünde hap çubuk | `chart-card` | Hayır | `ol`; değer ve pay metinde, çubuk `aria-hidden` |
+| `track-bar-chart.tsx` | Sıralı tek seri (ay, gün), iz üstünde sütun | `chart-card` | Hayır | Görsel `aria-hidden`, veri `sr-only` tabloda |
+| `ring-chart.tsx` | 2-5 kategorinin iç içe halkası, ortada değer | yok | Hayır | `role="img"` + `title`; her yayın kendi `title`ı |
+
+Dört grafik bileşeni "board" dilinde (2026-11): gri kuyu kart, beyaz karo,
+seri rengi `--chart-1…6` token'ından (metin rengi olarak kullanılmaz),
+fareyle üstüne gelinen seri dışındakiler `:has` ile geri çekilir (JS yok).
 
 ### Form ve Gezinme
 

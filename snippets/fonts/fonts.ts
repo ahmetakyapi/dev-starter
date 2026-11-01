@@ -5,6 +5,7 @@ import {
   IBM_Plex_Mono,
   Instrument_Sans,
   Instrument_Serif,
+  Inter,
   JetBrains_Mono,
   Manrope,
   Newsreader,
@@ -76,6 +77,8 @@ const jakarta = Plus_Jakarta_Sans({ subsets: ["latin", "latin-ext"], variable: "
 const geist = Geist({ subsets: ["latin", "latin-ext"], variable: "--font-sans-face", display: "swap" });
 const instrumentSans = Instrument_Sans({ subsets: ["latin", "latin-ext"], variable: "--font-sans-face", display: "swap" });
 const onest = Onest({ subsets: ["latin", "latin-ext"], variable: "--font-sans-face", display: "swap" });
+// Inter: `opsz` ekseni büyük puntoda harfleri sıkılaştırır (başlık), küçükte açar.
+const inter = Inter({ subsets: ["latin", "latin-ext"], axes: ["opsz"], variable: "--font-sans-face", display: "swap" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin", "latin-ext"], variable: "--font-sans-face", display: "swap" });
 
 /* --- Başlık (--font-display-face) ---------------------------------------- */
@@ -170,6 +173,15 @@ export const FONT_PRESETS = {
     sans: jakarta,
     mono: geistMono,
     note: "Tüketici uygulaması, kayıt akışı, mobil ağırlıklı ürün. verdant ya da ember.",
+  },
+  /**
+   * Nötr, sakin ürün dili ("board"): tek aile, ağırlık ve optik boyutla
+   * hiyerarşi. Nötr sistem + parlak paletlerle (cobalt, violet, rose…) yazıldı.
+   */
+  board: {
+    sans: inter,
+    mono: jetbrains,
+    note: "Pano, grafik, bileşen vitrini, yapay zekâ sohbeti. cobalt, violet, rose, jade. Mono'da ₺ yok: tutarı sans ile yaz.",
   },
   /** Dar ve okunaklı; küçük puntoda yoğun tablo. */
   dense: {

@@ -486,3 +486,32 @@ oturuma özel değil; kitteki `?oturum=` + ayrı tablo daha dar.
 **Ne zaman değişir:** Bir projede içerik bir başlık CMS'te (Sanity, Payload)
 duruyorsa onun kendi canlı önizlemesi kullanılır; değişmezler (gerçek sayfa,
 iki cihaz, iki tema, anında font) aynı kalır.
+
+## Board Görsel Dili — Nötr Sistem, Parlak Paletler, Grafik Token'ları (2026-11-01)
+
+**Karar:** boardui.com'un görsel dilinden ÖĞRENİLDİ, kodu alınmadı.
+Ekosistemin sistem katmanı nötr griye geçti, altı parlak palet ve altı
+grafik rengi eklendi, `board` font preseti (Inter + JetBrains Mono) geldi.
+
+**Neden:** eski sistem grileri mavi tonluydu (`#f7f9fb`, `#54677c`): her
+palet mavinin içinde duruyordu ve "her şey mavi" hissi buradan geliyordu.
+Nötr griyle renk yalnızca paletten ve veriden gelir; yeşim ya da pembe bir
+ürün de kendi rengini temiz taşır.
+
+**Ne alındı (dil, değer değil):** saf beyaz zemin + gri kuyu kart + beyaz
+karo; kısa, katmanlı gölge; yukarıdan aşağı tek aile CTA degradesi ve üst
+kenar ışığı; pastel ve eşit parlaklıkta grafik serileri; iz (track) üstünde
+çubuk; fareyle seri yalıtımı.
+
+**Lisans:** boardui'nin ücretsiz katmanı MIT, grafikler ve şablonlar ücretli
+"BoardUI License". Kendi stack'i (react-aria-components, Remix Icon) bizimkiyle
+(Base UI, lucide) aynı değil; doğrudan kurmak ikinci bir bileşen sistemi
+getirirdi. Ücretli grafiklerin kodu görülmedi; `chart-card`, `stage-bars`,
+`track-bar-chart`, `ring-chart` sıfırdan, kendi token'larımızla yazıldı.
+
+**Değişmeyen:** `signature` varsayılan palet ve değerleri, durum renkleri,
+degrade disiplini (üç yer, tek aile), punto ölçeği, imza eğrisi.
+
+**Etkisi:** `@ahmetakyapi/theme` kullanan proje yükseltince zemin `#f7f9fb`
+→ `#ffffff` (koyu `#070d16` → `#121212`) olur. `@ahmetakyapi/ui` `Button`
+`primary` artık `bg-cta` (degrade) + `shadow-cta`; yeni `soft` varyantı.

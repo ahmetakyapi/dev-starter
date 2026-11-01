@@ -40,6 +40,7 @@ bakılarak doğrulandı)
 | Eylem çağrısı (CTA) | [cta.gallery](https://www.cta.gallery/) | Yalnız CTA bandının kırpılmış görüntüsü, masaüstü ve telefon; "View website" bağlantısı | Salim Lunat (Webestica). Detay sayfalarındaki büyük görsel şablon reklamıdır, asıl görüntü "Desktop view" olandır |
 | Alt bilgi (footer) | [footer.design](https://www.footer.design/) | Üslup filtreli alt bilgi galerisi (tipografik, minimal, koyu, cesur), "Visit website" | Benten Woodring ve Devin Fountain'ın boş zaman projesi; ana sayfada bir sponsorlu kart var |
 | 404 sayfası | [404s.design](https://www.404s.design/) | 1440 piksel görüntüler, üslup/etkileşim/sektör filtresi; her kart asıl 404 sayfasına gider | Finnian Sturdy ("by FS"); Mobbin sponsorlu kartı var |
+| Grafik kartı, pano, sohbet arayüzü | [boardui.com](https://www.boardui.com/) | Bileşen ve grafik vitrini: nötr yüzey, pastel seri renkleri, palet değiştirici | Ücretsiz bileşenleri MIT; grafikler ve şablonlar ücretli (BoardUI License). Dili `decisions.md` → "Board Görsel Dili"nde ekosisteme uyarlandı, kodu alınmadı |
 | Bento ızgara | [bentogrids.com](https://bentogrids.com/) | 285 bento düzeni, görüntü ve kısa video; her örneğin kaynak bağlantısı | Ivan Votti. Kaynakların bir kısmı canlı site değil Dribbble/X gönderisi: yalnız görsel kavram, gerçek davranış yok |
 
 Kahraman bölümü, fiyat sayfası ve tam sayfa için henüz doğrulanmış

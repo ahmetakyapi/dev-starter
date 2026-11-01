@@ -4,7 +4,7 @@ import { m } from 'motion/react'
 import { cn } from '../utils'
 import { useMagnetic } from '../hooks/useMagnetic'
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger'
+type Variant = 'primary' | 'secondary' | 'soft' | 'ghost' | 'outline' | 'danger'
 type Size = 'sm' | 'md' | 'lg'
 
 // `ComponentProps<'button'>`: React 19'da `ref` sıradan prop, tipte de kabul edilir.
@@ -18,8 +18,12 @@ export type ButtonProps = React.ComponentProps<'button'> & {
 
 // Renk yalnızca token sınıfından: tema `data-theme` ile döner, koyu tema varyantı yazılmaz
 const variants: Record<Variant, string> = {
-  primary: 'bg-primary text-on-primary shadow-sm hover:bg-primary-hover',
-  secondary: 'border border-line bg-surface-raised text-strong hover:border-line-strong',
+  // Birincil: paletin CTA degradesi (yukarıdan aşağı, aynı aile) + üst kenar
+  // ışığı. Degrade disiplini: ekranda TEK birincil eylem bu varyantı taşır.
+  primary: 'bg-cta text-on-brand shadow-cta hover:brightness-95',
+  // Beyaz karo + kıl çizgisi: gri kuyunun (bg-surface) üstünde de ayrışır
+  secondary: 'border border-line bg-overlay text-strong shadow-sm hover:bg-surface',
+  soft: 'bg-primary-wash text-primary-ink hover:bg-primary hover:text-on-primary',
   ghost: 'text-soft hover:bg-surface-raised hover:text-strong',
   outline: 'border border-line-strong text-body hover:border-primary hover:text-primary-ink',
   danger: 'bg-danger-wash text-danger hover:bg-danger hover:text-on-primary',
@@ -37,7 +41,7 @@ const sizes: Record<Size, string> = {
 // mıknatıslı düğmede motion'ın her kare yazdığı transform'u CSS bir kez daha
 // yumuşatır ve çekim imlecin gerisinde kalır.
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,scale] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
+  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,scale,filter] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
 
 // motion bu adları jest ve animasyon geri çağrısı olarak yeniden tanımlar,
 // DOM imzasıyla m.button'a yayılamazlar: mıknatıslı yolda çağrılmazlar.

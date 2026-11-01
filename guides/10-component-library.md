@@ -155,6 +155,16 @@ kaldığı için erişilebilirlik açığı değil.
   oranı gibi ölçülerde.
 - **Sparkline**: eğilim işareti; okunacak sayı yanında. `tone="auto"`
   yalnızca "yükselmek iyi" serilerde.
+- **ChartCard + ChartLegend**: her grafiğin kabı. Kart gri kuyu
+  (`bg-surface`), lejant karoları beyaz (`bg-overlay`); başlıktaki büyük
+  değer telefonda okunan tek sayıdır, grafik onu destekler.
+- **StageBars**: huni. Çizim değil çubuk: ortak taban çizgisinde uzunluk
+  doğru okunur. Satırlar `subgrid`, izler hizalı.
+- **TrackBarChart**: sıralı tek seri. Etiketler kısa ("Oca"): 12 sütun
+  telefonda sütun başına ~24 px.
+- **RingChart**: az kategori, büyüklük sırası. Tam oran okunacaksa StageBars.
+- Seri rengi sırası sabit (`chart-1` ilk seri) ve lejantla aynı. Renk metin
+  rengi olmaz; değer her zaman `text-strong` ile yanında yazılır.
 
 ### Form ve Gezinme
 

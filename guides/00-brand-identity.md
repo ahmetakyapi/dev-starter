@@ -60,6 +60,19 @@ gerekçe değil: koyu tema gece kullanılan ürün içindir.
 | `verdant` | ~`#0f7a5a` | ~`#34d399` ailesi | Zümrüt |
 | `ember` | ~`#b45309` | ~`#fbbf24` ailesi | Kehribar → turuncu |
 | `iris` | ~`#5b4bd6` | ~`#a5b4fc` ailesi | Mor → indigo |
+| `cobalt` | `#2563eb` | `#60a5fa` | Parlak mavi; SaaS, pano |
+| `violet` | `#7c3aed` | `#a78bfa` | Menekşe; yaratıcı araç, yapay zekâ |
+| `rose` | `#db2777` | `#f472b6` | Pembe; tüketici, sosyal |
+| `ruby` | `#dc2626` | `#f87171` | Kırmızı; medya, spor. Yıkıcı eylem yine `danger` |
+| `tangerine` | `#c2410c` | `#fb923c` | Turuncu; yemek, alışveriş |
+| `jade` | `#047857` | `#34d399` | Yeşim; finans, sağlık |
+
+**Parlak aile (2026-11, "board" dili):** ilk dört palet derin ve
+kurumsal; son altısı Tailwind ramplarından, daha canlı. Mavi zorunlu
+değil: ürünün karakterine göre seç. Açıkta dolgu 600 (turuncu ve yeşilde
+700, 600 beyaz metinle AA tutmaz), koyuda 400. CTA degradesi yukarıdan
+aşağı aynı rengin bir basamak koyusuna iner. Hepsi contract testinde ölçülür.
+Bu palet ailesiyle önerilen yazı tipi `board` preseti (Inter + JetBrains Mono).
 
 `~` işaretli değerler yön gösterir; kesin değer § 4'teki ölçümle bulunur.
 `signature`ın tam değerleri [02-design-tokens.md](02-design-tokens.md) § 1.

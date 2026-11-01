@@ -60,12 +60,16 @@ font listesinden doğrulandı, Ekim 2026). Türkçe glif testi § 3.
 | `technical` | Space Grotesk | Space Grotesk | JetBrains Mono | Geometrik, teknik. | Var |
 | `friendly` | Plus Jakarta Sans | Plus Jakarta Sans | Geist Mono | Yuvarlak, cana yakın tüketici uygulaması. | Var |
 | `dense` | Onest | Onest | JetBrains Mono | Dar ve okunaklı; küçük puntoda yoğun tablo. | Var |
+| `board` | Inter (optik boyutlu) | Inter | JetBrains Mono | Nötr, sakin ürün dili; hiyerarşi ağırlık ve boyutla. Pano, grafik, sohbet arayüzü. | Var |
 
 **Listede olmayanlar ve nedeni:**
 
-- **Inter varsayılan değil.** Her yerde olduğu için ürüne kimlik vermiyor;
-  ekosistemde "jenerik" okunuyor. Gerekiyorsa `dense` ya da `product` aynı
-  işi daha karakterli yapar.
+- **Inter varsayılan değil, ama `board` presetinde var** (Değişti, 2026-11-01).
+  Tek başına ürüne kimlik vermiyor; kimliği nötr sistem + parlak palet +
+  grafik dili taşıdığında (boardui.com'dan öğrenilen dil) Inter doğru seçim:
+  göze batmaz, rakamları düzgün, `opsz` ekseniyle büyük puntoda sıkılaşır.
+  Türkçe ve ₺ glifleri woff dosyasının cmap'inden okunarak doğrulandı
+  (Kasım 2026). Kimliği yalnızca font taşıyacaksa hâlâ `dense` ya da `product`.
 - **Fraunces yok.** Simayahi'de denendi ve reddedildi; yeniden önerme.
 
 ---
