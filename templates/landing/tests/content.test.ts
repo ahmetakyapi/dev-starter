@@ -70,3 +70,33 @@ test("içerik: hero tarihi geçerli ISO günü", () => {
   // Date.parse("2026-02-31") NaN değil 3 Mart verir; gidiş-dönüş aynı günü vermeli.
   assert.equal(new Date(`${asOf}T00:00:00Z`).toISOString().slice(0, 10), asOf);
 });
+
+test("içerik: örnek veri açıkça işaretli (hero panosu ve fiyatlar)", () => {
+  assert.equal(content.hero.board.sample, true);
+  assert.equal(content.pricing.sample, true);
+  assert.ok(content.SAMPLE_NOTE.length > 0);
+});
+
+test("içerik: hero panosunun hunisi büyükten küçüğe, hafta yedi gün", () => {
+  const values = content.hero.board.funnel.stages.map((stage) => stage.value);
+  for (let i = 1; i < values.length; i += 1) assert.ok(values[i] <= values[i - 1], "huni daralmalı");
+  assert.equal(content.hero.board.closed.weekly.length, 7);
+  assert.equal(content.hero.board.closed.days.length, 7);
+});
+
+test("içerik: her özellik kartının kendi demosu var, demo türleri benzersiz", () => {
+  const kinds = content.features.items.map((feature) => feature.demo.kind);
+  assert.equal(new Set(kinds).size, kinds.length);
+});
+
+test("içerik: yıllık fiyat aylıktan pahalı değil", () => {
+  const amount = (text: string) => Number(text.replace(/[^\d]/g, ""));
+  for (const plan of content.pricing.plans) {
+    assert.ok(amount(plan.price.yearly) <= amount(plan.price.monthly), plan.name);
+  }
+});
+
+test("içerik: nasıl çalışır sahnelerinin satır sayısı eşit (sahne değişince boy zıplamaz)", () => {
+  const counts = new Set(content.steps.items.map((step) => step.scene.rows.length));
+  assert.equal(counts.size, 1);
+});

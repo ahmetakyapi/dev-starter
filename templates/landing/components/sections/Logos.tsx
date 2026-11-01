@@ -6,6 +6,9 @@ import { logos } from "@/lib/content";
  * Üzerine gelince ve altındaki "Şeridi Durdur" işaretlenince durur; hareketi
  * azaltanda durağan ve sarılı, denetim de gizli (app/landing.css).
  *
+ * Board dilinde bölüm SIKI ve sessiz: çizgi yok, başlık küçük ve soluk;
+ * hero panosundan sonra okuyucuyu yormadan "kim kullanıyor"u söyler.
+ *
  * İşaretler uydurma müşteri adlarından ÜRETİLİR: baş harf + dört basit
  * geometriden biri. Gerçek müşteriler gelince `LogoMark` yerine onların SVG
  * logoları konur (tek renk, `currentColor`, iki temada aynı dosya).
@@ -37,7 +40,7 @@ function LogoMark({ name, index }: { name: string; index: number }) {
           {initial}
         </text>
       </svg>
-      <span className="text-read font-semibold whitespace-nowrap">{name}</span>
+      <span className="text-read font-semibold tracking-[-0.01em] whitespace-nowrap">{name}</span>
     </span>
   );
 }
@@ -56,8 +59,8 @@ function Lap({ hidden = false }: { hidden?: boolean }) {
 
 export function Logos() {
   return (
-    <section aria-labelledby="logolar" className="marquee-section border-y border-line-soft py-10 sm:py-12">
-      <h2 id="logolar" className="px-4 text-center text-base font-semibold text-muted">
+    <section aria-labelledby="logolar" className="marquee-section py-12 sm:py-16">
+      <h2 id="logolar" className="px-4 text-center text-base font-medium tracking-normal text-muted">
         {logos.title}
       </h2>
       <div className="marquee mt-7 overflow-clip">

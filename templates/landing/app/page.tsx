@@ -24,9 +24,9 @@ export const metadata: Metadata = {
 };
 
 /*
- * `?hero=statement` yalnızca GELİŞTİRMEDE okunur: yedi düzeni aynı sunucuda
+ * `?hero=statement` yalnızca GELİŞTİRMEDE okunur: sekiz düzeni aynı sunucuda
  * yan yana denemek için. Üretimde parametre yok sayılır; yoksa aynı sayfa
- * yedi farklı adreste yedi farklı içerikle dizine girebilirdi. Üretimde
+ * sekiz farklı adreste sekiz farklı içerikle dizine girebilirdi. Üretimde
  * `searchParams` hiç beklenmediği için sayfa statik kalır (`○`).
  */
 async function resolveVariant(searchParams: PageProps<"/">["searchParams"]): Promise<HeroVariant> {

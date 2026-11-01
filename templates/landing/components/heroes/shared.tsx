@@ -11,7 +11,7 @@ import type { HeroImage, HeroLine, HeroStat, Link } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 /*
- * Yedi hero düzeninin ortak parçaları. Kurallar her düzende aynı:
+ * Hero düzenlerinin ortak parçaları. Kurallar her düzende aynı:
  *
  *  - LCP başlığı ilk karede GÖRÜNÜR: opaklıkla değil maske + transform ile
  *    açılır (`.line-mask`, app/landing.css). Reveal'e sarılmaz.

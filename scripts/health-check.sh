@@ -415,7 +415,12 @@ for d in packages/@ahmet/ui/src snippets; do [ -d "$d" ] && TOKEN_DIRS+=("$d"); 
 if [ ${#TOKEN_DIRS[@]} -gt 0 ]; then
   PALETTE='(bg|text|border|ring|from|via|to|fill|stroke|outline|shadow|placeholder)-(white|black|gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[0-9]+|/|\b)'
   VIOLATIONS=$(grep -rnE "$PALETTE|\bdark:|['\"]#[0-9a-fA-F]{3,8}['\"]|rgba?\([0-9]" "${TOKEN_DIRS[@]}" \
-    --include='*.ts' --include='*.tsx' 2>/dev/null | grep -v '\.test\.\|\.spec\.' || true)
+    --include='*.ts' --include='*.tsx' 2>/dev/null | grep -v '\.test\.\|\.spec\.' | grep -v 'token-ok' || true)
+  # Renk KULLANICI VERISI olan dosya (renk secici ve vitrini) basinda
+  # `token-ok-file: <neden>` tasir; gerekcesiz isaret Gate'te bulgudur.
+  for okf in $(grep -rl 'token-ok-file:' "${TOKEN_DIRS[@]}" --include='*.tsx' --include='*.ts' 2>/dev/null); do
+    VIOLATIONS=$(echo "$VIOLATIONS" | grep -v "^$okf:" || true)
+  done
   if [ -n "$VIOLATIONS" ]; then
     warn "Olasi design token ihlali (sabit renk / dark: varyanti):"
     echo "$VIOLATIONS" | head -8 | sed 's/^/     /'

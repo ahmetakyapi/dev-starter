@@ -23,7 +23,9 @@ import { Button, ButtonLink, buttonClass } from "@/components/ui/Button";
 <ButtonLink href="/kayit" variant="primary">Ücretsiz Başla</ButtonLink>
 ```
 
-- Varyant: `primary | secondary | ghost | danger`. Boy: `sm | md | lg | icon`.
+- Varyant: `brand | primary | secondary | soft | ghost | danger`. Boy: `sm | md | lg | icon`.
+  Board dili (2026-11): `brand`/`primary` üst kenar ışığı (`shadow-cta`), `secondary`
+  beyaz karo (kuyunun üstünde de ayrışır), `soft` vurgunun yıkanmış hali.
 - **`asChild` yok.** Bağlantı görünümlü düğme `ButtonLink`, başka bir öğe
   `buttonClass()`. Tek bileşenin iki öğe gibi davranması tipi ve
   erişilebilirliği bulanıklaştırır.
@@ -139,9 +141,23 @@ alınır, paket olarak kurulmaz:
 - **Agentic UI** — `agent-tool.tsx`, `action-card.tsx`, `agent-approval.tsx`;
   proaktif akış (agent hazırlar, kullanıcı onaylar) için `agent-feed.tsx`;
   karar için `/agentic`.
-- **Tanıtım sayfası kahramanı** — `landing` şablonunda yedi düzen
-  (`components/heroes/`: editorial-split, statement, product-frame, live-data,
-  bento, minimal, scroll-stage), `lib/content.ts` → `hero.variant` ile seçilir.
+- **Tanıtım sayfası kahramanı** — `landing` şablonunda sekiz düzen
+  (`components/heroes/`: **showcase** (varsayılan, 2026-11), editorial-split,
+  statement, product-frame, live-data, bento, minimal, scroll-stage),
+  `lib/content.ts` → `hero.variant` ile seçilir. `showcase`: büyük sıkı başlık
+  (-0.035em, anlam öbekleriyle maskeli satır girişi; opaklık değişmez, LCP ilk
+  karede) + altında CANLI ürün panosu (`HeroBoard`), ekran görüntüsü değil.
+- **Özelliği gösteren demo, ikon karesi değil** — landing `components/demos/`:
+  her özellik kartında o özelliği oynayan küçük sahne, tek saat
+  (`hooks/useStory.ts`), `tick 0` = tasarım karesi (hareket azaltmada orada
+  durur), kart ekrandan çıkınca durur, kartlar aynı anda oynamaz. Kart = kuyu
+  (`bg-surface rounded-2xl`), parça = karo (`demos/styles.ts` → `TILE`).
+- **Kaydırmaya bağlı sahne** — landing `HowItWorksStage`: yapışkan ürün
+  paneli `useScroll` eşiklerinde durum değiştirir; telefonda ve hareket
+  azaltmada düz liste, seçim CSS'te (hidrasyonda zıplama yok).
+- **Örnek veri dürüstlüğü** — vitrindeki her sayı `content.ts`te `sample: true`
+  ve ekranda "Örnek Veri" künyesiyle (`SAMPLE_NOTE`); toplamlar birbirini tutar
+  (testli).
 
 `/snippet <ad>` ile projeye uyarlanır.
 

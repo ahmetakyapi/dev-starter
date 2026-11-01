@@ -96,11 +96,11 @@ dev-starter/
 │
 ├── templates/
 │   ├── nextjs-fullstack/      → Next 16 + Drizzle/Neon + next-auth v5 + proxy.ts + tema + bileşenler + /akis (AI akışı)
-│   ├── landing/               → Yedi kahraman düzeni (hero.variant), hareket kataloğu, SEO
+│   ├── landing/               → Board dili: showcase hero (canlı pano) + 7 düzen, demolu özellikler, kaydırma sahnesi, SEO
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi + fonts/ + live-preview/
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (73 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form

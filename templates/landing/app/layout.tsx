@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Manrope } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { organization } from "@/lib/content";
@@ -15,18 +15,16 @@ import "./landing.css";
  * TUZAK: next/font `variable` adı @theme'deki adla aynı olursa
  * (`--font-sans: var(--font-sans)`) değişken kendine başvurur ve font
  * sessizce sistem yazı tipine düşer. Bu yüzden `-face` soneki.
- * Manrope değişken bir aile: `weight` verilmez, eksen tek dosyada gelir.
- * IBM Plex Mono değişken değil: her ağırlık alt küme başına ayrı, önceden
- * yüklenen bir dosya. Mono yalnızca künye ve etiketlerde, 400'de; kalın mono
- * gerekirse ağırlığı o gün ekle (guides/09 § 6).
+ *
+ * `board` preseti (guides/09, snippets/fonts): Inter + JetBrains Mono.
+ * NEDEN: landing "board" dilinde (nötr yüzey, pastel veri, büyük sıkı
+ * başlık); kimliği font değil sistem + palet + ürün parçaları taşıyor, Inter
+ * göze batmaz, rakamları düzgün. `opsz` ekseni büyük puntoda harfleri
+ * sıkılaştırır (hero başlığı), küçükte açar. İkisi de değişken aile:
+ * `weight` verilmez, eksen tek dosyada gelir. Türkçe ve ₺ glifleri var.
  */
-const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans-face", display: "swap" });
-const mono = IBM_Plex_Mono({
-  subsets: ["latin", "latin-ext"],
-  weight: "400",
-  variable: "--font-mono-face",
-  display: "swap",
-});
+const sans = Inter({ subsets: ["latin", "latin-ext"], axes: ["opsz"], variable: "--font-sans-face", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-face", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

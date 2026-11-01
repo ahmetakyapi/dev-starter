@@ -1,5 +1,7 @@
 "use client";
 
+/* token-ok-file: renk burada kullanıcı VERİSİ (seçilen değer, hazır renk), sistem rengi değil. */
+
 import { useId, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 

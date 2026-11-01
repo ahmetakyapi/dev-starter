@@ -155,6 +155,10 @@ bash ~/dev-starter/scripts/slop-scan.sh app components   # YÜKSEK bulgu varsa e
 Kasıtlı bir satır `slop-ok: <neden>` yorumuyla susturulur. Gerekçesiz
 `slop-ok` Gate'te bulgudur.
 
+Sabit renk denetimi (health-check § 9) için eşdeğeri: renk KULLANICI
+VERİSİ olan dosya (renk seçici, onun vitrini) başında
+`token-ok-file: <neden>` taşır, tek satır `token-ok`. Sistem rengi için asla.
+
 | Kalıp | Neden | Doğrusu |
 |-------|-------|---------|
 | Fallback'siz degrade metin | Kırpma desteklenmezse metin görünmez olur | `@supports` + solid `color` |
