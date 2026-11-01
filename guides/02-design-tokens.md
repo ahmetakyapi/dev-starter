@@ -13,8 +13,8 @@ lacivert → mavi tek ailesi (§ 1a). Şablonların varsayılan teması açık;
 ürüne göre değişir (01 § 0).
 
 ```text
-Katman 1 — ham rol değişkenleri     :root, :root[data-theme="light"] { --text-strong: #101c2b; }
-             (temaya göre değişir)  :root[data-theme="dark"]          { --text-strong: #eaf1f8; }
+Katman 1 — ham rol değişkenleri     :root, :root[data-theme="light"] { --text-strong: #0a0a0a; }
+             (temaya göre değişir)  :root[data-theme="dark"]          { --text-strong: #f5f5f5; }
                      │
 Katman 2 — Tailwind köprüsü         @theme inline { --color-strong: var(--text-strong); }
              (hiç değişmez)
@@ -29,16 +29,16 @@ Sınıf                               text-strong
 :root,
 :root[data-theme="light"] {
   color-scheme: light;
-  --page-bg: #f7f9fb;
-  --surface: rgb(16 32 52 / 0.028);
-  --surface-raised: rgb(16 32 52 / 0.07);
-  --surface-sunken: rgb(16 32 52 / 0.045);
-  --text-strong: #101c2b;
-  --text-body: #54677c;
-  --text-muted: #586a7c;      /* zemin 5,28:1 · kart 4,62:1 */
-  --line: rgb(16 32 52 / 0.1);
-  --line-soft: rgb(16 32 52 / 0.06);
-  --line-strong: rgb(16 32 52 / 0.17);
+  --page-bg: #ffffff;         /* nötr (2026-11): griler mavi tonu taşımaz */
+  --surface: rgb(0 0 0 / 0.03);          /* kart = gri kuyu (~#f7f7f7) */
+  --surface-raised: rgb(0 0 0 / 0.06);
+  --surface-sunken: rgb(0 0 0 / 0.045);
+  --text-strong: #0a0a0a;
+  --text-body: #525252;
+  --text-muted: #6b6b6b;      /* zemin 5,33:1 · kuyu 4,99:1 */
+  --line: rgb(0 0 0 / 0.08);
+  --line-soft: rgb(0 0 0 / 0.05);
+  --line-strong: rgb(0 0 0 / 0.14);
   --line-focus: #0d74c4;
   --primary: #0d74c4;
   --primary-hover: #0a5a9a;
@@ -52,16 +52,17 @@ Sınıf                               text-strong
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page-bg: #070d16;
-  --surface: rgb(255 255 255 / 0.05);
-  --surface-raised: rgb(255 255 255 / 0.12);
+  --page-bg: #0c0c0d;         /* derin nötr; yüzeyler yükseldikçe açılır */
+  --surface: rgb(255 255 255 / 0.035);
+  --surface-raised: rgb(255 255 255 / 0.07);
   --surface-sunken: rgb(0 0 0 / 0.3);
-  --text-strong: #eaf1f8;
-  --text-body: #94a7ba;
-  --text-muted: #8497a9;
-  --line: rgb(255 255 255 / 0.11);
-  --line-soft: rgb(255 255 255 / 0.07);
-  --line-strong: rgb(255 255 255 / 0.2);
+  --overlay: #18181a;         /* karo/menü/diyalog zeminden AÇIK: yükseklik ışıkla okunur */
+  --text-strong: #f5f5f5;     /* saf beyaz değil, uzun metinde göz yormaz */
+  --text-body: #a1a1a1;
+  --text-muted: #8a8a8a;
+  --line: rgb(255 255 255 / 0.08);
+  --line-soft: rgb(255 255 255 / 0.05);
+  --line-strong: rgb(255 255 255 / 0.15);
   --line-focus: #35b8ff;
   --primary: #35b8ff;
   --primary-hover: #7fd2ff;
@@ -92,6 +93,22 @@ Dikkat edilecek iki şey: koyu temada `--on-primary` **koyu**dur (açık mavi
 dolgu üstünde beyaz metin AA'yı tutmaz), ve kart zeminleri opak renk değil
 metin renginin çok düşük opaklıklı tonudur. Derinlik gölgeden değil bu ton
 farkından gelir.
+
+### Board katmanı (2026-11): kuyu, karo, grafik, CTA ışığı
+
+| Token | Sınıf | Ne için |
+|-------|-------|---------|
+| `--surface` | `bg-surface` | Kart = gri **kuyu**. İçindeki karo `bg-overlay shadow-raised`; kart içinde kart yok |
+| `--overlay` | `bg-overlay` | Karo, menü, diyalog. Açıkta beyaz, koyuda zeminden **açık** (`#18181a`) |
+| `--shadow-sm/md` | `shadow-raised/floating` | Açıkta kısa katmanlı gölge; koyuda üst kenarda 1 px ışık çizgisi (gölge koyuda görünmez, ışık görünür) |
+| `--shadow-button` | `shadow-cta` | Dolgulu düğme: üst kenar ışığı + kısa yer gölgesi |
+| `--chart-1…6` | `bg-chart-N`, `stroke-chart-N`, `fill-chart-N` | Veri serisi. Metin rengi DEĞİL; sıra sabit, lejantla aynı |
+| `--chart-track` / `--chart-ink` | `bg-chart-track`, `text-chart-ink` | Çubuğun boş izi; pastel dolgu üstündeki ikon/hap metni (her seride AA, testli) |
+| `--radius-2xl` | `rounded-2xl` | 32 px vitrin kartı / büyük panel kabuğu |
+
+Koyu tema "açığın tersi" değil: zemin `#0c0c0d`, yükseldikçe açılan yüzeyler
+(sayfa → kuyu → karo → katman), saf beyaz yerine `#f5f5f5` metin, paletlerde
+400 basamağı (doygunluğu düşük, koyu zeminde parlamaz).
 
 **Neden `inline`:** `@theme` (inline olmadan) değeri derleme anında çözer ve
 sınıfa sabit renk yazar; tema değişince sınıf değişmez. `inline`,

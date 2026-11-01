@@ -279,7 +279,7 @@ done
 # .gitignore. AGENTS.md'yi `next dev` yazar, o da disarida.
 SHARED_TEMPLATE_FILES=(
   ".claude/settings.json" ".nvmrc" "tsconfig.json" "postcss.config.mjs" "next.config.ts" "instrumentation.ts"
-  "app/globals.css" "app/icon.svg" "app/error.tsx" "app/global-error.tsx" "app/not-found.tsx"
+  "app/globals.css" "app/palettes.css" "app/icon.svg" "app/error.tsx" "app/global-error.tsx" "app/not-found.tsx"
   "app/opengraph-image.tsx" "app/manifest.ts" "app/robots.ts" "app/api/health/route.ts"
   "components/motion/MotionProvider.tsx" "components/motion/Reveal.tsx"
   "components/ui/Button.tsx" "components/ui/EmptyState.tsx" "components/ui/Field.tsx"

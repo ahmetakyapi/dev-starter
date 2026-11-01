@@ -62,8 +62,8 @@ export default async function OpengraphImage() {
           justifyContent: "flex-end",
           padding: 80,
           background:
-            "radial-gradient(800px 500px at 0% 0%, rgba(53,184,255,0.18), transparent 60%), radial-gradient(700px 500px at 100% 100%, rgba(53,184,255,0.12), transparent 60%), #070d16",
-          color: "#eaf1f8",
+            "radial-gradient(800px 500px at 0% 0%, rgba(53,184,255,0.18), transparent 60%), radial-gradient(700px 500px at 100% 100%, rgba(53,184,255,0.12), transparent 60%), #0c0c0d",
+          color: "#f5f5f5",
         }}
       >
         <div
@@ -80,7 +80,7 @@ export default async function OpengraphImage() {
         >
           {SITE_NAME}
         </div>
-        <div style={{ display: "flex", marginTop: 20, fontSize: 34, color: "#94a7ba", maxWidth: 900 }}>
+        <div style={{ display: "flex", marginTop: 20, fontSize: 34, color: "#a1a1a1", maxWidth: 900 }}>
           {SITE_DESCRIPTION}
         </div>
       </div>

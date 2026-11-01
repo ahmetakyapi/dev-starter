@@ -304,6 +304,31 @@ describe('theme.css ↔ tokens.ts', () => {
   })
 })
 
+describe('şablon palet dosyası (app/palettes.css)', () => {
+  // Üretilmiş dosya: elle düzenlenip tokens.ts'ten koparsa palet değiştirici
+  // pakette başka, şablonda başka renk gösterir.
+  const TPL = readFileSync(new URL('../templates/landing/app/palettes.css', import.meta.url), 'utf8')
+  const block = (sel: string) => {
+    const at = TPL.indexOf(`${sel} {`)
+    if (at === -1) throw new Error(`palettes.css'te blok yok: ${sel}`)
+    return TPL.slice(at, TPL.indexOf('}', at))
+  }
+  const names = { primary: '--primary', primaryInk: '--primary-ink', onPrimary: '--on-primary', primaryWash: '--primary-wash', ctaGradient: '--cta-gradient' } as const
+  for (const name of Object.keys(palettes).filter((n) => n !== 'signature') as (keyof typeof palettes)[]) {
+    it(`${name} tokens.ts ile aynı (açık + koyu)`, () => {
+      for (const [theme, sel] of [['light', `:root[data-palette="${name}"]`], ['dark', `:root[data-theme="dark"][data-palette="${name}"]`]] as const) {
+        const b = block(sel)
+        for (const [key, cssName] of Object.entries(names)) {
+          expect(cssVar(b, cssName), `${name}/${theme} ${cssName}`).toBe(palettes[name][theme][key as keyof typeof names])
+        }
+      }
+    })
+  }
+  it('iki şablonda bayt bayt aynı', () => {
+    expect(readFileSync(new URL('../templates/nextjs-fullstack/app/palettes.css', import.meta.url), 'utf8')).toBe(TPL)
+  })
+})
+
 describe('grafik serileri', () => {
   // Grafik rengi token'dan okunur; CSS ile JS (OG görseli, e-posta) ayrışırsa
   // aynı seri iki yüzeyde iki renkte görünür.

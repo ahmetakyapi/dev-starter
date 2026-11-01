@@ -34,7 +34,7 @@ export const THEME_COOKIE = "theme";
 export const THEMES = ["dark", "light"] as const;
 export type Theme = (typeof THEMES)[number];
 export const DEFAULT_THEME: Theme = "light"; // şablon varsayılanı; portfolyo/oyun → "dark"
-export const THEME_COLOR = { dark: "#070d16", light: "#f7f9fb" } as const; // globals.css --page-bg ile eş
+export const THEME_COLOR = { dark: "#0c0c0d", light: "#ffffff" } as const; // globals.css --page-bg ile eş
 export const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export const isTheme = (v: unknown): v is Theme =>

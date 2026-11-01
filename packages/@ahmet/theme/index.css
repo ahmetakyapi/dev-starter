@@ -83,8 +83,17 @@
      yüzey arasındaki ton farkı taşır; bu yüzden iki temada da okunur. */
   .surface {
     background-color: var(--surface);
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius-xl);
+  }
+
+  /* Karo: kuyunun (.surface) İÇİNDEKİ beyaz parça — lejant, ayar satırı,
+     liste öğesi. Kart içinde kart değil: kuyu zemin, karo içerik. Koyuda
+     zeminden açık (`--overlay`) ve üst kenarında ışık çizgisi (--shadow-sm). */
+  .tile {
+    background-color: var(--overlay);
     border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
   }
 
   /* Cam OPT-IN. Bulanıklık her karede arkadaki katmanı yeniden çizdirir ve

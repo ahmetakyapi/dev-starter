@@ -513,5 +513,5 @@ getirirdi. Ücretli grafiklerin kodu görülmedi; `chart-card`, `stage-bars`,
 degrade disiplini (üç yer, tek aile), punto ölçeği, imza eğrisi.
 
 **Etkisi:** `@ahmetakyapi/theme` kullanan proje yükseltince zemin `#f7f9fb`
-→ `#ffffff` (koyu `#070d16` → `#121212`) olur. `@ahmetakyapi/ui` `Button`
+→ `#ffffff` (koyu `#070d16` → `#0c0c0d`) olur. `@ahmetakyapi/ui` `Button`
 `primary` artık `bg-cta` (degrade) + `shadow-cta`; yeni `soft` varyantı.

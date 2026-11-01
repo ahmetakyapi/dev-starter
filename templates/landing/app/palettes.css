@@ -1,0 +1,256 @@
+/* ==========================================================================
+   PALETLER (isteğe bağlı) — ÜRETİLDİ, elle düzenleme.
+   Kaynak: packages/@ahmet/theme/tokens.ts → palettes
+   Üreten: node ~/dev-starter/scripts/build-template-palettes.mjs
+
+   Kullanım (app/globals.css, `@import "tailwindcss";` satırının hemen altı):
+     @import "./palettes.css";
+   ve <html data-palette="cobalt">. Nötr sistem (zemin, metin, çizgi)
+   paletten bağımsız: burada yalnızca vurgu ailesi ve degradeler var.
+
+   Özgüllük: açık blok (0,2,0), koyu blok (0,3,0). Koyu blok açık bloğun
+   bütün değişkenlerini yeniden yazar; koyu temada açık palet kalmaz.
+   ========================================================================== */
+
+/* verdant */
+:root[data-palette="verdant"] {
+  --primary: #0f7a5a;
+  --primary-hover: #0b5f46;
+  --primary-soft: #3a9b7c;
+  --primary-wash: rgb(15 122 90 / 0.1);
+  --primary-ink: #0d6e51;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #062a1f 0%, #0b5a42 44%, #0f7a5a 76%, #1f9a74 100%);
+  --display-gradient-tight: linear-gradient(100deg, #06301f 0%, #137a5c 100%);
+  --brand-gradient: linear-gradient(150deg, #6ee7b7 0%, #14a37a 48%, #08523c 100%);
+  --cta-gradient: linear-gradient(150deg, #0f7a5a 0%, #08523c 100%);
+}
+
+:root[data-theme="dark"][data-palette="verdant"] {
+  --primary: #34d399;
+  --primary-hover: #6ee7b7;
+  --primary-soft: #4fdcaa;
+  --primary-wash: rgb(52 211 153 / 0.14);
+  --primary-ink: #34d399;
+  --on-primary: #04140e;
+  --display-gradient: linear-gradient(112deg, #f0faf6 0%, #b4f0d8 44%, #6ee0b4 76%, #34d399 100%);
+  --display-gradient-tight: linear-gradient(100deg, #eefaf5 0%, #4fdcaa 100%);
+  --brand-gradient: linear-gradient(150deg, #6ee7b7 0%, #14a37a 48%, #08523c 100%);
+  --cta-gradient: linear-gradient(150deg, #0f7a5a 0%, #08523c 100%);
+}
+
+/* ember */
+:root[data-palette="ember"] {
+  --primary: #b45309;
+  --primary-hover: #8f4207;
+  --primary-soft: #d97706;
+  --primary-wash: rgb(180 83 9 / 0.1);
+  --primary-ink: #a14a08;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #3b1a04 0%, #7a3606 44%, #b45309 76%, #d97706 100%);
+  --display-gradient-tight: linear-gradient(100deg, #431d05 0%, #a14a08 100%);
+  --brand-gradient: linear-gradient(150deg, #fcd34d 0%, #e07a0c 48%, #7a3306 100%);
+  --cta-gradient: linear-gradient(150deg, #b45309 0%, #7a3306 100%);
+}
+
+:root[data-theme="dark"][data-palette="ember"] {
+  --primary: #fbbf24;
+  --primary-hover: #fcd34d;
+  --primary-soft: #fcd062;
+  --primary-wash: rgb(251 191 36 / 0.14);
+  --primary-ink: #fbbf24;
+  --on-primary: #1a1002;
+  --display-gradient: linear-gradient(112deg, #fdf8ee 0%, #fde3a7 44%, #fcd062 76%, #fbbf24 100%);
+  --display-gradient-tight: linear-gradient(100deg, #fdf6e8 0%, #fbbf24 100%);
+  --brand-gradient: linear-gradient(150deg, #fcd34d 0%, #e07a0c 48%, #7a3306 100%);
+  --cta-gradient: linear-gradient(150deg, #b45309 0%, #7a3306 100%);
+}
+
+/* iris */
+:root[data-palette="iris"] {
+  --primary: #5b4bd6;
+  --primary-hover: #4636b8;
+  --primary-soft: #7d70e0;
+  --primary-wash: rgb(91 75 214 / 0.1);
+  --primary-ink: #5243c8;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #1b1550 0%, #3a2d9e 44%, #5b4bd6 76%, #7d70e0 100%);
+  --display-gradient-tight: linear-gradient(100deg, #1e1858 0%, #5243c8 100%);
+  --brand-gradient: linear-gradient(150deg, #c7d2fe 0%, #6d5fe0 48%, #2e2490 100%);
+  --cta-gradient: linear-gradient(150deg, #5b4bd6 0%, #2e2490 100%);
+}
+
+:root[data-theme="dark"][data-palette="iris"] {
+  --primary: #a5b4fc;
+  --primary-hover: #c7d2fe;
+  --primary-soft: #b4c0fd;
+  --primary-wash: rgb(165 180 252 / 0.14);
+  --primary-ink: #a5b4fc;
+  --on-primary: #0c0e24;
+  --display-gradient: linear-gradient(112deg, #f4f5fe 0%, #d9defe 44%, #bcc6fd 76%, #a5b4fc 100%);
+  --display-gradient-tight: linear-gradient(100deg, #f1f3fe 0%, #a5b4fc 100%);
+  --brand-gradient: linear-gradient(150deg, #c7d2fe 0%, #6d5fe0 48%, #2e2490 100%);
+  --cta-gradient: linear-gradient(150deg, #5b4bd6 0%, #2e2490 100%);
+}
+
+/* cobalt */
+:root[data-palette="cobalt"] {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-soft: #3b82f6;
+  --primary-wash: rgb(37 99 235 / 0.1);
+  --primary-ink: #1d4ed8;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #172554 0%, #1e40af 44%, #2563eb 76%, #3b82f6 100%);
+  --display-gradient-tight: linear-gradient(100deg, #172554 0%, #2563eb 100%);
+  --brand-gradient: linear-gradient(150deg, #93c5fd 0%, #3b82f6 48%, #1e40af 100%);
+  --cta-gradient: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+:root[data-theme="dark"][data-palette="cobalt"] {
+  --primary: #60a5fa;
+  --primary-hover: #93c5fd;
+  --primary-soft: #93c5fd;
+  --primary-wash: rgb(96 165 250 / 0.14);
+  --primary-ink: #60a5fa;
+  --on-primary: #172554;
+  --display-gradient: linear-gradient(112deg, #eff6ff 0%, #bfdbfe 44%, #93c5fd 76%, #60a5fa 100%);
+  --display-gradient-tight: linear-gradient(100deg, #eff6ff 0%, #60a5fa 100%);
+  --brand-gradient: linear-gradient(150deg, #93c5fd 0%, #3b82f6 48%, #1e40af 100%);
+  --cta-gradient: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+/* violet */
+:root[data-palette="violet"] {
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --primary-soft: #8b5cf6;
+  --primary-wash: rgb(124 58 237 / 0.1);
+  --primary-ink: #6d28d9;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #2e1065 0%, #5b21b6 44%, #7c3aed 76%, #8b5cf6 100%);
+  --display-gradient-tight: linear-gradient(100deg, #2e1065 0%, #7c3aed 100%);
+  --brand-gradient: linear-gradient(150deg, #c4b5fd 0%, #8b5cf6 48%, #5b21b6 100%);
+  --cta-gradient: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+:root[data-theme="dark"][data-palette="violet"] {
+  --primary: #a78bfa;
+  --primary-hover: #c4b5fd;
+  --primary-soft: #c4b5fd;
+  --primary-wash: rgb(167 139 250 / 0.14);
+  --primary-ink: #a78bfa;
+  --on-primary: #2e1065;
+  --display-gradient: linear-gradient(112deg, #f5f3ff 0%, #ddd6fe 44%, #c4b5fd 76%, #a78bfa 100%);
+  --display-gradient-tight: linear-gradient(100deg, #f5f3ff 0%, #a78bfa 100%);
+  --brand-gradient: linear-gradient(150deg, #c4b5fd 0%, #8b5cf6 48%, #5b21b6 100%);
+  --cta-gradient: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+/* rose */
+:root[data-palette="rose"] {
+  --primary: #db2777;
+  --primary-hover: #be185d;
+  --primary-soft: #ec4899;
+  --primary-wash: rgb(219 39 119 / 0.1);
+  --primary-ink: #be185d;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #500724 0%, #9d174d 44%, #db2777 76%, #ec4899 100%);
+  --display-gradient-tight: linear-gradient(100deg, #500724 0%, #db2777 100%);
+  --brand-gradient: linear-gradient(150deg, #f9a8d4 0%, #ec4899 48%, #9d174d 100%);
+  --cta-gradient: linear-gradient(180deg, #db2777 0%, #be185d 100%);
+}
+
+:root[data-theme="dark"][data-palette="rose"] {
+  --primary: #f472b6;
+  --primary-hover: #f9a8d4;
+  --primary-soft: #f9a8d4;
+  --primary-wash: rgb(244 114 182 / 0.14);
+  --primary-ink: #f472b6;
+  --on-primary: #500724;
+  --display-gradient: linear-gradient(112deg, #fdf2f8 0%, #fbcfe8 44%, #f9a8d4 76%, #f472b6 100%);
+  --display-gradient-tight: linear-gradient(100deg, #fdf2f8 0%, #f472b6 100%);
+  --brand-gradient: linear-gradient(150deg, #f9a8d4 0%, #ec4899 48%, #9d174d 100%);
+  --cta-gradient: linear-gradient(180deg, #db2777 0%, #be185d 100%);
+}
+
+/* ruby */
+:root[data-palette="ruby"] {
+  --primary: #dc2626;
+  --primary-hover: #b91c1c;
+  --primary-soft: #ef4444;
+  --primary-wash: rgb(220 38 38 / 0.1);
+  --primary-ink: #b91c1c;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #450a0a 0%, #991b1b 44%, #dc2626 76%, #ef4444 100%);
+  --display-gradient-tight: linear-gradient(100deg, #450a0a 0%, #dc2626 100%);
+  --brand-gradient: linear-gradient(150deg, #fca5a5 0%, #ef4444 48%, #991b1b 100%);
+  --cta-gradient: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+}
+
+:root[data-theme="dark"][data-palette="ruby"] {
+  --primary: #f87171;
+  --primary-hover: #fca5a5;
+  --primary-soft: #fca5a5;
+  --primary-wash: rgb(248 113 113 / 0.14);
+  --primary-ink: #f87171;
+  --on-primary: #450a0a;
+  --display-gradient: linear-gradient(112deg, #fef2f2 0%, #fecaca 44%, #fca5a5 76%, #f87171 100%);
+  --display-gradient-tight: linear-gradient(100deg, #fef2f2 0%, #f87171 100%);
+  --brand-gradient: linear-gradient(150deg, #fca5a5 0%, #ef4444 48%, #991b1b 100%);
+  --cta-gradient: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+}
+
+/* tangerine */
+:root[data-palette="tangerine"] {
+  --primary: #c2410c;
+  --primary-hover: #9a3412;
+  --primary-soft: #ea580c;
+  --primary-wash: rgb(194 65 12 / 0.1);
+  --primary-ink: #9a3412;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #431407 0%, #9a3412 44%, #c2410c 76%, #ea580c 100%);
+  --display-gradient-tight: linear-gradient(100deg, #431407 0%, #c2410c 100%);
+  --brand-gradient: linear-gradient(150deg, #fdba74 0%, #f97316 48%, #9a3412 100%);
+  --cta-gradient: linear-gradient(180deg, #c2410c 0%, #9a3412 100%);
+}
+
+:root[data-theme="dark"][data-palette="tangerine"] {
+  --primary: #fb923c;
+  --primary-hover: #fdba74;
+  --primary-soft: #fdba74;
+  --primary-wash: rgb(251 146 60 / 0.14);
+  --primary-ink: #fb923c;
+  --on-primary: #431407;
+  --display-gradient: linear-gradient(112deg, #fff7ed 0%, #fed7aa 44%, #fdba74 76%, #fb923c 100%);
+  --display-gradient-tight: linear-gradient(100deg, #fff7ed 0%, #fb923c 100%);
+  --brand-gradient: linear-gradient(150deg, #fdba74 0%, #f97316 48%, #9a3412 100%);
+  --cta-gradient: linear-gradient(180deg, #c2410c 0%, #9a3412 100%);
+}
+
+/* jade */
+:root[data-palette="jade"] {
+  --primary: #047857;
+  --primary-hover: #065f46;
+  --primary-soft: #059669;
+  --primary-wash: rgb(4 120 87 / 0.1);
+  --primary-ink: #065f46;
+  --on-primary: #ffffff;
+  --display-gradient: linear-gradient(112deg, #022c22 0%, #065f46 44%, #047857 76%, #059669 100%);
+  --display-gradient-tight: linear-gradient(100deg, #022c22 0%, #047857 100%);
+  --brand-gradient: linear-gradient(150deg, #6ee7b7 0%, #10b981 48%, #065f46 100%);
+  --cta-gradient: linear-gradient(180deg, #047857 0%, #065f46 100%);
+}
+
+:root[data-theme="dark"][data-palette="jade"] {
+  --primary: #34d399;
+  --primary-hover: #6ee7b7;
+  --primary-soft: #6ee7b7;
+  --primary-wash: rgb(52 211 153 / 0.14);
+  --primary-ink: #34d399;
+  --on-primary: #022c22;
+  --display-gradient: linear-gradient(112deg, #ecfdf5 0%, #a7f3d0 44%, #6ee7b7 76%, #34d399 100%);
+  --display-gradient-tight: linear-gradient(100deg, #ecfdf5 0%, #34d399 100%);
+  --brand-gradient: linear-gradient(150deg, #6ee7b7 0%, #10b981 48%, #065f46 100%);
+  --cta-gradient: linear-gradient(180deg, #047857 0%, #065f46 100%);
+}
