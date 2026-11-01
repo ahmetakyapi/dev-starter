@@ -80,7 +80,9 @@
   /* Paletten türeyenler. */
   --line-focus: var(--primary);
   --surface-solid: color-mix(in srgb, var(--page-bg) 92%, var(--text-strong));
-  --overlay: color-mix(in srgb, var(--page-bg) 96%, transparent);
+  /* Karo, menü, açılır takvim: OPAK. Yarı saydam katmanın arkasındaki metin
+     okunur ve seçilir; saydamlık isteyen yüzey `.glass`. */
+  --overlay: var(--page-bg);
   --glass-bg: color-mix(in srgb, var(--page-bg) 72%, transparent);
   --glow: color-mix(in srgb, var(--primary) 6%, transparent);
 }
