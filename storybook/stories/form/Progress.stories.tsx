@@ -30,6 +30,7 @@ function UploadDemo() {
 
 const meta = {
   title: "Bileşenler/Geri Bildirim/İlerleme",
+  id: "components-feedback-progress",
   component: Progress,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -63,11 +64,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
 };
 
-export const Belirli: Story = {
+export const Determinate: Story = {
   name: "Belirli",
   render: () => (
     <Frame width="md">
@@ -82,12 +83,12 @@ export const Belirli: Story = {
   },
 };
 
-export const Belirsiz: Story = {
+export const Indeterminate: Story = {
   name: "Belirsiz",
   args: { label: "Müşteri listesi hazırlanıyor", value: null, hint: "Satır sayısı bilinmiyor" },
 };
 
-export const Tamamlandi: Story = {
+export const Completed: Story = {
   name: "Tamamlandı",
   args: { label: "Ekim yedeği", value: 100, hint: "2,4 GB, 14.32'de bitti" },
   play: async ({ canvasElement }) => {
@@ -95,12 +96,12 @@ export const Tamamlandi: Story = {
   },
 };
 
-export const OzelMetin: Story = {
+export const CustomValueText: Story = {
   name: "Özel Değer Metni",
   args: { label: "Fotoğraflar aktarılıyor", value: 12, max: 40, valueText: "12 / 40 dosya", hint: undefined },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

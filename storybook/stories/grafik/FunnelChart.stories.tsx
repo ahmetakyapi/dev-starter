@@ -17,6 +17,7 @@ const oran = (stages: readonly { value: number }[]) => {
 
 const meta = {
   title: "Grafikler/Huni Grafiği",
+  id: "charts-funnel-chart",
   component: FunnelChart,
   tags: ["autodocs"],
   parameters: {
@@ -57,7 +58,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan (Eğri)",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -69,22 +70,22 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Basamak: Story = {
+export const Steps: Story = {
   name: "Basamak",
   args: { shape: "step" },
 };
 
-export const AltiAsama: Story = {
+export const SixStages: Story = {
   name: "Altı Aşama",
   args: { asamaSayisi: 6 },
 };
 
-export const IkiAsama: Story = {
+export const TwoStages: Story = {
   name: "Az Veri (İki Aşama)",
   args: { title: "Deneme → Ücretli", stages: [{ label: "Deneme", value: 412 }, { label: "Ücretli", value: 87 }], asamaSayisi: 2 },
 };
 
-export const SifirAsama: Story = {
+export const ZeroStage: Story = {
   name: "Sıfır Değerli Aşama",
   args: {
     title: "Yeni Ürün Hunisi",
@@ -97,7 +98,7 @@ export const SifirAsama: Story = {
   },
 };
 
-export const UzunEtiket: Story = {
+export const LongLabel: Story = {
   name: "Uzun Etiket",
   args: {
     title: "SaaS Etkinleştirme",
@@ -110,17 +111,17 @@ export const UzunEtiket: Story = {
   },
 };
 
-export const LejantsizKayit: Story = {
+export const WithoutLegend: Story = {
   name: "Lejantsız, SaaS Kayıt",
   args: { title: "Kayıt Hunisi", stages: KAYIT_HUNISI, legend: false, asamaSayisi: 6 },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>

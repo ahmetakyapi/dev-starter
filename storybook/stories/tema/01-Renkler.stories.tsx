@@ -219,7 +219,7 @@ function RenklerSayfasi() {
           <>
             Zemin, metin ve çizgi paletten bağımsız griler; mavi tonu taşımazlar. Yeşim ya da pembe bir ürün kendi rengini
             temiz taşısın diye. Vurgu ailesi{" "}
-            <a className="font-medium text-primary-ink underline underline-offset-4" href={storyHref("tema-paletler--butun-paletler")} target="_top">
+            <a className="font-medium text-primary-ink underline underline-offset-4" href={storyHref("theme-palettes--all-palettes")} target="_top">
               Paletler
             </a>{" "}
             sayfasında.
@@ -257,6 +257,7 @@ function RenklerSayfasi() {
 
 const meta = {
   title: "Tema/Renkler",
+  id: "theme-colors",
   component: RenklerSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -272,4 +273,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Renkler: Story = { name: "Renkler" };
+export const Colors: Story = { name: "Renkler" };

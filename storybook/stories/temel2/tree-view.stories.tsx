@@ -34,6 +34,7 @@ const NODES: TreeNode[] = [
 
 const meta = {
   title: "Bileşenler/Veri/Ağaç Görünümü",
+  id: "components-data-tree-view",
   component: TreeView,
   tags: ["autodocs"],
   parameters: {
@@ -61,7 +62,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -74,13 +75,13 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Secili: Story = { name: "Seçili Öğe", args: { selectedId: "q2" } };
+export const Selected: Story = { name: "Seçili Öğe", args: { selectedId: "q2" } };
 
-export const HepsiKapali: Story = { name: "Hepsi Kapalı", args: { defaultExpanded: [] } };
+export const AllCollapsed: Story = { name: "Hepsi Kapalı", args: { defaultExpanded: [] } };
 
-export const HepsiAcik: Story = { name: "Hepsi Açık", args: { defaultExpanded: ["rapor", "arsiv", "fatura"] } };
+export const AllExpanded: Story = { name: "Hepsi Açık", args: { defaultExpanded: ["rapor", "arsiv", "fatura"] } };
 
-export const UzunAd: Story = {
+export const LongName: Story = {
   name: "Uzun Ad",
   args: {
     nodes: [
@@ -95,7 +96,7 @@ export const UzunAd: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

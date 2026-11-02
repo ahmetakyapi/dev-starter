@@ -6,6 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Kapat Düğmesi",
+  id: "components-buttons-close-button",
   component: CloseButton,
   tags: ["autodocs"],
   parameters: {
@@ -26,7 +27,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Duyuruyu Kapat" }));
@@ -34,12 +35,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { disabled: true },
 };
 
-export const UyariSatirinda: Story = {
+export const InAlert: Story = {
   name: "Uyarı Satırında",
   render: (args) => (
     <Frame width="lg">
@@ -52,7 +53,7 @@ export const UyariSatirinda: Story = {
   ),
 };
 
-export const KartKosesinde: Story = {
+export const CardCorner: Story = {
   name: "Kart Köşesinde",
   render: (args) => (
     <Frame width="md">
@@ -69,7 +70,7 @@ export const KartKosesinde: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

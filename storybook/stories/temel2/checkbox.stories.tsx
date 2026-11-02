@@ -10,6 +10,7 @@ const indeterminate = (element: HTMLInputElement | null) => {
 
 const meta = {
   title: "Bileşenler/Seçim/Onay Kutusu",
+  id: "components-selection-checkbox",
   component: Checkbox,
   tags: ["autodocs"],
   parameters: {
@@ -36,7 +37,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const box = within(canvasElement).getByRole("checkbox", { name: /Haftalık Rapor/ });
@@ -45,9 +46,9 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Secili: Story = { name: "Seçili", args: { defaultChecked: true } };
+export const Selected: Story = { name: "Seçili", args: { defaultChecked: true } };
 
-export const Belirsiz: Story = {
+export const Indeterminate: Story = {
   name: "Belirsiz",
   args: { label: "Bütün Şubeler", hint: "12 şubeden 5'i seçili." },
   render: (args) => <Checkbox {...args} ref={indeterminate} />,
@@ -57,14 +58,14 @@ export const Belirsiz: Story = {
   },
 };
 
-export const DevreDisi: Story = { name: "Devre Dışı", args: { disabled: true } };
+export const Disabled: Story = { name: "Devre Dışı", args: { disabled: true } };
 
-export const Etiketsiz: Story = {
+export const Unlabeled: Story = {
   name: "Etiketsiz (Tablo Satırı)",
   args: { label: undefined, hint: undefined, "aria-label": "SP-2042 siparişini seç" },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

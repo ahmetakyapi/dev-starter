@@ -11,6 +11,7 @@ type Args = ComponentProps<typeof SankeyChart> & { kaynakSayisi: number; hedefSa
 
 const meta = {
   title: "Grafikler/Akış Grafiği",
+  id: "charts-sankey-chart",
   component: SankeyChart,
   tags: ["autodocs"],
   parameters: {
@@ -59,7 +60,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -75,12 +76,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const BesKaynak: Story = {
+export const FiveSources: Story = {
   name: "Beş Kaynak",
   args: { kaynakSayisi: 5 },
 };
 
-export const AzVeri: Story = {
+export const FewData: Story = {
   name: "Az Veri (İki → İki)",
   args: {
     title: "Plan Yükseltme",
@@ -104,7 +105,7 @@ export const AzVeri: Story = {
   },
 };
 
-export const SifirAkis: Story = {
+export const ZeroFlow: Story = {
   name: "Sıfır Değerli Akış",
   args: {
     title: "Bilet Yönlendirme",
@@ -134,7 +135,7 @@ export const SifirAkis: Story = {
   },
 };
 
-export const UzunEtiket: Story = {
+export const LongLabel: Story = {
   name: "Uzun Düğüm Adı",
   args: {
     title: "Kampanya Dönüşümü",
@@ -160,12 +161,12 @@ export const UzunEtiket: Story = {
   },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>

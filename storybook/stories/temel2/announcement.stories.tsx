@@ -5,6 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Gezinme/Duyuru",
+  id: "components-navigation-announcement",
   component: Announcement,
   tags: ["autodocs"],
   parameters: {
@@ -33,18 +34,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const SurumKunyesi: Story = { name: "Sürüm Künyesi", args: { tag: "Sürüm 2.4", children: "Panolarda çoklu seçim ve toplu taşıma" } };
+export const VersionTag: Story = { name: "Sürüm Künyesi", args: { tag: "Sürüm 2.4", children: "Panolarda çoklu seçim ve toplu taşıma" } };
 
-export const Kunyesiz: Story = { name: "Künyesiz", args: { tag: undefined, children: "Ekim bülteni yayında" } };
+export const WithoutEyebrow: Story = { name: "Künyesiz", args: { tag: undefined, children: "Ekim bülteni yayında" } };
 
-export const UzunMetin: Story = {
+export const LongText: Story = {
   name: "Uzun Metin",
   args: { tag: "Etkinlik", children: "14 Kasım'da İstanbul'da ürün ekibiyle canlı soru-cevap ve yol haritası tanıtımı" },
 };
 
-export const Kapatilabilir: Story = {
+export const Dismissible: Story = {
   name: "Kapatılabilir",
   render: (args) => (
     <DismissibleAnnouncement {...args} storageKey={`sb:duyuru:${Date.now()}`}>
@@ -59,7 +60,7 @@ export const Kapatilabilir: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

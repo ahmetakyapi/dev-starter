@@ -6,6 +6,7 @@ import { DEFAULT_THEME } from "@/lib/theme";
 
 const meta = {
   title: "Ekranlar/Açılış Sayfası/Üst Bölüm Varyantları",
+  id: "screens-landing-hero-variants",
   component: Hero,
   tags: ["autodocs"],
   parameters: {

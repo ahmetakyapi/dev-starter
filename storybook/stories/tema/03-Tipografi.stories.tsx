@@ -214,6 +214,7 @@ function TipografiSayfasi() {
 
 const meta = {
   title: "Tema/Tipografi",
+  id: "theme-typography",
   component: TipografiSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -228,4 +229,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Tipografi: Story = { name: "Tipografi" };
+export const Typography: Story = { name: "Tipografi" };

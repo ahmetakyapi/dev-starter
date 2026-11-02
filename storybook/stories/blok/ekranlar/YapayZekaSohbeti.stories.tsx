@@ -161,6 +161,7 @@ function ChatScreen({ start, livePlan = false }: ChatScreenProps) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Yapay Zekâ Sohbeti",
+  id: "screens-app-ai-chat",
   component: ChatScreen,
   tags: ["autodocs"],
   parameters: {
@@ -180,9 +181,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AjanCalisiyor: Story = { name: "Ajan Çalışıyor" };
+export const AgentWorking: Story = { name: "Ajan Çalışıyor" };
 
-export const Etkilesimli: Story = {
+export const Interactive: Story = {
   name: "Etkileşimli",
   args: { livePlan: true },
   parameters: {
@@ -198,7 +199,7 @@ export const Etkilesimli: Story = {
   },
 };
 
-export const BosSohbet: Story = {
+export const EmptyChat: Story = {
   name: "Boş Sohbet",
   args: { start: "empty" },
   play: async ({ canvasElement }) => {
@@ -208,4 +209,4 @@ export const BosSohbet: Story = {
   },
 };
 
-export const RaporHazir: Story = { name: "Rapor Hazır", args: { start: "done" } };
+export const ReportReady: Story = { name: "Rapor Hazır", args: { start: "done" } };

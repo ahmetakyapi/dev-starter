@@ -153,6 +153,7 @@ function Coverage() {
 
 const meta = {
   title: "Örnek Tasarım/Bileşen Kapsamı",
+  id: "showcase-component-coverage",
   component: Coverage,
   tags: ["autodocs"],
   parameters: {
@@ -169,7 +170,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Kapsam: Story = {
+export const CoverageTable: Story = {
   name: "Kapsam Tablosu",
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);

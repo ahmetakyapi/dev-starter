@@ -107,6 +107,7 @@ function LoginScreen({ mode }: LoginScreenProps) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Giriş Sayfası",
+  id: "screens-app-sign-in",
   component: LoginScreen,
   tags: ["autodocs"],
   parameters: {
@@ -126,11 +127,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Giris: Story = { name: "Giriş" };
+export const SignIn: Story = { name: "Giriş" };
 
-export const Kayit: Story = { name: "Kayıt", args: { mode: "kayit" } };
+export const SignUp: Story = { name: "Kayıt", args: { mode: "kayit" } };
 
-export const HataliGiris: Story = {
+export const FailedSignIn: Story = {
   name: "Hatalı Giriş",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

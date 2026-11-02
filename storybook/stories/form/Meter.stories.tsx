@@ -8,6 +8,7 @@ const GB = (n: number) => `${n.toLocaleString("tr-TR")} GB`;
 
 const meta = {
   title: "Bileşenler/Geri Bildirim/Ölçer",
+  id: "components-feedback-meter",
   component: Meter,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -42,11 +43,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
 };
 
-export const Esikler: Story = {
+export const Thresholds: Story = {
   name: "Eşikler",
   render: () => (
     <Frame width="md">
@@ -70,7 +71,7 @@ export const Esikler: Story = {
   },
 };
 
-export const Bolumlu: Story = {
+export const Segmented: Story = {
   name: "Bölümlü",
   render: () => (
     <Frame width="md">
@@ -88,7 +89,7 @@ export const Bolumlu: Story = {
   ),
 };
 
-export const Ters: Story = {
+export const Inverted: Story = {
   name: "Ters Ölçek",
   render: () => (
     <Frame width="md">
@@ -115,7 +116,7 @@ export const Ters: Story = {
   ),
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

@@ -13,6 +13,7 @@ const ort = (v: readonly number[]) => (v.length ? Math.round(v.reduce((a, b) => 
 
 const meta = {
   title: "Grafikler/Radar Grafiği",
+  id: "charts-radar-chart",
   component: RadarChart,
   tags: ["autodocs"],
   parameters: {
@@ -69,7 +70,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const table = within(canvasElement).getByRole("table", { name: "Destek Ekibi Profili" });
@@ -79,22 +80,22 @@ export const Varsayilan: Story = {
   },
 };
 
-export const TekSeri: Story = {
+export const SingleSeries: Story = {
   name: "Tek Seri",
   args: { seriSayisi: 1, title: "Sürüm 3.2 Kalite Profili", axes: ["Hız", "Erişilebilirlik", "SEO", "Güvenlik", "Kararlılık", "Kullanım"], series: [{ label: "Sürüm 3.2", values: [92, 96, 88, 81, 90, 82], series: 2 }] },
 };
 
-export const SekizEksen: Story = {
+export const EightAxes: Story = {
   name: "Sekiz Ölçüt",
   args: { eksenSayisi: 8 },
 };
 
-export const BesEksen: Story = {
+export const FiveAxes: Story = {
   name: "Az Veri (Beş Ölçüt)",
   args: { eksenSayisi: 5 },
 };
 
-export const SifirDegerler: Story = {
+export const ZeroValues: Story = {
   name: "Sıfır Değerli Ölçüt",
   args: {
     title: "Yeni Temsilci Profili",
@@ -105,7 +106,7 @@ export const SifirDegerler: Story = {
   },
 };
 
-export const UzunEtiket: Story = {
+export const LongLabel: Story = {
   name: "Uzun Eksen Adı",
   args: {
     title: "Ürün Değerlendirmesi",
@@ -117,12 +118,12 @@ export const UzunEtiket: Story = {
   },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={3}>

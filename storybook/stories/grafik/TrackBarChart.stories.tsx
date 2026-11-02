@@ -13,6 +13,7 @@ const AYLIK = AYLAR.map((label, i) => ({ label, value: KAZANC[i] }));
 
 const meta = {
   title: "Grafikler/Sütun Grafiği",
+  id: "charts-bar-chart",
   component: TrackBarChart,
   tags: ["autodocs"],
   parameters: {
@@ -57,7 +58,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -68,7 +69,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Haftalik: Story = {
+export const Weekly: Story = {
   name: "Haftalık Bilet (Yedi Gün)",
   args: {
     title: "Günlük Açılan Bilet",
@@ -80,7 +81,7 @@ export const Haftalik: Story = {
   },
 };
 
-export const OnDortGun: Story = {
+export const FourteenDays: Story = {
   name: "On Dört Gün, Uzun Etiket",
   args: {
     title: "Son 14 Gün Açılan Bilet",
@@ -93,29 +94,29 @@ export const OnDortGun: Story = {
   argTypes: { sutunSayisi: { control: { type: "range", min: 1, max: 14, step: 1 } } },
 };
 
-export const AzVeri: Story = {
+export const FewData: Story = {
   name: "Az Veri (Üç Ay)",
   args: { sutunSayisi: 3 },
 };
 
-export const SifirDegerler: Story = {
+export const ZeroValues: Story = {
   name: "Sıfır Değerli Aylar",
   args: {
     data: AYLAR.map((label, i) => ({ label, value: i < 4 ? 0 : KAZANC[i] })),
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş (Hepsi Sıfır)",
   args: { data: AYLAR.map((label) => ({ label, value: 0 })) },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>

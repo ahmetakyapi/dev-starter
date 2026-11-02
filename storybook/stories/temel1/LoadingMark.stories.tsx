@@ -4,6 +4,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Yükleme/Yükleme Halkası",
+  id: "components-loading-loading-mark",
   component: LoadingMark,
   tags: ["autodocs"],
   parameters: {
@@ -21,14 +22,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const AltYazisiz: Story = {
+export const WithoutSubtitle: Story = {
   name: "Alt Yazısız",
   args: { showLabel: false, label: "Yükleniyor", children: undefined },
 };
 
-export const KartIcinde: Story = {
+export const InCard: Story = {
   name: "Kart İçinde",
   render: (args) => (
     <Frame width="md">
@@ -39,7 +40,7 @@ export const KartIcinde: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

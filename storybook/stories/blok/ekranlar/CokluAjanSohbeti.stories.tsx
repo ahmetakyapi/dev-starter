@@ -267,6 +267,7 @@ function EmptyTeam({ onStart }: { onStart: (text: string) => void }) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Çoklu Asistan Sohbeti",
+  id: "screens-app-multi-agent-chat",
   component: MultiAgentScreen,
   tags: ["autodocs"],
   parameters: {
@@ -286,11 +287,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BosDurum: Story = { name: "Boş Durum" };
+export const EmptyState: Story = { name: "Boş Durum" };
 
-export const Konusma: Story = { name: "Konuşma", args: { start: "conversation" } };
+export const Conversation: Story = { name: "Konuşma", args: { start: "conversation" } };
 
-export const Etkilesimli: Story = {
+export const Interactive: Story = {
   name: "Etkileşimli",
   parameters: { docs: { description: { story: "Bir öneriye tıkla: ajanlar sırayla yazar; Kime ile tek ajan seçilebilir." } } },
   play: async ({ canvasElement }) => {

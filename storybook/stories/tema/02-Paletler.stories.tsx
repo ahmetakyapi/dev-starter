@@ -276,6 +276,7 @@ function SeciliPalet() {
 
 const meta = {
   title: "Tema/Paletler",
+  id: "theme-palettes",
   component: PaletlerSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -291,9 +292,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ButunPaletler: Story = { name: "Bütün Paletler" };
+export const AllPalettes: Story = { name: "Bütün Paletler" };
 
-export const SeciliPaletHikayesi: Story = {
+export const SelectedPalette: Story = {
   name: "Seçili Palet",
   render: () => <SeciliPalet />,
 };

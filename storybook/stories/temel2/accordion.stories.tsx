@@ -19,6 +19,7 @@ function Items({ exclusive, openFirst = true }: { exclusive?: string; openFirst?
 
 const meta = {
   title: "Bileşenler/Gezinme/Açılır Bölümler",
+  id: "components-navigation-accordion",
   component: Accordion,
   tags: ["autodocs"],
   parameters: {
@@ -46,7 +47,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -60,17 +61,17 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Kuyu: Story = { name: "Kuyu", args: { variant: "well" } };
+export const Well: Story = { name: "Kuyu", args: { variant: "well" } };
 
-export const HepsiKapali: Story = { name: "Hepsi Kapalı", args: { children: <Items openFirst={false} /> } };
+export const AllCollapsed: Story = { name: "Hepsi Kapalı", args: { children: <Items openFirst={false} /> } };
 
-export const BagimsizAcilir: Story = {
+export const IndependentItems: Story = {
   name: "Bağımsız Açılır",
   args: { children: <Items /> },
   parameters: { docs: { description: { story: "`exclusive` verilmediğinde birden çok soru aynı anda açık kalabilir." } } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

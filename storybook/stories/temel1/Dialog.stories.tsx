@@ -10,6 +10,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Katmanlar/İletişim Penceresi",
+  id: "components-overlays-dialog",
   component: Dialog,
   tags: ["autodocs"],
   parameters: {
@@ -64,9 +65,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const TiklayincaAcilir: Story = {
+export const OpensOnClick: Story = {
   name: "Tıklayınca Açılır",
   tags: ["!autodocs"],
   play: async ({ args, canvasElement, globals }) => {
@@ -78,7 +79,7 @@ export const TiklayincaAcilir: Story = {
   },
 };
 
-export const KapanincaOdakDoner: Story = {
+export const FocusReturns: Story = {
   name: "Kapanınca Odak Geri Döner",
   tags: ["!autodocs"],
   play: async ({ args, canvasElement, globals }) => {
@@ -92,7 +93,7 @@ export const KapanincaOdakDoner: Story = {
   },
 };
 
-export const Acik: Story = {
+export const Open: Story = {
   name: "Açık",
   tags: ["!autodocs"],
   args: { open: true },
@@ -131,7 +132,7 @@ function InviteDialog({ initialOpen }: { initialOpen: boolean }) {
   );
 }
 
-export const FormluAcik: Story = {
+export const WithFormOpen: Story = {
   name: "Formlu (Açık, Dışarı Tıklamayla Kapanmaz)",
   tags: ["!autodocs"],
   render: () => (
@@ -146,7 +147,7 @@ export const FormluAcik: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

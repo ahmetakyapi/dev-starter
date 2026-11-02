@@ -262,6 +262,7 @@ function AnalitikPanosu({ baslangicDonemi = "ay" }: { baslangicDonemi?: Donem })
 
 const meta = {
   title: "Grafikler/Pano/Analitik Panosu",
+  id: "charts-dashboards-analytics",
   component: AnalitikPanosu,
   tags: ["autodocs"],
   parameters: {
@@ -282,7 +283,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -295,12 +296,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Yillik: Story = {
+export const Yearly: Story = {
   name: "Yıllık Görünüm",
   args: { baslangicDonemi: "yil" },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };

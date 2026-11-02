@@ -48,6 +48,20 @@ Storybook hiçbir bileşenin ya da token'ın kopyasını tutmaz:
 Bir snippet ya da token değişince hikâye kendiliğinden günceldir; kırılırsa
 CI'daki **Storybook Build** işi (tip denetimi + derleme) yakalar.
 
+## Kural: Adresler İngilizce
+
+Görünen adlar (`title`, `name`) Türkçe; adres (URL) İngilizce. Her meta
+İngilizce bir `id` taşır, her hikâye İngilizce adla dışa aktarılır:
+
+```tsx
+const meta = { title: "Bileşenler/Katmanlar/Araç İpucu", id: "components-overlays-tooltip", … }
+export const Default: Story = { name: "Varsayılan" }   // → components-overlays-tooltip--default
+```
+
+Kimlik verilmezse Storybook Türkçe başlıktan `giriş--giris`, `i̇pucu` gibi
+bozuk adresler üretir. `npm run check:ids` (CI'da derlemeden sonra) yalnızca
+`a-z0-9-` ve Türkçe kelimesiz adreslere izin verir.
+
 ## Hikâye Yazarken
 
 `stories/_lib/Frame.tsx` → `Frame`, `Gallery`, `Cell`, `Screen` çerçeveleri:

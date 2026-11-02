@@ -6,6 +6,7 @@ import { CITIES } from "./_data";
 
 const meta = {
   title: "Bileşenler/Seçim/Aramalı Seçim",
+  id: "components-selection-combobox",
   component: Combobox,
   tags: ["autodocs"],
   parameters: {
@@ -39,9 +40,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const TurkceSuzgec: Story = {
+export const TurkishFilter: Story = {
   name: "Türkçe Süzgeç",
   parameters: { docs: { description: { story: "\"istanbul\" yazınca yalnızca \"İstanbul\" kalır; seçince girişe yazılır." } } },
   play: async ({ canvasElement }) => {
@@ -56,9 +57,9 @@ export const TurkceSuzgec: Story = {
   },
 };
 
-export const Secili: Story = { name: "Seçili", args: { defaultValue: CITIES.find((c) => c.value === "iğdır") } };
+export const Selected: Story = { name: "Seçili", args: { defaultValue: CITIES.find((c) => c.value === "iğdır") } };
 
-export const SonucYok: Story = {
+export const NoResults: Story = {
   name: "Sonuç Yok",
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
@@ -67,7 +68,7 @@ export const SonucYok: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

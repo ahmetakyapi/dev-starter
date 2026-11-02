@@ -10,6 +10,7 @@ import { Frame } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Katmanlar/Açılır Kart",
+  id: "components-overlays-popover",
   component: Popover,
   tags: ["autodocs"],
   parameters: {
@@ -45,9 +46,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const TiklayincaAcilir: Story = {
+export const OpensOnClick: Story = {
   name: "Tıklayınca Açılır",
   tags: ["!autodocs"],
   play: async ({ canvasElement, globals }) => {
@@ -60,7 +61,7 @@ export const TiklayincaAcilir: Story = {
   },
 };
 
-export const Acik: Story = {
+export const Open: Story = {
   name: "Açık",
   tags: ["!autodocs"],
   args: { defaultOpen: true },
@@ -69,7 +70,7 @@ export const Acik: Story = {
   },
 };
 
-export const FormluAcik: Story = {
+export const WithFormOpen: Story = {
   name: "Formlu (Odak Tuzağı, Açık)",
   tags: ["!autodocs"],
   render: () => (

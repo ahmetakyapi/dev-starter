@@ -8,6 +8,7 @@ import { NOV, dayLabel, isSunday } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Tarih Seçici",
+  id: "components-forms-date-picker",
   component: DatePicker,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -41,7 +42,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -54,7 +55,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const TekGunAcik: Story = {
+export const SingleDayOpen: Story = {
   name: "Tek Gün, Açık",
   parameters: { layout: "padded" },
   render: (args) => (
@@ -69,7 +70,7 @@ export const TekGunAcik: Story = {
   },
 };
 
-export const Aralik: Story = {
+export const Range: Story = {
   name: "Aralık",
   render: () => (
     <Frame width="sm" className="min-h-[34rem]">
@@ -92,22 +93,22 @@ export const Aralik: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş",
   args: { label: "Rapor Başlangıcı", defaultValue: null, placeholder: "Tarih Seçin" },
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: { label: "Teslim Tarihi", defaultValue: null, error: "Teslim tarihi seçmelisin." },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { disabled: true, hint: "Sipariş yola çıktı." },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

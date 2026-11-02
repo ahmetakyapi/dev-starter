@@ -7,6 +7,7 @@ import { SKILLS } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Etiket Girişi",
+  id: "components-forms-tag-input",
   component: TagInput,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -38,7 +39,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -49,7 +50,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Oneriler: Story = {
+export const Suggestions: Story = {
   name: "Öneriler",
   args: { defaultValue: ["Figma"] },
   play: async ({ canvasElement }) => {
@@ -64,7 +65,7 @@ export const Oneriler: Story = {
   },
 };
 
-export const Sinirda: Story = {
+export const AtLimit: Story = {
   name: "Sınırda",
   args: {
     label: "Konu Etiketleri",
@@ -79,17 +80,17 @@ export const Sinirda: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş",
   args: { label: "Alıcılar", defaultValue: [], suggestions: [], maxTags: undefined, hint: "E-posta yaz, virgülle ayır." },
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: { defaultValue: [], hint: undefined, error: "En az bir beceri ekle." },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { defaultValue: ["Figma", "React"], disabled: true },
   parameters: DISABLED_CONTRAST_EXEMPT,
@@ -102,7 +103,7 @@ export const DevreDisi: Story = {
   ),
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded", ...DISABLED_CONTRAST_EXEMPT },
   render: () => (

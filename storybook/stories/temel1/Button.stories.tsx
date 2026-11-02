@@ -27,6 +27,7 @@ const VARIANT_LABELS: Record<ButtonVariant, string> = {
 
 const meta = {
   title: "Bileşenler/Temel/Düğme",
+  id: "components-core-button",
   component: Button,
   tags: ["autodocs"],
   parameters: {
@@ -48,7 +49,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -57,12 +58,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Marka: Story = {
+export const Brand: Story = {
   name: "Marka (Birincil Eylem)",
   args: { variant: "brand", size: "lg", children: "Ücretsiz Başla" },
 };
 
-export const Ikonlu: Story = {
+export const WithIcon: Story = {
   name: "İkonlu",
   render: (args) => (
     <div className="flex flex-wrap items-center justify-center gap-3">
@@ -89,7 +90,7 @@ export const Ikonlu: Story = {
   ),
 };
 
-export const Yukleniyor: Story = {
+export const Loading: Story = {
   name: "Yükleniyor",
   render: (args) => (
     <div className="flex flex-wrap items-center justify-center gap-3">
@@ -105,12 +106,12 @@ export const Yukleniyor: Story = {
   ),
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { disabled: true, children: "Yayınla" },
 };
 
-export const BaglantiDugmesi: Story = {
+export const AsLink: Story = {
   name: "Bağlantı Düğmesi",
   render: () => (
     <div className="flex flex-wrap items-center justify-center gap-3">
@@ -126,7 +127,7 @@ export const BaglantiDugmesi: Story = {
   ),
 };
 
-export const UzunMetin: Story = {
+export const LongText: Story = {
   name: "Uzun Metin",
   args: { children: "Değişiklikleri Kaydet ve Ekibe Bildirim Gönder", variant: "secondary" },
   render: (args) => (
@@ -138,7 +139,7 @@ export const UzunMetin: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

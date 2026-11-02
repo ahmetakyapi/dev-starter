@@ -27,6 +27,7 @@ function OpenSettings(props: ComponentProps<typeof SettingsDialog>) {
 
 const meta = {
   title: "Bloklar/Ayarlar Penceresi",
+  id: "blocks-settings-dialog",
   component: SettingsDialog,
   tags: ["autodocs"],
   parameters: {
@@ -54,7 +55,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Acik: Story = {
+export const Open: Story = {
   name: "Açık",
   play: async ({ canvasElement }) => {
     const dialog = await within(canvasElement).findByRole("dialog");
@@ -69,11 +70,11 @@ export const Acik: Story = {
   },
 };
 
-export const GorunumSekmesi: Story = { name: "Görünüm Sekmesi", args: { defaultTab: "gorunum" } };
-export const BildirimlerSekmesi: Story = { name: "Bildirimler Sekmesi", args: { defaultTab: "bildirimler" } };
-export const GizlilikSekmesi: Story = { name: "Gizlilik Sekmesi", args: { defaultTab: "gizlilik" } };
+export const AppearanceTab: Story = { name: "Görünüm Sekmesi", args: { defaultTab: "gorunum" } };
+export const NotificationsTab: Story = { name: "Bildirimler Sekmesi", args: { defaultTab: "bildirimler" } };
+export const PrivacyTab: Story = { name: "Gizlilik Sekmesi", args: { defaultTab: "gizlilik" } };
 
-export const KendiDugmesiyle: Story = {
+export const CustomTrigger: Story = {
   name: "Kendi Düğmesiyle",
   parameters: { docs: { description: { story: "Kontrolsüz kullanım: `triggerLabel` ile kendi düğmesini çizer." } } },
   render: (args) => <SettingsDialog {...args} />,
@@ -87,7 +88,7 @@ export const KendiDugmesiyle: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: {
     docs: { description: { story: "Pencere tek seferde bir tane açılır; galeri her sekmenin satırlarını yan yana gösterir." } },

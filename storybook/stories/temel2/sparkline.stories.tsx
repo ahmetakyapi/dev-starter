@@ -8,6 +8,7 @@ const FLAT = [50, 52, 49, 51, 50, 53, 51, 50, 52, 51, 50, 51];
 
 const meta = {
   title: "Bileşenler/Veri/Mini Grafik",
+  id: "components-data-sparkline",
   component: Sparkline,
   tags: ["autodocs"],
   parameters: {
@@ -37,19 +38,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const OtomatikYukselen: Story = { name: "Otomatik, Yükselen", args: { tone: "auto" } };
+export const AutoRising: Story = { name: "Otomatik, Yükselen", args: { tone: "auto" } };
 
-export const OtomatikDusen: Story = { name: "Otomatik, Düşen", args: { tone: "auto", values: FALLING, title: "Son 12 Hafta Hisse Fiyatı" } };
+export const AutoFalling: Story = { name: "Otomatik, Düşen", args: { tone: "auto", values: FALLING, title: "Son 12 Hafta Hisse Fiyatı" } };
 
-export const Soluk: Story = { name: "Soluk", args: { tone: "muted", values: FLAT, title: "Son 12 Hafta Ziyaret" } };
+export const Muted: Story = { name: "Soluk", args: { tone: "muted", values: FLAT, title: "Son 12 Hafta Ziyaret" } };
 
-export const Dolgusuz: Story = { name: "Dolgusuz", args: { area: false } };
+export const Outline: Story = { name: "Dolgusuz", args: { area: false } };
 
-export const Genis: Story = { name: "Geniş", args: { width: 280, height: 56 } };
+export const Wide: Story = { name: "Geniş", args: { width: 280, height: 56 } };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

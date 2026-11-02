@@ -8,6 +8,7 @@ const GLYPHS = { Settings, Pencil, Share2, Trash2, MoreHorizontal } as const;
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/İkon Düğmesi",
+  id: "components-buttons-icon-button",
   component: IconButton,
   tags: ["autodocs"],
   parameters: {
@@ -29,7 +30,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Ayarları Aç" }));
@@ -37,17 +38,17 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Tehlikeli: Story = {
+export const Destructive: Story = {
   name: "Yıkıcı Eylem",
   args: { icon: Trash2, "aria-label": "Kaydı Sil", variant: "danger" },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { disabled: true, icon: Share2, "aria-label": "Paylaş" },
 };
 
-export const AracCubugu: Story = {
+export const Toolbar: Story = {
   name: "Araç Çubuğu",
   render: () => (
     <div role="toolbar" aria-label="Metin biçimi" className="inline-flex items-center gap-0.5 rounded-lg bg-overlay p-1 shadow-raised">
@@ -60,7 +61,7 @@ export const AracCubugu: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

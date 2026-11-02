@@ -27,6 +27,7 @@ const MANY: NotificationItem[] = Array.from({ length: 12 }, (_, i) => ({
 
 const meta = {
   title: "Bileşenler/Katmanlar/Bildirim Merkezi",
+  id: "components-overlays-notification-center",
   component: NotificationCenter,
   tags: ["autodocs"],
   parameters: {
@@ -62,9 +63,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const TiklayincaAcilir: Story = {
+export const OpensOnClick: Story = {
   name: "Tıklayınca Açılır",
   tags: ["!autodocs"],
   play: async ({ canvasElement, globals }) => {
@@ -75,7 +76,7 @@ export const TiklayincaAcilir: Story = {
   },
 };
 
-export const TumunuOkunduIsaretle: Story = {
+export const MarkAllRead: Story = {
   name: "Tümünü Okundu İşaretle",
   tags: ["!autodocs"],
   play: async ({ args, canvasElement, globals }) => {
@@ -88,7 +89,7 @@ export const TumunuOkunduIsaretle: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş (Açık)",
   tags: ["!autodocs"],
   args: { items: [] },
@@ -100,7 +101,7 @@ export const Bos: Story = {
   },
 };
 
-export const DokuzdanFazla: Story = {
+export const MoreThanNine: Story = {
   name: "9'dan Fazla Okunmamış",
   args: { items: MANY },
   play: async ({ canvasElement, globals }) => {

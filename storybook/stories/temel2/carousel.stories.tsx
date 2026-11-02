@@ -29,6 +29,7 @@ const QUOTES = [
 
 const meta = {
   title: "Bileşenler/Gezinme/Kart Kaydırıcı",
+  id: "components-navigation-carousel",
   component: Carousel,
   tags: ["autodocs"],
   parameters: {
@@ -57,7 +58,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -68,12 +69,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const TekTekSlayt: Story = {
+export const FullWidthSlide: Story = {
   name: "Tam Genişlik Slayt",
   args: { label: "Müşteri Yorumları", slideClassName: "basis-full" },
 };
 
-export const Yorumlar: Story = {
+export const Testimonials: Story = {
   name: "Müşteri Yorumları",
   args: {
     label: "Müşteri Yorumları",
@@ -86,9 +87,9 @@ export const Yorumlar: Story = {
   },
 };
 
-export const IkiSlayt: Story = { name: "İki Slayt", args: { slides: cards(SLIDES.slice(0, 2)) } };
+export const TwoSlides: Story = { name: "İki Slayt", args: { slides: cards(SLIDES.slice(0, 2)) } };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

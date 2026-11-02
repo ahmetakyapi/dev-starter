@@ -8,6 +8,7 @@ import { TRY } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Sayı Alanı",
+  id: "components-forms-number-field",
   component: NumberField,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -40,7 +41,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -52,7 +53,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const ParaBirimi: Story = {
+export const Currency: Story = {
   name: "Para Birimi",
   args: {
     label: "Aylık Bütçe",
@@ -71,7 +72,7 @@ export const ParaBirimi: Story = {
   },
 };
 
-export const Sinirda: Story = {
+export const AtLimit: Story = {
   name: "Sınırda",
   args: { label: "Gece Sayısı", defaultValue: 14, min: 1, max: 14, hint: "En fazla 14 gece rezervasyon yapılabilir." },
   play: async ({ canvasElement }) => {
@@ -80,22 +81,22 @@ export const Sinirda: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş",
   args: { label: "Adet", defaultValue: undefined, min: 0, placeholder: "0", hint: undefined },
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: { label: "Koltuk Sayısı", defaultValue: 0, min: 0, max: 40, error: "En az bir koltuk seçmelisin.", hint: undefined },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { label: "Oda Sayısı", defaultValue: 1, disabled: true, hint: "Bu pakette tek oda var." },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

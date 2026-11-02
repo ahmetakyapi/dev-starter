@@ -25,6 +25,7 @@ const GLYPHS = { Bell, Calendar, CreditCard, Download, FileText, Filter, Heart, 
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/İkon",
+  id: "components-buttons-icon",
   component: Icon,
   tags: ["autodocs"],
   parameters: {
@@ -45,9 +46,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const MetinYaninda: Story = {
+export const NextToText: Story = {
   name: "Metin Yanında",
   render: () => (
     <Frame width="sm">
@@ -69,7 +70,7 @@ export const MetinYaninda: Story = {
   ),
 };
 
-export const AnlamTasiyan: Story = {
+export const MeaningfulIcon: Story = {
   name: "Anlam Taşıyan İkon",
   render: () => (
     <Frame width="md">
@@ -99,7 +100,7 @@ export const AnlamTasiyan: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

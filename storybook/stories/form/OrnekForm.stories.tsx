@@ -165,6 +165,7 @@ function ReservationForm({ initial }: { initial?: { range: DateRange; tags: stri
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Örnek Form",
+  id: "components-forms-example-form",
   component: ReservationForm,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -188,18 +189,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
 };
 
-export const Doldurulmus: Story = {
+export const Filled: Story = {
   name: "Doldurulmuş",
   args: {
     initial: { range: { start: NOV(12), end: NOV(16) }, tags: ["Deniz Manzarası", "Sessiz Oda", "Vejetaryen Kahvaltı"] },
   },
 };
 
-export const Etkilesim: Story = {
+export const Interaction: Story = {
   name: "Etkileşim: Uçtan Uca Doldurma",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -242,7 +243,7 @@ export const Etkilesim: Story = {
   },
 };
 
-export const EksikGonderim: Story = {
+export const IncompleteSubmit: Story = {
   name: "Eksik Gönderim",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

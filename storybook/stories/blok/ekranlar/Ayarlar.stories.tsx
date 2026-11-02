@@ -237,6 +237,7 @@ function SettingsPage() {
 
 const meta = {
   title: "Ekranlar/Uygulama/Ayarlar",
+  id: "screens-app-settings",
   component: SettingsPage,
   tags: ["autodocs"],
   parameters: {
@@ -254,9 +255,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Etkilesim: Story = {
+export const Interaction: Story = {
   name: "Etkileşim",
   parameters: { docs: { description: { story: "Anahtar, radyo ve palet satırı tıklanır; palet `<html data-palette>`ı değiştirir." } } },
   play: async ({ canvasElement }) => {

@@ -5,6 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Form Alanı",
+  id: "components-core-field",
   component: Field,
   tags: ["autodocs"],
   parameters: {
@@ -32,7 +33,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const input = within(canvasElement).getByLabelText("E-posta");
@@ -41,12 +42,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Ipucu: Story = {
+export const Hint: Story = {
   name: "İpucu",
   args: { hint: "Fatura ve hesap bildirimleri bu adrese gider." },
 };
 
-export const Hata: Story = {
+export const Error: Story = {
   name: "Hata",
   args: {
     defaultValue: "elif@acme",
@@ -60,12 +61,12 @@ export const Hata: Story = {
   },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { label: "Kurum Kodu", name: "org", type: "text", defaultValue: "ACME-4821", disabled: true, hint: "Yalnızca yönetici değiştirebilir." },
 };
 
-export const TumDurumlar: Story = {
+export const AllStates: Story = {
   name: "Bütün Durumlar",
   parameters: { layout: "padded" },
   render: () => (

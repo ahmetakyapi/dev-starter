@@ -266,6 +266,7 @@ function YuzeylerSayfasi() {
 
 const meta = {
   title: "Tema/Yüzeyler",
+  id: "theme-surfaces",
   component: YuzeylerSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -281,4 +282,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Yuzeyler: Story = { name: "Yüzeyler" };
+export const Surfaces: Story = { name: "Yüzeyler" };

@@ -5,6 +5,7 @@ import { Cell, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Tema Düğmesi",
+  id: "components-core-theme-toggle",
   component: ThemeToggle,
   tags: ["autodocs"],
   parameters: {
@@ -22,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   /* Tıklar ve geri alır: hikâye bittiğinde tema araç çubuğundaki seçimde kalır. */
   play: async ({ canvasElement }) => {
@@ -35,7 +36,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const BaslikCubugunda: Story = {
+export const InHeaderBar: Story = {
   name: "Başlık Çubuğunda",
   render: (args) => (
     <header className="flex w-[min(100vw-2rem,48rem)] items-center justify-between gap-4 rounded-2xl bg-surface px-5 py-3">
@@ -53,7 +54,7 @@ export const BaslikCubugunda: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

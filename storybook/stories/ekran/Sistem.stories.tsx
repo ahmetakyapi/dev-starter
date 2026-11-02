@@ -23,6 +23,7 @@ function failure(digest?: string): Error & { digest?: string } {
 
 const meta = {
   title: "Ekranlar/Açılış Sayfası/Sistem Sayfaları",
+  id: "screens-landing-system-pages",
   component: ErrorBoundary,
   tags: ["autodocs"],
   parameters: {
@@ -48,7 +49,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Bulunamadi: Story = {
+export const NotFoundPage: Story = {
   name: "Sayfa Bulunamadı (404)",
   render: () => <NotFound />,
   play: async ({ canvasElement }) => {
@@ -58,7 +59,7 @@ export const Bulunamadi: Story = {
   },
 };
 
-export const Hata: Story = {
+export const ErrorPage: Story = {
   name: "Hata",
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -68,7 +69,7 @@ export const Hata: Story = {
   },
 };
 
-export const HataKimliksiz: Story = {
+export const ErrorPageWithoutDigest: Story = {
   name: "Hata, Kimlik Yok",
   args: { error: failure() },
   play: async ({ canvasElement }) => {
@@ -83,7 +84,7 @@ export const HataKimliksiz: Story = {
  * izler; iframe içinde bu sorgu çerçeve öğesinin `color-scheme`ine bakar,
  * o yüzden araç çubuğundaki tema oraya yazılır. Düğme statik çıktıda tıklanmaz.
  */
-export const GenelHata: Story = {
+export const GlobalErrorPage: Story = {
   name: "Genel Hata Sayfası",
   render: (args, { globals }) => (
     <main className="grid min-h-dvh place-items-center p-4">
@@ -97,7 +98,7 @@ export const GenelHata: Story = {
   ),
 };
 
-export const BosDurum: Story = {
+export const EmptyStateExample: Story = {
   name: "Boş Durum",
   render: () => (
     <main className="grid min-h-dvh place-items-center p-4">
@@ -114,7 +115,7 @@ export const BosDurum: Story = {
   ),
 };
 
-export const BosDurumlar: Story = {
+export const AllEmptyStates: Story = {
   name: "Bütün Boş Durumlar",
   render: () => (
     <main className="grid min-h-dvh place-items-center p-4">

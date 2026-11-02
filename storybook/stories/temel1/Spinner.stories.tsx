@@ -5,6 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Yükleme/Dönen Gösterge",
+  id: "components-loading-spinner",
   component: Spinner,
   tags: ["autodocs"],
   parameters: {
@@ -25,9 +26,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const DugmeIcinde: Story = {
+export const InButton: Story = {
   name: "Düğme İçinde",
   render: () => (
     <div className="flex flex-wrap items-center justify-center gap-3">
@@ -43,7 +44,7 @@ export const DugmeIcinde: Story = {
   ),
 };
 
-export const SatirIcinde: Story = {
+export const InRow: Story = {
   name: "Satır İçinde",
   render: () => (
     <Frame width="sm">
@@ -55,7 +56,7 @@ export const SatirIcinde: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

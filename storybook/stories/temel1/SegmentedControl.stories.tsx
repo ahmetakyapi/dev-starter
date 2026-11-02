@@ -19,6 +19,7 @@ function Local({ options, initial, label, size }: { options: readonly SegmentOpt
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Bölmeli Seçici",
+  id: "components-buttons-segmented-control",
   component: SegmentedControl,
   tags: ["autodocs"],
   parameters: {
@@ -52,7 +53,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -65,12 +66,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Kucuk: Story = {
+export const Small: Story = {
   name: "Küçük",
   args: { size: "sm" },
 };
 
-export const DevreDisiSecenek: Story = {
+export const DisabledOption: Story = {
   name: "Devre Dışı Seçenek",
   args: {
     "aria-label": "Plan dönemi",
@@ -83,7 +84,7 @@ export const DevreDisiSecenek: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

@@ -14,6 +14,7 @@ const ITEMS: TabItem[] = [
 
 const meta = {
   title: "Bileşenler/Gezinme/Sekmeler",
+  id: "components-navigation-tabs",
   component: Tabs,
   tags: ["autodocs"],
   parameters: {
@@ -41,7 +42,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -58,11 +59,11 @@ export const Varsayilan: Story = {
   },
 };
 
-export const AltCizgi: Story = { name: "Alt Çizgi", args: { variant: "underline", "aria-label": "Rapor Türü" } };
+export const Underline: Story = { name: "Alt Çizgi", args: { variant: "underline", "aria-label": "Rapor Türü" } };
 
-export const IkinciSecili: Story = { name: "İkinci Sekme Seçili", args: { defaultValue: "ayar" } };
+export const SecondSelected: Story = { name: "İkinci Sekme Seçili", args: { defaultValue: "ayar" } };
 
-export const CokSekme: Story = {
+export const ManyTabs: Story = {
   name: "Çok Sekme (Taşma)",
   args: {
     items: ["Özet", "Siparişler", "Müşteriler", "Ürünler", "Kampanyalar", "Raporlar", "Entegrasyonlar", "Faturalandırma"].map((label) => ({
@@ -74,7 +75,7 @@ export const CokSekme: Story = {
   },
 };
 
-export const SekmeBaglantilari: Story = {
+export const LinkTabs: Story = {
   name: "Sayfa Sekmeleri",
   render: (args) => (
     <div className="grid gap-6">
@@ -97,7 +98,7 @@ export const SekmeBaglantilari: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

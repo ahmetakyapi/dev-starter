@@ -26,6 +26,7 @@ function WithModel(props: ComponentProps<typeof ChatComposer>) {
 
 const meta = {
   title: "Bloklar/Mesaj Kutusu",
+  id: "blocks-chat-composer",
   component: ChatComposer,
   tags: ["autodocs"],
   parameters: {
@@ -64,9 +65,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Bos: Story = { name: "Boş" };
+export const Empty: Story = { name: "Boş" };
 
-export const Yazili: Story = {
+export const Typed: Story = {
   name: "Yazılı",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -77,7 +78,7 @@ export const Yazili: Story = {
   },
 };
 
-export const Gonderme: Story = {
+export const Sending: Story = {
   name: "Gönderme",
   parameters: { docs: { description: { story: "Enter gönderir; alan boşalır ve odak alanda kalır." } } },
   play: async ({ args, canvasElement }) => {
@@ -90,7 +91,7 @@ export const Gonderme: Story = {
   },
 };
 
-export const GonderiliyorDurdur: Story = {
+export const StreamingStop: Story = {
   name: "Gönderiliyor / Durdur",
   args: { status: "streaming" },
   play: async ({ args, canvasElement }) => {
@@ -100,15 +101,15 @@ export const GonderiliyorDurdur: Story = {
   },
 };
 
-export const TekModel: Story = {
+export const SingleModel: Story = {
   name: "Tek Model",
   parameters: { docs: { description: { story: "`models` verilmezse model yalnız etiket; `onAttach` / `onVoice` yoksa o düğmeler hiç çizilmez." } } },
   args: { models: undefined, onAttach: undefined, onVoice: undefined, model: "Fable 5 Mini" },
 };
 
-export const DevreDisi: Story = { name: "Devre Dışı", args: { disabled: true, placeholder: "Bağlantı bekleniyor" } };
+export const Disabled: Story = { name: "Devre Dışı", args: { disabled: true, placeholder: "Bağlantı bekleniyor" } };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={2}>
@@ -128,7 +129,7 @@ export const ButunVaryantlar: Story = {
   ),
 };
 
-export const ModelSecimi: Story = {
+export const ModelSelection: Story = {
   name: "Model Seçimi",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);

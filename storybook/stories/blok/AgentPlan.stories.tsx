@@ -7,6 +7,7 @@ import { PLAN, PLAN_LABELS } from "./_shared";
 
 const meta = {
   title: "Bloklar/Asistan Planı",
+  id: "blocks-agent-plan",
   component: AgentPlan,
   tags: ["autodocs"],
   parameters: {
@@ -38,11 +39,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Ortada: Story = { name: "Ortada" };
+export const Midway: Story = { name: "Ortada" };
 
-export const Baslangic: Story = { name: "Başlangıç", args: { activeIndex: 0 } };
+export const GettingStarted: Story = { name: "Başlangıç", args: { activeIndex: 0 } };
 
-export const Bitti: Story = {
+export const Done: Story = {
   name: "Bitti",
   args: { activeIndex: PLAN.length },
   play: async ({ canvasElement }) => {
@@ -50,7 +51,7 @@ export const Bitti: Story = {
   },
 };
 
-export const Daraltilmis: Story = {
+export const Collapsed: Story = {
   name: "Daraltılmış",
   args: { defaultOpen: false },
   play: async ({ canvasElement }) => {
@@ -79,13 +80,13 @@ function LivePlan() {
   );
 }
 
-export const Canli: Story = {
+export const Live: Story = {
   name: "Canlı",
   parameters: { docs: { description: { story: "Ajan akışı gibi kendiliğinden ilerler; bitince baştan başlar. Adım değişimi gizli canlı bölgede duyurulur." } } },
   render: () => <LivePlan />,
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={2}>

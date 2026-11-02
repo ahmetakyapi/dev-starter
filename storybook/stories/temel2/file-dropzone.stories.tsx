@@ -5,6 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Seçim/Dosya Bırakma Alanı",
+  id: "components-selection-file-dropzone",
   component: FileDropzone,
   tags: ["autodocs"],
   parameters: {
@@ -32,9 +33,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const KabulVeRet: Story = {
+export const AcceptAndReject: Story = {
   name: "Kabul ve Ret",
   args: { accept: ["application/pdf"], maxBytes: 1024 * 1024, hint: "Yalnızca PDF, en fazla 1 MB." },
   play: async ({ canvasElement }) => {
@@ -54,9 +55,9 @@ export const KabulVeRet: Story = {
   },
 };
 
-export const TekDosya: Story = { name: "Tek Dosya", args: { multiple: false, label: "Profil Fotoğrafı", hint: "PNG ya da JPEG.", accept: ["image/png", "image/jpeg"] } };
+export const SingleFile: Story = { name: "Tek Dosya", args: { multiple: false, label: "Profil Fotoğrafı", hint: "PNG ya da JPEG.", accept: ["image/png", "image/jpeg"] } };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

@@ -11,6 +11,7 @@ const STEPS: Step[] = [
 
 const meta = {
   title: "Bileşenler/Gezinme/Adım Göstergesi",
+  id: "components-navigation-stepper",
   component: Stepper,
   tags: ["autodocs"],
   parameters: {
@@ -38,20 +39,20 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const IlkAdim: Story = { name: "İlk Adım", args: { current: 0 } };
+export const FirstStep: Story = { name: "İlk Adım", args: { current: 0 } };
 
-export const SonAdim: Story = { name: "Son Adım", args: { current: 3 } };
+export const LastStep: Story = { name: "Son Adım", args: { current: 3 } };
 
-export const Tamamlandi: Story = { name: "Hepsi Tamamlandı", args: { current: 4 } };
+export const Completed: Story = { name: "Hepsi Tamamlandı", args: { current: 4 } };
 
-export const AciklamasizUc: Story = {
+export const ThreeStepsNoDescription: Story = {
   name: "Açıklamasız, Üç Adım",
   args: { steps: [{ label: "Bilgiler" }, { label: "Ödeme" }, { label: "Onay" }], current: 1 },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

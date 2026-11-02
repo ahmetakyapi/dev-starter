@@ -24,6 +24,7 @@ const CATEGORY = [
 
 const meta = {
   title: "Bileşenler/Seçim/Rozet",
+  id: "components-selection-badge",
   component: Badge,
   tags: ["autodocs"],
   parameters: {
@@ -60,13 +61,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Noktasiz: Story = { name: "Noktasız", args: { dot: false, tone: "primary", children: "Yeni" } };
+export const WithoutDot: Story = { name: "Noktasız", args: { dot: false, tone: "primary", children: "Yeni" } };
 
-export const Cizgili: Story = { name: "Çizgili", args: { variant: "outline", tone: "warning", children: "Bekliyor" } };
+export const Underline: Story = { name: "Çizgili", args: { variant: "outline", tone: "warning", children: "Bekliyor" } };
 
-export const Kategori: Story = { name: "Kategori", args: { tone: "chart-3", shape: "rounded", dot: false, children: "Destek" } };
+export const Category: Story = { name: "Kategori", args: { tone: "chart-3", shape: "rounded", dot: false, children: "Destek" } };
 
 function Row({ title, items, variant, dot }: { title: string; items: readonly (readonly [Tone, string])[]; variant: "soft" | "outline"; dot?: boolean }) {
   return (
@@ -85,7 +86,7 @@ function Row({ title, items, variant, dot }: { title: string; items: readonly (r
   );
 }
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   decorators: [

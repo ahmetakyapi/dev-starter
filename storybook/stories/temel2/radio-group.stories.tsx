@@ -11,6 +11,7 @@ const SHIPPING: RadioOption[] = [
 
 const meta = {
   title: "Bileşenler/Seçim/Seçenek Grubu",
+  id: "components-selection-radio-group",
   component: RadioGroup,
   tags: ["autodocs"],
   parameters: {
@@ -46,7 +47,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -56,7 +57,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Yatay: Story = {
+export const Horizontal: Story = {
   name: "Yatay",
   args: {
     name: "beden",
@@ -72,14 +73,14 @@ export const Yatay: Story = {
   },
 };
 
-export const SecimsizZorunlu: Story = { name: "Seçimsiz, Zorunlu", args: { defaultValue: undefined, required: true } };
+export const RequiredUnselected: Story = { name: "Seçimsiz, Zorunlu", args: { defaultValue: undefined, required: true } };
 
-export const DevreDisiSecenek: Story = {
+export const DisabledOption: Story = {
   name: "Devre Dışı Seçenek",
   args: { options: [...SHIPPING.slice(0, 2), { ...SHIPPING[2], disabled: true, hint: "Bu şubede stok yok" }] },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

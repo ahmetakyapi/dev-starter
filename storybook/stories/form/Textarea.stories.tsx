@@ -20,6 +20,7 @@ function Controlled(props: ComponentProps<typeof Textarea>) {
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Metin Alanı",
+  id: "components-forms-textarea",
   component: Textarea,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -51,7 +52,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -61,7 +62,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Sayacli: Story = {
+export const WithCounter: Story = {
   name: "Sayaçlı",
   args: { defaultValue: "Zil çalışmıyor, gelince arayın." },
   render: (args) => (
@@ -71,7 +72,7 @@ export const Sayacli: Story = {
   ),
 };
 
-export const SinirYakin: Story = {
+export const NearLimit: Story = {
   name: "Sınıra Yakın",
   args: { defaultValue: NEAR_LIMIT },
   render: (args) => (
@@ -85,7 +86,7 @@ export const SinirYakin: Story = {
   },
 };
 
-export const SinirDolu: Story = {
+export const LimitReached: Story = {
   name: "Sınır Dolu",
   args: { label: "Şikâyet Açıklaması", defaultValue: FULL, hint: "Yazdığın metin müşteri hizmetlerine gider." },
   render: (args) => (
@@ -95,7 +96,7 @@ export const SinirDolu: Story = {
   ),
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: {
     label: "İade Gerekçesi",
@@ -106,12 +107,12 @@ export const Hatali: Story = {
   },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { defaultValue: "Sipariş yola çıktı; not artık değiştirilemez.", disabled: true, maxLength: undefined },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

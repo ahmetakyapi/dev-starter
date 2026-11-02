@@ -75,6 +75,7 @@ async function rightClick(canvasElement: HTMLElement) {
 
 const meta = {
   title: "Bileşenler/Katmanlar/Bağlam Menüsü",
+  id: "components-overlays-context-menu",
   component: ContextMenu,
   tags: ["autodocs"],
   parameters: {
@@ -98,9 +99,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const SagTiklayincaAcilir: Story = {
+export const OpensOnRightClick: Story = {
   name: "Sağ Tıklayınca Açılır",
   tags: ["!autodocs"],
   play: async ({ canvasElement, globals }) => {
@@ -111,7 +112,7 @@ export const SagTiklayincaAcilir: Story = {
   },
 };
 
-export const AltMenuAcik: Story = {
+export const SubmenuOpen: Story = {
   name: "Alt Menü Açık",
   tags: ["!autodocs"],
   play: async ({ canvasElement, globals }) => {
