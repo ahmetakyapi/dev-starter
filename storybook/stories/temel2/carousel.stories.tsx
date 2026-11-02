@@ -28,7 +28,7 @@ const QUOTES = [
 ] as const;
 
 const meta = {
-  title: "Bileşenler/Gezinme/Atlıkarınca",
+  title: "Bileşenler/Gezinme/Kart Kaydırıcı",
   component: Carousel,
   tags: ["autodocs"],
   parameters: {

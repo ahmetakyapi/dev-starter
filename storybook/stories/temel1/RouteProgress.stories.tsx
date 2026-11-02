@@ -37,7 +37,7 @@ function Running() {
 }
 
 const meta = {
-  title: "Bileşenler/Yükleme/Gezinme Göstergesi",
+  title: "Bileşenler/Yükleme/Sayfa Yükleme Çubuğu",
   component: RouteProgress,
   tags: ["autodocs"],
   parameters: {

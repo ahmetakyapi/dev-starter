@@ -85,12 +85,12 @@ export const Varsayilan: Story = {
 };
 
 export const LejantliIkiSutun: Story = {
-  name: "Lejant · İki Sütun",
+  name: "Lejant (İki Sütun)",
   args: { label: "Ziyaretçi", value: "925", change: 5.2, changeLabel: "geçen haftaya göre", lejantKalemi: 4, lejantSutun: 2 },
 };
 
 export const LejantliUcSutun: Story = {
-  name: "Lejant · Üç Sütun",
+  name: "Lejant (Üç Sütun)",
   args: { label: "Kayıt Hunisi", value: "1.180", change: 2.4, lejantKalemi: 6, lejantSutun: 3 },
 };
 

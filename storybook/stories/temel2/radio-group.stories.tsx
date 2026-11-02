@@ -10,7 +10,7 @@ const SHIPPING: RadioOption[] = [
 ];
 
 const meta = {
-  title: "Bileşenler/Seçim/Radyo Grubu",
+  title: "Bileşenler/Seçim/Seçenek Grubu",
   component: RadioGroup,
   tags: ["autodocs"],
   parameters: {

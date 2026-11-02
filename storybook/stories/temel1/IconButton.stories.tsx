@@ -7,7 +7,7 @@ import { Cell, Gallery } from "../_lib/Frame";
 const GLYPHS = { Settings, Pencil, Share2, Trash2, MoreHorizontal } as const;
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/İkon Düğme",
+  title: "Bileşenler/Düğme ve İkon/İkon Düğmesi",
   component: IconButton,
   tags: ["autodocs"],
   parameters: {

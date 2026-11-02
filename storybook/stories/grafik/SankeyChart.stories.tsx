@@ -10,7 +10,7 @@ import { SANKEY_AKIS, SANKEY_HEDEF, SANKEY_KAYNAK, sayi, toplam } from "./_veri"
 type Args = ComponentProps<typeof SankeyChart> & { kaynakSayisi: number; hedefSayisi: number };
 
 const meta = {
-  title: "Grafikler/Sankey",
+  title: "Grafikler/Akış Grafiği",
   component: SankeyChart,
   tags: ["autodocs"],
   parameters: {

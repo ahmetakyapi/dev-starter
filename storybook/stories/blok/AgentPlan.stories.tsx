@@ -6,7 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { PLAN, PLAN_LABELS } from "./_shared";
 
 const meta = {
-  title: "Bloklar/Ajan Planı",
+  title: "Bloklar/Asistan Planı",
   component: AgentPlan,
   tags: ["autodocs"],
   parameters: {

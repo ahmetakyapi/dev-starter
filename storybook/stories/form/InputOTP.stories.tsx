@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { settle } from "./_a11y";
 
 const meta = {
-  title: "Bileşenler/Form Girişleri/Tek Kullanımlık Kod",
+  title: "Bileşenler/Form Girişleri/Doğrulama Kodu",
   component: InputOTP,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).

@@ -36,7 +36,7 @@ async function command(root: HTMLElement, query: string) {
 }
 
 const meta = {
-  title: "Ekranlar/Showcase/Pusula",
+  title: "Örnek Tasarım/Pusula Paneli",
   component: PusulaApp,
   tags: ["autodocs"],
   parameters: {
@@ -60,7 +60,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Uygulama: Story = {
-  name: "Uygulama · Gezinme",
+  name: "Uygulama (Gezinmeli)",
   parameters: {
     docs: { description: { story: "Bütün uygulama: kenar çubuğundan, ⌘K komut paletinden ve sayfa içi bağlantılardan gezilir; geçişte üstte gezinme çubuğu ve iskelet." } },
   },
@@ -104,7 +104,7 @@ export const Pano: Story = {
 };
 
 export const PanoHafta: Story = {
-  name: "Pano · Son 7 Gün",
+  name: "Pano (Son 7 Gün)",
   args: { initialPeriod: "hafta" },
   play: async ({ globals }) => settle(globals),
 };
@@ -140,7 +140,7 @@ export const GelenKutusu: Story = {
 };
 
 export const TalepAyrintisi: Story = {
-  name: "Gelen Kutusu · Talep Ayrıntısı",
+  name: "Gelen Kutusu (Talep Ayrıntısı)",
   args: { initialPage: "gelen", initialParams: { talep: TICKETS[0].id } },
   parameters: {
     docs: { description: { story: `Yan çekmecede ${TICKETS[0].id}: geciken ${DELAYED[0]?.id ?? "sipariş"} siparişine bağlı acil talep, olay akışı ve izleyenler.` } },
@@ -205,7 +205,7 @@ export const Raporlar: Story = {
 };
 
 export const RaporlarYukleniyor: Story = {
-  name: "Raporlar · Yükleniyor",
+  name: "Raporlar (Yükleniyor)",
   args: { initialPage: "raporlar", initialParams: { onizleme: "yukleniyor" } },
   parameters: { docs: { description: { story: "Satış tablosunun yerinde iskelet satırlar; kap `aria-busy`." } } },
   play: async ({ globals }) => settle(globals),

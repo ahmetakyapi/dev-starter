@@ -28,7 +28,7 @@ function FilterBody() {
 }
 
 const meta = {
-  title: "Bileşenler/Katmanlar/Çekmece",
+  title: "Bileşenler/Katmanlar/Yan Panel",
   component: Sheet,
   tags: ["autodocs"],
   parameters: {

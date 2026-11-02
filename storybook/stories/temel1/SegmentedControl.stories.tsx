@@ -18,7 +18,7 @@ function Local({ options, initial, label, size }: { options: readonly SegmentOpt
 }
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Bölümlü Denetim",
+  title: "Bileşenler/Düğme ve İkon/Bölmeli Seçici",
   component: SegmentedControl,
   tags: ["autodocs"],
   parameters: {

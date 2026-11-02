@@ -7,7 +7,7 @@ import { settle } from "./_settle";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Katmanlar/İpucu",
+  title: "Bileşenler/Katmanlar/Araç İpucu",
   component: Tooltip,
   tags: ["autodocs"],
   parameters: {
@@ -56,7 +56,7 @@ export const OdaklanincaAcilir: Story = {
 };
 
 export const InfoTipKapali: Story = {
-  name: "InfoTip (Kapalı)",
+  name: "Bilgi İpucu (Kapalı)",
   render: () => (
     <Frame width="sm" className="min-h-64">
       <div className="pt-24">
@@ -71,7 +71,7 @@ export const InfoTipKapali: Story = {
 };
 
 export const InfoTipAcik: Story = {
-  name: "InfoTip (Tıklayınca Açık)",
+  name: "Bilgi İpucu (Tıklayınca Açık)",
   tags: ["!autodocs"],
   render: InfoTipKapali.render,
   play: async ({ canvasElement, globals }) => {

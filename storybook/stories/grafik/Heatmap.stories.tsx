@@ -10,7 +10,7 @@ import { gunluk, sayi, toplam } from "./_veri";
 type Args = ComponentProps<typeof Heatmap> & { haftaSayisi: number; tepe: number };
 
 const meta = {
-  title: "Grafikler/Aktivite Izgarası",
+  title: "Grafikler/Isı Haritası",
   component: Heatmap,
   tags: ["autodocs"],
   parameters: {

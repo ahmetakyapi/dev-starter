@@ -10,7 +10,7 @@ import { KANAL, sayi, toplam } from "./_veri";
 type Args = ComponentProps<typeof GaugeChart> & { parcaSayisi: number };
 
 const meta = {
-  title: "Grafikler/Yarım Daire Gösterge",
+  title: "Grafikler/Yarım Daire Grafiği",
   component: GaugeChart,
   tags: ["autodocs"],
   parameters: {

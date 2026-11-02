@@ -12,7 +12,7 @@ type Args = ComponentProps<typeof RadarChart> & { eksenSayisi: number; seriSayis
 const ort = (v: readonly number[]) => (v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : 0);
 
 const meta = {
-  title: "Grafikler/Radar",
+  title: "Grafikler/Radar Grafiği",
   component: RadarChart,
   tags: ["autodocs"],
   parameters: {

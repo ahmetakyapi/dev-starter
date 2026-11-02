@@ -33,7 +33,7 @@ function Pane({ children, tall = false }: { children: ReactNode; tall?: boolean 
 }
 
 const meta = {
-  title: "Bloklar/Sohbet Akışı",
+  title: "Bloklar/Mesaj Akışı",
   component: ChatThread,
   tags: ["autodocs"],
   parameters: {

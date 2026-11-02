@@ -106,7 +106,7 @@ function conversation(productStep: number): ChatMessage[] {
       content: (
         <AgentMessage id="tasarim" time="14:04">
           <p>
-            Kahraman bölümünde ekran görüntüsü yerine <strong>canlı pano</strong> öneriyorum: ziyaretçi ürünü ilk
+            Üst bölümde ekran görüntüsü yerine <strong>canlı pano</strong> öneriyorum: ziyaretçi ürünü ilk
             ekranda çalışırken görür. Deneme düğmesini kaydırınca da görünür tutarım; telefonda alt kenarda sabit.
           </p>
           <p>Kontrast ve dokunma hedefleri iki temada da AA; taslak yarın 11.00'de hazır.</p>
@@ -266,7 +266,7 @@ function EmptyTeam({ onStart }: { onStart: (text: string) => void }) {
 }
 
 const meta = {
-  title: "Ekranlar/Uygulama/Çoklu Ajan Sohbeti",
+  title: "Ekranlar/Uygulama/Çoklu Asistan Sohbeti",
   component: MultiAgentScreen,
   tags: ["autodocs"],
   parameters: {

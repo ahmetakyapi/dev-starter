@@ -12,7 +12,7 @@ type Args = ComponentProps<typeof TrackBarChart> & { sutunSayisi: number; paraBi
 const AYLIK = AYLAR.map((label, i) => ({ label, value: KAZANC[i] }));
 
 const meta = {
-  title: "Grafikler/İz Üstünde Sütun",
+  title: "Grafikler/Sütun Grafiği",
   component: TrackBarChart,
   tags: ["autodocs"],
   parameters: {

@@ -5,7 +5,7 @@ import { HERO_VARIANTS } from "@/lib/content";
 import { DEFAULT_THEME } from "@/lib/theme";
 
 const meta = {
-  title: "Ekranlar/Açılış Sayfası/Kahraman",
+  title: "Ekranlar/Açılış Sayfası/Üst Bölüm Varyantları",
   component: Hero,
   tags: ["autodocs"],
   parameters: {

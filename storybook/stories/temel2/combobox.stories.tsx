@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { CITIES } from "./_data";
 
 const meta = {
-  title: "Bileşenler/Seçim/Aranır Seçim",
+  title: "Bileşenler/Seçim/Aramalı Seçim",
   component: Combobox,
   tags: ["autodocs"],
   parameters: {

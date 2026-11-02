@@ -9,7 +9,7 @@ import { settle } from "./_settle";
 import { Frame } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Katmanlar/Açılır Kutu",
+  title: "Bileşenler/Katmanlar/Açılır Kart",
   component: Popover,
   tags: ["autodocs"],
   parameters: {

@@ -71,7 +71,7 @@ export const Esikler: Story = {
 };
 
 export const Bolumlu: Story = {
-  name: "Bölümlü (SegmentedMeter)",
+  name: "Bölümlü",
   render: () => (
     <Frame width="md">
       <SegmentedMeter
@@ -89,7 +89,7 @@ export const Bolumlu: Story = {
 };
 
 export const Ters: Story = {
-  name: "Ters Ölçek (inverted)",
+  name: "Ters Ölçek",
   render: () => (
     <Frame width="md">
       <div className="grid gap-6">

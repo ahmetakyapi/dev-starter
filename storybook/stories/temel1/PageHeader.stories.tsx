@@ -42,7 +42,7 @@ type Story = StoryObj<typeof meta>;
 export const Varsayilan: Story = { name: "Varsayılan" };
 
 export const Murekkepli: Story = {
-  name: "Mürekkepli Başlık",
+  name: "Degrade Başlık",
   args: { title: "Fiyatlar", eyebrow: "Şeffaf plan", ink: true, description: "Ekip büyüdükçe ödeyin; gizli ücret yok.", action: undefined },
 };
 

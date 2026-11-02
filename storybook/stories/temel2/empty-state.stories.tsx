@@ -63,7 +63,7 @@ type Story = StoryObj<typeof meta>;
 export const Varsayilan: Story = { name: "Varsayılan" };
 
 export const Sahne: Story = {
-  name: "Sahne",
+  name: "Sahneli",
   args: {
     variant: "scene",
     scene: <SearchScene />,

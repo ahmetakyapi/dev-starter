@@ -63,7 +63,7 @@ export const AltCizgi: Story = { name: "Alt Çizgi", args: { variant: "underline
 export const IkinciSecili: Story = { name: "İkinci Sekme Seçili", args: { defaultValue: "ayar" } };
 
 export const CokSekme: Story = {
-  name: "Çok Sekme (taşma)",
+  name: "Çok Sekme (Taşma)",
   args: {
     items: ["Özet", "Siparişler", "Müşteriler", "Ürünler", "Kampanyalar", "Raporlar", "Entegrasyonlar", "Faturalandırma"].map((label) => ({
       value: label.toLocaleLowerCase("tr-TR"),
@@ -75,7 +75,7 @@ export const CokSekme: Story = {
 };
 
 export const SekmeBaglantilari: Story = {
-  name: "Sekme Bağlantıları (TabLinks)",
+  name: "Sayfa Sekmeleri",
   render: (args) => (
     <div className="grid gap-6">
       <TabLinks

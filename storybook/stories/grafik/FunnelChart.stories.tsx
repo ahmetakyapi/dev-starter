@@ -16,7 +16,7 @@ const oran = (stages: readonly { value: number }[]) => {
 };
 
 const meta = {
-  title: "Grafikler/Huni",
+  title: "Grafikler/Huni Grafiği",
   component: FunnelChart,
   tags: ["autodocs"],
   parameters: {

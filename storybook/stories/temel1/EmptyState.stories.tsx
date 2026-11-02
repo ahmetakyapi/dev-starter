@@ -56,7 +56,7 @@ export const IkonsuzEylemsiz: Story = {
 };
 
 export const SayfaBulunamadi: Story = {
-  name: "Sayfa Bulunamadı (h1)",
+  name: "Sayfa Bulunamadı",
   args: {
     title: "Sayfa Bulunamadı",
     titleAs: "h1",

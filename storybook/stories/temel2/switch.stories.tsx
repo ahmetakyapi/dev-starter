@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Seçim/Anahtar",
+  title: "Bileşenler/Seçim/Aç-Kapa Düğmesi",
   component: Switch,
   tags: ["autodocs"],
   parameters: {

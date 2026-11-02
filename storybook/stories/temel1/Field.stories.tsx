@@ -4,7 +4,7 @@ import { Field } from "@/components/ui/Field";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Temel/Alan",
+  title: "Bileşenler/Temel/Form Alanı",
   component: Field,
   tags: ["autodocs"],
   parameters: {

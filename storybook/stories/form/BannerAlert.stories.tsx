@@ -110,7 +110,7 @@ export const Kapatilabilir: Story = {
 };
 
 export const KapatmaOlayi: Story = {
-  name: "Kapatma Olayı (onDismiss)",
+  name: "Kapatılınca Haber Verir",
   args: { tone: "success", title: "Profil güncellendi", description: undefined, onDismiss: fn() },
   play: async ({ canvasElement, args }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Uyarıyı Kapat" }));

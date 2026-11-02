@@ -3,7 +3,7 @@ import { Skeleton, SkeletonCard, SkeletonRow, SkeletonText } from "@/components/
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Yükleme/İskelet",
+  title: "Bileşenler/Yükleme/İskelet Yükleyici",
   component: Skeleton,
   tags: ["autodocs"],
   parameters: {

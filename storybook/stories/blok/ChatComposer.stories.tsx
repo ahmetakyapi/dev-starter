@@ -25,7 +25,7 @@ function WithModel(props: ComponentProps<typeof ChatComposer>) {
 }
 
 const meta = {
-  title: "Bloklar/Sohbet Giriş Kutusu",
+  title: "Bloklar/Mesaj Kutusu",
   component: ChatComposer,
   tags: ["autodocs"],
   parameters: {

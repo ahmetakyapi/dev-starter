@@ -70,7 +70,7 @@ export const MetinYaninda: Story = {
 };
 
 export const AnlamTasiyan: Story = {
-  name: "Anlam Taşıyan (label)",
+  name: "Anlam Taşıyan İkon",
   render: () => (
     <Frame width="md">
       <table className="w-full text-left text-base">

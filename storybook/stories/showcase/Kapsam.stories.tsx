@@ -102,7 +102,7 @@ function Coverage() {
     <main className="min-h-dvh bg-page px-4 py-8 text-body sm:px-8 sm:py-12">
       <div className="mx-auto grid max-w-5xl gap-6">
         <header>
-          <p className="text-small font-medium text-muted">Ekranlar · Showcase</p>
+          <p className="text-small font-medium text-muted">Örnek Tasarım</p>
           <h1 className="mt-1 text-heading font-semibold tracking-tight text-strong">Bileşen Kapsamı</h1>
           <p className="mt-2 max-w-2xl text-read text-body">
             Kataloğun her dosyası Pusula'nın hangi sayfasında kullanılıyor. Liste <code className="font-mono text-small">snippets/ui</code>{" "}
@@ -152,7 +152,7 @@ function Coverage() {
 }
 
 const meta = {
-  title: "Ekranlar/Showcase/Bileşen Kapsamı",
+  title: "Örnek Tasarım/Bileşen Kapsamı",
   component: Coverage,
   tags: ["autodocs"],
   parameters: {

@@ -330,7 +330,7 @@ function GirisSayfasi() {
 }
 
 const meta = {
-  title: "Giriş",
+  title: "Başlangıç",
   component: GirisSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -346,7 +346,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Giris: Story = {
-  name: "Giriş",
+  name: "Başlangıç",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const month = canvas.getByRole("radio", { name: "Ay" });

@@ -4,7 +4,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Yükleme/Spinner",
+  title: "Bileşenler/Yükleme/Dönen Gösterge",
   component: Spinner,
   tags: ["autodocs"],
   parameters: {

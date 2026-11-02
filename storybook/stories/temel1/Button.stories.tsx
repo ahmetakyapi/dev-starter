@@ -111,7 +111,7 @@ export const DevreDisi: Story = {
 };
 
 export const BaglantiDugmesi: Story = {
-  name: "Bağlantı Düğmesi (ButtonLink)",
+  name: "Bağlantı Düğmesi",
   render: () => (
     <div className="flex flex-wrap items-center justify-center gap-3">
       <ButtonLink href="/fiyatlar">Fiyatları İncele</ButtonLink>

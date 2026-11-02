@@ -60,7 +60,7 @@ export const Belirsiz: Story = {
 export const DevreDisi: Story = { name: "Devre Dışı", args: { disabled: true } };
 
 export const Etiketsiz: Story = {
-  name: "Etiketsiz (tablo satırı)",
+  name: "Etiketsiz (Tablo Satırı)",
   args: { label: undefined, hint: undefined, "aria-label": "SP-2042 siparişini seç" },
 };
 

@@ -7,7 +7,7 @@ const FALLING = [88, 84, 86, 79, 75, 77, 70, 66, 68, 61, 58, 54];
 const FLAT = [50, 52, 49, 51, 50, 53, 51, 50, 52, 51, 50, 51];
 
 const meta = {
-  title: "Bileşenler/Veri/Mini Eğri",
+  title: "Bileşenler/Veri/Mini Grafik",
   component: Sparkline,
   tags: ["autodocs"],
   parameters: {

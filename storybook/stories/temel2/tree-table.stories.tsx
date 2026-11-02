@@ -30,7 +30,7 @@ const ROWS: TreeTableRow[] = [
 ];
 
 const meta = {
-  title: "Bileşenler/Veri/Açılır Satırlı Tablo",
+  title: "Bileşenler/Veri/Ağaç Tablo",
   component: TreeTable,
   tags: ["autodocs"],
   parameters: {

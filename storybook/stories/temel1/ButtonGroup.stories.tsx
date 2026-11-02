@@ -67,7 +67,7 @@ type Story = StoryObj<typeof meta>;
 export const Varsayilan: Story = { name: "Varsayılan" };
 
 export const KuyuAcKapa: Story = {
-  name: "Kuyu (Aç-Kapa)",
+  name: "Gri Zeminli (Aç-Kapa)",
   render: () => <FormatToggles />,
   play: async ({ canvasElement }) => {
     const italic = within(canvasElement).getByRole("button", { name: "İtalik" });

@@ -84,7 +84,7 @@ export const HataKimliksiz: Story = {
  * o yüzden araç çubuğundaki tema oraya yazılır. Düğme statik çıktıda tıklanmaz.
  */
 export const GenelHata: Story = {
-  name: "Genel Hata (Kök Layout)",
+  name: "Genel Hata Sayfası",
   render: (args, { globals }) => (
     <main className="grid min-h-dvh place-items-center p-4">
       <iframe

@@ -47,7 +47,23 @@ const preview: Preview = {
     a11y: { test: "error" },
     nextjs: { appDirectory: true },
     options: {
-      storySort: { order: ["Giriş", "Tema", "Bileşenler", "Grafikler", "Bloklar", "Ekranlar"] },
+      // Vitrin yüzü en üstte: önce bir arada görülen örnek tasarım ve vitrin,
+      // sonra başlangıç, token'lar ve parça parça katalog.
+      storySort: {
+        order: [
+          "Örnek Tasarım",
+          ["Her Şey Bir Arada", "Pusula Paneli", "Bileşen Kapsamı"],
+          "Vitrin",
+          ["Genel Bakış", "Temel Kütüphane", "Form Girişleri", "Katman ve Geri Bildirim", "Grafikler", "Bloklar"],
+          "Başlangıç",
+          "Tema",
+          ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"],
+          "Bileşenler",
+          "Grafikler",
+          "Bloklar",
+          "Ekranlar",
+        ],
+      },
     },
   },
   globalTypes: {

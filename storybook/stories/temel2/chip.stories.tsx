@@ -6,7 +6,7 @@ import { ChipGroup, FilterChip, RemovableChip } from "@/components/ui/chip";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Seçim/Çip",
+  title: "Bileşenler/Seçim/Süzgeç Etiketi",
   component: FilterChip,
   tags: ["autodocs"],
   parameters: {

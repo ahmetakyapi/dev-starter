@@ -3,7 +3,7 @@ import { LoadingMark } from "@/components/ui/loading-mark";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Yükleme/Marka Halkası",
+  title: "Bileşenler/Yükleme/Yükleme Halkası",
   component: LoadingMark,
   tags: ["autodocs"],
   parameters: {

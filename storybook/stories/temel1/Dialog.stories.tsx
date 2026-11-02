@@ -9,7 +9,7 @@ import { settle } from "./_settle";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Katmanlar/Diyalog",
+  title: "Bileşenler/Katmanlar/İletişim Penceresi",
   component: Dialog,
   tags: ["autodocs"],
   parameters: {

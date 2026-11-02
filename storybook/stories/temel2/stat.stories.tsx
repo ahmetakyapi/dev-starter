@@ -4,7 +4,7 @@ import { Stat, StatGrid } from "@/components/ui/stat";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Veri/Ölçü",
+  title: "Bileşenler/Veri/İstatistik",
   component: Stat,
   tags: ["autodocs"],
   parameters: {
@@ -51,12 +51,12 @@ export const Dusus: Story = { name: "Düşüş", args: { label: "Dönüşüm Ora
 export const Degisimsiz: Story = { name: "Değişimsiz", args: { label: "Aktif Abone", value: "4.910", change: 0.02 } };
 
 export const ArtisKotu: Story = {
-  name: "Artış Kötü (positiveIsGood=false)",
+  name: "Artışın Kötü Olduğu Ölçü",
   args: { label: "Ortalama Gecikme", value: "412", unit: "ms", change: 18.3, positiveIsGood: false, changeLabel: "dünden" },
 };
 
 export const DususIyi: Story = {
-  name: "Düşüş İyi (positiveIsGood=false)",
+  name: "Düşüşün İyi Olduğu Ölçü",
   args: { label: "Aylık Gider", value: "₺318.400", change: -6.1, positiveIsGood: false },
 };
 

@@ -40,7 +40,7 @@ export const DevreDisi: Story = {
 };
 
 export const UyariSatirinda: Story = {
-  name: "Uyarı Satırında (onWash)",
+  name: "Uyarı Satırında",
   render: (args) => (
     <Frame width="lg">
       <div role="note" className="flex items-start gap-3 rounded-lg bg-primary-wash px-4 py-3 text-primary-ink">

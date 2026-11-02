@@ -80,7 +80,7 @@ export default function Vitrin() {
       </header>
 
       <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">
-        <Showcase name="Slider" summary="Tek değer ya da iki tutamaklı aralık; sürüklerken değer balonu.">
+        <Showcase name="Kaydırıcı" summary="Tek değer ya da iki tutamaklı aralık; sürüklerken değer balonu.">
           <div className="grid w-full max-w-sm gap-8">
             <Slider label="Bildirim Sesi" defaultValue={0.64} format={{ style: "percent" }} min={0} max={1} step={0.01} />
             <Slider
@@ -98,7 +98,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Number Field" summary="Eksi ve artı karolu sayı alanı; basılı tutunca hızlanır.">
+        <Showcase name="Sayı Alanı" summary="Eksi ve artı karolu sayı alanı; basılı tutunca hızlanır.">
           <div className="grid w-full max-w-xs gap-6">
             <NumberField label="Misafir Sayısı" defaultValue={2} min={1} max={12} hint="Bebekler sayılmaz." />
             <NumberField
@@ -111,14 +111,14 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Input OTP" summary="Altı haneli kod; yapıştırınca dağılır, yazdıkça ilerler.">
+        <Showcase name="Doğrulama Kodu" summary="Altı haneli kod; yapıştırınca dağılır, yazdıkça ilerler.">
           <div className="grid gap-8">
             <InputOTP label="Doğrulama Kodu" defaultValue="4829" hint="0532 *** ** 47 numarasına gönderdik." />
             <InputOTP label="Yedek Kod" defaultValue="719305" error="Kod süresi doldu, yenisini iste." />
           </div>
         </Showcase>
 
-        <Showcase name="Textarea" summary="İçeriğe göre büyür; sınıra yaklaşınca sayaç renk ve sesle uyarır.">
+        <Showcase name="Metin Alanı" summary="İçeriğe göre büyür; sınıra yaklaşınca sayaç renk ve sesle uyarır.">
           <Textarea
             label="Teslimat Notu"
             maxLength={140}
@@ -130,7 +130,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Tag Input" summary="Enter ya da virgülle çip ekle, Backspace ile geri al; öneriler isteğe bağlı.">
+        <Showcase name="Etiket Girişi" summary="Enter ya da virgülle çip ekle, Backspace ile geri al; öneriler isteğe bağlı.">
           <TagInput
             label="Beceriler"
             defaultValue={["Figma", "Tasarım Sistemi", "React"]}
@@ -141,14 +141,14 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Color Picker" summary="Doygunluk alanı, ton şeridi, hex ve hazır renkler; alan oklarla gezilir.">
+        <Showcase name="Renk Seçici" summary="Doygunluk alanı, ton şeridi, hex ve hazır renkler; alan oklarla gezilir.">
           <div className="w-full max-w-xs rounded-lg bg-overlay p-4 shadow-raised">
             <ColorPicker label="Etiket Rengi" defaultValue="#3b82f6" presets={COLORS} />
           </div>
         </Showcase>
 
         <Showcase
-          name="Date Calendar"
+          name="Takvim"
           summary="Pazartesi başlayan ay; aralık uçları dolgulu, arası şeritte. Pazar günleri kapalı."
           wide
         >
@@ -169,7 +169,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Date Picker" summary="Alan + açılır takvim; tek gün ya da aralık.">
+        <Showcase name="Tarih Seçici" summary="Alan + açılır takvim; tek gün ya da aralık.">
           <div className="grid w-full max-w-xs gap-6">
             <DatePicker label="Teslim Tarihi" defaultValue={NOV(21)} defaultMonth={NOV(1)} name="teslim" />
             <DatePicker
@@ -182,7 +182,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Time Field" summary="SS:DD segmentleri; oklarla artır, rakamla yaz.">
+        <Showcase name="Saat Alanı" summary="SS:DD segmentleri; oklarla artır, rakamla yaz.">
           <div className="grid w-full max-w-xs gap-6">
             <TimeField label="Randevu Saati" defaultValue="14:30" minuteStep={5} />
             <TimeField label="Mesai Bitişi" hint="24 saat düzeninde." />

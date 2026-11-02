@@ -18,7 +18,7 @@ function Items({ exclusive, openFirst = true }: { exclusive?: string; openFirst?
 }
 
 const meta = {
-  title: "Bileşenler/Gezinme/Akordeon",
+  title: "Bileşenler/Gezinme/Açılır Bölümler",
   component: Accordion,
   tags: ["autodocs"],
   parameters: {

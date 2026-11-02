@@ -4,14 +4,14 @@ import { Announcement, DismissibleAnnouncement } from "@/components/ui/announcem
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Gezinme/Duyuru Hapı",
+  title: "Bileşenler/Gezinme/Duyuru",
   component: Announcement,
   tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
         component:
-          "Kahraman başlığının üstünde tek satırlık haber (\"Yeni · Grafikler geldi →\"); bilgi vermek için değil tıklanmak için durur. Noktasız ve yanıp sönmez; hapın tamamı tek bağlantı. Kapatılabilir hâlde × bağlantının kardeşidir ve kapatma tarayıcıda hatırlanır.",
+          "Sayfanın üst bölümündeki başlığın üstünde tek satırlık haber (\"Yeni · Grafikler geldi →\"); bilgi vermek için değil tıklanmak için durur. Noktasız ve yanıp sönmez; hapın tamamı tek bağlantı. Kapatılabilir hâlde × bağlantının kardeşidir ve kapatma tarayıcıda hatırlanır.",
       },
     },
   },

@@ -259,7 +259,7 @@ export default function Page() {
           </div>
         </Showcase>
 
-        <Showcase name="Atlıkarınca" summary="Scroll-snap ile JS’siz kayar; oklar, uzayan hap nokta, klavye." wide stage="stretch">
+        <Showcase name="Kart Kaydırıcı" summary="Scroll-snap ile JS’siz kayar; oklar, uzayan hap nokta, klavye." wide stage="stretch">
           <Carousel
             label="Yeni Neler Var"
             slides={SLIDES.map((slide) => (
@@ -273,7 +273,7 @@ export default function Page() {
           />
         </Showcase>
 
-        <Showcase name="Çip" summary="Süzgeç çipi aria-pressed taşır; kaldırılabilir çipte yalnızca × bir düğme.">
+        <Showcase name="Süzgeç Etiketi" summary="Süzgeç çipi aria-pressed taşır; kaldırılabilir çipte yalnızca × bir düğme.">
           <div className="grid w-full gap-5">
             <ChipGroup aria-label="Durum Süzgeci">
               {Object.entries(filters).map(([name, on], index) => (
@@ -303,7 +303,7 @@ export default function Page() {
           </div>
         </Showcase>
 
-        <Showcase name="Kapatma Düğmesi" summary="Görsel 28–32 piksel, dokunma alanı 44; halka dairenin çevresinde.">
+        <Showcase name="Kapat Düğmesi" summary="Görsel 28–32 piksel, dokunma alanı 44; halka dairenin çevresinde.">
           <div className="flex items-center gap-8">
             <div className="relative w-56 rounded-xl bg-overlay p-4 shadow-raised">
               <div className="absolute top-3 right-3">
@@ -334,7 +334,7 @@ export default function Page() {
           </div>
         </Showcase>
 
-        <Showcase name="Duyuru Hapı" summary="Kahramanın üstünde tek satır haber; kapatılabilir hâli tarayıcıda hatırlanır." wide>
+        <Showcase name="Duyuru" summary="Kahramanın üstünde tek satır haber; kapatılabilir hâli tarayıcıda hatırlanır." wide>
           <div className="grid justify-items-center gap-4">
             <Announcement href="/vitrin" tag="Yeni">
               Grafikler geldi

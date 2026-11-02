@@ -31,12 +31,12 @@ type Story = StoryObj<typeof meta>;
 export const Varsayilan: Story = { name: "Varsayılan" };
 
 export const Simgeli: Story = {
-  name: "Simgeli (label)",
+  name: "Simgeli",
   args: { children: "⌘", label: "Command" },
 };
 
 export const Kombinasyon: Story = {
-  name: "Kombinasyon (KbdCombo)",
+  name: "Tuş Kombinasyonu",
   render: () => <KbdCombo keys={["⇧", "⌘", "P"]} label="Shift Command P" />,
 };
 

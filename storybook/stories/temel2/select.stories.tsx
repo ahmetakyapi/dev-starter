@@ -7,7 +7,7 @@ import { CITIES } from "./_data";
 const ITEMS = CITIES.slice(0, 9);
 
 const meta = {
-  title: "Bileşenler/Seçim/Seçim Kutusu",
+  title: "Bileşenler/Seçim/Açılır Liste",
   component: Select,
   tags: ["autodocs"],
   parameters: {
