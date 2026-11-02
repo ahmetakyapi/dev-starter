@@ -7,6 +7,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Storybook düzeni — 2026-11-02
+
+- **Örnek Tasarım/Her Şey Bir Arada**: kataloğun tamamını tek uzun sayfada
+  sergileyen vitrin (73/73 bileşen kaynaktan ölçülür, 11 grafik, bloklar,
+  10 palet); kök adres doğrudan bu sayfayı açar.
+- Kenar çubuğu: Örnek Tasarım ve Vitrin en üstte; Türkçede mantıksız ya da
+  yarı İngilizce adlar düzeltildi (Kahraman → Üst Bölüm Varyantları,
+  Atlıkarınca → Kart Kaydırıcı, Bölümlü Denetim → Bölmeli Seçici…).
+- **Kural: adresler İngilizce.** Her meta İngilizce `id`, hikâyeler İngilizce
+  adla dışa aktarılır; görünen adlar Türkçe. CI `npm run check:ids` ile denetler.
+
 ### Storybook görsel kataloğu — 2026-11-02
 
 #### Eklendi
