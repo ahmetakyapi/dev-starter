@@ -11,7 +11,7 @@ type Args = ComponentProps<typeof GaugeChart> & { parcaSayisi: number };
 
 const meta = {
   title: "Grafikler/Yarım Daire Grafiği",
-  id: "charts-gauge-chart",
+  id: "gauge-chart",
   component: GaugeChart,
   tags: ["autodocs"],
   parameters: {
@@ -78,7 +78,7 @@ export const SingleFill: Story = {
     title: "Hedef Sürede Yanıtlanan",
     parts: [{ label: "Hedefte", value: 872, series: 6 }],
     max: 1000,
-    label: "SLA uyumu",
+    label: "SLA Uyumu",
     parcaSayisi: 1,
   },
 };
@@ -111,7 +111,7 @@ export const Empty: Story = {
     title: "Kota Kullanımı",
     parts: [{ label: "Kullanılan", value: 0, series: 2 }],
     max: 50,
-    label: "50 GB kotanın",
+    label: "50 GB Kotanın",
     parcaSayisi: 1,
   },
 };
@@ -125,7 +125,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={3}>
-      <GrafikHucre label="Üç parça">
+      <GrafikHucre label="Üç Parça">
         <ChartCard id="g-v1" label="Cihaza Göre Ziyaret" value="9.000">
           <GaugeChart
             title="Cihaza Göre Ziyaret"
@@ -137,12 +137,12 @@ export const AllVariants: Story = {
           />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Tek doluluk, kalan iz">
+      <GrafikHucre label="Tek Doluluk, Kalan İz">
         <ChartCard id="g-v2" label="Depolama" value="36 GB">
-          <GaugeChart title="Depolama" parts={[{ label: "Kullanılan", value: 36, series: 4 }]} max={50} label="50 GB kotanın" />
+          <GaugeChart title="Depolama" parts={[{ label: "Kullanılan", value: 36, series: 4 }]} max={50} label="50 GB Kotanın" />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="İnce yay, geniş boşluk">
+      <GrafikHucre label="İnce Yay, Geniş Boşluk">
         <ChartCard id="g-v3" label="Bilet Önceliği" value="1.284">
           <GaugeChart
             title="Bilet Önceliği"

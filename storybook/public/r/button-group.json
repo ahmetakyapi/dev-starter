@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button-group",
+  "type": "registry:ui",
+  "title": "Düğme Grubu",
+  "description": "Bağlı düğmeler",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/button-group.tsx",
+      "content": "import type { ComponentProps } from 'react'\nimport { cn } from '@/lib/utils'\n\n/**\n * Birbirine bağlı düğmeler: \"Önceki / Bugün / Sonraki\", \"Kopyala | ⌄\" gibi.\n * Grup bir `role=\"group\"` ve ADI var (`aria-label`); ekran okuyucu düğmeleri\n * neyin parçası olduğunu bilerek okur.\n *\n * İKİ GÖRÜNÜŞ (\"board\" dili, 2026-11):\n *   `attached` (varsayılan): kenarlar komşusuyla üst üste biner (`-ml-px`),\n *     iç köşeler düzleşir; tek parça bir satır. Çocuklar şablonun `Button`ı\n *     (`variant=\"secondary\"`) ya da `IconButton`.\n *   `well`: gri kuyuda kaynaşmış satır; çocuklar `variant=\"ghost\"`. Basılı\n *     (`aria-pressed=\"true\"`) düğme BEYAZ KARO olur (`bg-overlay` +\n *     `shadow-raised`): araç çubuğundaki \"Kalın / İtalik\" gibi aç-kapa\n *     düğmeleri için.\n *\n * Seçim TEK ise (biri seçili, ötekiler değil) bu değil `segmented-control.tsx`:\n * orada seçili durum `aria-checked` ile söylenir ve gösterge kayar. Bu\n * bileşende her düğme kendi işini yapar; `aria-pressed` bağımsız aç-kapa.\n *\n * Odak halkası komşunun altında kalmasın diye odaklı düğme öne alınır (`z-10`).\n */\n\ntype ButtonGroupProps = ComponentProps<'div'> & {\n  'aria-label': string\n  orientation?: 'horizontal' | 'vertical'\n  variant?: 'attached' | 'well'\n}\n\nexport function ButtonGroup({\n  orientation = 'horizontal',\n  variant = 'attached',\n  className,\n  ...props\n}: ButtonGroupProps) {\n  return (\n    <div\n      role=\"group\"\n      className={cn(\n        'inline-flex isolate [&>*]:relative [&>*:focus-visible]:z-10 [&>*:hover]:z-[1]',\n        orientation === 'vertical' && 'flex-col',\n        variant === 'attached' &&\n          (orientation === 'horizontal'\n            ? '[&>*:not(:first-child)]:-ml-px [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none'\n            : '[&>*:not(:first-child)]:-mt-px [&>*:not(:first-child)]:rounded-t-none [&>*:not(:last-child)]:rounded-b-none'),\n        variant === 'attached' &&\n          '[&>[aria-pressed=true]]:bg-surface-raised! [&>[aria-pressed=true]]:text-strong!',\n        variant === 'well' &&\n          'gap-0.5 rounded-md bg-surface-sunken p-1 [&>*]:rounded-sm! [&>[aria-pressed=true]]:bg-overlay! [&>[aria-pressed=true]]:text-strong! [&>[aria-pressed=true]]:shadow-raised!',\n        className,\n      )}\n      {...props}\n    />\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "button-group",
+    "palettes": false
+  }
+}

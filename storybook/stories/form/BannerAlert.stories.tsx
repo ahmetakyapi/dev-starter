@@ -12,7 +12,7 @@ function DismissDemo() {
   return open ? (
     <BannerAlert
       tone="warning"
-      title="Deneme süreniz 4 gün sonra bitiyor"
+      title="Deneme Süreniz 4 Gün Sonra Bitiyor"
       description="Panolarınız silinmez; yalnızca düzenleme kapanır."
       actions={
         <Button variant="secondary" size="sm">
@@ -30,7 +30,7 @@ function DismissDemo() {
 
 const meta = {
   title: "Bileşenler/Geri Bildirim/Uyarı Satırı",
-  id: "components-feedback-banner-alert",
+  id: "banner-alert",
   component: BannerAlert,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -45,7 +45,7 @@ const meta = {
   },
   args: {
     tone: "info",
-    title: "Kur bilgisi TCMB'den 15.30'da güncellenir",
+    title: "Kur Bilgisi TCMB'den 15.30'da Güncellenir",
     description: "Gün içindeki dövizli işlemler önceki günün kuruyla gösterilir.",
     announce: false,
   },
@@ -71,10 +71,10 @@ export const FourTones: Story = {
   render: () => (
     <Frame width="lg">
       <div className="grid gap-3">
-        <BannerAlert tone="info" title="Kur bilgisi TCMB'den 15.30'da güncellenir" />
-        <BannerAlert tone="success" title="Ekim kapanışı tamamlandı" description="214 işlem eşleşti, fark yok." />
-        <BannerAlert tone="warning" title="Fatura adresi eksik" description="Kasım faturası adres girilene kadar kesilmeyecek." />
-        <BannerAlert tone="danger" title="Banka senkronu başarısız" description="Garanti BBVA bağlantısının süresi doldu." />
+        <BannerAlert tone="info" title="Kur Bilgisi TCMB'den 15.30'da Güncellenir" />
+        <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
+        <BannerAlert tone="warning" title="Fatura Adresi Eksik" description="Kasım faturası adres girilene kadar kesilmeyecek." />
+        <BannerAlert tone="danger" title="Banka Senkronu Başarısız" description="Garanti BBVA bağlantısının süresi doldu." />
       </div>
     </Frame>
   ),
@@ -84,7 +84,7 @@ export const WithAction: Story = {
   name: "Eylemli",
   args: {
     tone: "danger",
-    title: "Banka senkronu başarısız",
+    title: "Banka Senkronu Başarısız",
     description: "Garanti BBVA bağlantısının süresi doldu; son işlemler 28 Ekim'den beri gelmiyor.",
     actions: (
       <Button variant="secondary" size="sm">
@@ -104,15 +104,15 @@ export const Dismissible: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Uyarıyı Kapat" }));
-    await expect(canvas.queryByText("Deneme süreniz 4 gün sonra bitiyor")).not.toBeInTheDocument();
+    await expect(canvas.queryByText("Deneme Süreniz 4 Gün Sonra Bitiyor")).not.toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Uyarıyı Geri Getir" }));
-    await expect(canvas.getByText("Deneme süreniz 4 gün sonra bitiyor")).toBeInTheDocument();
+    await expect(canvas.getByText("Deneme Süreniz 4 Gün Sonra Bitiyor")).toBeInTheDocument();
   },
 };
 
 export const OnDismiss: Story = {
   name: "Kapatılınca Haber Verir",
-  args: { tone: "success", title: "Profil güncellendi", description: undefined, onDismiss: fn() },
+  args: { tone: "success", title: "Profil Güncellendi", description: undefined, onDismiss: fn() },
   play: async ({ canvasElement, args }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Uyarıyı Kapat" }));
     await expect(args.onDismiss).toHaveBeenCalledOnce();
@@ -123,7 +123,7 @@ export const LongText: Story = {
   name: "Uzun Metin",
   args: {
     tone: "warning",
-    title: "Kasım bordrosunda üç çalışanın SGK bildirgesi eksik olduğu için toplu ödeme bekletiliyor",
+    title: "Kasım Bordrosunda Üç Çalışanın SGK Bildirgesi Eksik Olduğu için Toplu Ödeme Bekletiliyor",
     description:
       "Ayşe Yılmaz, Mert Kaya ve Zeynep Demir için işe giriş bildirgesi yüklenmedi. Bildirgeler 15 Kasım'a kadar yüklenmezse ödeme bir sonraki döneme kayar ve gecikme cezası doğabilir.",
     actions: (
@@ -140,19 +140,19 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Bilgi, yalnız başlık" className="place-items-stretch">
-        <BannerAlert tone="info" title="Kur bilgisi TCMB'den 15.30'da güncellenir" />
+      <Cell label="Bilgi, Yalnız Başlık" className="place-items-stretch">
+        <BannerAlert tone="info" title="Kur Bilgisi TCMB'den 15.30'da Güncellenir" />
       </Cell>
-      <Cell label="Başarı, açıklamalı" className="place-items-stretch">
-        <BannerAlert tone="success" title="Ekim kapanışı tamamlandı" description="214 işlem eşleşti, fark yok." />
+      <Cell label="Başarı, Açıklamalı" className="place-items-stretch">
+        <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
       </Cell>
-      <Cell label="Uyarı, kapatılabilir" className="place-items-stretch">
-        <BannerAlert tone="warning" title="Deneme süreniz 4 gün sonra bitiyor" description="Düzenleme kapanır, veriler kalır." onDismiss={() => {}} />
+      <Cell label="Uyarı, Kapatılabilir" className="place-items-stretch">
+        <BannerAlert tone="warning" title="Deneme Süreniz 4 Gün Sonra Bitiyor" description="Düzenleme kapanır, veriler kalır." onDismiss={() => {}} />
       </Cell>
-      <Cell label="Hata, eylemli" className="place-items-stretch">
+      <Cell label="Hata, Eylemli" className="place-items-stretch">
         <BannerAlert
           tone="danger"
-          title="Banka senkronu başarısız"
+          title="Banka Senkronu Başarısız"
           description="Bağlantının süresi doldu."
           actions={
             <Button variant="secondary" size="sm">

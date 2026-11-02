@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "copy-button",
+  "type": "registry:ui",
+  "title": "Kopyala Düğmesi",
+  "description": "Panoya kopyala",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/copy-button.tsx",
+      "content": "\"use client\";\n\nimport { Check, Copy, X } from \"lucide-react\";\nimport { useEffect, useRef, useState, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Panoya kopyala. Sonuç İKİ yoldan söylenir: ikon değişir (gören için) ve\n * görünmez bir canlı bölge \"Kopyalandı\" der (ekran okuyucu için). Yalnızca\n * ikonun değişmesi, ekran okuyucu kullanıcısına hiçbir şey söylemez.\n *\n * Pano izni yoksa (güvensiz bağlam, iframe, reddedilmiş izin) sessizce\n * başarılı görünmez: \"Kopyalanamadı\" der. Dürüst geri bildirim.\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): ikon durum değişince yerinde döner:\n * eski ikon kaybolur, yenisi 0,85'ten ölçeklenip belirir (`key` her durumda\n * yeni öğe, giriş CSS anahtar karesiyle). Metinli düğme beyaz karo; ikon\n * düğme üzerine gelince yumuşak gri.\n *\n * `children` verilirse metinli düğme, verilmezse yalnızca ikon (44 piksel).\n */\n\n/** Onayın ekranda kalma süresi. */\nconst RESET_AFTER = 1600;\n\nconst POP = `@keyframes ui-pop { from { opacity: 0; scale: 0.85; } }`;\n\ntype Status = \"idle\" | \"copied\" | \"failed\";\n\ntype CopyButtonProps = {\n  value: string;\n  /** İkon düğmenin adı ve metinli düğmenin varsayılan metni. */\n  label?: string;\n  copiedLabel?: string;\n  failedLabel?: string;\n  children?: ReactNode;\n  className?: string;\n};\n\nexport function CopyButton({\n  value,\n  label = \"Kopyala\",\n  copiedLabel = \"Kopyalandı\",\n  failedLabel = \"Kopyalanamadı\",\n  children,\n  className,\n}: CopyButtonProps) {\n  const [status, setStatus] = useState<Status>(\"idle\");\n  const timer = useRef<number | undefined>(undefined);\n\n  useEffect(() => () => window.clearTimeout(timer.current), []);\n\n  async function copy() {\n    let next: Status = \"copied\";\n    try {\n      await navigator.clipboard.writeText(value);\n    } catch {\n      next = \"failed\";\n    }\n    setStatus(next);\n    window.clearTimeout(timer.current);\n    timer.current = window.setTimeout(() => setStatus(\"idle\"), RESET_AFTER);\n  }\n\n  const Glyph = status === \"copied\" ? Check : status === \"failed\" ? X : Copy;\n  const message = status === \"copied\" ? copiedLabel : status === \"failed\" ? failedLabel : \"\";\n  const iconOnly = children === undefined;\n\n  return (\n    <>\n      <style href=\"ui-copy-button\" precedence=\"default\">\n        {POP}\n      </style>\n      <button\n        type=\"button\"\n        onClick={copy}\n        aria-label={iconOnly ? label : undefined}\n        title={iconOnly ? label : undefined}\n        className={cn(\n          \"inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md text-body transition-[background-color,color,scale] duration-150 active:scale-95 [&_svg]:size-4\",\n          iconOnly ? \"min-w-11 hover:bg-surface-raised hover:text-strong pointer-fine:min-h-9 pointer-fine:min-w-9\" : \"border border-line bg-overlay px-3 text-small font-semibold shadow-raised hover:bg-surface hover:text-strong\",\n          status === \"copied\" && \"text-success hover:text-success\",\n          status === \"failed\" && \"text-danger hover:text-danger\",\n          className,\n        )}\n      >\n        <Glyph key={status} aria-hidden strokeWidth={1.75} className=\"animate-[ui-pop_200ms_var(--ease-brand)]\" />\n        {iconOnly ? null : status === \"idle\" ? children : message}\n      </button>\n      <span role=\"status\" className=\"sr-only\">\n        {message}\n      </span>\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "copy-button",
+    "palettes": false
+  }
+}

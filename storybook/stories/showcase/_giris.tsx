@@ -28,10 +28,10 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
         </div>
         <AuthCard
           action={signIn}
-          title={`${WORKSPACE.name} çalışma alanı`}
+          title={`${WORKSPACE.name} Çalışma Alanı`}
           description={`${OPEN_TICKETS.length} talep yanıt bekliyor. Ekip hesabınla gir.`}
           submitLabel="Giriş Yap"
-          pendingLabel="Giriş yapılıyor"
+          pendingLabel="Giriş Yapılıyor"
           className="w-full"
           footer={<span className="text-muted">Örnek hesap: {ME.email}, şifre en az 8 karakter.</span>}
         />

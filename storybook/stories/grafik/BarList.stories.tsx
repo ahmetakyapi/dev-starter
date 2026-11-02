@@ -20,7 +20,7 @@ const KANALLAR = [
 
 const meta = {
   title: "Grafikler/Çubuk Listesi",
-  id: "charts-bar-list",
+  id: "bar-list",
   component: BarList,
   tags: ["autodocs"],
   parameters: {

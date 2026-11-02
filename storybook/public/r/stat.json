@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stat",
+  "type": "registry:ui",
+  "title": "İstatistik",
+  "description": "Etiket + değer + değişim",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/stat.tsx",
+      "content": "import { ArrowDownRight, ArrowUpRight, Minus } from \"lucide-react\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Ölçü: etiket + değer + değişim. Sunucu bileşeni.\n *\n * RENK TEK AYIRT EDİCİ DEĞİL. Değişim üç kanaldan söylenir: işaret (+ / −),\n * ok ve renk. Renk körlüğü olan okuyucu ya da gri tonlu bir çıktı yönü yine\n * okur; ekran okuyucu \"artış\" / \"düşüş\" kelimesini duyar.\n *\n * Eksi işareti kısa çizgi değil gerçek eksi (U+2212): rakam genişliğinde,\n * `tabular-nums` sütununda hizayı bozmaz.\n *\n * `positiveIsGood={false}`: artışın kötü haber olduğu ölçülerde (gider,\n * hata oranı, gecikme) renk ters döner; işaret ve ok aynı kalır, çünkü onlar\n * yönü söyler, yargıyı değil.\n *\n * Her `Stat` bir `dt` + `dd` çifti: `StatGrid` (bir `dl`) içinde kullan;\n * ekran okuyucu etiketle değeri eşleşmiş okur.\n *\n * Değer ve birim ayrı (`unit`): birim küçük puntoda, sayıdan kopmasın diye\n * aralarında bölünmez boşluk.\n */\n\ntype StatProps = {\n  /** Title Case etiket: \"Aylık Gelir\". */\n  label: ReactNode;\n  /** Biçimlenmiş değer: \"1.240.000\". Biçimleme çağıranın işi (tr-TR). */\n  value: ReactNode;\n  unit?: ReactNode;\n  /** Yüzde değişim, ham sayı: 2.4 → \"+%2,4\". `null`: değişim yok. */\n  change?: number | null;\n  /** Değişimin neye göre olduğu: \"Geçen Aya Göre\". */\n  changeLabel?: ReactNode;\n  positiveIsGood?: boolean;\n  /** Ondalık basamak sayısı. */\n  digits?: number;\n  size?: \"md\" | \"lg\";\n  className?: string;\n};\n\nconst percent = (value: number, digits: number) =>\n  new Intl.NumberFormat(\"tr-TR\", { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(Math.abs(value));\n\nexport function Stat({\n  label,\n  value,\n  unit,\n  change,\n  changeLabel,\n  positiveIsGood = true,\n  digits = 1,\n  size = \"md\",\n  className,\n}: StatProps) {\n  const hasChange = typeof change === \"number\" && Number.isFinite(change);\n  const rounded = hasChange ? Number(change.toFixed(digits)) : 0;\n  const direction = rounded > 0 ? \"up\" : rounded < 0 ? \"down\" : \"flat\";\n  const good = direction === \"flat\" ? null : (direction === \"up\") === positiveIsGood;\n  const Glyph = direction === \"up\" ? ArrowUpRight : direction === \"down\" ? ArrowDownRight : Minus;\n  const sign = direction === \"up\" ? \"+\" : direction === \"down\" ? \"−\" : \"\";\n  const spoken = direction === \"up\" ? \"artış\" : direction === \"down\" ? \"düşüş\" : \"değişim yok\";\n\n  return (\n    <div className={cn(\"min-w-0\", className)}>\n      <dt className=\"text-small font-medium text-muted\">{label}</dt>\n      <dd className=\"mt-1.5\">\n        <span className={cn(\"font-semibold tracking-tight text-strong tabular-nums\", size === \"lg\" ? \"text-display\" : \"text-heading\")}>\n          {value}\n          {unit ? <span className=\"text-base font-medium text-muted\">{\" \"}{unit}</span> : null}\n        </span>\n        {hasChange ? (\n          <span className=\"mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-small\">\n            <span\n              className={cn(\n                \"inline-flex items-center gap-0.5 rounded-sm px-1.5 py-0.5 font-semibold tabular-nums\",\n                good === true && \"bg-success-wash text-success\",\n                good === false && \"bg-danger-wash text-danger\",\n                // text-body: text-muted bu zeminde 4,26–4,34:1 (AA altı, Storybook axe ölçtü)\n                good === null && \"bg-surface-raised text-body\",\n              )}\n            >\n              <Glyph aria-hidden className=\"size-3.5\" strokeWidth={2} />\n              <span className=\"sr-only\">{spoken}: </span>\n              {sign}%{percent(rounded, digits)}\n            </span>\n            {changeLabel ? <span className=\"text-muted\">{changeLabel}</span> : null}\n          </span>\n        ) : null}\n      </dd>\n    </div>\n  );\n}\n\n/**\n * Ölçü ızgarası: `dl`. Yan yana duran ölçüler AYNI HATTA biter (ızgara\n * satırı), sütun sayısı genişliğe göre.\n */\nexport function StatGrid({ children, className }: { children: ReactNode; className?: string }) {\n  return <dl className={cn(\"grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-[repeat(auto-fit,minmax(10rem,1fr))]\", className)}>{children}</dl>;\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "stat",
+    "palettes": false
+  }
+}

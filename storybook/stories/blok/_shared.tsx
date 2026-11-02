@@ -88,13 +88,13 @@ export function ShellCommands() {
 }
 
 export const PLAN: readonly PlanStep[] = [
-  { id: "oku", title: "Destek kayıtlarını oku" },
-  { id: "ayikla", title: "Yinelenen talepleri ayıkla" },
-  { id: "grupla", title: "Talepleri konuya göre grupla" },
-  { id: "sec", title: "En sık üç sorunu seç", detail: "1.284 talep içinde 41 konu kümesi karşılaştırılıyor" },
-  { id: "ornek", title: "Her sorun için örnek talep bul" },
-  { id: "yaz", title: "Özet raporu yaz" },
-  { id: "paylas", title: "Ekip için paylaşım taslağı hazırla" },
+  { id: "oku", title: "Destek Kayıtlarını Oku" },
+  { id: "ayikla", title: "Yinelenen Talepleri Ayıkla" },
+  { id: "grupla", title: "Talepleri Konuya Göre Grupla" },
+  { id: "sec", title: "En Sık Üç Sorunu Seç", detail: "1.284 talep içinde 41 konu kümesi karşılaştırılıyor" },
+  { id: "ornek", title: "Her Sorun için Örnek Talep Bul" },
+  { id: "yaz", title: "Özet Raporu Yaz" },
+  { id: "paylas", title: "Ekip için Paylaşım Taslağı Hazırla" },
 ];
 export const PLAN_LABELS = PLAN.map((step) => String(step.title));
 

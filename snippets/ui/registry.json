@@ -1,0 +1,1722 @@
+{
+  "$comment": "ÜRETİLDİ — elle düzenleme. Kaynak: snippets/ui/*.tsx + README kataloğu + storybook hikâye kimlikleri. Üreten: npm run registry:ui",
+  "name": "dev-starter-ui",
+  "homepage": "https://dev-starter-storybook.vercel.app",
+  "shadcnBase": "https://dev-starter-storybook.vercel.app/r",
+  "install": {
+    "addUi": "node ~/dev-starter/scripts/add-ui.mjs <proje> <ad...>",
+    "shadcn": "npx shadcn@latest add https://dev-starter-storybook.vercel.app/r/<ad>.json"
+  },
+  "items": [
+    {
+      "name": "accordion",
+      "title": "Açılır Bölümler",
+      "category": "Form ve Gezinme",
+      "description": "SSS, katlanır bölüm",
+      "file": "snippets/ui/accordion.tsx",
+      "client": true,
+      "storyId": "accordion",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "activity-rings",
+      "title": "Aktivite Halkaları",
+      "category": "Grafik",
+      "description": "Her ölçü kendi hedefine göre tam tur; %100 aşılırsa ikinci tur",
+      "file": "snippets/ui/activity-rings.tsx",
+      "client": true,
+      "storyId": "activity-rings",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "agent-plan",
+      "title": "Asistan Planı",
+      "category": "Bloklar",
+      "description": "Ajanın çok adımlı planının kuşbakışı",
+      "file": "snippets/ui/agent-plan.tsx",
+      "client": false,
+      "storyId": "agent-plan",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "announcement",
+      "title": "Duyuru",
+      "category": "Form ve Gezinme",
+      "description": "Kahraman üstü duyuru hapı; kapatılabilir varyant",
+      "file": "snippets/ui/announcement.tsx",
+      "client": true,
+      "storyId": "announcement",
+      "registryDependencies": [
+        "close-button"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "app-shell",
+      "title": "Uygulama Kabuğu",
+      "category": "Bloklar",
+      "description": "Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik",
+      "file": "snippets/ui/app-shell.tsx",
+      "client": true,
+      "storyId": "app-shell",
+      "registryDependencies": [
+        "avatar",
+        "command-palette",
+        "kbd",
+        "sheet"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "area-chart",
+      "title": "Alan Grafiği",
+      "category": "Grafik",
+      "description": "Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon",
+      "file": "snippets/ui/area-chart.tsx",
+      "client": true,
+      "storyId": "area-chart",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "auth-card",
+      "title": "Giriş Kartı",
+      "category": "Bloklar",
+      "description": "Giriş/kayıt kartı, sunucu eylemine bağlanır",
+      "file": "snippets/ui/auth-card.tsx",
+      "client": true,
+      "storyId": "auth-card",
+      "registryDependencies": [
+        "spinner"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "avatar",
+      "title": "Avatar",
+      "category": "Form ve Gezinme",
+      "description": "Görsel + baş harf yedeği",
+      "file": "snippets/ui/avatar.tsx",
+      "client": true,
+      "storyId": "avatar",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "badge",
+      "title": "Rozet",
+      "category": "Form ve Gezinme",
+      "description": "Durum/kategori etiketi",
+      "file": "snippets/ui/badge.tsx",
+      "client": false,
+      "storyId": "badge",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "banner-alert",
+      "title": "Uyarı Satırı",
+      "category": "Geri Bildirim",
+      "description": "Sayfa içi durum satırı, 4 ton",
+      "file": "snippets/ui/banner-alert.tsx",
+      "client": false,
+      "storyId": "banner-alert",
+      "registryDependencies": [
+        "close-button"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "bar-list",
+      "title": "Çubuk Listesi",
+      "category": "Grafik",
+      "description": "Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu",
+      "file": "snippets/ui/bar-list.tsx",
+      "client": true,
+      "storyId": "bar-list",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "breadcrumb",
+      "title": "Gezinti Yolu",
+      "category": "Form ve Gezinme",
+      "description": "Konum çubuğu",
+      "file": "snippets/ui/breadcrumb.tsx",
+      "client": false,
+      "storyId": "breadcrumb",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "button-group",
+      "title": "Düğme Grubu",
+      "category": "Düğme ve İkon",
+      "description": "Bağlı düğmeler",
+      "file": "snippets/ui/button-group.tsx",
+      "client": false,
+      "storyId": "button-group",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "carousel",
+      "title": "Kart Kaydırıcı",
+      "category": "Form ve Gezinme",
+      "description": "Yan yana kaydırılan kartlar",
+      "file": "snippets/ui/carousel.tsx",
+      "client": true,
+      "storyId": "carousel",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "chart-card",
+      "title": "Grafik Kartı",
+      "category": "Grafik",
+      "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları",
+      "file": "snippets/ui/chart-card.tsx",
+      "client": false,
+      "storyId": "chart-card",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "chat-composer",
+      "title": "Mesaj Kutusu",
+      "category": "Bloklar",
+      "description": "Sohbet giriş kutusu",
+      "file": "snippets/ui/chat-composer.tsx",
+      "client": true,
+      "storyId": "chat-composer",
+      "registryDependencies": [
+        "dropdown-menu"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "chat-thread",
+      "title": "Mesaj Akışı",
+      "category": "Bloklar",
+      "description": "Mesaj akışı, düşünüyor göstergesi, boş durum",
+      "file": "snippets/ui/chat-thread.tsx",
+      "client": true,
+      "storyId": "chat-thread",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "checkbox",
+      "title": "Onay Kutusu",
+      "category": "Form ve Gezinme",
+      "description": "Onay, çoklu seçim",
+      "file": "snippets/ui/checkbox.tsx",
+      "client": false,
+      "storyId": "checkbox",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "chip",
+      "title": "Süzgeç Etiketi",
+      "category": "Düğme ve İkon",
+      "description": "`FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup`",
+      "file": "snippets/ui/chip.tsx",
+      "client": false,
+      "storyId": "chip",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "close-button",
+      "title": "Kapat Düğmesi",
+      "category": "Düğme ve İkon",
+      "description": "Diyalog, uyarı, çip, duyuru kapatma",
+      "file": "snippets/ui/close-button.tsx",
+      "client": false,
+      "storyId": "close-button",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "color-picker",
+      "title": "Renk Seçici",
+      "category": "Form Girişleri",
+      "description": "Kullanıcının kendi rengi (etiket, kategori)",
+      "file": "snippets/ui/color-picker.tsx",
+      "client": true,
+      "storyId": "color-picker",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "combo-chart",
+      "title": "Birleşik Grafik",
+      "category": "Grafik",
+      "description": "Birimi farklı iki ölçü: sütun hacmi (sol eksen) ve çizgi oranı (sağ eksen)",
+      "file": "snippets/ui/combo-chart.tsx",
+      "client": true,
+      "storyId": "combo-chart",
+      "registryDependencies": [
+        "chart-card",
+        "area-chart"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "combobox",
+      "title": "Aramalı Seçim",
+      "category": "Form ve Gezinme",
+      "description": "Çok seçenek, aranır",
+      "file": "snippets/ui/combobox.tsx",
+      "client": true,
+      "storyId": "combobox",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "command-palette",
+      "title": "Komut Paleti",
+      "category": "Katmanlar",
+      "description": "⌘K / Ctrl+K komut paleti",
+      "file": "snippets/ui/command-palette.tsx",
+      "client": true,
+      "storyId": "command-palette",
+      "registryDependencies": [
+        "kbd"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "context-menu",
+      "title": "Bağlam Menüsü",
+      "category": "Katmanlar",
+      "description": "Nesne üstünde sağ tık / uzun basma eylemleri",
+      "file": "snippets/ui/context-menu.tsx",
+      "client": true,
+      "storyId": "context-menu",
+      "registryDependencies": [
+        "kbd"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "copy-button",
+      "title": "Kopyala Düğmesi",
+      "category": "Düğme ve İkon",
+      "description": "Panoya kopyala",
+      "file": "snippets/ui/copy-button.tsx",
+      "client": true,
+      "storyId": "copy-button",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "data-table",
+      "title": "Veri Tablosu",
+      "category": "Veri",
+      "description": "Sıralanabilir tablo, karşılaştırma çubuğu",
+      "file": "snippets/ui/data-table.tsx",
+      "client": false,
+      "storyId": "data-table",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "date-calendar",
+      "title": "Takvim",
+      "category": "Form Girişleri",
+      "description": "Satır içi ay takvimi; tek gün ya da aralık",
+      "file": "snippets/ui/date-calendar.tsx",
+      "client": true,
+      "storyId": "date-calendar",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "date-picker",
+      "title": "Tarih Seçici",
+      "category": "Form Girişleri",
+      "description": "Formda tarih alanı + açılır takvim",
+      "file": "snippets/ui/date-picker.tsx",
+      "client": true,
+      "storyId": "date-picker",
+      "registryDependencies": [
+        "date-calendar",
+        "popover"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "dialog",
+      "title": "İletişim Penceresi",
+      "category": "Katmanlar",
+      "description": "Onay, kısa form, yıkıcı eylem",
+      "file": "snippets/ui/dialog.tsx",
+      "client": true,
+      "storyId": "dialog",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "divider",
+      "title": "Ayırıcı",
+      "category": "Geri Bildirim",
+      "description": "Yatay / dikey / etiketli (\"ya da\") ayırıcı",
+      "file": "snippets/ui/divider.tsx",
+      "client": false,
+      "storyId": "divider",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "dropdown-menu",
+      "title": "Açılır Menü",
+      "category": "Katmanlar",
+      "description": "Eylem menüsü",
+      "file": "snippets/ui/dropdown-menu.tsx",
+      "client": true,
+      "storyId": "dropdown-menu",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "empty-state",
+      "title": "Boş Durum",
+      "category": "Form ve Gezinme",
+      "description": "Boş durum: ikon / sahne / satır",
+      "file": "snippets/ui/empty-state.tsx",
+      "client": false,
+      "storyId": "empty-state",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "file-dropzone",
+      "title": "Dosya Bırakma Alanı",
+      "category": "Form ve Gezinme",
+      "description": "Dosya yükleme",
+      "file": "snippets/ui/file-dropzone.tsx",
+      "client": true,
+      "storyId": "file-dropzone",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "funnel-chart",
+      "title": "Huni Grafiği",
+      "category": "Grafik",
+      "description": "Daralan aşamalar (`curve`/`step`), sütun başına yüzde hapı, altta lejant",
+      "file": "snippets/ui/funnel-chart.tsx",
+      "client": true,
+      "storyId": "funnel-chart",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "gauge-chart",
+      "title": "Yarım Daire Grafiği",
+      "category": "Grafik",
+      "description": "Bütünün 2-4 parçası ya da tek doluluk (`max`); yarım daire, ortada büyük yüzde",
+      "file": "snippets/ui/gauge-chart.tsx",
+      "client": true,
+      "storyId": "gauge-chart",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "heatmap",
+      "title": "Isı Haritası",
+      "category": "Grafik",
+      "description": "Günlük bir sayının haftalar × günler ritmi, 5 basamak, Az ↔ Çok",
+      "file": "snippets/ui/heatmap.tsx",
+      "client": true,
+      "storyId": "heatmap",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "hover-card",
+      "title": "Önizleme Kartı",
+      "category": "Katmanlar",
+      "description": "Bağlantının önizlemesi (@ad, atanan kişi): `HoverCard` + `ProfilePreview`",
+      "file": "snippets/ui/hover-card.tsx",
+      "client": true,
+      "storyId": "hover-card",
+      "registryDependencies": [
+        "avatar"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "icon",
+      "title": "İkon",
+      "category": "Düğme ve İkon",
+      "description": "lucide ikonu, tek boyut ölçeği",
+      "file": "snippets/ui/icon.tsx",
+      "client": false,
+      "storyId": "icon",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "icon-button",
+      "title": "İkon Düğmesi",
+      "category": "Düğme ve İkon",
+      "description": "Yalnız ikonlu düğme",
+      "file": "snippets/ui/icon-button.tsx",
+      "client": false,
+      "storyId": "icon-button",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "input",
+      "title": "Metin Girişi",
+      "category": "Form Girişleri",
+      "description": "Tek satır metin; ikon, önek/sonek (₺, .com), temizle, şifre göster/gizle; sm/md/lg",
+      "file": "snippets/ui/input.tsx",
+      "client": true,
+      "storyId": "input",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "input-otp",
+      "title": "Doğrulama Kodu",
+      "category": "Form Girişleri",
+      "description": "Sabit uzunlukta tek kullanımlık kod",
+      "file": "snippets/ui/input-otp.tsx",
+      "client": true,
+      "storyId": "input-otp",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "kanban-board",
+      "title": "Kanban Panosu",
+      "category": "Verimlilik",
+      "description": "Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih",
+      "file": "snippets/ui/kanban-board.tsx",
+      "client": true,
+      "storyId": "kanban-board",
+      "registryDependencies": [
+        "avatar",
+        "badge"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "kbd",
+      "title": "Klavye Tuşu",
+      "category": "Düğme ve İkon",
+      "description": "Klavye tuşu, kısayol",
+      "file": "snippets/ui/kbd.tsx",
+      "client": false,
+      "storyId": "kbd",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "line-chart",
+      "title": "Çizgi Grafiği",
+      "category": "Grafik",
+      "description": "Sıralı eksende 2-5 seriyi kıyaslamak; kesik tahmin, hedef çizgisi, lejant süzgeç",
+      "file": "snippets/ui/line-chart.tsx",
+      "client": true,
+      "storyId": "line-chart",
+      "registryDependencies": [
+        "chart-card",
+        "area-chart"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "loading-mark",
+      "title": "Yükleme Halkası",
+      "category": "Yükleme",
+      "description": "Sayfa/kart düzeyinde bekleme, marka halkası",
+      "file": "snippets/ui/loading-mark.tsx",
+      "client": false,
+      "storyId": "loading-mark",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "meter",
+      "title": "Ölçer",
+      "category": "Geri Bildirim",
+      "description": "`Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım",
+      "file": "snippets/ui/meter.tsx",
+      "client": true,
+      "storyId": "meter",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "notification-center",
+      "title": "Bildirim Merkezi",
+      "category": "Katmanlar",
+      "description": "Üst çubukta zil + bildirim listesi",
+      "file": "snippets/ui/notification-center.tsx",
+      "client": true,
+      "storyId": "notification-center",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "number-field",
+      "title": "Sayı Alanı",
+      "category": "Form Girişleri",
+      "description": "Kesin küçük sayı (adet, kişi), tr-TR biçim",
+      "file": "snippets/ui/number-field.tsx",
+      "client": true,
+      "storyId": "number-field",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "pagination",
+      "title": "Sayfalama",
+      "category": "Veri",
+      "description": "Adreste sayfa numarası",
+      "file": "snippets/ui/pagination.tsx",
+      "client": false,
+      "storyId": "pagination",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "palette-switcher",
+      "title": "Palet Seçici",
+      "category": "Bloklar",
+      "description": "Alttan yüzen palet seçici + açık/koyu anahtarı; vitrin, tema denemesi",
+      "file": "snippets/ui/palette-switcher.tsx",
+      "client": true,
+      "storyId": "palette-switcher",
+      "registryDependencies": [],
+      "templateFiles": [
+        "app/palettes.css",
+        "components/ui/ThemeToggle.tsx",
+        "lib/theme.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": true
+    },
+    {
+      "name": "popover",
+      "title": "Açılır Kart",
+      "category": "Katmanlar",
+      "description": "Sayfayı kilitlemeyen küçük kutu",
+      "file": "snippets/ui/popover.tsx",
+      "client": true,
+      "storyId": "popover",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "progress",
+      "title": "İlerleme",
+      "category": "Geri Bildirim",
+      "description": "Bir işin ilerlemesi (belirli/belirsiz)",
+      "file": "snippets/ui/progress.tsx",
+      "client": true,
+      "storyId": "progress",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "radar-chart",
+      "title": "Radar Grafiği",
+      "category": "Grafik",
+      "description": "5-8 ölçütte 1-2 profil",
+      "file": "snippets/ui/radar-chart.tsx",
+      "client": true,
+      "storyId": "radar-chart",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "radio-group",
+      "title": "Seçenek Grubu",
+      "category": "Form ve Gezinme",
+      "description": "2-6 görünür seçenek",
+      "file": "snippets/ui/radio-group.tsx",
+      "client": false,
+      "storyId": "radio-group",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "rating",
+      "title": "Puanlama",
+      "category": "Form Girişleri",
+      "description": "`Rating` gösterim (yarım yıldız) · `RatingInput` giriş (isteğe bağlı yarım adım)",
+      "file": "snippets/ui/rating.tsx",
+      "client": true,
+      "storyId": "rating",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "ring-chart",
+      "title": "Halka Grafiği",
+      "category": "Grafik",
+      "description": "2-5 kategorinin iç içe halkası, ortada değer",
+      "file": "snippets/ui/ring-chart.tsx",
+      "client": false,
+      "storyId": "ring-chart",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "route-progress",
+      "title": "Sayfa Yükleme Çubuğu",
+      "category": "Yükleme",
+      "description": "Kök layout'ta gezinme göstergesi",
+      "file": "snippets/ui/route-progress.tsx",
+      "client": true,
+      "storyId": "route-progress",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "sankey-chart",
+      "title": "Akış Grafiği",
+      "category": "Grafik",
+      "description": "İki katmanlı akış (kaynak → hedef), sağda \"Ad · %22\", düğüm/akış yalıtma",
+      "file": "snippets/ui/sankey-chart.tsx",
+      "client": true,
+      "storyId": "sankey-chart",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "scatter-chart",
+      "title": "Saçılım Grafiği",
+      "category": "Grafik",
+      "description": "İki ölçünün ilişkisi; nokta boyu üçüncü ölçü (√ alan), renk kategori",
+      "file": "snippets/ui/scatter-chart.tsx",
+      "client": true,
+      "storyId": "scatter-chart",
+      "registryDependencies": [
+        "chart-card",
+        "line-chart"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "search-field",
+      "title": "Arama Alanı",
+      "category": "Form Girişleri",
+      "description": "Liste süzme, site araması: gecikmeli `onSearch`, yükleniyor, \"/\" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch`",
+      "file": "snippets/ui/search-field.tsx",
+      "client": true,
+      "storyId": "search-field",
+      "registryDependencies": [
+        "kbd",
+        "spinner"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "segmented-control",
+      "title": "Bölmeli Seçici",
+      "category": "Düğme ve İkon",
+      "description": "2-5 seçenekten biri, anında etki",
+      "file": "snippets/ui/segmented-control.tsx",
+      "client": true,
+      "storyId": "segmented-control",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "select",
+      "title": "Açılır Liste",
+      "category": "Form ve Gezinme",
+      "description": "5-15 seçenek, dar yer",
+      "file": "snippets/ui/select.tsx",
+      "client": true,
+      "storyId": "select",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "settings-dialog",
+      "title": "Ayarlar Penceresi",
+      "category": "Bloklar",
+      "description": "Sayfadan çıkmadan, anında etki eden ayarlar penceresi",
+      "file": "snippets/ui/settings-dialog.tsx",
+      "client": true,
+      "storyId": "settings-dialog",
+      "registryDependencies": [
+        "dialog"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "sheet",
+      "title": "Yan Panel",
+      "category": "Katmanlar",
+      "description": "Telefonda alttan çekmece, masaüstünde yan panel",
+      "file": "snippets/ui/sheet.tsx",
+      "client": true,
+      "storyId": "sheet",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "skeleton",
+      "title": "İskelet Yükleyici",
+      "category": "Yükleme",
+      "description": "Gelecek içeriğin şeklinde iskelet",
+      "file": "snippets/ui/skeleton.tsx",
+      "client": false,
+      "storyId": "skeleton",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "slider",
+      "title": "Kaydırıcı",
+      "category": "Form Girişleri",
+      "description": "Aralıkta yaklaşık değer; tek tutamak ya da aralık",
+      "file": "snippets/ui/slider.tsx",
+      "client": true,
+      "storyId": "slider",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "sparkline",
+      "title": "Mini Grafik",
+      "category": "Veri",
+      "description": "Eksensiz mini eğri",
+      "file": "snippets/ui/sparkline.tsx",
+      "client": false,
+      "storyId": "sparkline",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "spinner",
+      "title": "Dönen Gösterge",
+      "category": "Yükleme",
+      "description": "Satır içi, düğme içi kısa bekleme",
+      "file": "snippets/ui/spinner.tsx",
+      "client": false,
+      "storyId": "spinner",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "stage-bars",
+      "title": "Aşama Çubukları",
+      "category": "Grafik",
+      "description": "Huni aşamaları, iz üstünde hap çubuk",
+      "file": "snippets/ui/stage-bars.tsx",
+      "client": false,
+      "storyId": "stage-bars",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "stat",
+      "title": "İstatistik",
+      "category": "Veri",
+      "description": "Etiket + değer + değişim",
+      "file": "snippets/ui/stat.tsx",
+      "client": false,
+      "storyId": "stat",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "stepper",
+      "title": "Adım Göstergesi",
+      "category": "Form ve Gezinme",
+      "description": "Çok adımlı akışta konum",
+      "file": "snippets/ui/stepper.tsx",
+      "client": false,
+      "storyId": "stepper",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "switch",
+      "title": "Aç-Kapa Düğmesi",
+      "category": "Form ve Gezinme",
+      "description": "Anında etki eden aç/kapa",
+      "file": "snippets/ui/switch.tsx",
+      "client": false,
+      "storyId": "switch",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tabs",
+      "title": "Sekmeler",
+      "category": "Form ve Gezinme",
+      "description": "`Tabs`: sayfa içi · `TabLinks`: ayrı adresler",
+      "file": "snippets/ui/tabs.tsx",
+      "client": true,
+      "storyId": "tabs",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tag-input",
+      "title": "Etiket Girişi",
+      "category": "Form Girişleri",
+      "description": "Serbest ya da önerili çoklu etiket",
+      "file": "snippets/ui/tag-input.tsx",
+      "client": true,
+      "storyId": "tag-input",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "task-list",
+      "title": "Görev Listesi",
+      "category": "Verimlilik",
+      "description": "Görev listesi: onay, öncelik, son tarih, alt görevler, tamamlananları gizle, satır içi ekleme",
+      "file": "snippets/ui/task-list.tsx",
+      "client": true,
+      "storyId": "task-list",
+      "registryDependencies": [
+        "checkbox"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "textarea",
+      "title": "Metin Alanı",
+      "category": "Form Girişleri",
+      "description": "Çok satırlı metin, içeriğe göre büyür",
+      "file": "snippets/ui/textarea.tsx",
+      "client": true,
+      "storyId": "textarea",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "time-field",
+      "title": "Saat Alanı",
+      "category": "Form Girişleri",
+      "description": "24 saatlik SS:DD",
+      "file": "snippets/ui/time-field.tsx",
+      "client": true,
+      "storyId": "time-field",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "timeline",
+      "title": "Zaman Çizelgesi",
+      "category": "Form ve Gezinme",
+      "description": "Tarihli olaylar",
+      "file": "snippets/ui/timeline.tsx",
+      "client": false,
+      "storyId": "timeline",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "toast",
+      "title": "Bildirim",
+      "category": "Geri Bildirim",
+      "description": "Eylem sonucu bildirimi: `<Toaster />` + `toast.success/error/warning/info/undo/promise`",
+      "file": "snippets/ui/toast.tsx",
+      "client": true,
+      "storyId": "toast",
+      "registryDependencies": [
+        "spinner"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "toggle-group",
+      "title": "Aç-Kapa Grubu",
+      "category": "Düğme ve İkon",
+      "description": "Basılı/basılı değil düğmeler: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost`",
+      "file": "snippets/ui/toggle-group.tsx",
+      "client": true,
+      "storyId": "toggle-group",
+      "registryDependencies": [
+        "kbd",
+        "tooltip"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tooltip",
+      "title": "Araç İpucu",
+      "category": "Katmanlar",
+      "description": "`Tooltip`: görsel etiket · `InfoTip`: açıklama",
+      "file": "snippets/ui/tooltip.tsx",
+      "client": true,
+      "storyId": "tooltip",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "track-bar-chart",
+      "title": "Sütun Grafiği",
+      "category": "Grafik",
+      "description": "Sıralı tek seri (ay, gün), iz üstünde sütun",
+      "file": "snippets/ui/track-bar-chart.tsx",
+      "client": false,
+      "storyId": "bar-chart",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tree-table",
+      "title": "Ağaç Tablo",
+      "category": "Veri",
+      "description": "Açılır satırlı tablo",
+      "file": "snippets/ui/tree-table.tsx",
+      "client": true,
+      "storyId": "tree-table",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tree-view",
+      "title": "Ağaç Görünümü",
+      "category": "Veri",
+      "description": "Klasör/kategori ağacı",
+      "file": "snippets/ui/tree-view.tsx",
+      "client": true,
+      "storyId": "tree-view",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "week-calendar",
+      "title": "Haftalık Takvim",
+      "category": "Verimlilik",
+      "description": "Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste",
+      "file": "snippets/ui/week-calendar.tsx",
+      "client": true,
+      "storyId": "week-calendar",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    }
+  ]
+}

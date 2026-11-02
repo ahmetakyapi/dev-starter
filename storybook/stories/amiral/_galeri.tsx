@@ -5,6 +5,10 @@
 import {
   Bean,
   Bell,
+  Bold,
+  Italic,
+  Underline,
+  Search,
   Coffee,
   FileText,
   Flame,
@@ -65,9 +69,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FileDropzone } from "@/components/ui/file-dropzone";
+import { HoverCard, ProfilePreview } from "@/components/ui/hover-card";
 import { Icon } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
+import { Input } from "@/components/ui/input";
 import { InputOTP } from "@/components/ui/input-otp";
+import { KanbanBoard, type KanbanColumn } from "@/components/ui/kanban-board";
 import { Kbd, KbdCombo } from "@/components/ui/kbd";
 import { LoadingMark } from "@/components/ui/loading-mark";
 import { Meter, SegmentedMeter } from "@/components/ui/meter";
@@ -77,7 +84,9 @@ import { Pagination } from "@/components/ui/pagination";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup } from "@/components/ui/radio-group";
+import { Rating, RatingInput } from "@/components/ui/rating";
 import { startRouteProgress, stopRouteProgress } from "@/components/ui/route-progress";
+import { HighlightMatch, SearchField, matchesTr } from "@/components/ui/search-field";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
@@ -90,13 +99,18 @@ import { Stepper } from "@/components/ui/stepper";
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
 import { TagInput } from "@/components/ui/tag-input";
+import { TaskList, type Task } from "@/components/ui/task-list";
 import { Textarea } from "@/components/ui/textarea";
 import { TimeField } from "@/components/ui/time-field";
 import { Timeline } from "@/components/ui/timeline";
+import { Toaster, toast } from "@/components/ui/toast";
+import { ToggleGroup } from "@/components/ui/toggle-group";
 import { InfoTip, Tooltip } from "@/components/ui/tooltip";
 import { TreeTable } from "@/components/ui/tree-table";
 import { TreeView } from "@/components/ui/tree-view";
+import { WeekCalendar, type CalendarEvent } from "@/components/ui/week-calendar";
 import {
+  BRAND,
   CAFES,
   NOTIFICATIONS,
   OCTOBER_ORDERS,
@@ -107,6 +121,7 @@ import {
   ROAST_TOTAL,
   ROAST_WEEK,
   SUBSCRIBERS,
+  ME,
   TEAM,
   change,
   fromK,
@@ -115,6 +130,7 @@ import {
   type Order,
   type OrderStatus,
 } from "./_data";
+import { cn } from "@/lib/utils";
 import { Cell, CellGrid, GroupHead } from "./_ui";
 
 const NOV = (d: number) => new Date(2026, 10, d);
@@ -245,7 +261,7 @@ function TemelGroup() {
           <Button variant="secondary" size="sm">
             Mağazadan Teslim Al
           </Button>
-          <Divider label="ya da" />
+          <Divider label="Ya da" />
           <div className="flex h-8 items-center justify-center gap-3 text-small text-muted">
             <span>Kargo</span>
             <Divider orientation="vertical" />
@@ -266,8 +282,13 @@ const ORIGINS = ["Brezilya", "Burundi", "El Salvador", "Endonezya", "Etiyopya", 
   label: c,
 }));
 
+type Format = "kalin" | "italik" | "alti";
+
 function SecimGroup() {
   const [roast, setRoast] = useState<"acik" | "orta" | "koyu">("orta");
+  const [query, setQuery] = useState("");
+  const [format, setFormat] = useState<Format[]>(["kalin"]);
+  const found = ORDERS.filter((o) => matchesTr(`${o.id} ${o.customer}`, query, { fold: true }));
   const [filters, setFilters] = useState<Record<string, boolean>>({ Yolda: true, Gecikti: true, Teslim: false });
   const [notes, setNotes] = useState(["Çikolata", "Fındık", "Karamel"]);
   const partial = useRef<HTMLInputElement>(null);
@@ -350,6 +371,50 @@ function SecimGroup() {
               </Button>
             ) : null}
           </ChipGroup>
+        </div>
+      </Cell>
+      <Cell file="search-field" name="Arama Alanı" note="Gecikmeli arama, “/” kısayolu; “alsancak” yazınca Alsancak bulunur." span={3} align="stretch">
+        <div className="mx-auto grid w-full max-w-sm gap-3">
+          <SearchField label="Sipariş Ara" placeholder="Müşteri ya da sipariş no" shortcut="/" debounce={150} onSearch={setQuery} resultCount={found.length} />
+          <ul className="grid gap-1.5" aria-label="Arama Sonuçları">
+            {found.slice(0, 3).map((o) => (
+              <li key={o.id} className="flex items-center justify-between gap-3 rounded-xl bg-overlay px-4 py-2.5 shadow-raised">
+                <span className="min-w-0 truncate text-base text-strong">
+                  <HighlightMatch text={o.customer} query={query} fold />
+                </span>
+                <span className="shrink-0 font-mono text-small text-muted">
+                  <HighlightMatch text={o.id} query={query} fold />
+                </span>
+              </li>
+            ))}
+            {found.length === 0 ? <li className="rounded-xl bg-overlay px-4 py-2.5 text-small text-muted shadow-raised">Bu aramaya uyan sipariş yok.</li> : null}
+          </ul>
+        </div>
+      </Cell>
+      <Cell file="toggle-group" name="Aç-Kapa Grubu" note="Her düğme basılı ya da değil; hiçbiri de geçerli. İkonun adı ipucunda." span={3}>
+        <div className="mx-auto grid max-w-sm gap-4">
+          <ToggleGroup<Format>
+            aria-label="Metin Biçimi"
+            multiple
+            value={format}
+            onValueChange={setFormat}
+            className="justify-self-start"
+            items={[
+              { value: "kalin", label: "Kalın", icon: Bold, iconOnly: true, shortcut: ["⌘", "B"] },
+              { value: "italik", label: "İtalik", icon: Italic, iconOnly: true, shortcut: ["⌘", "I"] },
+              { value: "alti", label: "Altı Çizili", icon: Underline, iconOnly: true, shortcut: ["⌘", "U"] },
+            ]}
+          />
+          <p
+            className={cn(
+              "rounded-xl bg-overlay px-4 py-3 text-base text-body shadow-raised",
+              format.includes("kalin") && "font-semibold text-strong",
+              format.includes("italik") && "italic",
+              format.includes("alti") && "underline underline-offset-4",
+            )}
+          >
+            Etiket notu: şeftali ve yasemin, açık kavrum.
+          </p>
         </div>
       </Cell>
     </CellGrid>
@@ -452,6 +517,27 @@ function FormGroup() {
       <Cell file="file-dropzone" name="Dosya Bırakma Alanı" note="Klavyeyle açılır; reddedilen dosya nedeniyle okunur.">
         <FileDropzone label="Yeşil Çekirdek Faturası" />
       </Cell>
+      <Cell file="input" name="Metin Girişi" note="Alanın içinde ikon, önek, sonek ve temizle; anlamı etiket taşır." span={3}>
+        <div className="mx-auto grid max-w-sm gap-5">
+          <Input label="Ürün Adı" defaultValue="Etiyopya Guji" clearable hint="Kasım kahvesi, mağazada bu adla görünür." />
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Input label="Paket Fiyatı (₺)" prefix="₺" inputMode="decimal" defaultValue="360" />
+            <Input label="Net Ağırlık" suffix="g" inputMode="numeric" defaultValue="250" />
+          </div>
+        </div>
+      </Cell>
+      <Cell file="rating" name="Yıldız Puanı" note="Gösterim tek bir adla okunur; giriş yerel radyo, oklarla gezilir." span={3}>
+        <div className="mx-auto grid max-w-sm gap-5">
+          <div className="flex items-center justify-between gap-4 rounded-xl bg-overlay px-4 py-3 shadow-raised">
+            <span className="min-w-0">
+              <span className="block truncate text-base font-semibold text-strong">Etiyopya Yirgacheffe</span>
+              <span className="block text-small text-muted">Web mağaza yorumları</span>
+            </span>
+            <Rating value={4.7} count={128} showValue size="sm" />
+          </div>
+          <RatingInput label="Bu Kahveyi Puanla" name="puan" defaultValue={4} labels={["Hiç Beğenmedim", "Beğenmedim", "Fena Değil", "Beğendim", "Bayıldım"]} />
+        </div>
+      </Cell>
     </CellGrid>
   );
 }
@@ -477,7 +563,7 @@ function KatmanGroup() {
   const [items, setItems] = useState<NotificationItem[]>(() => NOTIFICATIONS.map((n) => ({ ...n })));
   return (
     <CellGrid>
-      <Cell file="dropdown-menu" name="Açılır Menü" note="Oklar, Home/End, harfle atlama; yıkıcı öğe ayrı grupta." span={3}>
+      <Cell file="dropdown-menu" name="Açılır Menü" note="Oklar, Home/End, harfle atlama; yıkıcı öğe ayrı grupta.">
         <ContextTile title="KK-3192 · Alsancak Demlik" meta="24 kg Kıyı Harmanı · ₺15.840">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger render={<Button variant="secondary" size="sm" />}>Eylemler</DropdownMenuTrigger>
@@ -500,7 +586,7 @@ function KatmanGroup() {
           </DropdownMenu>
         </ContextTile>
       </Cell>
-      <Cell file="context-menu" name="Bağlam Menüsü" note="Sağ tık ya da uzun basma; kısayollar ve ayrı yıkıcı grup." span={3}>
+      <Cell file="context-menu" name="Bağlam Menüsü" note="Sağ tık ya da uzun basma; kısayollar ve ayrı yıkıcı grup.">
         <ContextMenu>
           <ContextMenuTrigger className="mx-auto block w-full max-w-72 rounded-xl bg-overlay p-3 shadow-raised outline-none select-none focus-visible:outline-2 focus-visible:outline-line-focus">
             <div className="grid aspect-[16/7] place-items-center rounded-xl bg-chart-1/25">
@@ -524,8 +610,27 @@ function KatmanGroup() {
           </ContextMenuContent>
         </ContextMenu>
       </Cell>
+      <Cell file="hover-card" name="Önizleme Kartı" note="Bağlantının ardındaki kişi, gitmeden; üzerine gel ya da odaklan.">
+        <p className="mx-auto max-w-64 text-base text-body">
+          Alsancak Demlik siparişini{" "}
+          <HoverCard href="#b-avatar" trigger={TEAM[2].name} side="bottom" align="start">
+            <ProfilePreview
+              name={TEAM[2].name}
+              role={TEAM[2].role}
+              handle={`selin@${BRAND.domain}`}
+              bio="Sekiz kafenin haftalık siparişini ve tadım günlerini o planlar."
+              stats={[
+                { label: "Kafe", value: CAFES.length },
+                { label: "Açık Sipariş", value: ORDERS.filter((o) => o.channel === "Toptan" && o.status !== "Teslim Edildi").length },
+              ]}
+              meta={`${BRAND.city} · Katılım Mart 2024`}
+            />
+          </HoverCard>{" "}
+          bu sabah onayladı.
+        </p>
+      </Cell>
       <Cell file="dialog" name="İletişim Penceresi" note="Yerel dialog: odak tuzağı, Escape ve odak dönüşü tarayıcıdan.">
-        <ContextTile title="KK-3192" meta="Hazırlanıyor · bugün kargoda">
+        <ContextTile title="KK-3192" meta="Hazırlanıyor · Bugün Kargoda">
           <Button variant="danger" size="sm" onClick={() => setDialog(true)}>
             İptal Et
           </Button>
@@ -549,7 +654,7 @@ function KatmanGroup() {
         />
       </Cell>
       <Cell file="sheet" name="Yan Panel" note="Telefonda alttan çekmece, masaüstünde sağdan panel.">
-        <ContextTile title="Siparişler" meta="14 açık · 3 kanal">
+        <ContextTile title="Siparişler" meta="14 Açık · 3 Kanal">
           <Button variant="secondary" size="sm" onClick={() => setSheet(true)}>
             Süzgeçler
           </Button>
@@ -575,7 +680,7 @@ function KatmanGroup() {
         </Sheet>
       </Cell>
       <Cell file="popover" name="Açılır Kart" note="Sayfayı kilitlemez; dış tıklama ve Escape kapatır.">
-        <ContextTile title="Toptan Fiyat Listesi" meta="Kasım 2026 · 8 kafe">
+        <ContextTile title="Toptan Fiyat Listesi" meta="Kasım 2026 · 8 Kafe">
           <Popover>
             <PopoverTrigger render={<Button variant="secondary" size="sm" />}>Paylaş</PopoverTrigger>
             <PopoverContent title="Toptan Fiyat Listesi" description="Bağlantıya sahip olan her kafe listeyi görür.">
@@ -649,6 +754,74 @@ const SPARK = [
   { name: "Brezilya Cerrado", values: [40, 38, 39, 36, 37, 35, 36, 34, 33, 34, 32, 31] },
 ] as const;
 
+/** Atölyenin bu haftası: kavurma, teslimat ve tadım. Urla teslimatı gecikme uyarısındaki yeni tahmin. */
+const WEEK: readonly CalendarEvent[] = [
+  { id: "w1", title: "Haftalık Plan", start: "2026-11-02T09:00", end: "2026-11-02T09:30", location: "Atölye", series: 4 },
+  { id: "w2", title: "Kavurma · Parti 45", start: "2026-11-02T10:00", end: "2026-11-02T12:00", location: "Kavurma Odası", series: 3 },
+  { id: "w3", title: "Alsancak Demlik Kargoya", start: "2026-11-02T15:00", end: "2026-11-02T15:30", location: "Yurtiçi Şubesi", series: 2 },
+  { id: "w4", title: "Urla Bağ Evi Teslimatı", start: "2026-11-03T10:30", end: "2026-11-03T11:30", location: "Urla", series: 2 },
+  { id: "w5", title: "Kavurma · Parti 46", start: "2026-11-03T13:00", end: "2026-11-03T15:00", location: "Kavurma Odası", series: 3 },
+  { id: "w6", title: "Guji Tadımı", start: "2026-11-04T10:00", end: "2026-11-04T11:00", location: "Tadım Masası", series: 5 },
+  { id: "w7", title: "Matbaa Görüşmesi", start: "2026-11-04T10:30", end: "2026-11-04T11:15", location: "Görüntülü", series: 4 },
+  { id: "w8", title: "Kavurma · Parti 47", start: "2026-11-05T09:30", end: "2026-11-05T12:30", location: "Kavurma Odası", series: 3 },
+  { id: "w9", title: "Bornova Kitap Kafe Teslimatı", start: "2026-11-05T14:00", end: "2026-11-05T14:45", location: "Bornova", series: 2 },
+  { id: "w10", title: "Ekim Kapanışı", start: "2026-11-06T11:00", end: "2026-11-06T12:00", location: "Atölye", series: 4 },
+  { id: "w11", title: "Açık Atölye Günü", start: "2026-11-07T11:00", end: "2026-11-07T14:00", location: "Atölye", series: 5 },
+];
+
+const BOARD: readonly KanbanColumn[] = [
+  {
+    id: "yapilacak",
+    title: "Yapılacak",
+    cards: [
+      { id: "k1", title: "Guji etiketini matbaaya gönder", tags: [{ label: "Ambalaj", tone: "chart-4" }], assignee: { name: TEAM[0].name }, due: "2026-11-04" },
+      { id: "k2", title: "Kenya Nyeri yeşil çekirdek siparişi", tags: [{ label: "Tedarik", tone: "chart-2" }], assignee: { name: TEAM[3].name }, due: "2026-11-06" },
+      { id: "k3", title: "Kasım abonelik kutularını hazırla", tags: [{ label: "Abonelik", tone: "chart-1" }], assignee: { name: TEAM[4].name }, due: "2026-11-09" },
+    ],
+  },
+  {
+    id: "suruyor",
+    title: "Sürüyor",
+    limit: 3,
+    cards: [
+      { id: "k4", title: "Alsancak Demlik · 24 kg Kıyı Harmanı", tags: [{ label: "Toptan", tone: "chart-3" }], assignee: { name: TEAM[1].name }, due: "2026-11-02" },
+      { id: "k5", title: "Urla Bağ Evi gecikmesi için kafeyi ara", tags: [{ label: "Toptan", tone: "chart-3" }, { label: "Kargo", tone: "neutral" }], assignee: { name: TEAM[2].name }, due: "2026-11-01" },
+    ],
+  },
+  {
+    id: "kontrol",
+    title: "Kontrolde",
+    cards: [{ id: "k6", title: "Ekim faturalarının eşleşmesi", tags: [{ label: "Muhasebe", tone: "chart-5" }], assignee: { name: TEAM[5].name }, due: "2026-11-03" }],
+  },
+  {
+    id: "bitti",
+    title: "Bitti",
+    done: true,
+    cards: [
+      { id: "k7", title: "Parti 44 · Brezilya Cerrado", tags: [{ label: "Kavurma", tone: "chart-6" }], assignee: { name: TEAM[1].name }, due: "2026-10-31" },
+      { id: "k8", title: "Kargo anlaşmasını yenile", tags: [{ label: "Kargo", tone: "neutral" }], assignee: { name: TEAM[3].name }, due: "2026-11-01" },
+    ],
+  },
+];
+
+const TODAY_TASKS: readonly Task[] = [
+  { id: "t1", title: "Urla Bağ Evi'ne yeni teslim saatini yaz", done: false, priority: "high", due: "2026-11-02" },
+  {
+    id: "t2",
+    title: "Kasım kahvesi etiketini onayla",
+    done: false,
+    priority: "medium",
+    due: "2026-11-04",
+    subtasks: [
+      { id: "t2a", title: "Tat notalarını son kez oku", done: true },
+      { id: "t2b", title: "Barkodu kontrol et", done: false },
+      { id: "t2c", title: "Matbaaya PDF gönder", done: false },
+    ],
+  },
+  { id: "t3", title: "Ekim kapanışını Barış'la imzala", done: true, priority: "medium", due: "2026-11-02" },
+  { id: "t4", title: "Açık atölye günü duyurusu", done: false, priority: "low", due: "2026-11-05" },
+];
+
 function VeriGroup() {
   const lastMonth = REVENUE_NOW[REVENUE_NOW.length - 1];
   const prevMonth = REVENUE_NOW[REVENUE_NOW.length - 2];
@@ -708,10 +881,10 @@ function VeriGroup() {
           ]}
         />
       </Cell>
-      <Cell file="timeline" name="Zaman Çizelgesi" note="Tarihli olaylar; nokta kendi tonunun yıkamasında." span={3}>
+      <Cell file="timeline" name="Zaman Çizelgesi" note="Tarihli olaylar; nokta kendi tonunun yıkamasında." span={2} align="stretch">
         <Timeline events={ORDER_TIMELINE} />
       </Cell>
-      <Cell file="sparkline" name="Mini Grafik" note="Eksensiz eğilim; tablo satırında yer kaplamaz." span={3} align="stretch">
+      <Cell file="sparkline" name="Mini Grafik" note="Eksensiz eğilim; tablo satırında yer kaplamaz." span={2} align="stretch">
         <ul className="grid gap-1.5">
           {SPARK.map((s) => (
             <li key={s.name} className="flex items-center justify-between gap-4 rounded-xl bg-overlay px-4 py-3 shadow-raised">
@@ -724,6 +897,17 @@ function VeriGroup() {
           ))}
         </ul>
       </Cell>
+      <Cell file="task-list" name="Görev Listesi" note="Alt görevler sayaçla açılır; biten satır üstü çizilerek söner." span={2} align="stretch" className="p-3 sm:p-3">
+        <TaskList title={`${ME.name.split(" ")[0]} · Bugün`} defaultTasks={TODAY_TASKS} today="2026-11-02" />
+      </Cell>
+      <Cell file="kanban-board" name="Kanban Panosu" note="Fare, dokunma tutamağı ya da klavye (Boşluk, oklar) ile taşınır; WIP sınırı sayılır." span={6} size="lg" align="stretch">
+        <KanbanBoard label="Atölye İşleri" defaultColumns={BOARD} today="2026-11-02" />
+      </Cell>
+      <Cell file="week-calendar" name="Haftalık Takvim" note="Çakışanlar yan yana; şu an çizgisi bugünde. Telefonda gün gün liste." span={6} size="lg" align="stretch">
+        <div className="rounded-xl bg-overlay p-2 shadow-raised">
+          <WeekCalendar label="Atölyenin Bu Haftası" week="2026-11-02" events={WEEK} now="2026-11-02T09:40" startHour={8} endHour={16} hourHeight={56} />
+        </div>
+      </Cell>
     </CellGrid>
   );
 }
@@ -732,13 +916,14 @@ function VeriGroup() {
 
 function GeriGroup() {
   const [upload, setUpload] = useState(64);
+  const [deleted, setDeleted] = useState(false);
   return (
     <CellGrid>
       <Cell file="banner-alert" name="Uyarı Satırı" note="Dört ton yıkama zeminde; ikon, başlık, eylem. Tek kenar şeridi yok." span={4} align="stretch">
         <div className="grid gap-3">
           <BannerAlert
             tone="warning"
-            title="Urla Bağ Evi teslimatı bir gün gecikti"
+            title="Urla Bağ Evi Teslimatı Bir Gün Gecikti"
             description="Seferihisar aktarmasında bekledi; yeni tahmin 3 Kasım öğleden önce."
             actions={
               <Button variant="secondary" size="sm">
@@ -746,8 +931,8 @@ function GeriGroup() {
               </Button>
             }
           />
-          <BannerAlert tone="success" title="Ekim kapanışı tamamlandı" description="214 fatura eşleşti, fark yok." />
-          <BannerAlert tone="info" title="Yeşil çekirdek kuru her gün 15.30'da güncellenir" />
+          <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 fatura eşleşti, fark yok." />
+          <BannerAlert tone="info" title="Yeşil Çekirdek Kuru Her Gün 15.30'da Güncellenir" />
         </div>
       </Cell>
       <Cell file="meter" name="Ölçer" note="Doluluk; eşikte ton ve durum metni birlikte değişir." span={2} align="stretch">
@@ -766,10 +951,10 @@ function GeriGroup() {
           />
         </div>
       </Cell>
-      <Cell file="progress" name="İlerleme" note="Belirli ve belirsiz; bitince “Tamamlandı” der." align="stretch">
+      <Cell file="progress" name="İlerleme" note="Belirli ve belirsiz; bitince “Tamamlandı” der." span={3} align="stretch">
         <div className="grid gap-5">
-          <Progress label="Etiket baskısı" value={upload} hint="240 etiketten sırada olanlar" />
-          <Progress label="Kafe listesi eşitleniyor" value={null} />
+          <Progress label="Etiket Baskısı" value={upload} hint="240 etiketten sırada olanlar" />
+          <Progress label="Kafe Listesi Eşitleniyor" value={null} />
           <div className="flex gap-2">
             <Button variant="secondary" size="sm" onClick={() => setUpload((v) => Math.max(0, v - 18))}>
               Geri
@@ -780,7 +965,35 @@ function GeriGroup() {
           </div>
         </div>
       </Cell>
-      <Cell file="empty-state" name="Boş Durum" note="İkon beyaz karoda, tek cümle, tek eylem.">
+      <Cell file="toast" name="Bildirim" note="Eylemin sonucu sağ altta; hata kendiliğinden kapanmaz, silmede Geri Al." span={3}>
+        <div className="grid justify-items-center gap-3">
+          <div className="flex flex-wrap justify-center gap-2">
+            <Button variant="secondary" size="sm" onClick={() => toast.success("KK-3193 Kaydedildi", { description: "Çeşme Liman Kafe · 12 kg Gece Harmanı" })}>
+              Siparişi Kaydet
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={deleted}
+              onClick={() => {
+                setDeleted(true);
+                toast.undo("KK-3188 Taslağı Silindi", () => {
+                  setDeleted(false);
+                  toast.info("KK-3188 Taslağı Geri Geldi");
+                });
+              }}
+            >
+              Taslağı Sil
+            </Button>
+            <Button variant="secondary" size="sm" onClick={() => toast.error("Kargo Etiketi Basılamadı", { description: "Yazıcıda etiket rulosu bitti." })}>
+              Etiket Bas
+            </Button>
+          </div>
+          <p className="text-center text-small text-muted">Bildirimler ekranın sağ altında yığılır.</p>
+          <Toaster />
+        </div>
+      </Cell>
+      <Cell file="empty-state" name="Boş Durum" note="İkon beyaz karoda, tek cümle, tek eylem." span={3}>
         <EmptyState
           className="bg-overlay shadow-raised"
           icon={<Store />}
@@ -793,13 +1006,13 @@ function GeriGroup() {
           }
         />
       </Cell>
-      <Cell file="announcement" name="Duyuru" note="Kahramanın üstünde tek satırlık haber; hap tek bağlantı.">
+      <Cell file="announcement" name="Duyuru" note="Kahramanın üstünde tek satırlık haber; hap tek bağlantı." span={3}>
         <div className="grid justify-items-center gap-3">
           <Announcement href="#grafikler" tag="Yeni">
-            Kavurma raporu panoda
+            Kavurma Raporu Panoda
           </Announcement>
           <Announcement href="#tema" tag="Sürüm 3.0">
-            On palet, iki tema
+            On Palet, İki Tema
           </Announcement>
         </div>
       </Cell>

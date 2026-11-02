@@ -7,7 +7,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Seçim/Süzgeç Etiketi",
-  id: "components-selection-chip",
+  id: "chip",
   component: FilterChip,
   tags: ["autodocs"],
   parameters: {
@@ -112,7 +112,7 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="FilterChip: boş, seçili, sayılı, ikonlu">
+      <Cell label="FilterChip: Boş, Seçili, Sayılı, İkonlu">
         <ChipGroup aria-label="Süzgeç Örnekleri" className="justify-center">
           <FilterChip selected={false}>Bugün</FilterChip>
           <FilterChip selected>Bu Hafta</FilterChip>
@@ -138,7 +138,7 @@ export const AllVariants: Story = {
           </RemovableChip>
         </ChipGroup>
       </Cell>
-      <Cell label="ChipGroup: süzgeç satırı">
+      <Cell label="ChipGroup: Süzgeç Satırı">
         <FilterDemo />
       </Cell>
     </Gallery>

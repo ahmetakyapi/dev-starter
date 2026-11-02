@@ -17,7 +17,7 @@ const oran = (stages: readonly { value: number }[]) => {
 
 const meta = {
   title: "Grafikler/Huni Grafiği",
-  id: "charts-funnel-chart",
+  id: "funnel-chart",
   component: FunnelChart,
   tags: ["autodocs"],
   parameters: {
@@ -126,18 +126,18 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={2}>
       {(["curve", "step"] as const).map((shape) => (
-        <GrafikHucre key={shape} label={shape === "curve" ? "Eğri geçiş" : "Basamaklı geçiş"}>
+        <GrafikHucre key={shape} label={shape === "curve" ? "Eğri Geçiş" : "Basamaklı Geçiş"}>
           <ChartCard id={`huni-${shape}`} label={shape === "curve" ? "Ödeme Hunisi · Eğri" : "Ödeme Hunisi · Basamak"} value={oran(ODEME_HUNISI.slice(0, 4))} change={-1.2}>
             <FunnelChart title={`Ödeme hunisi, ${shape === "curve" ? "eğri" : "basamak"}`} stages={ODEME_HUNISI.slice(0, 4)} shape={shape} />
           </ChartCard>
         </GrafikHucre>
       ))}
-      <GrafikHucre label="Altı aşama, lejantsız">
+      <GrafikHucre label="Altı Aşama, Lejantsız">
         <ChartCard id="huni-alti" label="Kayıt Hunisi" value={oran(KAYIT_HUNISI)} change={2.4}>
           <FunnelChart title="Kayıt hunisi" stages={KAYIT_HUNISI} legend={false} />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="İki aşama, basamak">
+      <GrafikHucre label="İki Aşama, Basamak">
         <ChartCard id="huni-iki" label="Deneme → Ücretli" value="%21,1">
           <FunnelChart title="Deneme → Ücretli" shape="step" stages={[{ label: "Deneme", value: 412 }, { label: "Ücretli", value: 87 }]} />
         </ChartCard>

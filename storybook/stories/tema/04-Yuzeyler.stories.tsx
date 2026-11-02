@@ -139,8 +139,8 @@ function EdgeZoom({ theme }: { theme: ThemeName }) {
     <ThemeScope theme={theme} className="overflow-hidden rounded-2xl border border-line">
       <div className="relative h-44 overflow-hidden bg-surface" aria-hidden>
         <div className="absolute top-1/2 left-[8%] h-10 w-24 origin-top-left scale-[8] rounded-[3px] bg-overlay shadow-raised" />
-        <span className="absolute top-3 left-4 font-mono text-micro text-muted">kuyu</span>
-        <span className="absolute bottom-3 left-4 font-mono text-micro text-muted">karo, üst kenar</span>
+        <span className="absolute top-3 left-4 font-mono text-micro text-muted">Kuyu</span>
+        <span className="absolute bottom-3 left-4 font-mono text-micro text-muted">Karo, Üst Kenar</span>
       </div>
       <p className="border-t border-line px-4 py-3 text-small text-body">
         <span className="font-medium text-strong">{theme === "light" ? "Açık" : "Koyu"}, ×8 büyütme. </span>
@@ -157,7 +157,7 @@ function YuzeylerSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Yüzeyler"
-        title="Sayfa, kuyu, karo, katman."
+        title="Sayfa, Kuyu, Karo, Katman"
         lead="Board dilinin iskeleti dört basamak. Derinlik ton farkıyla kurulur; gölge yalnızca gerçekten sayfanın üstünde yüzen katmanda belirgin. Koyuda yüzeyler yükseldikçe açılır."
       />
 
@@ -266,7 +266,7 @@ function YuzeylerSayfasi() {
 
 const meta = {
   title: "Tema/Yüzeyler",
-  id: "theme-surfaces",
+  id: "surfaces",
   component: YuzeylerSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -282,4 +282,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Surfaces: Story = { name: "Yüzeyler" };
+export const Overview: Story = { name: "Yüzeyler" };

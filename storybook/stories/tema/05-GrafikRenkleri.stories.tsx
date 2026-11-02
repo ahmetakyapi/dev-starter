@@ -91,7 +91,7 @@ function GrafikRenkleriSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Grafik Renkleri"
-        title="Pastel, eşit parlak, sırası sabit."
+        title="Pastel, Eşit Parlak, Sırası Sabit"
         lead="Altı seri rengi paletten bağımsız: veri her üründe aynı okunur. Birinci seri hep chart-1. Renk değer yazmaz; değeri yanında text-strong yazar."
       />
 
@@ -109,11 +109,11 @@ function GrafikRenkleriSayfasi() {
               </p>
               <dl className="mt-2 space-y-0.5 px-1 pb-1 font-mono text-micro">
                 <div className="flex justify-between gap-2">
-                  <dt className="text-muted">açık</dt>
+                  <dt className="text-muted">Açık</dt>
                   <dd className="text-strong">{chart.light[key]}</dd>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <dt className="text-muted">koyu</dt>
+                  <dt className="text-muted">Koyu</dt>
                   <dd className="text-strong">{chart.dark[key]}</dd>
                 </div>
               </dl>
@@ -225,7 +225,7 @@ function GrafikRenkleriSayfasi() {
 
 const meta = {
   title: "Tema/Grafik Renkleri",
-  id: "theme-chart-colors",
+  id: "chart-colors",
   component: GrafikRenkleriSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -240,4 +240,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ChartColors: Story = { name: "Grafik Renkleri" };
+export const Overview: Story = { name: "Grafik Renkleri" };

@@ -22,7 +22,7 @@ const COMMANDS: Command[] = [
 
 const meta = {
   title: "Bileşenler/Katmanlar/Komut Paleti",
-  id: "components-overlays-command-palette",
+  id: "command-palette",
   component: CommandPalette,
   tags: ["autodocs"],
   parameters: {

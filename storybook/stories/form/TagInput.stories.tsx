@@ -7,7 +7,7 @@ import { SKILLS } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Etiket Girişi",
-  id: "components-forms-tag-input",
+  id: "tag-input",
   component: TagInput,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -111,13 +111,13 @@ export const AllVariants: Story = {
       <Cell label="Boş">
         <TagInput label="Alıcılar" className="w-full" />
       </Cell>
-      <Cell label="Dolu, önerili">
+      <Cell label="Dolu, Önerili">
         <TagInput label="Beceriler" defaultValue={["Figma", "Tasarım Sistemi", "React"]} suggestions={SKILLS} className="w-full" />
       </Cell>
       <Cell label="Sınırda">
         <TagInput label="Konu Etiketleri" defaultValue={["Bütçe", "Kira", "Fatura"]} maxTags={3} className="w-full" />
       </Cell>
-      <Cell label="Uzun etiketler">
+      <Cell label="Uzun Etiketler">
         <TagInput
           label="Teslimat Bölgeleri"
           defaultValue={["Kadıköy", "Üsküdar", "Ataşehir", "Beşiktaş", "Şişli", "Sarıyer"]}
@@ -127,7 +127,7 @@ export const AllVariants: Story = {
       <Cell label="Hata">
         <TagInput label="Beceriler" error="En az bir beceri ekle." className="w-full" />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <div data-a11y-disabled className="w-full">
           <TagInput label="Beceriler" defaultValue={["Figma", "React"]} disabled />
         </div>

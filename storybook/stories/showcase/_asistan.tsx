@@ -64,7 +64,7 @@ function Drafts() {
                 {c.name} · {o.id} · {tl.format(o.total)}
               </span>
               <Badge tone="danger" className="ml-auto">
-                {daysBetween(o.date, TODAY)} gün
+                {daysBetween(o.date, TODAY)} Gün
               </Badge>
               {t ? <span className="sr-only">Bağlı talep {t.id}</span> : null}
             </li>
@@ -72,7 +72,7 @@ function Drafts() {
         })}
       </ul>
       <a href={href("gelen", { etiket: "Gecikme" })} className="justify-self-start font-medium text-primary-ink underline underline-offset-4">
-        Taslakları gelen kutusunda aç
+        Taslakları Gelen Kutusunda Aç
       </a>
     </div>
   );
@@ -135,7 +135,7 @@ export function AsistanPage() {
     <div className="flex min-h-full flex-col">
       <PageBar
         title="Asistan"
-        description={fresh ? "Yeni sohbet" : `Geciken siparişler · bugün ${shortDate.format(TODAY)}`}
+        description={fresh ? "Yeni Sohbet" : `Geciken Siparişler · Bugün ${shortDate.format(TODAY)}`}
         actions={
           <Button
             variant="secondary"
@@ -158,7 +158,7 @@ export function AsistanPage() {
             thinking={thinking}
             thinkingLabel="Asistan düşünüyor"
             empty={{
-              title: "Bugün ne yapalım?",
+              title: "Bugün Ne Yapalım?",
               description: "Pusula'daki siparişler, talepler ve takvim üzerinde çalışabilirim.",
               suggestions: SUGGESTIONS,
               onSuggestion: send,

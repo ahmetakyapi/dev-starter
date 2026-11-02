@@ -83,6 +83,8 @@ dev-starter/
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
+│   ├── add-ui.mjs             → snippets/ui bileşenini bağımlılıklarıyla projeye kurar (--list, --dry-run, --install)
+│   ├── build-ui-registry.mjs  → snippets/ui/registry.json + shadcn kaydı storybook/public/r (--check: verify:registry)
 │   ├── add-figure-kit.mjs     → anatomy figür kitini bir projeye kurar (components/iso)
 │   └── verify-anatomy.mjs     → Figür kiti iki şablonda build/tip/lint/test temiz mi (opt-in)
 │
@@ -100,9 +102,9 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 541 hikâye — Tema, Bileşenler,
-│                                Grafikler, Bloklar, Ekranlar, Pusula showcase (73/73 bileşen); `npm run storybook`
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (73 bileşen + vitrin/) + fonts/ + live-preview/
+├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 637 hikâye — Tema, Bileşenler,
+│                                Grafikler, Bloklar, Ekranlar, Pusula showcase (86/86 bileşen); `npm run storybook`
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (86 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form

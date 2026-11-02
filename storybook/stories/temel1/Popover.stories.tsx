@@ -10,7 +10,7 @@ import { Frame } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Katmanlar/Açılır Kart",
-  id: "components-overlays-popover",
+  id: "popover",
   component: Popover,
   tags: ["autodocs"],
   parameters: {
@@ -83,8 +83,8 @@ export const WithFormOpen: Story = {
           </PopoverTrigger>
           <PopoverContent title="Tutar Aralığı" align="center">
             <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
-              <Field label="En az (₺)" name="min" type="number" defaultValue={5000} />
-              <Field label="En çok (₺)" name="max" type="number" defaultValue={25000} />
+              <Field label="En Az (₺)" name="min" type="number" defaultValue={5000} />
+              <Field label="En Çok (₺)" name="max" type="number" defaultValue={25000} />
               <div className="flex justify-end gap-2 pt-1">
                 <PopoverClose className={buttonClass({ variant: "ghost", size: "sm" })}>Vazgeç</PopoverClose>
                 <Button size="sm" type="submit">

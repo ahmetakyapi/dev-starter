@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "divider",
+  "type": "registry:ui",
+  "title": "Ayırıcı",
+  "description": "Yatay / dikey / etiketli (\"ya da\") ayırıcı",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/divider.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Ayırıcı: içeriği iki parçaya bölen kıl çizgi. Kart içinde ikinci bir kart\n * açmak yerine (slop) bölümler bununla ayrılır.\n *\n * ANLAM ÜÇ DURUMDA FARKLI:\n * - Yatay, etiketsiz: `<hr>`. Rolü kendiliğinden `separator`; ekran okuyucu\n *   \"ayırıcı\" der. Yalnızca konu değişiyorsa anlamlı; süs ise `decorative`.\n * - Dikey: `<div role=\"separator\" aria-orientation=\"vertical\">`. `<hr>`\n *   yatay varsayılır, dikeyliği ARIA söyler. Araç çubuğunda düğme grubunu\n *   ayırırken en sık bu gerekir.\n * - Etiketli (\"ya da\"): kapsayıcı `separator` DEĞİL. `separator` rolünün\n *   çocukları sunumsaldır (ARIA): etiket ekran okuyucudan silinirdi ve\n *   \"Google ile Gir / ya da / E-postayla Gir\" akışındaki \"ya da\" kaybolurdu.\n *   İki çizgi `aria-hidden`, etiket düz metin olarak okunur.\n *\n * `decorative`: bölücü yalnızca görsel ritimse (liste öğeleri arası)\n * ekran okuyucuya her satırda \"ayırıcı\" dedirtme.\n *\n * Renk `border-line` (kıl), `strong` yalnızca yoğun tablolarda. Sunucu bileşeni.\n */\n\ntype DividerProps = {\n  orientation?: \"horizontal\" | \"vertical\";\n  /** Ortadaki kısa etiket: \"ya da\", \"Dün\". Yalnızca yatayda. */\n  label?: ReactNode;\n  /** Etiketin hizası. */\n  align?: \"start\" | \"center\";\n  tone?: \"soft\" | \"default\" | \"strong\";\n  decorative?: boolean;\n  className?: string;\n};\n\nconst TONE = { soft: \"border-line-soft\", default: \"border-line\", strong: \"border-line-strong\" } as const;\nconst TONE_BG = { soft: \"bg-line-soft\", default: \"bg-line\", strong: \"bg-line-strong\" } as const;\n\nexport function Divider({\n  orientation = \"horizontal\",\n  label,\n  align = \"center\",\n  tone = \"default\",\n  decorative = false,\n  className,\n}: DividerProps) {\n  if (orientation === \"vertical\") {\n    return (\n      <div\n        role={decorative ? \"presentation\" : \"separator\"}\n        aria-orientation={decorative ? undefined : \"vertical\"}\n        className={cn(\"w-px shrink-0 self-stretch\", TONE_BG[tone], className)}\n      />\n    );\n  }\n\n  if (label) {\n    return (\n      <div className={cn(\"flex items-center gap-3 text-small font-medium text-muted\", className)}>\n        {align === \"center\" ? <span aria-hidden className={cn(\"h-px flex-1\", TONE_BG[tone])} /> : null}\n        <span className=\"shrink-0\">{label}</span>\n        <span aria-hidden className={cn(\"h-px flex-1\", TONE_BG[tone])} />\n      </div>\n    );\n  }\n\n  return (\n    <hr\n      aria-hidden={decorative || undefined}\n      className={cn(\"h-0 w-full shrink-0 border-0 border-t\", TONE[tone], className)}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Geri Bildirim"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "divider",
+    "palettes": false
+  }
+}

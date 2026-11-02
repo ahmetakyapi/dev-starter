@@ -5,7 +5,7 @@ import { LandingPage } from "./_sayfa";
 
 const meta = {
   title: "Ekranlar/Açılış Sayfası/Tam Sayfa",
-  id: "screens-landing-full-page",
+  id: "landing",
   component: LandingPage,
   tags: ["autodocs"],
   parameters: {
@@ -24,7 +24,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const FullPage: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

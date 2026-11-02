@@ -31,7 +31,7 @@ const ROWS: TreeTableRow[] = [
 
 const meta = {
   title: "Bileşenler/Veri/Ağaç Tablo",
-  id: "components-data-tree-table",
+  id: "tree-table",
   component: TreeTable,
   tags: ["autodocs"],
   parameters: {
@@ -84,7 +84,7 @@ export const AllVariants: Story = {
       <Cell label="Kapalı" className="place-items-stretch">
         <TreeTable caption="Bütçe, kapalı" columns={COLUMNS} rows={ROWS} />
       </Cell>
-      <Cell label="Bir kalem açık" className="place-items-stretch">
+      <Cell label="Bir Kalem Açık" className="place-items-stretch">
         <TreeTable caption="Bütçe, bir kalem açık" columns={COLUMNS} rows={ROWS} defaultExpanded={["altyapi"]} />
       </Cell>
     </Gallery>

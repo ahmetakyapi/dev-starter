@@ -8,12 +8,12 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 const VARIANTS = Object.keys(BUTTON_VARIANTS) as ButtonVariant[];
 
 const VARIANT_NOTES: Record<ButtonVariant, string> = {
-  brand: "brand — ekranın tek birincil eylemi",
-  primary: "primary — öteki vurgulu eylemler",
-  secondary: "secondary — beyaz karo, kıl çizgisi",
-  soft: "soft — renkli ama ikinci derece",
-  ghost: "ghost — araç çubuğu, satır içi",
-  danger: "danger — yıkıcı eylem",
+  brand: "brand · Ekranın Tek Birincil Eylemi",
+  primary: "primary · Öteki Vurgulu Eylemler",
+  secondary: "secondary · Beyaz Karo, Kıl Çizgisi",
+  soft: "soft · Renkli ama İkinci Derece",
+  ghost: "ghost · Araç Çubuğu, Satır İçi",
+  danger: "danger · Yıkıcı Eylem",
 };
 
 const VARIANT_LABELS: Record<ButtonVariant, string> = {
@@ -27,7 +27,7 @@ const VARIANT_LABELS: Record<ButtonVariant, string> = {
 
 const meta = {
   title: "Bileşenler/Temel/Düğme",
-  id: "components-core-button",
+  id: "button",
   component: Button,
   tags: ["autodocs"],
   parameters: {
@@ -100,7 +100,7 @@ export const Loading: Story = {
       </Button>
       <Button {...args} variant="secondary" disabled aria-busy="true">
         <Spinner size="sm" tone="current" label={null} />
-        Dışa aktarılıyor
+        Dışa Aktarılıyor
       </Button>
     </div>
   ),

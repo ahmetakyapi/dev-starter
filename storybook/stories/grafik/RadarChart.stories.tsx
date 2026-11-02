@@ -13,7 +13,7 @@ const ort = (v: readonly number[]) => (v.length ? Math.round(v.reduce((a, b) => 
 
 const meta = {
   title: "Grafikler/Radar Grafiği",
-  id: "charts-radar-chart",
+  id: "radar-chart",
   component: RadarChart,
   tags: ["autodocs"],
   parameters: {
@@ -127,7 +127,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={3}>
-      <GrafikHucre label="İki profil, altı ölçüt">
+      <GrafikHucre label="İki Profil, Altı Ölçüt">
         <ChartCard id="r-v1" label="Destek Ekibi · Altı Ölçüt" value="84">
           <RadarChart
             title="Destek ekibi, iki profil"
@@ -139,12 +139,12 @@ export const AllVariants: Story = {
           />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Tek profil, beş ölçüt">
+      <GrafikHucre label="Tek Profil, Beş Ölçüt">
         <ChartCard id="r-v2" label="Sürüm 3.2" value="89">
           <RadarChart title="Sürüm 3.2" axes={["Hız", "SEO", "Güvenlik", "Kararlılık", "Kullanım"]} series={[{ label: "Sürüm 3.2", values: [92, 88, 81, 90, 82], series: 6 }]} />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="İki profil, sekiz ölçüt">
+      <GrafikHucre label="İki Profil, Sekiz Ölçüt">
         <ChartCard id="r-v3" label="Destek Ekibi · Sekiz Ölçüt" value="82">
           <RadarChart
             title="Destek ekibi, sekiz ölçüt"

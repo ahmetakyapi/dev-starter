@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Gezinme/Duyuru",
-  id: "components-navigation-announcement",
+  id: "announcement",
   component: Announcement,
   tags: ["autodocs"],
   parameters: {
@@ -16,7 +16,7 @@ const meta = {
       },
     },
   },
-  args: { href: "/surumler/2-4", tag: "Yeni", children: "Grafikler geldi" },
+  args: { href: "/surumler/2-4", tag: "Yeni", children: "Grafikler Geldi" },
   decorators: [
     (Story, { parameters }) =>
       parameters.bare ? (
@@ -36,13 +36,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = { name: "Varsayılan" };
 
-export const VersionTag: Story = { name: "Sürüm Künyesi", args: { tag: "Sürüm 2.4", children: "Panolarda çoklu seçim ve toplu taşıma" } };
+export const VersionTag: Story = { name: "Sürüm Künyesi", args: { tag: "Sürüm 2.4", children: "Panolarda Çoklu Seçim ve Toplu Taşıma" } };
 
-export const WithoutEyebrow: Story = { name: "Künyesiz", args: { tag: undefined, children: "Ekim bülteni yayında" } };
+export const WithoutEyebrow: Story = { name: "Künyesiz", args: { tag: undefined, children: "Ekim Bülteni Yayında" } };
 
 export const LongText: Story = {
   name: "Uzun Metin",
-  args: { tag: "Etkinlik", children: "14 Kasım'da İstanbul'da ürün ekibiyle canlı soru-cevap ve yol haritası tanıtımı" },
+  args: { tag: "Etkinlik", children: "14 Kasım'da İstanbul'da Ürün Ekibiyle Canlı Soru-Cevap ve Yol Haritası Tanıtımı" },
 };
 
 export const Dismissible: Story = {
@@ -54,9 +54,9 @@ export const Dismissible: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("link", { name: /Grafikler geldi/ })).toBeVisible();
+    await expect(canvas.getByRole("link", { name: /Grafikler Geldi/ })).toBeVisible();
     await userEvent.click(canvas.getByRole("button"));
-    await expect(canvas.queryByRole("link", { name: /Grafikler geldi/ })).toBeNull();
+    await expect(canvas.queryByRole("link", { name: /Grafikler Geldi/ })).toBeNull();
   },
 };
 
@@ -67,20 +67,20 @@ export const AllVariants: Story = {
     <Gallery cols={2}>
       <Cell label="Künyeli">
         <Announcement href="/surumler" tag="Yeni">
-          Grafikler geldi
+          Grafikler Geldi
         </Announcement>
       </Cell>
-      <Cell label="Sürüm künyesi">
+      <Cell label="Sürüm Künyesi">
         <Announcement href="/surumler/2-4" tag="Sürüm 2.4">
-          Panolarda toplu taşıma
+          Panolarda Toplu Taşıma
         </Announcement>
       </Cell>
       <Cell label="Künyesiz">
-        <Announcement href="/bulten">Ekim bülteni yayında</Announcement>
+        <Announcement href="/bulten">Ekim Bülteni Yayında</Announcement>
       </Cell>
       <Cell label="Kapatılabilir">
         <DismissibleAnnouncement href="/davet" tag="Ekip" storageKey="sb:duyuru:galeri">
-          Panoya misafir davet edin
+          Panoya Misafir Davet Edin
         </DismissibleAnnouncement>
       </Cell>
     </Gallery>

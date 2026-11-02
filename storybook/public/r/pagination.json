@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pagination",
+  "type": "registry:ui",
+  "title": "Sayfalama",
+  "description": "Adreste sayfa numarası",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/pagination.tsx",
+      "content": "import { ChevronLeft, ChevronRight } from \"lucide-react\";\nimport Link from \"next/link\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Sayfalama: sayfa numarası ADRESTE (`?sayfa=3`). Bağlantılar gerçek;\n * paylaşılabilir, geri tuşu çalışır, JavaScript kapalıyken de çalışır.\n * Sunucu bileşeni.\n *\n * Telefonda numaralar yerine \"3 / 12\" künyesi ve iki ok: yedi numara 390\n * piksele 44 piksellik dokunma hedefleriyle sığmıyor. Masaüstünde ilk, son\n * ve geçerli sayfanın iki komşusu, aralar \"…\".\n *\n * Geçerli sayfa `aria-current=\"page\"`, bağlantı değil düz metin: kendine\n * giden bağlantı ekran okuyucuda boş bir durak olur.\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): geçerli sayfa BEYAZ KARO (`bg-overlay`\n * + kıl çizgisi + `shadow-raised`), ötekiler düz; üzerine gelince yumuşak\n * gri. Dolu vurgu kutusu sayfalamayı ekranın en bağıran öğesi yapıyordu.\n *\n * `scroll`: liste sayfanın tepesindeyse varsayılan (true) doğru, yeni sayfa\n * başından okunur. Liste sayfanın ortasında bir panelse `scroll={false}` ve\n * listenin başına bir çapa (`#liste`) daha iyi.\n */\n\ntype PaginationProps = {\n  page: number;\n  pageCount: number;\n  /** Sayfa adresini kurar: `(n) => \"?sayfa=\" + n`. */\n  hrefFor: (page: number) => string;\n  scroll?: boolean;\n  labels?: { nav?: string; previous?: string; next?: string; page?: (n: number) => string };\n  className?: string;\n};\n\n/** Gösterilecek sayfalar: ilk, son, geçerli ± 1; aralar `null` (\"…\"). */\nexport function pageWindow(page: number, pageCount: number): (number | null)[] {\n  const pages = new Set([1, pageCount, page - 1, page, page + 1].filter((n) => n >= 1 && n <= pageCount));\n  const sorted = [...pages].sort((a, b) => a - b);\n  return sorted.flatMap((n, i) => (i > 0 && n - sorted[i - 1] > 1 ? [null, n] : [n]));\n}\n\nconst CELL =\n  \"inline-grid min-h-11 min-w-11 place-items-center rounded-md px-2 text-base font-medium tabular-nums transition-colors pointer-fine:min-h-9 pointer-fine:min-w-9\";\n\nexport function Pagination({ page, pageCount, hrefFor, scroll = true, labels = {}, className }: PaginationProps) {\n  if (pageCount <= 1) return null;\n  const { nav = \"Sayfalama\", previous = \"Önceki Sayfa\", next = \"Sonraki Sayfa\", page: pageLabel = (n) => `Sayfa ${n}` } = labels;\n  const hasPrev = page > 1;\n  const hasNext = page < pageCount;\n\n  const arrow = (target: number, enabled: boolean, label: string, Glyph: typeof ChevronLeft) =>\n    enabled ? (\n      <Link href={hrefFor(target)} scroll={scroll} aria-label={label} title={label} className={cn(CELL, \"text-body hover:bg-surface-raised hover:text-strong\")}>\n        <Glyph aria-hidden className=\"size-4\" strokeWidth={1.75} />\n      </Link>\n    ) : (\n      <span aria-hidden className={cn(CELL, \"text-muted opacity-40\")}>\n        <Glyph className=\"size-4\" strokeWidth={1.75} />\n      </span>\n    );\n\n  return (\n    <nav aria-label={nav} className={cn(\"flex items-center justify-between gap-2 sm:justify-center\", className)}>\n      {arrow(page - 1, hasPrev, previous, ChevronLeft)}\n      <p className=\"text-small font-medium text-muted tabular-nums sm:hidden\">\n        {page} / {pageCount}\n      </p>\n      <ul className=\"hidden items-center gap-1 sm:flex\">\n        {pageWindow(page, pageCount).map((n, i) =>\n          n === null ? (\n            <li key={`gap-${i}`} aria-hidden className=\"px-1 text-muted\">\n              …\n            </li>\n          ) : (\n            <li key={n}>\n              {n === page ? (\n                <span aria-current=\"page\" className={cn(CELL, \"border border-line bg-overlay font-semibold text-strong shadow-raised\")}>\n                  {n}\n                </span>\n              ) : (\n                <Link href={hrefFor(n)} scroll={scroll} aria-label={pageLabel(n)} className={cn(CELL, \"text-muted hover:bg-surface-raised hover:text-strong\")}>\n                  {n}\n                </Link>\n              )}\n            </li>\n          ),\n        )}\n      </ul>\n      {arrow(page + 1, hasNext, next, ChevronRight)}\n    </nav>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "pagination",
+    "palettes": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "skeleton",
+  "type": "registry:ui",
+  "title": "İskelet Yükleyici",
+  "description": "Gelecek içeriğin şeklinde iskelet",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/skeleton.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\n/**\n * Yükleme iskeleti, gelecek içeriğin ŞEKLİNDE: satır satır metin, avatar +\n * iki satır + sağda değer, başlıklı kart. Yer tuttuğu için içerik geldiğinde\n * sayfa zıplamaz. Genel bir dönen halka yerine bunu kullan.\n *\n * Şablonun `components/ui/Skeleton.tsx`ünün genişletilmiş hâli; ikisi aynı\n * `.skeleton` yardımcısını (app/globals.css) kullanır. Hareketi azaltan\n * kullanıcıda nabız durur (globals.css'teki genel kural).\n *\n * PARILTI (\"board\" dili, 2026-11): nabız yerine soldan sağa geçen bir ışık\n * şeridi (`::after`, yalnızca `translate`: düzen hesaplatmaz). Şerit bir\n * RENK degradesi değil, zemin tonunun saydamdan saydama açılıp kapanan bir\n * parlaklığı; degrade disiplinine (globals.css başı) girmez. Bütün\n * bloklar AYNI ANDA parlar (süre ve gecikme ortak): satır satır dalga\n * ekranda kıpırtı yapar. Hareketi azaltan kullanıcıda şerit HİÇ çizilmez\n * (`no-preference` sorgusu), blok durağan kalır; globals.css'in nabzı da\n * zaten durur.\n *\n * Ekran okuyucuya gizli. \"Yükleniyor\" bilgisini KAP verir:\n *   <section aria-busy=\"true\"> … <SkeletonCard /> … </section>\n */\n\nconst SHIMMER = `\n@media (prefers-reduced-motion: no-preference) {\n  .ui-shimmer { position: relative; overflow: hidden; animation: none; }\n  .ui-shimmer::after {\n    content: \"\";\n    position: absolute;\n    inset: 0;\n    translate: -100% 0;\n    background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--page-bg) 60%, transparent), transparent);\n    animation: ui-shimmer 1.6s var(--ease-brand) infinite;\n  }\n  /* Koyuda sayfa zemini bloktan KOYU: şerit sönük bir gölgeye dönerdi.\n     Orada ışığı yükselmiş yüzey tonu taşır (beyazın %7'si). */\n  :root[data-theme=\"dark\"] .ui-shimmer::after {\n    background-image: linear-gradient(90deg, transparent, var(--surface-raised), transparent);\n  }\n}\n@keyframes ui-shimmer { to { translate: 100% 0; } }\n`;\n\nexport function Skeleton({ className }: { className?: string }) {\n  return (\n    <>\n      <style href=\"ui-skeleton\" precedence=\"default\">\n        {SHIMMER}\n      </style>\n      <span aria-hidden className={cn(\"skeleton ui-shimmer block rounded-sm\", className)} />\n    </>\n  );\n}\n\n/** Paragraf: son satır kısa, gerçek metin gibi biter. */\nexport function SkeletonText({ lines = 3, className }: { lines?: number; className?: string }) {\n  return (\n    <span aria-hidden className={cn(\"block space-y-2.5\", className)}>\n      {Array.from({ length: lines }, (_, i) => (\n        <Skeleton key={i} className={cn(\"h-3.5\", i === lines - 1 && lines > 1 ? \"w-3/5\" : \"w-full\")} />\n      ))}\n    </span>\n  );\n}\n\n/**\n * Liste satırı: avatar, iki satır, sağda sayı. `DataTable` ya da liste\n * yüklenirken satır sayısı kadar bas; satır yüksekliği gerçeğiyle aynı.\n */\nexport function SkeletonRow({ avatar = true, value = true, className }: { avatar?: boolean; value?: boolean; className?: string }) {\n  return (\n    <span aria-hidden className={cn(\"flex min-h-14 items-center gap-3 py-2\", className)}>\n      {avatar ? <Skeleton className=\"size-9 shrink-0 rounded-full\" /> : null}\n      <span className=\"block min-w-0 flex-1 space-y-2\">\n        <Skeleton className=\"h-3.5 w-2/5\" />\n        <Skeleton className=\"h-3 w-3/5\" />\n      </span>\n      {value ? <Skeleton className=\"h-4 w-14 shrink-0\" /> : null}\n    </span>\n  );\n}\n\n/** Panel kartı: başlık, künye, metin ve altta düğme yeri. Gri kuyu, kenarlıksız. */\nexport function SkeletonCard({ lines = 3, action = true, className }: { lines?: number; action?: boolean; className?: string }) {\n  return (\n    <span aria-hidden className={cn(\"block rounded-xl bg-surface p-5 sm:p-6\", className)}>\n      <Skeleton className=\"h-5 w-1/3\" />\n      <Skeleton className=\"mt-2 h-3 w-1/4\" />\n      <SkeletonText lines={lines} className=\"mt-5\" />\n      {action ? <Skeleton className=\"mt-6 h-11 w-28 rounded-md\" /> : null}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Yükleme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "skeleton",
+    "palettes": false
+  }
+}

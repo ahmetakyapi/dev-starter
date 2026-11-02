@@ -13,6 +13,8 @@ import { NumberField } from "@/components/ui/number-field";
 import { Select } from "@/components/ui/select";
 import { Stepper } from "@/components/ui/stepper";
 import { TimeField } from "@/components/ui/time-field";
+import { ToggleGroup } from "@/components/ui/toggle-group";
+import { WeekCalendar } from "@/components/ui/week-calendar";
 import { Button } from "@/components/ui/Button";
 import {
   CUSTOMERS,
@@ -33,6 +35,11 @@ import { PageBar, Well, WellTitle, useApp } from "./_ui";
 
 const KINDS = ["Görüşme", "Teslimat", "Numune", "İç Toplantı"] as const;
 const KIND_TONE = { Görüşme: "chart-2", Teslimat: "chart-1", Numune: "chart-3", "İç Toplantı": "chart-4" } as const;
+/** Haftalık ızgarada aynı renk: rozetin tonu = bloğun `--chart-N` yıkaması. */
+const KIND_SERIES = { Görüşme: 2, Teslimat: 1, Numune: 3, "İç Toplantı": 4 } as const;
+type Kind = (typeof KINDS)[number];
+const hm = (n: number) => String(n).padStart(2, "0");
+const iso = (d: Date) => `${dayKey(d)}T${hm(d.getHours())}:${hm(d.getMinutes())}`;
 const STEPS = [
   { label: "Müşteri", description: "Kim ve ne için" },
   { label: "Zaman", description: "Gün, saat ve süre" },
@@ -58,6 +65,7 @@ export function TakvimPage() {
   const [time, setTime] = useState<string | null>("14:30");
   const [minutes, setMinutes] = useState<number | null>(45);
   const [confirm, setConfirm] = useState(false);
+  const [shown, setShown] = useState<Kind[]>([...KINDS]);
 
   const end = range.end ?? range.start;
   const inRange = useMemo(
@@ -67,6 +75,17 @@ export function TakvimPage() {
   const days = [...new Set(inRange.map((e) => dayKey(e.date)))];
   const monthEvents = events.filter((e) => e.date.getMonth() === 10);
   const next = [...events].sort((a, b) => a.date.getTime() - b.date.getTime()).find((e) => e.date > TODAY);
+
+  const weekEvents = events
+    .filter((e) => shown.includes(e.kind))
+    .map((e) => ({
+      id: e.id,
+      title: e.title,
+      start: iso(e.date),
+      end: iso(new Date(e.date.getTime() + e.minutes * 60_000)),
+      location: e.customerId ? `${customer(e.customerId).name} · ${e.place}` : e.place,
+      series: KIND_SERIES[e.kind],
+    }));
 
   const shift = (weeks: number) => {
     const start = addDays(range.start, weeks * 7);
@@ -88,14 +107,14 @@ export function TakvimPage() {
     setRange(weekOf(date));
     setConfirm(false);
     setStep(0);
-    notify({ tone: "success", title: "Randevu oluşturuldu", body: `${title} · ${longDate.format(date)}, ${clock.format(date)}` });
+    notify({ tone: "success", title: "Randevu Oluşturuldu", body: `${title} · ${longDate.format(date)}, ${clock.format(date)}` });
   };
 
   return (
     <div className="flex min-h-full flex-col">
       <PageBar
         title="Takvim"
-        description={`Kasım 2026 · ${num.format(monthEvents.length)} etkinlik`}
+        description={`Kasım 2026 · ${num.format(monthEvents.length)} Etkinlik`}
         actions={
           <Button size="sm" onClick={() => document.getElementById("randevu")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
             <CalendarPlus aria-hidden />
@@ -177,7 +196,7 @@ export function TakvimPage() {
               <EmptyState
                 className="flex-1 justify-center bg-overlay shadow-raised"
                 icon={<CalendarCheck2 />}
-                title="Bu aralıkta etkinlik yok"
+                title="Bu Aralıkta Etkinlik Yok"
                 hint="Takvimden başka bir hafta seç ya da yeni randevu oluştur."
               />
             ) : (
@@ -224,6 +243,30 @@ export function TakvimPage() {
             )}
           </Well>
         </div>
+
+        <Well labelledBy="takvim-hafta">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 id="takvim-hafta" className="text-base font-semibold text-strong">
+                Haftalık Görünüm
+              </h2>
+              <p className="mt-0.5 text-small text-muted">
+                {shortDate.format(weekOf(range.start).start)} – {shortDate.format(weekOf(range.start).end!)} · Çakışan etkinlikler yan yana.
+              </p>
+            </div>
+            <ToggleGroup<Kind>
+              aria-label="Gösterilen Etkinlik Türleri"
+              multiple
+              size="sm"
+              value={shown}
+              onValueChange={setShown}
+              items={KINDS.map((k) => ({ value: k, label: k }))}
+            />
+          </div>
+          <div className="rounded-lg bg-overlay p-2 shadow-raised">
+            <WeekCalendar label="Haftalık Takvim" week={dayKey(range.start)} events={weekEvents} now={iso(TODAY)} startHour={8} endHour={18} hourHeight={60} />
+          </div>
+        </Well>
 
         <Well labelledBy="randevu" className="scroll-mt-4">
           <WellTitle id="randevu" hint="Üç adım: müşteri, zaman, onay. Pazar günleri kapalı.">
@@ -287,7 +330,7 @@ export function TakvimPage() {
         open={confirm}
         onOpenChange={setConfirm}
         size="sm"
-        title="Randevu oluşturulsun mu?"
+        title="Randevu Oluşturulsun mu?"
         description={
           who && day && time
             ? `${customer(who).contact} (${customer(who).name}) için ${longDate.format(day)}, ${time} saatine ${minutes ?? 0} dakikalık ${kind?.toLocaleLowerCase("tr-TR")} eklenecek ve davet e-postası gidecek.`

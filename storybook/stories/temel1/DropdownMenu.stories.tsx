@@ -24,7 +24,7 @@ const onAction = fn();
 
 const meta = {
   title: "Bileşenler/Katmanlar/Açılır Menü",
-  id: "components-overlays-dropdown-menu",
+  id: "dropdown-menu",
   component: DropdownMenu,
   tags: ["autodocs"],
   parameters: {
@@ -121,9 +121,9 @@ function ColumnsMenu({ defaultOpen }: { defaultOpen?: boolean }) {
         <DropdownMenuGroup>
           <DropdownMenuLabel>Sıralama</DropdownMenuLabel>
           <DropdownMenuRadioGroup value={sort} onValueChange={(value) => setSort(String(value))}>
-            <DropdownMenuRadioItem value="yeni">En yeni önce</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="eski">En eski önce</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="tutar">Tutara göre</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="yeni">En Yeni Önce</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="eski">En Eski Önce</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="tutar">Tutara Göre</DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuGroup>
       </DropdownMenuContent>
@@ -151,7 +151,7 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Metinli tetikleyici: eylem listesi">
+      <Cell label="Metinli Tetikleyici: Eylem Listesi">
         <DropdownMenu>
           <DropdownMenuTrigger render={<Button variant="secondary" />}>
             Eylemler
@@ -166,7 +166,7 @@ export const AllVariants: Story = {
           </DropdownMenuContent>
         </DropdownMenu>
       </Cell>
-      <Cell label="İkon tetikleyici: onay ve radyo öğeleri">
+      <Cell label="İkon Tetikleyici: Onay ve Radyo Öğeleri">
         <ColumnsMenu />
       </Cell>
     </Gallery>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Ajan planı: bir yapay zekâ ajanının çok adımlı işini adım adım gösteren
- * liste ("4 adım kaldı"). Sohbette asistan mesajının içinde ya da bir görev
+ * liste ("4 Adım Kaldı"). Sohbette asistan mesajının içinde ya da bir görev
  * panelinin üstünde. Ajanın tek tek ARAÇ çağrılarını ve onaylarını göstermek
  * için `snippets/agent-feed.tsx`, `agent-approval.tsx`; bu bileşen planın
  * KUŞBAKIŞI.
@@ -35,7 +35,7 @@ export type PlanStep = { id: string; title: ReactNode; detail?: ReactNode };
 type AgentPlanProps = {
   steps: readonly PlanStep[];
   activeIndex: number;
-  /** Başlığı ez; verilmezse "N adım kaldı" / "Plan tamamlandı". */
+  /** Başlığı ez; verilmezse "N Adım Kaldı" / "Plan Tamamlandı". */
   title?: ReactNode;
   /** Duyuru için düz metin adlar (title ReactNode ise). Verilmezse sayı duyurulur. */
   stepLabels?: readonly string[];
@@ -46,7 +46,7 @@ type AgentPlanProps = {
 export function AgentPlan({ steps, activeIndex, title, stepLabels, defaultOpen = true, className }: AgentPlanProps) {
   const done = activeIndex >= steps.length;
   const remaining = Math.max(0, steps.length - activeIndex);
-  const heading = title ?? (done ? "Plan tamamlandı" : `${remaining.toLocaleString("tr-TR")} adım kaldı`);
+  const heading = title ?? (done ? "Plan Tamamlandı" : `${remaining.toLocaleString("tr-TR")} Adım Kaldı`);
   const activeLabel = stepLabels?.[activeIndex] ?? (typeof steps[activeIndex]?.title === "string" ? steps[activeIndex].title : "");
   const announcement = done
     ? `Plan tamamlandı, ${steps.length} adım.`

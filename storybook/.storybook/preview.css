@@ -9,6 +9,7 @@
 @source "../../templates/landing/components";
 @source "../../templates/landing/app";
 @source "../stories";
+@source "./install-block.tsx";
 
 /* next/font yerine (Storybook'ta yalnız görüntü için) Google Fonts bağlantısı
    preview-head.html'de; şablonun beklediği değişken adları buradan. */

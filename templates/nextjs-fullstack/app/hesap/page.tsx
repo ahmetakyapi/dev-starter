@@ -33,7 +33,7 @@ export default async function HesapPage() {
             <dd>{session.user.name ?? "—"}</dd>
           </div>
           <div className="flex justify-between gap-4">
-            <dt className="text-muted">E-posta</dt>
+            <dt className="text-muted">E-Posta</dt>
             <dd>{session.user.email ?? "—"}</dd>
           </div>
         </dl>

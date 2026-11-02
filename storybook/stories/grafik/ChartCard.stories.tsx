@@ -18,7 +18,7 @@ const SERILER = [1, 2, 3, 4, 5, 6] as const;
 
 const meta = {
   title: "Grafikler/Grafik Kartı",
-  id: "charts-chart-card",
+  id: "chart-card",
   component: ChartCard,
   tags: ["autodocs"],
   parameters: {
@@ -137,7 +137,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>
-      <GrafikHucre label="Artış, dönem seçicili">
+      <GrafikHucre label="Artış, Dönem Seçicili">
         <ChartCard id="v-artis" label="Ziyaretçi" value="925" change={5.2} action={<Donem />}>
           <p className="text-small text-muted">Grafik alanı</p>
         </ChartCard>
@@ -147,17 +147,17 @@ export const AllVariants: Story = {
           <p className="text-small text-muted">Grafik alanı</p>
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Değişim yok">
+      <GrafikHucre label="Değişim Yok">
         <ChartCard id="v-sabit" label="Açık Bilet" value="42" change={0}>
           <p className="text-small text-muted">Grafik alanı</p>
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Değişimsiz, yalnız değer">
+      <GrafikHucre label="Değişimsiz, Yalnız Değer">
         <ChartCard id="v-yalin" label="Toplam Müşteri" value="18.204">
           <p className="text-small text-muted">Grafik alanı</p>
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Lejant, iki sütun">
+      <GrafikHucre label="Lejant, İki Sütun">
         <ChartCard
           id="v-lejant2"
           label="Tarayıcıya Göre Ziyaretçi"
@@ -168,7 +168,7 @@ export const AllVariants: Story = {
           <p className="text-small text-muted">Grafik alanı</p>
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Lejant, üç sütun ve birim">
+      <GrafikHucre label="Lejant, Üç Sütun ve Birim">
         <ChartCard
           id="v-lejant3"
           label="Destek Kanalı"
@@ -180,7 +180,7 @@ export const AllVariants: Story = {
               className="px-1 pb-1"
               items={[
                 { label: "Canlı Destek", value: 4230, series: 2, unit: "bilet" },
-                { label: "E-posta", value: 3420, series: 3, unit: "bilet" },
+                { label: "E-Posta", value: 3420, series: 3, unit: "bilet" },
                 { label: "Telefon", value: 1350, series: 1, unit: "bilet" },
               ]}
             />

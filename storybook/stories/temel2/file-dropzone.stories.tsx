@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Seçim/Dosya Bırakma Alanı",
-  id: "components-selection-file-dropzone",
+  id: "file-dropzone",
   component: FileDropzone,
   tags: ["autodocs"],
   parameters: {
@@ -62,10 +62,10 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Çoklu, varsayılan izin listesi" className="place-items-stretch">
+      <Cell label="Çoklu, Varsayılan İzin Listesi" className="place-items-stretch">
         <FileDropzone label="Fatura Yükle" />
       </Cell>
-      <Cell label="Tek görsel" className="place-items-stretch">
+      <Cell label="Tek Görsel" className="place-items-stretch">
         <FileDropzone label="Profil Fotoğrafı" hint="PNG ya da JPEG." multiple={false} accept={["image/png", "image/jpeg"]} />
       </Cell>
     </Gallery>

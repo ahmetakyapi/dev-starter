@@ -10,7 +10,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Katmanlar/İletişim Penceresi",
-  id: "components-overlays-dialog",
+  id: "dialog",
   component: Dialog,
   tags: ["autodocs"],
   parameters: {
@@ -124,7 +124,7 @@ function InviteDialog({ initialOpen }: { initialOpen: boolean }) {
         }
       >
         <form className="grid gap-4" onSubmit={(event) => event.preventDefault()}>
-          <Field label="E-posta" name="email" type="email" placeholder="mert.aksoy@acme.com.tr" data-autofocus />
+          <Field label="E-Posta" name="email" type="email" placeholder="mert.aksoy@acme.com.tr" data-autofocus />
           <Field label="Rol" name="rol" defaultValue="Düzenleyici" hint="Yönetici, Düzenleyici ya da Okuyucu." />
         </form>
       </Dialog>
@@ -152,13 +152,13 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="sm · yıkıcı onay">
+      <Cell label="sm · Yıkıcı Onay">
         <SizedDialog size="sm" title="Kaydı Sil" body="Bu kayıt kalıcı olarak silinir." />
       </Cell>
-      <Cell label="md · form">
+      <Cell label="md · Form">
         <InviteDialog initialOpen={false} />
       </Cell>
-      <Cell label="lg · uzun içerik, kaydırılır">
+      <Cell label="lg · Uzun İçerik, Kaydırılır">
         <SizedDialog
           size="lg"
           title="Kullanım Koşulları"

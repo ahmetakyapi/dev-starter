@@ -26,7 +26,7 @@ function WithModel(props: ComponentProps<typeof ChatComposer>) {
 
 const meta = {
   title: "Bloklar/Mesaj Kutusu",
-  id: "blocks-chat-composer",
+  id: "chat-composer",
   component: ChatComposer,
   tags: ["autodocs"],
   parameters: {
@@ -113,16 +113,16 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={2}>
-      <Cell label="Boş · gönder soluk" className="block">
+      <Cell label="Boş · Gönder Soluk" className="block">
         <ChatComposer {...args} />
       </Cell>
-      <Cell label="Yanıt akıyor · Durdur" className="block">
+      <Cell label="Yanıt Akıyor · Durdur" className="block">
         <ChatComposer {...args} status="streaming" />
       </Cell>
-      <Cell label="Tek model · ek ve ses yok" className="block">
+      <Cell label="Tek Model · Ek ve Ses Yok" className="block">
         <ChatComposer {...args} models={undefined} onAttach={undefined} onVoice={undefined} />
       </Cell>
-      <Cell label="Devre dışı" className="block">
+      <Cell label="Devre Dışı" className="block">
         <ChatComposer {...args} disabled placeholder="Bağlantı bekleniyor" />
       </Cell>
     </Gallery>

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "accordion",
+  "type": "registry:ui",
+  "title": "Açılır Bölümler",
+  "description": "SSS, katlanır bölüm",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/accordion.tsx",
+      "content": "\"use client\";\n\nimport { ChevronDown } from \"lucide-react\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Akordeon: `<details>` / `<summary>`. JavaScript'siz açılıp kapanır,\n * sayfa içi aramada (Ctrl+F) kapalı içerik bulunur ve kendiliğinden açılır,\n * ekran okuyucu \"genişletilmiş / daraltılmış\" der. `exclusive` verilirse\n * yerel `name` özniteliği aynı gruptan yalnızca birini açık tutar.\n *\n * AÇILAN İÇERİK BASTIĞIN YERDE UZAR. Kaydırma çapalaması (scroll\n * anchoring) ekrandaki bir öğeyi \"çapa\" seçip içerik değişince onu yerinde\n * tutmak için sayfayı kaydırır; çapa açılan bölümün altındaki bir öğeye\n * düşerse okuyucu açtığı metnin sonuna fırlatılır (Safari 27 bunu bir bülten\n * kartında yaptı). Özete basıldığı an çapalama kısa süre kapanır, içerik\n * aşağı doğru uzar, sonra çapalama geri gelir. \"use client\" yalnızca bu\n * korumanın tıklama dinleyicisi için; katlama JS'siz de çalışır.\n *\n * İKİ GÖRÜNÜŞ (`variant`, \"board\" dili 2026-11):\n *   `line` (varsayılan): kıl çizgisiyle ayrılmış satırlar; SSS gibi uzun\n *     metin listeleri.\n *   `well`: gri kuyu (`bg-surface rounded-xl p-1.5`) içinde her öğe beyaz\n *     karo (`bg-overlay shadow-raised rounded-lg`); ayar ya da özellik\n *     panelleri. Kuyu → karo tek seviye: karo içine kart konmaz.\n * Chevron küçük yuvarlak bir düğme gibi durur, açılınca döner; özete\n * gelince arka planı yumuşak griye döner (tıklanabilir olduğunu söyler).\n *\n * Açılış animasyonu `::details-content` + `interpolate-size` (yalnızca\n * destekleyen tarayıcıda; desteklemeyen anında açar). Hareketi azaltan\n * kullanıcıda süre sıfıra iner (globals.css genel kuralı).\n */\n\n/** Çapalamanın kapalı kaldığı süre: açılış geçişinin (280 ms) üstünde. */\nconst HOLD_MS = 450;\n\nconst STYLES = `\n.ui-accordion { interpolate-size: allow-keywords; }\n.ui-accordion::details-content {\n  block-size: 0;\n  overflow-y: clip;\n  transition: block-size 280ms var(--ease-brand), content-visibility 280ms allow-discrete;\n}\n.ui-accordion[open]::details-content { block-size: auto; }\n`;\n\nlet releaseTimer: number | undefined;\n\nfunction holdAnchor() {\n  // Kök VE gövde: tarayıcılar görünüm alanının değerini ikisinden birinden okuyor.\n  const root = document.documentElement;\n  root.style.setProperty(\"overflow-anchor\", \"none\");\n  document.body.style.setProperty(\"overflow-anchor\", \"none\");\n  window.clearTimeout(releaseTimer);\n  releaseTimer = window.setTimeout(() => {\n    root.style.removeProperty(\"overflow-anchor\");\n    document.body.style.removeProperty(\"overflow-anchor\");\n  }, HOLD_MS);\n}\n\nconst VARIANTS = {\n  line: \"divide-y divide-line-soft border-y border-line-soft\",\n  well: \"space-y-1.5 rounded-xl bg-surface p-1.5 [&>details]:rounded-lg [&>details]:bg-overlay [&>details]:px-4 [&>details]:shadow-raised\",\n} as const;\n\nexport function Accordion({\n  children,\n  variant = \"line\",\n  className,\n}: {\n  children: ReactNode;\n  variant?: keyof typeof VARIANTS;\n  className?: string;\n}) {\n  return (\n    <div className={cn(VARIANTS[variant], className)}>\n      <style href=\"ui-accordion\" precedence=\"default\">\n        {STYLES}\n      </style>\n      {children}\n    </div>\n  );\n}\n\ntype AccordionItemProps = {\n  /** Title Case başlık. */\n  title: ReactNode;\n  children: ReactNode;\n  defaultOpen?: boolean;\n  /** Aynı ada sahip öğelerden yalnızca biri açık kalır (yerel `name`). */\n  exclusive?: string;\n  className?: string;\n};\n\nexport function AccordionItem({ title, children, defaultOpen, exclusive, className }: AccordionItemProps) {\n  return (\n    <details name={exclusive} open={defaultOpen} className={cn(\"ui-accordion group\", className)}>\n      <summary\n        onClick={holdAnchor}\n        className=\"group/summary flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 text-read font-semibold text-strong select-none [&::-webkit-details-marker]:hidden [&:focus-visible]:outline-offset-[-2px]\"\n      >\n        {title}\n        <span\n          aria-hidden\n          className=\"grid size-7 shrink-0 place-items-center rounded-full text-muted transition-colors group-hover/summary:bg-surface-raised group-hover/summary:text-strong\"\n        >\n          <ChevronDown className=\"size-4 transition-transform duration-300 group-open:rotate-180\" strokeWidth={1.75} />\n        </span>\n      </summary>\n      <div className=\"pb-4 text-base text-body\">{children}</div>\n    </details>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "accordion",
+    "palettes": false
+  }
+}

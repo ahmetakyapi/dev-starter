@@ -23,7 +23,7 @@ function failure(digest?: string): Error & { digest?: string } {
 
 const meta = {
   title: "Ekranlar/Açılış Sayfası/Sistem Sayfaları",
-  id: "screens-landing-system-pages",
+  id: "system-pages",
   component: ErrorBoundary,
   tags: ["autodocs"],
   parameters: {
@@ -121,7 +121,7 @@ export const AllEmptyStates: Story = {
     <main className="grid min-h-dvh place-items-center p-4">
       <h1 className="sr-only">Boş Durumlar</h1>
       <Gallery cols={2}>
-        <Cell label="İkon, ipucu ve eylem">
+        <Cell label="İkon, İpucu ve Eylem">
           <EmptyState
             className="w-full"
             icon={<SearchX aria-hidden />}
@@ -141,7 +141,7 @@ export const AllEmptyStates: Story = {
             action={<ButtonLink href="/">{NOT_FOUND.action}</ButtonLink>}
           />
         </Cell>
-        <Cell label="Yalnız başlık">
+        <Cell label="Yalnız Başlık">
           <EmptyState className="w-full" title={NOT_FOUND.title} />
         </Cell>
       </Gallery>

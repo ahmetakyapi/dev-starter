@@ -12,7 +12,7 @@ const SHORTCUTS = [
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Klavye Tuşu",
-  id: "components-buttons-kbd",
+  id: "kbd",
   component: Kbd,
   tags: ["autodocs"],
   parameters: {
@@ -81,7 +81,7 @@ export const AllVariants: Story = {
       <Cell label="Sözcük">
         <Kbd>Esc</Kbd>
       </Cell>
-      <Cell label="Simge (adlı)">
+      <Cell label="Simge (Adlı)">
         <div className="flex gap-1.5">
           <Kbd label="Command">⌘</Kbd>
           <Kbd label="Shift">⇧</Kbd>

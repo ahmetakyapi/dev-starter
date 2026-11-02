@@ -53,13 +53,13 @@ const NAV: readonly ShellNavGroup[] = [
 ];
 
 const PLAN: readonly PlanStep[] = [
-  { id: "oku", title: "Destek kayıtlarını oku" },
-  { id: "ayikla", title: "Yinelenen talepleri ayıkla" },
-  { id: "grupla", title: "Talepleri konuya göre grupla" },
-  { id: "sec", title: "En sık üç sorunu seç", detail: "1.284 talep içinde 41 konu kümesi karşılaştırılıyor" },
-  { id: "ornek", title: "Her sorun için örnek talep bul" },
-  { id: "yaz", title: "Özet raporu yaz" },
-  { id: "paylas", title: "Ekip için paylaşım taslağı hazırla" },
+  { id: "oku", title: "Destek Kayıtlarını Oku" },
+  { id: "ayikla", title: "Yinelenen Talepleri Ayıkla" },
+  { id: "grupla", title: "Talepleri Konuya Göre Grupla" },
+  { id: "sec", title: "En Sık Üç Sorunu Seç", detail: "1.284 talep içinde 41 konu kümesi karşılaştırılıyor" },
+  { id: "ornek", title: "Her Sorun için Örnek Talep Bul" },
+  { id: "yaz", title: "Özet Raporu Yaz" },
+  { id: "paylas", title: "Ekip için Paylaşım Taslağı Hazırla" },
 ];
 const PLAN_LABELS = PLAN.map((step) => String(step.title));
 
@@ -274,7 +274,7 @@ const SETTINGS: readonly SettingsTab[] = [
       <SettingsSection title="Bildirimler" description="Hangi olayda haber verelim?">
         <Switch label="Ajan İşi Bitirdiğinde" hint="Uzun süren planlar tamamlanınca." defaultChecked />
         <Switch label="Onay Beklendiğinde" hint="Ajan bir işlem için iznini istediğinde." defaultChecked />
-        <Switch label="Haftalık E-posta Özeti" hint="Pazartesi sabahı, 09.00." />
+        <Switch label="Haftalık E-Posta Özeti" hint="Pazartesi sabahı, 09.00." />
       </SettingsSection>
     ),
   },
@@ -395,7 +395,7 @@ export default function VitrinBloklar() {
               <ChatThread
                 messages={[]}
                 empty={{
-                  title: "Bugün ne yapalım?",
+                  title: "Bugün Ne Yapalım?",
                   description: emptyNote ?? "Bir soru sor ya da aşağıdaki işlerden birini seç.",
                   suggestions: SUGGESTIONS,
                   onSuggestion: (text) => setEmptyNote(`Seçtin: “${text}”`),

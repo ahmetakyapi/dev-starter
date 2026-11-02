@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stage-bars",
+  "type": "registry:ui",
+  "title": "Aşama Çubukları",
+  "description": "Huni aşamaları, iz üstünde hap çubuk",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+    "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/stage-bars.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\nimport { SERIES_BG } from \"@/components/ui/chart-card\";\n\n/**\n * Aşama çubukları: bir hunideki adımlar (ziyaret → kayıt → aktif → ücretli)\n * hap biçimli satırlar halinde. Ad solda, dolgu iz (track) üstünde ortada,\n * değer ve pay sağda. Sunucu bileşeni, JavaScript inmez.\n *\n * NEDEN ÇUBUK, NEDEN HUNİ ÇİZİMİ DEĞİL: aşamalar arası farkı göz ancak\n * ortak bir taban çizgisinde doğru kıyaslar. Daralan huni çizimi alanı\n * büyütür ve küçük farkı abartır; uzunluk ise doğrudan okunur.\n *\n * Satırlar `subgrid`: ad ve değer sütunu EN UZUN içeriğe göre bir kez\n * ölçülür, her satırın izi aynı yerden başlayıp aynı yerde biter.\n *\n * Pay her zaman ilk aşamaya göre (`%100` = ilk satır). İki aşama arası\n * dönüşüm ayrı bir bilgi; gerekiyorsa `note` ile satıra yaz.\n *\n * Erişilebilirlik: bir `ol`. Her satır \"Kayıt 790 %67 (ilk aşamaya göre)\"\n * olarak okunur; dolgu çubuğu `aria-hidden` (bilgi metinde zaten var).\n * Fareyle bir satırın üstüne gelince diğerleri geri çekilir (`:has`, JS yok);\n * bu yalnızca bir süs, bilgi her satırda zaten yazılı.\n *\n * İkon dolgunun üstünde `text-chart-ink`: seri renkleri iki temada da açık\n * pastel, ikon ikisinde de koyu kalır.\n */\n\ntype Stage = { label: ReactNode; value: number; icon?: ReactNode; note?: ReactNode };\n\nconst number = new Intl.NumberFormat(\"tr-TR\");\n\nexport function StageBars({\n  stages,\n  title,\n  className,\n}: {\n  stages: readonly Stage[];\n  /** Ekran okuyucu adı: \"Kayıt Hunisi\". */\n  title: string;\n  className?: string;\n}) {\n  const base = stages[0]?.value || 1;\n  return (\n    <ol aria-label={title} className={cn(\"group/bars grid grid-cols-[auto_1fr_auto] gap-x-3 gap-y-2\", className)}>\n      {stages.map((stage, i) => {\n        const share = Math.round((stage.value / base) * 100);\n        // Görünür en küçük dolgu: %0 olmayan değer iz içinde kaybolmasın\n        const width = stage.value > 0 ? Math.max(share, 4) : 0;\n        return (\n          <li\n            key={i}\n            className=\"col-span-3 grid grid-cols-subgrid items-center transition-opacity duration-200 group-has-[li:hover]/bars:opacity-45 hover:opacity-100!\"\n          >\n            <span className=\"truncate text-right text-base text-body\">{stage.label}</span>\n            <span aria-hidden className=\"relative h-6 overflow-hidden rounded-full bg-chart-track\">\n              <span\n                className={cn(\"absolute inset-y-0 left-0 flex items-center rounded-full pl-2 text-chart-ink [&_svg]:size-3.5\", SERIES_BG[i % SERIES_BG.length])}\n                style={{ width: `${width}%` }}\n              >\n                {stage.icon}\n              </span>\n            </span>\n            <span className=\"flex items-baseline gap-1.5 justify-self-end text-base tabular-nums\">\n              <span className=\"font-semibold text-strong\">{number.format(stage.value)}</span>\n              <span className=\"w-9 text-small text-muted\">%{share}</span>\n              <span className=\"sr-only\"> (ilk aşamaya göre)</span>\n            </span>\n            {stage.note ? <span className=\"col-start-2 col-end-4 text-small text-muted\">{stage.note}</span> : null}\n          </li>\n        );\n      })}\n    </ol>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Grafik"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "stage-bars",
+    "palettes": false
+  }
+}

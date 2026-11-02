@@ -6,7 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Sayfa Başlığı",
-  id: "components-core-page-header",
+  id: "page-header",
   component: PageHeader,
   tags: ["autodocs"],
   parameters: {
@@ -44,7 +44,7 @@ export const Default: Story = { name: "Varsayılan" };
 
 export const GradientTitle: Story = {
   name: "Degrade Başlık",
-  args: { title: "Fiyatlar", eyebrow: "Şeffaf plan", ink: true, description: "Ekip büyüdükçe ödeyin; gizli ücret yok.", action: undefined },
+  args: { title: "Fiyatlar", eyebrow: "Şeffaf Plan", ink: true, description: "Ekip büyüdükçe ödeyin; gizli ücret yok.", action: undefined },
 };
 
 export const Plain: Story = {
@@ -66,22 +66,22 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Künye + açıklama + eylem" className="block">
+      <Cell label="Künye + Açıklama + Eylem" className="block">
         <article aria-label="Künye + açıklama + eylem">
           <PageHeader eyebrow="Ekim 2026" title="Raporlar" description="Aylık satış ve tahsilat özeti." action={<Button>Yeni Rapor</Button>} />
         </article>
       </Cell>
-      <Cell label="Mürekkepli kısa başlık" className="block">
+      <Cell label="Mürekkepli Kısa Başlık" className="block">
         <article aria-label="Mürekkepli kısa başlık">
           <PageHeader title="Fiyatlar" ink description="Ekip büyüdükçe ödeyin." />
         </article>
       </Cell>
-      <Cell label="Yalnızca başlık" className="block">
+      <Cell label="Yalnızca Başlık" className="block">
         <article aria-label="Yalnızca başlık">
           <PageHeader title="Ayarlar" />
         </article>
       </Cell>
-      <Cell label="Bağlantı eylemi" className="block">
+      <Cell label="Bağlantı Eylemi" className="block">
         <article aria-label="Bağlantı eylemi">
           <PageHeader eyebrow="Destek" title="Yardım Merkezi" action={<ButtonLink href="/iletisim">İletişim</ButtonLink>} />
         </article>

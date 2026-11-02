@@ -24,7 +24,7 @@ const CATEGORY = [
 
 const meta = {
   title: "Bileşenler/Seçim/Rozet",
-  id: "components-selection-badge",
+  id: "badge",
   component: Badge,
   tags: ["autodocs"],
   parameters: {
@@ -98,10 +98,10 @@ export const AllVariants: Story = {
   ],
   render: () => (
     <div className="grid gap-8">
-      <Row title="Durum · soft · noktalı (üst sıra pill, alt sıra rounded)" items={STATUS} variant="soft" dot />
+      <Row title="Durum · soft · Noktalı (Üst Sıra pill, Alt Sıra rounded)" items={STATUS} variant="soft" dot />
       <Row title="Durum · outline" items={STATUS} variant="outline" />
       <Row title="Kategori · soft" items={CATEGORY} variant="soft" />
-      <Row title="Kategori · outline · noktalı" items={CATEGORY} variant="outline" dot />
+      <Row title="Kategori · outline · Noktalı" items={CATEGORY} variant="outline" dot />
     </div>
   ),
 };

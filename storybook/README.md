@@ -1,14 +1,14 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**542 hikâye**, her biri açık/koyu tema ve 10 palette:
+**637 hikâye**, her biri açık/koyu tema ve 10 palette:
 
 | Bölüm | İçerik |
 |-------|--------|
-| **Örnek Tasarım** (en üstte) | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (73/73 bileşen, 11 grafik, bloklar, 10 palet); **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
+| **Örnek Tasarım** (en üstte) | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (86/86 bileşen, 15 grafik, bloklar, 10 palet); **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
 | Vitrin | Genel bakış + grup grup vitrin sayfaları (`snippets/ui/vitrin/`) |
 | Başlangıç, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
 | Bileşenler | `snippets/ui`nin bütün bileşenleri + şablonun ortak bileşenleri; her biri varsayılan, durumlar, bütün varyantlar, `play` etkileşimi |
-| Grafikler | 11 grafik + Analitik Panosu, Satış Özeti kompozisyonları |
+| Grafikler | 15 grafik + Analitik Panosu, Satış Özeti kompozisyonları |
 | Bloklar | Uygulama kabuğu, sohbet, giriş, ayarlar, ajan planı, palet seçici |
 | Ekranlar | Landing (tam sayfa, 8 üst bölüm varyantı, 11 bölüm), sistem sayfaları, uygulama ekranları |
 
@@ -55,13 +55,30 @@ Görünen adlar (`title`, `name`) Türkçe; adres (URL) İngilizce. Her meta
 İngilizce bir `id` taşır, her hikâye İngilizce adla dışa aktarılır:
 
 ```tsx
-const meta = { title: "Bileşenler/Katmanlar/Araç İpucu", id: "components-overlays-tooltip", … }
-export const Default: Story = { name: "Varsayılan" }   // → components-overlays-tooltip--default
+const meta = { title: "Bileşenler/Katmanlar/Araç İpucu", id: "tooltip", … }
+export const Default: Story = { name: "Varsayılan" }   // → tooltip--default
 ```
+
+Grup kimliği **kısa**: bileşenin dosya adı (`tooltip`, `area-chart`), en çok
+24 harf, grup adı (Bileşenler/Katmanlar) adrese girmez. Tek hikâyeli sayfada
+dışa aktarım `Overview` (`colors--overview`), grup adı tekrar etmez.
+
+Kısa yönlendirmeler (`vercel.json`): `/showcase`, `/pusula`, `/gallery`,
+`/start`, `/theme`, `/palettes`, bir bileşenin belgesi `/c/<ad>`
+(ör. `/c/tooltip`), bir hikâye `/s/<ad>/<hikâye>` (ör. `/s/tooltip/default`).
 
 Kimlik verilmezse Storybook Türkçe başlıktan `giriş--giris`, `i̇pucu` gibi
 bozuk adresler üretir. `npm run check:ids` (CI'da derlemeden sonra) yalnızca
 `a-z0-9-` ve Türkçe kelimesiz adreslere izin verir.
+
+## Projeye Al Bloğu ve shadcn Kaydı
+
+Her bileşen belgesinin (`/c/<ad>`) başında "Projeye Al": `add-ui` ve shadcn
+kurulum komutları (kopyala düğmeli), iç bileşen, şablon dosyası ve npm
+bağımlılıkları. Veri `snippets/ui/registry.json`dan (`.storybook/install-block.tsx`,
+`parameters.docs.page`); eşleme meta `id`sinden, istisna kayıttaki `storyId`.
+`public/r/*.json` shadcn kaydı, derlemede `/r/<ad>.json` olarak yayınlanır
+(`staticDirs`). İkisi de `npm run registry:ui` ile üretilir (depo kökü).
 
 ## Hikâye Yazarken
 

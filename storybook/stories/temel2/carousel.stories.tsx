@@ -4,11 +4,11 @@ import { Carousel } from "@/components/ui/carousel";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const SLIDES = [
-  { tag: "Grafikler", title: "Huni ve sütun grafikleri panoya geldi", body: "Kayıttan ödemeye her aşamayı tek kartta karşılaştırın.", series: "bg-chart-1" },
-  { tag: "Ekip", title: "Panoya misafir davet edin", body: "Düzenleme yetkisi vermeden yalnızca okuma bağlantısı paylaşın.", series: "bg-chart-2" },
-  { tag: "Dışa Aktarma", title: "CSV ve PDF tek tıkla", body: "Filtrelenmiş görünüm neyse dosyaya o yazılır.", series: "bg-chart-3" },
-  { tag: "Bildirimler", title: "Günlük özet e-postası", body: "Her sabah 09.00'da yalnızca değişenler.", series: "bg-chart-4" },
-  { tag: "Mobil", title: "Telefondan onay verin", body: "Bekleyen harcamalar tek ekranda, iki dokunuşla.", series: "bg-chart-5" },
+  { tag: "Grafikler", title: "Huni ve Sütun Grafikleri Panoya Geldi", body: "Kayıttan ödemeye her aşamayı tek kartta karşılaştırın.", series: "bg-chart-1" },
+  { tag: "Ekip", title: "Panoya Misafir Davet Edin", body: "Düzenleme yetkisi vermeden yalnızca okuma bağlantısı paylaşın.", series: "bg-chart-2" },
+  { tag: "Dışa Aktarma", title: "CSV ve PDF Tek Tıkla", body: "Filtrelenmiş görünüm neyse dosyaya o yazılır.", series: "bg-chart-3" },
+  { tag: "Bildirimler", title: "Günlük Özet E-postası", body: "Her sabah 09.00'da yalnızca değişenler.", series: "bg-chart-4" },
+  { tag: "Mobil", title: "Telefondan Onay Verin", body: "Bekleyen harcamalar tek ekranda, iki dokunuşla.", series: "bg-chart-5" },
 ];
 
 const cards = (list = SLIDES) =>
@@ -29,7 +29,7 @@ const QUOTES = [
 
 const meta = {
   title: "Bileşenler/Gezinme/Kart Kaydırıcı",
-  id: "components-navigation-carousel",
+  id: "carousel",
   component: Carousel,
   tags: ["autodocs"],
   parameters: {
@@ -94,10 +94,10 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Varsayılan genişlik" className="place-items-stretch">
+      <Cell label="Varsayılan Genişlik" className="place-items-stretch">
         <Carousel label="Yeni Neler Var, galeri" slides={cards()} slideClassName="basis-[85%]" />
       </Cell>
-      <Cell label="Tam genişlik slayt" className="place-items-stretch">
+      <Cell label="Tam Genişlik Slayt" className="place-items-stretch">
         <Carousel label="Tam genişlik, galeri" slides={cards()} slideClassName="basis-full" />
       </Cell>
     </Gallery>

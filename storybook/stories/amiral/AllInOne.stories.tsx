@@ -20,8 +20,8 @@ import { GroupHead, Reveal, SectionHead } from "./_ui";
 
 /* Storybook içi bağlantılar: İngilizce kimlikler (ana oturumun adlandırması). */
 const story = (id: string) => `./?path=/story/${id}`;
-const PUSULA = story("showcase-pusula-dashboard--app");
-const GETTING_STARTED = story("getting-started--getting-started");
+const PUSULA = story("pusula--app");
+const GETTING_STARTED = story("start--overview");
 const GALLERY = story("gallery--overview");
 
 const count = (group: (typeof GROUPS)[number]["id"]) => Object.values(GROUP_OF).filter((g) => g === group).length;
@@ -94,12 +94,12 @@ function TopBar() {
 
 function Numbers() {
   const items = [
-    { value: TOTAL, label: "bileşen", note: "snippets/ui, kopyala-yapıştır kaynak" },
-    { value: count("grafik"), label: "grafik", note: "kart kabıyla, bağımlılıksız SVG" },
-    { value: count("blok"), label: "blok", note: "kabuk, sohbet, giriş, ayarlar" },
-    { value: PALETTE_COUNT, label: "palet", note: "tek öznitelikle değişir" },
-    { value: 2, label: "tema", note: "açık ve koyu, her ikisinde AA" },
-    { value: STORY_COUNT, label: "hikâye", note: "bu katalogda, kaynaktan sayıldı" },
+    { value: TOTAL, label: "Bileşen", note: "snippets/ui, kopyala-yapıştır kaynak" },
+    { value: count("grafik"), label: "Grafik", note: "kart kabıyla, bağımlılıksız SVG" },
+    { value: count("blok"), label: "Blok", note: "kabuk, sohbet, giriş, ayarlar" },
+    { value: PALETTE_COUNT, label: "Palet", note: "tek öznitelikle değişir" },
+    { value: 2, label: "Tema", note: "açık ve koyu, her ikisinde AA" },
+    { value: STORY_COUNT, label: "Hikâye", note: "bu katalogda, kaynaktan sayıldı" },
   ];
   return (
     <section aria-labelledby="sayilar" className="mt-24 sm:mt-32">
@@ -266,7 +266,7 @@ function AllInOnePage() {
             eyebrow="Bileşenler"
             title={
               <>
-                {GALLERY_COUNT} parça, <span className="text-muted">hepsi canlı.</span>
+                {GALLERY_COUNT} Parça, <span className="text-muted">Hepsi Canlı</span>
               </>
             }
             lead="Her biri kendi kuyusunda, gerçek veriyle ve tıklanabilir: menüler açılır, takvim oklarla gezilir, pencere odak tuzağıyla gelir."
@@ -294,7 +294,7 @@ function AllInOnePage() {
             eyebrow="Grafikler"
             title={
               <>
-                {count("grafik")} grafik, <span className="text-muted">tek bir pano.</span>
+                {count("grafik")} Grafik, <span className="text-muted">Tek Bir Pano</span>
               </>
             }
             lead="Kanal payı akışın kaynaklarıyla, huninin son aşaması ısı haritasının Ekim toplamıyla, abonelik halkası abone sayısıyla aynı. Hiçbir toplam elle yazılmadı."
@@ -313,7 +313,7 @@ function AllInOnePage() {
             eyebrow="Bloklar"
             title={
               <>
-                Parçalar birleşince, <span className="text-muted">ürün olur.</span>
+                Parçalar Birleşince, <span className="text-muted">Ürün Olur</span>
               </>
             }
             lead="Uygulama kabuğunun içinde yapay zekâ asistanı planını adım adım yürütür; yaz ve gönder, cevap gelir. Giriş kartı ile ayarlar penceresi aynı dilde."
@@ -330,7 +330,7 @@ function AllInOnePage() {
             eyebrow="Tema"
             title={
               <>
-                On palet, <span className="display-ink">iki tema.</span>
+                On Palet, <span className="display-ink">İki Tema</span>
               </>
             }
             lead="Sistem renkleri nötr kalır; palet yalnızca birincil eylemi, marka karosunu ve kısa başlığı boyar. Bir karta dokun: bütün sayfa o paletle döner."
@@ -353,7 +353,7 @@ function AllInOnePage() {
             eyebrow="Kapsam"
             title={
               <>
-                Sayılan, <span className="text-muted">sayılmayan değil.</span>
+                Sayılan, <span className="text-muted">Sayılmayan Değil</span>
               </>
             }
             lead={`Liste snippets/ui klasöründen (${SNIPPETS.length} dosya) ve bu sayfanın kaynak dosyalarındaki içe aktarımlardan derleme anında çıkar. Bir ada dokun, kuyusuna gidersin.`}
@@ -370,7 +370,7 @@ function AllInOnePage() {
             eyebrow="Kurulum"
             title={
               <>
-                Üç adımda <span className="text-muted">senin projende.</span>
+                Üç Adımda <span className="text-muted">Senin Projende</span>
               </>
             }
           />
@@ -380,8 +380,8 @@ function AllInOnePage() {
         </Section>
 
         <footer className="mt-28 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-small text-muted">
-          <span>dev-starter · board dili · 2 Kasım 2026</span>
-          <span>Örnek veri: {BRAND.name}, {BRAND.city}</span>
+          <span>dev-starter · Board Dili · 2 Kasım 2026</span>
+          <span>Örnek Veri: {BRAND.name}, {BRAND.city}</span>
           <a href="#ust" className={buttonClass({ variant: "ghost", size: "sm" })}>
             Başa Dön
           </a>
@@ -397,7 +397,7 @@ function AllInOnePage() {
 
 const meta = {
   title: "Örnek Tasarım/Her Şey Bir Arada",
-  id: "showcase-all-in-one",
+  id: "showcase",
   component: AllInOnePage,
   // Tam ekran vitrin sayfası: otomatik belge sayfası işe yaramaz ve kök adreste
   // ilk açılan kayıt olurdu. Ziyaretçi doğrudan sayfanın kendisini görür.
@@ -407,7 +407,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Kataloğun vitrin yüzü: 73 bileşenin hepsi tek uzun sayfada, tek bir kurgunun (Kıyı Kahve, İzmir) tutarlı verisiyle. Kahraman kompozisyonu, sayılar, grup grup canlı bileşen galerisi, on bir grafiklik pano, bloklar, on palet ve iki tema, kapsam dizini ve kurulum. Kapsam rozeti derleme anında `import.meta.glob` ile ölçülür.",
+          `Kataloğun vitrin yüzü: ${TOTAL} bileşenin hepsi tek uzun sayfada, tek bir kurgunun (Kıyı Kahve, İzmir) tutarlı verisiyle. Kahraman kompozisyonu, sayılar, grup grup canlı bileşen galerisi, ${count("grafik")} grafiklik pano, bloklar, ${PALETTE_COUNT} palet ve iki tema, kapsam dizini ve kurulum. Sayıların hepsi derleme anında ölçülür: bileşenler \`import.meta.glob\` ile snippets/ui klasöründen, kapsam bu sayfanın içe aktarımlarından.`,
       },
     },
   },

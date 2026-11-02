@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stepper",
+  "type": "registry:ui",
+  "title": "Adım Göstergesi",
+  "description": "Çok adımlı akışta konum",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/stepper.tsx",
+      "content": "import { Check } from \"lucide-react\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Adım göstergesi: çok adımlı bir akışta neredeyiz (\"Bilgiler › Ödeme ›\n * Onay\"). Sunucu bileşeni; adımlar arası geçişi akışın kendisi yönetir.\n *\n * Sıralı liste (`<ol>`): ekran okuyucu \"3 öğeden 2.\" der. Bulunulan adım\n * `aria-current=\"step\"`. Tamamlanan adımın durumu yalnızca onay işaretiyle\n * değil, görünmez \"Tamamlandı\" metniyle de söylenir.\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): tamamlanan adım dolu vurgu + tik;\n * bulunulan adım beyaz karo, vurgu çizgisi ve yumuşak halka\n * (`ring-primary-wash`); gelecek adım gri kuyu. Bağlantı çizgisi 2 piksel\n * hap: tamamlanan kısım vurgu, kalan kısım iz (`bg-chart-track`).\n *\n * Telefonda dikey (etiketler sığar, açıklama okunur), `sm` üstünde yatay.\n */\n\nexport type Step = { label: ReactNode; description?: ReactNode };\n\ntype StepperProps = {\n  steps: readonly Step[];\n  /** Bulunulan adımın sırası, sıfırdan. */\n  current: number;\n  \"aria-label\"?: string;\n  doneLabel?: string;\n  className?: string;\n};\n\nexport function Stepper({ steps, current, doneLabel = \"Tamamlandı\", className, ...props }: StepperProps) {\n  return (\n    <ol aria-label={props[\"aria-label\"] ?? \"Adımlar\"} className={cn(\"flex flex-col gap-4 sm:flex-row sm:gap-0\", className)}>\n      {steps.map((step, index) => {\n        const state = index < current ? \"done\" : index === current ? \"current\" : \"upcoming\";\n        const last = index === steps.length - 1;\n        return (\n          <li\n            key={index}\n            aria-current={state === \"current\" ? \"step\" : undefined}\n            className=\"relative flex min-w-0 flex-1 gap-3 sm:flex-col sm:gap-2.5\"\n          >\n            <span className=\"flex items-center sm:w-full\">\n              <span\n                className={cn(\n                  \"grid size-8 shrink-0 place-items-center rounded-full border text-small font-semibold tabular-nums transition-[background-color,border-color,box-shadow]\",\n                  state === \"done\" && \"border-primary bg-primary text-on-primary\",\n                  state === \"current\" && \"border-primary bg-overlay text-primary-ink shadow-raised ring-4 ring-primary-wash\",\n                  state === \"upcoming\" && \"border-line bg-surface text-muted\",\n                )}\n              >\n                {state === \"done\" ? <Check aria-hidden className=\"size-4\" strokeWidth={2.25} /> : index + 1}\n              </span>\n              {last ? null : (\n                <span aria-hidden className={cn(\"mx-3 hidden h-0.5 flex-1 rounded-full sm:block\", index < current ? \"bg-primary\" : \"bg-chart-track\")} />\n              )}\n            </span>\n            {/* Dikeyde adımları bağlayan çizgi. */}\n            {last ? null : (\n              <span\n                aria-hidden\n                className={cn(\"absolute top-10 bottom-[-0.5rem] left-[0.9375rem] w-0.5 rounded-full sm:hidden\", index < current ? \"bg-primary\" : \"bg-chart-track\")}\n              />\n            )}\n            <span className=\"min-w-0 pt-1 sm:pt-0 sm:pr-4\">\n              <span className={cn(\"block text-base font-semibold\", state === \"upcoming\" ? \"text-muted\" : \"text-strong\")}>\n                {step.label}\n                {state === \"done\" ? <span className=\"sr-only\"> ({doneLabel})</span> : null}\n              </span>\n              {step.description ? <span className=\"mt-0.5 block text-small text-muted\">{step.description}</span> : null}\n            </span>\n          </li>\n        );\n      })}\n    </ol>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "stepper",
+    "palettes": false
+  }
+}

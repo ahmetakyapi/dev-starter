@@ -19,7 +19,7 @@ function Items({ exclusive, openFirst = true }: { exclusive?: string; openFirst?
 
 const meta = {
   title: "Bileşenler/Gezinme/Açılır Bölümler",
-  id: "components-navigation-accordion",
+  id: "accordion",
   component: Accordion,
   tags: ["autodocs"],
   parameters: {
@@ -76,12 +76,12 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="line (varsayılan)" className="place-items-stretch">
+      <Cell label="line (Varsayılan)" className="place-items-stretch">
         <Accordion>
           <Items exclusive="g1" />
         </Accordion>
       </Cell>
-      <Cell label="well: her soru beyaz karo" className="place-items-stretch">
+      <Cell label="well: Her Soru Beyaz Karo" className="place-items-stretch">
         <Accordion variant="well" className="bg-transparent p-0">
           <Items exclusive="g2" />
         </Accordion>

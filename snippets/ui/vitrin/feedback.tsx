@@ -78,21 +78,21 @@ function makeNotifications(): NotificationItem[] {
   const now = Date.now();
   const ago = (min: number) => new Date(now - min * 60_000).toISOString();
   return [
-    { id: "1", actor: "Elif Yıldız", title: "Elif Yıldız Q3 raporuna yorum yaptı", body: "“Kasım satırındaki artış kampanyadan mı geliyor?”", at: ago(3), read: false },
-    { id: "2", actor: "Mert Aksoy", title: "Mert Aksoy sizi “Bütçe 2027” panosuna ekledi", at: ago(42), read: false },
-    { id: "3", icon: Download, title: "Dışa aktarma hazır", body: "Ekim müşteri listesi (2.418 satır) indirilebilir.", at: ago(130), read: false },
-    { id: "4", icon: CreditCard, title: "Kasım faturası ödendi", body: "₺1.249,00 · Kurumsal plan", at: ago(60 * 20), read: true },
-    { id: "5", actor: "Deniz Kaya", title: "Deniz Kaya “Ürün Yol Haritası” belgesini paylaştı", at: ago(60 * 26), read: true },
-    { id: "6", icon: CalendarClock, title: "Deneme süreniz 4 gün sonra bitiyor", at: ago(60 * 24 * 3), read: true },
+    { id: "1", actor: "Elif Yıldız", title: "Elif Yıldız Q3 Raporuna Yorum Yaptı", body: "“Kasım satırındaki artış kampanyadan mı geliyor?”", at: ago(3), read: false },
+    { id: "2", actor: "Mert Aksoy", title: "Mert Aksoy Sizi “Bütçe 2027” Panosuna Ekledi", at: ago(42), read: false },
+    { id: "3", icon: Download, title: "Dışa Aktarma Hazır", body: "Ekim müşteri listesi (2.418 satır) indirilebilir.", at: ago(130), read: false },
+    { id: "4", icon: CreditCard, title: "Kasım Faturası Ödendi", body: "₺1.249,00 · Kurumsal plan", at: ago(60 * 20), read: true },
+    { id: "5", actor: "Deniz Kaya", title: "Deniz Kaya “Ürün Yol Haritası” Belgesini Paylaştı", at: ago(60 * 26), read: true },
+    { id: "6", icon: CalendarClock, title: "Deneme Süreniz 4 Gün Sonra Bitiyor", at: ago(60 * 24 * 3), read: true },
   ];
 }
 
 const SLIDES = [
-  { tag: "Grafikler", title: "Huni ve sütun grafikleri panoya geldi", body: "Kayıttan ödemeye her aşamayı tek kartta karşılaştırın.", series: "bg-chart-1" },
-  { tag: "Ekip", title: "Panoya misafir davet edin", body: "Düzenleme yetkisi vermeden yalnızca okuma bağlantısı paylaşın.", series: "bg-chart-2" },
-  { tag: "Dışa Aktarma", title: "CSV ve PDF tek tıkla", body: "Filtrelenmiş görünüm neyse dosyaya o yazılır.", series: "bg-chart-3" },
-  { tag: "Bildirimler", title: "Günlük özet e-postası", body: "Her sabah 09.00'da yalnızca değişenler.", series: "bg-chart-4" },
-  { tag: "Mobil", title: "Telefondan onay verin", body: "Bekleyen harcamalar tek ekranda, iki dokunuşla.", series: "bg-chart-5" },
+  { tag: "Grafikler", title: "Huni ve Sütun Grafikleri Panoya Geldi", body: "Kayıttan ödemeye her aşamayı tek kartta karşılaştırın.", series: "bg-chart-1" },
+  { tag: "Ekip", title: "Panoya Misafir Davet Edin", body: "Düzenleme yetkisi vermeden yalnızca okuma bağlantısı paylaşın.", series: "bg-chart-2" },
+  { tag: "Dışa Aktarma", title: "CSV ve PDF Tek Tıkla", body: "Filtrelenmiş görünüm neyse dosyaya o yazılır.", series: "bg-chart-3" },
+  { tag: "Bildirimler", title: "Günlük Özet E-Postası", body: "Her sabah 09.00'da yalnızca değişenler.", series: "bg-chart-4" },
+  { tag: "Mobil", title: "Telefondan Onay Verin", body: "Bekleyen harcamalar tek ekranda, iki dokunuşla.", series: "bg-chart-5" },
 ];
 
 const CITIES = ["İstanbul", "İzmir", "Ankara", "Eskişehir"];
@@ -110,7 +110,7 @@ export default function Page() {
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
       <header className="mb-10 grid gap-4">
         <DismissibleAnnouncement href="/vitrin" tag="Yeni" storageKey="duyuru:vitrin-geri-bildirim">
-          Grafikler panoya geldi
+          Grafikler Panoya Geldi
         </DismissibleAnnouncement>
         <h1 className="text-display font-bold tracking-tight">Katman, Geri Bildirim, Gezinme</h1>
         <p className="max-w-xl text-lead text-body">
@@ -199,7 +199,7 @@ export default function Page() {
             {banner ? (
               <BannerAlert
                 tone="warning"
-                title="Deneme süreniz 4 gün sonra bitiyor"
+                title="Deneme Süreniz 4 Gün Sonra Bitiyor"
                 description="Panolarınız silinmez; yalnızca düzenleme kapanır."
                 actions={<button className={SECONDARY}>Plan Seç</button>}
                 onDismiss={() => setBanner(false)}
@@ -211,7 +211,7 @@ export default function Page() {
             )}
             <BannerAlert
               tone="danger"
-              title="Banka senkronu başarısız"
+              title="Banka Senkronu Başarısız"
               description="Garanti BBVA bağlantısının süresi doldu; son işlemler 28 Eki’den beri gelmiyor."
               actions={
                 <button className={SECONDARY}>
@@ -219,16 +219,16 @@ export default function Page() {
                 </button>
               }
             />
-            <BannerAlert tone="success" title="Ekim kapanışı tamamlandı" description="214 işlem eşleşti, fark yok." />
-            <BannerAlert tone="info" title="Kur bilgisi TCMB’den 15.30’da güncellenir" />
+            <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
+            <BannerAlert tone="info" title="Kur Bilgisi TCMB’den 15.30’da Güncellenir" />
           </div>
         </Showcase>
 
         <Showcase name="İlerleme" summary="Belirli ve belirsiz; bitince yeşil ✓ ve “Tamamlandı”." stage="stretch">
           <div className="grid gap-6">
-            <Progress label="Q3 raporu.pdf yükleniyor" value={upload} hint="Yaklaşık 20 saniye kaldı" />
-            <Progress label="Müşteri listesi hazırlanıyor" value={null} hint="Satır sayısı bilinmiyor" />
-            <Progress label="Ekim yedeği" value={100} />
+            <Progress label="Q3 raporu.pdf Yükleniyor" value={upload} hint="Yaklaşık 20 saniye kaldı" />
+            <Progress label="Müşteri Listesi Hazırlanıyor" value={null} hint="Satır sayısı bilinmiyor" />
+            <Progress label="Ekim Yedeği" value={100} />
             <div className="flex gap-2">
               <button className={SECONDARY} onClick={() => setUpload((v) => Math.max(0, v - 18))}>
                 Geri
@@ -309,7 +309,7 @@ export default function Page() {
               <div className="absolute top-3 right-3">
                 <CloseButton aria-label="Kartı Kapat" />
               </div>
-              <p className="pr-8 text-base font-semibold text-strong">Haftalık özet</p>
+              <p className="pr-8 text-base font-semibold text-strong">Haftalık Özet</p>
               <p className="mt-1 text-small text-muted">Satışlar geçen haftaya göre %6,2 arttı.</p>
             </div>
             <div className="flex items-center gap-3">
@@ -322,14 +322,14 @@ export default function Page() {
         <Showcase name="Ayırıcı" summary="Yatay, dikey ve ortasında etiketli; etiket ekran okuyucuda kaybolmaz.">
           <div className="grid w-full max-w-xs gap-4">
             <button className={SECONDARY + " justify-center"}>Google ile Giriş Yap</button>
-            <Divider label="ya da" />
-            <button className={SECONDARY + " justify-center"}>E-postayla Devam Et</button>
+            <Divider label="Ya da" />
+            <button className={SECONDARY + " justify-center"}>E-Postayla Devam Et</button>
             <div className="mt-2 flex h-9 items-center justify-center gap-3 text-small text-muted">
               <span>Taslak</span>
               <Divider orientation="vertical" />
               <span>12 Eki</span>
               <Divider orientation="vertical" />
-              <span>3 düzenleyen</span>
+              <span>3 Düzenleyen</span>
             </div>
           </div>
         </Showcase>
@@ -337,12 +337,12 @@ export default function Page() {
         <Showcase name="Duyuru" summary="Kahramanın üstünde tek satır haber; kapatılabilir hâli tarayıcıda hatırlanır." wide>
           <div className="grid justify-items-center gap-4">
             <Announcement href="/vitrin" tag="Yeni">
-              Grafikler geldi
+              Grafikler Geldi
             </Announcement>
             <Announcement href="/vitrin" tag="Sürüm 2.4">
-              Panolarda çoklu seçim ve toplu taşıma
+              Panolarda Çoklu Seçim ve Toplu Taşıma
             </Announcement>
-            <Announcement href="/vitrin">Ekim bülteni yayında</Announcement>
+            <Announcement href="/vitrin">Ekim Bülteni Yayında</Announcement>
           </div>
         </Showcase>
       </div>

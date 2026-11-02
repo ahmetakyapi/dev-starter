@@ -77,6 +77,13 @@ jobs:
       - name: Verify README assets
         run: npm run verify:readme
 
+      # snippets/ui/registry.json ve storybook/public/r/*.json (shadcn kaydı)
+      # bileşen dosyalarından üretiliyor. Bileşen değişip kayıt yeniden
+      # üretilmezse `npx shadcn add` ve Storybook'un "Projeye Al" bloğu eski
+      # kaynağı dağıtırdı; burada kırılır. Düzeltme: npm run registry:ui
+      - name: Verify UI registry
+        run: npm run verify:registry
+
       # DIKKAT: buradaki adimlar bir zamanlar `! grep ... || echo "temiz"` idiomunu
       # kullaniyordu. O idiom TERS calisir — sizinti VARKEN hem eslesen satiri basar
       # hem "temiz" yazip exit 0 verir. Yani guvenlik taramasi hicbir zaman

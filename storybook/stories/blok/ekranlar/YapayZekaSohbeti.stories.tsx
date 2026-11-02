@@ -129,7 +129,7 @@ function ChatScreen({ start, livePlan = false }: ChatScreenProps) {
               streaming={streaming}
               thinkingLabel="Düşünüyor…"
               empty={{
-                title: "Bugün ne yapalım, Elif?",
+                title: "Bugün Ne Yapalım, Elif?",
                 description: "Destek kayıtları, raporlar ve ekip notları bağlı. Bir soru sor ya da aşağıdaki işlerden birini seç.",
                 suggestions: SUGGESTIONS,
                 onSuggestion: send,
@@ -161,7 +161,7 @@ function ChatScreen({ start, livePlan = false }: ChatScreenProps) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Yapay Zekâ Sohbeti",
-  id: "screens-app-ai-chat",
+  id: "ai-chat",
   component: ChatScreen,
   tags: ["autodocs"],
   parameters: {
@@ -204,7 +204,7 @@ export const EmptyChat: Story = {
   args: { start: "empty" },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("heading", { name: "Bugün ne yapalım, Elif?" })).toBeVisible();
+    await expect(canvas.getByRole("heading", { name: "Bugün Ne Yapalım, Elif?" })).toBeVisible();
     await expect(canvas.getByRole("list", { name: "Öneriler" })).toBeVisible();
   },
 };

@@ -23,7 +23,9 @@
     "verify:agentic": "node scripts/verify-agentic.mjs",
     "verify:anatomy": "node scripts/verify-anatomy.mjs",
     "readme:assets": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs",
-    "verify:readme": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs --check"
+    "verify:readme": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs --check",
+    "registry:ui": "node scripts/build-ui-registry.mjs",
+    "verify:registry": "node scripts/build-ui-registry.mjs --check"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

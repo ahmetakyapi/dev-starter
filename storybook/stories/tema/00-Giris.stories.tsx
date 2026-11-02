@@ -84,7 +84,7 @@ function Composition() {
             </Badge>
           </div>
           <div className="rounded-lg bg-overlay px-4 py-1 shadow-raised">
-            <Switch label="Hatırlatma gönder" hint="Seanstan bir saat önce SMS" defaultChecked />
+            <Switch label="Hatırlatma Gönder" hint="Seanstan bir saat önce SMS" defaultChecked />
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3 px-3 pt-3 pb-2">
             <AvatarGroup size="sm" label="Katılımcılar" people={[{ name: "Derya Aksoy" }, { name: "Kerem Yıldız" }, { name: "Selin Başaran" }]} />
@@ -107,16 +107,16 @@ function Composition() {
 }
 
 const PRINCIPLES = [
-  { t: "Nötr sistem", d: "Zemin, metin ve çizgi gri. Renk yalnızca paletten ve veriden gelir." },
-  { t: "Derinlik tondan", d: "Gri kuyu, beyaz karo. Gölge yalnızca gerçekten yüzen katmanda." },
-  { t: "Degrade üç yerde", d: "Kısa başlık, tek birincil eylem, marka karosu. Hepsi tek aile." },
-  { t: "Tek eğri", d: "Her geçiş cubic-bezier(0.22, 1, 0.36, 1); hareketi azaltana saygı." },
+  { t: "Nötr Sistem", d: "Zemin, metin ve çizgi gri. Renk yalnızca paletten ve veriden gelir." },
+  { t: "Derinlik Tondan", d: "Gri kuyu, beyaz karo. Gölge yalnızca gerçekten yüzen katmanda." },
+  { t: "Degrade Üç Yerde", d: "Kısa başlık, tek birincil eylem, marka karosu. Hepsi tek aile." },
+  { t: "Tek Eğri", d: "Her geçiş cubic-bezier(0.22, 1, 0.36, 1); hareketi azaltana saygı." },
 ];
 
 /* Tema sayfaları: her kartın küçük bir canlı önizlemesi var. */
 const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode }[] = [
   {
-    id: "theme-colors--colors",
+    id: "colors--overview",
     title: "Renkler",
     text: "Sistem rolleri iki temada, WCAG oranlarıyla.",
     preview: (
@@ -130,7 +130,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "theme-palettes--all-palettes",
+    id: "palettes--all",
     title: "Paletler",
     text: "On palet; CTA, karo ve display başlık.",
     preview: (
@@ -142,7 +142,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "theme-typography--typography",
+    id: "typography--overview",
     title: "Tipografi",
     text: "Rol adlı punto ölçeği ve font presetleri.",
     preview: (
@@ -154,7 +154,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "theme-surfaces--surfaces",
+    id: "surfaces--overview",
     title: "Yüzeyler",
     text: "Sayfa, kuyu, karo, katman; köşe ve gölge.",
     preview: (
@@ -165,7 +165,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "theme-chart-colors--chart-colors",
+    id: "chart-colors--overview",
     title: "Grafik Renkleri",
     text: "Altı seri, iz ve mürekkep.",
     preview: (
@@ -177,7 +177,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "theme-motion--motion",
+    id: "motion--overview",
     title: "Hareket",
     text: "İmza eğrisi, süreler, yaylar.",
     preview: (
@@ -197,17 +197,17 @@ const OTHER = [
 
 const STEPS = [
   {
-    t: "Bileşeni projeye al",
+    t: "Bileşeni Projeye Al",
     d: "Paket değil kaynak: dosyayı components/ui altına kopyala ya da komutu çalıştır.",
     code: "/snippet chart-card\n# ya da\ncp ~/dev-starter/snippets/ui/chart-card.tsx components/ui/",
   },
   {
-    t: "Paleti seç",
+    t: "Paleti Seç",
     d: "Şablonda signature hazır. Diğerleri palettes.css'te; html'e bir öznitelik yeter.",
     code: '/* app/globals.css */\n@import "tailwindcss";\n@import "./palettes.css";\n\n<html data-palette="cobalt" data-theme="light">',
   },
   {
-    t: "Yazı tipini bağla",
+    t: "Yazı Tipini Bağla",
     d: "Board dilinin preseti Inter + JetBrains Mono; latin-ext ile Türkçe harfler tam.",
     code: '// app/layout.tsx\nimport { fontClass } from "./fonts";\n<html className={fontClass("board")}>',
   },
@@ -218,16 +218,16 @@ function GirisSayfasi() {
     <DocPage>
       <header className="grid gap-10">
         <div className="max-w-4xl">
-          <p className="font-mono text-small text-muted">dev-starter · görsel katalog</p>
+          <p className="font-mono text-small text-muted">dev-starter · Görsel Katalog</p>
           <h1 className="mt-5 text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-strong">
-            Sakin yüzey, <span className="display-ink">renkli veri.</span>
+            Sakin Yüzey, <span className="display-ink">Renkli Veri</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lead text-body">
             Ekosistemin bütün arayüzleri tek bir dille konuşur: beyaz sayfa, gri kuyu, içinde beyaz karolar. Arayüz geri çekilir, renk
             yalnızca veride ve tek bir birincil eylemde kalır. Bu katalogdaki her şey projeye kopyalanan gerçek kaynak.
           </p>
           <div className="mt-8 flex flex-wrap gap-2">
-            <a href={storyHref("theme-colors--colors")} target="_top" className={buttonClass({ variant: "brand", size: "lg" })}>
+            <a href={storyHref("colors--overview")} target="_top" className={buttonClass({ variant: "brand", size: "lg" })}>
               Temayı İncele <ArrowRight />
             </a>
             <a href="#kurulum" className={buttonClass({ variant: "secondary", size: "lg" })}>
@@ -289,7 +289,7 @@ function GirisSayfasi() {
             <li key={o.t} className="rounded-2xl border border-line p-5">
               <p className="text-base font-semibold text-strong">{o.t}</p>
               <p className="mt-1.5 text-small text-body">{o.d}</p>
-              <p className="mt-3 text-micro text-muted">Kenar çubuğunda</p>
+              <p className="mt-3 text-micro text-muted">Kenar Çubuğunda</p>
             </li>
           ))}
         </ul>
@@ -331,7 +331,7 @@ function GirisSayfasi() {
 
 const meta = {
   title: "Başlangıç",
-  id: "getting-started",
+  id: "start",
   component: GirisSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -346,7 +346,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const GettingStarted: Story = {
+export const Overview: Story = {
   name: "Başlangıç",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

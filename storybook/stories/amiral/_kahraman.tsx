@@ -85,7 +85,7 @@ function Composition() {
             <h3 id="k-bugun" className="text-small font-medium text-muted">
               Bugün, Atölyede
             </h3>
-            <Badge tone="primary">{NOTIFICATIONS.filter((n) => !n.read).length} yeni</Badge>
+            <Badge tone="primary">{NOTIFICATIONS.filter((n) => !n.read).length} Yeni</Badge>
           </div>
           <ul className="grid grid-cols-1 gap-1.5">
             {NOTIFICATIONS.slice(0, 3).map((n) => (
@@ -133,13 +133,13 @@ export function Hero({ covered, total, pusulaHref }: { covered: number; total: n
           <span className="rounded-full bg-success-wash px-2 py-0.5 font-semibold text-success tabular-nums">
             {covered}/{total}
           </span>
-          <span className="text-strong">Bu sayfada {covered}/{total} bileşen</span>
+          <span className="text-strong">Bu Sayfada {covered}/{total} Bileşen</span>
           <ArrowRight aria-hidden className="size-3.5 text-muted" />
         </m.a>
         <m.h1 {...enter(0.05)} className="mt-7 text-[clamp(2.75rem,8.4vw,6.25rem)] leading-[0.95] font-semibold tracking-[-0.05em] text-strong">
-          Arayüz susar,
+          Arayüz Susar,
           <br />
-          <span className="display-ink">veri konuşur.</span>
+          <span className="display-ink">Veri Konuşur</span>
         </m.h1>
         <m.p {...enter(0.12)} className="mt-7 max-w-2xl text-lead text-body">
           Kataloğun bütün parçaları tek sayfada, tek bir kurgunun verisiyle: İzmir'de kahve kavuran küçük bir atölye. Gri kuyu, beyaz karo, pastel

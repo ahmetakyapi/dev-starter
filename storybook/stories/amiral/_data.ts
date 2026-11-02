@@ -74,7 +74,16 @@ export const CHANNELS = [
   { id: "kafe", label: "Toptan", series: 3 },
   { id: "abone", label: "Abonelik", series: 1 },
 ] as const;
-const CHANNEL_TOTALS = split(REVENUE_TOTAL, [41, 37, 22]);
+/**
+ * Her ayın cirosu kanallara bölünür; abonelik ay ay pay alır, toptan pay
+ * verir. Kanal toplamları bu aylık serilerden: çizgi grafiğinin serileri =
+ * kanal payı göstergesi = akışın kaynakları.
+ */
+export const CHANNEL_MONTHLY = CHANNELS.map(() => [] as number[]);
+REVENUE_NOW.forEach((month, i) => {
+  split(month, [39 + i * 0.3, 42 - i * 0.7, 19 + i * 0.4]).forEach((value, c) => CHANNEL_MONTHLY[c].push(value));
+});
+const CHANNEL_TOTALS = CHANNEL_MONTHLY.map((values) => sum(values));
 export const CHANNEL_REVENUE = CHANNELS.map((c, i) => ({ ...c, value: CHANNEL_TOTALS[i] }));
 
 /** Ürün grubu karışımı, kanal başına (satır = kanal, sütun = grup). */
@@ -145,6 +154,25 @@ export const WEB_FUNNEL = (() => {
   ];
 })();
 export const CONVERSION = Math.round((OCTOBER_ORDERS / WEB_FUNNEL[0].value) * 1000) / 10;
+/** Huni kartındaki "Eylül'e göre +0,4 puan" buradan: Eylül oranı Ekim'den türetilir. */
+export const CONVERSION_GAIN = 0.4;
+
+/** Son beş tam ay: web siparişi (ısı haritasından) ve dönüşüm oranı (son ay = huni). */
+export const WEB_MONTHS = (() => {
+  const months = [
+    { label: "Haz", key: "2026-06" },
+    { label: "Tem", key: "2026-07" },
+    { label: "Ağu", key: "2026-08" },
+    { label: "Eyl", key: "2026-09" },
+    { label: "Eki", key: "2026-10" },
+  ];
+  const rates = [CONVERSION - 0.9, CONVERSION - 1.1, CONVERSION - 0.7, CONVERSION - CONVERSION_GAIN, CONVERSION];
+  return months.map((m, i) => ({
+    label: m.label,
+    orders: sum(DAYS.filter((d) => d.date.startsWith(m.key)).map((d) => d.value)),
+    rate: Math.round(rates[i] * 10) / 1000,
+  }));
+})();
 
 /* --- Abonelik ------------------------------------------------------------ */
 
@@ -185,6 +213,37 @@ export const CUPPING = [
 ] as const;
 export const cuppingAverage = (values: readonly number[]) => Math.round(sum(values) / values.length);
 
+/**
+ * Fiyat ↔ tadım puanı, son 30 gün. Paket sayıları en çok satanlar listesiyle
+ * aynı; Yirgacheffe ve Cerrado'nun puanı tadım profilinin ortalaması.
+ * Fiyat web mağazanın kilo fiyatı (250 g paket × 4).
+ */
+const topPack = (name: string) => TOP_PRODUCTS.find((p) => p.label.startsWith(name))?.value ?? 0;
+export const PRICE_SCORE = [
+  { label: "Kıyı Harmanı", x: 790, y: 79, size: topPack("Kıyı Harmanı"), category: "harman" },
+  { label: "Gece Harmanı", x: 720, y: 76, size: 96, category: "harman" },
+  { label: "Brezilya Cerrado", x: 860, y: cuppingAverage(CUPPING[1].values), size: topPack("Brezilya Cerrado"), category: "koken" },
+  { label: "Kolombiya Huila", x: 1180, y: 80, size: topPack("Kolombiya Huila"), category: "koken" },
+  { label: "Etiyopya Yirgacheffe", x: 1360, y: cuppingAverage(CUPPING[0].values), size: topPack("Etiyopya Yirgacheffe"), category: "koken" },
+  { label: "Etiyopya Guji", x: 1440, y: 85, size: 122, category: "koken" },
+  { label: "Kenya Nyeri AA", x: 1620, y: 86, size: topPack("Kenya Nyeri AA"), category: "koken" },
+] as const;
+export const PRICE_CATEGORIES = [
+  { key: "harman", label: "Harman", series: 3 },
+  { key: "koken", label: "Tek Köken", series: 2 },
+] as const;
+
+/* --- Ekim hedefleri ------------------------------------------------------ */
+
+/** Abonelik hunisinin "Eylül'e göre %5,7"si: Eylül'deki aboneden geri hesaplanır. */
+export const SUB_GROWTH = 5.7;
+export const NEW_SUBSCRIBERS = SUBSCRIBERS - Math.round(SUBSCRIBERS / (1 + SUB_GROWTH / 100));
+export const OCTOBER_GOALS = [
+  { label: "Ciro", value: REVENUE_NOW[REVENUE_NOW.length - 1], goal: 350, unit: "bin ₺", series: 2 },
+  { label: "Web Siparişi", value: OCTOBER_ORDERS, goal: 1300, unit: "sipariş", series: 3 },
+  { label: "Net Yeni Abone", value: NEW_SUBSCRIBERS, goal: 30, unit: "abone", series: 1 },
+] as const;
+
 /* --- Kafeler ve siparişler --------------------------------------------- */
 
 export const CAFES = [
@@ -219,10 +278,10 @@ export const ORDER_TIMELINE = [
 
 const ago = (minutes: number) => new Date(TODAY.getTime() - minutes * 60_000);
 export const NOTIFICATIONS = [
-  { id: "n1", actor: "Selin Başaran", title: "Selin Başaran Alsancak Demlik siparişini onayladı", body: "24 kg · Kıyı Harmanı", at: ago(4), read: false },
-  { id: "n2", actor: "Kerem Arıkan", title: "Kerem Arıkan 44. partiyi kavurdu", body: "Brezilya Cerrado · 36 kg", at: ago(38), read: false },
-  { id: "n3", actor: "Ece Doğan", title: "Ece Doğan bir iade talebini çözdü", at: ago(150), read: false },
-  { id: "n4", actor: "Onur Tekin", title: "Onur Tekin kargo anlaşmasını yeniledi", at: ago(60 * 22), read: true },
+  { id: "n1", actor: "Selin Başaran", title: "Selin Başaran Alsancak Demlik Siparişini Onayladı", body: "24 kg · Kıyı Harmanı", at: ago(4), read: false },
+  { id: "n2", actor: "Kerem Arıkan", title: "Kerem Arıkan 44. Partiyi Kavurdu", body: "Brezilya Cerrado · 36 kg", at: ago(38), read: false },
+  { id: "n3", actor: "Ece Doğan", title: "Ece Doğan Bir İade Talebini Çözdü", at: ago(150), read: false },
+  { id: "n4", actor: "Onur Tekin", title: "Onur Tekin Kargo Anlaşmasını Yeniledi", at: ago(60 * 22), read: true },
 ] as const;
 
 /* --- Kapsam: snippets/ui dosyalarının gruplara dağılımı ---------------- */
@@ -257,6 +316,10 @@ export const GROUP_OF: Record<string, GroupId> = {
   "date-picker": "form",
   "time-field": "form",
   "file-dropzone": "form",
+  "search-field": "secim",
+  "toggle-group": "secim",
+  input: "form",
+  rating: "form",
   dialog: "katman",
   sheet: "katman",
   popover: "katman",
@@ -265,17 +328,22 @@ export const GROUP_OF: Record<string, GroupId> = {
   "context-menu": "katman",
   "command-palette": "katman",
   "notification-center": "katman",
+  "hover-card": "katman",
   "data-table": "veri",
   "tree-view": "veri",
   "tree-table": "veri",
   stat: "veri",
   sparkline: "veri",
   timeline: "veri",
+  "kanban-board": "veri",
+  "week-calendar": "veri",
+  "task-list": "veri",
   "banner-alert": "geri",
   progress: "geri",
   meter: "geri",
   "empty-state": "geri",
   announcement: "geri",
+  toast: "geri",
   tabs: "gezinme",
   breadcrumb: "gezinme",
   pagination: "gezinme",
@@ -297,6 +365,10 @@ export const GROUP_OF: Record<string, GroupId> = {
   "sankey-chart": "grafik",
   "stage-bars": "grafik",
   "track-bar-chart": "grafik",
+  "line-chart": "grafik",
+  "combo-chart": "grafik",
+  "scatter-chart": "grafik",
+  "activity-rings": "grafik",
   "app-shell": "blok",
   "chat-thread": "blok",
   "chat-composer": "blok",
@@ -311,7 +383,7 @@ export const GROUPS: readonly { id: GroupId; title: string; note: string; sectio
   { id: "secim", title: "Seçim", note: "Aç-kapa, onay, seçenek ve arama; anında etki eden kararlar.", section: "bilesenler" },
   { id: "form", title: "Form", note: "Sayıdan takvime, hepsi aynı etiket, yardım ve hata düzeninde.", section: "bilesenler" },
   { id: "katman", title: "Katmanlar", note: "Sayfanın üstüne açılanlar: odak tuzağı, Escape, odak dönüşü.", section: "bilesenler" },
-  { id: "veri", title: "Veri", note: "Tablo, ağaç ve sayı; sıralanır, açılır, ekran okuyucuya tablo.", section: "bilesenler" },
+  { id: "veri", title: "Veri", note: "Tablo, ağaç, sayı, pano ve ajanda; sıralanır, açılır, taşınır, ekran okuyucuya metin.", section: "bilesenler" },
   { id: "geri", title: "Geri Bildirim", note: "Durum, ilerleme, doluluk ve boşluk; renk tek işaret değil.", section: "bilesenler" },
   { id: "gezinme", title: "Gezinme", note: "Sekme, yol, sayfa ve adım: kullanıcı nerede, nereye gidebilir.", section: "bilesenler" },
   { id: "yukleme", title: "Yükleme", note: "Beklemenin dört biçimi; hareket azaltıldığında durağan.", section: "bilesenler" },

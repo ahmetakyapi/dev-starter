@@ -64,8 +64,8 @@ function PaletteHalf({ name, theme }: { name: PaletteName; theme: ThemeName }) {
         <Row color={p.primary} label="Primary" value={p.primary} />
         <Row color={p.primaryInk} label="Ink" value={p.primaryInk} />
         <Row color={p.primaryWash} label="Wash" value={p.primaryWash} />
-        <Row label="CTA metni, en kötü durak" value={ctaWorst ? formatRatio(ctaWorst) : "—"} />
-        <Row label="Ink, wash üstünde" value={inkOnWash ? formatRatio(inkOnWash) : "—"} />
+        <Row label="CTA Metni, En Kötü Durak" value={ctaWorst ? formatRatio(ctaWorst) : "—"} />
+        <Row label="Ink, Wash Üstünde" value={inkOnWash ? formatRatio(inkOnWash) : "—"} />
       </dl>
     </ThemeScope>
   );
@@ -97,7 +97,7 @@ function PaletlerSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Paletler"
-        title="On palet, tek kimlik."
+        title="On Palet, Tek Kimlik"
         lead="Palet yalnızca vurgu ailesini ve degradeleri değiştirir; zemin, metin ve durum renkleri sistemde kalır. Her palet iki temada ölçülür: CTA'nın beyaz metni her durakta, ink kendi wash'ı üstünde AA."
       >
         <div className="mt-8 flex flex-wrap gap-2" aria-hidden>
@@ -249,12 +249,12 @@ function SeciliPalet() {
               items={[
                 {
                   value: "eposta",
-                  label: "E-posta",
+                  label: "E-Posta",
                   panel: (
                     <div className="mt-4 rounded-xl bg-overlay px-4 py-2 shadow-raised">
-                      <Switch label="Haftalık özet" hint="Her pazartesi 09.00'da" defaultChecked />
-                      <Switch label="Yeni yorum" hint="Birisi kaydına yorum yazınca" />
-                      <Checkbox label="Pazarlama e-postalarını da al" defaultChecked />
+                      <Switch label="Haftalık Özet" hint="Her pazartesi 09.00'da" defaultChecked />
+                      <Switch label="Yeni Yorum" hint="Birisi kaydına yorum yazınca" />
+                      <Checkbox label="Pazarlama E-Postalarını da Al" defaultChecked />
                     </div>
                   ),
                 },
@@ -276,7 +276,7 @@ function SeciliPalet() {
 
 const meta = {
   title: "Tema/Paletler",
-  id: "theme-palettes",
+  id: "palettes",
   component: PaletlerSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -292,9 +292,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AllPalettes: Story = { name: "Bütün Paletler" };
+export const All: Story = { name: "Bütün Paletler" };
 
-export const SelectedPalette: Story = {
+export const Selected: Story = {
   name: "Seçili Palet",
   render: () => <SeciliPalet />,
 };

@@ -1,6 +1,7 @@
+/// <reference types="vite/client" />
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { DELAYED, OPEN_TICKETS, TICKETS, periodStats, tl } from "./_data";
+import { BOARD, DELAYED, OPEN_TICKETS, TICKETS, periodStats, tl } from "./_data";
 import { PusulaApp } from "./_app";
 import { settle } from "./_settle";
 
@@ -28,6 +29,9 @@ async function go(root: HTMLElement, label: string) {
   await canvas.findByRole("heading", { level: 1, name: label }, { timeout: 3000 });
 }
 
+/** Katalogdaki bileşen sayısı: elle yazılmaz, snippets/ui klasöründen sayılır (Kapsam hikâyesiyle aynı yöntem). */
+const TOTAL = Object.keys(import.meta.glob("../../../snippets/ui/*.tsx")).length;
+
 async function command(root: HTMLElement, query: string) {
   await userEvent.keyboard("{Control>}k{/Control}");
   const box = await within(root.ownerDocument.body).findByPlaceholderText("Sayfa, talep ya da komut ara");
@@ -37,7 +41,7 @@ async function command(root: HTMLElement, query: string) {
 
 const meta = {
   title: "Örnek Tasarım/Pusula Paneli",
-  id: "showcase-pusula-dashboard",
+  id: "pusula",
   component: PusulaApp,
   tags: ["autodocs"],
   parameters: {
@@ -45,13 +49,13 @@ const meta = {
     docs: {
       description: {
         component:
-          "Pusula: küçük ekipler için destek + satış + takvim + asistan paneli. Kataloğun 73 bileşeninin hepsi tek bir kurgusal üründe, aynı sahte veriyle (Kervan Tekstil, 2 Kasım 2026) birlikte çalışır: panodaki ciro = müşteriye göre listenin toplamı = rapor tablosunun dip satırı. Kenar çubuğu, ⌘K ve sayfa içi bağlantılar iç durumla gezer; dönem seçimi (Hafta/Ay/Yıl) bütün grafikleri birlikte değiştirir. Kapsam tablosu: Ekranlar/Showcase/Bileşen Kapsamı.",
+          `Pusula: küçük ekipler için destek + satış + görev + takvim + asistan paneli. Kataloğun ${TOTAL} bileşeninin hepsi tek bir kurgusal üründe, aynı sahte veriyle (Kervan Tekstil, 2 Kasım 2026) birlikte çalışır: panodaki ciro = müşteriye göre listenin toplamı = rapor tablosunun dip satırı. Kenar çubuğu, ⌘K ve sayfa içi bağlantılar iç durumla gezer; dönem seçimi (Hafta/Ay/Yıl) bütün grafikleri birlikte değiştirir. Kapsam tablosu: Ekranlar/Showcase/Bileşen Kapsamı.`,
       },
     },
   },
   args: { initialPage: "pano", initialPeriod: "ay", signedOut: false },
   argTypes: {
-    initialPage: { control: "select", options: ["pano", "gelen", "takvim", "asistan", "raporlar", "ayarlar"] },
+    initialPage: { control: "select", options: ["pano", "gelen", "gorevler", "takvim", "asistan", "raporlar", "ayarlar"] },
     initialPeriod: { control: "inline-radio", options: ["hafta", "ay", "yil"] },
     initialParams: { control: false },
   },
@@ -89,7 +93,7 @@ export const App: Story = {
 export const Dashboard: Story = {
   name: "Pano",
   parameters: {
-    docs: { description: { story: "Dört ölçü karosu ve on grafik; dönem seçimi hepsini birlikte değiştirir. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
+    docs: { description: { story: "Dört ölçü karosu ve on iki grafik; dönem seçimi hepsini birlikte değiştirir. Sipariş ve dönüşüm birleşik grafikte, dönem hedefleri aktivite halkalarında. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
@@ -114,7 +118,7 @@ export const Inbox: Story = {
   name: "Gelen Kutusu",
   args: { initialPage: "gelen" },
   parameters: {
-    docs: { description: { story: "Talep tablosu: öncelik çipleri, müşteri araması, sıralama ve sayfalama; satıra sağ tıklayınca bağlam menüsü, ada basınca yan çekmecede ayrıntı. Süzgeç boş kalınca boş durum." } },
+    docs: { description: { story: "Talep tablosu: arama alanı (“/” kısayolu, Türkçe harf düzleme), öncelik çipleri, müşteri seçimi, sıralama ve sayfalama; atanan kişinin üstüne gelince önizleme kartı, satıra sağ tıklayınca bağlam menüsü, ada basınca yan çekmecede ayrıntı. Arşivleme bildirimi Geri Al düğmeli. Süzgeç boş kalınca boş durum." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
@@ -129,7 +133,7 @@ export const Inbox: Story = {
     if (!atlas.some((t) => t.priority === "Acil")) {
       await userEvent.type(canvas.getByRole("combobox", { name: "Müşteri" }), "Atlas");
       await userEvent.click(await within(document.body).findByRole("option", { name: "Atlas Konaklama" }));
-      await canvas.findByRole("heading", { name: "Bu süzgeçlere uyan talep yok" });
+      await canvas.findByRole("heading", { name: "Bu Süzgeçlere Uyan Talep Yok" });
       await userEvent.click(canvas.getByRole("button", { name: "Süzgeçleri Temizle" }));
     }
     await waitFor(() => expect(within(canvas.getByRole("table", { name: "Talepler" })).getAllByRole("row").length).toBe(9));
@@ -153,11 +157,32 @@ export const TicketDetail: Story = {
   },
 };
 
+export const Tasks: Story = {
+  name: "Görevler",
+  args: { initialPage: "gorevler" },
+  parameters: {
+    docs: { description: { story: "Ekip panosu (kanban: fare, dokunma tutamağı ya da klavyeyle taşınır, Sürüyor kolonunda iş sınırı), kişinin bugünkü görev listesi ve yaklaşan son tarihler. Kart kolon değiştirince sonuç bildirim olarak gelir." } },
+  },
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole("heading", { level: 1, name: "Görevler" });
+    // Klavyeyle taşıma: Yapılacak'ın ilk kartı Sürüyor'a.
+    const first = BOARD[0].cards[0];
+    const card = canvas.getByRole("button", { name: new RegExp(`^${first.title}`) });
+    card.focus();
+    await userEvent.keyboard(" ");
+    await userEvent.keyboard("{ArrowRight}");
+    await userEvent.keyboard(" ");
+    await within(document.body).findByText("Sürüyor Kolonuna Taşındı");
+    await settle(globals);
+  },
+};
+
 export const Calendar: Story = {
   name: "Takvim",
   args: { initialPage: "takvim" },
   parameters: {
-    docs: { description: { story: "Aralık takvimi ve ajanda; altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
+    docs: { description: { story: "Aralık takvimi ve ajanda, seçilen haftanın saat ızgarası (türler aç-kapa grubuyla süzülür); altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
@@ -165,9 +190,10 @@ export const Calendar: Story = {
     await canvas.findByRole("listitem", { current: "step" });
     await userEvent.click(canvas.getByRole("button", { name: "Devam" }));
     await userEvent.click(canvas.getByRole("button", { name: "Randevuyu Onayla" }));
-    const dialog = await canvas.findByRole("dialog", { name: "Randevu oluşturulsun mu?" });
+    const dialog = await canvas.findByRole("dialog", { name: "Randevu Oluşturulsun mu?" });
     await userEvent.click(within(dialog).getByRole("button", { name: "Oluştur ve Davet Gönder" }));
-    await canvas.findByText("Randevu oluşturuldu");
+    // Bildirim (toast) sayfanın köküne taşınır: kanvasta değil, belgede aranır.
+    await within(document.body).findByText("Randevu Oluşturuldu");
     await expect(canvas.getByRole("button", { name: /Bildirimler, \d+ okunmamış/ })).toBeInTheDocument();
     await settle(globals);
   },
@@ -192,13 +218,14 @@ export const Reports: Story = {
   name: "Raporlar",
   args: { initialPage: "raporlar" },
   parameters: {
-    docs: { description: { story: "Hazır rapor kartları, sekmeler; satış tablosunun toplamı panodaki ciroyla aynı. Dışa aktarma sekmesinde dosya hazırlanırken yükleme durumu." } },
+    docs: { description: { story: "Hazır rapor kartları, sekmeler; satış tablosunun toplamı panodaki ciroyla aynı, birikimli ciro çizgileri tablonun ilk dört satırında biter, müşteri haritası tablonun sütunlarını saçılım olarak gösterir. Destek sekmesinde kapanış anketi puanı; dışa aktarma sekmesinde dosya hazırlanırken yükleme durumu." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole("tab", { name: "Dışa ve İçe Aktar" }));
     await userEvent.click(await canvas.findByRole("button", { name: "CSV Oluştur" }));
-    await canvas.findByText("Dışa aktarma hazır", undefined, { timeout: 5000 });
+    // Sonuç bildirimi (toast) belgenin kökünde; kanvasta değil.
+    await within(document.body).findByText("Dışa Aktarma Hazır", undefined, { timeout: 5000 });
     await userEvent.click(canvas.getByRole("tab", { name: "Satış" }));
     await expect(canvas.getByRole("table", { name: "Müşteri Bazında Ciro" })).toBeInTheDocument();
     await settle(globals);
@@ -223,7 +250,7 @@ export const Settings: Story = {
     const group = await canvas.findByRole("group", { name: "Doğrulama Kodu" });
     await userEvent.click(within(group).getAllByRole("textbox")[0]);
     await userEvent.keyboard("482913");
-    await canvas.findByText("İki adımlı doğrulama açık");
+    await canvas.findByText("İki Adımlı Doğrulama Açık");
     await settle(globals);
   },
 };
@@ -234,7 +261,7 @@ export const SignedOut: Story = {
   parameters: { docs: { description: { story: "Kenar çubuğundaki Oturumu Kapat buraya getirir; çalışma alanı e-postasıyla girince pano açılır." } } },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(await canvas.findByLabelText("E-posta"), "elif@gmail.com");
+    await userEvent.type(await canvas.findByLabelText("E-Posta"), "elif@gmail.com");
     await userEvent.type(canvas.getByLabelText("Şifre"), "kervan2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await canvas.findByText(/kervantekstil\.com\.tr/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });

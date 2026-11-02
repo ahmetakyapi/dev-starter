@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "popover",
+  "type": "registry:ui",
+  "title": "Açılır Kart",
+  "description": "Sayfayı kilitlemeyen küçük kutu",
+  "dependencies": [
+    "@base-ui/react@1.8.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/popover.tsx",
+      "content": "\"use client\";\n\nimport { Popover as Base } from \"@base-ui/react/popover\";\nimport type { ComponentProps, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Açılır kutu: bir düğmeye bağlı, sayfayı kilitlemeyen küçük katman\n * (filtre seçenekleri, kısa açıklama, paylaşım bağlantısı).\n *\n * Headless katman Base UI (`@base-ui/react`, kararı guides/10): konumlama\n * (Floating UI), dış tıklama ve Escape ile kapanma, odağın tetikleyiciye\n * dönmesi, `aria-expanded`/`aria-controls` bağları ondan. Biz yalnızca\n * görünüşü veriyoruz; görünüş token sınıfı.\n *\n *   <Popover>\n *     <PopoverTrigger className={buttonClass({ variant: \"secondary\" })}>Filtre</PopoverTrigger>\n *     <PopoverContent title=\"Filtreler\">…</PopoverContent>\n *   </Popover>\n *\n * Tetikleyici kendi düğmeni taşıyacaksa: `<PopoverTrigger render={<Button />}>`.\n * İçinde form varsa ve odak dışarı kaçmamalıysa: `<Popover modal=\"trap-focus\">`\n * ve içeride bir `PopoverClose` (dokunmatik ekran okuyucu çıkış bulsun).\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): beyaz karo `bg-overlay`, `rounded-xl`,\n * kıl çizgisi (`border-line`, eskiden `-strong`: gölge zaten ayırıyor) ve\n * katmanlı kısa gölge `shadow-modal`. Giriş 0,96'dan ölçek + opaklık,\n * kaynağı tetikleyici (`--transform-origin`): kutu düğmeden \"çıkar\".\n *\n * Konum: Positioner `z-50` taşır. Sayfa kökünde `isolation: isolate` yoksa\n * başka bir yığın bağlamının altında kalabilir; kök layout'taki gövde\n * wrapper'ına `isolate` ver.\n */\n\nexport const Popover = Base.Root;\nexport const PopoverTrigger = Base.Trigger;\nexport const PopoverClose = Base.Close;\n\n/* Base UI katmanlarının ortak yüzeyi; menü ve seçim kutusu aynı dizeyi taşır\n   (her dosya tek başına kopyalansın diye paylaşılmıyor). */\nconst FLOATING_SURFACE =\n  \"rounded-xl border border-line bg-overlay text-body shadow-modal outline-none origin-(--transform-origin) transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-starting-style:scale-[0.96] data-starting-style:opacity-0 data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150\";\n\ntype PopoverContentProps = Omit<ComponentProps<typeof Base.Popup>, \"title\" | \"className\"> & {\n  title?: ReactNode;\n  description?: ReactNode;\n  side?: \"top\" | \"bottom\" | \"left\" | \"right\";\n  align?: \"start\" | \"center\" | \"end\";\n  sideOffset?: number;\n  className?: string;\n};\n\nexport function PopoverContent({\n  title,\n  description,\n  side = \"bottom\",\n  align = \"center\",\n  sideOffset = 8,\n  className,\n  children,\n  ...props\n}: PopoverContentProps) {\n  return (\n    <Base.Portal>\n      <Base.Positioner side={side} align={align} sideOffset={sideOffset} collisionPadding={12} className=\"z-50\">\n        <Base.Popup\n          className={cn(FLOATING_SURFACE, \"w-[min(20rem,var(--available-width))] p-4\", className)}\n          {...props}\n        >\n          {title ? <Base.Title className=\"text-base font-semibold text-strong\">{title}</Base.Title> : null}\n          {description ? (\n            <Base.Description className=\"mt-1 text-small text-muted\">{description}</Base.Description>\n          ) : null}\n          {title || description ? <div className=\"mt-3\">{children}</div> : children}\n        </Base.Popup>\n      </Base.Positioner>\n    </Base.Portal>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Katmanlar"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "popover",
+    "palettes": false
+  }
+}

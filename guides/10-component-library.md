@@ -199,7 +199,17 @@ kaldığı için erişilebilirlik açığı değil.
 - **RadarChart**: en çok iki seri, kısa etiketler.
 - **SankeyChart**: yalnızca iki katman; ad 10-12 harfi geçmesin. Yerleşim saf `sankeyLayout`ta.
 - **BarList**: varsayılan büyükten küçüğe; anlamlı sıra varsa `sort={false}`.
+- **LineChart**: hacim okunacaksa `area-chart`. Lejant süzgeci Y eksenini kalan serilere göre yeniden ölçekler; tahmini `dashed` ile ver ki renkten bağımsız ayırt edilsin.
+- **ComboChart**: yalnız iki ölçünün birimi farklıysa. Oranı 0-1 ve `format: { style: "percent" }` ile ver; sağ eksen solun adım sayısına uyar, ızgara tek.
+- **ScatterChart**: zaman ekseni varsa bu değil. Kategori gizlenince eksen bilerek kaymaz; 64 px'ten uzak imleç nokta seçmez.
+- **ActivityRings**: ölçülerin birbirine oranı okunacaksa `ring-chart`. Beyaz karo üstünde `cut="stroke-overlay"`.
 - Bütün grafikler görünür olunca çizilir (`useInView`); hareket azaltmada son hal anında. JS yoksa çizim başlangıç halinde kalır, veri sr-only tabloda okunur.
+
+### Verimlilik
+
+- **KanbanBoard**: durum bileşenin içinde; kalıcılık için `onChange`te sunucu eylemi. `today` verilmezse gecikme vurgusu yalnız istemcide. `limitMode="block"` dolu kolona bırakmayı reddeder. Kendi ağacında `domMax` yükler.
+- **WeekCalendar**: tarih seçmek için değil (`date-calendar`). Test ve hikâyede `now` ile saati sabitle. 45 dakikadan kısa blokta saat yalnız ekran okuyucuya söylenir.
+- **TaskList**: üst görevi işaretlemek alt görevleri bitirir, son alt görev bitince üst de biter. İş kolonlar arasında akıyorsa `kanban-board`.
 
 ### Form Girişleri
 
@@ -212,6 +222,9 @@ kaldığı için erişilebilirlik açığı değil.
 - **DateCalendar**: SSR tutarlılığı için `defaultMonth` ver; "bugün" yalnız tarayıcıda. Doğum tarihi için yanlış araç.
 - **DatePicker**: gizli giriş `YYYY-AA-GG`; aralıkta `<name>-start`/`<name>-end`.
 - **TimeField**: 24 saat, değer sarılır; yarım değer `null`.
+- **Input**: içine bir şey (ikon, ₺, temizle, göz) konacaksa bu, yoksa şablonun `Field`ı. Önek görsel ipucudur; anlamı etiket taşır ("Tutar (₺)").
+- **SearchField**: süzme ve arama içindir; seçtirmek gerekiyorsa combobox, komut için komut paleti. Sayfada ⌘K paleti varsa `shortcut="/"`. Sunucuda süzülecekse `normalizeTr`/`matchesTr`'yi `lib/`e taşı.
+- **Rating**: gösterimde `Rating`, formda `RatingInput`. Beş ayrık seçenek bir radyo grubudur, slider değil. Dolu yıldız `accent-warm`.
 
 ### Katman ve Geri Bildirim (ek)
 
@@ -224,6 +237,9 @@ kaldığı için erişilebilirlik açığı değil.
 - **Carousel**: asıl mesajı 2. slayta koyma; etkin nokta `clip-path` ile uzar.
 - **Chip**: tek seçimli süzgeç için `segmented-control`. Çip kaldırılınca odağı taşımak üst bileşenin işi.
 - **BannerAlert**: sayfayla gelen satır sessiz; sonradan belirene `announce`. En fazla iki eylem.
+- **Toast** (`ui/toast.tsx`): `<Toaster />` sayfada bir kez; mount öncesi çağrılar sıraya girer. Karar gerekiyorsa dialog, kalıcı durum için banner-alert. Hata kendiliğinden kapanmaz; geri al için `toast.undo` (8 sn).
+- **HoverCard**: yalnız ek bilgi; içine tek yolu olan eylem koyma (Tab ile karta girilmez). Dokunmatikte iki dokunuş gerekir.
+- **ToggleGroup**: seçenekler birbirini dışlıyor ve biri hep seçili olmak zorundaysa `segmented-control`. Yalnız ikonlu öğede `label` zorunlu.
 
 ### Bloklar
 
@@ -311,19 +327,55 @@ tabloyu kaydırır.
 
 ## 7. Projeye Alma
 
-```
-/snippet data-table
+Tek komut; bağımlılık zincirini betik çözer:
+
+```bash
+node ~/dev-starter/scripts/add-ui.mjs --list                       # katalog, kategoriye göre
+node ~/dev-starter/scripts/add-ui.mjs . date-picker --dry-run      # önce plan: ne kopyalanacak
+node ~/dev-starter/scripts/add-ui.mjs . date-picker stage-bars --install
 ```
 
-Komut dosyayı okur, projenin tech stack'ini kontrol eder (`next`, `tailwindcss`,
-`motion`, LazyMotion), uyarlar ve `components/ui/` altına yazar. Elle:
+`scripts/add-ui.mjs` (bağımlılıksız, Node 22+):
 
-1. `snippets/ui/<ad>.tsx` dosyasını `components/ui/` altına kopyala.
-2. Base UI kullanıyorsa: `npm install @base-ui/react`.
-3. Proje farklı rol adları kullanıyorsa (shadcn `bg-background` gibi)
-   sınıfları çevir; yapıya dokunma.
-4. `npm run typecheck && npm run lint`; görsel bir bileşense 390 ve 1280
-   pikselde, iki temada aç.
+1. **Transitif çözüm**: `date-picker` → `date-calendar` + `popover` →
+   `@/lib/utils`, `@/lib/motion`. `@/components/ui/<ad>` önce `snippets/ui`,
+   yoksa landing şablonunun `components/ui`si (`ThemeToggle`); öteki `@/…`
+   şablondan. Kayıt değil kaynak okunur: kayda girmemiş yeni bileşen de kurulur.
+2. **Hedef kök** tsconfig `paths["@/*"]`ten: `src/` düzeni de doğru yere gider.
+3. **Üstüne yazmaz**: aynı dosya `aynı`, farklıysa `farklı (atlandı)` ve satır
+   farkı; `--force` ezer. `skeleton.tsx` ile şablonun `Skeleton.tsx`i
+   macOS/Windows'ta aynı dosya: `harf çakışması` olarak durur.
+4. **npm**: eksik paketleri sürümüyle (landing `package.json`; Base UI
+   Storybook'tan) projenin paket yöneticisine (npm/pnpm/yarn/bun) komut olarak
+   yazar, `--install` çalıştırır.
+5. **palettes.css** gereken bileşende (`palette-switcher`) dosyayı kopyalar,
+   `globals.css`e eklenecek satırı söyler.
+6. **Uyarılar**: hedef `globals.css`te bileşenin kullandığı token yoksa
+   (`--color-chart-1`, `@utility skeleton`…), `m.*` var ama `LazyMotion` yoksa,
+   atlanan `lib/motion.ts`te bileşenin istediği ad (`SPRING`) yoksa.
+
+Sonra: proje farklı rol adları kullanıyorsa (shadcn `bg-background` gibi)
+sınıfları çevir; `npm run typecheck && npm run lint`; görsel bir bileşense 390
+ve 1280 pikselde, iki temada aç. `/snippet ui/<ad>` aynı betiği kullanır.
+
+**Dev-starter dışındaki projede (shadcn kaydı):** her bileşen shadcn
+registry-item olarak da yayında; `components.json`u olan herhangi bir Next
+projesinde:
+
+```bash
+npx shadcn@latest add https://dev-starter-storybook.vercel.app/r/stage-bars.json
+```
+
+İç bağımlılıklar (`chart-card`, `lib-utils`, `lib-motion`…) URL'le bağlı,
+shadcn onları da getirir ve npm paketlerini kurar. Kayıt
+`scripts/build-ui-registry.mjs` ile üretilir: `snippets/ui/registry.json`
+(Storybook'un her bileşen belgesindeki "Projeye Al" bloğu bunu okur) ve
+`storybook/public/r/*.json`. Bileşen değişince `npm run registry:ui`; CI
+`npm run verify:registry` ile ayrışmayı yakalar. Sınır: shadcn yorumla başlayan
+dosyanın (şablonun `lib/theme.ts`i) ilk yorumunu atar, bu yüzden var olan aynı
+dosyayı "farklı" sayıp üzerine yazmayı sorar; `--yes` bu soruyu yanıtlamaz
+(etkileşimli yanıtla ya da `--overwrite`). shadcn'in kendi `lib/utils.ts`i
+varsa bizimki (`cn` + punto adları twMerge'e tanıtılmış) üstüne yazmayı sorar.
 
 **Doğrulama kaydı (Ekim 2026):** 36 dosya Next 16.3 + React 19.2 +
 Tailwind 4 + Base UI 1.8 şablon kopyasında geçici bir galeri sayfasında

@@ -11,6 +11,7 @@ import {
   Inbox,
   Info,
   LayoutDashboard,
+  ListTodo,
   LogOut,
   MessageSquare,
   Settings,
@@ -19,44 +20,46 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { AppShell, type ShellNavGroup } from "@/components/ui/app-shell";
-import { CloseButton } from "@/components/ui/close-button";
 import { CommandPalette, type Command } from "@/components/ui/command-palette";
-import { Icon } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import type { NotificationItem } from "@/components/ui/notification-center";
 import { RouteProgress, startRouteProgress, stopRouteProgress } from "@/components/ui/route-progress";
 import { Skeleton, SkeletonCard } from "@/components/ui/skeleton";
-import { ME, OPEN_TICKETS, PERIODS, customer, notifications, type Period } from "./_data";
+import { Toaster, toast } from "@/components/ui/toast";
+import { BOARD, ME, OPEN_TICKETS, PERIODS, customer, notifications, type Period } from "./_data";
 import { AsistanPage } from "./_asistan";
 import { AyarlarPage } from "./_ayarlar";
 import { GelenPage } from "./_gelen";
 import { GirisPage } from "./_giris";
+import { GorevlerPage } from "./_gorevler";
 import { PanoPage } from "./_pano";
 import { RaporlarPage } from "./_raporlar";
 import { TakvimPage } from "./_takvim";
 import { AppContext, PAGES, href, type Page, type Params, type Toast } from "./_ui";
-import { cn } from "@/lib/utils";
 
 /** Sayfa geçişinde iskeletin kalma süresi: gezinme göstergesi görünsün, hap çıkmasın (420 ms). */
 const LOAD_MS = 360;
-const TOAST_MS = 5000;
 
 const ICONS: Record<Page, ReactNode> = {
   pano: <LayoutDashboard />,
   gelen: <Inbox />,
+  gorevler: <ListTodo />,
   takvim: <CalendarDays />,
   asistan: <MessageSquare />,
   raporlar: <BarChart3 />,
   ayarlar: <Settings />,
 };
 
+/** Ekip panosunda bitmemiş kart sayısı: kenar çubuğu rozeti. */
+const OPEN_TASKS = BOARD.filter((c) => !c.done).reduce((n, c) => n + c.cards.length, 0);
+
 const NAV: readonly ShellNavGroup[] = [
   {
-    items: (["pano", "gelen", "takvim", "asistan"] as const).map((id) => ({
+    items: (["pano", "gelen", "gorevler", "takvim", "asistan"] as const).map((id) => ({
       href: href(id),
       label: PAGES.find((p) => p.id === id)!.label,
       icon: ICONS[id],
-      badge: id === "gelen" ? OPEN_TICKETS.length : undefined,
+      badge: id === "gelen" ? OPEN_TICKETS.length : id === "gorevler" ? OPEN_TASKS : undefined,
     })),
   },
   {
@@ -81,6 +84,8 @@ function PageView({ page }: { page: Page }) {
       return <PanoPage />;
     case "gelen":
       return <GelenPage />;
+    case "gorevler":
+      return <GorevlerPage />;
     case "takvim":
       return <TakvimPage />;
     case "asistan":
@@ -111,23 +116,6 @@ function PageLoading({ page }: { page: Page }) {
   );
 }
 
-function Toasts({ toasts, dismiss }: { toasts: readonly Toast[]; dismiss: (id: number) => void }) {
-  return (
-    <div aria-live="polite" className="pointer-events-none fixed inset-x-3 bottom-3 z-40 grid grid-cols-1 justify-items-end gap-2 sm:inset-x-auto sm:right-5 sm:bottom-5">
-      {toasts.map((t) => (
-        <div key={t.id} className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl bg-overlay p-3.5 pr-2 shadow-floating ring-1 ring-line">
-          <Icon icon={t.tone === "success" ? CheckCircle2 : Info} size="md" className={cn("mt-0.5", t.tone === "success" ? "text-success" : "text-primary-ink")} />
-          <div className="min-w-0 flex-1">
-            <p className="text-base font-medium text-strong">{t.title}</p>
-            {t.body ? <p className="mt-0.5 text-small text-muted">{t.body}</p> : null}
-          </div>
-          <CloseButton aria-label="Bildirimi Kapat" size="sm" onClick={() => dismiss(t.id)} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export type PusulaAppProps = {
   /** Açılıştaki sayfa. */
   initialPage?: Page;
@@ -143,12 +131,11 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
   const [pending, setPending] = useState<Page | null>(null);
   const [period, setPeriod] = useState<Period>(initialPeriod);
   const [items, setItems] = useState<NotificationItem[]>(() => notifications());
-  const [toasts, setToasts] = useState<Toast[]>([]);
   const [signedIn, setSignedIn] = useState(!signedOut);
   const routeRef = useRef(route);
   routeRef.current = route;
   const timer = useRef<number | null>(null);
-  const toastId = useRef(0);
+  const noticeId = useRef(0);
 
   const navigate = useCallback((page: Page, params: Record<string, string | undefined> = {}) => {
     const clean: Record<string, string> = {};
@@ -195,20 +182,17 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
     return () => document.removeEventListener("click", onClick, { capture: true });
   }, [navigate]);
 
-  const dismiss = useCallback((id: number) => setToasts((list) => list.filter((t) => t.id !== id)), []);
-
-  const notify = useCallback(
-    (toast: Omit<Toast, "id">) => {
-      const id = ++toastId.current;
-      setToasts((list) => [...list.slice(-2), { ...toast, id }]);
-      setItems((list) => [
-        { id: `t${id}`, title: toast.title, body: toast.body, at: new Date().toISOString(), read: false, icon: toast.tone === "success" ? CheckCircle2 : Info },
-        ...list,
-      ]);
-      window.setTimeout(() => dismiss(id), TOAST_MS);
-    },
-    [dismiss],
-  );
+  const notify = useCallback((notice: Omit<Toast, "id">) => {
+    const id = ++noticeId.current;
+    const options = { description: notice.body };
+    if (notice.undo) toast.undo(notice.title, notice.undo, options);
+    else if (notice.tone === "success") toast.success(notice.title, options);
+    else toast.info(notice.title, options);
+    setItems((list) => [
+      { id: `t${id}`, title: notice.title, body: notice.body, at: new Date().toISOString(), read: false, icon: notice.tone === "success" ? CheckCircle2 : Info },
+      ...list,
+    ]);
+  }, []);
 
   const markRead = useCallback((ids: string[]) => setItems((list) => list.map((n) => (ids.includes(n.id) ? { ...n, read: true } : n))), []);
 
@@ -223,7 +207,7 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
       {
         id: "randevu",
         label: "Yeni Randevu Oluştur",
-        hint: "Takvim · üç adımlı akış",
+        hint: "Takvim · Üç Adımlı Akış",
         group: "Eylemler",
         icon: <CalendarPlus />,
         keywords: ["toplantı", "görüşme"],
@@ -288,7 +272,7 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
         {loadingPage ? <PageLoading page={loadingPage} /> : <PageView key={`${route.page}:${route.params.durum ?? ""}:${route.params.etiket ?? ""}`} page={route.page} />}
       </AppShell>
       <CommandPalette commands={commands} placeholder="Sayfa, talep ya da komut ara" />
-      <Toasts toasts={toasts} dismiss={dismiss} />
+      <Toaster />
     </AppContext.Provider>
   );
 }

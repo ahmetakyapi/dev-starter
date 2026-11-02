@@ -5,7 +5,7 @@ import { TEAM } from "./_data";
 
 const meta = {
   title: "Bileşenler/Seçim/Avatar",
-  id: "components-selection-avatar",
+  id: "avatar",
   component: Avatar,
   tags: ["autodocs"],
   parameters: {
@@ -65,7 +65,7 @@ export const AllVariants: Story = {
           <Avatar name="Ayşe Demir" size="lg" />
         </div>
       </Cell>
-      <Cell label="Addan türeyen pastel">
+      <Cell label="Addan Türeyen Pastel">
         <div className="flex flex-wrap justify-center gap-2">
           {TEAM.map((person) => (
             <Avatar key={person.name} name={person.name} />

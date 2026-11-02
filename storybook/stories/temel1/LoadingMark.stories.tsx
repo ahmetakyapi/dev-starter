@@ -4,7 +4,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Yükleme/Yükleme Halkası",
-  id: "components-loading-loading-mark",
+  id: "loading-mark",
   component: LoadingMark,
   tags: ["autodocs"],
   parameters: {
@@ -45,15 +45,15 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="sm · 32 piksel">
+      <Cell label="sm · 32 Piksel">
         <LoadingMark size="sm" label="Küçük yükleniyor" />
       </Cell>
-      <Cell label="md · 48 piksel, alt yazılı">
+      <Cell label="md · 48 Piksel, Alt Yazılı">
         <LoadingMark size="md" label="Kayıtlar getiriliyor" showLabel>
           A
         </LoadingMark>
       </Cell>
-      <Cell label="lg · 72 piksel, baş harfli">
+      <Cell label="lg · 72 Piksel, Baş Harfli">
         <LoadingMark size="lg" label="Pano hazırlanıyor" showLabel>
           P
         </LoadingMark>

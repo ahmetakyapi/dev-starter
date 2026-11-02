@@ -24,7 +24,7 @@ function Orta({ rings }: { rings: ComponentProps<typeof RingChart>["rings"] }) {
 
 const meta = {
   title: "Grafikler/Halka Grafiği",
-  id: "charts-ring-chart",
+  id: "ring-chart",
   component: RingChart,
   tags: ["autodocs"],
   parameters: {
@@ -139,9 +139,9 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={3}>
       {[
-        { label: "Beş halka, varsayılan", n: 5, thickness: 9, gap: 4 },
-        { label: "Üç halka, kalın", n: 3, thickness: 14, gap: 5 },
-        { label: "İki halka, ince", n: 2, thickness: 6, gap: 3 },
+        { label: "Beş Halka, Varsayılan", n: 5, thickness: 9, gap: 4 },
+        { label: "Üç Halka, Kalın", n: 3, thickness: 14, gap: 5 },
+        { label: "İki Halka, İnce", n: 2, thickness: 6, gap: 3 },
       ].map((v) => {
         const rings = TARAYICI.slice(0, v.n);
         return (

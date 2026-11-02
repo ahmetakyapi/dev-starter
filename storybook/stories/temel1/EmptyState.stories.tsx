@@ -6,7 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Boş Durum",
-  id: "components-core-empty-state",
+  id: "empty-state-template",
   component: EmptyState,
   tags: ["autodocs"],
   parameters: {
@@ -72,13 +72,13 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="İkon + eylem" className="block">
+      <Cell label="İkon + Eylem" className="block">
         <EmptyState title="Henüz Rapor Yok" hint="İlk raporunuz burada listelenir." icon={<Inbox aria-hidden />} action={<Button>Rapor Oluştur</Button>} />
       </Cell>
-      <Cell label="Arama sonucu yok" className="block">
+      <Cell label="Arama Sonucu Yok" className="block">
         <EmptyState title="Eşleşen Kayıt Yok" hint="Filtreleri temizleyip yeniden deneyin." icon={<FileSearch aria-hidden />} action={<Button variant="secondary">Filtreleri Temizle</Button>} />
       </Cell>
-      <Cell label="Davet bekleyen ekip" className="block">
+      <Cell label="Davet Bekleyen Ekip" className="block">
         <EmptyState title="Ekipte Kimse Yok" hint="Takım arkadaşlarınızı e-postayla davet edin." icon={<Users aria-hidden />} action={<Button variant="secondary">Davet Gönder</Button>} />
       </Cell>
     </Gallery>

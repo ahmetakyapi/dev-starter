@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "avatar",
+  "type": "registry:ui",
+  "title": "Avatar",
+  "description": "Görsel + baş harf yedeği",
+  "dependencies": [
+    "@base-ui/react@1.8.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/avatar.tsx",
+      "content": "'use client'\n\nimport { Avatar as Base } from '@base-ui/react/avatar'\nimport { cn } from '@/lib/utils'\n\n/**\n * Avatar: görsel, yüklenemezse baş harfler. `AvatarGroup`: üst üste binen\n * küçük avatarlar (\"Ekip\", \"Katılımcılar\"), fazlası \"+3\" hapında.\n *\n * Base UI Avatar görselin yüklenip yüklenmediğini izler ve yalnızca\n * yüklendiyse gösterir; kırık görsel ikonu hiç çıkmaz. Yükleme sürerken ve\n * hata olursa baş harf yedeği durur, ikisi aynı kutuda: sayfa zıplamaz.\n * (Ayrıca `next/image` gerektirmeden `<img>` basar; uzak avatar adresleri\n * için `remotePatterns`a joker host yazmak `/_next/image`ı herkese açık bir\n * görsel vekiline çevirirdi.)\n *\n * PASTEL YEDEK (\"board\" dili, 2026-11): baş harf zemini grafik paletinin\n * yıkaması (`--chart-N` %30, sayfa zeminiyle karışık), renk ADDAN türetilir: aynı kişi her ekranda\n * aynı renkte, komşu satırlar birbirinden ayrışır. Grafik rengi metin\n * rengi olamadığından harf `text-strong` (açık temada pastel üstünde koyu,\n * koyu temada koyulaşmış yıkama üstünde açık; iki temada da AA).\n *\n * BAŞ HARFLER TÜRKÇE BÜYÜK HARFLE: `toLocaleUpperCase(\"tr-TR\")`. \"ilker\"\n * → \"İ\", \"ışık\" → \"I\". `toUpperCase()` \"ilker\"den \"I\" üretir.\n *\n * `alt`: avatar bir adın YANINDA duruyorsa (liste satırı) görsel süstür,\n * `alt=\"\"` doğru; ad yalnızca avatarda ise `alt={ad}`. Grupta adlar\n * görünmediği için grubun kendisi adlanır (`role=\"group\"` + \"Ayşe, Mert ve\n * 3 kişi daha\"), tek tek avatarlar susar.\n */\n\nconst SIZES = {\n  sm: 'size-8 text-micro',\n  md: 'size-10 text-small',\n  lg: 'size-14 text-read',\n} as const\n\n/* Sınıf adları TAM yazılır: Tailwind kaynağı tarar, birleştirilmiş dizeyi\n   görmez. Yıkama sayfa zeminiyle KARIŞTIRILIR (saydam değil, opak): grupta\n   üst üste binen avatar alttakini göstermesin. */\nconst TINTS = [\n  'bg-[color-mix(in_srgb,var(--chart-1)_30%,var(--page-bg))]',\n  'bg-[color-mix(in_srgb,var(--chart-2)_30%,var(--page-bg))]',\n  'bg-[color-mix(in_srgb,var(--chart-3)_30%,var(--page-bg))]',\n  'bg-[color-mix(in_srgb,var(--chart-4)_30%,var(--page-bg))]',\n  'bg-[color-mix(in_srgb,var(--chart-5)_30%,var(--page-bg))]',\n  'bg-[color-mix(in_srgb,var(--chart-6)_30%,var(--page-bg))]',\n] as const\n\nfunction initials(name: string) {\n  const parts = name.trim().split(/\\s+/).filter(Boolean)\n  const letters = parts.length > 1 ? [parts[0][0], parts.at(-1)![0]] : [parts[0]?.[0] ?? '?']\n  return letters.join('').toLocaleUpperCase('tr-TR')\n}\n\n/** Addan kararlı bir renk: basit karakter toplamı, sunucuda ve istemcide aynı. */\nfunction tint(name: string) {\n  let sum = 0\n  for (const char of name) sum = (sum * 31 + char.charCodeAt(0)) >>> 0\n  return TINTS[sum % TINTS.length]\n}\n\ntype AvatarProps = {\n  name: string\n  src?: string | null\n  /** Varsayılan boş: avatar genellikle adın yanında durur. */\n  alt?: string\n  size?: keyof typeof SIZES\n  className?: string\n}\n\nexport function Avatar({ name, src, alt = '', size = 'md', className }: AvatarProps) {\n  return (\n    <Base.Root\n      className={cn(\n        'inline-grid shrink-0 place-items-center overflow-hidden rounded-full font-semibold text-strong select-none',\n        tint(name),\n        SIZES[size],\n        className,\n      )}\n    >\n      {src ? <Base.Image src={src} alt={alt} className=\"size-full object-cover\" /> : null}\n      <Base.Fallback aria-hidden={alt === '' ? true : undefined}>{initials(name)}</Base.Fallback>\n    </Base.Root>\n  )\n}\n\ntype AvatarGroupProps = {\n  people: readonly { name: string; src?: string | null }[]\n  /** Gösterilecek en fazla avatar; fazlası \"+N\" hapında. */\n  max?: number\n  size?: keyof typeof SIZES\n  /** Grubun okunan adının başı: \"Ekip\" → \"Ekip: Ayşe, Mert ve 3 kişi daha\". */\n  label?: string\n  className?: string\n}\n\nconst OVERLAP = { sm: '-space-x-2', md: '-space-x-2.5', lg: '-space-x-3.5' } as const\n\nexport function AvatarGroup({ people, max = 4, size = 'md', label, className }: AvatarGroupProps) {\n  const shown = people.slice(0, max)\n  const rest = people.length - shown.length\n  const names = shown.map((person) => person.name).join(', ')\n  const spoken = `${label ? `${label}: ` : ''}${names}${rest > 0 ? ` ve ${rest} kişi daha` : ''}`\n  return (\n    <div\n      role=\"group\"\n      aria-label={spoken}\n      className={cn('flex items-center [&>*]:ring-2 [&>*]:ring-page', OVERLAP[size], className)}\n    >\n      {shown.map((person, index) => (\n        // Halka (kapta) zeminle aynı renkte: avatarlar birbirinden kesilmiş\n        // görünür. Beyaz karo üstündeyse `className=\"[&>*]:ring-overlay\"`.\n        <Avatar key={`${person.name}-${index}`} name={person.name} src={person.src} size={size} />\n      ))}\n      {rest > 0 ? (\n        <span\n          aria-hidden\n          className={cn(\n            'inline-grid shrink-0 place-items-center rounded-full bg-[color-mix(in_srgb,var(--text-strong)_8%,var(--page-bg))] font-semibold text-body tabular-nums',\n            SIZES[size],\n          )}\n        >\n          +{rest}\n        </span>\n      ) : null}\n    </div>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "avatar",
+    "palettes": false
+  }
+}

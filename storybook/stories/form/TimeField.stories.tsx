@@ -6,7 +6,7 @@ import { settle } from "./_a11y";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Saat Alanı",
-  id: "components-forms-time-field",
+  id: "time-field",
   component: TimeField,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -95,16 +95,16 @@ export const AllVariants: Story = {
       <Cell label="Boş">
         <TimeField label="Mesai Bitişi" className="w-full max-w-60" />
       </Cell>
-      <Cell label="Gece yarısı">
+      <Cell label="Gece Yarısı">
         <TimeField label="Teslim Saati" defaultValue="00:00" className="w-full max-w-60" />
       </Cell>
-      <Cell label="Yardım metni">
+      <Cell label="Yardım Metni">
         <TimeField label="Açılış Saati" defaultValue="09:00" minuteStep={15} hint="15 dakikalık adım." className="w-full max-w-60" />
       </Cell>
       <Cell label="Hata">
         <TimeField label="Kapanış Saati" defaultValue="07:15" error="Kapanış, açılıştan önce olamaz." className="w-full max-w-60" />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <TimeField label="Randevu Saati" defaultValue="18:00" disabled className="w-full max-w-60" />
       </Cell>
     </Gallery>

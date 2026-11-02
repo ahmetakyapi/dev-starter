@@ -7,7 +7,7 @@ import { TRY } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Kaydırıcı",
-  id: "components-forms-slider",
+  id: "slider",
   component: Slider,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -128,10 +128,10 @@ export const AllVariants: Story = {
   parameters: { layout: "padded", ...DISABLED_CONTRAST_EXEMPT },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Tek değer, yüzde">
+      <Cell label="Tek Değer, Yüzde">
         <Slider label="Bildirim Sesi" defaultValue={0.64} min={0} max={1} step={0.01} format={{ style: "percent" }} className="w-full" />
       </Cell>
-      <Cell label="Aralık, para birimi">
+      <Cell label="Aralık, Para Birimi">
         <Slider
           label="Gecelik Fiyat"
           defaultValue={[1500, 4500]}
@@ -144,7 +144,7 @@ export const AllVariants: Story = {
           className="w-full"
         />
       </Cell>
-      <Cell label="İşaretli aralık">
+      <Cell label="İşaretli Aralık">
         <Slider
           label="Bütçe"
           defaultValue={[2000, 6000]}
@@ -158,7 +158,7 @@ export const AllVariants: Story = {
           className="w-full"
         />
       </Cell>
-      <Cell label="Değer gizli">
+      <Cell label="Değer Gizli">
         <Slider label="Bulanıklık" defaultValue={30} showValue={false} hint="Arka planı yumuşatır." className="w-full" />
       </Cell>
       <Cell label="Hata">
@@ -173,7 +173,7 @@ export const AllVariants: Story = {
           className="w-full"
         />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <div data-a11y-disabled className="w-full">
           <Slider label="Ekran Parlaklığı" defaultValue={72} disabled />
         </div>

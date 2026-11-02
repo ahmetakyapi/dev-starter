@@ -1,5 +1,6 @@
 import type { Decorator, Preview } from "@storybook/nextjs-vite";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { DocsPageWithInstall } from "./install-block";
 import "./preview.css";
 
 /** Paletler: şablonun `app/palettes.css`iyle aynı adlar (signature varsayılan). */
@@ -46,6 +47,9 @@ const preview: Preview = {
     backgrounds: { disable: true },
     a11y: { test: "error" },
     nextjs: { appDirectory: true },
+    // Her bileşen belgesinin başında "Projeye Al" (registry.json'dan). Kendi
+    // docs.page'ini veren hikâye bunu ezer; kayıtta olmayan sayfada blok yok.
+    docs: { page: DocsPageWithInstall },
     options: {
       // Vitrin yüzü en üstte: önce bir arada görülen örnek tasarım ve vitrin,
       // sonra başlangıç, token'lar ve parça parça katalog.

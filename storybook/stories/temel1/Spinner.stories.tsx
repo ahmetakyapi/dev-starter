@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Yükleme/Dönen Gösterge",
-  id: "components-loading-spinner",
+  id: "spinner",
   component: Spinner,
   tags: ["autodocs"],
   parameters: {
@@ -34,7 +34,7 @@ export const InButton: Story = {
     <div className="flex flex-wrap items-center justify-center gap-3">
       <Button variant="brand" disabled aria-busy="true">
         <Spinner size="sm" tone="current" label={null} />
-        Hesap oluşturuluyor
+        Hesap Oluşturuluyor
       </Button>
       <Button variant="secondary" disabled aria-busy="true">
         <Spinner size="sm" tone="current" label={null} />
@@ -74,7 +74,7 @@ export const AllVariants: Story = {
           <Spinner tone="muted" label="Sönük tonda yükleniyor" />
         </div>
       </Cell>
-      <Cell label="current: düğmenin metin rengi">
+      <Cell label="current: Düğmenin Metin Rengi">
         <Button variant="primary" disabled aria-busy="true">
           <Spinner size="sm" tone="current" label={null} />
           Kaydediliyor

@@ -20,7 +20,7 @@ function SearchScene() {
 
 const meta = {
   title: "Bileşenler/Veri/Boş Durum",
-  id: "components-data-empty-state",
+  id: "empty-state",
   component: EmptyState,
   tags: ["autodocs"],
   parameters: {
@@ -81,7 +81,7 @@ export const Illustrated: Story = {
 
 export const Inline: Story = {
   name: "Satır İçi",
-  args: { variant: "inline", icon: undefined, title: "Bu hafta etkinlik yok.", hint: undefined, action: undefined },
+  args: { variant: "inline", icon: undefined, title: "Bu Hafta Etkinlik Yok", hint: undefined, action: undefined },
 };
 
 export const TitleOnly: Story = { name: "Yalnız Başlık", args: { hint: undefined, action: undefined, icon: <SearchX /> } };
@@ -91,14 +91,14 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="icon: panel içi" className="place-items-stretch">
+      <Cell label="icon: Panel İçi" className="place-items-stretch">
         <EmptyState icon={<FileText />} title="Henüz Fatura Yok" hint="İlk siparişin tamamlandığında burada listelenecek." action={<Button size="sm">Fatura Oluştur</Button>} />
       </Cell>
-      <Cell label="scene: sayfa düzeyi" className="place-items-stretch">
+      <Cell label="scene: Sayfa Düzeyi" className="place-items-stretch">
         <EmptyState variant="scene" scene={<SearchScene />} title="Sonuç Bulunamadı" hint="Yazımı kontrol et ya da süzgeçleri temizle." />
       </Cell>
-      <Cell label="inline: küçük liste">
-        <EmptyState variant="inline" title="Bu hafta etkinlik yok." />
+      <Cell label="inline: Küçük Liste">
+        <EmptyState variant="inline" title="Bu Hafta Etkinlik Yok" />
       </Cell>
     </Gallery>
   ),

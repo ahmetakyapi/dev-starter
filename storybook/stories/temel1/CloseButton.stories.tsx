@@ -6,7 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Kapat Düğmesi",
-  id: "components-buttons-close-button",
+  id: "close-button",
   component: CloseButton,
   tags: ["autodocs"],
   parameters: {
@@ -75,16 +75,16 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={4}>
-      <Cell label="md · 32 piksel daire">
+      <Cell label="md · 32 Piksel Daire">
         <CloseButton aria-label="Diyaloğu Kapat" />
       </Cell>
-      <Cell label="sm · 28 piksel daire">
+      <Cell label="sm · 28 Piksel Daire">
         <CloseButton aria-label="Filtreyi Kaldır" size="sm" />
       </Cell>
-      <Cell label="onWash · renkli zeminde" className="bg-primary-wash">
+      <Cell label="onWash · Renkli Zeminde" className="bg-primary-wash">
         <CloseButton aria-label="Uyarıyı Kapat" tone="onWash" />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <CloseButton aria-label="Kapat" disabled />
       </Cell>
     </Gallery>

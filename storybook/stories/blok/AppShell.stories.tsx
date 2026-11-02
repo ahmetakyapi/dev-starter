@@ -19,8 +19,8 @@ function PanoContent({ compact = false }: { compact?: boolean }) {
       <ContentBar title="Pano" meta="Pazartesi, 2 Kasım" />
       <div className="grid gap-8 p-4 sm:p-6">
         <StatGrid>
-          <Stat label="Açık Talep" value="148" change={-6.2} changeLabel="Geçen Haftaya Göre" positiveIsGood={false} />
-          <Stat label="İlk Yanıt Süresi" value="18" unit="dk" change={-12.4} changeLabel="Geçen Haftaya Göre" positiveIsGood={false} />
+          <Stat label="Açık Talep" value="148" change={-6.2} changeLabel="geçen haftaya göre" positiveIsGood={false} />
+          <Stat label="İlk Yanıt Süresi" value="18" unit="dk" change={-12.4} changeLabel="geçen haftaya göre" positiveIsGood={false} />
           {compact ? null : <Stat label="Memnuniyet" value="4,6" unit="/ 5" change={2.1} changeLabel="Geçen Aya Göre" />}
           {compact ? null : <Stat label="Ajan Çözümü" value="%37" change={8.5} changeLabel="Geçen Aya Göre" />}
         </StatGrid>
@@ -50,7 +50,7 @@ function PanoContent({ compact = false }: { compact?: boolean }) {
 
 const meta = {
   title: "Bloklar/Uygulama Kabuğu",
-  id: "blocks-app-shell",
+  id: "app-shell",
   component: AppShell,
   tags: ["autodocs"],
   parameters: {
@@ -144,12 +144,12 @@ export const AllVariants: Story = {
   },
   render: (args) => (
     <Gallery cols={2}>
-      <Cell label="Açık · Pano etkin" className="block p-2">
+      <Cell label="Açık · Pano Etkin" className="block p-2">
         <AppShell {...args} contentAs="div" className="h-[30rem] min-h-0 rounded-xl">
           <PanoContent compact />
         </AppShell>
       </Cell>
-      <Cell label="Daraltılmış · Gelen Kutusu etkin" className="block p-2">
+      <Cell label="Daraltılmış · Gelen Kutusu Etkin" className="block p-2">
         {/* Sayfada iki kabuk olunca "Kenar Çubuğu" / "Ana Gezinme" yer işaretleri
             yinelenir; ikinci kopya yalnız görüntü olsun diye `inert`. */}
         <div inert className="contents">

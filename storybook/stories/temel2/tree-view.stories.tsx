@@ -34,7 +34,7 @@ const NODES: TreeNode[] = [
 
 const meta = {
   title: "Bileşenler/Veri/Ağaç Görünümü",
-  id: "components-data-tree-view",
+  id: "tree-view",
   component: TreeView,
   tags: ["autodocs"],
   parameters: {
@@ -101,10 +101,10 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="İkonlu, açık klasör" className="place-items-stretch">
+      <Cell label="İkonlu, Açık Klasör" className="place-items-stretch">
         <TreeView aria-label="İkonlu" nodes={NODES} defaultExpanded={["rapor"]} />
       </Cell>
-      <Cell label="Seçili öğe" className="place-items-stretch">
+      <Cell label="Seçili Öğe" className="place-items-stretch">
         <TreeView aria-label="Seçili" nodes={NODES} defaultExpanded={["fatura"]} selectedId="f1" />
       </Cell>
       <Cell label="İkonsuz" className="place-items-stretch">

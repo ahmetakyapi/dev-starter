@@ -60,7 +60,7 @@ export const SETTINGS_TABS: readonly SettingsTab[] = [
         <SettingsSection title="Kenar Çubuğu">
           <RadioGroup
             name="kenar-cubugu"
-            legend="Açılışta kenar çubuğu"
+            legend="Açılışta Kenar Çubuğu"
             hideLegend
             defaultValue="acik"
             options={[

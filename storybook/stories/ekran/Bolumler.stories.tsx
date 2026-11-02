@@ -26,7 +26,7 @@ function Section({ of: Of }: { of: ComponentType }) {
 
 const meta = {
   title: "Ekranlar/Açılış Sayfası/Bölümler",
-  id: "screens-landing-sections",
+  id: "landing-sections",
   component: Section,
   tags: ["autodocs"],
   parameters: {

@@ -157,7 +157,7 @@ export function NotificationCenter({ items, onMarkRead, onOpen, className }: Not
                 <span className="grid size-10 place-items-center rounded-full bg-surface text-muted">
                   <BellOff aria-hidden className="size-[1.125rem]" strokeWidth={1.75} />
                 </span>
-                <p className="text-base font-medium text-strong">Bildirim yok</p>
+                <p className="text-base font-medium text-strong">Bildirim Yok</p>
                 <p className="text-small text-muted">Biri sizi andığında ya da bir iş bittiğinde burada görünür.</p>
               </div>
             ) : (

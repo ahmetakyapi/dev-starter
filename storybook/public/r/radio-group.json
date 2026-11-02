@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "radio-group",
+  "type": "registry:ui",
+  "title": "Seçenek Grubu",
+  "description": "2-6 görünür seçenek",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/radio-group.tsx",
+      "content": "import type { ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\n/**\n * Radyo grubu: birbirini dışlayan 2-6 seçenek, hepsi aynı anda görünür.\n * Yedi ve üstü seçenekte `select.tsx`; 2-4 kısa seçenekte ve anında etki\n * ediyorsa `segmented-control.tsx`.\n *\n * YEREL: `<fieldset>` + `<legend>` + aynı `name`li radyolar. Tarayıcı ok\n * tuşu gezinmesini, tek Tab durağını ve form gönderimini kendisi yapar;\n * JavaScript'siz çalışır, sunucu bileşeninde çizilir. Ekran okuyucu grubun\n * adını (legend) ve \"3 seçenekten 2.\" bilgisini kendisi söyler.\n *\n * İÇ NOKTA YAYLA GELİR (\"board\" dili, 2026-11): seçilince halka vurguyla\n * dolar, ortadaki beyaz nokta 0,4'ten yayla büyür (yoktan değil: nesne\n * sıfır ölçekten patlamaz) ve hafifçe aşıp oturur. Yay CSS `linear()` ile\n * örneklenmiş bir spring; sunucu bileşeni kalır. Basılıyken halka 0,92'ye\n * çöker. Hareketi azaltan kullanıcıda nokta anında belirir (globals.css).\n *\n * Kontrollü kullanım gerekiyorsa (`value` + `onChange`) bu dosyayı istemci\n * bileşeninde çağır; giriş prop'ları olduğu gibi geçer.\n */\n\n/* Örneklenmiş yay (stiffness 420, damping 26); checkbox.tsx ve switch.tsx\n   aynı bloğu taşır, React aynı `href`i bir kez basar. */\nconst SPRING_CSS = `\n.ui-spring {\n  transition-duration: 460ms;\n  transition-timing-function: var(--ease-brand);\n  transition-timing-function: linear(0, 0.07, 0.232, 0.427, 0.618, 0.78, 0.905, 0.992, 1.044, 1.07, 1.076, 1.07, 1.057, 1.042, 1.028, 1.016, 1.007, 1, 0.996, 0.995, 0.994, 0.995, 0.996, 0.997, 1);\n}\n`\n\nexport type RadioOption = { value: string; label: ReactNode; hint?: ReactNode; disabled?: boolean }\n\ntype RadioGroupProps = {\n  name: string\n  /** Grubun adı (legend): Title Case. */\n  legend: ReactNode\n  options: readonly RadioOption[]\n  defaultValue?: string\n  value?: string\n  onChange?: (value: string) => void\n  /** Legend'ı görsel olarak gizle (adı başka bir başlık zaten söylüyorsa). */\n  hideLegend?: boolean\n  orientation?: 'vertical' | 'horizontal'\n  required?: boolean\n  className?: string\n}\n\nexport function RadioGroup({\n  name,\n  legend,\n  options,\n  defaultValue,\n  value,\n  onChange,\n  hideLegend = false,\n  orientation = 'vertical',\n  required,\n  className,\n}: RadioGroupProps) {\n  return (\n    <fieldset className={cn('min-w-0', className)}>\n      <style href=\"ui-spring\" precedence=\"default\">\n        {SPRING_CSS}\n      </style>\n      <legend className={hideLegend ? 'sr-only' : 'mb-1 text-small font-semibold text-strong'}>\n        {legend}\n      </legend>\n      <div className={cn('flex', orientation === 'vertical' ? 'flex-col' : 'flex-wrap gap-x-6')}>\n        {options.map((option) => (\n          <label\n            key={option.value}\n            className={cn(\n              'flex min-h-11 cursor-pointer items-start gap-3 py-2.5',\n              option.disabled ? 'cursor-not-allowed opacity-50' : 'group/radio',\n            )}\n          >\n            <span className=\"ui-spring relative mt-[0.1875rem] grid size-[1.125rem] shrink-0 place-items-center transition-[scale] group-active/radio:scale-[0.92]\">\n              <input\n                type=\"radio\"\n                name={name}\n                value={option.value}\n                disabled={option.disabled}\n                required={required}\n                defaultChecked={value === undefined ? option.value === defaultValue : undefined}\n                checked={value === undefined ? undefined : option.value === value}\n                onChange={onChange ? () => onChange(option.value) : undefined}\n                className=\"peer absolute inset-0 m-0 size-full cursor-pointer appearance-none rounded-full border border-line-strong bg-overlay shadow-raised transition-colors checked:border-primary checked:bg-primary hover:border-primary-soft disabled:cursor-not-allowed\"\n              />\n              <span\n                aria-hidden\n                className=\"ui-spring pointer-events-none relative size-[0.4375rem] scale-[0.4] rounded-full bg-on-primary opacity-0 transition-[scale,opacity] peer-checked:scale-100 peer-checked:opacity-100\"\n              />\n            </span>\n            <span className=\"min-w-0\">\n              <span className=\"block text-base font-medium text-strong\">{option.label}</span>\n              {option.hint ? (\n                <span className=\"mt-0.5 block text-small text-muted\">{option.hint}</span>\n              ) : null}\n            </span>\n          </label>\n        ))}\n      </div>\n    </fieldset>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "radio-group",
+    "palettes": false
+  }
+}

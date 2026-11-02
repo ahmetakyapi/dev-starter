@@ -27,7 +27,7 @@ function OpenSettings(props: ComponentProps<typeof SettingsDialog>) {
 
 const meta = {
   title: "Bloklar/Ayarlar Penceresi",
-  id: "blocks-settings-dialog",
+  id: "settings-dialog",
   component: SettingsDialog,
   tags: ["autodocs"],
   parameters: {
@@ -96,7 +96,7 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={2}>
       {SETTINGS_TABS.map((tab) => (
-        <Cell key={tab.value} label={`${tab.label} sekmesi`} className="block">
+        <Cell key={tab.value} label={`${tab.label} Sekmesi`} className="block">
           <div className="rounded-xl bg-overlay p-5 shadow-raised ring-1 ring-line">{tab.content}</div>
         </Cell>
       ))}

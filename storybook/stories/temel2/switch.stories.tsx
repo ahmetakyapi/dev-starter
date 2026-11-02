@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Seçim/Aç-Kapa Düğmesi",
-  id: "components-selection-switch",
+  id: "switch",
   component: Switch,
   tags: ["autodocs"],
   parameters: {
@@ -65,7 +65,7 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Ayar listesi: ray sağda" className="place-items-stretch">
+      <Cell label="Ayar Listesi: Ray Sağda" className="place-items-stretch">
         <div className="grid divide-y divide-line-soft">
           <Switch label="Bildirimler" hint="Yeni sipariş gelince haber ver." defaultChecked />
           <Switch label="Sessiz Saatler" hint="22.00 ile 08.00 arası bildirim yok." />
@@ -73,7 +73,7 @@ export const AllVariants: Story = {
           <Switch label="Haftalık Özet" disabled defaultChecked />
         </div>
       </Cell>
-      <Cell label="Satır içi: ray solda">
+      <Cell label="Satır İçi: Ray Solda">
         <div className="grid gap-1">
           <Switch placement="start" label="Hareketi Azalt" />
           <Switch placement="start" label="Sıkı Düzen" defaultChecked />

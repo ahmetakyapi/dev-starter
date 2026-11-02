@@ -14,7 +14,7 @@ const ITEMS: TabItem[] = [
 
 const meta = {
   title: "Bileşenler/Gezinme/Sekmeler",
-  id: "components-navigation-tabs",
+  id: "tabs",
   component: Tabs,
   tags: ["autodocs"],
   parameters: {

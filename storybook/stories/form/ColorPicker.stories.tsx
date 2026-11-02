@@ -36,7 +36,7 @@ function ControlledDemo() {
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Renk Seçici",
-  id: "components-forms-color-picker",
+  id: "color-picker",
   component: ColorPicker,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -123,12 +123,12 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Hazır renkli">
+      <Cell label="Hazır Renkli">
         <div className="w-full rounded-lg bg-overlay p-4 shadow-raised">
           <ColorPicker label="Etiket Rengi" defaultValue="#3b82f6" presets={COLORS} />
         </div>
       </Cell>
-      <Cell label="Hazır renksiz">
+      <Cell label="Hazır Renksiz">
         <div className="w-full rounded-lg bg-overlay p-4 shadow-raised">
           <ColorPicker label="Marka Rengi" defaultValue="#34d399" />
         </div>

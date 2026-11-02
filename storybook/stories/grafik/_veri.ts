@@ -56,7 +56,7 @@ export const TARAYICI = [
 /* Destek kanalları — gösterge */
 export const KANAL = [
   { label: "Canlı Destek", value: 4230, series: 2 },
-  { label: "E-posta", value: 3420, series: 3 },
+  { label: "E-Posta", value: 3420, series: 3 },
   { label: "Telefon", value: 1350, series: 1 },
   { label: "Sosyal Medya", value: 610, series: 4 },
 ] as const;
@@ -85,7 +85,7 @@ export const SANKEY_KAYNAK = [
   { id: "arama", label: "Arama", series: 2 },
   { id: "sosyal", label: "Sosyal", series: 3 },
   { id: "dogrudan", label: "Doğrudan", series: 1 },
-  { id: "eposta", label: "E-posta", series: 4 },
+  { id: "eposta", label: "E-Posta", series: 4 },
   { id: "reklam", label: "Reklam", series: 5 },
 ] as const;
 export const SANKEY_HEDEF = [

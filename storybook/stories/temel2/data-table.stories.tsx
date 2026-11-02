@@ -11,7 +11,7 @@ const sortHref = (key: string, dir: SortDir) => `?sort=${key}&dir=${dir}`;
 
 const meta = {
   title: "Bileşenler/Veri/Veri Tablosu",
-  id: "components-data-data-table",
+  id: "data-table",
   component: OrderTable,
   tags: ["autodocs"],
   parameters: {
@@ -145,7 +145,7 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Rahat (varsayılan)" className="place-items-stretch">
+      <Cell label="Rahat (Varsayılan)" className="place-items-stretch">
         <DataTable caption="Rahat" columns={ORDER_COLUMNS} rows={ORDERS.slice(0, 3)} rowKey={(r) => r.id} minWidth="30rem" />
       </Cell>
       <Cell label="Sık" className="place-items-stretch">

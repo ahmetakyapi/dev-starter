@@ -8,7 +8,7 @@ const GLYPHS = { Settings, Pencil, Share2, Trash2, MoreHorizontal } as const;
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/İkon Düğmesi",
-  id: "components-buttons-icon-button",
+  id: "icon-button",
   component: IconButton,
   tags: ["autodocs"],
   parameters: {

@@ -10,7 +10,27 @@ her projeden cagrilabilir; kaynak `~/dev-starter/snippets/`.
 kutuphanesi icin `~/dev-starter/guides/10-component-library.md` (`snippets/ui/`:
 dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareket iceriyorsa `~/dev-starter/guides/04-motion.md`.
 
-## Adimlar
+## `snippets/ui` bileseni ise: add-ui (elle kopyalama yok)
+
+Kutuphane bileseni (`ui/<ad>` ya da `--list`te gorunen ad) **betikle** kurulur;
+transitif bagimliliklari (`@/components/ui/*`, `lib/utils`, `lib/motion`,
+`lib/theme`, `app/palettes.css`) kendisi cozer, var olan dosyanin ustune yazmaz:
+
+```bash
+node ~/dev-starter/scripts/add-ui.mjs --list                       # katalog
+node ~/dev-starter/scripts/add-ui.mjs . <ad...> --dry-run          # once plan
+node ~/dev-starter/scripts/add-ui.mjs . <ad...> --install          # kur + eksik npm paketleri
+```
+
+Ozet tablosunu oku: `farkli (atlandi)` satiri projenin kendi dosyasidir —
+`--force` ile ezmeden once farki kullaniciya goster. `Uyarilar` (eksik token,
+LazyMotion yok, atlanan yardimcida eksik disa aktarim) ve `Sonraki adimlar`
+(palettes.css satiri) uygulanmadan bitti deme. Proje farkli rol adlari
+kullaniyorsa (shadcn `bg-background`) siniflari kurulumdan SONRA cevir.
+Tailwind v3 / Next 14 projesinde betik kopyalar ama siniflar v4 token'i ister:
+asagidaki adimlarla uyarla.
+
+## Adimlar (snippets/ kok parcalari ve uyarlama)
 
 1. `ls ~/dev-starter/snippets/ ~/dev-starter/snippets/ui/` ile dosyayi bul ve tamamini oku (`.tsx`, `.ts`;
    `rolling-number` yaninda `.module.css` de var).

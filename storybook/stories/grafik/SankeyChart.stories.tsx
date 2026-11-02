@@ -11,7 +11,7 @@ type Args = ComponentProps<typeof SankeyChart> & { kaynakSayisi: number; hedefSa
 
 const meta = {
   title: "Grafikler/Akış Grafiği",
-  id: "charts-sankey-chart",
+  id: "sankey-chart",
   component: SankeyChart,
   tags: ["autodocs"],
   parameters: {
@@ -111,7 +111,7 @@ export const ZeroFlow: Story = {
     title: "Bilet Yönlendirme",
     unit: "bilet",
     sources: [
-      { id: "eposta", label: "E-posta", series: 3 },
+      { id: "eposta", label: "E-Posta", series: 3 },
       { id: "canli", label: "Canlı Destek", series: 2 },
       { id: "telefon", label: "Telefon", series: 1 },
     ],
@@ -171,8 +171,8 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={2}>
       {[
-        { label: "Dört kaynak, üç hedef", n: 4, m: 3, h: "h-72" },
-        { label: "Beş kaynak, iki hedef, kısa", n: 5, m: 2, h: "h-56" },
+        { label: "Dört Kaynak, Üç Hedef", n: 4, m: 3, h: "h-72" },
+        { label: "Beş Kaynak, İki Hedef, Kısa", n: 5, m: 2, h: "h-56" },
       ].map((v, i) => {
         const s = SANKEY_KAYNAK.slice(0, v.n);
         const t = SANKEY_HEDEF.slice(0, v.m);

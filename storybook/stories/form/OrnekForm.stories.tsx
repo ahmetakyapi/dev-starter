@@ -43,16 +43,16 @@ function ReservationForm({ initial }: { initial?: { range: DateRange; tags: stri
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!range?.end) {
-      setResult({ tone: "danger", title: "Çıkış tarihi eksik", description: "Takvimde giriş ve çıkış gününü seçin." });
+      setResult({ tone: "danger", title: "Çıkış Tarihi Eksik", description: "Takvimde giriş ve çıkış gününü seçin." });
       return;
     }
     if (code.length < 6) {
-      setResult({ tone: "danger", title: "Doğrulama kodu eksik", description: "Telefonunuza gelen 6 haneli kodu girin." });
+      setResult({ tone: "danger", title: "Doğrulama Kodu Eksik", description: "Telefonunuza gelen 6 haneli kodu girin." });
       return;
     }
     setResult({
       tone: "success",
-      title: "Rezervasyon talebiniz alındı",
+      title: "Rezervasyon Talebiniz Alındı",
       description: `${stay.formatRange(range.start, range.end)}, ${count} gece, ${guests ?? 1} misafir, giriş ${arrival ?? "belirtilmedi"}. Otel 2 saat içinde onaylayacak.`,
     });
   }
@@ -165,7 +165,7 @@ function ReservationForm({ initial }: { initial?: { range: DateRange; tags: stri
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Örnek Form",
-  id: "components-forms-example-form",
+  id: "example-form",
   component: ReservationForm,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -238,7 +238,7 @@ export const Interaction: Story = {
 
     await step("Gönder ve onayı gör", async () => {
       await userEvent.click(canvas.getByRole("button", { name: "Talebi Gönder" }));
-      await expect(await canvas.findByText("Rezervasyon talebiniz alındı")).toBeInTheDocument();
+      await expect(await canvas.findByText("Rezervasyon Talebiniz Alındı")).toBeInTheDocument();
     });
   },
 };
@@ -248,6 +248,6 @@ export const IncompleteSubmit: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Talebi Gönder" }));
-    await expect(await canvas.findByRole("alert")).toHaveTextContent("Çıkış tarihi eksik");
+    await expect(await canvas.findByRole("alert")).toHaveTextContent("Çıkış Tarihi Eksik");
   },
 };

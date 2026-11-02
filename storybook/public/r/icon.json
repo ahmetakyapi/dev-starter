@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "icon",
+  "type": "registry:ui",
+  "title": "İkon",
+  "description": "lucide ikonu, tek boyut ölçeği",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/icon.tsx",
+      "content": "import type { LucideIcon, LucideProps } from \"lucide-react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * lucide-react wrapper'ı: tek boyut ölçeği, tek çizgi kalınlığı.\n *\n * VARSAYILAN `aria-hidden`. İkonların çoğu yanındaki metnin süsü; ekran\n * okuyucu \"görüntü\" diye okumamalı. İkon TEK BAŞINA anlam taşıyorsa (tablo\n * hücresindeki onay işareti) `label` ver: o zaman `role=\"img\"` ile adı okunur.\n * Düğmenin tek içeriği ikonsa etiketi ikona değil DÜĞMEYE ver\n * (`icon-button.tsx`, `aria-label` zorunlu).\n *\n * Boyut ölçeği metinle eşleşir: sm → text-small/base satırı, md → read,\n * lg → başlık. Piksel yazma; ölçeği büyütmek gerekirse buraya ekle.\n */\n\nexport const ICON_SIZES = { sm: 16, md: 20, lg: 24 } as const;\nexport type IconSize = keyof typeof ICON_SIZES;\n\n/* İnce çizgi (1.75) token'lı arayüzde daha sakin; lucide varsayılanı 2. */\nconst STROKE = 1.75;\n\ntype IconProps = Omit<LucideProps, \"size\" | \"ref\"> & {\n  icon: LucideIcon;\n  size?: IconSize;\n  /** Verilirse ikon anlam taşır ve ekran okuyucu bu adı okur. */\n  label?: string;\n};\n\nexport function Icon({ icon: Glyph, size = \"sm\", label, className, strokeWidth = STROKE, ...props }: IconProps) {\n  const a11y = label ? { role: \"img\", \"aria-label\": label } : { \"aria-hidden\": true as const };\n  return (\n    <Glyph\n      size={ICON_SIZES[size]}\n      strokeWidth={strokeWidth}\n      className={cn(\"shrink-0\", className)}\n      focusable=\"false\"\n      {...a11y}\n      {...props}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "icon",
+    "palettes": false
+  }
+}

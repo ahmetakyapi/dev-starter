@@ -54,11 +54,11 @@ const NAV: readonly ShellNavGroup[] = [
 ];
 
 const PLAN: readonly PlanStep[] = [
-  { id: "oku", title: "Ekim siparişlerini oku" },
-  { id: "ayir", title: "Kanallara ayır" },
-  { id: "kavurma", title: "Kavurma kayıtlarıyla eşleştir", detail: `${num.format(ROAST_TOTAL)} kg geçen haftanın partileri karşılaştırılıyor` },
-  { id: "stok", title: "Kasım stok ihtiyacını hesapla" },
-  { id: "rapor", title: "Kurucuya özet yaz" },
+  { id: "oku", title: "Ekim Siparişlerini Oku" },
+  { id: "ayir", title: "Kanallara Ayır" },
+  { id: "kavurma", title: "Kavurma Kayıtlarıyla Eşleştir", detail: `${num.format(ROAST_TOTAL)} kg geçen haftanın partileri karşılaştırılıyor` },
+  { id: "stok", title: "Kasım Stok İhtiyacını Hesapla" },
+  { id: "rapor", title: "Kurucuya Özet Yaz" },
 ];
 const PLAN_LABELS = PLAN.map((s) => String(s.title));
 const MODELS = ["Fable 5", "Fable 5 Mini"] as const;

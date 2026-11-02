@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sparkline",
+  "type": "registry:ui",
+  "title": "Mini Grafik",
+  "description": "Eksensiz mini eğri",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/sparkline.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\n/**\n * Mini eğri: eksensiz, ızgarasız SVG; son nokta vurgulu. Sunucuda çizilir,\n * istemciye JavaScript inmez.\n *\n * Eğri bir EĞİLİM işareti; okunacak sayı yanındaki `Stat`. Bu yüzden eksen,\n * etiket ve imleç yok. Tek seri olduğu için lejant da yok: `title` seriyi\n * adlandırır ve ekran okuyucu onu okur (`role=\"img\"`).\n *\n * TON: `auto` ilk ve son noktayı karşılaştırır (yükselen success, düşen\n * danger). Yalnızca fiyat gibi \"yükselmek iyi\" olan serilerde kullan; faiz,\n * işsizlik, gecikme gibi serilerde `primary` (varsayılan): renk orada bir\n * yargı gibi okunur.\n *\n * `vector-effect: non-scaling-stroke`: kutu esnese de çizgi kalınlığı sabit.\n */\n\ntype SparklineProps = {\n  values: readonly number[];\n  /** Ekran okuyucu adı: \"Son 30 Gün Kapanış\". */\n  title: string;\n  width?: number;\n  height?: number;\n  tone?: \"primary\" | \"auto\" | \"muted\";\n  area?: boolean;\n  className?: string;\n};\n\n/** Alan dolgusunun opaklığı: çizgiyi bastırmayacak kadar hafif. */\nconst AREA_OPACITY = 0.1;\n\nexport function Sparkline({ values, title, width = 120, height = 32, tone = \"primary\", area = true, className }: SparklineProps) {\n  if (values.length < 2) return null;\n  const min = Math.min(...values);\n  const max = Math.max(...values);\n  const span = max - min || 1;\n  const pad = 3;\n  const x = (i: number) => pad + (i / (values.length - 1)) * (width - pad * 2);\n  const y = (v: number) => pad + (1 - (v - min) / span) * (height - pad * 2);\n  const points = values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(\" \");\n  const lastX = x(values.length - 1);\n  const lastY = y(values.at(-1)!);\n\n  const first = values[0];\n  const last = values.at(-1)!;\n  const color =\n    tone === \"muted\"\n      ? \"var(--text-muted)\"\n      : tone === \"auto\"\n        ? last > first\n          ? \"var(--success)\"\n          : last < first\n            ? \"var(--danger)\"\n            : \"var(--text-muted)\"\n        : \"var(--primary)\";\n\n  return (\n    <svg\n      viewBox={`0 0 ${width} ${height}`}\n      width={width}\n      height={height}\n      role=\"img\"\n      aria-label={title}\n      preserveAspectRatio=\"none\"\n      className={cn(\"block max-w-full overflow-visible\", className)}\n    >\n      {area ? (\n        <polygon\n          points={`${x(0).toFixed(1)},${height} ${points} ${lastX.toFixed(1)},${height}`}\n          fill={color}\n          opacity={AREA_OPACITY}\n        />\n      ) : null}\n      <polyline\n        points={points}\n        fill=\"none\"\n        stroke={color}\n        strokeWidth={1.75}\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n        vectorEffect=\"non-scaling-stroke\"\n      />\n      {/* Son nokta: zeminden bir halka ayırır, eğri neresinde biterse bitsin seçilir. */}\n      <circle cx={lastX} cy={lastY} r={4.5} fill=\"var(--page-bg)\" />\n      <circle cx={lastX} cy={lastY} r={2.75} fill={color} />\n    </svg>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "sparkline",
+    "palettes": false
+  }
+}

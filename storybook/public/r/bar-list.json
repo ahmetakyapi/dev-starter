@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bar-list",
+  "type": "registry:ui",
+  "title": "Çubuk Listesi",
+  "description": "Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+    "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/bar-list.tsx",
+      "content": "\"use client\";\n\nimport { m, useReducedMotion } from \"motion/react\";\nimport Link from \"next/link\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\nimport type { Series } from \"@/components/ui/chart-card\";\n\n/**\n * Sıralı çubuk listesi: \"En Çok Ziyaret Edilen Sayfalar\", \"Kaynaklar\",\n * \"Ülkeler\" gibi uzun adlı, 3-10 kalemlik bir sıralama. Ad solda, değer\n * sağda, satırın ARKASINDA değerle orantılı soluk bir dolgu (wash). Grafik\n * gibi değil liste gibi okunur; ad uzun olduğunda sütun grafiğinden iyidir\n * (etiket döndürmek, kısaltmak gerekmez).\n *\n * DOLGU METNİN ARKASINDA: ayrı bir çubuk satırı ad ile değer arasında yer\n * kaplar ve telefonda adı kısaltır. Dolgu serinin rengi `%30`\n * (`bg-chart-N/30`); üstündeki `text-strong` iki temada da AA kalır. En\n * büyük değer tam genişlik, gerisi ona göre.\n *\n * Varsayılan olarak BÜYÜKTEN KÜÇÜĞE sıralanır (`sort={false}` verilen\n * sırayı korur: zaman ya da aşama sırası gibi anlamlı bir düzen varsa).\n *\n * `href` verilen satır bağlantıdır: bütün satır tıklanır, dokunmatikte\n * 44 px, masaüstünde 36 px (`pointer-fine:`). Bağlantısız satır düz metin.\n *\n * Hareket: ekrana girince dolgular soldan, sırayla uzar (`scaleX`, çubuk\n * çizimi; genişlik animasyonu değil). Hareketi azaltan kullanıcıda süre 0.\n * Erişilebilirlik: bir `ol`; her satır \"Fiyatlandırma 2.140\" diye okunur,\n * dolgu `aria-hidden`.\n */\n\ntype Item = { label: ReactNode; value: number; href?: string; icon?: ReactNode };\n\nconst WASH = [\"bg-chart-1/30\", \"bg-chart-2/30\", \"bg-chart-3/30\", \"bg-chart-4/30\", \"bg-chart-5/30\", \"bg-chart-6/30\"] as const;\nconst EASE = [0.22, 1, 0.36, 1] as const;\n\nexport function BarList({\n  items,\n  title,\n  columns,\n  series = 2,\n  sort = true,\n  valueFormat,\n  className,\n}: {\n  items: readonly Item[];\n  /** Listenin ekran okuyucu adı: \"En Çok Ziyaret Edilen Sayfalar\". */\n  title: string;\n  /** Görünür sütun başlıkları: `[\"Sayfa\", \"Ziyaret\"]`. */\n  columns?: readonly [string, string];\n  series?: Series;\n  sort?: boolean;\n  /** Değer biçimi: `{ style: \"percent\" }` ya da para birimi. */\n  valueFormat?: Intl.NumberFormatOptions;\n  className?: string;\n}) {\n  const reduce = useReducedMotion();\n  const format = new Intl.NumberFormat(\"tr-TR\", valueFormat);\n  const rows = sort ? [...items].sort((a, b) => b.value - a.value) : items;\n  const max = Math.max(...rows.map((r) => r.value), 1);\n\n  return (\n    <div className={cn(\"w-full\", className)}>\n      {columns ? (\n        <div aria-hidden className=\"mb-2 flex justify-between px-3 text-micro font-medium text-muted\">\n          <span>{columns[0]}</span>\n          <span>{columns[1]}</span>\n        </div>\n      ) : null}\n      <ol aria-label={title} className=\"space-y-1\">\n        {rows.map((row, i) => {\n          const body = (\n            <>\n              <m.span\n                aria-hidden\n                className={cn(\"absolute inset-y-0 left-0 rounded-md\", WASH[series - 1])}\n                style={{ width: `${Math.max((row.value / max) * 100, 1.5)}%`, originX: 0 }}\n                initial={reduce ? false : { scaleX: 0 }}\n                whileInView={{ scaleX: 1 }}\n                viewport={{ once: true, amount: 0.3 }}\n                transition={{ duration: reduce ? 0 : 0.7, delay: reduce ? 0 : i * 0.06, ease: EASE }}\n              />\n              <span className=\"relative flex min-w-0 items-center gap-2 text-base text-strong [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted\">\n                {row.icon}\n                <span className=\"truncate\">{row.label}</span>\n              </span>\n              <span className=\"relative shrink-0 text-base font-semibold text-strong tabular-nums\">{format.format(row.value)}</span>\n            </>\n          );\n          const rowClass = \"relative flex min-h-11 items-center justify-between gap-4 rounded-md px-3 pointer-fine:min-h-9\";\n          return (\n            <li key={i}>\n              {row.href ? (\n                <Link href={row.href} className={cn(rowClass, \"transition-colors hover:bg-surface-raised\")}>\n                  {body}\n                </Link>\n              ) : (\n                <div className={rowClass}>{body}</div>\n              )}\n            </li>\n          );\n        })}\n      </ol>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Grafik"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "bar-list",
+    "palettes": false
+  }
+}

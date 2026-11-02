@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spinner",
+  "type": "registry:ui",
+  "title": "Dönen Gösterge",
+  "description": "Satır içi, düğme içi kısa bekleme",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/spinner.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\n/**\n * Spinner: küçük, satır içi bekleme işareti (düğme içi, tek hücre, kısa\n * istek). Sayfa ya da panel düzeyinde bekleme için `skeleton.tsx`: yapıyı\n * tutan iskelet, dönen bir halkadan daha az zıplatır.\n *\n * Ekran okuyucu `label`i duyar (`role=\"status\"`). Düğme içinde kullanırken\n * düğmenin kendi metni zaten bir şey söylüyorsa `label={null}` ver; aynı\n * cümle iki kez okunmasın.\n *\n * Hareketi azaltan kullanıcıda dönmez; yay olarak durur. Durağan yay da\n * \"bitmedi\" der, ama gözü yormaz.\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): ince iz halkası + çeyrek yay, 0,75 sn'de\n * bir tur (1 sn üstü ağır, 0,5 altı telaşlı görünür). `tone=\"current\"`\n * düğmenin metin rengini alır: `bg-cta` düğmede beyaz, ikincilde koyu;\n * düğme içinde vurgu mavisi sırıtırdı.\n */\n\nconst SIZES = { sm: \"size-4\", md: \"size-5\", lg: \"size-8\" } as const;\nconst TONES = { primary: \"text-primary\", current: \"text-current\", muted: \"text-muted\" } as const;\n\ntype SpinnerProps = {\n  size?: keyof typeof SIZES;\n  /** Ekran okuyucu metni. `null`: yalnızca görsel (çevredeki metin anlatıyor). */\n  label?: string | null;\n  tone?: keyof typeof TONES;\n  className?: string;\n};\n\nexport function Spinner({ size = \"md\", label = \"Yükleniyor\", tone = \"primary\", className }: SpinnerProps) {\n  const svg = (\n    <svg\n      viewBox=\"0 0 24 24\"\n      fill=\"none\"\n      aria-hidden\n      className={cn(SIZES[size], TONES[tone], \"shrink-0 animate-spin [animation-duration:0.75s] motion-reduce:animate-none\", className)}\n    >\n      <circle cx=\"12\" cy=\"12\" r=\"9\" stroke=\"currentColor\" strokeOpacity=\"0.16\" strokeWidth=\"2.25\" />\n      <path d=\"M21 12a9 9 0 0 0-9-9\" stroke=\"currentColor\" strokeWidth=\"2.25\" strokeLinecap=\"round\" />\n    </svg>\n  );\n\n  if (label === null) return svg;\n\n  return (\n    <span role=\"status\" className=\"inline-flex items-center\">\n      {svg}\n      <span className=\"sr-only\">{label}</span>\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Yükleme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "spinner",
+    "palettes": false
+  }
+}

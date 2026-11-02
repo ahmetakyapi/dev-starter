@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "select",
+  "type": "registry:ui",
+  "title": "Açılır Liste",
+  "description": "5-15 seçenek, dar yer",
+  "dependencies": [
+    "@base-ui/react@1.8.0",
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/select.tsx",
+      "content": "\"use client\";\n\nimport { Select as Base } from \"@base-ui/react/select\";\nimport { Check, ChevronsUpDown } from \"lucide-react\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Seçim kutusu: 5-15 seçenekten biri, yer dar. Daha az seçenekte\n * `radio-group.tsx` (hepsi görünür, tek dokunuş), daha fazlasında ya da\n * aranacaksa `combobox.tsx`.\n *\n * Base UI Select: listbox kalıbı (ok tuşları, Home/End, harf yazarak atlama,\n * Escape ile kapanma ve odağın tetikleyiciye dönmesi), gizli bir yerel giriş\n * sayesinde form gönderimi (`name`) ve etiket bağı (`Select.Label`).\n *\n * NEDEN YEREL `<select>` DEĞİL: yerel seçim telefonda en iyisi (sistem\n * tekerleği) ve form dostu; ama açık listesi stillenemez, iki temada\n * farklı görünür ve seçeneklere ikon ya da açıklama konamaz. Basit bir form\n * alanıysa yerel `<select>` hâlâ doğru seçim; şablonun `Field` diliyle\n * stilleyip kullan. Bu bileşen, görünüşü arayüzün parçası olan seçimler için.\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): tetikleyici beyaz karo (`bg-overlay`\n * + kıl çizgisi + `shadow-raised`), açıkken vurgu çizgisi ve yumuşak halka.\n * Liste `rounded-xl` karo, `p-1.5`; vurgulu öğe yumuşak gri\n * (`bg-surface-raised`), seçili öğede SAĞDA tik (`primary-ink`): etiketler\n * sol kenarda hizalı kalır.\n *\n * Konum: liste tetikleyicinin üstüne değil ALTINA açılır\n * (`alignItemWithTrigger={false}`): üste binen liste dar ekranda seçili\n * öğeyi parmağın altına getiriyor ve kaydırmayla karışıyor.\n */\n\nexport type SelectItem = { value: string; label: string; disabled?: boolean };\n\ntype SelectProps = {\n  label: ReactNode;\n  items: readonly SelectItem[];\n  name?: string;\n  value?: string | null;\n  defaultValue?: string | null;\n  onValueChange?: (value: string | null) => void;\n  placeholder?: string;\n  hideLabel?: boolean;\n  disabled?: boolean;\n  required?: boolean;\n  className?: string;\n};\n\nexport function Select({\n  label,\n  items,\n  name,\n  value,\n  defaultValue,\n  onValueChange,\n  placeholder = \"Seçin\",\n  hideLabel = false,\n  disabled,\n  required,\n  className,\n}: SelectProps) {\n  return (\n    <Base.Root\n      items={items}\n      name={name}\n      value={value}\n      defaultValue={defaultValue}\n      onValueChange={(next) => onValueChange?.(next as string | null)}\n      disabled={disabled}\n      required={required}\n    >\n      <div className={cn(\"grid content-start gap-1.5\", className)}>\n        <Base.Label className={hideLabel ? \"sr-only\" : \"text-small font-semibold text-strong\"}>{label}</Base.Label>\n        <Base.Trigger className=\"flex min-h-11 w-full min-w-40 items-center justify-between gap-3 rounded-md border border-line bg-overlay px-3 text-start text-base text-strong shadow-raised transition-[border-color,box-shadow] select-none hover:border-line-strong data-disabled:opacity-50 data-popup-open:border-primary data-popup-open:ring-[3px] data-popup-open:ring-primary-wash pointer-fine:min-h-10\">\n          <Base.Value placeholder={placeholder} className=\"min-w-0 truncate data-placeholder:text-muted\" />\n          <Base.Icon className=\"text-muted\">\n            <ChevronsUpDown aria-hidden className=\"size-4\" strokeWidth={1.75} />\n          </Base.Icon>\n        </Base.Trigger>\n      </div>\n      <Base.Portal>\n        <Base.Positioner alignItemWithTrigger={false} sideOffset={6} collisionPadding={8} className=\"z-50 outline-none\">\n          <Base.Popup className=\"min-w-(--anchor-width) origin-(--transform-origin) rounded-xl border border-line bg-overlay p-1.5 text-body shadow-modal outline-none transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-[0.96] data-starting-style:opacity-0\">\n            <Base.List className=\"max-h-[min(20rem,var(--available-height))] overflow-y-auto overscroll-contain\">\n              {items.map((item) => (\n                <Base.Item\n                  key={item.value}\n                  value={item.value}\n                  disabled={item.disabled}\n                  className=\"grid min-h-11 cursor-default grid-cols-[1fr_1rem] items-center gap-2.5 rounded-md px-2.5 text-base outline-none select-none pointer-fine:min-h-9 data-disabled:opacity-50 data-highlighted:bg-surface-raised data-highlighted:text-strong data-selected:font-medium data-selected:text-strong\"\n                >\n                  <Base.ItemText className=\"col-start-1 row-start-1 truncate\">{item.label}</Base.ItemText>\n                  <Base.ItemIndicator className=\"col-start-2 row-start-1 text-primary-ink\">\n                    <Check aria-hidden className=\"size-4\" strokeWidth={2.25} />\n                  </Base.ItemIndicator>\n                </Base.Item>\n              ))}\n            </Base.List>\n          </Base.Popup>\n        </Base.Positioner>\n      </Base.Portal>\n    </Base.Root>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "select",
+    "palettes": false
+  }
+}

@@ -38,7 +38,7 @@ function Running() {
 
 const meta = {
   title: "Bileşenler/Yükleme/Sayfa Yükleme Çubuğu",
-  id: "components-loading-route-progress",
+  id: "route-progress",
   component: RouteProgress,
   tags: ["autodocs"],
   parameters: {

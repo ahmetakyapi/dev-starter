@@ -133,11 +133,11 @@ const PRIORITY: Record<Priority, { label: string; tone: "danger" | "warning" | "
 const now = Date.now();
 const MIN = 60_000;
 const NOTIFICATIONS: NotificationItem[] = [
-  { id: "n1", title: "Mert Aksoy talebi sana atadı", body: "T-4821 · Siparişim 6 gündür aynı şubede bekliyor", at: new Date(now - 8 * MIN), read: false, actor: "Mert Aksoy" },
-  { id: "n2", title: "Planlama Ajanı özeti bitirdi", body: "Destek talepleri özeti paylaşıma hazır.", at: new Date(now - 42 * MIN), read: false, icon: Bot },
-  { id: "n3", title: "Onay bekleniyor: toplu iade", body: "Rapor Ajanı 12 iade için onayını istiyor.", at: new Date(now - 3 * 60 * MIN), read: false, icon: CreditCard },
-  { id: "n4", title: "Zeynep Kaya yorum yaptı", body: "“Kargo şablonunu güncelledim, bakar mısın?”", at: new Date(now - 26 * 60 * MIN), read: true, actor: "Zeynep Kaya" },
-  { id: "n5", title: "Haftalık rapor gönderildi", at: new Date(now - 4 * 24 * 60 * MIN), read: true, icon: CircleCheck },
+  { id: "n1", title: "Mert Aksoy Talebi Sana Atadı", body: "T-4821 · Siparişim 6 gündür aynı şubede bekliyor", at: new Date(now - 8 * MIN), read: false, actor: "Mert Aksoy" },
+  { id: "n2", title: "Planlama Ajanı Özeti Bitirdi", body: "Destek talepleri özeti paylaşıma hazır.", at: new Date(now - 42 * MIN), read: false, icon: Bot },
+  { id: "n3", title: "Onay Bekleniyor: Toplu İade", body: "Rapor Ajanı 12 iade için onayını istiyor.", at: new Date(now - 3 * 60 * MIN), read: false, icon: CreditCard },
+  { id: "n4", title: "Zeynep Kaya Yorum Yaptı", body: "“Kargo şablonunu güncelledim, bakar mısın?”", at: new Date(now - 26 * 60 * MIN), read: true, actor: "Zeynep Kaya" },
+  { id: "n5", title: "Haftalık Rapor Gönderildi", at: new Date(now - 4 * 24 * 60 * MIN), read: true, icon: CircleCheck },
 ];
 
 type Filter = "tumu" | "okunmamis" | "bana";
@@ -335,7 +335,7 @@ function InboxScreen({ initialSelected }: { initialSelected?: string }) {
         className="h-dvh min-h-0"
       >
         <div className="flex h-full flex-col">
-          <ContentBar title="Gelen Kutusu" meta={`${unreadCount.toLocaleString("tr-TR")} okunmamış`}>
+          <ContentBar title="Gelen Kutusu" meta={`${unreadCount.toLocaleString("tr-TR")} Okunmamış`}>
             <NotificationCenter
               items={notifications}
               onMarkRead={(ids) => setNotifications((list) => list.map((n) => (ids.includes(n.id) ? { ...n, read: true } : n)))}
@@ -380,7 +380,7 @@ function InboxScreen({ initialSelected }: { initialSelected?: string }) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Gelen Kutusu",
-  id: "screens-app-inbox",
+  id: "inbox-page",
   component: InboxScreen,
   tags: ["autodocs"],
   parameters: {
@@ -419,7 +419,7 @@ export const NotificationsOpen: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: /Bildirimler, 3 okunmamış/ }));
     const popup = await within(document.body).findByRole("dialog", { name: /Bildirimler/ });
-    await waitFor(() => expect(within(popup).getByText("Mert Aksoy talebi sana atadı")).toBeVisible());
+    await waitFor(() => expect(within(popup).getByText("Mert Aksoy Talebi Sana Atadı")).toBeVisible());
   },
 };
 
