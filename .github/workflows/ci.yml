@@ -130,7 +130,13 @@ jobs:
           PALETTE='(bg|text|border|ring|from|via|to|fill|stroke|outline|shadow|placeholder)-(white|black|gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[0-9]+|/|\b)'
           VIOLATIONS=$(grep -rnE "$PALETTE|\bdark:|['\"]#[0-9a-fA-F]{3,8}['\"]|rgba?\([0-9]" \
             packages/@ahmet/ui/src/ snippets/ --include='*.ts' --include='*.tsx' 2>/dev/null \
-            | grep -v '\.test\.\|\.spec\.' || true)
+            | grep -v '\.test\.\|\.spec\.' | grep -v 'token-ok' || true)
+          # scripts/health-check.sh § 9 ile AYNI kural: renk kullanici VERISI olan
+          # dosya (renk secici ve vitrini) basinda `token-ok-file: <neden>` tasir.
+          # Iki kopyadan biri degisip oteki kalirsa yerelde temiz, CI'da kirmizi olur.
+          for okf in $(grep -rl 'token-ok-file:' packages/@ahmet/ui/src/ snippets/ --include='*.ts' --include='*.tsx' 2>/dev/null); do
+            VIOLATIONS=$(echo "$VIOLATIONS" | grep -v "^$okf:" || true)
+          done
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ Design token violations found:"
             echo "$VIOLATIONS"
