@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Form Alanı",
-  id: "components-core-field",
+  id: "field",
   component: Field,
   tags: ["autodocs"],
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
     </Frame>
   ),
   args: {
-    label: "E-posta",
+    label: "E-Posta",
     name: "email",
     type: "email",
     placeholder: "elif@acme.com.tr",
@@ -36,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
-    const input = within(canvasElement).getByLabelText("E-posta");
+    const input = within(canvasElement).getByLabelText("E-Posta");
     await userEvent.type(input, "elif@acme.com.tr");
     await expect(input).toHaveValue("elif@acme.com.tr");
   },
@@ -55,7 +55,7 @@ export const Error: Story = {
     error: "Geçerli bir e-posta adresi girin.",
   },
   play: async ({ canvasElement }) => {
-    const input = within(canvasElement).getByLabelText("E-posta");
+    const input = within(canvasElement).getByLabelText("E-Posta");
     await expect(input).toHaveAttribute("aria-invalid", "true");
     await expect(input).toHaveAccessibleDescription("Geçerli bir e-posta adresi girin.");
   },
@@ -71,13 +71,13 @@ export const AllStates: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Boş, yer tutuculu">
+      <Cell label="Boş, Yer Tutuculu">
         <Field label="Ad Soyad" name="ad" placeholder="Elif Yıldız" className="w-full max-w-xs" />
       </Cell>
-      <Cell label="Dolu, ipuçlu">
+      <Cell label="Dolu, İpuçlu">
         <Field label="Şirket" name="sirket" defaultValue="Acme Lojistik A.Ş." hint="Faturada görünecek unvan." className="w-full max-w-xs" />
       </Cell>
-      <Cell label="Hata (ipucu gizlenir)">
+      <Cell label="Hata (İpucu Gizlenir)">
         <Field
           label="Telefon"
           name="tel"
@@ -88,7 +88,7 @@ export const AllStates: Story = {
           className="w-full max-w-xs"
         />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <Field label="Kurum Kodu" name="kod" defaultValue="ACME-4821" disabled className="w-full max-w-xs" />
       </Cell>
     </Gallery>

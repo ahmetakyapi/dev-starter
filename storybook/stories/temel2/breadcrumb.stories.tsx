@@ -17,7 +17,7 @@ const PLAIN: Crumb[] = [
 
 const meta = {
   title: "Bileşenler/Gezinme/Gezinti Yolu",
-  id: "components-navigation-breadcrumb",
+  id: "breadcrumb",
   component: Breadcrumb,
   tags: ["autodocs"],
   parameters: {

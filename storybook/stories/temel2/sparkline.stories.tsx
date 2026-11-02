@@ -8,7 +8,7 @@ const FLAT = [50, 52, 49, 51, 50, 53, 51, 50, 52, 51, 50, 51];
 
 const meta = {
   title: "Bileşenler/Veri/Mini Grafik",
-  id: "components-data-sparkline",
+  id: "sparkline",
   component: Sparkline,
   tags: ["autodocs"],
   parameters: {
@@ -55,13 +55,13 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="primary (varsayılan)">
+      <Cell label="primary (Varsayılan)">
         <Sparkline title="Ciro" values={RISING} />
       </Cell>
-      <Cell label="auto, yükselen: success">
+      <Cell label="auto, Yükselen: success">
         <Sparkline title="Hisse Fiyatı, Yükselen" values={RISING} tone="auto" />
       </Cell>
-      <Cell label="auto, düşen: danger">
+      <Cell label="auto, Düşen: danger">
         <Sparkline title="Hisse Fiyatı, Düşen" values={FALLING} tone="auto" />
       </Cell>
       <Cell label="muted">
@@ -70,7 +70,7 @@ export const AllVariants: Story = {
       <Cell label="Dolgusuz">
         <Sparkline title="Ciro, Dolgusuz" values={RISING} area={false} />
       </Cell>
-      <Cell label="Geniş kutu, sabit çizgi">
+      <Cell label="Geniş Kutu, Sabit Çizgi">
         <Sparkline title="Ciro, Geniş" values={FALLING} width={240} height={56} />
       </Cell>
     </Gallery>

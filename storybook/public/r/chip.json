@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "chip",
+  "type": "registry:ui",
+  "title": "Süzgeç Etiketi",
+  "description": "`FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup`",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/chip.tsx",
+      "content": "import { Check, X } from \"lucide-react\";\nimport type { ComponentProps, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Çip: iki ayrı iş, iki ayrı bileşen.\n *\n * `FilterChip`: SÜZGEÇ. Aç/kapa bir düğmedir (`aria-pressed`), seçim\n * kutusu değil; ekran okuyucu \"Bu Hafta, açma/kapama düğmesi, basılı\" der.\n * Seçiliyken zemin `bg-primary-wash`, metin `text-primary-ink` VE solda ✓\n * belirir: renk tek işaret değil. ✓ yer açarak değil, çipin iç boşluğunu\n * kullanarak gelir (genişlik zıplamaz): boşken sol iç boşluk 12, seçiliyken\n * ikon 14 + 6 boşluk + 8 kenar.\n * Tek seçimli süzgeç (yalnızca biri) gerekiyorsa çip değil\n * `segmented-control.tsx`.\n *\n * `RemovableChip`: KALDIRILABİLİR değer (seçilmiş etiket, alıcı, şehir).\n * Çipin gövdesi düğme DEĞİL; yalnızca × düğme ve adı \"Kaldır: İstanbul\".\n * Gövdeye tıklayınca silmek, okumaya çalışırken değer kaybettirir.\n * Kaldırıldıktan sonra odak yok olan düğmeyle birlikte kaybolur: üst\n * bileşen odağı bir sonraki çipin × düğmesine ya da girişe taşımalı.\n *\n * `ChipGroup`: `role=\"group\"` + ad (\"Durum Süzgeci\"). Çipler doğal Tab\n * sırasında; 10'dan fazla çip varsa süzgeç değil arama kutusu gerekir.\n *\n * Dokunmatikte çip satırı 44 piksel yükseklik, farede 32. Sunucu bileşeni:\n * `onClick` istemci bir üstten gelir.\n */\n\ntype FilterChipProps = Omit<ComponentProps<\"button\">, \"aria-pressed\"> & {\n  selected: boolean;\n  icon?: ReactNode;\n  /** Sağda küçük sayı: \"12\". */\n  count?: number;\n};\n\nconst count = new Intl.NumberFormat(\"tr-TR\");\n\nexport function FilterChip({ selected, icon, count: n, className, children, type = \"button\", ...props }: FilterChipProps) {\n  return (\n    <button\n      type={type}\n      aria-pressed={selected}\n      className={cn(\n        \"group inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-base font-medium whitespace-nowrap transition-[background-color,border-color,color,transform] duration-150 select-none active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 pointer-fine:min-h-8\",\n        selected\n          ? \"border-transparent bg-primary-wash text-primary-ink\"\n          : \"border-line bg-overlay text-body shadow-raised hover:border-line-strong hover:text-strong\",\n        className,\n      )}\n      {...props}\n    >\n      {selected ? (\n        <Check aria-hidden className=\"-ml-0.5 size-3.5 shrink-0\" strokeWidth={2.5} />\n      ) : icon ? (\n        <span aria-hidden className=\"-ml-0.5 text-muted [&_svg]:size-3.5\">\n          {icon}\n        </span>\n      ) : null}\n      {children}\n      {typeof n === \"number\" ? (\n        <span className={cn(\"text-small tabular-nums\", selected ? \"text-primary-ink\" : \"text-muted\")}>\n          {count.format(n)}\n        </span>\n      ) : null}\n    </button>\n  );\n}\n\ntype RemovableChipProps = {\n  children: ReactNode;\n  /** Kaldırma düğmesinin adı için düz metin: \"İstanbul\". */\n  label: string;\n  onRemove?: () => void;\n  /** Çipin başında avatar ya da renk noktası. */\n  leading?: ReactNode;\n  disabled?: boolean;\n  className?: string;\n};\n\nexport function RemovableChip({ children, label, onRemove, leading, disabled, className }: RemovableChipProps) {\n  return (\n    <span\n      className={cn(\n        \"inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-line bg-overlay pl-3 text-base font-medium whitespace-nowrap text-strong shadow-raised\",\n        leading ? \"pl-1\" : \"pl-3\",\n        className,\n      )}\n    >\n      {leading ? <span aria-hidden className=\"grid place-items-center\">{leading}</span> : null}\n      {children}\n      <button\n        type=\"button\"\n        aria-label={`Kaldır: ${label}`}\n        onClick={onRemove}\n        disabled={disabled}\n        className=\"group -my-1.5 -mr-0.5 grid size-11 cursor-pointer place-items-center rounded-full outline-none focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 pointer-fine:size-8\"\n      >\n        <span\n          aria-hidden\n          className=\"grid size-5 place-items-center rounded-full text-muted transition-[background-color,color,transform] duration-150 group-hover:bg-surface-raised group-hover:text-strong group-active:scale-90 group-focus-visible:outline-2 group-focus-visible:outline-offset-1 group-focus-visible:outline-line-focus\"\n        >\n          <X className=\"size-3\" strokeWidth={2.5} />\n        </span>\n      </button>\n    </span>\n  );\n}\n\ntype ChipGroupProps = ComponentProps<\"div\"> & {\n  /** Zorunlu: grubun adı, \"Durum Süzgeci\". */\n  \"aria-label\": string;\n};\n\nexport function ChipGroup({ className, ...props }: ChipGroupProps) {\n  return <div role=\"group\" className={cn(\"flex flex-wrap items-center gap-2\", className)} {...props} />;\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "chip",
+    "palettes": false
+  }
+}

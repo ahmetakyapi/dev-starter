@@ -75,7 +75,7 @@ async function rightClick(canvasElement: HTMLElement) {
 
 const meta = {
   title: "Bileşenler/Katmanlar/Bağlam Menüsü",
-  id: "components-overlays-context-menu",
+  id: "context-menu",
   component: ContextMenu,
   tags: ["autodocs"],
   parameters: {

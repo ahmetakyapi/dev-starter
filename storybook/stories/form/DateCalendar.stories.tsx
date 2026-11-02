@@ -29,7 +29,7 @@ function RangeDemo() {
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Takvim",
-  id: "components-forms-date-calendar",
+  id: "date-calendar",
   component: DateCalendar,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -120,17 +120,17 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Tek gün">
+      <Cell label="Tek Gün">
         <Card>
           <DateCalendar label="Randevu Günü" defaultValue={NOV(5)} defaultMonth={NOV(1)} />
         </Card>
       </Cell>
-      <Cell label="Aralık, haftayı aşan">
+      <Cell label="Aralık, Haftayı Aşan">
         <Card>
           <DateCalendar mode="range" label="Konaklama" defaultValue={{ start: NOV(12), end: NOV(18) }} defaultMonth={NOV(1)} />
         </Card>
       </Cell>
-      <Cell label="Pazar kapalı, sınırlı">
+      <Cell label="Pazar Kapalı, Sınırlı">
         <Card>
           <DateCalendar label="Teslim Günü" defaultMonth={NOV(1)} min={NOV(4)} max={NOV(27)} isDateDisabled={isSunday} />
         </Card>

@@ -25,7 +25,7 @@ const GLYPHS = { Bell, Calendar, CreditCard, Download, FileText, Filter, Heart, 
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/İkon",
-  id: "components-buttons-icon",
+  id: "icon",
   component: Icon,
   tags: ["autodocs"],
   parameters: {
@@ -112,7 +112,7 @@ export const AllVariants: Story = {
           <Icon icon={Star} size="lg" />
         </div>
       </Cell>
-      <Cell label="Sık kullanılan ikonlar">
+      <Cell label="Sık Kullanılan İkonlar">
         <ul className="grid grid-cols-5 gap-4 text-body">
           {Object.entries(GLYPHS).map(([name, glyph]) => (
             <li key={name} className="grid place-items-center" title={name}>

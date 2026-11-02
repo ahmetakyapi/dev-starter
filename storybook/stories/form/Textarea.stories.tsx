@@ -20,7 +20,7 @@ function Controlled(props: ComponentProps<typeof Textarea>) {
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Metin Alanı",
-  id: "components-forms-textarea",
+  id: "textarea",
   component: Textarea,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -117,22 +117,22 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Boş, sayaçsız">
+      <Cell label="Boş, Sayaçsız">
         <Textarea label="Açıklama" placeholder="Proje hakkında birkaç cümle" className="w-full" />
       </Cell>
       <Cell label="Sayaç">
         <Textarea label="Teslimat Notu" maxLength={140} defaultValue="Zil çalışmıyor, gelince arayın." className="w-full" />
       </Cell>
-      <Cell label="Sınıra yakın">
+      <Cell label="Sınıra Yakın">
         <Textarea label="Teslimat Notu" maxLength={140} defaultValue={NEAR_LIMIT} className="w-full" />
       </Cell>
-      <Cell label="Sınır dolu">
+      <Cell label="Sınır Dolu">
         <Textarea label="Şikâyet Açıklaması" maxLength={140} defaultValue={FULL} className="w-full" />
       </Cell>
       <Cell label="Hata">
         <Textarea label="İade Gerekçesi" defaultValue="Beğenmedim" error="Gerekçe en az 20 karakter olmalı." className="w-full" />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <Textarea label="Teslimat Notu" defaultValue="Not artık değiştirilemez." disabled className="w-full" />
       </Cell>
     </Gallery>

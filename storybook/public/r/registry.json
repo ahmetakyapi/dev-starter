@@ -1,0 +1,2318 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "dev-starter",
+  "homepage": "https://dev-starter-storybook.vercel.app",
+  "items": [
+    {
+      "name": "lib-utils",
+      "type": "registry:lib",
+      "title": "lib/utils.ts",
+      "description": "dev-starter landing şablonundan: lib/utils.ts",
+      "dependencies": [
+        "clsx@^2.1.1",
+        "tailwind-merge@^3.7.0"
+      ],
+      "files": [
+        {
+          "path": "templates/landing/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Açılır Bölümler",
+      "description": "SSS, katlanır bölüm",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "accordion",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "activity-rings",
+      "type": "registry:ui",
+      "title": "Aktivite Halkaları",
+      "description": "Her ölçü kendi hedefine göre tam tur; %100 aşılırsa ikinci tur",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "activity-rings",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/activity-rings.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "agent-plan",
+      "type": "registry:ui",
+      "title": "Asistan Planı",
+      "description": "Ajanın çok adımlı planının kuşbakışı",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Bloklar"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "agent-plan",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/agent-plan.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "announcement",
+      "type": "registry:ui",
+      "title": "Duyuru",
+      "description": "Kahraman üstü duyuru hapı; kapatılabilir varyant",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/close-button.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "announcement",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/announcement.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "app-shell",
+      "type": "registry:ui",
+      "title": "Uygulama Kabuğu",
+      "description": "Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/avatar.json",
+        "https://dev-starter-storybook.vercel.app/r/command-palette.json",
+        "https://dev-starter-storybook.vercel.app/r/kbd.json",
+        "https://dev-starter-storybook.vercel.app/r/sheet.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Bloklar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "app-shell",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/app-shell.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "area-chart",
+      "type": "registry:ui",
+      "title": "Alan Grafiği",
+      "description": "Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "area-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/area-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "auth-card",
+      "type": "registry:ui",
+      "title": "Giriş Kartı",
+      "description": "Giriş/kayıt kartı, sunucu eylemine bağlanır",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/spinner.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Bloklar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "auth-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/auth-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "Görsel + baş harf yedeği",
+      "dependencies": [
+        "@base-ui/react@1.8.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "avatar",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/avatar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Rozet",
+      "description": "Durum/kategori etiketi",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "badge",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "banner-alert",
+      "type": "registry:ui",
+      "title": "Uyarı Satırı",
+      "description": "Sayfa içi durum satırı, 4 ton",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/close-button.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "banner-alert",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/banner-alert.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bar-list",
+      "type": "registry:ui",
+      "title": "Çubuk Listesi",
+      "description": "Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "bar-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/bar-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Gezinti Yolu",
+      "description": "Konum çubuğu",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "breadcrumb",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "Düğme Grubu",
+      "description": "Bağlı düğmeler",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "button-group",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/button-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "title": "Kart Kaydırıcı",
+      "description": "Yan yana kaydırılan kartlar",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "carousel",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/carousel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chart-card",
+      "type": "registry:ui",
+      "title": "Grafik Kartı",
+      "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "chart-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/chart-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "lib-motion",
+      "type": "registry:lib",
+      "title": "lib/motion.ts",
+      "description": "dev-starter landing şablonundan: lib/motion.ts",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "files": [
+        {
+          "path": "templates/landing/lib/motion.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "chat-composer",
+      "type": "registry:ui",
+      "title": "Mesaj Kutusu",
+      "description": "Sohbet giriş kutusu",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/dropdown-menu.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Bloklar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "chat-composer",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/chat-composer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chat-thread",
+      "type": "registry:ui",
+      "title": "Mesaj Akışı",
+      "description": "Mesaj akışı, düşünüyor göstergesi, boş durum",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Bloklar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "chat-thread",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/chat-thread.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Onay Kutusu",
+      "description": "Onay, çoklu seçim",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "checkbox",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chip",
+      "type": "registry:ui",
+      "title": "Süzgeç Etiketi",
+      "description": "`FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "chip",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/chip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "close-button",
+      "type": "registry:ui",
+      "title": "Kapat Düğmesi",
+      "description": "Diyalog, uyarı, çip, duyuru kapatma",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "close-button",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/close-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "title": "Renk Seçici",
+      "description": "Kullanıcının kendi rengi (etiket, kategori)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "color-picker",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/color-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "combo-chart",
+      "type": "registry:ui",
+      "title": "Birleşik Grafik",
+      "description": "Birimi farklı iki ölçü: sütun hacmi (sol eksen) ve çizgi oranı (sağ eksen)",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json",
+        "https://dev-starter-storybook.vercel.app/r/area-chart.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "combo-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/combo-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Aramalı Seçim",
+      "description": "Çok seçenek, aranır",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "combobox",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/combobox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "command-palette",
+      "type": "registry:ui",
+      "title": "Komut Paleti",
+      "description": "⌘K / Ctrl+K komut paleti",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/kbd.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "command-palette",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/command-palette.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "Bağlam Menüsü",
+      "description": "Nesne üstünde sağ tık / uzun basma eylemleri",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/kbd.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "context-menu",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/context-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Kopyala Düğmesi",
+      "description": "Panoya kopyala",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "copy-button",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/copy-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "Veri Tablosu",
+      "description": "Sıralanabilir tablo, karşılaştırma çubuğu",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "data-table",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/data-table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "date-calendar",
+      "type": "registry:ui",
+      "title": "Takvim",
+      "description": "Satır içi ay takvimi; tek gün ya da aralık",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "date-calendar",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/date-calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "title": "Tarih Seçici",
+      "description": "Formda tarih alanı + açılır takvim",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/date-calendar.json",
+        "https://dev-starter-storybook.vercel.app/r/popover.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "date-picker",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "İletişim Penceresi",
+      "description": "Onay, kısa form, yıkıcı eylem",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "dialog",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "divider",
+      "type": "registry:ui",
+      "title": "Ayırıcı",
+      "description": "Yatay / dikey / etiketli (\"ya da\") ayırıcı",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "divider",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/divider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Açılır Menü",
+      "description": "Eylem menüsü",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "dropdown-menu",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "title": "Boş Durum",
+      "description": "Boş durum: ikon / sahne / satır",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "empty-state",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/empty-state.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "file-dropzone",
+      "type": "registry:ui",
+      "title": "Dosya Bırakma Alanı",
+      "description": "Dosya yükleme",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "file-dropzone",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/file-dropzone.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "funnel-chart",
+      "type": "registry:ui",
+      "title": "Huni Grafiği",
+      "description": "Daralan aşamalar (`curve`/`step`), sütun başına yüzde hapı, altta lejant",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "funnel-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/funnel-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "gauge-chart",
+      "type": "registry:ui",
+      "title": "Yarım Daire Grafiği",
+      "description": "Bütünün 2-4 parçası ya da tek doluluk (`max`); yarım daire, ortada büyük yüzde",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "gauge-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/gauge-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "heatmap",
+      "type": "registry:ui",
+      "title": "Isı Haritası",
+      "description": "Günlük bir sayının haftalar × günler ritmi, 5 basamak, Az ↔ Çok",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "heatmap",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/heatmap.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "title": "Önizleme Kartı",
+      "description": "Bağlantının önizlemesi (@ad, atanan kişi): `HoverCard` + `ProfilePreview`",
+      "dependencies": [
+        "@base-ui/react@1.8.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/avatar.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "hover-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/hover-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "icon",
+      "type": "registry:ui",
+      "title": "İkon",
+      "description": "lucide ikonu, tek boyut ölçeği",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "icon",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/icon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "icon-button",
+      "type": "registry:ui",
+      "title": "İkon Düğmesi",
+      "description": "Yalnız ikonlu düğme",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "icon-button",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/icon-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Metin Girişi",
+      "description": "Tek satır metin; ikon, önek/sonek (₺, .com), temizle, şifre göster/gizle; sm/md/lg",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "input",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "title": "Doğrulama Kodu",
+      "description": "Sabit uzunlukta tek kullanımlık kod",
+      "dependencies": [
+        "@base-ui/react@1.8.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "input-otp",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/input-otp.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "kanban-board",
+      "type": "registry:ui",
+      "title": "Kanban Panosu",
+      "description": "Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/avatar.json",
+        "https://dev-starter-storybook.vercel.app/r/badge.json"
+      ],
+      "categories": [
+        "Verimlilik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "kanban-board",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/kanban-board.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Klavye Tuşu",
+      "description": "Klavye tuşu, kısayol",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "kbd",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/kbd.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "line-chart",
+      "type": "registry:ui",
+      "title": "Çizgi Grafiği",
+      "description": "Sıralı eksende 2-5 seriyi kıyaslamak; kesik tahmin, hedef çizgisi, lejant süzgeç",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json",
+        "https://dev-starter-storybook.vercel.app/r/area-chart.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "line-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/line-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "loading-mark",
+      "type": "registry:ui",
+      "title": "Yükleme Halkası",
+      "description": "Sayfa/kart düzeyinde bekleme, marka halkası",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yükleme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "loading-mark",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/loading-mark.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "meter",
+      "type": "registry:ui",
+      "title": "Ölçer",
+      "description": "`Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım",
+      "dependencies": [
+        "@base-ui/react@1.8.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "meter",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "notification-center",
+      "type": "registry:ui",
+      "title": "Bildirim Merkezi",
+      "description": "Üst çubukta zil + bildirim listesi",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "notification-center",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/notification-center.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "number-field",
+      "type": "registry:ui",
+      "title": "Sayı Alanı",
+      "description": "Kesin küçük sayı (adet, kişi), tr-TR biçim",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "number-field",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/number-field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Sayfalama",
+      "description": "Adreste sayfa numarası",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "pagination",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/pagination.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "theme-toggle",
+      "type": "registry:ui",
+      "title": "components/ui/ThemeToggle.tsx",
+      "description": "dev-starter landing şablonundan: components/ui/ThemeToggle.tsx",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-theme.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "files": [
+        {
+          "path": "templates/landing/components/ui/ThemeToggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "lib-theme",
+      "type": "registry:lib",
+      "title": "lib/theme.ts",
+      "description": "dev-starter landing şablonundan: lib/theme.ts",
+      "files": [
+        {
+          "path": "templates/landing/lib/theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "palettes",
+      "type": "registry:file",
+      "title": "app/palettes.css",
+      "description": "dev-starter landing şablonundan: app/palettes.css",
+      "files": [
+        {
+          "path": "templates/landing/app/palettes.css",
+          "type": "registry:file",
+          "target": "app/palettes.css"
+        }
+      ]
+    },
+    {
+      "name": "palette-switcher",
+      "type": "registry:ui",
+      "title": "Palet Seçici",
+      "description": "Alttan yüzen palet seçici + açık/koyu anahtarı; vitrin, tema denemesi",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/theme-toggle.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-theme.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/palettes.json"
+      ],
+      "categories": [
+        "Bloklar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "palette-switcher",
+        "palettes": true
+      },
+      "files": [
+        {
+          "path": "snippets/ui/palette-switcher.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Açılır Kart",
+      "description": "Sayfayı kilitlemeyen küçük kutu",
+      "dependencies": [
+        "@base-ui/react@1.8.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "popover",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "İlerleme",
+      "description": "Bir işin ilerlemesi (belirli/belirsiz)",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "progress",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "radar-chart",
+      "type": "registry:ui",
+      "title": "Radar Grafiği",
+      "description": "5-8 ölçütte 1-2 profil",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "radar-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/radar-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Seçenek Grubu",
+      "description": "2-6 görünür seçenek",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "radio-group",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/radio-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "rating",
+      "type": "registry:ui",
+      "title": "Puanlama",
+      "description": "`Rating` gösterim (yarım yıldız) · `RatingInput` giriş (isteğe bağlı yarım adım)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "rating",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/rating.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ring-chart",
+      "type": "registry:ui",
+      "title": "Halka Grafiği",
+      "description": "2-5 kategorinin iç içe halkası, ortada değer",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "ring-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/ring-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "route-progress",
+      "type": "registry:ui",
+      "title": "Sayfa Yükleme Çubuğu",
+      "description": "Kök layout'ta gezinme göstergesi",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yükleme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "route-progress",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/route-progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sankey-chart",
+      "type": "registry:ui",
+      "title": "Akış Grafiği",
+      "description": "İki katmanlı akış (kaynak → hedef), sağda \"Ad · %22\", düğüm/akış yalıtma",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "sankey-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/sankey-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scatter-chart",
+      "type": "registry:ui",
+      "title": "Saçılım Grafiği",
+      "description": "İki ölçünün ilişkisi; nokta boyu üçüncü ölçü (√ alan), renk kategori",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json",
+        "https://dev-starter-storybook.vercel.app/r/line-chart.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "scatter-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/scatter-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "search-field",
+      "type": "registry:ui",
+      "title": "Arama Alanı",
+      "description": "Liste süzme, site araması: gecikmeli `onSearch`, yükleniyor, \"/\" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/kbd.json",
+        "https://dev-starter-storybook.vercel.app/r/spinner.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "search-field",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/search-field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Bölmeli Seçici",
+      "description": "2-5 seçenekten biri, anında etki",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "segmented-control",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/segmented-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Açılır Liste",
+      "description": "5-15 seçenek, dar yer",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "select",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "settings-dialog",
+      "type": "registry:ui",
+      "title": "Ayarlar Penceresi",
+      "description": "Sayfadan çıkmadan, anında etki eden ayarlar penceresi",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/dialog.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Bloklar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "settings-dialog",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/settings-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Yan Panel",
+      "description": "Telefonda alttan çekmece, masaüstünde yan panel",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "sheet",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "İskelet Yükleyici",
+      "description": "Gelecek içeriğin şeklinde iskelet",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yükleme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "skeleton",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Kaydırıcı",
+      "description": "Aralıkta yaklaşık değer; tek tutamak ya da aralık",
+      "dependencies": [
+        "@base-ui/react@1.8.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "slider",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sparkline",
+      "type": "registry:ui",
+      "title": "Mini Grafik",
+      "description": "Eksensiz mini eğri",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "sparkline",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/sparkline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Dönen Gösterge",
+      "description": "Satır içi, düğme içi kısa bekleme",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yükleme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "spinner",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stage-bars",
+      "type": "registry:ui",
+      "title": "Aşama Çubukları",
+      "description": "Huni aşamaları, iz üstünde hap çubuk",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "stage-bars",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stage-bars.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stat",
+      "type": "registry:ui",
+      "title": "İstatistik",
+      "description": "Etiket + değer + değişim",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "stat",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stat.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "title": "Adım Göstergesi",
+      "description": "Çok adımlı akışta konum",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "stepper",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stepper.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Aç-Kapa Düğmesi",
+      "description": "Anında etki eden aç/kapa",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "switch",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Sekmeler",
+      "description": "`Tabs`: sayfa içi · `TabLinks`: ayrı adresler",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "tabs",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:ui",
+      "title": "Etiket Girişi",
+      "description": "Serbest ya da önerili çoklu etiket",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "tag-input",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tag-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "task-list",
+      "type": "registry:ui",
+      "title": "Görev Listesi",
+      "description": "Görev listesi: onay, öncelik, son tarih, alt görevler, tamamlananları gizle, satır içi ekleme",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/checkbox.json"
+      ],
+      "categories": [
+        "Verimlilik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "task-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/task-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Metin Alanı",
+      "description": "Çok satırlı metin, içeriğe göre büyür",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "textarea",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "time-field",
+      "type": "registry:ui",
+      "title": "Saat Alanı",
+      "description": "24 saatlik SS:DD",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "time-field",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/time-field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "registry:ui",
+      "title": "Zaman Çizelgesi",
+      "description": "Tarihli olaylar",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "timeline",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/timeline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Bildirim",
+      "description": "Eylem sonucu bildirimi: `<Toaster />` + `toast.success/error/warning/info/undo/promise`",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/spinner.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "toast",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/toast.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Aç-Kapa Grubu",
+      "description": "Basılı/basılı değil düğmeler: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost`",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/kbd.json",
+        "https://dev-starter-storybook.vercel.app/r/tooltip.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "toggle-group",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/toggle-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Araç İpucu",
+      "description": "`Tooltip`: görsel etiket · `InfoTip`: açıklama",
+      "dependencies": [
+        "@base-ui/react@1.8.0",
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "tooltip",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "track-bar-chart",
+      "type": "registry:ui",
+      "title": "Sütun Grafiği",
+      "description": "Sıralı tek seri (ay, gün), iz üstünde sütun",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "bar-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/track-bar-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tree-table",
+      "type": "registry:ui",
+      "title": "Ağaç Tablo",
+      "description": "Açılır satırlı tablo",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "tree-table",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tree-table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tree-view",
+      "type": "registry:ui",
+      "title": "Ağaç Görünümü",
+      "description": "Klasör/kategori ağacı",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "tree-view",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tree-view.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "week-calendar",
+      "type": "registry:ui",
+      "title": "Haftalık Takvim",
+      "description": "Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Verimlilik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "week-calendar",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/week-calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
+}

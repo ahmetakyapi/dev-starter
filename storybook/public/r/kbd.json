@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "kbd",
+  "type": "registry:ui",
+  "title": "Klavye Tuşu",
+  "description": "Klavye tuşu, kısayol",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/kbd.tsx",
+      "content": "import type { ComponentProps } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Klavye tuşu. `<kbd>` anlamı taşır; ekran okuyucu içeriği okur.\n *\n * Simgeli tuşlar (⌘ ⇧ ⌥ ↵) ekran okuyucuda ya hiç ya da garip okunur; simge\n * kullanırken `label` ver (\"Command\"). Ad görünmez METİN olarak yazılır,\n * simge gizlenir: `<kbd>`nin rolü yok ve rolsüz öğeye `aria-label` konamaz\n * (ARIA 1.2), ekran okuyucu onu yok sayıp yine simgeyi okurdu. `KbdCombo`\n * tuşları \"+\" ile değil boşlukla dizer; kısayolun tamamı için tek bir\n * `aria-label` taşır (`role=\"img\"` sayesinde geçerli).\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): beyaz küçük karo (`bg-overlay`), kıl\n * çizgisi ve kısa gölge; eski kalın alt kenar (`border-b-2`) daktilo tuşu\n * gibi ağırdı. Yazı mono değil gövde fontu: ↑ ↓ ↵ ⌘ gibi simgeler Inter'de\n * daha dengeli, harfler aynı genişlikte görünür (`tabular-nums`).\n *\n * Dokunmatik ekranda klavye kısayolu anlamsız: kısayol ipuçlarını\n * `pointer-fine:` ya da `hidden sm:inline-flex` ile gizlemek çoğu zaman\n * doğru karar.\n */\n\nexport function Kbd({ label, className, children, ...props }: ComponentProps<\"kbd\"> & { label?: string }) {\n  return (\n    <kbd\n      className={cn(\n        \"inline-flex h-5 min-w-5 items-center justify-center rounded-[0.3125rem] border border-line bg-overlay px-1.5 font-sans text-micro font-medium text-muted tabular-nums shadow-raised\",\n        className,\n      )}\n      {...props}\n    >\n      {label ? (\n        <>\n          <span aria-hidden>{children}</span>\n          <span className=\"sr-only\">{label}</span>\n        </>\n      ) : (\n        children\n      )}\n    </kbd>\n  );\n}\n\ntype KbdComboProps = {\n  /** Görünen tuşlar: [\"⌘\", \"K\"]. */\n  keys: readonly string[];\n  /** Kısayolun okunan adı: \"Command K\". */\n  label: string;\n  className?: string;\n};\n\nexport function KbdCombo({ keys, label, className }: KbdComboProps) {\n  return (\n    <span role=\"img\" aria-label={label} className={cn(\"inline-flex items-center gap-1\", className)}>\n      {keys.map((key) => (\n        <Kbd key={key} aria-hidden>\n          {key}\n        </Kbd>\n      ))}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "kbd",
+    "palettes": false
+  }
+}

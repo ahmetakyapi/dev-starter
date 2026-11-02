@@ -7,10 +7,36 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Yeni bileşenler, tek komutla kurulum, kısa adresler — 2026-11-02
+
+#### Eklendi
+
+- **13 bileşen** (`snippets/ui`, her biri hikâyeli, play testli, axe temiz):
+  `input`, `search-field`, `toast`, `hover-card`, `rating`, `toggle-group`;
+  grafikler `line-chart`, `combo-chart`, `scatter-chart`, `activity-rings`;
+  verimlilik `kanban-board` (klavyeyle sürükle-bırak, WIP sınırı),
+  `week-calendar`, `task-list`. Vitrin ve Pusula'ya yerleştirildi.
+- **`scripts/add-ui.mjs`**: bileşeni bağımlılık zinciriyle projeye kurar
+  (`--list`, `--dry-run`, `--install`, üstüne yazmaz). **Kayıt**:
+  `snippets/ui/registry.json` + shadcn öğeleri (`storybook/public/r/*.json`,
+  `npx shadcn add https://dev-starter-storybook.vercel.app/r/<ad>.json`);
+  `npm run registry:ui`, CI `verify:registry`. Storybook'ta her bileşen
+  belgesinde **Projeye Al** bloğu.
+- **Kısa adresler**: grup kimliği bileşenin dosya adı (`tooltip--default`,
+  `showcase--all-in-one`); `vercel.json` yönlendirmeleri `/showcase`,
+  `/pusula`, `/gallery`, `/theme`, `/c/<ad>`, `/s/<ad>/<hikâye>`.
+  `check:ids` 24 harf sınırı ve grup adı tekrarını da denetler.
+
+#### Değişti
+
+- Storybook ve vitrin metinlerinde başlık, alt başlık, düğme ve rozetler
+  **Title Case** (439 metin); "E-Posta" yazımı rehberle birleşti; bileşen
+  varsayılanları "Plan Tamamlandı", "Bildirim Yok", "Sol Eksen".
+
 ### Storybook düzeni — 2026-11-02
 
 - **Örnek Tasarım/Her Şey Bir Arada**: kataloğun tamamını tek uzun sayfada
-  sergileyen vitrin (73/73 bileşen kaynaktan ölçülür, 11 grafik, bloklar,
+  sergileyen vitrin (bileşen sayısı kaynaktan ölçülür; şu an 86/86, 15 grafik, bloklar,
   10 palet); kök adres doğrudan bu sayfayı açar.
 - Kenar çubuğu: Örnek Tasarım ve Vitrin en üstte; Türkçede mantıksız ya da
   yarı İngilizce adlar düzeltildi (Kahraman → Üst Bölüm Varyantları,

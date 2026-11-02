@@ -2,30 +2,39 @@
 
 import { Coffee, CreditCard, Repeat, ShoppingBag } from "lucide-react";
 import type { ReactNode } from "react";
+import { ActivityRings } from "@/components/ui/activity-rings";
 import { AreaChart } from "@/components/ui/area-chart";
 import { BarList } from "@/components/ui/bar-list";
 import { ChartCard, ChartLegend } from "@/components/ui/chart-card";
+import { ComboChart } from "@/components/ui/combo-chart";
 import { FunnelChart } from "@/components/ui/funnel-chart";
 import { GaugeChart } from "@/components/ui/gauge-chart";
 import { Heatmap } from "@/components/ui/heatmap";
+import { LineChart } from "@/components/ui/line-chart";
 import { RadarChart } from "@/components/ui/radar-chart";
 import { RingChart } from "@/components/ui/ring-chart";
 import { SankeyChart } from "@/components/ui/sankey-chart";
+import { ScatterChart } from "@/components/ui/scatter-chart";
 import { StageBars } from "@/components/ui/stage-bars";
 import { TrackBarChart } from "@/components/ui/track-bar-chart";
 import { cn } from "@/lib/utils";
 import {
   CATEGORIES,
   CHANNELS,
+  CHANNEL_MONTHLY,
   CHANNEL_REVENUE,
   CONVERSION,
+  CONVERSION_GAIN,
   CUPPING,
   CUPPING_AXES,
   DAYS,
   DAYS_TOTAL,
   FLOWS,
   MONTHS,
+  OCTOBER_GOALS,
   PLANS,
+  PRICE_CATEGORIES,
+  PRICE_SCORE,
   REVENUE_BEFORE,
   REVENUE_CHANGE,
   REVENUE_NOW,
@@ -35,8 +44,10 @@ import {
   ROAST_WEEK,
   SUBSCRIBERS,
   SUB_FUNNEL,
+  SUB_GROWTH,
   TOP_PRODUCTS,
   WEB_FUNNEL,
+  WEB_MONTHS,
   change,
   cuppingAverage,
   fromK,
@@ -127,13 +138,13 @@ export function Dashboard() {
       </Tile>
 
       <Tile file="funnel-chart" className="lg:col-span-4">
-        <ChartCard id="g-huni" label="Web Hunisi · Ekim" value={`%${CONVERSION.toLocaleString("tr-TR")}`} change={0.4} changeLabel="Eylül'e göre" action={<FileTag file="funnel-chart" />}>
+        <ChartCard id="g-huni" label="Web Hunisi · Ekim" value={`%${CONVERSION.toLocaleString("tr-TR")}`} change={CONVERSION_GAIN} changeLabel="puan, Eylül'e göre" action={<FileTag file="funnel-chart" />}>
           <FunnelChart title="Web Mağaza Hunisi" stages={WEB_FUNNEL} />
         </ChartCard>
       </Tile>
 
       <Tile file="stage-bars" className="lg:col-span-4">
-        <ChartCard id="g-abone" label="Abonelik Hunisi" value={`${num.format(SUBSCRIBERS)} abone`} change={5.7} changeLabel="Eylül'e göre" action={<FileTag file="stage-bars" />}>
+        <ChartCard id="g-abone" label="Abonelik Hunisi" value={`${num.format(SUBSCRIBERS)} abone`} change={SUB_GROWTH} changeLabel="Eylül'e göre" action={<FileTag file="stage-bars" />}>
           <StageBars title="Abonelik Hunisi" stages={SUB_FUNNEL.map((s, i) => ({ label: s.label, value: s.value, icon: SUB_ICONS[i] }))} />
         </ChartCard>
       </Tile>
@@ -184,6 +195,74 @@ export function Dashboard() {
       <Tile file="track-bar-chart" className="lg:col-span-3">
         <ChartCard id="g-kavurma" label="Haftalık Kavurma" value={`${num.format(ROAST_TOTAL)} kg`} change={change(ROAST_TOTAL, ROAST_PREV)} changeLabel="önceki haftaya göre" action={<FileTag file="track-bar-chart" />}>
           <TrackBarChart title="Geçen Hafta Kavrulan Kahve" data={ROAST_WEEK} series={3} format={(v) => `${num.format(v)} kg`} height="h-40" />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="line-chart" className="md:col-span-2 lg:col-span-8">
+        <ChartCard
+          id="g-kanal-ay"
+          label="Kanala Göre Ciro · Son 12 Ay"
+          value={fromK(REVENUE_TOTAL)}
+          change={change(sum(CHANNEL_MONTHLY[2].slice(-3)), sum(CHANNEL_MONTHLY[2].slice(-6, -3)))}
+          changeLabel="abonelik, önceki çeyreğe göre"
+          action={<FileTag file="line-chart" />}
+        >
+          <LineChart
+            title="Kanala Göre Aylık Ciro"
+            labels={MONTHS}
+            unit="bin ₺"
+            markers
+            series={CHANNELS.map((c, i) => ({ label: c.label, values: CHANNEL_MONTHLY[i], series: c.series }))}
+          />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="activity-rings" className="md:col-span-2 lg:col-span-4">
+        <ChartCard
+          id="g-hedef"
+          label="Ekim Hedefleri"
+          value={`${OCTOBER_GOALS.filter((g) => g.value >= g.goal).length} / ${OCTOBER_GOALS.length} tuttu`}
+          action={<FileTag file="activity-rings" />}
+        >
+          <ActivityRings title="Ekim Hedefleri" rings={OCTOBER_GOALS} layout="stack" thickness={13} />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="combo-chart" className="md:col-span-2 lg:col-span-6">
+        <ChartCard
+          id="g-web-ay"
+          label="Web Siparişi ve Dönüşüm · 5 Ay"
+          value={`${num.format(sum(WEB_MONTHS.map((m) => m.orders)))} sipariş`}
+          change={change(WEB_MONTHS[4].orders, WEB_MONTHS[3].orders)}
+          changeLabel="Ekim, Eylül'e göre"
+          action={<FileTag file="combo-chart" />}
+        >
+          <ComboChart
+            title="Aylık Web Siparişi ve Dönüşüm Oranı"
+            labels={WEB_MONTHS.map((m) => m.label)}
+            bars={{ label: "Web Siparişi", values: WEB_MONTHS.map((m) => m.orders), series: 2, unit: "sipariş" }}
+            line={{ label: "Dönüşüm", values: WEB_MONTHS.map((m) => m.rate), series: 4, format: { style: "percent", maximumFractionDigits: 1 } }}
+          />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="scatter-chart" className="md:col-span-2 lg:col-span-6">
+        <ChartCard
+          id="g-fiyat"
+          label="Fiyat ve Tadım Puanı · 30 Gün"
+          value={`${PRICE_SCORE.length} kahve`}
+          action={<FileTag file="scatter-chart" />}
+        >
+          <ScatterChart
+            title="Kilo Fiyatına Göre Tadım Puanı"
+            points={PRICE_SCORE}
+            categories={PRICE_CATEGORIES}
+            x={{ label: "Kilo Fiyatı", format: { style: "currency", currency: "TRY", maximumFractionDigits: 0 } }}
+            y={{ label: "Tadım Puanı", unit: "puan" }}
+            size={{ label: "Satılan Paket", unit: "paket" }}
+            zero={false}
+            height="h-56"
+          />
         </ChartCard>
       </Tile>
     </div>

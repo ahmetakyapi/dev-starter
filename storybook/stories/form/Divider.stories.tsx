@@ -7,7 +7,7 @@ import { settle } from "./_a11y";
 
 const meta = {
   title: "Bileşenler/Geri Bildirim/Ayırıcı",
-  id: "components-feedback-divider",
+  id: "divider",
   component: Divider,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -35,9 +35,9 @@ const meta = {
   render: (args) => (
     <Frame width="sm">
       <div className={args.orientation === "vertical" ? "flex h-10 items-center justify-center gap-4 text-small text-muted" : "grid gap-4"}>
-        <p className="text-base text-body">Fatura bilgileri</p>
+        <p className="text-base text-body">Fatura Bilgileri</p>
         <Divider {...args} />
-        <p className="text-base text-body">Teslimat bilgileri</p>
+        <p className="text-base text-body">Teslimat Bilgileri</p>
       </div>
     </Frame>
   ),
@@ -93,14 +93,14 @@ export const Labeled: Story = {
     <Frame width="sm">
       <div className="grid gap-4">
         <Button variant="secondary">Google ile Giriş Yap</Button>
-        <Divider label="ya da" />
+        <Divider label="Ya da" />
         <Button variant="secondary">E-postayla Devam Et</Button>
       </div>
     </Frame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText("ya da")).toBeVisible();
+    await expect(canvas.getByText("Ya da")).toBeVisible();
     await expect(canvas.queryByRole("separator")).not.toBeInTheDocument();
   },
 };
@@ -119,10 +119,10 @@ export const AllVariants: Story = {
       <Cell label="Yatay, strong">
         <Divider tone="strong" />
       </Cell>
-      <Cell label="Etiketli, ortada">
-        <Divider label="ya da" className="w-full" />
+      <Cell label="Etiketli, Ortada">
+        <Divider label="Ya da" className="w-full" />
       </Cell>
-      <Cell label="Etiketli, başta">
+      <Cell label="Etiketli, Başta">
         <Divider label="Dün" align="start" className="w-full" />
       </Cell>
       <Cell label="Dikey">

@@ -140,7 +140,7 @@ export function AuthCard({
 
           <div className="grid gap-1.5">
             <label htmlFor={`${id}-email`} className="text-small font-semibold text-strong">
-              E-posta
+              E-Posta
             </label>
             <input
               id={`${id}-email`}

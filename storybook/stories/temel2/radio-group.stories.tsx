@@ -11,7 +11,7 @@ const SHIPPING: RadioOption[] = [
 
 const meta = {
   title: "Bileşenler/Seçim/Seçenek Grubu",
-  id: "components-selection-radio-group",
+  id: "radio-group",
   component: RadioGroup,
   tags: ["autodocs"],
   parameters: {
@@ -85,10 +85,10 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Dikey, açıklamalı">
+      <Cell label="Dikey, Açıklamalı">
         <RadioGroup name="g1" legend="Kargo Seçeneği" options={SHIPPING} defaultValue="hizli" />
       </Cell>
-      <Cell label="Yatay, kısa">
+      <Cell label="Yatay, Kısa">
         <RadioGroup
           name="g2"
           legend="Fatura Türü"
@@ -100,7 +100,7 @@ export const AllVariants: Story = {
           ]}
         />
       </Cell>
-      <Cell label="Gizli başlık">
+      <Cell label="Gizli Başlık">
         <RadioGroup
           name="g3"
           legend="Ödeme Yöntemi"

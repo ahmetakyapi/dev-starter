@@ -51,7 +51,7 @@ function SettingsPage() {
     <Screen>
       <AppShell brand={BRAND} groups={NAV} current={ROUTES.ayarlar} user={USER} userAction={<SignOutButton />} className="h-dvh min-h-0">
         <div className="flex h-full flex-col">
-          <ContentBar title="Ayarlar" meta="Değişiklikler anında uygulanır" />
+          <ContentBar title="Ayarlar" meta="Değişiklikler Anında Uygulanır" />
           <div className="min-h-0 flex-1 overflow-y-auto">
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[11rem_1fr] lg:gap-12 lg:py-10">
               <nav aria-label="Ayar bölümleri" className="lg:sticky lg:top-0 lg:self-start">
@@ -100,7 +100,7 @@ function SettingsPage() {
                       <Field label="Ad Soyad" name="ad" defaultValue={USER.name} autoComplete="name" />
                       <Field label="Unvan" name="unvan" defaultValue="Destek Ekibi Lideri" autoComplete="organization-title" />
                       <Field
-                        label="E-posta"
+                        label="E-Posta"
                         name="eposta"
                         type="email"
                         defaultValue="elif@pusula.app"
@@ -179,9 +179,9 @@ function SettingsPage() {
                         legend="Onay İste"
                         defaultValue="geri-alinamaz"
                         options={[
-                          { value: "her", label: "Her işlemde", hint: "Ajan her araç çağrısından önce sorar." },
-                          { value: "geri-alinamaz", label: "Yalnız geri alınamayan işlemlerde", hint: "E-posta gönderme, silme, ödeme." },
-                          { value: "hic", label: "Hiçbir zaman", hint: "Önerilmez; yalnız deneme çalışma alanında." },
+                          { value: "her", label: "Her İşlemde", hint: "Ajan her araç çağrısından önce sorar." },
+                          { value: "geri-alinamaz", label: "Yalnız Geri Alınamayan İşlemlerde", hint: "E-posta gönderme, silme, ödeme." },
+                          { value: "hic", label: "Hiçbir Zaman", hint: "Önerilmez; yalnız deneme çalışma alanında." },
                         ]}
                       />
                     </div>
@@ -193,9 +193,9 @@ function SettingsPage() {
                     <Switch label="Ajan İşi Bitirdiğinde" hint="Uzun süren planlar tamamlanınca." defaultChecked />
                     <Switch label="Onay Beklendiğinde" hint="Ajan bir işlem için iznini istediğinde." defaultChecked />
                     <Switch label="Bana Talep Atandığında" defaultChecked />
-                    <SettingsRow label="E-posta Özeti" hint="Okunmamış talepler ve ajan raporları.">
+                    <SettingsRow label="E-Posta Özeti" hint="Okunmamış talepler ve ajan raporları.">
                       <Select
-                        label="E-posta Özeti"
+                        label="E-Posta Özeti"
                         hideLabel
                         defaultValue="haftalik"
                         items={[
@@ -237,7 +237,7 @@ function SettingsPage() {
 
 const meta = {
   title: "Ekranlar/Uygulama/Ayarlar",
-  id: "screens-app-settings",
+  id: "settings-page",
   component: SettingsPage,
   tags: ["autodocs"],
   parameters: {

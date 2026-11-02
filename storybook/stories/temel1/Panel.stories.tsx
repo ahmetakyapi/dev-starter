@@ -31,7 +31,7 @@ function InvoiceList() {
 
 const meta = {
   title: "Bileşenler/Temel/Panel",
-  id: "components-core-panel",
+  id: "panel",
   component: Panel,
   tags: ["autodocs"],
   parameters: {
@@ -52,7 +52,7 @@ const meta = {
       <>
         <PanelHeader
           title="Son Faturalar"
-          meta="Ekim 2026 · 3 kayıt"
+          meta="Ekim 2026 · 3 Kayıt"
           action={
             <ButtonLink href="/faturalar" variant="ghost" size="sm">
               Tümü
@@ -91,7 +91,7 @@ export const LongTitle: Story = {
       <>
         <PanelHeader
           title="Bölgelere Göre Üçüncü Çeyrek Satış ve Tahsilat Özeti"
-          meta="Son güncelleme 2 saat önce · Muhasebe ekibi"
+          meta="Son Güncelleme 2 Saat Önce · Muhasebe Ekibi"
           action={
             <Button variant="secondary" size="sm">
               Dışa Aktar
@@ -109,28 +109,28 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Başlık + künye + eylem" className="block">
+      <Cell label="Başlık + Künye + Eylem" className="block">
         <Panel>
           <PanelHeader title="Son Faturalar" meta="Ekim 2026" action={<Button variant="ghost" size="sm">Tümü</Button>} />
           <InvoiceList />
         </Panel>
       </Cell>
-      <Cell label="Yalnızca başlık" className="block">
+      <Cell label="Yalnızca Başlık" className="block">
         <Panel>
           <PanelHeader title="Ekip Notları" />
           <p className="text-base text-body">Cuma toplantısında kasım bütçesi konuşulacak.</p>
         </Panel>
       </Cell>
-      <Cell label="Sayı kartı" className="block">
+      <Cell label="Sayı Kartı" className="block">
         <Panel>
-          <PanelHeader title="Aylık Gelir" meta="Geçen aya göre" />
+          <PanelHeader title="Aylık Gelir" meta="Geçen Aya Göre" />
           <p className="text-display font-bold text-strong tabular-nums">₺284.150</p>
           <p className="mt-1 text-small text-success">%12,4 artış</p>
         </Panel>
       </Cell>
-      <Cell label="Cam yüzey (glass)" className="block">
+      <Cell label="Cam Yüzey (glass)" className="block">
         <Panel className="glass">
-          <PanelHeader title="Canlı Ziyaretçi" meta="Son 5 dakika" />
+          <PanelHeader title="Canlı Ziyaretçi" meta="Son 5 Dakika" />
           <p className="text-display font-bold text-strong tabular-nums">142</p>
         </Panel>
       </Cell>

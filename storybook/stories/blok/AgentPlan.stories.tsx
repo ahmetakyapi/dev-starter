@@ -7,7 +7,7 @@ import { PLAN, PLAN_LABELS } from "./_shared";
 
 const meta = {
   title: "Bloklar/Asistan Planı",
-  id: "blocks-agent-plan",
+  id: "agent-plan",
   component: AgentPlan,
   tags: ["autodocs"],
   parameters: {
@@ -47,7 +47,7 @@ export const Done: Story = {
   name: "Bitti",
   args: { activeIndex: PLAN.length },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByText("Plan tamamlandı")).toBeVisible();
+    await expect(within(canvasElement).getByText("Plan Tamamlandı")).toBeVisible();
   },
 };
 
@@ -99,8 +99,8 @@ export const AllVariants: Story = {
       <Cell label="Bitti · 7 / 7" className="block">
         <AgentPlan {...args} activeIndex={PLAN.length} className="bg-page ring-1 ring-line" />
       </Cell>
-      <Cell label="Daraltılmış · özel başlık" className="block">
-        <AgentPlan {...args} defaultOpen={false} title="Rapor hazırlanıyor" className="bg-page ring-1 ring-line" />
+      <Cell label="Daraltılmış · Özel Başlık" className="block">
+        <AgentPlan {...args} defaultOpen={false} title="Rapor Hazırlanıyor" className="bg-page ring-1 ring-line" />
       </Cell>
     </Gallery>
   ),

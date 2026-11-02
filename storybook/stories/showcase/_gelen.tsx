@@ -46,10 +46,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EmptyState } from "@/components/ui/empty-state";
+import { HoverCard, ProfilePreview } from "@/components/ui/hover-card";
 import { Icon } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { Pagination } from "@/components/ui/pagination";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Rating } from "@/components/ui/rating";
+import { SearchField, matchesTr } from "@/components/ui/search-field";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Sheet } from "@/components/ui/sheet";
 import { Timeline } from "@/components/ui/timeline";
@@ -69,6 +72,8 @@ import {
   member,
   num,
   order,
+  starsOf,
+  ticket,
   ticketEvents,
   tl,
   type Priority,
@@ -82,7 +87,7 @@ const PER_PAGE = 8;
 const STATUS_TONE = { Açık: "primary", Beklemede: "warning", Çözüldü: "success" } as const;
 const PRIORITY_TONE = { Acil: "danger", Yüksek: "warning", Normal: "neutral", Düşük: "neutral" } as const;
 const PRIORITY_RANK: Record<Priority, number> = { Acil: 4, Yüksek: 3, Normal: 2, Düşük: 1 };
-const CHANNEL_ICON = { "E-posta": <Mail />, Telefon: <Phone />, "Canlı Sohbet": <Radio />, "Web Formu": <Hash /> } as const;
+const CHANNEL_ICON = { "E-Posta": <Mail />, Telefon: <Phone />, "Canlı Sohbet": <Radio />, "Web Formu": <Hash /> } as const;
 
 const TAGS = [...new Set(TICKETS.flatMap((t) => t.tags))].sort((a, b) => a.localeCompare(b, "tr-TR"));
 const CUSTOMER_ITEMS: ComboboxItem[] = CUSTOMERS.map((c) => ({ value: c.id, label: c.name }));
@@ -117,6 +122,8 @@ export function GelenPage() {
   const [folder, setFolder] = useState<Folder>(params.etiket ? `etiket:${params.etiket}` : params.durum ? `durum:${params.durum}` : "tum");
   const [who, setWho] = useState<ComboboxItem | null>(null);
   const [priorities, setPriorities] = useState<readonly Priority[]>([]);
+  const [text, setText] = useState("");
+  const [query, setQuery] = useState("");
   const [view, setView] = useState<"liste" | "musteri">("liste");
   const [showChannel, setShowChannel] = useState(true);
   const [showMessages, setShowMessages] = useState(false);
@@ -126,8 +133,10 @@ export function GelenPage() {
     [overrides, archived],
   );
 
+  /** Konu, numara, müşteri ve yetkili adında; Türkçe harfler düzlenir ("cinar" → Çınar). */
+  const matchesQuery = (t: Ticket) => matchesTr(`${t.id} ${t.subject} ${customer(t.customerId).name} ${customer(t.customerId).contact}`, query, { fold: true });
   const rows = tickets.filter(
-    (t) => matchesFolder(t, folder) && (!who || t.customerId === who.value) && (!priorities.length || priorities.includes(t.priority)),
+    (t) => matchesFolder(t, folder) && (!who || t.customerId === who.value) && (!priorities.length || priorities.includes(t.priority)) && matchesQuery(t),
   );
 
   /** Süzgeç değişince ilk sayfaya dön (adresteki sayfa numarası eskir). */
@@ -138,6 +147,8 @@ export function GelenPage() {
     setFolder("tum");
     setWho(null);
     setPriorities([]);
+    setText("");
+    setQuery("");
     resetPage();
   };
 
@@ -147,11 +158,16 @@ export function GelenPage() {
   };
   const assignToMe = (t: Ticket) => {
     setOverrides((o) => ({ ...o, [t.id]: { ...o[t.id], assignee: ME.id } }));
-    notify({ tone: "info", title: `${t.id} sana atandı`, body: t.subject });
+    notify({ tone: "info", title: `${t.id} Sana Atandı`, body: t.subject });
   };
   const archive = (t: Ticket) => {
     setArchived((a) => [...a, t.id]);
-    notify({ tone: "info", title: `${t.id} arşivlendi`, body: "Arşivdeki talepler raporlarda sayılmaya devam eder." });
+    notify({
+      tone: "info",
+      title: `${t.id} Arşivlendi`,
+      body: "Arşivdeki talepler raporlarda sayılmaya devam eder.",
+      undo: () => setArchived((a) => a.filter((id) => id !== t.id)),
+    });
     if (params.talep === t.id) navigate("gelen", { ...params, talep: undefined });
   };
   const open = (t: Ticket) => navigate("gelen", { ...params, talep: t.id });
@@ -194,7 +210,7 @@ export function GelenPage() {
               shortcut={["⌘", "L"]}
               onClick={() => {
                 navigator.clipboard?.writeText(t.id).catch(() => undefined);
-                notify({ tone: "info", title: `${t.id} panoya kopyalandı` });
+                notify({ tone: "info", title: `${t.id} Panoya Kopyalandı` });
               }}
             >
               Numarayı Kopyala
@@ -240,12 +256,26 @@ export function GelenPage() {
       header: "Atanan",
       sortable: true,
       sortValue: (t) => member(t.assignee).name,
-      render: (t) => (
-        <span className="inline-flex items-center gap-2">
-          <Avatar name={member(t.assignee).name} size="sm" />
-          <span className="text-body">{member(t.assignee).name.split(" ")[0]}</span>
-        </span>
-      ),
+      render: (t) => {
+        const m = member(t.assignee);
+        return (
+          <span className="inline-flex items-center gap-2">
+            <Avatar name={m.name} size="sm" />
+            <HoverCard href={href("raporlar", { sekme: "destek" })} trigger={m.name.split(" ")[0]} side="bottom" align="start">
+              <ProfilePreview
+                name={m.name}
+                role={m.role}
+                handle={m.email}
+                stats={[
+                  { label: "Açık Talep", value: tickets.filter((x) => x.assignee === m.id && x.status !== "Çözüldü").length },
+                  { label: "Son 8 Günde Çözülen", value: tickets.filter((x) => x.assignee === m.id && x.status === "Çözüldü").length },
+                ]}
+                meta="Ekip yükü Raporlar › Destek sekmesinde"
+              />
+            </HoverCard>
+          </span>
+        );
+      },
     },
     ...(showMessages
       ? [{ key: "mesaj", header: "Mesaj", numeric: true, render: (t: Ticket) => num.format(t.messages) } satisfies Column<Ticket>]
@@ -327,7 +357,7 @@ export function GelenPage() {
     <div className="flex min-h-full flex-col">
       <PageBar
         title="Gelen Kutusu"
-        description={`${num.format(openCount + waitCount)} talep yanıt bekliyor · ${num.format(openCount)} açık, ${num.format(waitCount)} beklemede`}
+        description={`${num.format(openCount + waitCount)} Talep Yanıt Bekliyor · ${num.format(openCount)} Açık, ${num.format(waitCount)} Beklemede`}
         actions={
           <>
             <Popover>
@@ -361,7 +391,7 @@ export function GelenPage() {
                 <DropdownMenuItem
                   icon={<Download />}
                   shortcut="E"
-                  onClick={() => notify({ tone: "success", title: "Talepler dışa aktarıldı", body: `${num.format(rows.length)} satır · talepler-kasim.csv` })}
+                  onClick={() => notify({ tone: "success", title: "Talepler Dışa Aktarıldı", body: `${num.format(rows.length)} satır · talepler-kasim.csv` })}
                 >
                   CSV Olarak İndir
                 </DropdownMenuItem>
@@ -391,6 +421,20 @@ export function GelenPage() {
         <div className="grid grid-cols-1 min-w-0 content-start gap-4">
           <div className="grid grid-cols-1 gap-3 rounded-xl bg-surface p-3 sm:p-4">
             <div className="flex flex-wrap items-end gap-3">
+              <SearchField
+                label="Talep Ara"
+                showLabel
+                placeholder="Konu, numara ya da yetkili"
+                value={text}
+                onValueChange={setText}
+                onSearch={(q) => {
+                  setQuery(q);
+                  resetPage();
+                }}
+                resultCount={query ? rows.length : undefined}
+                shortcut="/"
+                className="w-full sm:w-72"
+              />
               <Combobox
                 label="Müşteri"
                 items={CUSTOMER_ITEMS}
@@ -430,11 +474,22 @@ export function GelenPage() {
                 </FilterChip>
               ))}
             </ChipGroup>
-            {folder !== "tum" || who ? (
+            {folder !== "tum" || who || query ? (
               <ChipGroup aria-label="Etkin Süzgeçler">
                 {folder !== "tum" ? (
                   <RemovableChip label={`Kaldır: ${folderLabel(folder)}`} onRemove={() => setFolder("tum")}>
                     {folderLabel(folder)}
+                  </RemovableChip>
+                ) : null}
+                {query ? (
+                  <RemovableChip
+                    label={`Kaldır: “${query}” araması`}
+                    onRemove={() => {
+                      setText("");
+                      setQuery("");
+                    }}
+                  >
+                    “{query}”
                   </RemovableChip>
                 ) : null}
                 {who ? (
@@ -450,8 +505,8 @@ export function GelenPage() {
             <EmptyState
               icon={<SearchX />}
               titleAs="h2"
-              title="Bu süzgeçlere uyan talep yok"
-              hint={`${folderLabel(folder)}${who ? `, ${who.label}` : ""}${priorities.length ? `, ${priorities.join(" / ")} öncelik` : ""} için kayıt bulunamadı.`}
+              title="Bu Süzgeçlere Uyan Talep Yok"
+              hint={`${folderLabel(folder)}${who ? `, ${who.label}` : ""}${priorities.length ? `, ${priorities.join(" / ")} öncelik` : ""}${query ? `, “${query}” araması` : ""} için kayıt bulunamadı.`}
               action={
                 <Button variant="secondary" size="sm" onClick={clearAll}>
                   Süzgeçleri Temizle
@@ -607,6 +662,15 @@ function TicketDetail({ t }: { t: Ticket }) {
           <dt className="text-small text-muted">İlk Yanıt</dt>
           <dd className="mt-0.5 text-strong">{t.firstResponseMin === null ? "Henüz yok" : `${t.firstResponseMin} dakika`}</dd>
         </div>
+        {t.status === "Çözüldü" ? (
+          <div>
+            <dt className="text-small text-muted">Kapanış Anketi</dt>
+            <dd className="mt-1">
+              {/* Anket yalnız önceden kapanmış talepte var; şimdi kapatılanınki henüz gelmedi. */}
+              {ticket(t.id)?.status === "Çözüldü" ? <Rating value={starsOf(t)} size="sm" showValue /> : <span className="text-muted">Yanıt Bekleniyor</span>}
+            </dd>
+          </div>
+        ) : null}
         <div>
           <dt className="text-small text-muted">İzleyenler</dt>
           <dd className="mt-0.5">

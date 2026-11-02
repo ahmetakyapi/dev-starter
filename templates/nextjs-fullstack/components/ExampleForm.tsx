@@ -41,7 +41,7 @@ export function ExampleForm() {
     >
       <Field label="Ad" name="name" autoComplete="name" defaultValue={values.name} error={errors.name} />
       <Field
-        label="E-posta"
+        label="E-Posta"
         name="email"
         type="email"
         autoComplete="email"

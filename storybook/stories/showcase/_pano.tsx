@@ -2,11 +2,13 @@
 
 import { useMemo } from "react";
 import { MessagesSquare, PackageCheck, Reply, Smile } from "lucide-react";
+import { ActivityRings } from "@/components/ui/activity-rings";
 import { Announcement } from "@/components/ui/announcement";
 import { AreaChart } from "@/components/ui/area-chart";
 import { BannerAlert } from "@/components/ui/banner-alert";
 import { BarList } from "@/components/ui/bar-list";
 import { ChartCard, ChartLegend } from "@/components/ui/chart-card";
+import { ComboChart } from "@/components/ui/combo-chart";
 import { FunnelChart } from "@/components/ui/funnel-chart";
 import { GaugeChart } from "@/components/ui/gauge-chart";
 import { Heatmap } from "@/components/ui/heatmap";
@@ -23,11 +25,14 @@ import {
   CHANNELS,
   CHANNEL_SERIES,
   DELAYED,
+  FIRST_REPLY_GOAL,
   HEATMAP_WEEKS,
   ME,
+  MONTHLY_TARGET,
   OUTCOMES,
   PERIODS,
   RADAR_AXES,
+  TARGET_SCALE,
   TODAY,
   customer,
   longDate,
@@ -101,6 +106,19 @@ export function PanoPage() {
     value: s.tickets.filter((t) => (t.date.getDay() + 6) % 7 === i).length,
   }));
   const delayedNames = DELAYED.map((o) => customer(o.customerId).name);
+  const target = Math.round(MONTHLY_TARGET * TARGET_SCALE[period]);
+  const fastReplies = s.tickets.filter((t) => (t.firstResponseMin ?? 999) <= 30).length;
+  const goals = [
+    { label: "Ciro", value: s.revenue, goal: target, unit: "₺", series: 1 },
+    { label: "Çözülen Talep", value: q.resolved, goal: s.ticketCount, unit: "talep", series: 2 },
+    { label: "30 Dakikada Yanıt", value: fastReplies, goal: Math.round(s.ticketCount * FIRST_REPLY_GOAL), unit: "talep", series: 3 },
+  ] as const;
+  // Birleşik grafikte en çok 10 sütun: 30 günlük dönem üçer günlük dilimlere toplanır (etiket dilimin ilk günü).
+  const step = Math.ceil(w.buckets.length / 10);
+  const groups = Array.from({ length: Math.ceil(w.buckets.length / step) }, (_, g) => {
+    const range = (list: readonly number[]) => list.slice(g * step, g * step + step).reduce((a, v) => a + v, 0);
+    return { label: w.buckets[g * step].label, orders: range(s.orderSeries), visits: range(s.visitSeries) };
+  });
 
   return (
     <div className="flex min-h-full flex-col">
@@ -112,12 +130,12 @@ export function PanoPage() {
       <div className="grid grid-cols-1 gap-6 p-4 sm:p-6">
         <div className="grid grid-cols-1 gap-3">
           <Announcement href={href("asistan")} tag="Yeni">
-            Asistan geciken siparişler için müşteri e-postası yazıyor
+            Asistan Geciken Siparişler için Müşteri E-postası Yazıyor
           </Announcement>
           {DELAYED.length ? (
             <BannerAlert
               tone="warning"
-              title={`${DELAYED.length} sipariş teslim tarihini geçti`}
+              title={`${DELAYED.length} Sipariş Teslim Tarihini Geçti`}
               description={`${delayedNames.join(", ")} siparişleri kargo aktarma merkezinde bekliyor. İlgili talepler gelen kutusunda.`}
               actions={
                 <a
@@ -251,11 +269,45 @@ export function PanoPage() {
             >
               <Heatmap title={`Günlük Sipariş, Son ${heatWeeks} Hafta`} data={days} weeks={heatWeeks} unit="sipariş" levels={[2, 4, 6]} />
             </ChartCard>
+
+            <ChartCard
+              id="pano-donusum"
+              className="lg:col-span-2"
+              label="Sipariş ve Dönüşüm"
+              value={num.format(s.orderCount)}
+              change={s.orderChange}
+              changeLabel={w.prevLabel}
+              action={
+                <InfoTip label="Dönüşüm nasıl hesaplanır">
+                  Dilimdeki sipariş sayısı bölü mağaza ziyareti (30 günlük dönemde üçer gün); dönemin toplamı Mağaza Dönüşümü hunisindeki orandır.
+                </InfoTip>
+              }
+            >
+              <ComboChart
+                title="Sipariş ve Dönüşüm Oranı"
+                labels={groups.map((g) => g.label)}
+                bars={{ label: step > 1 ? `Sipariş (${step} Gün)` : "Sipariş", values: groups.map((g) => g.orders), series: 2, unit: "sipariş" }}
+                line={{ label: "Dönüşüm", values: groups.map((g) => (g.visits ? g.orders / g.visits : 0)), series: 4, format: { style: "percent", maximumFractionDigits: 1 } }}
+              />
+            </ChartCard>
+
+            <ChartCard
+              id="pano-hedef"
+              label="Dönem Hedefleri"
+              value={`${goals.filter((g) => g.value >= g.goal).length} / ${goals.length} tuttu`}
+              action={
+                <InfoTip label="Hedefler nereden gelir">
+                  Ciro hedefi aylık {tl.format(MONTHLY_TARGET)}, döneme oranlanır. Taleplerin hepsi çözülmeli, yüzde {FIRST_REPLY_GOAL * 100}'i yarım saatte yanıtlanmalı.
+                </InfoTip>
+              }
+            >
+              <ActivityRings title="Dönem Hedefleri" rings={goals} layout="stack" thickness={13} />
+            </ChartCard>
           </div>
         </section>
 
         <section aria-labelledby="pano-destek" className="grid grid-cols-1 gap-3">
-          <SectionTitle id="pano-destek" title="Destek" note={`${num.format(s.ticketCount)} talep · ${w.caption}`} />
+          <SectionTitle id="pano-destek" title="Destek" note={`${num.format(s.ticketCount)} Talep · ${w.caption}`} />
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             <ChartCard
               id="pano-talep-kanal"

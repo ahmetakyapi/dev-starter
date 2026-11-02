@@ -8,7 +8,7 @@ const ITEMS = CITIES.slice(0, 9);
 
 const meta = {
   title: "Bileşenler/Seçim/Açılır Liste",
-  id: "components-selection-select",
+  id: "select",
   component: Select,
   tags: ["autodocs"],
   parameters: {
@@ -72,10 +72,10 @@ export const AllVariants: Story = {
       <Cell label="Seçili">
         <Select label="Teslimat Şehri" items={ITEMS} defaultValue="izmir" className="w-full" />
       </Cell>
-      <Cell label="Seçimsiz, yer tutucu">
+      <Cell label="Seçimsiz, Yer Tutucu">
         <Select label="Fatura Şehri" items={ITEMS} placeholder="Şehir seç" className="w-full" />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <Select label="Depo" items={ITEMS} defaultValue="bursa" disabled className="w-full" />
       </Cell>
     </Gallery>

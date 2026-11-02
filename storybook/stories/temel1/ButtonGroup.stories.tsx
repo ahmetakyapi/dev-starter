@@ -28,7 +28,7 @@ function FormatToggles() {
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Düğme Grubu",
-  id: "components-buttons-button-group",
+  id: "button-group",
   component: ButtonGroup,
   tags: ["autodocs"],
   parameters: {
@@ -98,24 +98,24 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="attached · metinli">
+      <Cell label="attached · Metinli">
         <ButtonGroup aria-label="Görünüm">
           <Button variant="secondary">Liste</Button>
           <Button variant="secondary" aria-pressed="true">Pano</Button>
           <Button variant="secondary">Takvim</Button>
         </ButtonGroup>
       </Cell>
-      <Cell label="attached · ikonlu">
+      <Cell label="attached · İkonlu">
         <ButtonGroup aria-label="Hizalama">
           <IconButton variant="secondary" icon={AlignLeft} aria-label="Sola Hizala" />
           <IconButton variant="secondary" icon={AlignCenter} aria-label="Ortala" />
           <IconButton variant="secondary" icon={AlignRight} aria-label="Sağa Hizala" />
         </ButtonGroup>
       </Cell>
-      <Cell label="well · aç-kapa (Kalın basılı)">
+      <Cell label="well · Aç-Kapa (Kalın Basılı)">
         <FormatToggles />
       </Cell>
-      <Cell label="attached · dikey">
+      <Cell label="attached · Dikey">
         <ButtonGroup aria-label="Sayfa" orientation="vertical">
           <Button variant="secondary">Önceki</Button>
           <Button variant="secondary">Sonraki</Button>

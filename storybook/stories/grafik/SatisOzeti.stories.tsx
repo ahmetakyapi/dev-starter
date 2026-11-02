@@ -109,7 +109,7 @@ function SatisOzeti({ baslangicBolgesi = "tum" }: { baslangicBolgesi?: Bolge }) 
           <div>
             <p className="text-small font-medium text-muted">Defter · Satış</p>
             <h1 className="mt-1 text-heading font-semibold tracking-tight text-strong">Satış Özeti</h1>
-            <p className="mt-1 text-small text-muted">2026 yılı, aylık abonelik gelirleri</p>
+            <p className="mt-1 text-small text-muted">2026 Yılı, Aylık Abonelik Gelirleri</p>
           </div>
           <SegmentedControl aria-label="Bölge" options={BOLGELER} value={bolge} onValueChange={setBolge} />
         </header>
@@ -201,7 +201,7 @@ function SatisOzeti({ baslangicBolgesi = "tum" }: { baslangicBolgesi?: Bolge }) 
 
 const meta = {
   title: "Grafikler/Pano/Satış Özeti",
-  id: "charts-dashboards-sales-summary",
+  id: "dashboard-sales",
   component: SatisOzeti,
   tags: ["autodocs"],
   parameters: {

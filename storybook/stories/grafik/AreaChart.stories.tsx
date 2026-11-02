@@ -11,7 +11,7 @@ type Args = ComponentProps<typeof AreaChart> & { noktaSayisi: number; seriSayisi
 
 const meta = {
   title: "Grafikler/Alan Grafiği",
-  id: "charts-area-chart",
+  id: "area-chart",
   component: AreaChart,
   tags: ["autodocs"],
   parameters: {
@@ -159,7 +159,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>
-      <GrafikHucre label="İki seri, sayı">
+      <GrafikHucre label="İki Seri, Sayı">
         <ChartCard id="alan-v1" label="Aylık Yeni Kayıt" value={sayi(toplam(KAYIT_BU_YIL))} change={yuzdeDegisim(toplam(KAYIT_BU_YIL), toplam(KAYIT_GECEN_YIL))}>
           <AreaChart
             title="Aylık Yeni Kayıt"
@@ -173,7 +173,7 @@ export const AllVariants: Story = {
           />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Tek seri, para birimi">
+      <GrafikHucre label="Tek Seri, Para Birimi">
         <ChartCard id="alan-v2" label="Aylık Ciro" value="₺7.848.000" change={18.2}>
           <AreaChart
             title="Aylık Ciro"
@@ -184,7 +184,7 @@ export const AllVariants: Story = {
           />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Günlük, iki seri">
+      <GrafikHucre label="Günlük, İki Seri">
         <ChartCard id="alan-v3" label="Açılan ve Çözülen Bilet" value={sayi(toplam(BILET_ACILAN))} change={-4.6}>
           <AreaChart
             title="Açılan ve Çözülen Bilet"

@@ -5,7 +5,7 @@ import { Cell, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Tema Düğmesi",
-  id: "components-core-theme-toggle",
+  id: "theme-toggle",
   component: ThemeToggle,
   tags: ["autodocs"],
   parameters: {
@@ -59,13 +59,13 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Gri kuyuda">
+      <Cell label="Gri Kuyuda">
         <ThemeToggle initialTheme="light" />
       </Cell>
-      <Cell label="Beyaz karoda" className="bg-overlay">
+      <Cell label="Beyaz Karoda" className="bg-overlay">
         <ThemeToggle initialTheme="light" />
       </Cell>
-      <Cell label="Sayfa zemininde" className="bg-page">
+      <Cell label="Sayfa Zemininde" className="bg-page">
         <ThemeToggle initialTheme="light" />
       </Cell>
     </Gallery>

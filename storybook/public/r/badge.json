@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "badge",
+  "type": "registry:ui",
+  "title": "Rozet",
+  "description": "Durum/kategori etiketi",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/badge.tsx",
+      "content": "import type { ComponentProps } from 'react'\nimport { cn } from '@/lib/utils'\n\n/**\n * Rozet: kısa durum ya da kategori etiketi (\"Taslak\", \"Tamamlandı\",\n * \"Bekliyor\"). Etkileşimsiz; tıklanan bir etiket gerekiyorsa düğme ya da\n * bağlantı yap.\n *\n * Metin Title Case ve kısa (bir-iki kelime). Durum rozetinde renk TEK\n * işaret olmasın: `dot` küçük bir nokta ekler, ama asıl ayırt edici\n * metnin kendisi (\"Hata\" / \"Tamam\"); renk yalnızca hızlandırır.\n *\n * İKİ AİLE (\"board\" dili, 2026-11):\n *   DURUM tonları (`success` \"Tamamlandı\", `warning` \"Bekliyor\", `danger`,\n *     `primary`, `neutral`): yıkanmış zemin + aynı ailenin mürekkebi.\n *     Mürekkepler globals.css'te kendi wash'ı üstünde AA ölçülmüş.\n *   KATEGORİ tonları (`chart-1…6`): grafik paletinin pastel yıkaması\n *     (%22). Grafik rengi METİN rengi olamaz (açık zeminde AA tutmaz), bu\n *     yüzden yazı `text-strong`; renk zeminde ve noktada. Etiketleri\n *     grafikteki seriyle eşleştirmek için (aynı sıra, aynı renk).\n *\n * `variant`: `soft` (varsayılan) yıkanmış zemin; `outline` yalnızca çizgi,\n * yoğun tablolarda daha sessiz. `shape`: `pill` (varsayılan) ya da\n * `rounded` (8 piksel köşe; 24 piksel boyda 12 piksel zaten hap olurdu).\n */\n\nconst TONES = {\n  neutral: {\n    soft: 'bg-surface-raised text-body',\n    outline: 'border-line-strong text-body',\n    dot: 'bg-muted',\n  },\n  primary: {\n    soft: 'bg-primary-wash text-primary-ink',\n    outline: 'border-primary/40 text-primary-ink',\n    dot: 'bg-primary',\n  },\n  success: {\n    soft: 'bg-success-wash text-success',\n    outline: 'border-success/40 text-success',\n    dot: 'bg-success',\n  },\n  warning: {\n    soft: 'bg-warning-wash text-warning',\n    outline: 'border-warning/40 text-warning',\n    dot: 'bg-warning',\n  },\n  danger: {\n    soft: 'bg-danger-wash text-danger',\n    outline: 'border-danger/40 text-danger',\n    dot: 'bg-danger',\n  },\n  'chart-1': {\n    soft: 'bg-chart-1/22 text-strong',\n    outline: 'border-chart-1 text-strong',\n    dot: 'bg-chart-1',\n  },\n  'chart-2': {\n    soft: 'bg-chart-2/22 text-strong',\n    outline: 'border-chart-2 text-strong',\n    dot: 'bg-chart-2',\n  },\n  'chart-3': {\n    soft: 'bg-chart-3/22 text-strong',\n    outline: 'border-chart-3 text-strong',\n    dot: 'bg-chart-3',\n  },\n  'chart-4': {\n    soft: 'bg-chart-4/22 text-strong',\n    outline: 'border-chart-4 text-strong',\n    dot: 'bg-chart-4',\n  },\n  'chart-5': {\n    soft: 'bg-chart-5/22 text-strong',\n    outline: 'border-chart-5 text-strong',\n    dot: 'bg-chart-5',\n  },\n  'chart-6': {\n    soft: 'bg-chart-6/22 text-strong',\n    outline: 'border-chart-6 text-strong',\n    dot: 'bg-chart-6',\n  },\n} as const\n\ntype BadgeProps = ComponentProps<'span'> & {\n  tone?: keyof typeof TONES\n  variant?: 'soft' | 'outline'\n  shape?: 'pill' | 'rounded'\n  dot?: boolean\n}\n\nexport function Badge({\n  tone = 'neutral',\n  variant = 'soft',\n  shape = 'pill',\n  dot = false,\n  className,\n  children,\n  ...props\n}: BadgeProps) {\n  return (\n    <span\n      className={cn(\n        'inline-flex h-6 shrink-0 items-center gap-1.5 border border-transparent px-2.5 text-small font-medium whitespace-nowrap',\n        shape === 'pill' ? 'rounded-full' : 'rounded-sm px-2',\n        TONES[tone][variant],\n        className,\n      )}\n      {...props}\n    >\n      {dot ? (\n        <span aria-hidden className={cn('size-1.5 shrink-0 rounded-full', TONES[tone].dot)} />\n      ) : null}\n      {children}\n    </span>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "badge",
+    "palettes": false
+  }
+}

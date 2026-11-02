@@ -1,0 +1,30 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "progress",
+  "type": "registry:ui",
+  "title": "İlerleme",
+  "description": "Bir işin ilerlemesi (belirli/belirsiz)",
+  "dependencies": [
+    "@base-ui/react@1.8.0",
+    "lucide-react@^1.51.0",
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/progress.tsx",
+      "content": "\"use client\";\n\nimport { Progress as Base } from \"@base-ui/react/progress\";\nimport { Check } from \"lucide-react\";\nimport { m, useReducedMotion } from \"motion/react\";\nimport { useId, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Doğrusal ilerleme: bir İŞİN ne kadarının bittiği (yükleme, dışa aktarma,\n * kurulum adımı). Bir KAPASİTENİN doluluğu (depolama, kota) ilerleme değil\n * ölçüdür: `meter.tsx`. İkisi ekran okuyucuda farklı okunur\n * (`progressbar` / `meter`), birinin yerine öteki kullanılmaz.\n *\n * Base UI Progress: `role=\"progressbar\"`, `aria-valuenow/min/max`, etiket\n * bağı (`aria-labelledby`) ve `tr-TR` biçimli `aria-valuetext` ondan.\n * `value={null}` BELİRSİZ: süre bilinmiyorsa uydurma yüzde gösterme.\n *\n * DOLGU GENİŞLİKLE DEĞİL `translateX` İLE: Base UI'nin göstergesi\n * `width: %` yazar; genişliği animasyonla değiştirmek her karede düzen\n * hesaplatır (slop listesi). Kendi dolgumuz iz kadar geniş bir hap, sola\n * kaydırılıp izin `overflow-hidden`ı ile kırpılır. `scaleX` de olurdu ama\n * hapın yuvarlak ucunu ezer (küçük değerde uç kareleşir); kaydırmada uç hep\n * tam yuvarlak. Sağdan sola dilde `-` işaretini çevir.\n *\n * BİTİNCE: dolgu `bg-success`e döner ve yüzdenin yerine ✓ + \"Tamamlandı\"\n * gelir. Renk tek işaret değil, metin de değişir.\n *\n * BELİRSİZDE: kısa bir hap izin içinde soldan sağa kayar (1,4 sn, imza\n * eğrisi). Hareketi azaltan kullanıcıda kayma yok; hap ortada durur ve\n * yanında \"Hazırlanıyor\" yazar.\n */\n\nconst percent = new Intl.NumberFormat(\"tr-TR\", { style: \"percent\", maximumFractionDigits: 0 });\n\ntype ProgressProps = {\n  /** 0–max arası; `null` belirsiz. */\n  value: number | null;\n  max?: number;\n  /** Görünen Title Case etiket: \"Rapor Dışa Aktarılıyor\". */\n  label: ReactNode;\n  /** Sağdaki yüzde ya da kendi metnin (\"12 / 40 dosya\"). `false` gizler. */\n  valueText?: ReactNode | false;\n  /** Altta küçük açıklama: \"Yaklaşık 2 dakika kaldı\". */\n  hint?: ReactNode;\n  size?: \"sm\" | \"md\";\n  className?: string;\n};\n\nexport function Progress({ value, max = 100, label, valueText, hint, size = \"md\", className }: ProgressProps) {\n  const reduce = useReducedMotion();\n  const hintId = useId();\n  const ratio = value === null ? null : Math.min(1, Math.max(0, value / max));\n  const complete = ratio === 1;\n\n  return (\n    <Base.Root\n      value={value}\n      max={max}\n      locale=\"tr-TR\"\n      aria-describedby={hint ? hintId : undefined}\n      className={cn(\"grid gap-2\", className)}\n    >\n      <div className=\"flex items-baseline justify-between gap-3\">\n        <Base.Label className=\"min-w-0 truncate text-base font-medium text-strong\">{label}</Base.Label>\n        {valueText === false ? null : complete ? (\n          <span className=\"inline-flex shrink-0 items-center gap-1 text-small font-semibold text-success\">\n            <Check aria-hidden className=\"size-3.5\" strokeWidth={2.5} />\n            Tamamlandı\n          </span>\n        ) : (\n          <span aria-hidden className=\"shrink-0 text-small font-medium text-muted tabular-nums\">\n            {valueText ?? (ratio === null ? \"Hazırlanıyor\" : percent.format(ratio))}\n          </span>\n        )}\n      </div>\n\n      <Base.Track\n        className={cn(\n          \"relative overflow-hidden rounded-full bg-chart-track\",\n          size === \"sm\" ? \"h-1.5\" : \"h-2\",\n        )}\n      >\n        {ratio === null ? (\n          reduce ? (\n            <span className=\"absolute inset-y-0 left-[30%] w-2/5 rounded-full bg-primary\" />\n          ) : (\n            <m.span\n              className=\"absolute inset-y-0 left-0 w-2/5 rounded-full bg-primary\"\n              initial={{ x: \"-100%\" }}\n              animate={{ x: \"250%\" }}\n              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], repeat: Infinity, repeatDelay: 0.15 }}\n            />\n          )\n        ) : (\n          <span\n            className={cn(\n              \"absolute inset-0 rounded-full transition-[transform,background-color] duration-300 motion-reduce:transition-none\",\n              complete ? \"bg-success\" : \"bg-primary\",\n            )}\n            style={{ transform: `translateX(-${(1 - ratio) * 100}%)` }}\n          />\n        )}\n      </Base.Track>\n\n      {hint ? (\n        <p id={hintId} className=\"text-small text-muted\">\n          {hint}\n        </p>\n      ) : null}\n    </Base.Root>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Geri Bildirim"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "progress",
+    "palettes": false
+  }
+}

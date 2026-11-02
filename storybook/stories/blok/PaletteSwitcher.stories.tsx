@@ -26,10 +26,10 @@ function PalettePreview() {
         </button>
         <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-primary-wash px-3 text-small font-semibold text-primary-ink [&_svg]:size-3.5">
           <Check aria-hidden strokeWidth={2.5} />
-          Plan tamamlandı
+          Plan Tamamlandı
         </span>
         <a href="/raporlar" className="text-base font-medium text-primary-ink underline-offset-4 hover:underline">
-          Bütün raporlar
+          Bütün Raporlar
         </a>
       </div>
       <div aria-hidden className="mt-6 flex h-24 items-end gap-2 rounded-lg bg-surface p-3">
@@ -43,7 +43,7 @@ function PalettePreview() {
 
 const meta = {
   title: "Bloklar/Palet Seçici",
-  id: "blocks-palette-switcher",
+  id: "palette-switcher",
   component: PaletteSwitcher,
   tags: ["autodocs"],
   parameters: {
@@ -132,13 +132,13 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={2}>
-      <Cell label="Satır içi · tema anahtarıyla">
+      <Cell label="Satır İçi · Tema Anahtarıyla">
         <PaletteSwitcher {...args} floating={false} label="Renk Paleti, tema anahtarıyla" />
       </Cell>
-      <Cell label="Satır içi · yalnız paletler">
+      <Cell label="Satır İçi · Yalnız Paletler">
         <PaletteSwitcher {...args} floating={false} initialTheme={null} label="Renk Paleti, yalnız paletler" />
       </Cell>
-      <Cell label="Dört palet · dar seçim">
+      <Cell label="Dört Palet · Dar Seçim">
         <PaletteSwitcher
           {...args}
           floating={false}
@@ -152,7 +152,7 @@ export const AllVariants: Story = {
           ]}
         />
       </Cell>
-      <Cell label="Paletin dokunduğu yüzeyler" className="block">
+      <Cell label="Paletin Dokunduğu Yüzeyler" className="block">
         <PalettePreview />
       </Cell>
     </Gallery>

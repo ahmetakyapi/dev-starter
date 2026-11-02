@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "icon-button",
+  "type": "registry:ui",
+  "title": "İkon Düğmesi",
+  "description": "Yalnız ikonlu düğme",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/icon-button.tsx",
+      "content": "import type { LucideIcon } from \"lucide-react\";\nimport type { ComponentProps } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Yalnızca ikon taşıyan düğme. `aria-label` TİPTE ZORUNLU: metinsiz bir\n * düğmenin adı yoksa ekran okuyucu \"düğme\" der ve susar. Etiketi Title Case\n * yaz (\"Ayarları Aç\"); `title` aynı metni fareyle üzerine gelene gösterir.\n * Daha zengin bir ipucu için `tooltip.tsx` → `<Tooltip>` ile sar.\n *\n * DOKUNMA HEDEFİ: dokunmatikte her boy 44 piksel. `sm` yalnızca hassas\n * işaretçide (fare) 36'ya iner; görsel küçülse de parmak hedefi küçülmez.\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): `ghost` üzerine gelince yumuşak gri\n * (vurgu yıkaması değil: ikon düğmeler çoğunlukla araç çubuğunda dizilir,\n * renkli hover sırayla yanıp sönerdi); `secondary` beyaz karo + kıl\n * çizgisi. Basılınca 0,95'e çöker (aşağı itme yerine: kare düğmede kayma\n * hizayı bozuyordu).\n *\n * Base UI tetikleyicisi olarak kullanılabilir (`render={<IconButton … />}`):\n * ref ve gelen bütün prop'lar düğmeye yayılıyor (React 19, ref bir prop).\n */\n\nconst VARIANTS = {\n  ghost: \"text-body hover:bg-surface-raised hover:text-strong data-popup-open:bg-surface-raised aria-expanded:bg-surface-raised\",\n  secondary: \"border border-line bg-overlay text-body shadow-raised hover:bg-surface hover:text-strong\",\n  primary: \"bg-primary text-on-primary shadow-cta hover:bg-primary-hover\",\n  danger: \"text-danger hover:bg-danger-wash\",\n} as const;\n\nconst SIZES = {\n  sm: \"size-11 rounded-md pointer-fine:size-9 [&_svg]:size-4\",\n  md: \"size-11 rounded-md [&_svg]:size-[1.125rem]\",\n  lg: \"size-12 rounded-lg [&_svg]:size-5\",\n} as const;\n\ntype IconButtonProps = Omit<ComponentProps<\"button\">, \"aria-label\" | \"children\"> & {\n  /** Zorunlu: düğmenin tek adı bu. */\n  \"aria-label\": string;\n  icon: LucideIcon;\n  variant?: keyof typeof VARIANTS;\n  size?: keyof typeof SIZES;\n  /** Fareyle üzerine gelince aynı etiketi göster. Tooltip ile sarılıysa kapat. */\n  showTitle?: boolean;\n};\n\nexport function IconButton({\n  icon: Glyph,\n  variant = \"ghost\",\n  size = \"md\",\n  showTitle = true,\n  className,\n  type = \"button\",\n  ...props\n}: IconButtonProps) {\n  return (\n    <button\n      type={type}\n      title={showTitle ? props[\"aria-label\"] : undefined}\n      className={cn(\n        \"inline-grid shrink-0 place-items-center transition-[background-color,color,border-color,scale] duration-150 active:scale-95 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50\",\n        VARIANTS[variant],\n        SIZES[size],\n        className,\n      )}\n      {...props}\n    >\n      <Glyph aria-hidden strokeWidth={1.75} />\n    </button>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "icon-button",
+    "palettes": false
+  }
+}

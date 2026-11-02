@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, House, Settings, Shield, SlidersHorizontal } from "lucide-react";
+import { Bell, House, Settings, Shield, SlidersHorizontal, UserRound } from "lucide-react";
 import { BannerAlert } from "@/components/ui/banner-alert";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { Divider } from "@/components/ui/divider";
+import { Input } from "@/components/ui/input";
 import { InputOTP } from "@/components/ui/input-otp";
 import { Kbd, KbdCombo } from "@/components/ui/kbd";
 import { NumberField } from "@/components/ui/number-field";
@@ -105,7 +106,7 @@ export function AyarlarPage() {
           />
         }
         title="Ayarlar"
-        description={`${WORKSPACE.name} · ${WORKSPACE.plan} · değişiklikler anında kaydedilir`}
+        description={`${WORKSPACE.name} · ${WORKSPACE.plan} · Değişiklikler Anında Kaydedilir`}
         actions={<SettingsDialog tabs={QUICK} triggerLabel="Hızlı Ayarlar" description="Bu cihazdaki Pusula tercihleri." />}
       />
 
@@ -115,6 +116,15 @@ export function AyarlarPage() {
             Profil
           </WellTitle>
           <div className="grid grid-cols-1 gap-4">
+            <Input label="Ad Soyad" leadingIcon={UserRound} defaultValue={ME.name} autoComplete="name" />
+            <Input
+              label="Yanıt Adresi"
+              defaultValue={ME.email.split("@")[0]}
+              suffix={`@${WORKSPACE.domain}`}
+              autoComplete="off"
+              spellCheck={false}
+              hint="Müşteriye giden yanıtlar bu adresten çıkar."
+            />
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Select label="Dil" defaultValue="tr" items={LANGS} />
               <Select label="Saat Dilimi" defaultValue="ist" items={ZONES} />
@@ -137,7 +147,7 @@ export function AyarlarPage() {
 
         <Well labelledBy="ayar-bildirim">
           <WellTitle id="ayar-bildirim" hint="Ne zaman ve nereden haber verelim?">
-            Bildirimler
+            Bildirim Tercihleri
           </WellTitle>
           <div className="grid grid-cols-1 divide-y divide-line-soft">
             <Switch label="Acil Talepler" hint="Öncelik Acil olan her yeni talep." defaultChecked />
@@ -147,7 +157,7 @@ export function AyarlarPage() {
           <Divider label="Kanallar" align="start" tone="soft" className="my-3" />
           <div className="grid grid-cols-1">
             <Checkbox label="Uygulama İçi" hint="Üst çubuktaki zil." defaultChecked />
-            <Checkbox label="E-posta" hint={ME.email} defaultChecked />
+            <Checkbox label="E-Posta" hint={ME.email} defaultChecked />
             <Checkbox label="SMS" hint="Yalnızca acil talepler için." />
           </div>
         </Well>
@@ -203,7 +213,7 @@ export function AyarlarPage() {
             />
             {twoStep ? (
               verified ? (
-                <BannerAlert tone="success" title="İki adımlı doğrulama açık" description="Yeni cihazlarda giriş yaparken SMS kodu sorulacak." announce />
+                <BannerAlert tone="success" title="İki Adımlı Doğrulama Açık" description="Yeni cihazlarda giriş yaparken SMS kodu sorulacak." announce />
               ) : (
                 <div className="grid grid-cols-1 gap-3 rounded-lg bg-overlay p-4 shadow-raised">
                   <InputOTP
@@ -217,7 +227,7 @@ export function AyarlarPage() {
                         return;
                       }
                       setVerified(true);
-                      notify({ tone: "success", title: "İki adımlı doğrulama açıldı" });
+                      notify({ tone: "success", title: "İki Adımlı Doğrulama Açıldı" });
                     }}
                   />
                 </div>

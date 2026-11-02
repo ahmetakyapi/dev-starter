@@ -11,7 +11,7 @@ const STEPS: Step[] = [
 
 const meta = {
   title: "Bileşenler/Gezinme/Adım Göstergesi",
-  id: "components-navigation-stepper",
+  id: "stepper",
   component: Stepper,
   tags: ["autodocs"],
   parameters: {
@@ -58,7 +58,7 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={2}>
       {[0, 1, 3, 4].map((current) => (
-        <Cell key={current} label={current === 4 ? "Hepsi tamamlandı" : `Bulunulan adım: ${STEPS[current].label}`} className="place-items-stretch">
+        <Cell key={current} label={current === 4 ? "Hepsi Tamamlandı" : `Bulunulan Adım: ${STEPS[current].label}`} className="place-items-stretch">
           <Stepper aria-label={`Adımlar ${current}`} steps={STEPS} current={current} />
         </Cell>
       ))}

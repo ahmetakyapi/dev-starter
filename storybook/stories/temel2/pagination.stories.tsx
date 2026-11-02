@@ -6,7 +6,7 @@ const hrefFor = (n: number) => `?sayfa=${n}`;
 
 const meta = {
   title: "Bileşenler/Veri/Sayfalama",
-  id: "components-data-pagination",
+  id: "pagination",
   component: Pagination,
   tags: ["autodocs"],
   parameters: {
@@ -61,16 +61,16 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="İlk sayfa: önceki oku pasif">
+      <Cell label="İlk Sayfa: Önceki Oku Pasif">
         <Pagination page={1} pageCount={12} hrefFor={hrefFor} scroll={false} labels={{ nav: "Sayfalama, İlk Sayfa" }} />
       </Cell>
-      <Cell label="Orta sayfa: iki yanda boşluk">
+      <Cell label="Orta Sayfa: İki Yanda Boşluk">
         <Pagination page={6} pageCount={12} hrefFor={hrefFor} scroll={false} labels={{ nav: "Sayfalama, Orta Sayfa" }} />
       </Cell>
-      <Cell label="Son sayfa: sonraki oku pasif">
+      <Cell label="Son Sayfa: Sonraki Oku Pasif">
         <Pagination page={12} pageCount={12} hrefFor={hrefFor} scroll={false} labels={{ nav: "Sayfalama, Son Sayfa" }} />
       </Cell>
-      <Cell label="Dört sayfa: boşluk yok">
+      <Cell label="Dört Sayfa: Boşluk Yok">
         <Pagination page={2} pageCount={4} hrefFor={hrefFor} scroll={false} labels={{ nav: "Sayfalama, Dört Sayfa" }} />
       </Cell>
     </Gallery>

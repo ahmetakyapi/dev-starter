@@ -26,6 +26,7 @@ const PAGE_OF: Record<string, string> = {
   _ui: "Kabuk",
   _pano: "Pano",
   _gelen: "Gelen Kutusu",
+  _gorevler: "Görevler",
   _takvim: "Takvim",
   _asistan: "Asistan",
   _raporlar: "Raporlar",
@@ -153,7 +154,7 @@ function Coverage() {
 
 const meta = {
   title: "Örnek Tasarım/Bileşen Kapsamı",
-  id: "showcase-component-coverage",
+  id: "coverage",
   component: Coverage,
   tags: ["autodocs"],
   parameters: {
@@ -170,7 +171,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const CoverageTable: Story = {
+export const Table: Story = {
   name: "Kapsam Tablosu",
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tooltip",
+  "type": "registry:ui",
+  "title": "Araç İpucu",
+  "description": "`Tooltip`: görsel etiket · `InfoTip`: açıklama",
+  "dependencies": [
+    "@base-ui/react@1.8.0",
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/tooltip.tsx",
+      "content": "\"use client\";\n\nimport { Popover } from \"@base-ui/react/popover\";\nimport { Tooltip as Base } from \"@base-ui/react/tooltip\";\nimport { Info } from \"lucide-react\";\nimport type { ReactElement, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * İki bileşen, iki ayrı iş:\n *\n * `Tooltip`: GÖRSEL ETİKET. İkon düğmenin adını fareyle üzerine gelene ve\n * klavyeyle odaklanana gösterir. Base UI tooltip'i dokunmatikte BİLEREK\n * açmaz: uzun basma tarayıcının bağlam menüsüyle çakışır ve keşfedilemez.\n * Bu yüzden tooltip'e hiçbir zaman önemli bilgi konmaz; düğmenin adı zaten\n * `aria-label`da durur, tooltip yalnızca onu görünür kılar.\n *\n * `InfoTip`: AÇIKLAMA. \"Bu sayı ne demek?\" sorusunun cevabı gibi okunması\n * gereken metin. Popover üzerine kurulu: farede üzerine gelince, dokunmatikte\n * TIKLAYINCA açılır (uzun basma değil), Escape ve dış tıklama kapatır,\n * ekran okuyucu düğmenin ardından içeriği okur.\n *\n *   <Tooltip label=\"Ayarları Aç\">\n *     <IconButton icon={Settings} aria-label=\"Ayarları Aç\" showTitle={false} />\n *   </Tooltip>\n *   <InfoTip label=\"F/K Nedir\">Fiyatın hisse başına kâra oranı.</InfoTip>\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): beyaz karo + kıl çizgisi + `shadow-modal`.\n * Tek satırlık etiket `rounded-lg` (24 piksellik `xl` otuz piksel yüksek bir\n * kutuda hapa dönerdi), açıklama kutusu `rounded-xl`. Giriş 0,96'dan,\n * kaynağı tetikleyici.\n *\n * Aynı satırda çok sayıda tooltip varsa `TooltipProvider` ile sar: ilki\n * açıldıktan sonra komşulara geçerken gecikme beklenmez.\n */\n\nexport const TooltipProvider = Base.Provider;\n\nconst SURFACE =\n  \"z-50 border border-line bg-overlay text-strong shadow-modal origin-(--transform-origin) transition-[opacity,scale] duration-150 ease-[var(--ease-brand)] data-starting-style:scale-[0.96] data-starting-style:opacity-0 data-ending-style:scale-[0.96] data-ending-style:opacity-0\";\n\ntype TooltipProps = {\n  /** Görünen etiket. Tetikleyicinin `aria-label`ı ile aynı metin olmalı. */\n  label: ReactNode;\n  /** Tetikleyici: ref'i ve prop'ları DOM'a yayan tek bir öğe (Button, IconButton). */\n  children: ReactElement;\n  side?: \"top\" | \"bottom\" | \"left\" | \"right\";\n  /** Açılma gecikmesi (ms). Kısa tutmak her geçişte ekranı kırpıştırır. */\n  delay?: number;\n};\n\nexport function Tooltip({ label, children, side = \"top\", delay = 500 }: TooltipProps) {\n  return (\n    <Base.Root>\n      <Base.Trigger delay={delay} render={children} />\n      <Base.Portal>\n        <Base.Positioner side={side} sideOffset={8} collisionPadding={8} className=\"z-50\">\n          <Base.Popup className={cn(SURFACE, \"rounded-lg px-2.5 py-1.5 text-small font-medium\")}>{label}</Base.Popup>\n        </Base.Positioner>\n      </Base.Portal>\n    </Base.Root>\n  );\n}\n\ntype InfoTipProps = {\n  /** Düğmenin adı ve açılan kutunun başlığı: \"F/K Nedir\". */\n  label: string;\n  /** Açıklama metni: cümle düzeninde, birkaç satır. */\n  children: ReactNode;\n  side?: \"top\" | \"bottom\" | \"left\" | \"right\";\n  className?: string;\n};\n\nexport function InfoTip({ label, children, side = \"top\", className }: InfoTipProps) {\n  return (\n    <Popover.Root>\n      <Popover.Trigger\n        openOnHover\n        delay={200}\n        aria-label={label}\n        className={cn(\n          // Görsel 20 piksel, dokunma alanı 44: negatif kenar boşluğu satırı itmez.\n          \"-m-3 inline-grid size-11 shrink-0 place-items-center rounded-full text-muted transition-colors hover:text-primary-ink data-popup-open:text-primary-ink [&_svg]:size-4\",\n          className,\n        )}\n      >\n        <Info aria-hidden strokeWidth={1.75} />\n      </Popover.Trigger>\n      <Popover.Portal>\n        <Popover.Positioner side={side} sideOffset={4} collisionPadding={12} className=\"z-50\">\n          <Popover.Popup className={cn(SURFACE, \"w-[min(18rem,var(--available-width))] rounded-xl p-4 text-body\")}>\n            <Popover.Title className=\"text-small font-semibold text-strong\">{label}</Popover.Title>\n            <Popover.Description className=\"mt-1 text-small text-muted\">{children}</Popover.Description>\n          </Popover.Popup>\n        </Popover.Positioner>\n      </Popover.Portal>\n    </Popover.Root>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Katmanlar"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "tooltip",
+    "palettes": false
+  }
+}

@@ -137,7 +137,7 @@ export default function Vitrin() {
 
   const commands: Command[] = [
     { id: "pano", label: "Panoya Git", group: "Gezinme", icon: <LayoutDashboard />, shortcut: ["G", "P"], onSelect: () => {} },
-    { id: "siparis", label: "Siparişler", hint: "Son 30 günün siparişleri", group: "Gezinme", icon: <Package />, shortcut: ["G", "S"], onSelect: () => {} },
+    { id: "siparis", label: "Siparişler", hint: "Son 30 Günün Siparişleri", group: "Gezinme", icon: <Package />, shortcut: ["G", "S"], onSelect: () => {} },
     { id: "ekip", label: "Ekip Üyeleri", group: "Gezinme", icon: <Users />, onSelect: () => {} },
     { id: "tema", label: "Koyu Temaya Geç", group: "Ayarlar", icon: <Moon />, keywords: ["görünüm"], onSelect: () => {} },
     { id: "bildirim", label: "Bildirim Ayarları", group: "Ayarlar", icon: <Bell />, onSelect: () => {} },

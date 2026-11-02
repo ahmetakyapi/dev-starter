@@ -20,7 +20,7 @@ const LINK = "https://pano.acme.com.tr/davet/7KQ2-M4XD";
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Kopyala Düğmesi",
-  id: "components-buttons-copy-button",
+  id: "copy-button",
   component: CopyButton,
   tags: ["autodocs"],
   parameters: {
@@ -81,15 +81,15 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="İkon · boşta">
+      <Cell label="İkon · Boşta">
         <CopyButton value={LINK} label="Bağlantıyı Kopyala" />
       </Cell>
-      <Cell label="Metinli · boşta">
+      <Cell label="Metinli · Boşta">
         <CopyButton value={LINK} label="Kopyala">
           Bağlantıyı Kopyala
         </CopyButton>
       </Cell>
-      <Cell label="Komut satırında">
+      <Cell label="Komut Satırında">
         <div className="flex items-center gap-2 rounded-md bg-surface-sunken py-1 pr-1 pl-3">
           <code className="font-mono text-small text-body">npm i @base-ui/react</code>
           <CopyButton value="npm i @base-ui/react" label="Komutu Kopyala" />

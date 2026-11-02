@@ -71,7 +71,7 @@ const KAYNAK = [
   { id: "arama", label: "Arama", series: 2, pay: 0.38 },
   { id: "sosyal", label: "Sosyal", series: 3, pay: 0.24 },
   { id: "dogrudan", label: "Doğrudan", series: 1, pay: 0.18 },
-  { id: "eposta", label: "E-posta", series: 4, pay: 0.11 },
+  { id: "eposta", label: "E-Posta", series: 4, pay: 0.11 },
   { id: "reklam", label: "Reklam", series: 5, pay: 0.09 },
 ] as const;
 /* Kaynağa göre sonuç payı: sipariş, sepette kaldı, ayrıldı */
@@ -262,7 +262,7 @@ function AnalitikPanosu({ baslangicDonemi = "ay" }: { baslangicDonemi?: Donem })
 
 const meta = {
   title: "Grafikler/Pano/Analitik Panosu",
-  id: "charts-dashboards-analytics",
+  id: "dashboard-analytics",
   component: AnalitikPanosu,
   tags: ["autodocs"],
   parameters: {

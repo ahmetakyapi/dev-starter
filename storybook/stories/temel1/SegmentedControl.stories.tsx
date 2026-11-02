@@ -19,7 +19,7 @@ function Local({ options, initial, label, size }: { options: readonly SegmentOpt
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Bölmeli Seçici",
-  id: "components-buttons-segmented-control",
+  id: "segmented-control",
   component: SegmentedControl,
   tags: ["autodocs"],
   parameters: {
@@ -89,13 +89,13 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="md · dört seçenek">
+      <Cell label="md · Dört Seçenek">
         <Local options={RANGE} initial="hafta" label="Zaman aralığı (orta)" />
       </Cell>
-      <Cell label="sm · üç seçenek">
+      <Cell label="sm · Üç Seçenek">
         <Local options={RANGE.slice(0, 3)} initial="gun" label="Zaman aralığı (küçük)" size="sm" />
       </Cell>
-      <Cell label="İki seçenek">
+      <Cell label="İki Seçenek">
         <Local
           options={[
             { value: "liste", label: "Liste" },
@@ -105,7 +105,7 @@ export const AllVariants: Story = {
           label="Görünüm"
         />
       </Cell>
-      <Cell label="Devre dışı seçenekli">
+      <Cell label="Devre Dışı Seçenekli">
         <Local
           options={[
             { value: "aylik", label: "Aylık" },

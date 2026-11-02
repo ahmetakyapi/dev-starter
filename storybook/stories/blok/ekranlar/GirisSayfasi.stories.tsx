@@ -107,7 +107,7 @@ function LoginScreen({ mode }: LoginScreenProps) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Giriş Sayfası",
-  id: "screens-app-sign-in",
+  id: "sign-in-page",
   component: LoginScreen,
   tags: ["autodocs"],
   parameters: {
@@ -135,7 +135,7 @@ export const FailedSignIn: Story = {
   name: "Hatalı Giriş",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(canvas.getByLabelText("E-posta"), "elif@pusula.app");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "elif@pusula.app");
     await userEvent.type(canvas.getByLabelText("Şifre"), "kisa");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await expect(await canvas.findByRole("alert")).toHaveTextContent("E-posta ya da şifre hatalı.");

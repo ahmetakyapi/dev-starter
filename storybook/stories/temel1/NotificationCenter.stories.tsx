@@ -9,12 +9,12 @@ import { Frame } from "../_lib/Frame";
 const ago = (min: number) => new Date(Date.now() - min * 60_000).toISOString();
 
 const ITEMS: NotificationItem[] = [
-  { id: "1", actor: "Elif Yıldız", title: "Elif Yıldız Q3 raporuna yorum yaptı", body: "“Kasım satırındaki artış kampanyadan mı geliyor?”", at: ago(3), read: false },
-  { id: "2", actor: "Mert Aksoy", title: "Mert Aksoy sizi “Bütçe 2027” panosuna ekledi", at: ago(42), read: false },
-  { id: "3", icon: Download, title: "Dışa aktarma hazır", body: "Ekim müşteri listesi (2.418 satır) indirilebilir.", at: ago(130), read: false },
-  { id: "4", icon: CreditCard, title: "Kasım faturası ödendi", body: "₺1.249,00 · Kurumsal plan", at: ago(60 * 20), read: true },
-  { id: "5", actor: "Deniz Kaya", title: "Deniz Kaya “Ürün Yol Haritası” belgesini paylaştı", at: ago(60 * 26), read: true },
-  { id: "6", icon: CalendarClock, title: "Deneme süreniz 4 gün sonra bitiyor", at: ago(60 * 24 * 3), read: true },
+  { id: "1", actor: "Elif Yıldız", title: "Elif Yıldız Q3 Raporuna Yorum Yaptı", body: "“Kasım satırındaki artış kampanyadan mı geliyor?”", at: ago(3), read: false },
+  { id: "2", actor: "Mert Aksoy", title: "Mert Aksoy Sizi “Bütçe 2027” Panosuna Ekledi", at: ago(42), read: false },
+  { id: "3", icon: Download, title: "Dışa Aktarma Hazır", body: "Ekim müşteri listesi (2.418 satır) indirilebilir.", at: ago(130), read: false },
+  { id: "4", icon: CreditCard, title: "Kasım Faturası Ödendi", body: "₺1.249,00 · Kurumsal plan", at: ago(60 * 20), read: true },
+  { id: "5", actor: "Deniz Kaya", title: "Deniz Kaya “Ürün Yol Haritası” Belgesini Paylaştı", at: ago(60 * 26), read: true },
+  { id: "6", icon: CalendarClock, title: "Deneme Süreniz 4 Gün Sonra Bitiyor", at: ago(60 * 24 * 3), read: true },
 ];
 
 const MANY: NotificationItem[] = Array.from({ length: 12 }, (_, i) => ({
@@ -27,7 +27,7 @@ const MANY: NotificationItem[] = Array.from({ length: 12 }, (_, i) => ({
 
 const meta = {
   title: "Bileşenler/Katmanlar/Bildirim Merkezi",
-  id: "components-overlays-notification-center",
+  id: "notification-center",
   component: NotificationCenter,
   tags: ["autodocs"],
   parameters: {
@@ -95,7 +95,7 @@ export const Empty: Story = {
   args: { items: [] },
   play: async ({ canvasElement, globals }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Bildirimler" }));
-    const empty = await screen.findByText("Bildirim yok");
+    const empty = await screen.findByText("Bildirim Yok");
     await waitFor(() => expect(empty).toBeVisible());
     await settle(globals);
   },

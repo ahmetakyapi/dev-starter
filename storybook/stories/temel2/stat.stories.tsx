@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Veri/İstatistik",
-  id: "components-data-stat",
+  id: "stat",
   component: Stat,
   tags: ["autodocs"],
   parameters: {
@@ -90,12 +90,12 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Artış, iyi">
+      <Cell label="Artış, İyi">
         <StatGrid className="grid-cols-1 rounded-xl bg-overlay p-5 shadow-raised sm:grid-cols-1">
           <Stat label="Yeni Üye" value="1.284" change={12.6} changeLabel="geçen aya göre" />
         </StatGrid>
       </Cell>
-      <Cell label="Düşüş, kötü">
+      <Cell label="Düşüş, Kötü">
         <StatGrid className="grid-cols-1 rounded-xl bg-overlay p-5 shadow-raised sm:grid-cols-1">
           <Stat label="Dönüşüm Oranı" value="%3,2" change={-0.8} changeLabel="geçen haftaya göre" />
         </StatGrid>
@@ -105,17 +105,17 @@ export const AllVariants: Story = {
           <Stat label="Aktif Abone" value="4.910" change={0} changeLabel="geçen aya göre" />
         </StatGrid>
       </Cell>
-      <Cell label="Artış, kötü (positiveIsGood=false)">
+      <Cell label="Artış, Kötü (positiveIsGood=false)">
         <StatGrid className="grid-cols-1 rounded-xl bg-overlay p-5 shadow-raised sm:grid-cols-1">
           <Stat label="Ortalama Gecikme" value="412" unit="ms" change={18.3} positiveIsGood={false} changeLabel="dünden" />
         </StatGrid>
       </Cell>
-      <Cell label="Büyük boy">
+      <Cell label="Büyük Boy">
         <StatGrid className="grid-cols-1 rounded-xl bg-overlay p-5 shadow-raised sm:grid-cols-1">
           <Stat size="lg" label="Toplam Ciro" value="₺8,4" unit="milyon" change={4.2} />
         </StatGrid>
       </Cell>
-      <Cell label="Mini eğriyle">
+      <Cell label="Mini Eğriyle">
         <div className="flex w-full items-end justify-between gap-4 rounded-xl bg-overlay p-5 shadow-raised">
           <StatGrid className="grid-cols-1 sm:grid-cols-1">
             <Stat label="Haftalık Ciro" value="₺84.120" change={6.4} />

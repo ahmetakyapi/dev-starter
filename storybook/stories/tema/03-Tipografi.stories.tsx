@@ -9,15 +9,15 @@ import { DocPage, Note, PageHero, Section, Token } from "./_lib/doc";
    metninden ayrıştırılır. */
 
 const SCALE: Record<(typeof TEXT_SIZES)[number], { cls: string; use: string; sample: string }> = {
-  micro: { cls: "text-micro", use: "Eksen etiketi, künye", sample: "Son güncelleme 14.32" },
+  micro: { cls: "text-micro", use: "Eksen etiketi, künye", sample: "Son Güncelleme 14.32" },
   small: { cls: "text-small", use: "Yardım, rozet, etiket", sample: "Geçen haftaya göre +%5,2" },
   base: { cls: "text-base", use: "Arayüz metni, düğme", sample: "Raporu indir ve ekiple paylaş" },
   read: { cls: "text-read", use: "Uzun okuma, paragraf", sample: "Işık sabah yedide salona düşer, gölge öğlene doğru kısalır." },
   lead: { cls: "text-lead", use: "Giriş paragrafı", sample: "Seans notların tek yerde, haftalık özet hazır." },
   title: { cls: "text-title", use: "Kart ve diyalog başlığı", sample: "Aylık Ziyaretçi" },
   heading: { cls: "text-heading", use: "Bölüm başlığı, büyük değer", sample: "Ödeme Hunisi" },
-  display: { cls: "text-display", use: "Sayfa başlığı", sample: "Gün sonu raporu" },
-  hero: { cls: "text-hero", use: "Üst bölüm başlığı, ekranda bir kez", sample: "Sakin yüzey." },
+  display: { cls: "text-display", use: "Sayfa başlığı", sample: "Gün Sonu Raporu" },
+  hero: { cls: "text-hero", use: "Üst bölüm başlığı, ekranda bir kez", sample: "Sakin Yüzey" },
 };
 
 function ScaleRow({ name }: { name: (typeof TEXT_SIZES)[number] }) {
@@ -93,13 +93,13 @@ function TipografiSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Tipografi"
-        title="Kontrastı punto kurar, ağırlık değil."
+        title="Kontrastı Punto Kurar, Ağırlık Değil"
         lead="Punto adları rol taşır, piksel değil: text-small, text-heading. Tek aile, dört ağırlık, sıkı başlık aralığı. Board dilinin preseti Inter + JetBrains Mono."
       />
 
       <div className="mt-12 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="rounded-2xl bg-surface p-6 sm:p-10">
-          <p className="text-small font-medium text-muted">Inter · sans · arayüz ve gövde</p>
+          <p className="text-small font-medium text-muted">Inter · sans · Arayüz ve Gövde</p>
           <p className="mt-4 font-sans text-[clamp(5rem,14vw,10rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-strong" aria-hidden>
             Ağ
           </p>
@@ -112,7 +112,7 @@ function TipografiSayfasi() {
           </div>
         </div>
         <div className="flex flex-col rounded-2xl bg-surface p-6 sm:p-10">
-          <p className="text-small font-medium text-muted">JetBrains Mono · mono · kod, künye</p>
+          <p className="text-small font-medium text-muted">JetBrains Mono · mono · Kod, Künye</p>
           <p className="mt-4 font-mono text-[clamp(3.5rem,9vw,6rem)] leading-none text-strong" aria-hidden>
             {"{ }"}
           </p>
@@ -214,7 +214,7 @@ function TipografiSayfasi() {
 
 const meta = {
   title: "Tema/Tipografi",
-  id: "theme-typography",
+  id: "typography",
   component: TipografiSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -229,4 +229,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Typography: Story = { name: "Tipografi" };
+export const Overview: Story = { name: "Tipografi" };

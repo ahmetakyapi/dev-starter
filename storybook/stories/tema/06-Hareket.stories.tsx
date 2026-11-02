@@ -101,10 +101,10 @@ function CurvePlot() {
         0.36, 1
       </text>
       <text x={P + S / 2} y={P + S + 20} textAnchor="middle" className="fill-muted text-[10px]">
-        zaman
+        Zaman
       </text>
       <text x={12} y={P + S / 2} textAnchor="middle" transform={`rotate(-90 12 ${P + S / 2})`} className="fill-muted text-[10px]">
-        ilerleme
+        İlerleme
       </text>
     </svg>
   );
@@ -149,7 +149,7 @@ function SpringPlot() {
         <path key={l.name} d={toPath(l.data)} className={l.cls} strokeWidth={2.5} fill="none" strokeLinecap="round" />
       ))}
       <text x={W - P} y={target - 6} textAnchor="end" className="fill-muted text-[9px]">
-        hedef
+        Hedef
       </text>
     </svg>
   );
@@ -176,12 +176,12 @@ function HareketSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Hareket"
-        title="Tek eğri, dört süre, iki yay."
+        title="Tek Eğri, Dört Süre, İki Yay"
         lead="Hareket bir şeyin nereden gelip nereye gittiğini anlatır, süs değildir. Her geçiş aynı imza eğrisini kullanır: hızlı başlar, uzun ve sakin yavaşlar."
       >
         <div className="mt-6 flex flex-wrap items-center gap-2">
           <Badge tone={reduce ? "warning" : "success"} dot>
-            {reduce ? "Hareket azaltılmış: dönüşümler kapalı" : "Hareket tam"}
+            {reduce ? "Hareket Azaltılmış: Dönüşümler Kapalı" : "Hareket Tam"}
           </Badge>
           <span className="text-small text-muted">İşletim sisteminin tercihi, canlı okunur.</span>
         </div>
@@ -208,7 +208,7 @@ function HareketSayfasi() {
               <Rail run={curveRun} label="Doğrusal" tone="bg-muted" transition={{ duration: 1.2, ease: "linear" }} />
             </div>
             <div>
-              <p className="mb-2 text-small font-medium text-strong">Eşit zaman aralığında konum</p>
+              <p className="mb-2 text-small font-medium text-strong">Eşit Zaman Aralığında Konum</p>
               <Frames />
               <Note className="mt-2">
                 On bir kare, her biri sürenin onda biri. İlk üç kare yolun yarısından fazlasını alır; kalanı varışı yumuşatır.
@@ -313,7 +313,7 @@ function HareketSayfasi() {
             ))}
           </m.ul>
           <div className="rounded-2xl bg-surface p-5" aria-hidden>
-            <p className="mb-3 text-small font-medium text-strong">Zaman çizelgesi</p>
+            <p className="mb-3 text-small font-medium text-strong">Zaman Çizelgesi</p>
             <div className="space-y-1.5">
               {STAGGER_ITEMS.map((label, i) => {
                 const total = STAGGER * 5 + DUR.slow;
@@ -360,7 +360,7 @@ function HareketSayfasi() {
 
 const meta = {
   title: "Tema/Hareket",
-  id: "theme-motion",
+  id: "motion",
   component: HareketSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -375,7 +375,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Motion: Story = {
+export const Overview: Story = {
   name: "Hareket",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

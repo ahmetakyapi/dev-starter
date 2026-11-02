@@ -19,7 +19,7 @@ const TONES: TimelineEvent[] = [
 
 const meta = {
   title: "Bileşenler/Veri/Zaman Çizelgesi",
-  id: "components-data-timeline",
+  id: "timeline",
   component: Timeline,
   tags: ["autodocs"],
   parameters: {
@@ -75,10 +75,10 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Sipariş geçmişi: nokta ve ikon karosu" className="place-items-stretch">
+      <Cell label="Sipariş Geçmişi: Nokta ve İkon Karosu" className="place-items-stretch">
         <Timeline events={ORDER} />
       </Cell>
-      <Cell label="Beş ton" className="place-items-stretch">
+      <Cell label="Beş Ton" className="place-items-stretch">
         <Timeline events={TONES} />
       </Cell>
     </Gallery>

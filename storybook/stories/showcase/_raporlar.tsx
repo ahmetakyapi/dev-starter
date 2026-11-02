@@ -6,11 +6,15 @@ import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { Avatar } from "@/components/ui/avatar";
 import { BannerAlert } from "@/components/ui/banner-alert";
 import { Carousel } from "@/components/ui/carousel";
+import { ChartCard } from "@/components/ui/chart-card";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { FileDropzone } from "@/components/ui/file-dropzone";
+import { LineChart } from "@/components/ui/line-chart";
 import { LoadingMark } from "@/components/ui/loading-mark";
 import { Meter, SegmentedMeter } from "@/components/ui/meter";
 import { Progress } from "@/components/ui/progress";
+import { Rating } from "@/components/ui/rating";
+import { ScatterChart } from "@/components/ui/scatter-chart";
 import { Select } from "@/components/ui/select";
 import { Skeleton, SkeletonRow, SkeletonText } from "@/components/ui/skeleton";
 import { Sparkline } from "@/components/ui/sparkline";
@@ -18,6 +22,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { Tabs } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/Button";
 import {
+  CHANNELS,
+  CHANNEL_SERIES,
   MONTHLY_TARGET,
   PERIODS,
   REPORT_FAQ,
@@ -28,6 +34,7 @@ import {
   num,
   pct,
   periodStats,
+  survey,
   tl,
   type Customer,
   type Period,
@@ -35,6 +42,8 @@ import {
 import { PageBar, Well, WellTitle, useApp } from "./_ui";
 
 type Row = { customer: Customer; orders: number; revenue: number };
+
+const TL_COMPACT: Intl.NumberFormatOptions = { style: "currency", currency: "TRY", notation: "compact", maximumFractionDigits: 1 };
 
 const PERIOD_NAMES: Record<Period, string> = { hafta: "Son 7 Gün", ay: "Son 30 Gün", yil: "Son 12 Ay" };
 
@@ -103,7 +112,7 @@ export function RaporlarPage() {
     if (exporting === "running") {
       const id = window.setTimeout(() => {
         setExporting("done");
-        notify({ tone: "success", title: "Dışa aktarma hazır", body: `${num.format(s.orderCount)} sipariş · siparisler-${period}.csv` });
+        notify({ tone: "success", title: "Dışa Aktarma Hazır", body: `${num.format(s.orderCount)} sipariş · siparisler-${period}.csv` });
       }, 1400);
       return () => window.clearTimeout(id);
     }
@@ -118,6 +127,21 @@ export function RaporlarPage() {
   const showSkeleton = loading || forceLoading;
   const openByMember = TEAM.map((m) => ({ m, open: TICKETS.filter((t) => t.assignee === m.id && t.status !== "Çözüldü").length }));
   const channelTotal = s.channels.reduce((a, c) => a + c.orders, 0);
+  const poll = survey(s.tickets);
+
+  // İlk dört müşterinin birikimli cirosu: çizgilerin son noktası tablodaki ciro.
+  const top = s.byCustomer.slice(0, 4);
+  let running = top.map(() => 0);
+  const cumulative = s.window.buckets.map((b) => {
+    running = top.map((r, i) => running[i] + s.orders.filter((o) => o.customerId === r.customer.id && o.date >= b.start && o.date < b.end).reduce((a, o) => a + o.total, 0));
+    return running;
+  });
+  // Müşteri haritası: tablonun üç sütunu (sipariş, ortalama sepet, ciro); renk en çok kullandığı kanal.
+  const points = s.byCustomer.map((r) => {
+    const own = s.orders.filter((o) => o.customerId === r.customer.id);
+    const channel = CHANNELS.reduce((a, c) => (own.filter((o) => o.channel === c).length > own.filter((o) => o.channel === a).length ? c : a));
+    return { label: r.customer.name, x: r.orders, y: Math.round(r.revenue / r.orders), size: r.revenue, category: channel };
+  });
 
   const slides = SAVED_REPORTS.map((r) => {
     const rs = periodStats(r.period);
@@ -199,6 +223,27 @@ export function RaporlarPage() {
           />
         </div>
       </Well>
+      <div className="grid grid-cols-1 gap-4 lg:col-span-3 lg:grid-cols-2">
+        <ChartCard id="rapor-birikim" label={`İlk Dört Müşteri · Birikimli Ciro`} value={tl.format(top.reduce((a, r) => a + r.revenue, 0))}>
+          <LineChart
+            title="İlk Dört Müşterinin Birikimli Cirosu"
+            labels={s.window.buckets.map((b) => b.label)}
+            valueFormat={TL_COMPACT}
+            series={top.map((r, i) => ({ label: r.customer.name, values: cumulative.map((c) => c[i]), series: ([1, 2, 3, 5] as const)[i] }))}
+          />
+        </ChartCard>
+        <ChartCard id="rapor-harita" label="Müşteri Haritası" value={`${num.format(points.length)} müşteri`}>
+          <ScatterChart
+            title="Sipariş Sayısına Göre Ortalama Sepet"
+            points={points}
+            categories={CHANNELS.map((c) => ({ key: c, label: c, series: CHANNEL_SERIES[c] }))}
+            x={{ label: "Sipariş", unit: "sipariş" }}
+            y={{ label: "Ortalama Sepet", format: { style: "currency", currency: "TRY", maximumFractionDigits: 0 } }}
+            size={{ label: "Ciro", format: { style: "currency", currency: "TRY", maximumFractionDigits: 0 } }}
+            height="h-60"
+          />
+        </ChartCard>
+      </div>
     </div>
   );
 
@@ -226,7 +271,7 @@ export function RaporlarPage() {
         </ul>
       </Well>
       <Well labelledBy="rapor-sss">
-        <WellTitle id="rapor-sss" hint={`${num.format(s.ticketCount)} talep · ${s.window.caption}`}>
+        <WellTitle id="rapor-sss" hint={`${num.format(s.ticketCount)} Talep · ${s.window.caption}`}>
           Rapor Notları
         </WellTitle>
         <Accordion variant="well" className="bg-transparent p-0">
@@ -239,6 +284,13 @@ export function RaporlarPage() {
         <div className="mt-auto grid grid-cols-1 gap-4 pt-6">
           <Progress label="İlk Yanıt 30 Dakika İçinde" value={pct(s.tickets.filter((t) => (t.firstResponseMin ?? 999) <= 30).length, s.ticketCount, 0)} hint="Hedef %80" size="sm" />
           <Progress label="Çözülen Talepler" value={pct(s.quality.resolved, s.ticketCount, 0)} hint="Kapanan ya da onaylanan" size="sm" />
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-lg bg-overlay px-3 py-2.5 shadow-raised">
+            <span className="min-w-0">
+              <span className="block text-base font-medium text-strong">Kapanış Anketi</span>
+              <span className="block text-small text-muted">Çözülen taleplerde müşteri puanı</span>
+            </span>
+            <Rating value={poll.average} count={poll.count} showValue size="sm" />
+          </div>
         </div>
       </Well>
     </div>
@@ -247,7 +299,7 @@ export function RaporlarPage() {
   const aktar = (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <Well labelledBy="rapor-disa">
-        <WellTitle id="rapor-disa" hint={`${PERIOD_NAMES[period]} · ${num.format(s.orderCount)} sipariş`}>
+        <WellTitle id="rapor-disa" hint={`${PERIOD_NAMES[period]} · ${num.format(s.orderCount)} Sipariş`}>
           Dışa Aktar
         </WellTitle>
         <div className="grid grid-cols-1 flex-1 place-items-center gap-4 rounded-lg bg-overlay p-6 text-center shadow-raised">
@@ -287,7 +339,7 @@ export function RaporlarPage() {
           </div>
           {upload ? (
             upload.value >= 100 ? (
-              <BannerAlert tone="success" title={`${upload.name} içe aktarıldı`} description="Satırlar eşleştirildi; çakışan sipariş numarası yok." announce onDismiss={() => setUpload(null)} />
+              <BannerAlert tone="success" title={`${upload.name} İçe Aktarıldı`} description="Satırlar eşleştirildi; çakışan sipariş numarası yok." announce onDismiss={() => setUpload(null)} />
             ) : (
               <Progress label={`${upload.name} yükleniyor`} value={upload.value} />
             )

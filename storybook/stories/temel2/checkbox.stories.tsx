@@ -10,7 +10,7 @@ const indeterminate = (element: HTMLInputElement | null) => {
 
 const meta = {
   title: "Bileşenler/Seçim/Onay Kutusu",
-  id: "components-selection-checkbox",
+  id: "checkbox",
   component: Checkbox,
   tags: ["autodocs"],
   parameters: {
@@ -70,7 +70,7 @@ export const AllVariants: Story = {
   parameters: { bare: true },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Boş, seçili, belirsiz">
+      <Cell label="Boş, Seçili, Belirsiz">
         <div className="grid">
           <Checkbox label="Fatura Bildirimleri" />
           <Checkbox label="Haftalık Rapor" defaultChecked />
@@ -83,7 +83,7 @@ export const AllVariants: Story = {
           <Checkbox label="SMS ile Doğrulama" hint="Girişte telefonuna kod gönderilir." defaultChecked />
         </div>
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <div className="grid">
           <Checkbox label="Kurumsal Fatura" disabled />
           <Checkbox label="KVKK Aydınlatma Metni" disabled defaultChecked />

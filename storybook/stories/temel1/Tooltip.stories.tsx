@@ -8,7 +8,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Katmanlar/Araç İpucu",
-  id: "components-overlays-tooltip",
+  id: "tooltip",
   component: Tooltip,
   tags: ["autodocs"],
   parameters: {
@@ -88,7 +88,7 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Araç çubuğu: TooltipProvider ile komşular beklemeden açılır">
+      <Cell label="Araç Çubuğu: TooltipProvider ile Komşular Beklemeden Açılır">
         <TooltipProvider>
           <div className="flex gap-1 rounded-lg bg-overlay p-1 shadow-raised">
             <Tooltip label="Düzenle">
@@ -106,7 +106,7 @@ export const AllVariants: Story = {
           </div>
         </TooltipProvider>
       </Cell>
-      <Cell label="InfoTip: sayının yanında açıklama">
+      <Cell label="InfoTip: Sayının Yanında Açıklama">
         <p className="flex items-center gap-2 text-base font-medium text-body">
           Aktif Kullanıcı
           <InfoTip label="Aktif Kullanıcı Nedir">Son 30 günde en az bir kez oturum açan kişi sayısı.</InfoTip>

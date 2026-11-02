@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "lib-motion",
+  "type": "registry:lib",
+  "title": "lib/motion.ts",
+  "description": "dev-starter landing şablonundan: lib/motion.ts",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "files": [
+    {
+      "path": "templates/landing/lib/motion.ts",
+      "content": "import type { Transition, Variants } from \"motion/react\";\n\n/**\n * Hareket sözleşmesi. Bu dosya \"use client\" DEĞİL: sabitler sunucu\n * bileşenlerinden de okunabilsin diye. `\"use client\"` bir modülden dışa\n * aktarılan değer sunucuya gerçek değer olarak gelmez, istemci referansına\n * dönüşür ve bunu ne derleyici ne çalışma zamanı söyler.\n *\n * CSS tarafının karşılığı `--ease-brand` (app/globals.css); iki eğri aynı.\n */\nexport const EASE = [0.22, 1, 0.36, 1] as const;\n\nexport const DUR = { fast: 0.16, base: 0.28, slow: 0.5, page: 0.6 } as const;\n\nexport const SPRING = {\n  snappy: { type: \"spring\", stiffness: 500, damping: 40 },\n  soft: { type: \"spring\", stiffness: 120, damping: 22, mass: 0.8 },\n} as const satisfies Record<string, Transition>;\n\nexport const STAGGER = 0.06;\n\nexport const fadeUp: Variants = {\n  hidden: { opacity: 0, y: 16 },\n  show: { opacity: 1, y: 0, transition: { duration: DUR.slow, ease: EASE } },\n};\n\nexport const fadeIn: Variants = {\n  hidden: { opacity: 0 },\n  show: { opacity: 1, transition: { duration: DUR.base, ease: EASE } },\n};\n\nexport const scaleIn: Variants = {\n  hidden: { opacity: 0, scale: 0.96 },\n  show: { opacity: 1, scale: 1, transition: { duration: DUR.base, ease: EASE } },\n};\n\n/** Kapsayıcı varyantı: çocuklar `STAGGER` aralıkla sırayla gelir. */\nexport function stagger(delay = 0): Variants {\n  return {\n    hidden: {},\n    show: { transition: { staggerChildren: STAGGER, delayChildren: delay } },\n  };\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

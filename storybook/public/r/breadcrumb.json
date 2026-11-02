@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "breadcrumb",
+  "type": "registry:ui",
+  "title": "Gezinti Yolu",
+  "description": "Konum çubuğu",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/breadcrumb.tsx",
+      "content": "import { ChevronLeft, ChevronRight } from 'lucide-react'\nimport Link from 'next/link'\nimport type { ReactNode } from 'react'\nimport { cn } from '@/lib/utils'\n\n/**\n * Konum çubuğu: \"Ana Sayfa › Ayarlar › Profil\". Sunucu bileşeni.\n *\n * Son öğe bulunulan sayfa: bağlantı değil, `aria-current=\"page\"`. Ayraçlar\n * `aria-hidden`: ekran okuyucu \"büyüktür işareti\" okumasın; liste yapısı\n * sırayı zaten söylüyor.\n *\n * İKON (\"board\" dili, 2026-11): her öğe isteğe bağlı bir lucide ikonu\n * taşır (`icon: <House />`); ikon süstür (`aria-hidden`), ad metinde.\n * Ayraç soluk bir chevron. Bağlantılar üzerine gelince yumuşak gri bir\n * hapa oturur (`bg-surface-raised`), bulunulan sayfa `text-strong`.\n * `iconOnly` ilk öğenin yalnızca ikonla görünmesini sağlar (ev ikonu);\n * adı o zaman görünmez metin olarak durur.\n *\n * TELEFONDA yalnızca bir üst sayfaya dönüş bağlantısı (\"‹ Projeler\"): dört\n * düzeyli bir yol 390 piksele sığmıyor, kırpılmış bir yol ise hiçbir şey\n * söylemiyor. Tam yol `sm` ve üstünde.\n */\n\nexport type Crumb = { label: ReactNode; href?: string; icon?: ReactNode }\n\ntype BreadcrumbProps = {\n  items: readonly Crumb[]\n  label?: string\n  /** İlk öğe yalnızca ikonla görünsün (ikonu varsa); ad ekran okuyucuda kalır. */\n  iconOnly?: boolean\n  className?: string\n}\n\nconst ICON = 'shrink-0 [&_svg]:size-4 [&_svg]:stroke-[1.75]'\n\nexport function Breadcrumb({\n  items,\n  label = 'Sayfa Konumu',\n  iconOnly = false,\n  className,\n}: BreadcrumbProps) {\n  const parent = [...items].reverse().find((item, i) => i > 0 && item.href)\n  return (\n    <nav aria-label={label} className={cn('text-small', className)}>\n      {parent?.href ? (\n        <Link\n          href={parent.href}\n          className=\"-ml-1 inline-flex min-h-11 items-center gap-1 rounded-sm px-1 font-medium text-muted transition-colors hover:text-strong sm:hidden\"\n        >\n          <ChevronLeft aria-hidden className=\"size-4\" strokeWidth={1.75} />\n          {parent.label}\n        </Link>\n      ) : null}\n      <ol className=\"hidden flex-wrap items-center gap-0.5 sm:flex\">\n        {items.map((item, index) => {\n          const last = index === items.length - 1\n          const hideText = iconOnly && index === 0 && Boolean(item.icon)\n          const content = (\n            <>\n              {item.icon ? (\n                <span aria-hidden className={ICON}>\n                  {item.icon}\n                </span>\n              ) : null}\n              <span className={hideText ? 'sr-only' : undefined}>{item.label}</span>\n            </>\n          )\n          return (\n            <li key={index} className=\"inline-flex items-center gap-0.5\">\n              {last || !item.href ? (\n                <span\n                  aria-current={last ? 'page' : undefined}\n                  className={cn(\n                    'inline-flex min-h-8 items-center gap-1.5 px-1.5',\n                    last ? 'font-medium text-strong' : 'text-muted',\n                  )}\n                >\n                  {content}\n                </span>\n              ) : (\n                <Link\n                  href={item.href}\n                  className=\"inline-flex min-h-8 items-center gap-1.5 rounded-sm px-1.5 text-muted transition-colors hover:bg-surface-raised hover:text-strong\"\n                >\n                  {content}\n                </Link>\n              )}\n              {last ? null : (\n                <ChevronRight\n                  aria-hidden\n                  className=\"size-3.5 shrink-0 text-muted opacity-50\"\n                  strokeWidth={2}\n                />\n              )}\n            </li>\n          )\n        })}\n      </ol>\n    </nav>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "breadcrumb",
+    "palettes": false
+  }
+}

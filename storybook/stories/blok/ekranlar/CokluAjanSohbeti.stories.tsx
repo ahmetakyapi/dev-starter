@@ -15,9 +15,9 @@ import { BRAND, ContentBar, NAV, ROUTES, ShellCommands, SignOutButton, USER } fr
 /* --- Ekip ---------------------------------------------------------------- */
 
 const AGENTS = [
-  { id: "tasarim", name: "Tasarım", role: "Arayüz, görsel dil, erişilebilirlik" },
-  { id: "pazarlama", name: "Pazarlama", role: "Kampanya, metin, kanal" },
-  { id: "urun", name: "Ürün", role: "Öncelik, ölçüm, yol haritası" },
+  { id: "tasarim", name: "Tasarım", role: "Arayüz, Görsel Dil, Erişilebilirlik" },
+  { id: "pazarlama", name: "Pazarlama", role: "Kampanya, Metin, Kanal" },
+  { id: "urun", name: "Ürün", role: "Öncelik, Ölçüm, Yol Haritası" },
 ] as const;
 type AgentId = (typeof AGENTS)[number]["id"];
 type Recipient = "hepsi" | AgentId;
@@ -56,10 +56,10 @@ function AgentMessage({ id, time, children }: { id: AgentId; time: string; child
 }
 
 const PRODUCT_PLAN = [
-  { id: "olc", title: "Son 90 günün deneme kayıtlarını çıkar" },
-  { id: "kirilim", title: "Kanallara göre dönüşümü karşılaştır", detail: "Arama, sosyal ve e-posta; 3.412 kayıt" },
-  { id: "hedef", title: "%20 artış için gereken trafiği hesapla" },
-  { id: "deney", title: "İki varyantlı deney taslağı yaz" },
+  { id: "olc", title: "Son 90 Günün Deneme Kayıtlarını Çıkar" },
+  { id: "kirilim", title: "Kanallara Göre Dönüşümü Karşılaştır", detail: "Arama, sosyal ve e-posta; 3.412 kayıt" },
+  { id: "hedef", title: "%20 Artış için Gereken Trafiği Hesapla" },
+  { id: "deney", title: "İki Varyantlı Deney Taslağı Yaz" },
 ];
 
 const GOAL = "Kasım kampanyası için açılış sayfasını yenileyelim. Hedef: deneme kaydını %20 artırmak, bütçe değişmiyor.";
@@ -230,7 +230,7 @@ function EmptyTeam({ onStart }: { onStart: (text: string) => void }) {
     <div className="mx-auto flex min-h-full max-w-2xl flex-col items-center justify-center px-4 py-10 text-center">
       <AvatarGroup people={AGENTS} size="lg" label="Hazır ajanlar" className="[&>*]:ring-4 [&>*]:ring-overlay" />
       <h2 className="mt-5 text-heading font-semibold tracking-tight text-balance text-strong">
-        Tasarım, Pazarlama ve Ürün hazır
+        Tasarım, Pazarlama ve Ürün Hazır
       </h2>
       <p className="mt-2 max-w-md text-read text-pretty text-body">
         Bir hedef yaz; üç ajan kendi açısından plan çıkarsın, sen birleştir. Tek bir ajana yazmak için aşağıdan seç.
@@ -267,7 +267,7 @@ function EmptyTeam({ onStart }: { onStart: (text: string) => void }) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Çoklu Asistan Sohbeti",
-  id: "screens-app-multi-agent-chat",
+  id: "multi-agent-chat",
   component: MultiAgentScreen,
   tags: ["autodocs"],
   parameters: {

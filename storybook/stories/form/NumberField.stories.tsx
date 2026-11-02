@@ -8,7 +8,7 @@ import { TRY } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Sayı Alanı",
-  id: "components-forms-number-field",
+  id: "number-field",
   component: NumberField,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -104,10 +104,10 @@ export const AllVariants: Story = {
       <Cell label="Varsayılan">
         <NumberField label="Misafir Sayısı" defaultValue={2} min={1} max={12} className="w-full max-w-60" />
       </Cell>
-      <Cell label="Para birimi">
+      <Cell label="Para Birimi">
         <NumberField label="Aylık Bütçe" defaultValue={12500} min={0} step={500} format={TRY} className="w-full max-w-60" />
       </Cell>
-      <Cell label="Üst sınırda">
+      <Cell label="Üst Sınırda">
         <NumberField label="Gece Sayısı" defaultValue={14} min={1} max={14} className="w-full max-w-60" />
       </Cell>
       <Cell label="Ondalık">
@@ -123,7 +123,7 @@ export const AllVariants: Story = {
       <Cell label="Hata">
         <NumberField label="Koltuk Sayısı" defaultValue={0} min={0} error="En az bir koltuk seçmelisin." className="w-full max-w-60" />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <NumberField label="Oda Sayısı" defaultValue={1} disabled className="w-full max-w-60" />
       </Cell>
     </Gallery>

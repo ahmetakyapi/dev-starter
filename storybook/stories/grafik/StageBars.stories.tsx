@@ -15,7 +15,7 @@ const SERILER = [1, 2, 3, 4, 5, 6] as const;
 
 const meta = {
   title: "Grafikler/Aşama Çubukları",
-  id: "charts-stage-bars",
+  id: "stage-bars",
   component: StageBars,
   tags: ["autodocs"],
   parameters: {
@@ -143,7 +143,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>
-      <GrafikHucre label="Altı aşama">
+      <GrafikHucre label="Altı Aşama">
         <ChartCard id="sb-v1" label="Kayıt Hunisi" value="1.180" change={2.4}>
           <StageBars title="Kayıt Hunisi" stages={KAYIT_HUNISI} />
         </ChartCard>
@@ -153,12 +153,12 @@ export const AllVariants: Story = {
           <StageBars title="Ödeme Hunisi" stages={ODEME_HUNISI.slice(0, 4).map((s, i) => ({ ...s, icon: IKONLAR[i] }))} />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="İki aşama">
+      <GrafikHucre label="İki Aşama">
         <ChartCard id="sb-v3" label="Deneme → Ücretli" value="%21">
           <StageBars title="Deneme → Ücretli" stages={[{ label: "Deneme", value: 412 }, { label: "Ücretli", value: 87 }]} />
         </ChartCard>
       </GrafikHucre>
-      <GrafikHucre label="Sıfır değerli son aşama">
+      <GrafikHucre label="Sıfır Değerli Son Aşama">
         <ChartCard id="sb-v4" label="Kurumsal Hunisi" value="64" change={-8.6}>
           <StageBars
             title="Kurumsal Hunisi"

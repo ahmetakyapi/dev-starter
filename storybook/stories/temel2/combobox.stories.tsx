@@ -6,7 +6,7 @@ import { CITIES } from "./_data";
 
 const meta = {
   title: "Bileşenler/Seçim/Aramalı Seçim",
-  id: "components-selection-combobox",
+  id: "combobox",
   component: Combobox,
   tags: ["autodocs"],
   parameters: {
@@ -79,7 +79,7 @@ export const AllVariants: Story = {
       <Cell label="Seçili">
         <Combobox label="Depo" items={CITIES} defaultValue={CITIES[7]} className="w-full" />
       </Cell>
-      <Cell label="Gizli etiket">
+      <Cell label="Gizli Etiket">
         <Combobox label="Şehir Ara" hideLabel items={CITIES} placeholder="Şehir ara" className="w-full" />
       </Cell>
     </Gallery>

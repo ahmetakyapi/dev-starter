@@ -12,12 +12,13 @@ import { cn } from "@/lib/utils";
  * (Storybook'ta adres çubuğu yok, ama bağlantı semantiği ve klavye doğru kalır).
  */
 
-export type Page = "pano" | "gelen" | "takvim" | "asistan" | "raporlar" | "ayarlar";
+export type Page = "pano" | "gelen" | "gorevler" | "takvim" | "asistan" | "raporlar" | "ayarlar";
 export type Params = Readonly<Record<string, string>>;
 
 export const PAGES: readonly { id: Page; label: string }[] = [
   { id: "pano", label: "Pano" },
   { id: "gelen", label: "Gelen Kutusu" },
+  { id: "gorevler", label: "Görevler" },
   { id: "takvim", label: "Takvim" },
   { id: "asistan", label: "Asistan" },
   { id: "raporlar", label: "Raporlar" },
@@ -30,7 +31,14 @@ export const href = (page: Page, params: Record<string, string | undefined> = {}
   return `?${q.toString()}`;
 };
 
-export type Toast = { id: number; title: string; body?: string; tone: "success" | "info" };
+export type Toast = {
+  id: number;
+  title: string;
+  body?: string;
+  tone: "success" | "info";
+  /** Verilirse bildirimde "Geri Al" düğmesi (silme, arşivleme). */
+  undo?: () => void;
+};
 
 type AppState = {
   page: Page;
@@ -40,7 +48,7 @@ type AppState = {
   setPeriod: (p: Period) => void;
   notifications: readonly NotificationItem[];
   markRead: (ids: string[]) => void;
-  /** Kısa bildirim (sağ altta) + bildirim merkezine kayıt. */
+  /** Kısa bildirim (sağ altta, `toast`) + bildirim merkezine kayıt. */
   notify: (toast: Omit<Toast, "id">) => void;
 };
 

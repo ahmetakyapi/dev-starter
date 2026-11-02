@@ -6,7 +6,7 @@ import { settle } from "./_a11y";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Doğrulama Kodu",
-  id: "components-forms-input-otp",
+  id: "input-otp",
   component: InputOTP,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -102,10 +102,10 @@ export const AllVariants: Story = {
       <Cell label="Hata">
         <InputOTP label="Yedek Kod" defaultValue="719305" error="Kod süresi doldu, yenisini iste." />
       </Cell>
-      <Cell label="Dört hane, ayraçsız">
+      <Cell label="Dört Hane, Ayraçsız">
         <InputOTP label="Kart Şifresi Onayı" length={4} groupAt={0} />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <InputOTP label="Doğrulama Kodu" defaultValue="4829" disabled />
       </Cell>
     </Gallery>

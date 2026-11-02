@@ -13,7 +13,7 @@ const AYLIK = AYLAR.map((label, i) => ({ label, value: KAZANC[i] }));
 
 const meta = {
   title: "Grafikler/Sütun Grafiği",
-  id: "charts-bar-chart",
+  id: "bar-chart",
   component: TrackBarChart,
   tags: ["autodocs"],
   parameters: {

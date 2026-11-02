@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "close-button",
+  "type": "registry:ui",
+  "title": "Kapat Düğmesi",
+  "description": "Diyalog, uyarı, çip, duyuru kapatma",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/close-button.tsx",
+      "content": "import { X } from \"lucide-react\";\nimport type { ComponentProps } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Kapatma düğmesi: diyalog, uyarı satırı, duyuru hapı, çip. \"Küçük ×\"\n * ekranın en sık yanlış yapılan öğesi; burada dört şey doğru:\n *\n * 1. DOKUNMA ALANI GÖRSELDEN BÜYÜK. Düğmenin kendisi 44 × 44 piksel\n *    (WCAG 2.5.5), görünen daire 32 (`md`) ya da 28 (`sm`). Fazlası negatif\n *    kenar boşluğuyla taşar: düzende yalnızca görsel kadar yer tutar, parmak\n *    yine 44 piksel bulur. Sağ üst köşeye konduğunda `-m-1.5` hizayı bozmaz.\n * 2. AD TİPTE ZORUNLU. \"×\" bir ad değil; ekran okuyucu \"çarpı düğmesi\" der.\n *    Neyi kapattığını söyle: \"Duyuruyu Kapat\", \"Filtreyi Kaldır\".\n * 3. ODAK HALKASI DAİRENİN ÇEVRESİNDE. Tarayıcı halkası 44 piksellik\n *    görünmez kutuya çizilse havada asılı bir kare görünürdü; halka\n *    `group-focus-visible` ile içteki daireye taşınır.\n * 4. DURUMLAR: üstüne gelince ton (`bg-surface-raised`), basınca daire 0.92'ye\n *    iner (150 ms, imza eğrisi), devre dışıyken soluk ve tıklanamaz.\n *\n * Sunucu bileşeni: `onClick` istemci bir üstten gelebilir.\n */\n\nconst SIZES = {\n  /** 28 piksel görsel; satır içi (çip, duyuru hapı). */\n  sm: { bleed: \"-m-2\", dot: \"size-7\", icon: \"size-3.5\" },\n  /** 32 piksel görsel; diyalog, uyarı satırı başlığı. */\n  md: { bleed: \"-m-1.5\", dot: \"size-8\", icon: \"size-4\" },\n} as const;\n\ntype CloseButtonProps = Omit<ComponentProps<\"button\">, \"aria-label\" | \"children\"> & {\n  /** Zorunlu: neyi kapattığını söyler (\"Bildirimi Kapat\"). */\n  \"aria-label\": string;\n  size?: keyof typeof SIZES;\n  /** Kapalıyken taşma yok: düğme düzende 44 piksel yer kaplar. */\n  bleed?: boolean;\n  /** Koyu ya da renkli zemin üstünde (wash satırı) hover tonunu değiştir. */\n  tone?: \"default\" | \"onWash\";\n};\n\nexport function CloseButton({\n  size = \"md\",\n  bleed = true,\n  tone = \"default\",\n  type = \"button\",\n  className,\n  ...props\n}: CloseButtonProps) {\n  const s = SIZES[size];\n  return (\n    <button\n      type={type}\n      className={cn(\n        \"group inline-grid size-11 shrink-0 cursor-pointer place-items-center rounded-full text-muted outline-none focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40\",\n        bleed && s.bleed,\n        className,\n      )}\n      {...props}\n    >\n      <span\n        aria-hidden\n        className={cn(\n          \"grid place-items-center rounded-full transition-[background-color,color,transform] duration-150 group-hover:text-strong group-active:scale-[0.92] group-focus-visible:text-strong group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-line-focus\",\n          tone === \"onWash\" ? \"group-hover:bg-page/70\" : \"group-hover:bg-surface-raised\",\n          s.dot,\n        )}\n      >\n        <X className={s.icon} strokeWidth={2} />\n      </span>\n    </button>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "close-button",
+    "palettes": false
+  }
+}

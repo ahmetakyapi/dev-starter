@@ -309,7 +309,7 @@ export default function Page() {
                 { id: "arama", label: "Arama", series: 2 },
                 { id: "sosyal", label: "Sosyal", series: 3 },
                 { id: "dogrudan", label: "Doğrudan", series: 1 },
-                { id: "eposta", label: "E-posta", series: 4 },
+                { id: "eposta", label: "E-Posta", series: 4 },
               ]}
               targets={[
                 { id: "kayit", label: "Kayıt" },

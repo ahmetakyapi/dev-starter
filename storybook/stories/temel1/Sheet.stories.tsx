@@ -29,7 +29,7 @@ function FilterBody() {
 
 const meta = {
   title: "Bileşenler/Katmanlar/Yan Panel",
-  id: "components-overlays-sheet",
+  id: "sheet",
   component: Sheet,
   tags: ["autodocs"],
   parameters: {

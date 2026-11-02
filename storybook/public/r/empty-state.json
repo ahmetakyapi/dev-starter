@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "empty-state",
+  "type": "registry:ui",
+  "title": "Boş Durum",
+  "description": "Boş durum: ikon / sahne / satır",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/empty-state.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Boş durum, üç biçim. Şablonun `components/ui/EmptyState.tsx`ünün\n * genişletilmiş hâli; aynı dil, aynı sınıflar.\n *\n * `variant=\"icon\"` (varsayılan): panel içinde, ikonlu kutu. \"Henüz Kayıt\n * Yok\" + ne yapılacağını söyleyen bir cümle + tek eylem.\n * `variant=\"scene\"`: SAYFA düzeyinde boşluk (arama sonucu yok, ilk kurulum,\n * 404). `scene` yuvasına bir çizim gelir: SVG, canvas sahnesi ya da\n * marka işareti. Sahne dekoratiftir (`aria-hidden`); anlam başlıkta.\n * `variant=\"inline\"`: tek satırlık, kutusuz. Panel içindeki küçük listeler\n * için (\"Bu hafta etkinlik yok.\"). Panel içine sahne konmaz: dar bir\n * kutuda çizim, boşluğun kendisinden büyük bir olay olur.\n *\n * GÖRÜNÜŞ (\"board\" dili, 2026-11): `icon` biçimi gri kuyu (`bg-surface`,\n * `rounded-xl`), ikon kuyunun üstünde beyaz bir karoda (`bg-overlay` +\n * `shadow-raised`, `rounded-lg`); kesikli çizgi kalktı (kesik kenar\n * \"buraya bırak\" der, boş liste bir bırakma alanı değil). Kuyunun içine\n * kart konmaz; eylem tek düğme.\n *\n * Başlık Title Case; `hint` cümle düzeninde ve bir sonraki adımı söyler\n * (\"İlk kaydı eklediğinde burada listelenecek.\"), suçlamaz (\"Hiç kaydınız\n * yok!\" değil).\n */\n\ntype EmptyStateProps = {\n  title: ReactNode;\n  hint?: ReactNode;\n  action?: ReactNode;\n  icon?: ReactNode;\n  scene?: ReactNode;\n  variant?: \"icon\" | \"scene\" | \"inline\";\n  /**\n   * Başlığın düzeyi: sayfa düzeyinde boş durum h1 ya da h2 olabilir. Ad\n   * şablondaki `EmptyState` ile aynı; bu dosya onun yerine geçince çağrılar\n   * değişmez.\n   */\n  titleAs?: \"p\" | \"h1\" | \"h2\" | \"h3\";\n  className?: string;\n};\n\nexport function EmptyState({ title, hint, action, icon, scene, variant = \"icon\", titleAs: Title = \"p\", className }: EmptyStateProps) {\n  if (variant === \"inline\") {\n    return (\n      <div className={cn(\"flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3\", className)}>\n        <p className=\"text-base text-muted\">\n          <span className=\"font-medium text-body\">{title}</span>\n          {hint ? <> {hint}</> : null}\n        </p>\n        {action}\n      </div>\n    );\n  }\n\n  const isScene = variant === \"scene\";\n  return (\n    <div\n      className={cn(\n        \"flex flex-col items-center text-center\",\n        isScene ? \"px-4 py-16 sm:py-24\" : \"rounded-xl bg-surface px-6 py-10 sm:py-12\",\n        className,\n      )}\n    >\n      {isScene && scene ? (\n        <div aria-hidden className=\"mb-6 w-full max-w-60\">\n          {scene}\n        </div>\n      ) : icon ? (\n        <div aria-hidden className=\"mb-4 grid size-12 place-items-center rounded-lg bg-overlay text-strong shadow-raised [&_svg]:size-5 [&_svg]:stroke-[1.75]\">\n          {icon}\n        </div>\n      ) : null}\n      <Title className={cn(\"font-semibold tracking-tight text-strong\", isScene ? \"text-heading\" : \"text-read\")}>{title}</Title>\n      {hint ? <p className={cn(\"mt-2 max-w-sm text-muted\", isScene ? \"text-read\" : \"text-base\")}>{hint}</p> : null}\n      {action ? <div className=\"mt-5\">{action}</div> : null}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "empty-state",
+    "palettes": false
+  }
+}

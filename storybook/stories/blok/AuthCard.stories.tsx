@@ -52,7 +52,7 @@ const SIGN_UP = {
 
 const meta = {
   title: "Bloklar/Giriş Kartı",
-  id: "blocks-auth-card",
+  id: "auth-card",
   component: AuthCard,
   tags: ["autodocs"],
   parameters: {
@@ -114,11 +114,11 @@ export const Error: Story = {
   parameters: { docs: { description: { story: "Sunucu genel hata döndürdü: kartın üstünde `role=\"alert\"`, e-posta yeniden dolu, şifre boş." } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(canvas.getByLabelText("E-posta"), "elif@pusula.app");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "elif@pusula.app");
     await userEvent.type(canvas.getByLabelText("Şifre"), "1234");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await expect(await canvas.findByRole("alert")).toHaveTextContent("E-posta ya da şifre hatalı.");
-    await expect(canvas.getByLabelText("E-posta")).toHaveValue("elif@pusula.app");
+    await expect(canvas.getByLabelText("E-Posta")).toHaveValue("elif@pusula.app");
   },
 };
 
@@ -126,11 +126,11 @@ export const FieldError: Story = {
   name: "Alan Hatası",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(canvas.getByLabelText("E-posta"), "elif.pusula");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "elif.pusula");
     await userEvent.type(canvas.getByLabelText("Şifre"), "uzunbirsifre");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await expect(await canvas.findByText("Geçerli bir e-posta adresi yaz.")).toBeVisible();
-    await expect(canvas.getByLabelText("E-posta")).toHaveAttribute("aria-invalid", "true");
+    await expect(canvas.getByLabelText("E-Posta")).toHaveAttribute("aria-invalid", "true");
   },
 };
 
@@ -139,7 +139,7 @@ export const Submitting: Story = {
   args: { action: neverResolves },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(canvas.getByLabelText("E-posta"), "elif@pusula.app");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "elif@pusula.app");
     await userEvent.type(canvas.getByLabelText("Şifre"), "guclu-sifre-2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     const pending = await canvas.findByRole("button", { name: /Giriş Yapılıyor/ });
@@ -156,14 +156,14 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={3}>
-      <Cell label="Giriş · sağlayıcılarla">
+      <Cell label="Giriş · Sağlayıcılarla">
         <AuthCard {...args} />
       </Cell>
-      <Cell label="Kayıt · yeni şifre">
+      <Cell label="Kayıt · Yeni Şifre">
         <AuthCard {...args} {...SIGN_UP} />
       </Cell>
-      <Cell label="Yalnız e-posta">
-        <AuthCard {...args} socialAction={undefined} title="E-postayla Gir" description={undefined} />
+      <Cell label="Yalnız E-Posta">
+        <AuthCard {...args} socialAction={undefined} title="E-Postayla Gir" description={undefined} />
       </Cell>
     </Gallery>
   ),

@@ -8,7 +8,7 @@ import { NOV, dayLabel, isSunday } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Tarih Seçici",
-  id: "components-forms-date-picker",
+  id: "date-picker",
   component: DatePicker,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -116,7 +116,7 @@ export const AllVariants: Story = {
       <Cell label="Boş">
         <DatePicker label="Rapor Başlangıcı" defaultMonth={NOV(1)} className="w-full" />
       </Cell>
-      <Cell label="Tek gün">
+      <Cell label="Tek Gün">
         <DatePicker label="Teslim Tarihi" defaultValue={NOV(21)} defaultMonth={NOV(1)} className="w-full" />
       </Cell>
       <Cell label="Aralık">
@@ -128,13 +128,13 @@ export const AllVariants: Story = {
           className="w-full"
         />
       </Cell>
-      <Cell label="Aralık, yarım">
+      <Cell label="Aralık, Yarım">
         <DatePicker mode="range" label="Konaklama" defaultValue={{ start: NOV(12), end: null }} defaultMonth={NOV(1)} className="w-full" />
       </Cell>
       <Cell label="Hata">
         <DatePicker label="Teslim Tarihi" error="Teslim tarihi seçmelisin." className="w-full" />
       </Cell>
-      <Cell label="Devre dışı">
+      <Cell label="Devre Dışı">
         <DatePicker label="Teslim Tarihi" defaultValue={NOV(21)} disabled className="w-full" />
       </Cell>
     </Gallery>

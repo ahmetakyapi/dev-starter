@@ -9,7 +9,7 @@ import { CONVERSATION, FIRST_QUESTION, LongAnswer } from "./thread-data";
 const onSuggestion = fn();
 
 const EMPTY = {
-  title: "Bugün ne yapalım?",
+  title: "Bugün Ne Yapalım?",
   description: "Bir soru sor ya da aşağıdaki işlerden birini seç.",
   suggestions: SUGGESTIONS,
   onSuggestion,
@@ -34,7 +34,7 @@ function Pane({ children, tall = false }: { children: ReactNode; tall?: boolean 
 
 const meta = {
   title: "Bloklar/Mesaj Akışı",
-  id: "blocks-chat-thread",
+  id: "chat-thread",
   component: ChatThread,
   tags: ["autodocs"],
   parameters: {
@@ -126,7 +126,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={2}>
-      <Cell label="Boş durum + öneriler" className="block p-2">
+      <Cell label="Boş Durum + Öneriler" className="block p-2">
         <div className="h-80 rounded-xl bg-overlay shadow-raised ring-1 ring-line">
           <ChatThread {...args} messages={[]} empty={EMPTY} className="h-full" label="Sohbet: boş" />
         </div>

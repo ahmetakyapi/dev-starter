@@ -4,7 +4,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Yükleme/İskelet Yükleyici",
-  id: "components-loading-skeleton",
+  id: "skeleton",
   component: Skeleton,
   tags: ["autodocs"],
   parameters: {
@@ -72,20 +72,20 @@ export const AllVariants: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={2}>
-      <Cell label="Skeleton — tek blok, avatar" className="bg-overlay">
+      <Cell label="Skeleton · Tek Blok, Avatar" className="bg-overlay">
         <div className="flex items-center gap-3">
           <Skeleton className="size-12 rounded-full" />
           <Skeleton className="h-4 w-40" />
         </div>
       </Cell>
-      <Cell label="SkeletonText — son satır kısa" className="block bg-overlay">
+      <Cell label="SkeletonText · Son Satır Kısa" className="block bg-overlay">
         <SkeletonText lines={3} />
       </Cell>
-      <Cell label="SkeletonRow — avatar, iki satır, değer" className="block bg-overlay">
+      <Cell label="SkeletonRow · Avatar, İki Satır, Değer" className="block bg-overlay">
         <SkeletonRow />
         <SkeletonRow avatar={false} />
       </Cell>
-      <Cell label="SkeletonCard — başlık, metin, düğme yeri" className="block bg-overlay">
+      <Cell label="SkeletonCard · Başlık, Metin, Düğme Yeri" className="block bg-overlay">
         <SkeletonCard />
       </Cell>
     </Gallery>

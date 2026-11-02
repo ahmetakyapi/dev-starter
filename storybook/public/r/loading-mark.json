@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "loading-mark",
+  "type": "registry:ui",
+  "title": "Yükleme Halkası",
+  "description": "Sayfa/kart düzeyinde bekleme, marka halkası",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/loading-mark.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Marka halkası: ekranın ortasında, bekleyişi ürünün kendi işaretine bağlayan\n * yükleme göstergesi. Spinner satır içindir; bu, sayfa ya da kart düzeyinde\n * bekleme (gezinme kartı, ilk yükleme, uzun süren eylem).\n *\n * Halka YÜZDE GÖSTERMEZ. Ne kadar kaldığını bilmediğimiz bir şeyi ilerleme\n * gibi çizmek veri dürüstlüğüyle çelişir; döngü yalnızca \"çalışıyor\" der.\n *\n * DÖNGÜ YALNIZCA BEKLEMEDE. Görünüme giren süslemeler bir kez oynar ve\n * oturur; bu bileşen ise beklemenin kendisi olduğu için döner. Hareketi\n * azaltan kullanıcıda halka çeyrek yay olarak SABİT durur (titreşmez,\n * nefes almaz) ve ortadaki karo yerinde kalır.\n *\n * Ortadaki kare marka karosu (`bg-brand`): degradenin izinli üç yerinden\n * biri. Logon varsa `children` ile onu ver.\n *\n * Anahtar kareler bileşenle birlikte gelir (`<style href precedence>`, React\n * 19): React aynı `href`i sayfada bir kez basar, globals.css'e dokunmak\n * gerekmez.\n */\n\nconst SIZES = { sm: 32, md: 48, lg: 72 } as const;\n\nconst KEYFRAMES = `\n@keyframes lm-spin { to { transform: rotate(360deg) } }\n@keyframes lm-dash {\n  0% { stroke-dasharray: 1 150; stroke-dashoffset: 0 }\n  50% { stroke-dasharray: 90 150; stroke-dashoffset: -35 }\n  100% { stroke-dasharray: 90 150; stroke-dashoffset: -124 }\n}\n@keyframes lm-breathe { 50% { transform: scale(0.9) } }\n`;\n\ntype LoadingMarkProps = {\n  size?: keyof typeof SIZES;\n  /** Ekran okuyucu metni ve (görünür) alt yazı. */\n  label?: string;\n  /** Alt yazıyı ekranda da göster. Kapalıyken yalnızca ekran okuyucu duyar. */\n  showLabel?: boolean;\n  /** Ortadaki karonun içi: logo ya da baş harf. */\n  children?: ReactNode;\n  className?: string;\n};\n\nexport function LoadingMark({ size = \"md\", label = \"Yükleniyor\", showLabel = false, children, className }: LoadingMarkProps) {\n  const px = SIZES[size];\n  return (\n    <div role=\"status\" className={cn(\"inline-flex flex-col items-center gap-3\", className)}>\n      <style href=\"ui-loading-mark\" precedence=\"default\">\n        {KEYFRAMES}\n      </style>\n      <span className=\"relative grid place-items-center\" style={{ width: px, height: px }} aria-hidden>\n        <svg\n          viewBox=\"0 0 50 50\"\n          width={px}\n          height={px}\n          className=\"absolute inset-0 animate-[lm-spin_1.6s_linear_infinite] motion-reduce:animate-none\"\n        >\n          <circle cx=\"25\" cy=\"25\" r=\"20\" fill=\"none\" stroke=\"var(--line)\" strokeWidth=\"3\" />\n          <circle\n            cx=\"25\"\n            cy=\"25\"\n            r=\"20\"\n            fill=\"none\"\n            stroke=\"var(--primary)\"\n            strokeWidth=\"3\"\n            strokeLinecap=\"round\"\n            strokeDasharray=\"32 150\"\n            className=\"animate-[lm-dash_1.4s_var(--ease-brand)_infinite] motion-reduce:animate-none\"\n          />\n        </svg>\n        <span\n          className=\"grid place-items-center rounded-sm bg-brand text-micro font-bold text-on-brand animate-[lm-breathe_1.4s_var(--ease-brand)_infinite] motion-reduce:animate-none\"\n          style={{ width: px * 0.36, height: px * 0.36 }}\n        >\n          {children}\n        </span>\n      </span>\n      <span className={showLabel ? \"text-small font-medium text-muted\" : \"sr-only\"}>{label}</span>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Yükleme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "loading-mark",
+    "palettes": false
+  }
+}

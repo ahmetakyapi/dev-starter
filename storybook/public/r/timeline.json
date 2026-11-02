@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "timeline",
+  "type": "registry:ui",
+  "title": "Zaman Çizelgesi",
+  "description": "Tarihli olaylar",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/timeline.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Zaman çizelgesi: tarihli olayların dikey listesi (sipariş geçmişi, sürüm\n * notları, etkinlik akışı). Sunucu bileşeni.\n *\n * Sıralı liste ve her olayın zamanı `<time dateTime>`: makine okur, ekran\n * okuyucu görünen metni okur. Görünen biçimi çağıran verir (\"3 Ekim\",\n * \"2 Saat Önce\"); burada biçimleme yok, çünkü göreli zaman sunucuda ve\n * istemcide farklı çıkar (hidrasyon uyuşmazlığı).\n *\n * İŞARET (\"board\" dili, 2026-11): nokta, kendi tonunun yıkamasından bir\n * halkanın içinde; zemin rengine bağlı `ring-page` hilesi yok, çizelge\n * kuyuda da karoda da aynı görünür. Olayın `icon`u varsa nokta yerine\n * beyaz küçük bir karo (ikon süs, `aria-hidden`). Çizgi işaretlere\n * değmez, aralarında boşluk bırakır. Zaman sağda değil başlığın üstünde:\n * dar ekranda satır kırılmaz.\n *\n * Nokta rengi bir ton ipucu; olayın ne olduğunu başlık söyler.\n */\n\nexport type TimelineEvent = {\n  id: string;\n  /** ISO tarih: `dateTime` özniteliği. */\n  at: string;\n  /** Görünen zaman metni. */\n  when: ReactNode;\n  title: ReactNode;\n  description?: ReactNode;\n  tone?: \"neutral\" | \"primary\" | \"success\" | \"warning\" | \"danger\";\n  /** Nokta yerine küçük ikon karosu. */\n  icon?: ReactNode;\n};\n\nconst TONE = {\n  neutral: { halo: \"bg-surface-raised\", dot: \"bg-muted\", ink: \"text-muted\" },\n  primary: { halo: \"bg-primary-wash\", dot: \"bg-primary\", ink: \"text-primary-ink\" },\n  success: { halo: \"bg-success-wash\", dot: \"bg-success\", ink: \"text-success\" },\n  warning: { halo: \"bg-warning-wash\", dot: \"bg-warning\", ink: \"text-warning\" },\n  danger: { halo: \"bg-danger-wash\", dot: \"bg-danger\", ink: \"text-danger\" },\n} as const;\n\nexport function Timeline({ events, className }: { events: readonly TimelineEvent[]; className?: string }) {\n  return (\n    <ol className={cn(\"relative\", className)}>\n      {events.map((event, index) => {\n        const tone = TONE[event.tone ?? \"neutral\"];\n        return (\n          <li key={event.id} className=\"relative flex gap-3.5 pb-6 last:pb-0\">\n            {index < events.length - 1 ? (\n              <span aria-hidden className=\"absolute top-8 bottom-1.5 left-3 w-px -translate-x-1/2 bg-line\" />\n            ) : null}\n            {event.icon ? (\n              <span\n                aria-hidden\n                className={cn(\"relative grid size-6 shrink-0 place-items-center rounded-sm border border-line bg-overlay shadow-raised [&_svg]:size-3.5\", tone.ink)}\n              >\n                {event.icon}\n              </span>\n            ) : (\n              <span aria-hidden className={cn(\"relative grid size-6 shrink-0 place-items-center rounded-full\", tone.halo)}>\n                <span className={cn(\"size-2 rounded-full\", tone.dot)} />\n              </span>\n            )}\n            <div className=\"min-w-0 pt-0.5\">\n              <time dateTime={event.at} className=\"block text-small font-medium text-muted tabular-nums\">\n                {event.when}\n              </time>\n              <p className=\"mt-0.5 text-base font-semibold text-strong\">{event.title}</p>\n              {event.description ? <p className=\"mt-1 text-base text-body\">{event.description}</p> : null}\n            </div>\n          </li>\n        );\n      })}\n    </ol>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "timeline",
+    "palettes": false
+  }
+}

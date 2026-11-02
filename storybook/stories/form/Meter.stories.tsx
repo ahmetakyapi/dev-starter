@@ -8,7 +8,7 @@ const GB = (n: number) => `${n.toLocaleString("tr-TR")} GB`;
 
 const meta = {
   title: "Bileşenler/Geri Bildirim/Ölçer",
-  id: "components-feedback-meter",
+  id: "meter",
   component: Meter,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -124,16 +124,16 @@ export const AllVariants: Story = {
       <Cell label="Normal">
         <Meter label="API Kotası" value={4100} max={10000} valueText="4.100 / 10.000" className="w-full" />
       </Cell>
-      <Cell label="Uyarı eşiği (%75)">
+      <Cell label="Uyarı Eşiği (%75)">
         <Meter label="Depolama" value={39} max={50} valueText="39 GB / 50 GB" className="w-full" />
       </Cell>
-      <Cell label="Hata eşiği (%90)">
+      <Cell label="Hata Eşiği (%90)">
         <Meter label="Posta Kutusu" value={14.6} max={15} valueText="14,6 GB / 15 GB" statusText={{ warn: "Az Yer Kaldı", danger: "Kota Doldu" }} className="w-full" />
       </Cell>
-      <Cell label="Yüzde (değer metni yok)">
+      <Cell label="Yüzde (Değer Metni Yok)">
         <Meter label="Bellek" value={58} className="w-full" />
       </Cell>
-      <Cell label="Ters ölçek">
+      <Cell label="Ters Ölçek">
         <Meter label="Şifre Gücü" value={2} max={10} valueText="Zayıf" inverted statusText={{ warn: "Biraz Daha Uzat", danger: "Çok Kolay" }} className="w-full" />
       </Cell>
       <Cell label="Bölümlü">

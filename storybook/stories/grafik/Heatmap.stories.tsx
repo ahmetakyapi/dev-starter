@@ -11,7 +11,7 @@ type Args = ComponentProps<typeof Heatmap> & { haftaSayisi: number; tepe: number
 
 const meta = {
   title: "Grafikler/Isı Haritası",
-  id: "charts-heatmap",
+  id: "heatmap",
   component: Heatmap,
   tags: ["autodocs"],
   parameters: {
@@ -98,9 +98,9 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={2}>
       {[
-        { label: "Seyrek (tavan 4)", peak: 4, seed: 3 },
-        { label: "Orta (tavan 11)", peak: 11, seed: 7 },
-        { label: "Yoğun (tavan 30)", peak: 30, seed: 11 },
+        { label: "Seyrek (Tavan 4)", peak: 4, seed: 3 },
+        { label: "Orta (Tavan 11)", peak: 11, seed: 7 },
+        { label: "Yoğun (Tavan 30)", peak: 30, seed: 11 },
         { label: "Boş", peak: 0, seed: 1 },
       ].map((v) => {
         const data = gunluk({ weeks: 20, peak: v.peak, seed: v.seed });
