@@ -22,6 +22,27 @@ const config: StorybookConfig = {
     // Depo kökündeki snippet ve şablon dosyaları storybook/ dışında: Vite'ın
     // dosya sunucusu onlara izin vermeli.
     config.server = { ...config.server, fs: { ...config.server?.fs, allow: [repoRoot] } };
+    // Depo kökündeki dosyalar çıplak paketleri (lucide-react, @base-ui/react…)
+    // kendi konumlarından, yani kökteki node_modules'tan arar; orada yoklar ya
+    // da başka sürümdeler. dedupe hepsini storybook/node_modules'tan çözer
+    // (tek React kopyası da buna bağlı).
+    config.resolve = {
+      ...config.resolve,
+      dedupe: [
+        ...(config.resolve?.dedupe ?? []),
+        "react",
+        "react-dom",
+        "next",
+        "motion",
+        "lucide-react",
+        "@base-ui/react",
+        "clsx",
+        "tailwind-merge",
+        "three",
+        "@react-three/fiber",
+        "zod",
+      ],
+    };
     return config;
   },
 };

@@ -64,13 +64,13 @@
   --success: #0c7350;
   --success-wash: rgb(12 115 80 / 0.1);
   /* `--accent-warm` (brass) tonunun bir basamak koyusu: rozet metni kendi
-     wash'ı kart üstündeyken bile AA (sayfa 5,82 · wash 5,07 · kart+wash 4,82). */
+     wash'ı kart üstündeyken bile AA (sayfa 6,15 · wash 5,18 · kart+wash 4,87). */
   --warning: #825a0a;
-  --warning-wash: rgb(130 90 10 / 0.1);
+  --warning-wash: rgb(130 90 10 / 0.12);
   --danger: #c01a3d;
   --danger-wash: rgb(192 26 61 / 0.08);
   /* Sıcak ikincil vurgu (Açılış Zili "brass"); seyrek, tek nokta. Metin
-     rengi DEĞİL: açık zeminde 3,99:1, AA'nın altında. Uyarı metni `text-warning`. */
+     rengi DEĞİL: beyaz zeminde 4,21:1, AA'nın altında. Uyarı metni `text-warning`. */
   --accent-warm: #a4720f;
 
   /* Degrade düğme ve karo üstündeki metin her palette beyaz; CTA degradesi
@@ -103,11 +103,11 @@
   --chart-track: rgb(255 255 255 / 0.08);
 
   --success: #3ddc97;
-  --success-wash: rgb(61 220 151 / 0.14);
+  --success-wash: rgb(61 220 151 / 0.12);
   --warning: #d3a04a;
   --warning-wash: rgb(211 160 74 / 0.14);
   --danger: #ff5c7a;
-  --danger-wash: rgb(255 92 122 / 0.14);
+  --danger-wash: rgb(255 92 122 / 0.12);
   --accent-warm: #d3a04a;
 
   --surface-solid: color-mix(in srgb, var(--page-bg) 90%, var(--text-strong));
