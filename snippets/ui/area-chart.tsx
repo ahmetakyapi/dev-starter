@@ -133,7 +133,9 @@ export function AreaChart({
   const reduce = useReducedMotion();
   // Gözlemci kapta: `<defs>` içindeki kırpma dikdörtgeni boyutsuz, onu gözlemlemek güvenilmez.
   const frame = useRef<HTMLElement>(null);
-  const seen = useInView(frame, { once: true, amount: 0.3 });
+  // Hareket azaltmada görünür olmayı BEKLEME: son hal hemen çizilir. Yoksa
+  // ekran dışındaki grafik baskıda, tam sayfa görüntüde ve kaydırmadan önce boş kalır.
+  const seen = useInView(frame, { once: true, amount: 0.3 }) || reduce === true;
   const [active, setActive] = useState<number | null>(null);
   const [live, setLive] = useState("");
 
@@ -178,7 +180,9 @@ export function AreaChart({
 
   return (
     <figure ref={frame} className={cn("w-full", className)}>
-      <table className="sr-only">
+      <div className="sr-only">
+        {/* sr-only kap DIŞTA: <table> width: 1px'i yok sayar, uzun etiketle sayfayı yana taşırır. */}
+        <table>
         <caption>{title}</caption>
         <thead>
           <tr>
@@ -201,6 +205,7 @@ export function AreaChart({
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="flex gap-2">
         {/* Y ekseni: değer gerçek konumunda, çizgisiz */}

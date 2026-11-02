@@ -88,7 +88,9 @@ export function FunnelChart({
   const reduce = useReducedMotion();
   // Gözlemci kapta: `<defs>` içindeki kırpma dikdörtgeni boyutsuz, onu gözlemlemek güvenilmez.
   const frame = useRef<HTMLElement>(null);
-  const seen = useInView(frame, { once: true, amount: 0.3 });
+  // Hareket azaltmada görünür olmayı BEKLEME: son hal hemen çizilir. Yoksa
+  // ekran dışındaki grafik baskıda, tam sayfa görüntüde ve kaydırmadan önce boş kalır.
+  const seen = useInView(frame, { once: true, amount: 0.3 }) || reduce === true;
   const clip = `funnel-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const base = stages[0]?.value || 1;
   const paths = funnelPaths(

@@ -81,7 +81,9 @@ export function RadarChart({
 
   return (
     <figure className={cn("w-full", className)}>
-      <table className="sr-only">
+      <div className="sr-only">
+        {/* sr-only kap DIŞTA: <table> width: 1px'i yok sayar, uzun etiketle sayfayı yana taşırır. */}
+        <table>
         <caption>{title}</caption>
         <thead>
           <tr>
@@ -104,6 +106,7 @@ export function RadarChart({
           ))}
         </tbody>
       </table>
+      </div>
 
       <div aria-hidden className="relative mx-auto aspect-square w-full max-w-80">
         <svg viewBox={`${-BOX / 2} ${-BOX / 2} ${BOX} ${BOX}`} className="group/radar absolute inset-0 size-full overflow-visible">
@@ -128,7 +131,7 @@ export function RadarChart({
                   className={cn(FILL[tone], STROKE[tone])}
                   strokeWidth={2}
                   strokeLinejoin="round"
-                  initial={{ d: toPath(radarPoints(zero, max)) }}
+                  initial={{ d: toPath(reduce ? pts : radarPoints(zero, max)) }}
                   whileInView={{ d: toPath(pts) }}
                   viewport={view}
                   transition={transition}
@@ -139,7 +142,7 @@ export function RadarChart({
                     r={4}
                     strokeWidth={2}
                     className={cn(DOT[tone], "stroke-overlay")}
-                    initial={{ cx: 0, cy: 0 }}
+                    initial={reduce ? { cx: x, cy: y } : { cx: 0, cy: 0 }}
                     whileInView={{ cx: x, cy: y }}
                     viewport={view}
                     transition={transition}

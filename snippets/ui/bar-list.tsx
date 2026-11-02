@@ -76,7 +76,7 @@ export function BarList({
                 aria-hidden
                 className={cn("absolute inset-y-0 left-0 rounded-md", WASH[series - 1])}
                 style={{ width: `${Math.max((row.value / max) * 100, 1.5)}%`, originX: 0 }}
-                initial={{ scaleX: 0 }}
+                initial={reduce ? false : { scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: reduce ? 0 : 0.7, delay: reduce ? 0 : i * 0.06, ease: EASE }}

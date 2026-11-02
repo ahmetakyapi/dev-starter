@@ -61,7 +61,8 @@ export function ChartCard({ label, value, change, changeLabel = "önceki döneme
                   "rounded-sm px-1.5 py-0.5 text-small font-semibold tabular-nums",
                   up && "bg-success-wash text-success",
                   down && "bg-danger-wash text-danger",
-                  !up && !down && "bg-surface-raised text-muted",
+                  // text-body: text-muted bu zeminde 12 px'te 4,34:1 (AA altı, Storybook axe ölçtü)
+                  !up && !down && "bg-surface-raised text-body",
                 )}
               >
                 <span className="sr-only">{up ? "artış" : down ? "düşüş" : "değişim yok"}, {changeLabel}: </span>

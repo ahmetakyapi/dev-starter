@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView } from "motion/react";
+import { useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { cn } from "@/lib/utils";
 
@@ -109,7 +109,10 @@ export function Heatmap({
   const { cells, months } = heatmapGrid(data, { end, weeks, levels });
   const wrap = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
-  const shown = useInView(scroller, { once: true, amount: 0.3 });
+  // Hareket azaltmada görünür olmayı BEKLEME: son hal hemen çizilir. Yoksa
+  // ekran dışındaki grafik baskıda, tam sayfa görüntüde ve kaydırmadan önce boş kalır.
+  const reduce = useReducedMotion();
+  const shown = useInView(scroller, { once: true, amount: 0.3 }) || reduce === true;
   const [active, setActive] = useState<number | null>(null);
   const [tip, setTip] = useState<{ x: number; y: number } | null>(null);
   const [live, setLive] = useState("");
@@ -159,7 +162,9 @@ export function Heatmap({
 
   return (
     <figure ref={wrap} className={cn("relative w-full", className)}>
-      <table className="sr-only">
+      <div className="sr-only">
+        {/* sr-only kap DIŞTA: <table> width: 1px'i yok sayar, uzun etiketle sayfayı yana taşırır. */}
+        <table>
         <caption>{title}: aylık toplam</caption>
         <tbody>
           {[...monthTotals].map(([key, total]) => (
@@ -172,6 +177,7 @@ export function Heatmap({
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="flex gap-1.5 [--cell:12px] sm:[--cell:15px]">
         {/* Gün etiketleri kaydırmanın DIŞINDA: kare boyu sabit, satırlar aynı şablonla hizalı */}
