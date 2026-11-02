@@ -152,7 +152,7 @@ jobs:
       - name: AI slop scan
         run: |
           bash scripts/test-slop-scan.sh
-          bash scripts/slop-scan.sh templates snippets packages/@ahmet/ui/src
+          bash scripts/slop-scan.sh templates snippets packages/@ahmet/ui/src storybook/stories
 
   agentic:
     name: Agentic Verification

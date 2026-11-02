@@ -1,5 +1,16 @@
 # storybook — dev-starter Görsel Kataloğu
 
+**541 hikâye + 94 belge sayfası**, her biri açık/koyu tema ve 10 palette:
+
+| Bölüm | İçerik |
+|-------|--------|
+| Giriş, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
+| Bileşenler | `snippets/ui`nin bütün bileşenleri + şablonun ortak bileşenleri; her biri varsayılan, durumlar, bütün varyantlar, `play` etkileşimi |
+| Grafikler | 11 grafik + Analitik Panosu, Satış Özeti kompozisyonları |
+| Bloklar | Uygulama kabuğu, sohbet, giriş, ayarlar, ajan planı, palet seçici |
+| Ekranlar | Landing (tam sayfa, 8 kahraman, 11 bölüm), vitrin sayfaları, uygulama ekranları |
+| Ekranlar/Showcase | **Pusula**: 73 bileşenin hepsi tek uygulamada, tutarlı sahte veriyle; "Bileşen Kapsamı" %100'ü kaynaktan ölçer |
+
 Ekosistemin bileşenleri, ekranları ve temaları tek yerde, canlı: `snippets/ui`
 kütüphanesinin her bileşeni bütün durumlarıyla, landing şablonunun ekranları,
 uygulama ekranı kompozisyonları ve token'ların (renk, punto, yüzey, grafik,
@@ -48,3 +59,25 @@ etkileşimi sına (`storybook/test`).
 Sürümler sabit (`storybook` 10.6.3): 10.6.2'nin Next taklidinde
 `LayoutRouterContext.parentRenderTree` yoktu ve Next 16.4'ün `useRouter`ı
 çöküyordu; 10.6.3 bunu düzeltti. Yükseltmeden önce derleyip bir hikâyeyi çiz.
+
+## Doğrulama (Kasım 2026)
+
+Her grup hikâyeleri açık/koyu × 390/1280'de çizildi: `play` sonucu, konsol
+hatası, yatay taşma ve axe (ham + eklenti). Yakalanan snippet hataları
+kaynağında düzeltildi (chat-composer menü çökmesi, command-palette listbox,
+bildirim zili adı, stat/chart-card/textarea/time-field kontrastı,
+date-picker diyalog adı, number-field taşması, grafiklerin hareket
+azaltmada ekran dışında boş kalması, sr-only tabloların telefonda taşırması).
+
+## Bilinen Sınırlar
+
+- `data-table` yapışkan ilk sütunun zemini `page`/`surface` seçer; `bg-overlay`
+  karo içinde koyuda bir ton koyu görünür (`stickyFirst={false}`).
+- `data-table` kaydırma solması (`animation-timeline: scroll()`) taşan
+  tabloda bitmeyen animasyon sayılır; geçiş bekleyen testler onu dışlamalı.
+- `route-progress` aynı adrese (yalnız sorgu değişen) bağlantıda da başlar ve
+  10 sn güvenlik durdurmasına kadar kalır.
+- Yerel `<dialog>`a sentetik Escape test ortamında `cancel` üretmez; hikâyeler
+  "Kapat" düğmesini kullanır.
+- Takvimdeki "bugün" işareti gerçek saate bağlı; sabit sahte veri 2 Kasım 2026.
+
