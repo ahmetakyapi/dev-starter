@@ -175,7 +175,8 @@ export function TimeField({
         }}
         className={cn(
           "rounded-sm px-1 py-0.5 tabular-nums caret-transparent outline-none transition-colors",
-          "focus:bg-primary-wash focus:text-primary-ink",
+          // Dolgu: alan zemininde wash + ink 4,27:1 kalıyordu; primary/on-primary AA (testli).
+          "focus:bg-primary focus:text-on-primary",
           current === null ? "text-muted" : "text-strong",
         )}
       >
