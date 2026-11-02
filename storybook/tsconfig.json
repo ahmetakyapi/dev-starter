@@ -1,0 +1,91 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": false,
+    "types": [
+      "node",
+      "react",
+      "react-dom"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/components/ui/*": [
+        "../snippets/ui/*",
+        "../templates/landing/components/ui/*"
+      ],
+      "@/*": [
+        "../templates/landing/*"
+      ],
+      "react": [
+        "./node_modules/@types/react"
+      ],
+      "react/*": [
+        "./node_modules/@types/react/*"
+      ],
+      "react-dom": [
+        "./node_modules/@types/react-dom"
+      ],
+      "react-dom/*": [
+        "./node_modules/@types/react-dom/*"
+      ],
+      "next": [
+        "./node_modules/next"
+      ],
+      "next/*": [
+        "./node_modules/next/*"
+      ],
+      "motion/*": [
+        "./node_modules/motion/*"
+      ],
+      "lucide-react": [
+        "./node_modules/lucide-react"
+      ],
+      "@base-ui/react": [
+        "./node_modules/@base-ui/react"
+      ],
+      "@base-ui/react/*": [
+        "./node_modules/@base-ui/react/*"
+      ],
+      "clsx": [
+        "./node_modules/clsx"
+      ],
+      "tailwind-merge": [
+        "./node_modules/tailwind-merge"
+      ],
+      "three": [
+        "./node_modules/@types/three"
+      ],
+      "three/*": [
+        "./node_modules/@types/three/*"
+      ],
+      "@react-three/fiber": [
+        "./node_modules/@react-three/fiber"
+      ],
+      "zod": [
+        "./node_modules/zod"
+      ]
+    },
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
+  },
+  "include": [
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
+    "stories/**/*.ts",
+    "stories/**/*.tsx"
+  ]
+}
