@@ -25,6 +25,11 @@ import { cn } from "@/lib/utils";
  *   Home / End   ilk / son satır
  *   Enter        aç/kapa
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): başlık satırı soluk, satır üzerine
+ * gelince `bg-surface`, klavyeyle odaklanan satır yumuşak gri
+ * (`bg-surface-raised`) + halka. Alt düzeyler girintiyle ve `text-body`
+ * ile geri çekilir.
+ *
  * Hücreler HAZIR İÇERİK (`cells: { gelir: "1.240 ₺" }`): fonksiyon değil
  * ReactNode, yani satırlar bir sunucu bileşeninden olduğu gibi geçer. Sayı
  * biçimlemesi sunucuda yapılır, tarayıcıya yalnızca sonuç iner.
@@ -109,7 +114,7 @@ export function TreeTable({ caption, columns, rows, defaultExpanded = [], minWid
                 key={column.key}
                 scope="col"
                 style={column.width ? { width: column.width } : undefined}
-                className={cn("px-3 py-2.5 text-small font-semibold whitespace-nowrap text-muted", column.numeric ? "text-end" : "text-start")}
+                className={cn("px-3 py-2.5 text-small font-medium whitespace-nowrap text-muted", column.numeric ? "text-end" : "text-start")}
               >
                 {column.header}
               </th>
@@ -138,7 +143,7 @@ export function TreeTable({ caption, columns, rows, defaultExpanded = [], minWid
                   if (hasChildren) toggle(row.id);
                 }}
                 className={cn(
-                  "border-b border-line-soft transition-colors last:border-0 hover:bg-surface focus-visible:bg-primary-wash",
+                  "border-b border-line-soft transition-colors duration-100 last:border-0 hover:bg-surface focus-visible:bg-surface-raised",
                   hasChildren && "cursor-pointer",
                   level === 1 ? "text-strong" : "text-body",
                 )}
@@ -156,7 +161,7 @@ export function TreeTable({ caption, columns, rows, defaultExpanded = [], minWid
                       <span className="flex min-h-6 items-center gap-1.5" style={{ paddingLeft: `${(level - 1) * 1.25}rem` }}>
                         <span aria-hidden className="grid size-4 shrink-0 place-items-center text-muted">
                           {hasChildren ? (
-                            <ChevronRight className={cn("size-4 transition-transform", isOpen && "rotate-90")} strokeWidth={1.75} />
+                            <ChevronRight className={cn("size-4 transition-transform duration-200", isOpen && "rotate-90")} strokeWidth={1.75} />
                           ) : null}
                         </span>
                         <span className="min-w-0">{row.cells[column.key]}</span>

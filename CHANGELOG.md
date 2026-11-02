@@ -7,6 +7,69 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Board dili, ikinci dalga — 2026-11-01
+
+#### Eklendi
+
+- **37 yeni `snippets/ui` bileşeni** (hepsi şablon kopyasında tsc, eslint,
+  next build, 390/1440 × açık/koyu ekran görüntüsü ve Playwright etkileşimiyle):
+  - Form: `slider`, `number-field`, `input-otp`, `textarea`, `tag-input`,
+    `color-picker`, `date-calendar`, `date-picker`, `time-field`.
+  - Katman / geri bildirim: `context-menu`, `notification-center`, `close-button`,
+    `divider`, `progress`, `meter`, `announcement`, `carousel`, `chip`, `banner-alert`.
+  - Grafik (animasyonlu SVG, bağımlılıksız): `area-chart`, `gauge-chart`,
+    `funnel-chart`, `heatmap`, `radar-chart`, `sankey-chart`, `bar-list`
+    (+ ilk dalganın `chart-card`, `stage-bars`, `track-bar-chart`, `ring-chart`).
+  - Bloklar: `app-shell`, `auth-card`, `settings-dialog`, `agent-plan`,
+    `chat-composer`, `chat-thread`, `palette-switcher`.
+- **`snippets/ui/vitrin/`**: giriş + beş grup sayfası, her bileşenin doğru kullanımı.
+- **`templates/*/app/palettes.css`** (isteğe bağlı): on palet + palet seçici
+  noktaları (`--swatch-*`), `scripts/build-template-palettes.mjs` ile
+  tokens.ts'ten üretilir; contract testi eşliği denetler.
+- `.tile` karo sınıfı (`@ahmetakyapi/theme/css`).
+
+#### Değişti
+
+- **Koyu tema**: zemin `#0c0c0d`, yükseldikçe açılan yüzeyler, `overlay #18181a`,
+  `#f5f5f5` metin, karo üst kenarında ışık çizgisi. Açıkta `--overlay` opak.
+- **31 mevcut bileşen board diline**: açılır yüzeyler `rounded-xl` + kıl çizgisi,
+  seçim göstergesi kuyunun üstünde kayan beyaz karo, çizilerek gelen tik, yaylı
+  anahtar ve radyo, pastel avatar + `AvatarGroup`, badge kategori tonları.
+  **`tabs` varsayılanı `well`** (eski görünüm `variant="underline"`).
+- **landing şablonu**: varsayılan hero `showcase` (canlı ürün panosu); Özellikler'de
+  ikon kareleri yerine canlı demolar (`components/demos/`); Nasıl Çalışır
+  kaydırmaya bağlı yapışkan sahne; Görüşler, Fiyatlar (aylık/yıllık + yuvarlanan
+  fiyat), SSS, kapanış ve alt bilgi (büyük kelime işareti) yenilendi; başlık
+  masaüstünde kaydırınca cam hapa daralır; font `board` preseti; içerik testi 44.
+
+#### Düzeltildi
+
+- `radio-group` iç noktası `scale-0`dan büyüyordu (slop kuralı); `data-table`
+  yapışkan ilk hücre satır üzerine gelince gri olmuyordu.
+
+### Board görsel dili — 2026-11-01
+
+#### Değişti
+
+- **Sistem katmanı nötr** (`@ahmetakyapi/theme` + iki şablonun `globals.css`i):
+  zemin `#ffffff` / `#121212`, metin ve çizgi grileri mavi tonsuz, kısa
+  katmanlı gölgeler. `text-muted` kuyu kartın üstünde de AA (`#6b6b6b`).
+- `@ahmetakyapi/ui` `Button` `primary`: `bg-cta` + `shadow-cta`; `secondary`
+  beyaz karo. Şablon `Button`: `brand`/`primary` `shadow-cta`, `secondary`
+  beyaz karo, `ghost` nötr.
+
+#### Eklendi
+
+- **Altı parlak palet**: `cobalt`, `violet`, `rose`, `ruby`, `tangerine`,
+  `jade` (CSS + `tokens.ts`, her biri contract testinde WCAG ölçümlü).
+- **Grafik token'ları** `--chart-1…6`, `--chart-track`, `--chart-ink`
+  (`bg-chart-*`, `stroke-chart-*`; `tokens.ts` → `chart`), `--shadow-cta`,
+  `--radius-2xl`.
+- **`board` font preseti**: Inter (opsz) + JetBrains Mono; Türkçe ve ₺ cmap'ten doğrulandı.
+- **`snippets/ui`**: `chart-card.tsx`, `stage-bars.tsx`, `track-bar-chart.tsx`,
+  `ring-chart.tsx` (sunucu bileşeni, JS'siz seri yalıtımı).
+- `decisions.md` → "Board Görsel Dili", `design-references.md` → boardui.com.
+
 ### Canlı önizleme kuralı — 2026-10-27
 
 #### Eklendi

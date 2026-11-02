@@ -62,7 +62,18 @@
     letter-spacing: -0.035em;
   }
 
-  /* ── Başlık çubuğu: kaydırınca ton değiştirir ───────────────────────── */
+  /* ── Başlık çubuğu: telefonda ton, masaüstünde cam hap ─────────────────
+     Telefonda (md altı) başlık her zaman OPAK ve tam genişlik: saydam üst
+     katman iOS 26 Safari'de durum çubuğunun altını buğulandırıyor
+     (mistakes.md #94). Kaydırınca yalnızca alt çizgi gelir.
+
+     Masaüstünde kaydırınca içerik ortada bir cam HAPA toplanır. Daralma
+     YERLEŞİMLE değil dönüşümle: üç sütunlu ızgara (marka · menü · eylem)
+     yerinde kalır; marka sağa, eylem sola `translateX(--pill-d)` kayar, cam
+     zemin `clip-path: inset(0 --pill-d round ...)` ile aynı paya kırpılır.
+     `max-width`/`width` geçişi her karede yerleşimi yeniden hesaplatırdı.
+     Pay: kabın genişliği ile hedef hap genişliği farkının yarısı; kap dar
+     olduğunda 0'a iner (hap tam genişlik kalır). */
   .site-header {
     border-bottom: 1px solid transparent;
     transition:
@@ -72,6 +83,178 @@
 
   .site-header[data-scrolled="true"] {
     border-bottom-color: var(--line-soft);
+  }
+
+  @media (width >= 48rem) {
+    .site-header,
+    .site-header[data-scrolled="true"] {
+      border-bottom-color: transparent;
+    }
+
+    .header-bar {
+      --pill-d: 0px;
+    }
+
+    .site-header[data-scrolled="true"] .header-bar {
+      --pill-d: max(0px, (min(100vw - 2rem, 72rem) - 50rem) / 2);
+    }
+
+    /* Cam, `glass` yardımcısının bir tık dolu hali: beyaz sayfada %72
+       zemin, altından geçen büyük başlığı bulanık bir leke gibi
+       gösteriyordu. Yardımcı sınıf kullanılmaz (yardımcı katmanı bu
+       katmanı ezer); geri düşüşler `glass` ile aynı. */
+    .header-glass {
+      background-color: var(--surface-solid);
+      border: 1px solid var(--line-soft);
+      opacity: 0;
+      clip-path: inset(0 var(--pill-d) round 999px);
+      transition:
+        opacity 300ms,
+        clip-path 420ms var(--ease-brand);
+    }
+
+    .site-header[data-scrolled="true"] .header-glass {
+      opacity: 1;
+    }
+
+    @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+      .header-glass {
+        background-color: color-mix(in srgb, var(--overlay) 86%, transparent);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+        backdrop-filter: blur(16px) saturate(140%);
+      }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .header-glass {
+        background-color: var(--surface-solid);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+    }
+
+    .header-start,
+    .header-end {
+      transition: transform 420ms var(--ease-brand);
+    }
+
+    .header-start {
+      transform: translateX(var(--pill-d));
+    }
+
+    .header-end {
+      transform: translateX(calc(var(--pill-d) * -1));
+    }
+  }
+
+  /* ── Board tipografisi ──────────────────────────────────────────────────
+     Büyük ve SIKI: hiyerarşiyi renk değil punto ve aralık kurar. Satır
+     yüksekliği maskenin payıyla ölçüldü (1.0 altı Türkçe kuyruklara değer). */
+  .hero-display {
+    font-size: clamp(2.6rem, 9.6vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+  }
+
+  /* Panodaki ve fiyattaki display rakamlar: ölçeğin `display` basamağına
+     yakın ama rakama özgü sıkılık ve tek satır yüksekliği (yuvarlanan sayı
+     penceresi satır yüksekliğiyle ölçülür). */
+  .metric-figure {
+    font-size: 2.25rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .price-figure {
+    font-size: 3rem;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  /* Nasıl Çalışır adımı: telefonda `heading`, geniş ekranda bir basamak büyük. */
+  .step-title {
+    font-size: var(--text-heading);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  @media (width >= 64rem) {
+    .step-title {
+      font-size: 2rem;
+    }
+  }
+
+  /* Görüş alıntısı: gövdenin en büyük puntosu, başlık kadar sıkı değil. */
+  .quote-text {
+    font-size: clamp(1.5rem, 3.4vw, 2.5rem);
+    line-height: 1.25;
+    letter-spacing: -0.022em;
+    text-wrap: pretty;
+  }
+
+  /* Phrases: anlam öbeği tek parça alt satıra iner (components/text). */
+  .phrase {
+    display: inline-block;
+  }
+
+  /* ── Hero panosu (showcase) ─────────────────────────────────────────────
+     Sıra: başlık satırları (60–240 ms) → açıklama ve eylemler → pano yükselir
+     → huni çubukları soldan dolar → hafta sütunları aşağıdan → sayı yuvarlanır.
+     Hepsi CSS: hidrasyonu beklemez. Çubuk ve sütun `clip-path` ile dolar
+     (küçük öğe, tek seferlik açılış; guides/04 § 14 kural 9), köşe yarıçapı
+     ezilmez. Hareketi azaltan okuyucu bu bloğa hiç girmez: son hâl. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-fade {
+      animation: hero-fade 0.6s var(--ease-brand) 0.28s both;
+    }
+
+    .hero-board {
+      animation: board-rise 0.8s var(--ease-brand) 0.36s both;
+    }
+
+    .bar-fill {
+      animation: bar-fill 0.6s var(--ease-brand) both;
+      animation-delay: calc(0.8s + var(--i, 0) * 60ms);
+    }
+
+    .col-rise {
+      animation: col-rise 0.5s var(--ease-brand) both;
+      animation-delay: calc(0.9s + var(--i, 0) * 60ms);
+    }
+
+    .step-pulse {
+      animation: step-pulse 1.2s ease-in-out infinite;
+    }
+
+    /* Yazma imleci: saniyede bir, yumuşak geçişsiz (gerçek imleç gibi). */
+    .caret {
+      animation: caret 1s steps(1) infinite;
+    }
+
+    /* SSS: açılan yanıt yarım satır aşağıdan belirir. Yükseklik
+       canlandırılmaz (yerleşim); yalnızca içerik. */
+    .faq-item[open] .faq-answer {
+      animation: hero-fade 0.3s var(--ease-brand) both;
+    }
+  }
+
+  /* ── Alt bilgi kelime işareti ───────────────────────────────────────────
+     Site adı kabın genişliğini doldurur: punto ad uzunluğundan hesaplanır
+     (`--chars`, kap sorgusu birimi). Ad değişince kendiliğinden sığar. */
+  .wordmark-box {
+    container-type: inline-size;
+  }
+
+  .wordmark {
+    font-size: calc(100cqi / (var(--chars, 8) * 0.6));
+    line-height: 0.8;
+    letter-spacing: -0.055em;
   }
 
   /* ── Hero zemini: R3F sahnesinin CSS karşılığı ──────────────────────────
@@ -130,21 +313,64 @@
     }
   }
 
-  /* ── Nasıl çalışır: kaydırmaya bağlı ilerleme çizgisi ───────────────────
-     JavaScript'siz, `animation-timeline: view()`. Liste görünümde ilerledikçe
-     çizgi yukarıdan aşağı dolar. Desteklemeyen tarayıcıda ve hareketi
-     azaltanda çizgi baştan dolu durur: bilgi kaybı yok, süs eksik. */
-  .steps-rail {
-    transform-origin: top;
+  /* ── Nasıl çalışır: yapışkan sahne ──────────────────────────────────────
+     Varsayılan (telefon, hareketi azaltan): düz liste, her adımın altında
+     kendi durumu. Geniş ekranda ve hareket serbestken: adımlar uzun aralıklı,
+     okunmayan adım geri çekilir, sağda tek yapışkan panel. `hidden` sınıfı
+     KULLANILMAZ: yardımcı katmanı bu katmandaki `display`i ezerdi. */
+  .how-sticky,
+  .how-rail {
+    display: none;
   }
 
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .steps-rail {
-        animation: rail-fill linear both;
-        animation-timeline: view();
-        animation-range: cover 15% cover 65%;
-      }
+  .how-list {
+    grid-column: 1 / -1;
+  }
+
+  .how-inline-scene {
+    margin-top: 1.5rem;
+  }
+
+  /* Geniş ekranda düz liste (hareketi azaltan okuyucu): adım metni solda,
+     durumu sağda; sağ yarı boş kalmasın. */
+  @media (width >= 64rem) {
+    .how-step {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .how-inline-scene {
+      margin-top: 0;
+    }
+  }
+
+  @media (width >= 64rem) and (prefers-reduced-motion: no-preference) {
+    .how-sticky,
+    .how-rail {
+      display: block;
+    }
+
+    .how-list {
+      grid-column: span 5;
+    }
+
+    .how-inline-scene {
+      display: none;
+    }
+
+    .how-step {
+      display: flex;
+      min-height: 56vh;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 2.5rem;
+      transition: opacity 300ms;
+    }
+
+    .how-step:not([data-active="true"]) {
+      opacity: 0.4;
     }
   }
 
@@ -207,6 +433,51 @@
   }
 }
 
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.6rem, 0);
+  }
+}
+
+@keyframes board-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2rem, 0);
+  }
+}
+
+@keyframes bar-fill {
+  from {
+    clip-path: inset(0 100% 0 0 round 0.75rem);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 0.75rem);
+  }
+}
+
+@keyframes col-rise {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes step-pulse {
+  50% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
 @keyframes line-rise {
   from {
     transform: translate3d(0, 0.55em, 0);
@@ -216,12 +487,6 @@
 @keyframes marquee {
   to {
     transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes rail-fill {
-  from {
-    transform: scaleY(0);
   }
 }
 

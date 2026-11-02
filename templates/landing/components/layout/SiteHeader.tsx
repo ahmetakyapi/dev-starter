@@ -12,8 +12,11 @@ import type { Theme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 /*
- * Yapışkan başlık. Sayfanın başında zeminle bir, kaydırınca örtü tonuna ve
- * alt çizgiye geçer: içeriğin altından aktığı anlaşılır.
+ * Yapışkan başlık. Sayfanın başında zeminle bir. Kaydırınca:
+ *  - masaüstünde içerik ortada bir CAM HAPA toplanır (`.header-glass`,
+ *    arkasından gerçekten içerik aktığı için cam burada yerinde). Daralma
+ *    dönüşüm + kırpma ile, yerleşim değişmez (app/landing.css → "Başlık çubuğu").
+ *  - telefonda opak örtü tonu ve alt çizgi (iOS buğusu, mistakes.md #94).
  *
  * Kaydırma `useScroll` ile izlenir (scroll dinleyicisi yok). Durum yalnızca
  * EŞİK geçildiğinde değişir; aynı değeri yeniden yazmak React'te çizim
@@ -51,28 +54,31 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
     <header
       data-scrolled={toned}
       className={cn(
-        "site-header sticky top-0 z-30 pt-[env(safe-area-inset-top)]",
+        "site-header sticky top-0 z-30 pt-[env(safe-area-inset-top)] md:px-4 md:pt-[max(0.75rem,env(safe-area-inset-top))]",
         // Telefonda en üstte de opak: saydam üst katmanda iOS 26 Safari durum
         // çubuğunun altını bulanıklaştırıyor ("buğulu üst", mistakes.md #94).
-        toned ? "bg-overlay" : "bg-page md:bg-transparent",
+        toned ? "bg-overlay md:bg-transparent" : "bg-page md:bg-transparent",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <a href="#ust" className="flex min-h-11 items-center gap-2.5 rounded-md">
+      <div className="header-bar relative mx-auto flex h-16 max-w-6xl items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr] gap-4 px-4 sm:px-6 md:h-14 md:px-3">
+        {/* Cam hap zemini: yalnızca masaüstünde ve kaydırınca görünür. */}
+        <span aria-hidden className="header-glass pointer-events-none absolute inset-0 hidden rounded-full shadow-floating md:block" />
+
+        <a href="#ust" className="header-start relative flex min-h-11 items-center gap-2.5 justify-self-start rounded-md">
           {/* Marka karosu: degradenin izinli üç yerinden biri. */}
           <span aria-hidden className="grid size-8 place-items-center rounded-sm bg-brand text-on-brand [&_svg]:size-4">
             <Layers />
           </span>
-          <span className="text-read font-bold text-strong">{SITE_NAME}</span>
+          <span className="text-read font-semibold tracking-[-0.01em] text-strong">{SITE_NAME}</span>
         </a>
 
-        <nav aria-label="Ana menü" className="hidden md:block">
-          <ul className="flex items-center gap-1">
+        <nav aria-label="Ana menü" className="relative hidden md:block">
+          <ul className="flex items-center gap-0.5">
             {nav.links.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="inline-flex min-h-11 items-center rounded-md px-3 text-base font-medium text-body transition-colors hover:text-strong"
+                  className="inline-flex min-h-11 items-center rounded-full px-3 text-base font-medium text-body transition-colors hover:bg-surface-raised hover:text-strong pointer-fine:min-h-9"
                 >
                   {link.label}
                 </a>
@@ -81,9 +87,12 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="header-end relative flex items-center gap-2 justify-self-end">
           <ThemeToggle initialTheme={initialTheme} />
-          <a href={nav.cta.href} className={buttonClass({ variant: "primary", size: "sm", className: "hidden sm:inline-flex" })}>
+          <a
+            href={nav.cta.href}
+            className={buttonClass({ variant: "primary", size: "sm", className: "hidden rounded-full px-4 sm:inline-flex" })}
+          >
             {nav.cta.label}
           </a>
           <button

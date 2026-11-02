@@ -45,7 +45,8 @@ YOK; gerekiyorsa `nextjs-fullstack` şablonundan alınır.
 
 1. `lib/site.ts` (ad, açıklama) ve `lib/content.ts` (bütün metin). Bileşene
    dokunmak gerekmez; `tests/content.test.ts` yazım ve yapı kurallarını denetler.
-2. Hero düzeni: `lib/content.ts` → `hero.variant` (yedi düzen,
+2. Hero düzeni: `lib/content.ts` → `hero.variant` (sekiz düzen, varsayılan
+   `showcase`: büyük sıkı başlık + altında canlı ürün panosu,
    `components/heroes/index.tsx` başında hangisinin ne zaman seçileceği).
    Geliştirmede `/?hero=statement` ile denenir; üretimde parametre okunmaz.
 3. Palet: `app/globals.css`teki iki `signature` bloğu (aşağıda).
@@ -55,11 +56,20 @@ YOK; gerekiyorsa `nextjs-fullstack` şablonundan alınır.
 
 ## Sayfa düzeni
 
-Sıra: Hero → Logo şeridi → Özellikler (bento) → Nasıl Çalışır (yapışkan
-başlık + kaydırmaya bağlı çizgi) → Görüşler (bir büyük + iki küçük alıntı) →
-Fiyatlar (2 plan + kurumsal satır) → SSS (`<details>`) → Kapanış.
-Her bölüm ayrı bir düzen ailesi; aynı aileyi ikinci kez kullanma.
+Sıra: Hero (showcase: canlı pano) → Logo şeridi → Özellikler (vitrin
+bentosu, her kartın üstünde o özelliği oynayan canlı demo) → Nasıl Çalışır
+(gri bant, kaydırmaya bağlı yapışkan ürün sahnesi) → Görüşler (tek büyük
+alıntı + kişi sekmeleri) → Fiyatlar (aylık/yıllık seçici, 2 plan + kurumsal
+satır) → SSS (tek kuyuda `<details>`) → Kapanış → alt bilgi (sütunlar +
+büyük kelime işareti). Her bölüm ayrı bir düzen ailesi; aynı aileyi ikinci
+kez kullanma. Ritim yoğun / ferah sırayla, vurgu koyu zemin değil TON farkı.
 
+- **Board dili:** kart gri kuyu (`bg-surface rounded-2xl`), içindeki parça
+  beyaz karo (`bg-overlay shadow-raised rounded-lg`, `components/demos/styles.ts`
+  → `TILE`). Kart içinde kart yok. Başlıkların üstünde ikon karesi YOK.
+- **Demolar** (`components/demos/`): tek saat `hooks/useStory.ts`; `tick 0`
+  tasarımın kendisi (sunucu çizimi ve hareketi azaltan okuyucu onu görür),
+  kart görünmüyorken durur. Demo verisi `lib/content.ts`te, ÖRNEK.
 - **Üst künye (eyebrow) yalnızca hero'da.** Bölüm başlıkları künyesiz.
 - **Tek niyet, tek etiket.** Kayıt eylemi her yerde "Ücretsiz Başla" ve aynı
   adrese gider; test bunu denetler.
@@ -73,11 +83,15 @@ Her bölüm ayrı bir düzen ailesi; aynı aileyi ikinci kez kullanma.
 
 - Hero başlığı satır satır maskeli açılır, CSS'te (`.line-mask`, `app/landing.css`).
   **Opaklık 0'dan başlamaz**: LCP öğesi ilk karede boyanır.
-- Rakamlar `RollingNumber` (JavaScript'siz, sunucuda). Yalnızca ilk ekranda;
-  aşağıdaki bir sayıya konursa okuyucu gelmeden dönüş biter.
-- Kaydırmaya bağlı tek CSS öğesi: adım çizgisi (`animation-timeline: view()`,
-  `@supports` korumalı; desteklemeyen tarayıcıda dolu durur).
-- Mıknatıs ve eğim yalnızca `(hover: hover) and (pointer: fine)` ve hareket
+- Rakamlar `RollingNumber` (JavaScript'siz, sunucuda). İlk ekranda (hero
+  panosu) ya da etkileşimle yeniden bağlanınca (fiyat dönemi, `key`);
+  aşağıdaki bir sayıya durağan konursa okuyucu gelmeden dönüş biter.
+- Kaydırmaya bağlı tek sahne: Nasıl Çalışır (`useScroll`, durum yalnızca eşikte
+  değişir). Hangi düzenin çizileceği CSS'te (geniş + hareket serbest:
+  yapışkan; telefon ya da hareketi azaltan: düz liste).
+- Başlık çubuğu masaüstünde kaydırınca cam hapa daralır: `transform` +
+  `clip-path`, genişlik canlandırılmaz.
+- Mıknatıs, eğim ve hero panosunun imleç paralaksı yalnızca `(hover: hover) and (pointer: fine)` ve hareket
   serbestken (`hooks/useFinePointer.ts`).
 - Scroll dinleyicisi yok: `useScroll`, IntersectionObserver ya da CSS.
 - `globals.css` sistem dosyasıdır (nextjs-fullstack ile birebir); landing'e

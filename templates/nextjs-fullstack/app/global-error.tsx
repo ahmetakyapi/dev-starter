@@ -10,8 +10,8 @@
  */
 
 const STYLES = `
-:root{color-scheme:light dark;--bg:#f7f9fb;--fg:#101c2b;--soft:#54677c;--btn:#0d74c4;--on:#fff}
-@media (prefers-color-scheme:dark){:root{--bg:#070d16;--fg:#eaf1f8;--soft:#94a7ba;--btn:#35b8ff;--on:#06121f}}
+:root{color-scheme:light dark;--bg:#ffffff;--fg:#0a0a0a;--soft:#525252;--btn:#0d74c4;--on:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#0c0c0d;--fg:#f5f5f5;--soft:#a1a1a1;--btn:#35b8ff;--on:#06121f}}
 body{margin:0;min-height:100dvh;display:grid;place-items:center;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,sans-serif;padding:1rem}
 main{max-width:28rem;text-align:center}
 h1{font-size:1.5rem;margin:0 0 .75rem}

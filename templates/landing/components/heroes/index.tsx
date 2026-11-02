@@ -5,12 +5,15 @@ import { LiveDataHero } from "./LiveData";
 import { MinimalHero } from "./Minimal";
 import { ProductFrameHero } from "./ProductFrame";
 import { ScrollStageHero } from "./ScrollStage";
+import { ShowcaseHero } from "./Showcase";
 import { StatementHero } from "./Statement";
 
 /**
  * Hero kataloğu. Seçim `lib/content.ts` → `hero.variant`, tek satır.
  *
  * Ne zaman hangisi:
+ *  - showcase         VARSAYILAN. Ürünün arayüzü gösterilebiliyorsa: büyük sıkı başlık + altında canlı pano
+ *                     (`HeroBoard`, gerçek bileşen). Panonun verisi `hero.board`, ÖRNEK veri künyeli.
  *  - editorial-split  Gösterecek gerçek bir ürün ekranı ya da fotoğraf varsa; varsayılan güvenli seçim.
  *  - statement        Mesajın kendisi yeterince güçlüyse (lansman, manifesto); görsel gerekmez.
  *  - product-frame    Ürünün arayüzü satışı yapıyorsa; geniş bir ekran görüntüsü şart.
@@ -22,6 +25,7 @@ import { StatementHero } from "./Statement";
  * Ortak kurallar `./shared.tsx` başında.
  */
 const HEROES = {
+  showcase: ShowcaseHero,
   "editorial-split": EditorialSplitHero,
   statement: StatementHero,
   "product-frame": ProductFrameHero,

@@ -24,6 +24,10 @@ import { cn } from "@/lib/utils";
  * `layoutId` SAYFADA TEKİL OLMALI: aynı adı taşıyan iki gösterge birbirine
  * uçar. Ad `useId`den türüyor; iki denetim yan yana durabilir.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): gri kuyu (`bg-surface-sunken`, `p-1`)
+ * üstünde BEYAZ KARO (`bg-overlay` + `shadow-raised`, çizgisiz): seçim
+ * renkle değil yükseklikle okunur. Basılan seçenek hafifçe çöker (0,97).
+ *
  * Hareketi azaltan kullanıcıda gösterge kaymaz, yerinde belirir
  * (`MotionConfig reducedMotion="user"` düzen animasyonunu kapatır).
  */
@@ -76,7 +80,7 @@ export function SegmentedControl<T extends string>({
       <div
         role="radiogroup"
         aria-label={props["aria-label"]}
-        className={cn("inline-flex w-fit max-w-full gap-0.5 overflow-x-auto rounded-md bg-surface-sunken p-0.5", className)}
+        className={cn("inline-flex w-fit max-w-full gap-0.5 overflow-x-auto rounded-md bg-surface-sunken p-1 [scrollbar-width:none]", className)}
       >
         {options.map((option, index) => {
           const selected = option.value === value;
@@ -94,8 +98,8 @@ export function SegmentedControl<T extends string>({
               onClick={() => onValueChange(option.value)}
               onKeyDown={(event) => move(event, value)}
               className={cn(
-                "relative min-h-11 shrink-0 rounded-sm px-3.5 font-semibold whitespace-nowrap transition-colors disabled:opacity-50 [&:focus-visible]:outline-offset-[-2px]",
-                size === "sm" ? "text-small pointer-fine:min-h-8" : "text-base pointer-fine:min-h-9",
+                "relative min-h-11 shrink-0 rounded-sm px-3.5 font-medium whitespace-nowrap transition-[color,scale] duration-150 active:scale-[0.97] disabled:opacity-50 disabled:active:scale-100 [&:focus-visible]:outline-offset-[-2px]",
+                size === "sm" ? "text-small pointer-fine:min-h-7" : "text-base pointer-fine:min-h-8",
                 selected ? "text-strong" : "text-muted hover:text-strong",
               )}
             >
@@ -104,7 +108,7 @@ export function SegmentedControl<T extends string>({
                   layoutId={`${id}-thumb`}
                   transition={SPRING.snappy}
                   aria-hidden
-                  className="absolute inset-0 rounded-sm border border-line bg-page shadow-raised"
+                  className="absolute inset-0 rounded-sm bg-overlay shadow-raised"
                 />
               ) : null}
               <span className="relative">{option.label}</span>

@@ -12,11 +12,18 @@ import { cn } from "@/lib/utils";
  * Pano izni yoksa (güvensiz bağlam, iframe, reddedilmiş izin) sessizce
  * başarılı görünmez: "Kopyalanamadı" der. Dürüst geri bildirim.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): ikon durum değişince yerinde döner:
+ * eski ikon kaybolur, yenisi 0,85'ten ölçeklenip belirir (`key` her durumda
+ * yeni öğe, giriş CSS anahtar karesiyle). Metinli düğme beyaz karo; ikon
+ * düğme üzerine gelince yumuşak gri.
+ *
  * `children` verilirse metinli düğme, verilmezse yalnızca ikon (44 piksel).
  */
 
 /** Onayın ekranda kalma süresi. */
 const RESET_AFTER = 1600;
+
+const POP = `@keyframes ui-pop { from { opacity: 0; scale: 0.85; } }`;
 
 type Status = "idle" | "copied" | "failed";
 
@@ -61,20 +68,23 @@ export function CopyButton({
 
   return (
     <>
+      <style href="ui-copy-button" precedence="default">
+        {POP}
+      </style>
       <button
         type="button"
         onClick={copy}
         aria-label={iconOnly ? label : undefined}
         title={iconOnly ? label : undefined}
         className={cn(
-          "inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md text-body transition-colors hover:bg-primary-wash hover:text-strong [&_svg]:size-4",
-          iconOnly ? "min-w-11" : "border border-line px-3 text-small font-semibold",
+          "inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md text-body transition-[background-color,color,scale] duration-150 active:scale-95 [&_svg]:size-4",
+          iconOnly ? "min-w-11 hover:bg-surface-raised hover:text-strong pointer-fine:min-h-9 pointer-fine:min-w-9" : "border border-line bg-overlay px-3 text-small font-semibold shadow-raised hover:bg-surface hover:text-strong",
           status === "copied" && "text-success hover:text-success",
           status === "failed" && "text-danger hover:text-danger",
           className,
         )}
       >
-        <Glyph aria-hidden strokeWidth={1.75} />
+        <Glyph key={status} aria-hidden strokeWidth={1.75} className="animate-[ui-pop_200ms_var(--ease-brand)]" />
         {iconOnly ? null : status === "idle" ? children : message}
       </button>
       <span role="status" className="sr-only">

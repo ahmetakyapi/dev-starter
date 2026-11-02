@@ -11,14 +11,20 @@ import { cn } from "@/lib/utils";
  * DOKUNMA HEDEFİ: dokunmatikte her boy 44 piksel. `sm` yalnızca hassas
  * işaretçide (fare) 36'ya iner; görsel küçülse de parmak hedefi küçülmez.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): `ghost` üzerine gelince yumuşak gri
+ * (vurgu yıkaması değil: ikon düğmeler çoğunlukla araç çubuğunda dizilir,
+ * renkli hover sırayla yanıp sönerdi); `secondary` beyaz karo + kıl
+ * çizgisi. Basılınca 0,95'e çöker (aşağı itme yerine: kare düğmede kayma
+ * hizayı bozuyordu).
+ *
  * Base UI tetikleyicisi olarak kullanılabilir (`render={<IconButton … />}`):
  * ref ve gelen bütün prop'lar düğmeye yayılıyor (React 19, ref bir prop).
  */
 
 const VARIANTS = {
-  ghost: "text-body hover:bg-primary-wash hover:text-strong",
-  secondary: "border border-line bg-surface text-body hover:border-line-strong hover:text-strong",
-  primary: "bg-primary text-on-primary hover:bg-primary-hover",
+  ghost: "text-body hover:bg-surface-raised hover:text-strong data-popup-open:bg-surface-raised aria-expanded:bg-surface-raised",
+  secondary: "border border-line bg-overlay text-body shadow-raised hover:bg-surface hover:text-strong",
+  primary: "bg-primary text-on-primary shadow-cta hover:bg-primary-hover",
   danger: "text-danger hover:bg-danger-wash",
 } as const;
 
@@ -52,7 +58,7 @@ export function IconButton({
       type={type}
       title={showTitle ? props["aria-label"] : undefined}
       className={cn(
-        "inline-grid shrink-0 place-items-center transition-[background-color,color,border-color,transform] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
+        "inline-grid shrink-0 place-items-center transition-[background-color,color,border-color,scale] duration-150 active:scale-95 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
         VARIANTS[variant],
         SIZES[size],
         className,

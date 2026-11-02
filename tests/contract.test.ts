@@ -18,7 +18,7 @@ import {
 } from '../packages/@ahmet/ui/src/variants'
 import * as variantModule from '../packages/@ahmet/ui/src/variants'
 import { cn } from '../packages/@ahmet/ui/src/utils'
-import { animation, gradients, colors, motion, roles, palettes } from '../packages/@ahmet/theme/tokens'
+import { animation, gradients, colors, motion, roles, palettes, chart } from '../packages/@ahmet/theme/tokens'
 
 const THEME_CSS = readFileSync(new URL('../packages/@ahmet/theme/theme.css', import.meta.url), 'utf8')
 const INDEX_CSS = readFileSync(new URL('../packages/@ahmet/theme/index.css', import.meta.url), 'utf8')
@@ -301,6 +301,69 @@ describe('theme.css ↔ tokens.ts', () => {
   it('odak halkası yalnızca kartı dolduran öğede ya da .focus-inset ile içeride', () => {
     expect(INDEX_CSS).not.toMatch(/overflow-x-auto\)\s*:focus-visible/)
     expect(INDEX_CSS).toMatch(/\.focus-inset,\s*:where\([^)]*\) \.absolute\.inset-0\s*\):focus-visible \{\s*outline-offset: -2px/)
+  })
+})
+
+describe('şablon palet dosyası (app/palettes.css)', () => {
+  // Üretilmiş dosya: elle düzenlenip tokens.ts'ten koparsa palet değiştirici
+  // pakette başka, şablonda başka renk gösterir.
+  const TPL = readFileSync(new URL('../templates/landing/app/palettes.css', import.meta.url), 'utf8')
+  const block = (sel: string) => {
+    const at = TPL.indexOf(`${sel} {`)
+    if (at === -1) throw new Error(`palettes.css'te blok yok: ${sel}`)
+    return TPL.slice(at, TPL.indexOf('}', at))
+  }
+  const names = { primary: '--primary', primaryInk: '--primary-ink', onPrimary: '--on-primary', primaryWash: '--primary-wash', ctaGradient: '--cta-gradient' } as const
+  for (const name of Object.keys(palettes).filter((n) => n !== 'signature') as (keyof typeof palettes)[]) {
+    it(`${name} tokens.ts ile aynı (açık + koyu)`, () => {
+      for (const [theme, sel] of [['light', `:root[data-palette="${name}"]`], ['dark', `:root[data-theme="dark"][data-palette="${name}"]`]] as const) {
+        const b = block(sel)
+        for (const [key, cssName] of Object.entries(names)) {
+          expect(cssVar(b, cssName), `${name}/${theme} ${cssName}`).toBe(palettes[name][theme][key as keyof typeof names])
+        }
+      }
+    })
+  }
+  it('iki şablonda bayt bayt aynı', () => {
+    expect(readFileSync(new URL('../templates/nextjs-fullstack/app/palettes.css', import.meta.url), 'utf8')).toBe(TPL)
+  })
+})
+
+describe('grafik serileri', () => {
+  // Grafik rengi token'dan okunur; CSS ile JS (OG görseli, e-posta) ayrışırsa
+  // aynı seri iki yüzeyde iki renkte görünür.
+  for (const theme of ['light', 'dark'] as const) {
+    it(`--chart-* (${theme}) chart ile aynı`, () => {
+      const block = cssBlock(SYSTEM_SELECTOR[theme])
+      // Koyu blok yalnızca değişeni ezer; eksik anahtar açık bloktan miras
+      const light = cssBlock(SYSTEM_SELECTOR.light)
+      for (const [key, value] of Object.entries(chart[theme])) {
+        expect(cssVar(block, `--chart-${key}`) ?? cssVar(light, `--chart-${key}`), `${theme} --chart-${key}`).toBe(value)
+      }
+    })
+  }
+
+  it('köprü bg-chart-* sınıflarını üretir', () => {
+    for (const key of ['1', '2', '3', '4', '5', '6', 'track', 'ink']) {
+      expect(THEME_CSS).toContain(`--color-chart-${key}: var(--chart-${key});`)
+    }
+  })
+
+  // Hap metni ve ikon pastel dolgunun üstünde: her seri rengiyle AA
+  it('chart-ink her seri dolgusunda ≥ 4.5', () => {
+    for (const theme of ['light', 'dark'] as const) {
+      for (const i of [1, 2, 3, 4, 5, 6] as const) {
+        expect(contrast(parseColor(chart[theme].ink).rgb, parseColor(chart[theme][i]).rgb), `${theme} ${i}`).toBeGreaterThanOrEqual(AA)
+      }
+    }
+  })
+
+  // Seriler birbirinden ayırt edilir: altı renk de farklı
+  it('altı seri rengi birbirinden farklı', () => {
+    for (const theme of ['light', 'dark'] as const) {
+      const hues = [1, 2, 3, 4, 5, 6].map((i) => chart[theme][i as 1])
+      expect(new Set(hues).size).toBe(6)
+    }
   })
 })
 

@@ -121,8 +121,8 @@ CLAUDE.md'sinde kayıtlı. Build almadan tip üretmek için `npx next typegen`.
 @import "tailwindcss";
 
 /* Katman 1: ham rol değişkenleri, temaya göre */
-:root, :root[data-theme="light"] { --primary: #0d74c4; --text-strong: #101c2b; }
-:root[data-theme="dark"]         { --primary: #35b8ff; --text-strong: #eaf1f8; }
+:root, :root[data-theme="light"] { --primary: #0d74c4; --text-strong: #0a0a0a; }
+:root[data-theme="dark"]         { --primary: #35b8ff; --text-strong: #f5f5f5; }
 
 /* Katman 2: köprü — inline, yoksa tema değişince sınıf dönmez */
 @theme inline {

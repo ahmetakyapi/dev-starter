@@ -1,11 +1,4 @@
-import {
-  CalendarCheck,
-  Inbox,
-  NotebookPen,
-  Route,
-  ShieldCheck,
-  type LucideIcon,
-} from "lucide-react";
+import { CalendarCheck, Inbox, type LucideIcon } from "lucide-react";
 import { SITE_DESCRIPTION, SITE_NAME } from "./site";
 
 /**
@@ -20,9 +13,14 @@ import { SITE_DESCRIPTION, SITE_NAME } from "./site";
  * YAZIM: başlık, düğme, etiket ve künye Title Case; açıklama ve SSS yanıtı
  * cümle. Arayüz metninde uzun tire yok (`tests/content.test.ts` denetler).
  *
- * SAYILAR ÖRNEKTİR. Hero ve bento rakamları demo içindir; gerçek veri yoksa
- * yayına çıkmadan kaldır. Uydurma kesinlik, sayfanın en hızlı kaybettiği güven.
+ * SAYILAR ÖRNEKTİR. Hero, pano, özellik demoları ve fiyatlardaki rakamlar
+ * demo içindir; hepsi `sample: true` ya da `SAMPLE_NOTE` ile işaretli ve pano
+ * ekranda "Örnek Veri" künyesi taşır. Gerçek veri yoksa yayına çıkmadan
+ * kaldır. Uydurma kesinlik, sayfanın en hızlı kaybettiği güven.
  */
+
+/** Ekranda örnek verinin yanında görünen künye. */
+export const SAMPLE_NOTE = "Örnek Veri";
 
 /** Kayıt ya da ürün adresi. Şablonda fiyat bölümüne iner; gerçek adresle değiştir. */
 const SIGNUP_HREF = "#fiyatlar";
@@ -43,10 +41,11 @@ export const nav = {
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
 /**
- * Yedi hero düzeni (`components/heroes/`). Seçim tek satır: `hero.variant`.
+ * Sekiz hero düzeni (`components/heroes/`). Seçim tek satır: `hero.variant`.
  * Hangisinin ne zaman kullanılacağı `components/heroes/index.tsx` başında.
  */
 export const HERO_VARIANTS = [
+  "showcase",
   "editorial-split",
   "statement",
   "product-frame",
@@ -77,8 +76,26 @@ export type HeroImage = {
   height: number;
 };
 
+/**
+ * showcase düzeninin canlı panosu (ÖRNEK veri). Huni aşamaları büyükten
+ * küçüğe; `weekly` son yedi günün kapanan talepleri, toplamı `closed.value`.
+ */
+export type HeroBoard = {
+  sample: true;
+  title: string;
+  /** Ekran okuyucu özeti: pano görsel, içeriği tek cümlede. */
+  label: string;
+  range: string;
+  funnel: { title: string; rateLabel: string; stages: readonly { label: string; value: number }[] };
+  closed: { title: string; value: string; delta: string; weekly: readonly number[]; days: readonly string[] };
+  thread: { title: string; pending: string; steps: readonly { label: string; time: string }[] };
+};
+
 export const hero = {
-  variant: "live-data" as HeroVariant,
+  /* VARSAYILAN `showcase`: ürünün kendisi ilk ekranda canlı duruyor
+     (ekran görüntüsü değil gerçek bileşen). Ürün henüz yoksa ya da
+     gösterilecek arayüz yoksa `statement` ya da `editorial-split`. */
+  variant: "showcase" as HeroVariant,
   /** Parçacık arka planı (R3F). Kapalıysa yalnızca CSS ışıması kalır. */
   scene: true,
   /** Üst künye: en fazla bir tane, kısa. Boş dizgi verilirse basılmaz. */
@@ -122,6 +139,40 @@ export const hero = {
       icon: CalendarCheck,
     },
   ],
+  /** showcase: başlığın altındaki canlı pano. */
+  board: {
+    sample: true,
+    title: "Destek Paneli",
+    label: "Örnek pano: talep hunisi, bu hafta kapanan talepler ve bir talebin adımları.",
+    range: "Son 7 Gün",
+    funnel: {
+      title: "Talep Hunisi",
+      /** Başlıktaki oran: son aşama / ilk aşama, bileşende hesaplanır. */
+      rateLabel: "Kapanma Oranı",
+      stages: [
+        { label: "Gelen", value: 1180 },
+        { label: "Atanan", value: 964 },
+        { label: "Yanıtlanan", value: 812 },
+        { label: "Kapanan", value: 640 },
+      ],
+    },
+    closed: {
+      title: "Bu Hafta Kapanan",
+      value: "640",
+      delta: "+%12,4",
+      weekly: [72, 96, 118, 104, 131, 61, 58],
+      days: ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"],
+    },
+    thread: {
+      title: "Talep #1042",
+      pending: "Bekliyor",
+      steps: [
+        { label: "Talep Alındı", time: "09.12" },
+        { label: "Muhasebeye Atandı", time: "09.12" },
+        { label: "Yanıt Gönderildi", time: "09.47" },
+      ],
+    },
+  },
   /** scroll-stage: kaydırdıkça sırayla gelen üç cümle. */
   stage: [
     "Talepler tek bir gelen kutusunda toplanır.",
@@ -141,6 +192,7 @@ export const hero = {
   stats: { asOf: string; items: readonly HeroStat[] };
   bento: readonly HeroCell[];
   stage: readonly [string, string, string];
+  board: HeroBoard;
 };
 
 /* ── Logo şeridi ───────────────────────────────────────────────────────── */
@@ -155,7 +207,33 @@ export const logos = {
 
 /* ── Özellikler (bento) ────────────────────────────────────────────────── */
 
-export type Feature = { title: string; body: string; icon: LucideIcon; tags?: readonly string[] };
+/**
+ * Her özellik kartının üstünde o özelliği OYNAYAN küçük canlı demo var
+ * (guides/04-motion.md § 14): ikon karesi yok, ürün kendini gösteriyor.
+ * Demo verisi ÖRNEKTİR; yalnızca ekranda ne olduğunu anlatır.
+ */
+export type InboxItem = { source: string; title: string; from: string };
+
+export type FeatureDemo =
+  | {
+      kind: "inbox";
+      /** Kaynak başına bekleyen talep (ÖRNEK); yeni talep düştükçe artar. */
+      sourcesTitle: string;
+      sources: readonly { name: string; count: number }[];
+      items: readonly InboxItem[];
+      /** Satırın yaşı konuma göre: en üstteki her zaman en yeni. */
+      ages: readonly string[];
+    }
+  | { kind: "rules"; rules: readonly { match: string; owner: string; team: string }[] }
+  | {
+      kind: "digest";
+      summary: readonly { label: string; value: string }[];
+      days: readonly { label: string; value: number }[];
+    }
+  | { kind: "decisions"; task: string; status: string; noteTitle: string; notes: readonly { text: string; author: string; date: string }[] }
+  | { kind: "access"; roles: readonly string[]; permissions: readonly { label: string; allowed: readonly boolean[] }[] };
+
+export type Feature = { title: string; body: string; demo: FeatureDemo };
 
 export const features = {
   title: "Bir İşin Başından Sonuna Kadar",
@@ -164,44 +242,159 @@ export const features = {
     {
       title: "Tek Gelen Kutusu",
       body: "E-posta, form ve sohbetten gelen talepler aynı listeye düşer; hiçbiri bir sekmede unutulmaz.",
-      icon: Inbox,
-      tags: ["E-posta", "Web Formu", "Sohbet", "API"],
+      demo: {
+        kind: "inbox",
+        sourcesTitle: "Kaynaklar",
+        sources: [
+          { name: "E-posta", count: 128 },
+          { name: "Web Formu", count: 64 },
+          { name: "Sohbet", count: 41 },
+          { name: "API", count: 19 },
+        ],
+        ages: ["Şimdi", "4 Dk", "11 Dk"],
+        items: [
+          { source: "E-posta", title: "Ekim faturasının kopyası", from: "Kuzey Lojistik" },
+          { source: "Sohbet", title: "Teslim adresi değişikliği", from: "Atlas Gıda" },
+          { source: "Web Formu", title: "Yeni kullanıcı daveti", from: "Pervane" },
+          { source: "API", title: "Sipariş #8812 iptal edildi", from: "Mavera" },
+          { source: "E-posta", title: "Sözleşme yenileme sorusu", from: "Selvi Sağlık" },
+          { source: "Sohbet", title: "Rapor indirilemiyor", from: "Lodos Yazılım" },
+        ],
+      },
     },
     {
       title: "Sahiplik Kuralları",
       body: "Her talep yazdığın kurala göre doğru kişiye atanır.",
-      icon: Route,
+      demo: {
+        kind: "rules",
+        rules: [
+          { match: "Fatura", owner: "Derya Aksoy", team: "Muhasebe" },
+          { match: "İade", owner: "Kaan Yıldırım", team: "Destek" },
+          { match: "Hata", owner: "Selin Ekinci", team: "Ürün" },
+        ],
+      },
     },
     {
       title: "Haftalık Özet",
       body: "Pazartesi sabahı biten, takılan ve yeni gelen işler tek sayfada.",
-      icon: CalendarCheck,
+      demo: {
+        kind: "digest",
+        summary: [
+          { label: "Biten", value: "42" },
+          { label: "Takılan", value: "3" },
+          { label: "Yeni", value: "57" },
+        ],
+        days: [
+          { label: "Pzt", value: 9 },
+          { label: "Sal", value: 12 },
+          { label: "Çar", value: 7 },
+          { label: "Per", value: 10 },
+          { label: "Cum", value: 4 },
+        ],
+      },
     },
     {
       title: "Kararların Kaydı",
       body: "Bir kararın neden alındığı, işin hemen yanında yazılı kalır.",
-      icon: NotebookPen,
+      demo: {
+        kind: "decisions",
+        task: "Depo Taşıma Teslimi",
+        status: "Ertelendi",
+        noteTitle: "Karar Notu",
+        notes: [
+          { text: "Teslim 14 Kasım'a alındı, tedarikçi onayı bekleniyor.", author: "Selin Ekinci", date: "12 Kasım" },
+          { text: "Ek maliyet bu çeyrekte değil, gelecek bütçede karşılanacak.", author: "Derya Aksoy", date: "13 Kasım" },
+        ],
+      },
     },
     {
       title: "Rol Tabanlı Erişim",
       body: "Kim neyi görür, kim neyi değiştirir; ekip büyüdükçe ayar tek yerde.",
-      icon: ShieldCheck,
+      demo: {
+        kind: "access",
+        roles: ["Yönetici", "Üye", "Misafir"],
+        permissions: [
+          { label: "Talepleri Görür", allowed: [true, true, true] },
+          { label: "Talep Atar", allowed: [true, true, false] },
+          { label: "Kuralları Değiştirir", allowed: [true, false, false] },
+        ],
+      },
     },
   ],
 } satisfies { title: string; description: string; items: readonly Feature[] };
 
 /* ── Nasıl çalışır ─────────────────────────────────────────────────────── */
 
+/**
+ * Kaydırdıkça sağdaki ürün parçası adımın durumuna geçer (`HowItWorks`).
+ * Sahne verisi ÖRNEKTİR.
+ */
 export const steps = {
   title: "Üç Adımda Hazır",
   description: "Kurulum bir öğleden sonra sürmez; ilk talep birkaç dakika içinde düşer.",
+  /** Sahnenin üst satırı: ürün parçasının adı. */
+  sceneTitle: "Destek Akışı",
   // Adımın adı fiilin kendisi: "Adım 1" gibi bir etiket bilgi taşımaz.
   items: [
-    { title: "Bağla", body: "E-posta adresini ve formlarını iki tıklamayla bağla; geçmiş talepler de içeri aktarılır." },
-    { title: "Kuralları Yaz", body: "Hangi talebin kime gideceğini ve ne kadar sürede yanıtlanacağını bir kez belirle." },
-    { title: "Takip Et", body: "Takılan işler kendiliğinden öne çıkar; haftalık özet ekibin gelen kutusuna düşer." },
+    {
+      title: "Bağla",
+      body: "E-posta adresini ve formlarını iki tıklamayla bağla; geçmiş talepler de içeri aktarılır.",
+      scene: {
+        kind: "connect",
+        badge: "Bağlı",
+        rows: [
+          { label: "E-posta", detail: "destek@example.com" },
+          { label: "Web Formu", detail: "İletişim Sayfası" },
+          { label: "Sohbet", detail: "Site Sohbeti" },
+        ],
+        note: "1.284 Geçmiş Talep İçeri Aktarıldı",
+      },
+    },
+    {
+      title: "Kuralları Yaz",
+      body: "Hangi talebin kime gideceğini ve ne kadar sürede yanıtlanacağını bir kez belirle.",
+      scene: {
+        kind: "rules",
+        rows: [
+          { label: "Konu Fatura İçeriyorsa", detail: "Muhasebe · 4 Saat" },
+          { label: "Kaynak Sohbetse", detail: "Destek · 30 Dakika" },
+          { label: "Etiket Hata İse", detail: "Ürün · 1 Gün" },
+        ],
+        note: "Kurallar Yeni Gelen Her Talebe Uygulanır",
+      },
+    },
+    {
+      title: "Takip Et",
+      body: "Takılan işler kendiliğinden öne çıkar; haftalık özet ekibin gelen kutusuna düşer.",
+      scene: {
+        kind: "track",
+        rows: [
+          { label: "İade Onayı", detail: "Takıldı · 2 Gün", tone: "danger" },
+          { label: "Sözleşme Yenileme", detail: "Yanıt Bekliyor · 5 Saat", tone: "warning" },
+          { label: "Ekim Faturası", detail: "Kapandı · Bugün", tone: "success" },
+        ],
+        note: "Haftalık Özet Pazartesi 09.00'da Gönderilir",
+      },
+    },
   ],
-} as const;
+} as const satisfies {
+  title: string;
+  description: string;
+  sceneTitle: string;
+  items: readonly {
+    title: string;
+    body: string;
+    scene: {
+      kind: "connect" | "rules" | "track";
+      /** connect: her bağlı kaynağın yanındaki durum. */
+      badge?: string;
+      rows: readonly { label: string; detail: string; tone?: "danger" | "warning" | "success" }[];
+      note: string;
+    };
+  }[];
+};
+
+export type StepScene = (typeof steps.items)[number]["scene"];
 
 /* ── Görüşler ──────────────────────────────────────────────────────────── */
 
@@ -209,6 +402,8 @@ export type Testimonial = { quote: string; name: string; role: string };
 
 export const testimonials = {
   title: "Kullananlar Ne Diyor",
+  /** Kişi seçicinin ekran okuyucu adı. */
+  pick: "Görüş Seç",
   items: [
     {
       quote: "Üç ayrı araçtan bire indik. Pazartesi toplantısı artık kimin neyle uğraştığını sormakla geçmiyor.",
@@ -226,14 +421,17 @@ export const testimonials = {
       role: "Ürün Yöneticisi, Pervane",
     },
   ],
-} satisfies { title: string; items: readonly Testimonial[] };
+} satisfies { title: string; pick: string; items: readonly Testimonial[] };
 
 /* ── Fiyatlar ──────────────────────────────────────────────────────────── */
 
+export type Billing = "monthly" | "yearly";
+
 export type Plan = {
   name: string;
-  price: string;
-  period: string;
+  /** Biçimlendirilmiş fiyat, döneme göre (ÖRNEK). Yıllıkta aylık karşılığı. */
+  price: Record<Billing, string>;
+  period: Record<Billing, string>;
   description: string;
   features: readonly string[];
   cta: Link;
@@ -243,19 +441,22 @@ export type Plan = {
 export const pricing = {
   title: "Ekibin Büyüdükçe Ölçeklenen Fiyat",
   description: "Küçük ekipler için ücretsiz; ihtiyaç arttıkça kişi başına öde.",
+  /** Aylık / yıllık seçici. `saving` yıllık seçeneğin yanındaki kısa künye. */
+  billing: { label: "Ödeme Dönemi", monthly: "Aylık", yearly: "Yıllık", saving: "%20 Daha Az" },
+  sample: true,
   plans: [
     {
       name: "Başlangıç",
-      price: "₺0",
-      period: "Ay",
+      price: { monthly: "₺0", yearly: "₺0" },
+      period: { monthly: "Ay", yearly: "Ay" },
       description: "Beş kişiye kadar ekipler için.",
       features: ["Tek Gelen Kutusu", "Üç Sahiplik Kuralı", "Haftalık Özet"],
       cta: nav.cta,
     },
     {
       name: "Ekip",
-      price: "₺249",
-      period: "Kişi / Ay",
+      price: { monthly: "₺249", yearly: "₺199" },
+      period: { monthly: "Kişi / Ay", yearly: "Kişi / Ay, Yıllık Ödeme" },
       description: "Birden fazla ekibin aynı akışta çalıştığı şirketler için.",
       features: [
         "Sınırsız Kural",
@@ -276,6 +477,8 @@ export const pricing = {
 } satisfies {
   title: string;
   description: string;
+  billing: { label: string; monthly: string; yearly: string; saving: string };
+  sample: boolean;
   plans: readonly Plan[];
   enterprise: { name: string; description: string; cta: Link };
 };
@@ -284,6 +487,8 @@ export const pricing = {
 
 export const faq = {
   title: "Sık Sorulanlar",
+  description: "Yanıtını bulamadığın soru için doğrudan yaz; bir iş günü içinde dönüyoruz.",
+  contact: { label: "Soru Sor", href: "mailto:merhaba@example.com" },
   items: [
     {
       question: "Ücretsiz plan ne kadar süre geçerli?",
@@ -310,16 +515,34 @@ export const finalCta = {
   title: "İlk Akışını Bugün Kur",
   description: "Kurulum beş dakika sürer, kredi kartı istenmez.",
   primary: nav.cta,
+  secondary: { label: "Satışla Görüş", href: "mailto:satis@example.com" },
 } as const;
 
 export const footer = {
   tagline: SITE_DESCRIPTION,
+  /** Düzenli sütunlar: başlık + bağlantılar. Sayfa içi çapalar ve gerçek adresler. */
+  columns: [
+    { title: "Ürün", links: nav.links },
+    {
+      title: "İletişim",
+      links: [
+        { label: "Satış", href: "mailto:satis@example.com" },
+        { label: "Destek", href: "mailto:merhaba@example.com" },
+      ],
+    },
+  ],
+  legalTitle: "Yasal",
   links: [
     { label: "Gizlilik", href: "#" },
     { label: "Kullanım Koşulları", href: "#" },
     { label: "İletişim", href: "mailto:merhaba@example.com" },
   ],
-} as const satisfies { tagline: string; links: readonly Link[] };
+} as const satisfies {
+  tagline: string;
+  columns: readonly { title: string; links: readonly Link[] }[];
+  legalTitle: string;
+  links: readonly Link[];
+};
 
 /** JSON-LD Organization için; boş bırakılan alan basılmaz. */
 export const organization = {

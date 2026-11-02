@@ -1,6 +1,6 @@
 "use client";
 
-import { FileWarning, UploadCloud } from "lucide-react";
+import { FileText, FileWarning, UploadCloud } from "lucide-react";
 import { useId, useRef, useState, type DragEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +33,12 @@ import { cn } from "@/lib/utils";
  * İSTEMCİ DENETİMİ BİR KOLAYLIK, GÜVENLİK DEĞİL. Tarayıcının bildirdiği tür
  * dosya uzantısından tahmin; değiştirilebilir. Sunucu dosyayı yeniden
  * doğrulamalı: boyut, sihirli baytlar (dosyanın ilk baytları), uzantı.
+ *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): gri kuyu, kesikli kıl çizgisi (burada
+ * kesik kenar anlamlı: "buraya bırak"), ikon beyaz bir karoda. Dosya
+ * üstüne gelince alan vurgu yıkamasına döner, karo hafifçe yükselir.
+ * Kabul edilen dosyalar beyaz karo satırlar (ad + boyut), reddedilenler
+ * tehlike yıkamasında, nedeniyle.
  *
  * Reddedilen dosyalar sessizce düşmez: nedeniyle listelenir ve canlı bölge
  * okur.
@@ -127,12 +133,18 @@ export function FileDropzone({
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-dashed px-6 py-8 text-center transition-colors",
+          "group/drop flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-9 text-center transition-colors",
           "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-line-focus has-[:focus-visible]:outline-solid",
-          dragging ? "border-primary bg-primary-wash" : "border-line-strong bg-surface-sunken hover:border-primary-soft",
+          dragging ? "border-primary bg-primary-wash" : "border-line-strong bg-surface hover:border-primary-soft",
         )}
       >
-        <span aria-hidden className="grid size-11 place-items-center rounded-full bg-primary-wash text-primary-ink">
+        <span
+          aria-hidden
+          className={cn(
+            "mb-1 grid size-12 place-items-center rounded-lg bg-overlay text-strong shadow-raised transition-[translate,box-shadow] duration-200 group-hover/drop:-translate-y-0.5",
+            dragging && "-translate-y-1 text-primary-ink shadow-floating",
+          )}
+        >
           <UploadCloud className="size-5" strokeWidth={1.75} />
         </span>
         <span className="text-base font-semibold text-strong">{label}</span>
@@ -152,12 +164,14 @@ export function FileDropzone({
       </label>
       <div role="status" aria-live="polite" className="grid gap-1.5">
         {accepted.map((file) => (
-          <p key={fileKey(file)} className="truncate text-small text-body">
-            {file.name} <span className="text-muted tabular-nums">· {formatBytes(file.size)}</span>
+          <p key={fileKey(file)} className="flex items-center gap-2.5 rounded-lg border border-line bg-overlay px-3 py-2 text-small text-strong shadow-raised">
+            <FileText aria-hidden className="size-4 shrink-0 text-muted" strokeWidth={1.75} />
+            <span className="min-w-0 flex-1 truncate font-medium">{file.name}</span>
+            <span className="shrink-0 text-muted tabular-nums">{formatBytes(file.size)}</span>
           </p>
         ))}
         {rejected.map(({ file, reason }) => (
-          <p key={fileKey(file)} className="flex items-start gap-2 text-small text-danger">
+          <p key={fileKey(file)} className="flex items-start gap-2 rounded-lg bg-danger-wash px-3 py-2 text-small text-danger">
             <FileWarning aria-hidden className="mt-0.5 size-4 shrink-0" strokeWidth={1.75} />
             <span className="min-w-0">
               <span className="font-semibold">{file.name}</span>: {reason === "type" ? typeMessage : sizeMessage}.

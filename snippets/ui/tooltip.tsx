@@ -25,6 +25,11 @@ import { cn } from "@/lib/utils";
  *   </Tooltip>
  *   <InfoTip label="F/K Nedir">Fiyatın hisse başına kâra oranı.</InfoTip>
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo + kıl çizgisi + `shadow-modal`.
+ * Tek satırlık etiket `rounded-lg` (24 piksellik `xl` otuz piksel yüksek bir
+ * kutuda hapa dönerdi), açıklama kutusu `rounded-xl`. Giriş 0,96'dan,
+ * kaynağı tetikleyici.
+ *
  * Aynı satırda çok sayıda tooltip varsa `TooltipProvider` ile sar: ilki
  * açıldıktan sonra komşulara geçerken gecikme beklenmez.
  */
@@ -32,7 +37,7 @@ import { cn } from "@/lib/utils";
 export const TooltipProvider = Base.Provider;
 
 const SURFACE =
-  "z-50 rounded-md border border-line-strong bg-overlay text-strong shadow-floating origin-(--transform-origin) transition-[opacity,scale] duration-150 data-starting-style:scale-[0.97] data-starting-style:opacity-0 data-ending-style:scale-[0.97] data-ending-style:opacity-0";
+  "z-50 border border-line bg-overlay text-strong shadow-modal origin-(--transform-origin) transition-[opacity,scale] duration-150 ease-[var(--ease-brand)] data-starting-style:scale-[0.96] data-starting-style:opacity-0 data-ending-style:scale-[0.96] data-ending-style:opacity-0";
 
 type TooltipProps = {
   /** Görünen etiket. Tetikleyicinin `aria-label`ı ile aynı metin olmalı. */
@@ -50,7 +55,7 @@ export function Tooltip({ label, children, side = "top", delay = 500 }: TooltipP
       <Base.Trigger delay={delay} render={children} />
       <Base.Portal>
         <Base.Positioner side={side} sideOffset={8} collisionPadding={8} className="z-50">
-          <Base.Popup className={cn(SURFACE, "px-2.5 py-1.5 text-small font-medium")}>{label}</Base.Popup>
+          <Base.Popup className={cn(SURFACE, "rounded-lg px-2.5 py-1.5 text-small font-medium")}>{label}</Base.Popup>
         </Base.Positioner>
       </Base.Portal>
     </Base.Root>
@@ -83,9 +88,9 @@ export function InfoTip({ label, children, side = "top", className }: InfoTipPro
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner side={side} sideOffset={4} collisionPadding={12} className="z-50">
-          <Popover.Popup className={cn(SURFACE, "w-[min(18rem,var(--available-width))] p-3.5 text-body")}>
+          <Popover.Popup className={cn(SURFACE, "w-[min(18rem,var(--available-width))] rounded-xl p-4 text-body")}>
             <Popover.Title className="text-small font-semibold text-strong">{label}</Popover.Title>
-            <Popover.Description className="mt-1 text-small text-soft">{children}</Popover.Description>
+            <Popover.Description className="mt-1 text-small text-muted">{children}</Popover.Description>
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

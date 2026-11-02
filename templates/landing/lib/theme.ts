@@ -28,7 +28,7 @@ export const PALETTE = "signature" as const;
  * görseli). Kaynak `app/globals.css` → `--page-bg`; orada değişirse burada
  * da değişir.
  */
-export const THEME_COLOR = { dark: "#070d16", light: "#f7f9fb" } as const satisfies Record<Theme, string>;
+export const THEME_COLOR = { dark: "#0c0c0d", light: "#ffffff" } as const satisfies Record<Theme, string>;
 
 /** Çerez bir yıl yaşar; tercih her ziyarette yenilenmek zorunda kalmaz. */
 export const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;

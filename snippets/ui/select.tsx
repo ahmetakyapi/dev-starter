@@ -20,6 +20,12 @@ import { cn } from "@/lib/utils";
  * alanıysa yerel `<select>` hâlâ doğru seçim; şablonun `Field` diliyle
  * stilleyip kullan. Bu bileşen, görünüşü arayüzün parçası olan seçimler için.
  *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): tetikleyici beyaz karo (`bg-overlay`
+ * + kıl çizgisi + `shadow-raised`), açıkken vurgu çizgisi ve yumuşak halka.
+ * Liste `rounded-xl` karo, `p-1.5`; vurgulu öğe yumuşak gri
+ * (`bg-surface-raised`), seçili öğede SAĞDA tik (`primary-ink`): etiketler
+ * sol kenarda hizalı kalır.
+ *
  * Konum: liste tetikleyicinin üstüne değil ALTINA açılır
  * (`alignItemWithTrigger={false}`): üste binen liste dar ekranda seçili
  * öğeyi parmağın altına getiriyor ve kaydırmayla karışıyor.
@@ -66,7 +72,7 @@ export function Select({
     >
       <div className={cn("grid content-start gap-1.5", className)}>
         <Base.Label className={hideLabel ? "sr-only" : "text-small font-semibold text-strong"}>{label}</Base.Label>
-        <Base.Trigger className="flex min-h-11 w-full min-w-40 items-center justify-between gap-3 rounded-md border border-line-strong bg-surface-sunken px-3 text-start text-base text-strong transition-colors select-none hover:border-primary-soft data-disabled:opacity-50 data-popup-open:border-line-focus">
+        <Base.Trigger className="flex min-h-11 w-full min-w-40 items-center justify-between gap-3 rounded-md border border-line bg-overlay px-3 text-start text-base text-strong shadow-raised transition-[border-color,box-shadow] select-none hover:border-line-strong data-disabled:opacity-50 data-popup-open:border-primary data-popup-open:ring-[3px] data-popup-open:ring-primary-wash pointer-fine:min-h-10">
           <Base.Value placeholder={placeholder} className="min-w-0 truncate data-placeholder:text-muted" />
           <Base.Icon className="text-muted">
             <ChevronsUpDown aria-hidden className="size-4" strokeWidth={1.75} />
@@ -75,19 +81,19 @@ export function Select({
       </div>
       <Base.Portal>
         <Base.Positioner alignItemWithTrigger={false} sideOffset={6} collisionPadding={8} className="z-50 outline-none">
-          <Base.Popup className="min-w-(--anchor-width) origin-(--transform-origin) rounded-lg border border-line-strong bg-overlay p-1 text-body shadow-modal outline-none transition-[opacity,scale] duration-150 data-ending-style:scale-[0.97] data-ending-style:opacity-0 data-starting-style:scale-[0.97] data-starting-style:opacity-0">
+          <Base.Popup className="min-w-(--anchor-width) origin-(--transform-origin) rounded-xl border border-line bg-overlay p-1.5 text-body shadow-modal outline-none transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-[0.96] data-starting-style:opacity-0">
             <Base.List className="max-h-[min(20rem,var(--available-height))] overflow-y-auto overscroll-contain">
               {items.map((item) => (
                 <Base.Item
                   key={item.value}
                   value={item.value}
                   disabled={item.disabled}
-                  className="grid min-h-11 cursor-default grid-cols-[1rem_1fr] items-center gap-2.5 rounded-md px-2.5 text-base outline-none select-none pointer-fine:min-h-9 data-disabled:opacity-50 data-highlighted:bg-primary-wash data-highlighted:text-strong data-selected:font-medium data-selected:text-strong"
+                  className="grid min-h-11 cursor-default grid-cols-[1fr_1rem] items-center gap-2.5 rounded-md px-2.5 text-base outline-none select-none pointer-fine:min-h-9 data-disabled:opacity-50 data-highlighted:bg-surface-raised data-highlighted:text-strong data-selected:font-medium data-selected:text-strong"
                 >
-                  <Base.ItemIndicator className="col-start-1 text-primary-ink">
-                    <Check aria-hidden className="size-4" strokeWidth={2} />
+                  <Base.ItemText className="col-start-1 row-start-1 truncate">{item.label}</Base.ItemText>
+                  <Base.ItemIndicator className="col-start-2 row-start-1 text-primary-ink">
+                    <Check aria-hidden className="size-4" strokeWidth={2.25} />
                   </Base.ItemIndicator>
-                  <Base.ItemText className="col-start-2 truncate">{item.label}</Base.ItemText>
                 </Base.Item>
               ))}
             </Base.List>

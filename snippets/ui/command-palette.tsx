@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowRight, Search } from "lucide-react";
+import { CornerDownLeft, Search } from "lucide-react";
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { Kbd } from "@/components/ui/kbd";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,6 +24,13 @@ import { cn } from "@/lib/utils";
  * Komutlar veri: `onSelect` içinde ne yapılacağını çağıran bilir
  * (`router.push`, tema değişimi). Palet gezinmeyi kendisi yapmaz, bu yüzden
  * herhangi bir yönlendiriciye bağlı değil.
+ *
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `rounded-2xl` + kıl çizgisi +
+ * `shadow-modal`, giriş 0,96'dan ölçek + opaklık. Üstte arama, ortada
+ * `p-1.5` liste; etkin satır yumuşak gri (`bg-surface-raised`), ikonu ve
+ * kısayol hapları sağda (`kbd.tsx`). Altta "Gezin ↑ ↓ · Seç ↵ · Kapat Esc"
+ * künyesi: klavyeyi bilmeyen kullanıcıya yolu söyler. Künye ve haplar
+ * yalnızca hassas işaretçide (dokunmatikte klavye kısayolu anlamsız).
  *
  * Arama Türkçe küçük harfle karşılaştırır (`toLocaleLowerCase("tr-TR")`):
  * "İ" aranınca "i", "I" aranınca "ı" bulunur. `keywords` eş anlamlılar
@@ -204,13 +212,13 @@ export function CommandPalette({
         if (backdrop) close();
       }}
       className={cn(
-        "mx-auto mt-[12dvh] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-xl border border-line-strong bg-overlay p-0 text-body shadow-modal",
-        "opacity-0 transition-[opacity,display,overlay] transition-discrete duration-150 open:opacity-100 starting:open:opacity-0",
-        "backdrop:bg-scrim",
+        "mx-auto mt-[12dvh] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-2xl border border-line bg-overlay p-0 text-body shadow-modal",
+        "scale-[0.96] opacity-0 transition-[opacity,scale,display,overlay] transition-discrete duration-200 ease-[var(--ease-brand)] open:scale-100 open:opacity-100 starting:open:scale-[0.96] starting:open:opacity-0",
+        "backdrop:bg-scrim backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0",
       )}
     >
       <div className="flex items-center gap-3 border-b border-line-soft px-4">
-        <Search aria-hidden className="size-4 shrink-0 text-muted" strokeWidth={1.75} />
+        <Search aria-hidden className="size-[1.125rem] shrink-0 text-muted" strokeWidth={1.75} />
         <input
           ref={input}
           role="combobox"
@@ -230,7 +238,9 @@ export function CommandPalette({
           spellCheck={false}
           className="min-h-14 min-w-0 flex-1 bg-transparent text-read text-strong outline-none placeholder:text-muted"
         />
-        <kbd className="hidden rounded-[0.3125rem] border border-line-strong px-1.5 font-mono text-micro text-muted pointer-fine:inline">Esc</kbd>
+        <Kbd aria-hidden className="hidden pointer-fine:inline-flex">
+          Esc
+        </Kbd>
       </div>
 
       <div id={listId} role="listbox" aria-label={label} className="max-h-[min(22rem,55dvh)] overflow-y-auto overscroll-contain p-1.5">
@@ -239,7 +249,7 @@ export function CommandPalette({
         ) : (
           groups.map(([group, items]) => (
             <div key={group} role="group" aria-label={group}>
-              <p aria-hidden className="px-2.5 pt-2.5 pb-1 text-micro font-semibold text-muted">
+              <p aria-hidden className="px-2.5 pt-2.5 pb-1.5 text-micro font-medium text-muted">
                 {group}
               </p>
               {items.map((command) => {
@@ -254,12 +264,18 @@ export function CommandPalette({
                     onClick={() => run(command)}
                     onPointerMove={() => setActive(index)}
                     className={cn(
-                      "flex min-h-11 cursor-pointer items-center gap-3 rounded-md px-2.5 py-2 [&_svg]:size-4 [&_svg]:shrink-0",
-                      selected ? "bg-primary-wash text-strong" : "text-body",
+                      "flex min-h-11 cursor-pointer items-center gap-3 rounded-md px-2.5 py-2 transition-colors duration-100 [&_svg]:size-4 [&_svg]:shrink-0",
+                      selected ? "bg-surface-raised text-strong" : "text-body",
                     )}
                   >
                     {command.icon ? (
-                      <span aria-hidden className={selected ? "text-primary-ink" : "text-muted"}>
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "grid size-8 shrink-0 place-items-center rounded-sm border border-line bg-overlay shadow-raised transition-colors",
+                          selected ? "text-strong" : "text-muted",
+                        )}
+                      >
                         {command.icon}
                       </span>
                     ) : null}
@@ -270,13 +286,12 @@ export function CommandPalette({
                     {command.shortcut ? (
                       <span aria-hidden className="hidden gap-1 pointer-fine:flex">
                         {command.shortcut.map((key) => (
-                          <kbd key={key} className="rounded-[0.3125rem] border border-line-strong px-1.5 font-mono text-micro text-muted">
-                            {key}
-                          </kbd>
+                          <Kbd key={key}>{key}</Kbd>
                         ))}
                       </span>
+                    ) : selected ? (
+                      <CornerDownLeft aria-hidden className="hidden text-muted pointer-fine:block" strokeWidth={1.75} />
                     ) : null}
-                    {selected ? <ArrowRight aria-hidden className="text-primary-ink" strokeWidth={1.75} /> : null}
                   </div>
                 );
               })}
@@ -285,10 +300,17 @@ export function CommandPalette({
         )}
       </div>
 
-      <p aria-hidden className="hidden gap-4 border-t border-line-soft px-4 py-2 font-mono text-micro text-muted pointer-fine:flex">
-        <span>↑↓ Seç</span>
-        <span>↵ Aç</span>
-        <span>Esc Kapat</span>
+      <p aria-hidden className="hidden items-center gap-4 border-t border-line-soft bg-surface px-4 py-2.5 text-small text-muted pointer-fine:flex">
+        <span className="inline-flex items-center gap-1.5">
+          Gezin <Kbd>↑</Kbd>
+          <Kbd>↓</Kbd>
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          Seç <Kbd>↵</Kbd>
+        </span>
+        <span className="ml-auto inline-flex items-center gap-1.5">
+          Kapat <Kbd>Esc</Kbd>
+        </span>
       </p>
     </dialog>
   );

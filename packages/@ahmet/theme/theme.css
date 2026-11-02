@@ -14,7 +14,8 @@
  *   2. PALET — vurgu ailesi, display ve marka degradesi. `<html
  *      data-palette="...">` ile seçilir: `signature` (varsayılan, Açılış
  *      Zili mavi ailesi), `verdant` (zümrüt), `ember` (kehribar), `iris`
- *      (mor-indigo). Sistem rolleri (`--primary` vb.) `--palette-*`
+ *      (mor-indigo); parlak aile `cobalt`, `violet`, `rose`, `ruby`,
+ *      `tangerine`, `jade` (bölüm 2b). Sistem rolleri (`--primary` vb.) `--palette-*`
  *      değişkenlerinden okur; palet değiştirmek sistem katmanına dokunmaz.
  *      Tek palet kullanan proje kendi globals.css'inde yalnızca palet
  *      bloğunu ezer.
@@ -42,51 +43,75 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  --page-bg: #f7f9fb;
-  --surface: rgb(16 32 52 / 0.028);
-  --surface-raised: rgb(16 32 52 / 0.07);
-  --surface-sunken: rgb(16 32 52 / 0.045);
+  /* Nötr sistem (2026-11, "board" dili): zemin saf beyaz, griler mavi
+     tonu taşımaz; renk yalnızca paletten gelir. Kart = hafif gri kuyu
+     (`bg-surface` ≈ #f7f7f7), kuyunun içindeki karo = `bg-overlay` (beyaz). */
+  --page-bg: #ffffff;
+  --surface: rgb(0 0 0 / 0.03);
+  --surface-raised: rgb(0 0 0 / 0.06);
+  --surface-sunken: rgb(0 0 0 / 0.045);
   --overlay: #ffffff;
-  --scrim: rgb(16 28 43 / 0.42);
-  --text-strong: #101c2b;
-  --text-body: #54677c;
-  --text-soft: #54677c;
-  --text-muted: #586a7c;
-  --line: rgb(16 32 52 / 0.1);
-  --line-soft: rgb(16 32 52 / 0.06);
-  --line-strong: rgb(16 32 52 / 0.17);
+  --scrim: rgb(0 0 0 / 0.4);
+  --text-strong: #0a0a0a;
+  --text-body: #525252;
+  --text-soft: #525252;
+  /* Kuyunun (surface) üstünde de AA: sayfa 5,33 · kuyu 4,99. */
+  --text-muted: #6b6b6b;
+  --line: rgb(0 0 0 / 0.08);
+  --line-soft: rgb(0 0 0 / 0.05);
+  --line-strong: rgb(0 0 0 / 0.14);
   --success: #0c7350;
   --success-wash: rgb(12 115 80 / 0.1);
   /* `--accent-warm` (brass) tonunun bir basamak koyusu: 12 px rozet metni
-     kendi wash'ı kart üstündeyken bile AA (sayfa 5,82 · wash 4,93 ·
-     kart+wash 4,68). */
+     kendi wash'ı kart üstündeyken bile AA. */
   --warning: #825a0a;
   --warning-wash: rgb(130 90 10 / 0.12);
   --danger: #c01a3d;
   --danger-wash: rgb(192 26 61 / 0.08);
   --accent-warm: #a4720f;
-  --shadow-sm: 0 1px 2px rgb(16 32 52 / 0.06);
-  --shadow-md: 0 8px 24px rgb(16 32 52 / 0.08);
-  --shadow-overlay: 0 24px 64px rgb(16 32 52 / 0.16);
+  /* Katmanlı, kısa gölge: bir kıl çizgisi + yumuşak yayılma. Uzun ve tek
+     katmanlı gölge "yüzen kart" klişesi; burada kart neredeyse yere basar. */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05), 0 1px 3px rgb(0 0 0 / 0.07);
+  --shadow-md: 0 1px 1px rgb(0 0 0 / 0.04), 0 6px 16px -4px rgb(0 0 0 / 0.1);
+  --shadow-overlay: 0 0 0 1px rgb(0 0 0 / 0.04), 0 24px 48px -12px rgb(0 0 0 / 0.18);
+  /* Dolgulu düğme: üst kenarda ince ışık + kısa yer gölgesi. Degradeyle
+     birlikte düğmeye "basılabilir" bir hacim verir; tek başına parlama değil. */
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 1px 2px rgb(0 0 0 / 0.14);
+  /* Veri rengi: grafik serileri ve lejant noktası. METİN DEĞİL (açık
+     zeminde AA tutmaz); değer her zaman yanında `text-strong` ile yazılır.
+     Sıra sabit: ilk seri hep chart-1. Pastel ve eşit parlaklıkta, hiçbiri
+     ötekini bastırmaz. */
+  --chart-1: #a3e635;
+  --chart-2: #3b82f6;
+  --chart-3: #c084fc;
+  --chart-4: #f472b6;
+  --chart-5: #facc15;
+  --chart-6: #34d399;
+  --chart-track: rgb(0 0 0 / 0.06);
+  /* Pastel dolgunun üstündeki ikon ve hap metni: iki temada da koyu. */
+  --chart-ink: #0a0a0a;
 }
 
 /* ─── 1. Sistem — koyu ─────────────────────────────────────────────────── */
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --page-bg: #070d16;
-  --surface: rgb(255 255 255 / 0.05);
-  --surface-raised: rgb(255 255 255 / 0.12);
+  /* Koyu zemin düz gri değil, bir tık derin: yüzeyler yükseldikçe açılır
+     (sayfa → kuyu → karo → katman). Saf siyah değil; OLED'de bulaşma yapmaz. */
+  --page-bg: #0c0c0d;
+  --surface: rgb(255 255 255 / 0.035);
+  --surface-raised: rgb(255 255 255 / 0.07);
   --surface-sunken: rgb(0 0 0 / 0.3);
-  --overlay: #0e1724;
-  --scrim: rgb(2 6 12 / 0.66);
-  --text-strong: #eaf1f8;
-  --text-body: #94a7ba;
-  --text-soft: #94a7ba;
-  --text-muted: #8497a9;
-  --line: rgb(255 255 255 / 0.11);
-  --line-soft: rgb(255 255 255 / 0.07);
-  --line-strong: rgb(255 255 255 / 0.2);
+  --overlay: #18181a;
+  --scrim: rgb(0 0 0 / 0.6);
+  /* Saf beyaz değil: koyu zeminde #fff parlar, uzun metinde göz yorar. */
+  --text-strong: #f5f5f5;
+  --text-body: #a1a1a1;
+  --text-soft: #a1a1a1;
+  --text-muted: #8a8a8a;
+  --line: rgb(255 255 255 / 0.08);
+  --line-soft: rgb(255 255 255 / 0.05);
+  --line-strong: rgb(255 255 255 / 0.15);
   --success: #3ddc97;
   --success-wash: rgb(61 220 151 / 0.12);
   --warning: #d3a04a;
@@ -94,9 +119,19 @@
   --danger: #ff5c7a;
   --danger-wash: rgb(255 92 122 / 0.12);
   --accent-warm: #d3a04a;
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow-md: 0 8px 24px rgb(0 0 0 / 0.36);
-  --shadow-overlay: 0 24px 64px rgb(0 0 0 / 0.56);
+  /* Koyuda gölge görünmez; derinliği karonun ÜST KENARINDAKİ ışık çizgisi
+     taşır (ışık yukarıdan düşer). Açık temada bu katman yok. */
+  --shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 1px 1px rgb(0 0 0 / 0.3), 0 8px 20px -6px rgb(0 0 0 / 0.5);
+  --shadow-overlay: 0 0 0 1px rgb(255 255 255 / 0.06), 0 24px 48px -12px rgb(0 0 0 / 0.6);
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 1px 2px rgb(0 0 0 / 0.5);
+  --chart-1: #a3e635;
+  --chart-2: #60a5fa;
+  --chart-3: #c084fc;
+  --chart-4: #f472b6;
+  --chart-5: #facc15;
+  --chart-6: #34d399;
+  --chart-track: rgb(255 255 255 / 0.08);
 }
 
 /* Sistem rolleri paletten okur. Temadan bağımsız tek blok: `--palette-*`
@@ -248,6 +283,185 @@
   --palette-cta-gradient: linear-gradient(150deg, #5b4bd6 0%, #2e2490 100%);
 }
 
+/* ─── 2b. Parlak paletler (2026-11, "board" dili) ─────────────────────────
+   Tailwind ramplarından, tek aile. Açıkta dolgu 600 (turuncu ve yeşilde
+   700: 600 beyaz metinle AA tutmaz), koyuda 400. CTA degradesi YUKARIDAN
+   AŞAĞI aynı rengin bir basamak koyusuna iner: düğmeye ışık üstten düşer.
+   Değerler tokens.ts ile birebir, kontrastı contract testi ölçer. */
+/* cobalt — parlak mavi; SaaS, pano, üretkenlik aracı */
+:root[data-palette="cobalt"] {
+  --palette-primary: #2563eb;
+  --palette-primary-hover: #1d4ed8;
+  --palette-primary-soft: #3b82f6;
+  --palette-primary-wash: rgb(37 99 235 / 0.1);
+  --palette-primary-ink: #1d4ed8;
+  --palette-on-primary: #ffffff;
+  --palette-app-glow: rgb(37 99 235 / 0.06);
+  --palette-display-gradient: linear-gradient(112deg, #172554 0%, #1e40af 44%, #2563eb 76%, #3b82f6 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #172554 0%, #2563eb 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #93c5fd 0%, #3b82f6 48%, #1e40af 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+:root[data-theme="dark"][data-palette="cobalt"] {
+  --palette-primary: #60a5fa;
+  --palette-primary-hover: #93c5fd;
+  --palette-primary-soft: #93c5fd;
+  --palette-primary-wash: rgb(96 165 250 / 0.14);
+  --palette-primary-ink: #60a5fa;
+  --palette-on-primary: #172554;
+  --palette-app-glow: rgb(96 165 250 / 0.12);
+  --palette-display-gradient: linear-gradient(112deg, #eff6ff 0%, #bfdbfe 44%, #93c5fd 76%, #60a5fa 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #eff6ff 0%, #60a5fa 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #93c5fd 0%, #3b82f6 48%, #1e40af 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+/* violet — menekşe; yaratıcı araç, yapay zekâ, topluluk */
+:root[data-palette="violet"] {
+  --palette-primary: #7c3aed;
+  --palette-primary-hover: #6d28d9;
+  --palette-primary-soft: #8b5cf6;
+  --palette-primary-wash: rgb(124 58 237 / 0.1);
+  --palette-primary-ink: #6d28d9;
+  --palette-on-primary: #ffffff;
+  --palette-app-glow: rgb(124 58 237 / 0.06);
+  --palette-display-gradient: linear-gradient(112deg, #2e1065 0%, #5b21b6 44%, #7c3aed 76%, #8b5cf6 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #2e1065 0%, #7c3aed 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #c4b5fd 0%, #8b5cf6 48%, #5b21b6 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+:root[data-theme="dark"][data-palette="violet"] {
+  --palette-primary: #a78bfa;
+  --palette-primary-hover: #c4b5fd;
+  --palette-primary-soft: #c4b5fd;
+  --palette-primary-wash: rgb(167 139 250 / 0.14);
+  --palette-primary-ink: #a78bfa;
+  --palette-on-primary: #2e1065;
+  --palette-app-glow: rgb(167 139 250 / 0.12);
+  --palette-display-gradient: linear-gradient(112deg, #f5f3ff 0%, #ddd6fe 44%, #c4b5fd 76%, #a78bfa 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #f5f3ff 0%, #a78bfa 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #c4b5fd 0%, #8b5cf6 48%, #5b21b6 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+/* rose — pembe; tüketici uygulaması, sosyal, yaşam tarzı */
+:root[data-palette="rose"] {
+  --palette-primary: #db2777;
+  --palette-primary-hover: #be185d;
+  --palette-primary-soft: #ec4899;
+  --palette-primary-wash: rgb(219 39 119 / 0.1);
+  --palette-primary-ink: #be185d;
+  --palette-on-primary: #ffffff;
+  --palette-app-glow: rgb(219 39 119 / 0.06);
+  --palette-display-gradient: linear-gradient(112deg, #500724 0%, #9d174d 44%, #db2777 76%, #ec4899 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #500724 0%, #db2777 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #f9a8d4 0%, #ec4899 48%, #9d174d 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #db2777 0%, #be185d 100%);
+}
+
+:root[data-theme="dark"][data-palette="rose"] {
+  --palette-primary: #f472b6;
+  --palette-primary-hover: #f9a8d4;
+  --palette-primary-soft: #f9a8d4;
+  --palette-primary-wash: rgb(244 114 182 / 0.14);
+  --palette-primary-ink: #f472b6;
+  --palette-on-primary: #500724;
+  --palette-app-glow: rgb(244 114 182 / 0.12);
+  --palette-display-gradient: linear-gradient(112deg, #fdf2f8 0%, #fbcfe8 44%, #f9a8d4 76%, #f472b6 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #fdf2f8 0%, #f472b6 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #f9a8d4 0%, #ec4899 48%, #9d174d 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #db2777 0%, #be185d 100%);
+}
+
+/* ruby — kırmızı; medya, spor, etkinlik (danger ile karışmasın: yıkıcı eylem yine `danger`) */
+:root[data-palette="ruby"] {
+  --palette-primary: #dc2626;
+  --palette-primary-hover: #b91c1c;
+  --palette-primary-soft: #ef4444;
+  --palette-primary-wash: rgb(220 38 38 / 0.1);
+  --palette-primary-ink: #b91c1c;
+  --palette-on-primary: #ffffff;
+  --palette-app-glow: rgb(220 38 38 / 0.06);
+  --palette-display-gradient: linear-gradient(112deg, #450a0a 0%, #991b1b 44%, #dc2626 76%, #ef4444 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #450a0a 0%, #dc2626 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #fca5a5 0%, #ef4444 48%, #991b1b 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+}
+
+:root[data-theme="dark"][data-palette="ruby"] {
+  --palette-primary: #f87171;
+  --palette-primary-hover: #fca5a5;
+  --palette-primary-soft: #fca5a5;
+  --palette-primary-wash: rgb(248 113 113 / 0.14);
+  --palette-primary-ink: #f87171;
+  --palette-on-primary: #450a0a;
+  --palette-app-glow: rgb(248 113 113 / 0.12);
+  --palette-display-gradient: linear-gradient(112deg, #fef2f2 0%, #fecaca 44%, #fca5a5 76%, #f87171 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #fef2f2 0%, #f87171 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #fca5a5 0%, #ef4444 48%, #991b1b 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+}
+
+/* tangerine — turuncu; yemek, alışveriş, enerjik tanıtım */
+:root[data-palette="tangerine"] {
+  --palette-primary: #c2410c;
+  --palette-primary-hover: #9a3412;
+  --palette-primary-soft: #ea580c;
+  --palette-primary-wash: rgb(194 65 12 / 0.1);
+  --palette-primary-ink: #9a3412;
+  --palette-on-primary: #ffffff;
+  --palette-app-glow: rgb(194 65 12 / 0.06);
+  --palette-display-gradient: linear-gradient(112deg, #431407 0%, #9a3412 44%, #c2410c 76%, #ea580c 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #431407 0%, #c2410c 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #fdba74 0%, #f97316 48%, #9a3412 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #c2410c 0%, #9a3412 100%);
+}
+
+:root[data-theme="dark"][data-palette="tangerine"] {
+  --palette-primary: #fb923c;
+  --palette-primary-hover: #fdba74;
+  --palette-primary-soft: #fdba74;
+  --palette-primary-wash: rgb(251 146 60 / 0.14);
+  --palette-primary-ink: #fb923c;
+  --palette-on-primary: #431407;
+  --palette-app-glow: rgb(251 146 60 / 0.12);
+  --palette-display-gradient: linear-gradient(112deg, #fff7ed 0%, #fed7aa 44%, #fdba74 76%, #fb923c 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #fff7ed 0%, #fb923c 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #fdba74 0%, #f97316 48%, #9a3412 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #c2410c 0%, #9a3412 100%);
+}
+
+/* jade — yeşim; finans, sağlık, sürdürülebilirlik */
+:root[data-palette="jade"] {
+  --palette-primary: #047857;
+  --palette-primary-hover: #065f46;
+  --palette-primary-soft: #059669;
+  --palette-primary-wash: rgb(4 120 87 / 0.1);
+  --palette-primary-ink: #065f46;
+  --palette-on-primary: #ffffff;
+  --palette-app-glow: rgb(4 120 87 / 0.06);
+  --palette-display-gradient: linear-gradient(112deg, #022c22 0%, #065f46 44%, #047857 76%, #059669 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #022c22 0%, #047857 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #6ee7b7 0%, #10b981 48%, #065f46 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #047857 0%, #065f46 100%);
+}
+
+:root[data-theme="dark"][data-palette="jade"] {
+  --palette-primary: #34d399;
+  --palette-primary-hover: #6ee7b7;
+  --palette-primary-soft: #6ee7b7;
+  --palette-primary-wash: rgb(52 211 153 / 0.14);
+  --palette-primary-ink: #34d399;
+  --palette-on-primary: #022c22;
+  --palette-app-glow: rgb(52 211 153 / 0.12);
+  --palette-display-gradient: linear-gradient(112deg, #ecfdf5 0%, #a7f3d0 44%, #6ee7b7 76%, #34d399 100%);
+  --palette-display-gradient-tight: linear-gradient(100deg, #ecfdf5 0%, #34d399 100%);
+  --palette-brand-gradient: linear-gradient(150deg, #6ee7b7 0%, #10b981 48%, #065f46 100%);
+  --palette-cta-gradient: linear-gradient(180deg, #047857 0%, #065f46 100%);
+}
+
 /* ─── 3. Köprü — Tailwind ───────────────────────────────────────────── */
 @theme inline {
   --color-page: var(--page-bg);
@@ -298,6 +512,17 @@
   --shadow-raised: var(--shadow-sm);
   --shadow-floating: var(--shadow-md);
   --shadow-modal: var(--shadow-overlay);
+  --shadow-cta: var(--shadow-button);
+
+  /* Grafik serileri: `bg-chart-1`, `fill-chart-2`, `stroke-chart-track`. */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-track: var(--chart-track);
+  --color-chart-ink: var(--chart-ink);
 
   --font-sans: var(--font-sans-face, ui-sans-serif), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: var(--font-mono-face, ui-monospace), "SFMono-Regular", Menlo, monospace;
@@ -332,6 +557,8 @@
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
+  /* Vitrin kartı / büyük panel: 32 px, dış kabuk. İçindeki kuyu `xl`. */
+  --radius-2xl: 2rem;
 
   /* Ekosistemin tek eğrisi. Varsayılan geçiş eğrisi olarak da atanır:
      `transition` yazan her sınıf markanın eğrisini kendiliğinden alır. */

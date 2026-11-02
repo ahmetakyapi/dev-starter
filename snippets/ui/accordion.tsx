@@ -18,6 +18,15 @@ import { cn } from "@/lib/utils";
  * aşağı doğru uzar, sonra çapalama geri gelir. "use client" yalnızca bu
  * korumanın tıklama dinleyicisi için; katlama JS'siz de çalışır.
  *
+ * İKİ GÖRÜNÜŞ (`variant`, "board" dili 2026-11):
+ *   `line` (varsayılan): kıl çizgisiyle ayrılmış satırlar; SSS gibi uzun
+ *     metin listeleri.
+ *   `well`: gri kuyu (`bg-surface rounded-xl p-1.5`) içinde her öğe beyaz
+ *     karo (`bg-overlay shadow-raised rounded-lg`); ayar ya da özellik
+ *     panelleri. Kuyu → karo tek seviye: karo içine kart konmaz.
+ * Chevron küçük yuvarlak bir düğme gibi durur, açılınca döner; özete
+ * gelince arka planı yumuşak griye döner (tıklanabilir olduğunu söyler).
+ *
  * Açılış animasyonu `::details-content` + `interpolate-size` (yalnızca
  * destekleyen tarayıcıda; desteklemeyen anında açar). Hareketi azaltan
  * kullanıcıda süre sıfıra iner (globals.css genel kuralı).
@@ -50,9 +59,22 @@ function holdAnchor() {
   }, HOLD_MS);
 }
 
-export function Accordion({ children, className }: { children: ReactNode; className?: string }) {
+const VARIANTS = {
+  line: "divide-y divide-line-soft border-y border-line-soft",
+  well: "space-y-1.5 rounded-xl bg-surface p-1.5 [&>details]:rounded-lg [&>details]:bg-overlay [&>details]:px-4 [&>details]:shadow-raised",
+} as const;
+
+export function Accordion({
+  children,
+  variant = "line",
+  className,
+}: {
+  children: ReactNode;
+  variant?: keyof typeof VARIANTS;
+  className?: string;
+}) {
   return (
-    <div className={cn("divide-y divide-line-soft border-y border-line-soft", className)}>
+    <div className={cn(VARIANTS[variant], className)}>
       <style href="ui-accordion" precedence="default">
         {STYLES}
       </style>
@@ -76,10 +98,15 @@ export function AccordionItem({ title, children, defaultOpen, exclusive, classNa
     <details name={exclusive} open={defaultOpen} className={cn("ui-accordion group", className)}>
       <summary
         onClick={holdAnchor}
-        className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 text-read font-semibold text-strong select-none [&::-webkit-details-marker]:hidden [&:focus-visible]:outline-offset-[-2px]"
+        className="group/summary flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 text-read font-semibold text-strong select-none [&::-webkit-details-marker]:hidden [&:focus-visible]:outline-offset-[-2px]"
       >
         {title}
-        <ChevronDown aria-hidden className="size-4 shrink-0 text-muted transition-transform group-open:rotate-180" strokeWidth={1.75} />
+        <span
+          aria-hidden
+          className="grid size-7 shrink-0 place-items-center rounded-full text-muted transition-colors group-hover/summary:bg-surface-raised group-hover/summary:text-strong"
+        >
+          <ChevronDown className="size-4 transition-transform duration-300 group-open:rotate-180" strokeWidth={1.75} />
+        </span>
       </summary>
       <div className="pb-4 text-base text-body">{children}</div>
     </details>

@@ -155,6 +155,16 @@ kaldığı için erişilebilirlik açığı değil.
   oranı gibi ölçülerde.
 - **Sparkline**: eğilim işareti; okunacak sayı yanında. `tone="auto"`
   yalnızca "yükselmek iyi" serilerde.
+- **ChartCard + ChartLegend**: her grafiğin kabı. Kart gri kuyu
+  (`bg-surface`), lejant karoları beyaz (`bg-overlay`); başlıktaki büyük
+  değer telefonda okunan tek sayıdır, grafik onu destekler.
+- **StageBars**: huni. Çizim değil çubuk: ortak taban çizgisinde uzunluk
+  doğru okunur. Satırlar `subgrid`, izler hizalı.
+- **TrackBarChart**: sıralı tek seri. Etiketler kısa ("Oca"): 12 sütun
+  telefonda sütun başına ~24 px.
+- **RingChart**: az kategori, büyüklük sırası. Tam oran okunacaksa StageBars.
+- Seri rengi sırası sabit (`chart-1` ilk seri) ve lejantla aynı. Renk metin
+  rengi olmaz; değer her zaman `text-strong` ile yanında yazılır.
 
 ### Form ve Gezinme
 
@@ -179,6 +189,51 @@ kaldığı için erişilebilirlik açığı değil.
   zaman sunucu ile istemcide farklı çıkar).
 - **EmptyState**: `icon` panel içi, `scene` sayfa düzeyi, `inline` tek satır.
   Panel içine sahne konmaz.
+
+### Grafik (board dili, 2026-11)
+
+- **AreaChart**: iki dönemi kıyaslamak için; monoton kübik eğri sıfırın altına/tepeye taşmaz. Biçim `valueFormat` (Intl seçenekleri) ile, fonksiyonla değil (istemci bileşeni). Çizim kırpma perdesiyle: `pathLength` + `non-scaling-stroke` çizgiyi yarıda bırakıyor.
+- **GaugeChart**: kalan iz `max` ile; parçalar arası boşluk yuvarlak uçların içinden hesaplanır.
+- **FunnelChart**: kaybın yeri sorulunca; kesin kıyas için `stage-bars` daha dürüst.
+- **Heatmap**: tarihler UTC, bitiş günü veriden (hidrasyon farkı yok); telefonda yatay kayar, en yeni haftada açılır.
+- **RadarChart**: en çok iki seri, kısa etiketler.
+- **SankeyChart**: yalnızca iki katman; ad 10-12 harfi geçmesin. Yerleşim saf `sankeyLayout`ta.
+- **BarList**: varsayılan büyükten küçüğe; anlamlı sıra varsa `sort={false}`.
+- Bütün grafikler görünür olunca çizilir (`useInView`); hareket azaltmada son hal anında. JS yoksa çizim başlangıç halinde kalır, veri sr-only tabloda okunur.
+
+### Form Girişleri
+
+- **Slider**: değer yaklaşıksa; kesin sayı için number-field. Ağ isteğini `onValueCommitted`ta yap; aralıkta `minStepsBetweenValues`.
+- **NumberField**: basılı tutunca 1,2 sn sonra 5, 2,4 sn sonra 10 adım. Telefon/posta kodu için değil (onlar metin).
+- **InputOtp**: doğrulama `onComplete`te, sonuçla `error`. Ayraç ortada (3+3).
+- **Textarea**: büyümeyi `field-sizing` yapar, Firefox'ta küçük JS yedeği. Sayaç %90'da uyarı, sınırda tehlike.
+- **TagInput**: boş alanda Backspace önce son çipi işaretler, ikincide siler. Sunucuda `formData.getAll(name)`.
+- **ColorPicker**: değer `#rrggbb`, kullanıcı verisi olduğu için `style` ile; sistem renkleri token'dır, buradan seçilmez.
+- **DateCalendar**: SSR tutarlılığı için `defaultMonth` ver; "bugün" yalnız tarayıcıda. Doğum tarihi için yanlış araç.
+- **DatePicker**: gizli giriş `YYYY-AA-GG`; aralıkta `<name>-start`/`<name>-end`.
+- **TimeField**: 24 saat, değer sarılır; yarım değer `null`.
+
+### Katman ve Geri Bildirim (ek)
+
+- **ContextMenu**: hızlandırıcıdır, tek kapı olamaz; aynı eylemler görünür bir "Daha Fazla" düğmesinde (`dropdown-menu`) de olsun. Alt menü en fazla bir düzey.
+- **CloseButton**: her × buradan; adı neyi kapattığını söyler. `bleed` köşede hizayı bozmaz, 44 px korunur.
+- **Divider**: kart içinde kart yerine. "ya da" etiketli kap kasıtlı olarak `separator` değil.
+- **Progress / Meter**: iş bitecekse progress, kapasite ise meter. Süre bilinmiyorsa `value={null}`, uydurma yüzde yok. Dolgu `translateX` ile kayar. Meter eşikleri oran (0,75 / 0,9); yüksek değerin iyi olduğu ölçekte `inverted`.
+- **Announcement**: anahtar duyuruya özgü (`duyuru:<konu>-<tarih>`); kapatma satır içi betikle ilk boyamadan önce gizlenir (CSP'de nonce gerekir).
+- **NotificationCenter**: durum çağıranda (`items` + `onMarkRead`); rozet 9'dan sonra "9+".
+- **Carousel**: asıl mesajı 2. slayta koyma; etkin nokta `clip-path` ile uzar.
+- **Chip**: tek seçimli süzgeç için `segmented-control`. Çip kaldırılınca odağı taşımak üst bileşenin işi.
+- **BannerAlert**: sayfayla gelen satır sessiz; sonradan belirene `announce`. En fazla iki eylem.
+
+### Bloklar
+
+- **PaletteSwitcher**: `app/palettes.css` içe aktarılmalı (nokta renkleri oradaki `--swatch-*`). Çerezin ilk boyamadan önce okunması için THEME_SCRIPT'e iki satır (dosya başında). Telefonda on nokta yatay kayar.
+- **AppShell**: ikonları öğe olarak ver (`<Inbox />`); kabuk sayfanın kökü değilse `contentAs="div"` (tek `main`). Daraltma bilerek animasyonsuz.
+- **AuthCard**: `action` `useActionState` imzasıyla; şifreyi geri döndürme; hata metni hangi alanın yanlış olduğunu söylemez; marka logosu/rengi yok.
+- **SettingsDialog**: satırlar `SettingsSection`/`SettingsRow` + `Switch`/`Select` (`hideLabel`); derin bağlantı gerekiyorsa ayrı rota + `TabLinks`.
+- **AgentPlan**: bütün durum tek `activeIndex`ten türer; ajan olaylarını bu sayıya indirmek çağıranın işi.
+- **ChatComposer**: `onAttach`/`onVoice` yoksa o düğme çizilmez; model menüsü ≥ 2 modelde açılır.
+- **ChatThread**: kaydıran kap `data-chat-scroll` taşır; otomatik kaydırma yalnız kullanıcı sondaysa.
 
 ### Yönetim Paneli: Canlı Önizleme
 
