@@ -128,7 +128,8 @@ export function GaugeChart({
                 track ? "stroke-chart-track" : ["seg", STROKE[part.series - 1]],
                 "transition-opacity duration-200 group-has-[.seg:hover]/gauge:opacity-35 hover:opacity-100!",
               )}
-              initial={{ pathLength: 0, opacity: 0 }}
+              // Hareket azaltmada başlangıç yok: yay ekran dışında da çizili gelir.
+              initial={reduce ? false : { pathLength: 0, opacity: 0 }}
               whileInView={{ pathLength: 1, opacity: 1 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{

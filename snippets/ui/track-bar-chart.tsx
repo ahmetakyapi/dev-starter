@@ -48,7 +48,9 @@ export function TrackBarChart({
   const axis = ticks ?? [0, max];
   return (
     <figure className={cn("w-full", className)}>
-      <table className="sr-only">
+      <div className="sr-only">
+        {/* sr-only kap DIŞTA: <table> width: 1px'i yok sayar, uzun etiketle sayfayı yana taşırır. */}
+        <table>
         <caption>{title}</caption>
         <tbody>
           {data.map((d) => (
@@ -59,6 +61,7 @@ export function TrackBarChart({
           ))}
         </tbody>
       </table>
+      </div>
 
       <div aria-hidden className="flex gap-3">
         {/* Eksen: değerler gerçek konumunda, çizgisiz */}

@@ -100,6 +100,8 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
+├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 541 hikâye — Tema, Bileşenler,
+│                                Grafikler, Bloklar, Ekranlar, Pusula showcase (73/73 bileşen); `npm run storybook`
 ├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (73 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma

@@ -15,6 +15,8 @@
     "lint": "eslint packages snippets",
     "test": "vitest run",
     "typecheck": "tsc --noEmit --project packages/@ahmet/ui/tsconfig.json",
+    "storybook": "npm run dev --prefix storybook",
+    "storybook:build": "npm run build --prefix storybook",
     "verify:hooks": "bash scripts/test-hooks.sh",
     "slop": "bash scripts/slop-scan.sh",
     "verify:slop": "bash scripts/test-slop-scan.sh",

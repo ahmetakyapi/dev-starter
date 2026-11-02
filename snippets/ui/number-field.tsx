@@ -97,8 +97,10 @@ export function NumberField({
   const button =
     "grid size-11 shrink-0 place-items-center rounded-sm bg-overlay text-strong shadow-raised transition-[background-color,color,scale] duration-150 select-none pointer-fine:size-8 hover:bg-page active:scale-95 motion-reduce:active:scale-100 data-disabled:bg-transparent data-disabled:text-muted data-disabled:shadow-none [&:focus-visible]:outline-offset-0";
 
+  // *:min-w-0: Base UI kökü min-width:auto ile girdinin doğal genişliğine
+  // (~300 px) uzanıp dar kolonda taşıyordu.
   return (
-    <div className={cn("grid content-start gap-1.5", className)}>
+    <div className={cn("grid min-w-0 content-start gap-1.5 *:min-w-0", className)}>
       <label htmlFor={id} className="text-small font-semibold text-strong">
         {label}
       </label>

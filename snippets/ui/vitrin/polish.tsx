@@ -72,8 +72,8 @@ import { cn } from "@/lib/utils";
 /* Vitrin: her bileşen büyük yuvarlak bir kuyuda, altında adı ve tek cümle. */
 function Showcase({ name, note, children, wide, className }: { name: string; note: string; children: ReactNode; wide?: boolean; className?: string }) {
   return (
-    <figure className={cn("min-w-0", wide && "md:col-span-2")}>
-      <div className={cn("flex min-h-56 items-center justify-center rounded-2xl bg-surface p-5 sm:p-8", className)}>
+    <figure className={cn("flex h-full min-w-0 flex-col", wide && "md:col-span-2")}>
+      <div className={cn("flex min-h-56 flex-1 items-center justify-center rounded-2xl bg-surface p-5 sm:p-8", className)}>
         <div className="w-full min-w-0">{children}</div>
       </div>
       <figcaption className="mt-3 px-1">
@@ -530,12 +530,13 @@ export default function Vitrin() {
         </Showcase>
 
         <Showcase name="Ölçü ve Mini Eğri" note="Değişim işaret, ok ve renkle; eğri yalnızca eğilim.">
-          <StatGrid className="grid-cols-1 sm:grid-cols-1">
-            <div className="flex items-end justify-between gap-4">
+          {/* Eğri dl'nin DIŞINDA: dl yalnız dt/dd (ya da onları saran div) alır (axe definition-list). */}
+          <div className="flex items-end justify-between gap-4">
+            <StatGrid className="grid-cols-1 sm:grid-cols-1">
               <Stat label="Haftalık Ciro" value="₺84.120" change={6.4} changeLabel="geçen haftaya göre" />
-              <Sparkline title="Son 12 Hafta Ciro" values={[42, 48, 45, 52, 58, 55, 61, 66, 63, 70, 74, 79]} />
-            </div>
-          </StatGrid>
+            </StatGrid>
+            <Sparkline title="Son 12 Hafta Ciro" values={[42, 48, 45, 52, 58, 55, 61, 66, 63, 70, 74, 79]} />
+          </div>
         </Showcase>
 
         <Showcase name="Yükleme" note="Spinner, marka halkası ve parıltılı iskelet; hareket azaltmada durağan.">

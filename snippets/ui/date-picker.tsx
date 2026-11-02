@@ -107,7 +107,7 @@ export function DatePicker(props: SingleProps | RangeProps) {
           </span>
           <CalendarDays aria-hidden className="size-4 shrink-0 text-muted" />
         </PopoverTrigger>
-        <PopoverContent align="start" initialFocus={false} className="w-auto p-3">
+        <PopoverContent align="start" initialFocus={false} aria-labelledby={labelId} className="w-auto p-3">
           {props.mode === "range" ? (
             <DateCalendar
               {...common}

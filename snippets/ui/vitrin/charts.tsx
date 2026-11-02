@@ -66,10 +66,12 @@ function Showcase({
   children: ReactNode;
 }) {
   return (
-    <div className={wide ? "min-w-0 lg:col-span-2" : "min-w-0"}>
-      {children}
+    <div className={wide ? "flex h-full min-w-0 flex-col lg:col-span-2" : "flex h-full min-w-0 flex-col"}>
+      {/* ChartCard hücreyi doldurur: yan yana kartlar eşit boy, lejantları dipte hizalı. */}
+      <div className="flex flex-1 flex-col *:flex-1">{children}</div>
       <div className="mt-3 px-2">
-        <h2 className="text-base font-semibold text-strong">{name}</h2>
+        {/* Başlık değil: kartın kendi h3'ü önce gelir, h2 sırayı bozar (axe heading-order). */}
+        <p className="text-base font-semibold text-strong">{name}</p>
         <p className="mt-0.5 text-small text-muted">{note}</p>
       </div>
     </div>
@@ -102,7 +104,7 @@ export default function Page() {
           note="İki dönemi üst üste koymak için; fareyle, parmakla ya da oklarla gezilir."
           wide
         >
-          <ChartCard
+          <ChartCard titleAs="h2"
             id="ziyaret"
             label="Aylık Ziyaretçi"
             value={thisYear.toLocaleString("tr-TR")}
@@ -149,7 +151,7 @@ export default function Page() {
           name="Yarım Daire Gösterge"
           note="Bir bütünün 2-4 parçası; parçalar arası boşluk yuvarlak uçların içinden hesaplanır."
         >
-          <ChartCard
+          <ChartCard titleAs="h2"
             id="cihaz"
             label="Cihaza Göre Ziyaret"
             value="9.000"
@@ -181,7 +183,7 @@ export default function Page() {
           name="Huni"
           note="Kaybın nerede olduğunu gösterir; her aşamanın ilk aşamaya göre payı hapta."
         >
-          <ChartCard
+          <ChartCard titleAs="h2"
             id="huni"
             label="Ödeme Hunisi"
             value="%15,6"
@@ -204,7 +206,7 @@ export default function Page() {
           name="Aktivite Izgarası"
           note="Günlük bir sayının ritmi; telefonda geçmiş yatay kaydırılır, açılışta en yeni hafta görünür."
         >
-          <ChartCard
+          <ChartCard titleAs="h2"
             id="katki"
             label="Son 26 Hafta Katkı"
             value={totalContrib.toLocaleString("tr-TR")}
@@ -222,7 +224,7 @@ export default function Page() {
           name="Sıralı Çubuk Listesi"
           note="Uzun adlı 3-10 kalemlik sıralama; dolgu metnin arkasında, ad kısalmaz."
         >
-          <ChartCard
+          <ChartCard titleAs="h2"
             id="sayfa"
             label="En Çok Ziyaret Edilen Sayfalar"
             value="18.640"
@@ -247,7 +249,7 @@ export default function Page() {
           name="Radar"
           note="5-8 ölçütte bir ya da iki profil; şekil okunur, değerler tabloda."
         >
-          <ChartCard
+          <ChartCard titleAs="h2"
             id="radar"
             label="Sürüm Kalite Profili"
             value="88"
@@ -294,7 +296,7 @@ export default function Page() {
           name="Sankey"
           note="Kaynaktan sonuca akış; bir düğüm ya da bant üstünde tutulunca yalnızca ona bağlı akış kalır."
         >
-          <ChartCard
+          <ChartCard titleAs="h2"
             id="akis"
             label="Kaynağa Göre Dönüşüm"
             value="9.000"

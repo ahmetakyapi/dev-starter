@@ -152,7 +152,7 @@ jobs:
       - name: AI slop scan
         run: |
           bash scripts/test-slop-scan.sh
-          bash scripts/slop-scan.sh templates snippets packages/@ahmet/ui/src
+          bash scripts/slop-scan.sh templates snippets packages/@ahmet/ui/src storybook/stories
 
   agentic:
     name: Agentic Verification
@@ -221,3 +221,36 @@ jobs:
 
       - name: Run health check
         run: bash scripts/health-check.sh
+
+  storybook:
+    name: Storybook Build
+    runs-on: ubuntu-24.04
+
+    # Neden ayri is: storybook/ kendi package.json ve kilidiyle bagimsiz (kok
+    # npm ci'a 250 paket eklemesin). Bilesen ya da token degisikligi hikayeyi
+    # kirarsa (silinen prop, yeniden adlanan sinif) burada yakalanir: tip
+    # denetimi snippet'leri ve sablonu da kapsar, derleme bütün hikayeleri cizer.
+
+    defaults:
+      run:
+        working-directory: storybook
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: storybook/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npm run typecheck
+
+      - name: Build Storybook
+        run: npm run build

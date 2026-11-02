@@ -53,12 +53,12 @@ function Showcase({
   stage?: "center" | "stretch";
 }) {
   return (
-    <figure className={wide ? "md:col-span-2" : undefined}>
+    <figure className={wide ? "flex h-full flex-col md:col-span-2" : "flex h-full flex-col"}>
       <div
         className={
           stage === "center"
-            ? "grid min-h-64 place-items-center rounded-2xl bg-surface p-5 sm:p-8"
-            : "rounded-2xl bg-surface p-5 sm:p-8"
+            ? "grid min-h-64 flex-1 place-items-center rounded-2xl bg-surface p-5 sm:p-8"
+            : "flex-1 rounded-2xl bg-surface p-5 sm:p-8"
         }
       >
         {children}

@@ -109,7 +109,8 @@ export function Textarea({
             className={cn(
               "pointer-events-none absolute right-3 bottom-2 rounded-full px-1.5 text-micro font-semibold tabular-nums transition-colors",
               level === "ok" && "text-muted",
-              level === "warn" && "bg-warning-wash text-warning",
+              // Wash zeminsiz: wash + gri kuyu + alan zemini üst üste binince 4,41:1 (AA altı).
+              level === "warn" && "text-warning",
               level === "full" && "bg-danger-wash text-danger",
             )}
           >

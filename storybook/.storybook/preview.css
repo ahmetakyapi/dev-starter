@@ -1,0 +1,18 @@
+/* Şablonun gerçek token dosyası: Storybook kendi kopyasını TUTMAZ (tek kaynak). */
+@import "../../templates/landing/app/globals.css";
+@import "../../templates/landing/app/palettes.css";
+@import "../../templates/landing/app/landing.css";
+
+/* Tailwind yalnızca storybook/ altını tarardı: sınıflar depo kökündeki
+   snippet ve şablon dosyalarında. */
+@source "../../snippets/ui";
+@source "../../templates/landing/components";
+@source "../../templates/landing/app";
+@source "../stories";
+
+/* next/font yerine (Storybook'ta yalnız görüntü için) Google Fonts bağlantısı
+   preview-head.html'de; şablonun beklediği değişken adları buradan. */
+:root {
+  --font-sans-face: "Inter";
+  --font-mono-face: "JetBrains Mono";
+}

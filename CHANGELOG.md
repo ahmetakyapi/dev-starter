@@ -7,6 +7,31 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Storybook görsel kataloğu — 2026-11-02
+
+#### Eklendi
+
+- **`storybook/`** (Storybook 10.6.3, `@storybook/nextjs-vite`, kendi kilidi):
+  541 hikâye + 94 belge sayfası. Tema/palet araç çubuğu, şablonun gerçek
+  CSS'i (kopya yok), `@/` içe aktaran dosyaya göre çözülür, markalı arayüz.
+  Bölümler: Giriş, Tema (renkler/paletler/tipografi/yüzeyler/grafik/hareket),
+  Bileşenler, Grafikler (+ iki pano), Bloklar, Ekranlar (landing, vitrin,
+  uygulama), **Pusula showcase** (73/73 bileşen tek uygulamada).
+- CI: **Storybook Build** işi (tip denetimi + derleme); slop taraması hikâyeleri de kapsar.
+- Kök komutlar: `npm run storybook`, `npm run storybook:build`.
+
+#### Düzeltildi (hikâyeler yakaladı)
+
+- `chat-composer` model menüsü açılınca çöküyordu (Base UI GroupLabel grup dışında).
+- `command-palette` boş metin listbox içindeydi; `notification-center` zil adı
+  görünen "9+"yı içermiyordu; `date-picker` açılır kutusu adsızdı.
+- Kontrast: `stat` ve `chart-card` nötr hap, `textarea` uyarı sayacı, `time-field` odak.
+- `number-field` dar kolonda taşıyordu; grafiklerdeki `sr-only` tablolar
+  telefonda sayfayı taşırıyordu; grafikler hareket azaltmada ekran dışında boş kalıyordu.
+- Yan yana kartlar eşit boy: vitrin kartları ve `ChartCard` hücreyi doldurur,
+  lejant dipte (`titleAs` prop'u eklendi).
+- Şablon `globals.css`: üç wash değeri `tokens.ts` ile eşitlendi.
+
 ### Board dili, ikinci dalga — 2026-11-01
 
 #### Eklendi
