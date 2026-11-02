@@ -26,8 +26,8 @@ function Showcase({
   wide?: boolean;
 }) {
   return (
-    <figure className={wide ? "md:col-span-2" : undefined}>
-      <div className="grid min-h-64 place-items-center rounded-2xl bg-surface p-5 sm:p-8">{children}</div>
+    <figure className={wide ? "flex h-full flex-col md:col-span-2" : "flex h-full flex-col"}>
+      <div className="grid min-h-64 flex-1 place-items-center rounded-2xl bg-surface p-5 sm:p-8">{children}</div>
       <figcaption className="mt-3 px-1">
         <p className="text-base font-semibold text-strong">{name}</p>
         <p className="mt-0.5 text-base text-muted">{summary}</p>

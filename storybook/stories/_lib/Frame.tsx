@@ -33,8 +33,9 @@ export function Gallery({ children, cols = 3 }: { children: ReactNode; cols?: 2 
 
 export function Cell({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
   return (
-    <figure className="flex flex-col gap-3">
-      <div className={cn("grid min-h-40 place-items-center rounded-2xl bg-surface p-6", className)}>{children}</div>
+    // h-full + flex-1: galeride yan yana hücreler EŞİT boy (içerik kısa olsa da).
+    <figure className="flex h-full flex-col gap-3">
+      <div className={cn("grid min-h-40 flex-1 place-items-center rounded-2xl bg-surface p-6", className)}>{children}</div>
       <figcaption className="px-1 text-small font-medium text-muted">{label}</figcaption>
     </figure>
   );

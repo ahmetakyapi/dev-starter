@@ -39,20 +39,24 @@ type ChartCardProps = {
   id?: string;
   children: ReactNode;
   footer?: ReactNode;
+  /** Başlık düzeyi: sayfadaki yerine göre (h1'in hemen altındaysa h2). */
+  titleAs?: "h2" | "h3" | "h4";
   className?: string;
 };
 
-export function ChartCard({ label, value, change, changeLabel = "önceki döneme göre", action, id, children, footer, className }: ChartCardProps) {
+export function ChartCard({ label, value, change, changeLabel = "önceki döneme göre", action, id, children, footer, titleAs: Title = "h3", className }: ChartCardProps) {
   const hasChange = typeof change === "number" && Number.isFinite(change);
   const up = hasChange && change > 0;
   const down = hasChange && change < 0;
   return (
-    <section aria-labelledby={id} className={cn("rounded-xl bg-surface p-2", className)}>
+    // flex-col + lejant `mt-auto`: ızgarada yan yana kartlar satır boyuna uzar
+    // (grid stretch), lejant karoları her kartta dipte aynı hizada durur.
+    <section aria-labelledby={id} className={cn("flex flex-col rounded-xl bg-surface p-2", className)}>
       <header className="flex items-start justify-between gap-3 px-3 pt-3 pb-1">
         <div className="min-w-0">
-          <h3 id={id} className="text-small font-medium text-muted">
+          <Title id={id} className="text-small font-medium text-muted">
             {label}
-          </h3>
+          </Title>
           <p className="mt-1 flex flex-wrap items-center gap-2">
             <span className="text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</span>
             {hasChange ? (
@@ -73,8 +77,9 @@ export function ChartCard({ label, value, change, changeLabel = "önceki döneme
         </div>
         {action ? <div className="shrink-0">{action}</div> : null}
       </header>
-      <div className="px-3 py-4">{children}</div>
-      {footer}
+      {/* Kart satır boyuna uzayınca grafik boş alanın ortasında durur, üste yapışmaz. */}
+      <div className="flex flex-1 flex-col justify-center px-3 py-4">{children}</div>
+      {footer ? <div className="mt-auto">{footer}</div> : null}
     </section>
   );
 }
