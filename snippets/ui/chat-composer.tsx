@@ -159,8 +159,11 @@ export function ChatComposer({
               <ChevronDown aria-hidden strokeWidth={2} />
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top">
-              <DropdownMenuLabel>Model</DropdownMenuLabel>
+              {/* Etiket grubun İÇİNDE: Base UI GroupLabel bir grup bağlamı ister,
+                  dışarıda kalınca menü açılır açılmaz "MenuGroupContext is missing"
+                  (#31) fırlatır (Storybook hikâyesi yakaladı). */}
               <DropdownMenuRadioGroup value={model} onValueChange={(value) => onModelChange?.(value as string)}>
+                <DropdownMenuLabel>Model</DropdownMenuLabel>
                 {models.map((name) => (
                   <DropdownMenuRadioItem key={name} value={name}>
                     {name}
