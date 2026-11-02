@@ -97,7 +97,9 @@ export function NotificationCenter({ items, onMarkRead, onOpen, className }: Not
   const uid = useId();
   const unread = items.filter((item) => !item.read);
   const badge = unread.length > 9 ? "9+" : num.format(unread.length);
-  const triggerLabel = unread.length ? `Bildirimler, ${num.format(unread.length)} okunmamış` : "Bildirimler";
+  // Ad görünen rozeti İÇERİR ("9+" ise "9+"): sesle komut veren kullanıcı ekranda
+  // gördüğünü söyler (WCAG 2.5.3, axe label-content-name-mismatch).
+  const triggerLabel = unread.length ? `Bildirimler, ${badge} okunmamış` : "Bildirimler";
 
   const groups = ORDER.map((name) => ({
     name,

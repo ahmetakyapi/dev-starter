@@ -530,12 +530,13 @@ export default function Vitrin() {
         </Showcase>
 
         <Showcase name="Ölçü ve Mini Eğri" note="Değişim işaret, ok ve renkle; eğri yalnızca eğilim.">
-          <StatGrid className="grid-cols-1 sm:grid-cols-1">
-            <div className="flex items-end justify-between gap-4">
+          {/* Eğri dl'nin DIŞINDA: dl yalnız dt/dd (ya da onları saran div) alır (axe definition-list). */}
+          <div className="flex items-end justify-between gap-4">
+            <StatGrid className="grid-cols-1 sm:grid-cols-1">
               <Stat label="Haftalık Ciro" value="₺84.120" change={6.4} changeLabel="geçen haftaya göre" />
-              <Sparkline title="Son 12 Hafta Ciro" values={[42, 48, 45, 52, 58, 55, 61, 66, 63, 70, 74, 79]} />
-            </div>
-          </StatGrid>
+            </StatGrid>
+            <Sparkline title="Son 12 Hafta Ciro" values={[42, 48, 45, 52, 58, 55, 61, 66, 63, 70, 74, 79]} />
+          </div>
         </Showcase>
 
         <Showcase name="Yükleme" note="Spinner, marka halkası ve parıltılı iskelet; hareket azaltmada durağan.">

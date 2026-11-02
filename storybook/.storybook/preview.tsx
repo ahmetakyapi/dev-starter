@@ -1,6 +1,4 @@
 import type { Decorator, Preview } from "@storybook/nextjs-vite";
-import { withThemeByDataAttribute } from "@storybook/addon-themes";
-import { useEffect } from "react";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./preview.css";
 
@@ -18,13 +16,19 @@ export const PALETTES = [
   { value: "iris", title: "İris" },
 ] as const;
 
-/* Palet `<html data-palette>` üzerinde olmalı: palet blokları `:root[...]`
-   seçicisiyle yazılı, alt öğede işe yaramaz (ölçüldü). */
-const withPalette: Decorator = (Story, context) => {
-  const palette = (context.globals.palette as string) ?? "signature";
-  useEffect(() => {
-    document.documentElement.dataset.palette = palette;
-  }, [palette]);
+/* Tema ve palet `<html>` üzerinde, ÇİZİMLE EŞZAMANLI yazılır (effect'te değil).
+   addon-themes'in dekoratörü özniteliği play bittikten sonra yazıyordu: koyu
+   temada katman önce açık renklerle çizilip `transition-colors` ile dönüyor,
+   a11y denetimi geçişin ortasında sahte kontrast ihlali buluyordu (ölçüldü).
+   Paletler `:root[data-palette]` seçicili, alt öğede çalışmaz. */
+const THEMES: Record<string, string> = { Açık: "light", Koyu: "dark" };
+
+const withRootAttributes: Decorator = (Story, context) => {
+  const root = document.documentElement;
+  const theme = THEMES[String(context.globals.theme)] ?? "light";
+  const palette = String(context.globals.palette ?? "signature");
+  if (root.dataset.theme !== theme) root.dataset.theme = theme;
+  if (root.dataset.palette !== palette) root.dataset.palette = palette;
   return <Story />;
 };
 
@@ -47,21 +51,17 @@ const preview: Preview = {
     },
   },
   globalTypes: {
+    theme: {
+      description: "Tema",
+      toolbar: { title: "Tema", icon: "mirror", items: [{ value: "Açık", title: "Açık", icon: "sun" }, { value: "Koyu", title: "Koyu", icon: "moon" }], dynamicTitle: true },
+    },
     palette: {
       description: "Renk paleti",
       toolbar: { title: "Palet", icon: "paintbrush", items: [...PALETTES], dynamicTitle: true },
     },
   },
-  initialGlobals: { palette: "signature" },
-  decorators: [
-    withMotion,
-    withPalette,
-    withThemeByDataAttribute({
-      themes: { Açık: "light", Koyu: "dark" },
-      defaultTheme: "Açık",
-      attributeName: "data-theme",
-    }),
-  ],
+  initialGlobals: { theme: "Açık", palette: "signature" },
+  decorators: [withMotion, withRootAttributes],
 };
 
 export default preview;

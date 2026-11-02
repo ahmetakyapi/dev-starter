@@ -46,7 +46,7 @@ const config: StorybookConfig = {
   stories: process.env.SB_STORIES
     ? [`../stories/${process.env.SB_STORIES}/**/*.mdx`, `../stories/${process.env.SB_STORIES}/**/*.stories.@(ts|tsx)`]
     : ["../stories/**/*.mdx", "../stories/**/*.stories.@(ts|tsx)"],
-  addons: ["@storybook/addon-docs", "@storybook/addon-a11y", "@storybook/addon-themes"],
+  addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],
   staticDirs: [],
   core: { disableTelemetry: true },
   async viteFinal(config) {

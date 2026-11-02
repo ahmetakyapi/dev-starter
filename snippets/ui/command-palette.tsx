@@ -243,11 +243,13 @@ export function CommandPalette({
         </Kbd>
       </div>
 
-      <div id={listId} role="listbox" aria-label={label} className="max-h-[min(22rem,55dvh)] overflow-y-auto overscroll-contain p-1.5">
-        {results.length === 0 ? (
-          <p className="px-3 py-8 text-center text-base text-muted">{emptyText}</p>
-        ) : (
-          groups.map(([group, items]) => (
+      {/* Boş metin listbox'ın DIŞINDA: listbox yalnız option/group çocuk alır
+          (axe aria-required-children, Storybook ölçtü). role="status" duyurur. */}
+      {results.length === 0 ? (
+        <p role="status" className="px-3 py-8 text-center text-base text-muted">{emptyText}</p>
+      ) : null}
+      <div id={listId} role="listbox" aria-label={label} hidden={results.length === 0} className="max-h-[min(22rem,55dvh)] overflow-y-auto overscroll-contain p-1.5">
+        {groups.map(([group, items]) => (
             <div key={group} role="group" aria-label={group}>
               <p aria-hidden className="px-2.5 pt-2.5 pb-1.5 text-micro font-medium text-muted">
                 {group}
@@ -296,8 +298,7 @@ export function CommandPalette({
                 );
               })}
             </div>
-          ))
-        )}
+          ))}
       </div>
 
       <p aria-hidden className="hidden items-center gap-4 border-t border-line-soft bg-surface px-4 py-2.5 text-small text-muted pointer-fine:flex">

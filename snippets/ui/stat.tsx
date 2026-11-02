@@ -77,7 +77,8 @@ export function Stat({
                 "inline-flex items-center gap-0.5 rounded-sm px-1.5 py-0.5 font-semibold tabular-nums",
                 good === true && "bg-success-wash text-success",
                 good === false && "bg-danger-wash text-danger",
-                good === null && "bg-surface-raised text-muted",
+                // text-body: text-muted bu zeminde 4,26–4,34:1 (AA altı, Storybook axe ölçtü)
+                good === null && "bg-surface-raised text-body",
               )}
             >
               <Glyph aria-hidden className="size-3.5" strokeWidth={2} />
