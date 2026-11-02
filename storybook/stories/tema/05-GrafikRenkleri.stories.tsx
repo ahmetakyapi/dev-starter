@@ -225,6 +225,7 @@ function GrafikRenkleriSayfasi() {
 
 const meta = {
   title: "Tema/Grafik Renkleri",
+  id: "theme-chart-colors",
   component: GrafikRenkleriSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -239,4 +240,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const GrafikRenkleri: Story = { name: "Grafik Renkleri" };
+export const ChartColors: Story = { name: "Grafik Renkleri" };

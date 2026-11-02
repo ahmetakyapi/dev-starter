@@ -6,6 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Boş Durum",
+  id: "components-core-empty-state",
   component: EmptyState,
   tags: ["autodocs"],
   parameters: {
@@ -38,9 +39,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const AramaSonucuYok: Story = {
+export const NoSearchResults: Story = {
   name: "Arama Sonucu Yok",
   args: {
     title: "Eşleşen Müşteri Yok",
@@ -50,13 +51,13 @@ export const AramaSonucuYok: Story = {
   },
 };
 
-export const IkonsuzEylemsiz: Story = {
+export const WithoutIconOrAction: Story = {
   name: "İkonsuz, Eylemsiz",
   args: { title: "Bildirim Yok", hint: "Biri sizi andığında burada görünür.", icon: undefined, action: undefined },
 };
 
-export const SayfaBulunamadi: Story = {
-  name: "Sayfa Bulunamadı (h1)",
+export const NotFound: Story = {
+  name: "Sayfa Bulunamadı",
   args: {
     title: "Sayfa Bulunamadı",
     titleAs: "h1",
@@ -66,7 +67,7 @@ export const SayfaBulunamadi: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

@@ -6,6 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
   title: "Bileşenler/Temel/Sayfa Başlığı",
+  id: "components-core-page-header",
   component: PageHeader,
   tags: ["autodocs"],
   parameters: {
@@ -39,19 +40,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Murekkepli: Story = {
-  name: "Mürekkepli Başlık",
+export const GradientTitle: Story = {
+  name: "Degrade Başlık",
   args: { title: "Fiyatlar", eyebrow: "Şeffaf plan", ink: true, description: "Ekip büyüdükçe ödeyin; gizli ücret yok.", action: undefined },
 };
 
-export const Yalin: Story = {
+export const Plain: Story = {
   name: "Yalın (Yalnızca Başlık)",
   args: { eyebrow: undefined, description: undefined, action: undefined, title: "Ayarlar" },
 };
 
-export const UzunBaslik: Story = {
+export const LongTitle: Story = {
   name: "Uzun Başlık",
   args: {
     title: "Müşteri Sözleşmeleri ve Yenileme Takvimi",
@@ -60,7 +61,7 @@ export const UzunBaslik: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

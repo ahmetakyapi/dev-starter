@@ -373,7 +373,7 @@ export default function VitrinBloklar() {
 
           <div className="grid content-start gap-10">
             <Showcase
-              name="Ajan Planı"
+              name="Asistan Planı"
               note="Kalan adım sayısı, dönen gösterge, tamamlananlar üstü çizili; daraltılabilir."
               bodyClassName="border border-line bg-page"
             >
@@ -387,7 +387,7 @@ export default function VitrinBloklar() {
 
         <div className="grid gap-10 lg:grid-cols-2">
           <Showcase
-            name="Sohbet, Boş Durum"
+            name="Sohbet (Boş Durum)"
             note="İlk açılışta ortada başlık, açıklama ve tek dokunuşla gönderilen öneriler."
             bodyClassName="block p-2"
           >

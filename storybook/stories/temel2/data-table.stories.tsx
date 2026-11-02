@@ -11,6 +11,7 @@ const sortHref = (key: string, dir: SortDir) => `?sort=${key}&dir=${dir}`;
 
 const meta = {
   title: "Bileşenler/Veri/Veri Tablosu",
+  id: "components-data-data-table",
   component: OrderTable,
   tags: ["autodocs"],
   parameters: {
@@ -56,7 +57,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
 /* Sıralama adreste; Storybook'ta adres değişmediği için tıklama burada
    yakalanır ve aynı `?sort=&dir=` bağlantısı duruma çevrilir. */
@@ -86,7 +87,7 @@ function SortableDemo() {
   );
 }
 
-export const Siralama: Story = {
+export const Sorting: Story = {
   name: "Sıralama",
   render: () => <SortableDemo />,
   play: async ({ canvasElement }) => {
@@ -104,7 +105,7 @@ export const Siralama: Story = {
   },
 };
 
-export const KarsilastirmaCubugu: Story = {
+export const ComparisonBar: Story = {
   name: "Karşılaştırma Çubuğu",
   args: { columns: BAR_COLUMNS as typeof ORDER_COLUMNS, caption: "Şube Cirosu", sort: { key: "total", dir: "desc" }, rows: sortRows(ORDERS, BAR_COLUMNS, { key: "total", dir: "desc" }) },
   parameters: {
@@ -117,14 +118,14 @@ export const KarsilastirmaCubugu: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş",
   args: { rows: [], empty: "Bu aralıkta sipariş yok. Tarih aralığını genişletmeyi dene." },
 };
 
-export const Yukleniyor: Story = { name: "Yükleniyor", args: { state: "loading" } };
+export const Loading: Story = { name: "Yükleniyor", args: { state: "loading" } };
 
-export const Hata: Story = {
+export const Error: Story = {
   name: "Hata",
   args: {
     state: "error",
@@ -137,9 +138,9 @@ export const Hata: Story = {
   },
 };
 
-export const Sik: Story = { name: "Sık Yerleşim", args: { density: "compact" } };
+export const Dense: Story = { name: "Sık Yerleşim", args: { density: "compact" } };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

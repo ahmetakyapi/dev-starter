@@ -43,6 +43,7 @@ function PalettePreview() {
 
 const meta = {
   title: "Bloklar/Palet Seçici",
+  id: "blocks-palette-switcher",
   component: PaletteSwitcher,
   tags: ["autodocs"],
   parameters: {
@@ -68,7 +69,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Yuzen: Story = {
+export const Floating: Story = {
   name: "Yüzen",
   parameters: {
     layout: "fullscreen",
@@ -90,7 +91,7 @@ export const Yuzen: Story = {
   },
 };
 
-export const SatirIci: Story = {
+export const Inline: Story = {
   name: "Satır İçi",
   args: { floating: false },
   render: (args) => (
@@ -115,7 +116,7 @@ export const SatirIci: Story = {
   },
 };
 
-export const TemaAnahtarsiz: Story = {
+export const WithoutThemeToggle: Story = {
   name: "Tema Anahtarsız",
   args: { floating: false, initialTheme: null },
   render: (args) => (
@@ -127,7 +128,7 @@ export const TemaAnahtarsiz: Story = {
   ),
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={2}>

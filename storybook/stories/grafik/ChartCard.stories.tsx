@@ -18,6 +18,7 @@ const SERILER = [1, 2, 3, 4, 5, 6] as const;
 
 const meta = {
   title: "Grafikler/Grafik Kartı",
+  id: "charts-chart-card",
   component: ChartCard,
   tags: ["autodocs"],
   parameters: {
@@ -73,7 +74,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -84,27 +85,27 @@ export const Varsayilan: Story = {
   },
 };
 
-export const LejantliIkiSutun: Story = {
-  name: "Lejant · İki Sütun",
+export const LegendTwoColumns: Story = {
+  name: "Lejant (İki Sütun)",
   args: { label: "Ziyaretçi", value: "925", change: 5.2, changeLabel: "geçen haftaya göre", lejantKalemi: 4, lejantSutun: 2 },
 };
 
-export const LejantliUcSutun: Story = {
-  name: "Lejant · Üç Sütun",
+export const LegendThreeColumns: Story = {
+  name: "Lejant (Üç Sütun)",
   args: { label: "Kayıt Hunisi", value: "1.180", change: 2.4, lejantKalemi: 6, lejantSutun: 3 },
 };
 
-export const Dusus: Story = {
+export const Decrease: Story = {
   name: "Düşüş",
   args: { label: "İade Edilen Sipariş", value: "₺1.284", change: -6.3, changeLabel: "geçen aya göre" },
 };
 
-export const DegisimYok: Story = {
+export const NoChange: Story = {
   name: "Değişim Yok",
   args: { label: "Ortalama Sepet", value: "₺642", change: 0 },
 };
 
-export const UzunEtiket: Story = {
+export const LongLabel: Story = {
   name: "Uzun Etiket",
   args: {
     label: "Kurumsal Müşterilerden Gelen Yinelenen Aylık Gelir (Vergiler Hariç)",
@@ -114,7 +115,7 @@ export const UzunEtiket: Story = {
   },
 };
 
-export const BosVeri: Story = {
+export const EmptyValue: Story = {
   name: "Boş Değer",
   args: { label: "Bu Yıl Kazanılan", value: "₺0", change: null, donemSecici: false },
   render: ({ lejantKalemi: _l, lejantSutun: _s, donemSecici: _d, ...args }) => (
@@ -126,13 +127,13 @@ export const BosVeri: Story = {
   ),
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   args: { lejantKalemi: 4 },
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>

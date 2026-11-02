@@ -33,7 +33,8 @@ function Pane({ children, tall = false }: { children: ReactNode; tall?: boolean 
 }
 
 const meta = {
-  title: "Bloklar/Sohbet Akışı",
+  title: "Bloklar/Mesaj Akışı",
+  id: "blocks-chat-thread",
   component: ChatThread,
   tags: ["autodocs"],
   parameters: {
@@ -65,9 +66,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Konusma: Story = { name: "Konuşma" };
+export const Conversation: Story = { name: "Konuşma" };
 
-export const BosDurum: Story = {
+export const EmptyState: Story = {
   name: "Boş Durum",
   args: { messages: [], empty: EMPTY },
   play: async ({ canvasElement }) => {
@@ -77,7 +78,7 @@ export const BosDurum: Story = {
   },
 };
 
-export const Dusunuyor: Story = {
+export const Thinking: Story = {
   name: "Düşünüyor",
   args: {
     messages: [{ id: "u1", role: "user", content: FIRST_QUESTION }],
@@ -88,7 +89,7 @@ export const Dusunuyor: Story = {
   },
 };
 
-export const UzunYanit: Story = {
+export const LongReply: Story = {
   name: "Uzun Yanıt",
   args: {
     messages: [
@@ -106,7 +107,7 @@ export const UzunYanit: Story = {
   ),
 };
 
-export const Akiyor: Story = {
+export const Streaming: Story = {
   name: "Yanıt Akıyor",
   parameters: { docs: { description: { story: "`streaming`: log `aria-busy` taşır; yarım cümleler tek tek okunmaz." } } },
   args: {
@@ -121,7 +122,7 @@ export const Akiyor: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={2}>

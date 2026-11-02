@@ -6,7 +6,8 @@ import { ChipGroup, FilterChip, RemovableChip } from "@/components/ui/chip";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Seçim/Çip",
+  title: "Bileşenler/Seçim/Süzgeç Etiketi",
+  id: "components-selection-chip",
   component: FilterChip,
   tags: ["autodocs"],
   parameters: {
@@ -40,7 +41,7 @@ function Toggle(props: Omit<ComponentProps<typeof FilterChip>, "onClick">) {
   return <FilterChip {...props} selected={on} onClick={() => setOn((v) => !v)} />;
 }
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   render: (args) => <Toggle key={String(args.selected)} {...args} />,
   play: async ({ canvasElement }) => {
@@ -51,11 +52,11 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Secili: Story = { name: "Seçili", args: { selected: true } };
+export const Selected: Story = { name: "Seçili", args: { selected: true } };
 
-export const Ikonlu: Story = { name: "İkonlu", args: { icon: <CalendarDays />, count: undefined } };
+export const WithIcon: Story = { name: "İkonlu", args: { icon: <CalendarDays />, count: undefined } };
 
-export const DevreDisi: Story = { name: "Devre Dışı", args: { disabled: true } };
+export const Disabled: Story = { name: "Devre Dışı", args: { disabled: true } };
 
 const STATUS = [
   ["Bekleyen", 24],
@@ -93,9 +94,9 @@ function RemovableDemo() {
   );
 }
 
-export const SuzgecGrubu: Story = { name: "Süzgeç Grubu", render: () => <FilterDemo /> };
+export const FilterGroup: Story = { name: "Süzgeç Grubu", render: () => <FilterDemo /> };
 
-export const KaldirilabilirCipler: Story = {
+export const RemovableChips: Story = {
   name: "Kaldırılabilir Çipler",
   render: () => <RemovableDemo />,
   play: async ({ canvasElement }) => {
@@ -106,7 +107,7 @@ export const KaldirilabilirCipler: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

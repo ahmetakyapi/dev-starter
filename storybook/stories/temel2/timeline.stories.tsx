@@ -19,6 +19,7 @@ const TONES: TimelineEvent[] = [
 
 const meta = {
   title: "Bileşenler/Veri/Zaman Çizelgesi",
+  id: "components-data-timeline",
   component: Timeline,
   tags: ["autodocs"],
   parameters: {
@@ -46,13 +47,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const ButunTonlar: Story = { name: "Bütün Tonlar", args: { events: TONES } };
+export const AllTones: Story = { name: "Bütün Tonlar", args: { events: TONES } };
 
-export const TekOlay: Story = { name: "Tek Olay", args: { events: [ORDER[0]] } };
+export const SingleEvent: Story = { name: "Tek Olay", args: { events: [ORDER[0]] } };
 
-export const UzunMetin: Story = {
+export const LongText: Story = {
   name: "Uzun Metin",
   args: {
     events: [
@@ -69,7 +70,7 @@ export const UzunMetin: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

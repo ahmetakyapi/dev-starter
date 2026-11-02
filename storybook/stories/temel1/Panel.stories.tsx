@@ -31,6 +31,7 @@ function InvoiceList() {
 
 const meta = {
   title: "Bileşenler/Temel/Panel",
+  id: "components-core-panel",
   component: Panel,
   tags: ["autodocs"],
   parameters: {
@@ -69,9 +70,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const YalnizBaslik: Story = {
+export const TitleOnly: Story = {
   name: "Yalnızca Başlık",
   args: {
     children: (
@@ -83,7 +84,7 @@ export const YalnizBaslik: Story = {
   },
 };
 
-export const UzunBaslik: Story = {
+export const LongTitle: Story = {
   name: "Uzun Başlık ve Eylem",
   args: {
     children: (
@@ -103,7 +104,7 @@ export const UzunBaslik: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

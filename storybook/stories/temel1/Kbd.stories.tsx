@@ -12,6 +12,7 @@ const SHORTCUTS = [
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Klavye Tuşu",
+  id: "components-buttons-kbd",
   component: Kbd,
   tags: ["autodocs"],
   parameters: {
@@ -28,19 +29,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Simgeli: Story = {
-  name: "Simgeli (label)",
+export const Symbolic: Story = {
+  name: "Simgeli",
   args: { children: "⌘", label: "Command" },
 };
 
-export const Kombinasyon: Story = {
-  name: "Kombinasyon (KbdCombo)",
+export const KeyCombination: Story = {
+  name: "Tuş Kombinasyonu",
   render: () => <KbdCombo keys={["⇧", "⌘", "P"]} label="Shift Command P" />,
 };
 
-export const MetinIcinde: Story = {
+export const InText: Story = {
   name: "Metin İçinde",
   render: () => (
     <Frame width="sm">
@@ -51,7 +52,7 @@ export const MetinIcinde: Story = {
   ),
 };
 
-export const KisayolListesi: Story = {
+export const ShortcutList: Story = {
   name: "Kısayol Listesi",
   render: () => (
     <Frame width="md">
@@ -69,7 +70,7 @@ export const KisayolListesi: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

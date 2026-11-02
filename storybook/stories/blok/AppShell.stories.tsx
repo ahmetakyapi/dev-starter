@@ -50,6 +50,7 @@ function PanoContent({ compact = false }: { compact?: boolean }) {
 
 const meta = {
   title: "Bloklar/Uygulama Kabuğu",
+  id: "blocks-app-shell",
   component: AppShell,
   tags: ["autodocs"],
   parameters: {
@@ -97,7 +98,7 @@ function visible(el: Element | null): el is HTMLElement {
   return !!el && (el as HTMLElement).offsetParent !== null;
 }
 
-export const Acik: Story = {
+export const Open: Story = {
   name: "Açık",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -106,7 +107,7 @@ export const Acik: Story = {
   },
 };
 
-export const Daraltilmis: Story = {
+export const Collapsed: Story = {
   name: "Daraltılmış",
   args: { defaultCollapsed: true },
   play: async ({ canvasElement }) => {
@@ -121,7 +122,7 @@ export const Daraltilmis: Story = {
   },
 };
 
-export const TelefondaMenuAcik: Story = {
+export const MobileMenuOpen: Story = {
   name: "Telefonda Menü Açık",
   parameters: {
     docs: { description: { story: "Telefonda menü düğmesi gezinmeyi alttan açılan çekmecede açar. Masaüstü genişliğinde kenar çubuğu zaten görünür." } },
@@ -135,7 +136,7 @@ export const TelefondaMenuAcik: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: {
     layout: "padded",

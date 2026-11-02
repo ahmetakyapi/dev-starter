@@ -24,6 +24,7 @@ const onAction = fn();
 
 const meta = {
   title: "Bileşenler/Katmanlar/Açılır Menü",
+  id: "components-overlays-dropdown-menu",
   component: DropdownMenu,
   tags: ["autodocs"],
   parameters: {
@@ -71,9 +72,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const TiklayincaAcilir: Story = {
+export const OpensOnClick: Story = {
   name: "Tıklayınca Açılır",
   tags: ["!autodocs"],
   play: async ({ canvasElement, globals }) => {
@@ -87,7 +88,7 @@ export const TiklayincaAcilir: Story = {
   },
 };
 
-export const Acik: Story = {
+export const Open: Story = {
   name: "Açık",
   tags: ["!autodocs"],
   args: { defaultOpen: true },
@@ -130,7 +131,7 @@ function ColumnsMenu({ defaultOpen }: { defaultOpen?: boolean }) {
   );
 }
 
-export const OnayVeRadyoAcik: Story = {
+export const CheckboxAndRadioOpen: Story = {
   name: "Onay ve Radyo Öğeleri (Açık)",
   tags: ["!autodocs"],
   render: () => (
@@ -145,7 +146,7 @@ export const OnayVeRadyoAcik: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

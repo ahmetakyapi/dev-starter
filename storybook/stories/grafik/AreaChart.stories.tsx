@@ -11,6 +11,7 @@ type Args = ComponentProps<typeof AreaChart> & { noktaSayisi: number; seriSayisi
 
 const meta = {
   title: "Grafikler/Alan Grafiği",
+  id: "charts-area-chart",
   component: AreaChart,
   tags: ["autodocs"],
   parameters: {
@@ -72,7 +73,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -87,12 +88,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const TekSeri: Story = {
+export const SingleSeries: Story = {
   name: "Tek Seri",
   args: { seriSayisi: 1 },
 };
 
-export const ParaBirimi: Story = {
+export const Currency: Story = {
   name: "Para Birimi (Aylık Ciro)",
   args: {
     title: "Aylık Ciro",
@@ -105,7 +106,7 @@ export const ParaBirimi: Story = {
   },
 };
 
-export const GunlukBilet: Story = {
+export const DailyTickets: Story = {
   name: "On Dört Gün, Seyreltilmiş Etiket",
   args: {
     title: "Açılan ve Çözülen Bilet",
@@ -119,12 +120,12 @@ export const GunlukBilet: Story = {
   },
 };
 
-export const AzVeri: Story = {
+export const FewData: Story = {
   name: "Az Veri (İki Nokta)",
   args: { noktaSayisi: 2 },
 };
 
-export const SifirDegerler: Story = {
+export const ZeroValues: Story = {
   name: "Sıfıra İnen Değerler",
   args: {
     title: "Kampanya Siparişi",
@@ -138,7 +139,7 @@ export const SifirDegerler: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş (Hepsi Sıfır)",
   args: {
     title: "Kampanya Siparişi",
@@ -149,12 +150,12 @@ export const Bos: Story = {
   },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>

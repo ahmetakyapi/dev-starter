@@ -6,6 +6,7 @@ const hrefFor = (n: number) => `?sayfa=${n}`;
 
 const meta = {
   title: "Bileşenler/Veri/Sayfalama",
+  id: "components-data-pagination",
   component: Pagination,
   tags: ["autodocs"],
   parameters: {
@@ -36,17 +37,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const IlkSayfa: Story = { name: "İlk Sayfa", args: { page: 1 } };
+export const FirstPage: Story = { name: "İlk Sayfa", args: { page: 1 } };
 
-export const OrtaSayfa: Story = { name: "Orta Sayfa", args: { page: 6 } };
+export const MiddlePage: Story = { name: "Orta Sayfa", args: { page: 6 } };
 
-export const SonSayfa: Story = { name: "Son Sayfa", args: { page: 12 } };
+export const LastPage: Story = { name: "Son Sayfa", args: { page: 12 } };
 
-export const AzSayfa: Story = { name: "Az Sayfa", args: { page: 2, pageCount: 4 } };
+export const FewPages: Story = { name: "Az Sayfa", args: { page: 2, pageCount: 4 } };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon",
   args: { page: 3 },
   globals: { viewport: { value: "mobile1", isRotated: false } },
@@ -55,7 +56,7 @@ export const Telefon: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

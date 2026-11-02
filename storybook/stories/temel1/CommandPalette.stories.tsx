@@ -22,6 +22,7 @@ const COMMANDS: Command[] = [
 
 const meta = {
   title: "Bileşenler/Katmanlar/Komut Paleti",
+  id: "components-overlays-command-palette",
   component: CommandPalette,
   tags: ["autodocs"],
   parameters: {
@@ -53,9 +54,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const KisayolIleAcilir: Story = {
+export const OpensWithShortcut: Story = {
   name: "⌘K ile Açılır",
   tags: ["!autodocs"],
   play: async ({ globals }) => {
@@ -69,7 +70,7 @@ export const KisayolIleAcilir: Story = {
   },
 };
 
-export const DugmeyleAcilir: Story = {
+export const OpensWithButton: Story = {
   name: "Düğmeyle Açılır",
   tags: ["!autodocs"],
   play: async ({ canvasElement, globals }) => {
@@ -80,7 +81,7 @@ export const DugmeyleAcilir: Story = {
   },
 };
 
-export const Arama: Story = {
+export const SearchWithSynonyms: Story = {
   name: "Arama (Eş Anlamlıyla)",
   tags: ["!autodocs"],
   play: async ({ globals }) => {
@@ -93,7 +94,7 @@ export const Arama: Story = {
   },
 };
 
-export const SonucYok: Story = {
+export const NoResults: Story = {
   name: "Sonuç Yok",
   tags: ["!autodocs"],
   play: async ({ globals }) => {

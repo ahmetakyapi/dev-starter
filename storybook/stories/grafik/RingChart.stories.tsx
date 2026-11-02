@@ -24,6 +24,7 @@ function Orta({ rings }: { rings: ComponentProps<typeof RingChart>["rings"] }) {
 
 const meta = {
   title: "Grafikler/Halka Grafiği",
+  id: "charts-ring-chart",
   component: RingChart,
   tags: ["autodocs"],
   parameters: {
@@ -76,7 +77,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -86,7 +87,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const IkiHalka: Story = {
+export const TwoRings: Story = {
   name: "Az Veri (İki Halka)",
   args: {
     title: "Plan Dağılımı",
@@ -98,7 +99,7 @@ export const IkiHalka: Story = {
   },
 };
 
-export const SifirDeger: Story = {
+export const ZeroValue: Story = {
   name: "Sıfır Değerli Kategori",
   args: {
     title: "Ödeme Yöntemi",
@@ -111,7 +112,7 @@ export const SifirDeger: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş (Hepsi Sıfır)",
   args: {
     title: "Ödeme Yöntemi",
@@ -123,17 +124,17 @@ export const Bos: Story = {
   },
 };
 
-export const InceHalka: Story = {
+export const ThinRings: Story = {
   name: "İnce, Tam Tura Yakın",
   args: { thickness: 5, gap: 3, sweep: 0.98 },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={3}>

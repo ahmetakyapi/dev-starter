@@ -19,7 +19,8 @@ const KANALLAR = [
 ];
 
 const meta = {
-  title: "Grafikler/Sıralı Çubuk Listesi",
+  title: "Grafikler/Çubuk Listesi",
+  id: "charts-bar-list",
   component: BarList,
   tags: ["autodocs"],
   parameters: {
@@ -61,7 +62,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const list = within(canvasElement).getByRole("list", { name: "En Çok Satan Ürünler" });
@@ -71,12 +72,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Ikonlu: Story = {
+export const WithIcon: Story = {
   name: "İkonlu Kaynaklar",
   args: { title: "Trafik Kaynakları", items: KANALLAR, columns: ["Kaynak", "Ziyaret"], series: 3, kalemSayisi: 5 },
 };
 
-export const Baglantili: Story = {
+export const WithLinks: Story = {
   name: "Bağlantılı Satırlar",
   args: {
     title: "En Çok Ziyaret Edilen Sayfalar",
@@ -98,7 +99,7 @@ export const Baglantili: Story = {
   },
 };
 
-export const Yuzde: Story = {
+export const Percent: Story = {
   name: "Yüzde Biçimi, Sırasız",
   args: {
     title: "Ödeme Adımında Kayıp",
@@ -116,12 +117,12 @@ export const Yuzde: Story = {
   },
 };
 
-export const AzVeri: Story = {
+export const FewData: Story = {
   name: "Az Veri (İki Kalem)",
   args: { kalemSayisi: 2 },
 };
 
-export const SifirDeger: Story = {
+export const ZeroValue: Story = {
   name: "Sıfır Değerli Kalem",
   args: {
     title: "Ülkeye Göre Sipariş",
@@ -136,7 +137,7 @@ export const SifirDeger: Story = {
   },
 };
 
-export const UzunEtiket: Story = {
+export const LongLabel: Story = {
   name: "Uzun Etiket",
   args: {
     title: "En Çok Açılan Destek Konuları",
@@ -151,12 +152,12 @@ export const UzunEtiket: Story = {
   },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={3}>

@@ -201,6 +201,7 @@ function SatisOzeti({ baslangicBolgesi = "tum" }: { baslangicBolgesi?: Bolge }) 
 
 const meta = {
   title: "Grafikler/Pano/Satış Özeti",
+  id: "charts-dashboards-sales-summary",
   component: SatisOzeti,
   tags: ["autodocs"],
   parameters: {
@@ -221,7 +222,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -233,12 +234,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Ege: Story = {
+export const AegeanRegion: Story = {
   name: "Ege Bölgesi",
   args: { baslangicBolgesi: "ege" },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };

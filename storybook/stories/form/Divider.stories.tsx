@@ -7,6 +7,7 @@ import { settle } from "./_a11y";
 
 const meta = {
   title: "Bileşenler/Geri Bildirim/Ayırıcı",
+  id: "components-feedback-divider",
   component: Divider,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -45,11 +46,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
 };
 
-export const Yatay: Story = {
+export const Horizontal: Story = {
   name: "Yatay",
   render: () => (
     <Frame width="sm">
@@ -67,7 +68,7 @@ export const Yatay: Story = {
   },
 };
 
-export const Dikey: Story = {
+export const Vertical: Story = {
   name: "Dikey",
   render: () => (
     <Frame width="sm">
@@ -86,7 +87,7 @@ export const Dikey: Story = {
   },
 };
 
-export const Etiketli: Story = {
+export const Labeled: Story = {
   name: "Etiketli",
   render: () => (
     <Frame width="sm">
@@ -104,7 +105,7 @@ export const Etiketli: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

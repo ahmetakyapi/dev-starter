@@ -181,7 +181,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Seçim Kutusu" note="Beyaz karo tetikleyici; liste rounded-xl, seçili öğede sağda tik.">
+        <Showcase name="Açılır Liste" note="Beyaz karo tetikleyici; liste rounded-xl, seçili öğede sağda tik.">
           <Select
             label="Teslimat Şehri"
             defaultValue="izmir"
@@ -189,7 +189,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Aranır Seçim" note="Türkçe süzgeç: “istanbul” yazınca İstanbul bulunur.">
+        <Showcase name="Aramalı Seçim" note="Türkçe süzgeç: “istanbul” yazınca İstanbul bulunur.">
           <Combobox label="Şube" items={CITIES} placeholder="Şehir yazın" />
         </Showcase>
 
@@ -201,7 +201,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Radyo Grubu" note="İç nokta yayla büyür; tarayıcı ok tuşlarıyla gezilir.">
+        <Showcase name="Seçenek Grubu" note="İç nokta yayla büyür; tarayıcı ok tuşlarıyla gezilir.">
           <RadioGroup
             name="kargo"
             legend="Kargo Seçeneği"
@@ -214,7 +214,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Anahtar" note="Tutamak yayla kayar, basılıyken gideceği yöne uzar.">
+        <Showcase name="Aç-Kapa Düğmesi" note="Tutamak yayla kayar, basılıyken gideceği yöne uzar.">
           <div className="grid divide-y divide-line-soft">
             <Switch label="Bildirimler" hint="Yeni sipariş gelince haber ver." defaultChecked />
             <Switch label="Sessiz Saatler" />
@@ -222,7 +222,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Bölümlü Denetim" note="Gri kuyu üstünde beyaz karo kayar.">
+        <Showcase name="Bölmeli Seçici" note="Gri kuyu üstünde beyaz karo kayar.">
           <div className="grid justify-items-center gap-4">
             <SegmentedControl
               aria-label="Zaman Aralığı"
@@ -306,7 +306,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Konum Çubuğu" note="İkonlu öğeler, soluk chevron ayraç; telefonda tek geri bağlantısı.">
+        <Showcase name="Gezinti Yolu" note="İkonlu öğeler, soluk chevron ayraç; telefonda tek geri bağlantısı.">
           <Breadcrumb
             items={[
               { label: "Ana Sayfa", href: "/", icon: <House /> },
@@ -350,7 +350,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Diyalog ve Çekmece" note="rounded-2xl karo, 0,96'dan ölçekle gelir; eylemler gri kuyuda.">
+        <Showcase name="İletişim Penceresi ve Yan Panel" note="rounded-2xl karo, 0,96'dan ölçekle gelir; eylemler gri kuyuda.">
           <div className="flex flex-wrap justify-center gap-2">
             <Button variant="secondary" onClick={() => setDialogOpen(true)}>
               Diyaloğu Aç
@@ -411,7 +411,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Açılır Kutu ve İpucu" note="Beyaz karo, kıl çizgisi, tetikleyiciden 0,96 ölçekle çıkar.">
+        <Showcase name="Açılır Kart ve Araç İpucu" note="Beyaz karo, kıl çizgisi, tetikleyiciden 0,96 ölçekle çıkar.">
           <div className="flex items-center justify-center gap-4">
             <Popover>
               <PopoverTrigger render={<Button variant="secondary" />}>Paylaş</PopoverTrigger>
@@ -471,7 +471,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Akordeon" note="Kuyu görünüşünde her soru beyaz karo; chevron yuvarlakta döner.">
+        <Showcase name="Açılır Bölümler" note="Kuyu görünüşünde her soru beyaz karo; chevron yuvarlakta döner.">
           <Accordion variant="well" className="bg-transparent p-0">
             <AccordionItem title="Kargo Ne Kadar Sürer?" defaultOpen exclusive="sss">
               Standart gönderim 2-4 iş günü sürer; hızlı kargo ertesi gün kapında.
@@ -506,7 +506,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Açılır Satırlı Tablo" note="Treegrid; alt kalemler girintiyle geri çekilir." wide className="items-start">
+        <Showcase name="Ağaç Tablo" note="Treegrid; alt kalemler girintiyle geri çekilir." wide className="items-start">
           <TreeTable
             caption="Bütçe"
             defaultExpanded={["pazarlama"]}
@@ -529,7 +529,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Ölçü ve Mini Eğri" note="Değişim işaret, ok ve renkle; eğri yalnızca eğilim.">
+        <Showcase name="İstatistik ve Mini Grafik" note="Değişim işaret, ok ve renkle; eğri yalnızca eğilim.">
           {/* Eğri dl'nin DIŞINDA: dl yalnız dt/dd (ya da onları saran div) alır (axe definition-list). */}
           <div className="flex items-end justify-between gap-4">
             <StatGrid className="grid-cols-1 sm:grid-cols-1">
@@ -569,7 +569,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="İkon Düğme" note="Hayalet, ikincil, birincil ve tehlike; basınca 0,95'e çöker.">
+        <Showcase name="İkon Düğmesi" note="Hayalet, ikincil, birincil ve tehlike; basınca 0,95'e çöker.">
           <div className="flex justify-center gap-2">
             <IconButton icon={Bell} aria-label="Bildirimler" />
             <IconButton icon={Settings} aria-label="Ayarlar" variant="secondary" />

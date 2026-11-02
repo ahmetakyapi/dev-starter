@@ -26,6 +26,7 @@ function Section({ of: Of }: { of: ComponentType }) {
 
 const meta = {
   title: "Ekranlar/Açılış Sayfası/Bölümler",
+  id: "screens-landing-sections",
   component: Section,
   tags: ["autodocs"],
   parameters: {
@@ -44,7 +45,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const UstBilgi: Story = {
+export const Header: Story = {
   name: "Üst Bilgi",
   render: () => (
     <div className="min-h-[60dvh] bg-page text-body">
@@ -69,7 +70,7 @@ export const UstBilgi: Story = {
   },
 };
 
-export const Logolar: Story = {
+export const LogosSection: Story = {
   name: "Logolar",
   args: { of: Logos },
   play: async ({ canvasElement }) => {
@@ -85,11 +86,11 @@ export const Logolar: Story = {
   },
 };
 
-export const Ozellikler: Story = { name: "Özellikler", args: { of: Features } };
+export const FeaturesSection: Story = { name: "Özellikler", args: { of: Features } };
 
-export const NasilCalisir: Story = { name: "Nasıl Çalışır", args: { of: HowItWorks } };
+export const HowItWorksSection: Story = { name: "Nasıl Çalışır", args: { of: HowItWorks } };
 
-export const Gorusler: Story = {
+export const TestimonialsSection: Story = {
   name: "Görüşler",
   args: { of: Testimonials },
   play: async ({ canvasElement }) => {
@@ -105,9 +106,9 @@ export const Gorusler: Story = {
   },
 };
 
-export const Fiyatlar: Story = { name: "Fiyatlar", args: { of: Pricing } };
+export const PricingSection: Story = { name: "Fiyatlar", args: { of: Pricing } };
 
-export const FiyatlarYillik: Story = {
+export const PricingYearly: Story = {
   name: "Fiyatlar Yıllık",
   args: { of: Pricing },
   play: async ({ canvasElement }) => {
@@ -121,9 +122,9 @@ export const FiyatlarYillik: Story = {
   },
 };
 
-export const Sss: Story = { name: "SSS", args: { of: Faq } };
+export const FaqSection: Story = { name: "SSS", args: { of: Faq } };
 
-export const SssAcik: Story = {
+export const FaqOpen: Story = {
   name: "SSS Açık Yanıt",
   args: { of: Faq },
   play: async ({ canvasElement }) => {
@@ -136,9 +137,9 @@ export const SssAcik: Story = {
   },
 };
 
-export const Kapanis: Story = { name: "Kapanış", args: { of: FinalCta } };
+export const FinalCtaSection: Story = { name: "Kapanış", args: { of: FinalCta } };
 
-export const AltBilgi: Story = {
+export const Footer: Story = {
   name: "Alt Bilgi",
   render: () => (
     <div className="bg-page text-body">

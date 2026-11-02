@@ -7,7 +7,8 @@ import { CITIES } from "./_data";
 const ITEMS = CITIES.slice(0, 9);
 
 const meta = {
-  title: "Bileşenler/Seçim/Seçim Kutusu",
+  title: "Bileşenler/Seçim/Açılır Liste",
+  id: "components-selection-select",
   component: Select,
   tags: ["autodocs"],
   parameters: {
@@ -43,7 +44,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -54,16 +55,16 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Bos: Story = { name: "Seçimsiz", args: { defaultValue: null } };
+export const Empty: Story = { name: "Seçimsiz", args: { defaultValue: null } };
 
-export const DevreDisi: Story = { name: "Devre Dışı", args: { disabled: true } };
+export const Disabled: Story = { name: "Devre Dışı", args: { disabled: true } };
 
-export const DevreDisiSecenek: Story = {
+export const DisabledOption: Story = {
   name: "Devre Dışı Seçenek",
   args: { items: ITEMS.map((c) => (c.value === "ankara" ? { ...c, disabled: true } : c)), defaultValue: null },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

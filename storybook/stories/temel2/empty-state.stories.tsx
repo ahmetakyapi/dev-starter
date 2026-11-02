@@ -20,6 +20,7 @@ function SearchScene() {
 
 const meta = {
   title: "Bileşenler/Veri/Boş Durum",
+  id: "components-data-empty-state",
   component: EmptyState,
   tags: ["autodocs"],
   parameters: {
@@ -60,10 +61,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Sahne: Story = {
-  name: "Sahne",
+export const Illustrated: Story = {
+  name: "Sahneli",
   args: {
     variant: "scene",
     scene: <SearchScene />,
@@ -78,14 +79,14 @@ export const Sahne: Story = {
   },
 };
 
-export const SatirIci: Story = {
+export const Inline: Story = {
   name: "Satır İçi",
   args: { variant: "inline", icon: undefined, title: "Bu hafta etkinlik yok.", hint: undefined, action: undefined },
 };
 
-export const EylemsizIpucsuz: Story = { name: "Yalnız Başlık", args: { hint: undefined, action: undefined, icon: <SearchX /> } };
+export const TitleOnly: Story = { name: "Yalnız Başlık", args: { hint: undefined, action: undefined, icon: <SearchX /> } };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

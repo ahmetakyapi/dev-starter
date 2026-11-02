@@ -30,6 +30,7 @@ function DismissDemo() {
 
 const meta = {
   title: "Bileşenler/Geri Bildirim/Uyarı Satırı",
+  id: "components-feedback-banner-alert",
   component: BannerAlert,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -61,11 +62,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
 };
 
-export const DortTon: Story = {
+export const FourTones: Story = {
   name: "Dört Ton",
   render: () => (
     <Frame width="lg">
@@ -79,7 +80,7 @@ export const DortTon: Story = {
   ),
 };
 
-export const Eylemli: Story = {
+export const WithAction: Story = {
   name: "Eylemli",
   args: {
     tone: "danger",
@@ -93,7 +94,7 @@ export const Eylemli: Story = {
   },
 };
 
-export const Kapatilabilir: Story = {
+export const Dismissible: Story = {
   name: "Kapatılabilir",
   render: () => (
     <Frame width="lg">
@@ -109,8 +110,8 @@ export const Kapatilabilir: Story = {
   },
 };
 
-export const KapatmaOlayi: Story = {
-  name: "Kapatma Olayı (onDismiss)",
+export const OnDismiss: Story = {
+  name: "Kapatılınca Haber Verir",
   args: { tone: "success", title: "Profil güncellendi", description: undefined, onDismiss: fn() },
   play: async ({ canvasElement, args }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Uyarıyı Kapat" }));
@@ -118,7 +119,7 @@ export const KapatmaOlayi: Story = {
   },
 };
 
-export const UzunMetin: Story = {
+export const LongText: Story = {
   name: "Uzun Metin",
   args: {
     tone: "warning",
@@ -134,7 +135,7 @@ export const UzunMetin: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

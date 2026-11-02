@@ -10,7 +10,8 @@ import { KANAL, sayi, toplam } from "./_veri";
 type Args = ComponentProps<typeof GaugeChart> & { parcaSayisi: number };
 
 const meta = {
-  title: "Grafikler/Yarım Daire Gösterge",
+  title: "Grafikler/Yarım Daire Grafiği",
+  id: "charts-gauge-chart",
   component: GaugeChart,
   tags: ["autodocs"],
   parameters: {
@@ -62,7 +63,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     // Ad bütün parçaları sayar: renk tek bilgi kaynağı değil
@@ -71,7 +72,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const TekDoluluk: Story = {
+export const SingleFill: Story = {
   name: "Tek Doluluk (SLA)",
   args: {
     title: "Hedef Sürede Yanıtlanan",
@@ -82,17 +83,17 @@ export const TekDoluluk: Story = {
   },
 };
 
-export const DortParca: Story = {
+export const FourSlices: Story = {
   name: "Dört Parça",
   args: { parcaSayisi: 4 },
 };
 
-export const VurguIkinci: Story = {
+export const SecondHighlighted: Story = {
   name: "İkinci Parça Vurgulu",
   args: { highlight: 1 },
 };
 
-export const KucukParca: Story = {
+export const TinySlice: Story = {
   name: "Çok Küçük Parça",
   args: {
     title: "Plan Dağılımı",
@@ -104,7 +105,7 @@ export const KucukParca: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş (Sıfır Değer)",
   args: {
     title: "Kota Kullanımı",
@@ -115,12 +116,12 @@ export const Bos: Story = {
   },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={3}>

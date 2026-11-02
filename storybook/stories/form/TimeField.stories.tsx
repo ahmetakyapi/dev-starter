@@ -6,6 +6,7 @@ import { settle } from "./_a11y";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Saat Alanı",
+  id: "components-forms-time-field",
   component: TimeField,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -36,7 +37,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -51,7 +52,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Adim5Dk: Story = {
+export const FiveMinuteStep: Story = {
   name: "Adım 5 Dakika",
   args: { defaultValue: "09:00" },
   play: async ({ canvasElement }) => {
@@ -68,22 +69,22 @@ export const Adim5Dk: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş",
   args: { label: "Mesai Bitişi", defaultValue: null, minuteStep: 1, hint: "24 saat düzeninde." },
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: { label: "Kapanış Saati", defaultValue: "07:15", hint: undefined, error: "Kapanış, açılıştan (09:00) önce olamaz." },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { defaultValue: "18:00", disabled: true, hint: "Bu gün için saat sabit." },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

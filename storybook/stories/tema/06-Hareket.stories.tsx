@@ -360,6 +360,7 @@ function HareketSayfasi() {
 
 const meta = {
   title: "Tema/Hareket",
+  id: "theme-motion",
   component: HareketSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -374,7 +375,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Hareket: Story = {
+export const Motion: Story = {
   name: "Hareket",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

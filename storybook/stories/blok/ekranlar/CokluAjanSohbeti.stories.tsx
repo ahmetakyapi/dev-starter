@@ -106,7 +106,7 @@ function conversation(productStep: number): ChatMessage[] {
       content: (
         <AgentMessage id="tasarim" time="14:04">
           <p>
-            Kahraman bölümünde ekran görüntüsü yerine <strong>canlı pano</strong> öneriyorum: ziyaretçi ürünü ilk
+            Üst bölümde ekran görüntüsü yerine <strong>canlı pano</strong> öneriyorum: ziyaretçi ürünü ilk
             ekranda çalışırken görür. Deneme düğmesini kaydırınca da görünür tutarım; telefonda alt kenarda sabit.
           </p>
           <p>Kontrast ve dokunma hedefleri iki temada da AA; taslak yarın 11.00'de hazır.</p>
@@ -266,7 +266,8 @@ function EmptyTeam({ onStart }: { onStart: (text: string) => void }) {
 }
 
 const meta = {
-  title: "Ekranlar/Uygulama/Çoklu Ajan Sohbeti",
+  title: "Ekranlar/Uygulama/Çoklu Asistan Sohbeti",
+  id: "screens-app-multi-agent-chat",
   component: MultiAgentScreen,
   tags: ["autodocs"],
   parameters: {
@@ -286,11 +287,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BosDurum: Story = { name: "Boş Durum" };
+export const EmptyState: Story = { name: "Boş Durum" };
 
-export const Konusma: Story = { name: "Konuşma", args: { start: "conversation" } };
+export const Conversation: Story = { name: "Konuşma", args: { start: "conversation" } };
 
-export const Etkilesimli: Story = {
+export const Interactive: Story = {
   name: "Etkileşimli",
   parameters: { docs: { description: { story: "Bir öneriye tıkla: ajanlar sırayla yazar; Kime ile tek ajan seçilebilir." } } },
   play: async ({ canvasElement }) => {

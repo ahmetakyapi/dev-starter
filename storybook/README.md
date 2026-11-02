@@ -1,15 +1,16 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**541 hikâye + 94 belge sayfası**, her biri açık/koyu tema ve 10 palette:
+**542 hikâye**, her biri açık/koyu tema ve 10 palette:
 
 | Bölüm | İçerik |
 |-------|--------|
-| Giriş, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
+| **Örnek Tasarım** (en üstte) | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (73/73 bileşen, 11 grafik, bloklar, 10 palet); **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
+| Vitrin | Genel bakış + grup grup vitrin sayfaları (`snippets/ui/vitrin/`) |
+| Başlangıç, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
 | Bileşenler | `snippets/ui`nin bütün bileşenleri + şablonun ortak bileşenleri; her biri varsayılan, durumlar, bütün varyantlar, `play` etkileşimi |
 | Grafikler | 11 grafik + Analitik Panosu, Satış Özeti kompozisyonları |
 | Bloklar | Uygulama kabuğu, sohbet, giriş, ayarlar, ajan planı, palet seçici |
-| Ekranlar | Landing (tam sayfa, 8 kahraman, 11 bölüm), vitrin sayfaları, uygulama ekranları |
-| Ekranlar/Showcase | **Pusula**: 73 bileşenin hepsi tek uygulamada, tutarlı sahte veriyle; "Bileşen Kapsamı" %100'ü kaynaktan ölçer |
+| Ekranlar | Landing (tam sayfa, 8 üst bölüm varyantı, 11 bölüm), sistem sayfaları, uygulama ekranları |
 
 Ekosistemin bileşenleri, ekranları ve temaları tek yerde, canlı: `snippets/ui`
 kütüphanesinin her bileşeni bütün durumlarıyla, landing şablonunun ekranları,
@@ -47,6 +48,20 @@ Storybook hiçbir bileşenin ya da token'ın kopyasını tutmaz:
 
 Bir snippet ya da token değişince hikâye kendiliğinden günceldir; kırılırsa
 CI'daki **Storybook Build** işi (tip denetimi + derleme) yakalar.
+
+## Kural: Adresler İngilizce
+
+Görünen adlar (`title`, `name`) Türkçe; adres (URL) İngilizce. Her meta
+İngilizce bir `id` taşır, her hikâye İngilizce adla dışa aktarılır:
+
+```tsx
+const meta = { title: "Bileşenler/Katmanlar/Araç İpucu", id: "components-overlays-tooltip", … }
+export const Default: Story = { name: "Varsayılan" }   // → components-overlays-tooltip--default
+```
+
+Kimlik verilmezse Storybook Türkçe başlıktan `giriş--giris`, `i̇pucu` gibi
+bozuk adresler üretir. `npm run check:ids` (CI'da derlemeden sonra) yalnızca
+`a-z0-9-` ve Türkçe kelimesiz adreslere izin verir.
 
 ## Hikâye Yazarken
 

@@ -52,6 +52,7 @@ const SIGN_UP = {
 
 const meta = {
   title: "Bloklar/Giriş Kartı",
+  id: "blocks-auth-card",
   component: AuthCard,
   tags: ["autodocs"],
   parameters: {
@@ -89,7 +90,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Giris: Story = {
+export const SignIn: Story = {
   name: "Giriş",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -103,12 +104,12 @@ export const Giris: Story = {
   },
 };
 
-export const Kayit: Story = {
+export const SignUp: Story = {
   name: "Kayıt",
   args: SIGN_UP,
 };
 
-export const Hata: Story = {
+export const Error: Story = {
   name: "Hata",
   parameters: { docs: { description: { story: "Sunucu genel hata döndürdü: kartın üstünde `role=\"alert\"`, e-posta yeniden dolu, şifre boş." } } },
   play: async ({ canvasElement }) => {
@@ -121,7 +122,7 @@ export const Hata: Story = {
   },
 };
 
-export const AlanHatasi: Story = {
+export const FieldError: Story = {
   name: "Alan Hatası",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -133,7 +134,7 @@ export const AlanHatasi: Story = {
   },
 };
 
-export const Gonderiliyor: Story = {
+export const Submitting: Story = {
   name: "Gönderiliyor",
   args: { action: neverResolves },
   play: async ({ canvasElement }) => {
@@ -146,12 +147,12 @@ export const Gonderiliyor: Story = {
   },
 };
 
-export const SaglayicisizKayit: Story = {
+export const SignUpWithoutProviders: Story = {
   name: "Sağlayıcısız Kayıt",
   args: { ...SIGN_UP, socialAction: undefined },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
     <Gallery cols={3}>

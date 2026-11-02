@@ -380,6 +380,7 @@ function InboxScreen({ initialSelected }: { initialSelected?: string }) {
 
 const meta = {
   title: "Ekranlar/Uygulama/Gelen Kutusu",
+  id: "screens-app-inbox",
   component: InboxScreen,
   tags: ["autodocs"],
   parameters: {
@@ -399,9 +400,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Suzme: Story = {
+export const Filtering: Story = {
   name: "Süzme ve Seçim",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -412,7 +413,7 @@ export const Suzme: Story = {
   },
 };
 
-export const BildirimMerkeziAcik: Story = {
+export const NotificationsOpen: Story = {
   name: "Bildirim Merkezi Açık",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -422,7 +423,7 @@ export const BildirimMerkeziAcik: Story = {
   },
 };
 
-export const TelefondaAyrinti: Story = {
+export const MobileDetail: Story = {
   name: "Telefonda Ayrıntı",
   parameters: { docs: { description: { story: "Telefon genişliğinde talebe dokununca ayrıntı alttan açılan çekmecede. Masaüstünde ayrıntı zaten sağda." } } },
   play: async ({ canvasElement }) => {

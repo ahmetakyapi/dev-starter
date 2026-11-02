@@ -36,7 +36,8 @@ async function command(root: HTMLElement, query: string) {
 }
 
 const meta = {
-  title: "Ekranlar/Showcase/Pusula",
+  title: "Örnek Tasarım/Pusula Paneli",
+  id: "showcase-pusula-dashboard",
   component: PusulaApp,
   tags: ["autodocs"],
   parameters: {
@@ -59,8 +60,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Uygulama: Story = {
-  name: "Uygulama · Gezinme",
+export const App: Story = {
+  name: "Uygulama (Gezinmeli)",
   parameters: {
     docs: { description: { story: "Bütün uygulama: kenar çubuğundan, ⌘K komut paletinden ve sayfa içi bağlantılardan gezilir; geçişte üstte gezinme çubuğu ve iskelet." } },
   },
@@ -85,7 +86,7 @@ export const Uygulama: Story = {
   },
 };
 
-export const Pano: Story = {
+export const Dashboard: Story = {
   name: "Pano",
   parameters: {
     docs: { description: { story: "Dört ölçü karosu ve on grafik; dönem seçimi hepsini birlikte değiştirir. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
@@ -103,13 +104,13 @@ export const Pano: Story = {
   },
 };
 
-export const PanoHafta: Story = {
-  name: "Pano · Son 7 Gün",
+export const DashboardLast7Days: Story = {
+  name: "Pano (Son 7 Gün)",
   args: { initialPeriod: "hafta" },
   play: async ({ globals }) => settle(globals),
 };
 
-export const GelenKutusu: Story = {
+export const Inbox: Story = {
   name: "Gelen Kutusu",
   args: { initialPage: "gelen" },
   parameters: {
@@ -139,8 +140,8 @@ export const GelenKutusu: Story = {
   },
 };
 
-export const TalepAyrintisi: Story = {
-  name: "Gelen Kutusu · Talep Ayrıntısı",
+export const TicketDetail: Story = {
+  name: "Gelen Kutusu (Talep Ayrıntısı)",
   args: { initialPage: "gelen", initialParams: { talep: TICKETS[0].id } },
   parameters: {
     docs: { description: { story: `Yan çekmecede ${TICKETS[0].id}: geciken ${DELAYED[0]?.id ?? "sipariş"} siparişine bağlı acil talep, olay akışı ve izleyenler.` } },
@@ -152,7 +153,7 @@ export const TalepAyrintisi: Story = {
   },
 };
 
-export const Takvim: Story = {
+export const Calendar: Story = {
   name: "Takvim",
   args: { initialPage: "takvim" },
   parameters: {
@@ -172,7 +173,7 @@ export const Takvim: Story = {
   },
 };
 
-export const Asistan: Story = {
+export const Assistant: Story = {
   name: "Asistan",
   args: { initialPage: "asistan" },
   parameters: {
@@ -187,7 +188,7 @@ export const Asistan: Story = {
   },
 };
 
-export const Raporlar: Story = {
+export const Reports: Story = {
   name: "Raporlar",
   args: { initialPage: "raporlar" },
   parameters: {
@@ -204,14 +205,14 @@ export const Raporlar: Story = {
   },
 };
 
-export const RaporlarYukleniyor: Story = {
-  name: "Raporlar · Yükleniyor",
+export const ReportsLoading: Story = {
+  name: "Raporlar (Yükleniyor)",
   args: { initialPage: "raporlar", initialParams: { onizleme: "yukleniyor" } },
   parameters: { docs: { description: { story: "Satış tablosunun yerinde iskelet satırlar; kap `aria-busy`." } } },
   play: async ({ globals }) => settle(globals),
 };
 
-export const Ayarlar: Story = {
+export const Settings: Story = {
   name: "Ayarlar",
   args: { initialPage: "ayarlar" },
   parameters: {
@@ -227,7 +228,7 @@ export const Ayarlar: Story = {
   },
 };
 
-export const Giris: Story = {
+export const SignedOut: Story = {
   name: "Oturum Kapalı",
   args: { signedOut: true },
   parameters: { docs: { description: { story: "Kenar çubuğundaki Oturumu Kapat buraya getirir; çalışma alanı e-postasıyla girince pano açılır." } } },

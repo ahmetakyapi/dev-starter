@@ -7,7 +7,8 @@ import { settle } from "./_settle";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Katmanlar/İpucu",
+  title: "Bileşenler/Katmanlar/Araç İpucu",
+  id: "components-overlays-tooltip",
   component: Tooltip,
   tags: ["autodocs"],
   parameters: {
@@ -40,9 +41,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const OdaklanincaAcilir: Story = {
+export const OpensOnFocus: Story = {
   name: "Klavyeyle Odaklanınca Açılır",
   tags: ["!autodocs"],
   args: { delay: 0 },
@@ -55,8 +56,8 @@ export const OdaklanincaAcilir: Story = {
   },
 };
 
-export const InfoTipKapali: Story = {
-  name: "InfoTip (Kapalı)",
+export const InfoTipClosed: Story = {
+  name: "Bilgi İpucu (Kapalı)",
   render: () => (
     <Frame width="sm" className="min-h-64">
       <div className="pt-24">
@@ -70,10 +71,10 @@ export const InfoTipKapali: Story = {
   ),
 };
 
-export const InfoTipAcik: Story = {
-  name: "InfoTip (Tıklayınca Açık)",
+export const InfoTipOpen: Story = {
+  name: "Bilgi İpucu (Tıklayınca Açık)",
   tags: ["!autodocs"],
-  render: InfoTipKapali.render,
+  render: InfoTipClosed.render,
   play: async ({ canvasElement, globals }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "F/K Nedir" }));
     const popup = await screen.findByRole("dialog", { name: "F/K Nedir" });
@@ -82,7 +83,7 @@ export const InfoTipAcik: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

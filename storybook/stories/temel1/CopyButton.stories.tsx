@@ -20,6 +20,7 @@ const LINK = "https://pano.acme.com.tr/davet/7KQ2-M4XD";
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Kopyala Düğmesi",
+  id: "components-buttons-copy-button",
   component: CopyButton,
   tags: ["autodocs"],
   parameters: {
@@ -37,7 +38,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan (İkon)",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -46,12 +47,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Metinli: Story = {
+export const WithText: Story = {
   name: "Metinli",
   args: { children: "Bağlantıyı Kopyala" },
 };
 
-export const Basarisiz: Story = {
+export const CopyFailed: Story = {
   name: "Kopyalanamadı",
   args: { children: "Bağlantıyı Kopyala" },
   beforeEach: () => mockClipboard(false),
@@ -62,7 +63,7 @@ export const Basarisiz: Story = {
   },
 };
 
-export const AlanIcinde: Story = {
+export const InField: Story = {
   name: "API Anahtarı Satırında",
   render: (args) => (
     <Frame width="md">
@@ -75,7 +76,7 @@ export const AlanIcinde: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

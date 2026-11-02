@@ -17,7 +17,7 @@ const SCALE: Record<(typeof TEXT_SIZES)[number], { cls: string; use: string; sam
   title: { cls: "text-title", use: "Kart ve diyalog başlığı", sample: "Aylık Ziyaretçi" },
   heading: { cls: "text-heading", use: "Bölüm başlığı, büyük değer", sample: "Ödeme Hunisi" },
   display: { cls: "text-display", use: "Sayfa başlığı", sample: "Gün sonu raporu" },
-  hero: { cls: "text-hero", use: "Kahraman, ekranda bir kez", sample: "Sakin yüzey." },
+  hero: { cls: "text-hero", use: "Üst bölüm başlığı, ekranda bir kez", sample: "Sakin yüzey." },
 };
 
 function ScaleRow({ name }: { name: (typeof TEXT_SIZES)[number] }) {
@@ -214,6 +214,7 @@ function TipografiSayfasi() {
 
 const meta = {
   title: "Tema/Tipografi",
+  id: "theme-typography",
   component: TipografiSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -228,4 +229,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Tipografi: Story = { name: "Tipografi" };
+export const Typography: Story = { name: "Tipografi" };

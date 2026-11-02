@@ -10,7 +10,8 @@ import { gunluk, sayi, toplam } from "./_veri";
 type Args = ComponentProps<typeof Heatmap> & { haftaSayisi: number; tepe: number };
 
 const meta = {
-  title: "Grafikler/Aktivite Izgarası",
+  title: "Grafikler/Isı Haritası",
+  id: "charts-heatmap",
   component: Heatmap,
   tags: ["autodocs"],
   parameters: {
@@ -52,7 +53,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -67,32 +68,32 @@ export const Varsayilan: Story = {
   },
 };
 
-export const DestekBileti: Story = {
+export const SupportTickets: Story = {
   name: "Destek Bileti, Sabit Basamaklar",
   args: { title: "Günlük Açılan Bilet", unit: "bilet", tepe: 34, levels: [5, 15, 25] },
 };
 
-export const TamYil: Story = {
+export const FullYear: Story = {
   name: "Tam Yıl (53 Hafta)",
   args: { title: "Yıllık Katkı", unit: "katkı", haftaSayisi: 53 },
 };
 
-export const AzVeri: Story = {
+export const FewData: Story = {
   name: "Az Veri (Altı Hafta)",
   args: { haftaSayisi: 6 },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş (Hiç Etkinlik Yok)",
   args: { title: "Yeni Mağaza Siparişi", tepe: 0 },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>

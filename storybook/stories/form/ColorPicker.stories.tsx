@@ -36,6 +36,7 @@ function ControlledDemo() {
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Renk Seçici",
+  id: "components-forms-color-picker",
   component: ColorPicker,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -67,7 +68,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -79,7 +80,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const HazirRenkler: Story = {
+export const Presets: Story = {
   name: "Hazır Renkler",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -90,12 +91,12 @@ export const HazirRenkler: Story = {
   },
 };
 
-export const HazirRenksiz: Story = {
+export const WithoutPresets: Story = {
   name: "Hazır Renksiz",
   args: { presets: undefined, defaultValue: "#34d399", label: "Marka Rengi", hint: undefined },
 };
 
-export const Kontrollu: Story = {
+export const Controlled: Story = {
   name: "Kontrollü",
   parameters: { layout: "padded" },
   render: () => (
@@ -112,12 +113,12 @@ export const Kontrollu: Story = {
   },
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: { label: "Etiket Rengi", hint: undefined, error: "Bu renk başka bir etikette kullanılıyor." },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

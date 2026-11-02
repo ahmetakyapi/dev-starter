@@ -28,6 +28,7 @@ function FormatToggles() {
 
 const meta = {
   title: "Bileşenler/Düğme ve İkon/Düğme Grubu",
+  id: "components-buttons-button-group",
   component: ButtonGroup,
   tags: ["autodocs"],
   parameters: {
@@ -64,10 +65,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const KuyuAcKapa: Story = {
-  name: "Kuyu (Aç-Kapa)",
+export const WellToggle: Story = {
+  name: "Gri Zeminli (Aç-Kapa)",
   render: () => <FormatToggles />,
   play: async ({ canvasElement }) => {
     const italic = within(canvasElement).getByRole("button", { name: "İtalik" });
@@ -77,7 +78,7 @@ export const KuyuAcKapa: Story = {
   },
 };
 
-export const Dikey: Story = {
+export const Vertical: Story = {
   name: "Dikey",
   args: {
     orientation: "vertical",
@@ -92,7 +93,7 @@ export const Dikey: Story = {
   },
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

@@ -4,7 +4,8 @@ import { Switch } from "@/components/ui/switch";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Seçim/Anahtar",
+  title: "Bileşenler/Seçim/Aç-Kapa Düğmesi",
+  id: "components-selection-switch",
   component: Switch,
   tags: ["autodocs"],
   parameters: {
@@ -32,7 +33,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -45,13 +46,13 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Acik: Story = { name: "Açık", args: { defaultChecked: true } };
+export const Open: Story = { name: "Açık", args: { defaultChecked: true } };
 
-export const DevreDisi: Story = { name: "Devre Dışı", args: { label: "Otomatik Fatura", hint: "Yalnızca kurumsal planda.", disabled: true } };
+export const Disabled: Story = { name: "Devre Dışı", args: { label: "Otomatik Fatura", hint: "Yalnızca kurumsal planda.", disabled: true } };
 
-export const SoldaRay: Story = { name: "Solda Ray", args: { placement: "start", hint: undefined, label: "Hatırla" } };
+export const LeftRail: Story = { name: "Solda Ray", args: { placement: "start", hint: undefined, label: "Hatırla" } };
 
-export const UzunMetin: Story = {
+export const LongText: Story = {
   name: "Uzun Metin",
   args: {
     label: "Model Eğitimine Katkı",
@@ -59,7 +60,7 @@ export const UzunMetin: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

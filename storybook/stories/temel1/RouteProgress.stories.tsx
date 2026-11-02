@@ -37,7 +37,8 @@ function Running() {
 }
 
 const meta = {
-  title: "Bileşenler/Yükleme/Gezinme Göstergesi",
+  title: "Bileşenler/Yükleme/Sayfa Yükleme Çubuğu",
+  id: "components-loading-route-progress",
   component: RouteProgress,
   tags: ["autodocs"],
   parameters: {
@@ -60,7 +61,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan (Boşta)",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -72,7 +73,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Calisiyor: Story = {
+export const Navigating: Story = {
   name: "Gezinme Sürüyor",
   tags: ["!autodocs"],
   args: { label: "Sayfa yükleniyor" },

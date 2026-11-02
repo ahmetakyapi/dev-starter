@@ -16,7 +16,8 @@ const PLAIN: Crumb[] = [
 ];
 
 const meta = {
-  title: "Bileşenler/Gezinme/Konum Çubuğu",
+  title: "Bileşenler/Gezinme/Gezinti Yolu",
+  id: "components-navigation-breadcrumb",
   component: Breadcrumb,
   tags: ["autodocs"],
   parameters: {
@@ -44,13 +45,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const YalnizIkon: Story = { name: "İlk Öğe Yalnız İkon", args: { iconOnly: true } };
+export const IconOnly: Story = { name: "İlk Öğe Yalnız İkon", args: { iconOnly: true } };
 
-export const Ikonsuz: Story = { name: "İkonsuz", args: { items: PLAIN } };
+export const WithoutIcon: Story = { name: "İkonsuz", args: { items: PLAIN } };
 
-export const Derin: Story = {
+export const DeepPath: Story = {
   name: "Derin Yol",
   args: {
     iconOnly: true,
@@ -64,13 +65,13 @@ export const Derin: Story = {
   },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon",
   globals: { viewport: { value: "mobile1", isRotated: false } },
   parameters: { docs: { description: { story: "Dar ekranda yalnızca bir üst sayfaya geri bağlantısı kalır." } } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

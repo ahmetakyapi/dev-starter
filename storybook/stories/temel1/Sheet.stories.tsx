@@ -28,7 +28,8 @@ function FilterBody() {
 }
 
 const meta = {
-  title: "Bileşenler/Katmanlar/Çekmece",
+  title: "Bileşenler/Katmanlar/Yan Panel",
+  id: "components-overlays-sheet",
   component: Sheet,
   tags: ["autodocs"],
   parameters: {
@@ -82,9 +83,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan (Kapalı)" };
+export const Default: Story = { name: "Varsayılan (Kapalı)" };
 
-export const TiklayincaAcilir: Story = {
+export const OpensOnClick: Story = {
   name: "Tıklayınca Açılır",
   tags: ["!autodocs"],
   play: async ({ args, canvasElement, globals }) => {
@@ -96,7 +97,7 @@ export const TiklayincaAcilir: Story = {
   },
 };
 
-export const AlttanAcik: Story = {
+export const BottomOpen: Story = {
   name: "Alttan Açık",
   tags: ["!autodocs"],
   args: { open: true },
@@ -105,7 +106,7 @@ export const AlttanAcik: Story = {
   },
 };
 
-export const YandanAcik: Story = {
+export const SideOpen: Story = {
   name: "Yandan Açık (Sağ Panel)",
   tags: ["!autodocs"],
   args: { open: true, side: "right", title: "Gelişmiş Filtreler", description: "Masaüstünde yan panel: liste arkada görünür kalır." },

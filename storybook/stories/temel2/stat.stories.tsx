@@ -4,7 +4,8 @@ import { Stat, StatGrid } from "@/components/ui/stat";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Veri/Ölçü",
+  title: "Bileşenler/Veri/İstatistik",
+  id: "components-data-stat",
   component: Stat,
   tags: ["autodocs"],
   parameters: {
@@ -42,29 +43,29 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Artis: Story = { name: "Artış", args: { label: "Yeni Üye", value: "1.284", change: 12.6 } };
+export const Increase: Story = { name: "Artış", args: { label: "Yeni Üye", value: "1.284", change: 12.6 } };
 
-export const Dusus: Story = { name: "Düşüş", args: { label: "Dönüşüm Oranı", value: "%3,2", change: -0.8, changeLabel: "geçen haftaya göre" } };
+export const Decrease: Story = { name: "Düşüş", args: { label: "Dönüşüm Oranı", value: "%3,2", change: -0.8, changeLabel: "geçen haftaya göre" } };
 
-export const Degisimsiz: Story = { name: "Değişimsiz", args: { label: "Aktif Abone", value: "4.910", change: 0.02 } };
+export const Unchanged: Story = { name: "Değişimsiz", args: { label: "Aktif Abone", value: "4.910", change: 0.02 } };
 
-export const ArtisKotu: Story = {
-  name: "Artış Kötü (positiveIsGood=false)",
+export const IncreaseIsBad: Story = {
+  name: "Artışın Kötü Olduğu Ölçü",
   args: { label: "Ortalama Gecikme", value: "412", unit: "ms", change: 18.3, positiveIsGood: false, changeLabel: "dünden" },
 };
 
-export const DususIyi: Story = {
-  name: "Düşüş İyi (positiveIsGood=false)",
+export const DecreaseIsGood: Story = {
+  name: "Düşüşün İyi Olduğu Ölçü",
   args: { label: "Aylık Gider", value: "₺318.400", change: -6.1, positiveIsGood: false },
 };
 
-export const DegisimYok: Story = { name: "Değişim Bilgisi Yok", args: { change: null, changeLabel: undefined } };
+export const NoChange: Story = { name: "Değişim Bilgisi Yok", args: { change: null, changeLabel: undefined } };
 
-export const Buyuk: Story = { name: "Büyük", args: { size: "lg", label: "Toplam Ciro", value: "₺8,4", unit: "milyon" } };
+export const Large: Story = { name: "Büyük", args: { size: "lg", label: "Toplam Ciro", value: "₺8,4", unit: "milyon" } };
 
-export const IzgaraVeEgri: Story = {
+export const StatGridExample: Story = {
   name: "Ölçü Izgarası",
   parameters: { bare: true },
   decorators: [
@@ -84,7 +85,7 @@ export const IzgaraVeEgri: Story = {
   ),
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

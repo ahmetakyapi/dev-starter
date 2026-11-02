@@ -5,7 +5,8 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { settle } from "./_a11y";
 
 const meta = {
-  title: "Bileşenler/Form Girişleri/Tek Kullanımlık Kod",
+  title: "Bileşenler/Form Girişleri/Doğrulama Kodu",
+  id: "components-forms-input-otp",
   component: InputOTP,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -36,7 +37,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -55,36 +56,36 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Bos: Story = {
+export const Empty: Story = {
   name: "Boş",
 };
 
-export const Dolu: Story = {
+export const Filled: Story = {
   name: "Dolu",
   args: { defaultValue: "719305" },
 };
 
-export const YarimKalmis: Story = {
+export const Partial: Story = {
   name: "Yarım Kalmış",
   args: { defaultValue: "4829" },
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: { label: "Yedek Kod", defaultValue: "719305", hint: undefined, error: "Kod süresi doldu, yenisini iste." },
 };
 
-export const DortHane: Story = {
+export const FourDigits: Story = {
   name: "Dört Hane, Ayraçsız",
   args: { label: "Kart Şifresi Onayı", length: 4, groupAt: 0, hint: "Kartının son dört hanesi." },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { defaultValue: "4829", disabled: true, hint: "Yeni kod 45 saniye sonra istenebilir." },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

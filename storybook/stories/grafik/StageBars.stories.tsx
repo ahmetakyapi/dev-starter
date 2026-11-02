@@ -15,6 +15,7 @@ const SERILER = [1, 2, 3, 4, 5, 6] as const;
 
 const meta = {
   title: "Grafikler/Aşama Çubukları",
+  id: "charts-stage-bars",
   component: StageBars,
   tags: ["autodocs"],
   parameters: {
@@ -68,7 +69,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const list = within(canvasElement).getByRole("list", { name: "Kayıt Hunisi" });
@@ -79,17 +80,17 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Ikonlu: Story = {
+export const WithIcon: Story = {
   name: "İkonlu, Ödeme Hunisi",
   args: { title: "Ödeme Hunisi", stages: ODEME_HUNISI, ikonlu: true },
 };
 
-export const AzVeri: Story = {
+export const FewData: Story = {
   name: "Az Veri (İki Aşama)",
   args: { title: "Deneme → Ücretli", stages: [{ label: "Deneme", value: 412 }, { label: "Ücretli", value: 87 }], asamaSayisi: 2 },
 };
 
-export const SifirAsama: Story = {
+export const ZeroStage: Story = {
   name: "Sıfır Değerli Aşama",
   args: {
     title: "Kurumsal Hunisi",
@@ -103,7 +104,7 @@ export const SifirAsama: Story = {
   },
 };
 
-export const NotluSatir: Story = {
+export const WithStageNote: Story = {
   name: "Aşamalar Arası Not",
   args: {
     title: "Destek Bileti Akışı",
@@ -118,7 +119,7 @@ export const NotluSatir: Story = {
   },
 };
 
-export const UzunEtiket: Story = {
+export const LongLabel: Story = {
   name: "Uzun Etiket",
   args: {
     title: "Kurumsal Satış Hunisi",
@@ -133,12 +134,12 @@ export const UzunEtiket: Story = {
   },
 };
 
-export const Telefon: Story = {
+export const Mobile: Story = {
   name: "Telefon Genişliği",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>

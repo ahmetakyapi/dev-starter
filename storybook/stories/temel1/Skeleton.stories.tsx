@@ -3,7 +3,8 @@ import { Skeleton, SkeletonCard, SkeletonRow, SkeletonText } from "@/components/
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Yükleme/İskelet",
+  title: "Bileşenler/Yükleme/İskelet Yükleyici",
+  id: "components-loading-skeleton",
   component: Skeleton,
   tags: ["autodocs"],
   parameters: {
@@ -25,9 +26,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Metin: Story = {
+export const Paragraph: Story = {
   name: "Paragraf",
   render: () => (
     <Frame width="sm">
@@ -38,7 +39,7 @@ export const Metin: Story = {
   ),
 };
 
-export const Liste: Story = {
+export const ListRows: Story = {
   name: "Liste Satırları",
   render: () => (
     <Frame width="md">
@@ -52,7 +53,7 @@ export const Liste: Story = {
   ),
 };
 
-export const PanoYukleniyor: Story = {
+export const DashboardLoading: Story = {
   name: "Pano Yükleniyor",
   parameters: { layout: "padded" },
   render: () => (
@@ -66,7 +67,7 @@ export const PanoYukleniyor: Story = {
   ),
 };
 
-export const TumVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

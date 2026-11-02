@@ -30,5 +30,7 @@ addons.setConfig({
     inputTextColor: "#0a0a0a",
     inputBorderRadius: 10,
   }),
-  sidebar: { showRoots: true },
+  // showRoots kapalı: açıkken tek düzeyli başlıklar (Vitrin, Başlangıç) her
+  // zaman bölüm başlıklarının ÜSTÜNE çıkıyor ve storySort sırası bozuluyordu.
+  sidebar: { showRoots: false },
 });

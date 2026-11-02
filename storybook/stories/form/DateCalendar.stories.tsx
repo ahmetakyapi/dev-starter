@@ -29,6 +29,7 @@ function RangeDemo() {
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Takvim",
+  id: "components-forms-date-calendar",
   component: DateCalendar,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -62,7 +63,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -76,12 +77,12 @@ export const Varsayilan: Story = {
   },
 };
 
-export const TekGun: Story = {
+export const SingleDay: Story = {
   name: "Tek Gün",
   args: { label: "Teslim Günü", defaultValue: NOV(21) },
 };
 
-export const Aralik: Story = {
+export const Range: Story = {
   name: "Aralık",
   render: () => (
     <Frame width="sm">
@@ -96,7 +97,7 @@ export const Aralik: Story = {
   },
 };
 
-export const DevreDisiGunler: Story = {
+export const DisabledDays: Story = {
   name: "Devre Dışı Günler",
   render: () => (
     <Frame width="sm">
@@ -114,7 +115,7 @@ export const DevreDisiGunler: Story = {
   },
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },
   render: () => (

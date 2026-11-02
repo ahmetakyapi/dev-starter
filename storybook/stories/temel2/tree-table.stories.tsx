@@ -30,7 +30,8 @@ const ROWS: TreeTableRow[] = [
 ];
 
 const meta = {
-  title: "Bileşenler/Veri/Açılır Satırlı Tablo",
+  title: "Bileşenler/Veri/Ağaç Tablo",
+  id: "components-data-tree-table",
   component: TreeTable,
   tags: ["autodocs"],
   parameters: {
@@ -58,7 +59,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -71,11 +72,11 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Kapali: Story = { name: "Hepsi Kapalı", args: { defaultExpanded: [] } };
+export const Collapsed: Story = { name: "Hepsi Kapalı", args: { defaultExpanded: [] } };
 
-export const HepsiAcik: Story = { name: "Hepsi Açık", args: { defaultExpanded: ["pazarlama", "altyapi"] } };
+export const AllExpanded: Story = { name: "Hepsi Açık", args: { defaultExpanded: ["pazarlama", "altyapi"] } };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

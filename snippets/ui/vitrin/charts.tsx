@@ -148,7 +148,7 @@ export default function Page() {
         </Showcase>
 
         <Showcase
-          name="Yarım Daire Gösterge"
+          name="Yarım Daire Grafiği"
           note="Bir bütünün 2-4 parçası; parçalar arası boşluk yuvarlak uçların içinden hesaplanır."
         >
           <ChartCard titleAs="h2"
@@ -180,7 +180,7 @@ export default function Page() {
         </Showcase>
 
         <Showcase
-          name="Huni"
+          name="Huni Grafiği"
           note="Kaybın nerede olduğunu gösterir; her aşamanın ilk aşamaya göre payı hapta."
         >
           <ChartCard titleAs="h2"
@@ -203,7 +203,7 @@ export default function Page() {
         </Showcase>
 
         <Showcase
-          name="Aktivite Izgarası"
+          name="Isı Haritası"
           note="Günlük bir sayının ritmi; telefonda geçmiş yatay kaydırılır, açılışta en yeni hafta görünür."
         >
           <ChartCard titleAs="h2"
@@ -221,7 +221,7 @@ export default function Page() {
         </Showcase>
 
         <Showcase
-          name="Sıralı Çubuk Listesi"
+          name="Çubuk Listesi"
           note="Uzun adlı 3-10 kalemlik sıralama; dolgu metnin arkasında, ad kısalmaz."
         >
           <ChartCard titleAs="h2"
@@ -246,7 +246,7 @@ export default function Page() {
         </Showcase>
 
         <Showcase
-          name="Radar"
+          name="Radar Grafiği"
           note="5-8 ölçütte bir ya da iki profil; şekil okunur, değerler tabloda."
         >
           <ChartCard titleAs="h2"
@@ -293,7 +293,7 @@ export default function Page() {
         </Showcase>
 
         <Showcase
-          name="Sankey"
+          name="Akış Grafiği"
           note="Kaynaktan sonuca akış; bir düğüm ya da bant üstünde tutulunca yalnızca ona bağlı akış kalır."
         >
           <ChartCard titleAs="h2"

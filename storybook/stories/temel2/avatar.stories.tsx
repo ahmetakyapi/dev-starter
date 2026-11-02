@@ -5,6 +5,7 @@ import { TEAM } from "./_data";
 
 const meta = {
   title: "Bileşenler/Seçim/Avatar",
+  id: "components-selection-avatar",
   component: Avatar,
   tags: ["autodocs"],
   parameters: {
@@ -34,25 +35,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = { name: "Varsayılan" };
+export const Default: Story = { name: "Varsayılan" };
 
-export const Buyuk: Story = { name: "Büyük", args: { size: "lg", name: "Zeynep Öztürk" } };
+export const Large: Story = { name: "Büyük", args: { size: "lg", name: "Zeynep Öztürk" } };
 
-export const KucukHarfliAd: Story = { name: "Küçük Harfli Ad", args: { name: "ilker şahin" } };
+export const LowercaseName: Story = { name: "Küçük Harfli Ad", args: { name: "ilker şahin" } };
 
-export const TekKelime: Story = { name: "Tek Kelimelik Ad", args: { name: "Acar" } };
+export const SingleWordName: Story = { name: "Tek Kelimelik Ad", args: { name: "Acar" } };
 
-export const Grup: Story = {
+export const Group: Story = {
   name: "Grup",
   render: () => <AvatarGroup people={TEAM} max={4} label="Ekip" />,
 };
 
-export const KucukGrup: Story = {
+export const SmallGroup: Story = {
   name: "Grup, Fazlasız",
   render: () => <AvatarGroup people={TEAM.slice(0, 3)} size="sm" label="Katılımcılar" />,
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { bare: true },
   render: () => (

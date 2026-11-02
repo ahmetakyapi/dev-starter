@@ -7,6 +7,7 @@ import { TRY } from "./_data";
 
 const meta = {
   title: "Bileşenler/Form Girişleri/Kaydırıcı",
+  id: "components-forms-slider",
   component: Slider,
   tags: ["autodocs"],
   // Geçişler otursun, a11y denetimi yarım renk yakalamasın (bkz. _a11y.ts).
@@ -46,7 +47,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Varsayilan: Story = {
+export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -58,7 +59,7 @@ export const Varsayilan: Story = {
   },
 };
 
-export const Aralik: Story = {
+export const Range: Story = {
   name: "Aralık",
   args: {
     label: "Gecelik Fiyat",
@@ -81,7 +82,7 @@ export const Aralik: Story = {
   },
 };
 
-export const Isaretli: Story = {
+export const Checked: Story = {
   name: "İşaretli",
   args: {
     label: "Teslimat Yarıçapı",
@@ -96,7 +97,7 @@ export const Isaretli: Story = {
   },
 };
 
-export const Hatali: Story = {
+export const Invalid: Story = {
   name: "Hatalı",
   args: {
     label: "İndirim Oranı",
@@ -109,7 +110,7 @@ export const Hatali: Story = {
   },
 };
 
-export const DevreDisi: Story = {
+export const Disabled: Story = {
   name: "Devre Dışı",
   args: { label: "Ekran Parlaklığı", defaultValue: 72, disabled: true, hint: "Otomatik parlaklık açık." },
   parameters: DISABLED_CONTRAST_EXEMPT,
@@ -122,7 +123,7 @@ export const DevreDisi: Story = {
   ),
 };
 
-export const ButunVaryantlar: Story = {
+export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded", ...DISABLED_CONTRAST_EXEMPT },
   render: () => (

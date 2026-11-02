@@ -11,7 +11,8 @@ import VitrinPolish from "../../../snippets/ui/vitrin/polish";
  * kopyalanan sayfaların aynısı. Burada metin ya da veri uydurulmaz.
  */
 const meta = {
-  title: "Ekranlar/Vitrin",
+  title: "Vitrin",
+  id: "gallery",
   component: VitrinIndex,
   tags: ["autodocs"],
   parameters: {
@@ -35,9 +36,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Giris: Story = { name: "Giriş" };
-export const TemelKutuphane: Story = { name: "Temel Kütüphane", render: () => <VitrinPolish /> };
-export const FormGirisleri: Story = { name: "Form Girişleri", render: () => <VitrinForm /> };
-export const GeriBildirim: Story = { name: "Katman ve Geri Bildirim", render: () => <VitrinFeedback /> };
-export const Grafikler: Story = { name: "Grafikler", render: () => <VitrinCharts /> };
-export const Bloklar: Story = { name: "Bloklar", render: () => <VitrinBlocks /> };
+export const Overview: Story = { name: "Genel Bakış" };
+export const CoreLibrary: Story = { name: "Temel Kütüphane", render: () => <VitrinPolish /> };
+export const FormInputs: Story = { name: "Form Girişleri", render: () => <VitrinForm /> };
+export const OverlaysAndFeedback: Story = { name: "Katman ve Geri Bildirim", render: () => <VitrinFeedback /> };
+export const Charts: Story = { name: "Grafikler", render: () => <VitrinCharts /> };
+export const Blocks: Story = { name: "Bloklar", render: () => <VitrinBlocks /> };

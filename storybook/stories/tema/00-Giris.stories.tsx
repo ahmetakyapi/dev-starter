@@ -116,7 +116,7 @@ const PRINCIPLES = [
 /* Tema sayfaları: her kartın küçük bir canlı önizlemesi var. */
 const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode }[] = [
   {
-    id: "tema-renkler--renkler",
+    id: "theme-colors--colors",
     title: "Renkler",
     text: "Sistem rolleri iki temada, WCAG oranlarıyla.",
     preview: (
@@ -130,7 +130,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "tema-paletler--butun-paletler",
+    id: "theme-palettes--all-palettes",
     title: "Paletler",
     text: "On palet; CTA, karo ve display başlık.",
     preview: (
@@ -142,7 +142,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "tema-tipografi--tipografi",
+    id: "theme-typography--typography",
     title: "Tipografi",
     text: "Rol adlı punto ölçeği ve font presetleri.",
     preview: (
@@ -154,7 +154,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "tema-yüzeyler--yuzeyler",
+    id: "theme-surfaces--surfaces",
     title: "Yüzeyler",
     text: "Sayfa, kuyu, karo, katman; köşe ve gölge.",
     preview: (
@@ -165,7 +165,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "tema-grafik-renkleri--grafik-renkleri",
+    id: "theme-chart-colors--chart-colors",
     title: "Grafik Renkleri",
     text: "Altı seri, iz ve mürekkep.",
     preview: (
@@ -177,7 +177,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
     ),
   },
   {
-    id: "tema-hareket--hareket",
+    id: "theme-motion--motion",
     title: "Hareket",
     text: "İmza eğrisi, süreler, yaylar.",
     preview: (
@@ -227,7 +227,7 @@ function GirisSayfasi() {
             yalnızca veride ve tek bir birincil eylemde kalır. Bu katalogdaki her şey projeye kopyalanan gerçek kaynak.
           </p>
           <div className="mt-8 flex flex-wrap gap-2">
-            <a href={storyHref("tema-renkler--renkler")} target="_top" className={buttonClass({ variant: "brand", size: "lg" })}>
+            <a href={storyHref("theme-colors--colors")} target="_top" className={buttonClass({ variant: "brand", size: "lg" })}>
               Temayı İncele <ArrowRight />
             </a>
             <a href="#kurulum" className={buttonClass({ variant: "secondary", size: "lg" })}>
@@ -330,7 +330,8 @@ function GirisSayfasi() {
 }
 
 const meta = {
-  title: "Giriş",
+  title: "Başlangıç",
+  id: "getting-started",
   component: GirisSayfasi,
   parameters: {
     layout: "fullscreen",
@@ -345,8 +346,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Giris: Story = {
-  name: "Giriş",
+export const GettingStarted: Story = {
+  name: "Başlangıç",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const month = canvas.getByRole("radio", { name: "Ay" });
