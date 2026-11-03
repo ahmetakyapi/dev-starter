@@ -96,8 +96,8 @@ export function Textarea({
           }}
           style={{ minHeight: minRows * LINE + PAD, maxHeight: maxRows * LINE + PAD }}
           className={cn(
-            "block w-full resize-none rounded-md border border-line-strong bg-surface-sunken px-3 py-2.5 text-base text-strong [field-sizing:content]",
-            "transition-colors placeholder:text-muted hover:border-primary-soft focus-visible:border-line-focus focus-visible:outline-offset-0",
+            "block w-full resize-none rounded-md border border-line-strong bg-surface-sunken shadow-well px-3 py-2.5 text-base text-strong [field-sizing:content]",
+            "transition-colors placeholder:text-muted hover:border-primary-soft focus-visible:border-line-focus focus-visible:shadow-focus focus-visible:outline-offset-0",
             maxLength && "pb-7",
             error && "border-danger",
           )}

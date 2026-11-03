@@ -15,15 +15,17 @@ import { cn } from "@/lib/utils";
  */
 
 const BASE =
-  "inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-md font-semibold transition-[background-color,color,border-color,box-shadow,transform,filter] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
+  "inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-md font-semibold transition-[background-color,color,border-color,box-shadow,scale,filter] duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
 
 export const BUTTON_VARIANTS = {
   /* Ekranın TEK birincil eylemi: marka degradesi. Bir ekranda ikinci bir
      `brand` düğme görüyorsan biri `primary` olmalı. */
   brand: "bg-cta text-on-brand shadow-cta hover:brightness-95",
   primary: "bg-primary text-on-primary shadow-cta hover:bg-primary-hover",
-  /* Beyaz karo + kıl çizgisi: kuyunun (bg-surface) üstünde de ayrışır. */
-  secondary: "border border-line bg-overlay text-strong shadow-raised hover:bg-surface",
+  /* Beyaz karo: kenarı `shadow-raised`ın kıl halkası çizer (ayrı border
+     yok, iki çizgi üst üste binip kalınlaşmasın). Üzerine gelince zemin
+     değişmez, karo bir basamak YÜKSELİR: kuyunun üstünde de karo kalır. */
+  secondary: "bg-overlay text-strong shadow-raised hover:shadow-floating",
   /* Vurgunun yıkanmış hali: ikinci derece ama renkli eylem ("Taslağa Kaydet"). */
   soft: "bg-primary-wash text-primary-ink hover:bg-primary hover:text-on-primary",
   ghost: "text-body hover:bg-surface-raised hover:text-strong",

@@ -58,7 +58,7 @@ const SIZES = {
 
 const VARIANTS = {
   well: {
-    group: "rounded-md bg-surface-sunken p-1 gap-0.5",
+    group: "rounded-md bg-surface-sunken shadow-well p-1 gap-0.5",
     item: "text-muted hover:text-strong data-pressed:bg-overlay data-pressed:text-strong data-pressed:shadow-raised",
   },
   ghost: {

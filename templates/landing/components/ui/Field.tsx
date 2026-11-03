@@ -35,7 +35,7 @@ export function Field({ label, error, hint, className, name, ...props }: FieldPr
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
         className={cn(
-          "min-h-11 rounded-md border border-line-strong bg-surface-sunken px-3 text-base text-strong transition-colors placeholder:text-muted hover:border-primary-soft focus-visible:border-line-focus focus-visible:outline-offset-0",
+          "min-h-11 rounded-md border border-line-strong bg-surface-sunken shadow-well px-3 text-base text-strong transition-[color,background-color,border-color,box-shadow] placeholder:text-muted hover:border-primary-soft focus-visible:border-line-focus focus-visible:shadow-focus focus-visible:outline-offset-0",
           error && "border-danger",
         )}
         {...props}

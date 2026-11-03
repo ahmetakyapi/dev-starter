@@ -91,9 +91,9 @@ export function InputOTP({
               aria-label={index === 0 ? undefined : `Hane ${index + 1} / ${length}`}
               aria-invalid={error ? true : undefined}
               className={cn(
-                "h-12 w-10 min-w-0 rounded-md border border-line-strong bg-surface-sunken text-center text-title font-semibold text-strong tabular-nums caret-primary sm:w-11",
+                "h-12 w-10 min-w-0 rounded-md border border-line-strong bg-surface-sunken shadow-well text-center text-title font-semibold text-strong tabular-nums caret-primary sm:w-11",
                 "transition-[background-color,border-color,box-shadow,scale] duration-150 outline-none",
-                "hover:border-primary-soft focus:border-line-focus focus:bg-overlay focus:shadow-raised focus:outline-2 focus:outline-offset-0 focus:outline-line-focus",
+                "hover:border-primary-soft focus:border-line-focus focus:shadow-focus focus:bg-overlay focus:shadow-raised focus:outline-2 focus:outline-offset-0 focus:outline-line-focus",
                 "data-filled:border-line data-filled:bg-overlay data-filled:shadow-raised",
                 "motion-safe:data-filled:animate-[otp-pop_180ms_var(--ease-brand)]",
                 error && "border-danger data-filled:border-danger",

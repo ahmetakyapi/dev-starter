@@ -94,7 +94,7 @@ function Showcase({
 }) {
   return (
     <figure className={cn("flex h-full min-w-0 flex-col gap-3", className)}>
-      <div className={cn("flex min-h-72 flex-1 items-center justify-center overflow-hidden rounded-2xl bg-surface p-4 sm:p-8", bodyClassName)}>
+      <div className={cn("flex min-h-72 flex-1 items-center justify-center overflow-hidden rounded-2xl bg-surface edge-lit p-4 sm:p-8", bodyClassName)}>
         {children}
       </div>
       <figcaption className="px-1">

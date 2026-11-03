@@ -7,6 +7,32 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### İşçilik turu: derinlik dili — 2026-11-03
+
+Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.md`
+→ "İşçilik Turu").
+
+#### Değişti
+
+- **Gölge merdiveni** (`shadow-raised/floating/modal`): katmanlı, negatif
+  yayılmalı; koyuda üst kenar ışığı + %4 beyaz halka. İki şablonun
+  `globals.css`i ve `@ahmetakyapi/theme` birlikte.
+- **`shadow-cta`**: iç ışık + iç gölge çizgisi + kıl halka + dolgu renginde
+  düşüş (`color-mix`).
+- **Düğme**: `secondary` çizgisiz karo, üzerine gelince `shadow-floating`e
+  yükselir; basış `active:scale-[0.98]` ve geçiş listesinde `scale` (eski
+  `translate-y-px` + `transform` listesi basışı hiç yumuşatmıyordu).
+- **Punto harf aralığı**: `title` → `hero` basamakla sıkılaşır (−0.01 → −0.035em);
+  `h1` tabanı −0.03em; tablo, `time` ve `[data-numeric]` eşit genişlikte rakam.
+- **Panel** (iki şablon) ve landing nesne yüzeyleri `edge-lit` ile.
+
+#### Eklendi
+
+- `shadow-well` (içe oyulmuş kuyu): 11 giriş alanı + bölümlü denetim,
+  sekme, düğme ve geçiş grubu rayları.
+- `shadow-focus` (odak halesi): metin alanlarında 2 px odak çizgisinin yanına.
+- `edge-lit` utility: maskeli, üstten ışıklı kenar; vitrin ve Storybook kartları.
+
 ### Yeni bileşenler, tek komutla kurulum, kısa adresler — 2026-11-02
 
 #### Eklendi

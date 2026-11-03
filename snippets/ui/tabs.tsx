@@ -48,7 +48,7 @@ type TabsProps = {
 }
 
 const LIST = {
-  well: 'flex w-fit max-w-full gap-0.5 overflow-x-auto rounded-md bg-surface-sunken p-1 [scrollbar-width:none]',
+  well: 'flex w-fit max-w-full gap-0.5 overflow-x-auto rounded-md bg-surface-sunken shadow-well p-1 [scrollbar-width:none]',
   underline: 'flex max-w-full gap-1 overflow-x-auto border-b border-line [scrollbar-width:none]',
 } as const
 const TAB = {

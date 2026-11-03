@@ -17,7 +17,7 @@ export function Pricing() {
         <PricingPlans plans={pricing.plans} billing={pricing.billing} />
       </Reveal>
       <Reveal className="mt-4">
-        <div className="flex flex-col gap-4 rounded-2xl bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div className="flex flex-col gap-4 rounded-2xl bg-surface edge-lit p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div className="min-w-0">
             <h3 className="text-title font-semibold">{pricing.enterprise.name}</h3>
             <p className="mt-1 text-base text-soft">{pricing.enterprise.description}</p>

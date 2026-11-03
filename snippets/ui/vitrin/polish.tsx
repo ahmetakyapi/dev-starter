@@ -73,7 +73,7 @@ import { cn } from "@/lib/utils";
 function Showcase({ name, note, children, wide, className }: { name: string; note: string; children: ReactNode; wide?: boolean; className?: string }) {
   return (
     <figure className={cn("flex h-full min-w-0 flex-col", wide && "md:col-span-2")}>
-      <div className={cn("flex min-h-56 flex-1 items-center justify-center rounded-2xl bg-surface p-5 sm:p-8", className)}>
+      <div className={cn("flex min-h-56 flex-1 items-center justify-center rounded-2xl bg-surface edge-lit p-5 sm:p-8", className)}>
         <div className="w-full min-w-0">{children}</div>
       </div>
       <figcaption className="mt-3 px-1">

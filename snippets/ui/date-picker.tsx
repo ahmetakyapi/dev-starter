@@ -97,8 +97,8 @@ export function DatePicker(props: SingleProps | RangeProps) {
           aria-labelledby={`${labelId} ${valueId}`}
           aria-describedby={describedBy}
           className={cn(
-            "flex min-h-11 w-full items-center justify-between gap-3 rounded-md border border-line-strong bg-surface-sunken px-3 text-left text-base transition-colors",
-            "hover:border-primary-soft focus-visible:border-line-focus focus-visible:outline-offset-0 data-popup-open:border-line-focus disabled:opacity-50",
+            "flex min-h-11 w-full items-center justify-between gap-3 rounded-md border border-line-strong bg-surface-sunken shadow-well px-3 text-left text-base transition-[color,background-color,border-color,box-shadow]",
+            "hover:border-primary-soft focus-visible:border-line-focus focus-visible:shadow-focus focus-visible:outline-offset-0 data-popup-open:border-line-focus disabled:opacity-50",
             error && "border-danger",
           )}
         >

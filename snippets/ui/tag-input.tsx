@@ -158,8 +158,8 @@ export function TagInput({
         <div
           onClick={() => inputRef.current?.focus()}
           className={cn(
-            "flex min-h-11 w-full cursor-text flex-wrap items-center gap-1.5 rounded-md border border-line-strong bg-surface-sunken px-1.5 py-1.5 transition-colors",
-            "hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus",
+            "flex min-h-11 w-full cursor-text flex-wrap items-center gap-1.5 rounded-md border border-line-strong bg-surface-sunken shadow-well px-1.5 py-1.5 transition-[color,background-color,border-color,box-shadow]",
+            "hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:shadow-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus",
             error && "border-danger",
             disabled && "pointer-events-none opacity-50",
           )}

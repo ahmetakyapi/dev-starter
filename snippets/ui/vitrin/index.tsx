@@ -35,7 +35,7 @@ export default function VitrinPage() {
           <li key={g.href}>
             <Link
               href={g.href}
-              className="group flex h-full flex-col rounded-2xl bg-surface p-6 transition-colors hover:bg-surface-raised"
+              className="group flex h-full flex-col rounded-2xl bg-surface edge-lit p-6 transition-colors hover:bg-surface-raised"
             >
               <span className="flex items-start justify-between gap-4">
                 <span className="text-title font-semibold text-strong">{g.title}</span>

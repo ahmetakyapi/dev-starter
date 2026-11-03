@@ -47,7 +47,7 @@ export function ButtonGroup({
         variant === 'attached' &&
           '[&>[aria-pressed=true]]:bg-surface-raised! [&>[aria-pressed=true]]:text-strong!',
         variant === 'well' &&
-          'gap-0.5 rounded-md bg-surface-sunken p-1 [&>*]:rounded-sm! [&>[aria-pressed=true]]:bg-overlay! [&>[aria-pressed=true]]:text-strong! [&>[aria-pressed=true]]:shadow-raised!',
+          'gap-0.5 rounded-md bg-surface-sunken shadow-well p-1 [&>*]:rounded-sm! [&>[aria-pressed=true]]:bg-overlay! [&>[aria-pressed=true]]:text-strong! [&>[aria-pressed=true]]:shadow-raised!',
         className,
       )}
       {...props}

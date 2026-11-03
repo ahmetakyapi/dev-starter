@@ -21,8 +21,9 @@ const variants: Record<Variant, string> = {
   // Birincil: paletin CTA degradesi (yukarıdan aşağı, aynı aile) + üst kenar
   // ışığı. Degrade disiplini: ekranda TEK birincil eylem bu varyantı taşır.
   primary: 'bg-cta text-on-brand shadow-cta hover:brightness-95',
-  // Beyaz karo + kıl çizgisi: gri kuyunun (bg-surface) üstünde de ayrışır
-  secondary: 'border border-line bg-overlay text-strong shadow-sm hover:bg-surface',
+  // Beyaz karo: kenarı shadow-sm'in kıl halkası çizer (ayrı border yok, iki
+  // çizgi üst üste binip kalınlaşmasın). Üzerine gelince karo bir basamak yükselir
+  secondary: 'bg-overlay text-strong shadow-sm hover:shadow-md',
   soft: 'bg-primary-wash text-primary-ink hover:bg-primary hover:text-on-primary',
   ghost: 'text-soft hover:bg-surface-raised hover:text-strong',
   outline: 'border border-line-strong text-body hover:border-primary hover:text-primary-ink',
@@ -41,7 +42,7 @@ const sizes: Record<Size, string> = {
 // mıknatıslı düğmede motion'ın her kare yazdığı transform'u CSS bir kez daha
 // yumuşatır ve çekim imlecin gerisinde kalır.
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,scale,filter] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
+  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,box-shadow,scale,filter] duration-150 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
 
 // motion bu adları jest ve animasyon geri çağrısı olarak yeniden tanımlar,
 // DOM imzasıyla m.button'a yayılamazlar: mıknatıslı yolda çağrılmazlar.

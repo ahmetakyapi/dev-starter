@@ -92,7 +92,7 @@ export function HeroBoard({ board }: { board: HeroBoardData }) {
   return (
     <figure
       aria-label={board.label}
-      className="hero-board rounded-2xl bg-surface p-2 sm:p-3"
+      className="hero-board edge-lit rounded-2xl bg-surface p-2 sm:p-3"
     >
       <div aria-hidden>
         <div className="flex items-center justify-between gap-3 px-2 pt-1 pb-3 sm:px-3">
