@@ -113,8 +113,8 @@ export function AyarlarPage() {
           <Breadcrumb
             className="mb-1"
             items={[
-              { label: "Pusula", href: href("pano"), icon: <House /> },
-              { label: "Ayarlar", href: href("ayarlar"), icon: <Settings /> },
+              { label: "Pusula", href: href("dashboard"), icon: <House /> },
+              { label: "Ayarlar", href: href("settings"), icon: <Settings /> },
               { label: "Çalışma Alanı" },
             ]}
           />

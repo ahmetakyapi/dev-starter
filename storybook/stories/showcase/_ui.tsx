@@ -7,26 +7,44 @@ import { cn } from "@/lib/utils";
 
 /**
  * Pusula'nın sayfaları arasında paylaşılan durum ve iki küçük kalıp.
- * Gezinme adresi `?ekran=<sayfa>&...` biçiminde: kabuğun bağlantıları gerçek
+ * Gezinme adresi `?view=<sayfa>&...` biçiminde (İngilizce, küçük harf, ASCII: `?view=inbox&tag=gecikme&ticket=PSL-1186&page=2`): kabuğun bağlantıları gerçek
  * `<a href>`; uygulama tıklamayı yakalayıp sayfayı iç durumla değiştirir
  * (Storybook'ta adres çubuğu yok, ama bağlantı semantiği ve klavye doğru kalır).
  */
 
-export type Page = "pano" | "gelen" | "gorevler" | "takvim" | "asistan" | "raporlar" | "ayarlar";
+export type Page = "dashboard" | "inbox" | "tasks" | "calendar" | "assistant" | "reports" | "settings";
 export type Params = Readonly<Record<string, string>>;
 
 export const PAGES: readonly { id: Page; label: string }[] = [
-  { id: "pano", label: "Pano" },
-  { id: "gelen", label: "Gelen Kutusu" },
-  { id: "gorevler", label: "Görevler" },
-  { id: "takvim", label: "Takvim" },
-  { id: "asistan", label: "Asistan" },
-  { id: "raporlar", label: "Raporlar" },
-  { id: "ayarlar", label: "Ayarlar" },
+  { id: "dashboard", label: "Pano" },
+  { id: "inbox", label: "Gelen Kutusu" },
+  { id: "tasks", label: "Görevler" },
+  { id: "calendar", label: "Takvim" },
+  { id: "assistant", label: "Asistan" },
+  { id: "reports", label: "Raporlar" },
+  { id: "settings", label: "Ayarlar" },
 ];
 
+/**
+ * Adres parçası: küçük harf, ASCII, tireli ("Web Mağaza" → "web-magaza").
+ * Türkçe harf adreste yüzde kaçışına döner (`%C3%96deme`); paylaşılan
+ * bağlantı okunmaz olur. Değer adreste slug, ekranda asıl ad.
+ */
+export const slug = (text: string) =>
+  text
+    .toLocaleLowerCase("tr-TR")
+    .replace(/[çğıöşü]/g, (ch) => ({ ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u" })[ch]!)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+/** Slug'ı listedeki asıl ada çevirir; tanınmayan değer `undefined` (adres elle bozulmuşsa). */
+export const fromSlug = <T extends string>(list: readonly T[], value: string | undefined) =>
+  value ? list.find((item) => slug(item) === value) : undefined;
+
 export const href = (page: Page, params: Record<string, string | undefined> = {}) => {
-  const q = new URLSearchParams({ ekran: page });
+  const q = new URLSearchParams({ view: page });
   for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") q.set(k, v);
   return `?${q.toString()}`;
 };

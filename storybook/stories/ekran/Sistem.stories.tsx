@@ -90,7 +90,7 @@ export const GlobalErrorPage: Story = {
     <main className="grid min-h-dvh place-items-center p-4">
       <iframe
         title="Genel hata sayfası"
-        style={{ colorScheme: globals.theme === "Koyu" ? "dark" : "light" }}
+        style={{ colorScheme: globals.theme === "dark" || globals.theme === "Koyu" ? "dark" : "light" }}
         className="h-[32rem] w-full max-w-3xl rounded-2xl border border-line bg-surface"
         srcDoc={`<!doctype html>${renderToStaticMarkup(<GlobalError {...args} />)}`}
       />

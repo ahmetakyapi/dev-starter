@@ -41,7 +41,7 @@ async function command(root: HTMLElement, query: string) {
 
 const meta = {
   title: "Örnek Tasarım/Pusula Paneli",
-  id: "pusula",
+  id: "demo-app",
   component: PusulaApp,
   tags: ["autodocs"],
   parameters: {
@@ -53,9 +53,9 @@ const meta = {
       },
     },
   },
-  args: { initialPage: "pano", initialPeriod: "ay", signedOut: false },
+  args: { initialPage: "dashboard", initialPeriod: "ay", signedOut: false },
   argTypes: {
-    initialPage: { control: "select", options: ["pano", "gelen", "gorevler", "takvim", "asistan", "raporlar", "ayarlar"] },
+    initialPage: { control: "select", options: ["dashboard", "inbox", "tasks", "calendar", "assistant", "reports", "settings"] },
     initialPeriod: { control: "inline-radio", options: ["hafta", "ay", "yil"] },
     initialParams: { control: false },
   },
@@ -64,7 +64,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const App: Story = {
+export const Overview: Story = {
   name: "Uygulama (Gezinmeli)",
   parameters: {
     docs: { description: { story: "Bütün uygulama: kenar çubuğundan, ⌘K komut paletinden ve sayfa içi bağlantılardan gezilir; geçişte üstte gezinme çubuğu ve iskelet." } },
@@ -116,7 +116,7 @@ export const DashboardLast7Days: Story = {
 
 export const Inbox: Story = {
   name: "Gelen Kutusu",
-  args: { initialPage: "gelen" },
+  args: { initialPage: "inbox" },
   parameters: {
     docs: { description: { story: "Talep tablosu: arama alanı (“/” kısayolu, Türkçe harf düzleme), öncelik çipleri, müşteri seçimi, sıralama ve sayfalama; atanan kişinin üstüne gelince önizleme kartı, satıra sağ tıklayınca bağlam menüsü, ada basınca yan çekmecede ayrıntı. Arşivleme bildirimi Geri Al düğmeli. Süzgeç boş kalınca boş durum." } },
   },
@@ -146,7 +146,7 @@ export const Inbox: Story = {
 
 export const TicketDetail: Story = {
   name: "Gelen Kutusu (Talep Ayrıntısı)",
-  args: { initialPage: "gelen", initialParams: { talep: TICKETS[0].id } },
+  args: { initialPage: "inbox", initialParams: { ticket: TICKETS[0].id } },
   parameters: {
     docs: { description: { story: `Yan çekmecede ${TICKETS[0].id}: geciken ${DELAYED[0]?.id ?? "sipariş"} siparişine bağlı acil talep, olay akışı ve izleyenler.` } },
   },
@@ -159,7 +159,7 @@ export const TicketDetail: Story = {
 
 export const Tasks: Story = {
   name: "Görevler",
-  args: { initialPage: "gorevler" },
+  args: { initialPage: "tasks" },
   parameters: {
     docs: { description: { story: "Ekip panosu (kanban: fare, dokunma tutamağı ya da klavyeyle taşınır, Sürüyor kolonunda iş sınırı), kişinin bugünkü görev listesi ve yaklaşan son tarihler. Kart kolon değiştirince sonuç bildirim olarak gelir." } },
   },
@@ -180,7 +180,7 @@ export const Tasks: Story = {
 
 export const Calendar: Story = {
   name: "Takvim",
-  args: { initialPage: "takvim" },
+  args: { initialPage: "calendar" },
   parameters: {
     docs: { description: { story: "Aralık takvimi ve ajanda, seçilen haftanın saat ızgarası (türler aç-kapa grubuyla süzülür); altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
   },
@@ -201,7 +201,7 @@ export const Calendar: Story = {
 
 export const Assistant: Story = {
   name: "Asistan",
-  args: { initialPage: "asistan" },
+  args: { initialPage: "assistant" },
   parameters: {
     docs: { description: { story: "Ajan planı canlı ilerler, bitince geciken siparişler için taslaklar gelir. Soru yazınca yanıt panodaki sayılarla verilir." } },
   },
@@ -216,7 +216,7 @@ export const Assistant: Story = {
 
 export const Reports: Story = {
   name: "Raporlar",
-  args: { initialPage: "raporlar" },
+  args: { initialPage: "reports" },
   parameters: {
     docs: { description: { story: "Hazır rapor kartları, sekmeler; satış tablosunun toplamı panodaki ciroyla aynı, birikimli ciro çizgileri tablonun ilk dört satırında biter, müşteri haritası tablonun sütunlarını saçılım olarak gösterir. Destek sekmesinde kapanış anketi puanı; dışa aktarma sekmesinde dosya hazırlanırken yükleme durumu." } },
   },
@@ -234,14 +234,14 @@ export const Reports: Story = {
 
 export const ReportsLoading: Story = {
   name: "Raporlar (Yükleniyor)",
-  args: { initialPage: "raporlar", initialParams: { onizleme: "yukleniyor" } },
+  args: { initialPage: "reports", initialParams: { preview: "loading" } },
   parameters: { docs: { description: { story: "Satış tablosunun yerinde iskelet satırlar; kap `aria-busy`." } } },
   play: async ({ globals }) => settle(globals),
 };
 
 export const Settings: Story = {
   name: "Ayarlar",
-  args: { initialPage: "ayarlar" },
+  args: { initialPage: "settings" },
   parameters: {
     docs: { description: { story: "Form girişlerinin hepsi bir ayar sayfasında; iki adımlı doğrulamada kod yazılınca onay; Hızlı Ayarlar penceresi." } },
   },
@@ -265,6 +265,24 @@ export const SignedOut: Story = {
     await userEvent.type(canvas.getByLabelText("Şifre"), "kervan2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await canvas.findByText(/kervantekstil\.com\.tr/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
+    await settle(globals);
+  },
+};
+
+export const SampleAccount: Story = {
+  name: "Örnek Hesapla Giriş",
+  args: { signedOut: true },
+  parameters: {
+    docs: {
+      description: {
+        story: "Şifre yazdırmadan tek tıkla giriş: form gönderilmez, tarayıcı “şifre kaydedilsin mi?” ya da veri ihlali uyarısı açmaz. Yalnız örnek uygulamada.",
+      },
+    },
+  },
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: /Örnek Hesapla Gir/ }));
+    await canvas.findByRole("heading", { name: "Pano" }, { timeout: 3000 });
     await settle(globals);
   },
 };

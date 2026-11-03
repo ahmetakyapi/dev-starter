@@ -1,6 +1,6 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**653 hikâye**, her biri açık/koyu tema ve 10 palette:
+**654 hikâye**, her biri açık/koyu tema ve 10 palette:
 
 | Bölüm | İçerik |
 |-------|--------|
@@ -63,9 +63,16 @@ Grup kimliği **kısa**: bileşenin dosya adı (`tooltip`, `area-chart`), en ço
 24 harf, grup adı (Bileşenler/Katmanlar) adrese girmez. Tek hikâyeli sayfada
 dışa aktarım `Overview` (`colors--overview`), grup adı tekrar etmez.
 
-Kısa yönlendirmeler (`vercel.json`): `/showcase`, `/pusula`, `/gallery`,
-`/start`, `/theme`, `/palettes`, bir bileşenin belgesi `/c/<ad>`
-(ör. `/c/tooltip`), bir hikâye `/s/<ad>/<hikâye>` (ör. `/s/tooltip/default`).
+Kısa yönlendirmeler (`vercel.json`): `/showcase`, `/demo` (örnek uygulama
+Pusula; ekranı `/demo/inbox`, `/demo/settings`), `/gallery`, `/start`,
+`/theme`, `/palettes`, bir bileşenin belgesi `/c/<ad>` (ör. `/c/tooltip`),
+bir hikâye `/s/<ad>/<hikâye>` (ör. `/s/tooltip/default`). Eski `/pusula`
+kalıcı olarak `/demo`ya yönlenir.
+
+Araç çubuğu değerleri de adrese girer, bu yüzden ASCII: tema `light`/`dark`
+(menüde "Açık"/"Koyu"), palet `signature`, `cobalt`… Örnek uygulamanın iç
+adresleri de aynı kuralda: `?view=inbox&tag=gecikme&ticket=PSL-1186&page=2`
+(İngilizce anahtar, küçük harfli slug değer; Türkçe ad yalnız ekranda).
 
 Kimlik verilmezse Storybook Türkçe başlıktan `giriş--giris`, `i̇pucu` gibi
 bozuk adresler üretir. `npm run check:ids` (CI'da derlemeden sonra) yalnızca

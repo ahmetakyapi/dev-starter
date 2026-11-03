@@ -1,6 +1,6 @@
 "use client";
 
-import { Compass } from "lucide-react";
+import { ArrowRight, Compass } from "lucide-react";
 import { AuthCard, type AuthState } from "@/components/ui/auth-card";
 import { Marquee } from "@/components/ui/marquee";
 import { CUSTOMERS, ME, OPEN_TICKETS, WORKSPACE } from "./_data";
@@ -34,7 +34,24 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
           submitLabel="Giriş Yap"
           pendingLabel="Giriş Yapılıyor"
           className="w-full"
-          footer={<span className="text-muted">Örnek hesap: {ME.email}, şifre en az 8 karakter.</span>}
+          footer={
+            <div className="grid gap-2">
+              {/* Örnek uygulamada şifre YAZDIRILMAZ: yazılan şifreyle gönderilen form
+                  kaybolunca Chrome bunu gerçek giriş sayar, "Şifre kaydedilsin mi?"
+                  sorar; "12345678" gibi bir denemede veri ihlali uyarısı açar. Bu
+                  düğme formu göndermez, tarayıcının şifre yöneticisi devreye girmez.
+                  Gerçek projede bu satır yok; form `autoComplete`iyle doğru çalışır. */}
+              <button
+                type="button"
+                onClick={onSignedIn}
+                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-overlay px-4 text-base font-semibold text-strong shadow-raised transition-[box-shadow,scale] duration-150 hover:shadow-floating active:scale-[0.98]"
+              >
+                Örnek Hesapla Gir
+                <ArrowRight aria-hidden className="size-4" strokeWidth={2} />
+              </button>
+              <span className="text-small text-muted">Şifre gerekmez; {ME.name} olarak açılır.</span>
+            </div>
+          }
         />
       </div>
       <section aria-labelledby="giris-musteriler" className="grid w-full max-w-2xl gap-3">

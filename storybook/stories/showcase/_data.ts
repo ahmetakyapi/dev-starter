@@ -173,13 +173,15 @@ function generateOrders(): Order[] {
   }
   out.sort((a, b) => a.date.getTime() - b.date.getTime());
   out.forEach((o, i) => (o.id = `SP-${String(1000 + i)}`));
-  // Gecikenler: 5-8 gün önce verilmiş, farklı müşterilerden ilk üç sipariş.
+  // Gecikenler: farklı müşterilerden üç sipariş, 8, 6 ve 5 gün önce verilmiş
+  // (söz 4 gün: 4, 2 ve 1 gün gecikme). Hepsi aynı gün olsaydı panodaki
+  // gecikme kartı üç kez "+1 Gün" yazardı; gerçek bir gün böyle dağılır.
   const seen = new Set<string>();
-  for (const o of [...out].reverse()) {
-    const age = daysBetween(o.date, TODAY);
-    if (age < 5 || age > 8 || seen.has(o.customerId) || seen.size === 3) continue;
-    seen.add(o.customerId);
-    o.status = "Gecikti";
+  for (const target of [8, 6, 5]) {
+    const hit = [...out].reverse().find((o) => daysBetween(o.date, TODAY) === target && !seen.has(o.customerId));
+    if (!hit) continue;
+    seen.add(hit.customerId);
+    hit.status = "Gecikti";
   }
   return out;
 }
@@ -223,6 +225,8 @@ export type Priority = "Acil" | "Yüksek" | "Normal" | "Düşük";
 export type TicketStatus = "Açık" | "Beklemede" | "Çözüldü";
 export const PRIORITIES: readonly Priority[] = ["Acil", "Yüksek", "Normal", "Düşük"];
 export const STATUSES: readonly TicketStatus[] = ["Açık", "Beklemede", "Çözüldü"];
+/** Adresteki karşılığı: `?status=open`. Türkçe ad ekranda, İngilizce slug adreste. */
+export const STATUS_SLUG: Record<TicketStatus, string> = { Açık: "open", Beklemede: "pending", Çözüldü: "solved" };
 
 /** Panodaki sayılar için her talebin özeti (eski günler yalnızca bununla var). */
 export type TicketStub = {

@@ -65,6 +65,7 @@ import {
   ME,
   PRIORITIES,
   STATUSES,
+  STATUS_SLUG,
   TICKETS,
   TICKET_CHANNELS,
   customer,
@@ -80,7 +81,7 @@ import {
   type Ticket,
   type TicketStatus,
 } from "./_data";
-import { PageBar, href, useApp } from "./_ui";
+import { PageBar, fromSlug, href, useApp, type Params } from "./_ui";
 
 const PER_PAGE = 8;
 
@@ -111,6 +112,14 @@ function matchesFolder(t: Ticket, folder: Folder) {
   return true;
 }
 
+/** Adresteki `tag`/`status` slug'ını ağaç klasörüne çevirir: `?tag=web-magaza` → "etiket:Web Mağaza". */
+function initialFolder(params: Params): Folder {
+  const tag = fromSlug([...new Set(TICKETS.flatMap((t) => t.tags))], params.tag);
+  if (tag) return `etiket:${tag}`;
+  const status = STATUSES.find((st) => STATUS_SLUG[st] === params.status);
+  return status ? `durum:${status}` : "tum";
+}
+
 function Count({ n }: { n: number }) {
   return <span className="ml-auto pl-3 text-small text-body tabular-nums">{num.format(n)}</span>;
 }
@@ -119,7 +128,7 @@ export function GelenPage() {
   const { params, navigate, notify } = useApp();
   const [overrides, setOverrides] = useState<Record<string, Partial<Ticket>>>({});
   const [archived, setArchived] = useState<readonly string[]>([]);
-  const [folder, setFolder] = useState<Folder>(params.etiket ? `etiket:${params.etiket}` : params.durum ? `durum:${params.durum}` : "tum");
+  const [folder, setFolder] = useState<Folder>(initialFolder(params));
   const [who, setWho] = useState<ComboboxItem | null>(null);
   const [priorities, setPriorities] = useState<readonly Priority[]>([]);
   const [text, setText] = useState("");
@@ -141,7 +150,7 @@ export function GelenPage() {
 
   /** Süzgeç değişince ilk sayfaya dön (adresteki sayfa numarası eskir). */
   const resetPage = () => {
-    if (params.s || params.etiket || params.durum) navigate("gelen", { sort: params.sort, dir: params.dir });
+    if (params.page || params.tag || params.status) navigate("inbox", { sort: params.sort, dir: params.dir });
   };
   const clearAll = () => {
     setFolder("tum");
@@ -168,9 +177,9 @@ export function GelenPage() {
       body: "Arşivdeki talepler raporlarda sayılmaya devam eder.",
       undo: () => setArchived((a) => a.filter((id) => id !== t.id)),
     });
-    if (params.talep === t.id) navigate("gelen", { ...params, talep: undefined });
+    if (params.ticket === t.id) navigate("inbox", { ...params, ticket: undefined });
   };
-  const open = (t: Ticket) => navigate("gelen", { ...params, talep: t.id });
+  const open = (t: Ticket) => navigate("inbox", { ...params, ticket: t.id });
 
   const columns: Column<Ticket>[] = [
     {
@@ -261,7 +270,7 @@ export function GelenPage() {
         return (
           <span className="inline-flex items-center gap-2">
             <Avatar name={m.name} size="sm" />
-            <HoverCard href={href("raporlar", { sekme: "destek" })} trigger={m.name.split(" ")[0]} side="bottom" align="start">
+            <HoverCard href={href("reports", { tab: "support" })} trigger={m.name.split(" ")[0]} side="bottom" align="start">
               <ProfilePreview
                 name={m.name}
                 role={m.role}
@@ -293,9 +302,9 @@ export function GelenPage() {
   const sort = parseSort(params, ["oncelik", "atanan", "tarih"], { key: "tarih", dir: "desc" });
   const sorted = sortRows(rows, columns, sort);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PER_PAGE));
-  const page = Math.min(pageCount, Math.max(1, Number(params.s) || 1));
+  const page = Math.min(pageCount, Math.max(1, Number(params.page) || 1));
   const visible = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-  const current = params.talep ? tickets.find((t) => t.id === params.talep) : undefined;
+  const current = params.ticket ? tickets.find((t) => t.id === params.ticket) : undefined;
   const openCount = tickets.filter((t) => t.status === "Açık").length;
   const waitCount = tickets.filter((t) => t.status === "Beklemede").length;
 
@@ -367,8 +376,8 @@ export function GelenPage() {
               </PopoverTrigger>
               <PopoverContent title="Görünümü Paylaş" description="Bağlantıyı alan ekip arkadaşı aynı süzgeçleri görür.">
                 <div className="flex items-center gap-2 rounded-md bg-surface py-1 pr-1 pl-3 text-small text-body">
-                  <span className="min-w-0 flex-1 truncate">pusula.app/kervan{href("gelen", { sort: params.sort, dir: params.dir })}</span>
-                  <CopyButton value={`https://pusula.app/kervan${href("gelen", { sort: params.sort, dir: params.dir })}`} label="Bağlantıyı Kopyala" />
+                  <span className="min-w-0 flex-1 truncate">pusula.app/kervan{href("inbox", { sort: params.sort, dir: params.dir })}</span>
+                  <CopyButton value={`https://pusula.app/kervan${href("inbox", { sort: params.sort, dir: params.dir })}`} label="Bağlantıyı Kopyala" />
                 </div>
               </PopoverContent>
             </Popover>
@@ -521,7 +530,7 @@ export function GelenPage() {
                 rows={visible}
                 rowKey={(t) => t.id}
                 sort={sort}
-                sortHref={(key, dir) => href("gelen", { sort: key, dir })}
+                sortHref={(key, dir) => href("inbox", { sort: key, dir })}
                 stickyFirst={false}
                 minWidth="46rem"
               />
@@ -534,7 +543,7 @@ export function GelenPage() {
                     page={page}
                     pageCount={pageCount}
                     scroll={false}
-                    hrefFor={(n) => href("gelen", { sort: params.sort, dir: params.dir, s: n > 1 ? String(n) : undefined })}
+                    hrefFor={(n) => href("inbox", { sort: params.sort, dir: params.dir, page: n > 1 ? String(n) : undefined })}
                   />
                 ) : null}
               </div>
@@ -581,7 +590,7 @@ export function GelenPage() {
       <Sheet
         open={Boolean(current)}
         onOpenChange={(next) => {
-          if (!next) navigate("gelen", { ...params, talep: undefined });
+          if (!next) navigate("inbox", { ...params, ticket: undefined });
         }}
         side="right"
         title={current?.subject ?? "Talep"}
@@ -597,7 +606,7 @@ export function GelenPage() {
                 disabled={current.status === "Çözüldü"}
                 onClick={() => {
                   setStatus(current, "Çözüldü");
-                  navigate("gelen", { ...params, talep: undefined });
+                  navigate("inbox", { ...params, ticket: undefined });
                 }}
               >
                 Çözüldü Olarak Kapat

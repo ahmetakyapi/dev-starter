@@ -104,6 +104,7 @@ farkından gelir.
 | `--shadow-button` | `shadow-cta` | Dolgulu düğme: üstte ışık, altta gölge çizgisi, kıl halka, dolgunun kendi renginde kısa düşüş |
 | `--shadow-inset` | `shadow-well` | Kuyu: giriş alanı, bölümlü denetim ve sekme rayı içe oyulur (düğme yükselir, alan çöker) |
 | `--shadow-ring` | `shadow-focus` | Metin alanında odak halesi; 2 px odak çizgisinin YANINA konur, yerine değil |
+| `--warning-fill` / `--on-warning-fill` | `bg-warning-fill text-on-warning-fill` | Uyarı DOLGUSU: ikon karosu, gecikme rozeti, nokta. İki temada birebir aynı turuncu (`#ff9f0a`); metin rengi `--warning` (açık `#965600`, koyu `#ff9f0a`, ikisi 34-36° aynı aile) |
 | `--edge-light` | `edge-lit` | Üstten ışıklı kenar: vitrin kartı, panel, pano kabuğu. Tekrar eden satıra değil |
 | `--chart-1…6` | `bg-chart-N`, `stroke-chart-N`, `fill-chart-N` | Veri serisi. Metin rengi DEĞİL; sıra sabit, lejantla aynı |
 | `--chart-track` / `--chart-ink` | `bg-chart-track`, `text-chart-ink` | Çubuğun boş izi; pastel dolgu üstündeki ikon/hap metni (her seride AA, testli) |
