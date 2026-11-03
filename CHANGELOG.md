@@ -7,6 +7,28 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Dört yeni bileşen, Ahmet persona — 2026-11-03
+
+#### Eklendi
+
+- **`code-block`**: başlıkta dosya adı ya da sekmeler (npm / pnpm / yarn /
+  bun, `installTabs()`), kopyala; `persist` ile seçim aynı anahtarlı
+  bloklarda ve sonraki ziyarette hatırlanır; `$` istemi kopyalanmaz.
+- **`marquee`**: kayan şerit; WCAG 2.2.2 görünür durdurma düğmesi, kopya
+  `aria-hidden` + `inert`, hareketi azaltanda durağan.
+- **`compare-slider`**: önce / sonra; yerel `range` (klavye, dokunma, ekran
+  okuyucu), `clip-path` kırpma, opak önceki katman.
+- **`text-shimmer`**: süren işin etiketi; alfa maskesi kayar, metin AA'da
+  kalır; sunucu bileşeni.
+- Dördü de vitrinde (Her Şey Bir Arada) ve Pusula'da: Ayarlar → Webhook
+  ile Bağla, Asistan → "Taslaklar yazılıyor…" + şablon/asistan taslak
+  karşılaştırması, Giriş → müşteri şeridi. Kapsam 90/90.
+
+#### Değişti
+
+- Örnek verilerde oturum açan kişi **Ahmet Akyapı** ("Günaydın Ahmet");
+  vitrinin Kıyı Kahve kurucusu da. Müşteri adları çeşitlilik için kaldı.
+
 ### İşçilik turu: derinlik dili — 2026-11-03
 
 Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.md`

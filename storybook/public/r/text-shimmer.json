@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "text-shimmer",
+  "type": "registry:ui",
+  "title": "Parıltılı Metin",
+  "description": "Süren işin metin etiketi (\"Asistan düşünüyor…\")",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/text-shimmer.tsx",
+      "content": "import type { CSSProperties, ElementType, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Parıltılı metin: süren bir işin kısa etiketi. \"Asistan düşünüyor…\",\n * \"Rapor hazırlanıyor…\", \"Kaynaklar taranıyor…\". Işık metnin üstünden soldan\n * sağa geçer; spinner'ın yerini değil, ETİKETİN yerini alır (iş metinle\n * anlatılıyorsa ayrıca dönen halka koyma).\n *\n * RENK DEĞİL MASKE: metin tek token renginde (`text-strong`) kalır; parıltı\n * bir alfa maskesinin (`mask-image`) kaymasıyla oluşur. Degrade metin\n * değildir (degrade disiplini üç yer kuralı korunur), palette ve temada\n * aynı çalışır. Maskenin en sönük yeri %60 opaklık: açıkta 5,7:1, koyuda\n * 7:1, metin hiçbir karede AA'nın altına düşmez.\n *\n * DURUM BİLDİRİMİ ÇAĞIRANDA: etiket değişince okunması gerekiyorsa\n * `live` ver (`role=\"status\"`); tek seferlik etikette gerek yok. Parıltı\n * kendisi ekran okuyucuya bir şey söylemez.\n *\n * Hareketi azaltan kullanıcıda maske kalkar, düz metin kalır. Sunucu\n * bileşeni: istemci JavaScript'i yok, yalnız CSS.\n *\n *   <TextShimmer live>Asistan yanıt yazıyor…</TextShimmer>\n */\n\nconst CSS = `\n@keyframes ui-shimmer { from { mask-position: 100% 0; -webkit-mask-position: 100% 0; } to { mask-position: 0 0; -webkit-mask-position: 0 0; } }\n.ui-shimmer {\n  --shimmer-dim: color-mix(in srgb, currentColor 60%, transparent);\n  -webkit-mask-image: linear-gradient(100deg, var(--shimmer-dim) 35%, currentColor 50%, var(--shimmer-dim) 65%);\n  mask-image: linear-gradient(100deg, var(--shimmer-dim) 35%, currentColor 50%, var(--shimmer-dim) 65%);\n  -webkit-mask-size: 300% 100%;\n  mask-size: 300% 100%;\n  animation: ui-shimmer var(--shimmer-duration, 2s) linear infinite;\n}\n@media (prefers-reduced-motion: reduce) {\n  .ui-shimmer { animation: none; -webkit-mask-image: none; mask-image: none; }\n}`;\n\ntype TextShimmerProps = {\n  children: ReactNode;\n  /** Öğe türü; satır içi metin için `span` (varsayılan), başlık için `p`. */\n  as?: ElementType;\n  /** Bir geçişin saniyesi. */\n  duration?: number;\n  /** `role=\"status\"`: etiket değişince okunur. */\n  live?: boolean;\n  className?: string;\n};\n\nexport function TextShimmer({ children, as: Tag = \"span\", duration = 2, live = false, className }: TextShimmerProps) {\n  return (\n    <>\n      <style href=\"ui-text-shimmer\" precedence=\"default\">\n        {CSS}\n      </style>\n      <Tag\n        role={live ? \"status\" : undefined}\n        className={cn(\"ui-shimmer inline-block font-medium text-strong\", className)}\n        style={{ \"--shimmer-duration\": `${duration}s` } as CSSProperties}\n      >\n        {children}\n      </Tag>\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Yükleme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "text-shimmer",
+    "palettes": false
+  }
+}

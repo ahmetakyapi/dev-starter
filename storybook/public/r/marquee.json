@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "marquee",
+  "type": "registry:ui",
+  "title": "Kayan Şerit",
+  "description": "Kayan şerit: logolar, entegrasyonlar (sayfada tek)",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/marquee.tsx",
+      "content": "\"use client\";\n\nimport { Pause, Play } from \"lucide-react\";\nimport { Children, useId, useState, type CSSProperties, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Kayan şerit: müşteri logoları, entegrasyonlar, kısa alıntılar. Sayfada\n * TEK şerit (landing kuralı); iki şerit gözü ikiye böler.\n *\n * WCAG 2.2.2 (Durdur, Duraklat, Gizle): beş saniyeden uzun süren otomatik\n * hareketin durdurulabilmesi ZORUNLU. Üzerine gelmek ve odaklanmak şeridi\n * bekletir ama ikisi de tek yol olamaz (klavye ve dokunmatikte üzerine\n * gelinmez); bu yüzden görünür \"Şeridi Durdur\" düğmesi varsayılan açık.\n * Kapatmak yalnızca şerit beş saniyeden kısa sürüyorsa meşru.\n *\n * İÇERİK İKİ KEZ ÇİZİLİR, BİR KEZ OKUNUR: kesintisiz döngü için ikinci kopya\n * şart; o kopya `aria-hidden` + `inert` (içindeki bağlantılar Tab sırasına\n * girmez, ekran okuyucu listeyi iki kez okumaz). Gerçek liste `role=\"list\"`.\n *\n * HAREKET CSS'TE ve yalnız `transform`: iz kendi genişliğinin yarısı kadar\n * kayar, süre içerik uzunluğundan bağımsız `duration` saniyesi. Hareketi\n * azaltan kullanıcıda şerit durağan, sarılan bir sıra olur ve düğme\n * gizlenir (durduracak hareket yok).\n *\n * KENARLAR SÖNER: maske alfa ile (`mask-image`), renk değil; zemin ne olursa\n * olsun öğeler kenarda kaybolur. Maske rengi `currentColor`, token kuralına\n * takılmaz, çizilmez.\n *\n *   <Marquee label=\"Müşterilerimiz\">\n *     {logos.map((logo) => <Logo key={logo.name} {...logo} />)}\n *   </Marquee>\n */\n\nconst CSS = `\n@keyframes ui-marquee { to { transform: translate3d(calc(-50% - var(--marquee-gap) / 2), 0, 0); } }\n.ui-marquee-track { animation: ui-marquee var(--marquee-duration) linear infinite; animation-direction: var(--marquee-direction); }\n.ui-marquee:where(:hover, :focus-within) .ui-marquee-track, .ui-marquee[data-paused] .ui-marquee-track { animation-play-state: paused; }\n@media (prefers-reduced-motion: reduce) {\n  .ui-marquee-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }\n  .ui-marquee-clone, .ui-marquee-control { display: none; }\n  .ui-marquee-mask { mask-image: none; -webkit-mask-image: none; }\n}`;\n\nconst FADE = \"linear-gradient(90deg, transparent, currentColor 8%, currentColor 92%, transparent)\";\n\ntype MarqueeProps = {\n  children: ReactNode;\n  /** Listenin adı: \"Müşterilerimiz\", \"Entegrasyonlar\". */\n  label: string;\n  /** Bir tam turun saniyesi. Uzun liste daha uzun süre ister; 30-60 arası rahat okunur. */\n  duration?: number;\n  /** Sağdan sola (varsayılan) ya da soldan sağa. */\n  reverse?: boolean;\n  /** Görünür durdurma düğmesi. Yalnız 5 saniyeden kısa şeritte kapat. */\n  control?: boolean;\n  /** Öğeler arası boşluk (rem). */\n  gap?: number;\n  className?: string;\n};\n\nexport function Marquee({ children, label, duration = 40, reverse = false, control = true, gap = 2.5, className }: MarqueeProps) {\n  const [paused, setPaused] = useState(false);\n  const id = useId();\n  const items = Children.toArray(children);\n  const style = {\n    \"--marquee-duration\": `${duration}s`,\n    \"--marquee-direction\": reverse ? \"reverse\" : \"normal\",\n    \"--marquee-gap\": `${gap}rem`,\n  } as CSSProperties;\n\n  const row = (clone: boolean) => (\n    <ul\n      role={clone ? undefined : \"list\"}\n      aria-label={clone ? undefined : label}\n      aria-hidden={clone || undefined}\n      inert={clone || undefined}\n      className={cn(\"flex shrink-0 items-center\", clone && \"ui-marquee-clone\")}\n      style={{ gap: \"var(--marquee-gap)\" }}\n    >\n      {items.map((item, index) => (\n        <li key={index} className=\"shrink-0\">\n          {item}\n        </li>\n      ))}\n    </ul>\n  );\n\n  return (\n    <div className={cn(\"grid justify-items-center gap-3\", className)}>\n      <style href=\"ui-marquee\" precedence=\"default\">\n        {CSS}\n      </style>\n      <div\n        id={id}\n        className=\"ui-marquee ui-marquee-mask w-full overflow-hidden\"\n        data-paused={paused ? \"\" : undefined}\n        style={{ ...style, maskImage: FADE, WebkitMaskImage: FADE }}\n      >\n        <div className=\"ui-marquee-track flex w-max\" style={{ gap: \"var(--marquee-gap)\" }}>\n          {row(false)}\n          {row(true)}\n        </div>\n      </div>\n      {control ? (\n        <button\n          type=\"button\"\n          aria-controls={id}\n          aria-pressed={paused}\n          onClick={() => setPaused((value) => !value)}\n          className=\"ui-marquee-control inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 text-small font-medium text-muted transition-colors hover:bg-surface-raised hover:text-strong pointer-fine:min-h-8\"\n        >\n          {paused ? <Play aria-hidden className=\"size-3.5\" strokeWidth={2} /> : <Pause aria-hidden className=\"size-3.5\" strokeWidth={2} />}\n          Şeridi Durdur\n        </button>\n      ) : null}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "marquee",
+    "palettes": false
+  }
+}

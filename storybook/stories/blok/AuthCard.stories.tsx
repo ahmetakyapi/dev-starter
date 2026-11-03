@@ -114,11 +114,11 @@ export const Error: Story = {
   parameters: { docs: { description: { story: "Sunucu genel hata döndürdü: kartın üstünde `role=\"alert\"`, e-posta yeniden dolu, şifre boş." } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(canvas.getByLabelText("E-Posta"), "elif@pusula.app");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "ahmet@pusula.app");
     await userEvent.type(canvas.getByLabelText("Şifre"), "1234");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await expect(await canvas.findByRole("alert")).toHaveTextContent("E-posta ya da şifre hatalı.");
-    await expect(canvas.getByLabelText("E-Posta")).toHaveValue("elif@pusula.app");
+    await expect(canvas.getByLabelText("E-Posta")).toHaveValue("ahmet@pusula.app");
   },
 };
 
@@ -126,7 +126,7 @@ export const FieldError: Story = {
   name: "Alan Hatası",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(canvas.getByLabelText("E-Posta"), "elif.pusula");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "ahmet.pusula");
     await userEvent.type(canvas.getByLabelText("Şifre"), "uzunbirsifre");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await expect(await canvas.findByText("Geçerli bir e-posta adresi yaz.")).toBeVisible();
@@ -139,7 +139,7 @@ export const Submitting: Story = {
   args: { action: neverResolves },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(canvas.getByLabelText("E-Posta"), "elif@pusula.app");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "ahmet@pusula.app");
     await userEvent.type(canvas.getByLabelText("Şifre"), "guclu-sifre-2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     const pending = await canvas.findByRole("button", { name: /Giriş Yapılıyor/ });

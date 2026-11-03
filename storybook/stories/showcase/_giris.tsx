@@ -2,7 +2,8 @@
 
 import { Compass } from "lucide-react";
 import { AuthCard, type AuthState } from "@/components/ui/auth-card";
-import { ME, OPEN_TICKETS, WORKSPACE } from "./_data";
+import { Marquee } from "@/components/ui/marquee";
+import { CUSTOMERS, ME, OPEN_TICKETS, WORKSPACE } from "./_data";
 
 /** Oturum kapalıyken: Pusula'ya giriş. Başarılı girişte pano açılır. */
 export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
@@ -18,7 +19,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
   }
 
   return (
-    <main id="icerik" className="grid min-h-dvh place-items-center bg-page px-4 py-10">
+    <main id="icerik" className="grid min-h-dvh place-content-center justify-items-center gap-10 bg-page px-4 py-10">
       <div className="grid w-full max-w-sm justify-items-center gap-6">
         <div className="flex items-center gap-2.5 text-strong">
           <span aria-hidden className="inline-grid size-9 place-items-center rounded-md bg-brand text-on-brand">
@@ -36,6 +37,19 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
           footer={<span className="text-muted">Örnek hesap: {ME.email}, şifre en az 8 karakter.</span>}
         />
       </div>
+      <section aria-labelledby="giris-musteriler" className="grid w-full max-w-2xl gap-3">
+        <h2 id="giris-musteriler" className="text-center text-small font-medium text-muted">
+          {WORKSPACE.name} Bu Müşterilere Hizmet Veriyor
+        </h2>
+        <Marquee label={`${WORKSPACE.name} müşterileri`} duration={36}>
+          {CUSTOMERS.map((c) => (
+            <span key={c.id} className="inline-flex items-baseline gap-1.5 text-base font-semibold text-body">
+              {c.name}
+              <span className="text-small font-normal text-muted">{c.city}</span>
+            </span>
+          ))}
+        </Marquee>
+      </section>
     </main>
   );
 }

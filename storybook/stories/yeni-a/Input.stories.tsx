@@ -21,7 +21,7 @@ const meta = {
   },
   args: {
     label: "Ad Soyad",
-    placeholder: "Örn. Elif Yıldırım",
+    placeholder: "Örn. Ahmet Akyapı",
     hint: "Faturada bu ad yazacak.",
     size: "md",
     clearable: false,
@@ -48,8 +48,8 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByRole("textbox", { name: "Ad Soyad" });
-    await userEvent.type(field, "Elif Yıldırım");
-    await expect(field).toHaveValue("Elif Yıldırım");
+    await userEvent.type(field, "Ahmet Akyapı");
+    await expect(field).toHaveValue("Ahmet Akyapı");
     await expect(field).toHaveAccessibleDescription("Faturada bu ad yazacak.");
   },
 };
@@ -179,7 +179,7 @@ export const AllVariants: Story = {
         <Input label="Şirket Adı" placeholder="Örn. Özdemir Zeytincilik" className="w-full" />
       </Cell>
       <Cell label="İkon + temizle">
-        <Input label="E-Posta" leadingIcon={Mail} defaultValue="elif@ozdemir.com.tr" clearable className="w-full" />
+        <Input label="E-Posta" leadingIcon={Mail} defaultValue="ahmet@ozdemir.com.tr" clearable className="w-full" />
       </Cell>
       <Cell label="Önek">
         <Input label="Tutar (₺)" prefix="₺" defaultValue="1.250,00" inputMode="decimal" className="w-full" />

@@ -6,6 +6,8 @@ import { AgentPlan } from "@/components/ui/agent-plan";
 import { Badge } from "@/components/ui/badge";
 import { ChatComposer } from "@/components/ui/chat-composer";
 import { ChatThread, type ChatMessage } from "@/components/ui/chat-thread";
+import { CompareSlider } from "@/components/ui/compare-slider";
+import { TextShimmer } from "@/components/ui/text-shimmer";
 import { Button } from "@/components/ui/Button";
 import {
   ASSISTANT_MODELS,
@@ -46,6 +48,33 @@ function answer(text: string): string {
   return "Not aldım. Taslakları onayladıktan sonra bunu da yaparım.";
 }
 
+/** İlk taslak: hazır şablon ile asistanın siparişe göre yazdığı metin. */
+function DraftCompare() {
+  const order = DELAYED[0];
+  const c = customer(order.customerId);
+  const days = daysBetween(order.date, TODAY);
+  const mail = (tone: "template" | "assistant") => (
+    <div className={tone === "template" ? "bg-surface-sunken p-4 pt-12" : "bg-overlay p-4 pt-12"}>
+      <p className="text-small text-muted">Kime: {c.contact}</p>
+      <p className="mt-2 text-base text-strong">
+        {tone === "template"
+          ? "Sayın müşterimiz, siparişiniz kargoya verilmiştir. Gecikme için özür dileriz. İyi günler."
+          : `Merhaba ${c.contact.split(" ")[0]}, ${order.id} numaralı siparişiniz aktarma merkezinde ${days} gündür bekliyor. Kargo firmasıyla görüştük, yarın dağıtıma çıkacak; takip bağlantısını akşam ileteceğim.`}
+      </p>
+    </div>
+  );
+  return (
+    <CompareSlider
+      label="İlk taslak, şablon ve asistan"
+      beforeLabel="Şablon"
+      afterLabel="Asistan"
+      defaultValue={42}
+      before={mail("template")}
+      after={mail("assistant")}
+    />
+  );
+}
+
 function Drafts() {
   return (
     <div className="grid grid-cols-1 gap-3">
@@ -71,6 +100,7 @@ function Drafts() {
           );
         })}
       </ul>
+      <DraftCompare />
       <a href={href("gelen", { etiket: "Gecikme" })} className="justify-self-start font-medium text-primary-ink underline underline-offset-4">
         Taslakları Gelen Kutusunda Aç
       </a>
@@ -115,6 +145,7 @@ export function AsistanPage() {
                 ayırıp her müşteri için kısa bir bilgi e-postası yazacağım.
               </p>
               <AgentPlan steps={PLAN_STEPS} activeIndex={planIndex} stepLabels={PLAN_LABELS} title="Geciken Siparişler" />
+              {done ? null : <TextShimmer live className="text-small">Taslaklar yazılıyor…</TextShimmer>}
             </div>
           ),
         },

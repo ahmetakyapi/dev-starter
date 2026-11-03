@@ -410,6 +410,27 @@
       "palettes": false
     },
     {
+      "name": "code-block",
+      "title": "Kod Bloğu",
+      "category": "Düğme ve İkon",
+      "description": "Kurulum komutu, yapılandırma, API örneği; paket yöneticisi sekmeleri",
+      "file": "snippets/ui/code-block.tsx",
+      "client": true,
+      "storyId": "code-block",
+      "registryDependencies": [
+        "copy-button"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "color-picker",
       "title": "Renk Seçici",
       "category": "Form Girişleri",
@@ -480,6 +501,25 @@
       "registryDependencies": [
         "kbd"
       ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "compare-slider",
+      "title": "Karşılaştırma",
+      "category": "Form ve Gezinme",
+      "description": "Önce / sonra: görsel, metin taslağı, düzen varyantı",
+      "file": "snippets/ui/compare-slider.tsx",
+      "client": true,
+      "storyId": "compare-slider",
+      "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
       ],
@@ -926,6 +966,25 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "marquee",
+      "title": "Kayan Şerit",
+      "category": "Form ve Gezinme",
+      "description": "Kayan şerit: logolar, entegrasyonlar (sayfada tek)",
+      "file": "snippets/ui/marquee.tsx",
+      "client": true,
+      "storyId": "marquee",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1517,6 +1576,24 @@
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "text-shimmer",
+      "title": "Parıltılı Metin",
+      "category": "Yükleme",
+      "description": "Süren işin metin etiketi (\"Asistan düşünüyor…\")",
+      "file": "snippets/ui/text-shimmer.tsx",
+      "client": false,
+      "storyId": "text-shimmer",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
