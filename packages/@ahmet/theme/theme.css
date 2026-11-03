@@ -64,8 +64,14 @@
   --success-wash: rgb(12 115 80 / 0.1);
   /* `--accent-warm` (brass) tonunun bir basamak koyusu: 12 px rozet metni
      kendi wash'ı kart üstündeyken bile AA. */
-  --warning: #825a0a;
-  --warning-wash: rgb(130 90 10 / 0.12);
+  --warning: #965600;
+  --warning-wash: rgb(150 86 0 / 0.1);
+  /* Uyarı DOLGUSU (2026-11): ikon karosu, gecikme çubuğu, nokta. İki temada
+     BİREBİR aynı ton (Apple'ın sistem turuncusu gibi); metin değildir, üstündeki
+     ikon/rakam `on-warning-fill` (9,6:1). Metin rengi `--warning` temaya göre
+     koyulaşır ya da açılır; ikisi aynı hue ailesinde (34-36°). */
+  --warning-fill: #ff9f0a;
+  --on-warning-fill: #1f1300;
   --danger: #c01a3d;
   --danger-wash: rgb(192 26 61 / 0.08);
   --accent-warm: #a4720f;
@@ -126,8 +132,8 @@
   --line-strong: rgb(255 255 255 / 0.15);
   --success: #3ddc97;
   --success-wash: rgb(61 220 151 / 0.12);
-  --warning: #d3a04a;
-  --warning-wash: rgb(211 160 74 / 0.14);
+  --warning: #ff9f0a;
+  --warning-wash: rgb(255 159 10 / 0.14);
   --danger: #ff5c7a;
   --danger-wash: rgb(255 92 122 / 0.12);
   --accent-warm: #d3a04a;
@@ -508,6 +514,8 @@
   --color-success-wash: var(--success-wash);
   --color-warning: var(--warning);
   --color-warning-wash: var(--warning-wash);
+  --color-warning-fill: var(--warning-fill);
+  --color-on-warning-fill: var(--on-warning-fill);
   --color-danger: var(--danger);
   --color-danger-wash: var(--danger-wash);
   /* `accent-warm` şablonlarla ortak ad; `warm` geriye dönük uyum için duruyor. */

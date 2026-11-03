@@ -86,8 +86,8 @@ export function RaporlarPage() {
   const { period, setPeriod, params, notify } = useApp();
   const s = useMemo(() => periodStats(period), [period]);
   const month = useMemo(() => periodStats("ay"), []);
-  const [tab, setTab] = useState(params.sekme ?? "satis");
-  const forceLoading = params.onizleme === "yukleniyor";
+  const [tab, setTab] = useState(params.tab ?? "sales");
+  const forceLoading = params.preview === "loading";
   const [loading, setLoading] = useState(false);
   const first = useRef(true);
   const [exporting, setExporting] = useState<"idle" | "pending" | "running" | "done">("idle");
@@ -165,7 +165,7 @@ export function RaporlarPage() {
           className="mt-4"
           onClick={() => {
             setPeriod(r.period);
-            setTab(r.tag === "Destek" ? "destek" : "satis");
+            setTab(r.tag === "Destek" ? "support" : "sales");
             document.getElementById("rapor-sekmeler")?.scrollIntoView({ behavior: "smooth", block: "start" });
           }}
         >
@@ -379,9 +379,9 @@ export function RaporlarPage() {
             value={tab}
             onValueChange={setTab}
             items={[
-              { value: "satis", label: "Satış", panel: <div className="pt-4">{satis}</div> },
-              { value: "destek", label: "Destek", panel: <div className="pt-4">{destek}</div> },
-              { value: "aktar", label: "Dışa ve İçe Aktar", panel: <div className="pt-4">{aktar}</div> },
+              { value: "sales", label: "Satış", panel: <div className="pt-4">{satis}</div> },
+              { value: "support", label: "Destek", panel: <div className="pt-4">{destek}</div> },
+              { value: "export", label: "Dışa ve İçe Aktar", panel: <div className="pt-4">{aktar}</div> },
             ]}
           />
         </div>

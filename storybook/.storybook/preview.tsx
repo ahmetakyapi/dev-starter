@@ -22,7 +22,9 @@ export const PALETTES = [
    temada katman önce açık renklerle çizilip `transition-colors` ile dönüyor,
    a11y denetimi geçişin ortasında sahte kontrast ihlali buluyordu (ölçüldü).
    Paletler `:root[data-palette]` seçicili, alt öğede çalışmaz. */
-const THEMES: Record<string, string> = { Açık: "light", Koyu: "dark" };
+/* Değer adrese girer (`globals=theme:dark`): ASCII. "Açık" yazılsaydı adres
+   `theme:A%C3%A7%C4%B1k` olurdu. Eski bağlantılar için Türkçe değerler de tanınır. */
+const THEMES: Record<string, string> = { light: "light", dark: "dark", Açık: "light", Koyu: "dark" };
 
 const withRootAttributes: Decorator = (Story, context) => {
   const root = document.documentElement;
@@ -73,14 +75,14 @@ const preview: Preview = {
   globalTypes: {
     theme: {
       description: "Tema",
-      toolbar: { title: "Tema", icon: "mirror", items: [{ value: "Açık", title: "Açık", icon: "sun" }, { value: "Koyu", title: "Koyu", icon: "moon" }], dynamicTitle: true },
+      toolbar: { title: "Tema", icon: "mirror", items: [{ value: "light", title: "Açık", icon: "sun" }, { value: "dark", title: "Koyu", icon: "moon" }], dynamicTitle: true },
     },
     palette: {
       description: "Renk paleti",
       toolbar: { title: "Palet", icon: "paintbrush", items: [...PALETTES], dynamicTitle: true },
     },
   },
-  initialGlobals: { theme: "Açık", palette: "signature" },
+  initialGlobals: { theme: "light", palette: "signature" },
   decorators: [withMotion, withRootAttributes],
 };
 

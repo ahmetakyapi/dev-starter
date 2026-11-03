@@ -7,6 +7,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Adresler, örnek giriş, gecikme kartı, uyarı tonu — 2026-11-03
+
+#### Değişti
+
+- **Adresler sade ve ASCII**: örnek uygulama (Pusula) iç adresleri
+  `?view=inbox&tag=gecikme&ticket=PSL-1186&page=2` (eski `?ekran=gelen&etiket=Gecikme&s=2`);
+  ekran kimlikleri İngilizce (`dashboard`, `inbox`, `tasks`…), değerler küçük
+  harfli slug (`slug()`/`fromSlug()`). Storybook tema değeri `light`/`dark`
+  (adreste `theme:A%C3%A7%C4%B1k` yerine `theme:dark`; eski değerler hâlâ
+  tanınır). Hikâye grubu `pusula` → `demo-app`; kısa adres `/demo`,
+  `/demo/<ekran>`; eski `/pusula` kalıcı yönlenir.
+- **Örnek giriş**: "Örnek Hesapla Gir" düğmesi formu göndermez; Chrome'un
+  "şifre kaydedilsin mi?" ve veri ihlali uyarıları demoda açılmaz.
+  `auth-card` gönder düğmesi basışta `scale`.
+- **Uyarı tonu**: `--warning` tek hue ailesinde (açık `#965600`, koyu
+  `#ff9f0a`), yeni `--warning-fill` / `--on-warning-fill` iki temada aynı.
+- **Pano gecikme kartı**: tam genişlik kahverengi şerit yerine nötr kuyu,
+  büyük rakam, sipariş başına gecikme rozeti ve "nerede takıldı" yolculuk
+  çizgisi; örnek veride gecikmeler 4/2/1 gün.
+
 ### Dört yeni bileşen, Ahmet persona — 2026-11-03
 
 #### Eklendi

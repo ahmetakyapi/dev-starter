@@ -41,13 +41,13 @@ import { AppContext, PAGES, href, type Page, type Params, type Toast } from "./_
 const LOAD_MS = 360;
 
 const ICONS: Record<Page, ReactNode> = {
-  pano: <LayoutDashboard />,
-  gelen: <Inbox />,
-  gorevler: <ListTodo />,
-  takvim: <CalendarDays />,
-  asistan: <MessageSquare />,
-  raporlar: <BarChart3 />,
-  ayarlar: <Settings />,
+  dashboard: <LayoutDashboard />,
+  inbox: <Inbox />,
+  tasks: <ListTodo />,
+  calendar: <CalendarDays />,
+  assistant: <MessageSquare />,
+  reports: <BarChart3 />,
+  settings: <Settings />,
 };
 
 /** Ekip panosunda bitmemiş kart sayısı: kenar çubuğu rozeti. */
@@ -55,22 +55,22 @@ const OPEN_TASKS = BOARD.filter((c) => !c.done).reduce((n, c) => n + c.cards.len
 
 const NAV: readonly ShellNavGroup[] = [
   {
-    items: (["pano", "gelen", "gorevler", "takvim", "asistan"] as const).map((id) => ({
+    items: (["dashboard", "inbox", "tasks", "calendar", "assistant"] as const).map((id) => ({
       href: href(id),
       label: PAGES.find((p) => p.id === id)!.label,
       icon: ICONS[id],
-      badge: id === "gelen" ? OPEN_TICKETS.length : id === "gorevler" ? OPEN_TASKS : undefined,
+      badge: id === "inbox" ? OPEN_TICKETS.length : id === "tasks" ? OPEN_TASKS : undefined,
     })),
   },
   {
     label: "Çalışma Alanı",
-    items: (["raporlar", "ayarlar"] as const).map((id) => ({ href: href(id), label: PAGES.find((p) => p.id === id)!.label, icon: ICONS[id] })),
+    items: (["reports", "settings"] as const).map((id) => ({ href: href(id), label: PAGES.find((p) => p.id === id)!.label, icon: ICONS[id] })),
   },
 ];
 
 const BRAND = {
   name: "Pusula",
-  href: href("pano"),
+  href: href("dashboard"),
   logo: (
     <span className="inline-grid size-7 place-items-center rounded-sm bg-brand text-on-brand">
       <Compass className="!size-4" strokeWidth={2} />
@@ -80,19 +80,19 @@ const BRAND = {
 
 function PageView({ page }: { page: Page }) {
   switch (page) {
-    case "pano":
+    case "dashboard":
       return <PanoPage />;
-    case "gelen":
+    case "inbox":
       return <GelenPage />;
-    case "gorevler":
+    case "tasks":
       return <GorevlerPage />;
-    case "takvim":
+    case "calendar":
       return <TakvimPage />;
-    case "asistan":
+    case "assistant":
       return <AsistanPage />;
-    case "raporlar":
+    case "reports":
       return <RaporlarPage />;
-    case "ayarlar":
+    case "settings":
       return <AyarlarPage />;
   }
 }
@@ -119,14 +119,14 @@ function PageLoading({ page }: { page: Page }) {
 export type PusulaAppProps = {
   /** Açılıştaki sayfa. */
   initialPage?: Page;
-  /** Açılıştaki adres parametreleri: `{ talep: "PSL-1186" }`, `{ sekme: "aktar" }`. */
+  /** Açılıştaki adres parametreleri: `{ ticket: "PSL-1186" }`, `{ tab: "export" }`. */
   initialParams?: Params;
   initialPeriod?: Period;
   /** Oturum kapalı başlar: giriş kartı. */
   signedOut?: boolean;
 };
 
-export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPeriod = "ay", signedOut = false }: PusulaAppProps) {
+export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initialPeriod = "ay", signedOut = false }: PusulaAppProps) {
   const [route, setRoute] = useState<{ page: Page; params: Params }>({ page: initialPage, params: initialParams });
   const [pending, setPending] = useState<Page | null>(null);
   const [period, setPeriod] = useState<Period>(initialPeriod);
@@ -164,7 +164,7 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
     stopRouteProgress();
   }, []);
 
-  // Uygulamanın bağlantıları `?ekran=…`: tıklama yakalanır, sayfa iç durumla değişir.
+  // Uygulamanın bağlantıları `?view=…`: tıklama yakalanır, sayfa iç durumla değişir.
   // Yakalama evresinde ve belgede: kabuğun çekmecesi ve açılır menüler de kapsanır.
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
@@ -172,10 +172,10 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
       const anchor = event.target instanceof Element ? event.target.closest("a[href^='?']") : null;
       if (!anchor) return;
       const query = new URLSearchParams(anchor.getAttribute("href")!.slice(1));
-      const page = query.get("ekran") as Page | null;
+      const page = query.get("view") as Page | null;
       if (!page || !PAGES.some((p) => p.id === page)) return;
       event.preventDefault();
-      query.delete("ekran");
+      query.delete("view");
       navigate(page, Object.fromEntries(query));
     };
     document.addEventListener("click", onClick, { capture: true });
@@ -212,14 +212,14 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
         icon: <CalendarPlus />,
         keywords: ["toplantı", "görüşme"],
         onSelect: () => {
-          navigate("takvim");
+          navigate("calendar");
           window.setTimeout(() => document.getElementById("randevu")?.scrollIntoView({ block: "start" }), LOAD_MS + 50);
         },
       },
-      { id: "acik", label: "Açık Talepleri Göster", hint: `${OPEN_TICKETS.filter((t) => t.status === "Açık").length} talep`, group: "Eylemler", icon: <Inbox />, onSelect: () => navigate("gelen", { durum: "Açık" }) },
-      { id: "gecikme", label: "Geciken Siparişlerin Talepleri", group: "Eylemler", icon: <TriangleAlert />, keywords: ["kargo"], onSelect: () => navigate("gelen", { etiket: "Gecikme" }) },
-      { id: "asistan", label: "Asistana Sor", group: "Eylemler", icon: <Sparkles />, keywords: ["yapay zekâ", "sohbet"], onSelect: () => navigate("asistan") },
-      { id: "disa", label: "Siparişleri Dışa Aktar", hint: "CSV", group: "Eylemler", icon: <Download />, onSelect: () => navigate("raporlar", { sekme: "aktar" }) },
+      { id: "acik", label: "Açık Talepleri Göster", hint: `${OPEN_TICKETS.filter((t) => t.status === "Açık").length} talep`, group: "Eylemler", icon: <Inbox />, onSelect: () => navigate("inbox", { status: "open" }) },
+      { id: "gecikme", label: "Geciken Siparişlerin Talepleri", group: "Eylemler", icon: <TriangleAlert />, keywords: ["kargo"], onSelect: () => navigate("inbox", { tag: "gecikme" }) },
+      { id: "assistant", label: "Asistana Sor", group: "Eylemler", icon: <Sparkles />, keywords: ["yapay zekâ", "sohbet"], onSelect: () => navigate("assistant") },
+      { id: "disa", label: "Siparişleri Dışa Aktar", hint: "CSV", group: "Eylemler", icon: <Download />, onSelect: () => navigate("reports", { tab: "export" }) },
       ...PERIODS.map((p) => ({
         id: `donem-${p.value}`,
         label: `Dönem: ${p.label}`,
@@ -228,7 +228,7 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
         keywords: ["hafta", "ay", "yıl", "dönem"],
         onSelect: () => {
           setPeriod(p.value);
-          navigate("pano");
+          navigate("dashboard");
         },
       })),
       ...OPEN_TICKETS.map((t) => ({
@@ -237,7 +237,7 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
         hint: customer(t.customerId).name,
         group: "Açık Talepler",
         keywords: [customer(t.customerId).name, customer(t.customerId).contact],
-        onSelect: () => navigate("gelen", { talep: t.id }),
+        onSelect: () => navigate("inbox", { ticket: t.id }),
       })),
     ],
     [navigate],
@@ -248,7 +248,7 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
       <GirisPage
         onSignedIn={() => {
           setSignedIn(true);
-          setRoute({ page: "pano", params: {} });
+          setRoute({ page: "dashboard", params: {} });
         }}
       />
     );
@@ -269,7 +269,7 @@ export function PusulaApp({ initialPage = "pano", initialParams = {}, initialPer
         searchLabel="Ara ya da git"
         className="[&>aside]:sticky [&>aside]:top-0 [&>aside]:h-dvh [&>aside]:self-start"
       >
-        {loadingPage ? <PageLoading page={loadingPage} /> : <PageView key={`${route.page}:${route.params.durum ?? ""}:${route.params.etiket ?? ""}`} page={route.page} />}
+        {loadingPage ? <PageLoading page={loadingPage} /> : <PageView key={`${route.page}:${route.params.status ?? ""}:${route.params.tag ?? ""}`} page={route.page} />}
       </AppShell>
       <CommandPalette commands={commands} placeholder="Sayfa, talep ya da komut ara" />
       <Toaster />

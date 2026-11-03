@@ -20,7 +20,7 @@ import { GroupHead, Reveal, SectionHead } from "./_ui";
 
 /* Storybook içi bağlantılar: İngilizce kimlikler (ana oturumun adlandırması). */
 const story = (id: string) => `./?path=/story/${id}`;
-const PUSULA = story("pusula--app");
+const PUSULA = story("demo-app--overview");
 const GETTING_STARTED = story("start--overview");
 const GALLERY = story("gallery--overview");
 

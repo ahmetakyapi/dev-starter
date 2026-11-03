@@ -550,3 +550,20 @@ sistem bloklarını şablondan alınca bütün bileşenler yeni derinliği alır
 Yeni sınıflar (`shadow-well`, `shadow-focus`, `edge-lit`) yükseltilmemiş
 projede derlenmez; `scripts/add-ui.mjs` eksik token'ı uyarır.
 
+## Uyarı Tonu Tek Aile, Dolgu İki Temada Aynı (2026-11-03)
+
+**Karar:** `--warning` açıkta `#825a0a` → `#965600`, koyuda `#d3a04a` →
+`#ff9f0a`; yeni `--warning-fill: #ff9f0a` + `--on-warning-fill: #1f1300`
+iki temada AYNI.
+
+**Neden:** eski çift iki ayrı renk gibi okunuyordu: açıkta 40° zeytinimsi
+kahverengi, koyuda soluk altın; tam genişlikte wash zeminle birleşince
+"kirli turuncu" şerit. Apple'ın sistem turuncusu gibi canlı ton DOLGU
+olarak her iki temada aynı kalır; metin gerektiğinde temaya göre koyulaşır
+ama aynı hue ailesinde (34-36°). AA değişmedi: açık 5,79 sayfa, 4,72 kart +
+wash; dolgu üstü mürekkep 9,6:1 (`tests/palette.test.ts`, `contract.test.ts`).
+
+**Etkisi:** Pano'nun gecikme şeridi yerine `_gecikme.tsx` kartı (nötr kuyu,
+tek renk noktası, sipariş başına yolculuk çizgisi). `banner-alert` warning
+tonu yeni renkleri kendiliğinden alır.
+

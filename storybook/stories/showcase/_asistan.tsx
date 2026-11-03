@@ -101,7 +101,7 @@ function Drafts() {
         })}
       </ul>
       <DraftCompare />
-      <a href={href("gelen", { etiket: "Gecikme" })} className="justify-self-start font-medium text-primary-ink underline underline-offset-4">
+      <a href={href("inbox", { tag: "gecikme" })} className="justify-self-start font-medium text-primary-ink underline underline-offset-4">
         Taslakları Gelen Kutusunda Aç
       </a>
     </div>

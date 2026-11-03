@@ -5,7 +5,6 @@ import { MessagesSquare, PackageCheck, Reply, Smile } from "lucide-react";
 import { ActivityRings } from "@/components/ui/activity-rings";
 import { Announcement } from "@/components/ui/announcement";
 import { AreaChart } from "@/components/ui/area-chart";
-import { BannerAlert } from "@/components/ui/banner-alert";
 import { BarList } from "@/components/ui/bar-list";
 import { ChartCard, ChartLegend } from "@/components/ui/chart-card";
 import { ComboChart } from "@/components/ui/combo-chart";
@@ -43,6 +42,7 @@ import {
   tl,
   type Period,
 } from "./_data";
+import { DelayCard } from "./_gecikme";
 import { PageBar, SectionTitle, href, useApp } from "./_ui";
 
 const TL_COMPACT: Intl.NumberFormatOptions = { style: "currency", currency: "TRY", notation: "compact", maximumFractionDigits: 1 };
@@ -105,7 +105,6 @@ export function PanoPage() {
     label,
     value: s.tickets.filter((t) => (t.date.getDay() + 6) % 7 === i).length,
   }));
-  const delayedNames = DELAYED.map((o) => customer(o.customerId).name);
   const target = Math.round(MONTHLY_TARGET * TARGET_SCALE[period]);
   const fastReplies = s.tickets.filter((t) => (t.firstResponseMin ?? 999) <= 30).length;
   const goals = [
@@ -129,24 +128,10 @@ export function PanoPage() {
       />
       <div className="grid grid-cols-1 gap-6 p-4 sm:p-6">
         <div className="grid grid-cols-1 gap-3">
-          <Announcement href={href("asistan")} tag="Yeni">
+          <Announcement href={href("assistant")} tag="Yeni">
             Asistan Geciken Siparişler için Müşteri E-postası Yazıyor
           </Announcement>
-          {DELAYED.length ? (
-            <BannerAlert
-              tone="warning"
-              title={`${DELAYED.length} Sipariş Teslim Tarihini Geçti`}
-              description={`${delayedNames.join(", ")} siparişleri kargo aktarma merkezinde bekliyor. İlgili talepler gelen kutusunda.`}
-              actions={
-                <a
-                  href={href("gelen", { etiket: "Gecikme" })}
-                  className="inline-flex min-h-11 items-center rounded-md border border-line bg-overlay px-3.5 text-base font-medium text-strong shadow-raised transition-[border-color] hover:border-line-strong pointer-fine:min-h-9"
-                >
-                  Talepleri Gör
-                </a>
-              }
-            />
-          ) : null}
+          {DELAYED.length ? <DelayCard /> : null}
         </div>
 
         <section aria-labelledby="pano-ozet" className="grid grid-cols-1 gap-3">
