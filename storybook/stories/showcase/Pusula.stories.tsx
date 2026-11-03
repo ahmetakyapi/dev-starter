@@ -261,7 +261,7 @@ export const SignedOut: Story = {
   parameters: { docs: { description: { story: "Kenar çubuğundaki Oturumu Kapat buraya getirir; çalışma alanı e-postasıyla girince pano açılır." } } },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(await canvas.findByLabelText("E-Posta"), "elif@gmail.com");
+    await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@gmail.com");
     await userEvent.type(canvas.getByLabelText("Şifre"), "kervan2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
     await canvas.findByText(/kervantekstil\.com\.tr/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });

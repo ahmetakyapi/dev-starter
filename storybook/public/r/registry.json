@@ -558,6 +558,30 @@
       ]
     },
     {
+      "name": "code-block",
+      "type": "registry:ui",
+      "title": "Kod Bloğu",
+      "description": "Kurulum komutu, yapılandırma, API örneği; paket yöneticisi sekmeleri",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/copy-button.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "code-block",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/code-block.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "color-picker",
       "type": "registry:ui",
       "title": "Renk Seçici",
@@ -658,6 +682,32 @@
       "files": [
         {
           "path": "snippets/ui/command-palette.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "compare-slider",
+      "type": "registry:ui",
+      "title": "Karşılaştırma",
+      "description": "Önce / sonra: görsel, metin taslağı, düzen varyantı",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "compare-slider",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/compare-slider.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1233,6 +1283,32 @@
       "files": [
         {
           "path": "snippets/ui/loading-mark.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "marquee",
+      "type": "registry:ui",
+      "title": "Kayan Şerit",
+      "description": "Kayan şerit: logolar, entegrasyonlar (sayfada tek)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "marquee",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/marquee.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2052,6 +2128,29 @@
       "files": [
         {
           "path": "snippets/ui/task-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "text-shimmer",
+      "type": "registry:ui",
+      "title": "Parıltılı Metin",
+      "description": "Süren işin metin etiketi (\"Asistan düşünüyor…\")",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yükleme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "text-shimmer",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/text-shimmer.tsx",
           "type": "registry:ui"
         }
       ]

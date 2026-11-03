@@ -47,7 +47,7 @@ function split(total: number, weights: readonly number[]): number[] {
 export const BRAND = { name: "Kıyı Kahve", city: "İzmir", domain: "kiyikahve.com.tr" } as const;
 
 export const TEAM = [
-  { name: "Defne Yalçın", role: "Kurucu" },
+  { name: "Ahmet Akyapı", role: "Kurucu" },
   { name: "Kerem Arıkan", role: "Kavurma Ustası" },
   { name: "Selin Başaran", role: "Toptan Satış" },
   { name: "Onur Tekin", role: "Operasyon" },
@@ -294,6 +294,8 @@ export const GROUP_OF: Record<string, GroupId> = {
   "icon-button": "temel",
   "button-group": "temel",
   "copy-button": "temel",
+  "code-block": "temel",
+  marquee: "temel",
   kbd: "temel",
   "close-button": "temel",
   badge: "temel",
@@ -330,6 +332,7 @@ export const GROUP_OF: Record<string, GroupId> = {
   "notification-center": "katman",
   "hover-card": "katman",
   "data-table": "veri",
+  "compare-slider": "veri",
   "tree-view": "veri",
   "tree-table": "veri",
   stat: "veri",
@@ -353,6 +356,7 @@ export const GROUP_OF: Record<string, GroupId> = {
   spinner: "yukleme",
   "loading-mark": "yukleme",
   skeleton: "yukleme",
+  "text-shimmer": "yukleme",
   "route-progress": "yukleme",
   "chart-card": "grafik",
   "area-chart": "grafik",
@@ -386,7 +390,7 @@ export const GROUPS: readonly { id: GroupId; title: string; note: string; sectio
   { id: "veri", title: "Veri", note: "Tablo, ağaç, sayı, pano ve ajanda; sıralanır, açılır, taşınır, ekran okuyucuya metin.", section: "bilesenler" },
   { id: "geri", title: "Geri Bildirim", note: "Durum, ilerleme, doluluk ve boşluk; renk tek işaret değil.", section: "bilesenler" },
   { id: "gezinme", title: "Gezinme", note: "Sekme, yol, sayfa ve adım: kullanıcı nerede, nereye gidebilir.", section: "bilesenler" },
-  { id: "yukleme", title: "Yükleme", note: "Beklemenin dört biçimi; hareket azaltıldığında durağan.", section: "bilesenler" },
+  { id: "yukleme", title: "Yükleme", note: "Beklemenin beş biçimi; hareket azaltıldığında durağan.", section: "bilesenler" },
   { id: "grafik", title: "Grafikler", note: "ChartCard kuyusunda, lejant karolarında; seri rengi yalnız --chart-*.", section: "grafikler" },
   { id: "blok", title: "Bloklar", note: "Birden çok bileşenin birleştiği hazır parçalar.", section: "bloklar" },
 ];

@@ -241,6 +241,13 @@ kaldığı için erişilebilirlik açığı değil.
 - **HoverCard**: yalnız ek bilgi; içine tek yolu olan eylem koyma (Tab ile karta girilmez). Dokunmatikte iki dokunuş gerekir.
 - **ToggleGroup**: seçenekler birbirini dışlıyor ve biri hep seçili olmak zorundaysa `segmented-control`. Yalnız ikonlu öğede `label` zorunlu.
 
+### İşçilik Turu Bileşenleri (2026-11)
+
+- **CodeBlock**: belge, ayar ekranı ("Webhook ile Bağla") ve landing'in kurulum satırı. Kurulumda `installTabs(paket)` + `persist="pm"`: kullanıcının paket yöneticisi bütün bloklarda ve sonraki ziyarette hatırlanır. Renklendirme gerekiyorsa sunucuda üretip `children` ver; kopyalanan metin yine `code`.
+- **Marquee**: sayfada tek şerit; beş saniyeden uzunsa durdurma düğmesi kapatılmaz (WCAG 2.2.2). İçindeki bağlantılar bir kez Tab sırasına girer.
+- **CompareSlider**: iki katman aynı boyda olmalı (kap uzun olandan boy alır). İçinde tıklanacak öğe koyma: kaydırıcı kabı kaplar. Görselde iki `alt` farkı anlatsın.
+- **TextShimmer**: etiket olarak, spinner'ın yanında değil. Uzun iş için `progress`; yüzde biliniyorsa parıltı değil sayı göster.
+
 ### Bloklar
 
 - **PaletteSwitcher**: `app/palettes.css` içe aktarılmalı (nokta renkleri oradaki `--swatch-*`). Çerezin ilk boyamadan önce okunması için THEME_SCRIPT'e iki satır (dosya başında). Telefonda on nokta yatay kayar.

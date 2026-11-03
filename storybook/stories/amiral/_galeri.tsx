@@ -52,6 +52,10 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { CodeBlock, installTabs } from "@/components/ui/code-block";
+import { CompareSlider } from "@/components/ui/compare-slider";
+import { Marquee } from "@/components/ui/marquee";
+import { TextShimmer } from "@/components/ui/text-shimmer";
 import { CopyButton } from "@/components/ui/copy-button";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { DateCalendar, type DateRange } from "@/components/ui/date-calendar";
@@ -142,6 +146,15 @@ const GLYPHS = [
   { icon: Flame, label: "Kavurma" },
   { icon: Package, label: "Paket" },
   { icon: Truck, label: "Kargo" },
+] as const;
+
+const SUPPLIERS = [
+  { name: "Yirgacheffe Kooperatifi", Glyph: Bean },
+  { name: "Ege Süt", Glyph: Coffee },
+  { name: "Kervan Lojistik", Glyph: Truck },
+  { name: "Ambalaj Atölyesi", Glyph: Package },
+  { name: "Liman Kavurma", Glyph: Flame },
+  { name: "Çarşı Pazarı", Glyph: Store },
 ] as const;
 
 function TemelGroup() {
@@ -270,6 +283,22 @@ function TemelGroup() {
             <span>Ücretsiz</span>
           </div>
         </div>
+      </Cell>
+      <Cell file="code-block" name="Kod Bloğu" note="Paket yöneticisi sekmeleri; seçim aynı anahtarlı bloklarda ve sonraki ziyarette hatırlanır." span={3} align="stretch">
+        <div className="grid w-full gap-3">
+          <CodeBlock tabs={installTabs("@kiyi/siparis-sdk")} persist="galeri-pm" />
+          <CodeBlock title="lib/siparis.ts" code={'import { siparis } from "@kiyi/siparis-sdk";\n\nawait siparis.olustur({ urun: "Etiyopya Yirgacheffe", adet: 2 });'} />
+        </div>
+      </Cell>
+      <Cell file="marquee" name="Kayan Şerit" note="Üzerine gelince ve düğmeyle durur (WCAG 2.2.2); kopya ekran okuyucudan gizli." span={3}>
+        <Marquee label="Kıyı Kahve'nin Tedarikçileri" duration={30}>
+          {SUPPLIERS.map(({ name, Glyph }) => (
+            <span key={name} className="inline-flex items-center gap-2 rounded-full bg-overlay px-3.5 py-2 text-base font-semibold text-strong shadow-raised">
+              <Glyph aria-hidden className="size-4 text-muted" strokeWidth={1.75} />
+              {name}
+            </span>
+          ))}
+        </Marquee>
       </Cell>
     </CellGrid>
   );
@@ -822,6 +851,21 @@ const TODAY_TASKS: readonly Task[] = [
   { id: "t4", title: "Açık atölye günü duyurusu", done: false, priority: "low", due: "2026-11-05" },
 ];
 
+const MENU = ["Filtre Kahve", "Latte", "Flat White", "Soğuk Demleme"] as const;
+
+function PriceList({ prices, tone }: { prices: readonly number[]; tone: "muted" | "strong" }) {
+  return (
+    <ul className={cn("grid gap-1.5 p-4 pt-12", tone === "muted" ? "bg-surface-sunken" : "bg-overlay")}>
+      {MENU.map((item, index) => (
+        <li key={item} className="flex items-center justify-between gap-4 rounded-lg px-3 py-2">
+          <span className="text-base font-medium text-strong">{item}</span>
+          <span className={cn("text-base font-semibold tabular-nums", tone === "muted" ? "text-muted" : "text-strong")}>₺{prices[index]}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function VeriGroup() {
   const lastMonth = REVENUE_NOW[REVENUE_NOW.length - 1];
   const prevMonth = REVENUE_NOW[REVENUE_NOW.length - 2];
@@ -899,6 +943,16 @@ function VeriGroup() {
       </Cell>
       <Cell file="task-list" name="Görev Listesi" note="Alt görevler sayaçla açılır; biten satır üstü çizilerek söner." span={2} align="stretch" className="p-3 sm:p-3">
         <TaskList title={`${ME.name.split(" ")[0]} · Bugün`} defaultTasks={TODAY_TASKS} today="2026-11-02" />
+      </Cell>
+      <Cell file="compare-slider" name="Karşılaştırma" note="Yerel kaydırıcı: oklar, dokunma ve ekran okuyucu bedava; kırpma clip-path ile." span={4} align="stretch">
+        <CompareSlider
+          label="Menü fiyatları, ekim ve kasım"
+          beforeLabel="Ekim"
+          afterLabel="Kasım"
+          defaultValue={55}
+          before={<PriceList tone="muted" prices={[95, 110, 120, 135]} />}
+          after={<PriceList tone="strong" prices={[105, 120, 125, 150]} />}
+        />
       </Cell>
       <Cell file="kanban-board" name="Kanban Panosu" note="Fare, dokunma tutamağı ya da klavye (Boşluk, oklar) ile taşınır; WIP sınırı sayılır." span={6} size="lg" align="stretch">
         <KanbanBoard label="Atölye İşleri" defaultColumns={BOARD} today="2026-11-02" />
@@ -1134,7 +1188,7 @@ function YuklemeGroup() {
     }, 1600);
   }
   return (
-    <CellGrid className="lg:grid-cols-4">
+    <CellGrid className="lg:grid-cols-5">
       <Cell file="spinner" name="Dönen Gösterge" note="Satır içi ve düğme içi kısa bekleme." span={1} size="sm">
         <div className="grid justify-items-center gap-4">
           <div className="flex items-center gap-4">
@@ -1157,6 +1211,12 @@ function YuklemeGroup() {
           <SkeletonRow />
           <Skeleton className="h-3 w-3/4" />
           <Skeleton className="h-3 w-1/2" />
+        </div>
+      </Cell>
+      <Cell file="text-shimmer" name="Parıltılı Metin" note="Süren işin etiketi; renk değil alfa maskesi kayar, metin AA'da kalır." span={1} size="sm">
+        <div className="grid justify-items-center gap-2 text-center">
+          <TextShimmer live>Asistan menüyü yazıyor…</TextShimmer>
+          <TextShimmer className="text-small">Tedarikçiler taranıyor…</TextShimmer>
         </div>
       </Cell>
       <Cell file="route-progress" name="Gezinme Çubuğu" note="Sayfanın üstünde ince çubuk; gecikirse “Yükleniyor” hapı." span={1} size="sm">

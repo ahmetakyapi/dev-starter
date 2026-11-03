@@ -14,6 +14,7 @@ import { NumberField } from "@/components/ui/number-field";
 import { PaletteSwitcher } from "@/components/ui/palette-switcher";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
+import { CodeBlock } from "@/components/ui/code-block";
 import { SettingsDialog, SettingsRow, SettingsSection, type SettingsTab } from "@/components/ui/settings-dialog";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -81,6 +82,19 @@ const SHORTCUTS: readonly { keys: readonly string[]; label: string; spoken: stri
   { keys: ["Esc"], label: "Açık pencereyi kapat", spoken: "Escape" },
   { keys: ["⇧", "↵"], label: "Asistanda yeni satır", spoken: "Shift Enter" },
 ];
+
+const WEBHOOK_URL = `https://api.${WORKSPACE.domain}/pusula/talep`;
+
+const WEBHOOK_TABS = [
+  {
+    label: "cURL",
+    code: `curl -X POST ${WEBHOOK_URL} \\\n  -H "Content-Type: application/json" \\\n  -H "Pusula-Imza: sha256=…" \\\n  -d '{"olay":"talep.acildi","talep":"T-1042"}'`,
+  },
+  {
+    label: "JavaScript",
+    code: `await fetch("${WEBHOOK_URL}", {\n  method: "POST",\n  headers: { "Content-Type": "application/json", "Pusula-Imza": imza },\n  body: JSON.stringify({ olay: "talep.acildi", talep: "T-1042" }),\n});`,
+  },
+] as const;
 
 export function AyarlarPage() {
   const { notify } = useApp();
@@ -286,6 +300,13 @@ export function AyarlarPage() {
               </ul>
             </section>
           </div>
+        </Well>
+
+        <Well labelledBy="ayar-webhook" className="lg:col-span-2">
+          <WellTitle id="ayar-webhook" hint="Yeni talep açılınca Pusula bu adrese POST atar; imza başlıkta.">
+            Webhook ile Bağla
+          </WellTitle>
+          <CodeBlock tabs={WEBHOOK_TABS} persist="pusula-webhook" aria-label="Webhook örneği" />
         </Well>
       </div>
     </div>

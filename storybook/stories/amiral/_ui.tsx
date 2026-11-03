@@ -52,7 +52,7 @@ export function Cell({
   const place = { center: "items-center justify-center", start: "items-start justify-center", stretch: "items-stretch" }[align];
   return (
     <figure id={`b-${file}`} className={cn("row-span-2 grid min-w-0 scroll-mt-24 grid-rows-subgrid gap-y-3", SPAN[span])}>
-      <div className={cn("flex min-w-0 rounded-2xl bg-surface p-5 sm:p-7", min, place, className)}>
+      <div className={cn("edge-lit flex min-w-0 rounded-2xl bg-surface p-5 sm:p-7", min, place, className)}>
         <div className="w-full min-w-0">{children}</div>
       </div>
       <figcaption className="flex items-start justify-between gap-3 px-1">

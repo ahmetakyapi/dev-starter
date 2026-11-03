@@ -55,6 +55,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `loading-mark.tsx` | Sayfa/kart düzeyinde bekleme, marka halkası | yok | Hayır | `role="status"`; döngü yalnızca beklemede, reduced-motion'da sabit |
 | `route-progress.tsx` | Kök layout'ta gezinme göstergesi | `next/navigation` | Evet | Canlı bölge hep DOM'da; hap 420 ms sonra; `<Suspense>` şart |
 | `skeleton.tsx` | Gelecek içeriğin şeklinde iskelet | `.skeleton` | Hayır | `aria-hidden`; kap `aria-busy` taşır |
+| `text-shimmer.tsx` | Süren işin metin etiketi ("Asistan düşünüyor…") | yok | Hayır | Renk değil alfa maskesi; en sönük kare %60, AA; `live` ile `role="status"`; reduced-motion'da düz metin |
 
 ### Düğme ve İkon
 
@@ -65,6 +66,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `button-group.tsx` | Bağlı düğmeler | yok | Hayır | `role="group"` + ad; `well`de basılı durum `aria-pressed` |
 | `segmented-control.tsx` | 2-5 seçenekten biri, anında etki | motion (`domMax`) | Evet | Radyo grubu, gezici tabindex, ok tuşları |
 | `copy-button.tsx` | Panoya kopyala | lucide | Evet | Sonuç canlı bölgede; hata da söylenir |
+| `code-block.tsx` | Kurulum komutu, yapılandırma, API örneği; paket yöneticisi sekmeleri | `copy-button` | Evet | Sekme listesi, ok tuşları; kaydırılabilir `pre` odaklanır; `$` istemi kopyalanmaz ve okunmaz; `persist` tercihi paylaşır |
 | `kbd.tsx` | Klavye tuşu, kısayol | yok | Hayır | Simgeli tuşta `label`; kombinasyon tek ad |
 | `close-button.tsx` | Diyalog, uyarı, çip, duyuru kapatma | lucide | Hayır | `aria-label` TİPTE zorunlu; 44 px dokunma alanı (görsel 28/32); odak halkası dairede |
 | `chip.tsx` | `FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup` | lucide | Hayır | Süzgeç `aria-pressed` + ✓; yalnız × düğme, adı "Kaldır: İstanbul"; grup `role="group"` + ad |
@@ -112,9 +114,11 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `stepper.tsx` | Çok adımlı akışta konum | lucide | Hayır | `<ol>`, `aria-current="step"`, gizli "Tamamlandı" |
 | `file-dropzone.tsx` | Dosya yükleme | yok | Evet | Klavyeyle açılır, reddedilen dosya nedeniyle okunur; SVG varsayılan RED |
 | `timeline.tsx` | Tarihli olaylar | yok | Hayır | `<ol>` + `<time dateTime>` |
+| `compare-slider.tsx` | Önce / sonra: görsel, metin taslağı, düzen varyantı | lucide | Evet | Yerel `range`: oklar, Home/End, dokunma; değer metni iki tarafı söyler; `pan-y` ile sayfa kayar |
 | `empty-state.tsx` | Boş durum: ikon / sahne / satır | yok | Hayır | Sahne `aria-hidden`; başlık düzeyi `titleAs` ile |
 | `announcement.tsx` | Kahraman üstü duyuru hapı; kapatılabilir varyant | `next/link`, lucide, `close-button` | Evet | Hap tek bağlantı, × kardeş öğe; noktasız, yanıp sönmez |
 | `carousel.tsx` | Yan yana kaydırılan kartlar | lucide, motion | Evet | `aria-roledescription` carousel/slide; ←/→ Home/End; canlı bölge konumu söyler; otomatik oynatma yok |
+| `marquee.tsx` | Kayan şerit: logolar, entegrasyonlar (sayfada tek) | lucide | Evet | WCAG 2.2.2: görünür durdurma düğmesi (`aria-pressed`), üzerine gelince/odakta bekler; kopya `aria-hidden` + `inert`; reduced-motion'da durağan |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.

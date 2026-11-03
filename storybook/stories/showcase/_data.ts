@@ -77,7 +77,7 @@ export const WORKSPACE = {
 export type Member = { id: string; name: string; role: string; email: string };
 
 export const TEAM: readonly Member[] = [
-  { id: "elif", name: "Elif Yıldırım", role: "Destek Lideri", email: "elif@kervantekstil.com.tr" },
+  { id: "ahmet", name: "Ahmet Akyapı", role: "Destek Lideri", email: "ahmet@kervantekstil.com.tr" },
   { id: "zeynep", name: "Zeynep Kaya", role: "Destek Uzmanı", email: "zeynep@kervantekstil.com.tr" },
   { id: "mert", name: "Mert Aksoy", role: "Satış Sorumlusu", email: "mert@kervantekstil.com.tr" },
   { id: "selin", name: "Selin Arslan", role: "Satış Temsilcisi", email: "selin@kervantekstil.com.tr" },
@@ -269,18 +269,18 @@ type Draft = {
 /* Gelen kutusunun son sekiz günü elle yazıldı; müşteri sayıysa geciken
    siparişin sahibi (siparişler üretildiği için adı burada bilinmez). */
 const DRAFTS: readonly Draft[] = [
-  { back: 0, at: "10:12", subject: "Siparişimiz hâlâ teslim edilmedi", customerId: 0, channel: "Telefon", priority: "Acil", status: "Açık", assignee: "elif", firstResponseMin: 6, tags: ["Kargo", "Gecikme"], messages: 3, watchers: ["can", "mert"], order: 0, preview: "Kargo takip numarası 4 gündür aynı aktarma merkezinde görünüyor. Hafta sonu açılışımız var." },
-  { back: 0, at: "09:47", subject: "Kasım faturasında KDV iki kez yansımış", customerId: "defne", channel: "E-Posta", priority: "Yüksek", status: "Açık", assignee: "burak", firstResponseMin: 18, tags: ["Fatura"], messages: 2, watchers: ["elif"], order: "son", preview: "Fatura toplamı sipariş onayından 2.312 TL fazla. Düzeltilmiş faturayı bekliyoruz." },
+  { back: 0, at: "10:12", subject: "Siparişimiz hâlâ teslim edilmedi", customerId: 0, channel: "Telefon", priority: "Acil", status: "Açık", assignee: "ahmet", firstResponseMin: 6, tags: ["Kargo", "Gecikme"], messages: 3, watchers: ["can", "mert"], order: 0, preview: "Kargo takip numarası 4 gündür aynı aktarma merkezinde görünüyor. Hafta sonu açılışımız var." },
+  { back: 0, at: "09:47", subject: "Kasım faturasında KDV iki kez yansımış", customerId: "defne", channel: "E-Posta", priority: "Yüksek", status: "Açık", assignee: "burak", firstResponseMin: 18, tags: ["Fatura"], messages: 2, watchers: ["ahmet"], order: "son", preview: "Fatura toplamı sipariş onayından 2.312 TL fazla. Düzeltilmiş faturayı bekliyoruz." },
   { back: 0, at: "09:05", subject: "Toplu yenileme için teklif rica ediyoruz", customerId: "atlas", channel: "E-Posta", priority: "Normal", status: "Açık", assignee: "mert", firstResponseMin: null, tags: ["Teklif"], messages: 1, preview: "Üç otelimizde 420 oda için havlu ve nevresim yenilemesi planlıyoruz; Aralık teslim mümkün mü?" },
   { back: 0, at: "08:31", subject: "Web mağazada ödeme adımı hata veriyor", customerId: "mavi", channel: "Canlı Sohbet", priority: "Yüksek", status: "Açık", assignee: "zeynep", firstResponseMin: 2, tags: ["Web Mağaza", "Ödeme"], messages: 6, watchers: ["can"], preview: "Kartla ödemede '3D doğrulama tamamlanamadı' uyarısı çıkıyor, iki kez denedim." },
   { back: 1, at: "17:20", subject: "Peştemal renk kartelası isteği", customerId: "lavanta", channel: "Web Formu", priority: "Düşük", status: "Beklemede", assignee: "selin", firstResponseMin: 41, tags: ["Numune"], messages: 2, preview: "Yeni spa katımız için toprak tonlarında peştemal arıyoruz, kartela gönderebilir misiniz?" },
-  { back: 1, at: "15:02", subject: "Kargo gecikmesi: açılış haftası", customerId: 1, channel: "E-Posta", priority: "Acil", status: "Açık", assignee: "can", firstResponseMin: 12, tags: ["Kargo", "Gecikme"], messages: 4, watchers: ["elif"], order: 1, preview: "Sipariş beş gündür yolda görünüyor. Teslim tarihi için net bir gün verebilir misiniz?" },
+  { back: 1, at: "15:02", subject: "Kargo gecikmesi: açılış haftası", customerId: 1, channel: "E-Posta", priority: "Acil", status: "Açık", assignee: "can", firstResponseMin: 12, tags: ["Kargo", "Gecikme"], messages: 4, watchers: ["ahmet"], order: 1, preview: "Sipariş beş gündür yolda görünüyor. Teslim tarihi için net bir gün verebilir misiniz?" },
   { back: 1, at: "11:44", subject: "Bornoz bedenleri karışık gelmiş", customerId: "nehir", channel: "Telefon", priority: "Normal", status: "Beklemede", assignee: "zeynep", firstResponseMin: 9, tags: ["İade", "Ürün"], messages: 5, order: "son", preview: "L beden yerine 30 adet M gelmiş. Değişim için kuryeyi ne zaman gönderirsiniz?" },
   { back: 2, at: "16:35", subject: "Bayi fiyat listesi güncellemesi", customerId: "ege", channel: "E-Posta", priority: "Normal", status: "Çözüldü", assignee: "mert", firstResponseMin: 33, tags: ["Fiyat"], messages: 3, satisfied: true, preview: "2027 fiyat listesini PDF olarak paylaşabilir misiniz?" },
   { back: 2, at: "10:10", subject: "Havlu dokuma sıklığı hakkında soru", customerId: "cinar", channel: "Canlı Sohbet", priority: "Düşük", status: "Çözüldü", assignee: "zeynep", firstResponseMin: 1, tags: ["Ürün"], messages: 4, satisfied: true, preview: "500 gr/m² ile 600 gr/m² arasındaki fark kurumada ne kadar?" },
   { back: 3, at: "13:25", subject: "Siparişin teslim adresi değişecek", customerId: 2, channel: "Telefon", priority: "Yüksek", status: "Beklemede", assignee: "can", firstResponseMin: 4, tags: ["Kargo"], messages: 3, order: 2, preview: "Mağaza taşındı; yeni adres Menteşe Kordon Caddesi No. 14. Kargoya iletir misiniz?" },
   { back: 3, at: "09:58", subject: "Fatura adresi yanlış görünüyor", customerId: "kuzey", channel: "Web Formu", priority: "Normal", status: "Çözüldü", assignee: "burak", firstResponseMin: 27, tags: ["Fatura"], messages: 2, satisfied: true, preview: "Faturada eski vergi dairesi yazıyor, Karadeniz VD olmalı." },
-  { back: 4, at: "18:05", subject: "Hafta sonu teslimat seçeneği var mı?", customerId: "defne", channel: "Canlı Sohbet", priority: "Düşük", status: "Çözüldü", assignee: "elif", firstResponseMin: 1, tags: ["Kargo"], messages: 3, satisfied: true, preview: "Cumartesi resepsiyon açık, teslimat o gün yapılabilir mi?" },
+  { back: 4, at: "18:05", subject: "Hafta sonu teslimat seçeneği var mı?", customerId: "defne", channel: "Canlı Sohbet", priority: "Düşük", status: "Çözüldü", assignee: "ahmet", firstResponseMin: 1, tags: ["Kargo"], messages: 3, satisfied: true, preview: "Cumartesi resepsiyon açık, teslimat o gün yapılabilir mi?" },
   { back: 4, at: "14:12", subject: "Masa örtüsünde leke var", customerId: "cinar", channel: "E-Posta", priority: "Normal", status: "Çözüldü", assignee: "zeynep", firstResponseMin: 22, tags: ["İade", "Ürün"], messages: 5, satisfied: false, preview: "40 örtünün 6'sında aynı yerde sarı leke var; fotoğrafları ekledim." },
   { back: 4, at: "10:40", subject: "Bayi paneline giriş yapılamıyor", customerId: "ege", channel: "Telefon", priority: "Yüksek", status: "Çözüldü", assignee: "can", firstResponseMin: 3, tags: ["Hesap"], messages: 2, satisfied: true, preview: "Şifre sıfırlama e-postası gelmiyor." },
   { back: 5, at: "16:50", subject: "Logo nakışı için fiyat", customerId: "atlas", channel: "E-Posta", priority: "Normal", status: "Çözüldü", assignee: "selin", firstResponseMin: 46, tags: ["Teklif"], messages: 4, satisfied: true, preview: "Bornozlara göğüs nakışı eklenirse adet başı ne kadar artar?" },
@@ -581,7 +581,7 @@ const ev = (id: string, d: number, at: string, minutes: number, rest: Omit<Calen
 };
 
 export const EVENTS: readonly CalendarEvent[] = [
-  ev("e1", 2, "11:30", 30, { title: "Haftalık Destek Toplantısı", kind: "İç Toplantı", owner: "elif", place: "Toplantı Odası" }),
+  ev("e1", 2, "11:30", 30, { title: "Haftalık Destek Toplantısı", kind: "İç Toplantı", owner: "ahmet", place: "Toplantı Odası" }),
   ev("e2", 2, "14:00", 45, { title: "Toplu Yenileme Teklifi Görüşmesi", customerId: "atlas", kind: "Görüşme", owner: "mert", place: "Görüntülü Görüşme" }),
   ev("e3", 3, "10:00", 60, { title: "Açılış Öncesi Teslimat", customerId: DELAYED[0]?.customerId ?? "cinar", kind: "Teslimat", owner: "can", place: "Müşteri Adresi" }),
   ev("e4", 4, "15:30", 30, { title: "Peştemal Kartelası Sunumu", customerId: "lavanta", kind: "Numune", owner: "selin", place: "Görüntülü Görüşme" }),
@@ -590,7 +590,7 @@ export const EVENTS: readonly CalendarEvent[] = [
   ev("e7", 10, "11:00", 45, { title: "Bayi Yıllık Değerlendirme", customerId: "ege", kind: "Görüşme", owner: "mert", place: "Muğla Mağazası" }),
   ev("e8", 12, "14:30", 30, { title: "Fatura Mutabakatı", customerId: "defne", kind: "Görüşme", owner: "burak", place: "Telefon" }),
   ev("e9", 17, "10:30", 60, { title: "Yeni Sezon Numune Teslimi", customerId: "mavi", kind: "Numune", owner: "selin", place: "İzmir Showroom" }),
-  ev("e10", 19, "16:00", 30, { title: "Çeyrek Kapanış Toplantısı", kind: "İç Toplantı", owner: "elif", place: "Toplantı Odası" }),
+  ev("e10", 19, "16:00", 30, { title: "Çeyrek Kapanış Toplantısı", kind: "İç Toplantı", owner: "ahmet", place: "Toplantı Odası" }),
   ev("e11", 24, "09:00", 90, { title: "Otel Açılışı Toplu Teslimat", customerId: "atlas", kind: "Teslimat", owner: "can", place: "Atlas Pera" }),
   ev("e12", 26, "15:00", 45, { title: "Logo Nakışı Onay Görüşmesi", customerId: "atlas", kind: "Görüşme", owner: "selin", place: "Görüntülü Görüşme" }),
 ];
@@ -651,7 +651,7 @@ export const BOARD: readonly BoardColumn[] = [
 
 export type MyTask = { id: string; title: string; done: boolean; priority?: "high" | "medium" | "low"; due?: string; subtasks?: readonly { id: string; title: string; done: boolean }[] };
 
-/** Elif'in (Destek Lideri) bugünkü listesi. */
+/** Ahmet'in (Destek Lideri) bugünkü listesi. */
 export const MY_TASKS: readonly MyTask[] = [
   { id: "b1", title: `${delayedName(0)} ile açılış öncesi teslimatı teyit et`, done: false, priority: "high", due: "2026-11-02" },
   {

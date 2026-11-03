@@ -332,7 +332,7 @@ export default function VitrinBloklar() {
             }}
             groups={NAV}
             current={CURRENT}
-            user={{ name: "Elif Yıldırım", detail: "Destek Ekibi" }}
+            user={{ name: "Ahmet Akyapı", detail: "Destek Ekibi" }}
             userAction={
               <button
                 type="button"

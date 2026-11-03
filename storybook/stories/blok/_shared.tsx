@@ -59,7 +59,7 @@ export const NAV: readonly ShellNavGroup[] = [
   },
 ];
 
-export const USER = { name: "Elif Yıldırım", detail: "Destek Ekibi" };
+export const USER = { name: "Ahmet Akyapı", detail: "Destek Ekibi" };
 
 export function SignOutButton() {
   return (

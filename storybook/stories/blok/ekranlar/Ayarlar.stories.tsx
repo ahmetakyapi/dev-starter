@@ -103,7 +103,7 @@ function SettingsPage() {
                         label="E-Posta"
                         name="eposta"
                         type="email"
-                        defaultValue="elif@pusula.app"
+                        defaultValue="ahmet@pusula.app"
                         autoComplete="email"
                         hint="Değiştirirsen yeni adrese doğrulama bağlantısı gider."
                         className="sm:col-span-2"
