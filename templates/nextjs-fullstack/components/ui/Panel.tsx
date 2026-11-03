@@ -3,7 +3,9 @@ import { cn } from "@/lib/utils";
 
 /**
  * Panel: sayfanın temel yüzeyi. Derinlik GÖLGEYLE DEĞİL ton farkı + tek
- * piksellik çizgiyle; cam efekti burada yok (gerekiyorsa `glass` sınıfı).
+ * piksellik, üstten ışıklı kenarla (`edge-lit`: kenar yukarıda parlak, aşağı
+ * doğru söner; koyu temada düz çizginin kaybolduğu yerde yüzeyi çizer).
+ * Cam efekti burada yok (gerekiyorsa `glass` sınıfı).
  *
  * Her panelin bir başlığı olur (`PanelHeader`, h2). Başlıksız panelin nerede
  * başladığı yalnızca çizgiden anlaşılır; ekran okuyucu ise hiç anlamaz.
@@ -15,7 +17,7 @@ import { cn } from "@/lib/utils";
  * `scrollWidth` ölçümü bunu göstermedi.
  */
 export function Panel({ className, ...props }: ComponentProps<"section">) {
-  return <section className={cn("surface min-w-0 rounded-lg p-5 sm:p-6", className)} {...props} />;
+  return <section className={cn("edge-lit min-w-0 rounded-lg bg-surface p-5 sm:p-6", className)} {...props} />;
 }
 
 type PanelHeaderProps = {

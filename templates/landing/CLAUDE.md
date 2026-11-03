@@ -146,6 +146,9 @@ Tokenlar `app/globals.css` içinde, iki katman:
   **Radius:** `rounded-sm md lg xl` (+ `rounded-full`).
 - **Yüzey:** `surface` varsayılan (ton farkı + hairline). `glass` isteğe bağlı,
   yalnızca arkasında hareket eden içerik varsa. `app-bg` köşe ışımaları.
+  `edge-lit` üstten ışıklı kenar (panel, vitrin kartı; tekrar eden satıra
+  değil). Giriş alanı `shadow-well` ile içe oyulur, odakta `shadow-focus`
+  halesi 2 px çizginin yanına gelir. Gölge taşıyan karo ayrıca `border` almaz.
 - Tema çerezde, sayfa yine statik (`○`): layout varsayılanı basar,
   `<head>`deki küçük script (`lib/theme.ts` → `THEME_SCRIPT`) ilk boyamadan
   önce çerezdeki temayı ve `theme-color`ı yazar (guides/03 § 2b). Düğme

@@ -51,7 +51,7 @@ export function Features() {
       <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.items.map((feature, index) => (
           <RevealItem key={feature.title} as="li" index={index} className={cn("min-w-0", SPANS[index])}>
-            <article className="flex h-full flex-col rounded-2xl bg-surface p-2">
+            <article className="edge-lit flex h-full flex-col rounded-2xl bg-surface p-2">
               {/* Demo süs değil ama BİLGİ de değil: aynı bilgi başlık ve
                   cümlede. Ekran okuyucu hareketli listeyi duymasın. */}
               <div aria-hidden className="h-60 overflow-hidden rounded-xl p-3 sm:p-4">

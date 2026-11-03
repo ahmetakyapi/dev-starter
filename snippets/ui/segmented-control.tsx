@@ -80,7 +80,7 @@ export function SegmentedControl<T extends string>({
       <div
         role="radiogroup"
         aria-label={props["aria-label"]}
-        className={cn("inline-flex w-fit max-w-full gap-0.5 overflow-x-auto rounded-md bg-surface-sunken p-1 [scrollbar-width:none]", className)}
+        className={cn("inline-flex w-fit max-w-full gap-0.5 overflow-x-auto rounded-md bg-surface-sunken shadow-well p-1 [scrollbar-width:none]", className)}
       >
         {options.map((option, index) => {
           const selected = option.value === value;

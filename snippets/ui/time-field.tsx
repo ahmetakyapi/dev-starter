@@ -198,8 +198,8 @@ export function TimeField({
           if (event.target === event.currentTarget) focusSegment(parts.h === null ? "h" : "m");
         }}
         className={cn(
-          "flex min-h-11 w-full max-w-40 cursor-text items-center justify-between gap-2 rounded-md border border-line-strong bg-surface-sunken px-2 text-base font-semibold transition-colors",
-          "hover:border-primary-soft has-focus:border-line-focus",
+          "flex min-h-11 w-full max-w-40 cursor-text items-center justify-between gap-2 rounded-md border border-line-strong bg-surface-sunken shadow-well px-2 text-base font-semibold transition-[color,background-color,border-color,box-shadow]",
+          "hover:border-primary-soft has-focus:border-line-focus has-focus:shadow-focus",
           error && "border-danger",
           disabled && "pointer-events-none opacity-50",
         )}

@@ -71,12 +71,24 @@
   --accent-warm: #a4720f;
   /* Katmanlı, kısa gölge: bir kıl çizgisi + yumuşak yayılma. Uzun ve tek
      katmanlı gölge "yüzen kart" klişesi; burada kart neredeyse yere basar. */
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05), 0 1px 3px rgb(0 0 0 / 0.07);
-  --shadow-md: 0 1px 1px rgb(0 0 0 / 0.04), 0 6px 16px -4px rgb(0 0 0 / 0.1);
-  --shadow-overlay: 0 0 0 1px rgb(0 0 0 / 0.04), 0 24px 48px -12px rgb(0 0 0 / 0.18);
-  /* Dolgulu düğme: üst kenarda ince ışık + kısa yer gölgesi. Degradeyle
-     birlikte düğmeye "basılabilir" bir hacim verir; tek başına parlama değil. */
-  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 1px 2px rgb(0 0 0 / 0.14);
+  /* Gölge merdiveni şablonların globals.css'iyle birebir (2026-11 işçilik
+     turu): katmanlı, negatif yayılmalı; önce kıl kenar, sonra yumuşak düşüş. */
+  --shadow-sm: 0 0 0 1px rgb(10 10 10 / 0.035), 0 1px 1px -0.5px rgb(10 10 10 / 0.08), 0 2px 6px -2px rgb(10 10 10 / 0.08);
+  --shadow-md: 0 0 0 1px rgb(10 10 10 / 0.04), 0 2px 4px -1px rgb(10 10 10 / 0.06), 0 8px 16px -4px rgb(10 10 10 / 0.08), 0 16px 32px -12px rgb(10 10 10 / 0.12);
+  --shadow-overlay: 0 0 0 1px rgb(10 10 10 / 0.05), 0 4px 8px -2px rgb(10 10 10 / 0.06), 0 16px 32px -8px rgb(10 10 10 / 0.12), 0 32px 64px -16px rgb(10 10 10 / 0.2);
+  /* Dolgulu düğme: üstte ışık, altta gölge çizgisi, dışta kıl çizgi ve
+     dolgunun kendi renginde kısa düşüş. */
+  --shadow-button:
+    inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 -1px 0 rgb(0 0 0 / 0.12), 0 0 0 1px rgb(10 10 10 / 0.06),
+    0 1px 2px rgb(10 10 10 / 0.12), 0 6px 14px -6px color-mix(in srgb, var(--primary) 55%, transparent);
+  /* Kuyu (giriş alanı, bölümlü denetim rayı): içe tek piksellik gölge. */
+  --shadow-inset: inset 0 1px 2px rgb(10 10 10 / 0.06);
+  /* Odak halesi: 2 px'lik odak çizgisinin (WCAG) dışına vurgunun %18'iyle
+     yumuşak bir hale. Çizgiyi DEĞİŞTİRMEZ, yanına konur; tek başına 3:1'i
+     tutmaz. Yalnızca metin alanlarında (`shadow-focus`). */
+  --shadow-ring: 0 0 0 4px color-mix(in srgb, var(--line-focus, var(--primary)) 18%, transparent);
+  /* `edge-lit` kenarı: ışık yukarıdan düşer. */
+  --edge-light: linear-gradient(180deg, rgb(10 10 10 / 0.04), rgb(10 10 10 / 0.05) 60%, rgb(10 10 10 / 0.08));
   /* Veri rengi: grafik serileri ve lejant noktası. METİN DEĞİL (açık
      zeminde AA tutmaz); değer her zaman yanında `text-strong` ile yazılır.
      Sıra sabit: ilk seri hep chart-1. Pastel ve eşit parlaklıkta, hiçbiri
@@ -121,10 +133,14 @@
   --accent-warm: #d3a04a;
   /* Koyuda gölge görünmez; derinliği karonun ÜST KENARINDAKİ ışık çizgisi
      taşır (ışık yukarıdan düşer). Açık temada bu katman yok. */
-  --shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow-md: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 1px 1px rgb(0 0 0 / 0.3), 0 8px 20px -6px rgb(0 0 0 / 0.5);
-  --shadow-overlay: 0 0 0 1px rgb(255 255 255 / 0.06), 0 24px 48px -12px rgb(0 0 0 / 0.6);
-  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.6), 0 2px 6px -2px rgb(0 0 0 / 0.5);
+  --shadow-md: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.04), 0 2px 4px -1px rgb(0 0 0 / 0.4), 0 8px 16px -4px rgb(0 0 0 / 0.45), 0 16px 32px -8px rgb(0 0 0 / 0.6);
+  --shadow-overlay: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.04), 0 4px 8px -2px rgb(0 0 0 / 0.4), 0 16px 32px -8px rgb(0 0 0 / 0.55), 0 32px 64px -16px rgb(0 0 0 / 0.75);
+  --shadow-button:
+    inset 0 1px 0 rgb(255 255 255 / 0.24), inset 0 -1px 0 rgb(0 0 0 / 0.16), 0 0 0 1px rgb(0 0 0 / 0.5),
+    0 2px 6px rgb(0 0 0 / 0.35), 0 10px 20px -10px color-mix(in srgb, var(--primary) 45%, transparent);
+  --shadow-inset: inset 0 1px 2px rgb(0 0 0 / 0.45);
+  --edge-light: linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.06) 35%, rgb(255 255 255 / 0.04));
   --chart-1: #a3e635;
   --chart-2: #60a5fa;
   --chart-3: #c084fc;
@@ -513,6 +529,8 @@
   --shadow-floating: var(--shadow-md);
   --shadow-modal: var(--shadow-overlay);
   --shadow-cta: var(--shadow-button);
+  --shadow-well: var(--shadow-inset);
+  --shadow-focus: var(--shadow-ring);
 
   /* Grafik serileri: `bg-chart-1`, `fill-chart-2`, `stroke-chart-track`. */
   --color-chart-1: var(--chart-1);
@@ -546,12 +564,16 @@
   --text-lead--line-height: 1.6;
   --text-title: 1.25rem;
   --text-title--line-height: 1.4;
+  --text-title--letter-spacing: -0.01em;
   --text-heading: 1.5rem;
   --text-heading--line-height: 1.25;
+  --text-heading--letter-spacing: -0.02em;
   --text-display: 2.25rem;
   --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.03em;
   --text-hero: clamp(2.5rem, 6vw, 4.5rem);
   --text-hero--line-height: 1.02;
+  --text-hero--letter-spacing: -0.035em;
 
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
@@ -582,4 +604,34 @@
    durakta AA. Ekranda tek birincil eylem bunu taşır: `bg-cta text-on-brand`. */
 @utility bg-cta {
   background-image: var(--cta-gradient);
+}
+
+/* Üstten ışıklı kenar: tek renkli kıl çizgi yerine yukarıdan aşağı sönen
+   kenar. Vitrin kartı, panel, diyalog gibi "nesne" yüzeylerde; tekrar eden
+   satırda kullanma. Maskeli sözde öğe: yarı saydam zeminde de çalışır.
+   Şablonların globals.css'iyle birebir. */
+@utility edge-lit {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--edge-light);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  @media (forced-colors: active) {
+    &::before {
+      display: none;
+    }
+  }
 }

@@ -131,7 +131,7 @@ export function NumberField({
       >
         <Base.Group
           className={cn(
-            "flex w-full items-center gap-1 rounded-md border border-line-strong bg-surface-sunken p-1 transition-colors hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus data-disabled:opacity-50",
+            "flex w-full items-center gap-1 rounded-md border border-line-strong bg-surface-sunken shadow-well p-1 transition-[color,background-color,border-color,box-shadow] hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:shadow-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus data-disabled:opacity-50",
             error && "border-danger",
           )}
         >

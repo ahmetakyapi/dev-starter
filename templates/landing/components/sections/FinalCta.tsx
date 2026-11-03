@@ -17,7 +17,7 @@ export function FinalCta() {
   return (
     <section aria-labelledby="kapanis-baslik" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6 sm:pb-28">
       <Reveal>
-        <div className="rounded-2xl bg-surface px-6 py-16 text-center sm:px-12 sm:py-24">
+        <div className="edge-lit rounded-2xl bg-surface px-6 py-16 text-center sm:px-12 sm:py-24">
           <h2 id="kapanis-baslik" className="hero-display mx-auto max-w-4xl font-semibold">
             <Phrases text={finalCta.title} heading />
           </h2>

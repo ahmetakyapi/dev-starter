@@ -19,7 +19,7 @@ export function Frame({
 }) {
   const w = { sm: "max-w-xs", md: "max-w-md", lg: "max-w-2xl", xl: "max-w-4xl", full: "max-w-none" }[width];
   return (
-    <div className={cn("w-[min(100vw-2rem,64rem)] rounded-2xl bg-surface p-6 sm:p-10", className)}>
+    <div className={cn("w-[min(100vw-2rem,64rem)] rounded-2xl bg-surface edge-lit p-6 sm:p-10", className)}>
       <div className={cn("mx-auto w-full", w)}>{children}</div>
     </div>
   );
@@ -35,7 +35,7 @@ export function Cell({ label, children, className }: { label: string; children: 
   return (
     // h-full + flex-1: galeride yan yana hücreler EŞİT boy (içerik kısa olsa da).
     <figure className="flex h-full flex-col gap-3">
-      <div className={cn("grid min-h-40 flex-1 place-items-center rounded-2xl bg-surface p-6", className)}>{children}</div>
+      <div className={cn("grid min-h-40 flex-1 place-items-center rounded-2xl bg-surface edge-lit p-6", className)}>{children}</div>
       <figcaption className="px-1 text-small font-medium text-muted">{label}</figcaption>
     </figure>
   );

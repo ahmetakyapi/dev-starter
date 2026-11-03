@@ -515,3 +515,38 @@ degrade disiplini (üç yer, tek aile), punto ölçeği, imza eğrisi.
 **Etkisi:** `@ahmetakyapi/theme` kullanan proje yükseltince zemin `#f7f9fb`
 → `#ffffff` (koyu `#070d16` → `#0c0c0d`) olur. `@ahmetakyapi/ui` `Button`
 `primary` artık `bg-cta` (degrade) + `shadow-cta`; yeni `soft` varyantı.
+
+## İşçilik Turu — Gölge Merdiveni, Işıklı Kenar, Kuyu (2026-11-03)
+
+**Karar:** ui.wensity.com'un derinlik dilinden ÖĞRENİLDİ, kodu alınmadı.
+Sitenin hesaplanmış stilleri (tarayıcıda `getComputedStyle`) ölçüldü;
+değerler kendi token'larımıza uyarlandı. Board dili (kuyu + karo, nötr
+sistem, degrade disiplini) DEĞİŞMEDİ; yalnızca derinliğin işçiliği arttı.
+
+**Ne alındı (dil, değer değil):**
+
+- **Gölge merdiveni:** her basamak katmanlı ve negatif yayılmalı (kıl
+  kenar + içeri çekilmiş yumuşak düşüş); koyuda üst kenarda ışık çizgisi
+  ve %4'lük beyaz halka. `raised` açıkta da %3,5'lik halka taşır: beyaz
+  karo beyaz sayfada ayrışır.
+- **Basılabilir düğme:** üstte ışık, altta gölge çizgisi, dış kıl halka ve
+  dolgunun kendi renginde (`color-mix`, `--primary`) kısa düşüş. Gri gölge
+  dolguyu kirli gösterir; renkli düşüş düğmeyi zemine bağlar.
+- **Kuyu ve odak halesi:** giriş alanları ve bölümlü denetim rayı içe
+  oyulur (`shadow-well`); odakta 2 px çizginin yanına vurgunun %18'iyle
+  4 px hale (`shadow-focus`). Çizgi WCAG'i tutar, hale yalnızca yumuşatır.
+- **Üstten ışıklı kenar (`edge-lit`):** vitrin kartı, panel, landing
+  panosu, özellik kartı, fiyat, SSS ve kapanış kuyusu. Koyuda düz çizgi
+  yerine yukarıdan sönen kenar.
+- **Sıkı display:** harf aralığı punto basamağıyla gelir (hero −0.035em).
+
+**Alınmayan:** kırmızı marka, WebGL sıvı metal düğme, imleci izleyen
+etiket ve reklam alanları (bizim paletimiz ve "nedeni tek cümleyle
+yazılamayan hareket eklenmez" kuralı). Açık temada `#fafafa` zemin:
+board dilinin saf beyaz sayfa + gri kuyu ayrımını bozardı.
+
+**Etkisi:** token adları aynı, değerler değişti; mevcut proje `globals.css`
+sistem bloklarını şablondan alınca bütün bileşenler yeni derinliği alır.
+Yeni sınıflar (`shadow-well`, `shadow-focus`, `edge-lit`) yükseltilmemiş
+projede derlenmez; `scripts/add-ui.mjs` eksik token'ı uyarır.
+

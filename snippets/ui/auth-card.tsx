@@ -66,7 +66,7 @@ const DEFAULT_PROVIDERS: readonly AuthProvider[] = [
 ];
 
 const FIELD =
-  "min-h-11 w-full rounded-md border border-line-strong bg-surface-sunken px-3 text-base text-strong transition-colors placeholder:text-muted hover:border-primary-soft focus-visible:border-line-focus aria-invalid:border-danger";
+  "min-h-11 w-full rounded-md border border-line-strong bg-surface-sunken shadow-well px-3 text-base text-strong transition-[color,background-color,border-color,box-shadow] placeholder:text-muted hover:border-primary-soft focus-visible:border-line-focus focus-visible:shadow-focus aria-invalid:border-danger";
 
 export function AuthCard({
   action,

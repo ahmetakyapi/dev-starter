@@ -101,7 +101,10 @@ farkından gelir.
 | `--surface` | `bg-surface` | Kart = gri **kuyu**. İçindeki karo `bg-overlay shadow-raised`; kart içinde kart yok |
 | `--overlay` | `bg-overlay` | Karo, menü, diyalog. Açıkta beyaz, koyuda zeminden **açık** (`#18181a`) |
 | `--shadow-sm/md` | `shadow-raised/floating` | Açıkta kısa katmanlı gölge; koyuda üst kenarda 1 px ışık çizgisi (gölge koyuda görünmez, ışık görünür) |
-| `--shadow-button` | `shadow-cta` | Dolgulu düğme: üst kenar ışığı + kısa yer gölgesi |
+| `--shadow-button` | `shadow-cta` | Dolgulu düğme: üstte ışık, altta gölge çizgisi, kıl halka, dolgunun kendi renginde kısa düşüş |
+| `--shadow-inset` | `shadow-well` | Kuyu: giriş alanı, bölümlü denetim ve sekme rayı içe oyulur (düğme yükselir, alan çöker) |
+| `--shadow-ring` | `shadow-focus` | Metin alanında odak halesi; 2 px odak çizgisinin YANINA konur, yerine değil |
+| `--edge-light` | `edge-lit` | Üstten ışıklı kenar: vitrin kartı, panel, pano kabuğu. Tekrar eden satıra değil |
 | `--chart-1…6` | `bg-chart-N`, `stroke-chart-N`, `fill-chart-N` | Veri serisi. Metin rengi DEĞİL; sıra sabit, lejantla aynı |
 | `--chart-track` / `--chart-ink` | `bg-chart-track`, `text-chart-ink` | Çubuğun boş izi; pastel dolgu üstündeki ikon/hap metni (her seride AA, testli) |
 | `--radius-2xl` | `rounded-2xl` | 32 px vitrin kartı / büyük panel kabuğu |
@@ -200,6 +203,12 @@ Punto da rol adıyla yazılır:
 }
 ```
 
+**Harf aralığı basamakla gelir (2026-11).** `title` −0.01em, `heading`
+−0.02em, `display` −0.03em, `hero` −0.035em (`--text-*--letter-spacing`);
+gövde basamakları normal aralıkta kalır. Büyük puntoda varsayılan aralık
+harfleri koparır, başlık kelime bloğu yerine harf dizisi okunur. `text-hero`
+yazan öğe aralığı kendiliğinden alır; ayrıca `tracking-*` yazma.
+
 **Tuzak 1 — `--text-body` çakışması.** Tailwind v4'te `--text-*` ad alanı
 PUNTO demektir. Renk token'ı `--text-body` de `text-body` sınıfını üretmek
 ister. Bu yüzden gövde puntosunun adı `read`dir, `body` değil; renk tarafı
@@ -267,10 +276,25 @@ const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-manrop
   Ölçek basamağına denk gelmeyen sonuç en yakın **alt** basamağa iner.
   `design-reviewer` bunu ekranda `getComputedStyle` ile ölçer.
   (Formül: elayadesign/ai-design-skills, MIT; bizim ölçeğe uyarlandı.)
-- **Tek gerçek gölge.** Açılış Zili derinliği gölgeyle değil ton farkıyla
-  kurar; gölge yalnızca gerçekten havada duran katmanda (`--shadow-overlay`:
-  menü, diyalog). ElevenForge iki katmanlı gölge kullanır (yakın keskin +
-  uzak yumuşak); ikisini de yapma, birini seç.
+- **Gölge merdiveni (2026-11 işçilik turu).** Derinlik hâlâ önce ton
+  farkıyla kurulur; gölge yalnızca karoda (`raised`), yüzen öğede
+  (`floating`) ve katmanda (`modal`). Her basamak **katmanlı ve negatif
+  yayılmalı**: önce kenarı keskinleştiren 1 px kıl halka ya da kıl gölge,
+  sonra kenardan içeri çekilmiş (`-2px`, `-8px`, `-16px`) yumuşak düşüş.
+  Tek ve geniş gölge bulanık bir hale çizer ("yüzen kart" klişesi);
+  negatif yayılma gölgeyi karonun altına toplar, karo zemine basar. Koyuda
+  her basamağın başında `inset 0 1px 0` ışık çizgisi: ışık yukarıdan düşer.
+  Kıl halkalı gölge taşıyan karo AYRICA `border` almaz; iki çizgi üst üste
+  binip kenarı kalınlaştırır (`Button secondary` bu yüzden çizgisiz).
+- **Üstten ışıklı kenar (`edge-lit`).** Koyu temada büyük kuyunun kenarı
+  ton farkıyla seçilmez; düz `border` ise her kenarda aynı ağırlıkta, cansız
+  durur. `edge-lit` kenarı maskeli sözde öğeyle çizer: üstte parlak (%16),
+  aşağı doğru söner (%4). Yarı saydam zeminde de çalışır (`border-image`
+  radius'u yok sayar, `background-clip` hilesi opak zemin ister). Öğenin
+  kendi `::before`u varsa sınıfı dış sarmalayıcıya ver.
+- **Basış ölçekle.** Düğme `active:scale-[0.98]` (paket `0.97`); geçiş
+  listesinde `transform` değil `scale` yazılır: v4 `scale-*`i bağımsız
+  `scale` özelliğine derler, `transform` listedeyse basış hiç yumuşamaz.
 - **Aralık Tailwind'in 4 px ızgarası.** Paneller arası `gap-5`, panel içi
   `p-5 sm:p-6`. Rastgele `mt-[13px]` yok; ölçü bir karar ise yorumuna yaz.
 

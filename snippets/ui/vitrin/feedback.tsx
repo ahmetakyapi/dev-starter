@@ -57,8 +57,8 @@ function Showcase({
       <div
         className={
           stage === "center"
-            ? "grid min-h-64 flex-1 place-items-center rounded-2xl bg-surface p-5 sm:p-8"
-            : "flex-1 rounded-2xl bg-surface p-5 sm:p-8"
+            ? "grid min-h-64 flex-1 place-items-center rounded-2xl bg-surface edge-lit p-5 sm:p-8"
+            : "flex-1 rounded-2xl bg-surface edge-lit p-5 sm:p-8"
         }
       >
         {children}

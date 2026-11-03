@@ -41,6 +41,7 @@ bakılarak doğrulandı)
 | Alt bilgi (footer) | [footer.design](https://www.footer.design/) | Üslup filtreli alt bilgi galerisi (tipografik, minimal, koyu, cesur), "Visit website" | Benten Woodring ve Devin Fountain'ın boş zaman projesi; ana sayfada bir sponsorlu kart var |
 | 404 sayfası | [404s.design](https://www.404s.design/) | 1440 piksel görüntüler, üslup/etkileşim/sektör filtresi; her kart asıl 404 sayfasına gider | Finnian Sturdy ("by FS"); Mobbin sponsorlu kartı var |
 | Grafik kartı, pano, sohbet arayüzü | [boardui.com](https://www.boardui.com/) | Bileşen ve grafik vitrini: nötr yüzey, pastel seri renkleri, palet değiştirici | Ücretsiz bileşenleri MIT; grafikler ve şablonlar ücretli (BoardUI License). Dili `decisions.md` → "Board Görsel Dili"nde ekosisteme uyarlandı, kodu alınmadı |
+| Derinlik, düğme hacmi, bileşen sayfası | [ui.wensity.com](https://ui.wensity.com/) | Animasyonlu bileşen ve blok kataloğu: katmanlı negatif yayılmalı gölgeler, üstten ışıklı kart kenarı, iç ve dış halkalı CTA, içe oyulmuş giriş alanı, sıkı display başlık | Ücretli (Pro) + MIT ücretsiz katman. Dili `decisions.md` → "İşçilik Turu"nda ekosisteme uyarlandı, kodu alınmadı |
 | Bento ızgara | [bentogrids.com](https://bentogrids.com/) | 285 bento düzeni, görüntü ve kısa video; her örneğin kaynak bağlantısı | Ivan Votti. Kaynakların bir kısmı canlı site değil Dribbble/X gönderisi: yalnız görsel kavram, gerçek davranış yok |
 
 Kahraman bölümü, fiyat sayfası ve tam sayfa için henüz doğrulanmış

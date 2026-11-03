@@ -227,8 +227,8 @@ export function SearchField({
           ref.current?.focus();
         }}
         className={cn(
-          "flex w-full min-w-0 cursor-text items-center rounded-md border border-line-strong bg-surface-sunken transition-colors",
-          "hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus",
+          "flex w-full min-w-0 cursor-text items-center rounded-md border border-line-strong bg-surface-sunken shadow-well transition-[color,background-color,border-color,box-shadow]",
+          "hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:shadow-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus",
           s.box,
           disabled && "cursor-not-allowed opacity-50 hover:border-line-strong",
         )}

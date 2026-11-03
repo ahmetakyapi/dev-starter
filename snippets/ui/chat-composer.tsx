@@ -110,7 +110,7 @@ export function ChatComposer({
     <form
       onSubmit={submit}
       className={cn(
-        "rounded-xl border border-line bg-overlay p-2 shadow-floating transition-[border-color,box-shadow] focus-within:border-line-focus",
+        "rounded-xl border border-line bg-overlay p-2 shadow-floating transition-[border-color,box-shadow] focus-within:border-line-focus focus-within:shadow-focus",
         className,
       )}
     >

@@ -254,8 +254,8 @@ export function ColorPicker({
       <div className="flex flex-wrap items-center gap-3">
         <label
           className={cn(
-            "flex h-11 w-32 items-center gap-2 rounded-md border border-line-strong bg-surface-sunken px-3 transition-colors pointer-fine:h-9",
-            "hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus",
+            "flex h-11 w-32 items-center gap-2 rounded-md border border-line-strong bg-surface-sunken shadow-well px-3 transition-[color,background-color,border-color,box-shadow] pointer-fine:h-9",
+            "hover:border-primary-soft has-[input:focus-visible]:border-line-focus has-[input:focus-visible]:shadow-focus has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-line-focus",
             (draftInvalid || error) && "border-danger",
           )}
         >

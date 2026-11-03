@@ -24,7 +24,7 @@ export function Faq() {
           </a>
         </div>
         <Reveal className="lg:col-span-7">
-          <div className="divide-y divide-line rounded-2xl bg-surface px-5 sm:px-7">
+          <div className="edge-lit divide-y divide-line rounded-2xl bg-surface px-5 sm:px-7">
             {faq.items.map((item) => (
               <details key={item.question} className="faq-item group">
                 <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 py-5 text-read font-semibold text-strong [&::-webkit-details-marker]:hidden">
