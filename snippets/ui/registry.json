@@ -135,6 +135,29 @@
       "palettes": false
     },
     {
+      "name": "assignee-picker",
+      "title": "Kişi Seçici",
+      "category": "Düğme ve İkon",
+      "description": "Kişi atama: talep, görev, kart (tekli ya da çoklu)",
+      "file": "snippets/ui/assignee-picker.tsx",
+      "client": true,
+      "storyId": "assignee-picker",
+      "registryDependencies": [
+        "avatar",
+        "popover"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "auth-card",
       "title": "Giriş Kartı",
       "category": "Bloklar",
@@ -787,6 +810,25 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "hold-button",
+      "title": "Basılı Tut Onayı",
+      "category": "Düğme ve İkon",
+      "description": "Yıkıcı ama geri alınabilir eylemde diyalogsuz onay (arşivle, listeden çıkar)",
+      "file": "snippets/ui/hold-button.tsx",
+      "client": true,
+      "storyId": "hold-button",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

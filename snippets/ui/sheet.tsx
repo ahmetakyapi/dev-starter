@@ -193,7 +193,7 @@ export function Sheet({
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">{children}</div>
         {footer ? (
-          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:justify-end [&>*]:w-full sm:[&>*]:w-auto">
+          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:justify-end max-sm:[&>*]:w-full">
             {footer}
           </footer>
         ) : (

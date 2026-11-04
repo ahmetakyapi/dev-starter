@@ -70,7 +70,17 @@ export const WORKSPACE = {
   city: "Denizli",
   plan: "Ekip Planı",
   seats: { used: 6, total: 8 },
-  storage: { usedGb: 7.4, totalGb: 10 },
+  storage: {
+    usedGb: 7.4,
+    totalGb: 10,
+    /** Dosya alanının dökümü; toplamı `usedGb` (testte değil, burada elle tutuldu: 3,1 + 2,2 + 1,4 + 0,7). */
+    parts: [
+      { label: "Ekler", value: 3.1, series: 2 },
+      { label: "Raporlar", value: 2.2, series: 3 },
+      { label: "Sohbet", value: 1.4, series: 1 },
+      { label: "Yedek", value: 0.7, series: 5 },
+    ],
+  },
   domain: "kervantekstil.com.tr",
 } as const;
 

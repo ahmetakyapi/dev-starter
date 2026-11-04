@@ -33,6 +33,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { Announcement } from "@/components/ui/announcement";
+import { AssigneePicker } from "@/components/ui/assignee-picker";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { BannerAlert } from "@/components/ui/banner-alert";
@@ -54,6 +55,7 @@ import {
 } from "@/components/ui/context-menu";
 import { CodeBlock, installTabs } from "@/components/ui/code-block";
 import { CompareSlider } from "@/components/ui/compare-slider";
+import { HoldButton } from "@/components/ui/hold-button";
 import { Marquee } from "@/components/ui/marquee";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -156,6 +158,44 @@ const SUPPLIERS = [
   { name: "Liman Kavurma", Glyph: Flame },
   { name: "Çarşı Pazarı", Glyph: Store },
 ] as const;
+
+const CREW = TEAM.map((t, i) => ({ id: `k${i}`, name: t.name, detail: t.role }));
+
+function PickerDemo() {
+  const [roasters, setRoasters] = useState<string[]>(["k1", "k3"]);
+  const [owner, setOwner] = useState<string[]>(["k0"]);
+  return (
+    <dl className="mx-auto grid w-full max-w-72 gap-3">
+      {(
+        [
+          ["Kavurma Ekibi", true, roasters, setRoasters],
+          ["Sorumlu", false, owner, setOwner],
+        ] as const
+      ).map(([label, multiple, value, set]) => (
+        <div key={label} className="flex items-center justify-between gap-3 rounded-xl bg-overlay py-1.5 pr-1.5 pl-4 shadow-raised">
+          <dt className="text-base font-medium text-strong">{label}</dt>
+          <dd>
+            <AssigneePicker label={label} multiple={multiple} people={CREW} value={value} onValueChange={set} />
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function HoldDemo() {
+  const [count, setCount] = useState(3);
+  return (
+    <div className="grid justify-items-center gap-4 text-center">
+      <p className="text-base text-body">
+        Sepette <span className="font-semibold text-strong tabular-nums">{count}</span> eski sipariş taslağı
+      </p>
+      <HoldButton onConfirm={() => setCount((n) => Math.max(0, n - 1))} doneLabel="Taslak Silindi" disabled={count === 0}>
+        Basılı Tutarak Sil
+      </HoldButton>
+    </div>
+  );
+}
 
 function TemelGroup() {
   const [view, setView] = useState<"liste" | "izgara">("izgara");
@@ -299,6 +339,12 @@ function TemelGroup() {
             </span>
           ))}
         </Marquee>
+      </Cell>
+      <Cell file="assignee-picker" name="Kişi Seçici" note="Avatar yığını tetikler; Türkçe arama, ok tuşları, tekli ya da çoklu seçim." span={3}>
+        <PickerDemo />
+      </Cell>
+      <Cell file="hold-button" name="Basılı Tut Onayı" note="Kazara tıklama arşivlemez; bırakınca geri sarılır, klavyede Boşluk basılı." span={3}>
+        <HoldDemo />
       </Cell>
     </CellGrid>
   );
@@ -994,7 +1040,9 @@ function GeriGroup() {
           <Meter label="Çekirdek Deposu" value={3.4} max={4} valueText="3,4 / 4 ton" />
           <Meter label="Kavurma Kapasitesi" value={1147} max={1600} valueText="1.147 / 1.600 kg" />
           <SegmentedMeter
+            size="lg"
             label="Depo Dağılımı"
+            className="rounded-xl bg-overlay p-4 shadow-raised"
             max={4}
             format={(n) => `${n.toLocaleString("tr-TR")} ton`}
             segments={[

@@ -20,6 +20,7 @@ import {
   Tag,
   UserRoundCheck,
 } from "lucide-react";
+import { AssigneePicker, type Person } from "@/components/ui/assignee-picker";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ChipGroup, FilterChip, RemovableChip } from "@/components/ui/chip";
@@ -46,6 +47,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EmptyState } from "@/components/ui/empty-state";
+import { HoldButton } from "@/components/ui/hold-button";
 import { HoverCard, ProfilePreview } from "@/components/ui/hover-card";
 import { Icon } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
@@ -66,6 +68,7 @@ import {
   PRIORITIES,
   STATUSES,
   STATUS_SLUG,
+  TEAM,
   TICKETS,
   TICKET_CHANNELS,
   customer,
@@ -615,14 +618,27 @@ export function GelenPage() {
           ) : null
         }
       >
-        {current ? <TicketDetail t={current} /> : null}
+        {current ? (
+          <TicketDetail
+            key={current.id}
+            t={current}
+            onAssign={(assignee) => {
+              setOverrides((o) => ({ ...o, [current.id]: { ...o[current.id], assignee } }));
+              notify({ tone: "info", title: `${current.id} ${member(assignee).name.split(" ")[0]} Kişisine Atandı`, body: current.subject });
+            }}
+            onArchive={() => archive(current)}
+          />
+        ) : null}
       </Sheet>
     </div>
   );
 }
 
-function TicketDetail({ t }: { t: Ticket }) {
+const PEOPLE: readonly Person[] = TEAM.map((m) => ({ id: m.id, name: m.name, detail: m.role }));
+
+function TicketDetail({ t, onAssign, onArchive }: { t: Ticket; onAssign: (id: string) => void; onArchive: () => void }) {
   const c = customer(t.customerId);
+  const [watchers, setWatchers] = useState<string[]>([...t.watchers]);
   const o = t.orderId ? order(t.orderId) : undefined;
   return (
     <div className="grid grid-cols-1 gap-5">
@@ -665,7 +681,10 @@ function TicketDetail({ t }: { t: Ticket }) {
         </div>
         <div>
           <dt className="text-small text-muted">Atanan</dt>
-          <dd className="mt-0.5 text-strong">{member(t.assignee).name}</dd>
+          <dd className="-ml-1 flex items-center gap-1">
+            <AssigneePicker label="Atanan" multiple={false} people={PEOPLE} value={[t.assignee]} onValueChange={([id]) => id && id !== t.assignee && onAssign(id)} />
+            <span className="truncate text-strong">{member(t.assignee).name}</span>
+          </dd>
         </div>
         <div>
           <dt className="text-small text-muted">İlk Yanıt</dt>
@@ -682,12 +701,8 @@ function TicketDetail({ t }: { t: Ticket }) {
         ) : null}
         <div>
           <dt className="text-small text-muted">İzleyenler</dt>
-          <dd className="mt-0.5">
-            {t.watchers.length ? (
-              <AvatarGroup people={t.watchers.map((id) => ({ name: member(id).name }))} size="sm" label="İzleyenler" />
-            ) : (
-              <span className="text-muted">Yok</span>
-            )}
+          <dd className="-ml-1">
+            <AssigneePicker label="İzleyenler" people={PEOPLE} value={watchers} onValueChange={setWatchers} />
           </dd>
         </div>
         {o ? (
@@ -721,6 +736,12 @@ function TicketDetail({ t }: { t: Ticket }) {
           }))}
         />
       </section>
+
+      <div className="grid justify-items-start gap-1 border-t border-line-soft pt-4">
+        <HoldButton onConfirm={onArchive} doneLabel="Arşivlendi" hint="Kazara arşivlenmesin diye basılı tut; bildirimden geri alınır.">
+          Basılı Tutarak Arşivle
+        </HoldButton>
+      </div>
     </div>
   );
 }

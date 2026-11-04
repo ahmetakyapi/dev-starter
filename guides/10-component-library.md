@@ -248,6 +248,12 @@ kaldığı için erişilebilirlik açığı değil.
 - **CompareSlider**: iki katman aynı boyda olmalı (kap uzun olandan boy alır). İçinde tıklanacak öğe koyma: kaydırıcı kabı kaplar. Görselde iki `alt` farkı anlatsın.
 - **TextShimmer**: etiket olarak, spinner'ın yanında değil. Uzun iş için `progress`; yüzde biliniyorsa parıltı değil sayı göster.
 
+### Bencho Turu (2026-11)
+
+- **SegmentedMeter `size="lg"`**: kendi karosunda duran kota kartı (Dosya Alanı, Bağlam). Lejant hapına gelince bölüm öne çıkar; %90'da kalan pay `warning-fill` ve "Az Yer Kaldı". Ayar satırında ve rapor kuyusunda `sm` kalır.
+- **AssigneePicker**: tek sahipli alan (Atanan) `multiple={false}`, izleyen/ekip çoklu. Kişi listesi uzunsa (50+) sunucu araması için `people`'ı çağıranda süz.
+- **HoldButton**: yalnız geri alınabilir eylemde (bildirimde Geri Al olan). Geri alınamazsa `confirm` diyaloğu; süre 800-1600 ms.
+
 ### Bloklar
 
 - **PaletteSwitcher**: `app/palettes.css` içe aktarılmalı (nokta renkleri oradaki `--swatch-*`). Çerezin ilk boyamadan önce okunması için THEME_SCRIPT'e iki satır (dosya başında). Telefonda on nokta yatay kayar.

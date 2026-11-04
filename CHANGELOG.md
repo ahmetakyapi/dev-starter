@@ -7,6 +7,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Bencho turu: kota kartı, kişi seçici, basılı tut onayı — 2026-11-04
+
+Referans bencho.dev (davranış öğrenildi, kod alınmadı; `knowledge/decisions.md` → "Bencho Turu").
+
+#### Eklendi
+
+- **`assignee-picker`**: avatar yığını tetikleyici, Türkçe aramalı
+  `combobox` + `listbox`, tekli ya da çoklu. Pusula talep detayında Atanan
+  ve İzleyenler artık düzenlenebilir.
+- **`hold-button`**: basılı tutunca dolan onay; tıklama onaylamaz, klavyede
+  Boşluk/Enter basılı. Pusula'da "Basılı Tutarak Arşivle".
+- **`SegmentedMeter size="lg"`**: büyük rakam, ayrık kalın bölümler, hap
+  lejant (üzerine gelince bölüm öne çıkar), %90'da "Az Yer Kaldı". Pusula
+  Ayarlar → Dosya Alanı.
+
+#### Düzeltildi
+
+- `dialog` / `sheet` alt çubuğunda ikon düğme 20 piksele sıkışıyordu
+  (masaüstünde `w-auto` `size-11`i eziyordu); tam genişlik yalnız telefonda.
+
 ### Adresler, örnek giriş, gecikme kartı, uyarı tonu — 2026-11-03
 
 #### Değişti

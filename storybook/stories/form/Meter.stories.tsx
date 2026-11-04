@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, within } from "storybook/test";
+import { expect, userEvent, within } from "storybook/test";
 import { Meter, SegmentedMeter } from "@/components/ui/meter";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { settle } from "./_a11y";
@@ -87,6 +87,60 @@ export const Segmented: Story = {
       />
     </Frame>
   ),
+};
+
+export const SegmentedLarge: Story = {
+  name: "Bölümlü · Büyük",
+  render: () => (
+    <Frame width="md">
+      <div className="rounded-xl bg-overlay p-5 shadow-raised">
+        <SegmentedMeter
+          size="lg"
+          label="Dosya Alanı"
+          max={50}
+          format={GB}
+          segments={[
+            { label: "Belgeler", value: 14.2, series: 2 },
+            { label: "Görseller", value: 17.6, series: 3 },
+            { label: "Yedek", value: 6.6, series: 1 },
+          ]}
+        />
+      </div>
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("meter", { name: "Dosya Alanı" })).toHaveAttribute("aria-valuetext", "38,4 GB / 50 GB");
+    // Lejant hapına odak: o bölümün değeri başlığa çıkar (yalnız görsel).
+    await userEvent.tab();
+    await expect(canvas.getByText("Belgeler", { selector: "p span" })).toBeVisible();
+  },
+};
+
+export const SegmentedAlmostFull: Story = {
+  name: "Bölümlü · Dolmak Üzere",
+  render: () => (
+    <Frame width="md">
+      <div className="rounded-xl bg-overlay p-5 shadow-raised">
+        <SegmentedMeter
+          size="lg"
+          label="Dosya Alanı"
+          max={50}
+          format={GB}
+          segments={[
+            { label: "Belgeler", value: 21.4, series: 2 },
+            { label: "Görseller", value: 19.8, series: 3 },
+            { label: "Yedek", value: 5.3, series: 1 },
+          ]}
+        />
+      </div>
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("Az Yer Kaldı")).toBeVisible();
+    await expect(canvas.getByRole("meter")).toHaveAttribute("aria-valuetext", "46,5 GB / 50 GB, Az Yer Kaldı");
+  },
 };
 
 export const Inverted: Story = {
