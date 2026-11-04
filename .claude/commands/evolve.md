@@ -19,6 +19,8 @@ Odak: **$ARGUMENTS** (boşsa üç eksen de). Bu komut `~/dev-starter` deposunda
      60+ gün eskiyse yeniden denetim öner (`scripts/audit-project.sh`)
    - `knowledge/design-references.md`: 60+ gün eskiyse her bağlantıyı aç,
      hâlâ tamamen ücretsiz mi bak; ücretli olan "Bilinçli Olarak Dışarıda"ya iner
+   - `knowledge/references.md`: bağlantılar hâlâ açılıyor mu; kapanan siteye
+     "Durum" sütununda tarih düş, satırı silme
    - `patterns.md` ↔ `mistakes.md` çelişkisi: yeni kayıtların düzelttiği şeyi
      hâlâ öğreten desen var mı
 3. **Dış tarama** (`researcher` subagent'ı): Claude Code ekosistemi ve benzer

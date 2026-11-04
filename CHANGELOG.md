@@ -7,6 +7,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Referans arşivi — 2026-11-04
+
+#### Eklendi
+
+- **`knowledge/references.md`**: geçmişte ve bugün referans alınan her dış
+  kaynak tek listede, bağlantısıyla: incelenen siteler (Bencho, Wensity,
+  Apple HIG, shojimac, BoardUI, Açılış Zili), bölüm galerileri, elenenler ve
+  nedeni, skill/kod kaynakları (ai-design-skills, taste-skill, anatomy,
+  motion skill'leri), teknik belgeler, kendi projelerimiz. Her satırda ne
+  alındığı ve kararın nerede yazılı olduğu.
+
+#### Değişti
+
+- `design-references.md` yeniden "yalnız tamamen ücretsiz galeri": kısmen
+  ücretli Wensity ve Bencho satırları arşive taşındı. `uiux` rolü ve
+  `/evolve` arşivi okur; CLAUDE.md'de "referans alınınca" kuralı.
+
 ### Bencho turu 2: tepkiler, saat cetveli, imza alanı — 2026-11-04
 
 #### Eklendi
