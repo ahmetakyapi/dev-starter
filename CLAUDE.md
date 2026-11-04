@@ -102,9 +102,9 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 664 hikâye — Tema, Bileşenler,
-│                                Grafikler, Bloklar, Ekranlar, Pusula showcase (92/92 bileşen); `npm run storybook`
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (92 bileşen + vitrin/) + fonts/ + live-preview/
+├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 673 hikâye — Tema, Bileşenler,
+│                                Grafikler, Bloklar, Ekranlar, Pusula showcase (95/95 bileşen); `npm run storybook`
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (95 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form

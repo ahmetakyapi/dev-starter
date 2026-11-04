@@ -581,6 +581,10 @@ karo, hap çipler); yeni olan ETKİLEŞİM.
   çünkü klavyede doğal karşılığı var (Boşluk basılı) ve WCAG 2.5.1 yol
   hareketi istemez. Yalnız geri alınabilir eylemde.
 
+**Devamı (aynı gün):** `reactions` (Emoji reactions, ikonla), `time-scrubber`
+(Time scrubber), `signature-pad` (Signature pad, "Yazarak" yoluyla). Label
+input ve Create menu alınmadı: `input` ve `dropdown-menu` zaten karşılıyor.
+
 **Alınmayan:** ses efektleri (Sounds), göz takibi, sapan, jöle kaydırıcı
 gibi "oyuncak" etkileşimler; nedeni tek cümleyle yazılamıyor
 (`guides/04-motion.md`). Tepki emojileri: arayüzde emoji yasak (slop).

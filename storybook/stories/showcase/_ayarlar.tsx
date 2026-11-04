@@ -16,6 +16,8 @@ import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SegmentedMeter } from "@/components/ui/meter";
+import { SignaturePad, type SignatureValue } from "@/components/ui/signature-pad";
+import { TimeScrubber, formatClock } from "@/components/ui/time-scrubber";
 import { SettingsDialog, SettingsRow, SettingsSection, type SettingsTab } from "@/components/ui/settings-dialog";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -101,6 +103,8 @@ export function AyarlarPage() {
   const { notify } = useApp();
   const [signature, setSignature] = useState(`${ME.name}\n${ME.role} · ${WORKSPACE.name}\n0258 *** 41 07`);
   const [twoStep, setTwoStep] = useState(true);
+  const [digestAt, setDigestAt] = useState(8 * 60 + 30);
+  const [handSign, setHandSign] = useState<SignatureValue>(null);
   const [verified, setVerified] = useState(false);
   const [otpError, setOtpError] = useState<string | undefined>();
   const [tags, setTags] = useState<string[]>(["Kargo", "Fatura", "Teklif", "İade"]);
@@ -301,6 +305,25 @@ export function AyarlarPage() {
               </ul>
             </section>
           </div>
+        </Well>
+
+        <Well labelledBy="ayar-ozet">
+          <WellTitle id="ayar-ozet" hint={`Her sabah ${formatClock(digestAt)}'da gelen kutusu ve geciken siparişlerin özeti e-postayla gelir.`}>
+            Günlük Özet Saati
+          </WellTitle>
+          <div className="rounded-xl bg-overlay px-4 pt-5 pb-4 shadow-raised">
+            <TimeScrubber label="Günlük Özet Saati" value={digestAt} onValueChange={setDigestAt} hint="Hafta İçi Her Gün" />
+          </div>
+        </Well>
+
+        <Well labelledBy="ayar-imza">
+          <WellTitle id="ayar-imza" hint="Teslim tutanaklarının altına basılır; çizerek ya da adını yazarak.">
+            Teslim Tutanağı İmzası
+          </WellTitle>
+          <SignaturePad label="İmzan" name="imza" onValueChange={setHandSign} />
+          <p className="text-small text-muted" aria-live="polite">
+            {handSign === null ? "Henüz imza yok." : handSign.kind === "drawn" ? "Çizilen imza tutanaklara eklenecek." : `“${handSign.name}” adıyla imzalanacak.`}
+          </p>
         </Well>
 
         <Well labelledBy="ayar-alan" className="lg:col-span-2">

@@ -252,6 +252,9 @@ kaldığı için erişilebilirlik açığı değil.
 
 - **SegmentedMeter `size="lg"`**: kendi karosunda duran kota kartı (Dosya Alanı, Bağlam). Lejant hapına gelince bölüm öne çıkar; %90'da kalan pay `warning-fill` ve "Az Yer Kaldı". Ayar satırında ve rapor kuyusunda `sm` kalır.
 - **AssigneePicker**: tek sahipli alan (Atanan) `multiple={false}`, izleyen/ekip çoklu. Kişi listesi uzunsa (50+) sunucu araması için `people`'ı çağıranda süz.
+- **Reactions**: yorum, not, duyuru altında; tepki seti sabit altı ikon (emoji yok). Sayıyı sunucuda tut, bileşen iyimser günceller.
+- **TimeScrubber**: aralığı görmek önemliyse (06.00-22.00 içinde neredeyim); kesin dakika yazılacaksa `time-field`. Değer gece yarısından beri dakika.
+- **SignaturePad**: "Yazarak" yolu kaldırılmaz (WCAG 2.1.1). Sunucuda `formData.get("imza")` SVG ya da ad, `imza-kind` hangisi olduğunu söyler; SVG'yi saklamadan önce yalnız `path d` değerini doğrula.
 - **HoldButton**: yalnız geri alınabilir eylemde (bildirimde Geri Al olan). Geri alınamazsa `confirm` diyaloğu; süre 800-1600 ms.
 
 ### Bloklar

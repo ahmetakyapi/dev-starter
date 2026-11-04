@@ -1230,6 +1230,28 @@
       "palettes": false
     },
     {
+      "name": "reactions",
+      "title": "Tepkiler",
+      "category": "Düğme ve İkon",
+      "description": "Mesaja/nota tek dokunuşla tepki (Beğendim, Bakıyorum, Tamam)",
+      "file": "snippets/ui/reactions.tsx",
+      "client": true,
+      "storyId": "reactions",
+      "registryDependencies": [
+        "popover"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "ring-chart",
       "title": "Halka Grafiği",
       "category": "Grafik",
@@ -1399,6 +1421,25 @@
       "file": "snippets/ui/sheet.tsx",
       "client": true,
       "storyId": "sheet",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "signature-pad",
+      "title": "İmza Alanı",
+      "category": "Form Girişleri",
+      "description": "Teslim tutanağı, sözleşme onayı; çizerek ya da yazarak imza",
+      "file": "snippets/ui/signature-pad.tsx",
+      "client": true,
+      "storyId": "signature-pad",
       "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
@@ -1673,6 +1714,24 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "time-scrubber",
+      "title": "Saat Cetveli",
+      "category": "Form Girişleri",
+      "description": "Günün akışında bir an (özet saati, hatırlatma); cetvel sürüklenir",
+      "file": "snippets/ui/time-scrubber.tsx",
+      "client": true,
+      "storyId": "time-scrubber",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
