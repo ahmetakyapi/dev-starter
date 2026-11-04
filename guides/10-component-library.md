@@ -260,6 +260,14 @@ kaldığı için erişilebilirlik açığı değil.
 - **TickRuler** (ikinci Bencho turu): `time-scrubber` saate özel (06.00-22.00, dakika dilimi), `tick-ruler` her sayı için (süre, sıcaklık, yüzde; ivmeyle kayar, uçta lastik gibi direnir); saat seçiliyorsa `time-scrubber`.  değer bir süreklilikteyse ve kesinlik ikinciyse (toplantı süresi, termostat). Formda kesin sayı `number-field`, aralık `slider`. Çentik ~500'ü geçmesin; `valueText` ile okunuşu düzelt ("Saat 09:45").
 - **DigitRoll**: yalnız değişen değerde. İlk yüklemede dönen sayı `snippets/rolling-number`, ara değerden sayan `snippets/animated-number`; üçü üç ayrı iş. Büyük sayıyı 500 ağırlık ve `tracking-tight` ile, birimi `text-muted` küçük puntoyla yaz.
 
+### EasyUI Turu (2026-11)
+
+- **SplitButton**: kardeşler aynı işin biçimleriyse (CSV/Excel/PDF, Yayınla/Zamanla). Farklı işler (Düzenle, Sil) `dropdown-menu`.
+- **SelectionBar**: seçim durumu sayfada (`picked`), çubuk yalnız gösterir. Toplu işlem tek bildirim ve tek Geri Al ile; satır başına bildirim yığma.
+- **TocNav**: beş ve daha fazla bölümlü sayfada. Hedef başlıklara `scroll-mt-*` ver (yapışkan hapın boyu); kabuk içinde kullanıyorsan kaydırma kabı `app-shell`in içerik karosudur.
+- **ProductTour**: dört-beş adım, bir kez gösterilir; tekrar açma düğmesi ekranda kalır. Hedefe `data-tour="ad"` ver; seçici de olur.
+- **AppShell kaydırması (değişti)**: masaüstünde kabuk ekran boyunda, kenar çubuğu yerinde, içerik karosu kendi içinde kayar; telefonda pencere kayar. Sayfa değişiminde başa dönmek için `#icerik`i de kaydır.
+
 ### Bloklar
 
 - **PaletteSwitcher**: `app/palettes.css` içe aktarılmalı (nokta renkleri oradaki `--swatch-*`). Çerezin ilk boyamadan önce okunması için THEME_SCRIPT'e iki satır (dosya başında). Telefonda on nokta yatay kayar.

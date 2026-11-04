@@ -110,7 +110,8 @@ export function PageBar({
 export function SectionTitle({ id, title, note, className }: { id: string; title: string; note?: ReactNode; className?: string }) {
   return (
     <div className={cn("flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-1", className)}>
-      <h2 id={id} className="text-base font-semibold text-strong">
+      {/* scroll-mt: bölüm gezintisi (TocNav) yapışkan; başlık onun altında kalmasın. */}
+      <h2 id={id} className="scroll-mt-24 text-base font-semibold text-strong">
         {title}
       </h2>
       {note ? <p className="text-small text-muted">{note}</p> : null}
@@ -130,7 +131,7 @@ export function Well({ children, className, labelledBy }: { children: ReactNode;
 export function WellTitle({ id, children, hint }: { id: string; children: ReactNode; hint?: ReactNode }) {
   return (
     <div className="mb-4">
-      <h2 id={id} className="text-base font-semibold text-strong">
+      <h2 id={id} className="scroll-mt-24 text-base font-semibold text-strong">
         {children}
       </h2>
       {hint ? <p className="mt-0.5 text-small text-muted">{hint}</p> : null}

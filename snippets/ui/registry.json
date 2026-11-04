@@ -1171,6 +1171,25 @@
       "palettes": false
     },
     {
+      "name": "product-tour",
+      "title": "Ürün Turu",
+      "category": "Katmanlar",
+      "description": "Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım)",
+      "file": "snippets/ui/product-tour.tsx",
+      "client": true,
+      "storyId": "product-tour",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "progress",
       "title": "İlerleme",
       "category": "Geri Bildirim",
@@ -1413,6 +1432,26 @@
       "palettes": false
     },
     {
+      "name": "selection-bar",
+      "title": "Seçim Çubuğu",
+      "category": "Veri",
+      "description": "Satır seçilince alttan yükselen toplu işlem adası",
+      "file": "snippets/ui/selection-bar.tsx",
+      "client": true,
+      "storyId": "selection-bar",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "settings-dialog",
       "title": "Ayarlar Penceresi",
       "category": "Bloklar",
@@ -1540,6 +1579,28 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "split-button",
+      "title": "Bölünmüş Düğme",
+      "category": "Düğme ve İkon",
+      "description": "Ana eylem + aynı işin diğer biçimleri (\"CSV\" + ▾ Excel, PDF)",
+      "file": "snippets/ui/split-button.tsx",
+      "client": true,
+      "storyId": "split-button",
+      "registryDependencies": [
+        "dropdown-menu"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1814,6 +1875,24 @@
         "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "toc-nav",
+      "title": "Bölüm Gezintisi",
+      "category": "Form ve Gezinme",
+      "description": "Uzun sayfada yapışkan içindekiler + okuma ilerlemesi",
+      "file": "snippets/ui/toc-nav.tsx",
+      "client": true,
+      "storyId": "toc-nav",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

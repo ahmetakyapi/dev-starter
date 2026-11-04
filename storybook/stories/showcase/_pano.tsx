@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import { MessagesSquare, PackageCheck, Reply, Smile } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Compass, MessagesSquare, PackageCheck, Reply, Smile } from "lucide-react";
 import { ActivityRings } from "@/components/ui/activity-rings";
 import { Announcement } from "@/components/ui/announcement";
 import { AreaChart } from "@/components/ui/area-chart";
@@ -43,6 +43,8 @@ import {
   tl,
   type Period,
 } from "./_data";
+import { ProductTour, type TourStep } from "@/components/ui/product-tour";
+import { Button } from "@/components/ui/Button";
 import { DelayCard } from "./_gecikme";
 import { PageBar, SectionTitle, href, useApp } from "./_ui";
 
@@ -90,6 +92,13 @@ function StatTile({
   );
 }
 
+const TOUR: readonly TourStep[] = [
+  { target: "donem", title: "Dönemi Seç", body: "Hafta, ay ya da yıl: panodaki bütün sayılar bu seçime göre hesaplanır." },
+  { target: "ozet", title: "Özet", body: "Ciro, sipariş, sepet ve talep; her biri önceki döneme göre değişimiyle." },
+  { target: "gecikme", title: "Geciken Siparişler", body: "Söz verilen tarihi geçenler en uzun bekleyenden başlar. Satıra tıkla, talebi aç." },
+  { target: 'nav a[href="?view=inbox"]', title: "Gelen Kutusu", body: "Yanıt bekleyen talepler burada. Birden çok talebi seçip tek seferde işleyebilirsin." },
+];
+
 export function PanoPage() {
   const { period } = useApp();
   const s = useMemo(() => periodStats(period), [period]);
@@ -120,12 +129,24 @@ export function PanoPage() {
     return { label: w.buckets[g * step].label, orders: range(s.orderSeries), visits: range(s.visitSeries) };
   });
 
+  const [tour, setTour] = useState(false);
+
   return (
     <div className="flex min-h-full flex-col">
       <PageBar
         title="Pano"
         description={`Günaydın ${ME.name.split(" ")[0]} · ${longDate.format(TODAY)}`}
-        actions={<PeriodControl />}
+        actions={
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setTour(true)}>
+              <Compass aria-hidden />
+              Tanıtım Turu
+            </Button>
+            <span data-tour="donem">
+              <PeriodControl />
+            </span>
+          </div>
+        }
       />
       <div className="grid grid-cols-1 gap-6 p-4 sm:p-6">
         <div className="grid grid-cols-1 gap-3">
@@ -135,7 +156,7 @@ export function PanoPage() {
           {DELAYED.length ? <DelayCard /> : null}
         </div>
 
-        <section aria-labelledby="pano-ozet" className="grid grid-cols-1 gap-3">
+        <section aria-labelledby="pano-ozet" data-tour="ozet" className="grid grid-cols-1 gap-3">
           <SectionTitle id="pano-ozet" title="Özet" note={`${w.label} · ${w.caption}`} />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <StatTile label="Ciro" value={tl.format(s.revenue)} change={s.revenueChange} changeLabel={s.window.prevLabel} series={s.revenueSeries} trend={`${w.label} ciro eğilimi`} />
@@ -368,6 +389,7 @@ export function PanoPage() {
         </section>
 
       </div>
+      <ProductTour label="Pano Turu" open={tour} onOpenChange={setTour} steps={TOUR} />
     </div>
   );
 }

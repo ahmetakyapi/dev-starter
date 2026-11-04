@@ -624,3 +624,27 @@ yazılamayan hareket), reklam/sponsor kartları, İngilizce "of" eki.
 **Etkisi:** `rolling-number` (yüklemede) ve
 `animated-number` (ara değerden sayan) yerinde; üç sayının işi
 `guides/10` § "Bencho Turu"nda ayrıldı.
+
+## EasyUI Turu — Toplu İşlem, Bölünmüş Düğme, Tur, İçindekiler (2026-11-04)
+
+**Karar:** easyui.site'nin 132 bileşenlik kataloğu kütüphanemizle tek tek
+karşılaştırıldı; çoğunun karşılığı zaten var. Karşılığı OLMAYAN ve iş
+ekranında değer üreten dört desen sıfırdan, kendi token'larımızla yazıldı
+(kod alınmadı): `selection-bar`, `split-button`, `product-tour`, `toc-nav`.
+
+**Yan bulgu (kabuk):** `app-shell` kökü `min-h-dvh`, içerik karosu her boyda
+`overflow-y-auto` idi: karo hiç kaymıyor ama kaydırma kabı olduğu için
+içerideki `sticky` öğeler yapışmıyordu ve uzun sayfada kenar çubuğu
+kayboluyordu. Masaüstünde kabuk `lg:h-dvh`, karo `lg:overflow-y-auto`;
+telefonda pencere kayar. Bölüm gezintisinde `scrollIntoView` ile şeridi
+kaydırmak sayfanın yumuşak kaydırmasını kesiyordu; şerit yalnız yatayda
+`scrollTo` ile kayar.
+
+**Alınmayan:** gösteri efektleri (Dynamic island, Glitch, Meteors, Rocket
+popper) ve taşan diyalog açılışı (Settle modal): taşma yalnız küçük tek
+öğenin geri bildiriminde.
+
+**Örnek veri:** Pusula'nın kurgusal firması "Kervan Tekstil" kaldırıldı;
+çalışma alanının adı doğrudan Pusula, adresler `pusula.app` (sahibinin
+isteği).
+
