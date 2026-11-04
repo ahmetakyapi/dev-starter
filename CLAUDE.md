@@ -46,6 +46,7 @@ dev-starter/
 │   ├── patterns.md            → Test edilmiş desenler + Agentic UI
 │   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
 │   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur
+│   ├── references.md          → Referans arşivi: incelenen siteler, skill/kod kaynakları, elenenler (bağlantı + ne alındı)
 │   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
 │
 ├── agents/                    → 12 rol tanımı + AGENT_PROTOCOL.md
@@ -497,6 +498,7 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
   `templates/docs/DESIGN.template.md` (YAML frontmatter token şeması + 9 bölümlük görsel hafıza);
   retro ritüeli `/retro` (Knowledge Capture, `phases/release-maintenance.md § 4.5`)
 - **Yeni desen bulununca**: `knowledge/patterns.md`
+- **Bir siteden ya da depodan referans alınınca**: `knowledge/references.md` (bağlantı, tarih, ne alındı, nerede yaşıyor)
 - **Karar değişince**: `knowledge/decisions.md` — eskisini silme, "Değişti (tarih)" alt başlığı
 - **Paket versiyonu güncellenince**: `packages/@ahmet/*/package.json` + `CHANGELOG.md`
 - **Yeni kural eklenince**: `rules/` altında dosya, `AGENT_PROTOCOL.md`'ye referans

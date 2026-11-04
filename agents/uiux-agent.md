@@ -46,6 +46,7 @@ impeccable 3.0.0'da (2026-10-03) ekosistemden kaldırıldı. Yerine:
 | `~/dev-starter/guides/02-design-tokens.md` … `05-components.md` | Token, tema, hareket, bileşen kuralları |
 | `design-reviewer` subagent'ı | Kurulmuş arayüzü ekrandan ölçüp puanlamak |
 | `/reference` + `~/dev-starter/knowledge/design-references.md` | Yeni bölüm (menü, CTA, alt bilgi, 404, bento) şablondan değil gerçek bir siteden: ücretsiz galeri → ekran görüntüsü → yapı |
+| `~/dev-starter/knowledge/references.md` | Daha önce hangi siteden ne aldık (gölge merdiveni Wensity, board dili BoardUI…); yeni bir siteden ders alınınca satırı buraya eklenir |
 
 **Çakışma kuralı**: brief kazanır. Projenin tema dosyası ve seçili paleti
 (`signature` / `verdant` / `ember` / `iris`) **pinlenmiştir**; bir skill'in

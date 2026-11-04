@@ -9,6 +9,11 @@ bulunacağını tutar; **nasıl** kullanılacağı `/reference` komutunda
 **Yalnız tamamen ücretsiz kaynaklar.** Kısmen ücretli (freemium) ya da
 ücretli kaynak listeye girmez; katalog kimseyi abonelik almaya itmesin.
 
+**Gerçekten referans aldığımız her şeyin kaydı** (ücretli/kısmen ücretli
+siteler, skill ve kod kaynakları, elenenler dahil) ayrı dosyada:
+`knowledge/references.md`. Bu dosya yalnız yeni bölüm kurarken bakılacak
+ücretsiz galerileri tutar.
+
 **Sahip:** `uiux` rolü okur; satır ekleme/çıkarma kullanıcı onayıyla
 (`rules/self-improvement.md`). Ücret ve erişim değişir: `/evolve` 60 günden
 eski gözden geçirmede bağlantıları ve ücretsizliği yeniden doğrular.
@@ -41,8 +46,6 @@ bakılarak doğrulandı)
 | Alt bilgi (footer) | [footer.design](https://www.footer.design/) | Üslup filtreli alt bilgi galerisi (tipografik, minimal, koyu, cesur), "Visit website" | Benten Woodring ve Devin Fountain'ın boş zaman projesi; ana sayfada bir sponsorlu kart var |
 | 404 sayfası | [404s.design](https://www.404s.design/) | 1440 piksel görüntüler, üslup/etkileşim/sektör filtresi; her kart asıl 404 sayfasına gider | Finnian Sturdy ("by FS"); Mobbin sponsorlu kartı var |
 | Grafik kartı, pano, sohbet arayüzü | [boardui.com](https://www.boardui.com/) | Bileşen ve grafik vitrini: nötr yüzey, pastel seri renkleri, palet değiştirici | Ücretsiz bileşenleri MIT; grafikler ve şablonlar ücretli (BoardUI License). Dili `decisions.md` → "Board Görsel Dili"nde ekosisteme uyarlandı, kodu alınmadı |
-| Derinlik, düğme hacmi, bileşen sayfası | [ui.wensity.com](https://ui.wensity.com/) | Animasyonlu bileşen ve blok kataloğu: katmanlı negatif yayılmalı gölgeler, üstten ışıklı kart kenarı, iç ve dış halkalı CTA, içe oyulmuş giriş alanı, sıkı display başlık | Ücretli (Pro) + MIT ücretsiz katman. Dili `decisions.md` → "İşçilik Turu"nda ekosisteme uyarlandı, kodu alınmadı |
-| Mikro etkileşim (basılı tut, kota çubuğu, kişi seçici) | [bencho.dev](https://bencho.dev/) | Canlı, dokunulabilir React blokları: gri kuyu + beyaz karo, fiile göre süzme (Hover, Press, Drag, Type, Select) | Ücretsiz katman + Pro (€99/yıl). Kodu görülmedi; desenler `decisions.md` → "Bencho Turu"nda sıfırdan, kendi token'larımızla |
 | Bento ızgara | [bentogrids.com](https://bentogrids.com/) | 285 bento düzeni, görüntü ve kısa video; her örneğin kaynak bağlantısı | Ivan Votti. Kaynakların bir kısmı canlı site değil Dribbble/X gönderisi: yalnız görsel kavram, gerçek davranış yok |
 | Mac uygulaması ürün sayfası | [shojimac.com](https://shojimac.com/) | Tek site (galeri değil): iki tonlu sıkı başlık, "01–05" numaralı adımlar, tuş kapağı metinleri, karşılaştırma tablosu, Geist + Geist Mono | Ücretsiz bakılır. Nimbstia'da denendi: yapısı iyi, siyah mürekkep + büyük harf mono etiketleri yoğun araç arayüzünde reddedildi (`mistakes.md` #115) |
 
