@@ -18,6 +18,11 @@ logo, görsel ve font projeden gelir; kod yalnız açık lisansla (MIT vb.) ve
 dosya başında atıfla uyarlanır. Ayrıntı `design-references.md` → Kullanım
 Şartı.
 
+**Sitede:** Storybook → Örnek Tasarım/Referans Arşivi (`/references`) bu
+dosyayı derleme anında okur ve kart olarak gösterir. Tablo biçimini
+(başlık satırı, `|---|` ayracı, hücrede `|` yok) bozma; yeni bölüm `## `
+başlığıyla açılır ve sayfada kendiliğinden yeni kategori olur.
+
 **Yeni referans alınınca:** buraya satır (en yeni en üstte), kararın
 gerekçesi `knowledge/decisions.md`'ye, alınan şey CHANGELOG'a. Satır silinmez;
 sonradan vazgeçilirse "Durum" sütunu güncellenir.

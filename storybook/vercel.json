@@ -17,6 +17,11 @@
       "permanent": false
     },
     {
+      "source": "/references",
+      "destination": "/?path=/story/references--overview",
+      "permanent": false
+    },
+    {
       "source": "/pusula",
       "destination": "/demo",
       "permanent": true

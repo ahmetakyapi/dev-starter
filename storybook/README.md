@@ -1,6 +1,6 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**673 hikâye**, her biri açık/koyu tema ve 10 palette:
+**674 hikâye**, her biri açık/koyu tema ve 10 palette:
 
 | Bölüm | İçerik |
 |-------|--------|
@@ -63,7 +63,7 @@ Grup kimliği **kısa**: bileşenin dosya adı (`tooltip`, `area-chart`), en ço
 24 harf, grup adı (Bileşenler/Katmanlar) adrese girmez. Tek hikâyeli sayfada
 dışa aktarım `Overview` (`colors--overview`), grup adı tekrar etmez.
 
-Kısa yönlendirmeler (`vercel.json`): `/showcase`, `/demo` (örnek uygulama
+Kısa yönlendirmeler (`vercel.json`): `/showcase`, `/references` (referans arşivi; `knowledge/references.md`ten okunur), `/demo` (örnek uygulama
 Pusula; ekranı `/demo/inbox`, `/demo/settings`), `/gallery`, `/start`,
 `/theme`, `/palettes`, bir bileşenin belgesi `/c/<ad>` (ör. `/c/tooltip`),
 bir hikâye `/s/<ad>/<hikâye>` (ör. `/s/tooltip/default`). Eski `/pusula`

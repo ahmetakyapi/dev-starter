@@ -7,6 +7,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Referans arşivi sitede — 2026-11-04
+
+- **Storybook → Örnek Tasarım/Referans Arşivi** (`/references`): arşiv
+  kategori seçiciyle (Siteler, Galeriler, Elenenler, Kaynaklar, Belgeler,
+  Projelerimiz) ve yan yana kaydırılan kartlarla; kategori değişince ray
+  soluklaşarak yer değiştirir. Veri `knowledge/references.md`ten derleme
+  anında okunur (`?raw` + küçük ayrıştırıcı), kopya yok: arşive eklenen
+  satır sayfaya kendiliğinden düşer.
+
 ### Referans arşivi — 2026-11-04
 
 #### Eklendi

@@ -58,7 +58,7 @@ const preview: Preview = {
       storySort: {
         order: [
           "Örnek Tasarım",
-          ["Her Şey Bir Arada", "Pusula Paneli", "Bileşen Kapsamı"],
+          ["Her Şey Bir Arada", "Pusula Paneli", "Bileşen Kapsamı", "Referans Arşivi"],
           "Vitrin",
           ["Genel Bakış", "Temel Kütüphane", "Form Girişleri", "Katman ve Geri Bildirim", "Grafikler", "Bloklar"],
           "Başlangıç",
