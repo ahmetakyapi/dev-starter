@@ -183,6 +183,34 @@
       ]
     },
     {
+      "name": "assignee-picker",
+      "type": "registry:ui",
+      "title": "Kişi Seçici",
+      "description": "Kişi atama: talep, görev, kart (tekli ya da çoklu)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/avatar.json",
+        "https://dev-starter-storybook.vercel.app/r/popover.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "assignee-picker",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/assignee-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "auth-card",
       "type": "registry:ui",
       "title": "Giriş Kartı",
@@ -1049,6 +1077,32 @@
       "files": [
         {
           "path": "snippets/ui/heatmap.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hold-button",
+      "type": "registry:ui",
+      "title": "Basılı Tut Onayı",
+      "description": "Yıkıcı ama geri alınabilir eylemde diyalogsuz onay (arşivle, listeden çıkar)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "hold-button",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/hold-button.tsx",
           "type": "registry:ui"
         }
       ]

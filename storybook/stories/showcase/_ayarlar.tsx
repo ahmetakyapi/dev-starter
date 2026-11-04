@@ -15,6 +15,7 @@ import { PaletteSwitcher } from "@/components/ui/palette-switcher";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
 import { CodeBlock } from "@/components/ui/code-block";
+import { SegmentedMeter } from "@/components/ui/meter";
 import { SettingsDialog, SettingsRow, SettingsSection, type SettingsTab } from "@/components/ui/settings-dialog";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -299,6 +300,21 @@ export function AyarlarPage() {
                 })}
               </ul>
             </section>
+          </div>
+        </Well>
+
+        <Well labelledBy="ayar-alan" className="lg:col-span-2">
+          <WellTitle id="ayar-alan" hint={`${WORKSPACE.plan}: ${WORKSPACE.storage.totalGb} GB. Lejanttaki bir kalemin üzerine gel, payı öne çıksın.`}>
+            Dosya Alanı
+          </WellTitle>
+          <div className="rounded-xl bg-overlay p-5 shadow-raised">
+            <SegmentedMeter
+              size="lg"
+              label="Kullanılan Alan"
+              max={WORKSPACE.storage.totalGb}
+              segments={WORKSPACE.storage.parts}
+              format={(n) => `${n.toLocaleString("tr-TR", { maximumFractionDigits: 1 })} GB`}
+            />
           </div>
         </Well>
 

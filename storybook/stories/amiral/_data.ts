@@ -296,6 +296,8 @@ export const GROUP_OF: Record<string, GroupId> = {
   "copy-button": "temel",
   "code-block": "temel",
   marquee: "temel",
+  "assignee-picker": "temel",
+  "hold-button": "temel",
   kbd: "temel",
   "close-button": "temel",
   badge: "temel",

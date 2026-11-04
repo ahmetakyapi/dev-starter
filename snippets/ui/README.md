@@ -67,10 +67,12 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `segmented-control.tsx` | 2-5 seçenekten biri, anında etki | motion (`domMax`) | Evet | Radyo grubu, gezici tabindex, ok tuşları |
 | `copy-button.tsx` | Panoya kopyala | lucide | Evet | Sonuç canlı bölgede; hata da söylenir |
 | `code-block.tsx` | Kurulum komutu, yapılandırma, API örneği; paket yöneticisi sekmeleri | `copy-button` | Evet | Sekme listesi, ok tuşları; kaydırılabilir `pre` odaklanır; `$` istemi kopyalanmaz ve okunmaz; `persist` tercihi paylaşır |
+| `hold-button.tsx` | Yıkıcı ama geri alınabilir eylemde diyalogsuz onay (arşivle, listeden çıkar) | lucide | Evet | Tıklama onaylamaz, ipucu `aria-describedby`; Boşluk/Enter basılı tutulur; dolgu `clip-path`, metin her an AA; sonuç `role="status"` |
 | `kbd.tsx` | Klavye tuşu, kısayol | yok | Hayır | Simgeli tuşta `label`; kombinasyon tek ad |
 | `close-button.tsx` | Diyalog, uyarı, çip, duyuru kapatma | lucide | Hayır | `aria-label` TİPTE zorunlu; 44 px dokunma alanı (görsel 28/32); odak halkası dairede |
 | `chip.tsx` | `FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup` | lucide | Hayır | Süzgeç `aria-pressed` + ✓; yalnız × düğme, adı "Kaldır: İstanbul"; grup `role="group"` + ad |
 | `toggle-group.tsx` | Basılı/basılı değil düğmeler: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost` | Base UI, `tooltip`, `kbd`, lucide | Evet | `aria-pressed`, gezici tabindex ve oklar; yalnız ikonlu öğede `label` tipte zorunlu + tooltip |
+| `assignee-picker.tsx` | Kişi atama: talep, görev, kart (tekli ya da çoklu) | Base UI (`popover`), `avatar`, lucide | Evet | Tetikleyici adı durumu söyler; `combobox` + `listbox`, `aria-activedescendant`, ↑↓ Home End Enter; Türkçe harf düzleyen arama |
 
 ### Katmanlar
 

@@ -567,3 +567,26 @@ wash; dolgu üstü mürekkep 9,6:1 (`tests/palette.test.ts`, `contract.test.ts`)
 tek renk noktası, sipariş başına yolculuk çizgisi). `banner-alert` warning
 tonu yeni renkleri kendiliğinden alır.
 
+## Bencho Turu — Kota Kartı, Kişi Seçici, Basılı Tut Onayı (2026-11-04)
+
+**Karar:** bencho.dev'in mikro etkileşim kataloğundan üç desen alındı (kod
+değil, davranış). Görsel dili zaten board diliyle aynı (gri kuyu + beyaz
+karo, hap çipler); yeni olan ETKİLEŞİM.
+
+- **SegmentedMeter `lg`** ("Context meter"): büyük rakam, ayrık kalın
+  bölümler, lejant hapına gelince bölüm öne çıkar ve rakam ona döner.
+- **AssigneePicker** ("Assignees"): avatar yığını tetikleyici, Türkçe
+  aramalı listbox. Pusula talep detayında Atanan ve İzleyenler.
+- **HoldButton** ("Slide to confirm" yerine): kaydırma yerine basılı tutma,
+  çünkü klavyede doğal karşılığı var (Boşluk basılı) ve WCAG 2.5.1 yol
+  hareketi istemez. Yalnız geri alınabilir eylemde.
+
+**Alınmayan:** ses efektleri (Sounds), göz takibi, sapan, jöle kaydırıcı
+gibi "oyuncak" etkileşimler; nedeni tek cümleyle yazılamıyor
+(`guides/04-motion.md`). Tepki emojileri: arayüzde emoji yasak (slop).
+
+**Yan bulgu:** `dialog` ve `sheet` alt çubuğundaki `sm:[&>*]:w-auto` ikon
+düğmenin `size-11` genişliğini eziyordu; yanına `flex-1` düğme gelince 20
+piksele düşüyordu (Pusula talep çekmecesi, "Bana Ata"). Kural yalnız
+telefonda tam genişlik (`max-sm:[&>*]:w-full`) oldu.
+
