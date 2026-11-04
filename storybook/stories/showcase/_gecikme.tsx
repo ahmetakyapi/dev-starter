@@ -45,7 +45,7 @@ export function DelayCard() {
   const longest = Math.max(...rows.map((r) => r.late));
 
   return (
-    <section aria-labelledby="pano-gecikme" className="edge-lit rounded-2xl bg-surface p-2">
+    <section aria-labelledby="pano-gecikme" data-tour="gecikme" className="edge-lit rounded-2xl bg-surface p-2">
       <div className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]">
         <div className="flex flex-col justify-between gap-6 rounded-xl bg-overlay p-5 shadow-raised">
           <div>

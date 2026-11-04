@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, FileSpreadsheet } from "lucide-react";
+import { ArrowUpRight, FileSpreadsheet, FileText } from "lucide-react";
 import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { Avatar } from "@/components/ui/avatar";
 import { BannerAlert } from "@/components/ui/banner-alert";
@@ -19,6 +19,7 @@ import { Select } from "@/components/ui/select";
 import { Skeleton, SkeletonRow, SkeletonText } from "@/components/ui/skeleton";
 import { Sparkline } from "@/components/ui/sparkline";
 import { Spinner } from "@/components/ui/spinner";
+import { SplitButton } from "@/components/ui/split-button";
 import { Tabs } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/Button";
 import {
@@ -91,6 +92,7 @@ export function RaporlarPage() {
   const [loading, setLoading] = useState(false);
   const first = useRef(true);
   const [exporting, setExporting] = useState<"idle" | "pending" | "running" | "done">("idle");
+  const [format, setFormat] = useState<"csv" | "xlsx" | "pdf">("csv");
   const [upload, setUpload] = useState<{ name: string; value: number } | null>(null);
 
   // Dönem değişince tablo kısa bir süre iskelet gösterir (sunucudan geliyormuş gibi).
@@ -112,11 +114,11 @@ export function RaporlarPage() {
     if (exporting === "running") {
       const id = window.setTimeout(() => {
         setExporting("done");
-        notify({ tone: "success", title: "Dışa Aktarma Hazır", body: `${num.format(s.orderCount)} sipariş · siparisler-${period}.csv` });
+        notify({ tone: "success", title: "Dışa Aktarma Hazır", body: `${num.format(s.orderCount)} sipariş · siparisler-${period}.${format}` });
       }, 1400);
       return () => window.clearTimeout(id);
     }
-  }, [exporting, notify, period, s.orderCount]);
+  }, [exporting, notify, period, s.orderCount, format]);
 
   useEffect(() => {
     if (!upload || upload.value >= 100) return;
@@ -312,14 +314,24 @@ export function RaporlarPage() {
           )}
           <Progress
             className="w-full"
-            label="siparisler.csv"
+            label={`siparisler.${format}`}
             value={exporting === "done" ? 100 : exporting === "running" ? null : 0}
             hint={exporting === "done" ? "Dosya indirilmeye hazır." : "Sipariş no, tarih, müşteri, kanal, tutar, durum"}
           />
-          <Button disabled={exporting === "pending" || exporting === "running"} onClick={() => setExporting("pending")}>
-            {exporting === "pending" ? <Spinner size="sm" tone="current" label={null} /> : null}
+          <SplitButton
+            disabled={exporting === "pending" || exporting === "running"}
+            icon={exporting === "pending" ? <Spinner size="sm" tone="current" label={null} /> : null}
+            onClick={() => {
+              setFormat("csv");
+              setExporting("pending");
+            }}
+            items={[
+              { label: "Excel (.xlsx)", icon: <FileSpreadsheet />, onSelect: () => (setFormat("xlsx"), setExporting("pending")) },
+              { label: "PDF Özeti", icon: <FileText />, onSelect: () => (setFormat("pdf"), setExporting("pending")) },
+            ]}
+          >
             {exporting === "pending" ? "Sıraya Alınıyor" : exporting === "done" ? "Yeniden Oluştur" : "CSV Oluştur"}
-          </Button>
+          </SplitButton>
         </div>
       </Well>
       <Well labelledBy="rapor-ice">

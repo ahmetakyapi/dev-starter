@@ -130,7 +130,7 @@ export const AllVariants: Story = {
         <CodeBlock title="app/layout.tsx" code={'<html lang="tr" data-theme={theme} data-palette="signature" suppressHydrationWarning>'} className="w-full" />
       </Cell>
       <Cell label="Dosya · Satır Kırılır">
-        <CodeBlock title="next.config.ts" wrap code="Content-Security-Policy: default-src 'self'; img-src 'self' data: https://pusula.kervantekstil.com.tr; connect-src 'self' https://api.kervantekstil.com.tr" className="w-full" />
+        <CodeBlock title="next.config.ts" wrap code="Content-Security-Policy: default-src 'self'; img-src 'self' data: https://pusula.pusula.app; connect-src 'self' https://api.pusula.app" className="w-full" />
       </Cell>
     </Gallery>
   ),

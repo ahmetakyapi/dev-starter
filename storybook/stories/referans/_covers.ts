@@ -10,6 +10,7 @@
  */
 export const COVERS: Record<string, string> = {
   "bencho.dev": "https://bencho.dev/share-cover-ring.png",
+  "easyui.site": "https://easyui.site/og-image.webp",
   "ui.wensity.com": "https://ui.wensity.com/og/wensity-ui-og.jpg",
   "developer.apple.com": "https://developer.apple.com/tutorials/developer-og.jpg",
   "shojimac.com": "https://shojimac.com/og.jpg",

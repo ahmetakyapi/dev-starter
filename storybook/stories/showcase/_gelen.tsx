@@ -23,6 +23,7 @@ import {
 import { AssigneePicker, type Person } from "@/components/ui/assignee-picker";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ChipGroup, FilterChip, RemovableChip } from "@/components/ui/chip";
 import { Combobox, type ComboboxItem } from "@/components/ui/combobox";
 import {
@@ -56,6 +57,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Rating } from "@/components/ui/rating";
 import { Reactions, type Reaction } from "@/components/ui/reactions";
 import { SearchField, matchesTr } from "@/components/ui/search-field";
+import { SelectionAction, SelectionBar } from "@/components/ui/selection-bar";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Sheet } from "@/components/ui/sheet";
 import { Timeline } from "@/components/ui/timeline";
@@ -132,6 +134,7 @@ export function GelenPage() {
   const { params, navigate, notify } = useApp();
   const [overrides, setOverrides] = useState<Record<string, Partial<Ticket>>>({});
   const [archived, setArchived] = useState<readonly string[]>([]);
+  const [picked, setPicked] = useState<readonly string[]>([]);
   const [folder, setFolder] = useState<Folder>(initialFolder(params));
   const [who, setWho] = useState<ComboboxItem | null>(null);
   const [priorities, setPriorities] = useState<readonly Priority[]>([]);
@@ -184,6 +187,24 @@ export function GelenPage() {
     if (params.ticket === t.id) navigate("inbox", { ...params, ticket: undefined });
   };
   const open = (t: Ticket) => navigate("inbox", { ...params, ticket: t.id });
+
+  /* Toplu işlemler: seçim çubuğundan. Tek bildirim, tek geri alma. */
+  const bulkAssign = () => {
+    setOverrides((o) => Object.fromEntries([...Object.entries(o), ...picked.map((id) => [id, { ...o[id], assignee: ME.id }])]));
+    notify({ tone: "info", title: `${picked.length} Talep Sana Atandı` });
+    setPicked([]);
+  };
+  const bulkResolve = () => {
+    setOverrides((o) => Object.fromEntries([...Object.entries(o), ...picked.map((id) => [id, { ...o[id], status: "Çözüldü" as TicketStatus, resolved: true }])]));
+    notify({ tone: "success", title: `${picked.length} Talep Çözüldü` });
+    setPicked([]);
+  };
+  const bulkArchive = () => {
+    const ids = picked;
+    setArchived((a) => [...a, ...ids]);
+    notify({ tone: "info", title: `${ids.length} Talep Arşivlendi`, body: "Arşivdeki talepler raporlarda sayılmaya devam eder.", undo: () => setArchived((a) => a.filter((id) => !ids.includes(id))) });
+    setPicked([]);
+  };
 
   const columns: Column<Ticket>[] = [
     {
@@ -308,6 +329,34 @@ export function GelenPage() {
   const pageCount = Math.max(1, Math.ceil(sorted.length / PER_PAGE));
   const page = Math.min(pageCount, Math.max(1, Number(params.page) || 1));
   const visible = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const pageIds = visible.map((t) => t.id);
+  const pickedOnPage = pageIds.filter((id) => picked.includes(id)).length;
+  const tableColumns: Column<Ticket>[] = [
+    {
+      key: "sec",
+      width: "3rem",
+      header: (
+        <Checkbox
+          aria-label="Bu sayfadaki talepleri seç"
+          checked={pickedOnPage > 0 && pickedOnPage === pageIds.length}
+          ref={(el) => {
+            if (el) el.indeterminate = pickedOnPage > 0 && pickedOnPage < pageIds.length;
+          }}
+          onChange={(event) =>
+            setPicked((p) => (event.target.checked ? [...new Set([...p, ...pageIds])] : p.filter((id) => !pageIds.includes(id))))
+          }
+        />
+      ),
+      render: (t) => (
+        <Checkbox
+          aria-label={`${t.id} talebini seç`}
+          checked={picked.includes(t.id)}
+          onChange={(event) => setPicked((p) => (event.target.checked ? [...p, t.id] : p.filter((id) => id !== t.id)))}
+        />
+      ),
+    },
+    ...columns,
+  ];
   const current = params.ticket ? tickets.find((t) => t.id === params.ticket) : undefined;
   const openCount = tickets.filter((t) => t.status === "Açık").length;
   const waitCount = tickets.filter((t) => t.status === "Beklemede").length;
@@ -380,8 +429,8 @@ export function GelenPage() {
               </PopoverTrigger>
               <PopoverContent title="Görünümü Paylaş" description="Bağlantıyı alan ekip arkadaşı aynı süzgeçleri görür.">
                 <div className="flex items-center gap-2 rounded-md bg-surface py-1 pr-1 pl-3 text-small text-body">
-                  <span className="min-w-0 flex-1 truncate">pusula.app/kervan{href("inbox", { sort: params.sort, dir: params.dir })}</span>
-                  <CopyButton value={`https://pusula.app/kervan${href("inbox", { sort: params.sort, dir: params.dir })}`} label="Bağlantıyı Kopyala" />
+                  <span className="min-w-0 flex-1 truncate">pusula.app/{href("inbox", { sort: params.sort, dir: params.dir })}</span>
+                  <CopyButton value={`https://pusula.app/${href("inbox", { sort: params.sort, dir: params.dir })}`} label="Bağlantıyı Kopyala" />
                 </div>
               </PopoverContent>
             </Popover>
@@ -530,7 +579,7 @@ export function GelenPage() {
             <div className="grid grid-cols-1 gap-3">
               <DataTable
                 caption="Talepler"
-                columns={columns}
+                columns={tableColumns}
                 rows={visible}
                 rowKey={(t) => t.id}
                 sort={sort}
@@ -591,6 +640,17 @@ export function GelenPage() {
         </div>
       </div>
 
+      <SelectionBar count={picked.length} noun="talep" onClear={() => setPicked([])}>
+        <SelectionAction icon={<UserRoundCheck />} onClick={bulkAssign}>
+          Bana Ata
+        </SelectionAction>
+        <SelectionAction icon={<CheckCheck />} onClick={bulkResolve}>
+          Çözüldü
+        </SelectionAction>
+        <SelectionAction tone="danger" icon={<Archive />} onClick={bulkArchive}>
+          Arşivle
+        </SelectionAction>
+      </SelectionBar>
       <Sheet
         open={Boolean(current)}
         onOpenChange={(next) => {

@@ -68,6 +68,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `copy-button.tsx` | Panoya kopyala | lucide | Evet | Sonuç canlı bölgede; hata da söylenir |
 | `code-block.tsx` | Kurulum komutu, yapılandırma, API örneği; paket yöneticisi sekmeleri | `copy-button` | Evet | Sekme listesi, ok tuşları; kaydırılabilir `pre` odaklanır; `$` istemi kopyalanmaz ve okunmaz; `persist` tercihi paylaşır |
 | `hold-button.tsx` | Yıkıcı ama geri alınabilir eylemde diyalogsuz onay (arşivle, listeden çıkar) | lucide | Evet | Tıklama onaylamaz, ipucu `aria-describedby`; Boşluk/Enter basılı tutulur; dolgu `clip-path`, metin her an AA; sonuç `role="status"` |
+| `split-button.tsx` | Ana eylem + aynı işin diğer biçimleri ("CSV" + ▾ Excel, PDF) | `dropdown-menu`, lucide | Evet | İki ayrı düğme: ana eylem kendi adıyla, ok "Diğer Biçimler" menü düğmesi (Base UI Menu) |
 | `kbd.tsx` | Klavye tuşu, kısayol | yok | Hayır | Simgeli tuşta `label`; kombinasyon tek ad |
 | `close-button.tsx` | Diyalog, uyarı, çip, duyuru kapatma | lucide | Hayır | `aria-label` TİPTE zorunlu; 44 px dokunma alanı (görsel 28/32); odak halkası dairede |
 | `chip.tsx` | `FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup` | lucide | Hayır | Süzgeç `aria-pressed` + ✓; yalnız × düğme, adı "Kaldır: İstanbul"; grup `role="group"` + ad |
@@ -82,6 +83,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `dialog.tsx` | Onay, kısa form, yıkıcı eylem | yerel `<dialog>` | Evet | Odak tuzağı ve Escape tarayıcıdan, odak açana döner, sayaçlı kilit |
 | `sheet.tsx` | Telefonda alttan çekmece, masaüstünde yan panel | yerel `<dialog>` | Evet | Diyalogla aynı; sürükleme tek yol değil |
 | `popover.tsx` | Sayfayı kilitlemeyen küçük kutu | Base UI | Evet | Dış tıklama, Escape, odak dönüşü |
+| `product-tour.tsx` | Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım) | `react-dom` (portal), lucide | Evet | Kart diyalog: odak, Tab döngüsü, ← → adım, Escape kapatır ve odak açana döner; bulunamayan hedef atlanır |
 | `tooltip.tsx` | `Tooltip`: görsel etiket · `InfoTip`: açıklama | Base UI | Evet | Tooltip dokunmatikte açılmaz (bilinçli); InfoTip tıklamayla açılır |
 | `dropdown-menu.tsx` | Eylem menüsü | Base UI | Evet | Menü düğmesi kalıbı tam: oklar, Home/End, harf, Escape |
 | `command-palette.tsx` | ⌘K / Ctrl+K komut paleti | yerel `<dialog>` | Evet | Combobox + listbox, `aria-activedescendant`, Türkçe arama |
@@ -94,6 +96,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `data-table.tsx` | Sıralanabilir tablo, karşılaştırma çubuğu | `next/link` | Hayır | `aria-sort`, `<caption>`, odaklanabilir kaydırma bölgesi, satır başlığı `th` |
+| `selection-bar.tsx` | Satır seçilince alttan yükselen toplu işlem adası | motion, lucide | Evet | `role="toolbar"`, ← → gezinme, Escape seçimi bırakır; sayı canlı bölgede; işlemler satır menüsünde de |
 | `tree-view.tsx` | Klasör/kategori ağacı | yok | Evet | WAI-ARIA tree, tam klavye haritası, yazarak arama |
 | `tree-table.tsx` | Açılır satırlı tablo | yok | Evet | `treegrid`, satır odağı, `aria-level/expanded` |
 | `pagination.tsx` | Adreste sayfa numarası | `next/link` | Hayır | `aria-current="page"`; telefonda "3 / 12" |
@@ -122,6 +125,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `empty-state.tsx` | Boş durum: ikon / sahne / satır | yok | Hayır | Sahne `aria-hidden`; başlık düzeyi `titleAs` ile |
 | `announcement.tsx` | Kahraman üstü duyuru hapı; kapatılabilir varyant | `next/link`, lucide, `close-button` | Evet | Hap tek bağlantı, × kardeş öğe; noktasız, yanıp sönmez |
 | `carousel.tsx` | Yan yana kaydırılan kartlar | lucide, motion | Evet | `aria-roledescription` carousel/slide; ←/→ Home/End; canlı bölge konumu söyler; otomatik oynatma yok |
+| `toc-nav.tsx` | Uzun sayfada yapışkan içindekiler + okuma ilerlemesi | yok | Evet | `nav` + `aria-current="location"`; tık başlığa kaydırır ve odak verir; ilerleme kaydırmaya bağlı CSS |
 | `marquee.tsx` | Kayan şerit: logolar, entegrasyonlar (sayfada tek) | lucide | Evet | WCAG 2.2.2: görünür durdurma düğmesi (`aria-pressed`), üzerine gelince/odakta bekler; kopya `aria-hidden` + `inert`; reduced-motion'da durağan |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama

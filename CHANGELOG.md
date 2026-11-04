@@ -7,6 +7,30 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### EasyUI turu: seçim çubuğu, bölünmüş düğme, ürün turu, içindekiler — 2026-11-04
+
+Referans easyui.site (davranış öğrenildi, kod alınmadı; `knowledge/decisions.md` → "EasyUI Turu").
+
+#### Eklendi
+
+- **`selection-bar`**: satır seçilince alttan yükselen ters ada (toolbar,
+  ← →, Escape); Pusula Gelen'de onay kutusu sütunu + Bana Ata / Çözüldü /
+  Arşivle, tek bildirim ve tek Geri Al.
+- **`split-button`**: ana eylem + ▾ aynı işin biçimleri; Pusula Raporlar →
+  CSV / Excel / PDF.
+- **`product-tour`**: hedefi açıkta bırakan karartma, diyalog kart, ← →,
+  Escape, odak dönüşü, telefonda alta yaslı; Pusula Pano → Tanıtım Turu.
+- **`toc-nav`**: yapışkan içindekiler, etkin bölüm, okuma ilerlemesi;
+  Pusula Ayarlar'ın on bir bölümü.
+
+#### Değişti
+
+- **`app-shell`**: masaüstünde kabuk ekran boyunda, kenar çubuğu yerinde,
+  içerik karosu kendi içinde kayar (önce karo kaydırma kabıydı ama kaymıyordu,
+  `sticky` öğeler bozuluyordu); telefonda pencere kayar.
+- Pusula'daki kurgusal firma adı (Kervan Tekstil) kaldırıldı: çalışma alanı
+  doğrudan **Pusula**, adresler `pusula.app`.
+
 ### Referans arşivi: ortalanmış kart sahnesi — 2026-11-04
 
 - Sayfa yeniden tasarlandı: etkin kart ortada ve tam boy, komşular iki

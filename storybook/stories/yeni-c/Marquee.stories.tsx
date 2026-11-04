@@ -5,7 +5,7 @@ import { Marquee } from "@/components/ui/marquee";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const LOGOS = [
-  { name: "Kervan Tekstil", Glyph: Package },
+  { name: "Nehir Butik", Glyph: Package },
   { name: "Liman Kavurma", Glyph: Flame },
   { name: "Ege Süt", Glyph: Coffee },
   { name: "Atlas Lojistik", Glyph: Truck },

@@ -155,7 +155,9 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
       setRoute({ page, params: clean });
       setPending(null);
       stopRouteProgress();
+      // Masaüstünde içerik karosu kayar, telefonda pencere: ikisi de başa döner.
       window.scrollTo({ top: 0 });
+      document.getElementById("icerik")?.scrollTo({ top: 0 });
     }, LOAD_MS);
   }, []);
 

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "split-button",
+  "type": "registry:ui",
+  "title": "Bölünmüş Düğme",
+  "description": "Ana eylem + aynı işin diğer biçimleri (\"CSV\" + ▾ Excel, PDF)",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/dropdown-menu.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/split-button.tsx",
+      "content": "\"use client\";\n\nimport { ChevronDown } from \"lucide-react\";\nimport type { ReactNode } from \"react\";\nimport { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from \"@/components/ui/dropdown-menu\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Bölünmüş düğme: en sık seçilen eylem ve aynı işin kardeşleri tek hapta\n * (\"CSV Olarak İndir\" + ▾ Excel, PDF). Kardeşler GERÇEKTEN aynı işin\n * biçimleriyse kullan; farklı işler (Düzenle, Sil, Paylaş) tek düğmeye\n * sıkıştırılmaz, onlar `dropdown-menu`.\n *\n * İKİ AYRI DÜĞME, TEK GÖRÜNÜŞ: sol yarı ana eylemi hemen yapar, sağdaki ok\n * menüyü açar. Ekran okuyucu ikisini ayrı duyar: ana düğme kendi adıyla,\n * ok \"Diğer Biçimler\" (değiştirilebilir) + menü düğmesi bilgisiyle (Base UI\n * Menu: oklar, Home/End, harfle atlama, Escape, odak dönüşü).\n *\n * GÖRÜNÜŞ: iki yarı arasında 1 px'lik aralık (dolgunun kendi tonunda\n * soluk çizgi), dış köşeler yuvarlak, iç köşeler düz. Menü açıkken ok\n * döner (`data-popup-open`). Dokunmatikte ikisi de 44 px.\n *\n *   <SplitButton onClick={csv} items={[{ label: \"Excel (.xlsx)\", onSelect: xlsx }]}>CSV Olarak İndir</SplitButton>\n */\n\nexport type SplitItem = { label: string; onSelect: () => void; icon?: ReactNode; tone?: \"default\" | \"danger\"; disabled?: boolean };\n\nconst TONES = {\n  primary: {\n    face: \"bg-primary text-on-primary hover:bg-primary-hover\",\n    seam: \"bg-on-primary/25\",\n    shadow: \"shadow-cta\",\n  },\n  secondary: {\n    face: \"bg-overlay text-strong hover:bg-surface-raised\",\n    seam: \"bg-line\",\n    shadow: \"shadow-raised\",\n  },\n} as const;\n\ntype SplitButtonProps = {\n  children: ReactNode;\n  onClick: () => void;\n  items: readonly SplitItem[];\n  /** Ok düğmesinin adı. */\n  menuLabel?: string;\n  variant?: keyof typeof TONES;\n  disabled?: boolean;\n  /** Ana eylemin ikonu (metnin solunda). */\n  icon?: ReactNode;\n  className?: string;\n};\n\nexport function SplitButton({ children, onClick, items, menuLabel = \"Diğer Biçimler\", variant = \"primary\", disabled = false, icon, className }: SplitButtonProps) {\n  const t = TONES[variant];\n  const half =\n    \"inline-flex min-h-11 items-center justify-center gap-2 font-semibold transition-[background-color,scale] duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 pointer-fine:min-h-10 [&_svg]:size-4\";\n  return (\n    <div role=\"group\" aria-label={typeof children === \"string\" ? children : undefined} className={cn(\"inline-flex items-stretch rounded-md\", t.shadow, className)}>\n      <button type=\"button\" disabled={disabled} onClick={onClick} className={cn(half, \"rounded-l-md px-4 text-base\", t.face)}>\n        {icon}\n        {children}\n      </button>\n      <span aria-hidden className={cn(\"w-px\", t.seam)} />\n      <DropdownMenu>\n        <DropdownMenuTrigger\n          disabled={disabled}\n          aria-label={menuLabel}\n          className={cn(half, \"group rounded-r-md px-2.5\", t.face)}\n        >\n          <ChevronDown aria-hidden className=\"transition-[rotate] duration-200 group-data-popup-open:rotate-180\" strokeWidth={2.25} />\n        </DropdownMenuTrigger>\n        <DropdownMenuContent align=\"end\">\n          {items.map((item) => (\n            <DropdownMenuItem key={item.label} icon={item.icon} tone={item.tone} disabled={item.disabled} onClick={item.onSelect}>\n              {item.label}\n            </DropdownMenuItem>\n          ))}\n        </DropdownMenuContent>\n      </DropdownMenu>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Düğme ve İkon"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "split-button",
+    "palettes": false
+  }
+}

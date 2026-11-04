@@ -49,7 +49,7 @@ const meta = {
     docs: {
       description: {
         component:
-          `Pusula: küçük ekipler için destek + satış + görev + takvim + asistan paneli. Kataloğun ${TOTAL} bileşeninin hepsi tek bir kurgusal üründe, aynı sahte veriyle (Kervan Tekstil, 2 Kasım 2026) birlikte çalışır: panodaki ciro = müşteriye göre listenin toplamı = rapor tablosunun dip satırı. Kenar çubuğu, ⌘K ve sayfa içi bağlantılar iç durumla gezer; dönem seçimi (Hafta/Ay/Yıl) bütün grafikleri birlikte değiştirir. Kapsam tablosu: Ekranlar/Showcase/Bileşen Kapsamı.`,
+          `Pusula: küçük ekipler için destek + satış + görev + takvim + asistan paneli. Kataloğun ${TOTAL} bileşeninin hepsi tek bir kurgusal üründe, aynı sahte veriyle (Pusula, 2 Kasım 2026) birlikte çalışır: panodaki ciro = müşteriye göre listenin toplamı = rapor tablosunun dip satırı. Kenar çubuğu, ⌘K ve sayfa içi bağlantılar iç durumla gezer; dönem seçimi (Hafta/Ay/Yıl) bütün grafikleri birlikte değiştirir. Kapsam tablosu: Ekranlar/Showcase/Bileşen Kapsamı.`,
       },
     },
   },
@@ -262,9 +262,9 @@ export const SignedOut: Story = {
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@gmail.com");
-    await userEvent.type(canvas.getByLabelText("Şifre"), "kervan2026");
+    await userEvent.type(canvas.getByLabelText("Şifre"), "pusula2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
-    await canvas.findByText(/kervantekstil\.com\.tr/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
+    await canvas.findByText(/pusula\.com\.tr/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
     await settle(globals);
   },
 };

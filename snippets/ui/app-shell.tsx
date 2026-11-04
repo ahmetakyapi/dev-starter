@@ -92,7 +92,12 @@ export function AppShell({
   const toggleLabel = collapsed ? "Kenar Çubuğunu Genişlet" : "Kenar Çubuğunu Daralt";
 
   return (
-    <div className={cn("flex min-h-dvh flex-col bg-surface lg:flex-row", className)}>
+    // KAYDIRMA: masaüstünde kabuk ekran boyunda (`lg:h-dvh`), kenar çubuğu yerinde
+    // durur ve içerik karosu KENDİ içinde kayar; telefonda sayfa pencereyle kayar.
+    // Önceki `min-h-dvh` + her boyda `overflow-y-auto` içeriği hiç kaydırmıyordu
+    // ama kaydırma kabı yapıyordu: içerideki `sticky` öğeler (bölüm gezintisi,
+    // yapışkan tablo başlığı) yapışmıyor, uzun sayfada kenar çubuğu kayboluyordu.
+    <div className={cn("flex min-h-dvh flex-col bg-surface lg:h-dvh lg:flex-row", className)}>
       {/* Telefon üst çubuğu */}
       <header className="flex h-14 shrink-0 items-center gap-2 px-3 lg:hidden">
         <button
@@ -187,7 +192,7 @@ export function AppShell({
       <div className="flex min-h-0 min-w-0 flex-1 flex-col px-2 pb-2 lg:py-2 lg:pr-2 lg:pl-0">
         <Content
           id={Content === "main" ? "icerik" : undefined}
-          className="min-h-0 flex-1 overflow-y-auto rounded-xl bg-overlay shadow-raised ring-1 ring-line"
+          className="min-h-0 flex-1 rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:overflow-y-auto lg:overscroll-contain"
         >
           {children}
         </Content>

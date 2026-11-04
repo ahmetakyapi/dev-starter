@@ -1,9 +1,9 @@
 /**
  * Pusula: bütün sahte veri tek yerde.
  *
- * Kurgu: "Kervan Tekstil" (Denizli) otellere, kafelere ve butiklere ev
- * tekstili satan altı kişilik bir ekip. Pusula onların destek + satış +
- * takvim + asistan paneli. Bugün 2 Kasım 2026, Pazartesi, 10.40.
+ * Kurgu: Pusula, Denizli'de otellere, kafelere ve butiklere ev tekstili
+ * satan altı kişilik bir ekibin destek + satış + takvim + asistan paneli;
+ * çalışma alanının adı da Pusula (ayrı bir firma adı yok). Bugün 2 Kasım 2026, Pazartesi, 10.40.
  *
  * TUTARLILIK İLKESİ: hiçbir toplam elle yazılmaz. Siparişler ve talepler
  * tohumlu bir üreteçle (her derlemede aynı) bir kez üretilir; panodaki
@@ -66,7 +66,7 @@ function weighted<T>(rand: () => number, items: readonly T[], weight: (item: T) 
 /* --- Ekip ve çalışma alanı ---------------------------------------------- */
 
 export const WORKSPACE = {
-  name: "Kervan Tekstil",
+  name: "Pusula",
   city: "Denizli",
   plan: "Ekip Planı",
   seats: { used: 6, total: 8 },
@@ -81,18 +81,18 @@ export const WORKSPACE = {
       { label: "Yedek", value: 0.7, series: 5 },
     ],
   },
-  domain: "kervantekstil.com.tr",
+  domain: "pusula.app",
 } as const;
 
 export type Member = { id: string; name: string; role: string; email: string };
 
 export const TEAM: readonly Member[] = [
-  { id: "ahmet", name: "Ahmet Akyapı", role: "Destek Lideri", email: "ahmet@kervantekstil.com.tr" },
-  { id: "zeynep", name: "Zeynep Kaya", role: "Destek Uzmanı", email: "zeynep@kervantekstil.com.tr" },
-  { id: "mert", name: "Mert Aksoy", role: "Satış Sorumlusu", email: "mert@kervantekstil.com.tr" },
-  { id: "selin", name: "Selin Arslan", role: "Satış Temsilcisi", email: "selin@kervantekstil.com.tr" },
-  { id: "can", name: "Can Demir", role: "Operasyon", email: "can@kervantekstil.com.tr" },
-  { id: "burak", name: "Burak Öztürk", role: "Muhasebe", email: "burak@kervantekstil.com.tr" },
+  { id: "ahmet", name: "Ahmet Akyapı", role: "Destek Lideri", email: "ahmet@pusula.app" },
+  { id: "zeynep", name: "Zeynep Kaya", role: "Destek Uzmanı", email: "zeynep@pusula.app" },
+  { id: "mert", name: "Mert Aksoy", role: "Satış Sorumlusu", email: "mert@pusula.app" },
+  { id: "selin", name: "Selin Arslan", role: "Satış Temsilcisi", email: "selin@pusula.app" },
+  { id: "can", name: "Can Demir", role: "Operasyon", email: "can@pusula.app" },
+  { id: "burak", name: "Burak Öztürk", role: "Muhasebe", email: "burak@pusula.app" },
 ];
 export const ME = TEAM[0];
 export const member = (id: string) => TEAM.find((m) => m.id === id) ?? TEAM[0];

@@ -57,7 +57,11 @@ import { CodeBlock, installTabs } from "@/components/ui/code-block";
 import { CompareSlider } from "@/components/ui/compare-slider";
 import { HoldButton } from "@/components/ui/hold-button";
 import { Reactions } from "@/components/ui/reactions";
+import { ProductTour } from "@/components/ui/product-tour";
+import { SelectionAction, SelectionBar } from "@/components/ui/selection-bar";
 import { SignaturePad } from "@/components/ui/signature-pad";
+import { SplitButton } from "@/components/ui/split-button";
+import { TocNav } from "@/components/ui/toc-nav";
 import { TimeScrubber } from "@/components/ui/time-scrubber";
 import { Marquee } from "@/components/ui/marquee";
 import { TextShimmer } from "@/components/ui/text-shimmer";
@@ -158,7 +162,7 @@ const GLYPHS = [
 const SUPPLIERS = [
   { name: "Yirgacheffe Kooperatifi", Glyph: Bean },
   { name: "Ege Süt", Glyph: Coffee },
-  { name: "Kervan Lojistik", Glyph: Truck },
+  { name: "Rota Lojistik", Glyph: Truck },
   { name: "Ambalaj Atölyesi", Glyph: Package },
   { name: "Liman Kavurma", Glyph: Flame },
   { name: "Çarşı Pazarı", Glyph: Store },
@@ -185,6 +189,54 @@ function PickerDemo() {
         </div>
       ))}
     </dl>
+  );
+}
+
+const BEANS = ["Etiyopya Yirgacheffe", "Kolombiya Huila", "Brezilya Cerrado", "Kenya Nyeri"] as const;
+
+function BasketDemo() {
+  const [picked, setPicked] = useState<string[]>(["Kolombiya Huila", "Kenya Nyeri"]);
+  return (
+    <div className="relative grid w-full gap-1.5 rounded-xl bg-overlay p-2 pb-20 shadow-raised">
+      {BEANS.map((b) => (
+        <Checkbox
+          key={b}
+          label={b}
+          checked={picked.includes(b)}
+          onChange={(event) => setPicked((p) => (event.target.checked ? [...p, b] : p.filter((x) => x !== b)))}
+        />
+      ))}
+      <div className="absolute inset-x-0 bottom-3 grid">
+        <SelectionBar position="sticky" count={picked.length} noun="çekirdek" onClear={() => setPicked([])}>
+          <SelectionAction onClick={() => setPicked([])}>Kavurmaya Al</SelectionAction>
+          <SelectionAction tone="danger" onClick={() => setPicked([])}>
+            Stoktan Düş
+          </SelectionAction>
+        </SelectionBar>
+      </div>
+    </div>
+  );
+}
+
+function TourDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="grid justify-items-center gap-3 text-center">
+      <p className="max-w-64 text-base text-body">Vitrinin üç hücresini sırayla gösteren kısa tur.</p>
+      <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>
+        Vitrin Turunu Başlat
+      </Button>
+      <ProductTour
+        label="Vitrin Turu"
+        open={open}
+        onOpenChange={setOpen}
+        steps={[
+          { target: "#b-code-block", title: "Kod Bloğu", body: "Paket yöneticisi seçimi bütün bloklarda hatırlanır." },
+          { target: "#b-hold-button", title: "Basılı Tut Onayı", body: "Kazara tıklama arşivlemez; bırakınca geri sarılır." },
+          { target: "#b-product-tour", title: "Ve Bu Tur", body: "Escape kapatır, odak bu düğmeye döner." },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -367,6 +419,35 @@ function TemelGroup() {
       </Cell>
       <Cell file="signature-pad" name="İmza Alanı" note="Çizerek ya da yazarak; değer SVG, tema değişince yeniden çizilir." span={2} align="stretch">
         <SignaturePad label="Teslim Alan" height={120} />
+      </Cell>
+      <Cell file="split-button" name="Bölünmüş Düğme" note="Ana eylem hemen çalışır, ok aynı işin diğer biçimlerini açar." span={2}>
+        <div className="grid justify-items-center gap-3">
+          <SplitButton onClick={() => undefined} items={[{ label: "Excel (.xlsx)", onSelect: () => undefined }, { label: "PDF Özeti", onSelect: () => undefined }]}>
+            CSV Olarak İndir
+          </SplitButton>
+          <SplitButton variant="secondary" onClick={() => undefined} items={[{ label: "Taslak Olarak Kaydet", onSelect: () => undefined }, { label: "Zamanla", onSelect: () => undefined }]}>
+            Yayınla
+          </SplitButton>
+        </div>
+      </Cell>
+      <Cell file="selection-bar" name="Seçim Çubuğu" note="Satır seçilince alttan yükselen ters ada; ← → gezinir, Escape bırakır." span={4} align="stretch">
+        <BasketDemo />
+      </Cell>
+      <Cell file="toc-nav" name="Bölüm Gezintisi" note="Okunan bölüm vurgulu, altta okuma ilerlemesi; bu sayfanın bölümlerine gider." span={3}>
+        <TocNav
+          label="Vitrin İçindekiler"
+          sections={[
+            { id: "bilesenler-baslik", label: "Bileşenler" },
+            { id: "grafikler-baslik", label: "Grafikler" },
+            { id: "bloklar-baslik", label: "Bloklar" },
+            { id: "tema-baslik", label: "Tema" },
+            { id: "kapsam-baslik", label: "Kapsam" },
+          ]}
+          className="static"
+        />
+      </Cell>
+      <Cell file="product-tour" name="Ürün Turu" note="Hedef karartmanın dışında kalır; kart diyalog, ← → adım, Escape kapatır." span={3}>
+        <TourDemo />
       </Cell>
     </CellGrid>
   );

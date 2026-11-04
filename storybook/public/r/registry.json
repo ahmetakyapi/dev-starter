@@ -1597,6 +1597,32 @@
       ]
     },
     {
+      "name": "product-tour",
+      "type": "registry:ui",
+      "title": "Ürün Turu",
+      "description": "Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "product-tour",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/product-tour.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "progress",
       "type": "registry:ui",
       "title": "İlerleme",
@@ -1911,6 +1937,33 @@
       ]
     },
     {
+      "name": "selection-bar",
+      "type": "registry:ui",
+      "title": "Seçim Çubuğu",
+      "description": "Satır seçilince alttan yükselen toplu işlem adası",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "selection-bar",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/selection-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "settings-dialog",
       "type": "registry:ui",
       "title": "Ayarlar Penceresi",
@@ -2080,6 +2133,33 @@
       "files": [
         {
           "path": "snippets/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "split-button",
+      "type": "registry:ui",
+      "title": "Bölünmüş Düğme",
+      "description": "Ana eylem + aynı işin diğer biçimleri (\"CSV\" + ▾ Excel, PDF)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/dropdown-menu.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "split-button",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/split-button.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2435,6 +2515,29 @@
       "files": [
         {
           "path": "snippets/ui/toast.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toc-nav",
+      "type": "registry:ui",
+      "title": "Bölüm Gezintisi",
+      "description": "Uzun sayfada yapışkan içindekiler + okuma ilerlemesi",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "toc-nav",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/toc-nav.tsx",
           "type": "registry:ui"
         }
       ]

@@ -18,6 +18,7 @@ import { CodeBlock } from "@/components/ui/code-block";
 import { SegmentedMeter } from "@/components/ui/meter";
 import { SignaturePad, type SignatureValue } from "@/components/ui/signature-pad";
 import { TimeScrubber, formatClock } from "@/components/ui/time-scrubber";
+import { TocNav } from "@/components/ui/toc-nav";
 import { SettingsDialog, SettingsRow, SettingsSection, type SettingsTab } from "@/components/ui/settings-dialog";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -86,7 +87,7 @@ const SHORTCUTS: readonly { keys: readonly string[]; label: string; spoken: stri
   { keys: ["⇧", "↵"], label: "Asistanda yeni satır", spoken: "Shift Enter" },
 ];
 
-const WEBHOOK_URL = `https://api.${WORKSPACE.domain}/pusula/talep`;
+const WEBHOOK_URL = `https://api.${WORKSPACE.domain}/talep`;
 
 const WEBHOOK_TABS = [
   {
@@ -97,6 +98,20 @@ const WEBHOOK_TABS = [
     label: "JavaScript",
     code: `await fetch("${WEBHOOK_URL}", {\n  method: "POST",\n  headers: { "Content-Type": "application/json", "Pusula-Imza": imza },\n  body: JSON.stringify({ olay: "talep.acildi", talep: "T-1042" }),\n});`,
   },
+] as const;
+
+const SECTIONS = [
+  { id: "ayar-profil", label: "Profil" },
+  { id: "ayar-bildirim", label: "Bildirimler" },
+  { id: "ayar-gorunum", label: "Görünüm" },
+  { id: "ayar-satis", label: "Satış" },
+  { id: "ayar-guvenlik", label: "Güvenlik" },
+  { id: "ayar-kisayol", label: "Kısayollar" },
+  { id: "ayar-etiket", label: "Etiketler" },
+  { id: "ayar-ozet", label: "Özet" },
+  { id: "ayar-imza", label: "İmza" },
+  { id: "ayar-alan", label: "Dosya Alanı" },
+  { id: "ayar-webhook", label: "Webhook" },
 ] as const;
 
 export function AyarlarPage() {
@@ -128,6 +143,8 @@ export function AyarlarPage() {
         description={`${WORKSPACE.name} · ${WORKSPACE.plan} · Değişiklikler Anında Kaydedilir`}
         actions={<SettingsDialog tabs={QUICK} triggerLabel="Hızlı Ayarlar" description="Bu cihazdaki Pusula tercihleri." />}
       />
+
+      <TocNav label="Ayar Bölümleri" sections={SECTIONS} className="px-4 pt-4 sm:px-6" />
 
       <div className="grid grid-cols-1 gap-4 p-4 sm:p-6 lg:grid-cols-2">
         <Well labelledBy="ayar-profil">
