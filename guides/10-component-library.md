@@ -257,6 +257,9 @@ kaldığı için erişilebilirlik açığı değil.
 - **SignaturePad**: "Yazarak" yolu kaldırılmaz (WCAG 2.1.1). Sunucuda `formData.get("imza")` SVG ya da ad, `imza-kind` hangisi olduğunu söyler; SVG'yi saklamadan önce yalnız `path d` değerini doğrula.
 - **HoldButton**: yalnız geri alınabilir eylemde (bildirimde Geri Al olan). Geri alınamazsa `confirm` diyaloğu; süre 800-1600 ms.
 
+- **TickRuler** (ikinci Bencho turu): `time-scrubber` saate özel (06.00-22.00, dakika dilimi), `tick-ruler` her sayı için (süre, sıcaklık, yüzde; ivmeyle kayar, uçta lastik gibi direnir); saat seçiliyorsa `time-scrubber`.  değer bir süreklilikteyse ve kesinlik ikinciyse (toplantı süresi, termostat). Formda kesin sayı `number-field`, aralık `slider`. Çentik ~500'ü geçmesin; `valueText` ile okunuşu düzelt ("Saat 09:45").
+- **DigitRoll**: yalnız değişen değerde. İlk yüklemede dönen sayı `snippets/rolling-number`, ara değerden sayan `snippets/animated-number`; üçü üç ayrı iş. Büyük sayıyı 500 ağırlık ve `tracking-tight` ile, birimi `text-muted` küçük puntoyla yaz.
+
 ### Bloklar
 
 - **PaletteSwitcher**: `app/palettes.css` içe aktarılmalı (nokta renkleri oradaki `--swatch-*`). Çerezin ilk boyamadan önce okunması için THEME_SCRIPT'e iki satır (dosya başında). Telefonda on nokta yatay kayar.

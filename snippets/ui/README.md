@@ -98,6 +98,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `tree-table.tsx` | Açılır satırlı tablo | yok | Evet | `treegrid`, satır odağı, `aria-level/expanded` |
 | `pagination.tsx` | Adreste sayfa numarası | `next/link` | Hayır | `aria-current="page"`; telefonda "3 / 12" |
 | `stat.tsx` | Etiket + değer + değişim | lucide | Hayır | Renk tek işaret değil: işaret, ok, "artış/düşüş" |
+| `digit-roll.tsx` | Değer DEĞİŞİNCE yalnız değişen rakam yuvarlanır (vurgulanan bölüm, cetvel, canlı sayaç); ara sayı yok | motion | Evet | Tam değer `sr-only` tek metin, şeritler `aria-hidden`; kendiliğinden konuşmaz (gerekirse kap `aria-live`); reduced-motion'da yerinde değişir |
 | `sparkline.tsx` | Eksensiz mini eğri | yok | Hayır | `role="img"` + `title` |
 
 ### Form ve Gezinme
@@ -179,6 +180,8 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `time-field.tsx` | 24 saatlik SS:DD | lucide | Evet | İki `role="spinbutton"`; ok, PageUp/PageDown, rakamla yazınca ilerler |
 | `time-scrubber.tsx` | Günün akışında bir an (özet saati, hatırlatma); cetvel sürüklenir | yok | Evet | `role="slider"`, ← → dilim, PageUp/Down saat, Home/End; değer metni "09.30"; tekerlek ve dokunmatik |
 | `signature-pad.tsx` | Teslim tutanağı, sözleşme onayı; çizerek ya da yazarak imza | lucide | Evet | Çizim işaretçi ister: "Yazarak" yolu klavyeyle aynı işi yapar; değer SVG (`currentColor`), tema değişince yeniden çizilir |
+
+| `tick-ruler.tsx` | Sürekli değerde "aşağı yukarı şurası": saat, süre, sıcaklık; kayan cetvel, ortada sabit gösterge | `digit-roll`, motion | Evet | `role="slider"` + `aria-valuetext`; oklar, PageUp/PageDown büyük çentik, Home/End; klavyede değer hemen kesinleşir; yatay tekerlek, dikey kaydırma sayfada (`pan-y`) |
 | `input.tsx` | Tek satır metin; ikon, önek/sonek (₺, .com), temizle, şifre göster/gizle; sm/md/lg | lucide | Evet | Field düzeni (etiket, `aria-describedby`, `aria-invalid`); göster/gizle `aria-pressed` + sabit ad; temizle odağı alana geri verir; dokunmatikte 44 px |
 | `search-field.tsx` | Liste süzme, site araması: gecikmeli `onSearch`, yükleniyor, "/" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch` | `kbd`, `spinner`, lucide | Evet | `type="search"`, `aria-keyshortcuts`; "Aranıyor" ve "N sonuç" sabit canlı bölgede; Escape önce temizler, sonra odağı bırakır |
 | `rating.tsx` | `Rating` gösterim (yarım yıldız) · `RatingInput` giriş (isteğe bağlı yarım adım) | lucide | Evet | Gösterim tek `role="img"`; giriş `radiogroup` + görünmez yerel radyolar (oklar, `required`, JS'siz gönderim) |

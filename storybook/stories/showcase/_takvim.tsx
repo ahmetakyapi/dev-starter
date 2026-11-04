@@ -9,9 +9,9 @@ import { DateCalendar, type DateRange } from "@/components/ui/date-calendar";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Dialog } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
-import { NumberField } from "@/components/ui/number-field";
 import { Select } from "@/components/ui/select";
 import { Stepper } from "@/components/ui/stepper";
+import { TickRuler } from "@/components/ui/tick-ruler";
 import { TimeField } from "@/components/ui/time-field";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { WeekCalendar } from "@/components/ui/week-calendar";
@@ -293,7 +293,7 @@ export function TakvimPage() {
                     hint="Pazar günleri seçilemez."
                   />
                   <TimeField label="Saat" value={time} onValueChange={setTime} minuteStep={15} hint="Mesai 09.00–18.00." />
-                  <NumberField label="Süre" value={minutes} onValueChange={setMinutes} min={15} max={180} step={15} hint="Dakika, 15'er artar." />
+                  <TickRuler label="Süre" min={15} max={180} step={15} majorEvery={2} unit="dk" value={minutes ?? 45} onValueChange={setMinutes} spacing={18} />
                 </div>
               ) : (
                 <dl className="grid grid-cols-1 gap-3 text-base sm:grid-cols-3">

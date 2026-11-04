@@ -63,6 +63,7 @@ import { Marquee } from "@/components/ui/marquee";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { CopyButton } from "@/components/ui/copy-button";
 import { DataTable, type Column } from "@/components/ui/data-table";
+import { DigitRoll } from "@/components/ui/digit-roll";
 import { DateCalendar, type DateRange } from "@/components/ui/date-calendar";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Dialog } from "@/components/ui/dialog";
@@ -110,6 +111,7 @@ import { Tabs } from "@/components/ui/tabs";
 import { TagInput } from "@/components/ui/tag-input";
 import { TaskList, type Task } from "@/components/ui/task-list";
 import { Textarea } from "@/components/ui/textarea";
+import { TickRuler } from "@/components/ui/tick-ruler";
 import { TimeField } from "@/components/ui/time-field";
 import { Timeline } from "@/components/ui/timeline";
 import { Toaster, toast } from "@/components/ui/toast";
@@ -633,6 +635,11 @@ function FormGroup() {
           <RatingInput label="Bu Kahveyi Puanla" name="puan" defaultValue={4} labels={["Hiç Beğenmedim", "Beğenmedim", "Fena Değil", "Beğendim", "Bayıldım"]} />
         </div>
       </Cell>
+      <Cell file="tick-ruler" name="Cetvel Seçici" span={6} note="Sürükle, kaydır ya da oklarla; bırakınca en yakın çentiğe yayla oturur.">
+        <div className="mx-auto w-full max-w-md rounded-2xl bg-overlay p-5 shadow-raised">
+          <TickRuler label="Bitiş Sıcaklığı" min={190} max={235} step={1} majorEvery={5} defaultValue={212} unit="°C" spacing={10} />
+        </div>
+      </Cell>
     </CellGrid>
   );
 }
@@ -648,6 +655,25 @@ function ContextTile({ title, meta, children }: { title: string; meta: string; c
         <span className="block truncate text-small text-muted">{meta}</span>
       </span>
       {children}
+    </div>
+  );
+}
+
+const ROAST_BATCHES = [12.5, 12, 15, 12.5, 9] as const;
+
+function RoastCounter() {
+  const [count, setCount] = useState(3);
+  const total = ROAST_BATCHES.slice(0, count).reduce((a, b) => a + b, 0);
+  return (
+    <div className="grid justify-items-start gap-3">
+      <span className="text-base font-medium text-strong">Bugün Kavrulan</span>
+      <p aria-live="polite" className="flex items-baseline gap-1.5 text-strong">
+        <DigitRoll value={total} format={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }} className="text-display font-medium tracking-tight" />
+        <span className="text-base text-muted">kg · {count} parti</span>
+      </p>
+      <Button variant="secondary" size="sm" disabled={count === ROAST_BATCHES.length} onClick={() => setCount((c) => c + 1)}>
+        Parti Ekle
+      </Button>
     </div>
   );
 }
@@ -946,6 +972,9 @@ function VeriGroup() {
           <Stat label="Web Siparişi" value={num.format(OCTOBER_ORDERS)} change={ORDER_CHANGE} changeLabel="Eylül'e göre" />
           <Stat label="Aktif Abone" value={num.format(SUBSCRIBERS)} />
         </StatGrid>
+      </Cell>
+      <Cell file="digit-roll" name="Rakam Yuvarlama" note="Yalnız değişen rakam döner; ara sayı yok, genişlik sıçramaz." span={2}>
+        <RoastCounter />
       </Cell>
       <Cell file="tree-table" name="Ağaç Tablo" note="Açılır satırlar; alt kalemler girintiyle geri çekilir." span={4} align="stretch">
         <TreeTable

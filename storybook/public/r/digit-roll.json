@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "digit-roll",
+  "type": "registry:ui",
+  "title": "Rakam Yuvarlama",
+  "description": "Değer DEĞİŞİNCE yalnız değişen rakam yuvarlanır (vurgulanan bölüm, cetvel, canlı sayaç); ara sayı yok",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/digit-roll.tsx",
+      "content": "\"use client\";\n\nimport { m, useReducedMotion } from \"motion/react\";\nimport { SPRING } from \"@/lib/motion\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Rakam yuvarlanması: değer DEĞİŞİNCE her rakam kendi penceresinde dikey\n * kayarak yeni rakamına oturur (sayaç, toplam, seçilen saat). Yalnız değişen\n * basamak döner; \"175,6 B\" → \"175,8 B\"de yalnız son rakam hareket eder.\n *\n * ÜÇ SAYI, ÜÇ İŞ (tek kaynak, karışmasın):\n *   - `snippets/rolling-number.tsx`: İLK YÜKLEMEDE bir kez dönen display\n *     sayısı; JS'siz, sunucuda çizilir. Kahraman, landing.\n *   - `snippets/animated-number.tsx`: değeri ara sayılardan geçirerek SAYAR\n *     (1.000 → 1.250 arası 1.137'yi de gösterir).\n *   - bu dosya: ara sayı yok; değişen rakam doğrudan yeni rakamına yuvarlanır.\n *     Etkileşimde (cetvel, vurgulanan bölüm) değer saniyede onlarca kez\n *     değişebilir; sayan sayaç orada hiç oturmaz, rakam yuvarlanması oturur.\n *\n * İLK ÇİZİM DURAĞAN (`initial={false}`): sayfa açılırken dönmez; o iş\n * `rolling-number`ın. Yay `SPRING.snappy`: hafif aşar ve oturur, komşu\n * rakam pencerenin kenarında bir an görünür.\n *\n * GENİŞLİK SIÇRAMAZ: penceredeki görünmez kopya genişliği ve taban çizgisini\n * verir (`tabular-nums` ile her rakam aynı en); şerit onun üstünde mutlak.\n * Basamaklar SAĞDAN anahtarlanır: 99 → 100'de birler basamağı aynı öğe kalır,\n * soldan yeni basamak eklenir.\n *\n * Ekran okuyucu biçimlenmiş değerin tamamını tek metin olarak okur\n * (`sr-only`), şeritler `aria-hidden`. Değişimi duyurmak istenirse kap\n * `aria-live` taşır; bileşen kendiliğinden konuşmaz (sürüklerken her adımı\n * okumak gürültüdür). Hareketi azaltan kullanıcıda rakam yerinde değişir.\n *\n * Punto, ağırlık ve renk çağırandan: sakin büyük sayı için\n * `text-display font-medium tracking-tight`; birim yanında `text-muted`.\n *\n *   <DigitRoll value={175.6} format={{ maximumFractionDigits: 1 }} className=\"text-display font-medium\" />\n *   <DigitRoll value=\"09:45\" />   // biçimlenmiş metin de olur\n */\n\n/** Satır yüksekliği em cinsinden: şeridin adımı ile pencerenin boyu aynı sayı olmalı. */\nconst LINE = 1.2;\nconst DIGITS = [\"0\", \"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\"] as const;\nconst isDigit = (char: string) => char >= \"0\" && char <= \"9\";\n\ntype DigitRollProps = {\n  /** Sayı `format` ile `tr-TR` biçimlenir; metin olduğu gibi kullanılır. */\n  value: number | string;\n  format?: Intl.NumberFormatOptions;\n  locale?: string;\n  className?: string;\n};\n\nexport function DigitRoll({ value, format, locale = \"tr-TR\", className }: DigitRollProps) {\n  const reduce = useReducedMotion();\n  const text = typeof value === \"number\" ? new Intl.NumberFormat(locale, format).format(value) : value;\n  const chars = [...text];\n\n  return (\n    <span className={cn(\"inline-flex whitespace-nowrap tabular-nums\", className)} style={{ lineHeight: LINE }}>\n      <span className=\"sr-only\">{text}</span>\n      <span aria-hidden className=\"inline-flex\">\n        {chars.map((char, index) => {\n          const fromRight = chars.length - 1 - index;\n          if (!isDigit(char)) {\n            return (\n              <span key={`s${fromRight}${char}`} className=\"inline-block whitespace-pre\">\n                {char}\n              </span>\n            );\n          }\n          const digit = Number(char);\n          return (\n            <span key={`d${fromRight}`} className=\"relative inline-block\">\n              <span className=\"invisible\">{char}</span>\n              <span className=\"absolute inset-0 overflow-hidden\">\n                <m.span\n                  className=\"absolute inset-x-0 top-0 flex flex-col items-center\"\n                  initial={false}\n                  animate={{ y: `${-digit * LINE}em` }}\n                  transition={reduce ? { duration: 0 } : { ...SPRING.snappy, delay: Math.min(fromRight, 6) * 0.015 }}\n                >\n                  {DIGITS.map((d) => (\n                    <span key={d} className=\"block\" style={{ height: `${LINE}em` }}>\n                      {d}\n                    </span>\n                  ))}\n                </m.span>\n              </span>\n            </span>\n          );\n        })}\n      </span>\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "digit-roll",
+    "palettes": false
+  }
+}

@@ -903,6 +903,33 @@
       ]
     },
     {
+      "name": "digit-roll",
+      "type": "registry:ui",
+      "title": "Rakam Yuvarlama",
+      "description": "Değer DEĞİŞİNCE yalnız değişen rakam yuvarlanır (vurgulanan bölüm, cetvel, canlı sayaç); ara sayı yok",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "digit-roll",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/digit-roll.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "divider",
       "type": "registry:ui",
       "title": "Ayırıcı",
@@ -2281,6 +2308,33 @@
       "files": [
         {
           "path": "snippets/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tick-ruler",
+      "type": "registry:ui",
+      "title": "Cetvel Seçici",
+      "description": "Sürekli değerde \"aşağı yukarı şurası\": saat, süre, sıcaklık; kayan cetvel, ortada sabit gösterge",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/digit-roll.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "tick-ruler",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tick-ruler.tsx",
           "type": "registry:ui"
         }
       ]

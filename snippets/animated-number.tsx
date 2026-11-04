@@ -5,6 +5,8 @@
  * oynayan display sayısı için `rolling-number.tsx` (JS'siz, sunucuda
  * çizilir) daha doğru: bu bileşen hidrasyonu bekler ve ara karelerde
  * yarım değerler basar.
+ * Değer sık değişiyorsa (sürükleme, vurgu) ve ara sayılar gürültüyse:
+ * `ui/digit-roll.tsx`, yalnız değişen rakam yuvarlanır.
  *
  * Hareketi azaltan okuyucuda yay atlanır, değer doğrudan yazılır.
  * Ekran okuyucu ara kareleri değil son değeri okur (sr-only kopya).

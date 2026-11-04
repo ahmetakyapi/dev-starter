@@ -679,6 +679,26 @@
       "palettes": false
     },
     {
+      "name": "digit-roll",
+      "title": "Rakam Yuvarlama",
+      "category": "Veri",
+      "description": "Değer DEĞİŞİNCE yalnız değişen rakam yuvarlanır (vurgulanan bölüm, cetvel, canlı sayaç); ara sayı yok",
+      "file": "snippets/ui/digit-roll.tsx",
+      "client": true,
+      "storyId": "digit-roll",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "divider",
       "title": "Ayırıcı",
       "category": "Geri Bildirim",
@@ -1695,6 +1715,28 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tick-ruler",
+      "title": "Cetvel Seçici",
+      "category": "Form Girişleri",
+      "description": "Sürekli değerde \"aşağı yukarı şurası\": saat, süre, sıcaklık; kayan cetvel, ortada sabit gösterge",
+      "file": "snippets/ui/tick-ruler.tsx",
+      "client": true,
+      "storyId": "tick-ruler",
+      "registryDependencies": [
+        "digit-roll"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

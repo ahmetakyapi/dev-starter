@@ -17,7 +17,8 @@
  * YALNIZCA İLK EKRANDA. Animasyon yüklemede oynar, görünüme girişte değil;
  * ekranın altındaki bir sayıya konursa okuyucu oraya indiğinde dönüş
  * çoktan bitmiş olur. Değer DEĞİŞİNCE sayan sayaç ayrı bir iş:
- * `animated-number.tsx`.
+ * `animated-number.tsx`; değişince yalnız değişen rakamı yuvarlayan (ara
+ * sayı basmadan) `ui/digit-roll.tsx`.
  *
  * Stil: yanındaki `rolling-number.module.css` (birlikte kopyala).
  *

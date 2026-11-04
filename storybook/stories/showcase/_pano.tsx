@@ -8,6 +8,7 @@ import { AreaChart } from "@/components/ui/area-chart";
 import { BarList } from "@/components/ui/bar-list";
 import { ChartCard, ChartLegend } from "@/components/ui/chart-card";
 import { ComboChart } from "@/components/ui/combo-chart";
+import { DigitRoll } from "@/components/ui/digit-roll";
 import { FunnelChart } from "@/components/ui/funnel-chart";
 import { GaugeChart } from "@/components/ui/gauge-chart";
 import { Heatmap } from "@/components/ui/heatmap";
@@ -82,7 +83,7 @@ function StatTile({
   return (
     <div className="flex h-full flex-col justify-between gap-3 rounded-xl bg-surface p-4">
       <StatGrid className="grid-cols-1 sm:grid-cols-1">
-        <Stat label={label} value={value} change={change} changeLabel={changeLabel} positiveIsGood={positiveIsGood} />
+        <Stat label={label} value={<DigitRoll value={value} />} change={change} changeLabel={changeLabel} positiveIsGood={positiveIsGood} />
       </StatGrid>
       <Sparkline title={trend} values={series} width={240} height={36} className="w-full" />
     </div>
