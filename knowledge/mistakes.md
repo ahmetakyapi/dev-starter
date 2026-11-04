@@ -30,6 +30,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | VPS · Ortam Değişkeni · Yayın | 100–101 | vps, env, seo, robots, e-posta, github-actions |
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 | Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
+| Nimbstia'dan Öğrenilenler (2026-11-03) | 115–118 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
 
 ---
 
@@ -1964,7 +1965,66 @@ için hazır taşır (2026-10-27); kod: `snippets/live-preview/README.md` § 4.
 demo) önce `curl -sI <yol> | grep -i frame` ile denetlenir. Güvenlik başlığı
 gevşetilmez, yola özel istisna yazılır.
 
+## Nimbstia'dan Öğrenilenler (2026-11-03)
+
+### 115. "Kâğıt-Mürekkep" Yönü Reddedildi: Siyah Birincil Düğme + Büyük Harf Mono Etiket
+
+**Hata**: Referans siteden (shojimac.com) alınan dil bire bir panellere taşındı: açık temada siyah
+"ink" birincil düğmeler, siyah ölçü çubukları, 10–10.5px büyük harf ve geniş aralıklı Geist Mono
+etiketler, siyaha yakın (`#0f0f11`) koyu tema. Sahibi: "çok siyah ve koyu hissettiriyor, etiketler
+göze hitap etmiyor".
+
+**Sebep**: Bir pazarlama sitesinin dili (büyük tuval, az öğe) yoğun bir araç paneline uygulandı.
+Küçük puntoda büyük harf + mono + geniş aralık okuma hızını düşürür; küçük yüzeyde siyah dolgu
+ağır görünür.
+
+**Çözüm**: Birincil eylem marka mavisi degrade; etiketler cümle düzeninde ≥ 11.5px, 550–650;
+mono yalnız veri (sha, yol, port); koyu tema grafit (`#1f2024` / kart `#26272c`). Açık temada
+ipucu ve bildirim beyaz kart.
+
+**Kural**: Referanstan **yapı** alınır (hiyerarşi, numaralandırma, iki tonlu başlık), yoğun araç
+arayüzüne siyah dolgu ve büyük harf mono etiket taşınmaz. İlk turdan önce bir paneli iki temada
+ekran görüntüsüyle sahibine göster.
+
+### 116. Aydınlatınca Fazla Renk: Her Widget Doygun Degrade
+
+**Hata**: #115'in düzeltmesinde merkez panel iOS widget'ı gibi boyandı: yeşil degrade VPN kartı,
+beş doygun degrade uygulama ikonu, renkli başlık ikonları. Geri bildirim: "fazla renkli oldu,
+dengeyi sağla".
+
+**Çözüm**: Kartlar nötr; renk yalnız sinyal: durum çipi (`Bağlı 18 ms`), ikon glifi (kimlik
+renginin %7→%17 tonu üstünde), Claude halkaları, sistem halkaları. Tek doygun yüzey birincil
+eylem. Boş alan dekoratif ama anlamlı öğeyle doldu (bağlıyken nabız atan radar).
+
+**Kural**: Renk bütçesi: ekran başına bir doygun birincil + anlam taşıyan küçük sinyaller.
+"Daha canlı" isteği doygun zemin değil, ölçü/hareket/ikon detayıyla karşılanır.
+
+### 117. README Görselleri: Sistem Fontu ve Türkçe Arayüz Gerçeği Göstermiyordu
+
+**Hata**: README İngilizce, ekran görüntülerindeki arayüz Türkçe; görüntüler yalnız Mac'te
+Hammerspoon betiğiyle üretilebiliyordu ve `-apple-system` fontu Linux/CI'da başka çıkıyordu.
+
+**Çözüm**: (1) UI fontu gömüldü (Inter, OFL, alt küme 210 KB, panel.lua data URI ile satır içine
+alır); (2) `scripts/preview/shoot.js`: köprüyü (`webkit.messageHandlers`) taklit eden, demo veriyle
+her paneli açık/koyu çizen Playwright aracı, `--readme` ile tüm görselleri üretir; (3) `i18n.js`:
+DOM'da Türkçe→İngilizce çeviri katmanı (`language = "en"`), kullanıcı verisini çevirmez; demo
+verisi İngilizce ve marka adı büyük harfle ("Nimbstia").
+
+**Kural**: README görseli README'nin dilinde olur ve Mac'e/özel ortama bağlı olmadan yeniden
+üretilebilir. Font gömülmeden görsel üretilmez. Desen: `patterns.md` → Nimbstia Desenleri.
+
+### 118. Dar Döşemede Uzun Türkçe Etiket Kesildi
+
+**Hata**: 80px genişlikteki araç döşemesinde "Ekran Al" → "Ekran Görüntüsü" yapılınca
+"Ekran Görü…" diye kesildi; iki satıra bölmek de satır ritmini bozdu.
+
+**Çözüm**: `canvas.measureText` ile ölçüldü (11.5px'te 91px, 10.5px'te bile 83px > 80px);
+kısa ad ("Ekran Al", İngilizcesi "Screenshot") geri alındı.
+
+**Kural**: Sabit genişlikli döşemeye yazılacak etiket önce ölçülür; sığmıyorsa küçültme ya da
+bölme yerine daha kısa ve doğru kelime seçilir. Türkçe karşılıklar İngilizceden ortalama %30 uzundur.
+
 ---
 
-*Son güncelleme: 2026-10-27*
+*Son güncelleme: 2026-11-03*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

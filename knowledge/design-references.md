@@ -43,6 +43,7 @@ bakılarak doğrulandı)
 | Grafik kartı, pano, sohbet arayüzü | [boardui.com](https://www.boardui.com/) | Bileşen ve grafik vitrini: nötr yüzey, pastel seri renkleri, palet değiştirici | Ücretsiz bileşenleri MIT; grafikler ve şablonlar ücretli (BoardUI License). Dili `decisions.md` → "Board Görsel Dili"nde ekosisteme uyarlandı, kodu alınmadı |
 | Derinlik, düğme hacmi, bileşen sayfası | [ui.wensity.com](https://ui.wensity.com/) | Animasyonlu bileşen ve blok kataloğu: katmanlı negatif yayılmalı gölgeler, üstten ışıklı kart kenarı, iç ve dış halkalı CTA, içe oyulmuş giriş alanı, sıkı display başlık | Ücretli (Pro) + MIT ücretsiz katman. Dili `decisions.md` → "İşçilik Turu"nda ekosisteme uyarlandı, kodu alınmadı |
 | Bento ızgara | [bentogrids.com](https://bentogrids.com/) | 285 bento düzeni, görüntü ve kısa video; her örneğin kaynak bağlantısı | Ivan Votti. Kaynakların bir kısmı canlı site değil Dribbble/X gönderisi: yalnız görsel kavram, gerçek davranış yok |
+| Mac uygulaması ürün sayfası | [shojimac.com](https://shojimac.com/) | Tek site (galeri değil): iki tonlu sıkı başlık, "01–05" numaralı adımlar, tuş kapağı metinleri, karşılaştırma tablosu, Geist + Geist Mono | Ücretsiz bakılır. Nimbstia'da denendi: yapısı iyi, siyah mürekkep + büyük harf mono etiketleri yoğun araç arayüzünde reddedildi (`mistakes.md` #115) |
 
 Kahraman bölümü, fiyat sayfası ve tam sayfa için henüz doğrulanmış
 ücretsiz kaynak yok; eklenecekse aynı denetimden (fiyat sayfası, şartlar,

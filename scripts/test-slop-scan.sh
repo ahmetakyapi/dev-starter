@@ -30,6 +30,7 @@ export function Kart() {
       <strong>"10.000+"</strong>
       <a href="#">Daha Fazla</a>
       <button onClick={() => alert("Kaydedildi")}>Kaydet</button>
+      <h3 className="capitalize tracking-tight">bugünkü işler</h3>
     </div>
   );
 }
@@ -57,6 +58,7 @@ expect "[YUKSEK] Yer tutucu metin"
 expect "[YUKSEK] Pazarlama dolgusu sozcukleri — 2 adet"
 expect "[YUKSEK] Gokkusagi degrade"
 expect "[YUKSEK] JSX icinde emoji ikon"
+expect "[YUKSEK] text-transform: capitalize"
 expect "[UYARI] Kaydirma dinleyicisi"
 expect "[UYARI] Nesne scale(0)"
 expect "[UYARI] Keyfi punto"
@@ -96,6 +98,8 @@ export const pop = { initial: { scale: 0.86, opacity: 0 }, animate: { scale: 1, 
 export const parlama = ["0%", "100%"];
 export const hata = "Dosya 20 MB'tan büyük. Daha küçük bir dosya seç.";
 export const css = ".track { scale: 0 1; } .dot::after { scale:0; }";
+// capitalize yalniz yorumda ya da kod adinda: function capitalizeFirst() bulgu degil
+export const capitalizeFirst = (s: string) => s;
 // Gercek projelerden gelen yanlis pozitifler (2026-10-26 denetimi): her biri bir kez bulgu sayildi
 type Kati = { seamless?: boolean }; // iso-kit: tanimlayici, pazarlama degil
 export const yazi = "Masa oyununun kurallarını sunucu tutar.";

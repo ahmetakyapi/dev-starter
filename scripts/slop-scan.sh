@@ -154,6 +154,13 @@ EMOJI=$(printf '%s\n' "$FILES" | grep -E "$CODE" | tr '\n' '\0' \
   | xargs -0 perl -CSA -ne 'my $l = $_; next if $l =~ /slop-ok/; next if $l =~ m{^\s*(//|\*|/\*|\{/\*)}; print "$ARGV:$.:$l" if utf8::decode($l) && $l =~ /(?<![\w-])(?:[\x{1F300}-\x{1FAFF}\x{2B50}\x{2705}\x{274C}\x{2728}\x{26A1}\x{2764}]|.\x{FE0F})/; close ARGV if eof' 2>/dev/null || true)
 report YUKSEK "JSX icinde emoji ikon" "lucide-react ikonu, boyut ve renk token'dan" "$EMOJI"
 
+# 16. Otomatik buyuk harf: Turkce'de `i → I` uretir (`İ` degil), Title Case'i
+#     da bozar (bag-lac ve edatlar kucuk kalir). Kural rules/design-tokens.md;
+#     Nimbstia'da ayni hata elle yazilmis Title Case ile cozuldu (#115, #119).
+report YUKSEK "text-transform: capitalize (Turkce i → I)" \
+  "Basligi elle Title Case yaz (guides/05 § 6); kucultmede toLocaleLowerCase('tr-TR')" \
+  "$(scan -nE '(text-transform:[[:space:]]*capitalize|(className|class)=[^>]*[[:space:]"'"'"'`]capitalize([[:space:]"'"'"'`]|$))' | nocomment)"
+
 # ─── UYARI ───────────────────────────────────────────────────────────────────
 
 # 10. Kisitsiz kaydirma dinleyicisi: her karede calisir, mobilde kasar.

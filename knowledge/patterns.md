@@ -1468,3 +1468,46 @@ bu biçime uyar.
 *Yeni desenler eklendikçe bu dosya güncellenir.*
 
 *Son güncelleme: 2026-10-27*
+
+---
+
+## Nimbstia Desenleri (2026-11-03)
+
+Kaynak: `ahmetakyapi/Nimbstia`. Web dışı kabukta (Hammerspoon/WKWebView, Electron, Tauri)
+çalışan HTML panellere de uyar.
+
+### Köprüsü Taklit Edilen Panel Önizleme Aracı
+
+Panel yerel bir köprüyle konuşuyorsa (`window.webkit.messageHandlers.X.postMessage`) tarayıcıda
+açılmaz gibi görünür. Köprüyü init script'le taklit et, demo veriyi panelin kendi API'siyle bas:
+
+```js
+await page.addInitScript(lang => {
+  window.NB_LANG = lang; window.__msgs = []
+  const h = { postMessage: m => window.__msgs.push(m) }
+  window.webkit = { messageHandlers: new Proxy({}, { get: () => h }) }
+}, 'en')
+await page.goto('file://' + root + '/clipboard.html')
+await page.evaluate(`Clip.setItems(${JSON.stringify(DEMO)});Clip.open()`)
+await page.screenshot({ path, omitBackground: true })   // saydam gölge payı korunur
+```
+
+`__msgs` aynı zamanda davranış testi verir: tuşa bas, beklenen `action` gönderildi mi bak.
+README görselleri bu araçla ve **yalnız demo veriyle** üretilir (`shoot.js --readme`).
+
+### Satır İçi Tema ve Font (Base URL'siz HTML)
+
+`webview:html(string)` gibi base URL'siz yüklemede göreli `<link>`/`url()` çözülmez. Kaynakta
+`<link rel="stylesheet" href="theme.css">` kalsın (dosyadan açılınca çalışır), yükleyici bunu
+`<style>` ile değiştirsin ve `url("assets/fonts/X.woff2")` → `data:font/woff2;base64,...`
+yapsın; sonuç bir kez önbelleğe alınır. Aynı kalıp `<script src="i18n.js">` için.
+
+### DOM Çeviri Katmanı (Render Kodunu Değiştirmeden İkinci Dil)
+
+Dizgileri render fonksiyonlarına gömülü bir arayüze dil eklemek için: `<head>`'de çalışan tek
+dosya; tam eşleşme tablosu + dinamik dizgi için regex kuralları ("(\d+) dk önce"); metin
+düğümleri ve `placeholder/title/aria-label/data-tip` öznitelikleri; tek `MutationObserver`
+(+ `takeRecords()` ile kendi değişikliğini yutar); `Date`/`Intl` içinde `tr` → `en-GB`.
+**Kullanıcı verisi kapları atlanır** (liste başlıkları, önizleme, proje adları) — test: metni
+tam olarak "Bugün" olan bir öğe çevrilmemeli. `lang=tr` iken hiçbir şey yapmaz.
+

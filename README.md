@@ -291,7 +291,7 @@ Rol tanımlarının tek kaynağı [`agents/`](agents).
 | [`knowledge/patterns.md`](knowledge/patterns.md) | Projelerden toplanmış, test edilmiş desenler |
 | [`knowledge/decisions.md`](knowledge/decisions.md) | Ekosistem kararları ve neden değiştikleri |
 | [`knowledge/tech-radar.md`](knowledge/tech-radar.md) | İhtiyaç → teknoloji: kullan / dene / bekle |
-| [`knowledge/themes/`](knowledge/themes) | 6 projenin görsel hafızası |
+| [`knowledge/themes/`](knowledge/themes) | 7 projenin görsel hafızası |
 | [`knowledge/live-projects-audit.md`](knowledge/live-projects-audit.md) | Canlı projelerin denetimi |
 
 ---
