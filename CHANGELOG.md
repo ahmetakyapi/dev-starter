@@ -7,6 +7,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Bencho turu 2: tepkiler, saat cetveli, imza alanı — 2026-11-04
+
+#### Eklendi
+
+- **`reactions`**: ikonlu tepki hapları (emoji yok), `aria-pressed` + sayılı
+  ad, ekle katmanı; Pusula talep detayında ekip tepkileri.
+- **`time-scrubber`**: sabit ibre, akan cetvel; `role="slider"`, klavye,
+  sürükleme, tekerlek; Pusula Ayarlar → Günlük Özet Saati.
+- **`signature-pad`**: çizerek ya da yazarak imza, SVG değer, tema değişince
+  yeniden çizim, Geri Al / Temizle; Pusula Ayarlar → Teslim Tutanağı İmzası.
+
 ### Bencho turu: kota kartı, kişi seçici, basılı tut onayı — 2026-11-04
 
 Referans bencho.dev (davranış öğrenildi, kod alınmadı; `knowledge/decisions.md` → "Bencho Turu").

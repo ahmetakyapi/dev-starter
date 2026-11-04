@@ -56,6 +56,9 @@ import {
 import { CodeBlock, installTabs } from "@/components/ui/code-block";
 import { CompareSlider } from "@/components/ui/compare-slider";
 import { HoldButton } from "@/components/ui/hold-button";
+import { Reactions } from "@/components/ui/reactions";
+import { SignaturePad } from "@/components/ui/signature-pad";
+import { TimeScrubber } from "@/components/ui/time-scrubber";
 import { Marquee } from "@/components/ui/marquee";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -181,6 +184,11 @@ function PickerDemo() {
       ))}
     </dl>
   );
+}
+
+function ScrubberDemo() {
+  const [at, setAt] = useState(7 * 60 + 30);
+  return <TimeScrubber label="Kavurma Başlangıcı" value={at} onValueChange={setAt} min={5 * 60} max={12 * 60} hint="Sabah Partisi" />;
 }
 
 function HoldDemo() {
@@ -345,6 +353,18 @@ function TemelGroup() {
       </Cell>
       <Cell file="hold-button" name="Basılı Tut Onayı" note="Kazara tıklama arşivlemez; bırakınca geri sarılır, klavyede Boşluk basılı." span={3}>
         <HoldDemo />
+      </Cell>
+      <Cell file="reactions" name="Tepkiler" note="İkonla, emojisiz; hap aç-kapa düğmesi, adı sayıyı ve senin tepkini söyler." span={2}>
+        <div className="mx-auto grid max-w-72 gap-2.5">
+          <p className="rounded-xl bg-overlay px-4 py-3 text-base text-strong shadow-raised">Kasım harmanı kavruldu, yarın rafta.</p>
+          <Reactions label="Ekip tepkileri" defaultValue={[{ kind: "tebrik", count: 4, mine: true }, { kind: "ates", count: 2 }]} />
+        </div>
+      </Cell>
+      <Cell file="time-scrubber" name="Saat Cetveli" note="İbre sabit, cetvel akar; ok tuşu 15 dk, PageUp bir saat." span={2}>
+        <ScrubberDemo />
+      </Cell>
+      <Cell file="signature-pad" name="İmza Alanı" note="Çizerek ya da yazarak; değer SVG, tema değişince yeniden çizilir." span={2} align="stretch">
+        <SignaturePad label="Teslim Alan" height={120} />
       </Cell>
     </CellGrid>
   );

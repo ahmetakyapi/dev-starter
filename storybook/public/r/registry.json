@@ -1674,6 +1674,33 @@
       ]
     },
     {
+      "name": "reactions",
+      "type": "registry:ui",
+      "title": "Tepkiler",
+      "description": "Mesaja/nota tek dokunuşla tepki (Beğendim, Bakıyorum, Tamam)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/popover.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Düğme ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "reactions",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/reactions.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "ring-chart",
       "type": "registry:ui",
       "title": "Halka Grafiği",
@@ -1905,6 +1932,32 @@
       "files": [
         {
           "path": "snippets/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "signature-pad",
+      "type": "registry:ui",
+      "title": "İmza Alanı",
+      "description": "Teslim tutanağı, sözleşme onayı; çizerek ya da yazarak imza",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "signature-pad",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/signature-pad.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2254,6 +2307,29 @@
       "files": [
         {
           "path": "snippets/ui/time-field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "time-scrubber",
+      "type": "registry:ui",
+      "title": "Saat Cetveli",
+      "description": "Günün akışında bir an (özet saati, hatırlatma); cetvel sürüklenir",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "time-scrubber",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/time-scrubber.tsx",
           "type": "registry:ui"
         }
       ]

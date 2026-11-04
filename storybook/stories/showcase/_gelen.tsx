@@ -54,6 +54,7 @@ import { IconButton } from "@/components/ui/icon-button";
 import { Pagination } from "@/components/ui/pagination";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Rating } from "@/components/ui/rating";
+import { Reactions, type Reaction } from "@/components/ui/reactions";
 import { SearchField, matchesTr } from "@/components/ui/search-field";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Sheet } from "@/components/ui/sheet";
@@ -634,6 +635,13 @@ export function GelenPage() {
   );
 }
 
+/** Ekibin bu talebe tepkisi: acil olanı "Bakıyorum", çözüleni "Tamam" ile işaretlemiş. Örnek. */
+function teamReactions(t: Ticket): Reaction[] {
+  if (t.status === "Çözüldü") return [{ kind: "tamam", count: 2 }, { kind: "kalp", count: 1 }];
+  if (t.priority === "Acil") return [{ kind: "goz", count: 2, mine: t.assignee === ME.id }];
+  return t.watchers.length ? [{ kind: "begen", count: t.watchers.length }] : [];
+}
+
 const PEOPLE: readonly Person[] = TEAM.map((m) => ({ id: m.id, name: m.name, detail: m.role }));
 
 function TicketDetail({ t, onAssign, onArchive }: { t: Ticket; onAssign: (id: string) => void; onArchive: () => void }) {
@@ -669,6 +677,7 @@ function TicketDetail({ t, onAssign, onArchive }: { t: Ticket; onAssign: (id: st
           </span>
         </figcaption>
         <blockquote className="mt-3 text-base text-body">{t.preview}</blockquote>
+        <Reactions label="Ekip tepkileri" defaultValue={teamReactions(t)} className="mt-3" />
       </figure>
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-base">

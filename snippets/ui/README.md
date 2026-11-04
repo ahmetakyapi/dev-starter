@@ -71,6 +71,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `kbd.tsx` | Klavye tuşu, kısayol | yok | Hayır | Simgeli tuşta `label`; kombinasyon tek ad |
 | `close-button.tsx` | Diyalog, uyarı, çip, duyuru kapatma | lucide | Hayır | `aria-label` TİPTE zorunlu; 44 px dokunma alanı (görsel 28/32); odak halkası dairede |
 | `chip.tsx` | `FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup` | lucide | Hayır | Süzgeç `aria-pressed` + ✓; yalnız × düğme, adı "Kaldır: İstanbul"; grup `role="group"` + ad |
+| `reactions.tsx` | Mesaja/nota tek dokunuşla tepki (Beğendim, Bakıyorum, Tamam) | Base UI (`popover`), lucide | Evet | Emoji yok, ikon + Türkçe ad; hap `aria-pressed`, adı sayıyı söyler; sıfıra inen hap kalkar |
 | `toggle-group.tsx` | Basılı/basılı değil düğmeler: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost` | Base UI, `tooltip`, `kbd`, lucide | Evet | `aria-pressed`, gezici tabindex ve oklar; yalnız ikonlu öğede `label` tipte zorunlu + tooltip |
 | `assignee-picker.tsx` | Kişi atama: talep, görev, kart (tekli ya da çoklu) | Base UI (`popover`), `avatar`, lucide | Evet | Tetikleyici adı durumu söyler; `combobox` + `listbox`, `aria-activedescendant`, ↑↓ Home End Enter; Türkçe harf düzleyen arama |
 
@@ -176,6 +177,8 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `date-calendar.tsx` | Satır içi ay takvimi; tek gün ya da aralık | motion, lucide | Evet | WAI-ARIA grid; oklar, Home/End, PageUp/PageDown (+Shift); `aria-current="date"` |
 | `date-picker.tsx` | Formda tarih alanı + açılır takvim | `date-calendar`, `popover` | Evet | Tetikleyicinin adı "etiket + değer"; açılınca odak seçili güne, kapanınca tetikleyiciye |
 | `time-field.tsx` | 24 saatlik SS:DD | lucide | Evet | İki `role="spinbutton"`; ok, PageUp/PageDown, rakamla yazınca ilerler |
+| `time-scrubber.tsx` | Günün akışında bir an (özet saati, hatırlatma); cetvel sürüklenir | yok | Evet | `role="slider"`, ← → dilim, PageUp/Down saat, Home/End; değer metni "09.30"; tekerlek ve dokunmatik |
+| `signature-pad.tsx` | Teslim tutanağı, sözleşme onayı; çizerek ya da yazarak imza | lucide | Evet | Çizim işaretçi ister: "Yazarak" yolu klavyeyle aynı işi yapar; değer SVG (`currentColor`), tema değişince yeniden çizilir |
 | `input.tsx` | Tek satır metin; ikon, önek/sonek (₺, .com), temizle, şifre göster/gizle; sm/md/lg | lucide | Evet | Field düzeni (etiket, `aria-describedby`, `aria-invalid`); göster/gizle `aria-pressed` + sabit ad; temizle odağı alana geri verir; dokunmatikte 44 px |
 | `search-field.tsx` | Liste süzme, site araması: gecikmeli `onSearch`, yükleniyor, "/" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch` | `kbd`, `spinner`, lucide | Evet | `type="search"`, `aria-keyshortcuts`; "Aranıyor" ve "N sonuç" sabit canlı bölgede; Escape önce temizler, sonra odağı bırakır |
 | `rating.tsx` | `Rating` gösterim (yarım yıldız) · `RatingInput` giriş (isteğe bağlı yarım adım) | lucide | Evet | Gösterim tek `role="img"`; giriş `radiogroup` + görünmez yerel radyolar (oklar, `required`, JS'siz gönderim) |
