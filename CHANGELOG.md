@@ -7,6 +7,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Referans arşivi: ortalanmış kart sahnesi — 2026-11-04
+
+- Sayfa yeniden tasarlandı: etkin kart ortada ve tam boy, komşular iki
+  yanda küçük ve görselleri soluk (kaydırmaya bağlı CSS, `view(inline)`;
+  metin tam kontrastta kalır). Kapak sitenin kendi paylaşım görseli
+  (og:image, bağlantıyla; yoksa baş harfli kapak), tarayıcı çerçevesinde.
+  Oklar, noktalar, "02 / 07" sayacı, ← → Home End.
+- Arşive **Kısaca** sütunu: kart yalnız tek satırlık özeti gösterir,
+  ayrıntı markdown'da kalır.
+- Telefonda kategori şeridi artık kendi içinde kayar (ortalanmış şerit
+  soldan kesiliyordu).
+
 ### Referans arşivi sitede — 2026-11-04
 
 - **Storybook → Örnek Tasarım/Referans Arşivi** (`/references`): arşiv
