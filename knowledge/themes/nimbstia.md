@@ -110,7 +110,8 @@ kartlar, yumuşak gölge, tek bir birincil eylem, renk yalnız anlam taşıdığ
 ## 4. Component Stylings
 
 - **Widget kartı:** radius 22, `0 0 0 1px line` + üstten `inset 0 1px 0 rgba(255,255,255,.85)` ışık + `0 10px 28px -14px` gölge.
-- **Bağlantı kartı:** nötr; durum renk çipi (`Bağlı 18 ms`) + sağda dekoratif radar (3 halka, bağlıyken 3.6 sn nabız).
+- **Bağlantı kartı:** nötr; durum renk çipi (`Bağlı 18 ms`) + son kontrol zamanı. Dekoratif radar denendi, "göz yoruyor" diye kaldırıldı.
+- **Geliştirme Sunucuları:** canlı bilgi üstte; başlığa tıklayınca katlanır, durum `hs.settings`te saklanır.
 - **Claude kartı:** Apple Watch tarzı iç içe iki halka (r 38/27, kalınlık 10), ortada Claude glifi, yanda lejant.
 - **Araç döşemesi:** 48px squircle, kimlik renginin %7→%17 tonu + iç ışık; altında ad, iş, tek satır kısayol.
 - **Hızlı ayar:** 2×2 Denetim Merkezi döşemesi; açıkken küçük daire dolu renk, kart nötr.
@@ -118,9 +119,9 @@ kartlar, yumuşak gölge, tek bir birincil eylem, renk yalnız anlam taşıdığ
 
 ## 5. Layout Principles
 
-- Merkez 450px genişlik, 12px iç boşluk, kartlar arası 10px; içerik boyunu JS bildirir (`size` mesajı).
+- Merkez 480px genişlik, 12px iç boşluk, kartlar arası 10px; içerik boyunu JS bildirir (`size` mesajı).
 - Liste + önizleme panelleri 1060×660; sol liste gün gruplu, sağda önizleme + bilgi ızgarası.
-- 80px'lik döşemede metin ölçülür: sığmayan uzun ad kısaltılır, iki satıra bölünmez (#118).
+- Dar döşemede metin ölçülür; doğru kelime kısaltılmaz, alan açılır (#118). Merkez 480px.
 
 ## 6. Depth & Elevation
 
@@ -135,7 +136,8 @@ Panel: `0 0 0 .5px` kenar + 3 katman gölge. Koyu temada gölgeler `rgba(0,0,0,.
 | Tek mavi birincil eylem | Açık temada siyah "ink" düğme/rozet (#115) |
 | Cümle düzeninde okunur etiket | Küçük büyük-harf mono etiket |
 | Fontu göm (Inter) | README görüntüsünü sistem fontuna güvenerek üret (#117) |
-| Dar kutuda metni ölç | Uzun Türkçe etiketi kesik bırak (#118) |
+| Dar kutuda metni ölç, alanı aç | Uzun Türkçe etiketi kesik bırak (#118) |
+| Başlık, düğme, rozet Title Case | Cümle düzeninde başlık, arayüzde em dash (#119) |
 
 ## 8. Responsive Behavior
 

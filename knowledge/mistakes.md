@@ -30,7 +30,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | VPS · Ortam Değişkeni · Yayın | 100–101 | vps, env, seo, robots, e-posta, github-actions |
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 | Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
-| Nimbstia'dan Öğrenilenler (2026-11-03) | 115–118 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
+| Nimbstia'dan Öğrenilenler (2026-11-03) | 115–119 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
 
 ---
 
@@ -2018,13 +2018,32 @@ verisi İngilizce ve marka adı büyük harfle ("Nimbstia").
 **Hata**: 80px genişlikteki araç döşemesinde "Ekran Al" → "Ekran Görüntüsü" yapılınca
 "Ekran Görü…" diye kesildi; iki satıra bölmek de satır ritmini bozdu.
 
-**Çözüm**: `canvas.measureText` ile ölçüldü (11.5px'te 91px, 10.5px'te bile 83px > 80px);
-kısa ad ("Ekran Al", İngilizcesi "Screenshot") geri alındı.
+**Çözüm**: `canvas.measureText` ile ölçüldü (11.5px'te 91px, 10.5px'te bile 83px > 80px).
+Sahibi doğru kelimeyi ("Ekran Görüntüsü") istedi; panel 450 → 480px genişletildi, döşeme iç
+boşluğu sıfırlandı, etiket 11px / `-0.01em` ile tek satıra sığdı.
 
-**Kural**: Sabit genişlikli döşemeye yazılacak etiket önce ölçülür; sığmıyorsa küçültme ya da
-bölme yerine daha kısa ve doğru kelime seçilir. Türkçe karşılıklar İngilizceden ortalama %30 uzundur.
+**Kural**: Sabit genişlikli döşemeye yazılacak etiket önce ölçülür. Doğru kelime kısaltılmaz;
+önce alan (konteyner genişliği, iç boşluk) açılır, sonra punto en fazla bir adım küçülür. İki
+satıra bölmek satır ritmini bozar. Türkçe karşılıklar İngilizceden ortalama %30 uzundur.
+
+### 119. Ekosistem Kuralı Web Dışı Projeye Taşınmadı: Title Case ve Em Dash
+
+**Hata**: Nimbstia (Hammerspoon + HTML paneller) Next şablonundan doğmadığı için `guides/05 § 6`
+hiç uygulanmadı: başlık ve düğmelerin bir kısmı cümle düzenindeydi ("Son kontrol", "filtresinde
+öğe yok"), İngilizce çevirilerde "Multi-line Text", arayüzde em dash. Sahibi iki ayrı turda
+düzeltme istedi. `slop-scan.sh` 8 dosyayı taradı ve 0 bulgu verdi; degrade başlık, renkli
+parıltı gölgeleri ve dekoratif radar gibi izleri yakalayacak kuralı yoktu.
+
+**Çözüm**: Tüm panellerde başlık, düğme, sekme, rozet, künye etiketi Title Case (bağlaçlar
+küçük), yer tutucu ve meta satırı cümle; em dash yerine ` · `; çeviri tablosu (`i18n.js`)
+İngilizce Title Case ile. slop-scan'e `capitalize` kuralı eklendi (#16).
+
+**Kural**: Ekosistem rehberleri (`guides/05`, `rules/design-tokens.md`) framework'e değil
+**her arayüze** uygulanır; web dışı projede ilk tasarım turundan önce § 6 kontrol listesi
+okunur. slop-scan temiz çıktısı "AI izi yok" demek değildir: degrade metin, renkli gölge ve
+bilgi taşımayan süs gözle de denetlenir.
 
 ---
 
-*Son güncelleme: 2026-11-03*
+*Son güncelleme: 2026-11-04*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*
