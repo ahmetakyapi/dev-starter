@@ -64,6 +64,22 @@ Referans bencho.dev (davranış öğrenildi, kod alınmadı; `knowledge/decision
 - `dialog` / `sheet` alt çubuğunda ikon düğme 20 piksele sıkışıyordu
   (masaüstünde `w-auto` `size-11`i eziyordu); tam genişlik yalnız telefonda.
 
+### Bencho turu: sakin sayı, cetvel, rakam yuvarlama — 2026-11-04
+
+bencho.dev'in mikro etkileşim dilinden öğrenildi, kod alınmadı
+(`knowledge/decisions.md` → "Bencho Turu").
+
+#### Eklendi
+
+- **`tick-ruler`**: kayan cetvelle değer seçimi (saat, süre, sıcaklık);
+  sürükleme, yatay tekerlek ve klavye tek hareket değerinden, bırakınca
+  yayla en yakın adıma oturur; `role="slider"`, PageUp/PageDown büyük çentik.
+- **`digit-roll`**: değer değişince yalnız değişen rakam yuvarlanır; ara
+  sayı yok, genişlik sıçramaz, `tr-TR` biçim, reduced-motion'da yerinde.
+- Vitrin: Cetvel Seçici (bitiş sıcaklığı) ve Rakam Yuvarlama (bugün
+  kavrulan); Pusula: Takvim → randevu süresi cetvelle, Pano → istatistik
+  değerleri dönem değişince yuvarlanır. Kapsam 92/92, 11 yeni hikâye.
+
 ### Adresler, örnek giriş, gecikme kartı, uyarı tonu — 2026-11-03
 
 #### Değişti

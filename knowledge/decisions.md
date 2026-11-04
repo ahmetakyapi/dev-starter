@@ -594,3 +594,33 @@ düğmenin `size-11` genişliğini eziyordu; yanına `flex-1` düğme gelince 20
 piksele düşüyordu (Pusula talep çekmecesi, "Bana Ata"). Kural yalnız
 telefonda tam genişlik (`max-sm:[&>*]:w-full`) oldu.
 
+## Bencho Turu — Sakin Sayı, Nesne Kahraman, Küçük Kesin Etkileşim (2026-11-04)
+
+**Karar:** bencho.dev'in mikro etkileşim dilinden ÖĞRENİLDİ; kod, metin,
+renk ve görsel alınmadı (freemium, `design-references.md` → "Bilinçli
+Olarak Dışarıda"). Üç bileşen kendi token'larımızla yazıldı ya da
+genişletildi: `tick-ruler` ve `digit-roll`. Aynı gün açılan `SegmentedMeter
+size="lg"` kota kartını karşıladığı için ikinci bir "display" boyu
+eklenmedi (bir iş için iki boy kütüphaneyi bulandırır).
+
+**Ne alındı (dil, değer değil):**
+
+- **Sakin sayı:** büyük değer 500 ağırlık ve sıkı aralık (`text-display
+  font-medium tracking-tight`), birim ya da "/ 200 B" küçük ve sönük
+  (`text-muted`). Kalın sayı bağırır; ince ve büyük sayı kendinden emin
+  okunur, birim sayıyla yarışmaz.
+- **Nesne kahraman:** tek beyaz nesne yumuşak kuyunun ortasında
+  (`bg-overlay shadow-raised` karo, `bg-surface` kuyu). Board dilimiz
+  zaten buydu; bencho bunun etkileşimli tek nesneyle de çalıştığını
+  gösterdi: vitrin hücresi bir "örnek" değil, kendisi denenen nesne.
+- **Küçük kesin etkileşim:** basınca 0.97, bırakınca yayla oturma, değer
+  değişince yalnız değişen rakamın yuvarlanması. Her biri bir şeyi söyler
+  (basıldı, yerine oturdu, şu basamak değişti); süs değil geri bildirim.
+
+**Alınmayan:** ses (isteğe bağlı bile: çoğu çalışma ortamında sessiz,
+açılınca rahatsız eder), 3B nesneler ve noktalı küre (nedeni tek cümleyle
+yazılamayan hareket), reklam/sponsor kartları, İngilizce "of" eki.
+
+**Etkisi:** `rolling-number` (yüklemede) ve
+`animated-number` (ara değerden sayan) yerinde; üç sayının işi
+`guides/10` § "Bencho Turu"nda ayrıldı.
