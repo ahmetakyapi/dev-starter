@@ -1511,3 +1511,31 @@ düğümleri ve `placeholder/title/aria-label/data-tip` öznitelikleri; tek `Mut
 **Kullanıcı verisi kapları atlanır** (liste başlıkları, önizleme, proje adları) — test: metni
 tam olarak "Bugün" olan bir öğe çevrilmemeli. `lang=tr` iken hiçbir şey yapmaz.
 
+
+## ahmetakyapi.com Sanatsal Turu (2026-11-05)
+
+Ortak dosya `app/craft.css`; hepsi CSS, iki küçük istemci adası. Kural:
+yalnız `transform`/`opacity`/`clip-path`, kaydırmaya bağlı her şey
+`@supports` içinde, reduced-motion'da durağan.
+
+- **Film greni:** `body::after` sabit katman, feTurbulence SVG'si MASKE
+  olarak (`mask: url(data:…)`), zemin rengi temadan (`--grain-ink`),
+  opaklık ~0,04. Karışım modu YOK (bileşimci her karede harmanlamasın).
+- **İmleç ışığı (`PointerLight`):** ebeveyne `--mx/--my` yazan gizli span,
+  rAF ile bir kareye toplanır; yalnız `pointer: fine`. Katman `z-index:-1`
+  + ebeveynde `isolation` → ekran görüntüsünü değil aradaki zemini boyar.
+  Hero'da aynı noktalı ızgara imleç dairesinde maskeyle aydınlanır.
+- **Dev imza finali:** alt bilginin dibinde kenardan kenara SVG imza,
+  `clip-path` yazma animasyonu `view()`e bağlı. Aralık `entry 0% entry 85%`:
+  sayfanın SON öğesi `cover N%`e hiç ulaşmaz, negatif alt boşluk da öğeyi
+  hiç tam girdirmez (yarım yazılı kaldı, ölçüldü).
+- **Satır izi (`.row-sweep`):** `::before` soldan `scaleX`, başlık yarım rem
+  kayar; bağlantının `::after` katmanına dayanan satırda (proje listesi)
+  kayma yok, yalnız iz.
+- **Tuzak:** sayfa sarmalayıcısı opak zemin taşıyordu (rota geçişi için) ve
+  `body::before` zemin ışığını içerik boyunca örtüyordu; ışık yalnız alt
+  bilgide çıkıp içerik sonunda düz bir kenar bırakıyordu. Opaklık yalnız
+  `:root:active-view-transition` altında.
+- **Tuzak:** kartın `::after`ı başka işte (sticky-stack karartma örtüsü)
+  kullanılıyorsa `edge-lit` konmaz; `> :not(...)` kuralları yeni mutlak
+  katmanı (`.pointer-sheen`) da ızgara öğesi yapıp düzeni kaydırır.

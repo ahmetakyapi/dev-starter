@@ -20,6 +20,10 @@
 >   `/blog` + sunucuda çizilen yazı sayfası.
 > - **Görseller:** `public/projects/<slug>/{desktop,desktop-2,mobile}-{light,dark}.webp`,
 >   envanter `lib/content/project-shots.ts`.
+> - **5 Kasım 2026 sanatsal turu:** `app/craft.css` (gren, gölge merdiveni,
+>   ışıklı kenar, imleç ışığı, satır izi, ortak kaydırma ilerlemesi),
+>   hero'da İstanbul saati, kapanışta şafak, alt bilgide dev imza
+>   (`knowledge/patterns.md` → "ahmetakyapi.com Sanatsal Turu").
 > - Ayrıntılı spesifikasyon bu dosyaya henüz taşınmadı; kaynak kodun
 >   kendisi ve commit e25d425'in gövdesi.
 
