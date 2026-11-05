@@ -1539,3 +1539,28 @@ yalnız `transform`/`opacity`/`clip-path`, kaydırmaya bağlı her şey
 - **Tuzak:** kartın `::after`ı başka işte (sticky-stack karartma örtüsü)
   kullanılıyorsa `edge-lit` konmaz; `> :not(...)` kuralları yeni mutlak
   katmanı (`.pointer-sheen`) da ızgara öğesi yapıp düzeni kaydırır.
+
+## Dungeon Mates Derinlik Turu (2026-11-05)
+
+Piksel oyun landing'i için "iniş" dili; hepsi tek canvas ya da transform, ekranda
+değilken ve gizli sekmede durur, reduced-motion'da durağan.
+
+- **Kaya katmanı (`Strata`):** bölümler arasında 4 basamaklı piksel sırt (SVG,
+  `crispEdges`, tam sayı ızgara), her biri kendi hızında `y` parallax'ı (Firewatch
+  tepeleri). Her sırtın 1 birim yukarı kaydırılmış kopyası altta açık renkle → elle
+  çizilmiş karo gibi aydınlık üst kenar. **Tuzak:** `xMidYMax slice` geniş ekranda
+  üst sırtı düz kesti; kabın yüksekliği viewBox oranında (`100vw * 56/240`, clamp)
+  ve `xMidYMin slice`. Alt kenar maske ile sayfaya erir, sonraki bölüm aynı zeminde başlar.
+- **Hücresel ateş (`PixelFire`):** Doom ateşi — alt satır tam ısı, her hücre ısısını
+  bir üst satıra soğuyarak ve yana kayarak geçirir; 37 adım palet, soğuk uç saydam.
+  Hücre 6 CSS px, `Uint32Array` görünümlü tek ImageData, ~25 fps. Beyaz çekirdek
+  sayfada parlama gibi durdu → kaynak `STEPS-5`. Alt bilgideki dev imza önünde:
+  yazı üstte açık, altta koyu degrade → alevlerin önünde silüet.
+- **Derinlik atmosferi:** sabit katmanda üç renk yıkaması `opacity` ile çapraz
+  geçiş (gradyan yeniden boyanmaz), düşük çözünürlüklü tek canvas toz/kor (kor oranı
+  kaydırma derinliğinden, `MotionValue` doğrudan rAF'ta okunur), `pointer: fine`'da
+  `transform` ile taşınan meşale ışığı. İçerik `z-index: 1`, katman 0.
+- **Zincirli fener:** liste boyu bir iz; `top` yerine liste kadar uzun bir izi
+  `y: %` ile kaydır (yüzde kendi boyuna göre → derinlik), yay ile yumuşat.
+- **`digit-roll` framer-motion'a taşındı:** yapışkan derinlik göstergesinde her kat
+  değişiminde rakamlar yuvarlanır (ara sayı yok).
