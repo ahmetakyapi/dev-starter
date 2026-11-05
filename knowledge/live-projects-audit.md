@@ -287,6 +287,10 @@ marka istisnası mı yoksa güncellenecek mi, karar gerekiyor.
 
 **Önce yapı incelenmeli**, sonra tahmin edilebilir.
 
+> 2026-11-05: defter turu ([karalama#4](https://github.com/ahmetakyapi/karalama/pull/4)).
+> Dokunulan dosyalarda slop-scan YÜKSEK bulgu yok; kalan iş `text-[13px]` punto
+> ölçeği ve Next 16 / Tailwind v4 göçü (ayrı karar).
+
 ---
 
 ## Önerilen Sıra

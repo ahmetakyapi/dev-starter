@@ -1564,3 +1564,24 @@ değilken ve gizli sekmede durur, reduced-motion'da durağan.
   `y: %` ile kaydır (yüzde kendi boyuna göre → derinlik), yay ile yumuşat.
 - **`digit-roll` framer-motion'a taşındı:** yapışkan derinlik göstergesinde her kat
   değişiminde rakamlar yuvarlanır (ara sayı yok).
+
+## Karalama Defter Turu (2026-11-05)
+
+Ortak dosyalar `apps/web/src/app/craft.css` + `components/ui/Sketch.tsx`
+(Next 14 / Tailwind v3 / framer-motion yığınında; teknikler v4'te aynı).
+
+- **Canlı bilet:** form solda, sağda kâğıt "bilet" ayarlar değiştikçe güncellenir
+  (sayılar `key` ile yeniden girer, kategoriler damga gibi düşer). Yan çentikler
+  iki yarım `mask: radial-gradient(...)` ile; çentik yüksekliği `--stub` değişkeni,
+  koçan büyüyünce (QR) o da güncellenir.
+- **Boş sandalye:** lobide oda kapasitesi kadar hücre; boşlar kesik kalem çizgisi
+  (dört `repeating-linear-gradient` kenar), ilki kurucuya "Bot Oturt" düğmesi.
+  Boş alan kalmaz, kaç kişi eksik olduğu görünür.
+- **Kürsü sırayla:** 3. → 2. → 1.; blok `clip-path: inset(100% 0 0 0)`dan açılır
+  (yükseklik animasyonu yok), kazananın adı kürsü bitene kadar bekler.
+- **Tuval taşması:** 4:3 tuval `max-width: calc((100dvh - üst+araç) * 4/3)` ile
+  sınırlanır; yoksa 1920×1080'de alt kenar `overflow-hidden` içinde kesiliyordu.
+- **Tuzak (Tailwind v3):** `border-[var(--x)]/40` sınıf ÜRETMEZ (değişken renge
+  opaklık eklenemez); kenar görünmez kaldı. Değişkenli renkte `rgba(...)` yaz.
+- **Tuzak:** framer-motion `style={{ scale }}` Tailwind `-translate-x-1/2`yi ezer;
+  ortalamayı `style={{ x: '-50%', y: '-50%' }}` ile ver.
