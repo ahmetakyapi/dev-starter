@@ -476,6 +476,40 @@ useEffect(() => {
 
 ---
 
+## 15. Frekans Kapısı ve Durum Dili (secki turu, 2026-11-06)
+
+Emil Kowalski (`emilkowalski/skills`), Jakub Krehel (`better-ui`) ve
+ibelick (`improve-ui`) skill'lerinden alınan, bizde olmayan kurallar.
+Kaynak ve gerekçe: `knowledge/references.md` → secki.dev.
+
+- **Frekans kapısı.** Hareketin süresini, öğenin günde kaç kez görüldüğü
+  belirler. Günde yüzlerce (kısayol, komut paleti, sekme ikonu): animasyon
+  yok. Günde onlarca (hover, liste gezinmesi): ≤ 150 ms, yalnız `opacity` ya
+  da `background-color`. Ara sıra (pencere, bildirim): § 3 tablosu. Nadir
+  (karşılama, başarı anı): "hoşluk bütçesi" burada harcanır.
+- **Hareket tek kanal olmaz.** Her canlandırılan durum değişimi durağan bir
+  iz de bırakır: renk, ikon ya da etiket. Hareketi azaltan kullanıcı aynı
+  bilgiyi alır (`slot-text` tam metni, `border-beam` durağan çerçeve).
+- **Keyframe değil geçiş.** Hızlı tetiklenen her şey (anahtar, aç/kapa,
+  hover) CSS `transition`: yarıda kesilince olduğu yerden döner. Keyframe
+  yalnız kendiliğinden süren durum için (yükleniyor, canlı). `slop-scan`
+  `hover:animate-*`i uyarır.
+- **Açılır katman kökünden büyür.** Popover, menü, tooltip
+  `transform-origin: var(--transform-origin)` (Base UI verir); pencere
+  (dialog) merkezde kalır.
+- **İkon çizgisi metnin ağırlığına uyar.** 400 → 1,5 · 500-600 → 2 ·
+  700 → 2,5. Düğme içi ikon ile etiket aynı "kalemle" yazılmış görünür.
+- **Süren işin dili:** etiket (`text-shimmer`), çerçeve (`border-beam`),
+  küre (`thinking-orb`), nokta matrisi (`pixel-loader`). Aynı kartta en çok
+  biri: hepsi birden "çalışıyor"u bağırır.
+
+**Açık kararlar** (dış kaynaklar bizden farklı diyor, kullanıcı karar
+verecek; o güne dek mevcut kural geçerli): çıkışta `ease-in` yerine kısa
+`ease-out` (Emil ve Jakub), basış ölçeğinin tek değere (`--press-scale`)
+bağlanması (kodda 0,95 / 0,97 / 0,98 karışık), hareketi azaltmada CSS
+sıfırlamasının opaklık geçişini de öldürmesi, komut paletinin açılış
+animasyonu, `motion` 14'e geçiş (`x`/`y` donanım hızlandırması 14.2'de).
+
 ## Kontrol Listesi
 
 - [ ] `framer-motion` yok, `motion/react` + `m` + LazyMotion `strict`
@@ -493,3 +527,5 @@ useEffect(() => {
 - [ ] Hikâye tasarımda başlayıp bitiyor, ekran dışında duruyor, reduced-motion'da statik
 - [ ] Nesne `scale(0)`dan gelmiyor; tasarımda olmayan "yükleniyor çizgisi" yok
 - [ ] Fotoğrafta ve büyük başlıkta `filter` animasyonu yok; `view()` kabı `overflow: clip`
+- [ ] Günde yüzlerce görülen öğe (kısayol, palet) animasyonsuz; hover ≤ 150 ms
+- [ ] Hızlı tetiklenen durum `transition`, keyframe değil; hareket tek kanal değil

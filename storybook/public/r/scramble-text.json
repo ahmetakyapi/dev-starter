@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scramble-text",
+  "type": "registry:ui",
+  "title": "Çözülen Metin",
+  "description": "Kısa display metni rastgele karakterlerden çözülerek gelir; tek sefer",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/scramble-text.tsx",
+      "content": "\"use client\";\n\nimport { useInView, useReducedMotion } from \"motion/react\";\nimport { useCallback, useEffect, useRef, useState, type ElementType } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Çözülen metin: harfler rastgele karakterlerden geçerek soldan sağa yerine\n * oturur, şifre çözülüyormuş gibi. Kısa display metninde bir kez: geliştirici\n * aracının kahraman satırı, \"Bağlantı kuruldu\" anı, bölüm etiketi. Gövde\n * metninde, uzun cümlede ve her yeniden çizimde KULLANMA; okumayı geciktirir.\n *\n * TETİK: `inView` (varsayılan, görünür olunca bir kez), `mount`, `hover`\n * (fare üstüne gelince ve klavye odağında yeniden çözülür) ya da metin\n * değişince (`text` değişir değişmez her tetikte). Süre metnin boyundan\n * bağımsız (`duration`), her kare `requestAnimationFrame`.\n *\n * GENİŞLİK: geçiş karakterleri aynı aileden seçilir (Türkçe büyük harf +\n * rakam); eşit enli yazı için `font-mono` ver, satır hiç kımıldamaz.\n * Boşluk ve noktalama hiç karışmaz.\n *\n * Ekran okuyucu yalnız gerçek metni okur (`sr-only`), karışan karakterler\n * `aria-hidden`. Hareketi azaltan kullanıcıda metin doğrudan çizilir.\n *\n *   <ScrambleText text=\"Bağlantı kuruldu\" className=\"font-mono\" />\n */\n\nconst GLYPHS = \"ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ0123456789#%&*+=<>/\";\nconst FIXED = /[\\s.,;:!?'\"()\\-–—…]/;\n\ntype ScrambleTextProps = {\n  text: string;\n  trigger?: \"inView\" | \"mount\" | \"hover\";\n  /** Bütün metnin çözülme süresi (ms). */\n  duration?: number;\n  as?: ElementType;\n  className?: string;\n};\n\nexport function ScrambleText({ text, trigger = \"inView\", duration = 900, as: Tag = \"span\", className }: ScrambleTextProps) {\n  const reduce = useReducedMotion();\n  const ref = useRef<HTMLElement>(null);\n  const inView = useInView(ref, { once: true, margin: \"0px 0px -10% 0px\" });\n  const [shown, setShown] = useState(text);\n  const frame = useRef<number | undefined>(undefined);\n\n  const run = useCallback(() => {\n    if (reduce) {\n      setShown(text);\n      return;\n    }\n    cancelAnimationFrame(frame.current ?? 0);\n    const chars = [...text];\n    const start = performance.now();\n    const tick = (now: number) => {\n      const t = Math.min(1, (now - start) / duration);\n      const settled = Math.floor(t * chars.length);\n      setShown(\n        chars\n          .map((ch, i) => (i < settled || FIXED.test(ch) ? ch : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]))\n          .join(\"\"),\n      );\n      if (t < 1) frame.current = requestAnimationFrame(tick);\n    };\n    frame.current = requestAnimationFrame(tick);\n  }, [duration, reduce, text]);\n\n  useEffect(() => {\n    if (trigger === \"mount\" || (trigger === \"inView\" && inView)) run();\n    else setShown(text);\n  }, [inView, run, text, trigger]);\n\n  useEffect(() => () => cancelAnimationFrame(frame.current ?? 0), []);\n\n  const hover = trigger === \"hover\" ? { onPointerEnter: run, onFocus: run } : {};\n\n  return (\n    <Tag ref={ref} className={cn(\"inline-block whitespace-pre-wrap\", className)} {...hover}>\n      <span className=\"sr-only\">{text}</span>\n      <span aria-hidden>{shown}</span>\n    </Tag>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Hareket ve Doku"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "scramble-text",
+    "palettes": false
+  }
+}

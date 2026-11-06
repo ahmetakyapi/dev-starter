@@ -99,6 +99,29 @@
       ]
     },
     {
+      "name": "animated-icon",
+      "type": "registry:ui",
+      "title": "Canlı İkon",
+      "description": "Düğmenin üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "animated-icon",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/animated-icon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "announcement",
       "type": "registry:ui",
       "title": "Duyuru",
@@ -336,6 +359,52 @@
       "files": [
         {
           "path": "snippets/ui/bar-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "book-cover",
+      "type": "registry:ui",
+      "title": "Kitap Kapağı",
+      "description": "Rehber, e-kitap, kaynak kütüphanesi; üç boyutlu kitap okura döner",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "book-cover",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/book-cover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "border-beam",
+      "type": "registry:ui",
+      "title": "Işık Kenarı",
+      "description": "Çalışan kartın çerçevesinde dolaşan ışık: yazan asistan, süren içe aktarma",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "border-beam",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/border-beam.tsx",
           "type": "registry:ui"
         }
       ]
@@ -877,6 +946,30 @@
       ]
     },
     {
+      "name": "dial",
+      "type": "registry:ui",
+      "title": "Döner Düğme",
+      "description": "Kontrol panelinde sürekli değer (sıcaklık, ses, oran); 270° kadran",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/digit-roll.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "dial",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/dial.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "title": "İletişim Penceresi",
@@ -1003,6 +1096,34 @@
       ]
     },
     {
+      "name": "expandable-card",
+      "type": "registry:ui",
+      "title": "Genişleyen Kart",
+      "description": "Kart yerinden büyüyüp pencereye döner; görsel ve başlık akar",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "expandable-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/expandable-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "file-dropzone",
       "type": "registry:ui",
       "title": "Dosya Bırakma Alanı",
@@ -1078,6 +1199,32 @@
       "files": [
         {
           "path": "snippets/ui/gauge-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "halftone-image",
+      "type": "registry:ui",
+      "title": "Yarım Ton Görsel",
+      "description": "Fotoğrafı token renginde nokta, kare ya da ASCII ızgarasına çevirir",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "halftone-image",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/halftone-image.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1369,6 +1516,32 @@
       ]
     },
     {
+      "name": "mark-annotate",
+      "type": "registry:ui",
+      "title": "Elle İşaretleme",
+      "description": "Kalemle çizilmiş vurgu: altı çizgi, fosforlu kalem, daire, kutu, üstü çizili",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "mark-annotate",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/mark-annotate.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "marquee",
       "type": "registry:ui",
       "title": "Kayan Şerit",
@@ -1416,6 +1589,33 @@
       "files": [
         {
           "path": "snippets/ui/meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "morph-icon",
+      "type": "registry:ui",
+      "title": "Biçim Değiştiren İkon",
+      "description": "Aynı düğmenin iki hali (menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat)",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "morph-icon",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/morph-icon.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1566,6 +1766,52 @@
       "files": [
         {
           "path": "snippets/ui/palette-switcher.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pattern-bg",
+      "type": "registry:ui",
+      "title": "Desen Zemin",
+      "description": "Bölüm zemini: ızgara, nokta, çizgi, doku + solma + ışık; 35 hazır birleşim (`PATTERN_PRESETS`)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "pattern-bg",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/pattern-bg.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pixel-loader",
+      "type": "registry:ui",
+      "title": "Piksel Yükleyici",
+      "description": "Kart düzeyinde bekleme, nokta matrisinde desen (dalga, sarmal, nabız, yılan, yağmur)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "pixel-loader",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/pixel-loader.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1754,6 +2000,33 @@
       ]
     },
     {
+      "name": "reasoning",
+      "type": "registry:ui",
+      "title": "Düşünce Bloğu",
+      "description": "Modelin düşüncesi: akarken açık ve sayan, bitince \"6 sn düşündü\" satırına iner",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/text-shimmer.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zekâ"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "reasoning",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/reasoning.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "ring-chart",
       "type": "registry:ui",
       "title": "Halka Grafiği",
@@ -1850,6 +2123,32 @@
       "files": [
         {
           "path": "snippets/ui/scatter-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scramble-text",
+      "type": "registry:ui",
+      "title": "Çözülen Metin",
+      "description": "Kısa display metni rastgele karakterlerden çözülerek gelir; tek sefer",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "scramble-text",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/scramble-text.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2092,6 +2391,33 @@
       ]
     },
     {
+      "name": "slot-text",
+      "type": "registry:ui",
+      "title": "Kayan Metin",
+      "description": "Değişen etiketin harfleri yerine yuvarlanır (\"Kaydet\" → \"Kaydedildi\"); değişmeyen harf yerinde",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "slot-text",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/slot-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sparkline",
       "type": "registry:ui",
       "title": "Mini Grafik",
@@ -2241,6 +2567,29 @@
       ]
     },
     {
+      "name": "stream-text",
+      "type": "registry:ui",
+      "title": "Akan Metin",
+      "description": "Parça parça gelen yanıt: yalnız yeni sözcük belirir, önceki metin kıpırdamaz",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zekâ"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "stream-text",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stream-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "switch",
       "type": "registry:ui",
       "title": "Aç-Kapa Düğmesi",
@@ -2347,6 +2696,34 @@
       ]
     },
     {
+      "name": "terminal",
+      "type": "registry:ui",
+      "title": "Terminal",
+      "description": "Tanıtım ve belgede kurulum akışı: komut yazılır, çıktı satır satır gelir",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/copy-button.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "terminal",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/terminal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "text-shimmer",
       "type": "registry:ui",
       "title": "Parıltılı Metin",
@@ -2388,6 +2765,29 @@
       "files": [
         {
           "path": "snippets/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "thinking-orb",
+      "type": "registry:ui",
+      "title": "Düşünme Küresi",
+      "description": "Asistanın durumu: bekliyor, düşünüyor, konuşuyor (ses düzeyiyle)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zekâ"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "thinking-orb",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/thinking-orb.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2567,6 +2967,34 @@
       "files": [
         {
           "path": "snippets/ui/toggle-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tool-call",
+      "type": "registry:ui",
+      "title": "Araç Çağrısı",
+      "description": "Asistanın araç çağrısının kaydı: durum, süre, girdi, çıktı; onay yuvası",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/border-beam.json",
+        "https://dev-starter-storybook.vercel.app/r/text-shimmer.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zekâ"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "tool-call",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tool-call.tsx",
           "type": "registry:ui"
         }
       ]

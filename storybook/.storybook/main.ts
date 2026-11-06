@@ -49,7 +49,10 @@ const config: StorybookConfig = {
   addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],
   // public/r: shadcn kaydı (scripts/build-ui-registry.mjs üretir) → /r/<ad>.json
   staticDirs: ["../public"],
-  core: { disableTelemetry: true },
+  // Katalog kendi kapağıyla açılır: Storybook'un tanıtım kartları ve
+  // güncelleme bildirimi bu yüzü örtmesin.
+  core: { disableTelemetry: true, disableWhatsNewNotifications: true },
+  features: { sidebarOnboardingChecklist: false },
   async viteFinal(config) {
     config.plugins = [serverShims(repoRoot), resolveAt(repoRoot), tailwindcss(), ...(config.plugins ?? [])];
     config.define = { ...config.define, "process.cwd": '(() => "")' };

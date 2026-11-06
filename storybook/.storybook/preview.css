@@ -16,4 +16,30 @@
 :root {
   --font-sans-face: "Inter";
   --font-mono-face: "JetBrains Mono";
+  /* Display rolü: amiral projenin (Açılış Zili) ailesi; kapak ve belge
+     başlıkları. Gövde Inter kalır (board kararı). */
+  --font-display-face: "Schibsted Grotesk";
 }
+
+/* Belge sayfası: Storybook başlıkları `:where()` ile sıfır özgüllükte,
+   bu kurallar `!important`sız ezer. Gölge yok, saç çizgisi ve ton farkı. */
+.sbdocs-wrapper { padding: 4rem 48px; }
+.sbdocs-content { max-width: 1040px; }
+.sbdocs.sbdocs-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.sbdocs-content h2:not(.sb-anchor, .sb-unstyled) {
+  font-family: var(--font-display);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+}
+.sbdocs-content h3:not(.sb-anchor, .sb-unstyled) { font-family: var(--font-display); font-weight: 650; }
+.sbdocs-preview, .docs-story { border-radius: 14px; box-shadow: none; }

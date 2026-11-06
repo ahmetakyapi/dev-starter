@@ -37,7 +37,7 @@ dev-starter/
 │
 ├── packages/@ahmet/
 │   ├── theme/      → Tailwind v4 theme.css (sistem + palet + @theme inline köprüsü) + tokens.ts aynası
-│   └── ui/         → Surface, Button, Chip, CustomCursor + hooks + motion varyantları (m.*)
+│   └── ui/         → 86 bileşenlik kit (snippets/ui'dan üretilir) + Surface, Button, Chip, CustomCursor + hooks + motion varyantları (m.*)
 │
 ├── knowledge/
 │   ├── themes/                → 7 projenin görsel hafızası (DESIGN.md 9 bölüm)
@@ -78,7 +78,7 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
-│   ├── slop-scan.sh           → AI slop taraması (15 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
+│   ├── slop-scan.sh           → AI slop taraması (23 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
 │   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
 │   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
@@ -86,6 +86,7 @@ dev-starter/
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
 │   ├── add-ui.mjs             → snippets/ui bileşenini bağımlılıklarıyla projeye kurar (--list, --dry-run, --install)
 │   ├── build-ui-registry.mjs  → snippets/ui/registry.json + shadcn kaydı storybook/public/r (--check: verify:registry)
+│   ├── build-ui-package.mjs   → snippets/ui → @ahmetakyapi/ui kiti (86 bileşen, next/Base UI'sız; --check: verify:kit)
 │   ├── add-figure-kit.mjs     → anatomy figür kitini bir projeye kurar (components/iso)
 │   └── verify-anatomy.mjs     → Figür kiti iki şablonda build/tip/lint/test temiz mi (opt-in)
 │
@@ -103,9 +104,9 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 691 hikâye — Tema, Bileşenler,
-│                                Grafikler, Bloklar, Ekranlar, Pusula showcase (101/101 bileşen); `npm run storybook`
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (101 bileşen + vitrin/) + fonts/ + live-preview/
+├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 728 hikâye — Kapak, Tema, Bileşenler,
+│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula (118/118); kabuk tema ve paleti izler
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (118 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form

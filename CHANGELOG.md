@@ -7,6 +7,39 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Secki turu: 17 bileşen, paket kiti, Storybook kabuğu — 2026-11-06
+
+Referans secki.dev (332 bağlantı) ve patterncraft.fun; davranış öğrenildi, kod
+alınmadı (`knowledge/decisions.md` → "Secki Turu").
+
+#### Eklendi
+
+- **Hareket ve Doku** (13 bileşen): `border-beam` (çalışan kartın
+  çerçevesinde ışık), `slot-text` (harfleri yuvarlanan etiket),
+  `scramble-text`, `animated-icon` (anlamına uygun ikon hareketi),
+  `morph-icon` (menü ↔ kapat, oynat ↔ duraklat), `pixel-loader`, `terminal`
+  (kurulum akışı, döngüsüz), `dial` (270° kadran, `role="slider"`),
+  `book-cover` (3B kitap), `pattern-bg` (35 token'lı zemin: desen + solma +
+  ışık), `halftone-image` (nokta / kare / ASCII), `mark-annotate` (kalem
+  vurgusu), `expandable-card` (karttan pencereye paylaşılan öğe geçişi).
+- **Yapay Zekâ** (4 bileşen): `thinking-orb`, `tool-call` (durum, süre,
+  girdi/çıktı, onay yuvası), `reasoning` ("6 sn düşündü"), `stream-text`
+  (yalnız yeni sözcük belirir).
+- **@ahmetakyapi/ui 3.1.0**: 86 bileşenlik kit, `snippets/ui`dan üretilir
+  (`npm run kit:ui`, CI'da `verify:kit`). `lucide-react` peer bağımlılık.
+  **@ahmetakyapi/theme 3.0.0** npm'e ilk kez çıktı.
+- **Storybook**: Kapak sayfası (palet karoları bütün arayüzü döndürür),
+  Desen Kütüphanesi (kategori, arama, Önizle, Kopyala, favoriler), yönetici
+  teması `tokens.ts`ten açık + koyu, kabuk tema ve paleti izler, belge sayfası
+  koyu temada da koyu ve `lang="tr"`, "Yeni" rozetleri, favicon, Schibsted
+  Grotesk display rolü. Storybook'un tanıtım kartları kapalı.
+- **slop-scan**: sekiz yeni kalıp (ham palet rengi, derlenmeyen dinamik sınıf,
+  yapıştırmayı engelleme, `h-screen`, SVG'de sabit renk, hover'da keyframe,
+  sessizsiz otomatik video, kalıcı `will-change`); 27 davranış testi.
+- **guides/04 § 15**: frekans kapısı, hareketin tek kanal olmaması, keyframe
+  yerine geçiş, ikon çizgisi ağırlığı; dış kaynakların bizden ayrıldığı beş
+  nokta "Açık kararlar"da.
+
 ### EasyUI turu: seçim çubuğu, bölünmüş düğme, ürün turu, içindekiler — 2026-11-04
 
 Referans easyui.site (davranış öğrenildi, kod alınmadı; `knowledge/decisions.md` → "EasyUI Turu").

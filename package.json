@@ -25,7 +25,9 @@
     "readme:assets": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs",
     "verify:readme": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-readme-assets.mjs --check",
     "registry:ui": "node scripts/build-ui-registry.mjs",
-    "verify:registry": "node scripts/build-ui-registry.mjs --check"
+    "verify:registry": "node scripts/build-ui-registry.mjs --check",
+    "kit:ui": "node scripts/build-ui-package.mjs",
+    "verify:kit": "node scripts/build-ui-package.mjs --check"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

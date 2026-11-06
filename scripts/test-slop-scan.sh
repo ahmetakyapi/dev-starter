@@ -31,6 +31,14 @@ export function Kart() {
       <a href="#">Daha Fazla</a>
       <button onClick={() => alert("Kaydedildi")}>Kaydet</button>
       <h3 className="capitalize tracking-tight">bugünkü işler</h3>
+      <p className="text-zinc-500">ham palet</p>
+      <span className={`bg-${"ton"}-500`}>dinamik</span>
+      <input onPaste={(e) => e.preventDefault()} />
+      <main className="min-h-screen" />
+      <svg><path fill="#111827" /></svg>
+      <button className="hover:animate-bounce">Zıpla</button>
+      <video autoPlay loop src="/a.mp4" />
+      <div className="will-change-transform" />
     </div>
   );
 }
@@ -65,6 +73,14 @@ expect "[UYARI] Keyfi punto"
 expect "[UYARI] Sevimli sistem mesaji"
 expect "[UYARI] Supheli yuvarlak sayi"
 expect "[UYARI] Material ikon kiti"
+expect "[YUKSEK] Ham palet rengi"
+expect "[YUKSEK] Derlenmeyen dinamik sinif"
+expect "[YUKSEK] Yapistirmayi engelleme"
+expect "[UYARI] h-screen / 100vh"
+expect "[UYARI] SVG'de sabit fill/stroke"
+expect "[UYARI] Hover'da keyframe"
+expect "[UYARI] muted olmayan autoPlay"
+expect "[UYARI] Kalici will-change"
 
 # ─── Temiz ornek: benzer gorunen ama dogru kullanimlar ───────────────────────
 mkdir -p "$SANDBOX/temiz"
@@ -88,6 +104,11 @@ export function Temiz() {
       <article className="prose prose-blockquote:border-l-4 prose-code:rounded">Metin</article>
       <div data-seamless="">iso</div>
       <a href="#">Başa Dön</a>{/* slop-ok: kasitli; test susturmayi dogrular */}
+      <main className="min-h-dvh text-strong bg-surface" />
+      <svg><path fill="currentColor" className="stroke-line" /></svg>
+      <span className={TONE[ton]}>esleme tablosu</span>
+      <video autoPlay muted loop playsInline src="/a.mp4" />
+      <button className="transition-[translate] hover:-translate-y-px">Kaydır</button>
     </section>
   );
 }

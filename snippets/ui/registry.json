@@ -68,6 +68,24 @@
       "palettes": false
     },
     {
+      "name": "animated-icon",
+      "title": "Canlı İkon",
+      "category": "Hareket ve Doku",
+      "description": "Düğmenin üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile)",
+      "file": "snippets/ui/animated-icon.tsx",
+      "client": false,
+      "storyId": "animated-icon",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "announcement",
       "title": "Duyuru",
       "category": "Form ve Gezinme",
@@ -253,6 +271,42 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "book-cover",
+      "title": "Kitap Kapağı",
+      "category": "Hareket ve Doku",
+      "description": "Rehber, e-kitap, kaynak kütüphanesi; üç boyutlu kitap okura döner",
+      "file": "snippets/ui/book-cover.tsx",
+      "client": false,
+      "storyId": "book-cover",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "border-beam",
+      "title": "Işık Kenarı",
+      "category": "Hareket ve Doku",
+      "description": "Çalışan kartın çerçevesinde dolaşan ışık: yazan asistan, süren içe aktarma",
+      "file": "snippets/ui/border-beam.tsx",
+      "client": false,
+      "storyId": "border-beam",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -660,6 +714,28 @@
       "palettes": false
     },
     {
+      "name": "dial",
+      "title": "Döner Düğme",
+      "category": "Hareket ve Doku",
+      "description": "Kontrol panelinde sürekli değer (sıcaklık, ses, oran); 270° kadran",
+      "file": "snippets/ui/dial.tsx",
+      "client": true,
+      "storyId": "dial",
+      "registryDependencies": [
+        "digit-roll"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "dialog",
       "title": "İletişim Penceresi",
       "category": "Katmanlar",
@@ -755,6 +831,27 @@
       "palettes": false
     },
     {
+      "name": "expandable-card",
+      "title": "Genişleyen Kart",
+      "category": "Hareket ve Doku",
+      "description": "Kart yerinden büyüyüp pencereye döner; görsel ve başlık akar",
+      "file": "snippets/ui/expandable-card.tsx",
+      "client": true,
+      "storyId": "expandable-card",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "file-dropzone",
       "title": "Dosya Bırakma Alanı",
       "category": "Form ve Gezinme",
@@ -805,6 +902,25 @@
       "registryDependencies": [
         "chart-card"
       ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "halftone-image",
+      "title": "Yarım Ton Görsel",
+      "category": "Hareket ve Doku",
+      "description": "Fotoğrafı token renginde nokta, kare ya da ASCII ızgarasına çevirir",
+      "file": "snippets/ui/halftone-image.tsx",
+      "client": true,
+      "storyId": "halftone-image",
+      "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
       ],
@@ -1033,6 +1149,25 @@
       "palettes": false
     },
     {
+      "name": "mark-annotate",
+      "title": "Elle İşaretleme",
+      "category": "Hareket ve Doku",
+      "description": "Kalemle çizilmiş vurgu: altı çizgi, fosforlu kalem, daire, kutu, üstü çizili",
+      "file": "snippets/ui/mark-annotate.tsx",
+      "client": true,
+      "storyId": "mark-annotate",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "marquee",
       "title": "Kayan Şerit",
       "category": "Form ve Gezinme",
@@ -1066,6 +1201,26 @@
       "npm": {
         "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "morph-icon",
+      "title": "Biçim Değiştiren İkon",
+      "category": "Hareket ve Doku",
+      "description": "Aynı düğmenin iki hali (menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat)",
+      "file": "snippets/ui/morph-icon.tsx",
+      "client": true,
+      "storyId": "morph-icon",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1150,6 +1305,42 @@
         "tailwind-merge": "^3.7.0"
       },
       "palettes": true
+    },
+    {
+      "name": "pattern-bg",
+      "title": "Desen Zemin",
+      "category": "Hareket ve Doku",
+      "description": "Bölüm zemini: ızgara, nokta, çizgi, doku + solma + ışık; 35 hazır birleşim (`PATTERN_PRESETS`)",
+      "file": "snippets/ui/pattern-bg.tsx",
+      "client": false,
+      "storyId": "pattern-bg",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "pixel-loader",
+      "title": "Piksel Yükleyici",
+      "category": "Hareket ve Doku",
+      "description": "Kart düzeyinde bekleme, nokta matrisinde desen (dalga, sarmal, nabız, yılan, yağmur)",
+      "file": "snippets/ui/pixel-loader.tsx",
+      "client": false,
+      "storyId": "pixel-loader",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
     },
     {
       "name": "popover",
@@ -1291,6 +1482,27 @@
       "palettes": false
     },
     {
+      "name": "reasoning",
+      "title": "Düşünce Bloğu",
+      "category": "Yapay Zekâ",
+      "description": "Modelin düşüncesi: akarken açık ve sayan, bitince \"6 sn düşündü\" satırına iner",
+      "file": "snippets/ui/reasoning.tsx",
+      "client": true,
+      "storyId": "reasoning",
+      "registryDependencies": [
+        "text-shimmer"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "ring-chart",
       "title": "Halka Grafiği",
       "category": "Grafik",
@@ -1359,6 +1571,25 @@
         "chart-card",
         "line-chart"
       ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "scramble-text",
+      "title": "Çözülen Metin",
+      "category": "Hareket ve Doku",
+      "description": "Kısa display metni rastgele karakterlerden çözülerek gelir; tek sefer",
+      "file": "snippets/ui/scramble-text.tsx",
+      "client": true,
+      "storyId": "scramble-text",
+      "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
       ],
@@ -1548,6 +1779,26 @@
       "palettes": false
     },
     {
+      "name": "slot-text",
+      "title": "Kayan Metin",
+      "category": "Hareket ve Doku",
+      "description": "Değişen etiketin harfleri yerine yuvarlanır (\"Kaydet\" → \"Kaydedildi\"); değişmeyen harf yerinde",
+      "file": "snippets/ui/slot-text.tsx",
+      "client": true,
+      "storyId": "slot-text",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "sparkline",
       "title": "Mini Grafik",
       "category": "Veri",
@@ -1664,6 +1915,24 @@
       "palettes": false
     },
     {
+      "name": "stream-text",
+      "title": "Akan Metin",
+      "category": "Yapay Zekâ",
+      "description": "Parça parça gelen yanıt: yalnız yeni sözcük belirir, önceki metin kıpırdamaz",
+      "file": "snippets/ui/stream-text.tsx",
+      "client": true,
+      "storyId": "stream-text",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "switch",
       "title": "Aç-Kapa Düğmesi",
       "category": "Form ve Gezinme",
@@ -1745,6 +2014,28 @@
       "palettes": false
     },
     {
+      "name": "terminal",
+      "title": "Terminal",
+      "category": "Hareket ve Doku",
+      "description": "Tanıtım ve belgede kurulum akışı: komut yazılır, çıktı satır satır gelir",
+      "file": "snippets/ui/terminal.tsx",
+      "client": true,
+      "storyId": "terminal",
+      "registryDependencies": [
+        "copy-button"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "text-shimmer",
       "title": "Parıltılı Metin",
       "category": "Yükleme",
@@ -1770,6 +2061,24 @@
       "file": "snippets/ui/textarea.tsx",
       "client": true,
       "storyId": "textarea",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "thinking-orb",
+      "title": "Düşünme Küresi",
+      "category": "Yapay Zekâ",
+      "description": "Asistanın durumu: bekliyor, düşünüyor, konuşuyor (ses düzeyiyle)",
+      "file": "snippets/ui/thinking-orb.tsx",
+      "client": false,
+      "storyId": "thinking-orb",
       "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
@@ -1914,6 +2223,28 @@
       ],
       "npm": {
         "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tool-call",
+      "title": "Araç Çağrısı",
+      "category": "Yapay Zekâ",
+      "description": "Asistanın araç çağrısının kaydı: durum, süre, girdi, çıktı; onay yuvası",
+      "file": "snippets/ui/tool-call.tsx",
+      "client": false,
+      "storyId": "tool-call",
+      "registryDependencies": [
+        "border-beam",
+        "text-shimmer"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"

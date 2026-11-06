@@ -268,6 +268,16 @@ kaldığı için erişilebilirlik açığı değil.
 - **ProductTour**: dört-beş adım, bir kez gösterilir; tekrar açma düğmesi ekranda kalır. Hedefe `data-tour="ad"` ver; seçici de olur.
 - **AppShell kaydırması (değişti)**: masaüstünde kabuk ekran boyunda, kenar çubuğu yerinde, içerik karosu kendi içinde kayar; telefonda pencere kayar. Sayfa değişiminde başa dönmek için `#icerik`i de kaydır.
 
+### Secki Turu (2026-11)
+
+- **Süren işin dili, kartta biri:** etiket `text-shimmer`, çerçeve `border-beam`, küre `thinking-orb`, nokta matrisi `pixel-loader`. Düğme içinde `spinner`.
+- **ToolCall / Reasoning / StreamText**: ajan yanıtının üç katmanı. Araç çağrısı tek satır, açınca girdi/çıktı; düşünce akarken açık, bitince "6 sn düşündü"; yanıt yalnız yeni sözcüğü belirterek akar. Mesaj listesi `chat-thread` (`role="log"`).
+- **SlotText ya da DigitRoll**: rakamsa `digit-roll`, etiketse `slot-text`. İkisi de ilk çizimde durağan.
+- **PatternBackground**: kap `relative isolate`; hazır birleşimler `PATTERN_PRESETS`. Stil `@layer components`te: `className="fixed"` bütün sayfa zemini yapar.
+- **Dial ya da Slider**: kontrol panelinde yan yana birkaç ayar → kadran; formda tek aralık → `slider`; kesin sayı → `number-field`.
+- **ExpandableCard**: kartın kendisi büyür (`layoutId`, `domMax`); başka bir yerden açılan pencere için `dialog`.
+- **Paket mi kopya mı:** `@ahmetakyapi/ui` 86 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
+
 ### Bloklar
 
 - **PaletteSwitcher**: `app/palettes.css` içe aktarılmalı (nokta renkleri oradaki `--swatch-*`). Çerezin ilk boyamadan önce okunması için THEME_SCRIPT'e iki satır (dosya başında). Telefonda on nokta yatay kayar.

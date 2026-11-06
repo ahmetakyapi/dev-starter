@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "reasoning",
+  "type": "registry:ui",
+  "title": "Düşünce Bloğu",
+  "description": "Modelin düşüncesi: akarken açık ve sayan, bitince \"6 sn düşündü\" satırına iner",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/text-shimmer.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/reasoning.tsx",
+      "content": "\"use client\";\n\nimport { ChevronRight } from \"lucide-react\";\nimport { useEffect, useRef, useState, type ReactNode } from \"react\";\nimport { TextShimmer } from \"@/components/ui/text-shimmer\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Düşünce bloğu: modelin yanıttan önceki akıl yürütmesi. Akarken açık ve\n * canlı (\"Düşünüyor · 4 sn\", saniye işler), bitince kendiliğinden kapanıp\n * tek satıra iner: \"6 sn düşündü\". Kullanıcı isterse açıp okur; yanıtın\n * önünde uzun bir metin duvarı kalmaz.\n *\n * KULLANICI KARARI KAZANIR: akış sürerken bloğu kapatan ya da bittikten\n * sonra açan kullanıcının seçimine dokunulmaz; kendiliğinden kapanma yalnız\n * kullanıcı hiç dokunmadıysa.\n *\n * İçerik `text-muted`, solda yuvarlaksız ince çizgi (alıntı gibi;\n * kartın tek kenarında renkli şerit değil). Başlık düğmesi `aria-expanded`;\n * akış bitince \"6 sn düşündü\" canlı bölgede bir kez okunur. Hareketi\n * azaltan kullanıcıda parıltı düz metin olur.\n *\n *   <Reasoning streaming={isThinking} startedAt={t0}>{thoughts}</Reasoning>\n */\n\ntype ReasoningProps = {\n  children: ReactNode;\n  streaming: boolean;\n  /** Akışın başladığı an (`Date.now()`); verilmezse bileşen ilk çizimde sayar. */\n  startedAt?: number;\n  /** Bitmiş bir düşüncenin süresi (saniye); geçmiş mesajda sayaç yerine. */\n  durationSec?: number;\n  className?: string;\n};\n\nexport function Reasoning({ children, streaming, startedAt, durationSec, className }: ReasoningProps) {\n  const [open, setOpen] = useState(streaming);\n  const touched = useRef(false);\n  const start = useRef(startedAt ?? 0);\n  const [elapsed, setElapsed] = useState(durationSec ?? 0);\n\n  useEffect(() => {\n    if (!streaming) return;\n    if (!start.current) start.current = startedAt ?? Date.now();\n    const tick = () => setElapsed(Math.max(0, Math.round((Date.now() - start.current) / 1000)));\n    tick();\n    const id = window.setInterval(tick, 1000);\n    return () => window.clearInterval(id);\n  }, [streaming, startedAt]);\n\n  // Akış bitince kapan; kullanıcı elle açıp kapattıysa onun kararı kalır.\n  const [wasStreaming, setWasStreaming] = useState(streaming);\n  if (wasStreaming !== streaming) {\n    setWasStreaming(streaming);\n    if (!touched.current) setOpen(streaming);\n  }\n\n  const seconds = durationSec ?? elapsed;\n  const done = `${seconds} sn düşündü`;\n\n  return (\n    <div className={cn(\"grid gap-2\", className)}>\n      <button\n        type=\"button\"\n        aria-expanded={open}\n        onClick={() => {\n          touched.current = true;\n          setOpen((v) => !v);\n        }}\n        className=\"inline-flex min-h-9 items-center gap-1.5 justify-self-start rounded-md pr-2 text-small text-muted hover:text-strong\"\n      >\n        {streaming ? <TextShimmer>{`Düşünüyor · ${seconds} sn`}</TextShimmer> : <span>{done}</span>}\n        <ChevronRight aria-hidden className={cn(\"size-3.5 transition-[rotate] duration-200\", open && \"rotate-90\")} />\n      </button>\n      <span role=\"status\" className=\"sr-only\">\n        {streaming ? \"\" : done}\n      </span>\n      {open ? <div className=\"border-l border-line-strong pl-4 text-small leading-relaxed text-muted\">{children}</div> : null}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Yapay Zekâ"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "reasoning",
+    "palettes": false
+  }
+}

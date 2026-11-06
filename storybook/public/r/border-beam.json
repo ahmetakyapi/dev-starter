@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "border-beam",
+  "type": "registry:ui",
+  "title": "Işık Kenarı",
+  "description": "Çalışan kartın çerçevesinde dolaşan ışık: yazan asistan, süren içe aktarma",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/border-beam.tsx",
+      "content": "import type { CSSProperties, ElementType, HTMLAttributes, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Işık kenarı: kartın çerçevesinde dolaşan kısa bir ışık. \"Bu kart şu an\n * ÇALIŞIYOR\" demenin sessiz yolu: asistanın yanıt yazdığı mesaj, süren\n * içe aktarma, canlı yayındaki kayıt. Durağan karta süs olarak koyma; ışık\n * yalnız bir şey sürerken dolaşır (`active`), iş bitince söner.\n *\n * TEKNİK: kartın kendi `::after` katmanı. Zemin `conic-gradient` (açısı\n * `@property --beam-angle` ile döner), maske `content-box` dışlaması: yalnız\n * `--beam-width` kalınlığındaki çerçeve görünür. JavaScript yok, ölçüm yok,\n * köşe yarıçapı kartın kendisinden (`border-radius: inherit`).\n *\n * TEK RENK AİLESİ: ışık tonun kendi rengi, kuyruk aynı rengin saydamına\n * söner (degrade disiplini: tek aile). Geniş kartta ışık köşelerde hızlanır;\n * merkezden açı dönüyor, bilinçli (yol hesabı yerine sıfır JS).\n *\n * Hareketi azaltan kullanıcıda ışık dönmez: çerçeve tonun yarı saydamıyla\n * durağan çizilir, \"etkin\" bilgisi kaybolmaz. Ekran okuyucuya bir şey\n * söylemez; durum metni çağıranın (`aria-busy`, \"Yazıyor…\").\n *\n *   <BorderBeam className=\"rounded-xl bg-overlay p-5 shadow-raised\" active={streaming}>…</BorderBeam>\n */\n\nconst CSS = `\n@property --beam-angle { syntax: \"<angle>\"; inherits: false; initial-value: 0deg; }\n@keyframes ui-beam-spin { to { --beam-angle: 360deg; } }\n/* Kabın konumu katmanda: \\`className=\"absolute …\"\\` ezebilsin (katmansız CSS yardımcı sınıfı ezer). */\n@layer components { .ui-beam { position: relative; isolation: isolate; } }\n.ui-beam::after {\n  content: \"\";\n  position: absolute;\n  inset: 0;\n  z-index: 1;\n  border-radius: inherit;\n  padding: var(--beam-width);\n  pointer-events: none;\n  background: conic-gradient(\n    from var(--beam-angle),\n    transparent 0deg,\n    transparent calc(360deg - var(--beam-arc)),\n    color-mix(in oklab, var(--beam-color) 35%, transparent) calc(360deg - var(--beam-arc) * 0.55),\n    var(--beam-color) 360deg\n  );\n  -webkit-mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);\n  -webkit-mask-composite: xor;\n  mask: linear-gradient(black 0 0) content-box exclude, linear-gradient(black 0 0);\n  animation: ui-beam-spin var(--beam-duration) linear infinite;\n  transition: opacity 0.4s var(--ease-brand);\n}\n.ui-beam[data-active=\"false\"]::after { opacity: 0; animation-play-state: paused; }\n@media (prefers-reduced-motion: reduce) {\n  .ui-beam::after { animation: none; background: color-mix(in oklab, var(--beam-color) 55%, transparent); }\n}`;\n\nconst TONES = {\n  primary: \"var(--primary)\",\n  success: \"var(--success)\",\n  warning: \"var(--warning)\",\n  danger: \"var(--danger)\",\n} as const;\n\ntype BorderBeamProps = Omit<HTMLAttributes<HTMLElement>, \"children\" | \"style\"> & {\n  children?: ReactNode;\n  /** Kabın öğesi; köşe yarıçapı, zemin ve iç boşluk `className`den. */\n  as?: ElementType;\n  /** Işık dolaşıyor mu. `false` olunca söner (yer değişmez). */\n  active?: boolean;\n  tone?: keyof typeof TONES;\n  /** Bir turun saniyesi. 3-6 arası: kısası telaşlı, uzunu fark edilmez. */\n  duration?: number;\n  /** Işığın kuyruğuyla birlikte kapladığı açı (derece). */\n  arc?: number;\n  /** Çerçeve kalınlığı (piksel). */\n  width?: number;\n  className?: string;\n};\n\nexport function BorderBeam({\n  children,\n  as: Tag = \"div\",\n  active = true,\n  tone = \"primary\",\n  duration = 4,\n  arc = 110,\n  width = 1.5,\n  className,\n  ...props\n}: BorderBeamProps) {\n  return (\n    <>\n      <style href=\"ui-border-beam\" precedence=\"default\">\n        {CSS}\n      </style>\n      <Tag\n        {...props}\n        data-active={active}\n        className={cn(\"ui-beam\", className)}\n        style={\n          {\n            \"--beam-color\": TONES[tone],\n            \"--beam-duration\": `${duration}s`,\n            \"--beam-arc\": `${arc}deg`,\n            \"--beam-width\": `${width}px`,\n          } as CSSProperties\n        }\n      >\n        {children}\n      </Tag>\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Hareket ve Doku"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "border-beam",
+    "palettes": false
+  }
+}

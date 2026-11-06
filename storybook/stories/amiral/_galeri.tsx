@@ -58,6 +58,7 @@ import { CompareSlider } from "@/components/ui/compare-slider";
 import { HoldButton } from "@/components/ui/hold-button";
 import { Reactions } from "@/components/ui/reactions";
 import { ProductTour } from "@/components/ui/product-tour";
+import { AjanGroup, HareketGroup } from "./_hareket";
 import { SelectionAction, SelectionBar } from "@/components/ui/selection-bar";
 import { SignaturePad } from "@/components/ui/signature-pad";
 import { SplitButton } from "@/components/ui/split-button";
@@ -1420,6 +1421,8 @@ export const GALLERY_GROUPS = [
   { id: "geri", Group: GeriGroup },
   { id: "gezinme", Group: GezinmeGroup },
   { id: "yukleme", Group: YuklemeGroup },
+  { id: "hareket", Group: HareketGroup },
+  { id: "ajan", Group: AjanGroup },
 ] as const;
 
 export { GroupHead };

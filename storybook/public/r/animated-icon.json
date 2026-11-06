@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "animated-icon",
+  "type": "registry:ui",
+  "title": "Canlı İkon",
+  "description": "Düğmenin üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile)",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/animated-icon.tsx",
+      "content": "import type { ComponentType, CSSProperties, SVGProps } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Canlı ikon: lucide ikonu, sahibi olan düğmenin ya da kartın üzerine\n * gelince (ve klavye odağında) anlamına uygun küçük bir hareket yapar.\n * Zil sallanır, ok dürter, yenile döner, kalp atar. Hareket İKONUN\n * ANLAMINI söyler; her ikona aynı zıplamayı verme.\n *\n * TETİK `group`: en yakın `.group` öğesi (düğme, bağlantı, kart) üzerine\n * gelinince ya da `:focus-visible` olunca. Düğmeye `group` sınıfı ver.\n * `self`: ikonun kendi üstüne gelince. `always`: süren durumda (yenileniyor)\n * sürekli; `loop` ile yalnız `spin` ve `ring` mantıklı.\n *\n * Üzerine gelme yalnız ince işaretçide (`hover: hover`): dokunmatikte ilk\n * dokunuş takılı kalan bir hover bırakmasın. Süreler 450-650 ms, eğri\n * `--ease-brand`; `pop` 1,18'e büyür, 0'dan değil.\n *\n * İkon her zaman `aria-hidden` (adı düğmenin). Hareketi azaltan kullanıcıda\n * hiç oynamaz. Sunucu bileşeni: yalnız CSS.\n *\n *   <button className=\"group …\"><AnimatedIcon icon={Bell} motion=\"ring\" /> Bildirimler</button>\n */\n\nconst CSS = `\n@keyframes ui-ai-nudge { 0%, 100% { translate: 0 0; } 45% { translate: 3px 0; } }\n@keyframes ui-ai-bounce { 0%, 100% { translate: 0 0; } 40% { translate: 0 -3px; } 70% { translate: 0 1px; } }\n@keyframes ui-ai-ring { 0%, 100% { rotate: 0deg; } 15% { rotate: 14deg; } 35% { rotate: -11deg; } 55% { rotate: 7deg; } 75% { rotate: -3deg; } }\n@keyframes ui-ai-wiggle { 0%, 100% { rotate: 0deg; } 25% { rotate: -8deg; } 75% { rotate: 8deg; } }\n@keyframes ui-ai-spin { from { rotate: 0deg; } to { rotate: 360deg; } }\n@keyframes ui-ai-pop { 0%, 100% { scale: 1; } 40% { scale: 1.18; } 70% { scale: 0.96; } }\n.ui-ai { flex-shrink: 0; }\n.ui-ai[data-motion=\"ring\"] { transform-origin: 50% 8%; }\n.ui-ai[data-run=\"always\"] { animation: var(--ai-anim) var(--ai-dur) var(--ai-ease) var(--ai-count); }\n@media (hover: hover) {\n  .group:hover .ui-ai[data-run=\"group\"], .ui-ai[data-run=\"self\"]:hover { animation: var(--ai-anim) var(--ai-dur) var(--ai-ease) var(--ai-count); }\n}\n.group:focus-visible .ui-ai[data-run=\"group\"] { animation: var(--ai-anim) var(--ai-dur) var(--ai-ease) var(--ai-count); }\n@media (prefers-reduced-motion: reduce) { .ui-ai { animation: none !important; } }`;\n\nconst MOTIONS = {\n  nudge: { anim: \"ui-ai-nudge\", dur: \"0.45s\" },\n  bounce: { anim: \"ui-ai-bounce\", dur: \"0.5s\" },\n  ring: { anim: \"ui-ai-ring\", dur: \"0.65s\" },\n  wiggle: { anim: \"ui-ai-wiggle\", dur: \"0.45s\" },\n  spin: { anim: \"ui-ai-spin\", dur: \"0.6s\" },\n  pop: { anim: \"ui-ai-pop\", dur: \"0.45s\" },\n} as const;\n\nexport type IconMotion = keyof typeof MOTIONS;\n\ntype AnimatedIconProps = {\n  icon: ComponentType<SVGProps<SVGSVGElement> & { size?: number | string; strokeWidth?: number | string }>;\n  motion: IconMotion;\n  trigger?: \"group\" | \"self\" | \"always\";\n  /** Yalnız `trigger=\"always\"` ile: sonsuz döngü (yenileniyor, çalıyor). */\n  loop?: boolean;\n  size?: number;\n  strokeWidth?: number;\n  className?: string;\n};\n\nexport function AnimatedIcon({\n  icon: Icon,\n  motion,\n  trigger = \"group\",\n  loop = false,\n  size = 18,\n  strokeWidth = 2,\n  className,\n}: AnimatedIconProps) {\n  const m = MOTIONS[motion];\n  const linear = motion === \"spin\" && loop;\n  return (\n    <>\n      <style href=\"ui-animated-icon\" precedence=\"default\">\n        {CSS}\n      </style>\n      <Icon\n        aria-hidden\n        data-motion={motion}\n        data-run={trigger}\n        size={size}\n        strokeWidth={strokeWidth}\n        className={cn(\"ui-ai\", className)}\n        style={\n          {\n            \"--ai-anim\": m.anim,\n            \"--ai-dur\": linear ? \"1s\" : m.dur,\n            \"--ai-ease\": linear ? \"linear\" : \"var(--ease-brand)\",\n            \"--ai-count\": trigger === \"always\" && loop ? \"infinite\" : \"1\",\n          } as CSSProperties\n        }\n      />\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Hareket ve Doku"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "animated-icon",
+    "palettes": false
+  }
+}

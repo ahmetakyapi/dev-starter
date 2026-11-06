@@ -648,3 +648,44 @@ popper) ve taşan diyalog açılışı (Settle modal): taşma yalnız küçük t
 çalışma alanının adı doğrudan Pusula, adresler `pusula.app` (sahibinin
 isteği).
 
+## Secki Turu — Hareket ve Doku, Yapay Zekâ Bileşenleri, Paket Kiti, Storybook Kabuğu (2026-11-06)
+
+**Karar:** secki.dev'in 332 bağlantısı tarandı; bileşen, hareket, desen ve
+skill kaynaklarından kütüphanemizde karşılığı olmayan 17 desen sıfırdan,
+token'larımızla yazıldı (kod alınmadı). İki yeni grup:
+
+- **Hareket ve Doku** (13): `border-beam`, `slot-text`, `scramble-text`,
+  `animated-icon`, `morph-icon`, `pixel-loader`, `terminal`, `dial`,
+  `book-cover`, `pattern-bg`, `halftone-image`, `mark-annotate`,
+  `expandable-card`.
+- **Yapay Zekâ** (4): `thinking-orb`, `tool-call`, `reasoning`,
+  `stream-text`. Ajan arayüzünde "model ne yaptı"yı gösteren eksik parçalar
+  (`rules/agentic-ui.md`: şeffaflık).
+
+Her hareket bir şey söyler (çalışıyor, değişti, burası önemli), hareket
+azaltmada durur ve bilgi durağan bir kanalda da kalır. Işık ve desen tek renk
+ailesi; desen zemini bölüm arkasında, veri panelinde değil.
+
+**Desen kütüphanesi (patterncraft.fun'dan):** kullanıcı arayüzünü beğendi.
+Alınan deneyim (kategori, arama, Önizle ile bütün sayfaya uygula, Kopyala,
+favoriler); onların 250+ sabit renkli deseni yerine 35 token'lı birleşim:
+10 palet × 2 temada kendiliğinden doğru.
+
+**Paket kiti:** `@ahmetakyapi/ui` 3.1.0 artık 86 bileşen taşır.
+`scripts/build-ui-package.mjs` snippet'lerden ÜRETİR (tek kaynak
+`snippets/ui`); `next/*` ya da Base UI isteyen 32 bileşen pakette yok, onlar
+`add-ui` ile kopyalanır (paket Next'e ve headless kütüphaneye bağlanmaz).
+`verify:kit` CI'da bayatlığı yakalar. `lucide-react` peer bağımlılık oldu.
+
+**Storybook kabuğu:** yönetici teması `tokens.ts`ten (elle hex kopyası
+bitti), araç çubuğundaki Tema ve Palet'i izler: sidebar seçimi, marka karosu,
+odak halkası ve belge sayfası paletle döner (incelenen hiçbir Storybook bunu
+yapmıyordu). Seçili satır dolu mavi blok değil, yıkama + mürekkep + 2 px
+çizgi (ton farkı). Display rolü Schibsted Grotesk (amiral projenin ailesi);
+gövde Inter, kod JetBrains Mono kalır (board kararına ekleme). Yeni "Kapak":
+canlı palet karoları, gerçek bileşenlerden örnek sahne, raf ve kurulum.
+
+**Alınmayan / karar bekleyen:** ses (`ui-sound` yazıldı, iki eski kararla
+çeliştiği için çıkarıldı; kullanıcıya soruldu), WebGL süsleri, Lenis.
+Dış skill'lerin bizden ayrıldığı beş nokta `guides/04` § 15 "Açık kararlar"da.
+

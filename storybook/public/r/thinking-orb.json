@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "thinking-orb",
+  "type": "registry:ui",
+  "title": "Düşünme Küresi",
+  "description": "Asistanın durumu: bekliyor, düşünüyor, konuşuyor (ses düzeyiyle)",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/thinking-orb.tsx",
+      "content": "import type { CSSProperties } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Düşünme küresi: asistanın durumunu gösteren canlı küre. Sesli asistan\n * ekranı, sohbetin boş durumu, ajan kartının avatarı. Üç hal:\n *\n *   - `idle`: yavaş, sönük döner; asistan hazır, bekliyor.\n *   - `thinking`: hızlanır, nefes alır; yanıt hazırlanıyor.\n *   - `speaking`: `level` (0-1, ses düzeyi) küreyi o an büyütür; sesli yanıt.\n *\n * İÇİNDE ÜÇ LEKE: paletin birincil ailesi (`--primary`, `--primary-hover`,\n * `--primary-soft`) bulanık lekeler halinde, farklı hızlarda döner; üstte\n * yumuşak bir ışık lekesi cama derinlik verir. Renk paletle döner, tek aile.\n * Gölge yok: küre zeminden ton farkıyla ayrılır.\n *\n * Bilgi küre değil METİN: `label` verilirse `role=\"status\"` + gizli metin\n * (\"Asistan düşünüyor\"); hal değişince okunur. Küre tek başına süstür\n * (`aria-hidden`). Hareketi azaltan kullanıcıda lekeler durur, hal yine\n * opaklık ve boyla ayrışır. Sunucu bileşeni: yalnız CSS.\n *\n *   <ThinkingOrb state=\"thinking\" size={96} label=\"Asistan düşünüyor\" />\n */\n\nconst CSS = `\n@keyframes ui-orb-spin { to { rotate: 360deg; } }\n@keyframes ui-orb-breathe { 0%, 100% { scale: 1; } 50% { scale: 1.06; } }\n.ui-orb { position: relative; display: inline-block; flex-shrink: 0; border-radius: 9999px; overflow: hidden;\n  background: color-mix(in oklab, var(--primary) 18%, var(--surface)); isolation: isolate;\n  transition: scale 0.18s var(--ease-brand), opacity 0.4s var(--ease-brand); }\n.ui-orb-blob { position: absolute; border-radius: 9999px; filter: blur(calc(var(--orb-size) * 0.12)); mix-blend-mode: normal;\n  animation: ui-orb-spin var(--orb-speed) linear infinite; transform-origin: 50% 50%; }\n.ui-orb-blob:nth-child(1) { inset: -10% 30% 35% -15%; background: var(--primary); }\n.ui-orb-blob:nth-child(2) { inset: 35% -20% -10% 25%; background: var(--primary-hover); animation-duration: calc(var(--orb-speed) * 1.6); animation-direction: reverse; }\n.ui-orb-blob:nth-child(3) { inset: 20% 10% 10% 15%; background: var(--primary-soft); opacity: 0.85; animation-duration: calc(var(--orb-speed) * 2.3); }\n.ui-orb::after { content: \"\"; position: absolute; inset: 8% 22% 52% 18%; border-radius: 9999px;\n  background: radial-gradient(closest-side, color-mix(in oklab, white 55%, transparent), transparent); }\n.ui-orb[data-state=\"idle\"] { opacity: 0.72; --orb-speed: 14s; }\n.ui-orb[data-state=\"thinking\"] { --orb-speed: 4s; animation: ui-orb-breathe 1.8s var(--ease-brand) infinite; }\n.ui-orb[data-state=\"speaking\"] { --orb-speed: 6s; scale: calc(1 + var(--orb-level) * 0.14); }\n@media (prefers-reduced-motion: reduce) {\n  .ui-orb, .ui-orb-blob { animation: none !important; }\n  .ui-orb[data-state=\"speaking\"] { scale: 1; }\n}`;\n\nexport type OrbState = \"idle\" | \"thinking\" | \"speaking\";\n\ntype ThinkingOrbProps = {\n  state?: OrbState;\n  /** Piksel. 24 (satır içi) · 48 (avatar) · 96-160 (sesli asistan ekranı). */\n  size?: number;\n  /** `speaking` halinde anlık ses düzeyi, 0-1. Saniyede birkaç kez güncellemek yeter. */\n  level?: number;\n  /** Verilirse `role=\"status\"` ile okunur (\"Asistan düşünüyor\"). */\n  label?: string;\n  className?: string;\n};\n\nexport function ThinkingOrb({ state = \"idle\", size = 48, level = 0, label, className }: ThinkingOrbProps) {\n  const orb = (\n    <span\n      aria-hidden\n      data-state={state}\n      className={cn(\"ui-orb\", className)}\n      style={\n        {\n          width: size,\n          height: size,\n          \"--orb-size\": `${size}px`,\n          \"--orb-level\": Math.min(1, Math.max(0, level)),\n        } as CSSProperties\n      }\n    >\n      <span className=\"ui-orb-blob\" />\n      <span className=\"ui-orb-blob\" />\n      <span className=\"ui-orb-blob\" />\n    </span>\n  );\n\n  return (\n    <>\n      <style href=\"ui-thinking-orb\" precedence=\"default\">\n        {CSS}\n      </style>\n      {label ? (\n        <span role=\"status\" className=\"inline-flex\">\n          {orb}\n          <span className=\"sr-only\">{label}</span>\n        </span>\n      ) : (\n        orb\n      )}\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Yapay Zekâ"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "thinking-orb",
+    "palettes": false
+  }
+}

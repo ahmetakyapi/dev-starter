@@ -1,0 +1,190 @@
+// ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
+import { X } from "lucide-react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
+import { cn } from "../utils";
+
+/**
+ * Diyalog: yerel `<dialog>` + `showModal()`. Headless kütüphane GEREKMİYOR,
+ * çünkü tarayıcı en zor üç işi kendisi yapıyor:
+ *   - odak tuzağı: modal açıkken sayfanın geri kalanı `inert` (Tab dışarı
+ *     kaçmaz, ekran okuyucu arkadaki içeriği okumaz);
+ *   - Escape: `cancel` olayı; burada yakalanıp kontrollü duruma çevriliyor;
+ *   - üst katman (top layer): z-index savaşı yok, `overflow: hidden` bir ata
+ *     diyaloğu kesemez.
+ * Bizim eklediklerimiz: arka plana tıklayınca kapanma, odağın açan düğmeye
+ * DÖNMESİ (tarayıcılar bunu tutarlı yapmıyor) ve sayfa kaydırma kilidi.
+ *
+ * Kaydırma kilidi `html:has(dialog[open])` ile YAPILMAZ: kökteki `:has()`
+ * her DOM değişikliğinde bütün belgenin stilini yeniden hesaplatıyor
+ * (ölçülmüş bir yavaşlık). Kilit sayaçlı: üst üste açılan iki diyalogdan
+ * ilki kapanınca kilit çözülmez.
+ *
+ * Açılış animasyonu yalnızca CSS (`@starting-style` + `transition-discrete`):
+ * kutu 0,96'dan ölçeklenip belirir, örtü ayrıca solar ("board" dili,
+ * 2026-11). Aşağıdan kayma yerine ölçek: diyalog ekranın ortasında doğar,
+ * bir yerden gelmez. Desteklemeyen tarayıcıda animasyonsuz açılır, bozulmaz.
+ *
+ * GÖRÜNÜŞ: beyaz karo `rounded-2xl` + kıl çizgisi + `shadow-modal`; eylem
+ * satırı kutunun dibinde hafif gri bir kuyu (`bg-surface`): içerikle
+ * eylemleri çizgisiz ayırır.
+ *
+ * İlk odak: tarayıcı ilk odaklanabilir öğeye gider. Başka bir öğe istiyorsan
+ * ona `data-autofocus` ver. `autoFocus` DEĞİL: React istemcide `autofocus`
+ * özniteliğini yazmaz (yalnızca sunucu çiziminde), bağlanırken çağırdığı
+ * `focus()` da kapalı diyalogda boşa gider; istemci gezinmesinden sonra ilk
+ * odak Kapat düğmesine düşerdi. Yıkıcı bir onayda `data-autofocus` "Vazgeç"te.
+ *
+ * Yerel kapanış da duruma yansır (`<form method="dialog">`, tarayıcının
+ * zorla kapatması): yoksa `open` açık kalır, kaydırma kilidi çözülmez ve
+ * diyalog bir daha açılmaz.
+ */
+
+let lockCount = 0;
+
+function lockScroll() {
+  lockCount += 1;
+  if (lockCount === 1) {
+    const gap = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.overflow = "hidden";
+    // Kaydırma çubuğu kaybolunca sayfa yana kaymasın.
+    if (gap > 0) document.documentElement.style.paddingRight = `${gap}px`;
+  }
+}
+
+function unlockScroll() {
+  lockCount = Math.max(0, lockCount - 1);
+  if (lockCount === 0) {
+    document.documentElement.style.removeProperty("overflow");
+    document.documentElement.style.removeProperty("padding-right");
+  }
+}
+
+type DialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Title Case başlık; diyaloğun adı (`aria-labelledby`). */
+  title: ReactNode;
+  /** Tek cümlelik açıklama (`aria-describedby`). */
+  description?: ReactNode;
+  children?: ReactNode;
+  /** Alttaki eylemler; sağa yaslanır, telefonda tam genişlik. */
+  footer?: ReactNode;
+  size?: "sm" | "md" | "lg";
+  /** Arka plana tıklayınca kapansın mı. Form doldururken kapatmak veri kaybettirir. */
+  dismissible?: boolean;
+  closeLabel?: string;
+  className?: string;
+};
+
+const SIZES = { sm: "max-w-sm", md: "max-w-lg", lg: "max-w-2xl" } as const;
+
+export function Dialog({
+  open,
+  onOpenChange,
+  title,
+  description,
+  children,
+  footer,
+  size = "md",
+  dismissible = true,
+  closeLabel = "Kapat",
+  className,
+}: DialogProps) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
+  const pressedBackdrop = useRef(false);
+  const titleId = useId();
+  const descriptionId = useId();
+
+  useEffect(() => {
+    const dialog = ref.current;
+    if (!dialog || !open) return;
+    opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (!dialog.open) dialog.showModal();
+    // Kapalı iç içe bir diyaloğun içeriği de DOM'da durur; ilk eşleşme onun
+    // görünmez düğmesi olursa odak hiçbir yere gitmez. Yalnız bu diyaloğun kendi hedefi.
+    [...dialog.querySelectorAll<HTMLElement>("[data-autofocus]")]
+      .find((el) => el.closest("dialog") === dialog)
+      ?.focus();
+    lockScroll();
+    return () => {
+      dialog.close();
+      unlockScroll();
+      // Odak açan öğeye döner; o öğe artık sayfada yoksa tarayıcıya bırakılır.
+      const back = opener.current;
+      if (back?.isConnected) back.focus();
+    };
+  }, [open]);
+
+  return (
+    <dialog
+      ref={ref}
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
+      onCancel={(event) => {
+        // Escape: tarayıcının kendi kapatması yerine kontrollü durum.
+        event.preventDefault();
+        onOpenChange(false);
+      }}
+      onClose={(event) => {
+        // Öğe React'i atlayarak kapandı. `!currentTarget.open`: StrictMode'un
+        // kapat-aç provasından geç gelen `close` olayı açık diyaloğu kapatmasın.
+        if (open && !event.currentTarget.open) onOpenChange(false);
+      }}
+      onPointerDown={(event) => {
+        // Basışın başladığı yer: içeride metin seçip arka planda bırakmak da
+        // diyaloğun kendisine `click` düşürür (ortak ata); yazılmış form gitmesin.
+        pressedBackdrop.current = event.target === event.currentTarget;
+      }}
+      onClick={(event) => {
+        // Diyaloğun kendisine (iç kabın dışına, yani arka plana) basılıp bırakıldı.
+        const backdrop = pressedBackdrop.current && event.target === event.currentTarget;
+        pressedBackdrop.current = false;
+        if (dismissible && backdrop) onOpenChange(false);
+      }}
+      className={cn(
+        "m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] overflow-hidden rounded-2xl border border-line bg-overlay p-0 text-body shadow-modal",
+        "scale-[0.96] opacity-0 transition-[opacity,scale,display,overlay] transition-discrete duration-200 ease-[var(--ease-brand)] open:scale-100 open:opacity-100 starting:open:scale-[0.96] starting:open:opacity-0",
+        "backdrop:bg-scrim backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:transition-discrete backdrop:duration-200 open:backdrop:opacity-100 starting:open:backdrop:opacity-0",
+        SIZES[size],
+        className,
+      )}
+    >
+      {/* İçerik kapalıyken de DOM'da: kapanış animasyonu boş bir kutuyu
+          küçültmesin. Kapalı `<dialog>` zaten `display: none` ve erişilebilirlik
+          ağacının dışında. Her açılışta sıfırlanması gereken bir form varsa
+          ona `key` ver. */}
+      <div className="flex max-h-[calc(100dvh-2rem)] flex-col">
+        <header className="flex items-start gap-4 px-5 pt-5 sm:px-6 sm:pt-6">
+          <div className="min-w-0 flex-1">
+            <h2 id={titleId} className="text-title font-semibold tracking-tight">
+              {title}
+            </h2>
+            {description ? (
+              <p id={descriptionId} className="mt-1.5 text-base text-muted">
+                {description}
+              </p>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            aria-label={closeLabel}
+            title={closeLabel}
+            className="-mt-2 -mr-2 inline-grid size-11 shrink-0 place-items-center rounded-full text-muted transition-[background-color,color,scale] hover:bg-surface-raised hover:text-strong active:scale-95 pointer-fine:size-9 pointer-fine:-mt-1 pointer-fine:-mr-1 [&_svg]:size-[1.125rem]"
+          >
+            <X aria-hidden strokeWidth={1.75} />
+          </button>
+        </header>
+        {children ? <div className="min-h-0 overflow-y-auto px-5 py-4 sm:px-6">{children}</div> : null}
+        {footer ? (
+          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 py-4 sm:flex-row sm:justify-end sm:px-6 max-sm:[&>*]:w-full">
+            {footer}
+          </footer>
+        ) : (
+          <div className="h-5 sm:h-6" />
+        )}
+      </div>
+    </dialog>
+  );
+}

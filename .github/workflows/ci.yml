@@ -84,6 +84,11 @@ jobs:
       - name: Verify UI registry
         run: npm run verify:registry
 
+      # Paketin bileşen kiti snippets/ui'dan üretilir; snippet değişip kit
+      # üretilmezse npm'e eski kod gider. Düzeltme: npm run kit:ui
+      - name: UI paket kiti güncel mi
+        run: npm run verify:kit
+
       # DIKKAT: buradaki adimlar bir zamanlar `! grep ... || echo "temiz"` idiomunu
       # kullaniyordu. O idiom TERS calisir — sizinti VARKEN hem eslesen satiri basar
       # hem "temiz" yazip exit 0 verir. Yani guvenlik taramasi hicbir zaman

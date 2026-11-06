@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stream-text",
+  "type": "registry:ui",
+  "title": "Akan Metin",
+  "description": "Parça parça gelen yanıt: yalnız yeni sözcük belirir, önceki metin kıpırdamaz",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/stream-text.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef, type CSSProperties, type ElementType } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Akan metin: modelin parça parça gelen yanıtı. Yalnız YENİ gelen sözcükler\n * belirir (solma ya da bulanıktan netleşme); önceden gelmiş metin hiç\n * kıpırdamaz, satır zıplamaz. Akış sürerken sonda yanıp sönen imleç.\n *\n * NASIL: metin sözcüklere bölünür, her sözcük sıra numarasıyla anahtarlanır.\n * React var olan sözcüğü yeniden çizmez; CSS animasyonu yalnız yeni takılan\n * öğede çalışır. Aynı parçada gelen sözcükler 24 ms arayla (en çok 12\n * adım): büyük parça tek blok halinde düşmesin.\n *\n * ERİŞİLEBİLİRLİK: sözcükler gerçek metin (aria-hidden değil). Akış\n * sürerken kap `aria-busy`; her parçayı okutmak gürültü, mesaj listesi\n * (`chat-thread`, `role=\"log\"`) bitince okutur. Hareketi azaltan\n * kullanıcıda sözcükler doğrudan çizilir, imleç yanıp sönmez.\n *\n *   <StreamText text={partial} streaming={!done} />\n */\n\nconst CSS = `\n@keyframes ui-stream-fade { from { opacity: 0; } }\n@keyframes ui-stream-blur { from { opacity: 0; filter: blur(4px); translate: 0 2px; } }\n@keyframes ui-stream-caret { 50% { opacity: 0; } }\n.ui-stream-word { animation: var(--stream-anim) 0.42s var(--ease-brand) both; animation-delay: var(--stream-delay, 0ms); }\n.ui-stream-caret { display: inline-block; width: 0.5em; height: 1em; margin-left: 2px; translate: 0 0.15em; border-radius: 1px;\n  background: currentColor; opacity: 0.6; animation: ui-stream-caret 1s steps(1) infinite; }\n@media (prefers-reduced-motion: reduce) { .ui-stream-word, .ui-stream-caret { animation: none; } }`;\n\nconst STEP_MS = 24;\nconst MAX_STEPS = 12;\n\ntype StreamTextProps = {\n  text: string;\n  streaming?: boolean;\n  effect?: \"fade\" | \"blur\";\n  as?: ElementType;\n  className?: string;\n};\n\nexport function StreamText({ text, streaming = false, effect = \"blur\", as: Tag = \"p\", className }: StreamTextProps) {\n  const parts = text.split(/(\\s+)/);\n  const seen = useRef(0);\n  const before = seen.current;\n  useEffect(() => {\n    seen.current = parts.length;\n  });\n\n  return (\n    <>\n      <style href=\"ui-stream-text\" precedence=\"default\">\n        {CSS}\n      </style>\n      <Tag\n        aria-busy={streaming || undefined}\n        className={cn(\"whitespace-pre-wrap\", className)}\n        style={{ \"--stream-anim\": effect === \"blur\" ? \"ui-stream-blur\" : \"ui-stream-fade\" } as CSSProperties}\n      >\n        {parts.map((part, i) =>\n          /^\\s+$/.test(part) || part === \"\" ? (\n            part\n          ) : (\n            <span\n              key={i}\n              className=\"ui-stream-word\"\n              style={{ \"--stream-delay\": `${Math.min(Math.max(0, i - before) / 2, MAX_STEPS) * STEP_MS}ms` } as CSSProperties}\n            >\n              {part}\n            </span>\n          ),\n        )}\n        {streaming ? <span aria-hidden className=\"ui-stream-caret\" /> : null}\n      </Tag>\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Yapay Zekâ"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "stream-text",
+    "palettes": false
+  }
+}

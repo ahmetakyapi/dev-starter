@@ -1,21 +1,10 @@
 import type { Decorator, Preview } from "@storybook/nextjs-vite";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { ThemedDocsContainer } from "./docs-container";
 import { DocsPageWithInstall } from "./install-block";
+import { PALETTES } from "./palettes";
 import "./preview.css";
 
-/** Paletler: şablonun `app/palettes.css`iyle aynı adlar (signature varsayılan). */
-export const PALETTES = [
-  { value: "signature", title: "Signature" },
-  { value: "cobalt", title: "Kobalt" },
-  { value: "violet", title: "Menekşe" },
-  { value: "rose", title: "Gül" },
-  { value: "ruby", title: "Yakut" },
-  { value: "tangerine", title: "Mandalina" },
-  { value: "jade", title: "Yeşim" },
-  { value: "verdant", title: "Zümrüt" },
-  { value: "ember", title: "Kehribar" },
-  { value: "iris", title: "İris" },
-] as const;
 
 /* Tema ve palet `<html>` üzerinde, ÇİZİMLE EŞZAMANLI yazılır (effect'te değil).
    addon-themes'in dekoratörü özniteliği play bittikten sonra yazıyordu: koyu
@@ -51,14 +40,16 @@ const preview: Preview = {
     nextjs: { appDirectory: true },
     // Her bileşen belgesinin başında "Projeye Al" (registry.json'dan). Kendi
     // docs.page'ini veren hikâye bunu ezer; kayıtta olmayan sayfada blok yok.
-    docs: { page: DocsPageWithInstall },
+    // Belge kabı temayı izler; `lang: "tr"` Türkçe tireleme ve İ/ı dönüşümü için.
+    docs: { page: DocsPageWithInstall, container: ThemedDocsContainer, lang: "tr" },
     options: {
       // Vitrin yüzü en üstte: önce bir arada görülen örnek tasarım ve vitrin,
       // sonra başlangıç, token'lar ve parça parça katalog.
       storySort: {
         order: [
+          "Kapak",
           "Örnek Tasarım",
-          ["Her Şey Bir Arada", "Pusula Paneli", "Bileşen Kapsamı", "Referans Arşivi"],
+          ["Her Şey Bir Arada", "Desen Kütüphanesi", "Pusula Paneli", "Bileşen Kapsamı", "Referans Arşivi"],
           "Vitrin",
           ["Genel Bakış", "Temel Kütüphane", "Form Girişleri", "Katman ve Geri Bildirim", "Grafikler", "Bloklar"],
           "Başlangıç",

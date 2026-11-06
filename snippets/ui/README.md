@@ -198,6 +198,37 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `week-calendar.tsx` | Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste | lucide | Evet | Gün başına `role="group"` + başlık, etkinlikler `ol`; gün hapları `aria-pressed` |
 | `task-list.tsx` | Görev listesi: onay, öncelik, son tarih, alt görevler, tamamlananları gizle, satır içi ekleme | `checkbox`, motion, lucide | Evet | Kısmi alt görevde `indeterminate`; açma düğmesi `aria-expanded` + "2 / 4"; ekleme ve işaretleme canlı bölgede |
 
+### Hareket ve Doku
+
+secki.dev turu (2026-11-06). Her hareket bir şey söyler (çalışıyor,
+değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
+ışık ve desen tek renk ailesinde.
+
+| Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
+|-------|----------|------------|---------|-----------------|
+| `border-beam.tsx` | Çalışan kartın çerçevesinde dolaşan ışık: yazan asistan, süren içe aktarma | yok | Hayır | Süs: durum metni çağıranda (`aria-busy`); hareket azaltmada durağan çerçeve |
+| `slot-text.tsx` | Değişen etiketin harfleri yerine yuvarlanır ("Kaydet" → "Kaydedildi"); değişmeyen harf yerinde | motion | Evet | Tam metin `sr-only`, harfler `aria-hidden`; `live` ile `role="status"`; ilk çizim durağan |
+| `scramble-text.tsx` | Kısa display metni rastgele karakterlerden çözülerek gelir; tek sefer | motion (`useInView`) | Evet | Gerçek metin `sr-only`, karışan katman `aria-hidden`; hover tetiği odakta da çalışır |
+| `animated-icon.tsx` | Düğmenin üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile) | lucide | Hayır | İkon `aria-hidden`; hover yalnız ince işaretçide, odakta da oynar; hareket azaltmada durur |
+| `morph-icon.tsx` | Aynı düğmenin iki hali (menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat) | motion | Evet | İkon `aria-hidden`; hal bilgisi düğmenin adında ya da `aria-expanded`/`aria-pressed`ında |
+| `pixel-loader.tsx` | Kart düzeyinde bekleme, nokta matrisinde desen (dalga, sarmal, nabız, yılan, yağmur) | yok | Hayır | `role="status"` + gizli etiket; nokta hiç kaybolmaz; hareket azaltmada durağan dama |
+| `terminal.tsx` | Tanıtım ve belgede kurulum akışı: komut yazılır, çıktı satır satır gelir | `copy-button`, motion, lucide | Evet | Döküm `sr-only` listede tek seferde; canlandırılan katman `aria-hidden`; döngü yok, "Yeniden Oynat" |
+| `dial.tsx` | Kontrol panelinde sürekli değer (sıcaklık, ses, oran); 270° kadran | `digit-roll` | Evet | `role="slider"`, oklar, PageUp/PageDown, Home/End, `aria-valuetext` birimle; tekerlek yalnız odakta |
+| `book-cover.tsx` | Rehber, e-kitap, kaynak kütüphanesi; üç boyutlu kitap okura döner | yok | Hayır | `href` ile tek bağlantı, adı başlıktan; hareket azaltmada dönmez |
+| `pattern-bg.tsx` | Bölüm zemini: ızgara, nokta, çizgi, doku + solma + ışık; 35 hazır birleşim (`PATTERN_PRESETS`) | yok | Hayır | `aria-hidden`, `pointer-events: none`; ışık metnin arkasında, kontrast en yoğun yerde ölçülür |
+| `halftone-image.tsx` | Fotoğrafı token renginde nokta, kare ya da ASCII ızgarasına çevirir | motion (`useReducedMotion`) | Evet | Tuval `role="img"` + `alt` zorunlu; imleç etkisi yalnız ince işaretçide, hareket azaltmada yok |
+| `mark-annotate.tsx` | Kalemle çizilmiş vurgu: altı çizgi, fosforlu kalem, daire, kutu, üstü çizili | motion (`useInView`) | Evet | İşaret `aria-hidden`; anlam taşıyorsa metinle de (`<s>`); hareket azaltmada doğrudan çizili |
+| `expandable-card.tsx` | Kart yerinden büyüyüp pencereye döner; görsel ve başlık akar | motion (`domMax`), lucide, `react-dom` | Evet | `role="dialog"` + `aria-modal`; odak Kapat'a, Tab içeride, Escape ve zemin kapatır, odak karta döner |
+
+### Yapay Zekâ
+
+| Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
+|-------|----------|------------|---------|-----------------|
+| `thinking-orb.tsx` | Asistanın durumu: bekliyor, düşünüyor, konuşuyor (ses düzeyiyle) | yok | Hayır | Küre `aria-hidden`; `label` ile `role="status"`; hareket azaltmada lekeler durur |
+| `tool-call.tsx` | Asistanın araç çağrısının kaydı: durum, süre, girdi, çıktı; onay yuvası | `border-beam`, `text-shimmer`, lucide | Hayır | `<details>`: JS'siz açılır; durum metinle yazılır, renk tek işaret değil; `pre` odaklanır |
+| `reasoning.tsx` | Modelin düşüncesi: akarken açık ve sayan, bitince "6 sn düşündü" satırına iner | `text-shimmer`, lucide | Evet | Başlık `aria-expanded`; bitiş canlı bölgede bir kez; kullanıcının açıp kapatması korunur |
+| `stream-text.tsx` | Parça parça gelen yanıt: yalnız yeni sözcük belirir, önceki metin kıpırdamaz | yok | Evet | Sözcükler gerçek metin; akarken `aria-busy`, okutma mesaj listesinde; hareket azaltmada doğrudan |
+
 ### Bloklar
 
 Birden çok bileşenin birleştiği hazır parçalar: uygulama kabuğu, yapay zekâ

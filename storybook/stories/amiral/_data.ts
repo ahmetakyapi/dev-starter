@@ -286,10 +286,27 @@ export const NOTIFICATIONS = [
 
 /* --- Kapsam: snippets/ui dosyalarının gruplara dağılımı ---------------- */
 
-export type GroupId = "temel" | "secim" | "form" | "katman" | "veri" | "geri" | "gezinme" | "yukleme" | "grafik" | "blok";
+export type GroupId = "temel" | "secim" | "form" | "katman" | "veri" | "geri" | "gezinme" | "yukleme" | "hareket" | "ajan" | "grafik" | "blok";
 
 /** Her dosya tam bir grupta. Kaynaktaki listeyle karşılaştırılır (kapsam rozeti). */
 export const GROUP_OF: Record<string, GroupId> = {
+  "border-beam": "hareket",
+  "slot-text": "hareket",
+  "scramble-text": "hareket",
+  "animated-icon": "hareket",
+  "morph-icon": "hareket",
+  "pixel-loader": "hareket",
+  terminal: "hareket",
+  dial: "hareket",
+  "book-cover": "hareket",
+  "pattern-bg": "hareket",
+  "halftone-image": "hareket",
+  "mark-annotate": "hareket",
+  "expandable-card": "hareket",
+  "thinking-orb": "ajan",
+  "tool-call": "ajan",
+  reasoning: "ajan",
+  "stream-text": "ajan",
   icon: "temel",
   "icon-button": "temel",
   "button-group": "temel",
@@ -402,6 +419,8 @@ export const GROUPS: readonly { id: GroupId; title: string; note: string; sectio
   { id: "geri", title: "Geri Bildirim", note: "Durum, ilerleme, doluluk ve boşluk; renk tek işaret değil.", section: "bilesenler" },
   { id: "gezinme", title: "Gezinme", note: "Sekme, yol, sayfa ve adım: kullanıcı nerede, nereye gidebilir.", section: "bilesenler" },
   { id: "yukleme", title: "Yükleme", note: "Beklemenin beş biçimi; hareket azaltıldığında durağan.", section: "bilesenler" },
+  { id: "hareket", title: "Hareket ve Doku", note: "Işık, yuvarlanan harf, kalem çizgisi, desen: her hareket bir şey söyler, hareket azaltmada durur.", section: "bilesenler" },
+  { id: "ajan", title: "Yapay Zekâ", note: "Asistanın durumu, aracı, düşüncesi ve akan yanıtı; model ne yaptığını gösterir.", section: "bilesenler" },
   { id: "grafik", title: "Grafikler", note: "ChartCard kuyusunda, lejant karolarında; seri rengi yalnız --chart-*.", section: "grafikler" },
   { id: "blok", title: "Bloklar", note: "Birden çok bileşenin birleştiği hazır parçalar.", section: "bloklar" },
 ];

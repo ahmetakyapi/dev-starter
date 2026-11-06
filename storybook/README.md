@@ -1,10 +1,11 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**691 hikâye**, her biri açık/koyu tema ve 10 palette:
+**728 hikâye**, her biri açık/koyu tema ve 10 palette. Storybook'un kendi kabuğu (sidebar, araç çubuğu, belge) da seçilen tema ve paletle döner:
 
 | Bölüm | İçerik |
 |-------|--------|
-| **Örnek Tasarım** (en üstte) | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (101/101 bileşen, 15 grafik, bloklar, 10 palet); **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
+| **Kapak** (en üstte) | Kataloğun ilk ekranı: palet karoları bütün arayüzü döndürür, örnek sahne gerçek bileşenlerden, raf ve kurulum |
+| **Örnek Tasarım** | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (118/118 bileşen, 15 grafik, bloklar, 10 palet); **Desen Kütüphanesi**: 35 token'lı zemin, Önizle ve Kopyala; **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
 | Vitrin | Genel bakış + grup grup vitrin sayfaları (`snippets/ui/vitrin/`) |
 | Başlangıç, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
 | Bileşenler | `snippets/ui`nin bütün bileşenleri + şablonun ortak bileşenleri; her biri varsayılan, durumlar, bütün varyantlar, `play` etkileşimi |
@@ -23,6 +24,18 @@ npm run dev                # http://localhost:6006  (kökten: npm run storybook)
 npm run build              # storybook-static/      (kökten: npm run storybook:build)
 npm run typecheck          # hikâyeler + snippet'ler + şablon, tek tip denetimi
 ```
+
+## Kabuk (Yönetici Arayüzü)
+
+- Tema `.storybook/manager-theme.ts`te, `tokens.ts`ten üretilir (açık + koyu);
+  hex kopyası yok. `manager.ts` araç çubuğunu dinler (`SET_GLOBALS`,
+  `GLOBALS_UPDATED`) ve `api.setOptions({ theme })` ile kabuğu döndürür.
+- Sidebar seçimi, marka karosu ve odak halkası paletten: `paletteCss()`
+  10 palet × 2 tema değişkeni üretir, `manager-head.html` kullanır.
+  Seçiciler SB 10.6.3'te doğrulandı; Storybook yükseltmesinden sonra gözle denetle.
+- Belge sayfası (`docs-container.tsx`) temayı izler, `lang: "tr"`.
+- "yeni" etiketli bileşenin adının yanında "Yeni" hapı (`renderLabel`).
+- Display yazı tipi Schibsted Grotesk; gövde Inter, kod JetBrains Mono.
 
 ## Üst Çubuk
 

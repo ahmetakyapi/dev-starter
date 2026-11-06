@@ -11,3 +11,6 @@ packages/@ahmet/*/dist/
 .env*
 !.env.example
 !.env.template
+
+# Playwright MCP ekran görüntüleri ve günlükleri (yerel)
+.playwright-mcp/

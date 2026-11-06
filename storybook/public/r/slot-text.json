@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "slot-text",
+  "type": "registry:ui",
+  "title": "Kayan Metin",
+  "description": "Değişen etiketin harfleri yerine yuvarlanır (\"Kaydet\" → \"Kaydedildi\"); değişmeyen harf yerinde",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/slot-text.tsx",
+      "content": "\"use client\";\n\nimport { AnimatePresence, m, useReducedMotion } from \"motion/react\";\nimport type { ElementType } from \"react\";\nimport { DUR, EASE } from \"@/lib/motion\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Kayan metin: metin DEĞİŞİNCE harfler slot makinesi gibi yerine yuvarlanır.\n * Durum etiketi (\"Taslak\" → \"Yayında\"), sekme başlığı, düğmenin yeni hali\n * (\"Kopyala\" → \"Kopyalandı\"), dönen kahraman sözcüğü. Rakam için\n * `digit-roll` var (yalnız değişen basamak, ara sayı yok); bu dosya her\n * karakterde çalışır ve değişmeyen harfi YERİNDE bırakır: \"Kaydet\" →\n * \"Kaydedildi\"de \"Kayde\" kımıldamaz.\n *\n * HER KONUM BİR YUVA: yuvanın genişliğini görünmez güncel harf verir, eski\n * harf yukarı (`direction=\"up\"`) çıkarken yenisi alttan gelir; ikisi de\n * yuvaya mutlak konumlu, satır zıplamaz. Harfler soldan sağa 25 ms arayla.\n *\n * İlk çizim durağan (`initial={false}`): sayfa açılışında yuvarlanmaz.\n * Ekran okuyucu tam metni tek parça okur (`sr-only`); değişimi duyurmak\n * için `live` (`role=\"status\"`). Hareketi azaltan kullanıcıda metin\n * yerinde değişir.\n *\n *   <SlotText text={saved ? \"Kaydedildi\" : \"Kaydet\"} />\n */\n\nconst STEP = 0.025;\n\ntype SlotTextProps = {\n  text: string;\n  /** Eski harfin çıktığı yön. */\n  direction?: \"up\" | \"down\";\n  as?: ElementType;\n  live?: boolean;\n  className?: string;\n};\n\nexport function SlotText({ text, direction = \"up\", as: Tag = \"span\", live = false, className }: SlotTextProps) {\n  const reduce = useReducedMotion();\n  const sign = direction === \"up\" ? 1 : -1;\n  const chars = [...text];\n\n  return (\n    <Tag role={live ? \"status\" : undefined} className={cn(\"inline-flex whitespace-pre\", className)}>\n      <span className=\"sr-only\">{text}</span>\n      <span aria-hidden className=\"inline-flex\">\n        {chars.map((char, index) => (\n          <span key={index} className=\"relative inline-block overflow-hidden align-bottom\">\n            <span className=\"invisible\">{char}</span>\n            <AnimatePresence initial={false}>\n              <m.span\n                key={char}\n                className=\"absolute inset-0\"\n                initial={reduce ? false : { y: `${100 * sign}%`, opacity: 0 }}\n                animate={{ y: \"0%\", opacity: 1 }}\n                exit={reduce ? { opacity: 0, transition: { duration: 0 } } : { y: `${-100 * sign}%`, opacity: 0 }}\n                transition={{ duration: DUR.base, ease: EASE, delay: reduce ? 0 : Math.min(index, 16) * STEP }}\n              >\n                {char}\n              </m.span>\n            </AnimatePresence>\n          </span>\n        ))}\n      </span>\n    </Tag>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Hareket ve Doku"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "slot-text",
+    "palettes": false
+  }
+}

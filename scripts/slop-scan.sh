@@ -161,6 +161,26 @@ report YUKSEK "text-transform: capitalize (Turkce i → I)" \
   "Basligi elle Title Case yaz (guides/05 § 6); kucultmede toLocaleLowerCase('tr-TR')" \
   "$(scan -nE '(text-transform:[[:space:]]*capitalize|(className|class)=[^>]*[[:space:]"'"'"'`]capitalize([[:space:]"'"'"'`]|$))' | nocomment)"
 
+# 17. Ham Tailwind palet rengi: token yerine `bg-zinc-100`, `text-blue-600`.
+#     Tema ve paletle donmez, koyu temada kontrasti kimse olcmez. Degrade
+#     onekleri (from/via/to) burada sayilmaz: onlari kural 8 denetler.
+#     Esin: shadcn-ui/lint `no-raw-colors` (secki turu, 2026-11-06).
+report YUKSEK "Ham palet rengi (bg-zinc-100, text-blue-600)" \
+  "Rol token'i: bg-surface, text-strong, text-primary-ink, border-line (rules/design-tokens.md)" \
+  "$(scan -nE '(^|[[:space:]"'"'"'`:])(bg|text|border|ring|fill|stroke|outline|divide|decoration|caret|accent|shadow)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]{2,3}\b' "$CODE" | nocomment)"
+
+# 18. Derlenmeyen dinamik sinif: Tailwind kaynak metni tarar, `bg-${ton}-500`
+#     hicbir zaman derlenmez; bilesen stilsiz cizilir, ne build ne tsc soyler.
+#     Esin: shadcn-ui/lint `require-static-classes`.
+report YUKSEK "Derlenmeyen dinamik sinif (bg-\${...})" \
+  "Tam sinif adini esleme tablosunda yaz: const TONE = { danger: \"bg-danger-wash\" }" \
+  "$(scan -nE 'className=[^>]*[[:space:]"'"'"'`(](bg|text|border|ring|fill|stroke|from|to|via|shadow|grid-cols|col-span)-\$\{' "$SCRIPT")"
+
+# 19. Yapistirmayi engelleme: sifre yoneticisini ve erisilebilirligi bozar.
+report YUKSEK "Yapistirmayi engelleme (onPaste preventDefault)" \
+  "Yapistirmaya izin ver; dogrulamayi degere yap (WCAG 3.3.8)" \
+  "$(scan -nE 'onPaste=\{[^}]*preventDefault' "$SCRIPT")"
+
 # ─── UYARI ───────────────────────────────────────────────────────────────────
 
 # 10. Kisitsiz kaydirma dinleyicisi: her karede calisir, mobilde kasar.
@@ -202,6 +222,31 @@ report UYARI "Supheli yuvarlak sayi (10.000+, %100, 1M+, 10x)" \
 report UYARI "Material ikon kiti" \
   "Ekosistemin ikon kiti lucide-react; tek kit, tek cizgi kalinligi" \
   "$(scan -nE "(@mui/icons-material|material-symbols|material-icons|@material-design-icons)" "$SCRIPT")"
+
+# 20. h-screen / 100vh: telefonda adres cubugu yuzunden tasar.
+report UYARI "h-screen / 100vh (telefonda tasar)" \
+  "min-h-dvh ya da 100dvh" \
+  "$(scan -nE '(\bh-screen\b|\bmin-h-screen\b|[^-]100vh\b)' "$SCRIPT" | nocomment)"
+
+# 21. SVG'de sabit renk: ikon ve cizim temayla donmez.
+report UYARI "SVG'de sabit fill/stroke" \
+  "currentColor ya da token sinifi (fill-primary, stroke-line)" \
+  "$(scan -nE '\b(fill|stroke)=["'"'"'](#[0-9a-fA-F]{3,8}|rgb)' "$CODE")"
+
+# 22. Hover'da keyframe: yarida kesilince bastan baslar; gecis (transition) kesintisiz doner.
+report UYARI "Hover'da keyframe animasyonu" \
+  "transition kullan; keyframe yalniz kendiliginden suren durum icin (guides/04 § Frekans)" \
+  "$(scan -nE 'hover:animate-' "$SCRIPT")"
+
+# 23. Sessizsiz otomatik video: tarayici oynatmaz ya da kullaniciyi rahatsiz eder.
+report UYARI "muted olmayan autoPlay video" \
+  "autoPlay muted playsInline loop; ses gerekiyorsa kullanici baslatir" \
+  "$(scan -nE '<video[^>]*autoPlay' "$SCRIPT" | grep -v muted || true)"
+
+# 24. Kalici will-change: her ogeye ayri katman, bellek ve GPU israfi.
+report UYARI "Kalici will-change" \
+  "will-change yalniz hareket sirasinda (guides/04 § Performans)" \
+  "$(scan -nE '\bwill-change-(transform|\[)|will-change:[[:space:]]*all' "$SCRIPT")"
 
 # ─── Sonuc ───────────────────────────────────────────────────────────────────
 echo "  ── SONUC: $HIGH yuksek, $WARNS uyari"

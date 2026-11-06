@@ -35,3 +35,7 @@ export { Chip } from './components/Chip'
 export { Button } from './components/Button'
 export type { ButtonProps } from './components/Button'
 export { CustomCursor } from './components/CustomCursor'
+
+// Bileşen kiti: snippets/ui'dan ÜRETİLİR (scripts/build-ui-package.mjs).
+// Next'e ve Base UI'a bağlı olanlar kitte yok; onlar `add-ui` ile kopyalanır.
+export * from './kit'
