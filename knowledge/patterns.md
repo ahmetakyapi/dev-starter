@@ -1585,3 +1585,10 @@ Ortak dosyalar `apps/web/src/app/craft.css` + `components/ui/Sketch.tsx`
   opaklık eklenemez); kenar görünmez kaldı. Değişkenli renkte `rgba(...)` yaz.
 - **Tuzak:** framer-motion `style={{ scale }}` Tailwind `-translate-x-1/2`yi ezer;
   ortalamayı `style={{ x: '-50%', y: '-50%' }}` ile ver.
+
+## Mimio Sanatsal Tur (2026-11-07)
+
+- **Ürün nesnesinden bölüm kenarı:** açık zeminden koyu bölüme geçiş düz çizgi değil, ürünün nesnesinden (Mimio: Corsi blokları) 3 satırlık kademeli mozaik. Bloklar `animation-timeline: --edge` (kenarın kendi `view-timeline-name`'i) ve bloğa özel `animation-range: entry calc(var(--o) * 70%) …` ile sırayla oturur; JS yok. Kenar bölümün **içinde** durur, koyu zemin `::before` ile `inset: var(--edge-h) 0`'dan başlar — dışarı taşan kenar komşu bölümün metnini örtüyordu. Blok boyu sabit kalır, sütun sayısı kırılımla artar (12/24/32/40/48, `data-tier`). Opaklık ilk %25'te biter: yarı saydam koyu blok açık zeminde gri hayalet olur.
+- **Bento kartı işini oynar (04-motion § 14) — framer-motion 11 tuzağı:** `AnimatePresence` içinde yeniden sıralanan mutlak konumlu satırlar yeni yuvaya bir tur geç gidiyordu. Yığın hikâyesinde bütün öğeler DOM'da kalır, her biri `(start - i) mod n` yuvasına `animate` edilir; görünmeyen yuvalar opaklık 0.
+- **SVG çizgi açılışı `vectorEffect="non-scaling-stroke"` + `preserveAspectRatio="none"` ile `pathLength` kullanmaz** (kesik çizgi uzunluğu bozulur, çizgi yarıda kalır); açılış `clipPath` içindeki `rect`in `scaleX`'i ile.
+- **Arena her temada koyu:** tema değişkenleri bölümün kendisinde yeniden tanımlanır (`.section-games { --color-games-*: … }`); `html[data-theme]` değerleri kalıtımla gelir, seçici bölümde ezer. Yüksek kontrastta `--color-primary: inherit` temanın kendi vurgusuna döner.
