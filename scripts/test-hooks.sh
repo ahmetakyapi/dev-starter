@@ -876,6 +876,11 @@ printf '// bkz. mistakes.md #100\nexport const c = "#a4720f"\n' > atif.ts
 git add atif.ts
 OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
 if printf '%s' "$OUT" | grep -q 'DESIGN TOKEN'; then ok "atıf + gerçek hex aynı dosyada → uyarır"; else no "gerçek hex uyarısı kaçmamalı" "DESIGN TOKEN" "uyarı yok"; fi
+# token-ok-file işaretli illüstrasyon dosyası (duvar kâğıdı) → hex uyarısı yok
+printf '// token-ok-file: illüstrasyon, renk seti elle seçildi\nexport const c = "#a4720f"\n' > atif.ts
+git add atif.ts
+OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+if ! printf '%s' "$OUT" | grep -q 'DESIGN TOKEN'; then ok "token-ok-file işaretli dosya → hex uyarısı yok"; else no "token-ok-file istisnası tanınmalı" "uyarı yok" "DESIGN TOKEN"; fi
 git rm -q --cached atif.ts && rm -f atif.ts
 
 # (v8) Tasarım token satırı (token: "surface-raised") → geçmeli

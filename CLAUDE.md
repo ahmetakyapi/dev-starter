@@ -80,7 +80,7 @@ dev-starter/
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
 │   ├── slop-scan.sh           → AI slop taraması (24 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
 │   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
-│   ├── test-hooks.sh          → Hook davranış testleri (94, fixture'lar resmi şablon düzeninde)
+│   ├── test-hooks.sh          → Hook davranış testleri (95, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
