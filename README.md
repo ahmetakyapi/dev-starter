@@ -268,6 +268,7 @@ flowchart TB
 | `/theme` | Paleti ve temayı uygular ya da günceller |
 | `/snippet <ad>` | Bileşeni projeye uyarlayarak kopyalar |
 | `/reference <bölüm>` | Gerçek bir sitenin bölümünü (menü, CTA, alt bilgi…) referans alır, yapısını projenin token'larıyla kurar |
+| `/harvest <url>` | Beğenilen bir siteyi baştan sona tarar; ekosistemde olmayan desenleri token'larla yazıp kütüphaneye, Storybook'a ve bilgi tabanına işler |
 | `/review-ui` | Token, kimlik, iki tema, ekran düzeni, a11y ve hareket incelemesi |
 | `/check` | Build, typecheck, lint, test, token ve güvenlik sağlık kontrolü |
 | `/agentic` | AI arayüzünde tool'ların nerede duracağı, kontrolün kimde olacağı |
@@ -347,7 +348,7 @@ dev-starter/
 ├── agents/            12 agent rol tanımı + AGENT_PROTOCOL
 ├── .claude/
 │   ├── agents/        strategist · design-reviewer · content-editor · gate · deploy · frontend · backend · qa · researcher
-│   └── commands/      19 komut
+│   └── commands/      20 komut
 ├── knowledge/         mistakes · patterns · decisions · tech-radar · design-references · themes
 ├── rules/             10 kural
 ├── phases/            planlama · geliştirme · uçtan uca test ve son düzeltmeler · yayın ve bakım

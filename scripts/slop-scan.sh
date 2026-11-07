@@ -248,6 +248,13 @@ report UYARI "Kalici will-change" \
   "will-change yalniz hareket sirasinda (guides/04 § Performans)" \
   "$(scan -nE '\bwill-change-(transform|\[)|will-change:[[:space:]]*all' "$SCRIPT")"
 
+# 25. Sahte kitlik / aciliyet: "Son 3 koltuk", "10 kisiden 7'si kaldi", geri
+#     sayan "teklif bitiyor". Dogrulanamayan baski veri durustlugune aykiri
+#     (guides/08; Ribbon turunda alinmadi). Gercek stok varsa slop-ok + kaynak.
+report UYARI "Sahte kitlik / aciliyet (son N koltuk, N kaldi)" \
+  "Gercek ve dogrulanabilir sinir yoksa kaldir; varsa kaynagini goster ve slop-ok ile gerekcele" \
+  "$(scan -niE '(son [0-9]+ (koltuk|kisi|kişi|adet|yer|lisans)|[0-9]+ (koltuk|kisi|kişi|adet|yer|lisans|spots?|seats?) (kald[iı]|left)|only [0-9]+ left|teklif (bitiyor|sona eriyor))' "$SCRIPT" | nocomment)"
+
 # ─── Sonuc ───────────────────────────────────────────────────────────────────
 echo "  ── SONUC: $HIGH yuksek, $WARNS uyari"
 [ $HIGH -gt 0 ] && exit 1

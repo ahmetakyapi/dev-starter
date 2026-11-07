@@ -39,6 +39,7 @@ export function Kart() {
       <button className="hover:animate-bounce">Zıpla</button>
       <video autoPlay loop src="/a.mp4" />
       <div className="will-change-transform" />
+      <p>Erken fiyat: son 3 koltuk</p>
     </div>
   );
 }
@@ -81,6 +82,7 @@ expect "[UYARI] SVG'de sabit fill/stroke"
 expect "[UYARI] Hover'da keyframe"
 expect "[UYARI] muted olmayan autoPlay"
 expect "[UYARI] Kalici will-change"
+expect "[UYARI] Sahte kitlik / aciliyet"
 
 # ─── Temiz ornek: benzer gorunen ama dogru kullanimlar ───────────────────────
 mkdir -p "$SANDBOX/temiz"
@@ -109,6 +111,7 @@ export function Temiz() {
       <span className={TONE[ton]}>esleme tablosu</span>
       <video autoPlay muted loop playsInline src="/a.mp4" />
       <button className="transition-[translate] hover:-translate-y-px">Kaydır</button>
+      <p>{WORKSPACE.seats.total} koltuklu plan · 6 kişilik ekip</p>
     </section>
   );
 }

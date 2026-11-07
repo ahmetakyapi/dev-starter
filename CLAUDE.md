@@ -78,7 +78,7 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
-│   ├── slop-scan.sh           → AI slop taraması (23 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
+│   ├── slop-scan.sh           → AI slop taraması (24 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
 │   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
 │   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
@@ -94,7 +94,7 @@ dev-starter/
 │
 ├── .claude/
 │   ├── settings.json          → Hook entegrasyonu (paylaşılan, versiyonlanır)
-│   ├── commands/              → 19 komut — bootstrap ile ~/.claude/commands'a symlink
+│   ├── commands/              → 20 komut — bootstrap ile ~/.claude/commands'a symlink
 │   ├── agents/                → 9 subagent wrapper'ı — ~/.claude/agents'a symlink
 │   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
 │
@@ -282,6 +282,7 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 | `/snippet [tip]` | Hazır parçayı projeye uyarla | `.claude/commands/snippet.md` |
 | `/check` | Sağlık: build, tip, lint, test, tech stack uyumu, token, güvenlik | `.claude/commands/check.md` |
 | `/reference <bölüm> [görsel\|url]` | Gerçek sitenin bölümünü referans al, yapısını kendi token'larınla kur (galeri: `knowledge/design-references.md`) | `.claude/commands/reference.md` |
+| `/harvest <url>` | Referans turu: bütün siteyi tara, ekosistemde olmayan desenleri kütüphaneye + Storybook'a + bilgi tabanına işle (yalnız dev-starter) | `.claude/commands/harvest.md` |
 | `/review-ui` | UI incelemesi: token, kimlik, iki tema, düzen, a11y, hareket | `.claude/commands/review-ui.md` |
 | `/deploy` | Vercel deployment checklist | `.claude/commands/deploy.md` |
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
