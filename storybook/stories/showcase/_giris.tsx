@@ -3,6 +3,7 @@
 import { ArrowRight, Compass } from "lucide-react";
 import { AuthCard, type AuthState } from "@/components/ui/auth-card";
 import { Marquee } from "@/components/ui/marquee";
+import { ScrambleText } from "@/components/ui/scramble-text";
 import { CUSTOMERS, ME, OPEN_TICKETS, WORKSPACE } from "./_data";
 
 /** Oturum kapalıyken: Pusula'ya giriş. Başarılı girişte pano açılır. */
@@ -27,6 +28,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
           </span>
           <span className="text-title font-semibold tracking-tight">Pusula</span>
         </div>
+        <ScrambleText as="p" text="Şifreli Bağlantı Kuruldu" className="-mt-3 font-mono text-micro tracking-[0.14em] text-muted uppercase" />
         <AuthCard
           action={signIn}
           title={`${WORKSPACE.name} Çalışma Alanı`}

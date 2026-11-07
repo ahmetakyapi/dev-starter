@@ -286,7 +286,7 @@ export const NOTIFICATIONS = [
 
 /* --- Kapsam: snippets/ui dosyalarının gruplara dağılımı ---------------- */
 
-export type GroupId = "temel" | "secim" | "form" | "katman" | "veri" | "geri" | "gezinme" | "yukleme" | "hareket" | "ajan" | "grafik" | "blok";
+export type GroupId = "temel" | "secim" | "form" | "katman" | "veri" | "geri" | "gezinme" | "yukleme" | "hareket" | "ajan" | "tanitim" | "grafik" | "blok";
 
 /** Her dosya tam bir grupta. Kaynaktaki listeyle karşılaştırılır (kapsam rozeti). */
 export const GROUP_OF: Record<string, GroupId> = {
@@ -307,6 +307,17 @@ export const GROUP_OF: Record<string, GroupId> = {
   "tool-call": "ajan",
   reasoning: "ajan",
   "stream-text": "ajan",
+  "liquid-glass": "tanitim",
+  "blur-in": "tanitim",
+  "hand-callout": "tanitim",
+  "app-window": "tanitim",
+  dock: "tanitim",
+  "docking-nav": "tanitim",
+  "corner-mascot": "tanitim",
+  "trust-line": "tanitim",
+  wallpaper: "tanitim",
+  "drift-columns": "tanitim",
+  "notice-deck": "tanitim",
   icon: "temel",
   "icon-button": "temel",
   "button-group": "temel",
@@ -421,6 +432,7 @@ export const GROUPS: readonly { id: GroupId; title: string; note: string; sectio
   { id: "yukleme", title: "Yükleme", note: "Beklemenin beş biçimi; hareket azaltıldığında durağan.", section: "bilesenler" },
   { id: "hareket", title: "Hareket ve Doku", note: "Işık, yuvarlanan harf, kalem çizgisi, desen: her hareket bir şey söyler, hareket azaltmada durur.", section: "bilesenler" },
   { id: "ajan", title: "Yapay Zekâ", note: "Asistanın durumu, aracı, düşüncesi ve akan yanıtı; model ne yaptığını gösterir.", section: "bilesenler" },
+  { id: "tanitim", title: "Tanıtım", note: "Ziyaretçiye dönük açılış sayfası: netleşen başlık, cam eylem, canlı maket, köşedeki maskot.", section: "bilesenler" },
   { id: "grafik", title: "Grafikler", note: "ChartCard kuyusunda, lejant karolarında; seri rengi yalnız --chart-*.", section: "grafikler" },
   { id: "blok", title: "Bloklar", note: "Birden çok bileşenin birleştiği hazır parçalar.", section: "bloklar" },
 ];

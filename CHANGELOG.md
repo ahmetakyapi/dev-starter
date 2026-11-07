@@ -50,8 +50,9 @@ alınmadı (`knowledge/decisions.md` → "Ribbon Turu").
 
 #### Not
 
-- Bileşen Kapsamı 109/126: eksik 17 bileşen Secki turundan (Pusula'da henüz
-  kullanılmıyorlar); bu turun sekizi Pusula Tanıtım Sayfası'nda.
+- Bileşen Kapsamı 129/129 ve "Her Şey Bir Arada" 129/129: Secki turunun 17
+  bileşeni Pusula'ya (asistan adım akışı, ayarlar, gelen kutusu, raporlar,
+  giriş, görevler, tanıtım), Tanıtım grubu amiral sayfaya yerleşti.
 
 ### Secki turu: 17 bileşen, paket kiti, Storybook kabuğu — 2026-11-06
 

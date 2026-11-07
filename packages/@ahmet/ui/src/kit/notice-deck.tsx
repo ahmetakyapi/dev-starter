@@ -109,7 +109,7 @@ export function NoticeDeck({ items, label = "Duyurular", interval = 6000, onDism
             <button
               type="button"
               onClick={() => setIndex((i) => (i + 1) % items.length)}
-              aria-label={`Sıradaki duyuru (${(index % items.length) + 1} / ${items.length})`}
+              aria-label={`${(index % items.length) + 1}/${items.length} · Sıradaki duyuru`}
               className="min-h-8 rounded-full px-1.5 text-micro font-semibold text-muted tabular-nums hover:text-strong"
             >
               {(index % items.length) + 1}/{items.length}

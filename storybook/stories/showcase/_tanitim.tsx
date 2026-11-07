@@ -4,6 +4,7 @@ import { CalendarDays, Compass, Inbox, ListChecks, Sparkles } from "lucide-react
 import { useState } from "react";
 import { AppWindow, WindowStrip } from "@/components/ui/app-window";
 import { BlurIn } from "@/components/ui/blur-in";
+import { BookCover } from "@/components/ui/book-cover";
 import { CornerMascot } from "@/components/ui/corner-mascot";
 import { Dock } from "@/components/ui/dock";
 import { DockingNav } from "@/components/ui/docking-nav";
@@ -11,6 +12,7 @@ import { DriftColumns } from "@/components/ui/drift-columns";
 import { HandCallout } from "@/components/ui/hand-callout";
 import { Kbd } from "@/components/ui/kbd";
 import { LiquidGlass, LiquidGlassButton } from "@/components/ui/liquid-glass";
+import { MarkAnnotate } from "@/components/ui/mark-annotate";
 import { NoticeDeck } from "@/components/ui/notice-deck";
 import { TrustLine } from "@/components/ui/trust-line";
 import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
@@ -171,7 +173,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
 
         <section id="tanitim-kisayol" aria-labelledby="tanitim-kisayol-baslik" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-24 sm:px-6">
           <h2 id="tanitim-kisayol-baslik" className="text-heading font-semibold tracking-tight text-strong">
-            Fareye uzanmadan
+            Fareye <MarkAnnotate type="underline">uzanmadan</MarkAnnotate>
           </h2>
           <ul className="mt-6 grid gap-3 sm:grid-cols-3">
             {[
@@ -194,6 +196,22 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section aria-labelledby="tanitim-rehber-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-24 sm:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center">
+          <div>
+            <p className="text-micro font-semibold tracking-[0.14em] text-primary-ink uppercase">Rehberler</p>
+            <h2 id="tanitim-rehber-baslik" className="mt-2 text-title font-semibold tracking-tight text-strong">
+              Ekibin İlk Haftası İçin
+            </h2>
+            <p className="mt-3 max-w-md text-small text-soft">
+              Kurulumdan ilk yanıta iki kısa rehber; ekibe yeni katılan ilk gün ikisini okur.
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8 md:justify-start">
+            <BookCover title="Başlangıç Rehberi" subtitle="Gelen kutusu, görevler, takvim" author={WORKSPACE.name} mark="01" width={148} />
+            <BookCover tone="ink" title="Destek El Kitabı" subtitle="Yanıt dili ve öncelikler" author={WORKSPACE.name} mark="02" width={148} />
+          </div>
         </section>
       </main>
 

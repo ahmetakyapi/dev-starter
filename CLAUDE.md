@@ -105,7 +105,7 @@ dev-starter/
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
 ├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 753 hikâye — Kapak, Tema, Bileşenler,
-│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula + Tanıtım (kapsam 112/129); kabuk tema ve paleti izler
+│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula + Tanıtım (kapsam 129/129); kabuk tema ve paleti izler
 ├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (129 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
