@@ -131,6 +131,10 @@ export const yazi = "Masa oyununun kurallarını sunucu tutar.";
 window.addEventListener("scroll", () => requestAnimationFrame(() => {}), { passive: true });
 EOF
 # Test dosyasi taranmaz: kirli icerik tasisa bile
+cat > "$SANDBOX/temiz/Resim.tsx" <<'EOF'
+// token-ok-file: illüstrasyon varlığı, renk seti elle seçildi (test)
+export const Resim = () => <svg><circle fill="#fffbeb" r="4" /></svg>;
+EOF
 cat > "$SANDBOX/temiz/Kart.test.tsx" <<'EOF'
 it("alert", () => { expect(render(<a href="#">x</a>)).toBeTruthy(); alert("x"); });
 EOF

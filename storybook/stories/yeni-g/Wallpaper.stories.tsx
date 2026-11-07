@@ -59,7 +59,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Paletin rengiyle çizilen, çözünürlükten bağımsız (SVG) altı duvar kâğıdı sahnesi. Masaüstü maketinin arkası olur ya da `downloadWallpaper()` ile o anki palet ve temanın renginde PNG olarak indirilir (Retina masaüstü 2880×1800, telefon 1290×2796). Araç çubuğundan paleti değiştir, sonra indir.",
+          "Çözünürlükten bağımsız (SVG) sekiz illüstrasyon sahnesi: elle seçilmiş renk setleri, katman başına ışık degradesi, sis, hale, ipek dokusu. Masaüstü maketinin arkası olur ya da `downloadWallpaper()` ile PNG olarak indirilir (Retina masaüstü 2880×1800, telefon 1290×2796).",
       },
     },
   },
@@ -82,8 +82,8 @@ export const Desktop: Story = {
   name: "Masaüstü Maketi",
   parameters: { layout: "padded" },
   render: () => (
-    <Wallpaper scene="ridge" className="aspect-[16/10] w-full max-w-4xl rounded-2xl p-6">
-      <WindowStrip role="img" aria-label="Duvar kâğıdı üstünde iki pencere, Notlar odakta" className="h-48">
+    <Wallpaper scene="alpine" className="aspect-[16/10] w-full max-w-4xl rounded-2xl p-6">
+      <WindowStrip role="img" aria-label="Şafak dağları duvar kâğıdı üstünde iki pencere, Notlar odakta" className="h-48">
         <AppWindow title="Notlar" icon={<NotebookPen />} focused className="w-64" />
         <AppWindow title="Posta" icon={<Mail />} className="w-56" />
       </WindowStrip>

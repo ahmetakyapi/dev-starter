@@ -68,6 +68,17 @@ scan() {
 # sayi, mesaj) arayuz metnini arar, kodun kendi aciklamasini degil. Acilis
 # Zili'nin "✓ var, ✗ yok" diye yazilmis 30 yorum satiri boyle bulgu sayiliyordu.
 nocomment() { grep -vE '^[^:]+:[0-9]+:[[:space:]]*(//|\*|/\*|\{/\*)' || true; }
+# Renk KULLANICI VERISI ya da ILLUSTRASYON olan dosya basinda `token-ok-file:
+# <neden>` tasir (health-check kategori 9 ile ayni isaret): renk kurallarinda
+# o dosyanin bulgulari dusulur. Gerekcesiz isaret Gate'te bulgudur.
+notokfile() {
+  local line file
+  while IFS= read -r line; do
+    file=${line%%:*}
+    [ -n "$line" ] || continue
+    grep -q 'token-ok-file:' "$file" 2>/dev/null || printf '%s\n' "$line"
+  done
+}
 
 # $1 seviye (YUKSEK|UYARI), $2 baslik, $3 neden ve dogrusu, $4 bulgular
 report() {
@@ -231,7 +242,7 @@ report UYARI "h-screen / 100vh (telefonda tasar)" \
 # 21. SVG'de sabit renk: ikon ve cizim temayla donmez.
 report UYARI "SVG'de sabit fill/stroke" \
   "currentColor ya da token sinifi (fill-primary, stroke-line)" \
-  "$(scan -nE '\b(fill|stroke)=["'"'"'](#[0-9a-fA-F]{3,8}|rgb)' "$CODE")"
+  "$(scan -nE '\b(fill|stroke)=["'"'"'](#[0-9a-fA-F]{3,8}|rgb)' "$CODE" | notokfile)"
 
 # 22. Hover'da keyframe: yarida kesilince bastan baslar; gecis (transition) kesintisiz doner.
 report UYARI "Hover'da keyframe animasyonu" \

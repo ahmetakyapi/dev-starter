@@ -9,8 +9,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ### Offscreen turu (ilk /harvest): 3 bileşen, duvar kâğıtları — 2026-11-07
 
-- `wallpaper`: paletle çizilen 6 SVG duvar kâğıdı sahnesi; `downloadWallpaper()`
-  ile PNG (2880×1800, 1290×2796). Storybook → Tanıtım/Duvar Kâğıdı'nda indirme düğmeleri.
+- `wallpaper`: 8 illüstrasyon duvar kâğıdı (gün batımı tepeleri, altın saat,
+  lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları), elle
+  seçilmiş renk setleri; `downloadWallpaper()` ile PNG (2880×1800, 1290×2796).
+  Storybook → Tanıtım/Duvar Kâğıdı'nda indirme düğmeleri.
 - `drift-columns`: zıt yönde sonsuz süzülen görsel sütunları (yalnız CSS).
 - `notice-deck`: köşede dönen duyuru destesi, "2/3" sayaç, durdurulabilir.
 - Pusula Tanıtım Sayfası: demo masaüstünün arkasında duvar kâğıdı, duvar

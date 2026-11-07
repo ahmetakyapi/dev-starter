@@ -104,7 +104,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             </HandCallout>
           </div>
 
-          <Wallpaper scene="tide" className="mt-4 rounded-[1.375rem] p-3 shadow-floating ring-1 ring-line sm:p-6">
+          <Wallpaper scene="lagoon" className="mt-4 rounded-[1.375rem] p-3 shadow-floating ring-1 ring-line sm:p-6">
             <WindowStrip role="img" aria-label={`Pusula pencereleri, odakta ${WINDOWS.find((w) => w.id === focus)?.label}`} className="h-60">
               <AppWindow title="Gelen Kutusu" icon={<Inbox />} focused={focus === "gelen"} className="w-72">
                 <ul className="divide-y divide-line-soft">
@@ -151,10 +151,10 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           <div>
             <p className="text-micro font-semibold tracking-[0.14em] text-primary-ink uppercase">Duvar Kâğıtları</p>
             <h2 id="tanitim-duvar-baslik" className="mt-2 text-title font-semibold tracking-tight text-strong">
-              Masaüstün de paletine uysun
+              Masaüstün İçin Sekiz Sahne
             </h2>
             <p className="mt-3 max-w-md text-small text-soft">
-              {WALLPAPER_SCENES.length} sahne, çalışma alanının rengiyle çizilir: {WALLPAPER_SCENES.map((s) => WALLPAPER_NAMES[s]).join(", ")}.
+              Retina masaüstü ve telefon boyutunda indir: {WALLPAPER_SCENES.map((s) => WALLPAPER_NAMES[s]).join(", ")}.
             </p>
           </div>
           <DriftColumns columns={3} duration={60} className="h-[30rem]">
@@ -203,7 +203,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
         items={[
           { id: "surum", eyebrow: "Yeni Sürüm", title: "Pusula 3.1 yayında", body: "Pencere şeridi ve kısayol paleti." },
           { id: "canli", eyebrow: "Canlı Yayın", title: "Cuma 20.00'de soru-cevap" },
-          { id: "duvar", eyebrow: "Duvar Kâğıtları", title: `${WALLPAPER_SCENES.length} yeni sahne` },
+          { id: "duvar", eyebrow: "Duvar Kâğıtları", title: `${WALLPAPER_SCENES.length} yeni sahne indirilebilir` },
         ]}
       />
       <CornerMascot messages={["Merhaba!", `${OPEN_TICKETS.length} talep yanıt bekliyor.`, "Demoyu denedin mi?"]} />

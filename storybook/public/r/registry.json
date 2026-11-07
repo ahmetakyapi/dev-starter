@@ -3355,7 +3355,7 @@
       "name": "wallpaper",
       "type": "registry:ui",
       "title": "Duvar Kâğıdı",
-      "description": "Paletle çizilen 6 duvar kâğıdı sahnesi (SVG); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796)",
+      "description": "8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],

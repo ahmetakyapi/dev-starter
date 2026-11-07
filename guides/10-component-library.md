@@ -284,7 +284,7 @@ kaldığı için erişilebilirlik açığı değil.
 - **Ürün maketi:** ekran görüntüsü yerine `AppWindow` + `WindowStrip` + `Dock`. Tek pencere `focused`; sahne `role="img"` ve tek cümle. Maket etkileşimliyse (`Dock onSelect`) sayfada denenen demo olur.
 - **El notu ya da kalem vurgusu:** başka bir öğeyi okla göstereceksen `hand-callout`, metnin kendisini vurgulayacaksan `mark-annotate`. Font: `fonts.ts → handFont`.
 - **CornerMascot**: yalnız kişiliği olan tanıtım sayfasında, sayfada bir tane; uygulama, form ve ödeme ekranında yok.
-- **Offscreen turu:** maket ya da kahraman arkası için `wallpaper` (6 sahne, paletle çizilir, `downloadWallpaper()` ile PNG); galeri kahramanında `drift-columns`; sürüm notu ve etkinlik için köşede `notice-deck` (hata/sonuç bildirimi `toast`ta kalır).
+- **Offscreen turu:** maket ya da kahraman arkası için `wallpaper` (8 illüstrasyon sahnesi, `downloadWallpaper()` ile PNG; arayüz paletine uyan sahneyi seç); galeri kahramanında `drift-columns`; sürüm notu ve etkinlik için köşede `notice-deck` (hata/sonuç bildirimi `toast`ta kalır).
 - **Paket:** hepsi `@ahmetakyapi/ui` kitinde (97 bileşen).
 
 ### Bloklar

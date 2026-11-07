@@ -750,12 +750,18 @@ doku (`pattern-bg` → noise) bizde vardı. Üç yeni bileşen: `drift-columns`
 (zıt yönde süzülen sütunlar, yalnız CSS), `notice-deck` (köşede dönen duyuru
 destesi; sitedeki sponsor kartının duyuru karşılığı), `wallpaper`.
 
-**Duvar kâğıtları:** sitedeki görseller sanatçıların eseri, alınmadı. Yerine
-paletle çizilen altı SVG sahnesi (kum tepesi, gelgit, sıradağ, kutup ışığı,
-eş yükselti, çiçeklenme). Ribbon'ın sahil fotoğraflı masaüstü demosunun
-token'lı karşılığı; `downloadWallpaper()` o anki palet ve temanın renginde
-Retina masaüstü (2880×1800) ve telefon (1290×2796) PNG'si üretir. Sahne
-karakteri sabit, ton paletle döner.
+**Duvar kâğıtları:** sitedeki görseller sanatçıların eseri, alınmadı. İlk
+sürüm altı sahneyi paletin tonunu beyaz/siyahla karıştırarak çiziyordu;
+kullanıcı "güzel durmuyor" dedi (haklıydı: oklab karışımı bulanık ve
+kahverengiye çalan sahneler veriyordu). **Değişti (2026-11-07):** sekiz
+illüstrasyon sahnesi, elle seçilmiş renk setleriyle (`token-ok-file`
+gerekçeli istisna: arayüz rengi değil resim rengi) ve gerçek işçilikle:
+katman başına ışık degradesi, katmanlar arası sis, güneşte geniş hale, kumda
+aydınlık/gölge yüzü ve sırt çizgisi, düzensiz kayalık zirveler, kutup
+ışığında yüzlerce dikey huzme, ipek çizgileri, kâğıt kesiminde gölge.
+`downloadWallpaper()` Retina masaüstü (2880×1800) ve telefon (1290×2796)
+PNG'si üretir. Ders: illüstrasyonda token disiplini güzelliği öldürür;
+sınır arayüz ile resim arasında çizilir.
 
 **Erişilebilirlik kararı:** iki bileşen de kendiliğinden hareket eder; WCAG
 2.2.2 gereği üzerine gelme ve odak durdurur, hareketi azaltan kullanıcıda
