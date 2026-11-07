@@ -68,19 +68,19 @@ dev-starter/
 ├── phases/                    → planning (P1→P6), development (dalga planı), e2e-polish (E0→E5), release-maintenance
 │
 ├── hooks/
-│   ├── gate-guard.sh          → Commit öncesi Gate PASSED kontrolü (kolon başlıktan, #99)
+│   ├── gate-guard.sh          → Commit öncesi Gate PASSED + kapsam izi kontrolü (kolon başlıktan, #99)
 │   ├── quality-scan.sh        → Sır (AWS/PEM/JWT + sağlayıcı anahtarları), .env, debug, @ts-ignore, kilit, agentic cast, TDD/format uyarıları
 │   ├── routemap-sync.sh       → ROUTEMAP tazelik + DONE⇒PASSED değişmezi
 │   ├── session-brief.sh       → SessionStart: ROUTEMAP özeti + sıradaki iş önerisi
 │   ├── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
-│   └── lib/routemap.sh        → ROUTEMAP tablo ayrıştırıcı — kolon ada göre (#99)
+│   └── lib/routemap.sh        → ROUTEMAP ayrıştırıcı (kolon ada göre, #99) · lib/gate-hash.sh → Gate kapsam izi
 │
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
 │   ├── slop-scan.sh           → AI slop taraması (24 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
 │   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
-│   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
+│   ├── test-hooks.sh          → Hook davranış testleri (94, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
@@ -184,7 +184,7 @@ Kurallar kağıt üstünde kalmaz — bash hook'ları ile fiziksel olarak uygula
 
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
-| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse bloklar (kolon başlıktan bulunur, docs-only muaf — #99) |
+| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse ya da Gate'ten sonra kod değiştiyse (rapordaki `Kapsam:` izi) bloklar; kolon başlıktan, docs-only muaf — #99 |
 | `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Sır (AWS/PEM/JWT/URL + Anthropic/GitHub/npm/Resend/Stripe/Slack önekleri), `.env` (iç içe dahil), debug kodu, `@ts-ignore`, kilit, agentic cast; TDD'siz fix, format dışı mesaj, test zayıflatma uyarıları |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE ⇒ Gate PASSED değişmezi |
 | `hooks/session-brief.sh` | SessionStart | ROUTEMAP özeti + sıradaki iş önerisi bağlama basılır |

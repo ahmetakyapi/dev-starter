@@ -42,9 +42,23 @@ if command -v stat &>/dev/null; then
   NOW=$(date +%s)
   DIFF=$((NOW - ROUTEMAP_AGE))
 
+  # Düz stdout modele ulaşmaz (yukarıdaki not): hatırlatma additionalContext
+  # JSON'u olarak basılır. Her Edit/Write'ta tekrarlanıp bağlamı doldurmasın
+  # diye en çok 30 dakikada bir (işaret dosyası .git içinde, depoya girmez).
   if [ $DIFF -gt 1800 ]; then
-    echo "💡 ROUTEMAP hatırlatma: Son güncellemeden 30+ dakika geçti."
-    echo "   Aktif story durumunu güncellemeyi unutmayın."
+    MARK="$(git rev-parse --git-dir 2>/dev/null || echo .)/routemap-hint"
+    MARK_AGE=$(stat -c %Y "$MARK" 2>/dev/null || stat -f %m "$MARK" 2>/dev/null || echo 0)
+    if [ $((NOW - MARK_AGE)) -gt 1800 ]; then
+      touch "$MARK" 2>/dev/null || true
+      MSG="ROUTEMAP hatırlatma ($ROUTEMAP): son güncellemeden 30+ dakika geçti. Aktif story durumu ve Gate kolonu güncel mi?"
+      if command -v jq >/dev/null 2>&1; then
+        jq -n --arg m "$MSG" '{hookSpecificOutput: {hookEventName: "PostToolUse", additionalContext: $m}}'
+      elif command -v python3 >/dev/null 2>&1; then
+        MSG="$MSG" python3 -c 'import json, os; print(json.dumps({"hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": os.environ["MSG"]}}))'
+      else
+        echo "💡 $MSG"
+      fi
+    fi
   fi
 fi
 

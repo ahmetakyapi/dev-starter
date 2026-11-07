@@ -66,6 +66,7 @@ routemap_project_root() {
 routemap_story_rows() {
   awk -F'|' '
     function trim(s) { gsub(/^[ \t\r]+|[ \t\r]+$/, "", s); return s }
+    function norm(s) { gsub(/[*`]/, "", s); sub(/[ \t].*$/, "", s); return s }
     # CRLF kaydedilmiş dosyada son hücre "Gate\r" olur ve tablo hiç
     # tanınmazdı — satır başında \r temizlenir, trim de \r kırpar.
     { sub(/\r$/, "") }
@@ -78,7 +79,7 @@ routemap_story_rows() {
         for (i = 1; i <= NF; i++) {
           h = trim($i)
           if (h == "Durum") dc = i
-          if (h == "Gate")  gc = i
+          if (h == "Gate" || h ~ /^Gate /)  gc = i
           if (h == "ID")    idc = i
         }
         if (dc && gc && idc) intable = 1
@@ -86,7 +87,9 @@ routemap_story_rows() {
       }
       # Ayraç satırı: |----|----|
       if ($0 ~ /^\|[ \t:|-]+$/) next
-      durum = trim($dc); gate = trim($gc); id = trim($idc)
+      # Biçim gürültüsü (**IN_PROGRESS**, `PASSED`, "IN_PROGRESS 🔄") ayıklanır:
+      # tanınmayan hücre satırı görünmez yapıp Gate kontrolünü sessizce kapatıyordu.
+      durum = norm(trim($dc)); gate = norm(trim($gc)); id = trim($idc)
       if (durum != "") print id "\t" durum "\t" gate
       next
     }
