@@ -96,7 +96,7 @@ dev-starter/
 │   ├── settings.json          → Hook entegrasyonu (paylaşılan, versiyonlanır)
 │   ├── commands/              → 20 komut — bootstrap ile ~/.claude/commands'a symlink
 │   ├── agents/                → 9 subagent wrapper'ı — ~/.claude/agents'a symlink
-│   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
+│   └── skills/clone-website/  → Ölçümlü site klonlama + scripts/ (capture, styles, download-assets, visual-diff)
 │
 ├── templates/
 │   ├── nextjs-fullstack/      → Next 16 + Drizzle/Neon + next-auth v5 + proxy.ts + tema + bileşenler + /akis (AI akışı)
@@ -287,7 +287,7 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 | `/deploy` | Vercel deployment checklist | `.claude/commands/deploy.md` |
 | `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
 | `/agentic [konu]` | Agentic UI karar ağacı — tool, kontrol, state, dsl, test, kurulum, denetle | `.claude/commands/agentic.md` |
-| `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli, yalnız bu depoda) | `.claude/skills/clone-website/SKILL.md` |
+| `/clone-website <url>` | Ölçümlü site klonu: betikli yakalama + stil dökümü + varlık indirme, bant bant piksel/tipografi farkı geçene kadar düzeltme (Playwright, yalnız bu depoda) | `.claude/skills/clone-website/SKILL.md` |
 
 > **Tek kaynak: bu repo.** `machine/bootstrap.sh` her komutu
 > `~/.claude/commands/`a symlink'ler; global kopya yoktur, **her projede bu
