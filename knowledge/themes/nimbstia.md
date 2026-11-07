@@ -4,8 +4,8 @@ description: Klavye öncelikli macOS çalışma tezgâhı (Hammerspoon + WKWebVi
 colors:
   primary: '#2563ff'
   accent: '#2563ff'
-  neutral-bg: '#f4f5f8'
-  neutral-fg: '#111320'
+  neutral-bg: '#f6f6f5'
+  neutral-fg: '#17181a'
   dark-bg: '#1f2024'
   dark-card: '#26272c'
 typography:
@@ -74,7 +74,7 @@ kartlar, yumuşak gölge, tek bir birincil eylem, renk yalnız anlam taşıdığ
 ### Arka Plan
 | Token | Dark | Light | Kullanım |
 |-------|------|-------|----------|
-| `--bg` | `#1f2024` | `#f4f5f8` | Panel zemini |
+| `--bg` | `#1f2024` | `#f6f6f5` | Panel zemini |
 | `--card` | `#26272c` | `#ffffff` | Widget/kart |
 | `--chip` | `rgba(255,255,255,.075)` | `rgba(20,24,40,.055)` | Segment rayı, kapalı anahtar |
 
@@ -89,7 +89,7 @@ kartlar, yumuşak gölge, tek bir birincil eylem, renk yalnız anlam taşıdığ
 ### Metin
 | Token | Dark | Light | Kontrast |
 |-------|------|-------|----------|
-| `--text` | `#f3f4f7` | `#111320` | — |
+| `--text` | `#f3f4f7` | `#17181a` | — |
 | `--muted` | `#b9bcc8` | `#4b5065` | ≥ 7:1 |
 | `--faint` | `#9094a3` | `#6b7085` | beyazda 4.9:1; açık önizleme zemininde 4.42 → orada `--muted` |
 
@@ -150,3 +150,25 @@ tüm animasyonları kısaltır. Tema "auto" iken macOS görünümünü izler.
 degrade birincil düğme, etiketler cümle düzeninde 12px, büyük sayılar 700 ağırlık ve sıkı
 aralık, mono yalnız veri. `theme.css` token'larını kullan; Türkçe dizgileri aynen koru, İngilizce
 `i18n.js` tablosundan gelir. Önizle: `node scripts/preview/shoot.js out <panel>`."
+
+## Açık Öneri: Ribbon Dili (2026-11-07, onay bekliyor)
+
+meetribbon.app incelemesinden. Nimbstia zaten yolun ~%70'inde (nötr zemin,
+beyaz kart, tek mavi, tuş kapakları, pastel mini masaüstleri). Panellere
+önerilen, ÖNİZLENDİ ama uygulanmadı (Pano ve Yerleşim, iki tema):
+
+- Zemin serin zinc (`#f6f6f5` → `#f4f4f5`), panelde wash ve grain yok,
+  kart `ring 1px zinc-900/10 + shadow-sm`, hub widget'ı 24 px.
+- Vurgu sky, üçe ayrılır (AA): çizgi/halka `#0ea5e9` (metin değil, 2.77:1),
+  metin `#0369a1` (5.93:1), dolgu `#0273b6` (beyaz metin 5.08:1). Ribbon'ın
+  birebir sky-500/600'ü 11-13 px metinde AA'yı geçmez.
+- Seçili satır: sky-50 + 1 px sky çizgi; **sol 3 px şerit kalkar** (tek taraflı
+  vurgu şeridi, slop). Yerleşimde tek odaklı pencere halkası + kesik çizgili hayalet pencere.
+- Tuş kapağı düz (zinc-50 + zinc-300), ipucu ve boş durum metninde satır içi.
+
+Panele GİRMEZ (pazarlama/README kahramanı): büyük harfli eyebrow (#115),
+serif başlık + italik vurgu, el yazısı not, maskot, sıvı cam, yuvaya oturan
+menü, güven satırı. Instrument Serif `theme.css`e konmaz (`panel.lua` her
+panele base64 gömer, +70-90 KB). README hemen macOS 13+ diyor; `@property`
+13.3+, `color-mix()` Safari 16.2 ister. Logo degradesi (mavi→mor) sky arayüzle
+çatışır: karar gerekir. Ayrıntılı token tablosu: oturum raporu (nimbstia-visual).
