@@ -241,7 +241,7 @@ Kurulu ve tüm oturumlarda açık: `~/.agents/skills/` → `~/.claude/skills/`
 yedisi (`machine/bootstrap.sh` → `TASTE_SKILLS`): `design-taste-frontend`,
 `redesign-existing-projects`, `high-end-visual-design`, `minimalist-ui`,
 `brandkit`, `imagegen-frontend-web`, `imagegen-frontend-mobile`. Depodan ayrıca
-`motion-design` ve `motion-film`. Paketin geri kalanı ve impeccable 3 Ekim 2026'da kaldırıldı.
+`motion-design` ve `motion-film`; dış depodan sabit commit'le `anatomy` ve `cinecode`. Paketin geri kalanı ve impeccable 3 Ekim 2026'da kaldırıldı.
 
 > **VARSAYILAN — her projede geçerli.** `design-taste-frontend` (taste-skill v2)
 > tanıtım sayfası, portfolyo ve pazarlama sayfası içeren **her** frontend işinde
@@ -264,7 +264,8 @@ yedisi (`machine/bootstrap.sh` → `TASTE_SKILLS`): `design-taste-frontend`,
 | Görsel referans üretimi (web / mobil) | `imagegen-frontend-web` / `-mobile` |
 | Yeni bölüm (menü, CTA, alt bilgi, 404, bento) ya da kullanıcı "bu yapıyı kendi renklerimle kur" diye ekran görüntüsü verdi | `/reference` — galeri `~/dev-starter/knowledge/design-references.md`; yapı alınır, renk/metin/logo alınmaz |
 | Hareket kararı, zamanlama | `motion-design` + `~/dev-starter/guides/04-motion.md` |
-| Hareket filmi: bekleme/açılış filmi, tanıtım videosu, kinetik yazı, HTML → MP4 | `motion-film` |
+| Sayfa içi hareket filmi: bekleme/açılış filmi, kinetik yazı, mürekkep sahnesi | `motion-film` |
+| MP4 teslim edilen film: kısa film, tanıtım/reklam, müzik videosu, çekim kurgusu | `cinecode` (sabit commit, `bootstrap.sh` → `CINECODE_REF`; iş bölümü `motion-film` § 1b) |
 | Sade editoryal arayüz | `minimalist-ui` |
 
 **Mevcut projeye girerken — mod tespiti (skill §11.A) ŞART**

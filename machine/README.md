@@ -41,7 +41,12 @@ Sırayla:
    (açıklayıcı figür skill'i, MIT), `bootstrap.sh` → `ANATOMY_REF` commit'ine
    sabitli. Yerel değişiklik varsa dokunulmaz; ağ hatası kurulumu durdurmaz.
    Kiti bir projeye kurmak: `node ~/dev-starter/scripts/add-figure-kit.mjs <proje>`.
-9. **Eklentiler** — builtin eklentiler etkinleştirilir.
+9. **cinecode** — `sarpstar/cinecode` → `~/.claude/skills/cinecode` (kodla
+   film stüdyosu, MIT), `bootstrap.sh` → `CINECODE_REF` commit'ine sabitli;
+   anatomy ile aynı `pinned_skill` yolu. Node 22+, Python 3, ffmpeg ve Chrome
+   ister. Kitin "güncelle" komutu (`git pull`) sabit commit'te çalışmaz:
+   yükseltme `CINECODE_REF`'i değiştirmektir.
+10. **Eklentiler** — builtin eklentiler etkinleştirilir.
 
 Hedefte farklı bir dosya varsa üzerine yazılmaz: önce
 `~/.claude/backups/bootstrap-<tarih>/` altına taşınır. Zaten doğru bağlı olan
@@ -136,7 +141,9 @@ agent'ı aldı.
 **Depodan:** `motion-design` ve `motion-film` (`machine/skills/`). **Dış depodan:**
 `anatomy` (wheresryan22/anatomy, MIT; izometrik açıklayıcı figür, WebGL, 3D —
 ne zaman kullanılacağı `motion-film/reference/aciklayici-figur.md`de; projeye
-kurulumu `scripts/add-figure-kit.mjs`, şablon uyumu `npm run verify:anatomy`). Proje düzeyinde ayrıca
+kurulumu `scripts/add-figure-kit.mjs`, şablon uyumu `npm run verify:anatomy`) ve
+`cinecode` (sarpstar/cinecode, MIT; MP4 teslim edilen kısa film, reklam,
+müzik videosu; `motion-film` ile iş bölümü o skill'in § 1b'sinde). Proje düzeyinde ayrıca
 `.claude/skills/clone-website` (yalnızca dev-starter içinde).
 
 **Builtin eklenti:** `cc-plugin-you-should-know@builtin`.

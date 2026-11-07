@@ -32,6 +32,15 @@ TASTE_SKILLS=(design-taste-frontend redesign-existing-projects high-end-visual-d
 # burası; verify script'i SHA'yı bu satırdan okur.
 ANATOMY_REF="689dcf966e63d92be10a5d593c6e19e10acd4422"
 
+# cinecode (sarpstar/cinecode, MIT) — kodla film: senaryo, kare, ses, MP4.
+# Depo sık değişiyor ve skill her araç çağrısında koşan bir koruma kancası
+# (PreToolUse/Stop, scripts/guard.py) taşıyor; bu yüzden anatomy gibi SABİT
+# commit. Bu commit 7 Kasım 2026'da okundu: kanca yalnız skill yüklüyken
+# koşar, ağa çıkan araçlar (asset_search, tts) anahtar ve onay ister.
+# Yükseltme: yeni SHA, aradaki commit'lere ve hook.cjs/guard.py farkına bak,
+# sonra commit. health-check bu satırı denetler.
+CINECODE_REF="67f9807112b97ae253d4a5f0eccaccc46c3b2633"
+
 # Builtin eklentiler: pazar yeri gerekmez, yalnızca etkinleştirilir.
 BUILTIN_PLUGINS=("cc-plugin-you-should-know@builtin")
 
@@ -108,39 +117,53 @@ echo "▸ taste-skill"
 SKILLS_CLI_VERSION="1.7.2"
 run npx -y "skills@${SKILLS_CLI_VERSION}" add Leonxlnx/taste-skill -g -a claude-code -s "${TASTE_SKILLS[@]}" -y
 
+# Dış depodan sabit commit'e kurulan skill. Pin'in amacı tedarik zinciri:
+# skill her oturumda talimat olarak okunur, HEAD içeriği denetlenmemiştir.
+#   pinned_skill <ad> <depo-url> <40 haneli sha>
+# Yerel değişiklik varsa dokunmaz; ağ hatası kurulumu DURDURMAZ (skill'ler
+# isteğe bağlı, sonraki adımlar yine kurulur); pin'e oturtulamayan taze klon
+# silinir, kurulum yapılmamış sayılır.
+pinned_skill() {
+  local name="$1" url="$2" ref="$3"
+  local dir="$CLAUDE_DIR/skills/$name"
+  _pin_checkout() {
+    git -C "$dir" fetch --quiet origin "$ref" 2>/dev/null \
+      || git -C "$dir" fetch --quiet origin
+    git -C "$dir" -c advice.detachedHead=false checkout --quiet "$ref"
+  }
+  if [[ -d "$dir/.git" ]]; then
+    if [[ -n "$(git -C "$dir" status --porcelain 2>/dev/null)" ]]; then
+      echo "  ~/.claude/skills/$name içinde yerel değişiklik var; dokunulmadı"
+    elif [[ "$(git -C "$dir" rev-parse HEAD 2>/dev/null)" == "$ref" ]]; then
+      echo "  = $name zaten ${ref:0:7}"
+    else
+      run _pin_checkout || echo "  ⚠️  $name güncellenemedi (ağ?); eski sürüm yerinde kaldı"
+    fi
+  elif [[ ! -e "$dir" ]]; then
+    if run git clone --quiet "$url" "$dir"; then
+      run _pin_checkout || {
+        echo "  ⚠️  ${ref:0:7} bulunamadı; $name KURULMADI (pin'siz içerik bağlanmaz)"
+        run rm -rf "$dir"
+      }
+    else
+      echo "  ⚠️  $name klonlanamadı (ağ?); sonra tekrar çalıştır"
+    fi
+  else
+    echo "  ~/.claude/skills/$name git deposu değil; dokunulmadı"
+  fi
+}
+
 echo "▸ anatomy (açıklayıcı figür skill'i, wheresryan22/anatomy, MIT) @ ${ANATOMY_REF:0:7}"
 # İzometrik SVG figür, WebGL ve 3D kiti; motion-film'in `reference/aciklayici-figur.md`si
-# ne zaman bunu kullanacağını söylüyor. Ağ hatası kurulumu DURDURMAZ: figür
-# skill'i isteğe bağlı, eklentiler ve sonraki adımlar yine kurulur.
-ANATOMY_DIR="$CLAUDE_DIR/skills/anatomy"
-anatomy_checkout() {
-  git -C "$ANATOMY_DIR" fetch --quiet origin "$ANATOMY_REF" 2>/dev/null \
-    || git -C "$ANATOMY_DIR" fetch --quiet origin
-  git -C "$ANATOMY_DIR" -c advice.detachedHead=false checkout --quiet "$ANATOMY_REF"
-}
-if [[ -d "$ANATOMY_DIR/.git" ]]; then
-  if [[ -n "$(git -C "$ANATOMY_DIR" status --porcelain 2>/dev/null)" ]]; then
-    echo "  ~/.claude/skills/anatomy içinde yerel değişiklik var; dokunulmadı"
-  elif [[ "$(git -C "$ANATOMY_DIR" rev-parse HEAD 2>/dev/null)" == "$ANATOMY_REF" ]]; then
-    echo "  = anatomy zaten ${ANATOMY_REF:0:7}"
-  else
-    run anatomy_checkout || echo "  ⚠️  anatomy güncellenemedi (ağ?); eski sürüm yerinde kaldı"
-  fi
-elif [[ ! -e "$ANATOMY_DIR" ]]; then
-  if run git clone --quiet https://github.com/wheresryan22/anatomy "$ANATOMY_DIR"; then
-    # Pin'e oturtulamayan taze klon SKILL OLARAK BIRAKILMAZ: HEAD içeriği
-    # denetlenmemiştir ve her oturumda talimat olarak okunur. Pin'in tüm
-    # amacı buydu; checkout düşerse klon silinir, kurulum yapılmamış sayılır.
-    run anatomy_checkout || {
-      echo "  ⚠️  ${ANATOMY_REF:0:7} bulunamadı; anatomy KURULMADI (pin'siz içerik bağlanmaz)"
-      run rm -rf "$ANATOMY_DIR"
-    }
-  else
-    echo "  ⚠️  anatomy klonlanamadı (ağ?); sonra tekrar çalıştır"
-  fi
-else
-  echo "  ~/.claude/skills/anatomy git deposu değil; dokunulmadı"
-fi
+# ne zaman bunu kullanacağını söylüyor.
+pinned_skill anatomy https://github.com/wheresryan22/anatomy "$ANATOMY_REF"
+
+echo "▸ cinecode (kodla film stüdyosu, sarpstar/cinecode, MIT) @ ${CINECODE_REF:0:7}"
+# MP4 olarak çıkan her film (kısa film, tanıtım, reklam, müzik videosu) bunun
+# Hızlı/Film modlarıyla yapılır; motion-film § 1b iş bölümünü söylüyor.
+# Kitin kendi "cinecode'u güncelle" (git pull) komutu sabit commit'te çalışmaz,
+# bilerek: yükseltme CINECODE_REF'i değiştirip bootstrap'i yeniden koşmaktır.
+pinned_skill cinecode https://github.com/sarpstar/cinecode "$CINECODE_REF"
 
 echo "▸ Eklentiler"
 for p in "${BUILTIN_PLUGINS[@]}"; do

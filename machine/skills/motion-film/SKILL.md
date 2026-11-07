@@ -3,7 +3,9 @@ name: motion-film
 description: >
   Kodla çizilen hareket filmi (motion graphics, kinetic typography, bekleme/yükleme
   filmi, ürün tanıtım videosu, açılış sahnesi, logo reveal, "odül alan animasyon")
-  yapmak için yönetmenlik, teknik ve inceleme kiti. Canvas 2D / DOM ile saf
+  yapmak için yönetmenlik, teknik ve inceleme kiti. Teslimi MP4 olan kısa
+  film, reklam ve müzik videosu cinecode skill'iyle yapılır (§ 1b); bu kit
+  sayfa içi filmin ve iki kitin ortak sayılarının kaynağı. Canvas 2D / DOM ile saf
   render(t) filmler: kamera, dev kinetik yazı, mürekkep ve kâğıt dokusu, boil,
   sel geçişi, mühür finali, Web Audio sesi; temas sayfası ve MP4 üretim script'leri.
   Use when asked to make a motion design film, animated explainer, launch video,
@@ -13,11 +15,11 @@ description: >
   animation, explainer with narration. Kaynaklar: awesome-opus5-5-videos,
   lemo-opuscar, ClaudeAnimationBase, shipvideo, PDoomVideo, mexicat/pdoom-video,
   mg-styles-15, athemeroy/awesome-claude-5-5-videos, opus-video-prompts,
-  wheresryan22/anatomy, Florence "Opus 5.5 Motion Lab" + Açılış Zili filmi.
+  wheresryan22/anatomy, sarpstar/cinecode (MP4 filmleri o kitle), Florence "Opus 5.5 Motion Lab" + Açılış Zili filmi.
 license: MIT
 metadata:
   author: Ahmet Akyapı (dev-starter)
-  version: "1.4.0"
+  version: "1.5.0"
 ---
 
 # Motion Film — kodla hareket filmi
@@ -63,6 +65,37 @@ getirir; her sıfatı bir sayıyla değiştirdiğin yerde kararı geri alırsın
 yok (tohumlu `rng`), `Date.now()` yok, önceki kareden durum taşınmaz, CSS
 transition sahnede yok. Böylece kareler sırasız/paralel çizilir, hareketi
 azaltana son kare tek çağrı olur, sekme dönünce film olması gereken yerden sürer.
+
+## 1b. MP4 film mi? cinecode ile iş bölümü
+
+Sonucu **izlenecek bir dosya** olan her film (kısa film, tanıtım ve reklam,
+ürün videosu, müzik videosu, kendi çekiminin kurgusu, sosyal medya kesiti)
+`cinecode` skill'iyle yapılır (sarpstar/cinecode, MIT; `machine/bootstrap.sh`
+→ `CINECODE_REF` sabit commit'e kurar). O kit bu dosyanın video yarısını
+uçtan uca yürütür: Hızlı mod (tek HTML, Web Audio, bugün biter) ya da Film
+modu (altı onaylı adım: röportaj → yol haritası → senaryo → stil karesi →
+animatik → taslak), ses tasarımı, −14 LUFS master, lisans kaydı, jüri.
+
+| İş | Kim | Neden |
+|----|-----|-------|
+| Sayfanın içinde oynayan film (bekleme, açılış, boş durum, zil) | **motion-film** | Saf `render(ctx, t)`, tema token'ı çalışma anında, hareketi azaltana son kare; projenin bileşeni olur |
+| MP4/GIF teslim edilen film | **cinecode** | Senaryo, stil karesi, ses, master ve teslim onun kapılarıyla |
+| Sayfa içi bir sahnenin videosu (aynı sahneyi tanıtımda kullanmak) | motion-film `film-video.mjs` | Kod zaten var; yeniden kurmak ikinci kaynak açar |
+| Mekanizmayı anlatan figür | anatomy (§ 7b) | |
+
+**Birlikte çalışırken:**
+
+- cinecode filmi **proje deposunun dışında** kurar (`init_film.py`, ör.
+  `~/Filmler/<ad>`); film klasörü depoya girmez. Sitede kullanılacak son MP4
+  sıkıştırılıp yalnız o dosya projeye taşınır.
+- Marka filmi o projenin **film kimliği** belgesiyle başlar (Açılış Zili:
+  `docs/film-kimligi.md`). cinecode "varsayılan font ve palet yok, kartta
+  gerekçesi olsun" der; belge o gerekçedir: kartın LOOK satırı ve kahraman
+  oradan gelir, Hızlı/Film modu ve kapıları değişmez.
+- Bu dosyanın sayıları (§ 0, § 3) ve yasakları cinecode kartında da geçerli;
+  iki kit çatışırsa kart cinecode'un, marka kuralı projenin belgesinin.
+- Yükseltme `CINECODE_REF`'i değiştirip bootstrap'i yeniden koşmaktır; kitin
+  "cinecode'u güncelle" (`git pull`) komutu sabit commit'te bilerek çalışmaz.
 
 ## 2. Yönetmenlik (ayrıntı: `reference/yonetmenlik.md`)
 

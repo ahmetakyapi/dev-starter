@@ -7,6 +7,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### cinecode: kodla film stüdyosu — 2026-11-07
+
+#### Eklendi
+
+- **cinecode skill'i** (sarpstar/cinecode, MIT): `machine/bootstrap.sh`
+  `CINECODE_REF` sabit commit'ine kurar. MP4 teslim edilen kısa film, reklam,
+  müzik videosu onunla; iş bölümü `motion-film` § 1b (skill 1.5.0).
+- health-check `CINECODE_REF`'in 40 haneli sha olduğunu denetler.
+
+#### Değişti
+
+- bootstrap'te sabit commit'li dış skill kurulumu ortak `pinned_skill`
+  fonksiyonu oldu (anatomy ve cinecode aynı yoldan; davranış aynı).
+
 ### Secki turu: 17 bileşen, paket kiti, Storybook kabuğu — 2026-11-06
 
 Referans secki.dev (332 bağlantı) ve patterncraft.fun; davranış öğrenildi, kod

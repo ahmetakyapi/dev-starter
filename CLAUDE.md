@@ -34,6 +34,7 @@ dev-starter/
 │   └── skills/                → Depoda taşınan skill'ler
 │       ├── motion-design/     → UI hareketi: zamanlama, easing, koreografi (LottieFiles, MIT)
 │       └── motion-film/       → Kodla hareket filmi: yönetmenlik, kamera, mürekkep, ses, MP4
+│                                (MP4 filmler: cinecode, bootstrap sabit commit'le kurar)
 │
 ├── packages/@ahmet/
 │   ├── theme/      → Tailwind v4 theme.css (sistem + palet + @theme inline köprüsü) + tokens.ts aynası
@@ -231,6 +232,12 @@ npm run verify:anatomy                                # iki şablonda build/tip/
 
 anatomy `machine/bootstrap.sh` → `ANATOMY_REF` commit'ine sabitli. Yükseltme:
 SHA'yı değiştir, **önce** `verify:anatomy`, sonra commit (`mistakes.md #98`).
+
+Film stüdyosu **cinecode** (sarpstar/cinecode, MIT) aynı yoldan,
+`machine/bootstrap.sh` → `CINECODE_REF` commit'ine sabitli. MP4 teslim edilen
+kısa film, reklam ve müzik videosu onunla; sayfa içi film `motion-film`le
+(iş bölümü `machine/skills/motion-film/SKILL.md` § 1b). Yükseltme: SHA'yı
+değiştir, aradaki commit'lerde `scripts/hook.cjs`/`guard.py` farkını oku, commit.
 
 ### AI Slop Taraması
 

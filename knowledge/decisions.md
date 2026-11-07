@@ -689,3 +689,24 @@ canlı palet karoları, gerçek bileşenlerden örnek sahne, raf ve kurulum.
 çeliştiği için çıkarıldı; kullanıcıya soruldu), WebGL süsleri, Lenis.
 Dış skill'lerin bizden ayrıldığı beş nokta `guides/04` § 15 "Açık kararlar"da.
 
+## cinecode — MP4 Filmleri Dış Kitle, Sayfa İçi Film motion-film'le (2026-11-07)
+
+**Karar:** Teslimi bir dosya olan her film (kısa film, tanıtım ve reklam,
+müzik videosu, çekim kurgusu) `sarpstar/cinecode` skill'iyle yapılır.
+`motion-film` sayfanın içinde oynayan filmlerin (Açılış Zili mürekkep
+sahneleri, bekleme filmleri) ve iki kitin ortak sayılarının kaynağı kalır.
+
+**Neden:** cinecode bizim video yarımızın yapmadığını uçtan uca yürütüyor:
+onaylı adımlar (senaryo, stil karesi, animatik, taslak), katmanlı ses ve
+−14 LUFS master, lisans kaydı, bağlam bütçesi. Aynısını `motion-film`e
+yazmak ikinci, bayatlayacak bir kaynak açardı.
+
+**Nasıl kurulur:** vendor edilmedi (depo 30 MB, 11 MB'lık tanıtım GIF'i;
+kitin kendi güncelleme yolu git). anatomy gibi SABİT commit: skill her araç
+çağrısında koşan bir koruma kancası taşıyor, HEAD içeriği denetlenmeden
+talimat olmaz. bootstrap'te anatomy ile ortak `pinned_skill` fonksiyonu;
+health-check `CINECODE_REF`'i denetler.
+
+**Marka filmleri:** projenin film kimliği belgesiyle başlar (Açılış Zili
+`docs/film-kimligi.md`); cinecode'un "varsayılan font/palet yok, kartta
+gerekçesi olsun" kuralına gerekçeyi o belge verir. Mod ve kapılar değişmez.

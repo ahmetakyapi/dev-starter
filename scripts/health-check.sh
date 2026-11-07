@@ -391,6 +391,12 @@ if grep -qE '^ANATOMY_REF="[0-9a-f]{40}"' machine/bootstrap.sh; then
 else
   fail "machine/bootstrap.sh: ANATOMY_REF 40 haneli sha degil — verify:anatomy kaynagi belirsiz"
 fi
+# Film studyosu (cinecode): kanca tasiyan dis skill, yalniz sabit commit'ten.
+if grep -qE '^CINECODE_REF="[0-9a-f]{40}"' machine/bootstrap.sh; then
+  pass "cinecode tam commit'e sabitlenmis (bootstrap.sh CINECODE_REF)"
+else
+  fail "machine/bootstrap.sh: CINECODE_REF 40 haneli sha degil — HEAD icerigi skill olarak baglanir"
+fi
 
 # Yerel Node major'i .nvmrc ile ayni mi? Farkliysa bir sonraki npm install
 # CI'in reddedecegi bir kilit yazabilir.
