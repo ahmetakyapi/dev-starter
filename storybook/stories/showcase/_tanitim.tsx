@@ -7,10 +7,13 @@ import { BlurIn } from "@/components/ui/blur-in";
 import { CornerMascot } from "@/components/ui/corner-mascot";
 import { Dock } from "@/components/ui/dock";
 import { DockingNav } from "@/components/ui/docking-nav";
+import { DriftColumns } from "@/components/ui/drift-columns";
 import { HandCallout } from "@/components/ui/hand-callout";
 import { Kbd } from "@/components/ui/kbd";
 import { LiquidGlass, LiquidGlassButton } from "@/components/ui/liquid-glass";
+import { NoticeDeck } from "@/components/ui/notice-deck";
 import { TrustLine } from "@/components/ui/trust-line";
+import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
 import { EVENTS, OPEN_TICKETS, WORKSPACE } from "./_data";
 
 /**
@@ -101,7 +104,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             </HandCallout>
           </div>
 
-          <div className="mt-4 rounded-[1.375rem] bg-surface p-3 shadow-floating ring-1 ring-line sm:p-6">
+          <Wallpaper scene="tide" className="mt-4 rounded-[1.375rem] p-3 shadow-floating ring-1 ring-line sm:p-6">
             <WindowStrip role="img" aria-label={`Pusula pencereleri, odakta ${WINDOWS.find((w) => w.id === focus)?.label}`} className="h-60">
               <AppWindow title="Gelen Kutusu" icon={<Inbox />} focused={focus === "gelen"} className="w-72">
                 <ul className="divide-y divide-line-soft">
@@ -141,7 +144,29 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
                 })}
               />
             </div>
+          </Wallpaper>
+        </section>
+
+        <section aria-labelledby="tanitim-duvar-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-24 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
+          <div>
+            <p className="text-micro font-semibold tracking-[0.14em] text-primary-ink uppercase">Duvar Kâğıtları</p>
+            <h2 id="tanitim-duvar-baslik" className="mt-2 text-title font-semibold tracking-tight text-strong">
+              Masaüstün de paletine uysun
+            </h2>
+            <p className="mt-3 max-w-md text-small text-soft">
+              {WALLPAPER_SCENES.length} sahne, çalışma alanının rengiyle çizilir: {WALLPAPER_SCENES.map((s) => WALLPAPER_NAMES[s]).join(", ")}.
+            </p>
           </div>
+          <DriftColumns columns={3} duration={60} className="h-[30rem]">
+            {[...WALLPAPER_SCENES, ...WALLPAPER_SCENES].map((scene, i) => (
+              <figure key={i} className="overflow-hidden rounded-xl ring-1 ring-line">
+                <div className="aspect-[3/4]">
+                  <Wallpaper scene={scene} />
+                </div>
+                <figcaption className="bg-overlay px-3 py-2 text-micro font-medium text-soft">{WALLPAPER_NAMES[scene]}</figcaption>
+              </figure>
+            ))}
+          </DriftColumns>
         </section>
 
         <section id="tanitim-kisayol" aria-labelledby="tanitim-kisayol-baslik" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-24 sm:px-6">
@@ -172,6 +197,15 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
         </section>
       </main>
 
+      <NoticeDeck
+        className="fixed bottom-4 left-4 z-30 hidden sm:block"
+        label="Pusula duyuruları"
+        items={[
+          { id: "surum", eyebrow: "Yeni Sürüm", title: "Pusula 3.1 yayında", body: "Pencere şeridi ve kısayol paleti." },
+          { id: "canli", eyebrow: "Canlı Yayın", title: "Cuma 20.00'de soru-cevap" },
+          { id: "duvar", eyebrow: "Duvar Kâğıtları", title: `${WALLPAPER_SCENES.length} yeni sahne` },
+        ]}
+      />
       <CornerMascot messages={["Merhaba!", `${OPEN_TICKETS.length} talep yanıt bekliyor.`, "Demoyu denedin mi?"]} />
     </div>
   );

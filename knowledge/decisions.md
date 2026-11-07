@@ -741,3 +741,25 @@ de Instrument Sans).
 Apple logosu, maskot çizimi, rozetler), sistem serif'i, ham sky/zinc paleti,
 kıtlık sayacı ("10 kişiden 10'u kaldı": doğrulanamayan aciliyet, veri
 dürüstlüğü). Ayrıntı `references.md` → Değerlendirilip Alınmayanlar.
+
+## Offscreen Turu — Duvar Kâğıtları, Süzülen Sütunlar, Duyuru Destesi (2026-11-07)
+
+**Karar:** offscreen.wtf (duvar kâğıdı galerisi) ilk `/harvest` turuyla
+tarandı. Tıklanan noktadan daire açılan tema geçişi (`theme-toggle`) ve kumlu
+doku (`pattern-bg` → noise) bizde vardı. Üç yeni bileşen: `drift-columns`
+(zıt yönde süzülen sütunlar, yalnız CSS), `notice-deck` (köşede dönen duyuru
+destesi; sitedeki sponsor kartının duyuru karşılığı), `wallpaper`.
+
+**Duvar kâğıtları:** sitedeki görseller sanatçıların eseri, alınmadı. Yerine
+paletle çizilen altı SVG sahnesi (kum tepesi, gelgit, sıradağ, kutup ışığı,
+eş yükselti, çiçeklenme). Ribbon'ın sahil fotoğraflı masaüstü demosunun
+token'lı karşılığı; `downloadWallpaper()` o anki palet ve temanın renginde
+Retina masaüstü (2880×1800) ve telefon (1290×2796) PNG'si üretir. Sahne
+karakteri sabit, ton paletle döner.
+
+**Erişilebilirlik kararı:** iki bileşen de kendiliğinden hareket eder; WCAG
+2.2.2 gereği üzerine gelme ve odak durdurur, hareketi azaltan kullanıcıda
+hiç oynamaz, kendiliğinden değişen içerik ekran okuyucuya duyurulmaz.
+
+**Alınmayan:** açılış yükleyicisi (içeriği geciktirir), reklam/sponsor
+yerleri, Cormorant Garamond + Anton eşi (serif vurgu `editorial` presetiyle).

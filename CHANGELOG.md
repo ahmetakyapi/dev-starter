@@ -7,6 +7,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Offscreen turu (ilk /harvest): 3 bileşen, duvar kâğıtları — 2026-11-07
+
+- `wallpaper`: paletle çizilen 6 SVG duvar kâğıdı sahnesi; `downloadWallpaper()`
+  ile PNG (2880×1800, 1290×2796). Storybook → Tanıtım/Duvar Kâğıdı'nda indirme düğmeleri.
+- `drift-columns`: zıt yönde sonsuz süzülen görsel sütunları (yalnız CSS).
+- `notice-deck`: köşede dönen duyuru destesi, "2/3" sayaç, durdurulabilir.
+- Pusula Tanıtım Sayfası: demo masaüstünün arkasında duvar kâğıdı, duvar
+  kâğıdı galerisi bölümü, duyuru destesi. Kit 94 → 97, katalog 129.
+- `/harvest` komutu, slop-scan 25 (sahte kıtlık), `/reference`, `/review-ui`
+  § 9, `/new-project` ve strategist'e Ribbon dersleri.
+
 ### Ribbon turu: Tanıtım grubu, 8 bileşen — 2026-11-07
 
 Referans meetribbon.app; görsel dil ve davranış ölçüldü, kod ve görsel

@@ -222,7 +222,7 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 
 ### Tanıtım
 
-Ribbon turu (meetribbon.app, 2026-11-07). Görsel zeminli kahraman, sayfada
+Ribbon ve Offscreen turları (meetribbon.app, offscreen.wtf; 2026-11-07). Görsel zeminli kahraman, sayfada
 denenen ürün maketi, kişiliği olan küçük dokunuşlar. Hepsi tanıtım sayfası
 içindir; uygulama ekranına ve forma taşıma. Canlı örnek: Pusula → Tanıtım
 Sayfası hikâyesi.
@@ -237,6 +237,9 @@ Sayfası hikâyesi.
 | `docking-nav.tsx` | Görsel kahramanlı sayfada menü: boşluklu hap, kaydırınca üst kenara oturur | motion, lucide | Evet | `nav` + ad; telefonda `aria-expanded` panel, Esc kapatır ve odak düğmeye döner, Tab ile çıkınca kapanır |
 | `corner-mascot.tsx` | Kişiliği olan tanıtım sayfasında köşe maskotu: göz takibi, göz kırpma, balon | motion | Evet | Düğme adlı; balon `role="status"`; göz takibi ve kırpma hareket azaltmada ve dokunmatikte yok |
 | `trust-line.tsx` | Birincil eylemin altında en çok üç güvence ("Kart gerekmez · 2 dakikada kurulum") | lucide | Hayır | Ayraç `aria-hidden`, yerine görünmez virgül; `media` tonu görsel zemin üstü |
+| `wallpaper.tsx` | Paletle çizilen 6 duvar kâğıdı sahnesi (SVG); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796) | yok | Hayır | `aria-hidden` süs; hareket yok; sabit tohum, sunucu = istemci |
+| `drift-columns.tsx` | Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf) | yok | Hayır | İkinci kopya `aria-hidden` + `inert`; üzerine gelme/odak durdurur; hareket azaltmada durur ve kaydırılır |
+| `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç düğmesi elle geçirir |
 
 ### Yapay Zekâ
 

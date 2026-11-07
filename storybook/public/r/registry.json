@@ -1170,6 +1170,29 @@
       ]
     },
     {
+      "name": "drift-columns",
+      "type": "registry:ui",
+      "title": "Süzülen Sütunlar",
+      "description": "Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "drift-columns",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/drift-columns.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dropdown-menu",
       "type": "registry:ui",
       "title": "Açılır Menü",
@@ -1789,6 +1812,33 @@
       "files": [
         {
           "path": "snippets/ui/morph-icon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "notice-deck",
+      "type": "registry:ui",
+      "title": "Duyuru Destesi",
+      "description": "Köşede üst üste duyuru kartları, kendiliğinden döner, \"2/3\" sayaç (sürüm notu, etkinlik)",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "notice-deck",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/notice-deck.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3297,6 +3347,29 @@
       "files": [
         {
           "path": "snippets/ui/trust-line.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "wallpaper",
+      "type": "registry:ui",
+      "title": "Duvar Kâğıdı",
+      "description": "Paletle çizilen 6 duvar kâğıdı sahnesi (SVG); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "wallpaper",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/wallpaper.tsx",
           "type": "registry:ui"
         }
       ]
