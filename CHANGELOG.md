@@ -7,6 +7,39 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Ribbon turu: Tanıtım grubu, 8 bileşen — 2026-11-07
+
+Referans meetribbon.app; görsel dil ve davranış ölçüldü, kod ve görsel
+alınmadı (`knowledge/decisions.md` → "Ribbon Turu").
+
+#### Eklendi
+
+- **Tanıtım** (8 bileşen, hepsi pakette): `liquid-glass` (görsel zemin
+  üstünde SVG bükülmeli cam düğme; bükülme yalnız Chromium, öteki
+  tarayıcıda buğu + kenar), `blur-in` (kahraman başlığı sözcük sözcük
+  buğudan netleşir; CSS, JS beklemez; `<em>` vurgu tek parça), `hand-callout`
+  (el yazısı not + çizilerek gelen ok), `app-window` + `WindowStrip`
+  (token'la çizilmiş pencere maketi), `dock` (komşuları da büyüyen raf,
+  yalnız CSS), `docking-nav` (kaydırınca üst kenara oturan opak hap menü),
+  `corner-mascot` (gözleri imleci izleyen köşe maskotu, `role="status"`
+  balon), `trust-line` (eylemin altında en çok üç güvence).
+- **Font**: `snippets/fonts/fonts.ts` → isteğe bağlı `handFont` (Caveat,
+  `--font-hand-face`), `theme-fonts.css` → `--font-hand`. Türkçe glifleri
+  ve ₺ cmap'ten doğrulandı (`guides/09` § 2).
+- **Storybook**: "Bileşenler/Tanıtım" grubu (8 sayfa, 18 hikâye) ve Pusula
+  → **Tanıtım Sayfası**: sekizinin birlikte çalıştığı, dock'tan seçilen
+  pencerenin şeritte odağa geldiği canlı örnek (`play` testli). Hikâye
+  sayısı 728 → 746.
+- **@ahmetakyapi/ui**: kit 86 → 94 bileşen (sürüm artışı `/release`e bırakıldı).
+- **guides/10** § 4 "Ribbon Turu", **knowledge/references.md** (alınan ve
+  alınmayan), **knowledge/decisions.md** (strateji dersleri: deneme yerine
+  canlı demo, güvence tıklamanın dibinde, tek oyunbaz öğe, karşılaştırma SEO'su).
+
+#### Not
+
+- Bileşen Kapsamı 109/126: eksik 17 bileşen Secki turundan (Pusula'da henüz
+  kullanılmıyorlar); bu turun sekizi Pusula Tanıtım Sayfası'nda.
+
 ### Secki turu: 17 bileşen, paket kiti, Storybook kabuğu — 2026-11-06
 
 Referans secki.dev (332 bağlantı) ve patterncraft.fun; davranış öğrenildi, kod

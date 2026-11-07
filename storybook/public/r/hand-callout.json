@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hand-callout",
+  "type": "registry:ui",
+  "title": "El Yazısı Not",
+  "description": "El yazısı not + çizilerek gelen ok; demoda ilk dokunulacak yeri gösterir",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/hand-callout.tsx",
+      "content": "\"use client\";\n\nimport { useInView, useReducedMotion } from \"motion/react\";\nimport { useRef, type ReactNode, type RefObject } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * El yazısıyla not ve çizilerek gelen ok: arayüzün bir noktasını kenardan\n * gösterir. Ribbon'ın canlı demosundaki \"turn ribbon on\" notu, menü\n * çubuğundaki küçük simgeyi işaret eder; kimse aramadan bulur. Kullanım:\n * canlı demoda ilk dokunulacak yer, fiyat kartında \"en çok seçilen\",\n * ekran görüntüsünde yeni özellik. Sayfada BİR, en çok iki tane.\n *\n * `mark-annotate`tan farkı: o metnin ÜSTÜNE çizer (altı çizgi, daire);\n * bu metnin DIŞINDA durur ve okla başka bir öğeyi gösterir.\n *\n * YAZI TİPİ: `--font-hand-face` (snippets/fonts/fonts.ts → `handFont`,\n * Caveat; latin + latin-ext ile ğ ş İ ı ve ₺ yerinde). Tanımlı değilse\n * sistemin el yazısı ailesine düşer. Not kısa olmalı: üç-dört sözcük, küçük harf, noktasız.\n *\n * YÖN: ok notun altından ya da üstünden çıkar, sağa ya da sola kıvrılır.\n * Konumu çağıran verir (`absolute -top-16 right-0` gibi); bileşen yalnızca\n * notu ve oku çizer. Telefonda hedefin yanında yer yoksa `hidden sm:flex`.\n *\n * ERİŞİLEBİLİRLİK: varsayılan süs (`aria-hidden`); söylediği şey sayfada\n * metin olarak da bulunmalı. `onClick` verilirse gerçek düğme olur ve notun\n * kendisi adıdır (Ribbon'da not, demoyu açan düğmenin ikinci yoluydu).\n * Hareketi azaltan kullanıcıda ok doğrudan çizili.\n */\n\ntype Direction = \"down-right\" | \"down-left\" | \"up-right\" | \"up-left\";\n\ntype HandCalloutProps = {\n  children: ReactNode;\n  direction?: Direction;\n  /** Notun eğimi, derece. Eksi sola yatık. */\n  tilt?: number;\n  /** Çizime başlamadan bekleme, ms (görünür olduktan sonra). */\n  delay?: number;\n  onClick?: () => void;\n  className?: string;\n};\n\nexport function HandCallout({ children, direction = \"down-right\", tilt = -6, delay = 150, onClick, className }: HandCalloutProps) {\n  const ref = useRef<HTMLElement>(null);\n  const inView = useInView(ref, { once: true });\n  const reduce = useReducedMotion();\n  const drawn = inView || reduce;\n  const up = direction.startsWith(\"up\");\n  const left = direction.endsWith(\"left\");\n\n  const label = (\n    <span\n      className=\"font-[family-name:var(--font-hand-face,cursive)] text-heading leading-none font-bold text-strong\"\n      style={{ rotate: `${tilt}deg` }}\n    >\n      {children}\n    </span>\n  );\n\n  // Yol bir kez çizilir, yön aynalanarak verilir: aynı el, dört yön.\n  const arrow = (\n    <svg\n      viewBox=\"0 0 100 110\"\n      fill=\"none\"\n      aria-hidden\n      className={cn(\"h-20 w-[4.5rem] text-strong\", left && \"-scale-x-100\", up && \"-scale-y-100\")}\n    >\n      <path\n        d=\"M30 4 C 34 36, 44 70, 66 100\"\n        pathLength={1}\n        stroke=\"currentColor\"\n        strokeWidth={2.6}\n        strokeLinecap=\"round\"\n        strokeDasharray={1}\n        strokeDashoffset={drawn ? 0 : 1}\n        style={{ transition: reduce ? \"none\" : `stroke-dashoffset 900ms var(--ease-brand) ${delay}ms` }}\n      />\n      <path\n        d=\"M52 92 L66 100 L62 83\"\n        stroke=\"currentColor\"\n        strokeWidth={2.6}\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n        opacity={drawn ? 1 : 0}\n        style={{ transition: reduce ? \"none\" : `opacity 200ms ease-out ${delay + 800}ms` }}\n      />\n    </svg>\n  );\n\n  const body = (\n    <>\n      {up ? arrow : label}\n      {up ? label : arrow}\n    </>\n  );\n  const layout = cn(\"flex flex-col select-none\", left ? \"items-start\" : \"items-end\", className);\n\n  if (onClick) {\n    return (\n      <button\n        ref={ref as RefObject<HTMLButtonElement>}\n        type=\"button\"\n        onClick={onClick}\n        className={cn(layout, \"cursor-pointer rounded-md transition-transform duration-200 hover:-translate-y-0.5\")}\n      >\n        {body}\n      </button>\n    );\n  }\n  return (\n    <span ref={ref as RefObject<HTMLSpanElement>} aria-hidden className={layout}>\n      {body}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "hand-callout",
+    "palettes": false
+  }
+}

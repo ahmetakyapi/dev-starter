@@ -19,6 +19,9 @@
   /* Display rolü: amiral projenin (Açılış Zili) ailesi; kapak ve belge
      başlıkları. Gövde Inter kalır (board kararı). */
   --font-display-face: "Schibsted Grotesk";
+  /* El yazısı notu (hand-callout) ve serif vurgu (blur-in hikâyesi, Pusula tanıtımı). */
+  --font-hand-face: "Caveat";
+  --font-serif-face: "Instrument Serif";
 }
 
 /* Belge sayfası: Storybook başlıkları `:where()` ile sıfır özgüllükte,

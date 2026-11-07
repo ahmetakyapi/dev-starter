@@ -16,6 +16,8 @@
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-display-face, var(--font-sans-face)), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
+  /* İsteğe bağlı el yazısı (fonts.ts → handFont). Yüklenmemişse sistemin el yazısı ailesi. */
+  --font-hand: var(--font-hand-face, "Segoe Print"), "Bradley Hand", cursive;
 }
 
 /* Başlıklar display ailesini alır; katmanlı, yoksa `text-*` yardımcılarını ezer. */

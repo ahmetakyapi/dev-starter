@@ -689,3 +689,55 @@ canlı palet karoları, gerçek bileşenlerden örnek sahne, raf ve kurulum.
 çeliştiği için çıkarıldı; kullanıcıya soruldu), WebGL süsleri, Lenis.
 Dış skill'lerin bizden ayrıldığı beş nokta `guides/04` § 15 "Açık kararlar"da.
 
+## Ribbon Turu — Tanıtım Bileşenleri (2026-11-07)
+
+**Karar:** meetribbon.app (Mac pencere yöneticisi) bölüm bölüm tarandı
+(Playwright: 1440 ve 390 piksel ekran görüntüleri, hesaplanmış stiller, DOM,
+etkileşimler). Kütüphanede karşılığı olmayan sekiz desen sıfırdan, token'la
+yazıldı ve yeni **Tanıtım** grubunu kurdu: `liquid-glass`, `blur-in`,
+`hand-callout`, `app-window` (+ `WindowStrip`), `dock`, `docking-nav`,
+`corner-mascot`, `trust-line`. Hepsi pakete girdi (kit 86 → 94).
+
+**Zaten vardı, alınmadı:** cam hapa toplanan başlık (`SiteHeader`), iki
+sütunlu SSS (`Faq`), tuş kapağı (`kbd`), kalem vurgusu (`mark-annotate`),
+Instrument Sans + Instrument Serif eşi (`editorial` preset: Ribbon'ın gövdesi
+de Instrument Sans).
+
+**Sitenin asıl dersi (desen değil, strateji):**
+
+- **Deneme yerine canlı demo.** Ücretsiz deneme yok; bütün kısayollar
+  sayfadaki sahte masaüstünde denenir ("satın almadan önce burada dene").
+  Ürün maketi ekran görüntüsü değil, token'la çizilmiş, temayla dönen
+  parçalar (`app-window`, `dock`). Pusula Tanıtım Sayfası bunu gösterir:
+  dock'tan seçilen pencere şeritte odağa gelir.
+- **Güvenceyi tıklamanın dibine koy.** Her indirme düğmesinin altında aynı
+  güven satırı. "Güvenli mi?" sorusu SSS'ye kadar beklemez (`trust-line`).
+- **Tek oyunbaz öğe.** Ciddi bir araç sitesinde sıcaklık tek yerden gelir:
+  maskot ve el yazısı not. Sayfada bir maskot, bir-iki not; fazlası oyuncak.
+- **Karşılaştırma SEO'su.** Alt bilgide "Ribbon vs yabai/AeroSpace…" ve
+  rehber sütunları: arama trafiği rakip adıyla gelir. Kendi ürünlerimizde
+  sitemap'e karşılaştırma ve rehber sayfaları planlanabilir (`guides/11`
+  SEO açılışı).
+
+**Teknik kararlar:**
+
+- `blur-in` CSS animasyonu: kahraman başlığı çoğu zaman LCP; hidrasyonu
+  bekleyen Motion girişi başlığı JS inene kadar gizlerdi. Reveal'in "LCP
+  öğesi sarılmaz" kuralı korunur, bu tek istisna JS'siz.
+- `liquid-glass` üç katman: kenar (iç gölgeler, token'dan), buğu (her
+  tarayıcı), bükülme (`backdrop-filter: url(#svg)`, yalnız Chromium).
+  Desteklemeyen tarayıcı bildirimi atlar, düğme sadeleşir ama kırılmaz.
+  `prefers-reduced-transparency`de opak.
+- `docking-nav` kaydırmayı `useSyncExternalStore` ile boole okur: yalnız
+  eşikte çizim, sayfa ortasında yenilenince ilk karede doğru, efektte
+  setState yok (React Compiler lint kuralı).
+- `dock` büyümesi yalnız CSS (`:has()` ile komşular); ölçüm yok.
+- `handFont` (Caveat) preset'lerin parçası değil, isteğe bağlı yükleyici:
+  tanımlı her next/font yükleyicisi sayfaya bağlanır (fonts.ts ölçümü).
+- `app-window` ve maskotta pencere düğmeleri durum token'larından (danger,
+  warning, success); sabit kırmızı-sarı-yeşil yok, paletle döner.
+
+**Alınmayan:** varlıklar ve marka (piksel sanatı kahraman, suluboya kapanış,
+Apple logosu, maskot çizimi, rozetler), sistem serif'i, ham sky/zinc paleti,
+kıtlık sayacı ("10 kişiden 10'u kaldı": doğrulanamayan aciliyet, veri
+dürüstlüğü). Ayrıntı `references.md` → Değerlendirilip Alınmayanlar.

@@ -179,6 +179,29 @@
       ]
     },
     {
+      "name": "app-window",
+      "type": "registry:ui",
+      "title": "Uygulama Penceresi",
+      "description": "Ürünü ekran görüntüsü yerine token'la çizilmiş pencerelerle anlat; `WindowStrip` şerit",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "app-window",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/app-window.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "area-chart",
       "type": "registry:ui",
       "title": "Alan Grafiği",
@@ -359,6 +382,29 @@
       "files": [
         {
           "path": "snippets/ui/bar-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "blur-in",
+      "type": "registry:ui",
+      "title": "Bulanıktan Netleşen Başlık",
+      "description": "Kahraman başlığı sözcük sözcük buğudan netleşir; `<em>` tek parça (serif vurgu)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "blur-in",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/blur-in.tsx",
           "type": "registry:ui"
         }
       ]
@@ -864,6 +910,33 @@
       ]
     },
     {
+      "name": "corner-mascot",
+      "type": "registry:ui",
+      "title": "Köşe Maskotu",
+      "description": "Kişiliği olan tanıtım sayfasında köşe maskotu: göz takibi, göz kırpma, balon",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "corner-mascot",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/corner-mascot.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "data-table",
       "type": "registry:ui",
       "title": "Veri Tablosu",
@@ -1041,6 +1114,57 @@
       "files": [
         {
           "path": "snippets/ui/divider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dock",
+      "type": "registry:ui",
+      "title": "Uygulama Rafı",
+      "description": "Maketin uygulama rafı: üzerine gelince yükselen simgeler, komşular da biraz",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "dock",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/dock.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "docking-nav",
+      "type": "registry:ui",
+      "title": "Yuvaya Oturan Menü",
+      "description": "Görsel kahramanlı sayfada menü: boşluklu hap, kaydırınca üst kenara oturur",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "docking-nav",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/docking-nav.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1225,6 +1349,32 @@
       "files": [
         {
           "path": "snippets/ui/halftone-image.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hand-callout",
+      "type": "registry:ui",
+      "title": "El Yazısı Not",
+      "description": "El yazısı not + çizilerek gelen ok; demoda ilk dokunulacak yeri gösterir",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "hand-callout",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/hand-callout.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1488,6 +1638,29 @@
       "files": [
         {
           "path": "snippets/ui/line-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "liquid-glass",
+      "type": "registry:ui",
+      "title": "Sıvı Cam",
+      "description": "Fotoğraf/çizim üstündeki tek birincil eylem; cam künye (`LiquidGlass`, `LiquidGlassLink`, `LiquidGlassButton`)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "liquid-glass",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/liquid-glass.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3098,6 +3271,32 @@
       "files": [
         {
           "path": "snippets/ui/tree-view.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "trust-line",
+      "type": "registry:ui",
+      "title": "Güven Satırı",
+      "description": "Birincil eylemin altında en çok üç güvence (\"Kart gerekmez · 2 dakikada kurulum\")",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "trust-line",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/trust-line.tsx",
           "type": "registry:ui"
         }
       ]
