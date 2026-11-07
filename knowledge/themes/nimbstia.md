@@ -151,11 +151,11 @@ degrade birincil düğme, etiketler cümle düzeninde 12px, büyük sayılar 700
 aralık, mono yalnız veri. `theme.css` token'larını kullan; Türkçe dizgileri aynen koru, İngilizce
 `i18n.js` tablosundan gelir. Önizle: `node scripts/preview/shoot.js out <panel>`."
 
-## Açık Öneri: Ribbon Dili (2026-11-07, onay bekliyor)
+## Ribbon Dili (2026-11-07, uygulandı: Nimbstia dalı `claude/ribbon-dili`, 801808b)
 
 meetribbon.app incelemesinden. Nimbstia zaten yolun ~%70'inde (nötr zemin,
 beyaz kart, tek mavi, tuş kapakları, pastel mini masaüstleri). Panellere
-önerilen, ÖNİZLENDİ ama uygulanmadı (Pano ve Yerleşim, iki tema):
+uygulanan (beş panel, iki tema, README görselleri yeniden üretildi):
 
 - Zemin serin zinc (`#f6f6f5` → `#f4f4f5`), panelde wash ve grain yok,
   kart `ring 1px zinc-900/10 + shadow-sm`, hub widget'ı 24 px.
@@ -163,7 +163,8 @@ beyaz kart, tek mavi, tuş kapakları, pastel mini masaüstleri). Panellere
   metin `#0369a1` (5.93:1), dolgu `#0273b6` (beyaz metin 5.08:1). Ribbon'ın
   birebir sky-500/600'ü 11-13 px metinde AA'yı geçmez.
 - Seçili satır: sky-50 + 1 px sky çizgi; **sol 3 px şerit kalkar** (tek taraflı
-  vurgu şeridi, slop). Yerleşimde tek odaklı pencere halkası + kesik çizgili hayalet pencere.
+  vurgu şeridi, slop). Yerleşimde tek odaklı pencere halkası (`layouts.lua`
+  `win.key`: odaktaki uygulamanın APPS anahtarı) + kesik çizgili hayalet pencere.
 - Tuş kapağı düz (zinc-50 + zinc-300), ipucu ve boş durum metninde satır içi.
 
 Panele GİRMEZ (pazarlama/README kahramanı): büyük harfli eyebrow (#115),
@@ -171,4 +172,4 @@ serif başlık + italik vurgu, el yazısı not, maskot, sıvı cam, yuvaya otura
 menü, güven satırı. Instrument Serif `theme.css`e konmaz (`panel.lua` her
 panele base64 gömer, +70-90 KB). README macOS 13+ diyor; `@property`
 13.3+, `color-mix()` Safari 16.2 ister. Logo degradesi (mavi→mor) sky arayüzle
-çatışır, karar gerekir. Ayrıntılı token tablosu: oturum raporu (nimbstia-visual).
+çatışır, karar gerekir (bilerek değiştirilmedi). Ayrıntılı token tablosu: oturum raporu (nimbstia-visual).
