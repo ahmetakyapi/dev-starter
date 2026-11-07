@@ -50,7 +50,14 @@ function choose(id: PaletteName) {
   };
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!document.startViewTransition || reduce) swap();
-  else document.startViewTransition(swap);
+  else {
+    // Ok tuşlarıyla hızlı geçişte önceki geçiş atlanır ve `ready` /
+    // `updateCallbackDone` "Transition was skipped" ile reddedilir: beklenen
+    // durum, yakalanmazsa konsola işlenmemiş hata düşer.
+    const transition = document.startViewTransition(swap);
+    transition.ready.catch(() => {});
+    transition.updateCallbackDone.catch(() => {});
+  }
 }
 
 export function PaletteCards() {

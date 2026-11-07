@@ -265,7 +265,7 @@ export const SignedOut: Story = {
     await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@gmail.com");
     await userEvent.type(canvas.getByLabelText("Şifre"), "pusula2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
-    await canvas.findByText(/pusula\.com\.tr/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
+    await canvas.findByText(/pusula\.app/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
     await settle(globals);
   },
 };

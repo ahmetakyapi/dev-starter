@@ -1,11 +1,11 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**728 hikâye**, her biri açık/koyu tema ve 10 palette. Storybook'un kendi kabuğu (sidebar, araç çubuğu, belge) da seçilen tema ve paletle döner:
+**750+ hikâye** (güncel sayı Kapak'ta, derleme anında sayılır), her biri açık/koyu tema ve 10 palette. Storybook'un kendi kabuğu (sidebar, araç çubuğu, belge) da seçilen tema ve paletle döner:
 
 | Bölüm | İçerik |
 |-------|--------|
 | **Kapak** (en üstte) | Kataloğun ilk ekranı: palet karoları bütün arayüzü döndürür, örnek sahne gerçek bileşenlerden, raf ve kurulum |
-| **Örnek Tasarım** | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (118/118 bileşen, 15 grafik, bloklar, 10 palet); **Desen Kütüphanesi**: 35 token'lı zemin, Önizle ve Kopyala; **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
+| **Örnek Tasarım** | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (katalogdaki bütün bileşenler, 15 grafik, bloklar, 10 palet); **Desen Kütüphanesi**: 35 token'lı zemin, Önizle ve Kopyala; **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
 | Vitrin | Genel bakış + grup grup vitrin sayfaları (`snippets/ui/vitrin/`) |
 | Başlangıç, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
 | Bileşenler | `snippets/ui`nin bütün bileşenleri + şablonun ortak bileşenleri; her biri varsayılan, durumlar, bütün varyantlar, `play` etkileşimi |

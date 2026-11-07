@@ -68,7 +68,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     // Ad bütün parçaları sayar: renk tek bilgi kaynağı değil
     const img = within(canvasElement).getByRole("img", { name: /Kanala Göre Destek Bileti/ });
-    await expect(img).toHaveAccessibleName(/Canlı Destek %47, E-posta %38, Telefon %15/);
+    await expect(img).toHaveAccessibleName(/Canlı Destek %47, E-Posta %38, Telefon %15/);
   },
 };
 

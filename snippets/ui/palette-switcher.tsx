@@ -81,7 +81,14 @@ function applyPalette(id: string) {
   // `theme-switching` sınıfı YOK: o sınıf ThemeToggle'ın dairesel açılışını
   // çağırır; palet için tarayıcının kısa çapraz solması yeter.
   if (!document.startViewTransition || reduce) swap();
-  else document.startViewTransition(swap);
+  else {
+    // Ok tuşlarıyla hızlı geçişte önceki geçiş atlanır ve `ready` /
+    // `updateCallbackDone` "Transition was skipped" ile reddedilir: beklenen
+    // durum, yakalanmazsa konsola işlenmemiş hata düşer.
+    const transition = document.startViewTransition(swap);
+    transition.ready.catch(() => {});
+    transition.updateCallbackDone.catch(() => {});
+  }
 }
 
 type PaletteSwitcherProps = {
