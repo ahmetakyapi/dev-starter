@@ -151,7 +151,7 @@ degrade birincil düğme, etiketler cümle düzeninde 12px, büyük sayılar 700
 aralık, mono yalnız veri. `theme.css` token'larını kullan; Türkçe dizgileri aynen koru, İngilizce
 `i18n.js` tablosundan gelir. Önizle: `node scripts/preview/shoot.js out <panel>`."
 
-## Ribbon Dili (2026-11-07, uygulandı: Nimbstia dalı `claude/ribbon-dili`, 801808b)
+## Ribbon Dili (2026-11-07, uygulandı ve `main`e birleşti: 801808b + logo 1bf65c0)
 
 meetribbon.app incelemesinden. Nimbstia zaten yolun ~%70'inde (nötr zemin,
 beyaz kart, tek mavi, tuş kapakları, pastel mini masaüstleri). Panellere
@@ -172,4 +172,4 @@ serif başlık + italik vurgu, el yazısı not, maskot, sıvı cam, yuvaya otura
 menü, güven satırı. Instrument Serif `theme.css`e konmaz (`panel.lua` her
 panele base64 gömer, +70-90 KB). README macOS 13+ diyor; `@property`
 13.3+, `color-mix()` Safari 16.2 ister. Logo degradesi (mavi→mor) sky arayüzle
-çatışır, karar gerekir (bilerek değiştirilmedi). Ayrıntılı token tablosu: oturum raporu (nimbstia-visual).
+çatışıyordu; logo da gök mavisine çekildi (`#38bdf8 → #0ea5e9 → #0369a1`, N alt tonu `#e0f2fe`, gölge `#082f49`; `assets/logo.svg` + `pulstia.html` gömülü kopya). Ayrıntılı token tablosu: oturum raporu (nimbstia-visual).
