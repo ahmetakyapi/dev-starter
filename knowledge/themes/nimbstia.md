@@ -169,6 +169,6 @@ beyaz kart, tek mavi, tuş kapakları, pastel mini masaüstleri). Panellere
 Panele GİRMEZ (pazarlama/README kahramanı): büyük harfli eyebrow (#115),
 serif başlık + italik vurgu, el yazısı not, maskot, sıvı cam, yuvaya oturan
 menü, güven satırı. Instrument Serif `theme.css`e konmaz (`panel.lua` her
-panele base64 gömer, +70-90 KB). README hemen macOS 13+ diyor; `@property`
+panele base64 gömer, +70-90 KB). README macOS 13+ diyor; `@property`
 13.3+, `color-mix()` Safari 16.2 ister. Logo degradesi (mavi→mor) sky arayüzle
-çatışır: karar gerekir. Ayrıntılı token tablosu: oturum raporu (nimbstia-visual).
+çatışır, karar gerekir. Ayrıntılı token tablosu: oturum raporu (nimbstia-visual).
