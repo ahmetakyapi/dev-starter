@@ -1,6 +1,7 @@
 ---
 description: Sürüm artır, changelog güncelle, git etiketi oluştur
 argument-hint: "patch | minor | major"
+disable-model-invocation: true
 ---
 
 `$ARGUMENTS` seviyesinde (patch | minor | major) release yap. Bu komut

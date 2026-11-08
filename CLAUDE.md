@@ -5,171 +5,57 @@ Bu, Ahmet'in kişisel geliştirme ekosistemi. Yeni proje başlatmak, tema uygula
 **Versiyon**: 3.0.0 (+ yayınlanmamış: orkestrasyon) — Next 16 · React 19.2 · Tailwind v4 · `motion/react` · Drizzle + Neon · next-auth v5 · gerçek subagent orkestrasyonu (9 kayıtlı subagent, Görev Tanımı, dalga planı)
 
 Projeye başlarken sırayla izlenecek rehber: `guides/` (00 kimlik → 01 ilk gün → 08 yayına çıkış).
-Global kuralların tek kaynağı: `machine/CLAUDE.md` (`~/.claude/CLAUDE.md` ona symlink).
+Global kuralların tek kaynağı: `machine/CLAUDE.md` (`~/.claude/CLAUDE.md` ona symlink);
+yol kapsamlı global kurallar `machine/rules/` (→ `~/.claude/rules/dev-starter/`).
+
+**Bu dosyanın sözleşmesi** (8 Kasım 2026, Claude Code resmî önerisi): her
+oturumda yüklenir, ~200 satırın altında kalır (`scripts/health-check.sh`
+denetler). Burada yalnız her oturumda gereken harita, kural ve adres durur.
+Belirli dizinlere ait ayrıntı `.claude/rules/*.md` içinde `paths:`
+frontmatter'ıyla, o dosyalar okununca yüklenir; uzun harita ve örnekler
+`docs/ECOSYSTEM.md`de (otomatik yüklenmez). Taşınan bölümlerin listesi ve
+gerekçe: `knowledge/decisions.md` → "Bağlam Dosyaları".
+
+| Ne arıyorsan | Nerede |
+|---|---|
+| Ayrıntılı dizin ağacı, yaşam döngüsü fazları, komut örnekleri | `docs/ECOSYSTEM.md` |
+| Hook tablosu, engelleme sözleşmesi (exit 2, `if`, matcher) | `.claude/rules/hooks.md` (`hooks/`, ayarlar) |
+| health-check, verify:*, anatomy/cinecode pin'i, slop, canlı denetim | `.claude/rules/verification.md` (`scripts/`, bootstrap) |
+| Paket kullanımı (`@ahmetakyapi/theme`, `/ui`) | `.claude/rules/packages.md` (`packages/`, `snippets/`, `templates/`) |
+| Subagent tablosu, wrapper sözleşmesi, context curation, komut ↔ skill | `.claude/rules/orchestration.md` (`.claude/`, `agents/`, `machine/`) |
+| Kararlar ve geçmişi ("Değişti (tarih)") | `knowledge/decisions.md` |
 
 ---
 
-## Ekosistem Yapısı
+## Ekosistem Haritası (kısa)
 
 ```text
-dev-starter/
-├── guides/                    → Projeye başlarken: sırayla okunan 12 rehber + README
-│   ├── 00-brand-identity.md   → Kimlik değişmezleri + palet seçimi (signature/verdant/ember/iris)
-│   ├── 01-kickoff.md          → İlk gün / ilk hafta (/kickoff → /new-project → Neon → Vercel → CI)
-│   ├── 02-design-tokens.md    → İki katmanlı token, punto ölçeği, twMerge, kontrast, degrade istisnası
-│   ├── 03-theming.md          → data-theme + çerez, ThemeToggle + view transition, zemin, glass
-│   ├── 04-motion.md           → motion/react + LazyMotion, süreler, Reveal, kaydırma, desen kataloğu
-│   ├── 05-components.md       → Şablon bileşenleri, ekran düzeni sırası, durumlar, Title Case
-│   ├── 06-nextjs-16.md        → proxy.ts, async API, PageProps, önbellek, soft 404, formlar
-│   ├── 07-data-auth-security.md → Neon/Drizzle, migration, next-auth, checkBearer, başlıklar
-│   ├── 08-quality-and-ship.md → Commit kontrolü, smoke, CWV, a11y, veri dürüstlüğü, deploy
-│   ├── 09-typography.md       → Font preset'leri (snippets/fonts/fonts.ts)
-│   ├── 10-component-library.md → snippets/ui/ kopyala-yapıştır kütüphanesi
-│   └── 11-vps-email-push.md   → VPS deploy, env senkronu (GitHub → sunucu), SEO açılışı, Resend, Web Push
-│
-├── machine/
-│   ├── CLAUDE.md              → Global kurallar (tek kaynak)
-│   ├── README.md              → Yeni makine kurulumu, taşınmayanlar, skill listesi
-│   ├── bootstrap.sh           → Komut/agent/skill symlink'leri + taste-skill kurulumu
-│   └── skills/                → Depoda taşınan skill'ler
-│       ├── motion-design/     → UI hareketi: zamanlama, easing, koreografi (LottieFiles, MIT)
-│       └── motion-film/       → Kodla hareket filmi: yönetmenlik, kamera, mürekkep, ses, MP4
-│                                (MP4 filmler: cinecode, bootstrap sabit commit'le kurar)
-│
-├── packages/@ahmet/
-│   ├── theme/      → Tailwind v4 theme.css (sistem + palet + @theme inline köprüsü) + tokens.ts aynası
-│   └── ui/         → 86 bileşenlik kit (snippets/ui'dan üretilir) + Surface, Button, Chip, CustomCursor + hooks + motion varyantları (m.*)
-│
-├── knowledge/
-│   ├── themes/                → 7 projenin görsel hafızası (DESIGN.md 9 bölüm)
-│   ├── decisions.md           → Kararlar; değişenler "Değişti (2026-10-03)" başlığıyla
-│   ├── mistakes.md            → 119 kayıt, başında makine-okunur indeks (#58–73 agentic, #74–98 Next 16 / v4 / motion / figür, #99 ekosistem altyapısı, #100–101 VPS / env / yayın, #102–106 denetim, #107–114 Geo Tour, #115–119 Nimbstia tasarım)
-│   ├── patterns.md            → Test edilmiş desenler + Agentic UI
-│   ├── tech-radar.md          → İhtiyaç → varsayılan seçim (strategist okur)
-│   ├── design-references.md   → Bölüm → ücretsiz referans galerisi (navbar, CTA, footer, 404, bento) — /reference okur
-│   ├── references.md          → Referans arşivi: incelenen siteler, skill/kod kaynakları, elenenler (bağlantı + ne alındı)
-│   └── live-projects-audit.md → Canlı projelerin standart uyum denetimi
-│
-├── agents/                    → 12 rol tanımı + AGENT_PROTOCOL.md
-│   ├── AGENT_PROTOCOL.md      → Haberleşme, orkestrasyon (Görev Tanımı), context curation, hook'lar
-│   ├── strategist-agent.md    → Fikirden plana, yol haritası, teknoloji kararı
-│   ├── business-analyst-agent.md → Planlama, onay, orkestrasyon, ROUTEMAP
-│   ├── uiux-agent.md          → Tasarım ve hareket kararları
-│   ├── design-reviewer-agent.md → Kurulmuş arayüzü ekrandan ölçer, puanlar
-│   ├── frontend-agent.md      → Next.js ve React uygulaması
-│   ├── backend-agent.md       → DB, API, auth
-│   ├── agentic-ui-agent.md    → Agentic UI: tool, kontrol, state, DSL
-│   ├── qa-agent.md            → Test stratejisi, test-first, regression
-│   ├── researcher-agent.md    → Benzer çözümler, kütüphane seçimi (kaynaklı)
-│   ├── content-editor-agent.md → Türkçe metin editörlüğü
-│   ├── gate-agent.md          → 6+1 adımlı kalite denetimi (rapor: docs/gate/)
-│   └── deploy-agent.md        → Vercel deployment ve yayın
-│
-├── rules/                     → 10 kural dosyası (aşağıdaki tablo)
-├── phases/                    → planning (P1→P6), development (dalga planı), e2e-polish (E0→E5), release-maintenance
-│
-├── hooks/
-│   ├── gate-guard.sh          → Commit öncesi Gate PASSED kontrolü (kolon başlıktan, #99)
-│   ├── quality-scan.sh        → Sır (AWS/PEM/JWT + sağlayıcı anahtarları), .env, debug, @ts-ignore, kilit, agentic cast, TDD/format uyarıları
-│   ├── routemap-sync.sh       → ROUTEMAP tazelik + DONE⇒PASSED değişmezi
-│   ├── session-brief.sh       → SessionStart: ROUTEMAP özeti + sıradaki iş önerisi
-│   ├── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
-│   └── lib/routemap.sh        → ROUTEMAP tablo ayrıştırıcı — kolon ada göre (#99)
-│
-├── scripts/
-│   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
-│   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
-│   ├── slop-scan.sh           → AI slop taraması (23 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
-│   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
-│   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
-│   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
-│   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
-│   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
-│   ├── add-ui.mjs             → snippets/ui bileşenini bağımlılıklarıyla projeye kurar (--list, --dry-run, --install)
-│   ├── build-ui-registry.mjs  → snippets/ui/registry.json + shadcn kaydı storybook/public/r (--check: verify:registry)
-│   ├── build-ui-package.mjs   → snippets/ui → @ahmetakyapi/ui kiti (86 bileşen, next/Base UI'sız; --check: verify:kit)
-│   ├── add-figure-kit.mjs     → anatomy figür kitini bir projeye kurar (components/iso)
-│   └── verify-anatomy.mjs     → Figür kiti iki şablonda build/tip/lint/test temiz mi (opt-in)
-│
-├── tests/contract.test.ts     → Paket sözleşmesi (palet kontrastı WCAG formülüyle)
-│
-├── .claude/
-│   ├── settings.json          → Hook entegrasyonu (paylaşılan, versiyonlanır)
-│   ├── commands/              → 19 komut — bootstrap ile ~/.claude/commands'a symlink
-│   ├── agents/                → 9 subagent wrapper'ı — ~/.claude/agents'a symlink
-│   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
-│
-├── templates/
-│   ├── nextjs-fullstack/      → Next 16 + Drizzle/Neon + next-auth v5 + proxy.ts + tema + bileşenler + /akis (AI akışı)
-│   ├── landing/               → Board dili: showcase hero (canlı pano) + 7 düzen, demolu özellikler, kaydırma sahnesi, SEO
-│   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
-│   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
-│
-├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 728 hikâye — Kapak, Tema, Bileşenler,
-│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula (118/118); kabuk tema ve paleti izler
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (118 bileşen + vitrin/) + fonts/ + live-preview/
-│   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
-│   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
-│   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form
-│   ├── skeleton · search-bar · infinite-scroll · og-image
-│   ├── agent-tool · action-card · agent-approval (tsc ✓) · agent-feed (test ✓)
-│   └── live-preview/ → Panelde yazdıkça güncellenen canlı önizleme (masaüstü + telefon, açık/koyu, font anında)
-│
-├── eslint.config.js · .prettierrc · .editorconfig · .nvmrc (24)
-├── CHANGELOG.md · CONTRIBUTING.md
+guides/      12 rehber, sırayla okunur (00 kimlik → 08 yayına çıkış → 11 VPS/e-posta/push)
+machine/     global CLAUDE.md + rules/ + bootstrap.sh + depoda taşınan skill'ler (motion-design, motion-film)
+packages/    @ahmet/theme (Tailwind v4 theme.css + tokens.ts) · @ahmet/ui (snippets/ui'dan üretilen kit)
+knowledge/   themes/ · decisions · mistakes (indeksli) · patterns · tech-radar · design-references · references · live-projects-audit
+agents/      12 rol tanımı + AGENT_PROTOCOL.md (haberleşme, orkestrasyon, Görev Tanımı)
+rules/       10 kural dosyası (aşağıdaki tablo) · phases/ planning, development, e2e-polish, release-maintenance
+hooks/       gate-guard · quality-scan · routemap-sync · session-brief (+ lib/)
+scripts/     health-check · test-hooks · slop-scan · audit-project · verify-* · build-* · add-ui · add-figure-kit
+.claude/     settings.json (hook'lar) · rules/ · commands/ (19) · agents/ (9 wrapper) · skills/clone-website
+templates/   nextjs-fullstack · landing · agentic-chat · docs/ (KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS)
+storybook/   görsel katalog (Storybook 10, kendi kilidi) · snippets/ hazır parçalar + ui/ kütüphanesi + fonts/ + live-preview/
 ```
 
----
+Tam ağaç (dosya başına açıklama, sayılar): `docs/ECOSYSTEM.md`.
 
-## Proje Yaşam Döngüsü
+## Yaşam Döngüsü ve ROUTEMAP
 
 ```text
 KICKOFF  →  PLANNING (P1→P6)  →  DEVELOPMENT  →  E2E & POLISH (E0→E5)  →  RELEASE  →  MAINTENANCE
 ```
 
-### Kickoff (`/kickoff`, `agents/strategist-agent.md`)
-
-Fikir → pazar araştırması, yön seçenekleri, palet ve teknoloji kararları, MVP.
-Çıktı `docs/KICKOFF.md` + taslak `docs/PRODUCT.md`; onaylanınca `/new-project`.
-
-### Planning (`phases/planning.md`)
-
-6 adımda fikirden geliştirmeye hazır story'lere:
-
-| Adım | Ne Yapar | Çıktı |
-|------|----------|-------|
-| P1 | Discovery & Brainstorm | decisions.md |
-| P2 | Product Definition | PRODUCT.md |
-| P3 | Architecture Design | ARCHITECTURE.md |
-| P4 | Screen Design | SCREENS.md |
-| P5 | Story Writing | stories/ |
-| P6 | Dev Readiness Check | checklist |
-
-### Development (`phases/development.md`)
-
-Fazın playbook'u: iş boyu (KÜÇÜK/ORTA/BÜYÜK), story seçimi, subagent'lara
-dalga planıyla dağıtım (Görev Tanımı), Gate döngüsü ve eskalasyon. Tek
-story'nin iç akışı `rules/dev-cycle.md`:
-
-```text
-Plan → Validate → Develop → Self-Check → Gate → Commit → Review → Compound
-```
-
-### E2E & Polish (`phases/e2e-polish.md`)
-
-```text
-E0: Seed Data → E1: Smoke Test → E2: Interactive E2E → E3: Performance → E4: UI Polish → E5: Acceptance
-```
-
-### Release & Maintenance (`phases/release-maintenance.md`)
-
-```text
-Pre-Release Checklist → Version Tag → Deploy → Post-Deploy Verify → Maintenance Mode
-```
-
----
-
-## ROUTEMAP — Proje Durum Takibi
+Faz playbook'ları `phases/` (planning · development · e2e-polish ·
+release-maintenance); tek story'nin iç akışı `rules/dev-cycle.md`:
+Plan → Validate → Develop → Self-Check → Gate → Commit → Review → Compound.
+Kickoff `/kickoff` (`agents/strategist-agent.md`), çıktısı `docs/KICKOFF.md`
++ taslak `docs/PRODUCT.md`; onaylanınca `/new-project`.
 
 Her proje `docs/ROUTEMAP.md` ile durumunu takip eder (`rules/routemap-discipline.md`):
 
@@ -177,306 +63,62 @@ Her proje `docs/ROUTEMAP.md` ile durumunu takip eder (`rules/routemap-discipline
 - **Session resume**: Her yeni session'da ROUTEMAP okunur, kaldığı yerden devam edilir
 - **Template**: `templates/docs/ROUTEMAP.template.md`
 
----
+## Enforcement ve Denetim
 
-## Enforcement Hook'ları
-
-Kurallar kağıt üstünde kalmaz — bash hook'ları ile fiziksel olarak uygulanır:
-
-| Hook | Tetik | Ne Yapar |
-|------|-------|----------|
-| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse bloklar (kolon başlıktan bulunur, docs-only muaf — #99) |
-| `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Sır (AWS/PEM/JWT/URL + Anthropic/GitHub/npm/Resend/Stripe/Slack önekleri), `.env` (iç içe dahil), debug kodu, `@ts-ignore`, kilit, agentic cast; TDD'siz fix, format dışı mesaj, test zayıflatma uyarıları |
-| `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE ⇒ Gate PASSED değişmezi |
-| `hooks/session-brief.sh` | SessionStart | ROUTEMAP özeti + sıradaki iş önerisi bağlama basılır |
-
-Entegrasyon: **`.claude/settings.json`** içindeki `hooks` bloğu (paylaşılan,
-versiyonlanır). `.claude/settings.local.json` yalnızca makineye özgü izinler
-içindir ve gitignore'dadır. impeccable eklentisi ve `.impeccable/` 3.0.0'da
-kaldırıldı. **Şablonlar da aynı hook'ları taşır**: `templates/*/.claude/settings.json`
-hook'ları `~/dev-starter/hooks/`tan mutlak yolla çağırır — yeni proje ilk
-gününden denetimli doğar, kopya yok (tek kaynak).
-
----
-
-## Ecosystem Health Check
+Kurallar bash hook'larıyla fiziksel olarak uygulanır (`.claude/settings.json`,
+şablonlar `~/dev-starter/hooks/`tan mutlak yolla aynısını çağırır):
+`gate-guard` (Gate PASSED değilse commit bloklar), `quality-scan` (sır,
+`.env`, debug, kilit), `routemap-sync` (DONE ⇒ Gate PASSED), `session-brief`
+(oturum başında ROUTEMAP özeti). Engelleme yalnız exit 2; ayrıntı ve tablo
+`.claude/rules/hooks.md`.
 
 ```bash
-bash scripts/health-check.sh   # veya: npm run health
+bash scripts/health-check.sh     # ekosistem bütünlüğü (15 kategori) — her değişiklikten sonra TEMİZ
+bash scripts/test-hooks.sh       # hook davranış testleri
+bash scripts/slop-scan.sh <yol>  # AI slop taraması · npm run verify:agentic / verify:anatomy (ağ, opt-in)
+bash scripts/audit-project.sh ~/Desktop/Projects/<proje>   # canlı proje denetimi
 ```
 
-15 kategori, 130+ kontrol: agent dosyaları, kurallar, fazlar, hook'lar (davranış
-testiyle), snippet'ler, şablonlar (hook kaydı dahil), knowledge base, paket
-tutarlılığı, token ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade,
-palet dışı renk), tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy,
-motion), orkestrasyon bütünlüğü (wrapper ↔ rol ↔ protokol, komut ↔ tablo)
-ve bilgi tabanı bütünlüğü (mistakes numaraları, indeks kapsamı, satır tavanları).
-
-Agentic snippet ve şablonların **derlenip test edildiğini** kanıtlamak ayrı
-bir komuttur (ağ + `npm install` gerektirir, bu yüzden opt-in):
-
-```bash
-npm run verify:agentic
-```
-
-Geçici bir dizinde pin'li bağımlılıkları kurar, `tsc --noEmit` + `vitest run`
-çalıştırır ve `@ag-ui/client` pin'inin CopilotKit'le aynı olduğunu doğrular
-(`mistakes.md #71`). CopilotKit yükseltmesinden sonra **önce bunu çalıştır**.
-
-Açıklayıcı figür kiti (anatomy) için aynısı:
-
-```bash
-node scripts/add-figure-kit.mjs <proje> [--example]   # kiti projeye kur
-npm run verify:anatomy                                # iki şablonda build/tip/lint/test
-```
-
-anatomy `machine/bootstrap.sh` → `ANATOMY_REF` commit'ine sabitli. Yükseltme:
-SHA'yı değiştir, **önce** `verify:anatomy`, sonra commit (`mistakes.md #98`).
-
-Film stüdyosu **cinecode** (sarpstar/cinecode, MIT) aynı yoldan,
-`machine/bootstrap.sh` → `CINECODE_REF` commit'ine sabitli. MP4 teslim edilen
-kısa film, reklam ve müzik videosu onunla; sayfa içi film `motion-film`le
-(iş bölümü `machine/skills/motion-film/SKILL.md` § 1b). Yükseltme: SHA'yı
-değiştir, aradaki commit'lerde `scripts/hook.cjs`/`guard.py` farkını oku, commit.
-
-### AI Slop Taraması
-
-```bash
-bash scripts/slop-scan.sh app components   # veya: npm run slop -- <yol>
-```
-
-Tek taraflı vurgu şeridi, ölü bağlantı, `transition-all`, `font-black`, yer
-tutucu ve dolgu metni, gökkuşağı degrade, emoji, `scale(0)` gibi kalıpları
-bulur; YÜKSEK bulguda exit 1. Kurallar `rules/design-tokens.md` → AI-Slop
-Yasakları; neyi neden almadığımız `knowledge/decisions.md` → "AI Slop Taraması".
-
-### Canlı Proje Denetimi
-
-```bash
-bash scripts/audit-project.sh ~/Desktop/Projects/<proje>
-```
-
-Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
-
-**Açık kararlar:**
-
-1. ~~**Referans çelişkisi**~~ → ✅ 2026-10-03: ekosistemin görsel referansı
-   artık Açılış Zili (`signature` paleti, token mimarisi). ahmetakyapi.com
-   kendi eski paletinde kalır, dokunuldukça `signature`a yaklaşır.
-2. ~~**`gradient-text` yasağı fazla katı**~~ → ✅ 2026-08-16, yasak kaldırıldı;
-   2026-10-03'te yeni projeler için "üç yer + tek aile" kimlik kuralı geldi.
-3. **Palet istisnaları**: `onepiece-hub` ✅ çözüldü. `ramazan-vakitleri`
-   (mor+pembe+mavi) `iris`e yakın; hâlâ açık.
+**Açık kararlar** (palet istisnaları, referans çelişkisi): `knowledge/decisions.md` → "Açık Kararlar".
 
 ---
 
-## Skill Komutları
+## Komutlar
 
-| Komut | Açıklama | Dosya |
-|-------|----------|-------|
-| `/kickoff [fikir]` | Fikirden plana: pazar, yön, palet, teknoloji, MVP (strategist) | `.claude/commands/kickoff.md` |
-| `/roadmap` | Var olan projeye sıradaki işler (strategist) | `.claude/commands/roadmap.md` |
-| `/new-project [ad]` | Şablon + yer tutucular + palet/tema + belgeler + hook doğrulama | `.claude/commands/new-project.md` |
-| `/plan [adım]` | Planning fazını yürüt (P1→P6): belgeler + story'ler | `.claude/commands/plan.md` |
-| `/story [id]` | Story'yi uçtan uca işle: dağıt → Gate → commit → ROUTEMAP | `.claude/commands/story.md` |
-| `/gate [story]` | 6+1 adımlı denetim; sonuç ROUTEMAP Gate kolonuna — commit kontrolü | `.claude/commands/gate.md` |
-| `/fix [tarif]` | Bugfix protokolü: triage → failing test → fix → kayıt | `.claude/commands/fix.md` |
-| `/research [konu]` | Benzer çözümlerin araştırması (researcher) → docs/research/ | `.claude/commands/research.md` |
-| `/status` | Kaldığın yer + sıradaki en değerli 3 iş | `.claude/commands/status.md` |
-| `/retro [kapsam]` | Dersleri onayla bilgi tabanına işle | `.claude/commands/retro.md` |
-| `/evolve [odak]` | Ekosistemin kendi gelişim turu: sağlık + tazelik + dış tarama | `.claude/commands/evolve.md` |
-| `/theme [palet\|proje]` | Palet ya da referans tema uygula (Tailwind v4) | `.claude/commands/theme.md` |
-| `/snippet [tip]` | Hazır parçayı projeye uyarla | `.claude/commands/snippet.md` |
-| `/check` | Sağlık: build, tip, lint, test, tech stack uyumu, token, güvenlik | `.claude/commands/check.md` |
-| `/reference <bölüm> [görsel\|url]` | Gerçek sitenin bölümünü referans al, yapısını kendi token'larınla kur (galeri: `knowledge/design-references.md`) | `.claude/commands/reference.md` |
-| `/review-ui` | UI incelemesi: token, kimlik, iki tema, düzen, a11y, hareket | `.claude/commands/review-ui.md` |
-| `/deploy` | Vercel deployment checklist | `.claude/commands/deploy.md` |
-| `/release [seviye]` | Versiyon artırma + changelog | `.claude/commands/release.md` |
-| `/agentic [konu]` | Agentic UI karar ağacı — tool, kontrol, state, dsl, test, kurulum, denetle | `.claude/commands/agentic.md` |
-| `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli, yalnız bu depoda) | `.claude/skills/clone-website/SKILL.md` |
+| Komut | Açıklama |
+|-------|----------|
+| `/kickoff [fikir]` | Fikirden plana: pazar, yön, palet, teknoloji, MVP (strategist) |
+| `/roadmap` | Var olan projeye sıradaki işler (strategist) |
+| `/new-project [ad]` | Şablon + yer tutucular + palet/tema + belgeler + hook doğrulama |
+| `/plan [adım]` | Planning fazını yürüt (P1→P6): belgeler + story'ler |
+| `/story [id]` | Story'yi uçtan uca işle: dağıt → Gate → commit → ROUTEMAP |
+| `/gate [story]` | 6+1 adımlı denetim; sonuç ROUTEMAP Gate kolonuna — commit kontrolü |
+| `/fix [tarif]` | Bugfix protokolü: triage → failing test → fix → kayıt |
+| `/research [konu]` | Benzer çözümlerin araştırması (researcher) → docs/research/ |
+| `/status` | Kaldığın yer + sıradaki en değerli 3 iş |
+| `/retro [kapsam]` | Dersleri onayla bilgi tabanına işle |
+| `/evolve [odak]` | Ekosistemin kendi gelişim turu: sağlık + tazelik + dış tarama |
+| `/theme [palet\|proje]` | Palet ya da referans tema uygula (Tailwind v4) |
+| `/snippet [tip]` | Hazır parçayı projeye uyarla |
+| `/check` | Sağlık: build, tip, lint, test, tech stack uyumu, token, güvenlik |
+| `/reference <bölüm> [görsel\|url]` | Gerçek sitenin bölümünü referans al, yapısını kendi token'larınla kur (galeri: `knowledge/design-references.md`) |
+| `/review-ui` | UI incelemesi: token, kimlik, iki tema, düzen, a11y, hareket |
+| `/deploy` | Vercel deployment checklist |
+| `/release [seviye]` | Versiyon artırma + changelog |
+| `/agentic [konu]` | Agentic UI karar ağacı — tool, kontrol, state, dsl, test, kurulum, denetle |
+| `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli; skill, yalnız bu depoda) |
 
-> **Tek kaynak: bu repo.** `machine/bootstrap.sh` her komutu
-> `~/.claude/commands/`a symlink'ler; global kopya yoktur, **her projede bu
-> sürümler çalışır**. Bu yüzden komutların içindeki yollar `~/dev-starter/...`
-> biçiminde mutlaktır — göreli yol başka bir projeden çağrılınca bulunamaz.
+Dosyalar `.claude/commands/<ad>.md` (`/clone-website`: `.claude/skills/clone-website/SKILL.md`).
+**Tek kaynak bu repo**: bootstrap her komutu `~/.claude/commands/`a symlink'ler,
+her projede bu sürümler çalışır; bu yüzden komut içindeki yollar `~/dev-starter/...`
+biçiminde mutlaktır. Komut ↔ skill kararı ve wrapper sözleşmesi: `.claude/rules/orchestration.md`.
 
-### Kayıtlı Subagent'lar
-
-Karar rolleri (BA, UI, AG) ana oturumun **üstlendiği rol tanımlarıdır** —
-bağlamın tamamını görmeleri gerekir. Uygulayıcı ve denetleyici dokuz rol,
-izolasyondan gerçekten fayda gördüğü için kayıtlı subagent'tır ve bootstrap
-ile `~/.claude/agents/`a symlink'lenir (her projede kullanılabilir). Dağıtım
-kuralları: `agents/AGENT_PROTOCOL.md → Orkestrasyon` (Görev Tanımı, efor
-ölçekleme, referansla aktarım):
-
-| Subagent | wrapper | Rol tanımı |
-|----------|-------------|------------|
-| `strategist` | `.claude/agents/strategist.md` | `agents/strategist-agent.md` |
-| `gate` | `.claude/agents/gate.md` | `agents/gate-agent.md` |
-| `deploy` | `.claude/agents/deploy.md` | `agents/deploy-agent.md` |
-| `design-reviewer` | `.claude/agents/design-reviewer.md` | `agents/design-reviewer-agent.md` |
-| `content-editor` | `.claude/agents/content-editor.md` | `agents/content-editor-agent.md` |
-| `frontend` | `.claude/agents/frontend.md` | `agents/frontend-agent.md` |
-| `backend` | `.claude/agents/backend.md` | `agents/backend-agent.md` |
-| `qa` | `.claude/agents/qa.md` | `agents/qa-agent.md` |
-| `researcher` | `.claude/agents/researcher.md` | `agents/researcher-agent.md` |
-
-wrapper'lar bilerek incedir; rol tanımını kopyalamazlar ve onu
-`~/dev-starter/agents/...` mutlak yoluyla okurlar. İki kaynak olursa biri
-sessizce bayatlar — bu denetimin en sık bulduğu hata sınıfı buydu.
-
----
-
-## Context Curation
-
-Her agent sadece ihtiyacı olan bilgiyi alır (`rules/context-curation.md`):
-
-| Agent | Seviye | Ne Okur |
-|-------|--------|---------|
-| BA | FULL | Tüm dokümanlar |
-| UI | FOCUSED | Tema + ekranlar |
-| FE | TASK-SPECIFIC | Story + ilgili dosyalar |
-| BE | TASK-SPECIFIC | Story + schema + API |
-| QA | TASK-SPECIFIC | Story + tests/ + bugfix-protocol |
-| RS | TASK-SPECIFIC | Soru + tech-radar + decisions |
-| GATE | REVIEW | Story + diff + rules |
-| DP | MINIMAL | Config + env |
-
-Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet döner
+**Kayıtlı subagent'lar** (9, `.claude/agents/` ince wrapper → `agents/<ad>-agent.md`):
+`strategist`, `gate`, `deploy`, `design-reviewer`, `content-editor`, `frontend`,
+`backend`, `qa`, `researcher`. Karar rolleri (BA, UI, AG) ana oturumun üstlendiği
+rol tanımlarıdır. Dağıtım: `agents/AGENT_PROTOCOL.md → Orkestrasyon`; subagent
+çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet döner
 (`rules/context-curation.md → Referansla Aktar`).
-
----
-
-## Hızlı Başlangıç
-
-### Yeni Proje
-
-```text
-/new-project [proje-adı]
-```
-
-### Fikirden Başla
-
-```text
-/kickoff "ergoterapistler için seans takip uygulaması"
-```
-
-### Günlük Döngü
-
-```text
-/status                → kaldığın yer + sıradaki 3 iş
-/story STORY-004       → story'yi uçtan uca işle (dağıt → gate → commit)
-/gate                  → commit'e izin ver
-/fix "panel boş geliyor"  → TDD bugfix
-/research "takvim senkronu" → benzer çözümler + öneri
-/retro                 → dersleri bilgi tabanına işle
-```
-
-### Palet ya da Tema Uygula
-
-```text
-/theme signature
-/theme verdant
-/theme acilis-zili
-```
-
-### Deploy
-
-```text
-/deploy
-```
-
-### Referanstan Kur
-
-```text
-/reference navbar                       → uygun ücretsiz galeriyi öner
-/reference cta ~/Desktop/cta.png        → ekran görüntüsünün yapısını kendi renklerinle kur
-```
-
-### UI İnceleme
-
-```text
-/review-ui [dosya veya dizin]
-```
-
-### Hızlı Bileşen Üret
-
-```text
-/snippet reveal
-/snippet theme-toggle
-/snippet rolling-number
-/snippet modal
-/snippet form
-/snippet drawer
-/snippet skeleton
-/snippet toast
-/snippet confirm
-/snippet agent-tool
-/snippet action-card
-/snippet agent-approval
-/snippet agent-feed
-/snippet live-preview   → yönetim paneline canlı önizleme (rules/live-preview.md)
-```
-
-### Website Klonla
-
-```text
-/clone-website https://example.com
-```
-
-### Sağlık Kontrolü
-
-```text
-/check
-```
-
-### Release
-
-```text
-/release patch
-/release minor
-/release major
-```
-
----
-
-## Paket Kullanımı
-
-Yeni bir Next.js projesinde (Tailwind v4):
-
-```bash
-npm install @ahmetakyapi/theme @ahmetakyapi/ui motion
-```
-
-```css
-/* app/globals.css — tailwind.config.ts YOK */
-@import "tailwindcss";
-@import "@ahmetakyapi/theme/theme.css";   /* sistem + palet + @theme inline */
-@import "@ahmetakyapi/theme/css";         /* isteğe bağlı: .surface, .glass, .display-ink, .app-bg */
-@import "@ahmetakyapi/ui/source.css";     /* ui sınıflarını taratır — Tailwind node_modules'u taramaz */
-```
-
-```tsx
-// app/layout.tsx — palet ve tema html'de
-<html lang="tr" data-theme={theme} data-palette="signature" suppressHydrationWarning>
-```
-
-```ts
-// Kökte <LazyMotion features={domAnimation} strict> ŞART — bileşenler m.* kullanır
-import { Surface, Button, Chip, CustomCursor } from '@ahmetakyapi/ui'
-import { useSpotlight, useMagnetic, useCardTilt, useFinePointer } from '@ahmetakyapi/ui'
-// Sabitler ve cn() /core'dan: 'use client' taşımaz, sunucu bileşeninde de gerçek değer
-import { EASE, DUR, SPRING, STAGGER, fadeUp, fadeIn, cn } from '@ahmetakyapi/ui/core'
-```
-
-Birincil eylem `bg-cta text-on-brand` (her durak AA); `bg-brand` yalnızca
-marka karosu, üstüne metin yazılmaz. Gölge sınıfları şablonlarla ortak:
-`shadow-raised` · `shadow-floating` · `shadow-modal`.
-
-v3 preset'i (`@ahmetakyapi/theme/tailwind`) 3.0.0'da kaldırıldı. Ayrıntı:
-`guides/02-design-tokens.md`, `guides/00-brand-identity.md`.
-
----
 
 ## Kurallar
 
@@ -516,11 +158,12 @@ Tüm agent'lar `rules/` altındaki kurallara uyar:
 - **Yeni subagent eklenince**: `.claude/agents/[ad].md` (ince) + `agents/[ad]-agent.md`
 - **Yeni snippet eklenince**: `snippets/` altında, `guides/05-components.md` ya da `10-component-library.md` kataloğuna
 - **İki Next şablonuna ortak dosya eklenince**: `scripts/health-check.sh` → `SHARED_TEMPLATE_FILES` (bayt bayt aynılık `cmp` ile denetlenir; biri düzelip öteki bayatlamasın)
-- **Global kural değişince**: `machine/CLAUDE.md` (symlink hedefi)
+- **Global kural değişince**: `machine/CLAUDE.md` (symlink hedefi); yalnız belirli dosyalara aitse `machine/rules/` (`paths:` frontmatter'ı)
+- **Bu dosyaya bölüm eklenecekse**: önce "her oturumda gerekli mi?" — değilse `.claude/rules/<konu>.md` (`paths:`) ya da `docs/ECOSYSTEM.md`
 - **Katkı rehberi**: `CONTRIBUTING.md`
 
 ---
 
 ## Global Kurallar
 
-Bakınız: `machine/CLAUDE.md` (= `~/.claude/CLAUDE.md`)
+Bakınız: `machine/CLAUDE.md` (= `~/.claude/CLAUDE.md`) ve `machine/rules/` (= `~/.claude/rules/dev-starter/`)

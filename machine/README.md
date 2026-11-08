@@ -7,7 +7,8 @@ yarım saatte aynı çalışma düzenine dönmek ve iki makine arasında kuralla
 
 | Dosya | Ne |
 |-------|----|
-| `CLAUDE.md` | Global kurallar; `~/.claude/CLAUDE.md` buna symlink'lenir. **Tek kaynak burası** |
+| `CLAUDE.md` | Global kurallar; `~/.claude/CLAUDE.md` buna symlink'lenir. **Tek kaynak burası**. Her projede, her oturumda yüklenir: ~200 satır tavanı, yalnız her projede gereken kural |
+| `rules/` | Yol kapsamlı global kurallar (`paths:` frontmatter'ı); `~/.claude/rules/dev-starter/` buna symlink'lenir. Eşleşen dosya okununca yüklenir (React/Next, veri/env, görsel dil, tasarım skill'leri, canlı önizleme) |
 | `bootstrap.sh` | Kurulum script'i; tekrar çalıştırmak güvenli |
 | `skills/` | Depoda taşınan skill'ler (bugün: `motion-design`, `motion-film`) |
 
@@ -27,6 +28,12 @@ Sırayla:
    `~/dev-starter` ona symlink'lenir. Komutlar ve rehberler bu yolu mutlak
    olarak kullanır.
 3. **Global `CLAUDE.md`** — `~/.claude/CLAUDE.md` → `machine/CLAUDE.md`.
+   **Yol kapsamlı kurallar** — `~/.claude/rules/dev-starter/` → `machine/rules/`
+   (tek klasör symlink'i; kendi kural dosyaların `~/.claude/rules/` altında
+   yanında kalır). **Okuma izni** — `~/.claude/settings.json` →
+   `permissions.allow`e `Read(~/dev-starter/**)` eklenir (depo başka yerdeyse
+   gerçek yolu da); başka hiçbir izne dokunulmaz, dosya önce yedeklenir.
+   Neden: subagent wrapper'ları rol dosyasını proje dışından okur.
 4. **Komutlar** — `.claude/commands/*.md` her biri `~/.claude/commands/`a
    symlink. `/kickoff`, `/new-project`, `/theme`, `/check`, `/deploy`... her
    projede bu sürümler çalışır.
@@ -106,7 +113,7 @@ temizi.
 
 | Taşınmayan | Neden | Yeni makinede |
 |------------|-------|---------------|
-| `~/.claude/settings.json` izin listesi | Makineye özgü mutlak yollar taşıyor ve depo herkese açık | İlk oturumlarda onaylandıkça yeniden birikir |
+| `~/.claude/settings.json` izin listesi | Makineye özgü mutlak yollar taşıyor ve depo herkese açık | İlk oturumlarda onaylandıkça yeniden birikir. Tek istisna: bootstrap `Read(~/dev-starter/**)` ekler (2026-11-08) |
 | claude.ai'den eşitlenen eklenti ve skill'ler | Hesaba bağlı; aynı hesapla `/login` olunca kendiliğinden gelir | Bir şey yapmaya gerek yok |
 | MCP bağlantılarının yetkileri (Gmail, Drive, GitHub...) | OAuth belirteçleri makineye ve hesaba özgü | İlk kullanımda `/mcp` ya da claude.ai bağlayıcı ayarları |
 | `~/.claude/projects/*/memory` | Oturum hafızası makineye özgü, kişisel içerik taşıyabilir | Kurallar zaten `CLAUDE.md`lerde; hafıza yeniden birikir |
@@ -186,4 +193,7 @@ brew install --cask cmux
 - Yeni bir subagent: `.claude/agents/<ad>.md` (ince wrapper) +
   `agents/<ad>-agent.md` (rol tanımı).
 - Yeni bir skill'i depoda taşımak: `machine/skills/<ad>/` altına koy.
+- Yeni global kural: her projede her işte gerekiyorsa `CLAUDE.md`ye; yalnız
+  belirli dosyalara aitse `machine/rules/<konu>.md` (`paths:` YAML listesi).
+  Klasör symlink'li olduğu için bootstrap'ı yeniden koşmaya gerek yok.
 - taste-skill listesine ekleme: `TASTE_SKILLS` değişkeni ve bu tablo birlikte.

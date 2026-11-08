@@ -6,7 +6,9 @@ Bu dosya tüm agent'ların nasıl iletişim kurduğunu tanımlar. İki tür agen
   ile `~/.claude/agents/`a symlink'lenir): `strategist`, `gate`, `deploy`,
   `design-reviewer`, `content-editor`, `frontend`, `backend`, `qa`,
   `researcher`. Kendi context penceresinde, kısıtlı tool setiyle çalışır;
-  paralel dağıtılabilir.
+  paralel dağıtılabilir. wrapper rol dosyasını `~/dev-starter/agents/`tan
+  ilk turda okur; proje dışı bu yolun izni bootstrap'tan gelir
+  (`Read(~/dev-starter/**)`, `.claude/rules/orchestration.md`).
 - **Ana oturum rolü**: BA, UI ve AG — ana oturum ilgili rol dosyasını okur ve
   o rolü üstlenir. BA aynı zamanda **orkestratördür** (aşağıda).
 
@@ -302,7 +304,8 @@ Kuralların kağıt üstünde kalmaması için bash hook'ları:
 | `hooks/session-brief.sh` | SessionStart | ROUTEMAP özetini ve sıradaki iş önerisini bağlama basar |
 
 Kayıt yeri: `.claude/settings.json` (paylaşılan, versiyonlanır). impeccable
-3.0.0'da kaldırıldı.
+3.0.0'da kaldırıldı. Commit hook'ları handler düzeyinde `if` ile süzülür, engelleme
+yalnız exit 2 (sözleşme: `.claude/rules/hooks.md`).
 
 Hook'un çalıştığını varsayma — `bash scripts/health-check.sh` ile doğrula.
 

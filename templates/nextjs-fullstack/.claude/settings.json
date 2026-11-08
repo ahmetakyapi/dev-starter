@@ -1,5 +1,13 @@
 {
-  "$comment": "Enforcement hook'lari ekosistemden calisir — tek kaynak ~/dev-starter/hooks/ (komutlardaki ~/dev-starter/... mutlak yol kuralinin aynisi; kopyalamak iki kaynak yaratir, biri sessizce bayatlar). Makineye ozgu izinler .claude/settings.local.json'a (gitignore'lu).",
+  "$comment": "Enforcement hook'lari ekosistemden calisir — tek kaynak ~/dev-starter/hooks/ (komutlardaki ~/dev-starter/... mutlak yol kuralinin aynisi; kopyalamak iki kaynak yaratir, biri sessizce bayatlar). Makineye ozgu izinler .claude/settings.local.json'a (gitignore'lu). Commit hook'lari `if: Bash(git *)` ile suzulur, her Bash cagrisinda iki surec acilmaz (`git -C yol commit` de yakalanir); script'ler kendi commit suzgecini korur. Sir dosyalari (.env, .env.local, .env.*.local, .env.production) Read araciyla okunmaz; .env.example bilerek acik. Bash kurallari metin esler, guvenlik siniri degildir. Ayrinti: ~/dev-starter/.claude/rules/hooks.md.",
+  "permissions": {
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.production)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -7,10 +15,12 @@
         "hooks": [
           {
             "type": "command",
+            "if": "Bash(git *)",
             "command": "bash ~/dev-starter/hooks/gate-guard.sh"
           },
           {
             "type": "command",
+            "if": "Bash(git *)",
             "command": "bash ~/dev-starter/hooks/quality-scan.sh"
           }
         ]

@@ -317,11 +317,11 @@ Her push'ta CI şunları çalıştırır; biri başarısızsa merge yapılmaz.
 ## Yeni Makine
 
 [`machine/bootstrap.sh`](machine/bootstrap.sh) tekrar tekrar çalıştırılabilen bir
-kurulum script'i: global `CLAUDE.md`'yi, komutları, agent'ları ve depodaki
-skill'leri `~/.claude`'a **symlink'ler** (kopyalamaz; tek kaynak burada kalır),
+kurulum script'i: global `CLAUDE.md`'yi, yol kapsamlı global kuralları (`machine/rules/`),
+komutları, agent'ları ve depodaki skill'leri `~/.claude`'a **symlink'ler** (kopyalamaz; tek kaynak burada kalır),
 kullanılan taste-skill parçalarını ve anatomy figür kitini kurar, üzerine yazdığı her şeyi önce yedekler.
 `--dry-run` ile ne yapacağını önceden gösterir. İzin listesi bilinçli olarak
-taşınmaz; claude.ai eklentileri girişle kendiliğinden gelir.
+taşınmaz (tek istisna: subagent'ların rol dosyasını okuyabilmesi için `Read(~/dev-starter/**)`); claude.ai eklentileri girişle kendiliğinden gelir.
 → [`machine/README.md`](machine/README.md)
 
 ---
@@ -353,7 +353,7 @@ dev-starter/
 ├── phases/            planlama · geliştirme · uçtan uca test ve son düzeltmeler · yayın ve bakım
 ├── hooks/             gate-guard · quality-scan · routemap-sync · session-brief
 ├── scripts/           health-check · audit-project · slop-scan · verify-* · build-readme-assets
-└── machine/           bootstrap.sh · global CLAUDE.md · taşınan skill'ler
+└── machine/           bootstrap.sh · global CLAUDE.md + rules/ · taşınan skill'ler
 ```
 
 </details>

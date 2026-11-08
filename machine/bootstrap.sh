@@ -8,6 +8,9 @@
 # Kapsam dışı (bilinçli):
 # - ~/.claude/settings.json izin listesi: makineye özgü yollar taşıyor ve depo
 #   herkese açık. Yeni makinede izinler ilk oturumlarda yeniden birikir.
+#   Değişti (2026-11-08): TEK istisna `Read(~/dev-starter/**)` — subagent
+#   wrapper'ları rol dosyasını oradan okur; bootstrap yalnız bu kuralı ekler,
+#   listenin geri kalanına dokunmaz (aşağıda "Okuma izni").
 # - claude.ai'den eşitlenen eklenti/skill'ler (finance, data, design-dna,
 #   scroll-craft ...): aynı hesapla giriş yapınca kendiliğinden gelirler.
 set -euo pipefail
@@ -90,6 +93,48 @@ echo "▸ ~/dev-starter bağlantısı"
 
 echo "▸ Global CLAUDE.md"
 link "$HERE/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
+
+echo "▸ Yol kapsamlı global kurallar (tek kaynak: machine/rules)"
+# Global CLAUDE.md her projede, her oturumda yüklenir; yalnız belirli
+# dosyalara ait kurallar `paths:` frontmatter'ıyla burada durur ve eşleşen
+# dosya okununca yüklenir. Klasör TEK symlink: Claude Code ~/.claude/rules/
+# altını özyinelemeli tarar, kullanıcının kendi kural dosyaları yanında kalır
+# ve yeni kural dosyası bootstrap'ı yeniden koşmadan gelir (8 Kasım 2026,
+# knowledge/decisions.md → "Bağlam Dosyaları").
+link "$HERE/rules" "$CLAUDE_DIR/rules/dev-starter"
+
+echo "▸ Okuma izni: ~/dev-starter (subagent wrapper'ları rol dosyasını oradan okur)"
+# Kayıtlı subagent'lar her projeden çağrılır ve rol dosyasını
+# ~/dev-starter/agents/... mutlak yolundan okur. Bu yol projenin çalışma
+# dizini DIŞINDA: izin kuralı yoksa ilk Read izin istemine/redde düşer ve
+# alt ajan bir tur yakar. Yalnız bu kural(lar) eklenir; kullanıcının diğer
+# izinlerine dokunulmaz (ayrıntı yukarıda "Kapsam dışı"). Depo başka yerdeyse
+# symlink çözülmüş gerçek yol da eklenir (`//` = mutlak yol sözdizimi).
+READ_RULES=("Read(~/dev-starter/**)")
+[[ "$REPO" != "$HOME/dev-starter" ]] && READ_RULES+=("Read(/$REPO/**)")
+SETTINGS="$CLAUDE_DIR/settings.json"
+if (( DRY )); then
+  echo "  [dry] $SETTINGS → permissions.allow += ${READ_RULES[*]}"
+else
+  mkdir -p "$CLAUDE_DIR"
+  [[ -f "$SETTINGS" ]] && { mkdir -p "$BACKUP"; cp "$SETTINGS" "$BACKUP/settings.json"; }
+  node - "$SETTINGS" "${READ_RULES[@]}" <<'JS' || echo "  ⚠️  $SETTINGS güncellenemedi; izni elle ekle: ${READ_RULES[*]}"
+const fs = require('fs')
+const [file, ...rules] = process.argv.slice(2)
+let s = {}
+if (fs.existsSync(file)) {
+  try { s = JSON.parse(fs.readFileSync(file, 'utf8')) }
+  catch { console.error(`  ⚠️  ${file} geçerli JSON değil; dokunulmadı`); process.exit(1) }
+}
+s.permissions ??= {}
+s.permissions.allow ??= []
+const added = rules.filter((r) => !s.permissions.allow.includes(r))
+if (added.length === 0) { console.log(`  = ${rules.join(', ')} zaten izinli`); process.exit(0) }
+s.permissions.allow.push(...added)
+fs.writeFileSync(file, JSON.stringify(s, null, 2) + '\n')
+console.log(`  + permissions.allow: ${added.join(', ')}`)
+JS
+fi
 
 echo "▸ Komutlar (tek kaynak: .claude/commands)"
 for f in "$REPO"/.claude/commands/*.md; do

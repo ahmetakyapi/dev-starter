@@ -34,6 +34,17 @@ olmayan aktif story varken commit'i bloklar (`.claude/settings.json` →
 `~/dev-starter/hooks/`). Yukarıdaki komutlar Gate'in ön koşuludur, yerine
 geçmez; yalnız doküman değiştiren commit muaftır.
 
+## Yol kapsamlı kurallar (`.claude/rules/`)
+
+Bu dosya her oturumda yüklenir ve ~200 satırın altında kalır. Belirli
+dosyalara ait kurallar `.claude/rules/*.md` içinde, `paths:` frontmatter'ı
+eşleşen dosya okununca yüklenir (Claude Code resmî önerisi):
+- `tokens.md` (kimlik, palet, token: `*.tsx`, `*.css`)
+- `motion.md` (hareket: `*.tsx`, `lib/motion.ts`, `hooks/`)
+- `scene.md` (R3F sahnesi: `components/scene/`, `components/heroes/`)
+- `figures.md` (anatomy figür kiti: `components/iso/`, `components/figures/`)
+Yeni bir kural yalnız belirli dizinler içinse buraya değil oraya yazılır.
+
 ## Tech Stack
 
 Next 16 (App Router, Turbopack) · React 19.2 · TypeScript strict ·
@@ -97,81 +108,16 @@ kez kullanma. Ritim yoğun / ferah sırayla, vurgu koyu zemin değil TON farkı.
 - `globals.css` sistem dosyasıdır (nextjs-fullstack ile birebir); landing'e
   özgü kurallar `app/landing.css`te, `@layer components` içinde.
 
-## Parçacık sahnesi (R3F)
+## Tema ve token
 
-`components/scene/`. `SceneLayer` kapı: sahne yalnızca hassas işaretçi, en az
-768 piksel ve hareket serbestken, tarayıcı boşa çıkınca İNDİRİLİR
-(`dynamic(..., { ssr: false })`; ilk tıklamanın önüne uzun görev düşmesin).
-Telefonda ve hareketi azaltanda yalnızca `.hero-glow` CSS ışıması kalır.
-WebGL açılamazsa ya da parça inmezse `SceneBoundary` yalnızca sahneyi
-düşürür; sayfa hata ekranına gitmez, ışıma kalır.
-Renk `--primary`den okunur, tema değişince yenilenir. Hero ekrandan çıkınca
-ya da sekme arka plandayken çizim durur. İstemiyorsan `hero.scene: false`;
-tamamen çıkarmak için klasörü, iki paketi ve `HeroShell`deki satırı sil.
+Kimlik, palet ve token kuralları `.claude/rules/tokens.md`de (bileşen/stil dosyası okununca yüklenir); hareket kuralları `.claude/rules/motion.md`de. Özet: hardcoded renk ve `dark:` yok, degrade üç yerde, derinlik ton farkıyla, import `motion/react` + `m.*`.
 
-## Kimlik ortak, palet projeye göre
-
-Token adları, ton farkıyla derinlik, degrade disiplini, hareket eğrisi ve
-ölçekler KİMLİKTİR, her projede aynı kalır. Renk ailesi PALETTİR:
-`<html data-palette>` (`lib/theme.ts` → `PALETTE`, şablonda `signature`).
-Palet değiştirmek `globals.css`teki iki `signature` bloğunu ezmek demek;
-sistem katmanına dokunulmaz ve yeni palet `tests/palette.test.ts`ten geçer.
-Hazır alternatifler (`verdant`, `ember`, `iris`) `@ahmetakyapi/theme`te.
-
-## Token kuralları
-
-Tokenlar `app/globals.css` içinde, iki katman:
-
-1. Ham rol değişkenleri: sistem blokları (tema başına; gölge, durum
-   renkleri, odak halkası ve paletten türeyenler) ve palet blokları
-   (`--page-bg`, `--text-strong`, `--line`, `--primary*`, degradeler).
-   Renk değeri YALNIZCA burada yazılır.
-2. `@theme inline` onları sınıflara bağlar: `bg-page`, `bg-surface`,
-   `text-strong`, `text-body`, `text-muted`, `border-line`, `bg-primary`,
-   `text-on-primary`, `bg-primary-wash`, `text-primary-ink`, `text-danger`.
-
-- **Hardcoded renk yok, `dark:` varyantı yok.** Tema `data-theme` ile döner;
-  aynı sınıf iki temada doğru rengi alır. Tailwind'in hazır paleti, punto,
-  radius ve gölge ölçekleri temizlendi: `bg-red-500` ya da `text-sm` derlenmez.
-- **Punto adları rol taşır:** `text-micro small base read lead title heading
-  display hero`. Gövde `text-read` (renk `--text-body` ile çakışmasın diye).
-  Yeni basamak eklersen `lib/utils.ts` → `TEXT_SIZES`e de ekle, yoksa
-  `cn("text-small", "text-strong")` puntoyu siler.
-- **Degrade yalnızca üç yerde:** kısa display başlık (`.display-ink`,
-  `PageHeader ink`), ekranın TEK birincil eylemi (`Button variant="brand"`)
-  ve marka karosu (`bg-brand`). Veri yüzeyi ve gövde metni degrade taşımaz.
-  `.display-ink` içindeki çocuğa opacity/transform verme: metni kaybolur.
-- **Derinlik ton farkıyla**, gölgeyle değil. Gölge (`shadow-raised`,
-  `shadow-floating`, `shadow-modal`) yalnızca gerçekten yüzen katmanda.
-  **Radius:** `rounded-sm md lg xl` (+ `rounded-full`).
-- **Yüzey:** `surface` varsayılan (ton farkı + hairline). `glass` isteğe bağlı,
-  yalnızca arkasında hareket eden içerik varsa. `app-bg` köşe ışımaları.
-  `edge-lit` üstten ışıklı kenar (panel, vitrin kartı; tekrar eden satıra
-  değil). Giriş alanı `shadow-well` ile içe oyulur, odakta `shadow-focus`
-  halesi 2 px çizginin yanına gelir. Gölge taşıyan karo ayrıca `border` almaz.
 - Tema çerezde, sayfa yine statik (`○`): layout varsayılanı basar,
   `<head>`deki küçük script (`lib/theme.ts` → `THEME_SCRIPT`) ilk boyamadan
   önce çerezdeki temayı ve `theme-color`ı yazar (guides/03 § 2b). Düğme
   çerezi istemcide yazar. Varsayılan açık, next-themes yok, FOUC yok.
   Layout ya da sayfa `cookies()`/`headers()` okursa her ziyaret sunucu
   çizimine döner (`ƒ`); build çıktısında `○ /` kalmalı.
-- CSS değişkeni okuyamayan yerler (OG görseli, `global-error`, manifest,
-  viewport rengi) değeri sabit yazar ve kaynağını yorumda söyler.
-
-## Hareket kuralları
-
-- Import `motion/react`; `framer-motion` YOK. Kök `MotionProvider` →
-  `LazyMotion strict` + `MotionConfig reducedMotion="user"`. Bileşende
-  `m.div` yazılır, `motion.div` strict modda hata verir.
-- Eğri ve süreler `lib/motion.ts` (`EASE`, `DUR`, `SPRING`, `STAGGER`,
-  `fadeUp`...). CSS karşılığı `--ease-brand`; her `transition-*` onu
-  kendiliğinden alır.
-- **`Reveal`de hareketi azaltan kullanıcı için `initial={false}` YAZMA**:
-  sunucu HTML'i `opacity: 0` gelir ve içerik görünmez kalır. `initial`
-  hedefini değiştir. Kahraman başlığı ve LCP öğesi Reveal'e sarılmaz.
-- Sonradan değişen "hareketi azalt" tercihi için `useMotionPreference`.
-- Yalnızca `transform` ve `opacity` animasyonu. Nedeni tek cümleyle
-  yazılamayan hareket eklenmez.
 
 ## Yazım: Title Case
 
@@ -199,23 +145,9 @@ ve `SITE_INDEXABLE=false` kopyası dizine girmez. `NEXT_PUBLIC_SITE_URL`
 
 ## Açıklayıcı figür (anatomy, isteğe bağlı)
 
-Ürünün nasıl çalıştığını kutu ve okla değil, çalışan bir makineyle anlatan
-izometrik SVG figür. Kit şablonda YOK, tek komutla gelir:
+Kit şablonda YOK: `node ~/dev-starter/scripts/add-figure-kit.mjs .` (`--example`, `--lathe`). Kurallar `.claude/rules/figures.md`.
 
-```
-node ~/dev-starter/scripts/add-figure-kit.mjs .            # components/iso + CSS importları
-node ~/dev-starter/scripts/add-figure-kit.mjs . --example  # + çalışan örnek (test-rig)
-node ~/dev-starter/scripts/add-figure-kit.mjs . --lathe    # + döner parçalar (çan, kubbe, küre)
-```
-
-- Şablon hazır: `<html class="iso">` (kit `.iso[data-theme="light"]` ile
-  açık temaya geçer, ThemeToggle figürü de çevirir) ve `components/iso/**`,
-  `components/figures/**` için ESLint ayarı. Figür kare başına ref'e yazar;
-  react-hooks 7 bunu hata sayardı (`~/dev-starter/knowledge/mistakes.md #98`).
-- Figürü anatomy skill'i yazar: `components/figures/<ad>/` (geometri saf `.ts`,
-  statik çizim sunucu bileşeni, tek `"use client"` canlı bileşen).
-- `components/iso/` elle düzenlenmez; projeye özgü stil `bridge.css`e.
-- React Compiler açılırsa figürün canlı bileşenine `"use no memo"`.
+Parçacık sahnesi (R3F, `components/scene/`) isteğe bağlı: istemiyorsan `hero.scene: false`; ayrıntı `.claude/rules/scene.md`.
 
 ## Next 16 tuzakları
 

@@ -393,6 +393,11 @@ harici orkestrasyon çatısı (claude-flow tarzı SQLite hive-mind).
 zorlarsa ya da görev tanımı/teslim disiplini elle taşınamaz hale gelirse — o zaman
 durum deposu yapılandırılmış dosyaya (JSON) taşınır.
 
+> **Değişti (2026-11-08):** wrapper deseni korundu; bootstrap kullanıcı
+> ayarına `Read(~/dev-starter/**)` ekliyor, wrapper'lar rol dosyasını ilk
+> turda paralel okuyor, frontmatter'a `model`/`color`/`disallowedTools`
+> geldi. Gerekçe: aşağıda "Bağlam Dosyaları".
+
 **Bilinçli ertelenenler (2026-10-14):** şablonlara Playwright E2E iskeleti,
 auth dikey dilimi (giriş sayfası + korunan rota), `scripts/seed.ts`, e-posta
 katmanı (Resend), Upstash rate-limit adaptörü, Lighthouse CI. Hepsi şablon
@@ -419,7 +424,7 @@ skills` tedarik zinciri pin'i. Hook'ların her Bash çağrısında fork edilmesi
 *Yeni bir teknoloji benimsendiğinde bu dosya güncellenir. Eski karar silinmez;
 altına "Değişti (tarih)" başlığıyla yenisi ve gerekçesi yazılır.*
 
-*Son güncelleme: 2026-10-20*
+*Son güncelleme: 2026-11-08*
 
 ---
 
@@ -710,3 +715,162 @@ health-check `CINECODE_REF`'i denetler.
 **Marka filmleri:** projenin film kimliği belgesiyle başlar (Açılış Zili
 `docs/film-kimligi.md`); cinecode'un "varsayılan font/palet yok, kartta
 gerekçesi olsun" kuralına gerekçeyi o belge verir. Mod ve kapılar değişmez.
+
+## Bağlam Dosyaları — Kısa CLAUDE.md, Yol Kapsamlı Kurallar, Wrapper İzni (2026-11-08)
+
+**Karar:** Her oturumda yüklenen dosyalar (kök `CLAUDE.md`, global
+`machine/CLAUDE.md` = `~/.claude/CLAUDE.md`, iki Next şablonunun
+`CLAUDE.md`si) ~200 satırın altına indi. Yalnız belirli dosyalara ait
+kurallar `paths:` frontmatter'lı kural dosyalarına taşındı; eşleşen dosya
+okununca yüklenirler. Uzun harita ve örnekler `docs/ECOSYSTEM.md`de
+(otomatik yüklenmez). Hiçbir kural silinmedi; her taşınan bölüm yeni
+yerinde bir "nereden geldi" notu taşır.
+
+**Neden:** Claude Code'un güncel resmî önerisi (code.claude.com/docs, 8
+Kasım 2026'da doğrulandı): CLAUDE.md dosya başına ~200 satır; uzun dosya
+bağlamı yer ve uyumu düşürür. `@path` içe aktarma bağlamı AZALTMAZ
+(başlangıçta yüklenir), bu yüzden kullanılmadı. Global dosya 17 KB'tı ve
+Açılış Zili'nden bir CSS düzeltmesine kadar HER projede, HER işte
+yükleniyordu; React/Next, veritabanı ve görsel dil ayrıntısı backend ya da
+belge işinde boşa bağlam yiyordu. Kök dosya kendi tavanını (520) da
+aşmıştı (526).
+
+**Ölçüm (satır / bayt):** kök `CLAUDE.md` 526 → 169; `machine/CLAUDE.md`
+324 / 17,3 KB → 183 / 9,0 KB; `templates/landing/CLAUDE.md` 228 → 160;
+`templates/nextjs-fullstack/CLAUDE.md` 213 → 135. health-check tavanı dört
+dosyada 200.
+
+**Taşınanlar (eski → yeni):**
+
+| Eski yer | Yeni yer | Yüklenme |
+|---|---|---|
+| `machine/CLAUDE.md` → Kod Standartları → React / Next.js | `machine/rules/nextjs-react.md` | `*.tsx`, `app/`, `components/`, `hooks/`, `proxy.ts` |
+| `machine/CLAUDE.md` → Dosya Yapısı Tercihleri | `machine/rules/nextjs-react.md` | aynı |
+| `machine/CLAUDE.md` → Öğrenilen Hatalar 1, 2, 4, 6, 7, 8 | `machine/rules/nextjs-react.md` (numaralar korundu) | aynı |
+| `machine/CLAUDE.md` → Veritabanı, Environment Variables, Hatalar 3, 5, 9 | `machine/rules/data-env.md` | `lib/db*`, şema, migration, `.env.example`, API, action |
+| `machine/CLAUDE.md` → Görsel Dil (DNA, palet, notlar, tema tablosu), Hata 10 | `machine/rules/visual-language.md` | `*.css`, `*.tsx`, `THEME.md`, tema belgeleri |
+| `machine/CLAUDE.md` → Tasarım Skill'leri (tablo, mod tespiti, öncelik, çakışmalar) | `machine/rules/design-skills.md` | `*.css`, `*.tsx`, `app/`, `components/` |
+| `machine/CLAUDE.md` → Yönetim Paneli — Canlı Önizleme | `machine/rules/admin-live-preview.md` | `admin/`, `panel/`, `yonetim/` |
+| kök `CLAUDE.md` → Ekosistem Yapısı (tam ağaç), Proje Yaşam Döngüsü (faz ayrıntısı), Hızlı Başlangıç | `docs/ECOSYSTEM.md` | elle okunur |
+| kök `CLAUDE.md` → Enforcement Hook'ları (tablo, entegrasyon) | `.claude/rules/hooks.md` | `hooks/`, ayarlar, `test-hooks.sh` |
+| kök `CLAUDE.md` → Ecosystem Health Check, verify:agentic, anatomy, cinecode, AI Slop, Canlı Proje Denetimi | `.claude/rules/verification.md` | `scripts/`, bootstrap, `package.json`, CI |
+| kök `CLAUDE.md` → Açık kararlar | bu dosya → "Açık Kararlar" (aşağıda) | elle okunur |
+| kök `CLAUDE.md` → Kayıtlı Subagent tablosu, Context Curation, komut tablosunun Dosya sütunu | `.claude/rules/orchestration.md` | `.claude/`, `agents/`, `machine/`, `rules/`, `phases/` |
+| kök `CLAUDE.md` → Paket Kullanımı | `.claude/rules/packages.md` | `packages/`, `snippets/`, `storybook/`, `templates/` |
+| şablon `CLAUDE.md` → Kimlik ortak/palet + Token kuralları (tema satırı hariç) | `templates/*/.claude/rules/tokens.md` (iki şablonda bayt bayt aynı) | `*.tsx`, `*.css` |
+| şablon `CLAUDE.md` → Hareket kuralları | `templates/*/.claude/rules/motion.md` (ortak) | `*.tsx`, `lib/motion.ts`, `hooks/` |
+| şablon `CLAUDE.md` → Açıklayıcı figür (ayrıntı) | `templates/*/.claude/rules/figures.md` (ortak) | `components/iso/`, `components/figures/` |
+| landing `CLAUDE.md` → Parçacık sahnesi (R3F) | `templates/landing/.claude/rules/scene.md` | `components/scene/`, `components/heroes/` |
+| fullstack `CLAUDE.md` → AI akışı (`/akis`) | `templates/nextjs-fullstack/.claude/rules/feed.md` | `app/akis/`, `components/feed/`, `lib/feed*.ts` |
+
+Global dosyada KALAN her projeye ait kurallar: kimlik, tech stack,
+TypeScript, üç kritik kural özeti (Server Action, migration, canlı
+önizleme), Title Case ve çeviri kokan ifade (yanıtlarda da geçerli),
+yasaklı yaklaşımlar, commit + push + yazar kuralı, `design-taste-frontend`
+VARSAYILAN kuralı (tek paragraf), cmux önerisi, yeni proje komutları.
+
+**`machine/rules/` nasıl yüklenir:** `bootstrap.sh` klasörü tek symlink'le
+`~/.claude/rules/dev-starter/`e bağlar (Claude Code `~/.claude/rules/`
+altını özyinelemeli tarar; kullanıcının kendi kural dosyaları yanında
+kalır, yeni kural bootstrap'sız gelir). Bulut oturumunda bootstrap
+koşmadığı için tıpkı global CLAUDE.md gibi bu kurallar da orada yoktur —
+değişen bir şey yok.
+
+**Wrapper'ın rol dosyasını okuması — seçilen: izin, seçilmeyen: derleme.**
+Wrapper'lar rol tanımını `~/dev-starter/agents/...` mutlak yolundan okur;
+başka projeden çağrılan subagent için bu yol çalışma dizini dışındadır ve
+izin kuralı yoksa ilk `Read` izin istemine/redde düşüp bir tur yakar.
+İki çözüm tartıldı:
+- *Rol içeriğini wrapper'a derleyen üretim adımı* (health-check
+  tutarlılığı denetler): rol okuma turunu kaldırır, ama rol dosyaları da
+  `rules/`, `guides/`, `knowledge/`a okuma listesi veriyor — izin YİNE
+  gerekiyor. Üstüne ikinci kaynak, üretim betiği ve `--check` bakımı.
+- *Kullanıcı ayarına `Read(~/dev-starter/**)`* — SEÇİLDİ. Tek kaynak
+  bozulmaz, rol dosyası ve okuma listesindeki her dosya aynı kuralla açılır.
+  `bootstrap.sh` yalnız bu kuralı ekler (depo başka yerdeyse gerçek yolu da),
+  dosyayı önce yedekler, geçersiz JSON'a dokunmaz. Read kuralları Grep ve
+  Glob'a da uygulanır. Kalan tur maliyeti tek: wrapper gövdesi rol dosyası
+  ve okuma listesini İLK turda, paralel `Read` ile açtırır.
+
+**Wrapper frontmatter'ı:** dokuzuna `model: inherit` ve `color`; kod yazmayan
+dört role (`gate`, `deploy`, `design-reviewer`, `researcher`)
+`disallowedTools` ile Edit/NotebookEdit (gate ve deploy'da Write da) açıkça
+kapalı; açıklamalar "ne zaman"ı söyler, otomatik devir istenenlerde
+"PROAKTİF kullan" (gate, qa, design-reviewer, researcher). `isolation:
+worktree` frontmatter'a konmadı: paralel dalgada orkestratör çağrı başına
+seçiyor. health-check frontmatter'ı denetler (name = dosya adı, açıklama,
+model).
+
+**Hook'lar:** iki commit hook'una handler düzeyinde `"if": "Bash(git *)"`.
+`Bash(git commit*)` seçilmedi (lib'in tanıdığı ve testlediği `git -C yol
+commit`, `git -c k=v commit` kaçardı). Bilinen ve kabul edilen boşluk: `env
+git commit`, `command git commit`, `/usr/bin/git commit` alt komut adı `git`
+olmadığı için filtrede kalır (`if` "best-effort"tur; sert sınır izin
+sistemi). Kancalar zaten exit 2 ile engelliyordu (exit 1 engellemez);
+doğrulandı. `Edit|Write` matcher'ı tam ad listesi, NotebookEdit'i bilerek
+yakalamaz. SessionStart'a `if` konmaz (araç olayı değil, hook hiç koşmaz).
+
+**Sır dosyaları:** proje ve şablon ayarlarına `permissions.deny`:
+`Read(**/.env)`, `Read(**/.env.local)`, `Read(**/.env.*.local)`,
+`Read(**/.env.production)`. `Read(./.env*)` SEÇİLMEDİ: `.env.example`ı da
+kapatır, şablon ve `/new-project` onu okuyup düzenliyor. Bash kuralları metin
+eşler, güvenlik sınırı değildir; `cat .env.local` bununla kapanmaz — asıl
+koruma `quality-scan` (commit) ve `.gitignore`. `.claudeignore` etkisiz,
+kullanılmadı.
+
+### Komut mu Skill mi — Değerlendirme (toplu taşıma YOK)
+
+`.claude/commands/*.md` hâlâ çalışıyor ve skill listesinde açıklamasıyla
+görünüyor (model çağırabilir); yeni iş için resmî öneri skill. Toplu
+taşıma yapılmadı: bootstrap komutları tek tek `~/.claude/commands/`a
+bağlıyor, health-check `COMMANDS` listesi, kök CLAUDE.md tablosu ve README
+sayacı (`.claude/commands` sayısı, "Komut") aynı evreni sayıyor; taşıma
+dördünü birden değiştirir ve kazanç ancak skill'e özgü bir alan
+(yan dosya, `context: fork`, `paths`, `allowed-tools`) gerektiğinde gerçek.
+
+Bu turda yapılan tek komut değişikliği: geri alınması zor yan etkili
+`/deploy` ve `/release`e `disable-model-invocation: true` (model kendi
+kararıyla çağıramaz). `/new-project` bilerek açık: `/kickoff` onaydan sonra
+akışı ona devrediyor.
+
+**Ölçüt:** komut skill olur, eğer (1) 150 satırı aşıp yan dosyaya bölünmek
+istiyorsa, (2) betik/şablon taşıyorsa, (3) açıklamasından otomatik
+tetiklenmesi gerçekten isteniyorsa ya da (4) `paths`/`context: fork` gibi
+skill alanına ihtiyaç duyuyorsa.
+
+**Aday sırası:** 1) `/new-project` (184 satır, bash adımları; şablon/overlay
+seçimi ve doğrulama yan dosyaya), 2) `/reference` (104 satır, galeri
+kataloğu yan dosya olarak skill'in yanına), 3) `/agentic` (karar ağacı,
+`paths: lib/agent/**` gibi bir kapsamla kendiliğinden yüklenebilir).
+Kalanlar komut kalır: kısa, kullanıcının bilinçli tetiklediği akışlar
+(`/status`, `/story`, `/gate` — rapor ve ROUTEMAP yazımı ana oturumda
+olduğundan `context: fork` uygun değil — `/fix`, `/retro` …).
+
+**Taşıma reçetesi (tek tek, doğrulanarak):** `machine/skills/<ad>/SKILL.md`
+(< 500 satır; frontmatter `name`, `description` + `when_to_use`, gerekiyorsa
+`disable-model-invocation`, `allowed-tools`; ayrıntı yan dosyada) — bootstrap
+`machine/skills/*`i zaten bağlıyor; komut dosyası silinir; health-check'e
+`SKILLS` listesi, README sayacına skill sayısı, kök CLAUDE.md tablosunda
+dosya notu; `bash scripts/health-check.sh` + `npm run readme:assets`.
+
+**Ne zaman değişir:** Claude Code komut desteğini kaldırır ya da skill'e
+özgü bir alan bir komut için gerçekten gerekirse — o komut tek başına taşınır.
+
+### Değişti (2026-11-08) — Orkestrasyon Modeli: wrapper izni
+
+"Orkestrasyon Modeli" kararındaki ince wrapper deseni KORUNDU; eklenen tek
+şey okuma izni (`Read(~/dev-starter/**)`, bootstrap) ve wrapper gövdesinin
+ilk turda paralel okuma talimatı. Gerekçe yukarıda.
+
+## Açık Kararlar
+
+> 8 Kasım 2026'ya dek kök `CLAUDE.md`nin "Ecosystem Health Check" bölümünün
+> sonundaydı; karar listesi olduğu için buraya taşındı.
+
+1. ~~**Referans çelişkisi**~~ → ✅ 2026-10-03: ekosistemin görsel referansı
+   artık Açılış Zili (`signature` paleti, token mimarisi). ahmetakyapi.com
+   kendi eski paletinde kalır, dokunuldukça `signature`a yaklaşır.
+2. ~~**`gradient-text` yasağı fazla katı**~~ → ✅ 2026-08-16, yasak kaldırıldı;
+   2026-10-03'te yeni projeler için "üç yer + tek aile" kimlik kuralı geldi.
+3. **Palet istisnaları**: `onepiece-hub` ✅ çözüldü. `ramazan-vakitleri`
+   (mor+pembe+mavi) `iris`e yakın; hâlâ açık.

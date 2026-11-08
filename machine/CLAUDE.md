@@ -2,6 +2,23 @@
 
 Bu dosya tüm projelerde geçerlidir. Proje seviyesindeki CLAUDE.md dosyaları bunu override eder.
 
+**Bu dosyanın sözleşmesi:** her oturumda, her projede yüklenir; yalnız her
+projede gereken kural burada durur. Belirli dosyalara ait kurallar
+`~/.claude/rules/dev-starter/` altında (kaynak `~/dev-starter/machine/rules/`,
+`bootstrap.sh` bağlar) `paths:` frontmatter'ıyla, ilgili dosya okununca
+yüklenir. Yeni kural eklerken önce "her projede, her işte gerekli mi?" diye
+sor; değilse yol kapsamlı kurala ya da skill'e yaz. Tavan ~200 satır
+(`scripts/health-check.sh`). Karar: `~/dev-starter/knowledge/decisions.md` →
+"Bağlam Dosyaları".
+
+| Yol kapsamlı kural (`machine/rules/`) | Ne zaman yüklenir | İçerik |
+|---|---|---|
+| `nextjs-react.md` | `*.tsx`, `app/`, `components/`, `hooks/`, `proxy.ts` | React/Next standartları, dosya yapısı, arayüz hataları |
+| `data-env.md` | `lib/db*`, şema, migration, `.env.example`, API, action | Veritabanı, ortam değişkeni, yayın hataları |
+| `visual-language.md` | `*.css`, `*.tsx`, `THEME.md`, tema belgeleri | Kimlik/palet DNA'sı, proje tema tablosu |
+| `design-skills.md` | `*.css`, `*.tsx`, `app/`, `components/` | taste-skill tablosu, mod tespiti, öncelik, çakışmalar |
+| `admin-live-preview.md` | `admin/`, `panel/`, `yonetim/` | Canlı önizleme kuralının ayrıntısı |
+
 ---
 
 ## Kimlik
@@ -40,82 +57,14 @@ Proje konfigürasyonu aksini belirtmediği sürece:
 - Interface yerine `type` — union/intersection'lar için
 - Bağımlılık dizilerini (`useCallback`, `useMemo`, `useEffect`) eksiksiz doldur
 
-### React / Next.js
-- `'use client'` — sadece gerçekten gerektiğinde; default Server Component
-- Server Component'lere motion/useState koyma; `"use client"` modülden sabit export etme (sunucuda referansa döner)
-- `params`, `searchParams`, `cookies()`, `headers()` her zaman `await`
-- Temiz kopyada önce `npm run build` (ya da `npx next typegen`), sonra typecheck — `PageProps` tipleri oradan
-- Segmentte `loading.tsx` yok (soft 404); yavaş parça kendi `<Suspense>`inde
-- `suppressHydrationWarning` — `<html>`de; `mounted` guard yalnız next-themes kullanan eski projelerde
-- Three.js ve canvas bileşenleri: `dynamic(() => import(...), { ssr: false })`
-- Server Action herkese açık POST ucudur: her birinde `auth()` + zod + sahiplik
+### Her Projede Akılda Tutulacak Üç Kural
+- **Server Action herkese açık POST ucudur**: her birinde `auth()` + zod + sahiplik (ayrıntı `nextjs-react.md`)
+- **Migration her zaman yeni dosya**, deploy'da uygulanmaz; env ve migration deploy'dan ÖNCE (ayrıntı `data-env.md`)
+- **Yönetim paneli canlı önizlemesiz olmaz**: sitede görünen bir şeyi düzenleyen her ekranın yanında
+  sitenin kendisi (masaüstü + telefon, açık/koyu, yazdıkça) — `~/dev-starter/rules/live-preview.md` (ayrıntı `admin-live-preview.md`)
 
-### Veritabanı
-- Serverless (Vercel) ortamında `pg` kullanma — `@neondatabase/serverless` kullan
-- Her foreign key'de `ON DELETE` davranışını belirt
-- Her migration sonrası Drizzle tipleri yeniden üret
-- Migration deploy'da uygulanmaz → yeni özellik kendi tablosunu alır, tablo yokken sessizce düşer
-
-### Environment Variables
-- `.env.example` dosyasını her zaman güncelle (değer olmadan)
-- Client erişimi gereken varlar: `NEXT_PUBLIC_` prefix
-- Vercel'de env varları deploy öncesi ekle
-
-### Yönetim Paneli — Canlı Önizleme Zorunlu
-- Sitede görünen bir şeyi (metin, görsel, sıra, yazı tipi, punto, renk) düzenleyen her ekranın yanında
-  sitenin **kendisi** durur: masaüstü 1440 × 900 + telefon 390 × 844, açık/koyu, yazdıkça güncellenir
-- İçerik ~320 ms sonra taslağa yazılır ve `router.refresh()` ile yeniden çizilir (kaydırma yerinde);
-  yazı tipi/punto CSS değişkeniyle anında. Taslak ayrı tabloda, oturuma özel; canlı siteye sızmaz
-- Ayrı "önizleme bileşeni" yazılmaz, sitenin görünüm bileşeni iframe'de çizilir
-- Kural: `~/dev-starter/rules/live-preview.md` · kit: `~/dev-starter/snippets/live-preview/` (`/snippet live-preview`)
-
----
-
-## Görsel Dil
-
-Proje seviyesinde farklı tema belirtilmediği sürece Açılış Zili referans alınır
-(`signature` paleti ve token mimarisi oradan). ahmetakyapi.com da Ekim 2026 yenilemesiyle `signature` paletine geçiyor.
-
-### Ortak Tasarım DNA — Kimlik Ortak, Palet Projeye Göre
-Projeler tek markanın ürünleri gibi tanınır ama hepsi aynı renkte değildir.
-Ayrıntı: `~/dev-starter/guides/00-brand-identity.md`.
-
-**Kimlik (her projede, değişmez):**
-- **Token**: iki katman — ham rol değişkenleri `:root[data-theme]`, köprü `@theme inline`; rol adları ortak
-- **Derinlik**: gölgeyle değil **ton farkıyla**; tek gerçek gölge açılır katman ve marka karosunda
-- **Glass**: opt-in, yalnızca altından içerik geçen öğede; `@supports` korumalı, `prefers-reduced-transparency`de opak. Blur 12–16 px
-- **Degrade**: yalnızca üç yerde (kısa display başlık, birincil eylem, marka karosu), tek renk ailesi içinde; veri panelleri ve gövde metni taşımaz
-- **Ease**: `[0.22, 1, 0.36, 1]` — CSS'te `--ease-brand`, `@theme`te varsayılan geçiş eğrisi
-- **Erişilebilirlik**: kontrast ölçülür (≥ 4,5:1, `-ink` kuralı), 44 px dokunma hedefi, 2 px odak halkası
-- **Açık tema** ters çevrilmez, yeniden tasarlanır. **Şablon varsayılanı açık**; portfolyo/oyun koyu
-
-**Palet (`data-palette`):** `signature` varsayılan — Açılış Zili'nin lacivert → mavi
-ailesi (açık `#0d74c4`, koyu `#35b8ff`); `verdant` (zümrüt; sağlık/terapi), `ember`
-(kehribar; oyun/topluluk), `iris` (mor-indigo; yaratıcı/yapay zekâ). Palet `/kickoff`ta
-seçilir. Mevcut projeler kendi temalarıyla kalır.
-
-> **Not:** Mimio (Ağustos 2026, "Deniz" v2) kendi yolunu izler: imza mavi→cyan
-> degradesi, üç katmanlı zemin (aurora → grain → cam), varsayılan tema açık.
-> Degrade yalnızca üç yerde: birincil eylem, seçili gezinme satırı, marka
-> döşemesi. Veri panelleri degrade taşımaz. Bkz. `THEME.md`.
-
-> **Not:** Açılış Zili glass/glow kullanmaz — derinlik gölgeyle değil **ton
-> farkıyla** kurulur. Degrade metin (`.display-ink`) ekosistem yasağına
-> **belgeli istisnadır**: token'lanmış, `@supports` korumalı, solid fallback'li,
-> descender düzeltmeli ve yalnızca kısa display metninde (artık kimlik kuralının
-> "üç yer"inden biri). Ayrıca `--ease-brand`
-> `--default-transition-timing-function` olarak ayarlı — her geçiş marka
-> eğrisini otomatik alır, ayrıca yazmaya gerek yok.
-
-### Proje Tema Referansları
-| Proje | Font | Vurgu | Tema Sistemi | Detay |
-|-------|------|-------|--------------|-------|
-| ahmetakyapi.com | Manrope + IBM Plex Mono | İndigo+Cyan+Emerald | next-themes class | `knowledge/themes/ahmetakyapi.md` |
-| Açılış Zili | Schibsted Grotesk (tek aile, değişken 400–900) | Lacivert→mavi tek aile (`#0d74c4` / koyu `#35b8ff`) + yön renkleri (up/down) | Custom `data-theme`, **varsayılan açık** | `knowledge/themes/acilis-zili.md` |
-| Mimio | Schibsted Grotesk (başlık) + Plus Jakarta Sans (gövde) + IBM Plex Mono | Mavi→cyan imza degradesi (`#2b62f5`→`#17c2e0`) | Custom `data-theme`, **varsayılan açık** | `knowledge/themes/mimio.md` |
-| DigyNotes | Avenir Next (system) | Emerald (`#10b981`) | `html.light` class | `knowledge/themes/digynotes.md` |
-| Keskealsaydım | Archivo + IBM Plex Mono | Emerald + Cyan | shadcn HSL vars, açık/koyu tam destek | `knowledge/themes/keskealsaydim.md` |
-| Ramazan Vakitleri | System stack | Mor+Pembe+Mavi | Dark only (CSS) | `knowledge/themes/ramazan-vakitleri.md` |
+React/Next, veritabanı, ortam değişkeni ve görsel dil kurallarının tamamı
+yukarıdaki tablodaki dosyalarda. Hatalar: `~/dev-starter/knowledge/mistakes.md`.
 
 ---
 
@@ -156,30 +105,7 @@ kullanılmaz — arayüzde de, belgede de, yanıtta da:
 - `// @ts-ignore` — gerçek sorunu çöz
 - Magic number'lar — named constant kullan
 - `eslint-disable` yorum satırı — sorunu düzelt
-
----
-
-## Dosya Yapısı Tercihleri
-
-```
-app/
-  (auth)/           # auth route grubu
-  api/              # API routes
-  [feature]/        # feature route'ları
-components/
-  ui/               # genel UI bileşenleri
-  [feature]/        # feature'a özgü bileşenler
-lib/
-  db.ts             # tembel Neon bağlantısı
-  schema.ts         # Drizzle schema
-  env.ts            # zod ile env doğrulama
-  theme.ts          # THEME_COOKIE, DEFAULT_THEME, PALETTE ("use client" değil)
-  motion.ts         # EASE, DUR, SPRING ("use client" değil)
-  utils.ts          # cn() (extendTailwindMerge) + yardımcılar
-proxy.ts            # Next 16 — çerez varlığına bakan ön eleme
-hooks/              # custom hooks (use*.ts)
-types/              # global TypeScript tipleri
-```
+- Hardcoded renk ve `dark:` varyantı — her zaman token (ayrıntı `visual-language.md`)
 
 ---
 
@@ -216,82 +142,15 @@ burada değildi; 26 Ekim'de bulut oturumu dev-starter'a iki "Claude" commit'i at
 
 ---
 
-## Öğrenilen Hatalar
+## Görsel Dil ve Tasarım Skill'leri — Özet
 
-Detaylı liste: `~/dev-starter/knowledge/mistakes.md`
-
-Kritik olanlar:
-1. Tema çerezden sunucuda → script yok, `mounted` guard yok (next-themes yalnız eski projelerde)
-2. Three.js / React Quill → `dynamic(..., { ssr: false })`
-3. Serverless DB → `@neondatabase/serverless` (pg değil), tembel `db`
-4. motion → `motion/react` + `m.*`, `layoutId` unique, `'use client'` şart; reduced-motion'da `initial={false}` yok
-5. Vercel deploy → env ve migration deploy'dan önce
-6. Tailwind v4 → `@theme inline`; katmansız CSS utility'yi ezer; özel punto adları `extendTailwindMerge`e kayıtlı
-7. Zemin katmanı `position: fixed` pseudo-element (`background-attachment: fixed` değil), grain'de `mix-blend-mode` yok
-8. Next 16 → `proxy.ts`, `next lint` yok, typecheck'ten önce build
-9. Migration → her zaman yeni dosya, eskiyi değiştirme
-10. Hardcoded renk yok → her zaman CSS variable/token; `dark:` yok
-
----
-
-## Tasarım Skill'leri (taste-skill ailesi)
-
-Kurulu ve tüm oturumlarda açık: `~/.agents/skills/` → `~/.claude/skills/`
-(symlink). Kaynak: `npx skills add Leonxlnx/taste-skill`, yalnızca kullanılan
-yedisi (`machine/bootstrap.sh` → `TASTE_SKILLS`): `design-taste-frontend`,
-`redesign-existing-projects`, `high-end-visual-design`, `minimalist-ui`,
-`brandkit`, `imagegen-frontend-web`, `imagegen-frontend-mobile`. Depodan ayrıca
-`motion-design` ve `motion-film`; dış depodan sabit commit'le `anatomy` ve `cinecode`. Paketin geri kalanı ve impeccable 3 Ekim 2026'da kaldırıldı.
-
-> **VARSAYILAN — her projede geçerli.** `design-taste-frontend` (taste-skill v2)
-> tanıtım sayfası, portfolyo ve pazarlama sayfası içeren **her** frontend işinde
-> KOD YAZMADAN ÖNCE çağrılır. "Küçük bir düzeltme" bahanesi yok: skill'in
-> denetim listesi (em dash yasağı, eyebrow tavanı, bölüm düzeni tekrarı, sahte
-> ekran görüntüsü yasağı, kahraman disiplini) tam da o küçük düzeltmelerde
-> ihlal ediliyor. Kullanıcı adını anmasa bile çağır.
->
-> **Kapsam dışı (skill §13):** panolar, yoğun ürün arayüzü, yönetim panelleri,
-> veri tabloları, çok adımlı formlar. Bu ekranlarda skill'in yalnızca pazarlama
-> bölümleri geçerlidir; kalanında proje tema dosyası ve ekosistem kuralları
-> yürür. İş bir panoysa bunu açıkça söyle, skill'i zorla uygulama.
-
-**Ne zaman çağır**
-| Durum | Skill |
-|-------|-------|
-| **Her frontend işi — varsayılan** | `design-taste-frontend` |
-| Mevcut arayüzü premium'a çekme | `redesign-existing-projects` |
-| Marka rehberi, logo sistemi | `brandkit` |
-| Görsel referans üretimi (web / mobil) | `imagegen-frontend-web` / `-mobile` |
-| Yeni bölüm (menü, CTA, alt bilgi, 404, bento) ya da kullanıcı "bu yapıyı kendi renklerimle kur" diye ekran görüntüsü verdi | `/reference` — galeri `~/dev-starter/knowledge/design-references.md`; yapı alınır, renk/metin/logo alınmaz |
-| Hareket kararı, zamanlama | `motion-design` + `~/dev-starter/guides/04-motion.md` |
-| Sayfa içi hareket filmi: bekleme/açılış filmi, kinetik yazı, mürekkep sahnesi | `motion-film` |
-| MP4 teslim edilen film: kısa film, tanıtım/reklam, müzik videosu, çekim kurgusu | `cinecode` (sabit commit, `bootstrap.sh` → `CINECODE_REF`; iş bölümü `motion-film` § 1b) |
-| Sade editoryal arayüz | `minimalist-ui` |
-
-**Mevcut projeye girerken — mod tespiti (skill §11.A) ŞART**
-Var olan bir sitede skill'in varsayılan dial'ları (8/6/4) KULLANILMAZ. Mod
-"Redesign — Preserve"dir: marka token'ları, IA, çapa (`#anchor`) ve kopya sesi
-korunur; dial'lar sitenin kendi okumasından çıkarılır. Skill'i greenfield gibi
-çalıştırmak marka kimliğini siler.
-
-**Öncelik sırası — çakışma olursa**
-1. Proje `THEME.md` ve `knowledge/themes/*` — renk, font, degrade, radius,
-   gölge, bileşen dili. Skill bunları **ezmez**.
-2. Bu dosyadaki ekosistem kuralları ve `~/dev-starter/guides/` — kimlik, motion, Tailwind v4, token zorunluluğu.
-3. Skill'in zanaat kuralları — eyebrow tavanı, kahraman disiplini, sahte
-   ekran görüntüsü yasağı, bölüm düzeni tekrarı, CTA tutarlılığı.
-
-**Bilinen çakışmalar**
-- Skill'ler GSAP ya da `framer-motion` önerebilir; ekosistem `motion/react`
-  (LazyMotion + `m.*`) ve CSS kullanır. Öneriyi bu tech stack'e çevir.
-- `high-end-visual-design` kendi font/gölge setini getirir; tema dosyası olan
-  projelerde (Mimio, Açılış Zili) çağırma.
-- Skill'ler `lucide-react`'i önermez; ekosistem kuralı `lucide-react` der.
-  Mevcut projede zaten kuruluysa skill'in kendi istisnası geçerli, lucide kalır.
-- Skill em dash'i tümüyle yasaklar. Bu kural **kullanıcıya görünen arayüz
-  metni** için geçerlidir; kod yorumları ve dokümanlar kapsam dışı.
-
----
+- Proje kendi temasını söylemiyorsa Açılış Zili referanstır (`signature` paleti, token mimarisi).
+  Kimlik ortak, palet projeye göre: `~/dev-starter/guides/00-brand-identity.md` · ayrıntı `visual-language.md`.
+- **VARSAYILAN:** tanıtım sayfası, portfolyo ya da pazarlama sayfası içeren HER frontend işinde
+  KOD YAZMADAN ÖNCE `design-taste-frontend` çağrılır, kullanıcı anmasa bile. Panolar, yönetim
+  panelleri, veri tabloları kapsam dışı (yalnız pazarlama bölümleri). Var olan sitede mod
+  "Redesign — Preserve". Öncelik: proje teması > ekosistem kuralları > skill. Tablo, mod tespiti
+  ve bilinen çakışmalar `design-skills.md`de.
 
 ## Paralel Oturumlar — cmux Önerisi
 

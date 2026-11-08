@@ -1,6 +1,7 @@
 ---
 description: Vercel yayın kontrol listesi ve hazırlık (Next 16 projeleri)
 argument-hint: "[ortam]"
+disable-model-invocation: true
 ---
 
 Deploy oncesi kontrol listesini calistir. Rol tanimi:

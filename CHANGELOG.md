@@ -7,6 +7,44 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Bağlam dosyaları: kısa CLAUDE.md, yol kapsamlı kurallar — 2026-11-08
+
+Claude Code'un güncel resmî önerilerine göre (`knowledge/decisions.md` →
+"Bağlam Dosyaları"; eski → yeni yer tablosu orada).
+
+#### Değişti
+
+- **Kök `CLAUDE.md` 526 → 169 satır**, **global `machine/CLAUDE.md` 324 →
+  183 satır (17,3 → 9,0 KB)**, şablon `CLAUDE.md`leri 228 → 160 ve
+  213 → 135. Kural kaybolmadı; ayrıntı yol kapsamlı kurallara ve
+  `docs/ECOSYSTEM.md`ye taşındı.
+- **Subagent wrapper'ları**: `model: inherit`, `color`, kod yazmayan
+  rollerde `disallowedTools`; açıklamalar "ne zaman"ı söylüyor (otomatik
+  devir için "PROAKTİF"); gövde rol dosyasını ve okuma listesini ilk turda
+  paralel açtırıyor.
+- **Hook'lar**: iki commit hook'u handler düzeyinde `"if": "Bash(git *)"`
+  ile süzülüyor (her Bash çağrısında iki süreç açılmıyor); proje ve
+  şablon ayarları aynı.
+- `/deploy` ve `/release`: `disable-model-invocation: true`.
+- health-check: CLAUDE.md tavanı 520 → 200 ve üç dosya daha (global, iki
+  şablon); şablonların ortak dosyalarına üç kural dosyası.
+
+#### Eklendi
+
+- `machine/rules/` (5 yol kapsamlı global kural) → bootstrap
+  `~/.claude/rules/dev-starter/`e bağlıyor.
+- `.claude/rules/` (hooks, verification, packages, orchestration) ve
+  şablonlarda `.claude/rules/` (tokens, motion, figures + scene / feed).
+- `docs/ECOSYSTEM.md`: tam dizin ağacı, faz ayrıntısı, komut örnekleri.
+- bootstrap kullanıcı ayarına `Read(~/dev-starter/**)` ekliyor (subagent
+  rol dosyasını proje dışından okurken izin istemine düşmesin); başka izne
+  dokunmuyor, önce yedekliyor.
+- Proje ve şablon ayarlarında sır dosyası `Read` yasağı (`.env`,
+  `.env.local`, `.env.*.local`, `.env.production`; `.env.example` açık).
+- health-check: kural dosyalarında `paths:` frontmatter'ı, bootstrap'ın
+  kural/izin adımları, wrapper frontmatter'ı (name, description, model),
+  ayarlarda `.env` yasağı + `if` filtresi + çapasız regex matcher denetimi.
+
 ### cinecode: kodla film stüdyosu — 2026-11-07
 
 #### Eklendi

@@ -1,5 +1,13 @@
 {
-  "$comment": "Paylasilan proje ayarlari — versiyonlanir. Makineye ozgu izinler ve yollar .claude/settings.local.json'a (gitignore'lu) yazilir. Hook yollari $CLAUDE_PROJECT_DIR'a bagli: hook Claude'un o anki dizininde kosar, goreli yol bir cd sonrasi bulunamaz (exit 127 bloklamaz, commit taramasiz gecer).",
+  "$comment": "Paylasilan proje ayarlari — versiyonlanir. Makineye ozgu izinler ve yollar .claude/settings.local.json'a (gitignore'lu) yazilir. Hook yollari $CLAUDE_PROJECT_DIR'a bagli: hook Claude'un o anki dizininde kosar, goreli yol bir cd sonrasi bulunamaz (exit 127 bloklamaz, commit taramasiz gecer). Commit hook'lari `if: Bash(git *)` ile suzulur, her Bash cagrisinda iki surec acilmaz; `Bash(git commit*)` degil, cunku `git -C yol commit` ve `git -c k=v commit` kacardi; script'ler kendi commit suzgecini korur; SessionStart'a `if` konmaz (hook hic kosmaz). Sir dosyalari Read araciyla okunmaz; .env.example bilerek acik. Bash kurallari metin esler, guvenlik siniri degildir: asil koruma quality-scan ve .gitignore. Ayrinti: .claude/rules/hooks.md, knowledge/decisions.md -> Baglam Dosyalari.",
+  "permissions": {
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.production)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -7,10 +15,12 @@
         "hooks": [
           {
             "type": "command",
+            "if": "Bash(git *)",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/hooks/gate-guard.sh"
           },
           {
             "type": "command",
+            "if": "Bash(git *)",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/hooks/quality-scan.sh"
           }
         ]

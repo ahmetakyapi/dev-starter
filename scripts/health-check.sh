@@ -272,13 +272,15 @@ done
 # Iki Next sablonunun ortak dosyalari BAYT BAYT ayni kalmali: biri duzeltilip
 # digeri unutulunca yeni proje hangi sablondan dogduguna gore eski hatayi
 # tasir. Liste bilerek ACIK: yeni ortak dosya eklenince buraya da yazilir.
-# Bilerek ayrisanlar disarida: lib/theme.ts (landing statik, THEME_SCRIPT;
+# Bilerek ayrisanlar disarida: .claude/rules/{scene,feed}.md (sablona ozgu),
+# lib/theme.ts (landing statik, THEME_SCRIPT;
 # fullstack sunucuda, lib/theme.server.ts), app/{layout,page}.tsx, app/sitemap.ts,
 # lib/env.ts ve tests/{env,security}.test.ts (fullstack'te veritabani, oturum,
 # makine ucu), CLAUDE.md, .env.example, package.json, eslint.config.mjs, CI ve
 # .gitignore. AGENTS.md'yi `next dev` yazar, o da disarida.
 SHARED_TEMPLATE_FILES=(
-  ".claude/settings.json" ".nvmrc" "tsconfig.json" "postcss.config.mjs" "next.config.ts" "instrumentation.ts"
+  ".claude/settings.json" ".claude/rules/tokens.md" ".claude/rules/motion.md" ".claude/rules/figures.md"
+  ".nvmrc" "tsconfig.json" "postcss.config.mjs" "next.config.ts" "instrumentation.ts"
   "app/globals.css" "app/palettes.css" "app/icon.svg" "app/error.tsx" "app/global-error.tsx" "app/not-found.tsx"
   "app/opengraph-image.tsx" "app/manifest.ts" "app/robots.ts" "app/api/health/route.ts"
   "components/motion/MotionProvider.tsx" "components/motion/Reveal.tsx"
@@ -589,6 +591,72 @@ for f in .claude/commands/*.md; do
   esac
 done
 
+# Baglam dosyalari: yol kapsamli kurallar `paths:` frontmatter'iyla baslamali.
+# Frontmatter'siz kural HER oturumda yuklenir — tasimanin amaci bosa cikar.
+RULE_FILES=$(ls .claude/rules/*.md machine/rules/*.md templates/*/.claude/rules/*.md 2>/dev/null || true)
+NOPATHS=""
+for f in $RULE_FILES; do
+  if ! { head -n 1 "$f" | grep -qx -- '---' && sed -n '2,/^---$/p' "$f" | grep -q '^paths:'; }; then
+    NOPATHS="$NOPATHS $f"
+  fi
+done
+if [ -z "$RULE_FILES" ]; then
+  fail "Yol kapsamli kural dosyasi yok (.claude/rules, machine/rules) — CLAUDE.md'den tasinan kurallar kayip"
+elif [ -z "$NOPATHS" ]; then
+  pass "$(echo "$RULE_FILES" | wc -w | tr -d ' ') yol kapsamli kural dosyasi paths: frontmatter'i tasiyor"
+else
+  fail "paths: frontmatter'i olmayan kural dosyasi (her oturumda yuklenir):$NOPATHS"
+fi
+if grep -qF 'link "$HERE/rules" "$CLAUDE_DIR/rules/dev-starter"' machine/bootstrap.sh; then
+  pass "bootstrap machine/rules'u ~/.claude/rules/dev-starter'a bagliyor"
+else
+  fail "machine/bootstrap.sh machine/rules'u ~/.claude/rules/'a baglamiyor — global yol kapsamli kurallar yuklenmez"
+fi
+if grep -qF 'Read(~/dev-starter/**)' machine/bootstrap.sh; then
+  pass "bootstrap Read(~/dev-starter/**) iznini ekliyor (wrapper'lar rol dosyasini proje disindan okur)"
+else
+  fail "machine/bootstrap.sh Read(~/dev-starter/**) iznini eklemiyor — subagent'in ilk Read'i izin istemine duser"
+fi
+
+# wrapper frontmatter'i: ad dosya adiyla ayni, aciklama ve model var.
+# Aciklama otomatik devrin tek girdisi; bossa subagent hic secilmez.
+FM_BAD=""
+for w in "${WRAPPERS[@]}"; do
+  WF=".claude/agents/${w}.md"
+  [ -f "$WF" ] || continue
+  FM=$(sed -n '2,/^---$/p' "$WF")
+  if ! { grep -qx "name: $w" <<<"$FM" && grep -qE '^description: .{40,}' <<<"$FM" && grep -q '^model: ' <<<"$FM"; }; then
+    FM_BAD="$FM_BAD $w"
+  fi
+done
+if [ -z "$FM_BAD" ]; then
+  pass "${#WRAPPERS[@]} wrapper'in frontmatter'i tam (name, description, model)"
+else
+  fail "wrapper frontmatter'i eksik (name = dosya adi, description >= 40 karakter, model: beklenir):$FM_BAD"
+fi
+
+# Ayarlar: sir dosyasi Read yasagi + commit hook'larinin `if` filtresi.
+# `if` yalniz arac olaylarinda calisir; SessionStart'ta olursa hook HIC kosmaz.
+for SET in .claude/settings.json templates/nextjs-fullstack/.claude/settings.json; do
+  CHK=$(node -e '
+    const s = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))
+    const deny = (s.permissions && s.permissions.deny) || []
+    const out = []
+    if (!deny.includes("Read(**/.env.local)") || !deny.includes("Read(**/.env)")) out.push("sir dosyasi Read yasagi yok")
+    if (deny.some((r) => /\.env\*\)$|\.env\.\*\)$/.test(r))) out.push(".env.example da yasaklaniyor")
+    const pre = ((s.hooks && s.hooks.PreToolUse) || []).flatMap((m) => m.hooks)
+    for (const h of pre) if (/gate-guard|quality-scan/.test(h.command) && h.if !== "Bash(git *)") out.push("commit hook if filtresi yok: " + h.command)
+    for (const m of (s.hooks && s.hooks.SessionStart) || []) for (const h of m.hooks) if (h.if) out.push("SessionStart hookunda if (hic kosmaz)")
+    for (const ev of Object.values(s.hooks || {})) for (const m of ev) if (/\.\*/.test(m.matcher || "") && !/^\^/.test(m.matcher)) out.push("capasiz regex matcher: " + m.matcher)
+    console.log(out.join("; "))
+  ' "$SET" 2>&1)
+  if [ -z "$CHK" ]; then
+    pass "$SET: .env Read yasagi + commit hook'lari if filtreli"
+  else
+    fail "$SET: $CHK"
+  fi
+done
+
 # ─── 15. Bilgi Tabani Butunlugu ──────────────────────────────────────────────
 header "Bilgi Tabani Butunlugu"
 
@@ -628,7 +696,14 @@ check_cap() {
 }
 check_cap knowledge/mistakes.md 2200
 check_cap knowledge/patterns.md 1600
-check_cap CLAUDE.md 520
+# Baglam dosyalari (Claude Code resmi onerisi, 2026-11-08): CLAUDE.md her
+# oturumda yuklenir; ~200 satiri asan dosya baglam yer ve uyumu dusurur.
+# Ayrinti yol kapsamli kurala (.claude/rules, machine/rules) ya da
+# docs/ECOSYSTEM.md'ye gider. Eski tavan (kok 520) bu karari tasimiyordu.
+check_cap CLAUDE.md 200
+check_cap machine/CLAUDE.md 200
+check_cap templates/nextjs-fullstack/CLAUDE.md 200
+check_cap templates/landing/CLAUDE.md 200
 
 # README istatistik gorselleri rehber ve kayit SAYISINI basar: yeni bir
 # rehber ya da mistakes kaydi ekleyip `readme:assets`i unutan commit CI'da
