@@ -24,7 +24,12 @@
   /* Marka (brandTitle HTML'i): degrade yalnız karoda, paletle döner. */
   .ds-mark { display: flex; align-items: center; gap: 10px; min-width: 0; }
   .ds-mark__tile { width: 28px; height: 28px; border-radius: 8px; flex: none; background: var(--ds-tile);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35); }
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35); display: grid; align-content: center; gap: 2.5px; padding-inline: 7px; }
+  /* Üç çubuk: kapak ve README afişindeki işaretle aynı (yukarıdan aşağı kısalır, solar). */
+  .ds-mark__tile i { display: block; height: 3px; border-radius: 2px; background: #fff; }
+  .ds-mark__tile i:nth-child(1) { width: 100%; opacity: 0.95; }
+  .ds-mark__tile i:nth-child(2) { width: 75%; opacity: 0.75; }
+  .ds-mark__tile i:nth-child(3) { width: 50%; opacity: 0.55; }
   .ds-mark__name { display: block; font: 700 15px/1.1 "Schibsted Grotesk", "Inter", sans-serif; letter-spacing: -0.015em; }
   .ds-mark__meta { display: block; margin-top: 3px; font: 500 11px/1 "JetBrains Mono", monospace; color: var(--ds-muted); }
 

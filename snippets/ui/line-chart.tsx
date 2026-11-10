@@ -169,7 +169,8 @@ export function LineChart({
 
   const stepSm = Math.max(1, Math.ceil(n / 5));
   const stepLg = Math.max(1, Math.ceil(n / 10));
-  const showTick = (i: number, step: number) => i === n - 1 || (i % step === 0 && n - 1 - i >= step * 0.8);
+  // Son etiket sağa yaslı: ona bir tam adımdan yakın düşen etiket gizlenir (area-chart ile aynı).
+  const showTick = (i: number, step: number) => i === n - 1 || (i % step === 0 && n - 1 - i >= step);
 
   const nearest = (event: PointerEvent<HTMLDivElement>) => {
     const box = event.currentTarget.getBoundingClientRect();

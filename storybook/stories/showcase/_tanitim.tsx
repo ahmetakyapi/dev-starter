@@ -2,6 +2,7 @@
 
 import { CalendarDays, Compass, Inbox, ListChecks, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { Reveal, RevealItem } from "@/components/motion/Reveal";
 import { AppWindow, WindowStrip } from "@/components/ui/app-window";
 import { BlurIn } from "@/components/ui/blur-in";
 import { BookCover } from "@/components/ui/book-cover";
@@ -28,6 +29,8 @@ import { EVENTS, OPEN_TICKETS, WORKSPACE } from "./_data";
  */
 
 type WindowId = "gelen" | "takvim" | "gorevler" | "asistan";
+
+const TRUST = ["Kart gerekmez", "2 dakikada kurulum", "Verini istediğin an dışa aktar"];
 
 const WINDOWS: readonly { id: WindowId; label: string; icon: typeof Inbox }[] = [
   { id: "gelen", label: "Gelen Kutusu", icon: Inbox },
@@ -76,7 +79,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             <div className="absolute bottom-[-6rem] left-1/3 size-80 rounded-full bg-brand opacity-70 blur-3xl" />
           </div>
           <BlurIn as="h1" className="mx-auto max-w-4xl font-display text-[clamp(2.5rem,7vw,5.25rem)] leading-[1.05] font-semibold tracking-tight text-on-brand text-balance">
-            Talepleri <em className="font-[family-name:var(--font-serif-face),serif] font-normal">kaybetmeden</em> yanıtla.
+            Talepleri <em className="font-[family-name:var(--font-serif-face),serif] font-normal">Kaybetmeden</em> Yanıtla
           </BlurIn>
           <p className="mx-auto mt-6 max-w-xl text-lead text-on-brand/85">
             Destek, satış, görev ve takvim tek şeritte. Yeni talep açık işin yanına gelir; hiçbir pencere küçülmez.
@@ -85,28 +88,26 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             <LiquidGlassButton tone="media" onClick={onSignIn} className="h-12 px-7">
               Ücretsiz Dene
             </LiquidGlassButton>
-            <LiquidGlass tone="media">{WORKSPACE.plan} · {WORKSPACE.seats.total} koltuk</LiquidGlass>
+            <LiquidGlass tone="media">{WORKSPACE.plan} · {WORKSPACE.seats.total} Koltuk</LiquidGlass>
           </div>
-          <TrustLine tone="media" className="mt-5" items={["Kart gerekmez", "2 dakikada kurulum", "Verini istediğin an dışa aktar"]} />
+          <TrustLine tone="media" className="mt-5" items={TRUST} />
         </section>
 
-        <section id="tanitim-demo" aria-labelledby="tanitim-demo-baslik" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-20 sm:px-6">
-          <div className="flex items-start justify-between gap-6">
+        <section id="tanitim-demo" aria-labelledby="tanitim-demo-baslik" className="mx-auto max-w-6xl scroll-mt-24 px-4 pt-20 pb-36 sm:px-6 sm:pt-28">
+          <Reveal>
             <div className="max-w-2xl">
-              <p className="text-micro font-semibold tracking-[0.14em] text-primary-ink uppercase">Canlı Demo</p>
-              <h2 id="tanitim-demo-baslik" className="mt-2 text-title font-semibold tracking-tight text-strong">
-                Bir gün, tek şeritte
+              <p className="font-mono text-small text-primary-ink">Canlı Demo</p>
+              <h2 id="tanitim-demo-baslik" className="mt-3 font-display text-heading font-bold text-strong sm:text-display">
+                Bir Gün, Tek Şeritte
               </h2>
-              <p className="mt-3 text-small text-soft">
+              <p className="mt-3 text-read text-body">
                 Alttaki raftan bir uygulama seç: şeritte onun penceresi odağa gelir.
               </p>
             </div>
-            <HandCallout direction="down-right" className="-mb-8 hidden sm:flex">
-              buradan seç
-            </HandCallout>
-          </div>
+          </Reveal>
 
-          <Wallpaper scene="lagoon" className="mt-4 rounded-[1.375rem] p-3 shadow-floating ring-1 ring-line sm:p-6">
+          <Reveal delay={0.08} className="relative">
+          <Wallpaper scene="lagoon" className="mt-8 rounded-[1.375rem] p-3 shadow-floating ring-1 ring-line sm:p-6">
             <WindowStrip role="img" aria-label={`Pusula pencereleri, odakta ${WINDOWS.find((w) => w.id === focus)?.label}`} className="h-60">
               <AppWindow title="Gelen Kutusu" icon={<Inbox />} focused={focus === "gelen"} className="w-72">
                 <ul className="divide-y divide-line-soft">
@@ -147,18 +148,24 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
               />
             </div>
           </Wallpaper>
+          {/* Not, seçilecek yeri gösterir: ok rafın (dock) dibinden yukarı çıkar. Başlığın
+              yanındayken duvar kâğıdının boş köşesini gösteriyordu. */}
+          <HandCallout direction="up-left" delay={500} className="absolute top-full left-[calc(50%+4.5rem)] mt-1 hidden sm:flex">
+            buradan seç
+          </HandCallout>
+          </Reveal>
         </section>
 
-        <section aria-labelledby="tanitim-duvar-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-24 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
-          <div>
-            <p className="text-micro font-semibold tracking-[0.14em] text-primary-ink uppercase">Duvar Kâğıtları</p>
-            <h2 id="tanitim-duvar-baslik" className="mt-2 text-title font-semibold tracking-tight text-strong">
+        <section aria-labelledby="tanitim-duvar-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-28 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
+          <Reveal>
+            <p className="font-mono text-small text-primary-ink">Duvar Kâğıtları</p>
+            <h2 id="tanitim-duvar-baslik" className="mt-3 font-display text-heading font-bold text-strong sm:text-display">
               Masaüstün İçin Sekiz Sahne
             </h2>
-            <p className="mt-3 max-w-md text-small text-soft">
+            <p className="mt-3 max-w-md text-read text-body">
               Retina masaüstü ve telefon boyutunda indir: {WALLPAPER_SCENES.map((s) => WALLPAPER_NAMES[s]).join(", ")}.
             </p>
-          </div>
+          </Reveal>
           <DriftColumns columns={3} duration={60} className="h-[30rem]">
             {[...WALLPAPER_SCENES, ...WALLPAPER_SCENES].map((scene, i) => (
               <figure key={i} className="overflow-hidden rounded-xl ring-1 ring-line">
@@ -171,17 +178,20 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           </DriftColumns>
         </section>
 
-        <section id="tanitim-kisayol" aria-labelledby="tanitim-kisayol-baslik" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-24 sm:px-6">
-          <h2 id="tanitim-kisayol-baslik" className="text-heading font-semibold tracking-tight text-strong">
-            Fareye <MarkAnnotate type="underline">uzanmadan</MarkAnnotate>
-          </h2>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-3">
+        <section id="tanitim-kisayol" aria-labelledby="tanitim-kisayol-baslik" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-28 sm:px-6">
+          <Reveal>
+            <p className="font-mono text-small text-primary-ink">Kısayollar</p>
+            <h2 id="tanitim-kisayol-baslik" className="mt-3 font-display text-heading font-bold text-strong sm:text-display">
+              Fareye <MarkAnnotate type="underline">Uzanmadan</MarkAnnotate>
+            </h2>
+          </Reveal>
+          <ul className="mt-8 grid gap-3 sm:grid-cols-3">
             {[
               { keys: ["⌘", "K"], label: "Command K", text: "Talep, müşteri ya da komut ara" },
               { keys: ["⌥", "→"], label: "Option sağ ok", text: "Şeritte sonraki pencere" },
               { keys: ["⌘", "Z"], label: "Command Z", text: "Son işlemi geri al" },
-            ].map((s) => (
-              <li key={s.label} className="flex items-center gap-3 rounded-2xl bg-surface p-4">
+            ].map((s, i) => (
+              <RevealItem as="li" index={i} key={s.label} className="flex items-center gap-3 rounded-xl bg-surface p-4 edge-lit">
                 <span className="flex gap-1">
                   {s.keys.map((k) => (
                     <Kbd key={k} aria-hidden>
@@ -189,31 +199,58 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
                     </Kbd>
                   ))}
                 </span>
-                <span className="text-small text-body">
+                <span className="text-base text-body">
                   <span className="sr-only">{s.label}: </span>
                   {s.text}
                 </span>
-              </li>
+              </RevealItem>
             ))}
           </ul>
         </section>
 
-        <section aria-labelledby="tanitim-rehber-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-24 sm:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center">
-          <div>
-            <p className="text-micro font-semibold tracking-[0.14em] text-primary-ink uppercase">Rehberler</p>
-            <h2 id="tanitim-rehber-baslik" className="mt-2 text-title font-semibold tracking-tight text-strong">
+        <section aria-labelledby="tanitim-rehber-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-28 sm:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center">
+          <Reveal>
+            <p className="font-mono text-small text-primary-ink">Rehberler</p>
+            <h2 id="tanitim-rehber-baslik" className="mt-3 font-display text-heading font-bold text-strong sm:text-display">
               Ekibin İlk Haftası İçin
             </h2>
-            <p className="mt-3 max-w-md text-small text-soft">
+            <p className="mt-3 max-w-md text-read text-body">
               Kurulumdan ilk yanıta iki kısa rehber; ekibe yeni katılan ilk gün ikisini okur.
             </p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-8 md:justify-start">
-            <BookCover title="Başlangıç Rehberi" subtitle="Gelen kutusu, görevler, takvim" author={WORKSPACE.name} mark="01" width={148} />
-            <BookCover tone="ink" title="Destek El Kitabı" subtitle="Yanıt dili ve öncelikler" author={WORKSPACE.name} mark="02" width={148} />
-          </div>
+          </Reveal>
+          <Reveal delay={0.08} className="flex flex-wrap justify-center gap-6 rounded-2xl bg-surface px-4 py-10 edge-lit sm:gap-10">
+            <BookCover title="Başlangıç Rehberi" subtitle="Gelen kutusu, görevler, takvim" author={WORKSPACE.name} mark="01" width={128} />
+            <BookCover tone="ink" title="Destek El Kitabı" subtitle="Yanıt dili ve öncelikler" author={WORKSPACE.name} mark="02" width={128} />
+          </Reveal>
+        </section>
+
+        {/* Kapanış: sayfa kitaplarla bitip boşlukta kalıyordu. Tek eylem, altında aynı güven satırı. */}
+        <section aria-labelledby="tanitim-kapanis-baslik" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+          <Reveal className="grid justify-items-center gap-6 rounded-2xl bg-surface px-6 py-16 text-center edge-lit sm:py-24">
+            <h2 id="tanitim-kapanis-baslik" className="max-w-[16ch] font-display text-display font-bold text-balance text-strong sm:text-hero">
+              İlk Talebi Bugün Yanıtla
+            </h2>
+            <button
+              type="button"
+              onClick={onSignIn}
+              className="inline-flex min-h-12 items-center rounded-full bg-cta px-7 text-base font-semibold text-on-brand shadow-cta transition-[translate,scale] duration-200 hover:-translate-y-px active:scale-[0.98]"
+            >
+              Ücretsiz Dene
+            </button>
+            <TrustLine items={TRUST} />
+          </Reveal>
         </section>
       </main>
+
+      <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-4 pt-6 pb-28 text-small text-muted sm:px-6">
+        <p className="flex items-center gap-2 font-semibold text-strong">
+          <span aria-hidden className="grid size-6 place-items-center rounded-sm bg-brand text-on-brand">
+            <Compass className="size-3.5" />
+          </span>
+          {WORKSPACE.name}
+        </p>
+        <p>Örnek ürün: Tanıtım bileşenleriyle kurulmuş bir açılış sayfası.</p>
+      </footer>
 
       <NoticeDeck
         className="fixed bottom-4 left-4 z-30 hidden sm:block"

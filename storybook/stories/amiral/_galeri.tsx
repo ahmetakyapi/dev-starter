@@ -208,7 +208,8 @@ function BasketDemo() {
           onChange={(event) => setPicked((p) => (event.target.checked ? [...p, b] : p.filter((x) => x !== b)))}
         />
       ))}
-      <div className="absolute inset-x-0 bottom-3 grid">
+      {/* grid-cols-1: örtük sütun `auto` olsaydı çubuk en geniş hâline açılıp telefonda kuyudan taşardı; böyle kendi içinde kayar. */}
+      <div className="absolute inset-x-2 bottom-3 grid grid-cols-1">
         <SelectionBar position="sticky" count={picked.length} noun="çekirdek" onClear={() => setPicked([])}>
           <SelectionAction onClick={() => setPicked([])}>Kavurmaya Al</SelectionAction>
           <SelectionAction tone="danger" onClick={() => setPicked([])}>
@@ -707,13 +708,13 @@ function FormGroup() {
         </div>
       </Cell>
       <Cell file="rating" name="Yıldız Puanı" note="Gösterim tek bir adla okunur; giriş yerel radyo, oklarla gezilir." span={3}>
-        <div className="mx-auto grid max-w-sm gap-5">
-          <div className="flex items-center justify-between gap-4 rounded-xl bg-overlay px-4 py-3 shadow-raised">
+        <div className="mx-auto grid w-full max-w-sm grid-cols-1 gap-5">
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-overlay px-4 py-3 shadow-raised">
             <span className="min-w-0">
               <span className="block truncate text-base font-semibold text-strong">Etiyopya Yirgacheffe</span>
               <span className="block text-small text-muted">Web mağaza yorumları</span>
             </span>
-            <Rating value={4.7} count={128} showValue size="sm" />
+            <Rating value={4.7} count={128} showValue size="sm" className="shrink-0" />
           </div>
           <RatingInput label="Bu Kahveyi Puanla" name="puan" defaultValue={4} labels={["Hiç Beğenmedim", "Beğenmedim", "Fena Değil", "Beğendim", "Bayıldım"]} />
         </div>
@@ -1270,9 +1271,19 @@ function Facts({ items }: { items: readonly (readonly [string, string])[] }) {
   return (
     <dl className="mt-4 grid grid-cols-3 gap-1.5">
       {items.map(([k, v]) => (
-        <div key={k} className="rounded-xl bg-overlay px-3 py-3 shadow-raised">
+        <div key={k} className="min-w-0 rounded-xl bg-overlay px-2.5 py-3 shadow-raised sm:px-3">
           <dt className="truncate text-small text-muted">{k}</dt>
-          <dd className="mt-1 text-title font-semibold text-strong tabular-nums">{v}</dd>
+          {/* Birim sayıdan kopup alt satıra düşmesin: telefonda karo 75 piksel. */}
+          <dd className="mt-1 text-read font-semibold whitespace-nowrap text-strong tabular-nums sm:text-title">
+            {v.endsWith(" kg") ? (
+              <>
+                {v.slice(0, -3)}
+                <span className="ml-0.5 text-micro font-medium text-muted">kg</span>
+              </>
+            ) : (
+              v
+            )}
+          </dd>
         </div>
       ))}
     </dl>

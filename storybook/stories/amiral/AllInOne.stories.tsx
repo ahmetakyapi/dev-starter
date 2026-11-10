@@ -212,7 +212,7 @@ function Install() {
               <p className="mt-1.5 text-base text-body">{s.d}</p>
             </div>
             <div className="relative mt-auto rounded-xl bg-overlay shadow-raised">
-              <pre className="overflow-x-auto p-4 pr-12 font-mono text-small leading-relaxed text-strong" tabIndex={0} aria-label={`Adım ${i + 1} kodu`}>
+              <pre className="mr-11 overflow-x-auto p-4 pr-1 font-mono text-small leading-relaxed text-strong" tabIndex={0} aria-label={`Adım ${i + 1} kodu`}>
                 <code>{s.code}</code>
               </pre>
               <div className="absolute top-0 right-0">

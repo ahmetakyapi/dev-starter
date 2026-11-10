@@ -151,7 +151,7 @@
      Büyük ve SIKI: hiyerarşiyi renk değil punto ve aralık kurar. Satır
      yüksekliği maskenin payıyla ölçüldü (1.0 altı Türkçe kuyruklara değer). */
   .hero-display {
-    font-size: clamp(2.6rem, 9.6vw, 6.5rem);
+    font-size: clamp(2.8rem, 9.6vw, 6.5rem);
     line-height: 1;
     letter-spacing: -0.035em;
   }

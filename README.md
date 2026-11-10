@@ -78,7 +78,7 @@ hareket eğrisi, aynı bileşen davranışı. Değişen tek şey **palet**. Vars
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/readme/palettes-dark.svg">
-  <img alt="Dört palet: signature, verdant, ember, iris" src=".github/readme/palettes-light.svg" width="100%">
+  <img alt="On palet, açık ve koyu temada: her birinin marka karosu, başlık degradesi, rol renkleri ve düğmesi" src=".github/readme/palettes-light.svg" width="100%">
 </picture>
 
 | Her Projede Aynı | Projeye Göre Seçilen |
@@ -171,7 +171,7 @@ tek satırla değiştirilir. Görseller GitHub temana göre açık ya da koyu ge
 ## Bileşenler
 
 Kopyala-yapıştır kütüphane: her dosya tek başına projeye eklenir, yalnızca token
-sınıflarına ve `cn()`'e dayanır, açık/koyu ve dört palette doğru görünür.
+sınıflarına ve `cn()`'e dayanır, açık/koyu ve on palette doğru görünür.
 `/snippet <ad>` uyarlayarak kopyalar.
 
 | Grup | Bileşenler |

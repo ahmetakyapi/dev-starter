@@ -1,25 +1,83 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="dev-starter — Ahmet Akyapı ekosisteminin başlangıç kiti">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400" role="img" aria-label="dev-starter: Fikirden Canlıya, Aynı Kimlikle. 10 palet, tek token mimarisi.">
 <defs>
 <linearGradient id="display" x1="0.036" y1="0.313" x2="0.964" y2="0.687"><stop offset="0%" stop-color="#f2f7fc"/><stop offset="44%" stop-color="#b6e2ff"/><stop offset="76%" stop-color="#74caff"/><stop offset="100%" stop-color="#3fbcff"/></linearGradient>
 <linearGradient id="brand" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#5cc4ff"/><stop offset="48%" stop-color="#1f86e0"/><stop offset="100%" stop-color="#0b3f86"/></linearGradient>
-<radialGradient id="glow" cx="0.92" cy="0.05" r="0.75"><stop offset="0" stop-color="#35b8ff" stop-opacity="0.22"/><stop offset="1" stop-color="#35b8ff" stop-opacity="0"/></radialGradient>
-<clipPath id="card"><rect width="1280" height="360" rx="28"/></clipPath>
+<linearGradient id="chip-signature" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#5cc4ff"/><stop offset="48%" stop-color="#1f86e0"/><stop offset="100%" stop-color="#0b3f86"/></linearGradient>
+<linearGradient id="chip-cobalt" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#93c5fd"/><stop offset="48%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1e40af"/></linearGradient>
+<linearGradient id="chip-violet" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="48%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#5b21b6"/></linearGradient>
+<linearGradient id="chip-rose" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#f9a8d4"/><stop offset="48%" stop-color="#ec4899"/><stop offset="100%" stop-color="#9d174d"/></linearGradient>
+<linearGradient id="chip-ruby" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#fca5a5"/><stop offset="48%" stop-color="#ef4444"/><stop offset="100%" stop-color="#991b1b"/></linearGradient>
+<linearGradient id="chip-tangerine" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#fdba74"/><stop offset="48%" stop-color="#f97316"/><stop offset="100%" stop-color="#9a3412"/></linearGradient>
+<linearGradient id="chip-jade" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#6ee7b7"/><stop offset="48%" stop-color="#10b981"/><stop offset="100%" stop-color="#065f46"/></linearGradient>
+<linearGradient id="chip-verdant" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#6ee7b7"/><stop offset="48%" stop-color="#14a37a"/><stop offset="100%" stop-color="#08523c"/></linearGradient>
+<linearGradient id="chip-ember" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#fcd34d"/><stop offset="48%" stop-color="#e07a0c"/><stop offset="100%" stop-color="#7a3306"/></linearGradient>
+<linearGradient id="chip-iris" x1="0.250" y1="0.067" x2="0.750" y2="0.933"><stop offset="0%" stop-color="#c7d2fe"/><stop offset="48%" stop-color="#6d5fe0"/><stop offset="100%" stop-color="#2e2490"/></linearGradient>
+<pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="rgb(255,255,255)" fill-opacity="0.15"/></pattern>
+<linearGradient id="fade" x1="1" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="fade-mask"><rect width="1280" height="400" fill="url(#fade)"/></mask>
+<radialGradient id="glow" cx="0.86" cy="0.1" r="0.7"><stop offset="0" stop-color="#35b8ff" stop-opacity="0.2"/><stop offset="1" stop-color="#35b8ff" stop-opacity="0"/></radialGradient>
+<clipPath id="card"><rect width="1280" height="400" rx="28"/></clipPath>
 </defs>
+<rect width="1280" height="400" rx="28" fill="#0c0c0d"/>
 <g clip-path="url(#card)">
-<rect width="1280" height="360" fill="#0c0c0d"/>
-<rect width="1280" height="360" fill="url(#glow)"/>
-<g stroke="rgb(255,255,255)" stroke-opacity="0.05" stroke-width="1"><line x1="106" y1="0" x2="106" y2="360"/><line x1="212" y1="0" x2="212" y2="360"/><line x1="318" y1="0" x2="318" y2="360"/><line x1="424" y1="0" x2="424" y2="360"/><line x1="530" y1="0" x2="530" y2="360"/><line x1="636" y1="0" x2="636" y2="360"/><line x1="742" y1="0" x2="742" y2="360"/><line x1="848" y1="0" x2="848" y2="360"/><line x1="954" y1="0" x2="954" y2="360"/><line x1="1060" y1="0" x2="1060" y2="360"/><line x1="1166" y1="0" x2="1166" y2="360"/><line x1="1272" y1="0" x2="1272" y2="360"/></g>
+<rect width="1280" height="400" fill="url(#glow)"/>
+<rect width="1280" height="400" fill="url(#dots)" mask="url(#fade-mask)"/>
 </g>
-<rect x="0.5" y="0.5" width="1279" height="359" rx="28" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.08"/>
-<g transform="translate(96 72)">
-  <rect width="64" height="64" rx="16" fill="url(#brand)"/>
-  <rect x="16" y="18" width="32" height="7" rx="3.5" fill="#fff" fill-opacity="0.95"/>
-  <rect x="16" y="29" width="24" height="7" rx="3.5" fill="#fff" fill-opacity="0.75"/>
-  <rect x="16" y="40" width="16" height="7" rx="3.5" fill="#fff" fill-opacity="0.55"/>
+<g transform="translate(88 84)"><rect width="56" height="56" rx="14" fill="url(#brand)"/><rect x="14" y="15.8" width="28" height="6.1" rx="3.1" fill="#fff" fill-opacity="0.95"/><rect x="14" y="25.4" width="21" height="6.1" rx="3.1" fill="#fff" fill-opacity="0.75"/><rect x="14" y="35" width="14" height="6.1" rx="3.1" fill="#fff" fill-opacity="0.55"/></g>
+<text x="162" y="126" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="46" font-weight="800" letter-spacing="-1.7" fill="#f5f5f5">dev-starter</text>
+<text x="88" y="222" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="800" letter-spacing="-1.5" fill="url(#display)">Fikirden Canlıya,</text>
+<text x="88" y="268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="800" letter-spacing="-1.5" fill="#f5f5f5">Aynı Kimlikle</text>
+<text x="88" y="316" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#8a8a8a">Next 16  ·  React 19  ·  Tailwind v4  ·  motion  ·  Drizzle  ·  Neon  ·  Auth.js v5</text>
+<g transform="translate(672 74)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-signature)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
 </g>
-<text x="184" y="124" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="64" font-weight="800" letter-spacing="-2.4" fill="url(#display)">dev-starter</text>
-<text x="96" y="204" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#f5f5f5">Fikirden Canlıya, Aynı Kimlikle</text>
-<text x="96" y="236" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="17" fill="#a1a1a1">Şablonlar, token sistemi, bileşenler, rehberler ve agent'lar · Ahmet Akyapı ekosistemi</text>
-<g transform="translate(96 262)"><rect width="88.19999999999999" height="32" rx="16" fill="rgb(255,255,255)" fill-opacity="0.07"/><text x="44.099999999999994" y="21" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#a1a1a1">Next 16</text></g><g transform="translate(194.2 262)"><rect width="96.8" height="32" rx="16" fill="rgb(255,255,255)" fill-opacity="0.07"/><text x="48.4" y="21" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#a1a1a1">React 19</text></g><g transform="translate(301 262)"><rect width="122.6" height="32" rx="16" fill="rgb(255,255,255)" fill-opacity="0.07"/><text x="61.3" y="21" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#a1a1a1">Tailwind v4</text></g><g transform="translate(433.6 262)"><rect width="79.6" height="32" rx="16" fill="rgb(255,255,255)" fill-opacity="0.07"/><text x="39.8" y="21" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#a1a1a1">motion</text></g><g transform="translate(523.2 262)"><rect width="88.19999999999999" height="32" rx="16" fill="rgb(255,255,255)" fill-opacity="0.07"/><text x="44.099999999999994" y="21" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#a1a1a1">Drizzle</text></g><g transform="translate(621.4000000000001 262)"><rect width="62.4" height="32" rx="16" fill="rgb(255,255,255)" fill-opacity="0.07"/><text x="31.2" y="21" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#a1a1a1">Neon</text></g><g transform="translate(693.8000000000001 262)"><rect width="114" height="32" rx="16" fill="rgb(255,255,255)" fill-opacity="0.07"/><text x="57" y="21" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#a1a1a1">Auth.js v5</text></g>
-<g transform="translate(1000 284)"><circle r="16" fill="#35b8ff"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1052 284)"><circle r="16" fill="#34d399"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1104 284)"><circle r="16" fill="#fbbf24"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1156 284)"><circle r="16" fill="#a5b4fc"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1208 284)"><circle r="16" fill="#60a5fa"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1260 284)"><circle r="16" fill="#a78bfa"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1312 284)"><circle r="16" fill="#f472b6"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1364 284)"><circle r="16" fill="#f87171"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1416 284)"><circle r="16" fill="#fb923c"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g><g transform="translate(1468 284)"><circle r="16" fill="#34d399"/><circle r="16" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.15"/></g>
+<g transform="translate(725 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-cobalt)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(778 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-violet)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(831 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-rose)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(884 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-ruby)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(937 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-tangerine)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(990 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-jade)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(1043 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-verdant)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(1096 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-ember)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<g transform="translate(1149 92)">
+  <rect width="43" height="216" rx="13.4" fill="url(#chip-iris)"/>
+  <rect x="0.5" y="0.5" width="42" height="215" rx="13.4" fill="none" stroke="#fff" stroke-opacity="0.14"/>
+  <circle cx="21.5" cy="21.5" r="4.8" fill="#0c0c0d"/>
+</g>
+<text x="1192" y="338" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#8a8a8a">10 palet  ·  açık + koyu  ·  tek token mimarisi</text>
+<rect x="0.5" y="0.5" width="1279" height="399" rx="27.5" fill="none" stroke="rgb(255,255,255)" stroke-opacity="0.08"/>
 </svg>

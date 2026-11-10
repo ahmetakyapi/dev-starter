@@ -154,8 +154,9 @@ export function AreaChart({
   // Etiket seyreltme: telefonda en çok ~5, geniş ekranda ~10 etiket.
   const stepSm = Math.max(1, Math.ceil(n / 5));
   const stepLg = Math.max(1, Math.ceil(n / 10));
-  // Son etiket hep görünür; ona çok yakın düşen adım etiketi çakışmasın diye gizlenir.
-  const showTick = (i: number, step: number) => i === n - 1 || (i % step === 0 && n - 1 - i >= step * 0.8);
+  // Son etiket hep görünür; ona bir tam adımdan yakın düşen etiket gizlenir. Son etiket sağa
+  // yaslı (ortalı değil), yani yarım etiket kadar sola taşar: 0,8 adımda telefonda "28 Eki2 Kas" diye bitişiyordu.
+  const showTick = (i: number, step: number) => i === n - 1 || (i % step === 0 && n - 1 - i >= step);
 
   const nearest = (event: PointerEvent<HTMLDivElement>) => {
     const box = event.currentTarget.getBoundingClientRect();

@@ -303,7 +303,7 @@ export const Landing: Story = {
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    await canvas.findByRole("heading", { level: 1, name: "Talepleri kaybetmeden yanıtla." });
+    await canvas.findByRole("heading", { level: 1, name: "Talepleri Kaybetmeden Yanıtla" });
     const dock = canvas.getByRole("toolbar", { name: "Pusula uygulamaları" });
     await userEvent.click(within(dock).getByRole("button", { name: "Takvim" }));
     await waitFor(() => expect(canvas.getByRole("img", { name: /odakta Takvim/ })).toBeInTheDocument());

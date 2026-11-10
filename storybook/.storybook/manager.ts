@@ -1,6 +1,6 @@
 import { createElement } from "react";
 import { addons, type API } from "storybook/manager-api";
-import { GLOBALS_UPDATED, SET_GLOBALS } from "storybook/internal/core-events";
+import { GLOBALS_UPDATED, SET_GLOBALS, STORY_PREPARED } from "storybook/internal/core-events";
 import { THEMES, lightTheme, paletteCss } from "./manager-theme";
 
 /* Storybook'un kendi arayüzü de board dilinde ve ARAÇ ÇUBUĞUNU İZLER:
@@ -50,4 +50,24 @@ addons.register("dev-starter/theme-sync", (api: API) => {
   apply(undefined);
   api.on(SET_GLOBALS, ({ globals }: { globals: Record<string, unknown> }) => apply(globals));
   api.on(GLOBALS_UPDATED, ({ globals }: { globals: Record<string, unknown> }) => apply(globals));
+});
+
+/* Sayfa niteliğindeki hikâyelerde (kapak, vitrin, örnek uygulama) eklenti
+   paneli kapanır: kapak ilk ekranın üçte birini "This story has no controls"
+   kutusuna veriyordu. Panel yalnız BİZ kapattıysak geri açılır; kullanıcı
+   kendi kapattıysa bileşen sayfasına geçince kapalı kalır. */
+const PAGE_STORIES = /^(cover|showcase|demo-app|start|pattern-library|references|landing|gallery)--/;
+
+addons.register("dev-starter/page-stories", (api: API) => {
+  let hiddenByUs = false;
+  api.on(STORY_PREPARED, ({ id }: { id: string }) => {
+    const page = PAGE_STORIES.test(id);
+    if (page && api.getIsPanelShown()) {
+      api.togglePanel(false);
+      hiddenByUs = true;
+    } else if (!page && hiddenByUs) {
+      api.togglePanel(true);
+      hiddenByUs = false;
+    }
+  });
 });

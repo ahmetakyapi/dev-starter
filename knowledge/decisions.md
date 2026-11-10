@@ -995,3 +995,21 @@ içe dağıtım başlar. MCP gereken tek rol (`design-reviewer`) sunucuyu adıyl
 **Karar 6 — `hotfix` commit tipi değildir.** Tip listesi üç yerde aynıdır
 (kural tablosu, global CLAUDE.md, `quality-scan` → `CC_TYPES`) ve health-check
 eşitliği denetler.
+
+## Kapak ve README Yüzü (2026-11-10)
+
+- Kapağın konusu kimliktir, pano değil: Her Şey Bir Arada zaten ürün panosunu
+  gösteriyor; kapak token sistemini çalışırken gösterir (rol renkleri, ölçülen
+  kontrast, tema anahtarı).
+- Kapakta sayı ve oran elle yazılmaz: kontrast render anında `tokens.ts`ten
+  ölçülür, desen sayısı `PATTERN_PRESETS`ten gelir.
+- Marka işareti (degrade karo + kısalan üç çubuk) sidebar, kapak künyesi ve
+  README'de aynıdır.
+- Sayfa niteliğindeki hikâyede eklenti paneli kapanır; yalnız biz kapattıysak
+  geri açılır.
+- Play fonksiyonu sayfayı kaydırmaz ve ziyaretçinin globalini değiştirip
+  bırakmaz.
+- README görselleri palet sayısından bağımsız çizilir (beşli sıralar, numune
+  yelpazesi).
+- Kapakta yeni Tanıtım bileşenleri bilerek yok (yığılma olurdu); Pusula
+  Tanıtım Sayfası'nda sergileniyorlar.

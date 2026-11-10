@@ -35,7 +35,9 @@
   line-height: 1.05;
   letter-spacing: -0.03em;
 }
-.sbdocs-content h2:not(.sb-anchor, .sb-unstyled) {
+/* `.sb-unstyled *`: "Projeye Al" bloğunun kendi başlığı belge başlığı değil;
+   dışlanmazsa bloğun üstünde 3,5rem boşluk ve yarım bir çizgi çıkıyordu. */
+.sbdocs-content h2:not(.sb-anchor, .sb-unstyled, .sb-unstyled *) {
   font-family: var(--font-display);
   font-weight: 650;
   letter-spacing: -0.015em;
@@ -44,5 +46,5 @@
   border-top: 1px solid var(--line);
   border-bottom: 0;
 }
-.sbdocs-content h3:not(.sb-anchor, .sb-unstyled) { font-family: var(--font-display); font-weight: 650; }
+.sbdocs-content h3:not(.sb-anchor, .sb-unstyled, .sb-unstyled *) { font-family: var(--font-display); font-weight: 650; }
 .sbdocs-preview, .docs-story { border-radius: 14px; box-shadow: none; }

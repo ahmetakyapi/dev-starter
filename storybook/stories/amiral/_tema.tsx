@@ -159,7 +159,7 @@ function MiniScreen({ mode, palette }: { mode: "light" | "dark"; palette: Palett
 export function ThemeCompare() {
   const palette = usePalette();
   return (
-    <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2">
       <MiniScreen mode="light" palette={palette} />
       <MiniScreen mode="dark" palette={palette} />
     </div>

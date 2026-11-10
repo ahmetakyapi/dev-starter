@@ -126,7 +126,8 @@ export function TanitimGroup() {
         </div>
       </Cell>
       <Cell file="hand-callout" name="El Yazısı Not" note="Kenardan, okla tek bir noktayı gösterir; sayfada bir tane." span={3}>
-        <div className="relative grid justify-items-center pt-16">
+        {/* pt-24: okun ucu karonun ÜSTÜNDE bitsin; pt-16'da uç etiketin harflerine giriyordu. */}
+        <div className="relative grid justify-items-center pt-24">
           <HandCallout direction="down-left" className="absolute top-0 left-1/2">
             en çok bu seçiliyor
           </HandCallout>

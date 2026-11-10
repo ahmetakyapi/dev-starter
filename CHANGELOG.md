@@ -7,6 +7,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Görsel tur: Storybook kapağı, README yüzü — 2026-11-10
+
+- **Kapak yeniden tasarlandı**: paletin numune föyü (rol renkleri ve WCAG
+  formülüyle render anında ölçülen kontrast seçili paletle döner), tek sırada
+  on palet numunesi, sayı defteri (hepsi türetilir), içinde canlı parça
+  taşıyan dört kapı kartı, giriş koreografisi ve bölüm Reveal'leri.
+  Sayfa niteliğindeki hikâyelerde eklenti paneli kendiliğinden kapanır;
+  sidebar markasına üç çubuklu işaret.
+- **Düzeltme**: kapak açılışta aşağı kaymış geliyordu (play `userEvent` →
+  `fireEvent`); bileşen belgelerinde "Projeye Al" üstündeki boşluk; Her Şey
+  Bir Arada'da 390 px taşmaları (seçim çubuğu, puan, sekme birimi, el yazısı
+  ok, tema karşılaştırma, kurulum kodu).
+- `area-chart`, `line-chart`: telefonda son iki x etiketi bitişiyordu.
+- **Pusula Tanıtım**: Title Case, tek başlık ölçeği, rafı gösteren el notu,
+  kapanış bölümü ve alt bilgi.
+- **README görselleri**: palet panosu 4 palete göre yazılmıştı, 10 paletle 6'sı
+  tuvalden taşıyordu; pano ve afiş palet sayısından bağımsız yeniden çizildi,
+  sayılar sayıldıkları yolla, hareket panosu ortak ms ekseninde.
+- Landing: `hero-display` alt sınırı 2,8rem.
+
 ### Ajan Katmanı Denetimi (2026-11-10)
 
 - **hooks:** commit konusu çapalı okunuyor (`hook_commit_subject`): gövdede `feat:` geçen biçimsiz mesaj artık uyarı alıyor, `docs: prefix: …` sahte BUGFIX uyarısı almıyor, `feat(ui)!:` tanınıyor. `hotfix` tip listesinden çıktı (triage sınıfı; commit `fix(...)`).

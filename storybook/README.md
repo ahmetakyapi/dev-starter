@@ -4,7 +4,7 @@
 
 | Bölüm | İçerik |
 |-------|--------|
-| **Kapak** (en üstte) | Kataloğun ilk ekranı: palet karoları bütün arayüzü döndürür, örnek sahne gerçek bileşenlerden, raf ve kurulum |
+| **Kapak** (en üstte) | Kataloğun ilk ekranı: paletin numune föyü (rol renkleri ve ölçülen kontrast seçili paletle döner, anahtar temayı değiştirir), on palet numunesi bütün arayüzü döndürür, sayılar, dört kapı ve kurulum. Sayfa niteliğindeki hikâyelerde eklenti paneli kendiliğinden kapanır |
 | **Örnek Tasarım** | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (katalogdaki bütün bileşenler, 15 grafik, bloklar, 10 palet); **Desen Kütüphanesi**: 35 token'lı zemin, Önizle ve Kopyala; **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
 | Vitrin | Genel bakış + grup grup vitrin sayfaları (`snippets/ui/vitrin/`) |
 | Başlangıç, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
