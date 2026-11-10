@@ -36,7 +36,10 @@ Sırayla:
    Neden: subagent wrapper'ları rol dosyasını proje dışından okur.
 4. **Komutlar** — `.claude/commands/*.md` her biri `~/.claude/commands/`a
    symlink. `/kickoff`, `/new-project`, `/theme`, `/check`, `/deploy`... her
-   projede bu sürümler çalışır.
+   projede bu sürümler çalışır. Yalnız bu depoda anlamlı olanlar
+   (`REPO_ONLY_COMMANDS`: `/harvest`, `/evolve`) bağlanmaz. Depodan silinen ya
+   da o listeye giren komutun eski bağlantısı kaldırılır (yalnız bu depoya
+   giden symlink'ler; kendi komutlarına dokunulmaz).
 5. **Subagent'lar** — `.claude/agents/*.md` → `~/.claude/agents/` (`gate`,
    `deploy`, `strategist`, `design-reviewer`, `content-editor`, `frontend`,
    `backend`, `qa`, `researcher`). wrapper'lar ince; rol tanımlarını
@@ -100,6 +103,31 @@ vercel login
 # 8. Doğrulama
 bash ~/dev-starter/scripts/health-check.sh
 ```
+
+### Linux ve Bulut Oturumu
+
+Yukarıdaki adımlar macOS içindir. Linux'ta Homebrew yerine dağıtımın paket
+yöneticisi: `git`, `jq` (hook'lar JSON'u `jq` ile okur; yoksa `python3`e
+düşer, ikisi de yoksa uyarıp kontrolü atlar) ve Node 24 (`nvm install 24`).
+Depoyu istediğin yere klonla; `bootstrap.sh` `~/dev-starter` bağlantısını
+kendisi kurar. Önce `--dry-run`.
+
+**Bulut oturumunda (claude.ai/code) bootstrap koşmaz**: `~/.claude/CLAUDE.md`,
+`~/.claude/rules/dev-starter/`, global komutlar ve subagent'lar orada yoktur.
+Sonuçları:
+
+- dev-starter deposunun kendi oturumunda komutlar ve subagent'lar proje
+  kapsamından (`.claude/commands`, `.claude/agents`) gelir; hook'lar
+  `$CLAUDE_PROJECT_DIR`dan çalışır. Eksik olan yalnız global kurallardır.
+- Şablondan doğmuş bir projenin bulut oturumunda `~/dev-starter` yoktur:
+  hook'lar koşmaz, SessionStart bunu oturum başında söyler. Gate ve sır
+  taraması isteniyorsa oturumun başında depoyu `~/dev-starter`a klonla
+  (ortamın kurulum betiğine eklenebilir); bootstrap şart değil, hook'lar
+  yalnız o yolu arar.
+- Tarayıcı işleri (`/reference`, `/harvest`, `/clone-website`,
+  design-reviewer) bulut oturumunda kurulu Playwright'la çalışır
+  (`require('playwright')`); yerelde `npm i -D playwright && npx playwright
+  install chromium` ya da Playwright MCP.
 
 Projeler iCloud ile eşitlenen Masaüstü'ndeyse eşitleme ` 2.ts` kopyaları
 bırakıp derlemeyi kırabilir (`knowledge/mistakes.md` #91). Yeni makinede
@@ -189,7 +217,11 @@ brew install --cask cmux
 
 - Yeni bir global komut: `.claude/commands/<ad>.md` ekle, `bootstrap.sh`yi
   yeniden çalıştır. Komut başka projeden çağrılacağı için içindeki yollar
-  `~/dev-starter/...` biçiminde mutlak olmalı.
+  `~/dev-starter/...` biçiminde mutlak olmalı. Yalnız bu depoda çalışacaksa
+  `bootstrap.sh` → `REPO_ONLY_COMMANDS`a ekle.
+- Bir projede terminalden atılan commit'ler de Gate ve sır taramasından
+  geçsin: proje kökünde `bash ~/dev-starter/hooks/git-pre-commit.sh --install`
+  (klon başına bir kez; `/new-project` yeni projede kendisi yapar).
 - Yeni bir subagent: `.claude/agents/<ad>.md` (ince wrapper) +
   `agents/<ad>-agent.md` (rol tanımı).
 - Yeni bir skill'i depoda taşımak: `machine/skills/<ad>/` altına koy.

@@ -126,3 +126,33 @@ hook_commit_touches_worktree() {
 hook_is_git_commit() {
   hook_text_is_git_commit "$(hook_command)"
 }
+
+# Commit mesajının KONU satırını (ilk -m/--message'ın ilk satırı) basar;
+# çıkaramazsa boş döner (çağıran o durumda gevşek denetime düşer).
+# NEDEN VAR: biçim ve fix/TDD denetimleri deseni komut metninin HERHANGİ bir
+# yerinde arıyordu — gövdede "feat: ..." geçen biçimsiz mesaj uyarısız
+# geçiyor, "docs: prefix: ..." içindeki "fix:" sahte BUGFIX uyarısı
+# üretiyordu. Tanınan biçimler: -m 'x' · -m "x" · -m x · -am "x" ·
+# --message=x · -m "$(cat <<'EOF' ⏎ konu ⏎ … EOF)" (Claude Code'un varsayılanı).
+hook_commit_subject() {
+  local text="$1" rest q
+  [[ "$text" =~ (^|[[:space:]])(-[a-zA-Z]*m|--message)(=|[[:space:]]+)(.*)$ ]] || return 0
+  rest="${BASH_REMATCH[4]}"
+  if [[ "$rest" =~ ^[\"\']?\$\([[:space:]]*cat[[:space:]]*\<\<-?[[:space:]]*[\"\'\\]?[A-Za-z_][A-Za-z0-9_]*[\"\']?[[:space:]]*$'\n' ]]; then
+    rest="${rest#*$'\n'}"
+    while [[ "$rest" == $'\n'* ]]; do rest="${rest#$'\n'}"; done
+    rest="${rest%%$'\n'*}"
+  else
+    q="${rest:0:1}"
+    if [ "$q" = '"' ] || [ "$q" = "'" ]; then
+      rest="${rest:1}"
+      rest="${rest%%"$q"*}"
+    else
+      rest="${rest%%[[:space:]]*}"
+    fi
+    rest="${rest%%$'\n'*}"
+  fi
+  # baştaki boşluk/sekme (<<- girintisi)
+  rest="${rest#"${rest%%[![:space:]]*}"}"
+  printf '%s' "$rest"
+}

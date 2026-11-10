@@ -1,12 +1,13 @@
 ---
-description: Ekosistemin kendi gelişim turu — health-check + canlı proje denetimi + bilgi tazeliği + web araştırması ("benzer araçlar ne ekledi"). Öncelikli iyileştirme listesi üretir; onaylananları uygular. dev-starter'ın kendisini geliştirir.
+description: Ekosistemin kendi gelişim turu — health-check + canlı proje denetimi + bilgi tazeliği + web araştırması ("benzer araçlar ne ekledi"). Öncelikli iyileştirme listesi üretir; onaylananları uygular. dev-starter'ın kendisini geliştirir. Yalnız ~/dev-starter deposunda.
 argument-hint: "[odak — boşsa tam tur: altyapı | bilgi | rakip]"
 ---
 
 # /evolve — Ekosistem Kendini Geliştirir
 
-Odak: **$ARGUMENTS** (boşsa üç eksen de). Bu komut `~/dev-starter` deposunda
-çalışır; proje deposundaysa önce oraya geçmeyi öner.
+Odak: **$ARGUMENTS** (boşsa üç eksen de). Bu komut yalnız `~/dev-starter`
+deposunda yüklüdür (`machine/bootstrap.sh` → `REPO_ONLY_COMMANDS`; başka
+projeye bağlanmaz). Yollar depo köküne göredir.
 
 1. **Altyapı sağlığı** (komutlarla):
    - `bash ~/dev-starter/scripts/health-check.sh` — hata ve uyarıları listele
@@ -37,3 +38,7 @@ Odak: **$ARGUMENTS** (boşsa üç eksen de). Bu komut `~/dev-starter` deposunda
 
 Kural: `rules/self-improvement.md` — onaysız hiçbir kural/bilgi dosyası
 değişmez; her uygulanan madde CHANGELOG'da bir satırdır.
+
+Çıktı: sağlık özeti (health-check ve test-hooks son satırları), bayatlayan
+bilgi dosyaları, dış tarama raporunun yolu, öncelikli liste (en çok 7) ve
+uygulananların dosya listesi.

@@ -10,7 +10,8 @@ Kaynak: **$ARGUMENTS**
 `/reference` bir bölümün yapısını BİR projeye uyarlar. `/harvest` bütün siteyi
 tarar ve kalıcı kazancı **ekosisteme** işler: kütüphanede eksik olan
 bileşenler, desen ve strateji dersleri, alınmayanların gerekçesi. Bu komut
-`~/dev-starter` deposunda çalışır; proje deposundaysan önce oraya geç.
+yalnız `~/dev-starter` deposunda yüklüdür (`machine/bootstrap.sh` →
+`REPO_ONLY_COMMANDS`; başka projeye bağlanmaz). Yollar depo köküne göredir.
 
 **Kural (değişmez):** alınan şey dil ve davranıştır. Kod, metin, logo, görsel,
 maskot, ses ve font kopyalanmaz; her şey token'la sıfırdan yazılır

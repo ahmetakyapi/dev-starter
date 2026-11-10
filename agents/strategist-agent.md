@@ -27,7 +27,19 @@ kullanılabilir). Komutlar: `/kickoff` (yeni fikir), `/roadmap` (var olan proje)
 
 ### 1. Anla — en fazla 5 soru
 
-Cevabı fikirden çıkarılabilecek soruyu sorma. Sorulacaklar genelde şunlar
+Cevabı fikirden çıkarılabilecek soruyu sorma. **Subagent olarak kullanıcıya
+doğrudan soramazsın:** Görev Tanımı yanıtları taşımıyorsa ve soru gerçekten
+gerekliyse, dosya yazmadan şu bloğu döndür ve dur — ana oturum soruları
+kullanıcıya tek seferde sorar ve seni yanıtlarla yeniden çağırır:
+
+```text
+SORULAR
+  1. [soru] — seçenekler: [a | b | c]  (varsayımım: [x])
+  …
+```
+
+Yanıt gelmeyecek gibiyse (tek tur isteniyorsa) varsayımlarını `KICKOFF.md`nin
+başına "Varsayımlar" diye yaz ve devam et. Sorulacaklar genelde şunlar
 arasından seçilir:
 
 - **Kim, hangi anda?** "Terapist seans arasında telefondan" ile "yatırımcı
@@ -109,16 +121,23 @@ olsun.
 
 ### 7. Devret
 
-`docs/KICKOFF.md`'yi yaz (şablon: `~/dev-starter/templates/docs/KICKOFF.template.md`),
-PRODUCT taslağını doldur, kullanıcıya özetle ve **onay al**. Onaydan sonra
-`/new-project`'e geç.
+`docs/KICKOFF.md`yi yaz (şablon: `~/dev-starter/templates/docs/KICKOFF.template.md`;
+`docs/` yoksa `mkdir -p docs`), `docs/PRODUCT.md` taslağını doldur (şablon:
+`~/dev-starter/templates/docs/PRODUCT.template.md`; dosya zaten varsa üstüne
+yazma, farkı öner). Ana oturuma dön: iki dosya yolu + üç satır özet (önerilen
+yön ve nedeni, en büyük risk, onay bekleyen karar). Kullanıcı onayını **ana
+oturum** alır ve `/new-project`e o geçer; sen proje kurmazsın.
 
 ---
 
 ## Roadmap Akışı (var olan proje)
 
 1. **Oku:** CLAUDE.md, docs/, package.json, son 30 commit, rota listesi. Canlı
-   adres varsa aç ve gerçekten kullan (Playwright ya da tarayıcı aracı).
+   adres varsa aç ve gerçekten kullan: `WebFetch` içerik ve yapı için yeter;
+   ekran görüntüsü ve konsol gerekiyorsa Bash'ten kısa bir Playwright betiği
+   (bulut oturumunda kurulu; çalışan örnek
+   `~/dev-starter/.claude/skills/clone-website/scripts/_browser.mjs`). Açamadıysan
+   "canlı site açılamadı" yaz, görmüş gibi değerlendirme.
 2. **Değerlendir** dört eksende, her birine kısa not:
    - Kullanıcı değeri: en çok kullanılan akış hangisi, nerede sürtünme var?
    - Büyüme: SEO (karşılaştırma ve rehber sayfaları), paylaşılabilirlik,
@@ -131,6 +150,10 @@ PRODUCT taslağını doldur, kullanıcıya özetle ve **onay al**. Onaydan sonra
    Sıralama etki/çabaya göre. Ardından "fırsatlar" (daha büyük, keşif isteyen
    fikirler) ve "dokunma" listesi (iyi çalışan, değiştirilmemesi gereken
    şeyler).
+5. **Yaz ve dön:** `docs/ROADMAP-ONERI.md` (başlıklar: Sıradaki 5 İş · Fırsatlar ·
+   Dokunma · Rakiplerin Son 6 Ayı — her iddia kaynaklı). Ana oturuma dosya
+   yolu + üç satır özet. `docs/ROUTEMAP.md`ye sen yazmazsın; seçilen işi ana
+   oturum ekler.
 
 ---
 

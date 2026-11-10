@@ -34,7 +34,10 @@ Aktif story'si olan işte commit iznini `/gate` açar: sonuç
 `docs/ROUTEMAP.md`'nin Gate kolonuna işlenir ve `gate-guard` hook'u PASSED
 olmayan aktif story varken commit'i bloklar (`.claude/settings.json` →
 `~/dev-starter/hooks/`). Yukarıdaki komutlar Gate'in ön koşuludur, yerine
-geçmez; yalnız doküman değiştiren commit muaftır.
+geçmez; yalnız doküman değiştiren commit muaftır. `~/dev-starter` yoksa (bulut
+oturumu, kurulmamış makine) hook'lar koşmaz ve oturum başında "KAPALI" uyarısı
+basılır: kontrolleri elle çalıştır. Terminalden atılan commit'ler için klon
+başına bir kez `bash ~/dev-starter/hooks/git-pre-commit.sh --install`.
 
 ## Yol kapsamlı kurallar (`.claude/rules/`)
 

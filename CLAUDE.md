@@ -36,7 +36,7 @@ packages/    @ahmet/theme (Tailwind v4 theme.css + tokens.ts) · @ahmet/ui (snip
 knowledge/   themes/ · decisions · mistakes (indeksli) · patterns · tech-radar · design-references · references · live-projects-audit
 agents/      12 rol tanımı + AGENT_PROTOCOL.md (haberleşme, orkestrasyon, Görev Tanımı)
 rules/       10 kural dosyası (aşağıdaki tablo) · phases/ planning, development, e2e-polish, release-maintenance
-hooks/       gate-guard · quality-scan · routemap-sync · session-brief (+ lib/)
+hooks/       gate-guard · quality-scan · routemap-sync · session-brief · git-pre-commit (+ lib/)
 scripts/     health-check · test-hooks · slop-scan · audit-project · verify-* · build-* · add-ui · add-figure-kit
 .claude/     settings.json (hook'lar) · rules/ · commands/ (20) · agents/ (9 wrapper) · skills/clone-website
 templates/   nextjs-fullstack · landing · agentic-chat · docs/ (KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS)
@@ -110,7 +110,7 @@ bash scripts/audit-project.sh ~/Desktop/Projects/<proje>   # canlı proje deneti
 | `/clone-website <url>` | Ölçümlü site klonu: betikli yakalama, stil dökümü, varlık indirme, piksel/tipografi farkı geçene kadar düzeltme (Playwright; skill, yalnız bu depoda) |
 
 Dosyalar `.claude/commands/<ad>.md` (`/clone-website`: `.claude/skills/clone-website/SKILL.md`).
-**Tek kaynak bu repo**: bootstrap her komutu `~/.claude/commands/`a symlink'ler,
+**Tek kaynak bu repo**: bootstrap komutları (`/harvest` ve `/evolve` hariç, onlar yalnız bu depoda) `~/.claude/commands/`a symlink'ler,
 her projede bu sürümler çalışır; bu yüzden komut içindeki yollar `~/dev-starter/...`
 biçiminde mutlaktır. Komut ↔ skill kararı ve wrapper sözleşmesi: `.claude/rules/orchestration.md`.
 

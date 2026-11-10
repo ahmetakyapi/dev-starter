@@ -28,12 +28,21 @@ Bug geldiğinde `rules/bugfix-protocol.md` TDD akışını takip eder:
 
 1. Reproduce → 2. Failing test → 3. Fix → 4. Green → 5. Regression → 6. Document
 
-## Kullandığı Skills
+## Girdi, Çıktı, Bitti Tanımı
 
-| Skill     | Ne Zaman                              |
-| --------- | ------------------------------------- |
-| `/check`  | Schema veya API teslim öncesi kontrol |
-| `/deploy` | Production migration öncesi hazırlık  |
+- **Girdi** (Görev Tanımı): story dosyası, `oku:` adresleri (şema, API
+  sözleşmesi), `sinir:`, `kabul:` kriterleri. Eksikse `AGENT_ERROR` ile iste.
+- **Çıktı**: kod ve YENİ migration dosyası doğrudan dosyalara; son mesajında
+  değişen dosya listesi, doğrulama komutları + exit kodları, FE'nin
+  bağlanacağı sözleşme (uç/action adı, girdi şeması, hata durumları).
+- **Bitti**: kabul kriterleri karşılandı; her Server Action'da `auth()` + zod +
+  sahiplik; typecheck ve build çıktısı teslimde; commit ATILMADI; üretim
+  veritabanına DOKUNULMADI (üretim migration'ı kullanıcı onayıyla, deploy'dan
+  önce ve ayrı — `~/dev-starter/guides/07-data-auth-security.md`).
+
+Kayıtlı subagent slash komutu çağıramaz (`/check`, `/deploy` ana oturumun ve
+kullanıcının aracıdır); doğrulama aşağıdaki "Teslim Öncesi Doğrulama"
+komutlarıyla doğrudan yapılır.
 
 ## Agent İletişimi
 
@@ -225,8 +234,18 @@ değiştirmemiş mi? Migration dosyası immutable'dır (`mistakes.md` #25).
 
 Schema veya API route teslim ederken:
 
-1. Drizzle tipleri ve export'ları eksiksiz yaz
-2. Input validasyon schema'sını her zaman ekle
-3. Error case'leri ayrıca belirt
-4. Migration komutu hatırlat
-5. **Çalıştırdığın doğrulama komutlarını ve sonuçlarını yaz**
+1. Kod DOSYAYA yazılır; sohbete kod bloğu yapıştırılmaz
+   (`rules/context-curation.md → Referansla Aktar`)
+2. Drizzle tipleri ve export'ları eksiksiz; her girdide zod şeması
+3. Teslim mesajı şu biçimde:
+
+```text
+BE TESLİM
+  story:     [id]
+  dosyalar:  [değişen/eklenen dosya listesi; migration dosyası ayrıca]
+  sözleşme:  [uç ya da action → girdi şeması → dönüş → hata durumları]
+  kabul:     [kriter → karşılandı | karşılanmadı (neden)]
+  kanıt:     [tsc --noEmit → exit N · npm run build → exit N · npm test → exit N · db:generate → yeni dosya adı]
+  migration: [üretimde çalıştırılacak komut — KULLANICI ONAYIYLA: npm run db:migrate]
+  özet:      [üç satır]
+```

@@ -29,12 +29,19 @@ Bu agent çalışmadan önce şunları oku:
 
 **Context seviyesi**: REVIEW — Story + diff + rules (`rules/context-curation.md`)
 
-## Kullandığı Skills
+## Girdi, Çıktı, Bitti Tanımı
 
-| Skill          | Ne Zaman                                |
-| -------------- | --------------------------------------- |
-| `/check`       | Gate sonrası son sağlık kontrolü        |
-| `/review-ui`   | UI bileşeni içeren değişikliklerde      |
+- **Girdi** (Görev Tanımı): story dosyasının yolu (KÜÇÜK işte işin tek
+  cümlelik tarifi) + değişen dosya listesi. Diff'i kendin çıkarırsın.
+- **Çıktı**: aşağıdaki biçimde rapor GÖVDESİNİN tamamı, son mesajında. Dosya
+  yazmazsın; `docs/gate/<story>.md`yi ve ROUTEMAP'i ana oturum yazar.
+- **Bitti**: 6 pass'in her biri için komut + çıktı özeti + exit kodu raporda;
+  Pass 7 ya çalıştı ya "uygulanmadı" yazıldı; ilk satır sonuç.
+
+Slash komutu çağıramazsın (`/check`, `/review-ui` ana oturumun aracıdır);
+onların yaptığı işi aşağıdaki pass komutları doğrudan yapar. Çalışmayan
+komut (script yok, bağımlılık kurulu değil) "çalıştırılamadı: <neden>" diye
+rapora girer ve o pass ✅ sayılmaz.
 
 ## Agent İletişimi
 
@@ -71,8 +78,10 @@ Her teslimatta sırasıyla bu pass'ler (1–6 her zaman, 7 koşullu) çalıştı
 Değişiklik, istenilen görevle örtüşüyor mu?
 
 ```bash
-git diff --stat                    # kapsam gerçekten story kadar mı?
-git diff --name-only | sort
+# Gate commit'ten ÖNCE koşar: değişiklik çoğu zaman stage'lenmemiştir ve yeni
+# dosyalar izlenmiyordur. Yalın `git diff` ikisini de göstermez.
+git status --short                 # staged + unstaged + izlenmeyen
+git diff HEAD --stat               # kapsam gerçekten story kadar mı?
 ```
 
 - Acceptance criteria karşılanmış mı? (her birini tek tek işaretle)
@@ -104,11 +113,16 @@ npm run lint                          # config dosyası var mı, önce onu doğr
 # apostrof DEĞİL (x,2,7); \s GNU'ya özgü. Kebab değerli `token:` tasarım
 # token adıdır, eşleşme başına ayıklanır.
 SECRET_RE="(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"'[:space:]]{8,}[\"']"
-git -c core.quotePath=false diff --cached --name-only -z --diff-filter=ACMR \
-  | xargs -0 grep -HnoiE -e "$SECRET_RE" -- 2>/dev/null \
+# Değişen + yeni dosyalar (HEAD'e göre; `--cached` yalnız stage'lenmişi görür
+# ve commit'ten önce koşan Gate'te boş liste "temiz" sanılırdı).
+changed() {
+  git -c core.quotePath=false diff HEAD --name-only -z --diff-filter=ACMR
+  git -c core.quotePath=false ls-files -z --others --exclude-standard
+}
+changed | xargs -0 grep -HnoiE -e "$SECRET_RE" -- 2>/dev/null \
   | grep -vE ":[Tt]oken[[:space:]]*[:=][[:space:]]*[\"'][a-z]+(-[a-z0-9]+)+[\"']\$"
-git -c core.quotePath=false diff --cached --name-only | grep -E '(^|/)\.env($|\.)' | grep -vE '\.(example|template)$'
-grep -rn "dangerouslySetInnerHTML" --include="*.tsx" .
+changed | tr '\0' '\n' | grep -E '(^|/)\.env($|\.)' | grep -vE '\.(example|template)$'
+changed | xargs -0 grep -Hn "dangerouslySetInnerHTML" -- 2>/dev/null
 ```
 
 - Hardcoded secret / credential
@@ -178,7 +192,12 @@ veya bir agent/tool tanımı geçiyorsa çalıştır. Geçmiyorsa **atla ve rapo
 dosyadaki en pahalı hata sınıfı.
 
 ```bash
-npm run verify:agentic     # pin + çift kopya + tsc + vitest
+# Projede: tool testleri projenin kendi suite'inde, pin package.json'da
+npm test 2>&1 | tail -20
+grep -nE '"@ag-ui/[a-z-]+": *"[\^~]' package.json && echo "İHLAL: @ag-ui aralıkla" || echo "pin tam"
+npm ls @ag-ui/client 2>&1 | tail -5      # tek kopya olmalı
+# Yalnız dev-starter deposunda (snippet/şablon değiştiyse): pin + tsc + vitest
+npm run verify:agentic
 ```
 
 `rules/agentic-ui.md` → *Test Zorunlulukları* karşılanmadan Gate **PASSED

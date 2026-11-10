@@ -60,6 +60,11 @@ Bu agent çalışmadan önce şunları oku:
 [rakiplerde olmayan, bu projede yapılabilir olan — varsa; yoksa "yok" yaz]
 ```
 
+Dizin yoksa `mkdir -p docs/research`; `<konu>` kebab-case, Türkçe karaktersiz
+(`takvim-senkronu.md`). **Bitti tanımı**: en az 3 çözüm tabloda ve her
+satırın kaynağı açılıp OKUNDU (arama sonucu özeti kaynak değildir); öneri
+ekosistem stack'ine çevrildi; "Ne Zaman Yanlış Olur" dolu.
+
 Ana oturuma dönüş: dosya yolu + üç satır özet (`rules/context-curation.md →
 Referansla Aktar`). Karar kullanıcınındır; onaylanan karar `docs/ROUTEMAP.md`
 Kararlar Logu'na işlenir, radar'ı değiştiriyorsa `tech-radar.md` güncellenir.

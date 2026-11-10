@@ -161,7 +161,7 @@ Production bug
 3. Minimum fix uygula
 4. Gate Agent (kısa: Pass 1,2,3,4)
 5. Commit: fix(scope): description
-6. Deploy: vercel --prod
+6. Deploy: kullanıcı onayıyla — `vercel --prod` ya da commit + push (main push'u deploy tetikliyorsa)
 7. Post-deploy verify
 8. ROUTEMAP: maintenance log güncelle
 9. mistakes.md güncelle

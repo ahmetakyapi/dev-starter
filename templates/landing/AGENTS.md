@@ -12,8 +12,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 Ayrıntılı rehber `CLAUDE.md`; buradaki kısa liste Codex, Cursor, Copilot gibi
 `AGENTS.md` okuyan asistanlar ve insan geliştirici içindir. Claude'a özgü
-hook'lar (Gate, sır taraması) yalnız Claude Code'da çalışır; başka araçla
-çalışıyorsan aynı kontrolleri commit'ten önce ELLE çalıştır.
+hook'lar (Gate, sır taraması) yalnız Claude Code'da çalışır. Başka araçla ya
+da terminalden commit atıyorsan klon başına bir kez
+`bash ~/dev-starter/hooks/git-pre-commit.sh --install` çalıştır (aynı iki
+kontrolü git'in pre-commit kancasına bağlar); `~/dev-starter` yoksa aşağıdaki
+kontrolleri commit'ten önce ELLE çalıştır.
 
 - **Renk ve ölçü yalnız token'dan**: `bg-page`, `text-strong`, `border-line`,
   `bg-cta text-on-brand`. Hex, `rgb()`, Tailwind ham paleti (`bg-zinc-100`),

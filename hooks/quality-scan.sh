@@ -216,11 +216,21 @@ if [ -n "$AGUI_PKG" ]; then
 fi
 
 # 9. Commit mesajı conventional format'ta mı? (rules/commit-conventions.md)
-# Mesaj komut metninden çıkarılır; heredoc/karmaşık tırnaklamada ayrıştırma
-# garantisi yok, bu yüzden yalnız UYARI: desen komutun hiçbir yerinde yoksa.
+# KONU satırı (ilk -m'in ilk satırı) çapalı denetlenir: lib → hook_commit_subject.
+# Konu çıkarılamazsa (karmaşık tırnaklama, -F dosyası) eski gevşek denetime
+# düşülür: desen komutun hiçbir yerinde yoksa uyarı. Tipler kural dosyasıyla
+# AYNI liste; `hotfix` tip değildir (triage sınıfı — commit `fix(...)` olur).
 # (Komut grep'e here-string ile: `grep -q` erken çıkınca boru SIGPIPE alır.)
-if grep -qE '(^|[[:space:]])(-m|--message)([[:space:]]|=)' <<<"$CMD_TEXT"; then
-  if ! grep -qE '(feat|fix|hotfix|refactor|style|perf|test|docs|chore|ci)(\([a-z0-9_.-]+\))?: |Merge |Revert ' <<<"$CMD_TEXT"; then
+CC_TYPES='feat|fix|refactor|style|perf|test|docs|chore|ci'
+CC_SUBJECT_RE="^(($CC_TYPES)(\\([a-z0-9_./-]+\\))?!?: [^[:space:]]|revert: |Merge |Revert )"
+SUBJECT=$(hook_commit_subject "$CMD_TEXT")
+if [ -n "$SUBJECT" ]; then
+  if ! grep -qE "$CC_SUBJECT_RE" <<<"$SUBJECT"; then
+    warn "⚠️  COMMIT: Konu satırı conventional format'a uymuyor: \"${SUBJECT:0:72}\"" \
+      "   beklenen: <tip>(<scope>): <açıklama> — tipler: ${CC_TYPES//|/, } (rules/commit-conventions.md)"
+  fi
+elif grep -qE '(^|[[:space:]])(-[a-zA-Z]*m|--message)([[:space:]]|=)' <<<"$CMD_TEXT"; then
+  if ! grep -qE "($CC_TYPES)(\\([a-z0-9_./-]+\\))?!?: |revert: |Merge |Revert " <<<"$CMD_TEXT"; then
     warn "⚠️  COMMIT: Mesaj conventional format'a uymuyor görünüyor:" \
       "   beklenen: <tip>(<scope>): <açıklama> — rules/commit-conventions.md"
   fi
@@ -228,7 +238,14 @@ fi
 
 # 10. fix commit'inde test değişikliği var mı? (rules/bugfix-protocol.md: TDD —
 # önce failing test). Kod değişen ama test dosyası içermeyen fix → uyarı.
-if grep -qE '(fix|hotfix)(\([a-z0-9_.-]+\))?:' <<<"$CMD_TEXT"; then
+# Konu biliniyorsa yalnız ona bakılır ("docs: prefix: …" fix değildir).
+IS_FIX=0
+if [ -n "$SUBJECT" ]; then
+  grep -qE '^fix(\([a-z0-9_./-]+\))?!?:' <<<"$SUBJECT" && IS_FIX=1
+elif grep -qE '(^|[^a-z])fix(\([a-z0-9_./-]+\))?!?:' <<<"$CMD_TEXT"; then
+  IS_FIX=1
+fi
+if [ "$IS_FIX" -eq 1 ]; then
   FIX_CODE=$(echo "$STAGED" | grep -E '\.(tsx?|jsx?)$' | grep -vE '\.test\.|\.spec\.|(^|/)tests?/' || true)
   FIX_TESTS=$(echo "$STAGED" | grep -E '\.test\.|\.spec\.|(^|/)tests?/' || true)
   if [ -n "$FIX_CODE" ] && [ -z "$FIX_TESTS" ]; then
@@ -268,7 +285,7 @@ if [ $WARNINGS -gt 0 ]; then
   if command -v jq >/dev/null 2>&1; then
     jq -n --arg m "$MSG" '{hookSpecificOutput: {hookEventName: "PreToolUse", additionalContext: $m}}' >&3 || true
   elif command -v python3 >/dev/null 2>&1; then
-    MSG="$MSG" python3 -c 'import json, os; print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "additionalContext": os.environ["MSG"]}}))' >&3 || true
+    MSG="$MSG" python3 -c 'import json, os; print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "additionalContext": os.environ["MSG"]}}, ensure_ascii=False))' >&3 || true
   fi
 fi
 

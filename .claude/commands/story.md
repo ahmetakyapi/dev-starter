@@ -23,17 +23,31 @@ için yürütür.
    - Wave 1 paralel: `backend` (schema/API + testleri), `qa` (test planı +
      failing testler), UI kararları ana oturumda
    - Wave 2: `frontend` (UI + entegrasyon)
-   - Dosya çakışması riski varsa `isolation: worktree`
+   - Aynı dalgadaki iki subagent aynı dosyalara dokunacaksa önce `sinir:` ile
+     dosya sahipliğini ayır; ayrılamıyorsa `isolation: worktree` (sıra ve
+     birleştirme: `~/dev-starter/phases/development.md → Worktree ile Paralel
+     Çalışma`). Subagent commit ATMAZ.
    - Dalga arası: build + typecheck
 4. **Kabul ön-doğrulaması**: her teslimi story kabul kriterleriyle madde madde
    karşılaştır; eksikse agent'a iade et, Gate'e gönderme.
 5. **Gate**: ROUTEMAP: durum → IN_REVIEW, sonra `/gate <story-id>` akışını çalıştır. FAILED döngüsü
    FIX_1 → FIX_2 → ESCALATED.
 6. **Commit**: Gate PASSED sonrası `git status`la yalnız amaçlanan dosyaları
-   stage'le, conventional commit, push. ROUTEMAP: durum → DONE.
+   stage'le; ROUTEMAP'te durum → DONE (aynı commit'e girer); conventional
+   commit (`~/dev-starter/rules/commit-conventions.md`), sonra düz `git push`
+   ("commitle = push": `~/.claude/CLAUDE.md` → Commit ve Push; `main`e push
+   üretim deploy'u tetikliyorsa bu, kullanıcının bilerek verdiği onaydır).
+   Gate'ten sonra koda dokunduysan hook commit'i bloklar: `/gate`i yeniden çalıştır.
 7. **Compound** (`rules/dev-cycle.md → 8`): mistakes/patterns/decisions'lık
    çıktı var mı? Varsa taslağı kullanıcı onayına sun
    (`rules/self-improvement.md`).
 
-Çıktı: kullanıcıya kısa rapor — ne değişti (dosya listesi), Gate sonucu,
-commit hash'i, sıradaki önerilen story.
+Çıktı: kullanıcıya kısa rapor:
+
+```text
+STORY — <id> <başlık>: DONE | BLOCKED (<neden>) | ESCALATED
+Değişen: <dosya listesi ya da sayı + ana dosyalar>
+Kabul:   <n/n kriter> · Gate: <sonuç> (docs/gate/<id>.md)
+Commit:  <hash> <konu> · push: <yapıldı | yapılmadı (neden)>
+Sıradaki: <önerilen story>
+```

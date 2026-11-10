@@ -41,6 +41,17 @@ payload() {
   printf '{"tool_name":"Bash","tool_input":{"command":%s}}' "$(printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g; s/^/"/; s/$/"/')"
 }
 
+# Çok satırlı komut (heredoc'lu commit mesajı): payload() satır satır
+# tırnaklar ve geçersiz JSON üretir — hook komutu hiç göremez, test boşuna
+# geçer. Gerçek JSON kaçışı jq ya da python3 ile.
+payload_ml() {
+  if command -v jq >/dev/null 2>&1; then
+    jq -cn --arg c "$1" '{tool_name: "Bash", tool_input: {command: $c}}'
+  else
+    CMD="$1" python3 -c 'import json, os; print(json.dumps({"tool_name": "Bash", "tool_input": {"command": os.environ["CMD"]}}))'
+  fi
+}
+
 SANDBOX=$(mktemp -d)
 trap 'rm -rf "$SANDBOX"' EXIT
 
@@ -772,6 +783,64 @@ else
 fi
 git rm -q --cached bug.ts bug.test.ts && rm -f bug.ts bug.test.ts
 
+# (y3–y7) Commit konusu ÇAPALI okunur (lib → hook_commit_subject). Eski desen
+# komut metninin HERHANGİ bir yerinde `feat: ` görünce susuyordu: gövdede
+# "feat: ..." geçen biçimsiz mesaj uyarısız geçiyor, "docs: prefix: ..." ise
+# içindeki "fix:" yüzünden sahte BUGFIX uyarısı alıyordu. `hotfix` bir tip
+# değil (rules/commit-conventions.md): triage sınıfıdır, commit `fix(...)`.
+printf 'export const not = 1\n' > not.ts
+git add not.ts
+OUT=$(payload "git commit -m 'guncelleme yapildi' -m 'feat: govdede gecen tip'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'COMMIT:'; then
+  ok "biçimsiz konu + gövdede 'feat:' → format uyarısı (çapalı)"
+else
+  no "biçimsiz konu uyarmalı" "exit 0 + COMMIT uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+OUT=$(payload "git commit -m 'hotfix: odeme dustu'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'COMMIT:'; then
+  ok "'hotfix:' tip değil → format uyarısı"
+else
+  no "hotfix tipi uyarmalı" "exit 0 + COMMIT uyarısı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+OUT=$(payload "git commit -m 'docs: prefix: notu duzelt'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && ! printf '%s' "$OUT" | grep -qE 'BUGFIX|COMMIT:'; then
+  ok "'docs: prefix: …' → sahte BUGFIX/format uyarısı yok"
+else
+  no "'prefix:' fix sayılmamalı" "exit 0, uyarı yok" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+HEREDOC_CMD=$(printf 'git commit -m "$(cat <<'"'"'EOF'"'"'\nfeat(ui)!: dugme yeniden\n\ngovde satiri\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)"')
+OUT=$(payload_ml "$HEREDOC_CMD" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && ! printf '%s' "$OUT" | grep -q 'COMMIT:'; then
+  ok "heredoc mesajı, konu 'feat(ui)!: …' → format uyarısı yok"
+else
+  no "heredoc konusu tanınmalı" "exit 0, COMMIT uyarısı yok" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+HEREDOC_BAD=$(printf 'git commit -m "$(cat <<'"'"'EOF'"'"'\nson duzeltmeler\n\nfix: govdede\nEOF\n)"')
+OUT=$(payload_ml "$HEREDOC_BAD" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'COMMIT:' && ! printf '%s' "$OUT" | grep -q 'BUGFIX'; then
+  ok "heredoc mesajı, biçimsiz konu → format uyarısı, BUGFIX yok"
+else
+  no "heredoc biçimsiz konu uyarmalı" "exit 0 + COMMIT, BUGFIX yok" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+OUT=$(payload "git add not.ts && git commit -am \"fix(api): bos yanit\"" | bash "$HOOKS/quality-scan.sh" 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'BUGFIX' && ! printf '%s' "$OUT" | grep -q 'COMMIT:'; then
+  ok "-am \"fix(api): …\" → konu tanınır (BUGFIX uyarısı, format temiz)"
+else
+  no "-am konusu tanınmalı" "exit 0 + BUGFIX, COMMIT yok" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+git rm -q --cached not.ts && rm -f not.ts
+
 # (z) test dosyasına .only eklenmesi → uyarmalı
 printf 'it.only("tek", () => {})\n' > odak.test.ts
 git add odak.test.ts
@@ -1137,6 +1206,130 @@ if [ $CODE -eq 0 ] && [ -z "$OUT" ]; then
   ok "ROUTEMAP yok → sessiz geçer (exit 0, çıktı yok)"
 else
   no "ROUTEMAP'siz dizinde susmalı" "exit 0, çıktı boş" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -3)"
+fi
+
+# ─────────────────────────────────────────────────────────────
+# Şablon ayarları: ~/dev-starter yoksa SessionStart SUSMAZ
+# ─────────────────────────────────────────────────────────────
+# Şablon hook'ları ~/dev-starter/hooks/'tan çağrılır. Bulut oturumunda ya da
+# ekosistemi kurmamış makinede o yol yoktur: bash 127 ile çıkar, Claude Code
+# bunu engelleme saymaz ve Gate + sır taraması tek söz etmeden kapanır.
+# SessionStart komutu bu durumda modele durumu SÖYLER (kayıtlı komutun
+# kendisi çalıştırılır — ayar dosyasındaki metin, kopyası değil).
+echo
+echo "şablon settings.json (SessionStart yedeği)"
+
+TPL_SET="$REPO_ROOT/templates/nextjs-fullstack/.claude/settings.json"
+SS_CMD=$(node -e 'const s=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.stdout.write(s.hooks.SessionStart[0].hooks[0].command)' "$TPL_SET" 2>/dev/null || true)
+mkdir -p "$SANDBOX/ev-bos" "$SANDBOX/ev-kurulu" "$SANDBOX/tpl-proje"
+ln -s "$REPO_ROOT" "$SANDBOX/ev-kurulu/dev-starter"
+cd "$SANDBOX/tpl-proje" || exit 1
+
+OUT=$(printf '{"hook_event_name":"SessionStart","source":"startup"}' | HOME="$SANDBOX/ev-bos" bash -c "$SS_CMD" 2>/dev/null)
+CODE=$?
+if [ -n "$SS_CMD" ] && [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -q 'KAPALI'; then
+  ok "~/dev-starter yok → oturum başında 'hook'lar KAPALI' bağlama basılır"
+else
+  no "ekosistem yokken SessionStart susmamalı" "exit 0 + stdout'ta KAPALI" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -2)"
+fi
+
+OUT=$(printf '{"hook_event_name":"SessionStart","source":"startup"}' | HOME="$SANDBOX/ev-kurulu" bash -c "$SS_CMD" 2>&1)
+CODE=$?
+if [ -n "$SS_CMD" ] && [ $CODE -eq 0 ] && [ -z "$OUT" ]; then
+  ok "~/dev-starter var → session-brief koşar (ROUTEMAP'siz dizinde sessiz)"
+else
+  no "ekosistem varken yedek mesaj basılmamalı" "exit 0, çıktı boş" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -2)"
+fi
+
+if cmp -s "$REPO_ROOT/templates/nextjs-fullstack/.claude/settings.json" "$REPO_ROOT/templates/landing/.claude/settings.json"; then
+  ok "iki şablonun settings.json'u bayt bayt aynı"
+else
+  no "şablon ayarları ayrışmış" "cmp eşit" "farklı"
+fi
+
+# ─────────────────────────────────────────────────────────────
+# git-pre-commit.sh — Claude Code DIŞINDAKİ commit'ler (insan, Codex, Cursor)
+# ─────────────────────────────────────────────────────────────
+# PreToolUse hook'ları yalnız Claude'un Bash aracında tetiklenir; terminalden
+# atılan `git commit` Gate'i ve sır taramasını hiç görmüyordu. Köprü aynı iki
+# script'i git'in pre-commit kancasından koşturur (tek kaynak, kopya yok).
+echo
+echo "git-pre-commit.sh"
+
+GPC="$HOOKS/git-pre-commit.sh"
+mkdir -p "$SANDBOX/gpc" && cd "$SANDBOX/gpc" || exit 1
+git init -q -b main . 2>/dev/null || git init -q .
+git config user.email test@example.com && git config user.name Test
+printf 'ilk\n' > README.md && git add README.md && git commit -q -m 'chore: ilk'
+
+# (a) kurulum: pre-commit dosyası yazılır ve çalıştırılabilir
+DEV_STARTER_HOME="$REPO_ROOT" bash "$GPC" --install >/dev/null 2>&1
+CODE=$?
+if [ $CODE -eq 0 ] && [ -x .git/hooks/pre-commit ] && grep -q 'git-pre-commit.sh' .git/hooks/pre-commit; then
+  ok "--install → .git/hooks/pre-commit yazıldı (çalıştırılabilir)"
+else
+  no "--install kancayı yazmalı" "exit 0 + çalıştırılabilir pre-commit" "exit $CODE"
+fi
+
+# (b) gerçek `git commit`: sır içeren dosya → commit OLUŞMAZ
+printf 'const api_key = "sk_live_abcdefgh12345678"\n' > sir.ts
+git add sir.ts
+BEFORE=$(git rev-parse HEAD)
+DEV_STARTER_HOME="$REPO_ROOT" git commit -q -m 'feat: sir' >/dev/null 2>&1
+CODE=$?
+if [ $CODE -ne 0 ] && [ "$(git rev-parse HEAD)" = "$BEFORE" ]; then
+  ok "terminalden commit + sır → git commit durur (commit oluşmaz)"
+else
+  no "sırlı commit durmalı" "exit != 0, HEAD aynı" "exit $CODE, HEAD $(git rev-parse --short HEAD)"
+fi
+git rm -q --cached sir.ts && rm -f sir.ts
+
+# (c) temiz dosya → commit geçer
+printf 'export const a = 1\n' > a.ts && git add a.ts
+DEV_STARTER_HOME="$REPO_ROOT" git commit -q -m 'feat: a' >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "terminalden commit, temiz dosya → geçer" || no "temiz commit geçmeli" 0 "$CODE"
+
+# (d) Gate: aktif story FAILED + kod → durur; yalnız doküman → geçer
+mkdir -p docs
+cat > docs/ROUTEMAP.md <<'EOF'
+| ID | Story | Durum | Gate |
+|----|-------|-------|------|
+| S-01 | Login | IN_PROGRESS | FAILED |
+EOF
+printf 'export const b = 2\n' > b.ts && git add b.ts docs/ROUTEMAP.md
+BEFORE=$(git rev-parse HEAD)
+OUT=$(DEV_STARTER_HOME="$REPO_ROOT" git commit -q -m 'feat: b' 2>&1)
+CODE=$?
+if [ $CODE -ne 0 ] && [ "$(git rev-parse HEAD)" = "$BEFORE" ] && printf '%s' "$OUT" | grep -q 'GATE GUARD'; then
+  ok "terminalden commit + Gate FAILED → durur, gerekçe görünür"
+else
+  no "Gate FAILED terminalde de durdurmalı" "exit != 0 + GATE GUARD" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -2)"
+fi
+git rm -q --cached b.ts && rm -f b.ts
+DEV_STARTER_HOME="$REPO_ROOT" git commit -q -m 'docs: routemap' >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "terminalden commit, yalnız doküman → Gate muaf, geçer" || no "docs-only geçmeli" 0 "$CODE"
+
+# (e) ekosistem yoksa: commit geçer ama SESSİZ değil (stderr'de uyarı)
+printf 'export const c = 3\n' > c.md && git add c.md
+OUT=$(DEV_STARTER_HOME="$SANDBOX/yok" git commit -q -m 'docs: c' 2>&1)
+CODE=$?
+if [ $CODE -eq 0 ] && printf '%s' "$OUT" | grep -qi 'dev-starter'; then
+  ok "ekosistem yok → commit geçer, uyarı görünür (sessiz no-op değil)"
+else
+  no "ekosistem yokken uyarmalı" "exit 0 + uyarı" "exit $CODE, çıktı: $(printf '%s' "$OUT" | head -2)"
+fi
+
+# (f) başkasının pre-commit'i varsa kurulum EZMEZ
+mkdir -p "$SANDBOX/gpc2" && cd "$SANDBOX/gpc2" || exit 1
+git init -q . && printf '#!/bin/sh\necho baskasi\n' > .git/hooks/pre-commit
+DEV_STARTER_HOME="$REPO_ROOT" bash "$GPC" --install >/dev/null 2>&1
+CODE=$?
+if [ $CODE -ne 0 ] && grep -q baskasi .git/hooks/pre-commit; then
+  ok "var olan yabancı pre-commit → kurulum reddeder, dosya yerinde"
+else
+  no "yabancı kanca ezilmemeli" "exit != 0, dosya aynı" "exit $CODE"
 fi
 
 echo

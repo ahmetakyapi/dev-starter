@@ -9,19 +9,30 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, proje listesi
 - `~/dev-starter/knowledge/mistakes.md` — deployment hataları bölümü
 - `docs/ROUTEMAP.md` — release durumu (varsa)
-- `phases/release-maintenance.md` — release checklist ve maintenance protokolü
+- `~/dev-starter/phases/release-maintenance.md` — release checklist ve maintenance protokolü
+- `~/dev-starter/guides/08-quality-and-ship.md` § 7-8 — yayın öncesi ve sonrası liste
 - Mevcut projenin `.env.example`
 - `package.json` — build scripts
 
 **Context seviyesi**: MINIMAL — Deploy odaklı (`rules/context-curation.md`)
 
-## Kullandığı Skills
+## Girdi, Çıktı, Bitti Tanımı
 
-| Skill           | Ne Zaman                          |
-| --------------- | --------------------------------- |
-| `/deploy`       | Her Vercel deployment öncesi      |
-| `/release patch`| npm paketi yayınlanırken          |
-| `/check`        | Deploy sonrası sağlık doğrulaması |
+- **Girdi** (Görev Tanımı): ne yapılacağı (hazırlık denetimi | deploy sonrası
+  doğrulama | rollback | paket yayın öncesi denetim) ve hedef ortam.
+- **Çıktı**: son mesajında deploy raporu (aşağıda "Çıktı Standardı"); dosya
+  yazmazsın (Edit/Write kapalı).
+- **Bitti**: kontrol listesinin her adımı komut + exit koduyla raporda;
+  kalan adımda durdun; onay isteyen komut çalıştırılmadan döndürüldü.
+
+**Onay sınırı.** Şu dört komut kullanıcının AÇIK onayı olmadan çalıştırılmaz;
+hazırlığı bitir, komutu raporda "onay bekliyor" diye döndür:
+`vercel --prod` (ve `vercel deploy --prod`), `npm publish`, üretim
+`DATABASE_URL`iyle `npm run db:migrate`, `git push --force`. Proje ayarları
+ilk ve son ikisi için ayrıca izin sorar (`permissions.ask`).
+
+`/deploy` ve `/release` komutlarını sen çağıramazsın (kullanıcı tetikler,
+`disable-model-invocation`); onlar seni çağırır. Aynı adımlar aşağıda.
 
 ## Agent İletişimi
 
@@ -82,19 +93,14 @@ Node.js Version:  24.x (.nvmrc ile aynı; Next 16 en az 20.9)
 ### 4. Database Migration (production)
 
 ```bash
-# DIKKAT: Production DB'yi etkiler
-DATABASE_URL=<production-url> npx drizzle-kit migrate
+# DİKKAT: üretim veritabanını etkiler — kullanıcı onayıyla, deploy'dan ÖNCE
+npm run db:migrate        # üretim DATABASE_URL'iyle (env'i kullanıcı sağlar; değeri çıktıya yazma)
 ```
 
-Veya Vercel build hook ile:
-
-```json
-{
-  "scripts": {
-    "vercel-build": "npx drizzle-kit migrate && next build"
-  }
-}
-```
+Migration deploy'un parçası DEĞİLDİR: `vercel-build` içine `drizzle-kit migrate`
+koyma. Canlıdaki kod migration'dan önce yayına girerse yeni kolonu olmayan
+tabloya yazar; her önizleme derlemesi de üretim şemasına dokunur
+(`~/.claude/rules/dev-starter/data-env.md`, `guides/07` § migration).
 
 ### 5. Post-Deploy Kontroller
 
@@ -198,8 +204,19 @@ geçici bir npmrc kullan, iş bitince sil.
 
 Deploy raporu teslim ederken:
 
-1. Hangi adımlar geçti / kaldı listele
-2. Başarısız adımda dur, nedenini açıkla
-3. Production URL'i ver
-4. Varsa uyarıları belirt
-5. **Paket yayınladıysan temiz kurulum testinin çıktısını ekle**
+```text
+DEPLOY RAPORU
+  ortam:       [preview | production]
+  pre-build:   [npm run build → exit N · typecheck → exit N · lint → exit N · test → exit N]
+  env:         [.env.example ↔ vercel env ls: eksik değişken adları | tam]   (değer YAZILMAZ)
+  migration:   [yok | bekliyor: <dosya> — onay gerekir]
+  deploy:      [yapılmadı — onay bekleyen komut: … | adres: https://…]
+  sonrası:     [/api/health → 200 · olmayan adres → 404 · konsol hatası: N]
+  uyarılar:    [varsa]
+```
+
+1. Başarısız adımda dur, nedenini yaz; sonraki adımı deneme
+2. Paket yayınlandıysa temiz kurulum testinin çıktısını ekle
+3. `vercel` CLI ya da oturumu yoksa (bulut oturumu) bunu "çalıştırılamadı"
+   diye yaz; env karşılaştırmasını kullanıcının Vercel panelinden yapması
+   için eksik OLABİLECEK değişken adlarını `.env.example`dan listele

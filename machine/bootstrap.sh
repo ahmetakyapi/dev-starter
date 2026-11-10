@@ -136,15 +136,50 @@ console.log(`  + permissions.allow: ${added.join(', ')}`)
 JS
 fi
 
+# Depodan silinen ya da artık global olmayan komut/agent'ın ~/.claude altındaki
+# bağlantısını kaldırır. YALNIZ bu depoya işaret eden symlink'lere dokunur;
+# kullanıcının kendi dosyaları ve başka yere giden bağlantılar yerinde kalır.
+#   prune <~/.claude alt dizini> <depodaki kaynak dizin> [global olmayan adlar…]
+prune() {
+  local dir="$1" src="$2" l target base skip
+  shift 2
+  [[ -d "$dir" ]] || return 0
+  for l in "$dir"/*.md; do
+    [[ -L "$l" ]] || continue
+    target="$(readlink "$l")"
+    [[ "$target" == "$src"/* ]] || continue
+    base="$(basename "$l" .md)"
+    skip=0
+    for r in "$@"; do [[ "$r" == "$base" ]] && skip=1; done
+    if [[ ! -e "$target" || $skip -eq 1 ]]; then
+      run rm "$l"
+      echo "  - $l (kaynak silinmiş ya da yalnız dev-starter'a özgü)"
+    fi
+  done
+}
+
 echo "▸ Komutlar (tek kaynak: .claude/commands)"
+# REPO_ONLY_COMMANDS: yalnız bu depoda anlamlı komutlar (ekosistemin kendisini
+# değiştirirler). Proje kapsamında (.claude/commands) zaten yüklüdürler;
+# ~/.claude/commands'a BAĞLANMAZ — yoksa her projede listelenir ve model
+# ilgisiz bir depoda çağırabilir (clone-website'ın .claude/skills'te kalması
+# aynı karar). health-check listeyi ve açıklamalardaki "Yalnız ~/dev-starter"
+# ibaresini denetler.
+REPO_ONLY_COMMANDS=(harvest evolve)
 for f in "$REPO"/.claude/commands/*.md; do
-  link "$f" "$CLAUDE_DIR/commands/$(basename "$f")"
+  base="$(basename "$f" .md)"
+  case " ${REPO_ONLY_COMMANDS[*]} " in
+    *" $base "*) echo "  · /$base yalnız dev-starter'da (global bağlanmadı)"; continue ;;
+  esac
+  link "$f" "$CLAUDE_DIR/commands/$base.md"
 done
+prune "$CLAUDE_DIR/commands" "$REPO/.claude/commands" "${REPO_ONLY_COMMANDS[@]}"
 
 echo "▸ Subagent'lar (tek kaynak: .claude/agents)"
 for f in "$REPO"/.claude/agents/*.md; do
   link "$f" "$CLAUDE_DIR/agents/$(basename "$f")"
 done
+prune "$CLAUDE_DIR/agents" "$REPO/.claude/agents"
 
 echo "▸ Depoda taşınan skill'ler"
 for d in "$HERE"/skills/*/; do

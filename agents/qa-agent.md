@@ -32,6 +32,20 @@ Bu agent çalışmadan önce şunları oku:
   koruyucu test öner; bug fix'lerinde `bugfix-protocol.md` akışını yürüt
 - **Sınır**: implementasyon kodu yazmaz; test, fixture, seed ve test yardımcıları yazar
 
+**Girdi** (Görev Tanımı): story dosyası (kabul kriterleri) ya da bug tarifi +
+yeniden üretme adımları. **Bitti tanımı**: her kabul kriterine en az bir test
+eşlendi ya da "boşluk"ta nedeni yazıldı; test-first işte kırmızı çıktı
+teslimde; `npm test` çalışır durumda; implementasyon dosyasına dokunulmadı;
+commit atılmadı.
+
+Çalıştırılacak komutlar (şablon varsayılanı; projede farklıysa `package.json`
+→ `scripts.test` geçerlidir):
+
+```bash
+npm test 2>&1 | tail -20 ; echo "exit=${PIPESTATUS[0]}"          # tüm suite
+node --import tsx --test tests/<dosya>.test.ts ; echo "exit=$?"   # tek dosya
+```
+
 ## Teslim Formatı
 
 ```text

@@ -7,6 +7,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Ajan Katmanı Denetimi (2026-11-10)
+
+- **hooks:** commit konusu çapalı okunuyor (`hook_commit_subject`): gövdede `feat:` geçen biçimsiz mesaj artık uyarı alıyor, `docs: prefix: …` sahte BUGFIX uyarısı almıyor, `feat(ui)!:` tanınıyor. `hotfix` tip listesinden çıktı (triage sınıfı; commit `fix(...)`).
+- **hooks:** `hooks/git-pre-commit.sh` — Claude Code dışındaki commit'ler (terminal, başka asistan) aynı Gate ve sır taramasından geçer; proje kökünde `--install`.
+- **hooks:** jq'suz makinede Türkçe gerekçe `\u` kaçışlı basılıyordu (`ensure_ascii=False`).
+- **şablonlar:** `~/dev-starter` yoksa SessionStart "hook'lar KAPALI" uyarısını bağlama basar (önceden tek söz etmeden kapanıyordu).
+- **ayarlar:** `permissions.ask` — zorla push, `vercel --prod`, `npm publish` her modda onay ister. Düz `git push` listede yok.
+- **bootstrap:** `/harvest` ve `/evolve` başka projelere bağlanmıyor (`REPO_ONLY_COMMANDS`); depodan silinen komut/agent bağlantıları temizleniyor.
+- **gate:** Pass 3 stage'lenmemiş ve izlenmeyen dosyaları da tarıyor (önceden commit öncesi boş listeyi temiz sayıyordu); Pass 7 projede var olan komutları çalıştırıyor.
+- **subagent'lar:** strategist wrapper'ı inceltildi ve PRODUCT taslağına izin veriyor; design-reviewer Playwright MCP'yi ve bulut Playwright betiğini kullanabiliyor; gate/frontend/backend/deploy rol dosyalarında çağrılamayan komut tabloları yerine Girdi/Çıktı/Bitti tanımı ve doğrudan komutlar; deploy rolünden `vercel-build` içinde migration önerisi kalktı.
+- **komutlar:** `/kickoff` soru turu ve yazım sahibi netleşti; `/release` yalnız sürüm dosyalarını stage'liyor; `/new-project` rsync'siz ortamda çalışıyor ve git kancasını kuruyor; sekiz komut ve CONTRIBUTING Türkçe karakterle; her komut bir çıktı biçimiyle bitiyor.
+- **belgeler:** "commitle = push" ile "onaysız deploy yok" önceliği yazıldı; worktree ile paralel çalışmanın sırası (`phases/development.md`); ST/DR/CE/AG bağlam satırları; Linux ve bulut oturumu kurulumu.
+- **health-check:** 159 → 166 kontrol (wrapper, komut, yol, skill, commit tipi, ayar sözleşmeleri; 11 negatif testle doğrulandı). **test-hooks:** 95 → 111.
+
 ### Bağlam dosyaları: kısa CLAUDE.md, yol kapsamlı kurallar — 2026-11-08
 
 Claude Code'un güncel resmî önerilerine göre (`knowledge/decisions.md` →

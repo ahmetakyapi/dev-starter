@@ -72,6 +72,7 @@ dev-starter/
 │   ├── gate-guard.sh          → Commit öncesi Gate PASSED + kapsam izi kontrolü (kolon başlıktan, #99; lib/gate-hash.sh)
 │   ├── quality-scan.sh        → Sır (AWS/PEM/JWT + sağlayıcı anahtarları), .env, debug, @ts-ignore, kilit, agentic cast, TDD/format uyarıları
 │   ├── routemap-sync.sh       → ROUTEMAP tazelik + DONE⇒PASSED değişmezi
+│   ├── git-pre-commit.sh      → Terminal commit'leri için aynı Gate + sır taraması (git pre-commit köprüsü; --install)
 │   ├── session-brief.sh       → SessionStart: ROUTEMAP özeti + sıradaki iş önerisi
 │   ├── lib/hook-input.sh      → stdin JSON okuyucu (TOOL_INPUT diye bir şey yok, #52)
 │   └── lib/routemap.sh        → ROUTEMAP tablo ayrıştırıcı — kolon ada göre (#99)
@@ -81,7 +82,7 @@ dev-starter/
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
 │   ├── slop-scan.sh           → AI slop taraması (24 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
 │   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
-│   ├── test-hooks.sh          → Hook davranış testleri (95, fixture'lar resmi şablon düzeninde)
+│   ├── test-hooks.sh          → Hook davranış testleri (111, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)

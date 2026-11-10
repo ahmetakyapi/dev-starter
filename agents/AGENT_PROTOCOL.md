@@ -45,7 +45,7 @@ sonuçları birleştirir, ROUTEMAP'i günceller. Dalga planı ve faz kuralları:
 |----|---------|
 | Tek dosyalık düzeltme, kozmetik | Ana oturum kendisi yapar — subagent açma |
 | Tek story, tek alan (ORTA) | Ana oturum rolleri yürütür; gerekirse tek subagent (`phases/development.md` → İş Boyu, tek kaynak) |
-| Çok story / çok alan / dosya çakışması riski | Paralel subagent'lar, gerekirse `isolation: worktree` |
+| Çok story / çok alan / dosya çakışması riski | Paralel subagent'lar; dosya sahipliği `sinir:` ile, ayrılamıyorsa `isolation: worktree` (`phases/development.md`) |
 | Belirsiz / keşif | Önce `researcher` ya da `/kickoff` — uygulama sonra |
 
 Paralelde aynı anda en fazla 3-4 subagent: koordinasyon maliyeti dağıtım
@@ -88,7 +88,12 @@ session resume dosyadan devam eder.
 
 Faz çıktıları (KICKOFF, PRODUCT, ARCHITECTURE, SCREENS, story listesi) ve
 ESCALATED durumlar kullanıcıya sunulur; onay ROUTEMAP Kararlar Logu'na işlenir.
-Geri dönüşü zor işler (migration, deploy, silme) onaysız yürütülmez.
+Geri dönüşü zor işler onaysız yürütülmez: üretim veritabanında migration,
+`vercel --prod`, `npm publish`, `git push --force`, veri/dosya silme. Kapsam
+dışı tek şey kullanıcının "commitle" dediği düz `git push`tur (o istek onayın
+kendisidir; `main` push'u deploy tetiklese bile — `machine/CLAUDE.md` →
+Commit ve Push). Subagent kullanıcıya soramaz: onay gereken yerde durur,
+komutu ya da `SORULAR` bloğunu döndürür; soruyu ana oturum sorar.
 
 ---
 
@@ -176,8 +181,10 @@ Wave 3:
   → ana oturum: sonucu ROUTEMAP'e işler, commit, review
 ```
 
-Wave arası: build + typecheck; dosya çakışması riski varsa subagent'lar
-`isolation: worktree` ile açılır ve Gate PASSED sonrası merge edilir.
+Wave arası: build + typecheck. Dosya çakışması riski varsa önce `sinir:` ile
+dosya sahipliği ayrılır; ayrılamıyorsa subagent `isolation: worktree` ile
+açılır. Subagent commit atmaz; ana oturum farkı ana ağaca alır, Gate ve commit
+orada (sıra ve komutlar: `phases/development.md` → Worktree ile Paralel Çalışma).
 
 ---
 
@@ -305,7 +312,11 @@ Kuralların kağıt üstünde kalmaması için bash hook'ları:
 
 Kayıt yeri: `.claude/settings.json` (paylaşılan, versiyonlanır). impeccable
 3.0.0'da kaldırıldı. Commit hook'ları handler düzeyinde `if` ile süzülür, engelleme
-yalnız exit 2 (sözleşme: `.claude/rules/hooks.md`).
+yalnız exit 2 (sözleşme: `.claude/rules/hooks.md`). Hook'lar subagent'ların
+araç çağrılarında da koşar. Claude Code dışındaki commit'ler (terminal, başka
+asistan) için `hooks/git-pre-commit.sh --install` aynı iki script'i git'in
+pre-commit kancasına bağlar. Şablon projede `~/dev-starter` yoksa hook'lar
+koşmaz; SessionStart bunu oturum başında modele söyler.
 
 Hook'un çalıştığını varsayma — `bash ~/dev-starter/scripts/health-check.sh` ile doğrula.
 
@@ -369,6 +380,14 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 ---
 
 ## Skills Referans Tablosu
+
+Komutları **ana oturum** (ve kullanıcı) çağırır. Kayıtlı subagent slash
+komutu çağıramaz (wrapper `tools` listesinde `Skill` yok, bilerek: komutlar
+orkestrasyon adımıdır). "Hangi Agent" sütunundaki subagent kısaltması "bu
+komut işi o role dağıtır" demektir; subagent'ın kendi kullandığı komutlar rol
+dosyasındaki doğrulama komutlarıdır. `/deploy` ve `/release`i yalnız kullanıcı
+tetikler (`disable-model-invocation`); `/evolve` ve `/harvest` yalnız
+dev-starter deposunda yüklüdür (`machine/bootstrap.sh` → `REPO_ONLY_COMMANDS`).
 
 | Skill | Kullanım | Hangi Agent |
 |-------|----------|-------------|

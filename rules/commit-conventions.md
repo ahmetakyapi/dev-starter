@@ -4,7 +4,7 @@
 
 **Yazar**: her depoda `Ahmet Akyapı <ahmetakyapii@gmail.com>`; Claude yalnız
 `Co-Authored-By:` satırında. Taze klonda ilk committen önce `git config
-user.name/user.email` (ayrıntı `machine/CLAUDE.md` → Commit Mesajı Formatı).
+user.name/user.email` (ayrıntı `machine/CLAUDE.md` → Commit ve Push).
 
 ---
 
@@ -31,6 +31,12 @@ user.name/user.email` (ayrıntı `machine/CLAUDE.md` → Commit Mesajı Formatı
 | `docs` | Dokümantasyon | `docs: update README with deploy instructions` |
 | `chore` | Build, config, dependency | `chore: upgrade next to 15.1.0` |
 | `ci` | CI/CD değişikliği | `ci: add lighthouse check to PR workflow` |
+
+Tip listesi kapalıdır ve üç yerde AYNIDIR: bu tablo, `machine/CLAUDE.md` →
+Commit ve Push, `hooks/quality-scan.sh` → `CC_TYPES` (health-check eşitliği
+denetler). **`hotfix` tip değildir**: HOTFIX bir triage sınıfıdır
+(`rules/bugfix-protocol.md`), commit'i `fix(<scope>): …` olarak atılır.
+Kırıcı değişiklik tipten sonra `!` ile işaretlenir: `feat(api)!: …`.
 
 ### Scope (opsiyonel ama önerilen)
 

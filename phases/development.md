@@ -66,13 +66,49 @@ Wave 3:
   → ana oturum:        raporu docs/gate/<story>.md'ye yazar, sonucu ROUTEMAP'e işler, commit
 ```
 
-- **Paralel dosya çakışması riski varsa** subagent `isolation: worktree` ile
-  açılır; Gate PASSED sonrası dal ana ağaca merge edilir. Worktree'ye `.env`
-  otomatik gelmez — ortam isteyen doğrulamayı ana oturum çalıştırır.
+- **Paralel dosya çakışması riski varsa** önce Görev Tanımı'nın `sinir:`
+  alanıyla dosya sahipliğini ayır (çoğu dalgada yeter); ayrılamıyorsa
+  subagent `isolation: worktree` ile açılır — sıra aşağıda "Worktree ile
+  Paralel Çalışma".
+- **Subagent commit atmaz**, ROUTEMAP'e ve `docs/gate/`e yazmaz: commit,
+  Gate kaydı ve durum geçişi ana oturumundur.
 - **Dalga arası kontrol**: build + typecheck; çakışma varsa önce çöz, sonra
   yeni dalga.
 - Subagent çıktısı dosyaya yazılır (aşağıdaki adresler); ana oturuma yalnız
   yol + üç satır özet döner (`rules/context-curation.md → Referansla Aktar`).
+
+### Worktree ile Paralel Çalışma
+
+`isolation: worktree` wrapper frontmatter'ında YOKTUR; orkestratör çağrı
+başına seçer. Ne zaman: AYNI dalgadaki iki subagent aynı dosyalara yazacaksa
+ve `sinir:` ile ayrılamıyorsa. Bilinmesi gerekenler (Claude Code belgesi,
+10 Kasım 2026'da doğrulandı):
+
+- Worktree **varsayılan daldan** (commit'lenmiş hâlden) açılır, ana ağacın
+  commit'lenmemiş değişikliklerini GÖRMEZ. Bu yüzden önceki dalganın
+  çıktısına bağımlı iş (ör. Wave 2 `frontend`, Wave 1 `backend`
+  commit'lenmeden) worktree'de yapılmaz.
+- Worktree'ye `.env.local` ve `node_modules` gelmez: ortam ya da kurulum
+  isteyen doğrulamayı (build, test) ana oturum birleştirmeden SONRA çalıştırır;
+  subagent teslimde "worktree'de çalıştırılamadı" diye yazar.
+- Hook'lar worktree'de de koşar ve worktree'nin kendi ROUTEMAP'ini okur
+  (`hooks/lib/routemap.sh`). Subagent commit atmadığı için Gate orada sorulmaz.
+
+Sıra (commit tek yerde, ana ağaçta atılır; Gate birleşmiş hâli denetler):
+
+```bash
+# 1. Subagent worktree'de yazar, commit ATMAZ; teslimde worktree yolunu döndürür.
+# 2. Ana oturum farkı ana ağaca alır (yeni ve ikili dosyalar dahil):
+git -C <worktree> add -A
+git -C <worktree> diff --cached --binary HEAD | git apply --3way
+#    çakışma varsa ÖNCE çöz; sonra bir sonraki worktree'nin farkı
+# 3. Ana ağaçta: npm run build && npm run typecheck   (dalga arası kontrol)
+# 4. /gate <story>  → PASSED → commit (ana ağaçta) → push
+# 5. Temizlik: git worktree remove --force <worktree> && git branch -D <dal>
+```
+
+Gate'i worktree'de çalıştırma: kapsam izi (`hooks/lib/gate-hash.sh`) commit
+anında ana ağaçta yeniden hesaplanır ve tutmaz.
 
 ### Çıktı Adresleri
 
@@ -119,6 +155,6 @@ yetkisi yok — bu bilinçli: denetleyen, denetlediği kaydı değiştirmez).
 
 - Fazdaki tüm story'ler **DONE** ve Gate kolonları **PASSED**
   (`hooks/routemap-sync.sh` tutarsızlığı yakalar)
-- `bash scripts/audit-project.sh .` temiz ya da bulgular bilinçli-kayıtlı
+- `bash ~/dev-starter/scripts/audit-project.sh .` temiz ya da bulgular bilinçli-kayıtlı
 - ROUTEMAP: Development → DONE, E2E & Polish → IN_PROGRESS
 - Sırada: `phases/e2e-polish.md` (E0: Seed Data'dan başlar)

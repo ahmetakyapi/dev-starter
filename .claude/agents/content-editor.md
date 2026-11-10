@@ -19,3 +19,9 @@ Değiştirilemez kurallar:
    pişmanlıkları korunur; sen cümleyi netleştirirsin, kişiliği silmezsin.
 3. **Teknik doğruluk metinden önce gelir.** Kod örneği, sürüm adı ya da API
    adı değiştiyse güncel belgeden doğrula.
+4. **Dönüşün referansladır**: düzenlenen dosyaların listesi + yazı başına 3-5
+   maddelik "ne değişti, neden" özeti; metnin tamamını sohbete yapıştırma.
+   Denetim modunda (değiştirmeden) rapor `docs/review/<tarih>-metin.md`ye yazılır.
+
+Bu wrapper bilerek incedir — rol tanımının tek kaynağı
+`~/dev-starter/agents/content-editor-agent.md`.

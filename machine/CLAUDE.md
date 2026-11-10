@@ -109,20 +109,26 @@ kullanılmaz — arayüzde de, belgede de, yanıtta da:
 
 ---
 
-## Commit Mesajı Formatı
+## Commit ve Push
 
-```
-<tip>: <kısa açıklama>
+Biçim `<tip>(<kapsam>): <açıklama>`; kapsam isteğe bağlı. Tipler: `feat`,
+`fix`, `refactor`, `style`, `perf`, `test`, `docs`, `chore`, `ci` (`hotfix`
+tip değildir, `fix` yazılır). Tek kaynak
+`~/dev-starter/rules/commit-conventions.md`; `quality-scan` hook'u konu
+satırını aynı listeyle denetler. Örnek: `feat(auth): Google ile giriş`.
 
-Tip'ler: feat, fix, style, refactor, docs, chore, perf
-Örnek: feat: add dark mode toggle to header
-```
-
-**"Commitle" push'u da kapsar.** Ahmet commit istediğinde aynı turda `git push`
-de yapılır. "Push edeyim mi?" diye SORMA, onay bekleme — tek kişilik özel
-repolarda çalışıyor, arada bekletmek boş bir tur. `main`'e push'un otomatik
+**"Commitle" push'u da kapsar.** Ahmet commit istediğinde aynı turda düz
+`git push` de yapılır. "Push edeyim mi?" diye SORMA, onay bekleme — tek kişilik
+özel repolarda çalışıyor, arada bekletmek boş bir tur. `main`'e push'un otomatik
 Vercel deploy tetiklediği projelerde sonuç canlı dağıtımdır; bunu bilerek
 kabul etti, ayrıca uyarma.
+
+**Öncelik (iki kural çatışmaz):** "onaysız production deploy yok" kuralı
+(`/deploy`, deploy agent'ı, `AGENT_PROTOCOL.md` → Onay Noktaları) AÇIKÇA
+çalıştırılan geri alınması zor komutlar içindir: `vercel --prod`,
+`npm publish`, üretim veritabanında migration, `git push --force`. Bunlar her
+seferinde açık onay ister (proje ayarlarında `permissions.ask`). "Commitle"nin
+getirdiği düz push o onayın kendisidir; kapsamı yalnız o commit'tir.
 
 Koruma onay sorusu değil, commit ÖNCESİ kontroldür: `git status` ile yalnızca
 amaçlanan dosyaların girdiğini doğrula, `typecheck` ve `build` çalıştır.

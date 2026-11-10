@@ -3,37 +3,37 @@ description: Hazır bileşeni projeye uyarlayarak kopyala: snippets/ui kütüpha
 argument-hint: "ui/<ad> (data-table, tree-view, dialog, combobox …) | reveal | theme-toggle | rolling-number | modal | toast | form | og-image | agent-tool | agent-feed | live-preview"
 ---
 
-`$ARGUMENTS` tipinde bir bilesen snippet'ini mevcut projeye uyarla. Bu komut
-her projeden cagrilabilir; kaynak `~/dev-starter/snippets/`.
+`$ARGUMENTS` tipinde bir bileşen snippet'ini mevcut projeye uyarla. Bu komut
+her projeden çağrılabilir; kaynak `~/dev-starter/snippets/`.
 
-**Once oku:** `~/dev-starter/guides/05-components.md` § 2 ve bilesen
-kutuphanesi icin `~/dev-starter/guides/10-component-library.md` (`snippets/ui/`:
-dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareket iceriyorsa `~/dev-starter/guides/04-motion.md`.
+**Önce oku:** `~/dev-starter/guides/05-components.md` § 2 ve bileşen
+kütüphanesi için `~/dev-starter/guides/10-component-library.md` (`snippets/ui/`:
+dialog, dropdown, data-table, tree-view, pagination, stat, sparkline...). Hareket içeriyorsa `~/dev-starter/guides/04-motion.md`.
 
-## `snippets/ui` bileseni ise: add-ui (elle kopyalama yok)
+## `snippets/ui` bileşeni ise: add-ui (elle kopyalama yok)
 
-Kutuphane bileseni (`ui/<ad>` ya da `--list`te gorunen ad) **betikle** kurulur;
-transitif bagimliliklari (`@/components/ui/*`, `lib/utils`, `lib/motion`,
-`lib/theme`, `app/palettes.css`) kendisi cozer, var olan dosyanin ustune yazmaz:
+Kütüphane bileşeni (`ui/<ad>` ya da `--list`te görünen ad) **betikle** kurulur;
+transitif bağımlılıkları (`@/components/ui/*`, `lib/utils`, `lib/motion`,
+`lib/theme`, `app/palettes.css`) kendisi çözer, var olan dosyanın üstüne yazmaz:
 
 ```bash
 node ~/dev-starter/scripts/add-ui.mjs --list                       # katalog
-node ~/dev-starter/scripts/add-ui.mjs . <ad...> --dry-run          # once plan
+node ~/dev-starter/scripts/add-ui.mjs . <ad...> --dry-run          # önce plan
 node ~/dev-starter/scripts/add-ui.mjs . <ad...> --install          # kur + eksik npm paketleri
 ```
 
-Ozet tablosunu oku: `farkli (atlandi)` satiri projenin kendi dosyasidir —
-`--force` ile ezmeden once farki kullaniciya goster. `Uyarilar` (eksik token,
-LazyMotion yok, atlanan yardimcida eksik disa aktarim) ve `Sonraki adimlar`
-(palettes.css satiri) uygulanmadan bitti deme. Proje farkli rol adlari
-kullaniyorsa (shadcn `bg-background`) siniflari kurulumdan SONRA cevir.
-Tailwind v3 / Next 14 projesinde betik kopyalar ama siniflar v4 token'i ister:
-asagidaki adimlarla uyarla.
+Özet tablosunu oku: `farkli (atlandi)` satırı projenin kendi dosyasıdır —
+`--force` ile ezmeden önce farkı kullanıcıya göster. `Uyarilar` (eksik token,
+LazyMotion yok, atlanan yardımcıda eksik dışa aktarım) ve `Sonraki adimlar`
+(palettes.css satırı) uygulanmadan bitti deme. Proje farklı rol adları
+kullanıyorsa (shadcn `bg-background`) sınıfları kurulumdan SONRA çevir.
+Tailwind v3 / Next 14 projesinde betik kopyalar ama sınıflar v4 token'i ister:
+aşağıdaki adımlarla uyarla.
 
-## Adimlar (snippets/ kok parcalari ve uyarlama)
+## Adımlar (snippets/ kök parçaları ve uyarlama)
 
-1. `ls ~/dev-starter/snippets/ ~/dev-starter/snippets/ui/` ile dosyayi bul ve tamamini oku (`.tsx`, `.ts`;
-   `rolling-number` yaninda `.module.css` de var).
+1. `ls ~/dev-starter/snippets/ ~/dev-starter/snippets/ui/` ile dosyayı bul ve tamamını oku (`.tsx`, `.ts`;
+   `rolling-number` yanında `.module.css` de var).
 2. Projenin tech stack'ini kontrol et:
    ```bash
    grep -E '"(next|react|tailwindcss|motion|framer-motion)"' package.json
@@ -44,38 +44,43 @@ asagidaki adimlarla uyarla.
 
 ## Kurallar
 
-- **Hareket `motion/react`tan.** Kokte `LazyMotion features={domAnimation} strict`
-  varsa bilesende `m.*` (`import * as m from "motion/react-m"`); `motion.*`
-  strict altinda hata verir. `framer-motion` kullanan eski projede import yolunu
+- **Hareket `motion/react`tan.** Kökte `LazyMotion features={domAnimation} strict`
+  varsa bileşende `m.*` (`import * as m from "motion/react-m"`); `motion.*`
+  strict altında hata verir. `framer-motion` kullanan eski projede import yolunu
   projeye uydur, yeni paket kurma.
-- `tab-underline` `layout` animasyonu icin kendi `LazyMotion features={domMax}`
-  wrapper'ini getirir; kokteki `domAnimation`i degistirme.
-- **Token siniflari:** `bg-surface`, `text-strong`, `text-body`, `border-line`,
+- `tab-underline` `layout` animasyonu için kendi `LazyMotion features={domMax}`
+  wrapper'ini getirir; kökteki `domAnimation`i değiştirme.
+- **Token sınıfları:** `bg-surface`, `text-strong`, `text-body`, `border-line`,
   `bg-primary text-on-primary`, `bg-primary-wash text-primary-ink`, `bg-scrim`.
-  Hardcoded renk, hazir palet sinifi (`bg-white`, `text-gray-*`) ve `dark:` yok.
-  Proje farkli rol adlari kullaniyorsa (shadcn `bg-background` gibi) onlara cevir.
+  Hardcoded renk, hazır palet sınıfı (`bg-white`, `text-gray-*`) ve `dark:` yok.
+  Proje farklı rol adları kullanıyorsa (shadcn `bg-background` gibi) onlara çevir.
 - Sabitler `lib/motion.ts`ten (`EASE`, `DUR`, `SPRING`); yoksa snippet'in
-  icindekini kullan, yeni sihirli sayi ekleme.
-- `'use client'` yalnizca etkilesimli bilesende.
-- Reveal: kahraman/LCP ogesini sarma; reduced-motion'da `initial={false}` yok.
-- Erisilebilirlik: diyaloglarda odak tuzagi + `Esc` + sayacli kaydirma kilidi
-  (`use-scroll-lock`), dokunma hedefi ≥ 44 px, `aria-label` cumle duzeninde.
+  içindekini kullan, yeni sihirli sayı ekleme.
+- `'use client'` yalnızca etkileşimli bileşende.
+- Reveal: kahraman/LCP öğesini sarma; reduced-motion'da `initial={false}` yok.
+- Erişilebilirlik: diyaloglarda odak tuzağı + `Esc` + sayaçlı kaydırma kilidi
+  (`use-scroll-lock`), dokunma hedefi ≥ 44 px, `aria-label` cümle düzeninde.
   `modal`, `drawer`, `confirm` `./use-scroll-lock`tan `useScrollLock` +
-  `useLayer` (katman yigini, odak, Escape) alir: o dosyayi yanina birlikte
-  kopyala, katman basina ayri kilit ya da Escape dinleyicisi yazma.
-- Arayuz metni Turkce Title Case (baslik, dugme), em dash yok.
+  `useLayer` (katman yığını, odak, Escape) alır: o dosyayı yanına birlikte
+  kopyala, katman başına ayrı kilit ya da Escape dinleyicisi yazma.
+- Arayüz metni Türkçe Title Case (başlık, düğme), em dash yok.
 
-> `live-preview` bir **kit**tir (6 dosya): once `~/dev-starter/snippets/live-preview/README.md`
-> ve `~/dev-starter/rules/live-preview.md`i oku, README'deki 1–7 adimini sirayla uygula
-> (sema → gorunum bilesenine `draft` prop'u + `data-edit` → taslak Server Action'i →
-> onizleme rotasi → duzenleyici → yazi tipi seridi), sonunda README'deki Kabul listesini
-> tarayicida tek tek dogrula.
+> `live-preview` bir **kit**tir (6 dosya): önce `~/dev-starter/snippets/live-preview/README.md`
+> ve `~/dev-starter/rules/live-preview.md`i oku, README'deki 1–7 adımını sırayla uygula
+> (şema → görünüm bileşenine `draft` prop'u + `data-edit` → taslak Server Action'i →
+> önizleme rotası → düzenleyici → yazı tipi şeridi), sonunda README'deki Kabul listesini
+> tarayıcıda tek tek doğrula.
 
 > `agent-*` ve `action-card` snippet'leri `@copilotkit/react-core@1.69.2` tip
-> tanimlariyla `tsc --noEmit` uzerinden dogrulandi. Uyarlarken surum pin'ine
-> dikkat — `~/dev-starter/knowledge/mistakes.md` #70, #71. Karar icin: `/agentic`
+> tanımlarıyla `tsc --noEmit` üzerinden doğrulandı. Uyarlarken sürüm pin'ine
+> dikkat — `~/dev-starter/knowledge/mistakes.md` #70, #71. Karar için: `/agentic`
 
-> `agent-feed` CopilotKit gerektirmez: `agent-feed.tsx` (arayuz) +
-> `agent-feed-core.ts` (sozlesme, reducer, siralama) + `agent-feed.test.ts`.
-> Uc dosyayi birlikte kopyala; `runAction`/`undoAction` projenin server
-> action'laridir ve yetkiyi ORADA dogrular. Desen: `patterns.md → AI Feed`.
+> `agent-feed` CopilotKit gerektirmez: `agent-feed.tsx` (arayüz) +
+> `agent-feed-core.ts` (sözleşme, reducer, sıralama) + `agent-feed.test.ts`.
+> Üç dosyayı birlikte kopyala; `runAction`/`undoAction` projenin server
+> action'larıdır ve yetkiyi ORADA doğrular. Desen: `patterns.md → AI Feed`.
+
+Çıktı: yazılan dosyalar (ve `add-ui` özet tablosu), projeye uyarlarken
+değiştirdiğin şeyler (import yolu, token adı), `npm run typecheck` ve
+`npm run lint` exit kodları, kalan elle adımlar (ör. `palettes.css` satırı,
+`LazyMotion` sarmalayıcısı).

@@ -63,6 +63,17 @@ Gerekçe `knowledge/decisions.md` → "Bağlam Dosyaları".
   `disallowedTools` ile Edit/NotebookEdit'i açıkça kapatır (`gate` ve
   `deploy` Write'ı da); rapor yazan Write'ı tutar. `strategist` karar
   belgesini düzelttiği için Edit'i tutar, yalnız NotebookEdit kapalı.
+  health-check bu eşlemeyi denetler.
+- **Açık `tools` listesi MCP araçlarını ve `Skill`i dışarıda bırakır**
+  (resmî belge, 10 Kasım 2026). Sonuçları: (1) rol dosyası bir MCP aracını
+  "varsa kullan" diyorsa wrapper onu adıyla saymalıdır (`design-reviewer` →
+  `mcp__playwright__*`); (2) subagent slash komutu/skill ÇAĞIRAMAZ — rol
+  dosyasında "Kullandığı Skills" tablosu olmaz, yerine doğrudan çalışan
+  komutlar yazılır (`bash ~/dev-starter/scripts/...`); (3) `disallowedTools`a
+  `Bash(git push *)` gibi belirteçli giriş yazılmaz, aracın TAMAMINI kaldırır.
+- Gövde üç şeyi söyler ve rol dosyasını kopyalamaz: ilk turda okunacaklar,
+  3-5 değiştirilemez kural, dönüş biçimi (yol + üç satır özet; subagent
+  kullanıcıya soramaz, `SORULAR` bloğu döndürür).
 - `model: inherit`: ana oturumun modeli; ucuz modele düşürmek Gate ve
   uygulayıcıda kalite riski, karar sahibinin.
 - `isolation: worktree` frontmatter'a KONMAZ: paralel dalgada izolasyonu
@@ -82,8 +93,12 @@ token bütçeli tam tablo `agents/AGENT_PROTOCOL.md` → Context Curation):
 | FE | TASK-SPECIFIC | Story + ilgili dosyalar |
 | BE | TASK-SPECIFIC | Story + schema + API |
 | QA | TASK-SPECIFIC | Story + tests/ + bugfix-protocol |
+| AG | FOCUSED | Story + agentic-ui kuralları + tool şemaları |
 | RS | TASK-SPECIFIC | Soru + tech-radar + decisions |
-| GATE | REVIEW | Story + diff + rules |
+| ST | FULL (ürün) | Ürün belgeleri + radar + canlı durum |
+| DR | FOCUSED | Tema belgesi + ekran görüntüleri |
+| CE | TASK-SPECIFIC | İncelenen metin + yazım kuralları |
+| GATE | REVIEW | Story + diff + rules (mistakes yalnız indeks) |
 | DP | MINIMAL | Config + env |
 
 Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet döner
@@ -91,10 +106,20 @@ Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet dön
 
 ## Komutlar ve Skill'ler
 
-- **Tek kaynak: bu repo.** `machine/bootstrap.sh` her komutu
+- **Tek kaynak: bu repo.** `machine/bootstrap.sh` komutları
   `~/.claude/commands/`a symlink'ler; global kopya yoktur, **her projede bu
   sürümler çalışır**. Bu yüzden komutların içindeki yollar `~/dev-starter/...`
   biçiminde mutlaktır — göreli yol başka bir projeden çağrılınca bulunamaz.
+- **Yalnız bu depoda anlamlı komutlar** (`/harvest`, `/evolve`) global
+  BAĞLANMAZ: `machine/bootstrap.sh` → `REPO_ONLY_COMMANDS`. Proje kapsamında
+  (`.claude/commands/`) zaten yüklüdürler ve yolları depo köküne göre
+  olabilir; açıklamaları "Yalnız ~/dev-starter deposunda" der. Bootstrap,
+  depodan silinen ya da bu listeye giren komutun eski bağlantısını da
+  temizler (yalnız bu depoya giden symlink'ler).
+- Komut frontmatter'ı: `description` (ne yapar + ne zaman; listede 1.536
+  karakterde kesilir, önemli olan başta), argüman alıyorsa `argument-hint`.
+  Komut dosyasında `name` ve `paths` desteklenmez. Her komut bir rapor
+  biçimiyle ya da "Çıktı:" satırıyla biter.
 - Komut dosyası `.claude/commands/<ad>.md`; listesi `scripts/health-check.sh`
   → `COMMANDS`, kök `CLAUDE.md` tablosu ve README sayacıyla aynı evren.
 - Geri alınması zor yan etkili komut (`/deploy`, `/release`) frontmatter'da
@@ -112,7 +137,9 @@ Subagent çıktısı dosyaya yazılır, ana oturuma yol + üç satır özet dön
 
 - Yeni komut: `.claude/commands/` altında `.md` — yollar `~/dev-starter/...`
   mutlak; `health-check.sh` → `COMMANDS`, kök `CLAUDE.md` tablosu,
-  `npm run readme:assets`, `bash machine/bootstrap.sh`.
+  `AGENT_PROTOCOL.md` → Skills tablosu, `npm run readme:assets`,
+  `bash machine/bootstrap.sh`. Yalnız bu depoya özgüyse ayrıca
+  `REPO_ONLY_COMMANDS`.
 - Yeni subagent: `.claude/agents/[ad].md` (ince) + `agents/[ad]-agent.md`;
   `health-check.sh` → `WRAPPERS`, `AGENT_PROTOCOL.md` listesi, bu tablo.
 - Yeni kural: `rules/` altında dosya, `AGENT_PROTOCOL.md`'ye referans.

@@ -116,3 +116,9 @@ Renk, yazı tipi, metin, logo, ikon seti, görsel, birebir ölçü, kod.
   omurgasız karışım yine şablona döner.
 - `/clone-website`ın tersidir: o birebir kopyalar (yalnız dev-starter'da),
   bu yapıyı alıp kimliği değiştirir.
+
+## Çıktı
+
+`docs/references/<bölüm>.md` yolu, kurulan/değişen dosyalar, kütüphaneden
+kullanılan parçalar, `design-reviewer` raporunun yolu ve P0/P1 sayısı,
+referanstan bilerek ALINMAYANLAR (tek satır).

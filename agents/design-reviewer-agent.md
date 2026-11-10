@@ -12,12 +12,46 @@ Kayıtlı subagent: `.claude/agents/design-reviewer.md`.
 
 ## 1. Hazırlık
 
-1. Uygulama çalışıyor mu bak (`lsof -i :3000,3001`). Çalışmıyorsa
-   `npm run dev`'i arka planda başlat, hazır olana kadar bekle.
+**Girdi** (Görev Tanımı): kapsam (rotalar ya da "tüm site"), varsa canlı
+adres ve referans (`docs/references/<bölüm>.md`). **Çıktı**:
+`docs/review/<YYYY-MM-DD>-<kapsam>.md` (§ 4 biçimi) + ana oturuma yol ve üç
+satır özet. **Bitti**: matrisin her hücresi açıldı (açılamayan nedeniyle
+yazıldı), her bulgu ekran görüntüsü ya da ölçüme bağlı, `.tmp-*` silindi,
+başlattığın sunucu kapatıldı.
+
+1. Uygulama çalışıyor mu bak:
+   `curl -s -o /dev/null -w '%{http_code}' http://localhost:3000` (ya da
+   `lsof -i :3000`). Çalışmıyorsa `npm run dev`i arka planda başlat
+   (`npm run dev > .tmp-dev.log 2>&1 &`), `curl` 200 dönene dek bekle; iş
+   bitince kapat. Ortam değişkeni eksikse (build/dev patlıyor) bunu raporla,
+   sahte değerle açtıysan belirt.
 2. Rota listesini çıkar: `app/**/page.tsx` + README'deki rota tablosu. Dinamik
    rotalar için gerçek bir örnek kimlik bul (sitemap ya da veritabanı).
-3. Tarayıcı: Playwright MCP araçları varsa onları kullan; yoksa sistemde kurulu
-   Chrome ile `puppeteer-core` script'i (`.tmp-design-review.mjs`).
+3. Tarayıcı — ilk çalışanı kullan:
+   - **Playwright betiği (varsayılan; bulut oturumunda kurulu):**
+     `.tmp-design-review.mjs` yaz, `node` ile koştur. Çözümleme sırası ve
+     kararlı ekran görüntüsü (animasyonları sona sar, fontları bekle, tembel
+     görselleri tetikle) için çalışan örnek:
+     `~/dev-starter/.claude/skills/clone-website/scripts/_browser.mjs`
+     (`loadPlaywright`, `settle`, `FREEZE_CSS`). Kısa iskelet:
+     ```js
+     import { createRequire } from "node:module";
+     const { chromium } = createRequire(import.meta.url)("playwright");
+     const browser = await chromium.launch();
+     const page = await browser.newPage({ viewport: { width: 390, height: 844 }, colorScheme: "light" });
+     page.on("console", (m) => m.type() === "error" && console.log("KONSOL:", m.text()));
+     await page.goto("http://localhost:3000/", { waitUntil: "networkidle" });
+     await page.screenshot({ path: ".tmp-review/home-390-light.png", fullPage: true });
+     ```
+     Yerelde yoksa: `npm i -D playwright && npx playwright install chromium`
+     KURMA (proje dosyası değişir); kullanıcıya söyle ya da sıradakine geç.
+   - **Playwright MCP** (`mcp__playwright__*`; yalnız sunucu adı `playwright`
+     ise wrapper izinli).
+   - **Sistem Chrome'u + `puppeteer-core`** (`npx -y -p puppeteer-core node …`,
+     `executablePath` = `google-chrome` / macOS'ta
+     `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`).
+   Hiçbiri açılmıyorsa DUR: "tarayıcı açılamadı: <hata>" diye dön. Koddan
+   okuyup ekran görmüş gibi puan verme.
 
 ## 2. Matris
 
@@ -96,5 +130,8 @@ Matris: N rota × 4 genişlik × 2 tema = M ekran. Taşma: X. Konsol hatası: Y.
 kalite düşüşü, **P2** cila. P0 ve P1 en fazla 10 madde; gerisi fırsatlar
 listesine.
 
-İş bitince `.tmp-*` dosyalarını sil. Ekran görüntüleri istenirse
-`docs/review/<tarih>/` altına taşınır, yoksa silinir.
+Rapor `docs/review/<YYYY-MM-DD>-<kapsam>.md`ye yazılır (dizin yoksa
+`mkdir -p docs/review`). İş bitince `.tmp-*` dosyalarını sil ve başlattığın
+sunucuyu kapat. Ekran görüntüleri istenirse `docs/review/<tarih>/` altına
+taşınır, yoksa silinir (üçüncü tarafın ekran görüntüsü depoya girmez).
+Ana oturuma dönüş: rapor yolu + üç satır özet.

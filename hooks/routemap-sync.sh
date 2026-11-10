@@ -29,7 +29,7 @@ Ya Gate'i çalıştır (/gate) ya durumu IN_REVIEW'a çek."
   if command -v jq >/dev/null 2>&1; then
     jq -n --arg reason "$REASON" '{"decision": "block", "reason": $reason}'
   elif command -v python3 >/dev/null 2>&1; then
-    REASON="$REASON" python3 -c 'import json, os; print(json.dumps({"decision": "block", "reason": os.environ["REASON"]}))'
+    REASON="$REASON" python3 -c 'import json, os; print(json.dumps({"decision": "block", "reason": os.environ["REASON"]}, ensure_ascii=False))'
   else
     echo "⚠️  $REASON"
   fi
@@ -54,7 +54,7 @@ if command -v stat &>/dev/null; then
       if command -v jq >/dev/null 2>&1; then
         jq -n --arg m "$MSG" '{hookSpecificOutput: {hookEventName: "PostToolUse", additionalContext: $m}}'
       elif command -v python3 >/dev/null 2>&1; then
-        MSG="$MSG" python3 -c 'import json, os; print(json.dumps({"hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": os.environ["MSG"]}}))'
+        MSG="$MSG" python3 -c 'import json, os; print(json.dumps({"hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": os.environ["MSG"]}}, ensure_ascii=False))'
       else
         echo "💡 $MSG"
       fi

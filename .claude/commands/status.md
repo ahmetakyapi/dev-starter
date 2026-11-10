@@ -1,6 +1,5 @@
 ---
 description: Kaldığın yer raporu — ROUTEMAP + git log + açık işlerden hızlı özet ve sıradaki en değerli 3 iş önerisi. /roadmap'in ağır pazar analizine girmeden gündelik yön bulma.
-argument-hint: ""
 ---
 
 # /status — Neredeyiz, Sırada Ne Var?

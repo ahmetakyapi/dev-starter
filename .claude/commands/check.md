@@ -3,12 +3,12 @@ description: Proje sağlık kontrolü: build, typecheck, lint, test, token, güv
 argument-hint: "[dizin]"
 ---
 
-Projenin saglik durumunu kontrol et (`$ARGUMENTS` verilmisse o dizinde). Her
-adim bir KOMUT calistirir; "bakildi, iyi gorunuyor" sonuc degildir.
-Kurallarin kaynagi: `~/dev-starter/guides/08-quality-and-ship.md`.
+Projenin sağlık durumunu kontrol et (`$ARGUMENTS` verilmişse o dizinde). Her
+adım bir KOMUT çalıştırır; "bakıldı, iyi görünüyor" sonuç değildir.
+Kuralların kaynağı: `~/dev-starter/guides/08-quality-and-ship.md`.
 
-> **Sinir**: /check teknik sagliktir, ROUTEMAP'in Gate kolonuna YAZILMAZ.
-> Commit kapisini acan denetim `/gate`tir; /check onun hazirlik turudur.
+> **Sınır**: /check teknik sağlıktır, ROUTEMAP'in Gate kolonuna YAZILMAZ.
+> Commit kapısını açan denetim `/gate`tir; /check onun hazırlık turudur.
 
 ## 0. Tech Stack'i Tespit Et
 
@@ -17,53 +17,53 @@ grep -E '"(next|react|tailwindcss|motion|framer-motion|next-themes|eslint)"' pac
 ls proxy.ts middleware.ts eslint.config.* .eslintrc* tailwind.config.* postcss.config.* 2>/dev/null
 ```
 
-Asagidaki "yeni tech stack" maddeleri yalnizca Next 16 / Tailwind v4 projelerinde
-bulgu sayilir; eski projede bilgi olarak raporlanir.
+Aşağıdaki "yeni tech stack" maddeleri yalnızca Next 16 / Tailwind v4 projelerinde
+bulgu sayılır; eski projede bilgi olarak raporlanır.
 
-## 1. Komutlar (sirasi onemli)
+## 1. Komutlar (sırası önemli)
 
-1. `npm run build` — Next 16'da typecheck'ten ONCE (`PageProps` tipleri burada uretilir)
+1. `npm run build` — Next 16'da typecheck'ten ÖNCE (`PageProps` tipleri burada üretilir)
 2. `npm run typecheck` (yoksa `npx tsc --noEmit`) — exit kodunu raporla
-3. `npm run lint` — config dosyasinin VAR oldugunu da dogrula
+3. `npm run lint` — config dosyasının VAR olduğunu da doğrula
 4. `npm test` (varsa)
 
 ## 2. Yeni Tech Stack Uyumu
 
-- **Next 16:** `middleware.ts` yerine `proxy.ts` (`export function proxy`) var mi?
-  Senkron `params` / `cookies()` kullanimi var mi? Segmentte `loading.tsx` var mi
-  (soft 404 riski)? `revalidateTag` tek argumanla mi cagriliyor?
-- **ESLint:** `next lint` script'i ya da `.eslintrc*` varsa bulgu; dogrusu
+- **Next 16:** `middleware.ts` yerine `proxy.ts` (`export function proxy`) var mı?
+  Senkron `params` / `cookies()` kullanımı var mı? Segmentte `loading.tsx` var mı
+  (soft 404 riski)? `revalidateTag` tek argümanla mı çağrılıyor?
+- **ESLint:** `next lint` script'i ya da `.eslintrc*` varsa bulgu; doğrusu
   `"lint": "eslint --max-warnings 0"` + `eslint.config.mjs` (flat, `eslint-config-next/core-web-vitals` + `/typescript`).
-- **Tailwind v4:** `tailwind.config.*` olmamali; `postcss.config.mjs` →
-  `@tailwindcss/postcss`; `globals.css`te `@import "tailwindcss"` ve `@theme inline` koprusu.
-  `@import "tailwindcss"` var ama PostCSS eklentisi yoksa CRITICAL (utility'ler hic uretilmez).
-- **motion:** `framer-motion` import'u yeni projede bulgu; kokte
-  `LazyMotion strict` varsa bilesende `motion.*` kullanimi HATA (`m.*` olmali).
-- **Tema:** `next-themes` yeni projede bulgu (cerez + `data-theme` bekleniyor).
-- **cn():** ozel punto adlari (`text-small`, `text-read`...) kullaniliyorsa
-  `extendTailwindMerge` kaydi var mi (`mistakes.md` #75)?
+- **Tailwind v4:** `tailwind.config.*` olmamalı; `postcss.config.mjs` →
+  `@tailwindcss/postcss`; `globals.css`te `@import "tailwindcss"` ve `@theme inline` köprüsü.
+  `@import "tailwindcss"` var ama PostCSS eklentisi yoksa CRITICAL (utility'ler hiç üretilmez).
+- **motion:** `framer-motion` import'u yeni projede bulgu; kökte
+  `LazyMotion strict` varsa bileşende `motion.*` kullanımı HATA (`m.*` olmalı).
+- **Tema:** `next-themes` yeni projede bulgu (çerez + `data-theme` bekleniyor).
+- **cn():** özel punto adları (`text-small`, `text-read`...) kullanılıyorsa
+  `extendTailwindMerge` kaydı var mı (`mistakes.md` #75)?
 
-## 3. Token taramasi
+## 3. Token taraması
 
 ```bash
 grep -rn --include='*.tsx' --include='*.ts' -E '#[0-9a-fA-F]{3,8}\b|bg-white|bg-black|text-(gray|slate)-[0-9]|dark:' app components lib
 ```
 
-Kaynak: `~/dev-starter/rules/design-tokens.md`. Token tanim dosyalari (`globals.css`) istisna.
+Kaynak: `~/dev-starter/rules/design-tokens.md`. Token tanım dosyaları (`globals.css`) istisna.
 
-## 4. Guvenlik
+## 4. Güvenlik
 
 ```bash
 git ls-files | grep -E '(^|/)\.env($|\.)' | grep -vE '\.(example|template)$'
-# Desen hooks/quality-scan.sh § 3 ile ayni (tek tirnak, buyuk/kucuk harf, kebab token ayiklamasi)
+# Desen hooks/quality-scan.sh § 3 ile aynı (tek tırnak, büyük/küçük harf, kebab token ayıklaması)
 SECRET_RE="(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"'[:space:]]{8,}[\"']"
 grep -rnoiE "$SECRET_RE" app lib components --include='*.ts' --include='*.tsx' \
   | grep -vE ":[Tt]oken[[:space:]]*[:=][[:space:]]*[\"'][a-z]+(-[a-z0-9]+)+[\"']\$"
 grep -rn "console.log" app lib components --include='*.ts' --include='*.tsx'
 ```
 
-Korumali uclar `checkBearer` (uretimde sir yoksa 503) kullaniyor mu? Server
-Action'lar `auth()` + zod + sahiplik kontrolu yapiyor mu?
+Korumalı uçlar `checkBearer` (üretimde sır yoksa 503) kullanıyor mu? Server
+Action'lar `auth()` + zod + sahiplik kontrolü yapıyor mu?
 
 ## Rapor
 
@@ -78,7 +78,7 @@ Tech stack:   ✅ | ⚠️ [N madde] | ⏭️ (eski tech stack)
 Design Token: ✅ | ⚠️ [N ihlal]
 Security:     ✅ | ❌
 ━━━━━━━━━━━━━━━━━━━━━━━
-Sonuc: PASSED | FAILED | PASSED_WITH_WARNINGS
+Sonuç: PASSED | FAILED | PASSED_WITH_WARNINGS
 ```
 
-Her basarisiz adimda hatayi, komut ciktisini ve duzeltme onerisini belirt.
+Her başarısız adımda hatayı, komut çıktısını ve düzeltme önerisini belirt.

@@ -23,13 +23,27 @@ Bu agent çalışmadan önce şunları oku:
 Bu agent `rules/dev-cycle.md` pipeline'ını takip eder:
 1. Plan'ı oku → 2. Develop → 3. Self-Check → 4. Gate Agent'a gönder
 
-## Kullandığı Skills
+## Girdi, Çıktı, Bitti Tanımı
 
-| Skill            | Ne Zaman                          |
-| ---------------- | --------------------------------- |
-| `/snippet [tip]` | Hızlı bileşen iskelet üretimi     |
-| `/check`         | Teslim öncesi kod kalite kontrolü |
-| `/review-ui`     | UI bileşeni teslim edilince       |
+- **Girdi** (Görev Tanımı): story dosyası, `oku:` adresleri, `sinir:` (dokunulmayacak
+  dosyalar), `kabul:` kriterleri. Eksikse tahmin etme: `AGENT_ERROR` ile iste.
+- **Çıktı**: kod doğrudan dosyalara; son mesajında değişen dosya listesi,
+  doğrulama komutları + exit kodları, üç satır özet (aşağıda "Çıktı Standardı").
+- **Bitti**: her kabul kriteri karşılandı ya da karşılanmayanı nedeniyle
+  yazıldı; build, typecheck ve lint çıktısı teslimde; commit ATILMADI
+  (commit Gate'ten sonra ana oturumundur).
+
+## Araçlar (komut değil, doğrudan çalıştırılır)
+
+Kayıtlı subagent slash komutu çağıramaz (`/check`, `/review-ui`, `/snippet`
+ana oturumun aracıdır); aynı işi aşağıdaki komutlar doğrudan yapar:
+
+| İş | Komut |
+| --- | --- |
+| Kütüphane bileşeni kur (`snippets/ui`) | `node ~/dev-starter/scripts/add-ui.mjs --list` · `node ~/dev-starter/scripts/add-ui.mjs . <ad...> --dry-run` · `--install` |
+| Kök snippet (reveal, modal, toast…) | `~/dev-starter/snippets/<ad>.tsx` dosyasını oku, projeye uyarla (`guides/05-components.md` § 2) |
+| AI slop taraması | `bash ~/dev-starter/scripts/slop-scan.sh app components` (YÜKSEK bulgu = teslim yok) |
+| Token sızıntısı | `grep -rnE 'dark:\|bg-white\|text-(gray\|slate)-[0-9]\|#[0-9a-fA-F]{6}' app components --include='*.tsx'` |
 
 ## Agent İletişimi
 
@@ -257,8 +271,18 @@ Komutlardan biri çalışmıyorsa (script yok, bağımlılık kurulu değil) bun
 
 Kod teslim ederken:
 
-1. Tam dosya içeriğini ver (partial patch değil, tam dosya)
-2. Import'ları eksiksiz yaz
-3. TypeScript tiplerini atla — her prop tipini yaz
-4. Test edilecek edge case'leri listele
-5. **Çalıştırdığın doğrulama komutlarını ve sonuçlarını yaz**
+1. Kod DOSYAYA yazılır; sohbete kod bloğu ya da dosya gövdesi yapıştırılmaz
+   (`rules/context-curation.md → Referansla Aktar`)
+2. Dosyalar yarım bırakılmaz: import'lar eksiksiz, her prop tipli (`any` yok)
+3. Teslim mesajı şu biçimde:
+
+```text
+FE TESLİM
+  story:    [id]
+  dosyalar: [değişen/eklenen dosya listesi]
+  kabul:    [kriter → karşılandı | karşılanmadı (neden)]
+  kanıt:    [npm run build → exit N · tsc --noEmit → exit N · npm run lint → exit N · slop-scan → sonuç]
+  sınır durumlar: [test edilmesi gereken edge case'ler]
+  istek:    [kapsam dışı kalıp gereken şey — varsa]
+  özet:     [üç satır]
+```

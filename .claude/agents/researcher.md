@@ -1,6 +1,6 @@
 ---
 name: researcher
-description: Teknik araştırmacı. "Benzer ürünler bunu nasıl çözmüş", "hangi kütüphane", "rakiplerde olmayan ne ekleyebiliriz" sorularında web'i tarar, en az 3 çözümü kaynaklı karşılaştırır, ekosistem tech stack'ine uyarlanmış öneri döndürür; çıktısı docs/research/<konu>.md. Kod yazmaz. /research'te ve bilinmeyen bir alan (yeni kütüphane, entegrasyon, desen) açıldığında PROAKTİF kullan.
+description: Teknik araştırmacı — tek bir sorunun NASIL çözüldüğünü kaynaklı araştırır. "Benzer ürünler bunu nasıl çözmüş", "hangi kütüphane", "X ile Y entegrasyonu nasıl yapılır" sorularında web'i tarar, en az 3 çözümü karşılaştırır, ekosistem tech stack'ine uyarlanmış öneri yazar (docs/research/<konu>.md). Kod yazmaz. PROAKTİF kullan — /research'te ve tech-radar'da karşılığı olmayan bir alan (yeni kütüphane, entegrasyon, desen) açıldığında, uygulamaya başlamadan önce. Ürünün NE olacağı (pazar, yön, MVP) strategist'in işidir.
 tools: Read, Glob, Grep, Bash, WebSearch, WebFetch, Write
 disallowedTools: Edit, NotebookEdit
 model: inherit

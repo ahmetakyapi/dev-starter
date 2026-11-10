@@ -954,3 +954,44 @@ hiç oynamaz, kendiliğinden değişen içerik ekran okuyucuya duyurulmaz.
 
 **Alınmayan:** açılış yükleyicisi (içeriği geciktirir), reklam/sponsor
 yerleri, Cormorant Garamond + Anton eşi (serif vurgu `editorial` presetiyle).
+
+## Ajan Katmanı — Onay Sınırı, Depoya Özgü Komutlar, Terminal Commit'leri (2026-11-10)
+
+**Karar 1 — "Commitle = push" ile "onaysız deploy yok" çatışmaz.** Onay
+kuralı AÇIKÇA çalıştırılan geri alınması zor komutlar içindir: `vercel --prod`,
+`npm publish`, üretim veritabanında migration, `git push --force`. Bunlar proje
+ve şablon ayarlarında `permissions.ask` ile her modda sorulur. Kullanıcının
+"commitle" dediği düz push o onayın kendisidir (`main` push'u deploy tetiklese
+bile) ve listede yoktur.
+*Alternatif:* düz push'u da sormak — reddedildi (sahibin açık tercihi: "SORMA").
+*Ne zaman değişir:* depoya ikinci bir kişi girerse ya da üretim verisi olan bir
+projede push'tan kaynaklı bir kaza yaşanırsa `main`e push da `ask`e alınır.
+
+**Karar 2 — Yalnız dev-starter'da anlamlı komutlar global bağlanmaz.**
+`/harvest` ve `/evolve` `REPO_ONLY_COMMANDS`ta; proje kapsamında yüklü kalır.
+*Alternatif:* ikisini `.claude/skills/`e taşımak — "toplu taşıma yok" kararı ve
+dört sayacın (COMMANDS, CLAUDE.md tablosu, README, bootstrap) birlikte değişmesi
+yüzünden seçilmedi; liste tek satır.
+
+**Karar 3 — `~/dev-starter` yoksa şablon hook'ları commit'i BLOKLAMAZ, SÖYLER.**
+SessionStart yolu sınar ve "KAPALI" uyarısını bağlama basar.
+*Alternatif:* `onFailure: "block"` ya da exit 2 — `if: Bash(git *)` filtresiyle
+her git komutunu durdurur, bulut oturumu hiç commit atamazdı.
+*Ne zaman değişir:* bulut ortamının kurulum betiği depoyu `~/dev-starter`a
+klonlamaya başlarsa engelleme yeniden değerlendirilir.
+
+**Karar 4 — Terminal commit'leri için kopya değil köprü.**
+`hooks/git-pre-commit.sh --install` `.git/hooks/pre-commit`e ince bir köprü
+yazar; aynı iki script koşar. husky/`core.hooksPath` seçilmedi: şablona
+bağımlılık ve versiyonlanan ikinci bir kanca dizini getirirdi.
+*Sınır:* `--no-verify` atlar; mesaj biçimi o aşamada bilinmez.
+
+**Karar 5 — Subagent slash komutu çağırmaz; rol dosyası komutu doğrudan yazar.**
+Açık `tools` listesi `Skill`i ve MCP araçlarını dışarıda bırakır (resmî belge).
+Wrapper'lara `Skill` eklemek yerine rol dosyalarındaki "Kullandığı Skills"
+tabloları kaldırıldı: komutlar orkestrasyon adımıdır, subagent'a verilirse iç
+içe dağıtım başlar. MCP gereken tek rol (`design-reviewer`) sunucuyu adıyla sayar.
+
+**Karar 6 — `hotfix` commit tipi değildir.** Tip listesi üç yerde aynıdır
+(kural tablosu, global CLAUDE.md, `quality-scan` → `CC_TYPES`) ve health-check
+eşitliği denetler.

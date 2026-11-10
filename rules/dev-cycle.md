@@ -172,22 +172,15 @@ Evet'ler için taslak öner — **onaysız yazma**. Koşu başına en fazla 1-2 
 
 ## Paralel Geliştirme (Büyük Özellikler)
 
-Bağımsız parçalar paralel çalışabilir:
+Dalga planının tek kaynağı `phases/development.md` → Dalga (Wave) Yürütme
+(Wave 1: `backend` + `qa` + UI kararları · Wave 2: `frontend` · Wave 3:
+`gate` + ana oturum). Burada kopyası tutulmaz; iki plan ayrışınca biri
+bayatlıyordu (bu bölümde QA dalgası yoktu). Değişmeyen üç kural:
 
-```
-Wave 1 (paralel):
-  → BE Agent: API endpoint + schema
-  → UI Agent: Tasarım kararları
-
-Wave 2 (Wave 1 bittikten sonra):
-  → FE Agent: UI + API entegrasyonu
-
-Wave 3:
-  → Gate Agent: Kalite kontrolü
-  → BA Agent: Review
-```
-
-Wave arası: Build kontrolü yap, çakışma varsa çöz.
+- Dalga arası build + typecheck; çakışma varsa önce çöz.
+- Subagent commit atmaz; commit Gate'ten sonra, ana oturumda.
+- Worktree yalnız dosya sahipliği ayrılamadığında (`phases/development.md` →
+  Worktree ile Paralel Çalışma).
 
 ---
 

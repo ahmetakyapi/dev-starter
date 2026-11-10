@@ -657,6 +657,188 @@ for SET in .claude/settings.json templates/nextjs-fullstack/.claude/settings.jso
   fi
 done
 
+# Ajan katmani sozlesmesi (10 Kasim 2026 denetimi). Her kontrol o denetimde
+# bulunan bir hata sinifinin karsiligi: yanlis yazilmis frontmatter alani
+# sessizce yok sayilir; acik `tools` listesi MCP ve Skill'i disarida birakir
+# (rol dosyasi "Kullandigi Skills" diyorsa subagent onu yapamaz); salt-okur
+# rolun Edit/Write'i kapali olmali; komut tablosu, protokol ve dosyalar ayni
+# evreni saymali; `~/dev-starter/...` yolu cozulmeli; commit tip listesi uc
+# yerde ayni olmali. Tek node kosusu: PASS|… / WARN|… / FAIL|… satirlari basar.
+ORCH_OUT=$(node - "${WRAPPERS[*]}" "${COMMANDS[*]}" <<'NODE' 2>&1 || true
+const fs = require('fs')
+const path = require('path')
+const [wrappers, commands] = process.argv.slice(2).map((s) => s.split(' ').filter(Boolean))
+const out = (k, m) => console.log(k + '|' + m)
+const read = (f) => fs.readFileSync(f, 'utf8')
+const fm = (f) => {
+  const t = read(f)
+  if (!t.startsWith('---\n')) return null
+  const end = t.indexOf('\n---', 4)
+  if (end < 0) return null
+  const o = {}
+  for (const line of t.slice(4, end).split('\n')) {
+    const m = line.match(/^([A-Za-z_-]+):\s*(.*)$/)
+    if (m) o[m[1]] = m[2].replace(/^"(.*)"$/, '$1')
+  }
+  return o
+}
+const list = (v) => (v || '').split(',').map((x) => x.trim()).filter(Boolean)
+
+// 1. wrapper frontmatter: bilinen alanlar, salt-okur roller, rol dosyasi
+const KNOWN = new Set(['name', 'description', 'tools', 'disallowedTools', 'model', 'color', 'permissionMode', 'skills', 'memory', 'effort', 'maxTurns', 'background', 'mcpServers', 'hooks'])
+const COLORS = new Set(['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan'])
+const READONLY = { gate: ['Edit', 'Write', 'NotebookEdit'], deploy: ['Edit', 'Write', 'NotebookEdit'], 'design-reviewer': ['Edit', 'NotebookEdit'], researcher: ['Edit', 'NotebookEdit'] }
+let bad = [], total = 0
+for (const w of wrappers) {
+  const f = `.claude/agents/${w}.md`
+  if (!fs.existsSync(f)) continue
+  const o = fm(f)
+  if (!o) { bad.push(`${w}: frontmatter yok`); continue }
+  for (const k of Object.keys(o)) if (!KNOWN.has(k)) bad.push(`${w}: bilinmeyen alan '${k}' (sessizce yok sayilir${k === 'isolation' ? '; izolasyonu orkestrator cagri basina secer' : ''})`)
+  if (o.color && !COLORS.has(o.color)) bad.push(`${w}: gecersiz color '${o.color}'`)
+  const tools = list(o.tools), dis = list(o.disallowedTools)
+  if (tools.includes('Skill')) bad.push(`${w}: tools'ta Skill (subagent komut cagirmaz; rol dosyasi komutlari dogrudan calistirir)`)
+  if (dis.some((d) => /\(/.test(d))) bad.push(`${w}: disallowedTools'ta belirtecli giris (aracin tamamini kaldirir)`)
+  for (const t of READONLY[w] || []) {
+    if (!dis.includes(t)) bad.push(`${w}: disallowedTools ${t} icermiyor (salt-okur rol)`)
+    if (tools.includes(t)) bad.push(`${w}: tools ${t} iceriyor (salt-okur rol)`)
+  }
+  const d = o.description || ''
+  total += d.length
+  if (d.length > 700) bad.push(`${w}: description ${d.length} karakter (tavan 700; tetik listesi, rol ozeti degil)`)
+  if (!/kullan/i.test(d)) bad.push(`${w}: description NE ZAMAN kullanilacagini soylemiyor ("… dendiginde kullan")`)
+  const body = read(f)
+  const role = `agents/${w}-agent.md`
+  if (!fs.existsSync(role)) bad.push(`${w}: rol dosyasi ${role} yok`)
+  else {
+    if (!body.includes(`~/dev-starter/${role}`)) bad.push(`${w}: wrapper kendi rol dosyasini (~/dev-starter/${role}) anmiyor`)
+    if (/^## Kullandığı Skills/m.test(read(role))) bad.push(`${role}: "Kullandığı Skills" tablosu (subagent slash komutu cagiramaz)`)
+    if (/mcp__|MCP ara/.test(read(role)) && !tools.some((t) => t.startsWith('mcp__')) && tools.length) bad.push(`${w}: rol dosyasi MCP araci aniyor ama acik tools listesi hicbirini saymiyor`)
+  }
+}
+if (bad.length) out('FAIL', 'wrapper sozlesmesi: ' + bad.join(' · '))
+else out('PASS', `${wrappers.length} wrapper: alanlar bilinen, salt-okur rollerde Edit/Write kapali, rol dosyasi yerinde (aciklamalar toplam ${total} karakter)`)
+
+// 2. komut frontmatter + rapor bicimi + tablo/protokol kapsami
+bad = []
+const claudeMd = read('CLAUDE.md'), protocol = read('agents/AGENT_PROTOCOL.md')
+const bootstrap = read('machine/bootstrap.sh')
+const repoOnly = ((bootstrap.match(/^REPO_ONLY_COMMANDS=\(([^)]*)\)/m) || [])[1] || '').split(/\s+/).filter(Boolean)
+for (const c of commands) {
+  const f = `.claude/commands/${c}.md`
+  if (!fs.existsSync(f)) continue
+  const o = fm(f)
+  if (!o || !(o.description || '').trim()) { bad.push(`/${c}: description yok`); continue }
+  if ('name' in o || 'paths' in o) bad.push(`/${c}: komut dosyasinda name/paths desteklenmez`)
+  if ('argument-hint' in o && !o['argument-hint'].trim()) bad.push(`/${c}: bos argument-hint`)
+  if (o.description.length > 1536) bad.push(`/${c}: description ${o.description.length} karakter (listede 1536'da kesilir)`)
+  if (!claudeMd.includes('`/' + c)) bad.push(`/${c}: kok CLAUDE.md komut tablosunda yok`)
+  if (!protocol.includes('`/' + c)) bad.push(`/${c}: AGENT_PROTOCOL.md Skills tablosunda yok`)
+  const only = /Yalnız ~\/dev-starter/.test(o.description)
+  if (repoOnly.includes(c) !== only) bad.push(`/${c}: REPO_ONLY_COMMANDS (bootstrap) ile aciklamadaki "Yalnız ~/dev-starter" ibaresi uyusmuyor`)
+}
+for (const c of ['deploy', 'release']) {
+  const o = fm(`.claude/commands/${c}.md`) || {}
+  if (o['disable-model-invocation'] !== 'true') bad.push(`/${c}: disable-model-invocation: true yok (geri alinmasi zor yan etki)`)
+}
+for (const c of repoOnly) if (!commands.includes(c)) bad.push(`REPO_ONLY_COMMANDS'ta bilinmeyen komut: ${c}`)
+if (!repoOnly.length) bad.push('machine/bootstrap.sh REPO_ONLY_COMMANDS listesi yok (depoya ozgu komutlar her projeye baglanir)')
+if (bad.length) out('FAIL', 'komut sozlesmesi: ' + bad.join(' · '))
+else out('PASS', `${commands.length} komut: frontmatter tam, CLAUDE.md + AGENT_PROTOCOL tablosunda, depoya ozgu olanlar (${repoOnly.join(', ')}) global baglanmiyor`)
+
+// 3. ~/dev-starter/... yollari cozuluyor mu (komut, wrapper, rol, kural, faz, sablon)
+const globs = ['.claude/commands', '.claude/agents', 'agents', 'rules', 'phases', 'machine/rules', '.claude/rules']
+const files = globs.flatMap((d) => fs.readdirSync(d).filter((n) => n.endsWith('.md')).map((n) => path.join(d, n)))
+files.push('machine/CLAUDE.md', 'CONTRIBUTING.md')
+for (const t of fs.readdirSync('templates')) for (const n of ['CLAUDE.md', 'AGENTS.md']) if (fs.existsSync(`templates/${t}/${n}`)) files.push(`templates/${t}/${n}`)
+for (const base of ['machine/skills', '.claude/skills']) for (const d of fs.readdirSync(base)) if (fs.existsSync(`${base}/${d}/SKILL.md`)) files.push(`${base}/${d}/SKILL.md`)
+const missing = []
+let checked = 0
+for (const f of files) {
+  for (const m of read(f).matchAll(/~\/dev-starter\/([A-Za-z0-9_@.\/-]+)/g)) {
+    let rel = m[1].replace(/[.,;:)]+$/, '')
+    const after = read(f)[m.index + m[0].length] || ''
+    // yer tutucu (<ad>, [ad], *, $VAR, …) ya da yarim ad (agent-, evolve-) cozulmez
+    if (!rel || /[<\[*$…{]/.test(after) || /-$/.test(rel) || rel.endsWith('/') && /[<\[*$]/.test(after)) continue
+    if (/^node_modules\//.test(rel)) continue
+    checked++
+    if (!fs.existsSync(rel)) missing.push(`${f} → ~/dev-starter/${rel}`)
+  }
+}
+if (missing.length) out('FAIL', 'cozulmeyen ~/dev-starter yolu: ' + [...new Set(missing)].slice(0, 8).join(' · '))
+else out('PASS', `${checked} adet ~/dev-starter/... yolu cozuluyor (${files.length} dosya)`)
+
+// 4. skill'ler: ad = klasor, aciklama, 500 satir tavani, yan dosyalar yerinde
+bad = []
+let nskill = 0
+for (const base of ['machine/skills', '.claude/skills']) for (const d of fs.readdirSync(base)) {
+  const f = `${base}/${d}/SKILL.md`
+  if (!fs.existsSync(f)) { bad.push(`${base}/${d}: SKILL.md yok`); continue }
+  nskill++
+  const t = read(f), head = t.slice(0, t.indexOf('\n---', 4))
+  const name = (head.match(/^name:\s*(.+)$/m) || [])[1]
+  if (name !== d) bad.push(`${f}: name '${name}' klasor adiyla ('${d}') ayni degil`)
+  if (!/^description:/m.test(head)) bad.push(`${f}: description yok`)
+  const lines = t.split('\n').length
+  if (lines > 500) bad.push(`${f}: ${lines} satir (tavan 500; ayrinti yan dosyaya)`)
+  for (const m of t.matchAll(/(?<![A-Za-z0-9_\/.-])((?:reference|patterns|director|scripts|assets)\/[A-Za-z0-9_.\/-]+\.[a-z0-9]+)/g)) {
+    if (!fs.existsSync(`${base}/${d}/${m[1]}`)) bad.push(`${f}: yan dosya yok → ${m[1]}`)
+  }
+}
+if (bad.length) out('FAIL', 'skill sozlesmesi: ' + [...new Set(bad)].join(' · '))
+else out('PASS', `${nskill} skill: ad = klasor, aciklama var, < 500 satir, andigi yan dosyalar yerinde`)
+
+// 5. commit tipleri uc yerde ayni: kural tablosu, global CLAUDE.md, hook
+const hookTypes = ((read('hooks/quality-scan.sh').match(/^CC_TYPES='([^']+)'/m) || [])[1] || '').split('|').filter(Boolean).sort()
+const ruleSec = read('rules/commit-conventions.md').split('### Type')[1] || ''
+const ruleTypes = [...ruleSec.split('\n### ')[0].matchAll(/^\| `([a-z]+)` \|/gm)].map((m) => m[1]).sort()
+const gl = read('machine/CLAUDE.md')
+const glSec = gl.slice(gl.indexOf('## Commit ve Push'))
+const glTypes = [...(glSec.split('\n\n')[1] || '').matchAll(/`([a-z]+)`/g)].map((m) => m[1]).filter((x) => x !== 'hotfix')
+const same = (a, b) => a.length === b.length && a.every((x) => b.includes(x))
+if (!hookTypes.length || !ruleTypes.length) out('FAIL', 'commit tipleri ayristirilamadi (quality-scan CC_TYPES / commit-conventions tablosu)')
+else if (!same(hookTypes, ruleTypes)) out('FAIL', `commit tipleri ayrisik: hook [${hookTypes}] ≠ kural [${ruleTypes}]`)
+else if (!hookTypes.every((x) => glTypes.includes(x))) out('FAIL', `machine/CLAUDE.md → Commit ve Push tip listesi eksik: [${hookTypes.filter((x) => !glTypes.includes(x))}]`)
+else out('PASS', `commit tipleri uc yerde ayni (${hookTypes.join(', ')}): kural, global CLAUDE.md, quality-scan`)
+
+// 6. ayarlar: genis allow yok, geri alinmasi zor komutlar ask'ta, sablonlar ayni, SessionStart yedegi
+bad = []
+const sets = ['.claude/settings.json', 'templates/nextjs-fullstack/.claude/settings.json', 'templates/landing/.claude/settings.json']
+for (const f of sets) {
+  const s = JSON.parse(read(f)), p = s.permissions || {}
+  for (const r of p.allow || []) if (/^(Bash|Edit|Write|\*)(\(\*?\))?$|^Bash\(\*\)$|^mcp__\*$/.test(r)) bad.push(`${f}: genis allow kurali ${r}`)
+  if ((p.defaultMode || '') === 'bypassPermissions') bad.push(`${f}: defaultMode bypassPermissions`)
+  const ask = (p.ask || []).join(' ')
+  for (const need of ['git push --force', 'vercel --prod', 'npm publish']) if (!ask.includes(need)) bad.push(`${f}: permissions.ask '${need}' icermiyor`)
+  if ((p.ask || []).concat(p.deny || []).some((r) => /^Bash\(git push( \*)?\)$/.test(r))) bad.push(`${f}: duz git push soruluyor/yasak ("commitle = push" kurali)`)
+}
+if (read(sets[1]) !== read(sets[2])) bad.push('iki sablonun settings.json dosyasi ayrismis (bayt bayt ayni olmali)')
+const ss = JSON.parse(read(sets[1])).hooks.SessionStart[0].hooks[0].command
+if (!/\[ -f ~\/dev-starter\/hooks\/session-brief\.sh \]/.test(ss) || !/KAPALI/.test(ss)) bad.push('sablon SessionStart komutu ~/dev-starter yoklugunu modele soylemiyor')
+if (bad.length) out('FAIL', 'ayar sozlesmesi: ' + bad.join(' · '))
+else out('PASS', 'ayarlar: genis allow yok, zorla push/prod deploy/npm publish onayli, sablonlar ayni, SessionStart yedegi var')
+NODE
+)
+if [ -z "$ORCH_OUT" ]; then
+  fail "Ajan katmani sozlesmesi denetlenemedi (node ciktisi bos)"
+else
+  while IFS='|' read -r KIND MSG; do
+    case "$KIND" in
+      PASS) pass "$MSG" ;;
+      WARN) warn "$MSG" ;;
+      FAIL) fail "$MSG" ;;
+      *) fail "Ajan katmani denetimi beklenmedik cikti: $KIND $MSG" ;;
+    esac
+  done <<<"$ORCH_OUT"
+fi
+
+# git pre-commit koprusu: Claude Code disindaki commit'lerin tek yolu
+if [ -x hooks/git-pre-commit.sh ] && grep -q 'gate-guard' hooks/git-pre-commit.sh && grep -q 'quality-scan' hooks/git-pre-commit.sh; then
+  pass "hooks/git-pre-commit.sh iki commit script'ini kosturuyor (terminal/baska asistan commit'leri)"
+else
+  fail "hooks/git-pre-commit.sh eksik ya da gate-guard/quality-scan'i cagirmiyor"
+fi
+
 # ─── 15. Bilgi Tabani Butunlugu ──────────────────────────────────────────────
 header "Bilgi Tabani Butunlugu"
 

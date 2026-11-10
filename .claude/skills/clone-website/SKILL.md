@@ -189,10 +189,10 @@ node $SK/styles.mjs <url> "#pricing" docs/research/<host>/components/pricing.sty
 Fill every section; "N/A" only after checking (even a footer has hover states).
 
 ### Step 3: Dispatch Builders
-Simple band → one builder; complex band → one builder per sub-component + one for the wrapper (sub-components first). Each builder receives inline: the full spec, screenshot paths, shared imports (`icons.tsx`, `cn()`), target path, the site breakpoints, and "verify with `npx tsc --noEmit`". Use worktree isolation for parallel builders. **Don't wait** — extract the next band while builders work.
+Simple band → one builder; complex band → one builder per sub-component + one for the wrapper (sub-components first). Each builder receives inline: the full spec, screenshot paths, shared imports (`icons.tsx`, `cn()`), target path, the site breakpoints, and "verify with `npx tsc --noEmit`". Builders that write disjoint files (one component file each — the normal case) run in parallel in the main tree, no worktree needed. Use worktree isolation only when two builders must edit the same file, and **commit the foundation first**: a worktree starts from the last commit on the default branch and does not see uncommitted files (tokens, `icons.tsx`, `cn()` would be missing); it has no `node_modules` either, so the builder's `tsc` check runs after merge. **Don't wait** — extract the next band while builders work.
 
 ### Step 4: Merge
-Merge each worktree, resolve conflicts with full context, `npm run build` after every merge.
+Worktree builders commit on their own branch (the clone project has no Gate hook); merge each branch (`git merge --no-ff <branch>`), resolve conflicts with full context, then `git worktree remove <path>`. `npm run build` after every merge — and after every parallel batch in the main tree.
 
 ## Phase 4: Page Assembly
 Wire bands in `app/page.tsx` in topology order; implement page-level layout (scroll containers, sticky/fixed layers, z-index), page-level behaviors (smooth scroll library, scroll-driven animation, theme changes between sections). `npm run build` passes.

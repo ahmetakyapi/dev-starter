@@ -1,11 +1,21 @@
 {
-  "$comment": "Enforcement hook'lari ekosistemden calisir — tek kaynak ~/dev-starter/hooks/ (komutlardaki ~/dev-starter/... mutlak yol kuralinin aynisi; kopyalamak iki kaynak yaratir, biri sessizce bayatlar). Makineye ozgu izinler .claude/settings.local.json'a (gitignore'lu). Commit hook'lari `if: Bash(git *)` ile suzulur, her Bash cagrisinda iki surec acilmaz (`git -C yol commit` de yakalanir); script'ler kendi commit suzgecini korur. Sir dosyalari (.env, .env.local, .env.*.local, .env.production) Read araciyla okunmaz; .env.example bilerek acik. Bash kurallari metin esler, guvenlik siniri degildir. Ayrinti: ~/dev-starter/.claude/rules/hooks.md.",
+  "$comment": "Enforcement hook'lari ekosistemden calisir — tek kaynak ~/dev-starter/hooks/ (komutlardaki ~/dev-starter/... mutlak yol kuralinin aynisi; kopyalamak iki kaynak yaratir, biri sessizce bayatlar). Makineye ozgu izinler .claude/settings.local.json'a (gitignore'lu). Commit hook'lari `if: Bash(git *)` ile suzulur, her Bash cagrisinda iki surec acilmaz (`git -C yol commit` de yakalanir); script'ler kendi commit suzgecini korur. Sir dosyalari (.env, .env.local, .env.*.local, .env.production) Read araciyla okunmaz; .env.example bilerek acik. Bash kurallari metin esler, guvenlik siniri degildir. permissions.ask: geri alinmasi zor uc is (zorla push, uretim deploy'u, npm yayini) her modda onay ister — 'commitle = push' duz push icindir, bunlari kapsamaz (machine/CLAUDE.md -> Commit ve Push). ~/dev-starter yoksa hook'lar kosmaz (127 engellemez): SessionStart bunu oturum basinda modele soyler, terminal commit'leri icin `bash ~/dev-starter/hooks/git-pre-commit.sh --install`. Ayrinti: ~/dev-starter/.claude/rules/hooks.md.",
   "permissions": {
     "deny": [
       "Read(**/.env)",
       "Read(**/.env.local)",
       "Read(**/.env.*.local)",
       "Read(**/.env.production)"
+    ],
+    "ask": [
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git push * --force*)",
+      "Bash(git push * -f)",
+      "Bash(vercel --prod *)",
+      "Bash(vercel deploy --prod *)",
+      "Bash(npx vercel --prod *)",
+      "Bash(npm publish *)"
     ]
   },
   "hooks": {
@@ -42,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/dev-starter/hooks/session-brief.sh"
+            "command": "if [ -f ~/dev-starter/hooks/session-brief.sh ]; then bash ~/dev-starter/hooks/session-brief.sh; else echo \"⚠️ ~/dev-starter bulunamadı (bulut oturumu ya da ekosistemi kurulmamış makine): Gate kontrolü, sır taraması ve ROUTEMAP hook'ları bu oturumda KAPALI; commit hook'ları hata verip geçer. Commit öncesi elle: npm run lint, npm run typecheck, npm test, npm run build; staged farkta sır ve .env ara (git diff --cached). Kalıcı çözüm: dev-starter deposunu ~/dev-starter'a klonla ve machine/bootstrap.sh çalıştır.\"; fi"
           }
         ]
       }

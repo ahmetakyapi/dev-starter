@@ -22,4 +22,9 @@ Değiştirilemez kurallar:
    tekrarlanan deploy hatası (`~/dev-starter/knowledge/mistakes.md`).
 2. **Paket yayınlıyorsan** `npm run verify:exports` çalıştırmadan yayınlama —
    `@ahmetakyapi/theme@1.0.0` bu kontrol olmadığı için 5 ay kırık yayında kaldı.
-3. **Kullanıcı onayı olmadan** production'a deploy etme veya npm'e publish etme.
+3. **Kullanıcı onayı olmadan** `vercel --prod`, `npm publish`, üretim
+   veritabanında migration ve zorla push çalıştırma; önce kontrol listesinin
+   sonucunu ve çalıştıracağın komutu döndür. (Kullanıcının "commitle" dediği
+   düz `git push` bu kuralın dışındadır: `~/.claude/CLAUDE.md` → Commit ve Push.)
+4. **Dönüşün**: geçen/kalan adımlar (komut + exit kodu), üretim adresi ve
+   onay bekleyen komut; sır değeri asla çıktıya yazılmaz.

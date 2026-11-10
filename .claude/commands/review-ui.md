@@ -3,76 +3,76 @@ description: Arayüz kod incelemesi: token, kimlik ve palet, iki tema, ekran dü
 argument-hint: "[dosya veya dizin]"
 ---
 
-`$ARGUMENTS` dosyasini veya dizinini UI/UX perspektifinden incele. Bu komut
-her projeden cagrilabilir; kurallar `~/dev-starter/guides/` altinda. Projenin
-kendi `THEME.md` / `knowledge/themes/<proje>.md` dosyasi varsa o ONCE gelir.
+`$ARGUMENTS` dosyasını veya dizinini UI/UX perspektifinden incele. Bu komut
+her projeden çağrılabilir; kurallar `~/dev-starter/guides/` altında. Projenin
+kendi `THEME.md` / `knowledge/themes/<proje>.md` dosyası varsa o ÖNCE gelir.
 
-Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` subagent'ini oner.
+Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini öner.
 
 ## Kontrol listesi
 
-0. **Kod taraması** — once calistir, bulgulari asagidaki maddelere dagit:
+0. **Kod taraması** — önce çalıştır, bulguları aşağıdaki maddelere dağıt:
    `bash ~/dev-starter/scripts/slop-scan.sh $ARGUMENTS`
-   (tek tarafli serit, olu baglanti, transition-all, font-black, dolgu
-   sozcugu, yer tutucu, gokkusagi degrade, emoji, scale(0), yuvarlak sayi).
-   `slop-ok` ile susturulan satirin gerekcesi var mi?
+   (tek taraflı şerit, ölü bağlantı, transition-all, font-black, dolgu
+   sözcüğü, yer tutucu, gökkuşağı degrade, emoji, scale(0), yuvarlak sayı).
+   `slop-ok` ile susturulan satırın gerekçesi var mı?
 
 1. **Token** (`~/dev-starter/guides/02-design-tokens.md`, `rules/design-tokens.md`)
-   - Hardcoded hex, hazir palet sinifi (`bg-white`, `text-gray-*`) var mi?
-   - `dark:` varyanti var mi? (yeni tech stack'te olmamali; tema token'la doner)
-   - Ozel punto sinifi `cn()` icinde birlesiyorsa `extendTailwindMerge` kaydi var mi?
-   - Element varsayilanlari `@layer base` icinde mi (katmansiz kural utility'yi ezer)?
-   - Ic ice radius formulle mi: ic = dis − bosluk, bosluk < 32 px (`guides/02` § 4)?
+   - Hardcoded hex, hazır palet sınıfı (`bg-white`, `text-gray-*`) var mı?
+   - `dark:` varyantı var mı? (yeni tech stack'te olmamalı; tema token'la döner)
+   - Özel punto sınıfı `cn()` içinde birleşiyorsa `extendTailwindMerge` kaydı var mı?
+   - Element varsayılanları `@layer base` içinde mi (katmansız kural utility'yi ezer)?
+   - İç içe radius formülle mi: iç = dış − boşluk, boşluk < 32 px (`guides/02` § 4)?
 
 2. **Kimlik ve palet** (`~/dev-starter/guides/00-brand-identity.md`)
-   - Derinlik ton farkiyla mi; glass yalnizca altindan icerik gecen ogede mi?
-   - Degrade yalnizca uc yerde (display baslik, birincil eylem, marka karosu) ve tek aile mi?
-   - Degrade metinde `@supports` + solid fallback + descender payi var mi?
-   - Palet disinda kalan renk (sizinti) var mi?
+   - Derinlik ton farkıyla mı; glass yalnızca altından içerik geçen öğede mi?
+   - Degrade yalnızca üç yerde (display başlık, birincil eylem, marka karosu) ve tek aile mi?
+   - Degrade metinde `@supports` + solid fallback + descender payı var mı?
+   - Palet dışında kalan renk (sızıntı) var mı?
 
-3. **Iki tema**
-   - Her iki temada okunuyor mu? Acik tema ters cevrilmis degil, tasarlanmis mi?
-   - `--text-muted`, `-ink`/`-wash` ciftleri ≥ 4,5:1 (olc, tahmin etme)
+3. **İki tema**
+   - Her iki temada okunuyor mu? Açık tema ters çevrilmiş değil, tasarlanmış mı?
+   - `--text-muted`, `-ink`/`-wash` çiftleri ≥ 4,5:1 (ölç, tahmin etme)
 
-4. **Ekran duzeni** (`~/dev-starter/guides/05-components.md` § 3)
-   - Sira: baslik → kunye → ana gorsel → olcu izgarasi → metin → uyarilar → damga
-   - Her panelin `h2`si var mi? Ekranda tek `primary` dugme mi?
-   - Bos / yukleniyor / hata durumlari cizilmis mi; iskelet yapiyla eslesiyor mu?
-   - Ornek icerik gercekci mi (ad, marka, sayi, tarih); sistem mesaji sakin ve
+4. **Ekran düzeni** (`~/dev-starter/guides/05-components.md` § 3)
+   - Sıra: başlık → künye → ana görsel → ölçü ızgarası → metin → uyarılar → damga
+   - Her panelin `h2`si var mı? Ekranda tek `primary` düğme mi?
+   - Boş / yükleniyor / hata durumları çizilmiş mi; iskelet yapıyla eşleşiyor mu?
+   - Örnek içerik gerçekçi mi (ad, marka, sayı, tarih); sistem mesajı sakin ve
      somut mu; `href="#"` yok, etkin sayfa `aria-current` (`guides/05` § 7)
-   - Izgara hucreleri `minmax(0,1fr)`; sigmayan tablo kaydiriliyor, ezilmiyor
+   - Izgara hücreleri `minmax(0,1fr)`; sığmayan tablo kaydırılıyor, ezilmiyor
 
-5. **Duyarli tasarim**
-   - 390 ve 1280'de yatay tasma yok; dokunmatikte input ≥ 16 px
-   - Yapiskan baslik odagi ortmuyor (`scroll-padding-block`)
+5. **Duyarlı tasarım**
+   - 390 ve 1280'de yatay taşma yok; dokunmatikte input ≥ 16 px
+   - Yapışkan başlık odağı örtmüyor (`scroll-padding-block`)
 
-6. **Erisilebilirlik**
-   - Dokunma hedefi ≥ 44 px, gorunur `focus-visible` halkasi (kirpan kapta `-2px` offset)
-   - Ikon dugmelerde `aria-label`, gorsellerde `alt`, klavye ile tam akis
-   - Title Case baslik/dugme; `capitalize` / `toUpperCase` yok
+6. **Erişilebilirlik**
+   - Dokunma hedefi ≥ 44 px, görünür `focus-visible` halkası (kırpan kapta `-2px` offset)
+   - İkon düğmelerde `aria-label`, görsellerde `alt`, klavye ile tam akış
+   - Title Case başlık/düğme; `capitalize` / `toUpperCase` yok
 
 7. **Hareket** (`~/dev-starter/guides/04-motion.md`)
    - `motion/react` + `m.*`; `framer-motion` yeni projede yok
-   - Yalnizca `transform`/`opacity`; `width`/`height` animasyonu yok
-   - Kahraman/LCP Reveal'e sarili degil; reduced-motion'da `initial={false}` yok
-   - Sayfa giris animasyonunda fill-mode yok (fixed modallari kaydirir)
-   - Magnetic/imlec efektleri yalnizca `pointer: fine`
-   - Bento gorsel hikayesi: tasarimda basliyor/bitiyor, ekran disinda duruyor,
-     kartlar ayni anda oynamiyor, nesne `scale(0)`dan gelmiyor (`guides/04` § 14)
+   - Yalnızca `transform`/`opacity`; `width`/`height` animasyonu yok
+   - Kahraman/LCP Reveal'e sarılı değil; reduced-motion'da `initial={false}` yok
+   - Sayfa giriş animasyonunda fill-mode yok (fixed modalları kaydırır)
+   - Magnetic/imleç efektleri yalnızca `pointer: fine`
+   - Bento görsel hikâyesi: tasarımda başlıyor/bitiyor, ekran dışında duruyor,
+     kartlar aynı anda oynamıyor, nesne `scale(0)`dan gelmiyor (`guides/04` § 14)
 
-8. **Bilesen mimarisi**
-   - `'use client'` en alt seviyede mi; `"use client"` modulden sabit export ediliyor mu?
-   - Sayfa ici filtre baglantilari `scroll={false}`
+8. **Bileşen mimarisi**
+   - `'use client'` en alt seviyede mi; `"use client"` modülden sabit export ediliyor mu?
+   - Sayfa içi filtre bağlantıları `scroll={false}`
 
-9. **Tanitim sayfasi** (yalnizca pazarlama yuzeyi; `guides/10` → Ribbon Turu)
-   - Birincil eylemin hemen altinda dogrulanabilir guvence var mi (`trust-line`);
-     sifat degil olgu, en cok uc; sahte kitlik sayaci yok
-   - Kahraman basligi JS'i beklemeden gorunuyor mu (`blur-in` CSS, ya da hic giris yok)
-   - Cam (`liquid-glass`) yalnizca gorsel zemin ustunde; duz zeminde `bg-cta`
-   - Urun anlatimi bayatlayan ekran goruntusu yerine canli/token'li maket mi
-     (`app-window`, `dock`); maket `role="img"` + tek cumle ya da `aria-hidden`
-   - Sabit konumlu ogeler (menu, maskot, sohbet balonu, cerez bandi) 390'da
-     metni ya da birincil eylemi ortmuyor mu; sayfada en cok bir oyunbaz oge
-   - Hikaye: urun denenebiliyorsa deneme yerine sayfada canli demo var mi
+9. **Tanıtım sayfası** (yalnızca pazarlama yüzeyi; `guides/10` → Ribbon Turu)
+   - Birincil eylemin hemen altında doğrulanabilir güvence var mı (`trust-line`);
+     sıfat değil olgu, en çok üç; sahte kıtlık sayacı yok
+   - Kahraman başlığı JS'i beklemeden görünüyor mu (`blur-in` CSS, ya da hiç giriş yok)
+   - Cam (`liquid-glass`) yalnızca görsel zemin üstünde; düz zeminde `bg-cta`
+   - Ürün anlatımı bayatlayan ekran görüntüsü yerine canlı/token'li maket mi
+     (`app-window`, `dock`); maket `role="img"` + tek cümle ya da `aria-hidden`
+   - Sabit konumlu öğeler (menü, maskot, sohbet balonu, çerez bandı) 390'da
+     metni ya da birincil eylemi örtmüyor mu; sayfada en çok bir oyunbaz öğe
+   - Hikâye: ürün denenebiliyorsa deneme yerine sayfada canlı demo var mı
 
-Sonucu Gate raporu formatinda sun: her madde ✅ / ⚠️ / ❌, bulgu basina dosya:satir ve onerilen duzeltme.
+Sonucu Gate raporu formatında sun: her madde ✅ / ⚠️ / ❌, bulgu başına dosya:satır ve önerilen düzeltme.

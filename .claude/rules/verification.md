@@ -25,7 +25,11 @@ bash scripts/health-check.sh   # veya: npm run health
 testiyle), snippet'ler, şablonlar (hook kaydı dahil), knowledge base, paket
 tutarlılığı, token ihlalleri, CI/CD, temel dosyalar, tasarım denetimi (degrade,
 palet dışı renk), tech stack uyumu (Tailwind v4, ESLint flat, Next 16 proxy,
-motion), orkestrasyon bütünlüğü (wrapper ↔ rol ↔ protokol, komut ↔ tablo)
+motion), orkestrasyon bütünlüğü (wrapper ↔ rol ↔ protokol, komut ↔ tablo;
+10 Kasım 2026'dan beri ajan katmanı sözleşmesi: wrapper alanları ve
+salt-okur rollerin araçları, komut frontmatter'ı, `~/dev-starter/...`
+yollarının çözülmesi, skill'ler, commit tiplerinin üç yerde eşitliği, ayar
+dosyalarındaki `ask`/`allow`, git pre-commit köprüsü)
 ve bilgi tabanı bütünlüğü (mistakes numaraları, indeks kapsamı, satır tavanları;
 8 Kasım 2026'dan beri bağlam dosyaları: CLAUDE.md tavanları, `paths:`
 frontmatter'ı, bootstrap'ın kural/izin adımları, `.env` Read yasağı, commit
