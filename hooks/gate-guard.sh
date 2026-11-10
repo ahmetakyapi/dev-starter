@@ -13,6 +13,8 @@ set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib/hook-input.sh"
 # shellcheck source=lib/routemap.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/routemap.sh"
+# shellcheck source=lib/gate-hash.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/gate-hash.sh"
 
 # Sadece git commit komutlarını yakala (komut metni BİR kez okunur; stdin
 # ikinci okumada boş döner — bkz. lib/hook-input.sh)
@@ -70,5 +72,30 @@ if [ -n "$FAILED_ROWS" ]; then
   } >&2
   exit 2
 fi
+
+# PASSED, Gate'in GÖRDÜĞÜ değişikliğe bağlıdır: rapor `Kapsam: <iz>` taşıyorsa
+# iz yeniden hesaplanır (lib/gate-hash.sh; docs/ hariç). Farklıysa Gate'ten
+# sonra kod değişmiştir → yeniden /gate. İz satırı olmayan eski rapor geçer
+# (geriye uyum). Okuma hatası fail-open; karar yalnız iki iz de varken verilir.
+GATE_DIR="$(dirname "$ROUTEMAP")/gate"
+CURRENT=""
+while IFS=$'\t' read -r SID _ _; do
+  [ -n "$SID" ] || continue
+  REPORT="$GATE_DIR/$SID.md"
+  [ -f "$REPORT" ] || continue
+  WANT=$(grep -m1 -E '^Kapsam: [0-9a-f]{40}' "$REPORT" 2>/dev/null | awk '{print $2}') || true
+  [ -n "$WANT" ] || continue
+  [ -n "$CURRENT" ] || CURRENT=$(gate_hash 2>/dev/null) || true
+  [ -n "$CURRENT" ] || break
+  if [ "$WANT" != "$CURRENT" ]; then
+    {
+      echo "❌ GATE GUARD: Commit bloklandı — Gate'ten sonra kod değişti."
+      echo "   $SID raporu ($REPORT) başka bir değişiklik setini onayladı:"
+      echo "   rapordaki iz $WANT, şimdiki $CURRENT."
+      echo "   Yol: /gate $SID yeniden çalıştır (yalnız yeni farkı denetler)."
+    } >&2
+    exit 2
+  fi
+done <<<"$ACTIVE"
 
 exit 0

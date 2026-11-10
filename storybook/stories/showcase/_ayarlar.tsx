@@ -6,7 +6,9 @@ import { BannerAlert } from "@/components/ui/banner-alert";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColorPicker } from "@/components/ui/color-picker";
+import { Dial } from "@/components/ui/dial";
 import { Divider } from "@/components/ui/divider";
+import { HalftoneImage } from "@/components/ui/halftone-image";
 import { Input } from "@/components/ui/input";
 import { InputOTP } from "@/components/ui/input-otp";
 import { Kbd, KbdCombo } from "@/components/ui/kbd";
@@ -23,6 +25,7 @@ import { SettingsDialog, SettingsRow, SettingsSection, type SettingsTab } from "
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { TagInput } from "@/components/ui/tag-input";
+import { Terminal } from "@/components/ui/terminal";
 import { Textarea } from "@/components/ui/textarea";
 import { ME, TAG_COLORS, TAG_SUGGESTIONS, TICKETS, WORKSPACE } from "./_data";
 import { PageBar, Well, WellTitle, href, useApp } from "./_ui";
@@ -100,6 +103,25 @@ const WEBHOOK_TABS = [
   },
 ] as const;
 
+/** Webhook testinin dökümü: komut, bekleme, Pusula'nın gönderdiği olay ve alıcının yanıtı. */
+const WEBHOOK_TEST = [
+  { kind: "command", text: `curl -X POST ${WEBHOOK_URL} -d '{"olay":"test"}'` },
+  { kind: "comment", text: "Pusula imzalı bir deneme olayı gönderiyor" },
+  { kind: "output", text: "HTTP/2 200", tone: "success" },
+  { kind: "output", text: '{"alindi":true,"olay":"test"}', tone: "body" },
+] as const;
+
+/** Profil fotoğrafı yerine nötr bir portre silueti; yarım ton paletin tonuna basar. */
+const PORTRAIT = `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+<defs>
+<radialGradient id="bg" cx="0.3" cy="0.2" r="1"><stop offset="0" stop-color="white"/><stop offset="1" stop-color="silver"/></radialGradient>
+<radialGradient id="f" cx="0.38" cy="0.32" r="0.8"><stop offset="0" stop-color="white"/><stop offset="0.5" stop-color="gray"/><stop offset="1" stop-color="black"/></radialGradient>
+</defs>
+<rect width="240" height="240" fill="url(#bg)"/>
+<ellipse cx="120" cy="250" rx="98" ry="76" fill="url(#f)"/>
+<circle cx="120" cy="98" r="50" fill="url(#f)"/>
+</svg>`)}`;
+
 const SECTIONS = [
   { id: "ayar-profil", label: "Profil" },
   { id: "ayar-bildirim", label: "Bildirimler" },
@@ -152,6 +174,15 @@ export function AyarlarPage() {
             Profil
           </WellTitle>
           <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center gap-4">
+              <div className="size-20 shrink-0 overflow-hidden rounded-full bg-overlay shadow-raised">
+                <HalftoneImage src={PORTRAIT} alt={`${ME.name} profil fotoğrafı, yarım ton önizleme`} cell={6} className="size-full text-primary" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-small font-medium text-strong">Profil Fotoğrafı</p>
+                <p className="text-small text-muted">Yanıtlarının yanında paletin tonunda, noktalarla basılır.</p>
+              </div>
+            </div>
             <Input label="Ad Soyad" leadingIcon={UserRound} defaultValue={ME.name} autoComplete="name" />
             <Input
               label="Yanıt Adresi"
@@ -195,6 +226,11 @@ export function AyarlarPage() {
             <Checkbox label="Uygulama İçi" hint="Üst çubuktaki zil." defaultChecked />
             <Checkbox label="E-Posta" hint={ME.email} defaultChecked />
             <Checkbox label="SMS" hint="Yalnızca acil talepler için." />
+          </div>
+          <Divider label="Ses" align="start" tone="soft" className="my-3" />
+          <div className="flex flex-wrap items-center gap-5">
+            <Dial label="Bildirim Sesi" min={0} max={100} step={5} defaultValue={60} unit="%" size={112} />
+            <p className="max-w-56 text-small text-muted">Uygulama içi bildirimin bu cihazdaki sesi; sıfırda bildirim sessiz gelir.</p>
           </div>
         </Well>
 
@@ -363,6 +399,7 @@ export function AyarlarPage() {
             Webhook ile Bağla
           </WellTitle>
           <CodeBlock tabs={WEBHOOK_TABS} persist="pusula-webhook" aria-label="Webhook örneği" />
+          <Terminal title="Bağlantı Testi" lines={WEBHOOK_TEST} copyable={false} />
         </Well>
       </div>
     </div>

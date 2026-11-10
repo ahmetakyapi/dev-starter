@@ -15,7 +15,8 @@ import { ThinkingOrb } from "@/components/ui/thinking-orb";
 import { cn } from "@/lib/utils";
 import { palettes } from "../../../packages/@ahmet/theme/tokens";
 import { PALETTES } from "../../.storybook/palettes";
-import { STORY_COUNT, TOTAL } from "../amiral/_kapsam";
+import uiPackage from "../../../packages/@ahmet/ui/package.json";
+import { KIT_COUNT, STORY_COUNT, TOTAL } from "../amiral/_kapsam";
 
 /**
  * Kapak: kataloğun ilk ekranı. Kompozisyondaki her parça gerçek snippet
@@ -135,7 +136,7 @@ function Figures() {
     [String(TOTAL), "bileşen, hepsi kopyalanabilir"],
     [String(STORY_COUNT), "hikâye, açık ve koyu"],
     [String(PALETTES.length), "palet, tek token mimarisi"],
-    ["86", "bileşen npm paketinde"],
+    [String(KIT_COUNT), "bileşen npm paketinde"],
   ];
   return (
     <dl className="grid grid-cols-2 border-y border-line lg:grid-cols-4">
@@ -195,7 +196,7 @@ function Install() {
           { kind: "output", text: "+ terminal.tsx, dial.tsx, copy-button.tsx, digit-roll.tsx", tone: "success" },
           { kind: "comment", text: "ya da paket olarak" },
           { kind: "command", text: "npm i @ahmetakyapi/ui @ahmetakyapi/theme" },
-          { kind: "output", text: "+ @ahmetakyapi/ui@3.1.0", tone: "success" },
+          { kind: "output", text: `+ @ahmetakyapi/ui@${uiPackage.version}`, tone: "success" },
         ]}
       />
     </section>

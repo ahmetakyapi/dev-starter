@@ -27,6 +27,9 @@ KICKOFF.md yoksa sor:
   next-auth v5, `proxy.ts`, tema (cerez + `data-theme`), bilesen katalogu
 - `landing` — tek sayfalik tanitim/vitrin: tema, motion katalogu, yedi kahraman
   duzeni (`lib/content.ts` → `hero.variant`), SEO dosyalari, veritabani yok
+  Urun tanitimi (Mac uygulamasi, gelistirici araci, SaaS) ise Tanitim grubu
+  hazir: `node ~/dev-starter/scripts/add-ui.mjs . docking-nav blur-in liquid-glass trust-line app-window dock hand-callout`
+  (gorsel zeminli kahraman + sayfada denenen urun maketi; `guides/10` → Ribbon Turu)
 - `+ agentic-chat` overlay (istege bagli, yalnizca `nextjs-fullstack` ustune):
   LLM sohbeti. Once `/agentic kurulum` ile karar ver; kurulum
   `~/dev-starter/templates/agentic-chat/README.md`

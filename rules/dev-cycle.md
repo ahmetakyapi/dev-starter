@@ -198,4 +198,4 @@ Wave arası: Build kontrolü yap, çakışma varsa çöz.
 | Tek satır fix (typo, config) | Plan, Validate, Self-Check → doğrudan Gate |
 | Hotfix (production bug) | Bugfix Protocol'e geç (TDD akışı) |
 | Refactoring (davranış değişmez) | Plan kısa tutulabilir, testler zorunlu |
-| Dokümantasyon | Gate'in sadece Pass 1-2'si uygulanır |
+| Dokümantasyon | Gate istemez: yalnız `.md`/`.txt` değişen commit hook'ta muaf (`hooks/gate-guard.sh`). Pass 1-2 (gereksinim, uyum) öneri düzeyinde gözden geçirilir |

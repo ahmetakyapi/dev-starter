@@ -220,6 +220,27 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 | `mark-annotate.tsx` | Kalemle çizilmiş vurgu: altı çizgi, fosforlu kalem, daire, kutu, üstü çizili | motion (`useInView`) | Evet | İşaret `aria-hidden`; anlam taşıyorsa metinle de (`<s>`); hareket azaltmada doğrudan çizili |
 | `expandable-card.tsx` | Kart yerinden büyüyüp pencereye döner; görsel ve başlık akar | motion (`domMax`), lucide, `react-dom` | Evet | `role="dialog"` + `aria-modal`; odak Kapat'a, Tab içeride, Escape ve zemin kapatır, odak karta döner |
 
+### Tanıtım
+
+Ribbon ve Offscreen turları (meetribbon.app, offscreen.wtf; 2026-11-07). Görsel zeminli kahraman, sayfada
+denenen ürün maketi, kişiliği olan küçük dokunuşlar. Hepsi tanıtım sayfası
+içindir; uygulama ekranına ve forma taşıma. Canlı örnek: Pusula → Tanıtım
+Sayfası hikâyesi.
+
+| Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
+|-------|----------|------------|---------|-----------------|
+| `liquid-glass.tsx` | Fotoğraf/çizim üstündeki tek birincil eylem; cam künye (`LiquidGlass`, `LiquidGlassLink`, `LiquidGlassButton`) | yok | Hayır | Katmanlar `aria-hidden`; bükülme yalnız Chromium, öteki tarayıcıda buğu kalır; şeffaflık azaltmada opak; `media` tonunda kontrastı zeminde ölç |
+| `blur-in.tsx` | Kahraman başlığı sözcük sözcük buğudan netleşir; `<em>` tek parça (serif vurgu) | yok | Hayır | CSS animasyonu: JS ve hidrasyon beklemez (LCP); okunan kopya `sr-only` bütün halinde; hareket azaltmada doğrudan net |
+| `hand-callout.tsx` | El yazısı not + çizilerek gelen ok; demoda ilk dokunulacak yeri gösterir | motion (`useInView`), `--font-hand-face` | Evet | Varsayılan `aria-hidden` (bilgi metinde de olmalı); `onClick` ile adı notun kendisi olan düğme |
+| `app-window.tsx` | Ürünü ekran görüntüsü yerine token'la çizilmiş pencerelerle anlat; `WindowStrip` şerit | yok | Hayır | Pencere düğmeleri süs; sahne `role="img"` + tek cümle ya da `aria-hidden`; renkler durum token'larından |
+| `dock.tsx` | Maketin uygulama rafı: üzerine gelince yükselen simgeler, komşular da biraz | yok | Hayır | `onSelect` yoksa süs; varsa `toolbar` + adlı düğmeler, açık olan adında; büyüme yalnız ince işaretçide |
+| `docking-nav.tsx` | Görsel kahramanlı sayfada menü: boşluklu hap, kaydırınca üst kenara oturur | motion, lucide | Evet | `nav` + ad; telefonda `aria-expanded` panel, Esc kapatır ve odak düğmeye döner, Tab ile çıkınca kapanır |
+| `corner-mascot.tsx` | Kişiliği olan tanıtım sayfasında köşe maskotu: göz takibi, göz kırpma, balon | motion | Evet | Düğme adlı; balon `role="status"`; göz takibi ve kırpma hareket azaltmada ve dokunmatikte yok |
+| `trust-line.tsx` | Birincil eylemin altında en çok üç güvence ("Kart gerekmez · 2 dakikada kurulum") | lucide | Hayır | Ayraç `aria-hidden`, yerine görünmez virgül; `media` tonu görsel zemin üstü |
+| `wallpaper.tsx` | 8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`) | yok | Hayır | `aria-hidden` süs; hareket yok; sabit tohum, sunucu = istemci |
+| `drift-columns.tsx` | Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf) | yok | Hayır | İkinci kopya `aria-hidden` + `inert`; üzerine gelme/odak durdurur; hareket azaltmada durur ve kaydırılır |
+| `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç düğmesi elle geçirir |
+
 ### Yapay Zekâ
 
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |

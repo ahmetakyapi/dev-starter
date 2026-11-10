@@ -1,7 +1,7 @@
 # @ahmetakyapi/ui
 
 Türkçe, erişilebilir, token'lı React bileşen kiti: form, katman, veri,
-grafik, yapay zekâ, hareket ve doku. 86 bileşen + `Surface`, `Button`,
+grafik, yapay zekâ, hareket ve doku, tanıtım. 97 bileşen + `Surface`, `Button`,
 `Chip`, `CustomCursor` ve motion yardımcıları.
 
 Görsel katalog: <https://dev-starter-storybook.vercel.app>
@@ -28,7 +28,7 @@ Kökte `<LazyMotion features={domAnimation} strict>` olmalı: bileşenler
 `m.*` kullanır.
 
 ```tsx
-import { BorderBeam, Terminal, Dial, ToolCall, AreaChart } from "@ahmetakyapi/ui";
+import { BorderBeam, Terminal, Dial, ToolCall, AreaChart, LiquidGlassLink, BlurIn } from "@ahmetakyapi/ui";
 import { cn, EASE, DUR } from "@ahmetakyapi/ui/core"; // sunucu bileşeninde de gerçek değer
 ```
 

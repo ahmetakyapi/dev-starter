@@ -48,6 +48,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PatternBackground } from "@/components/ui/pattern-bg";
+import { SlotText } from "@/components/ui/slot-text";
 import { HoldButton } from "@/components/ui/hold-button";
 import { HoverCard, ProfilePreview } from "@/components/ui/hover-card";
 import { Icon } from "@/components/ui/icon";
@@ -564,17 +566,21 @@ export function GelenPage() {
           </div>
 
           {rows.length === 0 ? (
-            <EmptyState
-              icon={<SearchX />}
-              titleAs="h2"
-              title="Bu Süzgeçlere Uyan Talep Yok"
-              hint={`${folderLabel(folder)}${who ? `, ${who.label}` : ""}${priorities.length ? `, ${priorities.join(" / ")} öncelik` : ""}${query ? `, “${query}” araması` : ""} için kayıt bulunamadı.`}
-              action={
-                <Button variant="secondary" size="sm" onClick={clearAll}>
-                  Süzgeçleri Temizle
-                </Button>
-              }
-            />
+            <div className="relative isolate overflow-hidden rounded-xl bg-surface">
+              <PatternBackground pattern="dots" fade="center" size={18} intensity={0.45} />
+              <EmptyState
+                className="bg-transparent"
+                icon={<SearchX />}
+                titleAs="h2"
+                title="Bu Süzgeçlere Uyan Talep Yok"
+                hint={`${folderLabel(folder)}${who ? `, ${who.label}` : ""}${priorities.length ? `, ${priorities.join(" / ")} öncelik` : ""}${query ? `, “${query}” araması` : ""} için kayıt bulunamadı.`}
+                action={
+                  <Button variant="secondary" size="sm" onClick={clearAll}>
+                    Süzgeçleri Temizle
+                  </Button>
+                }
+              />
+            </div>
           ) : view === "liste" ? (
             <div className="grid grid-cols-1 gap-3">
               <DataTable
@@ -712,7 +718,7 @@ function TicketDetail({ t, onAssign, onArchive }: { t: Ticket; onAssign: (id: st
     <div className="grid grid-cols-1 gap-5">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone={STATUS_TONE[t.status]} dot>
-          {t.status}
+          <SlotText text={t.status} live />
         </Badge>
         <Badge tone={PRIORITY_TONE[t.priority]}>{t.priority}</Badge>
         {t.tags.map((tag) => (

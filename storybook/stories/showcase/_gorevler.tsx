@@ -6,11 +6,14 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CloseButton } from "@/components/ui/close-button";
 import { KanbanBoard, type KanbanColumn } from "@/components/ui/kanban-board";
+import { MorphIcon } from "@/components/ui/morph-icon";
 import { TaskList } from "@/components/ui/task-list";
 import { BOARD, ME, MY_TASKS, TODAY, dayKey, num, shortDate } from "./_data";
 import { PageBar, SectionTitle, Well, WellTitle, useApp } from "./_ui";
 
 const TODAY_KEY = dayKey(TODAY);
+/** Yaklaşan son tarihlerde kapalıyken görünen iş sayısı. */
+const UPCOMING_LIMIT = 5;
 const parse = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(y, m - 1, d);
@@ -29,8 +32,10 @@ export function GorevlerPage() {
   const { notify } = useApp();
   const [columns, setColumns] = useState<readonly KanbanColumn[]>(BOARD);
   const [tip, setTip] = useState(true);
+  const [allUpcoming, setAllUpcoming] = useState(false);
   const open = columns.filter((c) => !c.done).reduce((n, c) => n + c.cards.length, 0);
-  const dueToday = upcoming(columns).filter((x) => x.card.due! <= TODAY_KEY).length;
+  const due = upcoming(columns);
+  const dueToday = due.filter((x) => x.card.due! <= TODAY_KEY).length;
 
   const onChange = (next: KanbanColumn[]) => {
     // Kolonu değişen kart: sonucu bildirim olarak söyle (sıra değişimi sessiz).
@@ -74,9 +79,9 @@ export function GorevlerPage() {
             <WellTitle id="gorev-yakin" hint="Panodaki bitmemiş işler, son tarihe göre.">
               Yaklaşan Son Tarihler
             </WellTitle>
-            <ol className="grid grid-cols-1 gap-1.5">
-              {upcoming(columns)
-                .slice(0, 6)
+            <ol id="gorev-yakin-liste" className="grid grid-cols-1 gap-1.5">
+              {due
+                .slice(0, allUpcoming ? due.length : UPCOMING_LIMIT)
                 .map(({ card, column }) => {
                   const late = card.due! < TODAY_KEY;
                   return (
@@ -95,6 +100,18 @@ export function GorevlerPage() {
                   );
                 })}
             </ol>
+            {due.length > UPCOMING_LIMIT ? (
+              <button
+                type="button"
+                aria-expanded={allUpcoming}
+                aria-controls="gorev-yakin-liste"
+                onClick={() => setAllUpcoming((v) => !v)}
+                className="mt-2 inline-flex min-h-11 items-center gap-2 self-start rounded-md px-2 text-small font-medium text-primary-ink hover:bg-surface-raised"
+              >
+                <MorphIcon icon={allUpcoming ? "chevron-up" : "chevron-down"} size={18} />
+                {allUpcoming ? "Daha Az Göster" : `Tümünü Göster (${num.format(due.length)})`}
+              </button>
+            ) : null}
           </Well>
         </div>
       </div>

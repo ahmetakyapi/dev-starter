@@ -33,6 +33,7 @@ const PAGE_OF: Record<string, string> = {
   _raporlar: "Raporlar",
   _ayarlar: "Ayarlar",
   _giris: "Oturum Kapalı",
+  _tanitim: "Tanıtım",
 };
 
 const USED = new Map<string, Set<string>>();

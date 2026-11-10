@@ -4,10 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { MessageSquarePlus } from "lucide-react";
 import { AgentPlan } from "@/components/ui/agent-plan";
 import { Badge } from "@/components/ui/badge";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { ChatComposer } from "@/components/ui/chat-composer";
 import { ChatThread, type ChatMessage } from "@/components/ui/chat-thread";
 import { CompareSlider } from "@/components/ui/compare-slider";
+import { Reasoning } from "@/components/ui/reasoning";
+import { StreamText } from "@/components/ui/stream-text";
 import { TextShimmer } from "@/components/ui/text-shimmer";
+import { ThinkingOrb } from "@/components/ui/thinking-orb";
+import { ToolCall, type ToolCallStatus } from "@/components/ui/tool-call";
 import { Button } from "@/components/ui/Button";
 import {
   ASSISTANT_MODELS,
@@ -75,13 +80,53 @@ function DraftCompare() {
   );
 }
 
+/** Metni sözcük sözcük büyütür: gerçek akıştaki gibi parça parça gelir, bitince durur. */
+function useStreamed(full: string, wordsPerTick = 2, tickMs = 70) {
+  const words = full.split(" ");
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (count >= words.length) return;
+    const id = window.setTimeout(() => setCount((n) => Math.min(words.length, n + wordsPerTick)), tickMs);
+    return () => window.clearTimeout(id);
+  }, [count, words.length, wordsPerTick, tickMs]);
+  return { text: words.slice(0, count).join(" "), streaming: count < words.length };
+}
+
+const DRAFTS_INTRO = `${DELAYED.length} geciken sipariş için taslaklar hazır. Her biri müşterinin açık talebine yanıt olarak eklendi; gönderilmeden önce onayını bekliyor.`;
+
+/** Gönderim aracı: model e-postayı kendisi göndermez, onay kullanıcıda (rules/agentic-ui.md). */
+function SendApproval() {
+  const [state, setState] = useState<"pending" | "sent" | "rejected">("pending");
+  if (state === "rejected") {
+    return <p className="text-small text-muted">Gönderim iptal edildi; taslaklar Gelen Kutusunda duruyor.</p>;
+  }
+  return (
+    <ToolCall
+      name="email.send"
+      label="Bilgi E-postalarını Gönder"
+      status={state === "sent" ? "success" : "pending"}
+      durationMs={state === "sent" ? 900 : undefined}
+      input={{ alici: DELAYED.map((o) => customer(o.customerId).contact), adet: DELAYED.length }}
+      output={state === "sent" ? `${DELAYED.length} e-posta gönderildi, bağlı taleplere yanıt olarak eklendi.` : undefined}
+      actions={
+        <>
+          <Button variant="secondary" size="sm" onClick={() => setState("rejected")}>
+            Reddet
+          </Button>
+          <Button size="sm" onClick={() => setState("sent")}>
+            Onayla ve Gönder
+          </Button>
+        </>
+      }
+    />
+  );
+}
+
 function Drafts() {
+  const intro = useStreamed(DRAFTS_INTRO);
   return (
     <div className="grid grid-cols-1 gap-3">
-      <p>
-        {DELAYED.length} geciken sipariş için taslaklar hazır. Her biri müşterinin açık talebine yanıt olarak eklendi; gönderilmeden önce
-        onayını bekliyor.
-      </p>
+      <StreamText text={intro.text} streaming={intro.streaming} effect="fade" />
       <ul className="grid grid-cols-1 gap-1.5">
         {DELAYED.map((o) => {
           const c = customer(o.customerId);
@@ -101,9 +146,49 @@ function Drafts() {
         })}
       </ul>
       <DraftCompare />
+      <SendApproval />
       <a href={href("inbox", { tag: "gecikme" })} className="justify-self-start font-medium text-primary-ink underline underline-offset-4">
         Taslakları Gelen Kutusunda Aç
       </a>
+    </div>
+  );
+}
+
+const THOUGHT = `${num.format(OPEN_TICKETS.length)} açık talebin bir kısmı kargo sorusu; önce bunları siparişlerle eşleştirmeliyim. Teslim tarihi geçen ${DELAYED.length} sipariş var, en eskisi ${DELAYED[0].id}. Her müşteriye aynı şablonu göndermek yerine siparişin nerede beklediğini yazarsam ikinci bir talep açılmaz.`;
+
+/** Planın adımlarına bağlı araç çağrıları: model ne yaptığını gösterir. */
+function PlanTools({ planIndex }: { planIndex: number }) {
+  const status = (step: number): ToolCallStatus => (planIndex > step ? "success" : "running");
+  return (
+    <div className="grid grid-cols-1 gap-2">
+      <ToolCall
+        name="tickets.list"
+        label="Açık Talepler"
+        status={status(0)}
+        durationMs={640}
+        input={{ durum: "açık" }}
+        output={{ talep: OPEN_TICKETS.length }}
+      />
+      {planIndex >= 2 ? (
+        <ToolCall
+          name="shipping.track"
+          label="Kargo Takibi"
+          status={status(2)}
+          durationMs={1180}
+          input={{ siparis: DELAYED.map((o) => o.id) }}
+          output={{ gecikmede: DELAYED.length }}
+        />
+      ) : null}
+      {planIndex >= 4 ? (
+        <ToolCall
+          name="email.draft"
+          label="E-posta Taslakları"
+          status={status(4)}
+          durationMs={2310}
+          input={{ siparis: DELAYED.map((o) => o.id), ton: "bilgilendirme" }}
+          output={{ taslak: DELAYED.length }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -144,7 +229,11 @@ export function AsistanPage() {
                 Yanıt bekleyen {num.format(OPEN_TICKETS.length)} talebe ve son 8 günün siparişlerine bakıyorum. Kargo durumu teslim tarihini geçenleri
                 ayırıp her müşteri için kısa bir bilgi e-postası yazacağım.
               </p>
-              <AgentPlan steps={PLAN_STEPS} activeIndex={planIndex} stepLabels={PLAN_LABELS} title="Geciken Siparişler" />
+              <Reasoning streaming={!done}>{THOUGHT}</Reasoning>
+              <BorderBeam active={!done} className="rounded-xl">
+                <AgentPlan steps={PLAN_STEPS} activeIndex={planIndex} stepLabels={PLAN_LABELS} title="Geciken Siparişler" />
+              </BorderBeam>
+              <PlanTools planIndex={planIndex} />
               {done ? null : <TextShimmer live className="text-small">Taslaklar yazılıyor…</TextShimmer>}
             </div>
           ),
@@ -168,18 +257,25 @@ export function AsistanPage() {
         title="Asistan"
         description={fresh ? "Yeni Sohbet" : `Geciken Siparişler · Bugün ${shortDate.format(TODAY)}`}
         actions={
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setFresh(true);
-              setExtra([]);
-              setThinking(false);
-            }}
-          >
-            <MessageSquarePlus aria-hidden />
-            Yeni Sohbet
-          </Button>
+          <>
+            <ThinkingOrb
+              state={thinking || (!fresh && !done) ? "thinking" : "idle"}
+              size={32}
+              label={thinking || (!fresh && !done) ? "Asistan çalışıyor" : "Asistan hazır"}
+            />
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setFresh(true);
+                setExtra([]);
+                setThinking(false);
+              }}
+            >
+              <MessageSquarePlus aria-hidden />
+              Yeni Sohbet
+            </Button>
+          </>
         }
       />
       <div className="flex min-h-[40rem] flex-1 flex-col">

@@ -17,7 +17,11 @@ komut açar.
    `~/dev-starter/agents/gate-agent.md` (6+1 adım, her pass'te komut + exit
    kodu). Görev Tanımı'na story dosyasını ve değişen dosya listesini koy.
 3. Agent raporu döndürünce `docs/gate/<story-id>.md` dosyasına yaz
-   (dizin yoksa oluştur).
+   (dizin yoksa oluştur) ve sonuna kapsamın izini ekle:
+   `echo "Kapsam: $(bash ~/dev-starter/hooks/lib/gate-hash.sh)" >> docs/gate/<story-id>.md`.
+   `hooks/gate-guard.sh` commit anında izi yeniden hesaplar; Gate'ten sonra
+   kod değiştiyse commit bloklanır ve Gate yeniden çalışır. KÜÇÜK işte rapor
+   `docs/gate/adhoc-<YYYY-MM-DD>-<konu>.md`.
 4. Sonucu ROUTEMAP'teki story satırının **Gate** kolonuna işle:
    - `PASSED` / `PASSED_WITH_WARNINGS` → story IN_REVIEW ise kullanıcıya
      "commit'e hazır" de

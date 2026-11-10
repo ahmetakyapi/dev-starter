@@ -25,8 +25,8 @@ Her talep önce boyuna göre sınıflanır (BA rolü ilk mesajda beyan eder):
 
 | Boy | Tanım | Süreç |
 |-----|-------|-------|
-| **KÜÇÜK** | Tek dosya / kozmetik / config | Story yok. Doğrudan Develop → Self-Check → Gate (hafif) → Commit |
-| **ORTA** | Tek story, tek alan | `rules/dev-cycle.md` tam pipeline; ana oturum rolleri yürütür |
+| **KÜÇÜK** | Tek dosya / kozmetik / config | Story yok. Doğrudan Develop → Self-Check → Gate (hafif) → Commit. Rapor `docs/gate/adhoc-<YYYY-MM-DD>-<konu>.md`; aktif story yoksa hook kontrol etmez (sorumluluk ana oturumda). Başka bir story IN_PROGRESS ise önce onu BLOCKED yap ya da işini bitir |
+| **ORTA** | Tek story, tek alan | `rules/dev-cycle.md` tam pipeline; ana oturum rolleri yürütür, gerekirse tek subagent |
 | **BÜYÜK** | Çok story / çok alan / yeni modül | Bu dosyadaki dalga planı; iş kayıtlı subagent'lara dağıtılır |
 
 Belirsiz fikir Development'a girmez — `/kickoff` ya da Planning'e (P1) döner.

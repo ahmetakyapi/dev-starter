@@ -368,9 +368,10 @@ export const Overview: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("heading", { level: 1, name: "Referans Arşivi" })).toBeVisible();
     await expect(await canvas.findByRole("link", { name: /bencho\.dev/ })).toHaveAttribute("href", "https://bencho.dev/");
-    await expect(canvas.getByText("01 / 07")).toBeVisible();
+    // Sayaç toplamı kart sayısından gelir; yeni referans eklenince test bayatlamasın.
+    await expect(canvas.getByText(/^01 \/ \d{2}$/)).toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "Sonraki" }));
-    await waitFor(() => expect(canvas.getByText("02 / 07")).toBeVisible(), { timeout: 3000 });
+    await waitFor(() => expect(canvas.getByText(/^02 \/ \d{2}$/)).toBeVisible(), { timeout: 3000 });
     await userEvent.click(canvas.getByRole("radio", { name: /Galeriler/ }));
     await expect(await canvas.findByRole("link", { name: /navbar\.gallery/ })).toBeVisible();
   },

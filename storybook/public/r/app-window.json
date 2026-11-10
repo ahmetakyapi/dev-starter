@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-window",
+  "type": "registry:ui",
+  "title": "Uygulama Penceresi",
+  "description": "Ürünü ekran görüntüsü yerine token'la çizilmiş pencerelerle anlat; `WindowStrip` şerit",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/app-window.tsx",
+      "content": "import type { HTMLAttributes, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Masaüstü uygulama penceresi maketi: üç pencere düğmeli başlık çubuğu ve\n * gövde. Ürünü ekran görüntüsü yerine CANLI parçalarla anlatmak için\n * (Ribbon'ın bento kartlarında her özellik, içinde gerçek simgeler olan\n * küçük pencerelerle çizilmiş). Ekran görüntüsü bayatlar ve temayla dönmez;\n * maket token'la çizilir, iki temada da doğru, metni seçilebilir.\n *\n * DURUMLAR:\n *   - `focused`: odaktaki pencere, birincil renkte iki piksel halka. Bir\n *     sahnede TEK pencere odakta (Ribbon'daki mavi çerçeve).\n *   - `ghost`: henüz açılmamış, gelecek pencere. Kesik çizgili çerçeve,\n *     soluk içerik (\"yeni pencere buraya açılır\").\n *   - `tone=\"inverse\"`: ters zemin (açık temada koyu). Her iki temada koyu\n *     kalması gereken terminal için `terminal.tsx` var.\n *\n * Pencere düğmeleri süstür (`aria-hidden`); maket bir resimdir. Bütün\n * sahneyi `role=\"img\"` + `aria-label` ile tek cümleyle anlat ya da yanındaki\n * metin anlatıyorsa sahneyi `aria-hidden` yap. Düğmeler durum renklerinden\n * (danger, warning, success): paletle döner, sabit kırmızı-sarı-yeşil yok.\n *\n *   <AppWindow title=\"Notlar\" icon={<NotebookPen />} focused className=\"w-56\">\n *     <div className=\"p-3 text-small text-soft\">Pazartesi toplantısı…</div>\n *   </AppWindow>\n */\n\ntype AppWindowProps = Omit<HTMLAttributes<HTMLDivElement>, \"title\"> & {\n  /** Başlık çubuğundaki ad. */\n  title?: ReactNode;\n  /** Başlığın solunda küçük simge (lucide ya da uygulama simgesi). */\n  icon?: ReactNode;\n  focused?: boolean;\n  ghost?: boolean;\n  tone?: \"default\" | \"inverse\";\n  /** Başlık çubuğunun sağı: sekme, arama, paylaş düğmesi maketi. */\n  actions?: ReactNode;\n};\n\nexport function AppWindow({ title, icon, focused, ghost, tone = \"default\", actions, className, children, ...props }: AppWindowProps) {\n  const inverse = tone === \"inverse\";\n  return (\n    <div\n      data-focused={focused || undefined}\n      className={cn(\n        \"flex min-w-0 flex-col overflow-hidden rounded-xl transition-shadow duration-300\",\n        inverse ? \"bg-strong text-page\" : \"bg-overlay text-body\",\n        ghost\n          ? \"border border-dashed border-line-strong opacity-70 shadow-none\"\n          : focused\n            ? \"shadow-floating ring-2 ring-primary\"\n            : \"shadow-raised ring-1 ring-line\",\n        className,\n      )}\n      {...props}\n    >\n      <div\n        className={cn(\n          \"flex h-7 shrink-0 items-center gap-2 border-b px-2.5\",\n          inverse ? \"border-page/10\" : \"border-line-soft bg-surface\",\n        )}\n      >\n        <span aria-hidden className=\"flex gap-1\">\n          <span className={cn(\"size-2 rounded-full\", ghost ? \"bg-line-strong\" : \"bg-danger\")} />\n          <span className={cn(\"size-2 rounded-full\", ghost ? \"bg-line-strong\" : \"bg-warning\")} />\n          <span className={cn(\"size-2 rounded-full\", ghost ? \"bg-line-strong\" : \"bg-success\")} />\n        </span>\n        {title ? (\n          <span\n            className={cn(\n              \"flex min-w-0 items-center gap-1.5 truncate text-micro font-medium [&_svg]:size-3 [&_svg]:shrink-0\",\n              inverse ? \"text-page/70\" : \"text-muted\",\n            )}\n          >\n            {icon}\n            <span className=\"truncate\">{title}</span>\n          </span>\n        ) : null}\n        {actions ? <span className=\"ml-auto flex items-center gap-1\">{actions}</span> : null}\n      </div>\n      <div className=\"relative min-h-0 flex-1\">{children}</div>\n    </div>\n  );\n}\n\n/**\n * Pencere şeridi: pencereleri yan yana, ekranın dışına taşarak dizer\n * (Ribbon'ın \"küçültmek yerine kaydır\" fikri). Taşan pencere kenarda solar,\n * böylece sahnenin devam ettiği anlaşılır. Kaydırılabilir DEĞİL, maket.\n */\nexport function WindowStrip({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      className={cn(\n        \"flex gap-2 overflow-hidden [mask-image:linear-gradient(to_right,black_85%,transparent)] *:shrink-0\",\n        className,\n      )}\n      {...props}\n    >\n      {children}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "app-window",
+    "palettes": false
+  }
+}

@@ -8,10 +8,13 @@ import { BannerAlert } from "@/components/ui/banner-alert";
 import { Carousel } from "@/components/ui/carousel";
 import { ChartCard } from "@/components/ui/chart-card";
 import { DataTable, type Column } from "@/components/ui/data-table";
+import { ExpandableCard } from "@/components/ui/expandable-card";
 import { FileDropzone } from "@/components/ui/file-dropzone";
 import { LineChart } from "@/components/ui/line-chart";
 import { LoadingMark } from "@/components/ui/loading-mark";
 import { Meter, SegmentedMeter } from "@/components/ui/meter";
+import { PatternBackground } from "@/components/ui/pattern-bg";
+import { PixelLoader } from "@/components/ui/pixel-loader";
 import { Progress } from "@/components/ui/progress";
 import { Rating } from "@/components/ui/rating";
 import { ScatterChart } from "@/components/ui/scatter-chart";
@@ -39,6 +42,7 @@ import {
   tl,
   type Customer,
   type Period,
+  type PeriodStats,
 } from "./_data";
 import { PageBar, Well, WellTitle, useApp } from "./_ui";
 
@@ -69,6 +73,65 @@ function SalesTable({ rows, total }: { rows: readonly Row[]; total: number }) {
     { key: "ciro", header: "Ciro", numeric: true, render: (r) => tl.format(r.revenue), bar: { value: (r) => r.revenue } },
   ];
   return <DataTable caption="Müşteri Bazında Ciro" columns={columns} rows={rows} rowKey={(r) => r.customer.id} minWidth="38rem" density="compact" stickyFirst={false} />;
+}
+
+/** Genişleyen kartın görseli: desen zemin üstünde kartın ana sayısı. */
+function FigureMedia({ figure }: { figure: string }) {
+  return (
+    <span className="relative isolate grid size-full place-items-center">
+      <PatternBackground pattern="grid" fade="center" size={16} tone="primary" intensity={0.4} />
+      <span className="text-title font-semibold text-strong tabular-nums">{figure}</span>
+    </span>
+  );
+}
+
+/** Asistanın dönem özeti: cümleler ve kartlar aynı `periodStats`ten, uydurma sayı yok. */
+function PeriodDigest({ s, label, loading }: { s: PeriodStats; label: string; loading: boolean }) {
+  if (loading) {
+    return (
+      <div aria-busy="true" className="grid min-h-48 place-items-center gap-3 rounded-lg bg-overlay p-6 shadow-raised">
+        <PixelLoader pattern="spiral" grid={5} dot={6} glow label="Asistan özeti yazıyor" />
+        <p className="text-small text-muted">Asistan {label.toLocaleLowerCase("tr-TR")} verisini okuyor…</p>
+      </div>
+    );
+  }
+  const lead = s.byCustomer[0];
+  const topChannel = s.channels.reduce((a, c) => (c.orders > a.orders ? c : a), s.channels[0]);
+  const channelTotal = s.channels.reduce((a, c) => a + c.orders, 0);
+  const resolvedPct = pct(s.quality.resolved, s.ticketCount, 0);
+  const change = s.revenueChange ?? 0;
+  return (
+    <div className="grid grid-cols-1 gap-4">
+      <p className="max-w-3xl text-base text-body">
+        {label} içinde {num.format(s.orderCount)} sipariş ve {tl.format(s.revenue)} ciro var; önceki döneme göre %{change.toLocaleString("tr-TR")}.
+        {lead ? ` En çok alan ${lead.customer.name}; cirodaki payı %${pct(lead.revenue, s.revenue).toLocaleString("tr-TR")}.` : ""} Çözülen talep oranı %
+        {resolvedPct.toLocaleString("tr-TR")}.
+      </p>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {lead ? (
+          <ExpandableCard title="En Çok Alan Müşteri" summary={`${lead.customer.name} · ${tl.format(lead.revenue)}`} media={<FigureMedia figure={tl.format(lead.revenue)} />}>
+            {lead.customer.name} ({lead.customer.city}) bu dönemde {num.format(lead.orders)} sipariş verdi; ortalama sepet{" "}
+            {tl.format(Math.round(lead.revenue / lead.orders))}. Yetkili: {lead.customer.contact}.
+          </ExpandableCard>
+        ) : null}
+        <ExpandableCard
+          title="Kanal Dağılımı"
+          summary={`En çok ${topChannel.channel} · ${num.format(topChannel.orders)} sipariş`}
+          media={<FigureMedia figure={`%${pct(topChannel.orders, channelTotal, 0).toLocaleString("tr-TR")}`} />}
+        >
+          {s.channels.map((c) => `${c.channel}: ${num.format(c.orders)} sipariş`).join(" · ")}. Toplam {num.format(channelTotal)} sipariş.
+        </ExpandableCard>
+        <ExpandableCard
+          title="Destek Kalitesi"
+          summary={`${num.format(s.ticketCount)} talep · %${resolvedPct.toLocaleString("tr-TR")} çözüldü`}
+          media={<FigureMedia figure={`${num.format(s.quality.avgFirst)} dk`} />}
+        >
+          İlk yanıt ortalaması {num.format(s.quality.avgFirst)} dakika. {num.format(s.quality.answered)} talep yanıtlandı, {num.format(s.quality.resolved)} talep
+          çözüldü; çözülenlerin {num.format(s.quality.satisfied)} tanesinde müşteri memnun.
+        </ExpandableCard>
+      </div>
+    </div>
+  );
 }
 
 function SalesSkeleton() {
@@ -384,6 +447,13 @@ export function RaporlarPage() {
           <h2 className="text-base font-semibold text-strong">Hazır Raporlar</h2>
           <Carousel label="Hazır Raporlar" slides={slides} />
         </div>
+
+        <Well labelledBy="rapor-ozet">
+          <WellTitle id="rapor-ozet" hint={`Asistan ${PERIOD_NAMES[period]} verisinden yazdı; karta basınca ayrıntı açılır.`}>
+            Dönem Özeti
+          </WellTitle>
+          <PeriodDigest s={s} label={PERIOD_NAMES[period]} loading={showSkeleton} />
+        </Well>
 
         <div id="rapor-sekmeler" className="scroll-mt-4">
           <Tabs

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "blur-in",
+  "type": "registry:ui",
+  "title": "Bulanıktan Netleşen Başlık",
+  "description": "Kahraman başlığı sözcük sözcük buğudan netleşir; `<em>` tek parça (serif vurgu)",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/blur-in.tsx",
+      "content": "import { Children, Fragment, isValidElement, type CSSProperties, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Bulanıktan netleşen başlık: sözcükler sırayla, buğudan çıkıp yerine oturur\n * (Ribbon'ın kahraman başlığı: 10 px bulanıklık, 36 px aşağıdan, 0'dan 1'e).\n * Sayfanın TEK kahraman başlığı için. Bölüm başlıklarında `Reveal` yeter;\n * her başlık buğudan çıkarsa sayfa sisli bir slayt gösterisine döner.\n *\n * EDİTORYAL VURGU: çocuklar arasındaki öğe (genelde `<em>`) bölünmez, tek\n * parça gelir. Serif başlıkta tek sözcüğü italik yapmak (Ribbon: \"instead of\n * *shrinking* them\") başlığın bütün kimliğini taşır; `editorial` font\n * presetiyle (Instrument Serif) birebir. Bir başlıkta EN ÇOK BİR vurgu.\n *\n *   <BlurIn as=\"h1\" className=\"font-display text-hero text-strong\">\n *     Pencereleri <em>küçültmeden</em> kaydır.\n *   </BlurIn>\n *\n * NEDEN CSS, NEDEN JS DEĞİL: kahraman başlığı çoğu zaman LCP öğesi.\n * Hidrasyonu bekleyen bir giriş (Motion `initial`) başlığı JavaScript\n * inene kadar görünmez tutar; CSS animasyonu ilk boyamayla başlar ve\n * JavaScript kapalıyken de biter. Toplam süre kısa tutulur: son sözcük\n * ~700 ms + sözcük × 50 ms'de yerinde; uzun başlıkta (12+ sözcük) `step`\n * düşür ya da `by=\"block\"` kullan.\n *\n * ERİŞİLEBİLİRLİK: sözcüklere bölünmüş metin bazı ekran okuyucularda\n * parça parça okunur. Bu yüzden görünen kopya `aria-hidden`, okunan kopya\n * `sr-only` ve bütün halinde. Hareketi azaltan kullanıcıda doğrudan net.\n */\n\nconst CSS = `\n@keyframes ui-blur-in { from { opacity: 0; filter: blur(var(--blur-from)); transform: translateY(var(--blur-y)); } }\n.ui-blur-in .ui-blur-unit { display: inline-block; animation: ui-blur-in var(--blur-dur) var(--ease-brand) both;\n  animation-delay: calc(var(--blur-delay) + var(--i, 0) * var(--blur-step)); }\n@media (prefers-reduced-motion: reduce) { .ui-blur-in .ui-blur-unit { animation: none; } }`;\n\ntype BlurInProps = {\n  children: ReactNode;\n  as?: \"h1\" | \"h2\" | \"p\" | \"span\" | \"div\";\n  /** `word`: sözcük sözcük (varsayılan). `block`: bütün metin tek parça. */\n  by?: \"word\" | \"block\";\n  /** İlk sözcükten önce bekleme, ms. Kahramanda 0-150 arası; menü ve görsel önce otursun istersen artır. */\n  delay?: number;\n  /** Sözcükler arası kademe, ms. */\n  step?: number;\n  /** Tek sözcüğün süresi, ms. */\n  duration?: number;\n  /** Başlangıç bulanıklığı, piksel. */\n  blur?: number;\n  /** Başlangıç kayması, piksel. */\n  y?: number;\n  className?: string;\n};\n\ntype Unit = { node: ReactNode; gapAfter: boolean };\n\n/** Metni sözcüklere, öğeleri tek parçaya böler; boşluk düz metin kalır (satır oradan kırılır). */\nfunction units(children: ReactNode, by: \"word\" | \"block\"): Unit[] {\n  if (by === \"block\") return [{ node: children, gapAfter: false }];\n  const out: Unit[] = [];\n  for (const child of Children.toArray(children)) {\n    if (typeof child === \"string\" || typeof child === \"number\") {\n      for (const piece of String(child).split(/(\\s+)/)) {\n        if (!piece) continue;\n        if (/^\\s+$/.test(piece)) {\n          if (out.length) out[out.length - 1].gapAfter = true;\n        } else out.push({ node: piece, gapAfter: false });\n      }\n    } else if (isValidElement(child)) out.push({ node: child, gapAfter: false });\n  }\n  return out;\n}\n\nexport function BlurIn({\n  children,\n  as: Tag = \"h1\",\n  by = \"word\",\n  delay = 80,\n  step = 50,\n  duration = 700,\n  blur = 10,\n  y = 28,\n  className,\n}: BlurInProps) {\n  const parts = units(children, by);\n  const vars = {\n    \"--blur-delay\": `${delay}ms`,\n    \"--blur-step\": `${step}ms`,\n    \"--blur-dur\": `${duration}ms`,\n    \"--blur-from\": `${blur}px`,\n    \"--blur-y\": `${y}px`,\n  } as CSSProperties;\n\n  return (\n    <Tag className={cn(\"ui-blur-in\", className)} style={vars}>\n      <style href=\"ui-blur-in\" precedence=\"default\">\n        {CSS}\n      </style>\n      <span className=\"sr-only\">{children}</span>\n      <span aria-hidden>\n        {parts.map((part, i) => (\n          <Fragment key={i}>\n            <span className=\"ui-blur-unit\" style={{ \"--i\": i } as CSSProperties}>\n              {part.node}\n            </span>\n            {part.gapAfter ? \" \" : null}\n          </Fragment>\n        ))}\n      </span>\n    </Tag>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "blur-in",
+    "palettes": false
+  }
+}

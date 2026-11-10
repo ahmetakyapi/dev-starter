@@ -58,6 +58,52 @@ Claude Code'un güncel resmî önerilerine göre (`knowledge/decisions.md` →
 
 - bootstrap'te sabit commit'li dış skill kurulumu ortak `pinned_skill`
   fonksiyonu oldu (anatomy ve cinecode aynı yoldan; davranış aynı).
+### Offscreen turu (ilk /harvest): 3 bileşen, duvar kâğıtları — 2026-11-07
+
+- `wallpaper`: 8 illüstrasyon duvar kâğıdı (gün batımı tepeleri, altın saat,
+  lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları), elle
+  seçilmiş renk setleri; `downloadWallpaper()` ile PNG (2880×1800, 1290×2796).
+  Storybook → Tanıtım/Duvar Kâğıdı'nda indirme düğmeleri.
+- `drift-columns`: zıt yönde sonsuz süzülen görsel sütunları (yalnız CSS).
+- `notice-deck`: köşede dönen duyuru destesi, "2/3" sayaç, durdurulabilir.
+- Pusula Tanıtım Sayfası: demo masaüstünün arkasında duvar kâğıdı, duvar
+  kâğıdı galerisi bölümü, duyuru destesi. Kit 94 → 97, katalog 129.
+- `/harvest` komutu, slop-scan 25 (sahte kıtlık), `/reference`, `/review-ui`
+  § 9, `/new-project` ve strategist'e Ribbon dersleri.
+
+### Ribbon turu: Tanıtım grubu, 8 bileşen — 2026-11-07
+
+Referans meetribbon.app; görsel dil ve davranış ölçüldü, kod ve görsel
+alınmadı (`knowledge/decisions.md` → "Ribbon Turu").
+
+#### Eklendi
+
+- **Tanıtım** (8 bileşen, hepsi pakette): `liquid-glass` (görsel zemin
+  üstünde SVG bükülmeli cam düğme; bükülme yalnız Chromium, öteki
+  tarayıcıda buğu + kenar), `blur-in` (kahraman başlığı sözcük sözcük
+  buğudan netleşir; CSS, JS beklemez; `<em>` vurgu tek parça), `hand-callout`
+  (el yazısı not + çizilerek gelen ok), `app-window` + `WindowStrip`
+  (token'la çizilmiş pencere maketi), `dock` (komşuları da büyüyen raf,
+  yalnız CSS), `docking-nav` (kaydırınca üst kenara oturan opak hap menü),
+  `corner-mascot` (gözleri imleci izleyen köşe maskotu, `role="status"`
+  balon), `trust-line` (eylemin altında en çok üç güvence).
+- **Font**: `snippets/fonts/fonts.ts` → isteğe bağlı `handFont` (Caveat,
+  `--font-hand-face`), `theme-fonts.css` → `--font-hand`. Türkçe glifleri
+  ve ₺ cmap'ten doğrulandı (`guides/09` § 2).
+- **Storybook**: "Bileşenler/Tanıtım" grubu (8 sayfa, 18 hikâye) ve Pusula
+  → **Tanıtım Sayfası**: sekizinin birlikte çalıştığı, dock'tan seçilen
+  pencerenin şeritte odağa geldiği canlı örnek (`play` testli). Hikâye
+  sayısı 728 → 746.
+- **@ahmetakyapi/ui**: kit 86 → 94 bileşen (sürüm artışı `/release`e bırakıldı).
+- **guides/10** § 4 "Ribbon Turu", **knowledge/references.md** (alınan ve
+  alınmayan), **knowledge/decisions.md** (strateji dersleri: deneme yerine
+  canlı demo, güvence tıklamanın dibinde, tek oyunbaz öğe, karşılaştırma SEO'su).
+
+#### Not
+
+- Bileşen Kapsamı 129/129 ve "Her Şey Bir Arada" 129/129: Secki turunun 17
+  bileşeni Pusula'ya (asistan adım akışı, ayarlar, gelen kutusu, raporlar,
+  giriş, görevler, tanıtım), Tanıtım grubu amiral sayfaya yerleşti.
 
 ### Secki turu: 17 bileşen, paket kiti, Storybook kabuğu — 2026-11-06
 

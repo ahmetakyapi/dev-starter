@@ -44,7 +44,7 @@ sonuçları birleştirir, ROUTEMAP'i günceller. Dalga planı ve faz kuralları:
 | İş | Yürütme |
 |----|---------|
 | Tek dosyalık düzeltme, kozmetik | Ana oturum kendisi yapar — subagent açma |
-| Tek story, tek alan | İlgili rol ana oturumda ya da tek subagent |
+| Tek story, tek alan (ORTA) | Ana oturum rolleri yürütür; gerekirse tek subagent (`phases/development.md` → İş Boyu, tek kaynak) |
 | Çok story / çok alan / dosya çakışması riski | Paralel subagent'lar, gerekirse `isolation: worktree` |
 | Belirsiz / keşif | Önce `researcher` ya da `/kickoff` — uygulama sonra |
 
@@ -298,7 +298,7 @@ Kuralların kağıt üstünde kalmaması için bash hook'ları:
 
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
-| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse commit bloklar (kolonu başlıktan bulur, docs-only muaf) |
+| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse ya da Gate'ten sonra kod değiştiyse (`docs/gate/<id>.md` → `Kapsam:` izi, `hooks/lib/gate-hash.sh`) commit bloklar; kolonu başlıktan bulur, docs-only muaf |
 | `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Secret (AWS/PEM/JWT/URL + Anthropic/GitHub/npm/Resend/Stripe/Slack önekleri), .env, debug kodu, `@ts-ignore`, kilit, agentic cast, TDD/commit-format/test-zayıflatma uyarıları |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE⇒Gate PASSED değişmezi |
 | `hooks/session-brief.sh` | SessionStart | ROUTEMAP özetini ve sıradaki iş önerisini bağlama basar |
@@ -307,7 +307,7 @@ Kayıt yeri: `.claude/settings.json` (paylaşılan, versiyonlanır). impeccable
 3.0.0'da kaldırıldı. Commit hook'ları handler düzeyinde `if` ile süzülür, engelleme
 yalnız exit 2 (sözleşme: `.claude/rules/hooks.md`).
 
-Hook'un çalıştığını varsayma — `bash scripts/health-check.sh` ile doğrula.
+Hook'un çalıştığını varsayma — `bash ~/dev-starter/scripts/health-check.sh` ile doğrula.
 
 ---
 
@@ -363,7 +363,7 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 | simayahi | *(belgesiz)* | Next.js — **denetimde en temiz proje** |
 | derinay · dungeon-mates · elevenforge · harfiyen · karalama | *(belgesiz)* | Next.js |
 
-> Belgesiz bir projede çalışıyorsan önce `bash scripts/audit-project.sh <yol>`
+> Belgesiz bir projede çalışıyorsan önce `bash ~/dev-starter/scripts/audit-project.sh <yol>`
 > çalıştır — paletini ve mevcut durumunu bilmeden değişiklik yapma.
 
 ---
@@ -380,7 +380,7 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 | `/deploy` | Vercel deploy checklist | DP, BA |
 | `/release [patch\|minor\|major]` | npm paketi yayınla | DP |
 | `/new-project [ad]` | Yeni proje sihirbazı | BA |
-| `/clone-website <url>` | Pixel-perfect site klonlama | UI |
+| `/clone-website <url>` | Pixel-perfect site klonlama (yalnız dev-starter deposunda) | UI |
 | `/kickoff [fikir]` | Fikirden plana: pazar, yön, palet, MVP (strategist) | BA |
 | `/roadmap` | Var olan projeye sıradaki işler (strategist) | BA |
 | `/agentic [konu]` | Agentic UI karar ağacı | FE, BE |
@@ -391,7 +391,8 @@ belgeli. Durum ve standart uyumu: `knowledge/live-projects-audit.md`.
 | `/research [konu]` | Benzer çözümleri araştır (researcher) | RS |
 | `/status` | Kaldığın yer + sıradaki iş önerisi | BA |
 | `/retro` | Oturum/iş retrospektifi → bilgi tabanı taslakları | BA |
-| `/evolve` | Ekosistemin kendi bakım/gelişim turu | BA, RS |
+| `/evolve` | Ekosistemin kendi bakım/gelişim turu (yalnız dev-starter) | BA, RS |
+| `/harvest <url>` | Referans turu: siteyi tara, eksik desenleri kütüphaneye işle (yalnız dev-starter) | BA, UI |
 
 ### Doğrulama Komutları
 
@@ -399,9 +400,9 @@ Kontrol listesi okumak yerine bunları **çalıştır**:
 
 | Komut | Ne doğrular | Kim |
 |-------|-------------|-----|
-| `bash scripts/audit-project.sh <yol>` | Bir projeyi 8 standarda karşı denetler | UI, GATE, BA |
+| `bash ~/dev-starter/scripts/audit-project.sh <yol>` | Bir projeyi 8 standarda karşı denetler | UI, GATE, BA |
 | `npm run verify:exports` | Paket manifest'inin vaat ettiği yollar gerçekten var mı | DP, GATE |
-| `bash scripts/health-check.sh` | Ekosistem bütünlüğü — 15 kategori | BA, GATE |
+| `bash ~/dev-starter/scripts/health-check.sh` | Ekosistem bütünlüğü — 15 kategori | BA, GATE |
 | `npm pack --dry-run -w <paket>` | Yayınlanacak tarball içeriği | DP |
 
 ---

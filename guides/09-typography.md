@@ -62,6 +62,12 @@ font listesinden doğrulandı, Ekim 2026). Türkçe glif testi § 3.
 | `dense` | Onest | Onest | JetBrains Mono | Dar ve okunaklı; küçük puntoda yoğun tablo. | Var |
 | `board` | Inter (optik boyutlu) | Inter | JetBrains Mono | Nötr, sakin ürün dili; hiyerarşi ağırlık ve boyutla. Pano, grafik, sohbet arayüzü. | Var |
 
+**İsteğe bağlı el yazısı rolü (Kasım 2026):** `handFont` (Caveat,
+`--font-hand-face` → Tailwind `font-hand`) preset'lerin parçası değil; yalnız
+`hand-callout` notu gibi tek tük el notu için. Kullanılmıyorsa yükleyicisini
+sil. Glifler woff2 cmap'inden doğrulandı: ğ ş İ ve ₺ latin-ext, ı Ö Ç Ü latin
+dosyasında; iki alt küme birlikte hepsini taşır. Gövde ya da başlıkta kullanma.
+
 **Listede olmayanlar ve nedeni:**
 
 - **Inter varsayılan değil, ama `board` presetinde var** (Değişti, 2026-11-01).

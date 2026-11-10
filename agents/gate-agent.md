@@ -15,9 +15,9 @@
 Bu agent çalışmadan önce şunları oku:
 
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü
-- `~/dev-starter/knowledge/mistakes.md` — bilinen hatalar (regression kontrolü)
-- `~/dev-starter/knowledge/patterns.md` — onaylanmış desenler
-- `~/dev-starter/knowledge/decisions.md` — bug pattern'leri (varsa)
+- `~/dev-starter/knowledge/mistakes.md` — YALNIZ baştaki makine-okunur indeks
+  + diff'in dokunduğu alanın işaret ettiği kayıtlar (dosyanın tamamı ~2000
+  satır; REVIEW bütçesini aşar, `rules/context-curation.md`)
 - `~/dev-starter/rules/immutable-architecture.md` — kırılamaz kurallar
 - `~/dev-starter/rules/design-tokens.md` — token enforcement
 - `~/dev-starter/rules/commit-conventions.md` — commit standardı
@@ -210,7 +210,8 @@ Gate Agent sorun bulduğunda:
 1. Sorunun severity'sini belirle (CRITICAL/HIGH/MEDIUM/LOW)
 2. Bulguyu GATE_FAILED formatında yapılandır
    (AGENT_PROTOCOL.md → Hata Yönetimi: beklenen / bulunan / kök neden /
-    düzeltme / kaçın) ve story dosyasının GATE-LOG bölümüne ekle
+    düzeltme / kaçın) ve raporda döndür; story dosyasının GATE-LOG
+   bölümüne ANA OTURUM ekler (Gate'in yazma aracı yok)
 3. İlgili agent (FE/BE/QA) düzeltir — bir sonraki denemeden önce GATE-LOG'u okur
 4. ROUTEMAP Gate kolonu ana oturumca ilerletilir: FAILED → FIX_1 → FIX_2
 5. FIX_2 sonrasında hâlâ FAILED → ESCALATED: BA kullanıcıya seçenekli özet sunar
@@ -282,8 +283,10 @@ Her pass'te **çalıştırılan komut ve sonucu** yazılır. Komut yoksa pass ge
 - [sorun + sebep]
 ```
 
-Rapor adresi: `docs/gate/<story>.md`. Özet (sonuç + madde sayıları) ana
-oturuma üç satırla döner; rapor gövdesi sohbete yapıştırılmaz.
+Rapor adresi: `docs/gate/<story>.md`. Gate, "referansla aktar" kuralının TEK
+istisnasıdır (`AGENT_PROTOCOL.md` → Çıktı Adresleri): yazma aracı olmadığı
+için rapor GÖVDESİNİN TAMAMINI döndürür, dosyaya ana oturum yazar. Raporun
+ilk satırı sonuç (`PASSED` / `PASSED_WITH_WARNINGS` / `FAILED`).
 
 ---
 

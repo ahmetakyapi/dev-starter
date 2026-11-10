@@ -276,7 +276,16 @@ kaldığı için erişilebilirlik açığı değil.
 - **PatternBackground**: kap `relative isolate`; hazır birleşimler `PATTERN_PRESETS`. Stil `@layer components`te: `className="fixed"` bütün sayfa zemini yapar.
 - **Dial ya da Slider**: kontrol panelinde yan yana birkaç ayar → kadran; formda tek aralık → `slider`; kesin sayı → `number-field`.
 - **ExpandableCard**: kartın kendisi büyür (`layoutId`, `domMax`); başka bir yerden açılan pencere için `dialog`.
-- **Paket mi kopya mı:** `@ahmetakyapi/ui` 86 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
+- **Paket mi kopya mı:** `@ahmetakyapi/ui` 97 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
+
+### Ribbon Turu: Tanıtım (2026-11)
+
+- **Görsel zeminli kahraman:** menü `docking-nav` (opak hap, kaydırınca üst kenara oturur), başlık `blur-in` (tek `<em>` vurgu, `editorial` preset), eylem `LiquidGlassLink tone="media"`, altında `trust-line tone="media"`. Düz zeminde cam yerine `bg-cta`, menü yerine şablonun `SiteHeader`ı.
+- **Ürün maketi:** ekran görüntüsü yerine `AppWindow` + `WindowStrip` + `Dock`. Tek pencere `focused`; sahne `role="img"` ve tek cümle. Maket etkileşimliyse (`Dock onSelect`) sayfada denenen demo olur.
+- **El notu ya da kalem vurgusu:** başka bir öğeyi okla göstereceksen `hand-callout`, metnin kendisini vurgulayacaksan `mark-annotate`. Font: `fonts.ts → handFont`.
+- **CornerMascot**: yalnız kişiliği olan tanıtım sayfasında, sayfada bir tane; uygulama, form ve ödeme ekranında yok.
+- **Offscreen turu:** maket ya da kahraman arkası için `wallpaper` (8 illüstrasyon sahnesi, `downloadWallpaper()` ile PNG; arayüz paletine uyan sahneyi seç); galeri kahramanında `drift-columns`; sürüm notu ve etkinlik için köşede `notice-deck` (hata/sonuç bildirimi `toast`ta kalır).
+- **Paket:** hepsi `@ahmetakyapi/ui` kitinde (97 bileşen).
 
 ### Bloklar
 

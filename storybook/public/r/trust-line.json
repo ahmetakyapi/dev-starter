@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "trust-line",
+  "type": "registry:ui",
+  "title": "Güven Satırı",
+  "description": "Birincil eylemin altında en çok üç güvence (\"Kart gerekmez · 2 dakikada kurulum\")",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/trust-line.tsx",
+      "content": "import { ShieldCheck } from \"lucide-react\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Güven satırı: birincil eylemin hemen altında, küçük simge ve noktayla\n * ayrılmış kısa güvenceler. Ribbon her indirme düğmesinin altına aynı\n * satırı koyar (\"Apple onaylı · Geliştirici kimliğiyle imzalı · Gatekeeper'dan\n * temiz açılır\"); tıklamadan hemen önceki \"güvenli mi?\" sorusunu orada,\n * düğmenin dibinde yanıtlar. Ödeme düğmesinin altında \"Ödeme Stripe\n * güvencesinde\", kayıtta \"Kart gerekmez · 2 dakikada kurulum\".\n *\n * KURAL: en çok üç güvence, her biri doğrulanabilir bir olgu (\"şifreli\n * bağlantı\", \"KVKK uyumlu\" ancak gerçekten öyleyse). Sıfat değil olgu:\n * \"güvenilir\" yazma, neden güvenilir olduğunu yaz. Uydurma rozet ve\n * sayı yok (guides/08 → veri dürüstlüğü).\n *\n * Ayraç nokta süstür (`aria-hidden`); ekran okuyucu yerine görünmez virgülü\n * duyar, güvenceler birbirine yapışmaz. `tone=\"media\"` görsel zemin üstü.\n *\n *   <TrustLine items={[\"Apple onaylı\", \"İmzalı\", \"Gatekeeper'dan temiz açılır\"]} />\n */\n\ntype TrustLineProps = {\n  items: readonly ReactNode[];\n  /** Baştaki simge; varsayılan kalkan. `null` simgesiz. */\n  icon?: ReactNode | null;\n  tone?: \"default\" | \"media\";\n  align?: \"center\" | \"start\";\n  className?: string;\n};\n\nexport function TrustLine({ items, icon, tone = \"default\", align = \"center\", className }: TrustLineProps) {\n  const mark = icon === undefined ? <ShieldCheck /> : icon;\n  return (\n    <p\n      className={cn(\n        \"flex max-w-md items-start gap-1.5 text-micro leading-relaxed\",\n        align === \"center\" ? \"mx-auto justify-center text-center\" : \"justify-start text-left\",\n        tone === \"media\" ? \"text-on-brand/80\" : \"text-muted\",\n        className,\n      )}\n    >\n      {mark ? (\n        <span aria-hidden className=\"mt-0.5 shrink-0 opacity-90 [&_svg]:size-3.5\">\n          {mark}\n        </span>\n      ) : null}\n      <span>\n        {items.map((item, i) => (\n          <span key={i}>\n            {i > 0 ? (\n              <>\n                <span aria-hidden> · </span>\n                <span className=\"sr-only\">, </span>\n              </>\n            ) : null}\n            {item}\n          </span>\n        ))}\n      </span>\n    </p>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "trust-line",
+    "palettes": false
+  }
+}

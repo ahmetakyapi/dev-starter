@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { BOARD, DELAYED, OPEN_TICKETS, TICKETS, periodStats, tl } from "./_data";
 import { PusulaApp } from "./_app";
+import { TanitimPage } from "./_tanitim";
 import { settle } from "./_settle";
 
 /** Telefonda masaüstü öğeleri gizli: yalnızca görüneni tıkla. */
@@ -264,7 +265,7 @@ export const SignedOut: Story = {
     await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@gmail.com");
     await userEvent.type(canvas.getByLabelText("Şifre"), "pusula2026");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
-    await canvas.findByText(/pusula\.com\.tr/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
+    await canvas.findByText(/pusula\.app/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
     await settle(globals);
   },
 };
@@ -283,6 +284,31 @@ export const SampleAccount: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole("button", { name: /Örnek Hesapla Gir/ }));
     await canvas.findByRole("heading", { name: "Pano" }, { timeout: 3000 });
+    await settle(globals);
+  },
+};
+
+export const Landing: Story = {
+  name: "Tanıtım Sayfası",
+  render: () => <TanitimPage onSignIn={() => {}} />,
+  parameters: {
+    // Sabit menü ve köşe maskotu belge sayfasının üstüne binmesin: kendi çerçevesinde.
+    docs: {
+      story: { inline: false, height: "900px" },
+      description: {
+        story:
+          "Oturum açmamış ziyaretçinin sayfası (Ribbon turu): kaydırınca üst kenara oturan menü, bulanıktan netleşen serif vurgulu başlık, görsel zemin üstünde sıvı cam eylem ve güven satırı, pencere şeridi + dock ile sayfada denenen ürün maketi, el yazısı ok notu, köşe maskotu.",
+      },
+    },
+  },
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole("heading", { level: 1, name: "Talepleri kaybetmeden yanıtla." });
+    const dock = canvas.getByRole("toolbar", { name: "Pusula uygulamaları" });
+    await userEvent.click(within(dock).getByRole("button", { name: "Takvim" }));
+    await waitFor(() => expect(canvas.getByRole("img", { name: /odakta Takvim/ })).toBeInTheDocument());
+    await userEvent.click(canvas.getByRole("button", { name: "Maskota merhaba de" }));
+    await canvas.findByText("Merhaba!");
     await settle(globals);
   },
 };

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Compass, MessagesSquare, PackageCheck, Reply, Smile } from "lucide-react";
 import { ActivityRings } from "@/components/ui/activity-rings";
 import { Announcement } from "@/components/ui/announcement";
+import { AnimatedIcon } from "@/components/ui/animated-icon";
 import { AreaChart } from "@/components/ui/area-chart";
 import { BarList } from "@/components/ui/bar-list";
 import { ChartCard, ChartLegend } from "@/components/ui/chart-card";
@@ -138,8 +139,8 @@ export function PanoPage() {
         description={`Günaydın ${ME.name.split(" ")[0]} · ${longDate.format(TODAY)}`}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setTour(true)}>
-              <Compass aria-hidden />
+            <Button variant="ghost" size="sm" className="group" onClick={() => setTour(true)}>
+              <AnimatedIcon icon={Compass} motion="wiggle" />
               Tanıtım Turu
             </Button>
             <span data-tour="donem">

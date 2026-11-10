@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, fireEvent, userEvent, within } from "storybook/test";
+import { expect, fireEvent, within } from "storybook/test";
 import { CompareSlider } from "@/components/ui/compare-slider";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
@@ -61,10 +61,12 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const slider = canvas.getByRole("slider", { name: "Yanıt taslağı" });
     await expect(slider).toHaveAttribute("aria-valuetext", "Şablon %50, Asistan %50");
-    slider.focus();
-    await userEvent.keyboard("{ArrowRight}{ArrowRight}");
+    // userEvent.keyboard yerel range girdisinin değerini sentetik tuşla
+    // değiştirmez (tarayıcı varsayılan eylemi sentetik olayda çalışmaz);
+    // değer değişimi `change` olayıyla tetiklenir.
+    fireEvent.change(slider, { target: { value: "52" } });
     await expect(slider).toHaveValue("52");
-    await userEvent.keyboard("{End}");
+    fireEvent.change(slider, { target: { value: "100" } });
     await expect(slider).toHaveAttribute("aria-valuetext", "Şablon %100, Asistan %0"); // slop-ok: kaydırıcının End tuşundaki uç değeri, veri değil
   },
 };

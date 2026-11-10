@@ -64,4 +64,15 @@ Kodun yaninda ekrani da gormek gerekiyorsa `design-reviewer` subagent'ini oner.
    - `'use client'` en alt seviyede mi; `"use client"` modulden sabit export ediliyor mu?
    - Sayfa ici filtre baglantilari `scroll={false}`
 
+9. **Tanitim sayfasi** (yalnizca pazarlama yuzeyi; `guides/10` → Ribbon Turu)
+   - Birincil eylemin hemen altinda dogrulanabilir guvence var mi (`trust-line`);
+     sifat degil olgu, en cok uc; sahte kitlik sayaci yok
+   - Kahraman basligi JS'i beklemeden gorunuyor mu (`blur-in` CSS, ya da hic giris yok)
+   - Cam (`liquid-glass`) yalnizca gorsel zemin ustunde; duz zeminde `bg-cta`
+   - Urun anlatimi bayatlayan ekran goruntusu yerine canli/token'li maket mi
+     (`app-window`, `dock`); maket `role="img"` + tek cumle ya da `aria-hidden`
+   - Sabit konumlu ogeler (menu, maskot, sohbet balonu, cerez bandi) 390'da
+     metni ya da birincil eylemi ortmuyor mu; sayfada en cok bir oyunbaz oge
+   - Hikaye: urun denenebiliyorsa deneme yerine sayfada canli demo var mi
+
 Sonucu Gate raporu formatinda sun: her madde ✅ / ⚠️ / ❌, bulgu basina dosya:satir ve onerilen duzeltme.

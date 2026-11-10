@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { AssigneePicker, type Person } from "@/components/ui/assignee-picker";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
@@ -56,7 +56,8 @@ export const Default: Story = {
     await userEvent.keyboard("{Enter}");
     await expect(option).toHaveAttribute("aria-selected", "true");
     await userEvent.keyboard("{Escape}");
-    await expect(canvas.getByRole("button", { name: "İzleyenler: Mert Aksoy, Can Demir, Burak Öztürk" })).toHaveFocus();
+    // Odak, açılır pencere kapanış geçişi bitince düğmeye döner (anında değil).
+    await waitFor(() => expect(canvas.getByRole("button", { name: "İzleyenler: Mert Aksoy, Can Demir, Burak Öztürk" })).toHaveFocus());
   },
 };
 

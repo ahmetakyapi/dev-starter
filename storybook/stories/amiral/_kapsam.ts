@@ -25,6 +25,9 @@ export const USED = SNIPPETS.filter((name) => IMPORTED.has(name));
 export const COVERED = USED.length;
 export const TOTAL = SNIPPETS.length;
 
+/** Paket kitindeki bileşen sayısı: elle yazılmaz, `packages/@ahmet/ui/src/kit/`ten sayılır. */
+export const KIT_COUNT = Object.keys(import.meta.glob("../../../packages/@ahmet/ui/src/kit/*.tsx")).length;
+
 /** Sınıflandırılmamış dosya (yeni snippet, grubu yok): dizinde "Grupsuz" altında görünür. */
 export const UNGROUPED = SNIPPETS.filter((name) => !GROUP_OF[name]);
 export const inGroup = (group: GroupId) => SNIPPETS.filter((name) => GROUP_OF[name] === group);

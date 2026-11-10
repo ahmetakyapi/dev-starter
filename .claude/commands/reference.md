@@ -35,13 +35,27 @@ agent galeriyi tarayıp "en iyisini" seçmez.
 - Ekran görüntüsü verildiyse onu oku.
 - Site adresi verildiyse (galerideki örnek çoğu zaman yalnız masaüstü
   görüntüsüdür; telefondaki davranışı ancak asıl site gösterir) 1280 ve 390
-  genişlikte yakala: Playwright MCP varsa onunla, yoksa sistemdeki Chrome ile
-  `puppeteer-core` script'i (`.tmp-reference.mjs`). Yerleşim görüntüsü
+  genişlikte yakala: bulut oturumunda kurulu Playwright (`require('playwright')`),
+  yerelde Playwright MCP, o da yoksa sistemdeki Chrome ile `puppeteer-core`
+  script'i (`.tmp-reference.mjs`). Durumu olan bölümde (yapışan menü, açılan
+  panel) önce/sonra `className` ya da hesaplanmış stil farkını da kaydet:
+  davranış görüntüden değil farktan okunur. Yerleşim görüntüsü
   `prefers-reduced-motion: reduce` taklidiyle alınır: headless Chrome çalışan
   animasyonu ilk karesinde çeker. Hareketi görüntüyle değil sayıyla oku
   (`document.getAnimations()`, kaydırmada iki konumda ölçüm).
 - Görüntüler `.tmp-references/` altına (şablonlarda `.tmp-*` gitignore'da).
   **Üçüncü tarafın ekran görüntüsü depoya girmez**; depolar herkese açık.
+
+## 2.5 Kütüphanede var mı?
+
+Kurmadan önce `~/dev-starter/snippets/ui/README.md` kataloğuna bak: referanstaki
+parçanın hazır karşılığı çoğu zaman var. Örnek: kaydırınca kenara oturan
+menü → `docking-nav`, görsel üstü cam düğme → `liquid-glass`, buğudan gelen
+başlık → `blur-in`, ekran görüntüsü yerine ürün maketi → `app-window` +
+`dock`, eylem altı güvence → `trust-line`, el notu → `hand-callout`
+(Tanıtım grubu). Varsa `add-ui` ile kur, yapıyı onun üstüne oturt. Karşılığı
+yoksa ve desen başka projelerde de işe yarayacaksa bu işten sonra
+`/harvest` öner.
 
 ## 3. Yapıyı çıkar → `docs/references/<bölüm>.md`
 

@@ -262,7 +262,7 @@ export const Interaction: Story = {
   parameters: { docs: { description: { story: "Anahtar, radyo ve palet satırı tıklanır; palet `<html data-palette>`ı değiştirir." } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const ask = canvas.getByRole("radio", { name: /Her işlemde/ });
+    const ask = canvas.getByRole("radio", { name: /Her İşlemde/ });
     await userEvent.click(ask);
     await expect(ask).toBeChecked();
     const assigned = canvas.getByRole("switch", { name: /Bana Talep Atandığında/ });

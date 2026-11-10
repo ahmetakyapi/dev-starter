@@ -17,7 +17,8 @@ için yürütür.
    kriterlerini kullanıcıyla netleştir. ROUTEMAP: durum → IN_PROGRESS.
 2. **Boyu beyan et** (KÜÇÜK/ORTA/BÜYÜK). KÜÇÜK ise subagent açmadan
    `~/dev-starter/rules/dev-cycle.md` kısayoluyla ilerle.
-3. **Dalga planı** (ORTA/BÜYÜK): işi alanlara böl ve kayıtlı subagent'lara
+3. **Dalga planı** (BÜYÜK; ORTA'da ana oturum ya da tek subagent — tanımın
+   tek kaynağı `~/dev-starter/phases/development.md` → İş Boyu): işi alanlara böl ve kayıtlı subagent'lara
    **Görev Tanımı** ile dağıt (`AGENT_PROTOCOL.md → Orkestrasyon`):
    - Wave 1 paralel: `backend` (schema/API + testleri), `qa` (test planı +
      failing testler), UI kararları ana oturumda
@@ -26,7 +27,7 @@ için yürütür.
    - Dalga arası: build + typecheck
 4. **Kabul ön-doğrulaması**: her teslimi story kabul kriterleriyle madde madde
    karşılaştır; eksikse agent'a iade et, Gate'e gönderme.
-5. **Gate**: `/gate <story-id>` akışını çalıştır. FAILED döngüsü
+5. **Gate**: ROUTEMAP: durum → IN_REVIEW, sonra `/gate <story-id>` akışını çalıştır. FAILED döngüsü
    FIX_1 → FIX_2 → ESCALATED.
 6. **Commit**: Gate PASSED sonrası `git status`la yalnız amaçlanan dosyaları
    stage'le, conventional commit, push. ROUTEMAP: durum → DONE.

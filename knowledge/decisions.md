@@ -874,3 +874,83 @@ ilk turda paralel okuma talimatı. Gerekçe yukarıda.
    2026-10-03'te yeni projeler için "üç yer + tek aile" kimlik kuralı geldi.
 3. **Palet istisnaları**: `onepiece-hub` ✅ çözüldü. `ramazan-vakitleri`
    (mor+pembe+mavi) `iris`e yakın; hâlâ açık.
+## Ribbon Turu — Tanıtım Bileşenleri (2026-11-07)
+
+**Karar:** meetribbon.app (Mac pencere yöneticisi) bölüm bölüm tarandı
+(Playwright: 1440 ve 390 piksel ekran görüntüleri, hesaplanmış stiller, DOM,
+etkileşimler). Kütüphanede karşılığı olmayan sekiz desen sıfırdan, token'la
+yazıldı ve yeni **Tanıtım** grubunu kurdu: `liquid-glass`, `blur-in`,
+`hand-callout`, `app-window` (+ `WindowStrip`), `dock`, `docking-nav`,
+`corner-mascot`, `trust-line`. Hepsi pakete girdi (kit 86 → 94).
+
+**Zaten vardı, alınmadı:** cam hapa toplanan başlık (`SiteHeader`), iki
+sütunlu SSS (`Faq`), tuş kapağı (`kbd`), kalem vurgusu (`mark-annotate`),
+Instrument Sans + Instrument Serif eşi (`editorial` preset: Ribbon'ın gövdesi
+de Instrument Sans).
+
+**Sitenin asıl dersi (desen değil, strateji):**
+
+- **Deneme yerine canlı demo.** Ücretsiz deneme yok; bütün kısayollar
+  sayfadaki sahte masaüstünde denenir ("satın almadan önce burada dene").
+  Ürün maketi ekran görüntüsü değil, token'la çizilmiş, temayla dönen
+  parçalar (`app-window`, `dock`). Pusula Tanıtım Sayfası bunu gösterir:
+  dock'tan seçilen pencere şeritte odağa gelir.
+- **Güvenceyi tıklamanın dibine koy.** Her indirme düğmesinin altında aynı
+  güven satırı. "Güvenli mi?" sorusu SSS'ye kadar beklemez (`trust-line`).
+- **Tek oyunbaz öğe.** Ciddi bir araç sitesinde sıcaklık tek yerden gelir:
+  maskot ve el yazısı not. Sayfada bir maskot, bir-iki not; fazlası oyuncak.
+- **Karşılaştırma SEO'su.** Alt bilgide "Ribbon vs yabai/AeroSpace…" ve
+  rehber sütunları: arama trafiği rakip adıyla gelir. Kendi ürünlerimizde
+  sitemap'e karşılaştırma ve rehber sayfaları planlanabilir (`guides/11`
+  SEO açılışı).
+
+**Teknik kararlar:**
+
+- `blur-in` CSS animasyonu: kahraman başlığı çoğu zaman LCP; hidrasyonu
+  bekleyen Motion girişi başlığı JS inene kadar gizlerdi. Reveal'in "LCP
+  öğesi sarılmaz" kuralı korunur, bu tek istisna JS'siz.
+- `liquid-glass` üç katman: kenar (iç gölgeler, token'dan), buğu (her
+  tarayıcı), bükülme (`backdrop-filter: url(#svg)`, yalnız Chromium).
+  Desteklemeyen tarayıcı bildirimi atlar, düğme sadeleşir ama kırılmaz.
+  `prefers-reduced-transparency`de opak.
+- `docking-nav` kaydırmayı `useSyncExternalStore` ile boole okur: yalnız
+  eşikte çizim, sayfa ortasında yenilenince ilk karede doğru, efektte
+  setState yok (React Compiler lint kuralı).
+- `dock` büyümesi yalnız CSS (`:has()` ile komşular); ölçüm yok.
+- `handFont` (Caveat) preset'lerin parçası değil, isteğe bağlı yükleyici:
+  tanımlı her next/font yükleyicisi sayfaya bağlanır (fonts.ts ölçümü).
+- `app-window` ve maskotta pencere düğmeleri durum token'larından (danger,
+  warning, success); sabit kırmızı-sarı-yeşil yok, paletle döner.
+
+**Alınmayan:** varlıklar ve marka (piksel sanatı kahraman, suluboya kapanış,
+Apple logosu, maskot çizimi, rozetler), sistem serif'i, ham sky/zinc paleti,
+kıtlık sayacı ("10 kişiden 10'u kaldı": doğrulanamayan aciliyet, veri
+dürüstlüğü). Ayrıntı `references.md` → Değerlendirilip Alınmayanlar.
+
+## Offscreen Turu — Duvar Kâğıtları, Süzülen Sütunlar, Duyuru Destesi (2026-11-07)
+
+**Karar:** offscreen.wtf (duvar kâğıdı galerisi) ilk `/harvest` turuyla
+tarandı. Tıklanan noktadan daire açılan tema geçişi (`theme-toggle`) ve kumlu
+doku (`pattern-bg` → noise) bizde vardı. Üç yeni bileşen: `drift-columns`
+(zıt yönde süzülen sütunlar, yalnız CSS), `notice-deck` (köşede dönen duyuru
+destesi; sitedeki sponsor kartının duyuru karşılığı), `wallpaper`.
+
+**Duvar kâğıtları:** sitedeki görseller sanatçıların eseri, alınmadı. İlk
+sürüm altı sahneyi paletin tonunu beyaz/siyahla karıştırarak çiziyordu;
+kullanıcı "güzel durmuyor" dedi (haklıydı: oklab karışımı bulanık ve
+kahverengiye çalan sahneler veriyordu). **Değişti (2026-11-07):** sekiz
+illüstrasyon sahnesi, elle seçilmiş renk setleriyle (`token-ok-file`
+gerekçeli istisna: arayüz rengi değil resim rengi) ve gerçek işçilikle:
+katman başına ışık degradesi, katmanlar arası sis, güneşte geniş hale, kumda
+aydınlık/gölge yüzü ve sırt çizgisi, düzensiz kayalık zirveler, kutup
+ışığında yüzlerce dikey huzme, ipek çizgileri, kâğıt kesiminde gölge.
+`downloadWallpaper()` Retina masaüstü (2880×1800) ve telefon (1290×2796)
+PNG'si üretir. Ders: illüstrasyonda token disiplini güzelliği öldürür;
+sınır arayüz ile resim arasında çizilir.
+
+**Erişilebilirlik kararı:** iki bileşen de kendiliğinden hareket eder; WCAG
+2.2.2 gereği üzerine gelme ve odak durdurur, hareketi azaltan kullanıcıda
+hiç oynamaz, kendiliğinden değişen içerik ekran okuyucuya duyurulmaz.
+
+**Alınmayan:** açılış yükleyicisi (içeriği geciktirir), reklam/sponsor
+yerleri, Cormorant Garamond + Anton eşi (serif vurgu `editorial` presetiyle).

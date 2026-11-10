@@ -108,7 +108,7 @@ orada yapin ve commit'leyin.
 
 ## Yeni Skill Eklemek
 
-0. **Ortusme denetimi**: once mevcut 18 komutu tarayin — yeni komut var
+0. **Ortusme denetimi**: once mevcut komutlari tarayin (`ls .claude/commands`) — yeni komut var
    olanla ayni isi yapiyorsa komut degil, var olana bir mod ekleyin
    (/check ↔ /gate siniri gibi: kesisiyorlarsa sinir cumlesi yazin)
 1. `.claude/commands/[skill-adi].md` dosyasi olusturun
@@ -116,8 +116,13 @@ orada yapin ve commit'leyin.
    ```yaml
    ---
    description: Skill'in tek satirlik aciklamasi
+   argument-hint: "[arguman]"
    ---
    ```
+   Yan etkisi olan komutta (surum, deploy, proje kurma) modelin kendiliginden
+   cagirmamasi icin `disable-model-invocation: true` dusunun. Yalniz bu depoda
+   calisan komut (`/harvest`, `/evolve`) her projeye symlink'lenir; aciklamasina
+   "Yalniz ~/dev-starter" yazin.
 3. Icerikte: Ne yaptigini, hangi adimlari izledigini, cikti formatini tanimlayin
 4. **Yollar mutlak**: komutlar `machine/bootstrap.sh` ile `~/.claude/commands/`a
    symlink'lenir ve her projeden cagrilir. `templates/...` degil
@@ -169,6 +174,8 @@ orada yapin ve commit'leyin.
    yolla yazilir: `bash "$CLAUDE_PROJECT_DIR"/hooks/[hook-adi].sh`. Hook
    Claude'un o anki dizininde kosar; goreli yol (`bash hooks/...`) ilk `cd`den
    sonra bulunamaz ve commit kapisiz gecer (health-check bunu FAIL sayar)
+   Yeni projeler de calistirsin diye ayni kaydi `templates/*/.claude/settings.json`
+   dosyalarina `~/dev-starter/hooks/...` mutlak yoluyla ekleyin.
 4. `scripts/test-hooks.sh`'e gercek payload veren bir davranis testi ekleyin ve
    once KIRMIZI gordugunuzu dogrulayin
 5. `agents/AGENT_PROTOCOL.md` → Hook tablosuna ekleyin

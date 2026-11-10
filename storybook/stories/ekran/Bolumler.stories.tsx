@@ -133,7 +133,8 @@ export const FaqOpen: Story = {
     const summary = canvas.getByText(item.question);
     await userEvent.click(summary);
     await expect(summary.closest("details")).toHaveAttribute("open");
-    await expect(canvas.getByText(item.answer)).toBeVisible();
+    // Yanıt kısa bir belirmeyle gelir (.faq-answer): geçiş bitene kadar bekle.
+    await waitFor(() => expect(canvas.getByText(item.answer)).toBeVisible());
   },
 };
 

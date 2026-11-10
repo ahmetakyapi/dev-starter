@@ -38,7 +38,7 @@ dev-starter/
 │
 ├── packages/@ahmet/
 │   ├── theme/      → Tailwind v4 theme.css (sistem + palet + @theme inline köprüsü) + tokens.ts aynası
-│   └── ui/         → 86 bileşenlik kit (snippets/ui'dan üretilir) + Surface, Button, Chip, CustomCursor + hooks + motion varyantları (m.*)
+│   └── ui/         → 97 bileşenlik kit (snippets/ui'dan üretilir) + Surface, Button, Chip, CustomCursor + hooks + motion varyantları (m.*)
 │
 ├── knowledge/
 │   ├── themes/                → 7 projenin görsel hafızası (DESIGN.md 9 bölüm)
@@ -69,7 +69,7 @@ dev-starter/
 ├── phases/                    → planning (P1→P6), development (dalga planı), e2e-polish (E0→E5), release-maintenance
 │
 ├── hooks/
-│   ├── gate-guard.sh          → Commit öncesi Gate PASSED kontrolü (kolon başlıktan, #99)
+│   ├── gate-guard.sh          → Commit öncesi Gate PASSED + kapsam izi kontrolü (kolon başlıktan, #99; lib/gate-hash.sh)
 │   ├── quality-scan.sh        → Sır (AWS/PEM/JWT + sağlayıcı anahtarları), .env, debug, @ts-ignore, kilit, agentic cast, TDD/format uyarıları
 │   ├── routemap-sync.sh       → ROUTEMAP tazelik + DONE⇒PASSED değişmezi
 │   ├── session-brief.sh       → SessionStart: ROUTEMAP özeti + sıradaki iş önerisi
@@ -79,15 +79,15 @@ dev-starter/
 ├── scripts/
 │   ├── health-check.sh        → Ekosistem bütünlüğü (15 kategori, 130+ kontrol)
 │   ├── audit-project.sh       → Canlı projeyi ekosistem standartlarıyla denetler
-│   ├── slop-scan.sh           → AI slop taraması (23 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
+│   ├── slop-scan.sh           → AI slop taraması (24 kalıp, her projede; `slop-ok` ile gerekçeli susturma)
 │   ├── test-slop-scan.sh      → slop-scan davranış testi (kirli/temiz fixture)
-│   ├── test-hooks.sh          → Hook davranış testleri (87, fixture'lar resmi şablon düzeninde)
+│   ├── test-hooks.sh          → Hook davranış testleri (95, fixture'lar resmi şablon düzeninde)
 │   ├── verify-lockfile.mjs    → Kilit npm ci ile senkron mu (çevrimdışı)
 │   ├── verify-package-exports.mjs → Manifestin vaat ettiği giriş noktaları
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
 │   ├── add-ui.mjs             → snippets/ui bileşenini bağımlılıklarıyla projeye kurar (--list, --dry-run, --install)
 │   ├── build-ui-registry.mjs  → snippets/ui/registry.json + shadcn kaydı storybook/public/r (--check: verify:registry)
-│   ├── build-ui-package.mjs   → snippets/ui → @ahmetakyapi/ui kiti (86 bileşen, next/Base UI'sız; --check: verify:kit)
+│   ├── build-ui-package.mjs   → snippets/ui → @ahmetakyapi/ui kiti (97 bileşen, next/Base UI'sız; --check: verify:kit)
 │   ├── add-figure-kit.mjs     → anatomy figür kitini bir projeye kurar (components/iso)
 │   └── verify-anatomy.mjs     → Figür kiti iki şablonda build/tip/lint/test temiz mi (opt-in)
 │
@@ -98,9 +98,9 @@ dev-starter/
 ├── .claude/
 │   ├── settings.json          → Hook entegrasyonu (commit hook'ları `if` filtreli) + .env Read yasağı
 │   ├── rules/                 → Yol kapsamlı proje kuralları (hooks, verification, packages, orchestration)
-│   ├── commands/              → 19 komut — bootstrap ile ~/.claude/commands'a symlink
+│   ├── commands/              → 20 komut — bootstrap ile ~/.claude/commands'a symlink
 │   ├── agents/                → 9 subagent wrapper'ı — ~/.claude/agents'a symlink
-│   └── skills/clone-website/  → Site klonlama (yalnız bu depoda)
+│   └── skills/clone-website/  → Ölçümlü site klonlama + scripts/ (capture, styles, download-assets, visual-diff)
 │
 ├── templates/
 │   ├── nextjs-fullstack/      → Next 16 + Drizzle/Neon + next-auth v5 + proxy.ts + tema + bileşenler + /akis (AI akışı)
@@ -108,9 +108,9 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 728 hikâye — Kapak, Tema, Bileşenler,
-│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula (118/118); kabuk tema ve paleti izler
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (118 bileşen + vitrin/) + fonts/ + live-preview/
+├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 753 hikâye — Kapak, Tema, Bileşenler,
+│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula + Tanıtım (kapsam 129/129); kabuk tema ve paleti izler
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (129 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form

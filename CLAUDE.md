@@ -38,7 +38,7 @@ agents/      12 rol tanımı + AGENT_PROTOCOL.md (haberleşme, orkestrasyon, Gö
 rules/       10 kural dosyası (aşağıdaki tablo) · phases/ planning, development, e2e-polish, release-maintenance
 hooks/       gate-guard · quality-scan · routemap-sync · session-brief (+ lib/)
 scripts/     health-check · test-hooks · slop-scan · audit-project · verify-* · build-* · add-ui · add-figure-kit
-.claude/     settings.json (hook'lar) · rules/ · commands/ (19) · agents/ (9 wrapper) · skills/clone-website
+.claude/     settings.json (hook'lar) · rules/ · commands/ (20) · agents/ (9 wrapper) · skills/clone-website
 templates/   nextjs-fullstack · landing · agentic-chat · docs/ (KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS)
 storybook/   görsel katalog (Storybook 10, kendi kilidi) · snippets/ hazır parçalar + ui/ kütüphanesi + fonts/ + live-preview/
 ```
@@ -102,11 +102,12 @@ bash scripts/audit-project.sh ~/Desktop/Projects/<proje>   # canlı proje deneti
 | `/snippet [tip]` | Hazır parçayı projeye uyarla |
 | `/check` | Sağlık: build, tip, lint, test, tech stack uyumu, token, güvenlik |
 | `/reference <bölüm> [görsel\|url]` | Gerçek sitenin bölümünü referans al, yapısını kendi token'larınla kur (galeri: `knowledge/design-references.md`) |
+| `/harvest <url>` | Referans turu: bütün siteyi tara, ekosistemde olmayan desenleri kütüphaneye + Storybook'a + bilgi tabanına işle (yalnız dev-starter) |
 | `/review-ui` | UI incelemesi: token, kimlik, iki tema, düzen, a11y, hareket |
 | `/deploy` | Vercel deployment checklist |
 | `/release [seviye]` | Versiyon artırma + changelog |
 | `/agentic [konu]` | Agentic UI karar ağacı — tool, kontrol, state, dsl, test, kurulum, denetle |
-| `/clone-website <url>` | Pixel-perfect site klonlama (Browser MCP gerekli; skill, yalnız bu depoda) |
+| `/clone-website <url>` | Ölçümlü site klonu: betikli yakalama, stil dökümü, varlık indirme, piksel/tipografi farkı geçene kadar düzeltme (Playwright; skill, yalnız bu depoda) |
 
 Dosyalar `.claude/commands/<ad>.md` (`/clone-website`: `.claude/skills/clone-website/SKILL.md`).
 **Tek kaynak bu repo**: bootstrap her komutu `~/.claude/commands/`a symlink'ler,

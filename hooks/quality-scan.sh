@@ -81,6 +81,11 @@ staged0() { printf '%s\n' "$STAGED" | grep -E "$1" | tr '\n' '\0'; }
 # Yorumdaki kayıt atfı (`mistakes.md #100`) üç haneli olunca hex'e benzer;
 # atıf eşleşme başına (-o) ayıklanır, aynı satırdaki gerçek renk kalır.
 HEX_HITS=$(staged0 '\.(tsx?|css)$' | xargs -0 grep -HoE -e '(mistakes(\.md)?[[:space:]]+)?#[0-9a-fA-F]{3,8}' -- 2>/dev/null | grep -vE ':mistakes' | cut -d: -f1 | sort -u | grep -vE 'globals\.css|tailwind|theme|\.config\.|\.test\.|\.spec\.' || true)
+# Renk kullanıcı verisi ya da illüstrasyon olan dosya `token-ok-file: <neden>`
+# taşır (health-check 9 ve slop-scan 21 ile aynı istisna).
+if [ -n "$HEX_HITS" ]; then
+  HEX_HITS=$(printf '%s\n' "$HEX_HITS" | while IFS= read -r hf; do grep -q 'token-ok-file:' "$hf" 2>/dev/null || printf '%s\n' "$hf"; done)
+fi
 if [ -n "$HEX_HITS" ]; then
   warn "⚠️  DESIGN TOKEN: Hardcoded hex renk bulundu:" "$(echo "$HEX_HITS" | sed 's/^/   /')"
 fi

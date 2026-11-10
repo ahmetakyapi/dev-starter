@@ -17,7 +17,7 @@ Kurallar kağıt üstünde kalmaz — bash hook'ları ile fiziksel olarak uygula
 
 | Hook | Tetik | Ne Yapar |
 |------|-------|----------|
-| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse bloklar (kolon başlıktan bulunur, docs-only muaf — #99) |
+| `hooks/gate-guard.sh` | PreToolUse:Bash (git commit) | Aktif story Gate PASSED değilse ya da Gate'ten sonra kod değiştiyse (rapordaki `Kapsam:` izi, `hooks/lib/gate-hash.sh`) bloklar; kolon başlıktan bulunur, docs-only muaf — #99 |
 | `hooks/quality-scan.sh` | PreToolUse:Bash (git commit) | Sır (AWS/PEM/JWT/URL + Anthropic/GitHub/npm/Resend/Stripe/Slack önekleri), `.env` (iç içe dahil), debug kodu, `@ts-ignore`, kilit, agentic cast; TDD'siz fix, format dışı mesaj, test zayıflatma uyarıları |
 | `hooks/routemap-sync.sh` | PostToolUse:Edit/Write | ROUTEMAP tazelik + DONE ⇒ Gate PASSED değişmezi |
 | `hooks/session-brief.sh` | SessionStart | ROUTEMAP özeti + sıradaki iş önerisi bağlama basılır |

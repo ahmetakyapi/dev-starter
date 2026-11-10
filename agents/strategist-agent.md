@@ -95,6 +95,11 @@ satırları seç:
   bunların %30'u ikinci gün geri geliyor").
 - **Riskler:** en büyük 3 risk ve her biri için erken test ("veri sağlayıcısı
   dakikalık veri vermezse → ilk gün bir prototiple dene").
+- **Tanıtım yüzeyi** (ürünün bir tanıtım sayfası varsa, `decisions.md` →
+  "Ribbon Turu"): ürün sayfada denenebiliyor mu (deneme süresi yerine canlı
+  demo), birincil eylemin altındaki güvence ne (doğrulanabilir olgu), arama
+  trafiği nereden gelecek (rakip karşılaştırma "X vs Y" ve rehber sayfaları).
+  Her biri tek satır; bilinmiyorsa "Bilinmiyor" yaz.
 
 ### 6. Plan — ilk iki hafta
 
@@ -116,7 +121,8 @@ PRODUCT taslağını doldur, kullanıcıya özetle ve **onay al**. Onaydan sonra
    adres varsa aç ve gerçekten kullan (Playwright ya da tarayıcı aracı).
 2. **Değerlendir** dört eksende, her birine kısa not:
    - Kullanıcı değeri: en çok kullanılan akış hangisi, nerede sürtünme var?
-   - Büyüme: SEO, paylaşılabilirlik, geri gelme sebebi var mı?
+   - Büyüme: SEO (karşılaştırma ve rehber sayfaları), paylaşılabilirlik,
+     geri gelme sebebi var mı? Tanıtım sayfası ürünü sayfada denetiyor mu?
    - Kalite: performans, erişilebilirlik, hata durumları, test.
    - Teknik borç: eski tech stack (Next 14 / TW3 / framer-motion), tekrar eden kod,
      belgesiz kararlar.

@@ -1,5 +1,6 @@
 import {
   Bricolage_Grotesque,
+  Caveat,
   Geist,
   Geist_Mono,
   IBM_Plex_Mono,
@@ -105,6 +106,15 @@ const bricolage = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], axes: [
 const plexMono = IBM_Plex_Mono({ subsets: ["latin", "latin-ext"], weight: "400", variable: "--font-mono-face", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-face", display: "swap" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-face", display: "swap" });
+
+/* --- El yazısı (--font-hand-face), isteğe bağlı ------------------------- */
+// Preset'lerin parçası DEĞİL: yalnız `hand-callout` notu ve tek tük el
+// notu için. Kullanacaksan kök layout'ta `handFont.variable`ı fontClass'ın
+// yanına ekle; kullanmayacaksan bu satırı sil (tanımlı yükleyici sayfaya
+// bağlanır, yukarıdaki ölçüm). Değişken font: ağırlık ekseni tek dosyada.
+// Türkçe glif testi (Kasım 2026, woff2 cmap): ğ ş İ ve ₺ latin-ext
+// dosyasında, ı Ö Ç Ü latin dosyasında; iki alt küme birlikte hepsini taşır.
+export const handFont = Caveat({ subsets: ["latin", "latin-ext"], variable: "--font-hand-face", display: "swap" });
 
 type Loaded = { variable: string };
 type Preset = {

@@ -132,6 +132,24 @@
       "palettes": false
     },
     {
+      "name": "app-window",
+      "title": "Uygulama Penceresi",
+      "category": "Tanıtım",
+      "description": "Ürünü ekran görüntüsü yerine token'la çizilmiş pencerelerle anlat; `WindowStrip` şerit",
+      "file": "snippets/ui/app-window.tsx",
+      "client": false,
+      "storyId": "app-window",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "area-chart",
       "title": "Alan Grafiği",
       "category": "Grafik",
@@ -271,6 +289,24 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "blur-in",
+      "title": "Bulanıktan Netleşen Başlık",
+      "category": "Tanıtım",
+      "description": "Kahraman başlığı sözcük sözcük buğudan netleşir; `<em>` tek parça (serif vurgu)",
+      "file": "snippets/ui/blur-in.tsx",
+      "client": false,
+      "storyId": "blur-in",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -649,6 +685,26 @@
       "palettes": false
     },
     {
+      "name": "corner-mascot",
+      "title": "Köşe Maskotu",
+      "category": "Tanıtım",
+      "description": "Kişiliği olan tanıtım sayfasında köşe maskotu: göz takibi, göz kırpma, balon",
+      "file": "snippets/ui/corner-mascot.tsx",
+      "client": true,
+      "storyId": "corner-mascot",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "data-table",
       "title": "Veri Tablosu",
       "category": "Veri",
@@ -793,6 +849,63 @@
       "palettes": false
     },
     {
+      "name": "dock",
+      "title": "Uygulama Rafı",
+      "category": "Tanıtım",
+      "description": "Maketin uygulama rafı: üzerine gelince yükselen simgeler, komşular da biraz",
+      "file": "snippets/ui/dock.tsx",
+      "client": false,
+      "storyId": "dock",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "docking-nav",
+      "title": "Yuvaya Oturan Menü",
+      "category": "Tanıtım",
+      "description": "Görsel kahramanlı sayfada menü: boşluklu hap, kaydırınca üst kenara oturur",
+      "file": "snippets/ui/docking-nav.tsx",
+      "client": true,
+      "storyId": "docking-nav",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "drift-columns",
+      "title": "Süzülen Sütunlar",
+      "category": "Tanıtım",
+      "description": "Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf)",
+      "file": "snippets/ui/drift-columns.tsx",
+      "client": false,
+      "storyId": "drift-columns",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "dropdown-menu",
       "title": "Açılır Menü",
       "category": "Katmanlar",
@@ -920,6 +1033,25 @@
       "file": "snippets/ui/halftone-image.tsx",
       "client": true,
       "storyId": "halftone-image",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "hand-callout",
+      "title": "El Yazısı Not",
+      "category": "Tanıtım",
+      "description": "El yazısı not + çizilerek gelen ok; demoda ilk dokunulacak yeri gösterir",
+      "file": "snippets/ui/hand-callout.tsx",
+      "client": true,
+      "storyId": "hand-callout",
       "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
@@ -1131,6 +1263,24 @@
       "palettes": false
     },
     {
+      "name": "liquid-glass",
+      "title": "Sıvı Cam",
+      "category": "Tanıtım",
+      "description": "Fotoğraf/çizim üstündeki tek birincil eylem; cam künye (`LiquidGlass`, `LiquidGlassLink`, `LiquidGlassButton`)",
+      "file": "snippets/ui/liquid-glass.tsx",
+      "client": false,
+      "storyId": "liquid-glass",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "loading-mark",
       "title": "Yükleme Halkası",
       "category": "Yükleme",
@@ -1220,6 +1370,26 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "notice-deck",
+      "title": "Duyuru Destesi",
+      "category": "Tanıtım",
+      "description": "Köşede üst üste duyuru kartları, kendiliğinden döner, \"2/3\" sayaç (sürüm notu, etkinlik)",
+      "file": "snippets/ui/notice-deck.tsx",
+      "client": true,
+      "storyId": "notice-deck",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
@@ -2325,6 +2495,43 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "trust-line",
+      "title": "Güven Satırı",
+      "category": "Tanıtım",
+      "description": "Birincil eylemin altında en çok üç güvence (\"Kart gerekmez · 2 dakikada kurulum\")",
+      "file": "snippets/ui/trust-line.tsx",
+      "client": false,
+      "storyId": "trust-line",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "wallpaper",
+      "title": "Duvar Kâğıdı",
+      "category": "Tanıtım",
+      "description": "8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
+      "file": "snippets/ui/wallpaper.tsx",
+      "client": false,
+      "storyId": "wallpaper",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

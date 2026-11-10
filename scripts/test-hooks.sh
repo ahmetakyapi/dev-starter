@@ -95,6 +95,53 @@ payload "git commit -m x" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
 CODE=$?
 [ $CODE -eq 0 ] && ok "ROUTEMAP yok → uyarır, bloklamaz" || no "ROUTEMAP yok → bloklamamalı" 0 "$CODE"
 
+# (e) Biçimli hücre (**IN_PROGRESS**, `FAILED`) satırı görünmez yapmamalı
+cd "$SANDBOX/gate" || exit 1
+cat > docs/ROUTEMAP.md <<'EOF'
+| ID | Story | Durum | Gate |
+|----|-------|-------|------|
+| S-01 | Login | **IN_PROGRESS** | `FAILED` |
+EOF
+payload "git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "biçimli hücre (**IN_PROGRESS**) Gate'i kapatmaz" || no "biçimli hücre bloklanmalı" 2 "$CODE"
+
+# (f) PASSED, Gate'in gördüğü değişikliğe bağlı (Kapsam izi, lib/gate-hash.sh)
+mkdir -p "$SANDBOX/kapsam/docs/gate"
+cd "$SANDBOX/kapsam" || exit 1
+git init -q . && git config user.email t@t && git config user.name t
+echo "export const a = 1" > app.ts && git add app.ts && git commit -qm init
+cat > docs/ROUTEMAP.md <<'EOF'
+| ID | Story | Durum | Gate |
+|----|-------|-------|------|
+| S-01 | Login | IN_REVIEW | PASSED |
+EOF
+echo "export const a = 2" > app.ts
+{ echo "PASSED"; echo "Kapsam: $(bash "$HOOKS/lib/gate-hash.sh")"; } > docs/gate/S-01.md
+payload "git add -A && git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "Kapsam izi aynı → commit geçer" || no "aynı iz geçmeli" 0 "$CODE"
+echo "export const a = 3" > app.ts
+payload "git add -A && git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "Gate'ten sonra kod değişti → bloklar" || no "değişen kod bloklanmalı" 2 "$CODE"
+echo "export const a = 2" > app.ts
+echo "yeni" > yeni.ts
+payload "git commit -am 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 2 ] && ok "Gate'ten sonra eklenen yeni dosya → bloklar" || no "izlenmeyen yeni dosya bloklanmalı" 2 "$CODE"
+rm yeni.ts
+echo "notlar" >> docs/gate/S-01.md
+payload "git add -A && git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "docs/ altındaki değişiklik izi bozmaz" || no "docs değişikliği geçmeli" 0 "$CODE"
+printf 'PASSED\n' > docs/gate/S-01.md
+echo "export const a = 9" > app.ts
+payload "git add -A && git commit -m 'feat: x'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
+CODE=$?
+[ $CODE -eq 0 ] && ok "izsiz eski rapor → geriye uyum, geçer" || no "izsiz rapor geçmeli" 0 "$CODE"
+cd "$SANDBOX" || exit 1
+
 echo
 
 # ─────────────────────────────────────────────────────────────
@@ -829,6 +876,11 @@ printf '// bkz. mistakes.md #100\nexport const c = "#a4720f"\n' > atif.ts
 git add atif.ts
 OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
 if printf '%s' "$OUT" | grep -q 'DESIGN TOKEN'; then ok "atıf + gerçek hex aynı dosyada → uyarır"; else no "gerçek hex uyarısı kaçmamalı" "DESIGN TOKEN" "uyarı yok"; fi
+# token-ok-file işaretli illüstrasyon dosyası (duvar kâğıdı) → hex uyarısı yok
+printf '// token-ok-file: illüstrasyon, renk seti elle seçildi\nexport const c = "#a4720f"\n' > atif.ts
+git add atif.ts
+OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
+if ! printf '%s' "$OUT" | grep -q 'DESIGN TOKEN'; then ok "token-ok-file işaretli dosya → hex uyarısı yok"; else no "token-ok-file istisnası tanınmalı" "uyarı yok" "DESIGN TOKEN"; fi
 git rm -q --cached atif.ts && rm -f atif.ts
 
 # (v8) Tasarım token satırı (token: "surface-raised") → geçmeli
@@ -948,6 +1000,22 @@ echo
 # ─────────────────────────────────────────────────────────────
 # routemap-sync.sh — içerik değişmezi
 # ─────────────────────────────────────────────────────────────
+# Tazelik hatırlatması modele JSON (additionalContext) olarak ve 30 dakikada bir
+mkdir -p "$SANDBOX/tazelik/docs" && cd "$SANDBOX/tazelik" || exit 1
+git init -q .
+printf '| ID | Story | Durum | Gate |\n|----|-------|-------|------|\n| S-01 | Login | IN_PROGRESS | — |\n' > docs/ROUTEMAP.md
+touch -d '2 hours ago' docs/ROUTEMAP.md 2>/dev/null || touch -t "$(date -v-2H +%Y%m%d%H%M 2>/dev/null)" docs/ROUTEMAP.md
+P='{"tool_name":"Edit","tool_input":{"file_path":"app.ts"}}'
+OUT1=$(printf '%s' "$P" | bash "$HOOKS/routemap-sync.sh" 2>/dev/null)
+OUT2=$(printf '%s' "$P" | bash "$HOOKS/routemap-sync.sh" 2>/dev/null)
+if printf '%s' "$OUT1" | grep -q '"additionalContext"' && [ -z "$OUT2" ]; then
+  ok "tazelik hatırlatması JSON ve tek sefer"
+else
+  no "tazelik hatırlatması JSON + 30 dk'da bir olmalı" "JSON sonra boş" "1: $OUT1 | 2: $OUT2"
+fi
+cd "$SANDBOX" || exit 1
+
+echo
 echo "routemap-sync.sh — içerik değişmezi"
 
 mkdir -p "$SANDBOX/sync2/docs" && cd "$SANDBOX/sync2" || exit 1
