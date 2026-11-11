@@ -276,7 +276,7 @@ kaldığı için erişilebilirlik açığı değil.
 - **PatternBackground**: kap `relative isolate`; hazır birleşimler `PATTERN_PRESETS`. Stil `@layer components`te: `className="fixed"` bütün sayfa zemini yapar.
 - **Dial ya da Slider**: kontrol panelinde yan yana birkaç ayar → kadran; formda tek aralık → `slider`; kesin sayı → `number-field`.
 - **ExpandableCard**: kartın kendisi büyür (`layoutId`, `domMax`); başka bir yerden açılan pencere için `dialog`.
-- **Paket mi kopya mı:** `@ahmetakyapi/ui` 97 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
+- **Paket mi kopya mı:** `@ahmetakyapi/ui` 101 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
 
 ### Ribbon Turu: Tanıtım (2026-11)
 
@@ -286,6 +286,14 @@ kaldığı için erişilebilirlik açığı değil.
 - **CornerMascot**: yalnız kişiliği olan tanıtım sayfasında, sayfada bir tane; uygulama, form ve ödeme ekranında yok.
 - **Offscreen turu:** maket ya da kahraman arkası için `wallpaper` (8 illüstrasyon sahnesi, `downloadWallpaper()` ile PNG; arayüz paletine uyan sahneyi seç); galeri kahramanında `drift-columns`; sürüm notu ve etkinlik için köşede `notice-deck` (hata/sonuç bildirimi `toast`ta kalır).
 - **Paket:** hepsi `@ahmetakyapi/ui` kitinde (97 bileşen).
+
+### Scrolltide Turu (2026-11)
+
+- **Renk zemini mi desen mi:** ışık ve derinlik isteyen kahraman/kapanış → `mesh-gradient` (sayfada bir tane, metin kontrastı lekenin en yoğun yerinde); sakin, yapısal zemin → `pattern-bg`; fotoğraf varsa ikisi de yok.
+- **Menü seçimi:** düz 3-5 bağlantı → `SiteHeader` ya da `docking-nav`; zengin alt menülü tanıtım sitesi → `morph-nav` + `MorphNavGrid`; uygulama içi → `app-shell`.
+- **Galeri seçimi:** öne çıkan tek iş ve başlığı → `arc-carousel`; yan yana karşılaştırma → ızgara; ürün kartları → `carousel`; süs akışı → `drift-columns`.
+- **Şifre:** yeni şifre `password-field` (`new-password`), giriş ekranında düz `Input type="password"`. Kuralı sunucu da denetler.
+- **Desen notları:** raflı kütüphane sayfası (tür başına başlık + filtre çipleri + 6-12 kart + "Hepsini Gör (N)", N katalogdan türetilir); katalog kartında durağan kapak + yalnız üzerine gelince oynayan sessiz video; alt bilginin dibinde kenardan taşan dev marka adı (`aria-hidden`, `overflow-x: clip`).
 
 ### Bloklar
 

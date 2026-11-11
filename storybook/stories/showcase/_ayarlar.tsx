@@ -14,6 +14,7 @@ import { InputOTP } from "@/components/ui/input-otp";
 import { Kbd, KbdCombo } from "@/components/ui/kbd";
 import { NumberField } from "@/components/ui/number-field";
 import { PaletteSwitcher } from "@/components/ui/palette-switcher";
+import { PasswordField } from "@/components/ui/password-field";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -306,6 +307,8 @@ export function AyarlarPage() {
               )
             ) : null}
             <p className="text-small text-muted">Ekipte {WORKSPACE.seats.used} kişiden 4'ü iki adımlı doğrulamayı açtı.</p>
+            {/* Form yok: örnek uygulamada şifre gönderilmez (tarayıcının şifre kaydetme sorusu açılmasın, _giris.tsx). */}
+            <PasswordField label="Yeni Şifre" name="new-password" />
           </div>
         </Well>
 

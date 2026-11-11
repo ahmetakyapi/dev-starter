@@ -7,6 +7,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Scrolltide turu: dört yeni bileşen — 2026-11-11
+
+- **Yeni (`snippets/ui`, 129 → 133; kit 97 → 101):** `mesh-gradient`
+  (paletle dönen, görünümden çıkınca duran renk zemini; gren ve nokta
+  ekranı), `morph-nav` (tek kabuğu paneller arasında esneyen menü +
+  `MorphNavGrid`), `arc-carousel` (çember yayına dizili galeri; ok, klavye,
+  sürükleme), `password-field` (yazdıkça kural listesi + dilimli güç çubuğu).
+- **Storybook:** dört hikâye (`yeni-h`); Pusula'da Giriş üst menüsü,
+  Ayarlar → Güvenlik'te yeni şifre, Tanıtım'da "Hazır Akışlar" galerisi ve
+  renk zeminli kapanış.
+- **Bilgi tabanı:** `decisions.md` → "Scrolltide Turu", `references.md`
+  (satır + alınmayanlar), `guides/10` seçim ve desen notları.
+
 ### Görsel tur: Storybook kapağı, README yüzü — 2026-11-10
 
 - **Kapak yeniden tasarlandı**: paletin numune föyü (rol renkleri ve WCAG

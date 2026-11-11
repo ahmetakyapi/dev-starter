@@ -4,6 +4,7 @@ import { CalendarDays, Compass, Inbox, ListChecks, Sparkles } from "lucide-react
 import { useState } from "react";
 import { Reveal, RevealItem } from "@/components/motion/Reveal";
 import { AppWindow, WindowStrip } from "@/components/ui/app-window";
+import { ArcCarousel } from "@/components/ui/arc-carousel";
 import { BlurIn } from "@/components/ui/blur-in";
 import { BookCover } from "@/components/ui/book-cover";
 import { CornerMascot } from "@/components/ui/corner-mascot";
@@ -14,6 +15,7 @@ import { HandCallout } from "@/components/ui/hand-callout";
 import { Kbd } from "@/components/ui/kbd";
 import { LiquidGlass, LiquidGlassButton } from "@/components/ui/liquid-glass";
 import { MarkAnnotate } from "@/components/ui/mark-annotate";
+import { MeshGradient } from "@/components/ui/mesh-gradient";
 import { NoticeDeck } from "@/components/ui/notice-deck";
 import { TrustLine } from "@/components/ui/trust-line";
 import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
@@ -38,6 +40,17 @@ const WINDOWS: readonly { id: WindowId; label: string; icon: typeof Inbox }[] = 
   { id: "gorevler", label: "Görevler", icon: ListChecks },
   { id: "asistan", label: "Asistan", icon: Sparkles },
 ];
+
+/** Kavisli galerideki hazır akışlar; kapakları duvar kâğıdı sahneleri. */
+const FLOWS = [
+  { id: "destek", title: "Destek Kuyruğu", meta: "Öncelik · SLA · Devir" },
+  { id: "satis", title: "Satış Takibi", meta: "Teklif · Sipariş · Hatırlatma" },
+  { id: "etkinlik", title: "Etkinlik Planı", meta: "Takvim · Kayıt · Görev" },
+  { id: "iade", title: "İade ve Değişim", meta: "Talep · Onay · Kargo" },
+  { id: "isealim", title: "İşe Alım", meta: "Başvuru · Görüşme · Teklif" },
+  { id: "tedarik", title: "Tedarik", meta: "Sipariş · Teslim · Fatura" },
+  { id: "icerik", title: "İçerik Takvimi", meta: "Taslak · Onay · Yayın" },
+] as const;
 
 export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
   const [focus, setFocus] = useState<WindowId>("gelen");
@@ -208,6 +221,33 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           </ul>
         </section>
 
+        <section aria-labelledby="tanitim-akis-baslik" className="mx-auto max-w-6xl px-4 pb-28 sm:px-6">
+          <Reveal className="max-w-2xl">
+            <p className="font-mono text-small text-primary-ink">Hazır Akışlar</p>
+            <h2 id="tanitim-akis-baslik" className="mt-3 font-display text-heading font-bold text-strong sm:text-display">
+              Ekibine Uyanı Seç
+            </h2>
+            <p className="mt-3 max-w-md text-read text-body">Her akış kendi etiketleri, kuralları ve panosuyla gelir; ilk gün değiştirebilirsin.</p>
+          </Reveal>
+          <ArcCarousel
+            label="Hazır Akışlar"
+            linkLabel="Bu Akışla Dene"
+            visible={2}
+            className="mt-6"
+            items={FLOWS.map((flow, i) => ({
+              id: flow.id,
+              title: flow.title,
+              meta: flow.meta,
+              href: "#tanitim-demo",
+              media: (
+                <span className="relative block size-full">
+                  <Wallpaper scene={WALLPAPER_SCENES[i % WALLPAPER_SCENES.length]} />
+                </span>
+              ),
+            }))}
+          />
+        </section>
+
         <section aria-labelledby="tanitim-rehber-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-28 sm:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center">
           <Reveal>
             <p className="font-mono text-small text-primary-ink">Rehberler</p>
@@ -226,7 +266,8 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
 
         {/* Kapanış: sayfa kitaplarla bitip boşlukta kalıyordu. Tek eylem, altında aynı güven satırı. */}
         <section aria-labelledby="tanitim-kapanis-baslik" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
-          <Reveal className="grid justify-items-center gap-6 rounded-2xl bg-surface px-6 py-16 text-center edge-lit sm:py-24">
+          <MeshGradient texture="grain" scrim className="rounded-2xl edge-lit">
+          <Reveal className="grid justify-items-center gap-6 px-6 py-16 text-center sm:py-24">
             <h2 id="tanitim-kapanis-baslik" className="max-w-[16ch] font-display text-display font-bold text-balance text-strong sm:text-hero">
               İlk Talebi Bugün Yanıtla
             </h2>
@@ -237,8 +278,10 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             >
               Ücretsiz Dene
             </button>
-            <TrustLine items={TRUST} />
+            {/* Renk zemininde küçük metin `text-body`: `text-muted` lekenin üstünde 3,4:1'de kalıyordu. */}
+            <TrustLine items={TRUST} className="text-body" />
           </Reveal>
+          </MeshGradient>
         </section>
       </main>
 

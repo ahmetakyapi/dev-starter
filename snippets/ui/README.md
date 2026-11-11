@@ -189,6 +189,7 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `input.tsx` | Tek satır metin; ikon, önek/sonek (₺, .com), temizle, şifre göster/gizle; sm/md/lg | lucide | Evet | Field düzeni (etiket, `aria-describedby`, `aria-invalid`); göster/gizle `aria-pressed` + sabit ad; temizle odağı alana geri verir; dokunmatikte 44 px |
 | `search-field.tsx` | Liste süzme, site araması: gecikmeli `onSearch`, yükleniyor, "/" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch` | `kbd`, `spinner`, lucide | Evet | `type="search"`, `aria-keyshortcuts`; "Aranıyor" ve "N sonuç" sabit canlı bölgede; Escape önce temizler, sonra odağı bırakır |
 | `rating.tsx` | `Rating` gösterim (yarım yıldız) · `RatingInput` giriş (isteğe bağlı yarım adım) | lucide | Evet | Gösterim tek `role="img"`; giriş `radiogroup` + görünmez yerel radyolar (oklar, `required`, JS'siz gönderim) |
+| `password-field.tsx` | Yeni şifre (kayıt, sıfırlama, ayarlar): yazdıkça kural listesi ve dilimli güç çubuğu; `rules` ile özelleşir (scrolltide.co) | `input`, lucide | Evet | Liste alanın `aria-describedby`ında, maddede gizli "karşılandı"; güç sözcükle de yazılır; canlı bölge yalnız sayı değişince; yapıştırma serbest |
 
 ### Verimlilik
 
@@ -222,7 +223,7 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 
 ### Tanıtım
 
-Ribbon ve Offscreen turları (meetribbon.app, offscreen.wtf; 2026-11-07). Görsel zeminli kahraman, sayfada
+Ribbon, Offscreen ve Scrolltide turları (meetribbon.app, offscreen.wtf, scrolltide.co; 2026-11-07/11). Görsel zeminli kahraman, sayfada
 denenen ürün maketi, kişiliği olan küçük dokunuşlar. Hepsi tanıtım sayfası
 içindir; uygulama ekranına ve forma taşıma. Canlı örnek: Pusula → Tanıtım
 Sayfası hikâyesi.
@@ -240,6 +241,9 @@ Sayfası hikâyesi.
 | `wallpaper.tsx` | 8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`) | yok | Hayır | `aria-hidden` süs; hareket yok; sabit tohum, sunucu = istemci |
 | `drift-columns.tsx` | Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf) | yok | Hayır | İkinci kopya `aria-hidden` + `inert`; üzerine gelme/odak durdurur; hareket azaltmada durur ve kaydırılır |
 | `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç düğmesi elle geçirir |
+| `mesh-gradient.tsx` | Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co) | yok | Evet | Katman `aria-hidden`; yalnız `transform`, görünümden çıkınca durur, hareket azaltmada hiç oynamaz; kontrastı lekenin en yoğun yerinde ölç |
+| `morph-nav.tsx` | Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | Menü rolü yok: `nav` + `aria-expanded`/`aria-controls`; ↓ panele, Esc kapatır ve odak başlığa; kapalı panel `inert`; telefonda gruplar alt alta |
+| `arc-carousel.tsx` | Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | `region` + `aria-roledescription`; ←/→, Home/End, sürükleme, oklar; değişim "3 / 9: Ad" diye okunur; tekerlek dinlenmez, kendiliğinden dönmez |
 
 ### Yapay Zekâ
 

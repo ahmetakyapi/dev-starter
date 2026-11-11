@@ -297,7 +297,7 @@ export const Landing: Story = {
       story: { inline: false, height: "900px" },
       description: {
         story:
-          "Oturum açmamış ziyaretçinin sayfası (Ribbon turu): kaydırınca üst kenara oturan menü, bulanıktan netleşen serif vurgulu başlık, görsel zemin üstünde sıvı cam eylem ve güven satırı, pencere şeridi + dock ile sayfada denenen ürün maketi, el yazısı ok notu, köşe maskotu.",
+          "Oturum açmamış ziyaretçinin sayfası (Ribbon turu): kaydırınca üst kenara oturan menü, bulanıktan netleşen serif vurgulu başlık, görsel zemin üstünde sıvı cam eylem ve güven satırı, pencere şeridi + dock ile sayfada denenen ürün maketi, el yazısı ok notu, köşe maskotu; kavisli galeride hazır akışlar ve hareketli renk zeminli kapanış (Scrolltide turu).",
       },
     },
   },

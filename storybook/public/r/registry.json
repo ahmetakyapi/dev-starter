@@ -202,6 +202,33 @@
       ]
     },
     {
+      "name": "arc-carousel",
+      "type": "registry:ui",
+      "title": "Kavisli Galeri",
+      "description": "Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co)",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "arc-carousel",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/arc-carousel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "area-chart",
       "type": "registry:ui",
       "title": "Alan Grafiği",
@@ -1764,6 +1791,29 @@
       ]
     },
     {
+      "name": "mesh-gradient",
+      "type": "registry:ui",
+      "title": "Hareketli Renk Zemini",
+      "description": "Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "mesh-gradient",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/mesh-gradient.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "meter",
       "type": "registry:ui",
       "title": "Ölçer",
@@ -1812,6 +1862,33 @@
       "files": [
         {
           "path": "snippets/ui/morph-icon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "morph-nav",
+      "type": "registry:ui",
+      "title": "Biçim Değiştiren Menü",
+      "description": "Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co)",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "morph-nav",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/morph-nav.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1989,6 +2066,33 @@
       "files": [
         {
           "path": "snippets/ui/palette-switcher.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "password-field",
+      "type": "registry:ui",
+      "title": "Kurallı Şifre",
+      "description": "Yeni şifre (kayıt, sıfırlama, ayarlar): yazdıkça kural listesi ve dilimli güç çubuğu; `rules` ile özelleşir (scrolltide.co)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/input.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "password-field",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/password-field.tsx",
           "type": "registry:ui"
         }
       ]

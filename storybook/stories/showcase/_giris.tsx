@@ -1,10 +1,14 @@
 "use client";
 
-import { ArrowRight, Compass } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, Compass, ImageIcon, Inbox, Keyboard, ListChecks } from "lucide-react";
 import { AuthCard, type AuthState } from "@/components/ui/auth-card";
 import { Marquee } from "@/components/ui/marquee";
+import { MorphNav, MorphNavGrid } from "@/components/ui/morph-nav";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { CUSTOMERS, ME, OPEN_TICKETS, WORKSPACE } from "./_data";
+
+/** Tanıtım sayfası aynı Storybook çerçevesinde açılır (Pusula Paneli → Tanıtım Sayfası). */
+const LANDING = "?id=demo-app--landing&viewMode=story";
 
 /** Oturum kapalıyken: Pusula'ya giriş. Başarılı girişte pano açılır. */
 export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
@@ -20,7 +24,41 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
   }
 
   return (
-    <main id="icerik" className="grid min-h-dvh place-content-center justify-items-center gap-10 bg-page px-4 py-10">
+    <main id="icerik" className="relative grid min-h-dvh place-content-center justify-items-center gap-10 bg-page px-4 pt-28 pb-10">
+      {/* Sitenin menüsü giriş ekranında da: ürünü tanımayan ziyaretçi buradan tanıtıma döner. */}
+      <div className="absolute inset-x-0 top-0 z-20 px-4 pt-4">
+        <MorphNav
+          label="Site menüsü"
+          brand={<span className="text-read font-bold tracking-tight">{WORKSPACE.name}</span>}
+          items={[
+            {
+              label: "Ürün",
+              content: (
+                <MorphNavGrid
+                  links={[
+                    { href: `${LANDING}#tanitim-demo`, title: "Gelen Kutusu", description: "Talepler tek şeritte", icon: Inbox },
+                    { href: `${LANDING}#tanitim-demo`, title: "Görevler", description: "Talepten doğan işler", icon: ListChecks },
+                    { href: `${LANDING}#tanitim-demo`, title: "Takvim", description: "Toplantı ve teslimler", icon: CalendarDays },
+                    { href: `${LANDING}#tanitim-kisayol`, title: "Kısayollar", description: "Fareye uzanmadan", icon: Keyboard },
+                  ]}
+                />
+              ),
+            },
+            {
+              label: "Kaynaklar",
+              content: (
+                <MorphNavGrid
+                  links={[
+                    { href: `${LANDING}#tanitim-rehber-baslik`, title: "Rehberler", description: "Ekibin ilk haftası", icon: BookOpen },
+                    { href: `${LANDING}#tanitim-duvar-baslik`, title: "Duvar Kâğıtları", description: "Sekiz sahne, iki boy", icon: ImageIcon },
+                  ]}
+                />
+              ),
+            },
+            { label: "Tanıtım", href: LANDING },
+          ]}
+        />
+      </div>
       <div className="grid w-full max-w-sm justify-items-center gap-6">
         <div className="flex items-center gap-2.5 text-strong">
           <span aria-hidden className="inline-grid size-9 place-items-center rounded-md bg-brand text-on-brand">

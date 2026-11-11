@@ -1,7 +1,7 @@
 {
   "name": "@ahmetakyapi/ui",
   "version": "3.1.0",
-  "description": "Kişisel proje UI kütüphanesi: 97 bileşenlik kit (form, katman, grafik, yapay zekâ, hareket ve doku, tanıtım) + Surface, Button, Chip, imleç ve Motion yardımcıları",
+  "description": "Kişisel proje UI kütüphanesi: 101 bileşenlik kit (form, katman, grafik, yapay zekâ, hareket ve doku, tanıtım) + Surface, Button, Chip, imleç ve Motion yardımcıları",
   "keywords": [
     "a11y",
     "ai-ui",

@@ -150,6 +150,26 @@
       "palettes": false
     },
     {
+      "name": "arc-carousel",
+      "title": "Kavisli Galeri",
+      "category": "Tanıtım",
+      "description": "Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co)",
+      "file": "snippets/ui/arc-carousel.tsx",
+      "client": true,
+      "storyId": "arc-carousel",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "area-chart",
       "title": "Alan Grafiği",
       "category": "Grafik",
@@ -1337,6 +1357,24 @@
       "palettes": false
     },
     {
+      "name": "mesh-gradient",
+      "title": "Hareketli Renk Zemini",
+      "category": "Tanıtım",
+      "description": "Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co)",
+      "file": "snippets/ui/mesh-gradient.tsx",
+      "client": true,
+      "storyId": "mesh-gradient",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "meter",
       "title": "Ölçer",
       "category": "Geri Bildirim",
@@ -1370,6 +1408,26 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "morph-nav",
+      "title": "Biçim Değiştiren Menü",
+      "category": "Tanıtım",
+      "description": "Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co)",
+      "file": "snippets/ui/morph-nav.tsx",
+      "client": true,
+      "storyId": "morph-nav",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
@@ -1475,6 +1533,27 @@
         "tailwind-merge": "^3.7.0"
       },
       "palettes": true
+    },
+    {
+      "name": "password-field",
+      "title": "Kurallı Şifre",
+      "category": "Form Girişleri",
+      "description": "Yeni şifre (kayıt, sıfırlama, ayarlar): yazdıkça kural listesi ve dilimli güç çubuğu; `rules` ile özelleşir (scrolltide.co)",
+      "file": "snippets/ui/password-field.tsx",
+      "client": true,
+      "storyId": "password-field",
+      "registryDependencies": [
+        "input"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
     },
     {
       "name": "pattern-bg",

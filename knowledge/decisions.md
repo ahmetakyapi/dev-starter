@@ -955,6 +955,49 @@ hiç oynamaz, kendiliğinden değişen içerik ekran okuyucuya duyurulmaz.
 **Alınmayan:** açılış yükleyicisi (içeriği geciktirir), reklam/sponsor
 yerleri, Cormorant Garamond + Anton eşi (serif vurgu `editorial` presetiyle).
 
+## Scrolltide Turu — Renk Zemini, Biçim Değiştiren Menü, Kavisli Galeri, Kurallı Şifre (2026-11-11)
+
+**Karar:** scrolltide.co (kaydırma odaklı site promptları ve bileşen
+kütüphanesi; 2026-10-16'da ücretli olduğu için bölüm galerisine
+ALINMAMIŞTI) `/harvest` ile tarandı. Galeri kararı değişmedi: sitenin
+prompt'u, kodu, videosu kopyalanmaz. Alınan yalnız dört davranış; hepsi
+token'la sıfırdan yazıldı:
+
+- `mesh-gradient`: "Motion behind everything" rafının (24 gradyan, 5
+  yarım ton, 4 sarmal, alev) CSS karşılığı. Onlar shader + MP4; biz dört
+  bulanık leke + `transform`. Kimlik kuralı 5 gereği renk TEK aile
+  (`primary` ya da `neutral`), raflarındaki çok renkli "Neon/Candy"
+  karışımları alınmadı. Görünümden çıkınca durur (guides/04 → Ortam).
+  İlk sürüm tam doygun lekelerle "kötü duruyor" dendi (haklıydı: koyu
+  temada birincil renk açık, açık temada koyu; başlık ve gri güven satırı
+  zeminle çatışıyordu). **Değişti (2026-11-11):** varsayılan `soft` (lekeler
+  zeminle karışık) + daha geniş örtü; başlık ≥ 7,8:1, küçük metin `text-body`
+  ile ≥ 4,7:1 (piksel piksel ölçüldü). Tam doygun `intensity="vivid"`.
+- `morph-nav`: tek kabuğun paneller arasında esnemesi. Kabuğun eni/boyu
+  canlanan TEK öğe; içerik mutlak konumlu olduğu için akış yeniden
+  dizilmez (Base UI NavigationMenu aynı yolu kullanır). "Yalnız bileşimci"
+  kuralına bilinçli, dosyada yazılı istisna.
+- `arc-carousel`: Arc Wave/Flow Tunnel'ın WebGL'siz hâli. Ders: aynı öğede
+  `rotate` + `scale` uzak `transform-origin`den ölçekler, kart yaydan
+  düşer; dönüş dış, küçülme iç katmanda (ölçümle bulundu: kart altı 615 px
+  → 475 px, sahne 491 px).
+- `password-field`: Turtle Password'ün özü (her kural görünür ilerleme),
+  kaplumbağasız. Varsayılan kurallar uzunluğu öne alır (NIST 800-63B).
+
+**Strateji dersleri:** (1) Kütüphane sayfası türlere göre raflanmış
+(bileşen, bölüm, ekran, zemin), her rafın kendi filtre çipi ve "Hepsini
+Gör (95)" bağlantısı var; Storybook kapağımızın kapı kartlarıyla aynı
+fikir. (2) Katalog kartında hareketli önizleme yalnız üzerine gelince
+oynar, durağan kapak her zaman var (LCP). (3) "No AI tells" konumlanması:
+ürün doğrudan AI kokusunu reddederek satıyor; bizim `slop-scan`imizin
+pazardaki karşılığı. (4) Açılışta abonelik penceresi ve kıtlık sayacı
+içeriği örtüyor: yapma (references → Değerlendirilip Alınmayanlar).
+
+**Zaten vardı:** tema anahtarı (`theme-toggle`), basılı tut (`hold-button`),
+sıvı cam (`liquid-glass`), cetvel seçici (Tuner ↔ `tick-ruler`), sekme
+(Glass Tabs ↔ `tabs` well), sohbet kutusu (`chat-composer`), adım listesi
+(`HowItWorks`), dosya ağacı (`tree-view`), yarım ton (`halftone-image`).
+
 ## Ajan Katmanı — Onay Sınırı, Depoya Özgü Komutlar, Terminal Commit'leri (2026-11-10)
 
 **Karar 1 — "Commitle = push" ile "onaysız deploy yok" çatışmaz.** Onay
