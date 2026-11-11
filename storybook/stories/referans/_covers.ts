@@ -4,7 +4,7 @@
  * görseldir; ekran görüntüsü değildir (`design-references.md` → Kullanım
  * Şartı). Görsel yoksa ya da yüklenmezse kart baş harfli kapağa düşer.
  *
- * Toplandı: 2026-11-04 (sayfa başlığındaki `og:image` / `twitter:image`).
+ * Toplandı: 2026-11-04, ek üç site 2026-11-11 (sayfa başlığındaki `og:image` / `twitter:image`).
  * Site görselini değiştirirse adres kırılabilir; kırılan kapak sessizce
  * yedeğe döner, sayfa bozulmaz.
  */
@@ -25,13 +25,18 @@ export const COVERS: Record<string, string> = {
   "unsection.com": "https://www.unsection.com/images/og-default.png",
   "60fps.design": "https://framerusercontent.com/images/ICYS2f0rsJ9iOphXyUh94ULRS8Y.gif",
   "base-ui.com": "https://base-ui.com/opengraph-image-j8qpfc.png",
+  "meetribbon.app": "https://meetribbon.app/opengraph-image",
+  "offscreen.wtf": "https://offscreen.wtf/opengraph-image",
+  "secki.dev": "https://secki.dev/og.jpg?v=2",
   "keepachangelog.com": "https://keepachangelog.com/assets/images/keep-a-changelog-opengraph-851f2d20.png",
 };
 
 export function coverOf(href: string | undefined) {
   if (!href) return undefined;
   try {
-    return COVERS[new URL(href).hostname];
+    const host = new URL(href).hostname;
+    // Arşivde adres bazen www'lu bazen www'suz: ikisi de aynı kapağa düşer.
+    return COVERS[host] ?? COVERS[host.replace(/^www\./, "")] ?? COVERS[`www.${host}`];
   } catch {
     return undefined;
   }

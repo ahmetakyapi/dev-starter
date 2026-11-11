@@ -108,12 +108,14 @@ function seriesOf(name: string) {
 }
 
 function Cover({ v }: { v: View }) {
-  const src = coverOf(v.href);
-  const [failed, setFailed] = useState(false);
-  // Elenen satır "site → ne": çubukta site, kapakta elenen şeyin baş harfleri.
-  // Hepsi aynı sitenin harflerini ("SC") taşıyınca kapak hiçbir şey söylemiyordu.
+  // Elenen satır "site → ne" ve bağlantısız: kapak yine sitenin kendi paylaşım
+  // görseli (varsa), çubukta sitenin adı; görsel yoksa elenen şeyin baş harfleri.
+  // Arşivde site başına TEK elenen satırı var, aynı kapak tekrar etmez.
   const [site, subject] = v.name.includes(" → ") ? v.name.split(" → ") : [undefined, undefined];
-  const host = hostOf(v.href) ?? site;
+  const siteHref = v.href ?? (site && /^([a-z0-9-]+\.)+[a-z]{2,}$/i.test(site) ? `https://${site}` : undefined);
+  const src = coverOf(siteHref);
+  const [failed, setFailed] = useState(false);
+  const host = hostOf(siteHref);
   const mark = subject ?? v.name;
   return (
     <div className="overflow-hidden rounded-xl bg-surface-sunken shadow-raised">

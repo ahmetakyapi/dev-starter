@@ -21,7 +21,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   (masaüstünde üç kart, sağda sıradakinin kenarı); eskiden ilk kart ortaya
   oturuyor, geniş ekranda solda yarım ekran boşluk kalıyordu. Oklar kartların
   üstünden denetim satırına; Elenenler'de uzun adlar iki satırda kesilir,
-  kapak elenen şeyin baş harflerini, çubuk sitenin adını taşır.
+  kapakta sitenin kendi paylaşım görseli (yoksa elenen şeyin baş harfleri).
+  Aynı siteye ait elenen satırlar birleşti (scrolltide, bencho, easyui,
+  meetribbon): Elenenler 21 → 13 kart, her site bir kez.
 - **Bilgi tabanı:** `decisions.md` → "Scrolltide Turu", `references.md`
   (satır + alınmayanlar), `guides/10` seçim ve desen notları.
 
