@@ -17,6 +17,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - **Storybook:** dört hikâye (`yeni-h`); Pusula'da Giriş üst menüsü,
   Ayarlar → Güvenlik'te yeni şifre, Tanıtım'da "Hazır Akışlar" galerisi ve
   renk zeminli kapanış.
+- **Referans Arşivi sayfası:** raf artık içerik hizasından başlıyor
+  (masaüstünde üç kart, sağda sıradakinin kenarı); eskiden ilk kart ortaya
+  oturuyor, geniş ekranda solda yarım ekran boşluk kalıyordu. Oklar kartların
+  üstünden denetim satırına; Elenenler'de uzun adlar iki satırda kesilir,
+  kapak elenen şeyin baş harflerini, çubuk sitenin adını taşır.
 - **Bilgi tabanı:** `decisions.md` → "Scrolltide Turu", `references.md`
   (satır + alınmayanlar), `guides/10` seçim ve desen notları.
 

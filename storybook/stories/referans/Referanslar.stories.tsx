@@ -15,18 +15,21 @@ import { parseReferences, type Cell, type RefCard } from "./_parse";
  * Referans Arşivi sayfası. Veri `knowledge/references.md`ten derleme
  * anında okunur (kopya yok): `## ` başlıkları kategori, tablo satırları kart.
  *
- * SAHNE (Apple ürün atlıkarıncası mantığı): etkin kart ortada ve tam boy,
- * komşular iki yanda küçülmüş ve soluk görünür; sıradakinin varlığı her an
- * belli. Ölçek ve opaklık KAYDIRMAYA BAĞLI CSS ile (`animation-timeline:
- * view(inline)`): JavaScript her karede hesaplamaz, parmak/iz paneliyle
- * kaydırırken de birebir izler. Desteklemeyen tarayıcıda kartlar düz durur,
- * hareketi azaltanda da (aşağıdaki @media).
+ * SAHNE (Apple mağaza rafı mantığı): şerit sayfanın içerik hizasından
+ * başlar, masaüstünde üç kart birden görünür, sağda bir sonrakinin kenarı
+ * kesilir: "devamı var". **Değişti (2026-11-11):** eskiden ilk kart ekranın
+ * ortasına oturtuluyordu; geniş ekranda solda yarım ekranlık boşluk kalıyor,
+ * şerit "sağdan başlıyor" gibi duruyordu (kullanıcı geri bildirimi). Kenara
+ * giren kartın yalnız KAPAĞI söner (kaydırmaya bağlı CSS, `animation-timeline:
+ * view(inline)`, `entry`/`exit` aralığı); desteklemeyen tarayıcıda ve hareketi
+ * azaltanda kartlar düz durur.
  *
- * KAYDIRMA tarayıcının: yatay `scroll-snap` (merkeze oturur), yan boşluk
- * ilk ve son kartı ortaya getirecek kadar. Oklar, klavye (← → Home End) ve
- * noktalar `scrollTo` ile; etkin kart `IntersectionObserver` ile bulunur
- * (kaydırma dinleyicisi yok). Sayaç "02 / 07" gizli canlı bölgeyle
- * okunur, yalnız düğme ya da klavyeyle değiştiğinde.
+ * KAYDIRMA tarayıcının: yatay `scroll-snap` (kart başı içerik hizasına
+ * oturur, `scroll-padding`). Oklar, klavye (← → Home End) ve noktalar
+ * `scrollTo` ile; baştaki kart ve şeridin sona gelip gelmediği
+ * `IntersectionObserver` ile bulunur (kaydırma dinleyicisi yok). Sayaç
+ * "02 / 07" gizli canlı bölgeyle okunur, yalnız düğme ya da klavyeyle
+ * değiştiğinde.
  *
  * KART: üstte tarayıcı çerçevesinde sitenin kendi paylaşım görseli
  * (`_covers.ts`, bağlantıyla); yoksa baş harfli kapak. Altta ad, tek satır
@@ -47,18 +50,16 @@ const SHORT: Record<string, string> = {
 const SERIES = ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5", "bg-chart-6"] as const;
 
 const CSS = `
-.ref-stage { scrollbar-width: none; padding-inline: calc(50% - var(--card) / 2); }
+/* İçerik hizası: başlığın 72rem kabıyla aynı sol kenar; dar ekranda 1rem. */
+.ref-shelf { --gutter: max(1rem, calc((100% - 72rem) / 2)); }
+.ref-stage { scrollbar-width: none; padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
 .ref-stage::-webkit-scrollbar { display: none; }
 @supports (animation-timeline: view()) {
-  .ref-card, .ref-dim { animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(inline); animation-range: cover 0% cover 100%; }
-  .ref-card { animation-name: ref-scale; }
-  .ref-dim { animation-name: ref-dim; }
+  .ref-dim { animation: ref-dim linear both; animation-timeline: view(inline); animation-range: entry 0% exit 100%; }
 }
-/* Yalnız kapak söner, METİN DEĞİL: soluk metin AA'nın altına düşerdi (axe).
-   Yan kart küçülür ve görseli geri çekilir; adı ve özeti okunur kalır. */
-@keyframes ref-scale { 0%, 100% { scale: 0.86; } 38%, 62% { scale: 1; } }
-@keyframes ref-dim { 0%, 100% { opacity: 0.4; } 38%, 62% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .ref-card, .ref-dim { animation: none; } }`;
+/* Yalnız kapak söner, METİN DEĞİL: soluk metin AA'nın altına düşerdi (axe). */
+@keyframes ref-dim { 0% { opacity: 0.35; } 12%, 88% { opacity: 1; } 100% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .ref-dim { animation: none; } }`;
 
 type View = { id: string; name: string; href?: string; short: string; date?: string; status?: string };
 
@@ -75,7 +76,9 @@ function view(card: RefCard): View {
   const gallery = /^bölüm$/i.test(first.header);
   const ownLink = first.parts.find((p) => p.kind === "link");
   const link = gallery ? firstLink(card.cells.slice(1)) : (ownLink ?? firstLink(card.cells.filter((c) => !/nerede|görsel hafıza/i.test(c.header))));
-  const name = gallery ? (link?.text ?? first.plain) : (ownLink?.text ?? first.plain);
+  // Elenenler satırı "site → ne (uzun liste)": kart adı parantezden öncesi;
+  // listenin tamamı arşivde kalır, kartta iki satırı geçmez.
+  const name = gallery ? (link?.text ?? first.plain) : (ownLink?.text ?? first.plain.split(" (")[0]);
   return {
     id: card.id,
     name,
@@ -107,7 +110,11 @@ function seriesOf(name: string) {
 function Cover({ v }: { v: View }) {
   const src = coverOf(v.href);
   const [failed, setFailed] = useState(false);
-  const host = hostOf(v.href);
+  // Elenen satır "site → ne": çubukta site, kapakta elenen şeyin baş harfleri.
+  // Hepsi aynı sitenin harflerini ("SC") taşıyınca kapak hiçbir şey söylemiyordu.
+  const [site, subject] = v.name.includes(" → ") ? v.name.split(" → ") : [undefined, undefined];
+  const host = hostOf(v.href) ?? site;
+  const mark = subject ?? v.name;
   return (
     <div className="overflow-hidden rounded-xl bg-surface-sunken shadow-raised">
       <div aria-hidden className="flex h-8 items-center gap-1.5 border-b border-line-soft bg-overlay px-3">
@@ -128,8 +135,8 @@ function Cover({ v }: { v: View }) {
             className="absolute inset-0 size-full object-cover"
           />
         ) : (
-          <div className={cn("absolute inset-0 grid place-items-center", seriesOf(v.name))}>
-            <span className="text-display font-semibold text-chart-ink">{monogram(v.name)}</span>
+          <div className={cn("absolute inset-0 grid place-items-center", seriesOf(mark))}>
+            <span className="text-display font-semibold text-chart-ink">{monogram(mark)}</span>
           </div>
         )}
       </div>
@@ -147,7 +154,7 @@ function Card({ v, index, total }: { v: View; index: number; total: number }) {
       <Cover v={v} />
       <div className="grid gap-3 px-2 pb-2">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="min-w-0 text-title font-semibold text-strong">
+          <h2 className="line-clamp-2 min-w-0 text-title font-semibold text-strong">
             {v.href ? (
               <a
                 href={v.href}
@@ -190,29 +197,33 @@ function Card({ v, index, total }: { v: View; index: number; total: number }) {
 function Stage({ label, cards }: { label: string; cards: View[] }) {
   const scroller = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [edges, setEdges] = useState({ start: true, end: cards.length <= 1 });
   const [announce, setAnnounce] = useState(false);
 
   useEffect(() => {
     const root = scroller.current;
     if (!root) return;
-    // Gözlemci yalnız TETİKLER; etkin kart merkeze en yakın olandır. Eşikle
-    // seçmek (%75 görünen) kenarda dörtte üçü giren komşuyu da etkin sayıyordu.
-    const nearest = () => {
-      const mid = root.getBoundingClientRect().left + root.clientWidth / 2;
+    const items = [...root.querySelectorAll<HTMLElement>("[data-index]")];
+    // Gözlemci yalnız TETİKLER: baştaki kart, sol iç kenara (içerik hizası) en yakın olandır.
+    const update = () => {
+      const left = root.getBoundingClientRect().left + parseFloat(getComputedStyle(root).paddingLeft);
+      const right = root.getBoundingClientRect().right;
       let best = 0;
       let gap = Infinity;
-      root.querySelectorAll<HTMLElement>("[data-index]").forEach((el) => {
-        const r = el.getBoundingClientRect();
-        const d = Math.abs(r.left + r.width / 2 - mid);
+      items.forEach((el) => {
+        const d = Math.abs(el.getBoundingClientRect().left - left);
         if (d < gap) {
           gap = d;
           best = Number(el.dataset.index);
         }
       });
       setActive(best);
+      const first = items[0]?.getBoundingClientRect();
+      const last = items.at(-1)?.getBoundingClientRect();
+      setEdges({ start: !first || first.left >= left - 2, end: !last || last.right <= right + 2 });
     };
-    const io = new IntersectionObserver(nearest, { root, threshold: [0, 0.25, 0.5, 0.75, 1] });
-    root.querySelectorAll<HTMLElement>("[data-index]").forEach((el) => io.observe(el));
+    const io = new IntersectionObserver(update, { root, threshold: [0, 0.25, 0.5, 0.75, 0.98, 1] });
+    items.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [cards]);
 
@@ -223,7 +234,7 @@ function Stage({ label, cards }: { label: string; cards: View[] }) {
       if (!root || !target) return;
       setAnnounce(true);
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      root.scrollTo({ left: target.offsetLeft - (root.clientWidth - target.offsetWidth) / 2, behavior: reduce ? "auto" : "smooth" });
+      root.scrollTo({ left: target.offsetLeft - parseFloat(getComputedStyle(root).paddingLeft), behavior: reduce ? "auto" : "smooth" });
     },
     [cards.length],
   );
@@ -237,48 +248,53 @@ function Stage({ label, cards }: { label: string; cards: View[] }) {
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const arrow =
-    "absolute top-[40%] z-10 hidden size-12 -translate-y-1/2 place-items-center rounded-full bg-overlay text-strong shadow-floating transition-[opacity,scale] duration-200 hover:scale-105 active:scale-95 aria-disabled:pointer-events-none aria-disabled:opacity-0 md:grid";
+    "grid size-11 place-items-center rounded-full bg-overlay text-strong shadow-raised ring-1 ring-line-soft transition-[opacity,scale,box-shadow] duration-200 hover:shadow-floating active:scale-95 aria-disabled:pointer-events-none aria-disabled:opacity-35";
 
   return (
-    <section aria-roledescription="carousel" aria-label={label} className="relative grid gap-4">
+    <section aria-roledescription="carousel" aria-label={label} className="ref-shelf relative grid gap-2">
       <div
         ref={scroller}
         tabIndex={0}
         onKeyDown={onKey}
         onPointerDown={() => setAnnounce(false)}
         aria-label={`${label}: kartlar arasında sol ve sağ okla gezin`}
-        className="ref-stage flex snap-x snap-mandatory gap-5 overflow-x-auto py-8 outline-offset-4 [--card:min(34rem,84vw)] focus-visible:outline-2 focus-visible:outline-line-focus"
+        className="ref-stage flex snap-x snap-mandatory gap-5 overflow-x-auto py-6 outline-offset-4 [--card:min(22rem,84vw)] focus-visible:outline-2 focus-visible:outline-line-focus"
       >
         {cards.map((v, i) => (
-          <div key={v.id} data-index={i} className="flex shrink-0 snap-center">
+          <div key={v.id} data-index={i} className="flex shrink-0 snap-start">
             <Card v={v} index={i} total={cards.length} />
           </div>
         ))}
       </div>
-      <button type="button" aria-label="Önceki" aria-disabled={active === 0} onClick={() => go(active - 1)} className={cn(arrow, "left-4 lg:left-10")}>
-        <ChevronLeft className="size-5" strokeWidth={2} />
-      </button>
-      <button type="button" aria-label="Sonraki" aria-disabled={active === cards.length - 1} onClick={() => go(active + 1)} className={cn(arrow, "right-4 lg:right-10")}>
-        <ChevronRight className="size-5" strokeWidth={2} />
-      </button>
-      <div className="flex items-center justify-center gap-4">
-        <div className="flex items-center" role="group" aria-label="Kart Seç">
-          {cards.map((v, i) => (
-            <button
-              key={v.id}
-              type="button"
-              aria-label={`${i + 1}. kart: ${v.name}`}
-              aria-current={i === active ? "true" : undefined}
-              onClick={() => go(i)}
-              className="group grid h-8 w-6 place-items-center"
-            >
-              <span className={cn("block h-1.5 rounded-full transition-[width,background-color] duration-300", i === active ? "w-5 bg-strong" : "w-1.5 bg-line-strong group-hover:bg-muted")} />
-            </button>
-          ))}
+      {/* Denetim satırı şeritle aynı hizada: solda noktalar ve sayaç, sağda oklar (kartların üstüne binmez). */}
+      <div className="flex items-center justify-between gap-4 px-(--gutter)">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="hidden items-center sm:flex" role="group" aria-label="Kart Seç">
+            {cards.map((v, i) => (
+              <button
+                key={v.id}
+                type="button"
+                aria-label={`${i + 1}. kart: ${v.name}`}
+                aria-current={i === active ? "true" : undefined}
+                onClick={() => go(i)}
+                className="group grid h-8 w-5 place-items-center"
+              >
+                <span className={cn("block h-1.5 rounded-full transition-[width,background-color] duration-300", i === active ? "w-4 bg-strong" : "w-1.5 bg-line-strong group-hover:bg-muted")} />
+              </button>
+            ))}
+          </div>
+          <span className="font-mono text-small text-muted tabular-nums">
+            {pad(active + 1)} / {pad(cards.length)}
+          </span>
         </div>
-        <span className="font-mono text-small text-muted tabular-nums">
-          {pad(active + 1)} / {pad(cards.length)}
-        </span>
+        <div className="flex shrink-0 gap-2">
+          <button type="button" aria-label="Önceki" aria-disabled={edges.start} onClick={() => go(active - 1)} className={arrow}>
+            <ChevronLeft className="size-5" strokeWidth={2} />
+          </button>
+          <button type="button" aria-label="Sonraki" aria-disabled={edges.end} onClick={() => go(active + 1)} className={arrow}>
+            <ChevronRight className="size-5" strokeWidth={2} />
+          </button>
+        </div>
       </div>
       <span aria-live="polite" className="sr-only">
         {announce ? `${active + 1} / ${cards.length}: ${cards[active]?.name}` : ""}
@@ -352,7 +368,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Ekosisteme bir şey kazandırmış her dış kaynak, ortalanmış bir kart sahnesinde: etkin kart ortada, komşular iki yanda soluk. Veri `knowledge/references.md`ten derleme anında okunur; arşive eklenen satır buraya kendiliğinden düşer.",
+          "Ekosisteme bir şey kazandırmış her dış kaynak, içerik hizasından başlayan bir kart rafında: masaüstünde üç kart birden, sağda sıradakinin kenarı. Veri `knowledge/references.md`ten derleme anında okunur; arşive eklenen satır buraya kendiliğinden düşer.",
       },
     },
   },

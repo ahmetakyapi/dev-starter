@@ -30,7 +30,7 @@ başlığıyla açılır ve sayfada kendiliğinden yeni kategori olur.
 gerekçesi `knowledge/decisions.md`'ye, alınan şey CHANGELOG'a. Satır silinmez;
 sonradan vazgeçilirse "Durum" sütunu güncellenir.
 
-Son gözden geçirme: 2026-11-04
+Son gözden geçirme: 2026-11-11
 
 ---
 
