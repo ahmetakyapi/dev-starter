@@ -223,7 +223,7 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 
 ### Tanıtım
 
-Ribbon, Offscreen ve Scrolltide turları (meetribbon.app, offscreen.wtf, scrolltide.co; 2026-11-07/11). Görsel zeminli kahraman, sayfada
+Ribbon, Offscreen, Scrolltide ve Hoy turları (meetribbon.app, offscreen.wtf, scrolltide.co, gethoy.app; 2026-11-07/12). Görsel zeminli kahraman, sayfada
 denenen ürün maketi, kişiliği olan küçük dokunuşlar. Hepsi tanıtım sayfası
 içindir; uygulama ekranına ve forma taşıma. Canlı örnek: Pusula → Tanıtım
 Sayfası hikâyesi.
@@ -244,6 +244,9 @@ Sayfası hikâyesi.
 | `mesh-gradient.tsx` | Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co) | yok | Evet | Katman `aria-hidden`; yalnız `transform`, görünümden çıkınca durur, hareket azaltmada hiç oynamaz; kontrastı lekenin en yoğun yerinde ölç |
 | `morph-nav.tsx` | Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | Menü rolü yok: `nav` + `aria-expanded`/`aria-controls`; ↓ panele, Esc kapatır ve odak başlığa; kapalı panel `inert`; telefonda gruplar alt alta |
 | `arc-carousel.tsx` | Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | `region` + `aria-roledescription`; ←/→, Home/End, sürükleme, oklar; değişim "3 / 9: Ad" diye okunur; tekerlek dinlenmez, kendiliğinden dönmez |
+| `scroll-scenes.tsx` | "Nasıl çalışır" filmi: sahne sabit kalır, kaydırdıkça 3-6 sahne sırayla değişir, başlık sözcük sözcük netleşir (gethoy.app) | motion (`useScroll`) | Evet | Görsel `aria-hidden`, `narration` zorunlu (filmin düz anlatımı); sahneler `inert`; hareket azaltmada sabitleme kalkar, sahneler alt alta (yalnız CSS) |
+| `scrub-text.tsx` | Az seçenekli fiyat ya da manifesto: paragraf soluk başlar, kaydırdıkça cümle cümle koyulaşır (gethoy.app) | motion (`useScroll`) | Evet | Gerçek metin, soluk hâli `text-muted` (AA); durum yalnız parça sayısı değişince; hareket azaltmada baştan tam renk |
+| `phone-frame.tsx` | Mobil uygulama tanıtımı: token'la çizilmiş telefon (çerçeve, kamera adası, durum çubuğu); `app-window`ın telefon karşılığı (gethoy.app) | yok | Hayır | Çerçeve süs; `label` ile `role="img"`; donanım rengi iki temada aynı (`--chart-ink`) |
 
 ### Yapay Zekâ
 

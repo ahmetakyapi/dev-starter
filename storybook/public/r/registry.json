@@ -2121,6 +2121,29 @@
       ]
     },
     {
+      "name": "phone-frame",
+      "type": "registry:ui",
+      "title": "Telefon Maketi",
+      "description": "Mobil uygulama tanıtımı: token'la çizilmiş telefon (çerçeve, kamera adası, durum çubuğu); `app-window`ın telefon karşılığı (gethoy.app)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "phone-frame",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/phone-frame.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "pixel-loader",
       "type": "registry:ui",
       "title": "Piksel Yükleyici",
@@ -2476,6 +2499,58 @@
       "files": [
         {
           "path": "snippets/ui/scramble-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scroll-scenes",
+      "type": "registry:ui",
+      "title": "Kaydırmalı Sahneler",
+      "description": "\"Nasıl çalışır\" filmi: sahne sabit kalır, kaydırdıkça 3-6 sahne sırayla değişir, başlık sözcük sözcük netleşir (gethoy.app)",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "scroll-scenes",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/scroll-scenes.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scrub-text",
+      "type": "registry:ui",
+      "title": "Kaydırdıkça Koyulaşan Yazı",
+      "description": "Az seçenekli fiyat ya da manifesto: paragraf soluk başlar, kaydırdıkça cümle cümle koyulaşır (gethoy.app)",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "scrub-text",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/scrub-text.tsx",
           "type": "registry:ui"
         }
       ]

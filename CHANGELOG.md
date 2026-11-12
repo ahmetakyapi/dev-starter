@@ -7,6 +7,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Hoy turu: kaydırmalı film, koyulaşan yazı, telefon maketi — 2026-11-12
+
+- **Yeni (`snippets/ui`, 133 → 136; kit 101 → 104):** `scroll-scenes`
+  (sabit sahne, kaydırdıkça sahneler ve sözcük sözcük netleşen başlık;
+  `narration` zorunlu, hareket azaltmada sahneler alt alta), `scrub-text`
+  (kaydırdıkça cümle cümle koyulaşan paragraf; tablo yerine fiyat cümlesi),
+  `phone-frame` (token'la çizilmiş telefon; `app-window`ın telefon karşılığı).
+- **Pusula Tanıtım:** "Bir Talebin Yolculuğu" sahneleri, fiyat cümlesi ve
+  telefondaki talep listesi. Storybook'a üç hikâye (`yeni-i`).
+- **Bilgi tabanı:** `decisions.md` → "Hoy Turu" (anlatım zorunluluğu, kurucu
+  sesi, "kimin için değil" SSS'i), `references.md` (satır + alınmayanlar),
+  `guides/10` seçim notları.
+
 ### Scrolltide turu: dört yeni bileşen — 2026-11-11
 
 - **Yeni (`snippets/ui`, 129 → 133; kit 97 → 101):** `mesh-gradient`

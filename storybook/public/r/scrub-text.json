@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scrub-text",
+  "type": "registry:ui",
+  "title": "Kaydırdıkça Koyulaşan Yazı",
+  "description": "Az seçenekli fiyat ya da manifesto: paragraf soluk başlar, kaydırdıkça cümle cümle koyulaşır (gethoy.app)",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/scrub-text.tsx",
+      "content": "\"use client\";\n\nimport { useMotionValueEvent, useScroll } from \"motion/react\";\nimport { useRef, useState, type CSSProperties } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Kaydırdıkça koyulaşan yazı: paragraf soluk başlar, okur aşağı indikçe\n * cümle cümle (`phrases`) tam renge döner; okunan yer kendiliğinden vurgulanır.\n * gethoy.app'in fiyat bölümünden öğrenildi (kod alınmadı): tablo yerine iki\n * cümle, \"Hoy is free. Host up to 3 channels…\", kaydırınca parça parça\n * koyulaşıyor. Az seçenekli fiyatı ve tek fikirli manifestoyu tablodan çok\n * daha sakin anlatır.\n *\n * NE ZAMAN: iki planlı fiyat (\"Ücretsiz: üç kanal. Pro: sınırsız…\"),\n * kapanıştan önceki manifesto, ürünün tek paragraflık özeti.\n * NE ZAMAN DEĞİL: karşılaştırılacak çok satırlı plan (`PricingPlans`\n * tablosu); uzun okuma metni; formun ya da veri ekranının içi.\n *\n * NASIL: bölümün görünüm boyunca ilerlemesi (`useScroll`, öğenin alt kenarı\n * ekranın %85'ine girdiğinden %40'ına çıktığına dek) parça sayısına bölünür;\n * durum yalnız yanan parça sayısı DEĞİŞİNCE güncellenir. Renk geçişi CSS,\n * parçanın sözcükleri `--i` ile sırayla (gethoy: 25 ms). Sabitlemek istersen\n * çağıran sarar: `<div className=\"h-[250svh]\"><div className=\"sticky top-0 …\">`.\n *\n * ERİŞİLEBİLİRLİK: metin GERÇEK metin, her an okunur ve seçilir; soluk hâli\n * `text-muted` (beyaz ve koyu zeminde AA). Renk yalnız süs; anlam taşımaz.\n * Hareketi azaltan kullanıcıda bütün metin baştan tam renkte.\n *\n *   <ScrubText\n *     as=\"p\"\n *     className=\"text-display font-semibold\"\n *     phrases={[\"Pusula ücretsiz.\", \"Üç kişiye kadar ekip.\", \"Pro ile sınırsız kanal,\", \"bir kez öde, yenileme yok.\"]}\n *   />\n */\n\ntype ScrubTextProps = {\n  /** Sırayla yanacak parçalar; aralarına boşluk konur. */\n  phrases: readonly string[];\n  /** Baştan yanık gelen parça sayısı (ilk cümle başlık gibi hep koyu kalsın diye). */\n  lead?: number;\n  as?: \"p\" | \"h2\" | \"h3\" | \"div\";\n  className?: string;\n};\n\nconst CSS = `\n.ui-scrub .ui-scrub-w { color: var(--text-muted); transition: color 0.4s var(--ease-brand); }\n.ui-scrub [data-on] .ui-scrub-w { color: var(--text-strong); transition-duration: 0.28s; transition-delay: calc(var(--i) * 25ms); }\n@media (prefers-reduced-motion: reduce) { .ui-scrub .ui-scrub-w { color: var(--text-strong); transition: none; } }`;\n\nexport function ScrubText({ phrases, lead = 0, as: Tag = \"p\", className }: ScrubTextProps) {\n  const ref = useRef<HTMLElement>(null);\n  const [lit, setLit] = useState(lead);\n  const { scrollYProgress } = useScroll({ target: ref, offset: [\"end 0.85\", \"end 0.4\"] });\n\n  useMotionValueEvent(scrollYProgress, \"change\", (value) => {\n    const next = Math.max(lead, Math.min(phrases.length, Math.ceil(value * phrases.length)));\n    if (next !== lit) setLit(next);\n  });\n\n  return (\n    <Tag ref={ref as never} className={cn(\"ui-scrub\", className)}>\n      <style href=\"ui-scrub-text\" precedence=\"default\">\n        {CSS}\n      </style>\n      {phrases.map((phrase, index) => (\n        <span key={index} data-on={index < lit ? \"\" : undefined}>\n          {phrase.split(\" \").map((word, i) => (\n            <span key={i} className=\"ui-scrub-w\" style={{ \"--i\": i } as CSSProperties}>\n              {word}{\" \"}\n            </span>\n          ))}\n        </span>\n      ))}\n    </Tag>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "scrub-text",
+    "palettes": false
+  }
+}

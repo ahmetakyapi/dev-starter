@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="212" viewBox="0 0 1280 212" role="img" aria-label="12 Rehber, 133 Bileşen, 9 Kayıtlı Agent, 20 Komut, 119 Kayıtlı Hata">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="212" viewBox="0 0 1280 212" role="img" aria-label="12 Rehber, 136 Bileşen, 9 Kayıtlı Agent, 20 Komut, 119 Kayıtlı Hata">
 <defs><linearGradient id="stat-ink" x1="0.008" y1="0.413" x2="0.992" y2="0.587"><stop offset="0%" stop-color="#0a2547"/><stop offset="100%" stop-color="#1e6fbe"/></linearGradient></defs>
 <rect width="1280" height="212" rx="28" fill="#ffffff"/>
 <rect x="8" y="8" width="1264" height="196" rx="20" fill="rgb(0,0,0)" fill-opacity="0.03"/>
@@ -10,7 +10,7 @@
 </g>
 <g transform="translate(280 0)">
   <line x1="0" y1="40" x2="0" y2="172" stroke="rgb(0,0,0)" stroke-opacity="0.08"/>
-  <text x="28" y="108" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="76" font-weight="800" letter-spacing="-3.4" fill="url(#stat-ink)">133</text>
+  <text x="28" y="108" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="76" font-weight="800" letter-spacing="-3.4" fill="url(#stat-ink)">136</text>
   <text x="30" y="144" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="650" fill="#0a0a0a">Bileşen</text>
   <text x="30" y="168" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#6b6b6b">snippets/ui/</text>
 </g>

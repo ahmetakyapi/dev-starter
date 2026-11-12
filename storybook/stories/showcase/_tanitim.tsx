@@ -16,6 +16,9 @@ import { Kbd } from "@/components/ui/kbd";
 import { LiquidGlass, LiquidGlassButton } from "@/components/ui/liquid-glass";
 import { MarkAnnotate } from "@/components/ui/mark-annotate";
 import { MeshGradient } from "@/components/ui/mesh-gradient";
+import { PhoneFrame } from "@/components/ui/phone-frame";
+import { ScrollScenes } from "@/components/ui/scroll-scenes";
+import { ScrubText } from "@/components/ui/scrub-text";
 import { NoticeDeck } from "@/components/ui/notice-deck";
 import { TrustLine } from "@/components/ui/trust-line";
 import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
@@ -169,6 +172,61 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           </Reveal>
         </section>
 
+        {/* Hoy turu: kaydırmaya bağlı üç sahne; görsel aria-hidden, anlatım narration'da. */}
+        <ScrollScenes
+          label="Bir Talebin Yolculuğu"
+          narration={`Kaydırınca sayfa bir talebin yolculuğunu gösterir: önce "${tickets[0]?.subject}" talebi gelen kutusunun en üstüne düşer; sonra yanıt yazılır ve ekip aynı pencerede görür; en son talepten doğan iş görevlere devredilir ve yarın sabaha hatırlatma kurulur.`}
+          scenes={[
+            {
+              id: "gelir",
+              caption: "Talep gelir, şeridin başına düşer.",
+              content: (
+                <AppWindow title="Gelen Kutusu" icon={<Inbox />} focused className="w-[min(26rem,86vw)]">
+                  <ul className="divide-y divide-line-soft">
+                    {tickets.map((t, i) => (
+                      <li key={t.id} className={i === 0 ? "bg-primary-wash px-4 py-3" : "px-4 py-3"}>
+                        <p className="truncate text-base font-medium text-strong">{t.subject}</p>
+                        <p className="text-small text-muted">{t.id}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </AppWindow>
+              ),
+            },
+            {
+              id: "yanit",
+              caption: "Yanıtı yaz, ekip aynı pencerede görsün.",
+              content: (
+                <AppWindow title={tickets[0]?.subject ?? "Talep"} icon={<Inbox />} focused className="w-[min(26rem,86vw)]">
+                  <div className="grid gap-3 p-4">
+                    <p className="max-w-[85%] rounded-xl bg-surface px-3 py-2 text-base text-body">{tickets[0]?.preview}</p>
+                    <p className="max-w-[85%] justify-self-end rounded-xl bg-primary-wash px-3 py-2 text-base text-strong">
+                      Aktarma merkeziyle konuştum, yarın öğlene kadar teslim edilecek.
+                    </p>
+                  </div>
+                </AppWindow>
+              ),
+            },
+            {
+              id: "devret",
+              caption: "İşi devret, takvime düşsün.",
+              content: (
+                <AppWindow title="Görevler" icon={<ListChecks />} focused className="w-[min(22rem,86vw)]">
+                  <ul className="grid gap-2 p-4 text-base text-body">
+                    {["Kargo firmasını ara", "Müşteriye takip numarası gönder", "Teslimi onayla"].map((task, i) => (
+                      <li key={task} className="flex items-center gap-2">
+                        <span aria-hidden className={i === 0 ? "size-4 rounded-full bg-success" : "size-4 rounded-full ring-1 ring-line-strong"} />
+                        {task}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="border-t border-line-soft px-4 py-2 text-small text-muted">Hatırlatma: yarın 09.00</p>
+                </AppWindow>
+              ),
+            },
+          ]}
+        />
+
         <section aria-labelledby="tanitim-duvar-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-28 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
           <Reveal>
             <p className="font-mono text-small text-primary-ink">Duvar Kâğıtları</p>
@@ -262,6 +320,31 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             <BookCover title="Başlangıç Rehberi" subtitle="Gelen kutusu, görevler, takvim" author={WORKSPACE.name} mark="01" width={128} />
             <BookCover tone="ink" title="Destek El Kitabı" subtitle="Yanıt dili ve öncelikler" author={WORKSPACE.name} mark="02" width={128} />
           </Reveal>
+        </section>
+
+        {/* Hoy turu: fiyat tablo yerine cümle (kaydırdıkça koyulaşır) + telefon maketi. */}
+        <section aria-labelledby="tanitim-fiyat-baslik" className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-28 sm:px-6 md:grid-cols-[minmax(0,7fr)_auto]">
+          <div className="grid gap-6">
+            <h2 id="tanitim-fiyat-baslik" className="font-mono text-small text-primary-ink">
+              Fiyat
+            </h2>
+            <ScrubText
+              lead={1}
+              className="font-display text-heading leading-snug font-semibold text-balance sm:text-display"
+              phrases={[`${WORKSPACE.name} üç kişiye kadar ücretsiz.`, "Ekip büyüyünce koltuk başına öde,", "yıllık alırsan iki ay bizden.", "Telefonda da aynı şerit, aynı talepler."]}
+            />
+          </div>
+          <PhoneFrame width={252} time="09:41" label={`Telefonda ${WORKSPACE.name}: açık talepler listesi`} className="justify-self-center">
+            <div className="grid gap-2 px-3 pt-1">
+              <p className="px-1 text-title font-bold text-strong">Talepler</p>
+              {tickets.map((t) => (
+                <div key={t.id} className="grid gap-0.5 rounded-xl bg-surface px-3 py-2">
+                  <span className="truncate text-small font-semibold text-strong">{t.subject}</span>
+                  <span className="text-micro text-muted">{t.id}</span>
+                </div>
+              ))}
+            </div>
+          </PhoneFrame>
         </section>
 
         {/* Kapanış: sayfa kitaplarla bitip boşlukta kalıyordu. Tek eylem, altında aynı güven satırı. */}

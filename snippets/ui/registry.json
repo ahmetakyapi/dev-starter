@@ -1574,6 +1574,24 @@
       "palettes": false
     },
     {
+      "name": "phone-frame",
+      "title": "Telefon Maketi",
+      "category": "Tanıtım",
+      "description": "Mobil uygulama tanıtımı: token'la çizilmiş telefon (çerçeve, kamera adası, durum çubuğu); `app-window`ın telefon karşılığı (gethoy.app)",
+      "file": "snippets/ui/phone-frame.tsx",
+      "client": false,
+      "storyId": "phone-frame",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "pixel-loader",
       "title": "Piksel Yükleyici",
       "category": "Hareket ve Doku",
@@ -1838,6 +1856,44 @@
       "file": "snippets/ui/scramble-text.tsx",
       "client": true,
       "storyId": "scramble-text",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "scroll-scenes",
+      "title": "Kaydırmalı Sahneler",
+      "category": "Tanıtım",
+      "description": "\"Nasıl çalışır\" filmi: sahne sabit kalır, kaydırdıkça 3-6 sahne sırayla değişir, başlık sözcük sözcük netleşir (gethoy.app)",
+      "file": "snippets/ui/scroll-scenes.tsx",
+      "client": true,
+      "storyId": "scroll-scenes",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "scrub-text",
+      "title": "Kaydırdıkça Koyulaşan Yazı",
+      "category": "Tanıtım",
+      "description": "Az seçenekli fiyat ya da manifesto: paragraf soluk başlar, kaydırdıkça cümle cümle koyulaşır (gethoy.app)",
+      "file": "snippets/ui/scrub-text.tsx",
+      "client": true,
+      "storyId": "scrub-text",
       "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"

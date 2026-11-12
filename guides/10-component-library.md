@@ -276,7 +276,7 @@ kaldığı için erişilebilirlik açığı değil.
 - **PatternBackground**: kap `relative isolate`; hazır birleşimler `PATTERN_PRESETS`. Stil `@layer components`te: `className="fixed"` bütün sayfa zemini yapar.
 - **Dial ya da Slider**: kontrol panelinde yan yana birkaç ayar → kadran; formda tek aralık → `slider`; kesin sayı → `number-field`.
 - **ExpandableCard**: kartın kendisi büyür (`layoutId`, `domMax`); başka bir yerden açılan pencere için `dialog`.
-- **Paket mi kopya mı:** `@ahmetakyapi/ui` 101 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
+- **Paket mi kopya mı:** `@ahmetakyapi/ui` 104 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
 
 ### Ribbon Turu: Tanıtım (2026-11)
 
@@ -294,6 +294,13 @@ kaldığı için erişilebilirlik açığı değil.
 - **Galeri seçimi:** öne çıkan tek iş ve başlığı → `arc-carousel`; yan yana karşılaştırma → ızgara; ürün kartları → `carousel`; süs akışı → `drift-columns`.
 - **Şifre:** yeni şifre `password-field` (`new-password`), giriş ekranında düz `Input type="password"`. Kuralı sunucu da denetler.
 - **Desen notları:** raflı kütüphane sayfası (tür başına başlık + filtre çipleri + 6-12 kart + "Hepsini Gör (N)", N katalogdan türetilir); katalog kartında durağan kapak + yalnız üzerine gelince oynayan sessiz video; alt bilginin dibinde kenardan taşan dev marka adı (`aria-hidden`, `overflow-x: clip`).
+
+### Hoy Turu (2026-11)
+
+- **Ürün nasıl kullanılır, sırayla:** 3-6 eylem, her biri tek cümle ve bir maket → `scroll-scenes` (sayfada bir tane; `narration` zorunlu). Başlığın altında değişen üç satır yeterse landing'in `StageFrame`i; tıklanacak canlı demo normal bölümde (`AppWindow` + `Dock`).
+- **Fiyat:** iki plan ve az fark → `scrub-text` ile cümle ("X ücretsiz. Pro ile sınırsız, bir kez öde."); üç ve daha çok plan, satır satır karşılaştırma → `PricingPlans`.
+- **Telefon:** mobil uygulama ya da "yakında telefonda" bölümü → `phone-frame` (içerik token'la çizilir, temayla döner); masaüstü → `app-window`.
+- **SSS sesi:** kimin için olmadığını söyleyen bir soru ekle; gizlilik cevabı mekanizmayla ("sunucumuz yok"), sıfatla değil.
 
 ### Bloklar
 

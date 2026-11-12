@@ -38,7 +38,7 @@ dev-starter/
 │
 ├── packages/@ahmet/
 │   ├── theme/      → Tailwind v4 theme.css (sistem + palet + @theme inline köprüsü) + tokens.ts aynası
-│   └── ui/         → 101 bileşenlik kit (snippets/ui'dan üretilir) + Surface, Button, Chip, CustomCursor + hooks + motion varyantları (m.*)
+│   └── ui/         → 104 bileşenlik kit (snippets/ui'dan üretilir) + Surface, Button, Chip, CustomCursor + hooks + motion varyantları (m.*)
 │
 ├── knowledge/
 │   ├── themes/                → 7 projenin görsel hafızası (DESIGN.md 9 bölüm)
@@ -88,7 +88,7 @@ dev-starter/
 │   ├── verify-agentic.mjs     → Agentic snippet/şablon derleniyor mu (opt-in)
 │   ├── add-ui.mjs             → snippets/ui bileşenini bağımlılıklarıyla projeye kurar (--list, --dry-run, --install)
 │   ├── build-ui-registry.mjs  → snippets/ui/registry.json + shadcn kaydı storybook/public/r (--check: verify:registry)
-│   ├── build-ui-package.mjs   → snippets/ui → @ahmetakyapi/ui kiti (101 bileşen, next/Base UI'sız; --check: verify:kit)
+│   ├── build-ui-package.mjs   → snippets/ui → @ahmetakyapi/ui kiti (104 bileşen, next/Base UI'sız; --check: verify:kit)
 │   ├── add-figure-kit.mjs     → anatomy figür kitini bir projeye kurar (components/iso)
 │   └── verify-anatomy.mjs     → Figür kiti iki şablonda build/tip/lint/test temiz mi (opt-in)
 │
@@ -110,8 +110,8 @@ dev-starter/
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
 ├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 753 hikâye — Kapak, Tema, Bileşenler,
-│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula + Tanıtım (kapsam 133/133); kabuk tema ve paleti izler
-├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (133 bileşen + vitrin/) + fonts/ + live-preview/
+│                                Grafikler, Bloklar, Ekranlar, Desen Kütüphanesi, Pusula + Tanıtım (kapsam 136/136); kabuk tema ve paleti izler
+├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (136 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress
 │   ├── tr-text (testli) · phrases → Türkçe başlık: anlam öbekleriyle satır kırma, punto sığdırma
 │   ├── tab-underline · use-scroll-lock · modal · drawer · confirm · toast · form

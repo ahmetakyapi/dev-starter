@@ -955,6 +955,46 @@ hiç oynamaz, kendiliğinden değişen içerik ekran okuyucuya duyurulmaz.
 **Alınmayan:** açılış yükleyicisi (içeriği geciktirir), reklam/sponsor
 yerleri, Cormorant Garamond + Anton eşi (serif vurgu `editorial` presetiyle).
 
+## Hoy Turu — Kaydırmalı Film, Koyulaşan Fiyat Cümlesi, Telefon Maketi (2026-11-12)
+
+**Karar:** gethoy.app (Mac menü çubuğu sohbet uygulaması) `/harvest` ile
+tarandı; kullanıcı sitenin MANTIĞINI çok beğendi. Mantık şu: sayfa ürünü
+anlatmaz, ürünü KULLANIR. Beş eylem ("Hold to talk.", "Drop a file on a
+face."…) tek sabit sahnede, kaydırma hızında oynar; okur her cümleyi o an
+ekranda olurken okur. Üç bileşen sıfırdan yazıldı:
+
+- `scroll-scenes`: sabit sahne + sahne başına bir cümle. Sitede film 12,2
+  ekran boyu, beş sahne; bizde `sahne × length + 1` ekran. Sözcük aralığı
+  55 ms, sahne geçişi opaklık + transform + buğu. Durum yalnız sahne
+  değişince güncellenir. Landing'deki `StageFrame` (üç metin satırı) yerinde
+  kalır: o başlık altı, bu bütün bölüm.
+- `scrub-text`: tablo yerine cümleyle fiyat ("Hoy is free. Host up to 3
+  channels. Join as many as you like."). İki planlı üründe karşılaştırma
+  tablosu gereksiz ağırlık; okunan cümle koyulaşır, okunmayan soluk.
+- `phone-frame`: `app-window`ın telefon karşılığı. Çerçeve donanım rengi
+  iki temada aynı (`--chart-ink`). Ders: `cqi` öğenin kendisinde değil
+  yalnız çocuklarında çalışır; ilk sürümde köşeler sayfaya göre büyüyüp
+  telefon oval oldu, ölçüler tek `--u` değişkenine bağlandı.
+
+**Erişilebilirlik kararı (en değerli ders):** sitenin bütün filmi, ekran
+okuyucuya tek paragrafla anlatılıyor ("What the page shows as you scroll:
+a crowd of faces floats up…"). Bizde `narration` ZORUNLU prop: kaydırmalı
+film anlatımsız yazılamaz. Hareketi azaltan kullanıcıda sabitleme kalkar,
+sahneler alt alta (gethoy filmi tamamen kapatıyor; biz içeriği koruyoruz).
+
+**Strateji dersleri:** (1) Kurucu sesi birinci tekil ve somut ("I can't
+read them, and I couldn't hand them over"); gizlilik iddiası mekanizmayla
+("There's no Hoy server"). (2) SSS'te kimin için OLMADIĞINI söylemek
+("If you aren't in the Apple ecosystem, Hoy isn't your tool"): yanlış
+kullanıcıyı erkenden eler, güveni artırır. (3) "Soon" yerine tarih
+("TestFlight available Nov 16, 2026"). (4) Tek seferlik fiyat tek cümlede:
+"Pay once, no renewals." (5) Başlık bir benzetme zinciri: "Walkie-talkie
+meets AirDrop meets Messages."
+
+**Zaten vardı:** basılı tut (`hold-button`), dosya bırakma alanı
+(`file-dropzone`), görev listesi (`task-list`), kopyala (`copy-button`),
+SSS akordeonu (`Faq`), menü çubuğu maketi (`app-window` + `dock`).
+
 ## Scrolltide Turu — Renk Zemini, Biçim Değiştiren Menü, Kavisli Galeri, Kurallı Şifre (2026-11-11)
 
 **Karar:** scrolltide.co (kaydırma odaklı site promptları ve bileşen
