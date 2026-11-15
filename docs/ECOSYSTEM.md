@@ -99,7 +99,7 @@ dev-starter/
 ├── .claude/
 │   ├── settings.json          → Hook entegrasyonu (commit hook'ları `if` filtreli) + .env Read yasağı
 │   ├── rules/                 → Yol kapsamlı proje kuralları (hooks, verification, packages, orchestration)
-│   ├── commands/              → 20 komut — bootstrap ile ~/.claude/commands'a symlink
+│   ├── commands/              → 21 komut — bootstrap ile ~/.claude/commands'a symlink
 │   ├── agents/                → 9 subagent wrapper'ı — ~/.claude/agents'a symlink
 │   └── skills/clone-website/  → Ölçümlü site klonlama + scripts/ (capture, styles, download-assets, visual-diff)
 │

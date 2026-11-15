@@ -16,7 +16,9 @@ için yürütür.
    `~/dev-starter/templates/docs/STORY.template.md`den oluştur ve kabul
    kriterlerini kullanıcıyla netleştir. ROUTEMAP: durum → IN_PROGRESS.
 2. **Boyu beyan et** (KÜÇÜK/ORTA/BÜYÜK). KÜÇÜK ise subagent açmadan
-   `~/dev-starter/rules/dev-cycle.md` kısayoluyla ilerle.
+   `~/dev-starter/rules/dev-cycle.md` kısayoluyla ilerle. ORTA/BÜYÜK'te
+   dağıtmadan önce `/grill <story-id>` öner (gizli bağımlılık, sıra, yan
+   etki); kullanıcı geçerse devam et.
 3. **Dalga planı** (BÜYÜK; ORTA'da ana oturum ya da tek subagent — tanımın
    tek kaynağı `~/dev-starter/phases/development.md` → İş Boyu): işi alanlara böl ve kayıtlı subagent'lara
    **Görev Tanımı** ile dağıt (`AGENT_PROTOCOL.md → Orkestrasyon`):

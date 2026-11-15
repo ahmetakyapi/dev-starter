@@ -348,7 +348,7 @@ dev-starter/
 ├── agents/            12 agent rol tanımı + AGENT_PROTOCOL
 ├── .claude/
 │   ├── agents/        strategist · design-reviewer · content-editor · gate · deploy · frontend · backend · qa · researcher
-│   └── commands/      20 komut
+│   └── commands/      21 komut
 ├── knowledge/         mistakes · patterns · decisions · tech-radar · design-references · themes
 ├── rules/             10 kural
 ├── phases/            planlama · geliştirme · uçtan uca test ve son düzeltmeler · yayın ve bakım

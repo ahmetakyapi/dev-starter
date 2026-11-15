@@ -86,6 +86,11 @@ Plan şunları içermeli:
 
 Eksik varsa → planı düzelt, devam etme.
 
+ORTA/BÜYÜK işte, ya da plan mevcut bir akışa (çağrı sırası, middleware,
+webhook, entegrasyon) dokunuyorsa önce `/grill`: karar ağacı çıkarılır,
+bilgi koddan bulunur, kararlar önerili sorularla kullanıcıya sorulur ve
+story'ye işlenir. Bu liste ondan sonra işaretlenir.
+
 ### 3. Develop
 
 Geliştirme sırasında uyulacak kurallar:

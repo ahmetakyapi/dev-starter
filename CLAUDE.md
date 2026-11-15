@@ -38,7 +38,7 @@ agents/      12 rol tanımı + AGENT_PROTOCOL.md (haberleşme, orkestrasyon, Gö
 rules/       10 kural dosyası (aşağıdaki tablo) · phases/ planning, development, e2e-polish, release-maintenance
 hooks/       gate-guard · quality-scan · routemap-sync · session-brief · git-pre-commit (+ lib/)
 scripts/     health-check · test-hooks · slop-scan · audit-project · verify-* · build-* · add-ui · add-figure-kit
-.claude/     settings.json (hook'lar) · rules/ · commands/ (20) · agents/ (9 wrapper) · skills/clone-website
+.claude/     settings.json (hook'lar) · rules/ · commands/ (21) · agents/ (9 wrapper) · skills/clone-website
 templates/   nextjs-fullstack · landing · agentic-chat · docs/ (KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS)
 storybook/   görsel katalog (Storybook 10, kendi kilidi) · snippets/ hazır parçalar + ui/ kütüphanesi + fonts/ + live-preview/
 ```
@@ -93,6 +93,7 @@ bash scripts/audit-project.sh ~/Desktop/Projects/<proje>   # canlı proje deneti
 | `/plan [adım]` | Planning fazını yürüt (P1→P6): belgeler + story'ler |
 | `/story [id]` | Story'yi uçtan uca işle: dağıt → Gate → commit → ROUTEMAP |
 | `/gate [story]` | 6+1 adımlı denetim; sonuç ROUTEMAP Gate kolonuna — commit kontrolü |
+| `/grill [plan\|story]` | Kodlamadan önce planı sorguya çek: karar ağacı, önerili sorular, bilgiyi kendisi arar |
 | `/fix [tarif]` | Bugfix protokolü: triage → failing test → fix → kayıt |
 | `/research [konu]` | Benzer çözümlerin araştırması (researcher) → docs/research/ |
 | `/status` | Kaldığın yer + sıradaki en değerli 3 iş |

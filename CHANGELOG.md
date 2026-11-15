@@ -7,6 +7,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### `/grill`: kodlamadan önce planı sorguya çek — 2026-11-15
+
+- **Yeni komut (20 → 21):** `/grill [plan|story]`. Planı karar ağacına
+  böler, her turda yalnız ön koşulu çözülmüş kararları önerilen cevapla
+  sorar; koddan bulunabilecek bilgiyi kendisi arar, kararı kullanıcıya
+  bırakır, sonucu story'nin Teknik Notlar'ına işler. Yöntem Matt Pocock'un
+  `grilling` skill'inden (MIT); metin bizim.
+- **Akışa bağlandı:** `rules/dev-cycle.md` → 2. Validate ve `/story` adım 2
+  ORTA/BÜYÜK işte önerir; `/plan` belirsiz adımlarda önerir. Kendiliğinden
+  her işte koşmaz.
+- **Bilgi tabanı:** `references.md` § 4, `decisions.md` → "Sorgu Komutu".
+
 ### Scrolltide turu: dört yeni bileşen — 2026-11-11
 
 - **Yeni (`snippets/ui`, 129 → 133; kit 97 → 101):** `mesh-gradient`

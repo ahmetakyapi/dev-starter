@@ -18,7 +18,9 @@ yürütür; her adımın çıktısı bir dosyadır, karar havada kalmaz.
      (`~/dev-starter/templates/docs/`: PRODUCT, ARCHITECTURE, SCREENS,
      STORY şablonları)
    - Belirsiz alanlara EN ÇOK 5 hedefli soru sor (tek AskUserQuestion turu);
-     cevapları belgeye işle, `[NETLEŞTİRME]` işareti bırakma
+     cevapları belgeye işle, `[NETLEŞTİRME]` işareti bırakma. Kararlar
+     birbirine bağlıysa (P3 mimari, P5 story sırası) tek tur yerine
+     `/grill` akışını öner
    - ROUTEMAP'te adımı DONE yap
 3. **P5 Story Writing**: her story
    `~/dev-starter/templates/docs/STORY.template.md` ile yazılır

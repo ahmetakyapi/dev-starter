@@ -1056,3 +1056,20 @@ eşitliği denetler.
   yelpazesi).
 - Kapakta yeni Tanıtım bileşenleri bilerek yok (yığılma olurdu); Pusula
   Tanıtım Sayfası'nda sergileniyorlar.
+
+## Sorgu Komutu — `/grill` (2026-11-15)
+
+**Karar:** Kodlamadan önce planı sorguya çeken görüşme döngüsü ayrı bir komut
+(`/grill`) olarak eklendi. Matt Pocock'un `grilling` skill'inin yöntemi
+alındı (MIT): karar ağacı, her turda yalnız sınırdaki kararlar, her soruda
+önerilen cevap, bilgiyi ajan arar, kararı kullanıcı verir. Eksik olan buydu:
+`dev-cycle` VALIDATE bir kontrol listesiydi, BA rolü kapsamı sorguluyordu
+ama gizli bağımlılığı (çağrı sırası, yan etki) koddan bulup soran bir döngü
+yoktu.
+*Alternatifler:* (1) skill'i olduğu gibi kurmak — İngilizce, akışımıza
+(story, ROUTEMAP, Teknik Notlar) bağlı değil, reddedildi; (2) skill olarak
+`machine/skills/`e yazmak — yan dosya/betik gerektirmiyor, "Komut mu Skill
+mi" ölçütüne göre komut; (3) her işte otomatik koşturmak — küçük işleri
+uzatır, yalnız ORTA/BÜYÜK'te önerilir.
+*Ne zaman değişir:* `/story` akışında kullanıcı onu çoğunlukla geçiyorsa
+öneri kaldırılır; hep kullanılıyorsa VALIDATE'in zorunlu adımı olur.

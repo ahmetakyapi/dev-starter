@@ -406,6 +406,7 @@ dev-starter deposunda yüklüdür (`machine/bootstrap.sh` → `REPO_ONLY_COMMAND
 | `/plan` | Planning fazını yürüt (P1→P6) | BA |
 | `/story [id]` | Tek story'yi uçtan uca işle (dalga planıyla) | BA |
 | `/gate [story]` | Gate denetimi + sonucu ROUTEMAP'e işle | GATE, BA |
+| `/grill [plan\|story]` | Planı sorguya çek: karar ağacı + önerili sorular | BA |
 | `/fix [tarif]` | Bugfix protokolü (TDD) | QA, FE, BE |
 | `/research [konu]` | Benzer çözümleri araştır (researcher) | RS |
 | `/status` | Kaldığın yer + sıradaki iş önerisi | BA |
