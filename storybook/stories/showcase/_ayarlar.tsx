@@ -302,7 +302,7 @@ export function AyarlarPage() {
           </div>
         </Well>
 
-        <section aria-labelledby="ayar-kisayol" className="flex h-full flex-col rounded-xl bg-surface p-4 sm:p-5">
+        <section aria-labelledby="ayar-kisayol" className="flex h-full flex-col rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line sm:p-5">
           <WellTitle id="ayar-kisayol" hint="Mac'te ⌘, Windows ve Linux'ta Ctrl.">
             Klavye Kısayolları
           </WellTitle>

@@ -1087,10 +1087,13 @@ Pusula'nın ortak parçalarında (`_ui.tsx`) yaşıyor:
   (önceki dönem), 3 mürekkep (nötr), 4-6 yardımcı. Genel dizi (limon, mavi,
   mor, pembe) on iki grafik yan yana gelince renk kataloğu gibi okunuyordu.
   Palet değişince grafikler de döner.
-- **Mürekkep düğme (`INK`):** ekranın tek birincil eylemi koyu degrade hap;
-  logo karosu da aynı mürekkep. Renkli düğme veri renkleriyle yarışıyordu.
+- **Mürekkep düğme (`INK`):** sayfa başlığındaki birincil eylem (Takvim →
+  Randevu Oluştur) koyu degrade hap; logo karosu da aynı mürekkep.
+  Panodaki gecikme kartının "Talepleri Gör" düğmesi sahibinin isteğiyle
+  paletin mavi birincil düğmesi kaldı (2026-11-16): uyarı kartındaki tek
+  eylem renkli olunca daha çok çağırıyor.
 - **İki katlı sayfa başlığı:** ekmek kırıntısı (Pusula › Genel/Yönetim ›
-  sayfa) + canlı veri saati + zil; altında büyük başlık, tek satır bağlam,
+  sayfa) + verinin güncellendiği an + zil; altında büyük başlık, tek satır bağlam,
   sağda eylemler. Kenar çubuğu grupları "Genel" ve "Yönetim".
 - **Kart:** beyaz zemin + kıl halkası + en hafif gölge (`CARD`, `Well`);
   kartın içindeki panel gri ve gölgesiz (gömük), kart içinde kart yok.

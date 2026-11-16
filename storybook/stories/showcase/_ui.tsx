@@ -94,7 +94,7 @@ export const SECTION_OF: Record<Page, string> = {
 /**
  * Sayfa başlığı, iki katlı (Ingot turu):
  *   1. Üst çubuk: ekmek kırıntısı (Pusula › grup › sayfa [› alt]), sağda
- *      canlı veri saati ve zil. Kullanıcı nerede olduğunu her sayfada aynı
+ *      verinin güncellendiği an ve zil. Kullanıcı nerede olduğunu her sayfada aynı
  *      yerden okur.
  *   2. Başlık bloğu: büyük ad, bir satır bağlam, sağda sayfanın eylemleri.
  *      Birincil eylem varsa `INK` sınıflı tek koyu hap.
@@ -122,12 +122,11 @@ export function PageBar({
     <header className="border-b border-line-soft">
       <div className="flex min-h-13 items-center gap-3 border-b border-line-soft px-4 sm:px-6">
         <Breadcrumb items={items} className="min-w-0 flex-1" />
+        {/* Verinin tarihi, "canlı" iddiası değil: örnek veri 2 Kasım 10.24'te
+            donmuş bir kesit. Sürekli yanıp sönen nokta olmayan bir akışı vaat ederdi. */}
         <span className="hidden items-center gap-1.5 text-small text-muted md:inline-flex">
-          <span aria-hidden className="relative inline-flex size-2">
-            <span className="absolute inset-0 rounded-full bg-success opacity-40 motion-safe:animate-ping" />
-            <span className="relative size-2 rounded-full bg-success" />
-          </span>
-          Canlı · 2 Kas, 10:24
+          <span aria-hidden className="size-1.5 rounded-full bg-success" />
+          Güncellendi · 2 Kas, 10:24
         </span>
         <NotificationCenter items={notifications} onMarkRead={markRead} />
       </div>

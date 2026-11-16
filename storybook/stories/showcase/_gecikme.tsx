@@ -5,7 +5,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { DELAYED, TICKETS, TODAY, customer, daysBetween, shortDate, tl } from "./_data";
-import { INK, href } from "./_ui";
+import { href } from "./_ui";
 
 /**
  * Gecikme kartı (Pano). Eski hali tam genişlikte kahverengi bir uyarı
@@ -64,7 +64,7 @@ export function DelayCard() {
             </p>
           </div>
           <div className="grid gap-2">
-            <a href={href("inbox", { tag: "gecikme" })} className={buttonClass({ variant: "primary", className: cn(INK, "w-full") })}>
+            <a href={href("inbox", { tag: "gecikme" })} className={buttonClass({ variant: "primary", className: "w-full" })}>
               Talepleri Gör
               <ArrowRight aria-hidden />
             </a>

@@ -1,5 +1,6 @@
 "use client";
 
+import "./pusula.css";
 import { ArrowRight, BookOpen, CalendarDays, Compass, ImageIcon, Inbox, Keyboard, ListChecks } from "lucide-react";
 import { AuthCard, type AuthState } from "@/components/ui/auth-card";
 import { Marquee } from "@/components/ui/marquee";
@@ -61,8 +62,8 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
       </div>
       <div className="grid w-full max-w-sm justify-items-center gap-6">
         <div className="flex items-center gap-2.5 text-strong">
-          <span aria-hidden className="inline-grid size-9 place-items-center rounded-md bg-brand text-on-brand">
-            <Compass className="size-5" strokeWidth={2} />
+          <span aria-hidden className="pusula-ink inline-grid size-9 place-items-center rounded-lg">
+            <Compass className="size-5" strokeWidth={2.25} />
           </span>
           <span className="text-title font-semibold tracking-tight">Pusula</span>
         </div>

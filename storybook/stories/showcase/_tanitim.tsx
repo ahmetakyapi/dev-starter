@@ -1,5 +1,6 @@
 "use client";
 
+import "./pusula.css";
 import { CalendarDays, Compass, Inbox, ListChecks, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Reveal, RevealItem } from "@/components/motion/Reveal";
@@ -62,7 +63,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
       <DockingNav
         brand={
           <span className="flex items-center gap-2 text-read font-bold tracking-tight text-strong">
-            <span aria-hidden className="grid size-7 place-items-center rounded-sm bg-brand text-on-brand">
+            <span aria-hidden className="pusula-ink grid size-7 place-items-center rounded-lg">
               <Compass className="size-4" />
             </span>
             {WORKSPACE.name}
