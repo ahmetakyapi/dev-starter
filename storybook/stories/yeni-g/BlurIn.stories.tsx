@@ -49,7 +49,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "Serif Vurgulu" };
 
 export const Block: Story = {
-  name: "Tek Parça (by=block)",
+  name: "Tek Parça",
   render: () => (
     <Frame width="lg">
       <Replay>

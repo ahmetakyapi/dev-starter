@@ -55,7 +55,7 @@ export const Strength: Story = {
 };
 
 export const Auto: Story = {
-  name: "Tema Tonu (auto)",
+  name: "Tema Tonu (Otomatik)",
   render: () => (
     <Frame>
       <LiquidGlassButton>Düz zeminde: yalnız kenar ve buğu</LiquidGlassButton>

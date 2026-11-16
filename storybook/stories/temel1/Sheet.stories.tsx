@@ -118,7 +118,7 @@ export const SideOpen: Story = {
 
 /** Ayrıntı paneli anatomisi: kimlik karosu, durum hapı, saç çizgili başlık, solda ayrı eylem. */
 export const DetailPanel: Story = {
-  name: "Ayrıntı Paneli (Kimlik, Durum, Ayrı Eylem)",
+  name: "Ayrıntı Paneli",
   tags: ["!autodocs"],
   args: {
     open: true,

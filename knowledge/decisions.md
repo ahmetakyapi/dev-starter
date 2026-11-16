@@ -1138,3 +1138,27 @@ tanımlı ama bağlı değil; örnek veride 2023 tarih seçicisi 2026 satışlar
 yanında. İkisi de "tek kaynak" ve tutarlı örnek veri kararlarımızı doğruluyor.
 *Ne zaman değişir:* `record-list` + `filter-sheet` ikilisi üç projede aynı
 kurulursa `data-table`a hazır "telefon modu" olarak birleşir.
+
+## Storybook Kenar Çubuğu — Üç Bölüm, Anlamlı İkonlar, Türkçe Kabuk (2026-11-16)
+
+**Karar:** Kenar çubuğu üç bölüme ayrıldı ve her bölüm küçük, soluk, Title
+Case bir etiket taşıyor: **Başla** (Kapak, Başlangıç, Vitrin) · **Kütüphane**
+(Tema, Bileşenler, Grafikler, Bloklar) · **Uygulamada** (Ekranlar, Örnek
+Tasarım). Sıra `preview.tsx → storySort`, etiketler `manager-head.html`.
+
+- Üst düzey dokuz öğenin her biri anlamını söyleyen tek çizgi ikon taşıyor
+  (lucide, uygulamayla aynı aile; CSS maskesi, rengi paletle döner).
+  Storybook'un düğüm türüne göre verdiği yer imi / klasör / ızgara karışıklığı
+  kalktı; açma oku olmayan sayfalar ikon sütununa hizalandı.
+- Bileşenler alt grupları temelden karmaşığa sıralı (Temel → … → Yapay Zekâ);
+  önceden dosya sırasıyla rastgeleydi.
+- Kabuk Türkçe: marka alt satırı "Görsel Katalog" (Inter; eşaralıklı küçük
+  harf kod gibi okunuyordu), belge sayfaları "Belge" (yalnız görünen ad,
+  adres `…--docs` kalır: README bağlantıları ve İngilizce adres denetimi
+  bozulmaz), arama "Ara".
+- Başlangıç sayfası Kapak'ın hemen altında; önceden Örnek Tasarım'ın
+  arkasında kalıyordu.
+
+*Bilinen sınır:* seçiciler Storybook'un resmi API'si değil (`data-item-id`,
+`.sidebar-item`); SB yükseltmesinden sonra kenar çubuğu gözle denetlenir.
+Yeni bir üst düzey bölüm eklenirse ikonu ve sırası iki dosyaya birden yazılır.

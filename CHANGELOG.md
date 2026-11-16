@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Storybook kenar çubuğu — 2026-11-16
+
+- Üç bölüm (Başla · Kütüphane · Uygulamada) ve bölüm etiketleri; üst düzey
+  öğelerde anlamlı çizgi ikonlar; Bileşenler alt grupları temelden
+  karmaşığa sıralı; Başlangıç Kapak'ın altında.
+- Türkçe kabuk: "Görsel Katalog", "Belge", "Ara"; iki hikâye adındaki kod
+  değerleri ayıklandı.
+
 ### Yan panel anatomisi — 2026-11-16
 
 - **`sheet.tsx`:** `icon` (başlıkta kimlik karosu), `status` (durum hapı),

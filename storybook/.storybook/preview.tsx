@@ -47,18 +47,21 @@ const preview: Preview = {
       // sonra başlangıç, token'lar ve parça parça katalog.
       storySort: {
         order: [
+          // Üç bölüm (manager-head.html'deki etiketlerle aynı): Başla · Kütüphane · Uygulamada.
           "Kapak",
-          "Örnek Tasarım",
-          ["Her Şey Bir Arada", "Desen Kütüphanesi", "Pusula Paneli", "Bileşen Kapsamı", "Referans Arşivi"],
+          "Başlangıç",
           "Vitrin",
           ["Genel Bakış", "Temel Kütüphane", "Form Girişleri", "Katman ve Geri Bildirim", "Grafikler", "Bloklar"],
-          "Başlangıç",
           "Tema",
           ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"],
           "Bileşenler",
+          // Temelden karmaşığa: önce yapı taşları, sonra katmanlar, en sonda tanıtım ve yapay zekâ.
+          ["Temel", "Düğme ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"],
           "Grafikler",
           "Bloklar",
           "Ekranlar",
+          "Örnek Tasarım",
+          ["Pusula Paneli", "Her Şey Bir Arada", "Desen Kütüphanesi", "Bileşen Kapsamı", "Referans Arşivi"],
         ],
       },
     },

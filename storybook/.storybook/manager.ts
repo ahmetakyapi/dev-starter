@@ -11,8 +11,13 @@ import { THEMES, lightTheme, paletteCss } from "./manager-theme";
 
 type Item = { name: string; tags?: string[]; type?: string };
 
-/** "yeni" etiketli hikâye grubunun adının yanında küçük "Yeni" hapı. */
+/**
+ * Etiket: belge sayfaları "Docs" yerine "Belge" (yalnız görünen ad; adres
+ * `…--docs` kalır, README bağlantıları ve İngilizce adres denetimi bozulmaz).
+ * "yeni" etiketli hikâye grubunun adının yanında küçük "Yeni" hapı.
+ */
 function renderLabel(item: Item) {
+  if (item.type === "docs" && item.name === "Docs") return "Belge";
   if (!item.tags?.includes("yeni") || item.type === "story" || item.type === "docs") return undefined;
   return createElement(
     "span",
@@ -70,4 +75,17 @@ addons.register("dev-starter/page-stories", (api: API) => {
       hiddenByUs = false;
     }
   });
+});
+
+/* Arama kutusunun yer tutucusu Storybook'ta İngilizce ve ayarı yok: kabuk
+   Türkçe, kutu da Türkçe konuşsun. Kutu yeniden çizilince (tema değişimi)
+   gözlemci tekrar yazar. */
+addons.register("dev-starter/search-placeholder", () => {
+  const PLACEHOLDER = "Ara";
+  const apply = () => {
+    const input = document.getElementById("storybook-explorer-searchfield") as HTMLInputElement | null;
+    if (input && input.placeholder !== PLACEHOLDER) input.placeholder = PLACEHOLDER;
+  };
+  new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
+  apply();
 });
