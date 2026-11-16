@@ -18,8 +18,8 @@ siteler, skill ve kod kaynakları, elenenler dahil) ayrı dosyada:
 (`rules/self-improvement.md`). Ücret ve erişim değişir: `/evolve` 60 günden
 eski gözden geçirmede bağlantıları ve ücretsizliği yeniden doğrular.
 
-Son gözden geçirme: 2026-10-16 (her site açılıp fiyat ve şart sayfalarına
-bakılarak doğrulandı)
+Son gözden geçirme: 2026-11-16 (her site açılıp fiyat ve şart sayfalarına
+bakılarak doğrulandı; curated.design eklendi)
 
 ---
 
@@ -47,16 +47,18 @@ bakılarak doğrulandı)
 | 404 sayfası | [404s.design](https://www.404s.design/) | 1440 piksel görüntüler, üslup/etkileşim/sektör filtresi; her kart asıl 404 sayfasına gider | Finnian Sturdy ("by FS"); Mobbin sponsorlu kartı var |
 | Grafik kartı, pano, sohbet arayüzü | [boardui.com](https://www.boardui.com/) | Bileşen ve grafik vitrini: nötr yüzey, pastel seri renkleri, palet değiştirici | Ücretsiz bileşenleri MIT; grafikler ve şablonlar ücretli (BoardUI License). Dili `decisions.md` → "Board Görsel Dili"nde ekosisteme uyarlandı, kodu alınmadı |
 | Bento ızgara | [bentogrids.com](https://bentogrids.com/) | 285 bento düzeni, görüntü ve kısa video; her örneğin kaynak bağlantısı | Ivan Votti. Kaynakların bir kısmı canlı site değil Dribbble/X gönderisi: yalnız görsel kavram, gerçek davranış yok |
+| Tam sayfa (tanıtım sitesi) | [curated.design](https://curated.design/) | 2.931 canlı site; 16 sektör ve 7 üslup filtresi; her örnek "Live at <alan adı>" ile asıl siteye gider | Craftwork'ün projesi (16 Kasım 2026'da doğrulandı, son ekleme Ağustos 2026). Yalnız SİTE galerisi ücretsiz; bölüm kütüphanesi (kahraman, fiyat, SSS…) 3.397 bölümün 16'sı dışında Pro (aylık 9 $), o kısım bu listeye dahil değil. Sayfalarda Craftwork şablon reklamı ve ücretli sponsorlu kart var |
 | Mac uygulaması ürün sayfası | [shojimac.com](https://shojimac.com/) | Tek site (galeri değil): iki tonlu sıkı başlık, "01–05" numaralı adımlar, tuş kapağı metinleri, karşılaştırma tablosu, Geist + Geist Mono | Ücretsiz bakılır. Nimbstia'da denendi: yapısı iyi, siyah mürekkep + büyük harf mono etiketleri yoğun araç arayüzünde reddedildi (`mistakes.md` #115) |
 
-Kahraman bölümü, fiyat sayfası ve tam sayfa için henüz doğrulanmış
-ücretsiz kaynak yok; eklenecekse aynı denetimden (fiyat sayfası, şartlar,
+Kahraman bölümü ve fiyat sayfası için henüz doğrulanmış ücretsiz kaynak
+yok (tam sayfa: curated.design; bölümü oradaki canlı siteden yakala); eklenecekse aynı denetimden (fiyat sayfası, şartlar,
 asıl siteye bağlantı) geçer.
 
-## Bilinçli Olarak Dışarıda (16 Ekim 2026)
+## Bilinçli Olarak Dışarıda (16 Ekim 2026, güncelleme 16 Kasım 2026)
 
 | Kaynak | Neden |
 |---|---|
 | scrolltide.co | Ücretli: 121 şablonun 4'ü ücretsiz, gerisi abonelikle. Şartlar yalnız kişisel ve müşteri işine izin veriyor. Önerildiği gönderideki "600+ prompt" sayısı sitede geçmiyor ve öneren kişi kendi ürünü olduğunu yazıyor. Şablonların çoğu React + Vite, bir kısmı GSAP/Three.js varsayıyor |
 | unsection.com | Freemium: ücretsiz katman kategori başına 30 bölüm; tamamı aylık 5 $ ya da ömür boyu 99 $ |
-| 60fps.design | Freemium: göz atmak ücretsiz, filtreler ve kod parçaları aylık 15 $; kod parçaları zaten yalnız SwiftUI (iOS), web değil |
+| 60fps.design | Freemium: göz atmak ücretsiz, filtreler ve kod parçaları aylık 15 $; kod parçaları zaten yalnız SwiftUI (iOS), web değil. 16 Kasım 2026 yeniden bakıldı: hâlâ aynı (PRO 15 $/ay ya da 150 $/yıl), bölüm değil hareket referansı |
+| mobbin.com | Freemium (16 Kasım 2026): ücretsizde sınırlı uygulama, akış/arama yok; Pro aylık 10 $. Web panel ve uygulama ekranları için en güçlü kaynak ama ekran görüntüsü kütüphanesi, asıl siteye bağlanmıyor |
