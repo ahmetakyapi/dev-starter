@@ -94,7 +94,7 @@ export const Overview: Story = {
 export const Dashboard: Story = {
   name: "Pano",
   parameters: {
-    docs: { description: { story: "Dört ölçü karosu ve on iki grafik; dönem seçimi hepsini birlikte değiştirir. Sipariş ve dönüşüm birleşik grafikte, dönem hedefleri aktivite halkalarında. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
+    docs: { description: { story: "Kıl çizgiyle bölünmüş dört hücreli ölçü şeridi ve on iki grafik; dönem seçimi hepsini birlikte değiştirir. Sipariş ve dönüşüm birleşik grafikte, dönem hedefleri aktivite halkalarında. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);

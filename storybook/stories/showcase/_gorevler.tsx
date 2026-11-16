@@ -85,7 +85,7 @@ export function GorevlerPage() {
                 .map(({ card, column }) => {
                   const late = card.due! < TODAY_KEY;
                   return (
-                    <li key={card.id} className="flex items-center gap-3 rounded-lg bg-overlay px-3 py-2.5 shadow-raised">
+                    <li key={card.id} className="flex items-center gap-3 rounded-lg bg-surface px-3 py-2.5 ring-1 ring-inset ring-line-soft">
                       {card.assignee ? <Avatar name={card.assignee.name} size="sm" /> : null}
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-base font-medium text-strong">{card.title}</span>

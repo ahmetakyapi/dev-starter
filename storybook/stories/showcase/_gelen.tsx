@@ -223,7 +223,7 @@ export function GelenPage() {
             >
               <span className="truncate font-medium text-strong">{t.subject}</span>
               <span className="truncate text-small text-muted">
-                {t.id} · {customer(t.customerId).name}
+                <span className="font-mono text-micro tracking-tight">{t.id}</span> · {customer(t.customerId).name}
               </span>
             </button>
           </ContextMenuTrigger>
@@ -467,7 +467,7 @@ export function GelenPage() {
 
       <div className="grid grid-cols-1 flex-1 gap-4 p-4 sm:p-6 lg:grid-cols-[15rem_minmax(0,1fr)]">
         <aside aria-label="Klasörler" className="hidden lg:block">
-          <div className="sticky top-4 rounded-xl bg-surface p-2">
+          <div className="sticky top-4 rounded-xl bg-overlay p-2 shadow-raised ring-1 ring-line">
             <TreeView
               aria-label="Talep Klasörleri"
               nodes={tree}
@@ -482,8 +482,10 @@ export function GelenPage() {
           </div>
         </aside>
 
-        <div className="grid grid-cols-1 min-w-0 content-start gap-4">
-          <div className="grid grid-cols-1 gap-3 rounded-xl bg-surface p-3 sm:p-4">
+        {/* Ingot turu: süzgeç çubuğu, tablo ve sayfalama TEK kartta; araç
+            çubuğu kartın başı, sayfalama dibi (kıl çizgilerle ayrılır). */}
+        <div className="grid min-w-0 grid-cols-1 content-start overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line">
+          <div className="grid grid-cols-1 gap-3 border-b border-line-soft p-3 sm:p-4">
             <div className="flex flex-wrap items-end gap-3">
               <SearchField
                 label="Talep Ara"
@@ -566,7 +568,7 @@ export function GelenPage() {
           </div>
 
           {rows.length === 0 ? (
-            <div className="relative isolate overflow-hidden rounded-xl bg-surface">
+            <div className="relative isolate overflow-hidden">
               <PatternBackground pattern="dots" fade="center" size={18} intensity={0.45} />
               <EmptyState
                 className="bg-transparent"
@@ -582,8 +584,9 @@ export function GelenPage() {
               />
             </div>
           ) : view === "liste" ? (
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1">
               <DataTable
+                className="px-2 pt-2 [&_thead_tr]:border-0 [&_thead_tr]:bg-surface [&_thead_th:first-child]:rounded-l-md [&_thead_th:last-child]:rounded-r-md"
                 caption="Talepler"
                 columns={tableColumns}
                 rows={visible}
@@ -593,7 +596,7 @@ export function GelenPage() {
                 stickyFirst={false}
                 minWidth="46rem"
               />
-              <div className="flex flex-wrap items-center justify-between gap-3 px-1">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line-soft px-4 py-3">
                 <p className="text-small text-muted tabular-nums">
                   {num.format(sorted.length)} talepten {num.format((page - 1) * PER_PAGE + 1)}–{num.format(Math.min(page * PER_PAGE, sorted.length))}
                 </p>
@@ -609,6 +612,7 @@ export function GelenPage() {
             </div>
           ) : (
             <TreeTable
+              className="p-2"
               caption="Müşteriye Göre Talepler"
               defaultExpanded={byCustomer.slice(0, 2).map((g) => g.c.id)}
               minWidth="36rem"

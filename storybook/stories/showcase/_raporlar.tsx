@@ -13,7 +13,7 @@ import { FileDropzone } from "@/components/ui/file-dropzone";
 import { LineChart } from "@/components/ui/line-chart";
 import { LoadingMark } from "@/components/ui/loading-mark";
 import { Meter, SegmentedMeter } from "@/components/ui/meter";
-import { PatternBackground } from "@/components/ui/pattern-bg";
+import { cn } from "@/lib/utils";
 import { PixelLoader } from "@/components/ui/pixel-loader";
 import { Progress } from "@/components/ui/progress";
 import { Rating } from "@/components/ui/rating";
@@ -44,7 +44,7 @@ import {
   type Period,
   type PeriodStats,
 } from "./_data";
-import { PageBar, Well, WellTitle, useApp } from "./_ui";
+import { CARD, PageBar, SectionTitle, Well, WellTitle, useApp } from "./_ui";
 
 type Row = { customer: Customer; orders: number; revenue: number };
 
@@ -76,11 +76,26 @@ function SalesTable({ rows, total }: { rows: readonly Row[]; total: number }) {
 }
 
 /** Genişleyen kartın görseli: desen zemin üstünde kartın ana sayısı. */
-function FigureMedia({ figure }: { figure: string }) {
+/**
+ * Özet kartının görseli: büyük sayı yumuşak vurgu zemininde, altında kıl
+ * çizgili ölçek (Ingot'un nokta-çubuk ölçeği). Önceki ızgara deseni sayıyı
+ * süslüyordu ama bir şey söylemiyordu; ölçek payı gösterir.
+ */
+function FigureMedia({ figure, share, caption }: { figure: string; share: number; caption: string }) {
+  const ticks = 24;
+  const on = Math.round((Math.min(Math.max(share, 0), 100) / 100) * ticks);
   return (
-    <span className="relative isolate grid size-full place-items-center">
-      <PatternBackground pattern="grid" fade="center" size={16} tone="primary" intensity={0.4} />
-      <span className="text-title font-semibold text-strong tabular-nums">{figure}</span>
+    <span className="flex size-full flex-col gap-3 bg-linear-to-b from-primary-wash to-transparent p-5">
+      <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-overlay px-2.5 py-1 text-small font-medium text-body shadow-raised">
+        <span aria-hidden className="size-1.5 rounded-full bg-primary" />
+        {caption}
+      </span>
+      <span className="mt-auto text-display font-semibold tracking-tight text-strong tabular-nums">{figure}</span>
+      <span aria-hidden className="flex gap-1">
+        {Array.from({ length: ticks }, (_, i) => (
+          <span key={i} className={cn("h-5 flex-1 rounded-full", i < on ? "bg-primary" : "bg-chart-track")} />
+        ))}
+      </span>
     </span>
   );
 }
@@ -109,7 +124,7 @@ function PeriodDigest({ s, label, loading }: { s: PeriodStats; label: string; lo
       </p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {lead ? (
-          <ExpandableCard title="En Çok Alan Müşteri" summary={`${lead.customer.name} · ${tl.format(lead.revenue)}`} media={<FigureMedia figure={tl.format(lead.revenue)} />}>
+          <ExpandableCard title="En Çok Alan Müşteri" summary={`${lead.customer.name} · ${tl.format(lead.revenue)}`} media={<FigureMedia figure={tl.format(lead.revenue)} share={pct(lead.revenue, s.revenue)} caption={`Cirodaki payı %${pct(lead.revenue, s.revenue, 0)}`} />}>
             {lead.customer.name} ({lead.customer.city}) bu dönemde {num.format(lead.orders)} sipariş verdi; ortalama sepet{" "}
             {tl.format(Math.round(lead.revenue / lead.orders))}. Yetkili: {lead.customer.contact}.
           </ExpandableCard>
@@ -117,14 +132,14 @@ function PeriodDigest({ s, label, loading }: { s: PeriodStats; label: string; lo
         <ExpandableCard
           title="Kanal Dağılımı"
           summary={`En çok ${topChannel.channel} · ${num.format(topChannel.orders)} sipariş`}
-          media={<FigureMedia figure={`%${pct(topChannel.orders, channelTotal, 0).toLocaleString("tr-TR")}`} />}
+          media={<FigureMedia figure={`%${pct(topChannel.orders, channelTotal, 0).toLocaleString("tr-TR")}`} share={pct(topChannel.orders, channelTotal)} caption={`${topChannel.channel} payı`} />}
         >
           {s.channels.map((c) => `${c.channel}: ${num.format(c.orders)} sipariş`).join(" · ")}. Toplam {num.format(channelTotal)} sipariş.
         </ExpandableCard>
         <ExpandableCard
           title="Destek Kalitesi"
           summary={`${num.format(s.ticketCount)} talep · %${resolvedPct.toLocaleString("tr-TR")} çözüldü`}
-          media={<FigureMedia figure={`${num.format(s.quality.avgFirst)} dk`} />}
+          media={<FigureMedia figure={`${num.format(s.quality.avgFirst)} dk`} share={resolvedPct} caption={`İlk yanıt · %${resolvedPct} çözüldü`} />}
         >
           İlk yanıt ortalaması {num.format(s.quality.avgFirst)} dakika. {num.format(s.quality.answered)} talep yanıtlandı, {num.format(s.quality.resolved)} talep
           çözüldü; çözülenlerin {num.format(s.quality.satisfied)} tanesinde müşteri memnun.
@@ -289,7 +304,7 @@ export function RaporlarPage() {
         </div>
       </Well>
       <div className="grid grid-cols-1 gap-4 lg:col-span-3 lg:grid-cols-2">
-        <ChartCard id="rapor-birikim" label={`İlk Dört Müşteri · Birikimli Ciro`} value={tl.format(top.reduce((a, r) => a + r.revenue, 0))}>
+        <ChartCard className={CARD} id="rapor-birikim" label={`İlk Dört Müşteri · Birikimli Ciro`} value={tl.format(top.reduce((a, r) => a + r.revenue, 0))}>
           <LineChart
             title="İlk Dört Müşterinin Birikimli Cirosu"
             labels={s.window.buckets.map((b) => b.label)}
@@ -297,7 +312,7 @@ export function RaporlarPage() {
             series={top.map((r, i) => ({ label: r.customer.name, values: cumulative.map((c) => c[i]), series: ([1, 2, 3, 5] as const)[i] }))}
           />
         </ChartCard>
-        <ChartCard id="rapor-harita" label="Müşteri Haritası" value={`${num.format(points.length)} müşteri`}>
+        <ChartCard className={CARD} id="rapor-harita" label="Müşteri Haritası" value={`${num.format(points.length)} müşteri`}>
           <ScatterChart
             title="Sipariş Sayısına Göre Ortalama Sepet"
             points={points}
@@ -349,7 +364,7 @@ export function RaporlarPage() {
         <div className="mt-auto grid grid-cols-1 gap-4 pt-6">
           <Progress label="İlk Yanıt 30 Dakika İçinde" value={pct(s.tickets.filter((t) => (t.firstResponseMin ?? 999) <= 30).length, s.ticketCount, 0)} hint="Hedef %80" size="sm" />
           <Progress label="Çözülen Talepler" value={pct(s.quality.resolved, s.ticketCount, 0)} hint="Kapanan ya da onaylanan" size="sm" />
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-lg bg-overlay px-3 py-2.5 shadow-raised">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-lg bg-surface px-3 py-2.5 ring-1 ring-inset ring-line-soft">
             <span className="min-w-0">
               <span className="block text-base font-medium text-strong">Kapanış Anketi</span>
               <span className="block text-small text-muted">Çözülen taleplerde müşteri puanı</span>
@@ -367,7 +382,7 @@ export function RaporlarPage() {
         <WellTitle id="rapor-disa" hint={`${PERIOD_NAMES[period]} · ${num.format(s.orderCount)} Sipariş`}>
           Dışa Aktar
         </WellTitle>
-        <div className="grid grid-cols-1 flex-1 place-items-center gap-4 rounded-lg bg-overlay p-6 text-center shadow-raised">
+        <div className="grid grid-cols-1 flex-1 place-items-center gap-4 rounded-lg bg-surface p-6 text-center ring-1 ring-inset ring-line-soft">
           {exporting === "running" ? (
             <LoadingMark size="lg" label="Dosya hazırlanıyor" showLabel />
           ) : (
@@ -402,7 +417,7 @@ export function RaporlarPage() {
           İçe Aktar
         </WellTitle>
         <div className="grid grid-cols-1 flex-1 content-start gap-4">
-          <div className="rounded-lg bg-overlay p-2 shadow-raised">
+          <div className="rounded-lg bg-surface p-2 ring-1 ring-inset ring-line-soft">
           <FileDropzone
             label="Sipariş Dosyası Yükle"
             accept={[".csv", ".xlsx", "text/csv"]}
@@ -443,8 +458,8 @@ export function RaporlarPage() {
         }
       />
       <div className="grid grid-cols-1 gap-6 p-4 sm:p-6">
-        <div className="grid grid-cols-1 gap-3 rounded-xl bg-surface p-4 sm:p-5">
-          <h2 className="text-base font-semibold text-strong">Hazır Raporlar</h2>
+        <div className="grid grid-cols-1 gap-3">
+          <SectionTitle id="rapor-hazir" title="Hazır Raporlar" note="Bir kez kur, her dönem aynı biçimde gelsin" />
           <Carousel label="Hazır Raporlar" slides={slides} />
         </div>
 

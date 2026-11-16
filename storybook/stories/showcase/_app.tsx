@@ -35,6 +35,7 @@ import { GorevlerPage } from "./_gorevler";
 import { PanoPage } from "./_pano";
 import { RaporlarPage } from "./_raporlar";
 import { TakvimPage } from "./_takvim";
+import "./pusula.css";
 import { AppContext, PAGES, href, type Page, type Params, type Toast } from "./_ui";
 
 /** Sayfa geçişinde iskeletin kalma süresi: gezinme göstergesi görünsün, hap çıkmasın (420 ms). */
@@ -55,6 +56,7 @@ const OPEN_TASKS = BOARD.filter((c) => !c.done).reduce((n, c) => n + c.cards.len
 
 const NAV: readonly ShellNavGroup[] = [
   {
+    label: "Genel",
     items: (["dashboard", "inbox", "tasks", "calendar", "assistant"] as const).map((id) => ({
       href: href(id),
       label: PAGES.find((p) => p.id === id)!.label,
@@ -63,7 +65,7 @@ const NAV: readonly ShellNavGroup[] = [
     })),
   },
   {
-    label: "Çalışma Alanı",
+    label: "Yönetim",
     items: (["reports", "settings"] as const).map((id) => ({ href: href(id), label: PAGES.find((p) => p.id === id)!.label, icon: ICONS[id] })),
   },
 ];
@@ -72,8 +74,8 @@ const BRAND = {
   name: "Pusula",
   href: href("dashboard"),
   logo: (
-    <span className="inline-grid size-7 place-items-center rounded-sm bg-brand text-on-brand">
-      <Compass className="!size-4" strokeWidth={2} />
+    <span className="pusula-ink inline-grid size-7 place-items-center rounded-lg">
+      <Compass className="!size-4" strokeWidth={2.25} />
     </span>
   ),
 };
@@ -247,18 +249,21 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
 
   if (!signedIn) {
     return (
+      <div data-product="pusula" className="contents">
       <GirisPage
         onSignedIn={() => {
           setSignedIn(true);
           setRoute({ page: "dashboard", params: {} });
         }}
       />
+      </div>
     );
   }
 
   const loadingPage = pending;
   return (
     <AppContext.Provider value={ctx}>
+      <div data-product="pusula" className="contents">
       <Suspense fallback={null}>
         <RouteProgress />
       </Suspense>
@@ -275,6 +280,7 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
       </AppShell>
       <CommandPalette commands={commands} placeholder="Sayfa, talep ya da komut ara" />
       <Toaster />
+      </div>
     </AppContext.Provider>
   );
 }

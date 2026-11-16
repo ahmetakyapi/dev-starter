@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
+import { LayoutGrid } from "lucide-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { NotificationCenter, type NotificationItem } from "@/components/ui/notification-center";
 import type { Period } from "./_data";
 import { cn } from "@/lib/utils";
@@ -78,31 +80,98 @@ export function useApp(): AppState {
   return ctx;
 }
 
-/** Sayfa başlığı: solda ad + bir satır bağlam, sağda sayfanın eylemleri ve zil. */
+/** Sayfanın kenar çubuğundaki grubu: üst çubuktaki ekmek kırıntısının orta halkası. */
+export const SECTION_OF: Record<Page, string> = {
+  dashboard: "Genel",
+  inbox: "Genel",
+  tasks: "Genel",
+  calendar: "Genel",
+  assistant: "Genel",
+  reports: "Yönetim",
+  settings: "Yönetim",
+};
+
+/**
+ * Sayfa başlığı, iki katlı (Ingot turu):
+ *   1. Üst çubuk: ekmek kırıntısı (Pusula › grup › sayfa [› alt]), sağda
+ *      canlı veri saati ve zil. Kullanıcı nerede olduğunu her sayfada aynı
+ *      yerden okur.
+ *   2. Başlık bloğu: büyük ad, bir satır bağlam, sağda sayfanın eylemleri.
+ *      Birincil eylem varsa `INK` sınıflı tek koyu hap.
+ */
 export function PageBar({
   title,
   description,
   actions,
-  above,
+  crumb,
 }: {
   title: string;
   description?: ReactNode;
   actions?: ReactNode;
-  above?: ReactNode;
+  /** Sayfa adından sonra gelen alt halka ("Çalışma Alanı"). */
+  crumb?: string;
 }) {
-  const { notifications, markRead } = useApp();
+  const { page, notifications, markRead } = useApp();
+  const items = [
+    { label: "Pusula", href: href("dashboard"), icon: <LayoutGrid /> },
+    { label: SECTION_OF[page] },
+    crumb ? { label: title, href: href(page) } : { label: title },
+    ...(crumb ? [{ label: crumb }] : []),
+  ];
   return (
-    <header className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-line-soft px-4 py-4 sm:px-6">
-      <div className="min-w-0 flex-1">
-        {above}
-        <h1 className="text-title font-semibold tracking-tight text-strong">{title}</h1>
-        {description ? <p className="mt-0.5 text-small text-muted">{description}</p> : null}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {actions}
+    <header className="border-b border-line-soft">
+      <div className="flex min-h-13 items-center gap-3 border-b border-line-soft px-4 sm:px-6">
+        <Breadcrumb items={items} className="min-w-0 flex-1" />
+        <span className="hidden items-center gap-1.5 text-small text-muted md:inline-flex">
+          <span aria-hidden className="relative inline-flex size-2">
+            <span className="absolute inset-0 rounded-full bg-success opacity-40 motion-safe:animate-ping" />
+            <span className="relative size-2 rounded-full bg-success" />
+          </span>
+          Canlı · 2 Kas, 10:24
+        </span>
         <NotificationCenter items={notifications} onMarkRead={markRead} />
       </div>
+      <div className="flex flex-wrap items-end gap-x-6 gap-y-3 px-4 pt-6 pb-5 sm:px-6">
+        {/* En az 18rem: telefonda eylemler başlığı sıkıştırmaz, alt satıra iner. */}
+        <div className="min-w-[min(100%,18rem)] flex-1">
+          <h1 className="text-heading font-semibold tracking-tight text-strong">{title}</h1>
+          {description ? <p className="mt-1 text-base text-muted">{description}</p> : null}
+        </div>
+        {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
+      </div>
     </header>
+  );
+}
+
+/**
+ * Pusula kartı: beyaz zemin, kıl halkası, en hafif gölge. Karo içinde gri
+ * kuyu yerine (eski "board" dili) beyaz kart: içerik zaten beyaz bir karonun
+ * içinde; ikinci bir gri ton yüzeyi bulandırıyordu. Lejant karoları kartın
+ * içinde gri çipe döner (gölgesiz).
+ */
+export const CARD =
+  "rounded-xl bg-overlay p-1.5 shadow-raised ring-1 ring-line [&>.mt-auto>dl>div]:bg-surface [&>.mt-auto>dl>div]:shadow-none";
+
+/** Ekranın tek birincil eylemi: koyu mürekkep hap (pusula.css). `buttonClass` ile birlikte. */
+export const INK = "pusula-ink rounded-full";
+
+/** Yumuşak renk karosu: ölçü, rapor ve kategori ikonlarının zemini. */
+export function IconTile({ children, tone = "primary", className }: { children: ReactNode; tone?: "primary" | "success" | "warning" | "danger" | "neutral"; className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "inline-grid size-8 shrink-0 place-items-center rounded-lg ring-1 ring-inset [&_svg]:size-4",
+        tone === "primary" && "bg-primary-wash text-primary-ink ring-primary/15",
+        tone === "success" && "bg-success-wash text-success ring-success/15",
+        tone === "warning" && "bg-warning-wash text-warning ring-warning/15",
+        tone === "danger" && "bg-danger-wash text-danger ring-danger/15",
+        tone === "neutral" && "bg-surface text-body ring-line",
+        className,
+      )}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -111,7 +180,7 @@ export function SectionTitle({ id, title, note, className }: { id: string; title
   return (
     <div className={cn("flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-1", className)}>
       {/* scroll-mt: bölüm gezintisi (TocNav) yapışkan; başlık onun altında kalmasın. */}
-      <h2 id={id} className="scroll-mt-24 text-base font-semibold text-strong">
+      <h2 id={id} className="scroll-mt-24 text-title font-semibold tracking-tight text-strong">
         {title}
       </h2>
       {note ? <p className="text-small text-muted">{note}</p> : null}
@@ -119,10 +188,10 @@ export function SectionTitle({ id, title, note, className }: { id: string; title
   );
 }
 
-/** Beyaz içerik karosunun içindeki gri kuyu: ayar grupları, form kartları. */
+/** Ayar grupları, form kartları: beyaz kart + kıl halkası (eskiden gri kuyu; Ingot turu). */
 export function Well({ children, className, labelledBy }: { children: ReactNode; className?: string; labelledBy?: string }) {
   return (
-    <section aria-labelledby={labelledBy} className={cn("flex h-full flex-col rounded-xl bg-surface p-4 sm:p-5", className)}>
+    <section aria-labelledby={labelledBy} className={cn("flex h-full flex-col rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line sm:p-5", className)}>
       {children}
     </section>
   );
@@ -130,7 +199,7 @@ export function Well({ children, className, labelledBy }: { children: ReactNode;
 
 export function WellTitle({ id, children, hint }: { id: string; children: ReactNode; hint?: ReactNode }) {
   return (
-    <div className="mb-4">
+    <div className="-mx-4 mb-4 border-b border-line-soft px-4 pb-3 sm:-mx-5 sm:px-5">
       <h2 id={id} className="scroll-mt-24 text-base font-semibold text-strong">
         {children}
       </h2>

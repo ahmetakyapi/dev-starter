@@ -1,0 +1,62 @@
+/*
+ * Pusula'nın ürün kimliği (Ingot turu, 2026-11). Kataloğun genel token'ları
+ * değişmez; yalnız Pusula'nın kökü (`[data-product="pusula"]`) altında:
+ *
+ * 1. GRAFİK PALETİ paletin kendi rengiyle kurulur. Önceki genel dizi (limon,
+ *    mavi, mor, pembe) panoda on iki grafik yan yana gelince "renk
+ *    kataloğu" gibi okunuyordu. Pusula'da birinci seri paletin vurgusu,
+ *    ikincisi onun yıkanmışı (önceki dönem, ikinci kanal), üçüncüsü mürekkep
+ *    (nötr). Kalan üç seri sıcak-soğuk iki yardımcı ve uyarı tonu: yalnız
+ *    dörtten fazla kategori olduğunda görünür. Palet değişince (Verdant,
+ *    Ember…) grafikler de onunla döner: ürün tek renk ailesinde kalır.
+ *
+ * 2. MÜREKKEP DÜĞME (`.pusula-ink`): ekranın tek birincil eylemi koyu,
+ *    yukarıdan hafif aydınlanan bir hap. Renkli marka düğmesi sayfadaki veri
+ *    renkleriyle yarışıyordu; mürekkep her paletle sakin kalır.
+ */
+
+[data-product="pusula"] {
+  --chart-1: var(--primary);
+  --chart-2: color-mix(in oklab, var(--primary) 38%, var(--page-bg));
+  --chart-3: color-mix(in oklab, var(--text-strong) 34%, var(--page-bg));
+  --chart-4: #f59e0b;
+  --chart-5: #14b8a6;
+  --chart-6: #f43f5e;
+  --chart-track: color-mix(in oklab, var(--text-strong) 6%, transparent);
+}
+
+:root[data-theme="dark"] [data-product="pusula"] {
+  --chart-2: color-mix(in oklab, var(--primary) 45%, var(--page-bg));
+  --chart-3: color-mix(in oklab, var(--text-strong) 42%, var(--page-bg));
+  --chart-4: #fbbf24;
+  --chart-5: #2dd4bf;
+  --chart-6: #fb7185;
+  --chart-track: color-mix(in oklab, var(--text-strong) 9%, transparent);
+}
+
+.pusula-ink {
+  color: var(--page-bg);
+  background-color: var(--text-strong);
+  background-image: linear-gradient(180deg, color-mix(in oklab, var(--page-bg) 22%, transparent), transparent 55%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--page-bg) 25%, transparent),
+    0 1px 2px color-mix(in oklab, var(--text-strong) 30%, transparent),
+    0 4px 12px -4px color-mix(in oklab, var(--text-strong) 45%, transparent);
+}
+.pusula-ink:hover {
+  background-color: color-mix(in oklab, var(--text-strong) 86%, var(--page-bg));
+}
+
+/* Kıl çizgili ölçü şeridi: hücreler arasında dikey, telefonda yatay çizgi. */
+.pusula-strip > * + * {
+  border-top: 1px solid var(--line-soft);
+}
+@media (min-width: 40rem) {
+  .pusula-strip > * + * { border-top: 0; }
+  .pusula-strip > *:nth-child(even) { border-left: 1px solid var(--line-soft); }
+  .pusula-strip > *:nth-child(n + 3) { border-top: 1px solid var(--line-soft); }
+}
+@media (min-width: 80rem) {
+  .pusula-strip > *:nth-child(n + 3) { border-top: 0; }
+  .pusula-strip > * + * { border-left: 1px solid var(--line-soft); }
+}

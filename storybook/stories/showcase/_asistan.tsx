@@ -132,7 +132,7 @@ function Drafts() {
           const c = customer(o.customerId);
           const t = TICKETS.find((x) => x.orderId === o.id);
           return (
-            <li key={o.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg bg-overlay px-3 py-2 shadow-raised">
+            <li key={o.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg bg-surface px-3 py-2 ring-1 ring-inset ring-line-soft">
               <span className="font-medium text-strong">{c.contact}</span>
               <span className="text-small text-muted">
                 {c.name} · {o.id} · {tl.format(o.total)}

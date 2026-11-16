@@ -31,7 +31,7 @@ import {
   shortDate,
   type CalendarEvent,
 } from "./_data";
-import { PageBar, Well, WellTitle, useApp } from "./_ui";
+import { INK, PageBar, Well, WellTitle, useApp } from "./_ui";
 
 const KINDS = ["Görüşme", "Teslimat", "Numune", "İç Toplantı"] as const;
 const KIND_TONE = { Görüşme: "chart-2", Teslimat: "chart-1", Numune: "chart-3", "İç Toplantı": "chart-4" } as const;
@@ -116,7 +116,7 @@ export function TakvimPage() {
         title="Takvim"
         description={`Kasım 2026 · ${num.format(monthEvents.length)} Etkinlik`}
         actions={
-          <Button size="sm" onClick={() => document.getElementById("randevu")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+          <Button size="sm" className={INK} onClick={() => document.getElementById("randevu")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
             <CalendarPlus aria-hidden />
             Randevu Oluştur
           </Button>
@@ -129,7 +129,7 @@ export function TakvimPage() {
             <WellTitle id="takvim-ay" hint="Bir gün ya da iki uç seçerek aralık belirle.">
               Aralık
             </WellTitle>
-            <div className="rounded-lg bg-overlay p-3 shadow-raised">
+            <div className="rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
               <DateCalendar
                 mode="range"
                 label="Gösterilen Aralık"
@@ -139,7 +139,7 @@ export function TakvimPage() {
               />
             </div>
             {next ? (
-              <div className="mt-4 rounded-lg bg-overlay p-3 shadow-raised">
+              <div className="mt-4 rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
                 <p className="text-small text-muted">Sıradaki · {longDate.format(next.date)}</p>
                 <p className="mt-1 flex items-baseline gap-2 text-base">
                   <span className="font-semibold text-strong tabular-nums">{clock.format(next.date)}</span>
@@ -154,7 +154,7 @@ export function TakvimPage() {
             <p className="px-1 text-small font-semibold text-muted">Kasım'da</p>
             <dl className="grid grid-cols-2 gap-1.5 pt-2">
               {KINDS.map((k) => (
-                <div key={k} className="rounded-lg bg-overlay px-3 py-2 shadow-raised">
+                <div key={k} className="rounded-lg bg-surface px-3 py-2 ring-1 ring-inset ring-line-soft">
                   <dt className="text-small text-muted">{k}</dt>
                   <dd className="text-base font-semibold text-strong tabular-nums">
                     {num.format(monthEvents.filter((e) => e.kind === k).length)}
@@ -212,7 +212,7 @@ export function TakvimPage() {
                       </h3>
                       <ul className="grid grid-cols-1 gap-1.5">
                         {list.map((e) => (
-                          <li key={e.id} className="flex items-start gap-3 rounded-lg bg-overlay p-3 shadow-raised">
+                          <li key={e.id} className="flex items-start gap-3 rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
                             <time dateTime={e.date.toISOString()} className="w-12 shrink-0 pt-0.5 text-base font-semibold text-strong tabular-nums">
                               {clock.format(e.date)}
                             </time>
@@ -263,7 +263,7 @@ export function TakvimPage() {
               items={KINDS.map((k) => ({ value: k, label: k }))}
             />
           </div>
-          <div className="rounded-lg bg-overlay p-2 shadow-raised">
+          <div className="rounded-lg bg-surface p-2 ring-1 ring-inset ring-line-soft">
             <WeekCalendar label="Haftalık Takvim" week={dayKey(range.start)} events={weekEvents} now={iso(TODAY)} startHour={8} endHour={18} hourHeight={60} />
           </div>
         </Well>
@@ -272,7 +272,7 @@ export function TakvimPage() {
           <WellTitle id="randevu" hint="Üç adım: müşteri, zaman, onay. Pazar günleri kapalı.">
             Randevu Oluştur
           </WellTitle>
-          <div className="rounded-lg bg-overlay p-4 shadow-raised sm:p-6">
+          <div className="rounded-lg bg-surface p-4 ring-1 ring-inset ring-line-soft sm:p-6">
             <Stepper steps={STEPS} current={step} aria-label="Randevu Adımları" />
             <div className="mt-6 border-t border-line-soft pt-6">
               {step === 0 ? (

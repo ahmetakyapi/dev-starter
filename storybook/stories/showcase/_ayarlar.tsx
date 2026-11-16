@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, House, Settings, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import { Bell, Shield, SlidersHorizontal, UserRound } from "lucide-react";
 import { BannerAlert } from "@/components/ui/banner-alert";
-import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { Dial } from "@/components/ui/dial";
@@ -29,7 +28,7 @@ import { TagInput } from "@/components/ui/tag-input";
 import { Terminal } from "@/components/ui/terminal";
 import { Textarea } from "@/components/ui/textarea";
 import { ME, TAG_COLORS, TAG_SUGGESTIONS, TICKETS, WORKSPACE } from "./_data";
-import { PageBar, Well, WellTitle, href, useApp } from "./_ui";
+import { PageBar, Well, WellTitle, useApp } from "./_ui";
 
 const LANGS = [
   { value: "tr", label: "Türkçe" },
@@ -152,17 +151,8 @@ export function AyarlarPage() {
   return (
     <div className="flex min-h-full flex-col">
       <PageBar
-        above={
-          <Breadcrumb
-            className="mb-1"
-            items={[
-              { label: "Pusula", href: href("dashboard"), icon: <House /> },
-              { label: "Ayarlar", href: href("settings"), icon: <Settings /> },
-              { label: "Çalışma Alanı" },
-            ]}
-          />
-        }
         title="Ayarlar"
+        crumb="Çalışma Alanı"
         description={`${WORKSPACE.name} · ${WORKSPACE.plan} · Değişiklikler Anında Kaydedilir`}
         actions={<SettingsDialog tabs={QUICK} triggerLabel="Hızlı Ayarlar" description="Bu cihazdaki Pusula tercihleri." />}
       />
@@ -288,7 +278,7 @@ export function AyarlarPage() {
               verified ? (
                 <BannerAlert tone="success" title="İki Adımlı Doğrulama Açık" description="Yeni cihazlarda giriş yaparken SMS kodu sorulacak." announce />
               ) : (
-                <div className="grid grid-cols-1 gap-3 rounded-lg bg-overlay p-4 shadow-raised">
+                <div className="grid grid-cols-1 gap-3 rounded-lg bg-surface p-4 ring-1 ring-inset ring-line-soft">
                   <InputOTP
                     label="Doğrulama Kodu"
                     hint="Telefonuna gelen 6 haneli kodu yaz."
@@ -339,7 +329,7 @@ export function AyarlarPage() {
               maxTags={8}
               hint="Talep ekranında tek dokunuşla eklenir. En fazla 8."
             />
-            <div className="rounded-lg bg-overlay p-3 shadow-raised md:row-span-2 md:w-64">
+            <div className="rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft md:row-span-2 md:w-64">
               <ColorPicker label="Etiket Rengi" value={tagColor} onValueChange={setTagColor} presets={TAG_COLORS} />
             </div>
             <section aria-labelledby="ayar-etiket-kullanim" className="grid content-start gap-2">
@@ -350,7 +340,7 @@ export function AyarlarPage() {
                 {tags.map((tag) => {
                   const count = TICKETS.filter((t) => t.tags.includes(tag)).length;
                   return (
-                    <li key={tag} className="flex items-center gap-2.5 rounded-lg bg-overlay px-3 py-2.5 shadow-raised">
+                    <li key={tag} className="flex items-center gap-2.5 rounded-lg bg-surface px-3 py-2.5 ring-1 ring-inset ring-line-soft">
                       {/* token-ok: nokta rengi kullanıcının seçtiği etiket rengi (veri) */}
                       <span aria-hidden className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: tagColor }} />
                       <span className="min-w-0 flex-1 truncate text-base text-strong">{tag}</span>
@@ -367,7 +357,7 @@ export function AyarlarPage() {
           <WellTitle id="ayar-ozet" hint={`Her sabah ${formatClock(digestAt)}'da gelen kutusu ve geciken siparişlerin özeti e-postayla gelir.`}>
             Günlük Özet Saati
           </WellTitle>
-          <div className="rounded-xl bg-overlay px-4 pt-5 pb-4 shadow-raised">
+          <div className="rounded-xl bg-surface px-4 pt-5 pb-4 ring-1 ring-inset ring-line-soft">
             <TimeScrubber label="Günlük Özet Saati" value={digestAt} onValueChange={setDigestAt} hint="Hafta İçi Her Gün" />
           </div>
         </Well>
@@ -386,7 +376,7 @@ export function AyarlarPage() {
           <WellTitle id="ayar-alan" hint={`${WORKSPACE.plan}: ${WORKSPACE.storage.totalGb} GB. Lejanttaki bir kalemin üzerine gel, payı öne çıksın.`}>
             Dosya Alanı
           </WellTitle>
-          <div className="rounded-xl bg-overlay p-5 shadow-raised">
+          <div className="rounded-xl bg-surface p-5 ring-1 ring-inset ring-line-soft">
             <SegmentedMeter
               size="lg"
               label="Kullanılan Alan"

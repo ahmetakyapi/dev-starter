@@ -5,7 +5,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { DELAYED, TICKETS, TODAY, customer, daysBetween, shortDate, tl } from "./_data";
-import { href } from "./_ui";
+import { INK, href } from "./_ui";
 
 /**
  * Gecikme kartı (Pano). Eski hali tam genişlikte kahverengi bir uyarı
@@ -45,12 +45,12 @@ export function DelayCard() {
   const longest = Math.max(...rows.map((r) => r.late));
 
   return (
-    <section aria-labelledby="pano-gecikme" data-tour="gecikme" className="edge-lit rounded-2xl bg-surface p-2">
-      <div className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]">
-        <div className="flex flex-col justify-between gap-6 rounded-xl bg-overlay p-5 shadow-raised">
+    <section aria-labelledby="pano-gecikme" data-tour="gecikme" className="edge-lit overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]">
+        <div className="flex flex-col justify-between gap-6 border-b border-line-soft bg-surface p-5 lg:border-r lg:border-b-0">
           <div>
             <div className="flex items-center gap-2.5">
-              <span aria-hidden className="grid size-9 place-items-center rounded-md bg-warning-fill text-on-warning-fill shadow-raised">
+              <span aria-hidden className="grid size-9 place-items-center rounded-lg bg-warning-wash text-warning ring-1 ring-inset ring-warning/20">
                 <PackageX className="size-[1.125rem]" strokeWidth={2.25} />
               </span>
               <span className="text-small font-semibold text-warning">Teslimat Gecikmesi</span>
@@ -64,7 +64,7 @@ export function DelayCard() {
             </p>
           </div>
           <div className="grid gap-2">
-            <a href={href("inbox", { tag: "gecikme" })} className={buttonClass({ variant: "primary", className: "w-full" })}>
+            <a href={href("inbox", { tag: "gecikme" })} className={buttonClass({ variant: "primary", className: cn(INK, "w-full") })}>
               Talepleri Gör
               <ArrowRight aria-hidden />
             </a>
@@ -75,12 +75,12 @@ export function DelayCard() {
           </div>
         </div>
 
-        <ol aria-label="Geciken siparişler" className="grid auto-rows-fr grid-cols-1 gap-2">
+        <ol aria-label="Geciken siparişler" className="grid auto-rows-fr grid-cols-1 divide-y divide-line-soft">
           {rows.map(({ o, c, late, promised, ticket }) => (
             <li key={o.id} className="grid">
               <a
                 href={ticket ? href("inbox", { ticket: ticket.id }) : href("inbox", { tag: "gecikme" })}
-                className="group grid gap-4 rounded-xl bg-overlay p-4 shadow-raised transition-[box-shadow] duration-200 hover:shadow-floating sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center"
+                className="group grid h-full gap-4 px-5 py-4 transition-colors duration-150 hover:bg-surface sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center"
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <Avatar name={c.name} />

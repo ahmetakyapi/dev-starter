@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Compass, MessagesSquare, PackageCheck, Reply, Smile } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
+import { Compass, MessagesSquare, PackageCheck, Receipt, Reply, ShoppingBag, Smile, Wallet } from "lucide-react";
 import { ActivityRings } from "@/components/ui/activity-rings";
 import { Announcement } from "@/components/ui/announcement";
 import { AnimatedIcon } from "@/components/ui/animated-icon";
@@ -47,7 +47,8 @@ import {
 import { ProductTour, type TourStep } from "@/components/ui/product-tour";
 import { Button } from "@/components/ui/Button";
 import { DelayCard } from "./_gecikme";
-import { PageBar, SectionTitle, href, useApp } from "./_ui";
+import { CARD, IconTile, PageBar, SectionTitle, href, useApp } from "./_ui";
+import { cn } from "@/lib/utils";
 
 const TL_COMPACT: Intl.NumberFormatOptions = { style: "currency", currency: "TRY", notation: "compact", maximumFractionDigits: 1 };
 const WEEKDAYS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"] as const;
@@ -66,7 +67,14 @@ export function PeriodControl({ size = "md" }: { size?: "sm" | "md" }) {
   );
 }
 
-function StatTile({
+/**
+ * Ölçü şeridi hücresi (Ingot turu): dört ölçü ayrı gri karolar yerine TEK
+ * kartın kıl çizgiyle bölünmüş hücreleri. Göz dört sayıyı bir satır olarak
+ * okur; karşılaştırma kolaylaşır. Altta kesik çizgiyle ayrılmış eğilim ve
+ * dönemin kısa adı.
+ */
+function StatCell({
+  icon,
   label,
   value,
   change,
@@ -74,7 +82,9 @@ function StatTile({
   series,
   positiveIsGood,
   trend,
+  foot,
 }: {
+  icon: ReactNode;
   label: string;
   value: string;
   change: number | null;
@@ -82,13 +92,20 @@ function StatTile({
   series: readonly number[];
   positiveIsGood?: boolean;
   trend: string;
+  foot: string;
 }) {
   return (
-    <div className="flex h-full flex-col justify-between gap-3 rounded-xl bg-surface p-4">
-      <StatGrid className="grid-cols-1 sm:grid-cols-1">
-        <Stat label={label} value={<DigitRoll value={value} />} change={change} changeLabel={changeLabel} positiveIsGood={positiveIsGood} />
-      </StatGrid>
-      <Sparkline title={trend} values={series} width={240} height={36} className="w-full" />
+    <div className="relative flex h-full flex-col gap-4 p-4 sm:p-5">
+      <IconTile tone="neutral" className="absolute top-4 right-4 sm:top-5 sm:right-5">{icon}</IconTile>
+      <div className="pr-10">
+        <StatGrid className="grid-cols-1 sm:grid-cols-1">
+          <Stat label={label} value={<DigitRoll value={value} />} change={change} changeLabel={changeLabel} positiveIsGood={positiveIsGood} />
+        </StatGrid>
+      </div>
+      <div className="mt-auto border-t border-dashed border-line pt-3">
+        <Sparkline title={trend} values={series} width={240} height={32} className="w-full" />
+        <p className="mt-1.5 text-small text-muted">{foot}</p>
+      </div>
     </div>
   );
 }
@@ -159,11 +176,11 @@ export function PanoPage() {
 
         <section aria-labelledby="pano-ozet" data-tour="ozet" className="grid grid-cols-1 gap-3">
           <SectionTitle id="pano-ozet" title="Özet" note={`${w.label} · ${w.caption}`} />
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <StatTile label="Ciro" value={tl.format(s.revenue)} change={s.revenueChange} changeLabel={s.window.prevLabel} series={s.revenueSeries} trend={`${w.label} ciro eğilimi`} />
-            <StatTile label="Sipariş" value={num.format(s.orderCount)} change={s.orderChange} changeLabel={s.window.prevLabel} series={s.orderSeries} trend={`${w.label} sipariş eğilimi`} />
-            <StatTile label="Ortalama Sepet" value={tl.format(s.basket)} change={s.basketChange} changeLabel={s.window.prevLabel} series={s.basketSeries.filter((v) => v > 0)} trend={`${w.label} ortalama sepet eğilimi`} />
-            <StatTile label="Gelen Talep" value={num.format(s.ticketCount)} change={s.ticketChange} changeLabel={s.window.prevLabel} series={s.ticketSeries} positiveIsGood={false} trend={`${w.label} talep eğilimi`} />
+          <div className="pusula-strip grid grid-cols-1 overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line sm:grid-cols-2 xl:grid-cols-4">
+            <StatCell icon={<Wallet />} label="Ciro" value={tl.format(s.revenue)} change={s.revenueChange} changeLabel={s.window.prevLabel} series={s.revenueSeries} trend={`${w.label} ciro eğilimi`} foot={`Hedefin %${pct(s.revenue, target, 0)}'i · ${tl.format(target)}`} />
+            <StatCell icon={<ShoppingBag />} label="Sipariş" value={num.format(s.orderCount)} change={s.orderChange} changeLabel={s.window.prevLabel} series={s.orderSeries} trend={`${w.label} sipariş eğilimi`} foot={`Dönüşüm %${conversion.toLocaleString("tr-TR")}`} />
+            <StatCell icon={<Receipt />} label="Ortalama Sepet" value={tl.format(s.basket)} change={s.basketChange} changeLabel={s.window.prevLabel} series={s.basketSeries.filter((v) => v > 0)} trend={`${w.label} ortalama sepet eğilimi`} foot={`${num.format(s.orderCount)} siparişin ortalaması`} />
+            <StatCell icon={<MessagesSquare />} label="Gelen Talep" value={num.format(s.ticketCount)} change={s.ticketChange} changeLabel={s.window.prevLabel} series={s.ticketSeries} positiveIsGood={false} trend={`${w.label} talep eğilimi`} foot={`%${pct(q.resolved, s.ticketCount, 0)}'i çözüldü`} />
           </div>
         </section>
 
@@ -172,7 +189,7 @@ export function PanoPage() {
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             <ChartCard
               id="pano-ciro"
-              className="lg:col-span-2"
+              className={cn(CARD, "lg:col-span-2")}
               label="Ciro"
               value={tl.format(s.revenue)}
               change={s.revenueChange}
@@ -204,6 +221,7 @@ export function PanoPage() {
             </ChartCard>
 
             <ChartCard
+              className={CARD}
               id="pano-kanal"
               label="Kanala Göre Sipariş"
               value={num.format(s.orderCount)}
@@ -222,7 +240,7 @@ export function PanoPage() {
 
             <ChartCard
               id="pano-akis"
-              className="lg:col-span-2"
+              className={cn(CARD, "lg:col-span-2")}
               label="Kanaldan Sonuca Sipariş"
               value={num.format(s.orderCount)}
               change={s.orderChange}
@@ -237,7 +255,7 @@ export function PanoPage() {
               />
             </ChartCard>
 
-            <ChartCard id="pano-musteri" label="Müşteriye Göre Ciro" value={tl.format(s.revenue)} change={s.revenueChange} changeLabel={w.prevLabel}>
+            <ChartCard className={CARD} id="pano-musteri" label="Müşteriye Göre Ciro" value={tl.format(s.revenue)} change={s.revenueChange} changeLabel={w.prevLabel}>
               <BarList
                 title="Müşteriye Göre Ciro"
                 columns={["Müşteri", "Ciro"]}
@@ -247,6 +265,7 @@ export function PanoPage() {
             </ChartCard>
 
             <ChartCard
+              className={CARD}
               id="pano-huni"
               label="Mağaza Dönüşümü"
               value={`%${conversion.toLocaleString("tr-TR")}`}
@@ -266,7 +285,7 @@ export function PanoPage() {
 
             <ChartCard
               id="pano-ritim"
-              className="lg:col-span-2"
+              className={cn(CARD, "lg:col-span-2")}
               label={`Günlük Sipariş · Son ${heatWeeks} Hafta`}
               value={num.format(heatTotal)}
               action={
@@ -280,7 +299,7 @@ export function PanoPage() {
 
             <ChartCard
               id="pano-donusum"
-              className="lg:col-span-2"
+              className={cn(CARD, "lg:col-span-2")}
               label="Sipariş ve Dönüşüm"
               value={num.format(s.orderCount)}
               change={s.orderChange}
@@ -300,6 +319,7 @@ export function PanoPage() {
             </ChartCard>
 
             <ChartCard
+              className={CARD}
               id="pano-hedef"
               label="Dönem Hedefleri"
               value={`${goals.filter((g) => g.value >= g.goal).length} / ${goals.length} tuttu`}
@@ -318,6 +338,7 @@ export function PanoPage() {
           <SectionTitle id="pano-destek" title="Destek" note={`${num.format(s.ticketCount)} Talep · ${w.caption}`} />
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             <ChartCard
+              className={CARD}
               id="pano-talep-kanal"
               label="Talep Kanalları"
               value={num.format(s.ticketCount)}
@@ -334,6 +355,7 @@ export function PanoPage() {
             </ChartCard>
 
             <ChartCard
+              className={CARD}
               id="pano-kalite"
               label="Destek Kalitesi"
               value={`${avgScore} puan`}
@@ -361,16 +383,17 @@ export function PanoPage() {
             </ChartCard>
 
             <ChartCard
+              className={CARD}
               id="pano-gun"
               label="Haftanın Gününe Göre Talep"
               value={`${byWeekday.reduce((a, d) => (d.value > a.value ? d : a)).label} en yoğun`}
             >
-              <TrackBarChart title="Haftanın Gününe Göre Talep" data={byWeekday} series={3} height="h-44" />
+              <TrackBarChart title="Haftanın Gününe Göre Talep" data={byWeekday} series={1} height="h-44" />
             </ChartCard>
 
             <ChartCard
               id="pano-asama"
-              className="lg:col-span-3"
+              className={cn(CARD, "lg:col-span-3")}
               label="Talep Akışı"
               value={`%${pct(q.resolved, s.ticketCount).toLocaleString("tr-TR")} çözüldü`}
               change={pct(q.resolved, s.ticketCount) - pct(s.prevQuality.resolved, s.prevQuality.total)}

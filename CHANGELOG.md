@@ -7,6 +7,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Pusula'ya kendi kimliği: Ingot turu — 2026-11-16
+
+- **Örnek uygulamanın bütün sayfaları** (Pano, Gelen Kutusu, Görevler,
+  Takvim, Asistan, Raporlar, Ayarlar) yeni ortak dille: ekmek kırıntılı üst
+  çubuk + büyük başlık, mürekkep hap birincil düğme, kıl halkalı beyaz
+  kartlar, kart içinde gömük paneller, panoda tek kartlık ölçü şeridi,
+  Gelen Kutusu'nda tek kart tablo, Raporlar'da nokta-çubuk ölçekli özetler.
+- **Ürün kökünde grafik paleti** (`storybook/stories/showcase/pusula.css`):
+  seriler paletin vurgusundan türer; genel `--chart-*` değişmedi.
+- **Bilgi tabanı:** `references.md` (ingotui.com), `decisions.md` → "Ingot Turu".
+
 ### `/grill`: kodlamadan önce planı sorguya çek — 2026-11-15
 
 - **Yeni komut (20 → 21):** `/grill [plan|story]`. Planı karar ağacına

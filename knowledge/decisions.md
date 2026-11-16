@@ -1073,3 +1073,37 @@ mi" ölçütüne göre komut; (3) her işte otomatik koşturmak — küçük iş
 uzatır, yalnız ORTA/BÜYÜK'te önerilir.
 *Ne zaman değişir:* `/story` akışında kullanıcı onu çoğunlukla geçiyorsa
 öneri kaldırılır; hep kullanılıyorsa VALIDATE'in zorunlu adımı olur.
+
+## Ingot Turu — Pusula'nın Kendi Ürün Kimliği (2026-11-16)
+
+**Karar:** Pusula (Storybook'taki örnek uygulama) board dilinin "beyaz karo
+içinde gri kuyu" katmanını bırakıp kendi ürün kimliğine geçti; ölçü ve
+yöntem ingotui.com önizlemelerinden (dil, kod değil). Kataloğun genel
+token'ları ve `snippets/ui` bileşenleri DEĞİŞMEDİ; kimlik ürün kökünde
+(`[data-product="pusula"]`, `storybook/stories/showcase/pusula.css`) ve
+Pusula'nın ortak parçalarında (`_ui.tsx`) yaşıyor:
+
+- **Grafik paleti paletten türer:** seri 1 vurgu, 2 vurgunun yıkanmışı
+  (önceki dönem), 3 mürekkep (nötr), 4-6 yardımcı. Genel dizi (limon, mavi,
+  mor, pembe) on iki grafik yan yana gelince renk kataloğu gibi okunuyordu.
+  Palet değişince grafikler de döner.
+- **Mürekkep düğme (`INK`):** ekranın tek birincil eylemi koyu degrade hap;
+  logo karosu da aynı mürekkep. Renkli düğme veri renkleriyle yarışıyordu.
+- **İki katlı sayfa başlığı:** ekmek kırıntısı (Pusula › Genel/Yönetim ›
+  sayfa) + canlı veri saati + zil; altında büyük başlık, tek satır bağlam,
+  sağda eylemler. Kenar çubuğu grupları "Genel" ve "Yönetim".
+- **Kart:** beyaz zemin + kıl halkası + en hafif gölge (`CARD`, `Well`);
+  kartın içindeki panel gri ve gölgesiz (gömük), kart içinde kart yok.
+- **Ölçü şeridi:** dört ölçü tek kartın kıl çizgiyle bölünmüş hücreleri,
+  altta kesik çizgiyle ayrılmış eğilim ve bir satır anlam ("Hedefin %91'i").
+- **Gelen Kutusu:** süzgeç çubuğu, tablo (gri başlık satırı) ve sayfalama tek
+  kartta; talep numaraları eşaralıklı.
+- **Raporlar:** özet kartlarındaki süs ızgara yerine payı gösteren nokta-çubuk
+  ölçek ve ne ölçtüğünü yazan çip.
+
+*Alternatifler:* (1) `--chart-*` ve kart dilini genel token'larda değiştirmek —
+bütün kataloğu ve şablonları etkiler, board dili ekosistemin varsayılanı
+kalsın diye reddedildi; (2) Ingot'un turuncu vurgusunu ve Geist fontunu almak —
+kimlik taklidi olur, palet ve Inter kaldı.
+*Ne zaman değişir:* Bu dil başka bir projede de tutarsa `CARD`/`INK`/ölçü
+şeridi `snippets/ui`ye bileşen olarak taşınır (`/harvest` adım 3).
