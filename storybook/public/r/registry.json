@@ -2698,7 +2698,7 @@
       "name": "sheet",
       "type": "registry:ui",
       "title": "Yan Panel",
-      "description": "Telefonda alttan çekmece, masaüstünde yan panel",
+      "description": "Telefonda alttan çekmece, masaüstünde yan panel; yan panelde `icon` (kimlik karosu), `status` (durum hapı), `footerStart` (karşı kenarda yıkıcı eylem), `size=\"lg\"` (ayrıntı paneli)",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],

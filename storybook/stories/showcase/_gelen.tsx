@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   Archive,
   CheckCheck,
@@ -54,7 +54,6 @@ import { SlotText } from "@/components/ui/slot-text";
 import { HoldButton } from "@/components/ui/hold-button";
 import { HoverCard, ProfilePreview } from "@/components/ui/hover-card";
 import { Icon } from "@/components/ui/icon";
-import { IconButton } from "@/components/ui/icon-button";
 import { Pagination } from "@/components/ui/pagination";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Rating } from "@/components/ui/rating";
@@ -67,7 +66,9 @@ import { FilterSheet, type FilterGroup, type FilterValue } from "@/components/ui
 import { RecordList } from "@/components/ui/record-list";
 import { Sheet } from "@/components/ui/sheet";
 import { Timeline } from "@/components/ui/timeline";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tabs } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 import { TreeTable } from "@/components/ui/tree-table";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
 import { Button } from "@/components/ui/Button";
@@ -81,11 +82,13 @@ import {
   TODAY,
   TICKETS,
   TICKET_CHANNELS,
+  clock,
   customer,
   dateTime,
   member,
   num,
   order,
+  shortDate,
   starsOf,
   ticket,
   ticketEvents,
@@ -801,16 +804,32 @@ export function GelenPage() {
           if (!next) navigate("inbox", { ...params, ticket: undefined });
         }}
         side="right"
+        size="lg"
+        icon={current ? CHANNEL_ICON[current.channel] : undefined}
+        status={
+          current ? (
+            <Badge tone={STATUS_TONE[current.status]} dot>
+              <SlotText text={current.status} live />
+            </Badge>
+          ) : undefined
+        }
         title={current?.subject ?? "Talep"}
-        description={current ? `${current.id} · ${customer(current.customerId).name}` : undefined}
+        description={current ? `${customer(current.customerId).name} · ${current.channel} · ${dateTime(current.date)}` : undefined}
+        footerStart={
+          current ? (
+            <HoldButton onConfirm={() => archive(current)} doneLabel="Arşivlendi" hint="Kazara arşivlenmesin diye basılı tut; bildirimden geri alınır." hideHint>
+              Basılı Tutarak Arşivle
+            </HoldButton>
+          ) : undefined
+        }
         footer={
           current ? (
             <>
-              <Tooltip label="Bana Ata">
-                <IconButton icon={UserRoundCheck} aria-label="Bana Ata" variant="secondary" showTitle={false} className="shrink-0" onClick={() => assignToMe(current)} />
-              </Tooltip>
+              <Button variant="secondary" disabled={current.assignee === ME.id} onClick={() => assignToMe(current)}>
+                <Icon icon={UserRoundCheck} />
+                Bana Ata
+              </Button>
               <Button
-                className="flex-1"
                 disabled={current.status === "Çözüldü"}
                 onClick={() => {
                   setStatus(current, "Çözüldü");
@@ -831,7 +850,6 @@ export function GelenPage() {
               setOverrides((o) => ({ ...o, [current.id]: { ...o[current.id], assignee } }));
               notify({ tone: "info", title: `${current.id} ${member(assignee).name.split(" ")[0]} Kişisine Atandı`, body: current.subject });
             }}
-            onArchive={() => archive(current)}
           />
         ) : null}
       </Sheet>
@@ -848,29 +866,66 @@ function teamReactions(t: Ticket): Reaction[] {
 
 const PEOPLE: readonly Person[] = TEAM.map((m) => ({ id: m.id, name: m.name, detail: m.role }));
 
-function TicketDetail({ t, onAssign, onArchive }: { t: Ticket; onAssign: (id: string) => void; onArchive: () => void }) {
+/** Yan panelin bölüm etiketi: büyük harf, geniş aralık, soluk (Auton referansı). */
+function PanelLabel({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <h3 id={id} className="mb-2 text-micro font-semibold tracking-widest text-muted uppercase">
+      {children}
+    </h3>
+  );
+}
+
+/** Kıl çizgili bilgi satırı: solda ad, sağda değer. */
+function InfoRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex min-h-12 items-center justify-between gap-4 px-4 py-2">
+      <dt className="shrink-0 text-base text-muted">{label}</dt>
+      <dd className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 text-base text-strong">{children}</dd>
+    </div>
+  );
+}
+
+/** Ölçü karosu: üç karo yan yana, gömük zemin; `bar` verilirse altında ilerleme çizgisi. */
+function Metric({ label, value, note, bar }: { label: string; value: ReactNode; note?: ReactNode; bar?: { pct: number; tone: "success" | "danger" } }) {
+  return (
+    <div className="min-w-0 rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
+      <p className="truncate text-small text-muted">{label}</p>
+      <p className="mt-1 truncate text-title font-semibold tracking-tight text-strong tabular-nums">{value}</p>
+      {bar ? (
+        <span aria-hidden className="mt-2 block h-1 rounded-full bg-chart-track">
+          <span className={cn("block h-full rounded-full", bar.tone === "success" ? "bg-success" : "bg-danger")} style={{ width: `${Math.max(6, Math.min(100, bar.pct))}%` }} />
+        </span>
+      ) : null}
+      {note ? <p className="mt-1.5 truncate text-small text-muted">{note}</p> : null}
+    </div>
+  );
+}
+
+/** İlk yanıt hedefi (dakika): panodaki "30 Dakikada Yanıt" ile aynı. */
+const REPLY_TARGET_MIN = 30;
+
+function TicketDetail({ t, onAssign }: { t: Ticket; onAssign: (id: string) => void }) {
   const c = customer(t.customerId);
   const [watchers, setWatchers] = useState<string[]>([...t.watchers]);
+  const [tab, setTab] = useState("genel");
   const o = t.orderId ? order(t.orderId) : undefined;
-  return (
-    <div className="grid grid-cols-1 gap-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge tone={STATUS_TONE[t.status]} dot>
-          <SlotText text={t.status} live />
-        </Badge>
-        <Badge tone={PRIORITY_TONE[t.priority]}>{t.priority}</Badge>
-        {t.tags.map((tag) => (
-          <Badge key={tag} shape="rounded">
-            {tag}
-          </Badge>
-        ))}
-        <span className="ml-auto inline-flex items-center gap-1 text-small text-muted">
-          {t.id}
-          <CopyButton value={t.id} label="Talep Numarasını Kopyala" />
-        </span>
+  const events = ticketEvents(t);
+  const first = t.firstResponseMin;
+
+  const genel = (
+    <div className="grid grid-cols-1 gap-6 pt-4">
+      <div className="grid grid-cols-3 gap-2">
+        <Metric
+          label="İlk Yanıt"
+          value={first === null ? "—" : `${first} dk`}
+          note={first === null ? "Henüz yanıtlanmadı" : first <= REPLY_TARGET_MIN ? "Hedef içinde" : "Hedefi aştı"}
+          bar={first === null ? undefined : { pct: (first / REPLY_TARGET_MIN) * 100, tone: first <= REPLY_TARGET_MIN ? "success" : "danger" }}
+        />
+        <Metric label="Mesaj" value={num.format(t.messages)} note="Yazışmada" />
+        <Metric label="Geldi" value={clock.format(t.date)} note={shortDate.format(t.date)} />
       </div>
 
-      <figure className="rounded-xl bg-surface p-4">
+      <figure className="rounded-xl p-4 ring-1 ring-line">
         <figcaption className="flex items-center gap-2.5">
           <Avatar name={c.contact} size="sm" />
           <span className="min-w-0">
@@ -884,77 +939,99 @@ function TicketDetail({ t, onAssign, onArchive }: { t: Ticket; onAssign: (id: st
         <Reactions label="Ekip tepkileri" defaultValue={teamReactions(t)} className="mt-3" />
       </figure>
 
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-base">
-        <div>
-          <dt className="text-small text-muted">Kanal</dt>
-          <dd className="mt-0.5 inline-flex items-center gap-1.5 text-strong [&_svg]:size-4 [&_svg]:text-muted">
-            <span aria-hidden>{CHANNEL_ICON[t.channel]}</span>
-            {t.channel}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-small text-muted">Atanan</dt>
-          <dd className="-ml-1 flex items-center gap-1">
+      <section aria-labelledby="talep-bilgi">
+        <PanelLabel id="talep-bilgi">Talep Bilgileri</PanelLabel>
+        <dl className="divide-y divide-line-soft rounded-xl ring-1 ring-line">
+          <InfoRow label="Numara">
+            <span className="font-mono text-small">{t.id}</span>
+            <CopyButton value={t.id} label="Talep Numarasını Kopyala" />
+          </InfoRow>
+          <InfoRow label="Öncelik">
+            <Badge tone={PRIORITY_TONE[t.priority]} variant={t.priority === "Düşük" ? "outline" : "soft"}>
+              {t.priority}
+            </Badge>
+          </InfoRow>
+          <InfoRow label="Atanan">
+            <span className="truncate">{member(t.assignee).name}</span>
             <AssigneePicker label="Atanan" multiple={false} people={PEOPLE} value={[t.assignee]} onValueChange={([id]) => id && id !== t.assignee && onAssign(id)} />
-            <span className="truncate text-strong">{member(t.assignee).name}</span>
-          </dd>
-        </div>
-        <div>
-          <dt className="text-small text-muted">İlk Yanıt</dt>
-          <dd className="mt-0.5 text-strong">{t.firstResponseMin === null ? "Henüz yok" : `${t.firstResponseMin} dakika`}</dd>
-        </div>
-        {t.status === "Çözüldü" ? (
-          <div>
-            <dt className="text-small text-muted">Kapanış Anketi</dt>
-            <dd className="mt-1">
+          </InfoRow>
+          <InfoRow label="İzleyenler">
+            <AssigneePicker label="İzleyenler" people={PEOPLE} value={watchers} onValueChange={setWatchers} />
+          </InfoRow>
+          <InfoRow label="Etiketler">
+            {t.tags.map((tag) => (
+              <Badge key={tag} shape="rounded">
+                {tag}
+              </Badge>
+            ))}
+          </InfoRow>
+          {o ? (
+            <InfoRow label="Bağlı Sipariş">
+              <span className="font-mono text-small">{o.id}</span>
+              <span className="text-muted tabular-nums">{tl.format(o.total)}</span>
+              <Badge tone={o.status === "Gecikti" ? "danger" : o.status === "Teslim Edildi" ? "success" : "warning"}>{o.status}</Badge>
+            </InfoRow>
+          ) : null}
+          {t.status === "Çözüldü" ? (
+            <InfoRow label="Kapanış Anketi">
               {/* Anket yalnız önceden kapanmış talepte var; şimdi kapatılanınki henüz gelmedi. */}
               {ticket(t.id)?.status === "Çözüldü" ? <Rating value={starsOf(t)} size="sm" showValue /> : <span className="text-muted">Yanıt Bekleniyor</span>}
-            </dd>
-          </div>
-        ) : null}
-        <div>
-          <dt className="text-small text-muted">İzleyenler</dt>
-          <dd className="-ml-1">
-            <AssigneePicker label="İzleyenler" people={PEOPLE} value={watchers} onValueChange={setWatchers} />
-          </dd>
-        </div>
-        {o ? (
-          <div className="col-span-2 rounded-lg bg-surface px-3 py-2.5">
-            <dt className="text-small text-muted">Bağlı Sipariş</dt>
-            <dd className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span className="font-medium text-strong">{o.id}</span>
-              <span className="text-body">{tl.format(o.total)}</span>
-              <span className="text-small text-muted">{o.items}</span>
-              <Badge tone={o.status === "Gecikti" ? "danger" : o.status === "Teslim Edildi" ? "success" : "warning"} className="ml-auto">
-                {o.status}
-              </Badge>
-            </dd>
-          </div>
-        ) : null}
-      </dl>
-
-      <section aria-labelledby="talep-akis" className="grid grid-cols-1 gap-3">
-        <h3 id="talep-akis" className="flex items-center gap-1.5 text-small font-semibold text-muted">
-          <Icon icon={CheckCheck} />
-          Olay Akışı
-        </h3>
-        <Timeline
-          events={ticketEvents(t).map((e) => ({
-            id: e.id,
-            at: e.at.toISOString(),
-            when: dateTime(e.at),
-            title: e.title,
-            description: e.description,
-            tone: e.tone,
-          }))}
-        />
+            </InfoRow>
+          ) : null}
+        </dl>
       </section>
 
-      <div className="grid justify-items-start gap-1 border-t border-line-soft pt-4">
-        <HoldButton onConfirm={onArchive} doneLabel="Arşivlendi" hint="Kazara arşivlenmesin diye basılı tut; bildirimden geri alınır.">
-          Basılı Tutarak Arşivle
-        </HoldButton>
-      </div>
+      <section aria-labelledby="talep-bildirim">
+        <PanelLabel id="talep-bildirim">Bu Talep İçin Bildirimler</PanelLabel>
+        <div className="divide-y divide-line-soft">
+          <Switch label="Müşteri yanıtlayınca haber ver" hint="Uygulama içi zil ve e-posta" defaultChecked />
+          <Switch
+            label="Sipariş durumu değişince haber ver"
+            hint={o ? `${o.id} kargo takibinden` : "Bu talebe bağlı sipariş yok"}
+            defaultChecked={Boolean(o)}
+            disabled={!o}
+          />
+          <Switch label="Yanıt süresi dolmadan uyar" hint={`İlk yanıt hedefi ${REPLY_TARGET_MIN} dakika; 10 dakika kala`} defaultChecked={first === null} />
+        </div>
+      </section>
     </div>
+  );
+
+  const akis = (
+    <section aria-labelledby="talep-akis" className="grid grid-cols-1 gap-3 pt-4">
+      <PanelLabel id="talep-akis">Olay Akışı</PanelLabel>
+      <Timeline
+        events={events.map((e) => ({
+          id: e.id,
+          at: e.at.toISOString(),
+          when: dateTime(e.at),
+          title: e.title,
+          description: e.description,
+          tone: e.tone,
+        }))}
+      />
+    </section>
+  );
+
+  return (
+    <Tabs
+      aria-label="Talep Ayrıntısı"
+      value={tab}
+      onValueChange={setTab}
+      className="[&>[role=tablist]]:w-full"
+      items={[
+        { value: "genel", label: "Genel", panel: genel },
+        {
+          value: "akis",
+          label: (
+            <span className="inline-flex items-center gap-1.5">
+              Olay Akışı
+              <span className="rounded-full bg-surface-raised px-1.5 text-micro font-semibold text-body tabular-nums">{events.length}</span>
+            </span>
+          ),
+          panel: akis,
+        },
+      ]}
+    />
   );
 }

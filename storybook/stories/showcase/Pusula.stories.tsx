@@ -153,6 +153,7 @@ export const TicketDetail: Story = {
   },
   play: async ({ canvasElement, globals }) => {
     const sheet = await within(canvasElement).findByRole("dialog", { name: TICKETS[0].subject });
+    await userEvent.click(within(sheet).getByRole("tab", { name: /Olay Akışı/ }));
     await expect(within(sheet).getByRole("heading", { name: "Olay Akışı" })).toBeInTheDocument();
     await settle(globals);
   },

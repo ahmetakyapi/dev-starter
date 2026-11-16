@@ -25,6 +25,13 @@ import { cn } from "../utils";
  * ve hafifçe genişler, sürüklenebilir olduğunu söyler. Eylem satırı
  * diyalogdaki gibi hafif gri bir kuyu.
  *
+ * YAN PANEL ANATOMİSİ (2026-11, Auton referansı): `icon` başlığın solunda
+ * yumuşak karo (nesnenin kimliği: kanal, entegrasyon), `status` başlık
+ * satırının sağında durum hapı ("Bağlı", "Açık"), başlık bandı saç
+ * çizgisiyle içerikten ayrılır. Alt çubukta `footerStart` sola yaslanır:
+ * yıkıcı ya da ayrı türden eylem ("Bağlantıyı Kes", "Arşivle") onaylama
+ * düğmelerinin yanına değil karşı kenara düşer, kazara basılmaz.
+ * `size="lg"`: içinde liste ve ayar satırları olan ayrıntı paneli (36rem).
  * İlk odak ve yerel kapanış `dialog.tsx` ile aynı: başka bir öğe için
  * `data-autofocus` (`autoFocus` istemcide işlemez), `<form method="dialog">`
  * gibi React'i atlayan kapanış da duruma yansır.
@@ -60,8 +67,16 @@ type SheetProps = {
   description?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
+  /** Alt çubuğun solu: yıkıcı ya da ayrı türden eylem ("Bağlantıyı Kes"). */
+  footerStart?: ReactNode;
+  /** Başlığın solunda kimlik karosu (ikon ya da logo). */
+  icon?: ReactNode;
+  /** Başlık satırının sağında, kapat düğmesinden önce: durum hapı. */
+  status?: ReactNode;
   /** `right`: masaüstünde yan panel; telefonda da sağdan açılır. */
   side?: "bottom" | "right";
+  /** Yan panel genişliği: `md` 26rem, `lg` 36rem (liste + ayar içeren ayrıntı). */
+  size?: "md" | "lg";
   closeLabel?: string;
   className?: string;
 };
@@ -73,7 +88,11 @@ export function Sheet({
   description,
   children,
   footer,
+  footerStart,
+  icon,
+  status,
   side = "bottom",
+  size = "md",
   closeLabel = "Kapat",
   className,
 }: SheetProps) {
@@ -152,7 +171,7 @@ export function Sheet({
         "backdrop:bg-scrim backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:transition-discrete backdrop:duration-300 open:backdrop:opacity-100 starting:open:backdrop:opacity-0",
         bottom
           ? "inset-x-0 top-auto bottom-0 max-h-[85dvh] w-full rounded-t-2xl border-t translate-y-full open:translate-y-0 starting:open:translate-y-full"
-          : "inset-y-0 right-0 left-auto h-dvh max-h-none w-[min(26rem,calc(100%-2rem))] rounded-l-2xl border-l translate-x-full open:translate-x-0 starting:open:translate-x-full",
+          : cn("inset-y-0 right-0 left-auto h-dvh max-h-none rounded-l-2xl border-l", size === "lg" ? "w-[min(36rem,calc(100%-1rem))]" : "w-[min(26rem,calc(100%-2rem))]", " translate-x-full open:translate-x-0 starting:open:translate-x-full"),
         className,
       )}
     >
@@ -169,7 +188,12 @@ export function Sheet({
             <span className="h-1 w-10 rounded-full bg-line-strong transition-[background-color,scale] group-active/handle:scale-x-125 group-active/handle:bg-muted" />
           </div>
         ) : null}
-        <header className={cn("flex items-start gap-4 px-5", bottom ? "pt-1" : "pt-5")}>
+        <header className={cn("flex items-start gap-3 px-5", bottom ? "pt-1" : "border-b border-line-soft pt-4 pb-4")}>
+          {icon ? (
+            <span aria-hidden className="inline-grid size-10 shrink-0 place-items-center rounded-lg bg-surface text-strong ring-1 ring-line [&_svg]:size-5">
+              {icon}
+            </span>
+          ) : null}
           <div className="min-w-0 flex-1">
             <h2 id={titleId} className="text-title font-semibold tracking-tight">
               {title}
@@ -180,6 +204,7 @@ export function Sheet({
               </p>
             ) : null}
           </div>
+          {status ? <div className="flex shrink-0 items-center pt-1">{status}</div> : null}
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -191,8 +216,9 @@ export function Sheet({
           </button>
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">{children}</div>
-        {footer ? (
-          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:justify-end max-sm:[&>*]:w-full">
+        {footer || footerStart ? (
+          <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:items-center sm:justify-end max-sm:[&>*]:w-full">
+            {footerStart ? <div className="flex items-center sm:mr-auto max-sm:justify-center">{footerStart}</div> : null}
             {footer}
           </footer>
         ) : (

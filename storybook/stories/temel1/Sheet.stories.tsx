@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useArgs } from "storybook/preview-api";
 import { expect, fn, screen, userEvent, within } from "storybook/test";
+import { Truck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { Sheet } from "@/components/ui/sheet";
@@ -111,6 +112,56 @@ export const SideOpen: Story = {
   tags: ["!autodocs"],
   args: { open: true, side: "right", title: "Gelişmiş Filtreler", description: "Masaüstünde yan panel: liste arkada görünür kalır." },
   play: async ({ globals }) => {
+    await settle(globals);
+  },
+};
+
+/** Ayrıntı paneli anatomisi: kimlik karosu, durum hapı, saç çizgili başlık, solda ayrı eylem. */
+export const DetailPanel: Story = {
+  name: "Ayrıntı Paneli (Kimlik, Durum, Ayrı Eylem)",
+  tags: ["!autodocs"],
+  args: {
+    open: true,
+    side: "right",
+    size: "lg",
+    title: "Kargo Entegrasyonu",
+    description: "Pusula ekibi · Ahmet Akyapı bağladı, 12 Eyl",
+  },
+  render: (args) => {
+    const [, update] = useArgs();
+    return (
+      <Sheet
+        {...args}
+        onOpenChange={(open) => update({ open })}
+        icon={<Truck />}
+        status={
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-success-wash px-2.5 py-0.5 text-small font-medium text-success">
+            <span aria-hidden className="size-1.5 rounded-full bg-success" />
+            Bağlı
+          </span>
+        }
+        footerStart={
+          <Button variant="ghost" className="text-danger hover:bg-danger-wash hover:text-danger">
+            Bağlantıyı Kes
+          </Button>
+        }
+        footer={
+          <>
+            <Button variant="secondary">Anahtarı Yenile</Button>
+            <Button>Değişiklikleri Kaydet</Button>
+          </>
+        }
+      >
+        <p className="text-base text-body">
+          Başlıkta kimlik karosu ve durum hapı, bandın altında saç çizgisi; alt çubukta yıkıcı eylem onay düğmelerinin karşı kenarında.
+        </p>
+      </Sheet>
+    );
+  },
+  play: async ({ globals }) => {
+    const sheet = await screen.findByRole("dialog", { name: "Kargo Entegrasyonu" });
+    await expect(within(sheet).getByText("Bağlı")).toBeVisible();
+    await expect(within(sheet).getByRole("button", { name: "Bağlantıyı Kes" })).toBeVisible();
     await settle(globals);
   },
 };

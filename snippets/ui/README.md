@@ -81,7 +81,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `dialog.tsx` | Onay, kısa form, yıkıcı eylem | yerel `<dialog>` | Evet | Odak tuzağı ve Escape tarayıcıdan, odak açana döner, sayaçlı kilit |
-| `sheet.tsx` | Telefonda alttan çekmece, masaüstünde yan panel | yerel `<dialog>` | Evet | Diyalogla aynı; sürükleme tek yol değil |
+| `sheet.tsx` | Telefonda alttan çekmece, masaüstünde yan panel; yan panelde `icon` (kimlik karosu), `status` (durum hapı), `footerStart` (karşı kenarda yıkıcı eylem), `size="lg"` (ayrıntı paneli) | yerel `<dialog>` | Evet | Diyalogla aynı; sürükleme tek yol değil |
 | `filter-sheet.tsx` | Telefonda bütün süzgeç ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana düğme ("8 Talebi Göster") | `sheet`, lucide | Evet | Tekli grup radyo grubu (oklar, gezici tabindex), çoklu grup `aria-pressed`; seçili çipte ✓ + kalın kenar; sayı canlı bölgede |
 | `popover.tsx` | Sayfayı kilitlemeyen küçük kutu | Base UI | Evet | Dış tıklama, Escape, odak dönüşü |
 | `product-tour.tsx` | Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım) | `react-dom` (portal), lucide | Evet | Kart diyalog: odak, Tab döngüsü, ← → adım, Escape kapatır ve odak açana döner; bulunamayan hedef atlanır |

@@ -7,6 +7,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Yan panel anatomisi — 2026-11-16
+
+- **`sheet.tsx`:** `icon` (başlıkta kimlik karosu), `status` (durum hapı),
+  `footerStart` (yıkıcı eylem karşı kenarda), `size="lg"` (36rem ayrıntı
+  paneli); yan panelde başlık bandı saç çizgisiyle ayrılır. Geriye uyumlu.
+- **`hold-button.tsx`:** `hideHint` (ipucu yalnız ekran okuyucuda).
+- **Pusula talep ayrıntısı** yeni anatomiyle: Genel / Olay Akışı sekmeleri,
+  üç ölçü karosu (ilk yanıt hedef çizgili), büyük harfli bölüm etiketleri,
+  kıl çizgili bilgi listesi, talebe özel bildirim anahtarları.
+
 ### Assetora turu: dört yeni davranış — 2026-11-16
 
 - **Yeni bileşenler (133 → 136):** `record-list` (tablonun telefondaki

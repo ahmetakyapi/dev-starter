@@ -40,6 +40,9 @@ type HoldButtonProps = {
   holdMs?: number;
   doneLabel?: string;
   hint?: string;
+  /** İpucunu yalnız görsel olarak gizle (ekran okuyucu yine duyar). Düğmenin adı
+      zaten "Basılı Tutarak …" diyorsa: alt çubukta ikinci satır kalabalık yapar. */
+  hideHint?: boolean;
   tone?: keyof typeof TONES;
   disabled?: boolean;
   className?: string;
@@ -51,6 +54,7 @@ export function HoldButton({
   holdMs = 1200,
   doneLabel = "Tamamlandı",
   hint = "Onaylamak için basılı tut",
+  hideHint = false,
   tone = "danger",
   disabled = false,
   className,
@@ -144,7 +148,7 @@ export function HoldButton({
           {content}
         </span>
       </button>
-      <span id={hintId} className="text-micro text-muted">
+      <span id={hintId} className={hideHint ? "sr-only" : "text-micro text-muted"}>
         {hint}
       </span>
       <span role="status" className="sr-only">
