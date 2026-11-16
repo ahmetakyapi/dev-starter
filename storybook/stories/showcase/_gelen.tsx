@@ -17,6 +17,7 @@ import {
   Radio,
   SearchX,
   Share2,
+  SlidersHorizontal,
   Tag,
   UserRoundCheck,
 } from "lucide-react";
@@ -61,6 +62,9 @@ import { Reactions, type Reaction } from "@/components/ui/reactions";
 import { SearchField, matchesTr } from "@/components/ui/search-field";
 import { SelectionAction, SelectionBar } from "@/components/ui/selection-bar";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { DateRangePresets, rangeOf, type DateRangeValue, type RangePreset } from "@/components/ui/date-range-presets";
+import { FilterSheet, type FilterGroup, type FilterValue } from "@/components/ui/filter-sheet";
+import { RecordList } from "@/components/ui/record-list";
 import { Sheet } from "@/components/ui/sheet";
 import { Timeline } from "@/components/ui/timeline";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -74,6 +78,7 @@ import {
   STATUSES,
   STATUS_SLUG,
   TEAM,
+  TODAY,
   TICKETS,
   TICKET_CHANNELS,
   customer,
@@ -128,6 +133,22 @@ function initialFolder(params: Params): Folder {
   return status ? `durum:${status}` : "tum";
 }
 
+/** "Geldi" süzgecinin hazır aralıkları; örnek verinin bugünü `TODAY` (2 Kasım). */
+const WHEN: readonly RangePreset[] = [
+  { id: "bugun", label: "Bugün", days: 1 },
+  { id: "3", label: "Son 3 Gün", days: 3 },
+  { id: "7", label: "Son 7 Gün", days: 7 },
+  { id: "tum", label: "Tümü", days: null },
+];
+const ALL_TIME: DateRangeValue = { kind: "preset", id: "tum" };
+
+/** Telefondaki süzgeç çekmecesinin sıralama seçenekleri → adresteki `sort`/`dir`. */
+const SORTS = [
+  { value: "yeni", label: "En Yeni", sort: "tarih", dir: "desc" },
+  { value: "eski", label: "En Eski", sort: "tarih", dir: "asc" },
+  { value: "oncelik", label: "Önceliğe Göre", sort: "oncelik", dir: "desc" },
+] as const;
+
 function Count({ n }: { n: number }) {
   return <span className="ml-auto pl-3 text-small text-body tabular-nums">{num.format(n)}</span>;
 }
@@ -145,6 +166,8 @@ export function GelenPage() {
   const [view, setView] = useState<"liste" | "musteri">("liste");
   const [showChannel, setShowChannel] = useState(true);
   const [showMessages, setShowMessages] = useState(false);
+  const [when, setWhen] = useState<DateRangeValue>(ALL_TIME);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const tickets = useMemo(
     () => TICKETS.filter((t) => !archived.includes(t.id)).map((t) => ({ ...t, ...overrides[t.id] }) as Ticket),
@@ -153,8 +176,11 @@ export function GelenPage() {
 
   /** Konu, numara, müşteri ve yetkili adında; Türkçe harfler düzlenir ("cinar" → Çınar). */
   const matchesQuery = (t: Ticket) => matchesTr(`${t.id} ${t.subject} ${customer(t.customerId).name} ${customer(t.customerId).contact}`, query, { fold: true });
+  const span = rangeOf(when, WHEN, TODAY);
+  const inSpan = (t: Ticket) => !span || (t.date >= span.start && t.date <= span.end);
   const rows = tickets.filter(
-    (t) => matchesFolder(t, folder) && (!who || t.customerId === who.value) && (!priorities.length || priorities.includes(t.priority)) && matchesQuery(t),
+    (t) =>
+      matchesFolder(t, folder) && (!who || t.customerId === who.value) && (!priorities.length || priorities.includes(t.priority)) && inSpan(t) && matchesQuery(t),
   );
 
   /** Süzgeç değişince ilk sayfaya dön (adresteki sayfa numarası eskir). */
@@ -165,6 +191,7 @@ export function GelenPage() {
     setFolder("tum");
     setWho(null);
     setPriorities([]);
+    setWhen(ALL_TIME);
     setText("");
     setQuery("");
     resetPage();
@@ -415,6 +442,39 @@ export function GelenPage() {
     },
   ];
 
+  // Telefondaki süzgeç çekmecesi: masaüstü araç çubuğuyla AYNI durumu değiştirir, sayı gerçek.
+  const sortNow = SORTS.find((o) => o.sort === (params.sort ?? "tarih") && o.dir === (params.dir ?? "desc"))?.value ?? "yeni";
+  const filterGroups: readonly FilterGroup[] = [
+    { id: "sira", label: "Sıralama", options: SORTS.map((o) => ({ value: o.value, label: o.label })) },
+    {
+      id: "durum",
+      label: "Durum",
+      options: [
+        { value: "tum", label: "Tümü", count: tickets.length },
+        ...STATUSES.map((st) => ({ value: st, label: st, count: tickets.filter((t) => t.status === st).length })),
+      ],
+    },
+    { id: "oncelik", label: "Öncelik", multiple: true, options: PRIORITIES.map((p) => ({ value: p, label: p, count: tickets.filter((t) => t.priority === p).length })) },
+    { id: "tarih", label: "Geldi", options: WHEN.map((w) => ({ value: w.id, label: w.label })) },
+  ];
+  const filterValue: FilterValue = {
+    sira: [sortNow],
+    durum: [folder.startsWith("durum:") ? folder.slice(6) : "tum"],
+    oncelik: priorities,
+    tarih: when.kind === "preset" ? [when.id] : [],
+  };
+  const activeFilters = (folder !== "tum" ? 1 : 0) + priorities.length + (when.kind === "preset" && when.id === "tum" ? 0 : 1) + (who ? 1 : 0);
+  const applyFilters = (next: FilterValue) => {
+    const st = next.durum?.[0] ?? "tum";
+    if ((filterValue.durum[0] ?? "tum") !== st) setFolder(st === "tum" ? "tum" : `durum:${st}`);
+    setPriorities((next.oncelik ?? []) as Priority[]);
+    const w = next.tarih?.[0];
+    if (w && w !== filterValue.tarih[0]) setWhen({ kind: "preset", id: w });
+    const o = SORTS.find((x) => x.value === next.sira?.[0]);
+    if (o && o.value !== sortNow) navigate("inbox", { sort: o.sort, dir: o.dir });
+    else if (params.page) resetPage();
+  };
+
   const byCustomer = CUSTOMERS.map((c) => ({ c, list: rows.filter((t) => t.customerId === c.id) })).filter((g) => g.list.length);
 
   return (
@@ -511,35 +571,72 @@ export function GelenPage() {
                 }}
                 placeholder="Müşteri ara"
                 emptyText="Bu adla müşteri yok."
-                className="w-full sm:w-64"
+                className="w-full max-md:hidden sm:w-64"
               />
-              <SegmentedControl
-                aria-label="Gruplama"
-                size="sm"
-                className="sm:ml-auto"
-                value={view}
-                onValueChange={setView}
-                options={[
-                  { value: "liste", label: "Liste" },
-                  { value: "musteri", label: "Müşteriye Göre" },
-                ]}
+              <DateRangePresets
+                label="Geldi"
+                presets={WHEN}
+                value={when}
+                onValueChange={(v) => {
+                  setWhen(v);
+                  resetPage();
+                }}
+                today={TODAY}
+                className="max-md:hidden"
+              />
+              <Button variant="secondary" size="sm" className="md:hidden" onClick={() => setFiltersOpen(true)}>
+                <SlidersHorizontal aria-hidden />
+                Süzgeçler
+                {activeFilters ? (
+                  <span className="rounded-full bg-primary px-1.5 text-micro font-semibold text-on-primary tabular-nums">
+                    <span className="sr-only">, etkin: </span>
+                    {activeFilters}
+                  </span>
+                ) : null}
+              </Button>
+              <FilterSheet
+                open={filtersOpen}
+                onOpenChange={setFiltersOpen}
+                groups={filterGroups}
+                value={filterValue}
+                onValueChange={applyFilters}
+                resultCount={rows.length}
+                resultLabel={(n) => (n ? `${num.format(n)} Talebi Göster` : "Uyan Talep Yok")}
+                canClear={activeFilters > 0 || sortNow !== "yeni"}
+                onClear={() => {
+                  clearAll();
+                  if (sortNow !== "yeni") navigate("inbox", {});
+                }}
               />
             </div>
-            <ChipGroup aria-label="Öncelik Süzgeci">
-              {PRIORITIES.map((p) => (
-                <FilterChip
-                  key={p}
-                  selected={priorities.includes(p)}
-                  count={tickets.filter((t) => t.priority === p && matchesFolder(t, folder) && (!who || t.customerId === who.value)).length}
-                  onClick={() => {
-                    setPriorities((list) => (list.includes(p) ? list.filter((x) => x !== p) : [...list, p]));
-                    resetPage();
-                  }}
-                >
-                  {p}
-                </FilterChip>
-              ))}
-            </ChipGroup>
+            <div className="flex flex-wrap items-center gap-3">
+              <ChipGroup aria-label="Öncelik Süzgeci" className="max-md:hidden">
+                {PRIORITIES.map((p) => (
+                  <FilterChip
+                    key={p}
+                    selected={priorities.includes(p)}
+                    count={tickets.filter((t) => t.priority === p && matchesFolder(t, folder) && (!who || t.customerId === who.value)).length}
+                    onClick={() => {
+                      setPriorities((list) => (list.includes(p) ? list.filter((x) => x !== p) : [...list, p]));
+                      resetPage();
+                    }}
+                  >
+                    {p}
+                  </FilterChip>
+                ))}
+              </ChipGroup>
+                <SegmentedControl
+                  aria-label="Gruplama"
+                  size="sm"
+                  className="ml-auto"
+                  value={view}
+                  onValueChange={setView}
+                  options={[
+                    { value: "liste", label: "Liste" },
+                    { value: "musteri", label: "Müşteriye Göre" },
+                  ]}
+                />
+            </div>
             {folder !== "tum" || who || query ? (
               <ChipGroup aria-label="Etkin Süzgeçler">
                 {folder !== "tum" ? (
@@ -586,7 +683,7 @@ export function GelenPage() {
           ) : view === "liste" ? (
             <div className="grid grid-cols-1">
               <DataTable
-                className="px-2 pt-2 [&_thead_tr]:border-0 [&_thead_tr]:bg-surface [&_thead_th:first-child]:rounded-l-md [&_thead_th:last-child]:rounded-r-md"
+                className="px-2 pt-2 max-md:hidden [&_thead_tr]:border-0 [&_thead_tr]:bg-surface [&_thead_th:first-child]:rounded-l-md [&_thead_th:last-child]:rounded-r-md"
                 caption="Talepler"
                 columns={tableColumns}
                 rows={visible}
@@ -595,6 +692,43 @@ export function GelenPage() {
                 sortHref={(key, dir) => href("inbox", { sort: key, dir })}
                 stickyFirst={false}
                 minWidth="46rem"
+              />
+              {/* Telefonda tablo yerine kart listesi: altı sütun yana kaydırılmaz, bir bakışta okunur. */}
+              <RecordList
+                className="md:hidden"
+                label="Talepler"
+                items={visible.map((t) => {
+                  const m = member(t.assignee);
+                  return {
+                    id: t.id,
+                    title: t.subject,
+                    subtitle: (
+                      <>
+                        <span className="font-mono text-micro">{t.id}</span> · {customer(t.customerId).name}
+                      </>
+                    ),
+                    value: <time dateTime={t.date.toISOString()} className="text-small font-medium text-body">{dateTime(t.date)}</time>,
+                    meta: (
+                      <span className="inline-flex items-center gap-1.5 [&_svg]:size-3.5">
+                        <span aria-hidden>{CHANNEL_ICON[t.channel]}</span>
+                        {t.channel}
+                      </span>
+                    ),
+                    status: (
+                      <>
+                        <Badge tone={STATUS_TONE[t.status]} dot>{t.status}</Badge>
+                        <Badge tone={PRIORITY_TONE[t.priority]} variant={t.priority === "Düşük" ? "outline" : "soft"}>
+                          {t.priority}
+                        </Badge>
+                      </>
+                    ),
+                    people: [
+                      { role: "Atanan", name: m.name.split(" ")[0], avatar: <Avatar name={m.name} size="sm" /> },
+                      { role: "Yetkili", name: customer(t.customerId).contact },
+                    ],
+                    onSelect: () => open(t),
+                  };
+                })}
               />
               <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line-soft px-4 py-3">
                 <p className="text-small text-muted tabular-nums">

@@ -173,7 +173,7 @@
       "name": "area-chart",
       "title": "Alan Grafiği",
       "category": "Grafik",
-      "description": "Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon",
+      "description": "Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon; `bands` ile kalıcı işaretli dönemler (en iyi/zayıf ay)",
       "file": "snippets/ui/area-chart.tsx",
       "client": true,
       "storyId": "area-chart",
@@ -790,6 +790,31 @@
       "palettes": false
     },
     {
+      "name": "date-range-presets",
+      "title": "Tarih Aralığı Süzgeci",
+      "category": "Form Girişleri",
+      "description": "Liste/rapor süzgecinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile süzme",
+      "file": "snippets/ui/date-range-presets.tsx",
+      "client": true,
+      "storyId": "date-range-presets",
+      "registryDependencies": [
+        "date-calendar",
+        "popover"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "dial",
       "title": "Döner Düğme",
       "category": "Hareket ve Doku",
@@ -993,6 +1018,27 @@
       "client": true,
       "storyId": "file-dropzone",
       "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "filter-sheet",
+      "title": "Süzgeç Çekmecesi",
+      "category": "Katmanlar",
+      "description": "Telefonda bütün süzgeç ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana düğme (\"8 Talebi Göster\")",
+      "file": "snippets/ui/filter-sheet.tsx",
+      "client": true,
+      "storyId": "filter-sheet",
+      "registryDependencies": [
+        "sheet"
+      ],
       "templateFiles": [
         "lib/utils.ts"
       ],
@@ -1747,6 +1793,24 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "record-list",
+      "title": "Kayıt Listesi",
+      "category": "Veri",
+      "description": "Tablonun telefondaki hali: üç katlı kart (ne · ne zaman/durum · kim); `data-table` ile `max-md:hidden` / `md:hidden` çifti",
+      "file": "snippets/ui/record-list.tsx",
+      "client": false,
+      "storyId": "record-list",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

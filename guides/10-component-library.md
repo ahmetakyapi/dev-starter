@@ -276,7 +276,7 @@ kaldığı için erişilebilirlik açığı değil.
 - **PatternBackground**: kap `relative isolate`; hazır birleşimler `PATTERN_PRESETS`. Stil `@layer components`te: `className="fixed"` bütün sayfa zemini yapar.
 - **Dial ya da Slider**: kontrol panelinde yan yana birkaç ayar → kadran; formda tek aralık → `slider`; kesin sayı → `number-field`.
 - **ExpandableCard**: kartın kendisi büyür (`layoutId`, `domMax`); başka bir yerden açılan pencere için `dialog`.
-- **Paket mi kopya mı:** `@ahmetakyapi/ui` 101 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
+- **Paket mi kopya mı:** `@ahmetakyapi/ui` 103 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
 
 ### Ribbon Turu: Tanıtım (2026-11)
 
@@ -294,6 +294,14 @@ kaldığı için erişilebilirlik açığı değil.
 - **Galeri seçimi:** öne çıkan tek iş ve başlığı → `arc-carousel`; yan yana karşılaştırma → ızgara; ürün kartları → `carousel`; süs akışı → `drift-columns`.
 - **Şifre:** yeni şifre `password-field` (`new-password`), giriş ekranında düz `Input type="password"`. Kuralı sunucu da denetler.
 - **Desen notları:** raflı kütüphane sayfası (tür başına başlık + filtre çipleri + 6-12 kart + "Hepsini Gör (N)", N katalogdan türetilir); katalog kartında durağan kapak + yalnız üzerine gelince oynayan sessiz video; alt bilginin dibinde kenardan taşan dev marka adı (`aria-hidden`, `overflow-x: clip`).
+
+### Assetora Turu (2026-11)
+
+- **Tablo telefonda:** satırlar karşılaştırılmayacaksa (talep, sipariş, ilan) `data-table` geniş ekranda + `record-list` dar ekranda (`max-md:hidden` / `md:hidden`, aynı `visible` dizisi, aynı ana eylem). Sütun kıyası asıl işse (fiyat listesi, rapor) tablo kalır, yapışkan ilk sütunla.
+- **Süzgeç telefonda:** araç çubuğu süzgeçleri (`chip`, `combobox`, tarih) `max-md:hidden`; yerine tek "Süzgeçler" düğmesi (etkin süzgeç sayısı rozetle) + `filter-sheet`. Çekmece masaüstüyle AYNI durumu değiştirir; sonuç sayısı gerçek, "0" iken düğme "Uyan Kayıt Yok" der.
+- **Tarih süzgeci:** liste/rapor süzgecinde `date-range-presets` (hazır aralıklar + özel aralık tek kutuda, süzme `rangeOf`); formda tek tarih/aralık `date-picker`; panoda dönem kıyası `segmented-control`.
+- **Grafikte dönem işaretleme:** "şuraya bak" denecek iki üç dönem `area-chart` → `bands` (en iyi/zayıf ay, kampanya haftası); bant verinin kendisinden hesaplanır, elle yazılmaz.
+- **Desen notları:** ölçü kartları telefonda alt alta dört kart yerine yatay kaydırılan şerit (`snap-x`, kart `min(78%,280px)`, sonraki kartın kenarı görünür); "önceki dönemle karşılaştır" anahtarı ikinci seriyi kullanıcının seçimine bırakır; gizli kısayollar (`/`, ⌘B) "?" düğmesinin açtığı listede `kbd` ile görünür olur; ölçü kartında iki tonlu başlık şeridi (ikon + ad + ⋯ menü) değerin üstünde.
 
 ### Bloklar
 

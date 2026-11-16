@@ -42,7 +42,29 @@ import { SERIES_BG, type Series } from "@/components/ui/chart-card";
  *
  * Biçim `Intl.NumberFormatOptions` olarak gelir, fonksiyon değil: bu bir
  * istemci bileşeni ve sunucu sayfasından fonksiyon prop'u geçemez.
+ *
+ * DÖNEM BANTLARI (`bands`, Assetora turu 2026-11): adı olan dönemleri
+ * KALICI işaretler: "En İyi Gün", "Kampanya Haftası". Gezinen balon bir
+ * noktayı sorulunca söyler; bant okuyucu sormadan önce "şuraya bak" der.
+ * Bant tam boy bir sütun (tonun yıkanmış rengi, `success`/`danger`/
+ * `neutral`), üstünde ve altında birer çip: bandın adı + ilk serinin
+ * değeri, altta ikinci serinin değeri (aralık birden çok noktaysa
+ * TOPLAM). Banda düşen eksen etiketi aynı tonda. En çok iki üç bant: her
+ * şeyi işaretleyen grafik hiçbir şeyi işaretlemez. Ekran okuyucu bantları
+ * tablonun altındaki cümlede, klavyeyle banda girince canlı bölgede duyar.
  */
+
+/** Grafikte kalıcı işaretli dönem; `from`/`to` etiket dizisindeki sıra (dahil). */
+export type ChartBand = {
+  from: number;
+  to?: number;
+  /** Kısa ad: "En İyi Gün". Çipte ve ekran okuyucuda. */
+  label: string;
+  tone?: "success" | "danger" | "neutral";
+};
+
+const BAND_BG = { success: "bg-success-wash", danger: "bg-danger-wash", neutral: "bg-surface-raised" } as const;
+const BAND_TEXT = { success: "text-success", danger: "text-danger", neutral: "text-strong" } as const;
 
 type AreaSeries = {
   /** Lejant ve balon adı: "Bu Yıl". */
@@ -113,6 +135,7 @@ export function AreaChart({
   valueFormat,
   unit,
   height = "h-52",
+  bands = [],
   className,
 }: {
   /** X ekseni etiketleri, kısa: "Oca", "12 Eki". Seri değerleriyle aynı uzunlukta. */
@@ -127,6 +150,8 @@ export function AreaChart({
   unit?: string;
   /** Çizim alanı yüksekliği: Tailwind sınıfı. */
   height?: string;
+  /** Kalıcı işaretli dönemler (en iyi gün, kampanya haftası); en çok iki üç tane. */
+  bands?: readonly ChartBand[];
   className?: string;
 }) {
   const clip = `area-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
@@ -158,6 +183,20 @@ export function AreaChart({
   // yaslı (ortalı değil), yani yarım etiket kadar sola taşar: 0,8 adımda telefonda "28 Eki2 Kas" diye bitişiyordu.
   const showTick = (i: number, step: number) => i === n - 1 || (i % step === 0 && n - 1 - i >= step);
 
+  // Bantlar: sıralar sınırlanır, değer aralığın toplamı. Sütun bir noktanın yarım adım iki yanına uzanır.
+  const half = n < 2 ? 50 : 50 / (n - 1);
+  const marked = bands.map((b) => {
+    const from = Math.max(0, Math.min(n - 1, b.from));
+    const to = Math.max(from, Math.min(n - 1, b.to ?? b.from));
+    const sum = (s: AreaSeries) => s.values.slice(from, to + 1).reduce((a, v) => a + (v ?? 0), 0);
+    const left = Math.max(0, pct(from) - half);
+    const right = Math.min(100, pct(to) + half);
+    const center = (left + right) / 2;
+    const where = from === to ? labels[from] : `${labels[from]} – ${labels[to]}`;
+    return { ...b, from, to, left, right, center, where, tone: b.tone ?? "neutral", totals: series.map(sum) };
+  });
+  const bandAt = (i: number) => marked.find((b) => i >= b.from && i <= b.to);
+
   const nearest = (event: PointerEvent<HTMLDivElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
     const ratio = Math.min(1, Math.max(0, (event.clientX - box.left) / box.width));
@@ -174,7 +213,8 @@ export function AreaChart({
     if (next === null) return;
     event.preventDefault();
     setActive(next);
-    setLive(`${labels[next]}: ${series.map((s) => `${s.label} ${fmt(s.values[next] ?? 0)}`).join(", ")}`);
+    const band = bandAt(next);
+    setLive(`${labels[next]}${band ? ` (${band.label})` : ""}: ${series.map((s) => `${s.label} ${fmt(s.values[next] ?? 0)}`).join(", ")}`);
   }
 
   const draw = (delay: number) => ({ duration: reduce ? 0 : 1.1, delay: reduce ? 0 : delay, ease: EASE });
@@ -206,6 +246,11 @@ export function AreaChart({
           ))}
         </tbody>
       </table>
+        {marked.length ? (
+          <p>
+            İşaretli dönemler: {marked.map((b) => `${b.label}, ${b.where}: ${series.map((s, si) => `${s.label} ${fmt(b.totals[si])}`).join(", ")}`).join("; ")}.
+          </p>
+        ) : null}
       </div>
 
       <div className="flex gap-2">
@@ -230,6 +275,11 @@ export function AreaChart({
             onPointerLeave={(e) => e.pointerType === "mouse" && setActive(null)}
             className={cn("relative touch-pan-y rounded-sm select-none", height)}
           >
+            {marked.map((b) => (
+              <div key={`${b.label}-${b.from}`} aria-hidden className="pointer-events-none absolute inset-y-0" style={{ left: `${b.left}%`, width: `${b.right - b.left}%` }}>
+                <span className={cn("absolute inset-0 rounded-sm", BAND_BG[b.tone])} />
+              </div>
+            ))}
             <svg aria-hidden viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible">
               <defs>
                 <clipPath id={clip}>
@@ -286,11 +336,34 @@ export function AreaChart({
               })}
             </svg>
 
+            {/* Bant çipleri çizginin ÜSTÜNDE (okunur kalsın), balonun altında. Kenara yakın çip içeri yaslanır. */}
+            {marked.map((b) => {
+              const align = b.center < 14 ? "left-0" : b.center > 86 ? "right-0" : "-translate-x-1/2";
+              const at = b.center < 14 || b.center > 86 ? undefined : { left: `${b.center}%` };
+              const chip = "pointer-events-none absolute flex items-center gap-1.5 whitespace-nowrap rounded-md bg-overlay px-2 py-1 text-micro shadow-raised ring-1 ring-line";
+              return (
+                <div key={`chip-${b.label}-${b.from}`} aria-hidden>
+                  {/* İmleç bu bantta: balon aynı değeri söylüyor, üst çip çekilir (üst üste binmesin). */}
+                  <span className={cn(chip, "top-1.5 transition-opacity duration-150", align, active !== null && bandAt(active) === b && "opacity-0")} style={at}>
+                    <span className={cn("font-medium", BAND_TEXT[b.tone])}>{b.label}</span>
+                    <span className="font-semibold text-strong tabular-nums">{compact.format(b.totals[0] ?? 0)}</span>
+                  </span>
+                  {series[1] ? (
+                    <span className={cn(chip, "bottom-1.5", align)} style={at}>
+                      <span className={cn("size-1.5 rounded-full", SERIES_BG[(series[1].series ?? 2) - 1])} />
+                      <span className="text-muted">{series[1].label}</span>
+                      <span className="font-semibold text-strong tabular-nums">{compact.format(b.totals[1] ?? 0)}</span>
+                    </span>
+                  ) : null}
+                </div>
+              );
+            })}
+
             {/* İmleç katmanı: tam genişlik, translateX(%) ile kayar */}
             {active !== null ? (
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 transition-transform duration-150 ease-out motion-reduce:transition-none"
+                className="pointer-events-none absolute inset-0 z-10 transition-transform duration-150 ease-out motion-reduce:transition-none"
                 style={{ transform: `translateX(${pct(active)}%)` }}
               >
                 <span className="absolute inset-y-0 left-0 w-px -translate-x-1/2 bg-line-strong" />
@@ -334,6 +407,7 @@ export function AreaChart({
                   i === 0 ? "left-0" : i === n - 1 ? "right-0" : "-translate-x-1/2",
                   !showTick(i, stepSm) && "max-sm:hidden",
                   !showTick(i, stepLg) && "sm:hidden",
+                  bandAt(i) && cn("font-semibold", BAND_TEXT[bandAt(i)!.tone]),
                 )}
                 style={i === 0 || i === n - 1 ? undefined : { left: `${pct(i)}%` }}
               >

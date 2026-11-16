@@ -82,6 +82,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 |-------|----------|------------|---------|-----------------|
 | `dialog.tsx` | Onay, kısa form, yıkıcı eylem | yerel `<dialog>` | Evet | Odak tuzağı ve Escape tarayıcıdan, odak açana döner, sayaçlı kilit |
 | `sheet.tsx` | Telefonda alttan çekmece, masaüstünde yan panel | yerel `<dialog>` | Evet | Diyalogla aynı; sürükleme tek yol değil |
+| `filter-sheet.tsx` | Telefonda bütün süzgeç ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana düğme ("8 Talebi Göster") | `sheet`, lucide | Evet | Tekli grup radyo grubu (oklar, gezici tabindex), çoklu grup `aria-pressed`; seçili çipte ✓ + kalın kenar; sayı canlı bölgede |
 | `popover.tsx` | Sayfayı kilitlemeyen küçük kutu | Base UI | Evet | Dış tıklama, Escape, odak dönüşü |
 | `product-tour.tsx` | Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım) | `react-dom` (portal), lucide | Evet | Kart diyalog: odak, Tab döngüsü, ← → adım, Escape kapatır ve odak açana döner; bulunamayan hedef atlanır |
 | `tooltip.tsx` | `Tooltip`: görsel etiket · `InfoTip`: açıklama | Base UI | Evet | Tooltip dokunmatikte açılmaz (bilinçli); InfoTip tıklamayla açılır |
@@ -103,6 +104,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `stat.tsx` | Etiket + değer + değişim | lucide | Hayır | Renk tek işaret değil: işaret, ok, "artış/düşüş" |
 | `digit-roll.tsx` | Değer DEĞİŞİNCE yalnız değişen rakam yuvarlanır (vurgulanan bölüm, cetvel, canlı sayaç); ara sayı yok | motion | Evet | Tam değer `sr-only` tek metin, şeritler `aria-hidden`; kendiliğinden konuşmaz (gerekirse kap `aria-live`); reduced-motion'da yerinde değişir |
 | `sparkline.tsx` | Eksensiz mini eğri | yok | Hayır | `role="img"` + `title` |
+| `record-list.tsx` | Tablonun telefondaki hali: üç katlı kart (ne · ne zaman/durum · kim); `data-table` ile `max-md:hidden` / `md:hidden` çifti | yok | Hayır | `ul` + ad; ana eylem başlık, kart ona genişletilmiş tıklama alanı (satır başına tek eylem); kişiler "Atanan: Ad" okunur |
 
 ### Form ve Gezinme
 
@@ -154,7 +156,7 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 | `stage-bars.tsx` | Huni aşamaları, iz üstünde hap çubuk | `chart-card` | Hayır | `ol`; değer ve pay metinde, çubuk `aria-hidden` |
 | `track-bar-chart.tsx` | Sıralı tek seri (ay, gün), iz üstünde sütun | `chart-card` | Hayır | Görsel `aria-hidden`, veri `sr-only` tabloda |
 | `ring-chart.tsx` | 2-5 kategorinin iç içe halkası, ortada değer | yok | Hayır | `role="img"` + `title`; her yayın kendi `title`ı |
-| `area-chart.tsx` | Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon | `chart-card`, motion | Evet | Veri `sr-only` tabloda; çizim `aria-hidden`; odaklan + ←→ Home End, seçilen nokta canlı bölgede |
+| `area-chart.tsx` | Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon; `bands` ile kalıcı işaretli dönemler (en iyi/zayıf ay) | `chart-card`, motion | Evet | Veri `sr-only` tabloda; çizim `aria-hidden`; odaklan + ←→ Home End, seçilen nokta canlı bölgede; bantlar tablo altı cümlede ve banda girince canlı bölgede |
 | `gauge-chart.tsx` | Bütünün 2-4 parçası ya da tek doluluk (`max`); yarım daire, ortada büyük yüzde | `chart-card`, motion | Evet | `role="img"` + bütün parçaları sayan ad; her yayın `title`ı |
 | `funnel-chart.tsx` | Daralan aşamalar (`curve`/`step`), sütun başına yüzde hapı, altta lejant | `chart-card`, motion | Evet | Aşamalar `sr-only` `ol` ("ilk aşamaya göre %30"); lejant `dl` |
 | `heatmap.tsx` | Günlük bir sayının haftalar × günler ritmi, 5 basamak, Az ↔ Çok | motion | Evet | Aylık toplamlar `sr-only` tabloda; ızgara odaklanır, oklarla gün gün, canlı bölge |
@@ -181,6 +183,7 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `color-picker.tsx` | Kullanıcının kendi rengi (etiket, kategori) | yok | Evet | İki `role="slider"`: alan ve ton; hex alanı; `aria-pressed` hazır renkler |
 | `date-calendar.tsx` | Satır içi ay takvimi; tek gün ya da aralık | motion, lucide | Evet | WAI-ARIA grid; oklar, Home/End, PageUp/PageDown (+Shift); `aria-current="date"` |
 | `date-picker.tsx` | Formda tarih alanı + açılır takvim | `date-calendar`, `popover` | Evet | Tetikleyicinin adı "etiket + değer"; açılınca odak seçili güne, kapanınca tetikleyiciye |
+| `date-range-presets.tsx` | Liste/rapor süzgecinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile süzme | `date-calendar`, `popover`, lucide | Evet | Tetikleyici adı "etiket + değer"; hazır aralıklar radyo grubu (oklar); bitiş günü seçilince kapanır, odak tetikleyiciye |
 | `time-field.tsx` | 24 saatlik SS:DD | lucide | Evet | İki `role="spinbutton"`; ok, PageUp/PageDown, rakamla yazınca ilerler |
 | `time-scrubber.tsx` | Günün akışında bir an (özet saati, hatırlatma); cetvel sürüklenir | yok | Evet | `role="slider"`, ← → dilim, PageUp/Down saat, Home/End; değer metni "09.30"; tekerlek ve dokunmatik |
 | `signature-pad.tsx` | Teslim tutanağı, sözleşme onayı; çizerek ya da yazarak imza | lucide | Evet | Çizim işaretçi ister: "Yazarak" yolu klavyeyle aynı işi yapar; değer SVG (`currentColor`), tema değişince yeniden çizilir |

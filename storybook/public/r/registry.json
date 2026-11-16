@@ -232,7 +232,7 @@
       "name": "area-chart",
       "type": "registry:ui",
       "title": "Alan Grafiği",
-      "description": "Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon",
+      "description": "Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon; `bands` ile kalıcı işaretli dönemler (en iyi/zayıf ay)",
       "dependencies": [
         "motion@^13.5.1"
       ],
@@ -1046,6 +1046,34 @@
       ]
     },
     {
+      "name": "date-range-presets",
+      "type": "registry:ui",
+      "title": "Tarih Aralığı Süzgeci",
+      "description": "Liste/rapor süzgecinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile süzme",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/date-calendar.json",
+        "https://dev-starter-storybook.vercel.app/r/popover.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "date-range-presets",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/date-range-presets.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dial",
       "type": "registry:ui",
       "title": "Döner Düğme",
@@ -1319,6 +1347,33 @@
       "files": [
         {
           "path": "snippets/ui/file-dropzone.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "filter-sheet",
+      "type": "registry:ui",
+      "title": "Süzgeç Çekmecesi",
+      "description": "Telefonda bütün süzgeç ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana düğme (\"8 Talebi Göster\")",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/sheet.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "filter-sheet",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/filter-sheet.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2349,6 +2404,29 @@
       "files": [
         {
           "path": "snippets/ui/reasoning.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "record-list",
+      "type": "registry:ui",
+      "title": "Kayıt Listesi",
+      "description": "Tablonun telefondaki hali: üç katlı kart (ne · ne zaman/durum · kim); `data-table` ile `max-md:hidden` / `md:hidden` çifti",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "record-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/record-list.tsx",
           "type": "registry:ui"
         }
       ]

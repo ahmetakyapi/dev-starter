@@ -149,6 +149,15 @@ export function PanoPage() {
 
   const [tour, setTour] = useState(false);
 
+  // Ciro grafiğinin kalıcı işaretleri: dönemin en iyi ve en zayıf dilimi (yılda ay, diğerlerinde gün).
+  const grain = period === "yil" ? "Ay" : "Gün";
+  const peak = s.revenueSeries.indexOf(Math.max(...s.revenueSeries));
+  const dip = s.revenueSeries.indexOf(Math.min(...s.revenueSeries));
+  const revenueBands = [
+    { from: peak, label: `En İyi ${grain}`, tone: "success" as const },
+    ...(dip !== peak ? [{ from: dip, label: `En Zayıf ${grain}`, tone: "danger" as const }] : []),
+  ];
+
   return (
     <div className="flex min-h-full flex-col">
       <PageBar
@@ -211,6 +220,7 @@ export function PanoPage() {
             >
               <AreaChart
                 title="Ciro"
+                bands={revenueBands}
                 labels={w.buckets.map((b) => b.label)}
                 valueFormat={TL_COMPACT}
                 series={[

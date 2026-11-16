@@ -7,6 +7,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Assetora turu: dört yeni davranış — 2026-11-16
+
+- **Yeni bileşenler (133 → 136):** `record-list` (tablonun telefondaki
+  kart hali), `filter-sheet` (sonuç sayılı süzgeç çekmecesi),
+  `date-range-presets` (hazır aralık + özel aralık takvimi, `rangeOf`).
+- **`area-chart` → `bands`:** kalıcı işaretli dönemler (tam boy sütun, iki
+  serinin değer çipleri, tonlu eksen etiketi; ekran okuyucuda cümle ve
+  canlı bölge).
+- **Pusula:** Pano ciro grafiğinde en iyi/en zayıf gün; Gelen Kutusu'nda
+  "Geldi" tarih süzgeci, telefonda kart listesi ve süzgeç çekmecesi.
+- **Kit 101 → 103** (`date-range-presets` popover'a bağlı, kitin dışında).
+- **Bilgi tabanı:** `references.md`, `decisions.md` → "Assetora Turu",
+  `guides/10` → Assetora Turu (ne zaman hangisi + desen notları).
+
 ### Pusula'ya kendi kimliği: Ingot turu — 2026-11-16
 
 - **Örnek uygulamanın bütün sayfaları** (Pano, Gelen Kutusu, Görevler,

@@ -1110,3 +1110,31 @@ kalsın diye reddedildi; (2) Ingot'un turuncu vurgusunu ve Geist fontunu almak �
 kimlik taklidi olur, palet ve Inter kaldı.
 *Ne zaman değişir:* Bu dil başka bir projede de tutarsa `CARD`/`INK`/ölçü
 şeridi `snippets/ui`ye bileşen olarak taşınır (`/harvest` adım 3).
+
+## Assetora Turu — Dönem Bantları, Kayıt Listesi, Süzgeç Çekmecesi, Tarih Süzgeci (2026-11-16)
+
+**Karar:** assetora.vercel.app'ten (tek sayfalık gayrimenkul paneli) dört
+davranış alındı, hepsi token'la sıfırdan yazıldı:
+`area-chart` → `bands` (kalıcı işaretli dönemler), `record-list` (tablonun
+telefondaki kart hali), `filter-sheet` (sonuç sayılı süzgeç çekmecesi),
+`date-range-presets` (hazır aralık + özel aralık tek kutuda). Pusula'da
+Pano ciro grafiği (en iyi/en zayıf gün) ve Gelen Kutusu'nda (Geldi süzgeci,
+telefonda kart listesi ve süzgeç çekmecesi) gerçek veriyle çalışıyorlar.
+
+- **Bant ayrı grafik değil `area-chart`ın özelliği:** ayrı dosya aynı
+  çizimin ikinci kopyası olurdu.
+- **Tarih süzgecinde tek tetikleyici:** kaynakta hazır menü ve takvim iki
+  ayrı düğmeydi; ikisi aynı değeri değiştirdiği için "hangisi geçerli?"
+  sorusu doğuyordu.
+- **Süzgeç çekmecesinde seçim anında uygulanır,** ana düğme yalnız kapatır;
+  sayı gerçek kalır ("0" iken "Uyan Talep Yok").
+
+*Alınmayanlar:* grafik çizgileri (kaynakta veri değil, tasarım aracından
+dışa aktarılmış sabit SVG — veri dürüstlüğü), kenar çubuğu genişliğinin
+animasyonu (`app-shell` bilerek yapmıyor), degradeli kabartma anahtar
+(degrade disiplini).
+*Strateji dersi:* kaynakta iki paralel token sistemi var ve koyu tema
+tanımlı ama bağlı değil; örnek veride 2023 tarih seçicisi 2026 satışlarının
+yanında. İkisi de "tek kaynak" ve tutarlı örnek veri kararlarımızı doğruluyor.
+*Ne zaman değişir:* `record-list` + `filter-sheet` ikilisi üç projede aynı
+kurulursa `data-table`a hazır "telefon modu" olarak birleşir.

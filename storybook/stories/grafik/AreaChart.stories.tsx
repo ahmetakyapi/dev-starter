@@ -88,6 +88,37 @@ export const Default: Story = {
   },
 };
 
+/** En çok ve en az kayıt alınan ay: bant verinin kendisinden hesaplanır, elle yazılmaz. */
+const KAYIT: readonly number[] = KAYIT_BU_YIL;
+const ZIRVE = KAYIT.indexOf(Math.max(...KAYIT));
+const DIP = KAYIT.indexOf(Math.min(...KAYIT));
+
+export const PeriodBands: Story = {
+  name: "Dönem Bantları",
+  args: {
+    bands: [
+      { from: ZIRVE, label: "En İyi Ay", tone: "success" },
+      { from: DIP, label: "En Zayıf Ay", tone: "danger" },
+    ],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Adı olan dönemler kalıcı işaretli: tam boy sütun (tonun yıkanmışı), üstte bandın adı ve ilk serinin değeri, altta ikinci serinin değeri; eksen etiketi aynı tonda. Aralık birden çok noktaysa değer toplamdır. Ekran okuyucu bantları tablonun altındaki cümlede, klavyeyle banda girince canlı bölgede duyar. Assetora turundan.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const plot = canvas.getByRole("group", { name: /ok tuşlarıyla/ });
+    plot.focus();
+    await userEvent.keyboard("{Home}");
+    for (let i = 0; i < ZIRVE; i++) await userEvent.keyboard("{ArrowRight}");
+    await expect(canvasElement.querySelector("[aria-live]")).toHaveTextContent("(En İyi Ay)");
+  },
+};
+
 export const SingleSeries: Story = {
   name: "Tek Seri",
   args: { seriSayisi: 1 },
