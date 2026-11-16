@@ -1162,3 +1162,26 @@ Tasarım). Sıra `preview.tsx → storySort`, etiketler `manager-head.html`.
 *Bilinen sınır:* seçiciler Storybook'un resmi API'si değil (`data-item-id`,
 `.sidebar-item`); SB yükseltmesinden sonra kenar çubuğu gözle denetlenir.
 Yeni bir üst düzey bölüm eklenirse ikonu ve sırası iki dosyaya birden yazılır.
+
+## Bildirimler Sayfası ve Kanal Tablosu (2026-11-16)
+
+**Karar:** Pusula'ya zil kutusundan ayrı bir **Bildirimler** sayfası
+(Yönetim grubunda) eklendi; yöntem Axon referansından (dil ve davranış).
+Sekmeli (Tümü · Bahsedenler · Onaylar · Sistem) ve gün gün gruplu akış;
+satırda işin kendisi (Onayla, Teklifi Aç, Yanıtla, Yeniden Bağla), ⋯
+menüsünde okunma, erteleme, sessize alma; sağda Teslimat ve Ertelenenler;
+Tercihler yan panelde (`sheet` → `icon`, `footerStart`) yeni `channel-matrix`
+ile olay × kanal tablosu.
+
+- **Sayılar uydurma değil:** onay isteği Ayarlar'daki %12 indirim sınırını
+  aşan teklif, sistem uyarısı geciken sipariş sayısı, dosya alanı
+  `WORKSPACE.storage`, haftalık özet panonun son 7 günü.
+- **Tercih paneli taslakla çalışır:** Vazgeç ve kapatma taslağı atar,
+  yalnız Kaydet uygular; Teslimat kartı kaydedileni gösterir. (İlk sürümde
+  Vazgeç değişikliği bırakıyordu; play testi yeniden açıp denetliyor.)
+- **Sütun kutusu üç durumlu,** kilitli satırı (Güvenlik) etkilemez.
+
+*Bilinen sınır:* zil kutusu (`notification-center`) ile bu sayfa ayrı
+listeler tutuyor; ikisi açılışta aynı okunmamış sayıyla başlıyor ama
+birinde okunan ötekine yansımıyor. Ortak kaynağa (uygulama bağlamı)
+taşınması ayrı bir iş.

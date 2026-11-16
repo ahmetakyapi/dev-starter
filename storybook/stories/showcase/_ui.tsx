@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  * (Storybook'ta adres çubuğu yok, ama bağlantı semantiği ve klavye doğru kalır).
  */
 
-export type Page = "dashboard" | "inbox" | "tasks" | "calendar" | "assistant" | "reports" | "settings";
+export type Page = "dashboard" | "inbox" | "tasks" | "calendar" | "assistant" | "reports" | "notifications" | "settings";
 export type Params = Readonly<Record<string, string>>;
 
 export const PAGES: readonly { id: Page; label: string }[] = [
@@ -24,6 +24,7 @@ export const PAGES: readonly { id: Page; label: string }[] = [
   { id: "calendar", label: "Takvim" },
   { id: "assistant", label: "Asistan" },
   { id: "reports", label: "Raporlar" },
+  { id: "notifications", label: "Bildirimler" },
   { id: "settings", label: "Ayarlar" },
 ];
 
@@ -88,6 +89,7 @@ export const SECTION_OF: Record<Page, string> = {
   calendar: "Genel",
   assistant: "Genel",
   reports: "Yönetim",
+  notifications: "Yönetim",
   settings: "Yönetim",
 };
 

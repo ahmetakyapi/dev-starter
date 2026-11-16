@@ -112,6 +112,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 |-------|----------|------------|---------|-----------------|
 | `switch.tsx` | Anında etki eden aç/kapa | yerel giriş | Hayır | `role="switch"`, JS'siz form gönderimi; tutamak iki temada izine karşı ≥ 3:1 |
 | `checkbox.tsx` | Onay, çoklu seçim | yerel giriş | Hayır | Etiketin tamamı hedef; `indeterminate` ref ile; tik çizilerek gelir, hareket azaltmada anında |
+| `channel-matrix.tsx` | Olay × kanal tercih tablosu (bildirim, abonelik, izin); sütun başlığı bütün sütunu açar/kapar, kilitli satır | `checkbox` | Evet | Gerçek `<table>` + `caption`/`scope`; her kutu "Olay, Kanal" adını taşır; sütun kutusu üç durumlu (`indeterminate`); olay sütunu yapışkan |
 | `radio-group.tsx` | 2-6 görünür seçenek | yerel giriş | Hayır | `fieldset` + `legend`, tarayıcı ok gezinmesi; iç nokta 0.4'ten büyür, 0'dan değil |
 | `select.tsx` | 5-15 seçenek, dar yer | Base UI | Evet | Listbox, gizli yerel giriş, etiket bağı |
 | `combobox.tsx` | Çok seçenek, aranır | Base UI | Evet | `locale="tr-TR"` süzgeç, `aria-activedescendant` |

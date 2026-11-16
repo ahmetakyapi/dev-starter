@@ -3,6 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   BarChart3,
+  Bell,
   CalendarDays,
   CalendarPlus,
   CheckCircle2,
@@ -28,6 +29,7 @@ import { Skeleton, SkeletonCard } from "@/components/ui/skeleton";
 import { Toaster, toast } from "@/components/ui/toast";
 import { BOARD, ME, OPEN_TICKETS, PERIODS, customer, notifications, type Period } from "./_data";
 import { AsistanPage } from "./_asistan";
+import { BildirimPage, UNREAD_START } from "./_bildirim";
 import { AyarlarPage } from "./_ayarlar";
 import { GelenPage } from "./_gelen";
 import { GirisPage } from "./_giris";
@@ -48,6 +50,7 @@ const ICONS: Record<Page, ReactNode> = {
   calendar: <CalendarDays />,
   assistant: <MessageSquare />,
   reports: <BarChart3 />,
+  notifications: <Bell />,
   settings: <Settings />,
 };
 
@@ -66,7 +69,12 @@ const NAV: readonly ShellNavGroup[] = [
   },
   {
     label: "Yönetim",
-    items: (["reports", "settings"] as const).map((id) => ({ href: href(id), label: PAGES.find((p) => p.id === id)!.label, icon: ICONS[id] })),
+    items: (["reports", "notifications", "settings"] as const).map((id) => ({
+      href: href(id),
+      label: PAGES.find((p) => p.id === id)!.label,
+      icon: ICONS[id],
+      badge: id === "notifications" ? UNREAD_START : undefined,
+    })),
   },
 ];
 
@@ -94,6 +102,8 @@ function PageView({ page }: { page: Page }) {
       return <AsistanPage />;
     case "reports":
       return <RaporlarPage />;
+    case "notifications":
+      return <BildirimPage />;
     case "settings":
       return <AyarlarPage />;
   }

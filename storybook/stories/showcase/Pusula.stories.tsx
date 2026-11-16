@@ -56,7 +56,7 @@ const meta = {
   },
   args: { initialPage: "dashboard", initialPeriod: "ay", signedOut: false },
   argTypes: {
-    initialPage: { control: "select", options: ["dashboard", "inbox", "tasks", "calendar", "assistant", "reports", "settings"] },
+    initialPage: { control: "select", options: ["dashboard", "inbox", "tasks", "calendar", "assistant", "reports", "notifications", "settings"] },
     initialPeriod: { control: "inline-radio", options: ["hafta", "ay", "yil"] },
     initialParams: { control: false },
   },
@@ -239,6 +239,38 @@ export const ReportsLoading: Story = {
   args: { initialPage: "reports", initialParams: { preview: "loading" } },
   parameters: { docs: { description: { story: "Satış tablosunun yerinde iskelet satırlar; kap `aria-busy`." } } },
   play: async ({ globals }) => settle(globals),
+};
+
+export const Notifications: Story = {
+  name: "Bildirimler",
+  args: { initialPage: "notifications" },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Sekmeli ve gün gün gruplu akış; satırda işin kendisi (Onayla, Teklifi Aç, Yanıtla, Yeniden Bağla), ⋯ menüsünde okunma, erteleme, sessize alma. Onaylanan satır yeşile döner, bildirim Geri Al düğmeli. Sağda teslimat kanalları ve ertelenenler; Tercihler yan panelde olay × kanal tablosu (sütun başlığı bütün sütunu açar/kapar). Sayılar Pusula'nın verisinden.",
+      },
+    },
+  },
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole("heading", { level: 1, name: "Bildirimler" });
+    await userEvent.click(canvas.getByRole("button", { name: "Onayla" }));
+    await within(canvas.getByRole("tabpanel")).findByText("Onaylandı");
+    await within(document.body).findByText(/İndirim Onaylandı/);
+    await userEvent.click(canvas.getByRole("button", { name: "Tercihler" }));
+    const sheet = await canvas.findByRole("dialog", { name: "Bildirim Tercihleri" });
+    const column = within(sheet).getByRole("checkbox", { name: "SMS: bütün olaylar" });
+    await userEvent.click(column);
+    await expect(within(sheet).getByRole("checkbox", { name: "Onay İstekleri, SMS" })).toBeChecked();
+    await userEvent.click(within(sheet).getByRole("button", { name: "Vazgeç" }));
+    // Vazgeç taslağı atar: yeniden açınca SMS sütunu eski hâlinde.
+    await userEvent.click(canvas.getByRole("button", { name: "Tercihler" }));
+    const again = await canvas.findByRole("dialog", { name: "Bildirim Tercihleri" });
+    await expect(within(again).getByRole("checkbox", { name: "Onay İstekleri, SMS" })).not.toBeChecked();
+    await userEvent.click(within(again).getByRole("button", { name: "Vazgeç" }));
+    await settle(globals);
+  },
 };
 
 export const Settings: Story = {

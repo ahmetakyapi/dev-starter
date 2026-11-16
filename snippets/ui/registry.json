@@ -425,6 +425,26 @@
       "palettes": false
     },
     {
+      "name": "channel-matrix",
+      "title": "Kanal Tablosu",
+      "category": "Form ve Gezinme",
+      "description": "Olay × kanal tercih tablosu (bildirim, abonelik, izin); sütun başlığı bütün sütunu açar/kapar, kilitli satır",
+      "file": "snippets/ui/channel-matrix.tsx",
+      "client": true,
+      "storyId": "channel-matrix",
+      "registryDependencies": [
+        "checkbox"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "chart-card",
       "title": "Grafik Kartı",
       "category": "Grafik",

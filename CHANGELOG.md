@@ -7,6 +7,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Bildirimler sayfası ve kanal tablosu — 2026-11-16
+
+- **Yeni bileşen (136 → 137, kit 103 → 104):** `channel-matrix`, olay ×
+  kanal tercih tablosu; üç durumlu sütun kutusu, kilitli satır.
+- **Pusula → Bildirimler:** sekmeli ve gün gün gruplu akış, satır içi
+  eylemler (onaylanan satır yeşile döner, Geri Al düğmeli bildirim), ⋯
+  menüsü (okunma, erteleme, sessize alma), Teslimat ve Ertelenenler
+  kartları, taslakla çalışan Tercihler paneli.
+
 ### Storybook kenar çubuğu — 2026-11-16
 
 - Üç bölüm (Başla · Kütüphane · Uygulamada) ve bölüm etiketleri; üst düzey

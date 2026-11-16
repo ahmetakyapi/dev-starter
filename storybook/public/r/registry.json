@@ -559,6 +559,30 @@
       ]
     },
     {
+      "name": "channel-matrix",
+      "type": "registry:ui",
+      "title": "Kanal Tablosu",
+      "description": "Olay × kanal tercih tablosu (bildirim, abonelik, izin); sütun başlığı bütün sütunu açar/kapar, kilitli satır",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/checkbox.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "channel-matrix",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/channel-matrix.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "chart-card",
       "type": "registry:ui",
       "title": "Grafik Kartı",

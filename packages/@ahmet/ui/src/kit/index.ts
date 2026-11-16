@@ -14,6 +14,7 @@ export * from "./book-cover";
 export * from "./border-beam";
 export * from "./button-group";
 export * from "./carousel";
+export * from "./channel-matrix";
 export * from "./chart-card";
 export * from "./chat-thread";
 export * from "./checkbox";

@@ -31,6 +31,7 @@ const PAGE_OF: Record<string, string> = {
   _takvim: "Takvim",
   _asistan: "Asistan",
   _raporlar: "Raporlar",
+  _bildirim: "Bildirimler",
   _ayarlar: "Ayarlar",
   _giris: "Oturum Kapalı",
   _tanitim: "Tanıtım",
