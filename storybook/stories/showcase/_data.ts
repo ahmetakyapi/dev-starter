@@ -687,18 +687,6 @@ export const MY_TASKS: readonly MyTask[] = [
 
 /* --- Bildirimler (göreli zaman: bileşen "3 dk önce" yazar) --------------- */
 
-export function notifications(now = Date.now()) {
-  const ago = (min: number) => new Date(now - min * 60_000).toISOString();
-  const first = TICKETS[0];
-  return [
-    { id: "n1", actor: member(first.assignee).name, title: `${first.id} Acil Olarak İşaretlendi`, body: `“${first.subject}” · ${customer(first.customerId).name}`, at: ago(4), read: false },
-    { id: "n2", actor: "Mert Aksoy", title: "Mert Aksoy Atlas Teklifini Taslağa Ekledi", body: "420 oda · havlu ve nevresim", at: ago(38), read: false },
-    { id: "n3", actor: "Burak Öztürk", title: "Burak Öztürk Düzeltilmiş Faturayı Yükledi", body: `${TICKETS[1].id} · Defne Otel`, at: ago(95), read: false },
-    { id: "n4", actor: "Can Demir", title: `Can Demir ${DELAYED.length} Geciken Siparişi Kargoya Sordu`, at: ago(60 * 20), read: true },
-    { id: "n5", actor: "Selin Arslan", title: "Selin Arslan Bir Randevu Ekledi", body: "Peştemal kartelası sunumu · 4 Kas, 15.30", at: ago(60 * 26), read: true },
-  ];
-}
-
 /* --- Asistan ------------------------------------------------------------- */
 
 export const ASSISTANT_MODELS = ["Fable 5", "Fable 5 Mini", "Atlas 2"] as const;

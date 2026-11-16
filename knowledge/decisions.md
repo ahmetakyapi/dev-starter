@@ -1181,7 +1181,12 @@ ile olay × kanal tablosu.
   Vazgeç değişikliği bırakıyordu; play testi yeniden açıp denetliyor.)
 - **Sütun kutusu üç durumlu,** kilitli satırı (Güvenlik) etkilemez.
 
-*Bilinen sınır:* zil kutusu (`notification-center`) ile bu sayfa ayrı
-listeler tutuyor; ikisi açılışta aynı okunmamış sayıyla başlıyor ama
-birinde okunan ötekine yansımıyor. Ortak kaynağa (uygulama bağlamı)
-taşınması ayrı bir iş.
+### Değişti (2026-11-16) — Tek bildirim kaydı
+
+İlk sürümde zil kutusu ve bu sayfa ayrı listeler tutuyordu (birinde
+okunan ötekinde okunmamış görünüyordu). Kayıt uygulama düzeyine taşındı
+(`_app.tsx` → `feed`): zil kutusu `toBell()` ile ondan türer, kenar çubuğu
+rozeti canlı okunmamış sayısını gösterir, işlem bildirimleri ("Randevu
+Oluşturuldu") da akışa düşer, ertelenenler sayfa değişince kaybolmaz. Eski
+`notifications()` örnek verisi kaldırıldı. Play testi "Tümünü Okundu Say"
+sonrası zilin sıfırlandığını denetliyor.

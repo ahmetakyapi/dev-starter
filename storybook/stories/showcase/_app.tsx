@@ -23,13 +23,12 @@ import {
 import { AppShell, type ShellNavGroup } from "@/components/ui/app-shell";
 import { CommandPalette, type Command } from "@/components/ui/command-palette";
 import { IconButton } from "@/components/ui/icon-button";
-import type { NotificationItem } from "@/components/ui/notification-center";
 import { RouteProgress, startRouteProgress, stopRouteProgress } from "@/components/ui/route-progress";
 import { Skeleton, SkeletonCard } from "@/components/ui/skeleton";
 import { Toaster, toast } from "@/components/ui/toast";
-import { BOARD, ME, OPEN_TICKETS, PERIODS, customer, notifications, type Period } from "./_data";
+import { BOARD, ME, OPEN_TICKETS, PERIODS, customer, type Period } from "./_data";
 import { AsistanPage } from "./_asistan";
-import { BildirimPage, UNREAD_START } from "./_bildirim";
+import { BildirimPage, SNOOZED_START, buildItems, toBell, type FeedItem } from "./_bildirim";
 import { AyarlarPage } from "./_ayarlar";
 import { GelenPage } from "./_gelen";
 import { GirisPage } from "./_giris";
@@ -57,7 +56,8 @@ const ICONS: Record<Page, ReactNode> = {
 /** Ekip panosunda bitmemiş kart sayısı: kenar çubuğu rozeti. */
 const OPEN_TASKS = BOARD.filter((c) => !c.done).reduce((n, c) => n + c.cards.length, 0);
 
-const NAV: readonly ShellNavGroup[] = [
+/** Gezinme; Bildirimler rozeti canlı okunmamış sayısı (tek kayıttan). */
+const navGroups = (unread: number): readonly ShellNavGroup[] => [
   {
     label: "Genel",
     items: (["dashboard", "inbox", "tasks", "calendar", "assistant"] as const).map((id) => ({
@@ -73,7 +73,7 @@ const NAV: readonly ShellNavGroup[] = [
       href: href(id),
       label: PAGES.find((p) => p.id === id)!.label,
       icon: ICONS[id],
-      badge: id === "notifications" ? UNREAD_START : undefined,
+      badge: id === "notifications" && unread ? unread : undefined,
     })),
   },
 ];
@@ -142,7 +142,9 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
   const [route, setRoute] = useState<{ page: Page; params: Params }>({ page: initialPage, params: initialParams });
   const [pending, setPending] = useState<Page | null>(null);
   const [period, setPeriod] = useState<Period>(initialPeriod);
-  const [items, setItems] = useState<NotificationItem[]>(() => notifications());
+  // Tek bildirim kaydı: zil kutusu, Bildirimler sayfası ve kenar çubuğu rozeti aynı listeyi okur.
+  const [feed, setFeed] = useState<FeedItem[]>(() => buildItems());
+  const [snoozed, setSnoozed] = useState<FeedItem[]>([SNOOZED_START]);
   const [signedIn, setSignedIn] = useState(!signedOut);
   const routeRef = useRef(route);
   routeRef.current = route;
@@ -202,17 +204,32 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
     if (notice.undo) toast.undo(notice.title, notice.undo, options);
     else if (notice.tone === "success") toast.success(notice.title, options);
     else toast.info(notice.title, options);
-    setItems((list) => [
-      { id: `t${id}`, title: notice.title, body: notice.body, at: new Date().toISOString(), read: false, icon: notice.tone === "success" ? CheckCircle2 : Info },
+    // İşlem sonucu da akışa düşer (zil ve sayfa aynı kaydı görür).
+    setFeed((list) => [
+      {
+        id: `t${id}`,
+        kind: "bilgi",
+        day: "bugun",
+        title: notice.title,
+        label: notice.title,
+        meta: notice.body ? `${notice.body} · az önce` : "az önce",
+        read: false,
+        icon: notice.tone === "success" ? <CheckCircle2 /> : <Info />,
+        tone: notice.tone === "success" ? "success" : "primary",
+        at: new Date().toISOString(),
+      },
       ...list,
     ]);
   }, []);
 
-  const markRead = useCallback((ids: string[]) => setItems((list) => list.map((n) => (ids.includes(n.id) ? { ...n, read: true } : n))), []);
+  const markRead = useCallback((ids: string[]) => setFeed((list) => list.map((n) => (ids.includes(n.id) ? { ...n, read: true } : n))), []);
+  const bell = useMemo(() => feed.map(toBell), [feed]);
+  const unread = feed.filter((n) => !n.read).length;
+  const nav = useMemo(() => navGroups(unread), [unread]);
 
   const ctx = useMemo(
-    () => ({ page: route.page, params: route.params, navigate, period, setPeriod, notifications: items, markRead, notify }),
-    [route, navigate, period, items, markRead, notify],
+    () => ({ page: route.page, params: route.params, navigate, period, setPeriod, notifications: bell, markRead, notify, feed, setFeed, snoozed, setSnoozed }),
+    [route, navigate, period, bell, markRead, notify, feed, snoozed],
   );
 
   const commands: Command[] = useMemo(
@@ -279,7 +296,7 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
       </Suspense>
       <AppShell
         brand={BRAND}
-        groups={NAV}
+        groups={nav}
         current={href(loadingPage ?? route.page)}
         user={{ name: ME.name, detail: ME.role }}
         userAction={<IconButton icon={LogOut} aria-label="Oturumu Kapat" size="sm" onClick={() => setSignedIn(false)} />}

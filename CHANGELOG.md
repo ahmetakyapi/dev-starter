@@ -15,6 +15,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   eylemler (onaylanan satır yeşile döner, Geri Al düğmeli bildirim), ⋯
   menüsü (okunma, erteleme, sessize alma), Teslimat ve Ertelenenler
   kartları, taslakla çalışan Tercihler paneli.
+- **Tek bildirim kaydı:** zil kutusu, Bildirimler sayfası ve kenar çubuğu
+  rozeti aynı listeyi okur; işlem bildirimleri akışa düşer.
 
 ### Storybook kenar çubuğu — 2026-11-16
 

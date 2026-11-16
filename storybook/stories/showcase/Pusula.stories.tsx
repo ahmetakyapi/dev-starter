@@ -248,7 +248,7 @@ export const Notifications: Story = {
     docs: {
       description: {
         story:
-          "Sekmeli ve gün gün gruplu akış; satırda işin kendisi (Onayla, Teklifi Aç, Yanıtla, Yeniden Bağla), ⋯ menüsünde okunma, erteleme, sessize alma. Onaylanan satır yeşile döner, bildirim Geri Al düğmeli. Sağda teslimat kanalları ve ertelenenler; Tercihler yan panelde olay × kanal tablosu (sütun başlığı bütün sütunu açar/kapar). Sayılar Pusula'nın verisinden.",
+          "Sekmeli ve gün gün gruplu akış; satırda işin kendisi (Onayla, Teklifi Aç, Yanıtla, Yeniden Bağla), ⋯ menüsünde okunma, erteleme, sessize alma. Onaylanan satır yeşile döner, bildirim Geri Al düğmeli. Sağda teslimat kanalları ve ertelenenler; Tercihler yan panelde olay × kanal tablosu (sütun başlığı bütün sütunu açar/kapar). Sayılar Pusula'nın verisinden. Zil kutusu ve kenar çubuğu rozeti aynı kaydı okur: burada okunan orada da okunmuş.",
       },
     },
   },
@@ -257,7 +257,8 @@ export const Notifications: Story = {
     await canvas.findByRole("heading", { level: 1, name: "Bildirimler" });
     await userEvent.click(canvas.getByRole("button", { name: "Onayla" }));
     await within(canvas.getByRole("tabpanel")).findByText("Onaylandı");
-    await within(document.body).findByText(/İndirim Onaylandı/);
+    // Sonuç iki yerde: kısa bildirim balonu ve (tek kayıt olduğu için) akışın başı.
+    await waitFor(async () => expect((await within(document.body).findAllByText(/İndirim Onaylandı/)).length).toBeGreaterThanOrEqual(2));
     await userEvent.click(canvas.getByRole("button", { name: "Tercihler" }));
     const sheet = await canvas.findByRole("dialog", { name: "Bildirim Tercihleri" });
     const column = within(sheet).getByRole("checkbox", { name: "SMS: bütün olaylar" });
@@ -269,6 +270,10 @@ export const Notifications: Story = {
     const again = await canvas.findByRole("dialog", { name: "Bildirim Tercihleri" });
     await expect(within(again).getByRole("checkbox", { name: "Onay İstekleri, SMS" })).not.toBeChecked();
     await userEvent.click(within(again).getByRole("button", { name: "Vazgeç" }));
+    // Tek kayıt: sayfada okununca zil de sıfırlanır (zil ve sayfa aynı listeyi okur).
+    await waitFor(() => expect(canvas.getByRole("button", { name: /Bildirimler, \d+ okunmamış/ })).toBeInTheDocument());
+    await userEvent.click(canvas.getByRole("button", { name: "Tümünü Okundu Say" }));
+    await waitFor(() => expect(canvas.getByRole("button", { name: "Bildirimler" })).toBeInTheDocument());
     await settle(globals);
   },
 };

@@ -29,6 +29,7 @@ import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
+import type { NotificationItem } from "@/components/ui/notification-center";
 import { cn } from "@/lib/utils";
 import { DELAYED, OPEN_TICKETS, TICKETS, WORKSPACE, customer, member, num, periodStats, tl } from "./_data";
 import { IconTile, PageBar, useApp } from "./_ui";
@@ -41,8 +42,9 @@ import { IconTile, PageBar, useApp } from "./_ui";
  * verisinden: geciken sipariş, dosya alanı, haftalık ciro, indirim sınırı.
  */
 
-type Kind = "onay" | "bahsedilme" | "sistem" | "bilgi";
-type Item = {
+export type Kind = "onay" | "bahsedilme" | "sistem" | "bilgi";
+/** Uygulamanın TEK bildirim kaydı: zil kutusu da, bu sayfa da, kenar çubuğu rozeti de bunu okur. */
+export type FeedItem = {
   id: string;
   kind: Kind;
   day: "bugun" | "dun";
@@ -57,14 +59,18 @@ type Item = {
   tone?: "primary" | "success" | "warning" | "danger" | "neutral";
   /** Satırdaki eylem bitince ("Onaylandı", "Bağlandı"). */
   done?: string;
+  /** Zil kutusundaki göreli zaman için (ISO). */
+  at: string;
 };
+type Item = FeedItem;
 
 const MAX_DISCOUNT = 12;
 const ASKED_DISCOUNT = 15;
 
 const Mono = ({ children }: { children: ReactNode }) => <span className="font-mono text-small text-strong">{children}</span>;
 
-function buildItems(): Item[] {
+export function buildItems(now = Date.now()): Item[] {
+  const ago = (min: number) => new Date(now - min * 60_000).toISOString();
   const quote = OPEN_TICKETS.find((t) => t.customerId === "atlas" && t.tags.includes("Teklif")) ?? OPEN_TICKETS[0];
   const late = TICKETS[0];
   const invoice = TICKETS[1];
@@ -73,10 +79,11 @@ function buildItems(): Item[] {
   return [
     {
       id: "b1",
+      at: ago(4),
       kind: "onay",
       day: "bugun",
       actor: "Mert Aksoy",
-      label: `Mert Aksoy ${customer(quote.customerId).name} teklifinde yüzde ${ASKED_DISCOUNT} indirim için onayını istiyor`,
+      label: `Mert Aksoy ${customer(quote.customerId).name} teklifinde %${ASKED_DISCOUNT} indirim için onayını istiyor`,
       title: (
         <>
           <b className="font-medium">Mert Aksoy</b> <Mono>{quote.id}</Mono> teklifinde %{ASKED_DISCOUNT} indirim için onayını istiyor
@@ -87,6 +94,7 @@ function buildItems(): Item[] {
     },
     {
       id: "b2",
+      at: ago(25),
       kind: "bahsedilme",
       day: "bugun",
       actor: "Can Demir",
@@ -101,6 +109,7 @@ function buildItems(): Item[] {
     },
     {
       id: "b3",
+      at: ago(40),
       kind: "sistem",
       day: "bugun",
       icon: <Plug />,
@@ -116,6 +125,7 @@ function buildItems(): Item[] {
     },
     {
       id: "b4",
+      at: ago(60),
       kind: "bilgi",
       day: "bugun",
       actor: member(invoice.assignee).name,
@@ -130,6 +140,7 @@ function buildItems(): Item[] {
     },
     {
       id: "b5",
+      at: ago(100),
       kind: "sistem",
       day: "bugun",
       icon: <Sparkles />,
@@ -145,6 +156,7 @@ function buildItems(): Item[] {
     },
     {
       id: "b6",
+      at: ago(1100),
       kind: "bilgi",
       day: "dun",
       icon: <CalendarPlus />,
@@ -160,11 +172,12 @@ function buildItems(): Item[] {
     },
     {
       id: "b7",
+      at: ago(1528),
       kind: "sistem",
       day: "dun",
       icon: <HardDrive />,
       tone: "warning",
-      label: `Dosya alanının yüzde ${storagePct}'i dolu`,
+      label: `Dosya alanının %${storagePct}'i dolu`,
       title: (
         <>
           Dosya alanının <b className="font-medium">%{storagePct}</b>’i dolu ({WORKSPACE.storage.usedGb.toLocaleString("tr-TR")} / {WORKSPACE.storage.totalGb} GB)
@@ -176,8 +189,9 @@ function buildItems(): Item[] {
   ];
 }
 
-const SNOOZED_START: Item = {
+export const SNOOZED_START: Item = {
   id: "b0",
+  at: new Date().toISOString(),
   kind: "sistem",
   day: "bugun",
   icon: <AlarmClock />,
@@ -234,10 +248,13 @@ const DIGEST = [
   { value: "haftalik", label: "Haftalık, Pazartesi" },
 ];
 
+/** Zil kutusunun satırı: aynı kayıt, düz başlıkla. */
+export function toBell(item: Item): NotificationItem {
+  return { id: item.id, title: item.label, body: item.meta.replace(/ · [^·]*önce$/, ""), at: item.at, read: item.read, actor: item.actor };
+}
+
 export function BildirimPage() {
-  const { navigate, notify } = useApp();
-  const [items, setItems] = useState<Item[]>(buildItems);
-  const [snoozed, setSnoozed] = useState<Item[]>([SNOOZED_START]);
+  const { navigate, notify, feed: items, setFeed: setItems, snoozed, setSnoozed } = useApp();
   const [tab, setTab] = useState<string>("tum");
   const [prefsOpen, setPrefsOpen] = useState(false);
   // Kaydedilen tercih ve paneldeki taslak ayrı: Vazgeç ya da kapatma taslağı atar, yalnız Kaydet uygular.
@@ -272,12 +289,13 @@ export function BildirimPage() {
     setSnoozed((list) => [{ ...item, meta: when }, ...list]);
     notify({ tone: "info", title: "Bildirim Ertelendi", body: `${when} yeniden gelecek.`, undo: () => unsnooze(item.id, item) });
   };
+  /** Ertelemeyi geri al: kayıt akışın başına okunmamış döner. Güncelleyicide yan etki yok (katı modda iki kez çalışmasın). */
   const unsnooze = (id: string, original?: Item) => {
-    setSnoozed((list) => {
-      const found = list.find((i) => i.id === id);
-      if (found && id !== "b0") setItems((all) => [{ ...(original ?? found), read: false }, ...all.filter((i) => i.id !== id)]);
-      return list.filter((i) => i.id !== id);
-    });
+    const found = original ?? snoozed.find((i) => i.id === id);
+    setSnoozed((list) => list.filter((i) => i.id !== id));
+    if (!found) return;
+    const back = id === "b0" ? { ...found, meta: "Sistem · Entegrasyonlar · ertelemeden döndü" } : found;
+    setItems((all) => [{ ...back, read: false }, ...all.filter((i) => i.id !== id)]);
   };
 
   const actions = (item: Item): ReactNode => {
@@ -563,6 +581,4 @@ function Channel({ icon, label, hint, defaultChecked }: { icon: ReactNode; label
   );
 }
 
-/** Kenar çubuğu rozeti: açılıştaki okunmamış bildirim sayısı. */
-export const UNREAD_START = buildItems().filter((i) => !i.read).length;
 

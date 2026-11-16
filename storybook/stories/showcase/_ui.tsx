@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { LayoutGrid } from "lucide-react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { NotificationCenter, type NotificationItem } from "@/components/ui/notification-center";
 import type { Period } from "./_data";
+import type { FeedItem } from "./_bildirim";
 import { cn } from "@/lib/utils";
 
 /**
@@ -67,8 +68,14 @@ type AppState = {
   navigate: (page: Page, params?: Record<string, string | undefined>) => void;
   period: Period;
   setPeriod: (p: Period) => void;
+  /** Zil kutusunun satırları: `feed`ten türer (ayrı liste yok). */
   notifications: readonly NotificationItem[];
   markRead: (ids: string[]) => void;
+  /** Tek bildirim kaydı: Bildirimler sayfası, zil ve kenar çubuğu rozeti. */
+  feed: readonly FeedItem[];
+  setFeed: Dispatch<SetStateAction<FeedItem[]>>;
+  snoozed: readonly FeedItem[];
+  setSnoozed: Dispatch<SetStateAction<FeedItem[]>>;
   /** Kısa bildirim (sağ altta, `toast`) + bildirim merkezine kayıt. */
   notify: (toast: Omit<Toast, "id">) => void;
 };
