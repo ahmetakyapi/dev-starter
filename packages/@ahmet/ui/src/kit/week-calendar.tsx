@@ -28,6 +28,17 @@ import { cn } from "../utils";
  * etkinlik sayısı), altında seçili günün saat sıralı listesi. Varsayılan
  * gün bugün (haftadaysa), değilse haftanın ilk günü.
  *
+ * KART GÖRÜNÜMÜ (`variant="card"`, 2026-11 referans turu): pastel blok
+ * yerine sade gri kart; süre uzadıkça kart daha çok şey söyler: 30 dk
+ * başlık + saat, sonra iki satır başlık, ikon, katılımcılar, eylem (eşikler
+ * piksel yüksekliğe göre, `CardBlock`)
+ * ("Görüşmeye Katıl"; daha kısa kartta sağ üstte ikon düğmesi). Kategori rengi küçük noktada kalır (renk sinyal,
+ * zemin değil). Başlıkta büyük gün numarası, bugünün altında çizgi; sol
+ * üstte saat dilimi (`timeZone`). `allDay` etkinlikler ızgaranın üstünde
+ * "Tüm Gün" satırında (son tarihler, tatiller); gün başına iki çip, kalanı
+ * "+N". Eylem düğmesi kartın DIŞINDA ama üstünde konumlanır: `onSelect`
+ * düğmesinin içine düğme konmaz.
+ *
  * Erişilebilirlik: her gün `role="group"` + gizli başlık ("4 Kasım
  * Çarşamba"; `section` değil: yedi gün yedi landmark olup sayfa haritasını
  * boğardı), etkinlikler `ol` içinde. `onSelect` verilirse bloklar düğme
@@ -46,7 +57,23 @@ export type CalendarEvent = {
   location?: string;
   /** Kategori rengi 1-6. */
   series?: 1 | 2 | 3 | 4 | 5 | 6;
+  /** Kart görünümünde başlığın üstünde küçük ikon (kategori, kanal). */
+  icon?: ReactNode;
+  /** Katılımcı adları: kart görünümünde baş harf yığını (en çok 3 + "+N"). */
+  attendees?: readonly string[];
+  /** Kart görünümünde uzun kartın dibinde eylem ("Görüşmeye Katıl"). */
+  action?: { label: string; icon?: ReactNode; onClick: () => void };
+  /** Saatsiz, bütün günlük kayıt: "Tüm Gün" satırına düşer (`start` günün tarihi). */
+  allDay?: boolean;
 };
+
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toLocaleUpperCase("tr-TR");
 
 const WASH = ["bg-chart-1/22", "bg-chart-2/22", "bg-chart-3/22", "bg-chart-4/22", "bg-chart-5/22", "bg-chart-6/22"] as const;
 const DOT = ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5", "bg-chart-6"] as const;
@@ -107,6 +134,10 @@ export function WeekCalendar({
   hourHeight = 52,
   onSelect,
   label = "Haftalık takvim",
+  variant = "wash",
+  weekdaysOnly = false,
+  timeZone,
+  allDayLabel = "Tüm Gün",
   className,
 }: {
   /** Haftanın herhangi bir günü, `YYYY-MM-DD`. */
@@ -120,13 +151,20 @@ export function WeekCalendar({
   hourHeight?: number;
   onSelect?: (event: CalendarEvent) => void;
   label?: string;
+  /** `wash`: pastel blok (yoğun ızgara). `card`: gri kart + ikon, katılımcı, eylem (ferah ızgara, `hourHeight` ≥ 80 önerilir). */
+  variant?: "wash" | "card";
+  /** Yalnız Pazartesi–Cuma: iş aracında hafta sonu boşsa sütunlar genişler. */
+  weekdaysOnly?: boolean;
+  /** Kart görünümünde saat sütununun başı: "GMT+3". */
+  timeZone?: string;
+  allDayLabel?: string;
   className?: string;
 }) {
   const uid = useId();
   const clientNow = useSyncExternalStore(subscribeMinute, nowSnapshot, () => null);
   const now = nowProp ? new Date(nowProp) : clientNow !== null ? new Date(clientNow) : null;
   const [y, mo, d] = week.split("-").map(Number);
-  const days = weekDays(new Date(y, mo - 1, d));
+  const days = weekDays(new Date(y, mo - 1, d)).slice(0, weekdaysOnly ? 5 : 7);
   const keys = days.map(ymd);
   const todayKey = now ? ymd(now) : null;
   const [picked, setPicked] = useState<string | null>(null);
@@ -139,8 +177,19 @@ export function WeekCalendar({
     setPicked(null);
   }
 
+  const card = variant === "card";
   const byDay = new Map(keys.map((k) => [k, [] as CalendarEvent[]]));
-  for (const e of events) byDay.get(e.start.slice(0, 10))?.push(e);
+  const allByDay = new Map(keys.map((k) => [k, [] as CalendarEvent[]]));
+  for (const e of events) (e.allDay ? allByDay : byDay).get(e.start.slice(0, 10))?.push(e);
+  const hasAllDay = [...allByDay.values()].some((l) => l.length);
+  // Sınıf adları tam yazılır (Tailwind dinamik birleştirmeyi taramaz).
+  const gutter = card
+    ? weekdaysOnly
+      ? "grid-cols-[4rem_repeat(5,minmax(0,1fr))]"
+      : "grid-cols-[4rem_repeat(7,minmax(0,1fr))]"
+    : weekdaysOnly
+      ? "grid-cols-[3rem_repeat(5,minmax(0,1fr))]"
+      : "grid-cols-[3rem_repeat(7,minmax(0,1fr))]";
   for (const list of byDay.values()) list.sort((a, b) => a.start.localeCompare(b.start));
 
   const span = (endHour - startHour) * 60;
@@ -187,11 +236,23 @@ export function WeekCalendar({
           const key = keys[i];
           if (key !== selected) return null;
           const list = byDay.get(key) ?? [];
+          const allDay = allByDay.get(key) ?? [];
           return (
             <div key={key} role="group" aria-labelledby={`${uid}-m-${key}`} className="mt-3">
               <h3 id={`${uid}-m-${key}`} className="px-1 text-small font-semibold text-strong first-letter:uppercase">
                 {dayLong.format(day)}
               </h3>
+              {allDay.length ? (
+                <ul aria-label={allDayLabel} className="mt-2 flex flex-wrap gap-1.5">
+                  {allDay.map((e) => (
+                    <li key={e.id} className="inline-flex items-center gap-1.5 rounded-md bg-surface px-2 py-1 text-micro text-strong">
+                      <span aria-hidden className={cn("size-1.5 rounded-full", DOT[(e.series ?? 1) - 1])} />
+                      <span className="sr-only">{allDayLabel}: </span>
+                      {e.title}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               {list.length ? (
                 <ol className="mt-2 grid gap-1.5">
                   {list.map((e) => (
@@ -222,10 +283,25 @@ export function WeekCalendar({
 
       {/* ---------- Geniş ekran: saat ızgarası ---------- */}
       <div role="region" aria-label={label} className="max-md:hidden">
-        <div className="grid grid-cols-[3rem_repeat(7,minmax(0,1fr))]">
-          <span aria-hidden />
+        <div className={cn("grid", gutter, card && "border-b border-line")}>
+          {card ? (
+            <span aria-hidden className="flex items-end justify-center pb-2.5">
+              {timeZone ? <span className="rounded-full bg-surface px-2 py-0.5 text-micro text-muted ring-1 ring-inset ring-line-soft">{timeZone}</span> : null}
+            </span>
+          ) : (
+            <span aria-hidden />
+          )}
           {days.map((day, i) => {
             const isToday = keys[i] === todayKey;
+            if (card) {
+              return (
+                <p key={keys[i]} aria-hidden className="relative flex flex-col items-center gap-0.5 border-l border-line-soft py-2.5 text-center">
+                  <span className={cn("text-title font-semibold tracking-tight tabular-nums", isToday ? "text-primary-ink" : "text-strong")}>{day.getDate()}</span>
+                  <span className={cn("text-micro first-letter:uppercase", isToday ? "font-semibold text-primary-ink" : "text-muted")}>{dayShort.format(day)}</span>
+                  {isToday ? <span className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-primary" /> : null}
+                </p>
+              );
+            }
             return (
               <p key={keys[i]} aria-hidden className="flex flex-col items-center gap-0.5 pb-2 text-center">
                 <span className={cn("text-micro", isToday ? "font-semibold text-strong" : "text-muted")}>{dayShort.format(day)}</span>
@@ -242,7 +318,35 @@ export function WeekCalendar({
           })}
         </div>
 
-        <div className="grid grid-cols-[3rem_repeat(7,minmax(0,1fr))]" style={{ height: (endHour - startHour) * hourHeight }}>
+        {hasAllDay ? (
+          <div role="group" aria-label={allDayLabel} className={cn("grid border-b border-line", gutter)}>
+            <span aria-hidden className="flex items-center justify-end pr-2 text-micro text-muted">
+              {allDayLabel}
+            </span>
+            {days.map((day, i) => {
+              const list = allByDay.get(keys[i]) ?? [];
+              const shown = list.slice(0, 2);
+              return (
+                <ul key={keys[i]} aria-label={dayLong.format(day)} className="grid min-w-0 content-start gap-1 border-l border-line-soft p-1">
+                  {shown.map((e) => (
+                    <li key={e.id} className="flex min-w-0 items-center gap-1 rounded-md bg-surface px-1.5 py-1 text-micro text-strong ring-1 ring-inset ring-line-soft" title={e.title}>
+                      <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", DOT[(e.series ?? 1) - 1])} />
+                      <span className="truncate">{e.title}</span>
+                    </li>
+                  ))}
+                  {list.length > shown.length ? (
+                    <li className="px-1.5 text-micro text-muted">
+                      +{list.length - shown.length}
+                      <span className="sr-only"> daha: {list.slice(2).map((e) => e.title).join(", ")}</span>
+                    </li>
+                  ) : null}
+                </ul>
+              );
+            })}
+          </div>
+        ) : null}
+
+        <div className={cn("grid", gutter, card && "pt-2")} style={{ height: (endHour - startHour) * hourHeight }}>
           {/* Saat sütunu */}
           <div aria-hidden className="relative text-micro text-muted tabular-nums">
             {hours.map((h, i) => (
@@ -263,7 +367,7 @@ export function WeekCalendar({
                 key={key}
                 role="group"
                 aria-labelledby={`${uid}-g-${key}`}
-                className={cn("relative border-l border-line-soft", isToday && "bg-primary-wash/40")}
+                className={cn("relative border-l border-line-soft", isToday && (card ? "bg-primary-wash/25" : "bg-primary-wash/40"))}
               >
                 <h3 id={`${uid}-g-${key}`} className="sr-only">
                   {dayLong.format(day)}
@@ -285,7 +389,7 @@ export function WeekCalendar({
                       return (
                         <li
                           key={e.id}
-                          className="absolute px-0.5"
+                          className={cn("absolute", card ? "px-1 pb-1" : "px-0.5")}
                           style={{
                             top: `${top(s)}%`,
                             height: `${Math.max(top(en) - top(s), 2.5)}%`,
@@ -293,23 +397,27 @@ export function WeekCalendar({
                             width: `${100 / lanes}%`,
                           }}
                         >
-                          <EventShell
-                            event={e}
-                            onSelect={onSelect}
-                            spoken={spoken(e)}
-                            className={cn(
-                              "flex size-full flex-col overflow-hidden rounded-md px-1.5 py-1 text-left ring-1 ring-overlay ring-inset",
-                              WASH[(e.series ?? 1) - 1],
-                              short && "justify-center py-0",
-                            )}
-                          >
-                            <span className="flex min-w-0 items-center gap-1">
-                              <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", DOT[(e.series ?? 1) - 1])} />
-                              <span className="truncate text-micro font-semibold text-strong">{e.title}</span>
-                            </span>
-                            <span className={cn("truncate text-micro text-strong tabular-nums", short && "sr-only")}>{range(e)}</span>
-                            {!short && e.location && en - s >= 75 ? <span className="truncate text-micro text-strong">{e.location}</span> : null}
-                          </EventShell>
+                          {card ? (
+                            <CardBlock event={e} height={((en - s) / 60) * hourHeight} narrow={lanes > 1} range={range(e)} spoken={spoken(e)} onSelect={onSelect} />
+                          ) : (
+                            <EventShell
+                              event={e}
+                              onSelect={onSelect}
+                              spoken={spoken(e)}
+                              className={cn(
+                                "flex size-full flex-col overflow-hidden rounded-md px-1.5 py-1 text-left ring-1 ring-overlay ring-inset",
+                                WASH[(e.series ?? 1) - 1],
+                                short && "justify-center py-0",
+                              )}
+                            >
+                              <span className="flex min-w-0 items-center gap-1">
+                                <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", DOT[(e.series ?? 1) - 1])} />
+                                <span className="truncate text-micro font-semibold text-strong">{e.title}</span>
+                              </span>
+                              <span className={cn("truncate text-micro text-strong tabular-nums", short && "sr-only")}>{range(e)}</span>
+                              {!short && e.location && en - s >= 75 ? <span className="truncate text-micro text-strong">{e.location}</span> : null}
+                            </EventShell>
+                          )}
                         </li>
                       );
                     })}
@@ -327,6 +435,90 @@ export function WeekCalendar({
           })}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Kart görünümünün bloğu: yükseklik arttıkça ikon, katılımcı ve eylem eklenir. */
+function CardBlock({
+  event: e,
+  height,
+  narrow,
+  range,
+  spoken,
+  onSelect,
+}: {
+  event: CalendarEvent;
+  height: number;
+  /** Çakışan şeritte dar kart: ikon ve katılımcı yer yer, yalnız başlık ve saat kalır. */
+  narrow: boolean;
+  range: string;
+  spoken: string;
+  onSelect?: (event: CalendarEvent) => void;
+}) {
+  // Eşikler ölçüyle: başlık 1 satır + saat ≈ 52 px, 2 satır + saat ≈ 76, + ikon ≈ 108, + kişiler ≈ 140, + eylem ≈ 172.
+  const twoLines = height >= 72;
+  const showIcon = Boolean(e.icon) && height >= 104 && !narrow;
+  const people = e.attendees ?? [];
+  const showPeople = people.length > 0 && height >= 140 && !narrow;
+  const showAction = Boolean(e.action) && height >= 172 && !narrow;
+  // Kısa kartta eylem kaybolmasın: sağ üstte ikon düğmesi (adı tam metin).
+  const showActionIcon = Boolean(e.action) && !showAction && height >= 40;
+  return (
+    <div className="relative size-full">
+      <EventShell
+        event={e}
+        onSelect={onSelect}
+        spoken={spoken}
+        className={cn(
+          "flex size-full flex-col gap-1 overflow-hidden rounded-lg bg-surface p-2 text-left ring-1 ring-inset ring-line-soft transition-colors hover:bg-surface-raised",
+          height < 40 && "justify-center gap-0 py-1",
+        )}
+      >
+        {showIcon ? (
+          <span aria-hidden className="mb-0.5 inline-grid size-6 shrink-0 place-items-center rounded-md bg-overlay text-body shadow-raised [&_svg]:size-3.5">
+            {e.icon}
+          </span>
+        ) : null}
+        {/* shrink-0: sabit boylu dikey düzende iki satıra kırpılan başlık sıfıra büzülüyordu. */}
+        <span className={cn("shrink-0 text-small leading-snug font-medium text-strong", twoLines ? "line-clamp-2" : "truncate", showActionIcon && "pr-8")}>{e.title}</span>
+        <span className={cn("flex min-w-0 shrink-0 items-center gap-1 text-micro text-muted tabular-nums", height < 40 && "sr-only")}>
+          <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", DOT[(e.series ?? 1) - 1])} />
+          <span className="truncate">{range}</span>
+        </span>
+        {showPeople ? (
+          <span aria-hidden className={cn("mt-auto flex items-center", showAction && "mb-9")}>
+            {people.slice(0, 3).map((name, i) => (
+              <span key={name} className={cn("grid size-7 shrink-0 place-items-center rounded-full bg-overlay text-micro font-semibold text-body ring-2 ring-surface-solid", i > 0 && "-ml-1")}>
+                {initials(name)}
+              </span>
+            ))}
+            {people.length > 3 ? <span className="-ml-1 grid size-7 shrink-0 place-items-center rounded-full bg-surface-raised text-micro text-body ring-2 ring-surface-solid">+{people.length - 3}</span> : null}
+          </span>
+        ) : null}
+      </EventShell>
+      {showActionIcon ? (
+        <button
+          type="button"
+          onClick={e.action!.onClick}
+          aria-label={`${e.action!.label}: ${e.title}`}
+          title={e.action!.label}
+          className="absolute top-1.5 right-1.5 inline-grid size-7 place-items-center rounded-md bg-primary text-on-primary shadow-cta transition-colors hover:bg-primary-hover [&_svg]:size-3.5"
+        >
+          {e.action!.icon ?? e.action!.label.slice(0, 1)}
+        </button>
+      ) : null}
+      {showAction ? (
+        <button
+          type="button"
+          onClick={e.action!.onClick}
+          className="absolute inset-x-2 bottom-2 inline-flex min-h-8 items-center justify-center gap-1.5 rounded-md bg-primary px-2 text-micro font-semibold text-on-primary shadow-cta transition-colors hover:bg-primary-hover [&_svg]:size-3.5"
+        >
+          {e.action!.icon}
+          {e.action!.label}
+          <span className="sr-only">: {e.title}</span>
+        </button>
+      ) : null}
     </div>
   );
 }

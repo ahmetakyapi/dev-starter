@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
-import { WeekCalendar } from "@/components/ui/week-calendar";
+import { Code2, Palette, Rocket, Users, Video } from "lucide-react";
+import { WeekCalendar, type CalendarEvent } from "@/components/ui/week-calendar";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { HAFTA, SIMDI, TOPLANTILAR } from "./_veri";
 
@@ -53,6 +54,36 @@ export const Default: Story = {
     const blok = canvas.getAllByRole("button", { name: /Ödeme Akışı Atölyesi/ })[0];
     await userEvent.click(blok);
     await expect(args.onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "t7" }));
+  },
+};
+
+/** Kart görünümü için zenginleştirilmiş veri: ikon, katılımcı, eylem; son tarihler tüm gün. */
+const KART: CalendarEvent[] = [
+  ...TOPLANTILAR.map((e) => ({
+    ...e,
+    icon: e.id === "t2" ? <Palette /> : e.id === "t14" ? <Rocket /> : e.id === "t4" ? <Code2 /> : <Users />,
+    attendees: ["Elif Şahin", "Burak Öztürk", "Selin Arslan", "Mert Aksoy", "Can Demir"].slice(0, (Number(e.id.slice(1)) % 5) + 1),
+    action: e.location === "Çevrim İçi" ? { label: "Görüşmeye Katıl", icon: <Video />, onClick: fn() } : undefined,
+  })),
+  { id: "s1", title: "Ödeme sağlayıcı sözleşmesi", start: "2026-11-03T00:00", end: "2026-11-03T23:59", allDay: true, series: 6 },
+  { id: "s2", title: "Sürüm 2.4 kod dondurma", start: "2026-11-05T00:00", end: "2026-11-05T23:59", allDay: true, series: 2 },
+];
+
+export const CardVariant: Story = {
+  name: "Kart Görünümü",
+  args: { variant: "card", events: KART, timeZone: "GMT+3", allDayLabel: "Son Tarih", hourHeight: 112, startHour: 9, endHour: 18, weekdaysOnly: true },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Sade gri kart; süre uzadıkça kart daha çok şey söyler: başlık + saat → iki satır başlık → ikon → katılımcılar → \"Görüşmeye Katıl\" (kısa kartta sağ üstte ikon düğmesi). Büyük gün numarası ve bugünün altında çizgi, sol üstte saat dilimi, ızgaranın üstünde Tüm Gün satırı. `weekdaysOnly` ile Pazartesi–Cuma.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("group", { name: "Son Tarih" })).toBeInTheDocument();
+    await expect(canvas.getAllByRole("button", { name: /Görüşmeye Katıl/ }).length).toBeGreaterThan(0);
   },
 };
 

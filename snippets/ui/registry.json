@@ -2703,7 +2703,7 @@
       "name": "week-calendar",
       "title": "Haftalık Takvim",
       "category": "Verimlilik",
-      "description": "Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste",
+      "description": "Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste; `variant=\"card\"`: ikonlu gri kart, katılımcı, Katıl düğmesi, büyük gün numarası, saat dilimi, Tüm Gün satırı, `weekdaysOnly`",
       "file": "snippets/ui/week-calendar.tsx",
       "client": true,
       "storyId": "week-calendar",

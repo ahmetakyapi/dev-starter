@@ -1214,3 +1214,25 @@ merdiveni alındı (ölçülen hedef: sayfa #0d0d0d → kart #1d1d1d → kart i�
 *Ne zaman değişir:* bu merdiven bir projede daha tutarsa genel koyu
 temaya (`globals.css` → `--overlay`, `--surface`, `--line`) taşınır; o
 zaman bütün kataloğun kontrastı yeniden ölçülür.
+
+## Takvim — Kart Görünümü ve Bugün Paneli (2026-11-17)
+
+**Karar:** `week-calendar` geriye uyumlu `variant="card"` aldı; Pusula
+Takvim sayfası referanstaki düzene geçti: solda **Bugün** paneli (aralık
+seçen ay takvimi, Yapılacaklar / Etkinlikler sekmeleri), sağda kart
+görünümlü iş haftası; ikisi tek kartta.
+
+- **Kart süreyle zenginleşir, eşikler piksel ölçüsüyle:** başlık + saat
+  (≈52 px) → iki satır başlık (≈76) → ikon (≈108) → katılımcılar (≈140) →
+  tam genişlikte "Görüşmeye Katıl" (≈172); daha kısa kartta eylem sağ üstte
+  ikon düğmesi. Çakışan dar şeritte yalnız başlık ve saat. Başlık ve saat
+  `shrink-0`: sabit boylu dikey düzende iki satıra kırpılan başlık sıfıra
+  büzülüyordu (ilk denemede kartlar başlıksız göründü).
+- **Tüm Gün satırı uydurma etkinlik değil:** Pusula'da "Son Tarih"
+  etiketiyle ekip panosundaki bitmemiş işlerin son tarihleri (Görevler ile
+  aynı kayıt). Yapılacaklar Ahmet'in görev listesinden, son tarihe göre
+  gruplu (Bugün · Bu Hafta · Daha Sonra · Planlanmamış); grup açılır/kapanır,
+  "+" ile o gruba iş eklenir.
+- **İş haftası (`weekdaysOnly`):** hafta sonu boş; beş sütun kartları
+  okunur genişliğe çıkarır. Izgara 09–17, saat 112 px.
+- Emoji yerine tür ikonu (lucide; Görüşme, Teslimat, Numune, İç Toplantı).

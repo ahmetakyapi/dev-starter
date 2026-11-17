@@ -200,7 +200,7 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `kanban-board.tsx` | Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih | motion (`domMax`), lucide, `badge`, `avatar` | Evet | Klavye: Boşluk tut, ↑↓ sıra, ←→ kolon, Boşluk bırak, Escape geri al; her adım `aria-live`; dokunmada tutamaktan |
-| `week-calendar.tsx` | Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste | lucide | Evet | Gün başına `role="group"` + başlık, etkinlikler `ol`; gün hapları `aria-pressed` |
+| `week-calendar.tsx` | Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste; `variant="card"`: ikonlu gri kart, katılımcı, Katıl düğmesi, büyük gün numarası, saat dilimi, Tüm Gün satırı, `weekdaysOnly` | lucide | Evet | Gün başına `role="group"` + başlık, etkinlikler `ol`; gün hapları `aria-pressed` |
 | `task-list.tsx` | Görev listesi: onay, öncelik, son tarih, alt görevler, tamamlananları gizle, satır içi ekleme | `checkbox`, motion, lucide | Evet | Kısmi alt görevde `indeterminate`; açma düğmesi `aria-expanded` + "2 / 4"; ekleme ve işaretleme canlı bölgede |
 
 ### Hareket ve Doku

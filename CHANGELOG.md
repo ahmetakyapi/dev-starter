@@ -7,6 +7,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Takvim: kart görünümü ve Bugün paneli — 2026-11-17
+
+- **`week-calendar` → `variant="card"`** (geriye uyumlu): ikonlu gri kart,
+  katılımcı yığını, Görüşmeye Katıl düğmesi (kısa kartta ikon), büyük gün
+  numarası ve bugün çizgisi, saat dilimi etiketi, Tüm Gün satırı
+  (`allDay`), `weekdaysOnly`; çakışan dar şeritte sade kart.
+- **Pusula Takvim:** solda Bugün paneli (ay takvimi, gruplu Yapılacaklar +
+  ekleme, Etkinlikler), sağda iş haftası; Son Tarih satırında ekip
+  panosunun son tarihleri.
+
 ### Pusula koyu tema: katman merdiveni — 2026-11-17
 
 - Kabuk → içerik karosu → kart → kart içi dört basamak (`#0c0c0d` →

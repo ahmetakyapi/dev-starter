@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarCheck2, CalendarPlus, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
+import { CalendarCheck2, CalendarPlus, ChevronDown, ChevronLeft, ChevronRight, Handshake, MapPin, Plus, Shirt, Truck, Users, Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DateCalendar, type DateRange } from "@/components/ui/date-calendar";
@@ -14,11 +13,16 @@ import { Stepper } from "@/components/ui/stepper";
 import { TickRuler } from "@/components/ui/tick-ruler";
 import { TimeField } from "@/components/ui/time-field";
 import { ToggleGroup } from "@/components/ui/toggle-group";
-import { WeekCalendar } from "@/components/ui/week-calendar";
+import { WeekCalendar, type CalendarEvent as WeekEvent } from "@/components/ui/week-calendar";
 import { Button } from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import {
+  BOARD,
   CUSTOMERS,
   EVENTS,
+  MY_TASKS,
   TEAM,
   TODAY,
   addDays,
@@ -32,11 +36,14 @@ import {
   type CalendarEvent,
 } from "./_data";
 import { INK, PageBar, Well, WellTitle, useApp } from "./_ui";
+import { useId } from "react";
 
 const KINDS = ["Görüşme", "Teslimat", "Numune", "İç Toplantı"] as const;
 const KIND_TONE = { Görüşme: "chart-2", Teslimat: "chart-1", Numune: "chart-3", "İç Toplantı": "chart-4" } as const;
 /** Haftalık ızgarada aynı renk: rozetin tonu = bloğun `--chart-N` yıkaması. */
 const KIND_SERIES = { Görüşme: 2, Teslimat: 1, Numune: 3, "İç Toplantı": 4 } as const;
+/** Kart görünümündeki tür ikonu (emoji değil: ikon ailesi uygulamayla aynı). */
+const KIND_ICON = { Görüşme: <Handshake />, Teslimat: <Truck />, Numune: <Shirt />, "İç Toplantı": <Users /> } as const;
 type Kind = (typeof KINDS)[number];
 const hm = (n: number) => String(n).padStart(2, "0");
 const iso = (d: Date) => `${dayKey(d)}T${hm(d.getHours())}:${hm(d.getMinutes())}`;
@@ -76,16 +83,30 @@ export function TakvimPage() {
   const monthEvents = events.filter((e) => e.date.getMonth() === 10);
   const next = [...events].sort((a, b) => a.date.getTime() - b.date.getTime()).find((e) => e.date > TODAY);
 
-  const weekEvents = events
-    .filter((e) => shown.includes(e.kind))
-    .map((e) => ({
-      id: e.id,
-      title: e.title,
-      start: iso(e.date),
-      end: iso(new Date(e.date.getTime() + e.minutes * 60_000)),
-      location: e.customerId ? `${customer(e.customerId).name} · ${e.place}` : e.place,
-      series: KIND_SERIES[e.kind],
-    }));
+  const weekEvents: WeekEvent[] = [
+    ...events
+      .filter((e) => shown.includes(e.kind))
+      .map((e) => ({
+        id: e.id,
+        title: e.title,
+        start: iso(e.date),
+        end: iso(new Date(e.date.getTime() + e.minutes * 60_000)),
+        location: e.customerId ? `${customer(e.customerId).name} · ${e.place}` : e.place,
+        series: KIND_SERIES[e.kind],
+        icon: KIND_ICON[e.kind],
+        // Katılımcılar: sorumlu + müşteri yetkilisi; iç toplantıda ekip.
+        attendees: e.kind === "İç Toplantı" ? TEAM.map((m) => m.name) : [member(e.owner).name, ...(e.customerId ? [customer(e.customerId).contact] : [])],
+        action:
+          e.place === "Görüntülü Görüşme"
+            ? { label: "Görüşmeye Katıl", icon: <Video />, onClick: () => notify({ tone: "info", title: "Görüşme Bağlantısı Açıldı", body: `${e.title} · ${clock.format(e.date)}` }) }
+            : undefined,
+      })),
+    // Tüm gün satırı: ekip panosundaki bitmemiş işlerin son tarihleri (Görevler ile aynı kayıt).
+    ...BOARD.filter((c) => !c.done)
+      .flatMap((c) => c.cards)
+      .filter((c) => c.due)
+      .map((c) => ({ id: `son-${c.id}`, title: c.title, start: `${c.due}T00:00`, end: `${c.due}T23:59`, allDay: true, series: 6 as const })),
+  ];
 
   const shift = (weeks: number) => {
     const start = addDays(range.start, weeks * 7);
@@ -124,149 +145,58 @@ export function TakvimPage() {
       />
 
       <div className="grid grid-cols-1 gap-4 p-4 sm:p-6">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-          <Well labelledBy="takvim-ay">
-            <WellTitle id="takvim-ay" hint="Bir gün ya da iki uç seçerek aralık belirle.">
-              Aralık
-            </WellTitle>
-            <div className="rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
-              <DateCalendar
-                mode="range"
-                label="Gösterilen Aralık"
-                value={range}
-                onValueChange={(r) => setRange(r)}
-                defaultMonth={TODAY}
-              />
-            </div>
-            {next ? (
-              <div className="mt-4 rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
-                <p className="text-small text-muted">Sıradaki · {longDate.format(next.date)}</p>
-                <p className="mt-1 flex items-baseline gap-2 text-base">
-                  <span className="font-semibold text-strong tabular-nums">{clock.format(next.date)}</span>
-                  <span className="min-w-0 truncate font-medium text-strong">{next.title}</span>
-                </p>
-                <p className="mt-0.5 text-small text-muted">
-                  {member(next.owner).name} · {next.place}
-                </p>
-              </div>
-            ) : null}
-            <div className="mt-auto pt-4">
-            <p className="px-1 text-small font-semibold text-muted">Kasım'da</p>
-            <dl className="grid grid-cols-2 gap-1.5 pt-2">
-              {KINDS.map((k) => (
-                <div key={k} className="rounded-lg bg-surface px-3 py-2 ring-1 ring-inset ring-line-soft">
-                  <dt className="text-small text-muted">{k}</dt>
-                  <dd className="text-base font-semibold text-strong tabular-nums">
-                    {num.format(monthEvents.filter((e) => e.kind === k).length)}
-                    <span className="font-medium text-muted"> etkinlik</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            </div>
-          </Well>
+        {/* Referans turu (2026-11): solda "Bugün" paneli (ay takvimi, Yapılacaklar / Etkinlikler),
+            sağda ferah haftalık ızgara; ikisi tek kartta, aralarında saç çizgisi. */}
+        <section aria-labelledby="takvim-hafta" className="grid grid-cols-1 overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:grid-cols-[18rem_minmax(0,1fr)]">
+          <TodayPanel range={range} setRange={setRange} inRange={inRange} days={days} next={next} />
 
-          <Well labelledBy="takvim-ajanda">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0 border-t border-line-soft p-3 sm:p-4 lg:border-t-0 lg:border-l">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-1">
               <div>
-                <h2 id="takvim-ajanda" className="text-base font-semibold text-strong">
-                  Ajanda
+                <h2 id="takvim-hafta" className="text-title font-semibold tracking-tight text-strong">
+                  {shortDate.format(weekOf(range.start).start)} – {shortDate.format(addDays(weekOf(range.start).start, 4))} {weekOf(range.start).start.getFullYear()}
                 </h2>
                 <p className="mt-0.5 text-small text-muted">
-                  {shortDate.format(range.start)}
-                  {range.end && dayKey(range.end) !== dayKey(range.start) ? ` – ${shortDate.format(range.end)}` : ""} · {num.format(inRange.length)} etkinlik
+                  {num.format(weekEvents.filter((e) => !e.allDay && e.start.slice(0, 10) >= dayKey(weekOf(range.start).start) && e.start.slice(0, 10) <= dayKey(addDays(weekOf(range.start).start, 4))).length)} etkinlik · iş haftası
                 </p>
               </div>
-              <ButtonGroup aria-label="Hafta Gezinmesi">
-                <Button variant="secondary" size="sm" onClick={() => shift(-1)}>
-                  <ChevronLeft aria-hidden />
-                  Önceki
-                </Button>
-                <Button variant="secondary" size="sm" onClick={() => setRange(weekOf(TODAY))}>
-                  Bu Hafta
-                </Button>
-                <Button variant="secondary" size="sm" onClick={() => shift(1)}>
-                  Sonraki
-                  <ChevronRight aria-hidden />
-                </Button>
-              </ButtonGroup>
+              <div className="flex flex-wrap items-center gap-2">
+                <ToggleGroup<Kind>
+                  aria-label="Gösterilen Etkinlik Türleri"
+                  multiple
+                  size="sm"
+                  value={shown}
+                  onValueChange={setShown}
+                  items={KINDS.map((k) => ({ value: k, label: k }))}
+                />
+                <ButtonGroup aria-label="Hafta Gezinmesi">
+                  <Button variant="secondary" size="sm" onClick={() => shift(-1)} aria-label="Önceki Hafta">
+                    <ChevronLeft aria-hidden />
+                  </Button>
+                  <Button variant="secondary" size="sm" onClick={() => setRange(weekOf(TODAY))}>
+                    Bu Hafta
+                  </Button>
+                  <Button variant="secondary" size="sm" onClick={() => shift(1)} aria-label="Sonraki Hafta">
+                    <ChevronRight aria-hidden />
+                  </Button>
+                </ButtonGroup>
+              </div>
             </div>
-
-            {inRange.length === 0 ? (
-              <EmptyState
-                className="flex-1 justify-center bg-overlay shadow-raised"
-                icon={<CalendarCheck2 />}
-                title="Bu Aralıkta Etkinlik Yok"
-                hint="Takvimden başka bir hafta seç ya da yeni randevu oluştur."
-              />
-            ) : (
-              <ol className="grid grid-cols-1 gap-4">
-                {days.map((key) => {
-                  const list = inRange.filter((e) => dayKey(e.date) === key);
-                  const d = list[0].date;
-                  return (
-                    <li key={key} className="grid grid-cols-1 gap-1.5">
-                      <h3 className="px-1 text-small font-semibold text-muted">
-                        {longDate.format(d)}
-                        {key === dayKey(TODAY) ? <span className="ml-1.5 text-primary-ink">· Bugün</span> : null}
-                      </h3>
-                      <ul className="grid grid-cols-1 gap-1.5">
-                        {list.map((e) => (
-                          <li key={e.id} className="flex items-start gap-3 rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
-                            <time dateTime={e.date.toISOString()} className="w-12 shrink-0 pt-0.5 text-base font-semibold text-strong tabular-nums">
-                              {clock.format(e.date)}
-                            </time>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-base font-medium text-strong">{e.title}</p>
-                              <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-small text-muted">
-                                {e.customerId ? <span>{customer(e.customerId).name}</span> : null}
-                                <span className="inline-flex items-center gap-1">
-                                  <MapPin aria-hidden className="size-3.5" />
-                                  {e.place}
-                                </span>
-                                <span>{e.minutes} dk</span>
-                              </p>
-                            </div>
-                            <div className="flex shrink-0 items-center gap-2">
-                              <Badge tone={KIND_TONE[e.kind]} shape="rounded" className="max-sm:hidden">
-                                {e.kind}
-                              </Badge>
-                              <Avatar name={member(e.owner).name} size="sm" />
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  );
-                })}
-              </ol>
-            )}
-          </Well>
-        </div>
-
-        <Well labelledBy="takvim-hafta">
-          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 id="takvim-hafta" className="text-base font-semibold text-strong">
-                Haftalık Görünüm
-              </h2>
-              <p className="mt-0.5 text-small text-muted">
-                {shortDate.format(weekOf(range.start).start)} – {shortDate.format(weekOf(range.start).end!)} · Çakışan etkinlikler yan yana.
-              </p>
-            </div>
-            <ToggleGroup<Kind>
-              aria-label="Gösterilen Etkinlik Türleri"
-              multiple
-              size="sm"
-              value={shown}
-              onValueChange={setShown}
-              items={KINDS.map((k) => ({ value: k, label: k }))}
+            <WeekCalendar
+              label="Haftalık Takvim"
+              variant="card"
+              weekdaysOnly
+              timeZone="GMT+3"
+              allDayLabel="Son Tarih"
+              week={dayKey(range.start)}
+              events={weekEvents}
+              now={iso(TODAY)}
+              startHour={9}
+              endHour={17}
+              hourHeight={112}
             />
           </div>
-          <div className="rounded-lg bg-surface p-2 ring-1 ring-inset ring-line-soft">
-            <WeekCalendar label="Haftalık Takvim" week={dayKey(range.start)} events={weekEvents} now={iso(TODAY)} startHour={8} endHour={18} hourHeight={60} />
-          </div>
-        </Well>
+        </section>
 
         <Well labelledBy="randevu" className="scroll-mt-4">
           <WellTitle id="randevu" hint="Üç adım: müşteri, zaman, onay. Pazar günleri kapalı.">
@@ -348,3 +278,204 @@ export function TakvimPage() {
     </div>
   );
 }
+
+type Todo = { id: string; title: string; done: boolean; due?: string };
+type Group = { id: string; label: string; match: (t: Todo) => boolean; due?: string };
+
+/**
+ * Sol "Bugün" paneli: ay takvimi (aralık seçer, ızgara onu izler) ve iki
+ * sekme. Yapılacaklar Ahmet'in görev listesinden (Görevler ile aynı kayıt),
+ * son tarihe göre gruplu; her grup açılıp kapanır ve "+" ile o gruba iş
+ * eklenir (Planlanmamış: tarihsiz). Etkinlikler seçili aralığın ajandası.
+ */
+function TodayPanel({
+  range,
+  setRange,
+  inRange,
+  days,
+  next,
+}: {
+  range: DateRange;
+  setRange: (r: DateRange) => void;
+  inRange: readonly CalendarEvent[];
+  days: readonly string[];
+  next?: CalendarEvent;
+}) {
+  const today = dayKey(TODAY);
+  const weekEnd = dayKey(weekOf(TODAY).end!);
+  const [todos, setTodos] = useState<Todo[]>(() => MY_TASKS.map((t) => ({ id: t.id, title: t.title, done: t.done, due: t.due })));
+  const [tab, setTab] = useState("yapilacak");
+  const groups: readonly Group[] = [
+    { id: "bugun", label: "Bugün", match: (t) => t.due === today, due: today },
+    { id: "hafta", label: "Bu Hafta", match: (t) => Boolean(t.due && t.due > today && t.due <= weekEnd), due: dayKey(addDays(TODAY, 1)) },
+    { id: "sonra", label: "Daha Sonra", match: (t) => Boolean(t.due && t.due > weekEnd), due: dayKey(addDays(TODAY, 7)) },
+    { id: "plansiz", label: "Planlanmamış", match: (t) => !t.due },
+  ];
+  const open = todos.filter((t) => !t.done).length;
+
+  const yapilacak = (
+    <div className="grid gap-1 pt-3">
+      {groups.map((g) => (
+        <TodoGroup
+          key={g.id}
+          group={g}
+          items={todos.filter(g.match)}
+          onToggle={(id) => setTodos((list) => list.map((t) => (t.id === id ? { ...t, done: !t.done } : t)))}
+          onAdd={(title) => setTodos((list) => [...list, { id: `yeni-${list.length}`, title, done: false, due: g.due }])}
+        />
+      ))}
+    </div>
+  );
+
+  const etkinlik = (
+    <div className="grid gap-3 pt-3">
+      {next ? (
+        <div className="rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft">
+          <p className="text-micro text-muted">Sıradaki · {longDate.format(next.date)}</p>
+          <p className="mt-1 text-small font-medium text-strong">
+            <span className="tabular-nums">{clock.format(next.date)}</span> · {next.title}
+          </p>
+        </div>
+      ) : null}
+      {inRange.length === 0 ? (
+        <EmptyState className="bg-surface" icon={<CalendarCheck2 />} title="Bu Aralıkta Etkinlik Yok" hint="Takvimden başka bir hafta seç." />
+      ) : (
+        <ol className="grid gap-3">
+          {days.map((key) => {
+            const list = inRange.filter((e) => dayKey(e.date) === key);
+            return (
+              <li key={key}>
+                <h3 className="px-1 text-micro font-semibold text-muted">
+                  {longDate.format(list[0].date)}
+                  {key === today ? <span className="text-primary-ink"> · Bugün</span> : null}
+                </h3>
+                <ul className="mt-1 grid gap-0.5">
+                  {list.map((e) => (
+                    <li key={e.id} className="flex items-start gap-2 rounded-md px-1 py-1.5">
+                      <time dateTime={e.date.toISOString()} className="w-10 shrink-0 text-small font-semibold text-strong tabular-nums">
+                        {clock.format(e.date)}
+                      </time>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-small text-strong">{e.title}</span>
+                        <span className="flex items-center gap-1 text-micro text-muted">
+                          <MapPin aria-hidden className="size-3" />
+                          {e.place}
+                        </span>
+                      </span>
+                      <Badge tone={KIND_TONE[e.kind]} shape="rounded" className="shrink-0">
+                        {e.kind}
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </div>
+  );
+
+  return (
+    <aside aria-labelledby="takvim-bugun" className="flex min-w-0 flex-col gap-4 p-3 sm:p-4">
+      <div className="px-1">
+        <h2 id="takvim-bugun" className="text-title font-semibold tracking-tight text-strong">
+          Bugün
+        </h2>
+        <p className="mt-0.5 text-small text-muted">{longDate.format(TODAY)}</p>
+      </div>
+      <DateCalendar mode="range" label="Gösterilen Aralık" value={range} onValueChange={(r) => setRange(r)} defaultMonth={TODAY} />
+      <Tabs
+        aria-label="Bugün Paneli"
+        value={tab}
+        onValueChange={setTab}
+        className="[&>[role=tablist]]:w-full [&>[role=tablist]>*]:flex-1 [&>[role=tablist]>*]:justify-center"
+        items={[
+          { value: "yapilacak", label: <span className="inline-flex items-center gap-1.5">Yapılacaklar <span className="text-small text-muted tabular-nums">{num.format(open)}</span></span>, panel: yapilacak },
+          { value: "etkinlik", label: <span className="inline-flex items-center gap-1.5">Etkinlikler <span className="text-small text-muted tabular-nums">{num.format(inRange.length)}</span></span>, panel: etkinlik },
+        ]}
+      />
+    </aside>
+  );
+}
+
+function TodoGroup({ group, items, onToggle, onAdd }: { group: Group; items: readonly Todo[]; onToggle: (id: string) => void; onAdd: (title: string) => void }) {
+  const id = useId();
+  const [open, setOpen] = useState(group.id !== "sonra");
+  const [adding, setAdding] = useState(false);
+  const [draft, setDraft] = useState("");
+  const submit = () => {
+    const title = draft.trim();
+    if (title) onAdd(title);
+    setDraft("");
+    setAdding(false);
+    setOpen(true);
+  };
+  return (
+    <div className="border-b border-line-soft pb-1 last:border-0">
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={`${id}-list`}
+          onClick={() => setOpen((v) => !v)}
+          className="flex min-h-10 flex-1 items-center gap-1.5 rounded-md px-1 text-small font-semibold text-strong hover:bg-surface"
+        >
+          <ChevronDown aria-hidden className={cn("size-4 text-muted transition-transform duration-150", !open && "-rotate-90")} />
+          {group.label}
+          <span className="font-normal text-muted tabular-nums">{num.format(items.length)}</span>
+        </button>
+        <button
+          type="button"
+          aria-label={`${group.label} grubuna iş ekle`}
+          onClick={() => {
+            setAdding(true);
+            setOpen(true);
+          }}
+          className="inline-grid size-8 place-items-center rounded-md text-muted transition-colors hover:bg-surface hover:text-strong [&_svg]:size-4"
+        >
+          <Plus aria-hidden />
+        </button>
+      </div>
+      <div id={`${id}-list`} hidden={!open}>
+        {items.length || adding ? (
+          <ul className="grid gap-0.5 pb-1 pl-1">
+            {items.map((t) => (
+              <li key={t.id}>
+                <Checkbox
+                  label={<span className={cn("text-small", t.done ? "text-muted line-through" : "text-body")}>{t.title}</span>}
+                  checked={t.done}
+                  onChange={() => onToggle(t.id)}
+                  className="min-h-9 py-1"
+                />
+              </li>
+            ))}
+            {adding ? (
+              <li>
+                <input
+                  autoFocus
+                  aria-label={`${group.label}: yeni iş`}
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") submit();
+                    if (e.key === "Escape") {
+                      setDraft("");
+                      setAdding(false);
+                    }
+                  }}
+                  onBlur={submit}
+                  placeholder="Yeni iş, Enter ile ekle"
+                  className="mt-1 h-9 w-full rounded-md bg-surface px-2.5 text-small text-strong ring-1 ring-inset ring-line outline-none placeholder:text-muted focus:ring-2 focus:ring-line-focus"
+                />
+              </li>
+            ) : null}
+          </ul>
+        ) : (
+          <p className="pb-2 pl-7 text-micro text-muted">Bu grupta iş yok.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+

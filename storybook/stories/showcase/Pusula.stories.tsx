@@ -184,10 +184,14 @@ export const Calendar: Story = {
   name: "Takvim",
   args: { initialPage: "calendar" },
   parameters: {
-    docs: { description: { story: "Aralık takvimi ve ajanda, seçilen haftanın saat ızgarası (türler aç-kapa grubuyla süzülür); altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
+    docs: { description: { story: "Solda Bugün paneli (aralık seçen ay takvimi; Yapılacaklar son tarihe göre gruplu, gruba + ile iş eklenir; Etkinlikler ajandası), sağda kart görünümlü iş haftası: ikonlu kartlar, görüntülü görüşmede Katıl düğmesi, Son Tarih satırında ekip panosunun son tarihleri. Altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
+    // Bugün paneli: Planlanmamış grubuna "+" ile iş ekle, Enter'la kaydet.
+    await userEvent.click(await canvas.findByRole("button", { name: "Planlanmamış grubuna iş ekle" }));
+    await userEvent.type(canvas.getByRole("textbox", { name: "Planlanmamış: yeni iş" }), "Kargo firmasıyla sözleşmeyi yenile{Enter}");
+    await expect(canvas.getByRole("checkbox", { name: "Kargo firmasıyla sözleşmeyi yenile" })).toBeInTheDocument();
     await userEvent.click(await canvas.findByRole("button", { name: "Devam" }));
     await canvas.findByRole("listitem", { current: "step" });
     await userEvent.click(canvas.getByRole("button", { name: "Devam" }));
