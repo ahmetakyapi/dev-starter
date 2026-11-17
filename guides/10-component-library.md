@@ -276,7 +276,7 @@ kaldığı için erişilebilirlik açığı değil.
 - **PatternBackground**: kap `relative isolate`; hazır birleşimler `PATTERN_PRESETS`. Stil `@layer components`te: `className="fixed"` bütün sayfa zemini yapar.
 - **Dial ya da Slider**: kontrol panelinde yan yana birkaç ayar → kadran; formda tek aralık → `slider`; kesin sayı → `number-field`.
 - **ExpandableCard**: kartın kendisi büyür (`layoutId`, `domMax`); başka bir yerden açılan pencere için `dialog`.
-- **Paket mi kopya mı:** `@ahmetakyapi/ui` 104 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
+- **Paket mi kopya mı:** `@ahmetakyapi/ui` 106 bileşeni taşır (Next ve Base UI'sızlar). Kalanlar ve uyarlamak istediğin her şey `add-ui` ile kaynak olarak.
 
 ### Ribbon Turu: Tanıtım (2026-11)
 

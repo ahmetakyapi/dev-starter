@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, FileSpreadsheet, FileText } from "lucide-react";
+import { ArrowUpRight, FileSpreadsheet, FileText, Globe, Share2 } from "lucide-react";
+import { Dialog } from "@/components/ui/dialog";
+import { IconButton } from "@/components/ui/icon-button";
+import { SharePanel } from "@/components/ui/share-panel";
 import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { Avatar } from "@/components/ui/avatar";
 import { BannerAlert } from "@/components/ui/banner-alert";
@@ -166,6 +169,9 @@ export function RaporlarPage() {
   const s = useMemo(() => periodStats(period), [period]);
   const month = useMemo(() => periodStats("ay"), []);
   const [tab, setTab] = useState(params.tab ?? "sales");
+  // Paylaşım: hangi raporun penceresi açık, rapor başına erişim (ekip açık, bağlantı kapalı başlar).
+  const [sharing, setSharing] = useState<string | null>(null);
+  const [shareState, setShareState] = useState<Record<string, { team: boolean; link: boolean }>>({});
   const forceLoading = params.preview === "loading";
   const [loading, setLoading] = useState(false);
   const first = useRef(true);
@@ -223,6 +229,16 @@ export function RaporlarPage() {
     return { label: r.customer.name, x: r.orders, y: Math.round(r.revenue / r.orders), size: r.revenue, category: channel };
   });
 
+  const openReport = (r: (typeof SAVED_REPORTS)[number]) => {
+    setPeriod(r.period);
+    setTab(r.tag === "Destek" ? "support" : "sales");
+    document.getElementById("rapor-sekmeler")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const shared = SAVED_REPORTS.find((r) => r.id === sharing);
+  const sharedStats = shared ? periodStats(shared.period) : null;
+  const access = (id: string) => shareState[id] ?? { team: true, link: false };
+  const setAccess = (id: string, change: Partial<{ team: boolean; link: boolean }>) => setShareState((m) => ({ ...m, [id]: { ...access(id), ...change } }));
+
   const slides = SAVED_REPORTS.map((r) => {
     const rs = periodStats(r.period);
     return (
@@ -239,19 +255,13 @@ export function RaporlarPage() {
           </div>
           <Sparkline title={`${r.title} ciro eğilimi`} values={rs.revenueSeries} width={110} height={34} tone="auto" />
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          className="mt-4"
-          onClick={() => {
-            setPeriod(r.period);
-            setTab(r.tag === "Destek" ? "support" : "sales");
-            document.getElementById("rapor-sekmeler")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }}
-        >
-          Raporu Aç
-          <ArrowUpRight aria-hidden />
-        </Button>
+        <div className="mt-4 flex items-center gap-2">
+          <Button variant="secondary" size="sm" className="flex-1" onClick={() => openReport(r)}>
+            Raporu Aç
+            <ArrowUpRight aria-hidden />
+          </Button>
+          <IconButton icon={Share2} aria-label={`${r.title}: Paylaş`} variant="secondary" size="sm" onClick={() => setSharing(r.id)} />
+        </div>
       </article>
     );
   });
@@ -343,6 +353,8 @@ export function RaporlarPage() {
                 value={open}
                 max={4}
                 valueText={`${open} / 4`}
+                look="ticks"
+                ticks={44}
                 thresholds={{ warn: 0.5, danger: 0.75 }}
                 statusText={{ warn: "Yoğun", danger: "Çok Yoğun" }}
               />
@@ -483,6 +495,83 @@ export function RaporlarPage() {
           />
         </div>
       </div>
+
+      <Dialog
+        open={Boolean(shared)}
+        onOpenChange={(next) => !next && setSharing(null)}
+        title="Raporu Paylaş"
+        description="Ekiple ya da bağlantıyla; açan kişi aynı dönemi ve aynı sayıları görür."
+        footer={
+          shared ? (
+            <>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setSharing(null);
+                  openReport(shared);
+                }}
+              >
+                Raporu Aç
+              </Button>
+              <Button
+                onClick={() => {
+                  const a = access(shared.id);
+                  setSharing(null);
+                  notify({
+                    tone: "success",
+                    title: "Paylaşım Güncellendi",
+                    body: `${shared.title} · ${[a.team && "Pusula ekibi", a.link && "bağlantıya sahip herkes"].filter(Boolean).join(" ve ") || "yalnız sen"}`,
+                  });
+                }}
+              >
+                Bitti
+              </Button>
+            </>
+          ) : null
+        }
+      >
+        {shared && sharedStats ? (
+          <div className="grid gap-5">
+            {/* Önizleme: paylaşılan şeyin kendisi, gömük sahnede küçük kart. */}
+            <div className="rounded-xl bg-surface px-5 pt-5 ring-1 ring-inset ring-line-soft">
+              <article className="rounded-t-xl bg-overlay p-4 shadow-raised ring-1 ring-line">
+                <p className="text-micro font-semibold text-muted">
+                  {shared.tag} · {PERIOD_NAMES[shared.period]}
+                </p>
+                <h3 className="mt-1 text-base font-semibold text-strong">{shared.title}</h3>
+                <p className="mt-0.5 line-clamp-2 text-small text-body">{shared.body}</p>
+                <div className="mt-3 flex items-end justify-between gap-3">
+                  <p className="text-small text-muted">
+                    Ciro <span className="font-semibold text-strong tabular-nums">{tl.format(sharedStats.revenue)}</span>
+                  </p>
+                  <Sparkline title={`${shared.title} ciro eğilimi`} values={sharedStats.revenueSeries} width={96} height={28} tone="auto" />
+                </div>
+              </article>
+            </div>
+            <SharePanel
+              link={`https://pusula.app/r/${shared.id}?donem=${shared.period}`}
+              access={[
+                {
+                  id: "ekip",
+                  label: "Pusula Ekibi",
+                  tag: "Ekip",
+                  people: TEAM.map((m) => m.name),
+                  checked: access(shared.id).team,
+                  onCheckedChange: (team) => setAccess(shared.id, { team }),
+                },
+                {
+                  id: "baglanti",
+                  label: "Bağlantıya sahip herkes",
+                  tag: "Herkese Açık",
+                  icon: <Globe />,
+                  checked: access(shared.id).link,
+                  onCheckedChange: (link) => setAccess(shared.id, { link }),
+                },
+              ]}
+            />
+          </div>
+        ) : null}
+      </Dialog>
     </div>
   );
 }

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "connection-hero",
+  "type": "registry:ui",
+  "title": "Bağlantı Başlığı",
+  "description": "Entegrasyon bağlama penceresinin tepesi: iki uygulama karosu + bağlantı durumunu söyleyen üç nokta, arkada renk zemini",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/mesh-gradient.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/connection-hero.tsx",
+      "content": "\"use client\";\n\nimport type { ReactNode } from \"react\";\nimport { MeshGradient } from \"@/components/ui/mesh-gradient\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Bağlantı başlığı: iki uygulamanın karosu yan yana, aralarında bağlantının\n * DURUMUNU söyleyen üç nokta; arkada yumuşak renk zemini (`mesh-gradient`).\n * Entegrasyon bağlama/yeniden bağlama penceresinin ve entegrasyon ayrıntı\n * sayfasının tepesi.\n *\n * Noktalar süs değil, durum: `idle` sönük, `connecting` soldan sağa sırayla\n * yanar (veri akıyor), `connected` üçü de dolu ve başarı tonunda, `error`\n * ortadaki tehlike tonunda. Hareketi azaltan kullanıcıda sıralı yanma yok,\n * noktalar sabit yarı dolu (durum metni yine okunur).\n *\n * NE ZAMAN DEĞİL: liste satırında entegrasyon durumu (orada rozet), ya da\n * tek uygulamalı başlık (orada yalnız ikon karosu). Renk zemini ekranda bir\n * tane: pencere açıkken arkadaki sayfada ikinci bir renk zemini yoksa.\n *\n * Yöntem referans turundan (2026-11; dil ve davranış, kod ve görsel değil).\n *\n * Erişilebilirlik: başlık `role=\"img\"` + tam cümle (\"Pusula ile Kargo,\n * bağlanıyor\"); karolar ve noktalar `aria-hidden`. Durum değişimi için\n * çağıran ayrıca canlı bölge ya da bildirim verir.\n *\n * Örnek:\n *   <ConnectionHero from={{ label: \"Pusula\", icon: <Compass /> }} to={{ label: \"Kargo\", icon: <Truck /> }} status=\"connecting\" />\n */\n\ntype App = { label: string; icon: ReactNode };\ntype Status = \"idle\" | \"connecting\" | \"connected\" | \"error\";\n\nconst STATUS_TEXT: Record<Status, string> = {\n  idle: \"bağlı değil\",\n  connecting: \"bağlanıyor\",\n  connected: \"bağlandı\",\n  error: \"bağlantı hatası\",\n};\n\nconst CSS = `\n@keyframes ui-conn-dot { 0%, 100% { opacity: .35; transform: scale(.85) } 40% { opacity: 1; transform: scale(1) } }\n.ui-conn[data-status=\"connecting\"] .ui-conn-dot { animation: ui-conn-dot 1.2s var(--ease-brand, ease) infinite; }\n.ui-conn[data-status=\"connecting\"] .ui-conn-dot:nth-child(2) { animation-delay: .2s; }\n.ui-conn[data-status=\"connecting\"] .ui-conn-dot:nth-child(3) { animation-delay: .4s; }\n@media (prefers-reduced-motion: reduce) { .ui-conn[data-status=\"connecting\"] .ui-conn-dot { animation: none; opacity: .7; } }\n`;\n\nexport function ConnectionHero({ from, to, status = \"idle\", className }: { from: App; to: App; status?: Status; className?: string }) {\n  return (\n    <MeshGradient tone=\"primary\" intensity=\"soft\" texture=\"grain\" className={cn(\"rounded-xl\", className)}>\n      <style href=\"ui-connection-hero\" precedence=\"default\">\n        {CSS}\n      </style>\n      <div role=\"img\" aria-label={`${from.label} ile ${to.label}, ${STATUS_TEXT[status]}`} data-status={status} className=\"ui-conn relative flex items-center justify-center gap-4 px-6 py-10\">\n        <Tile>{from.icon}</Tile>\n        <span aria-hidden className=\"flex items-center gap-1.5\">\n          {[0, 1, 2].map((i) => (\n            <span\n              key={i}\n              className={cn(\n                \"ui-conn-dot size-2 rounded-full ring-1 ring-inset\",\n                status === \"connected\" && \"bg-success ring-success/30\",\n                status === \"error\" && (i === 1 ? \"bg-danger ring-danger/30\" : \"bg-overlay/60 ring-line\"),\n                (status === \"idle\" || status === \"connecting\") && \"bg-overlay ring-line\",\n                status === \"idle\" && \"opacity-50\",\n              )}\n            />\n          ))}\n        </span>\n        <Tile>{to.icon}</Tile>\n      </div>\n    </MeshGradient>\n  );\n}\n\nfunction Tile({ children }: { children: ReactNode }) {\n  return (\n    <span aria-hidden className=\"inline-grid size-16 place-items-center rounded-2xl bg-overlay/80 text-strong shadow-floating ring-1 ring-line backdrop-blur-sm [&_svg]:size-7\">\n      {children}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "connection-hero",
+    "palettes": false
+  }
+}

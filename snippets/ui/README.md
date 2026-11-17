@@ -83,6 +83,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `dialog.tsx` | Onay, kısa form, yıkıcı eylem | yerel `<dialog>` | Evet | Odak tuzağı ve Escape tarayıcıdan, odak açana döner, sayaçlı kilit |
 | `sheet.tsx` | Telefonda alttan çekmece, masaüstünde yan panel; yan panelde `icon` (kimlik karosu), `status` (durum hapı), `footerStart` (karşı kenarda yıkıcı eylem), `size="lg"` (ayrıntı paneli) | yerel `<dialog>` | Evet | Diyalogla aynı; sürükleme tek yol değil |
 | `filter-sheet.tsx` | Telefonda bütün süzgeç ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana düğme ("8 Talebi Göster") | `sheet`, lucide | Evet | Tekli grup radyo grubu (oklar, gezici tabindex), çoklu grup `aria-pressed`; seçili çipte ✓ + kalın kenar; sayı canlı bölgede |
+| `share-panel.tsx` | Paylaşım diyaloğunun gövdesi: bağlantı + kopyala, kitle düzeyinde erişim satırları (ekip, herkes) aç/kapa | `copy-button`, `switch`, lucide | Evet | Satırın tamamı anahtarın etiketi ("Pusula Ekibi, Ekip, 6 kişi"); erişim kapalıyken uyarı metni; kopyalama sonucu canlı bölgede |
 | `popover.tsx` | Sayfayı kilitlemeyen küçük kutu | Base UI | Evet | Dış tıklama, Escape, odak dönüşü |
 | `product-tour.tsx` | Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım) | `react-dom` (portal), lucide | Evet | Kart diyalog: odak, Tab döngüsü, ← → adım, Escape kapatır ve odak açana döner; bulunamayan hedef atlanır |
 | `tooltip.tsx` | `Tooltip`: görsel etiket · `InfoTip`: açıklama | Base UI | Evet | Tooltip dokunmatikte açılmaz (bilinçli); InfoTip tıklamayla açılır |
@@ -139,7 +140,7 @@ JavaScript'siz de çalışır.
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `progress.tsx` | Bir işin ilerlemesi (belirli/belirsiz) | Base UI, motion | Evet | `progressbar` + etiket bağı + `tr-TR` değer metni; bitince "Tamamlandı"; belirsiz hap hareket azaltmada durur |
-| `meter.tsx` | `Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım | Base UI | Evet | `role="meter"`; eşik aşılınca durum metni görünür ve `aria-valuetext`te |
+| `meter.tsx` | `Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım · `look="ticks"`: kategori kırılımında ince tik ölçek, `series` ile kategori rengi | Base UI | Evet | `role="meter"`; eşik aşılınca durum metni görünür ve `aria-valuetext`te |
 | `banner-alert.tsx` | Sayfa içi durum satırı, 4 ton | lucide, `close-button` | Hayır | Wash zemin + ikon + gizli "Hata:" öneki; yalnız `announce` ile `alert`/`status`; tek kenar şeridi yok |
 | `divider.tsx` | Yatay / dikey / etiketli ("ya da") ayırıcı | yok | Hayır | `<hr>`; dikeyde `aria-orientation`; etiketlide kap `separator` değil |
 | `toast.tsx` | Eylem sonucu bildirimi: `<Toaster />` + `toast.success/error/warning/info/undo/promise` | Base UI, `spinner`, lucide | Evet | Bölge polite, hata `role="alert"` ve kendiliğinden kapanmaz; fare üstünde ya da odakta süre durur; F6 ile bölgeye geçilir; hareket azaltmada yalnız solar |
@@ -246,6 +247,7 @@ Sayfası hikâyesi.
 | `drift-columns.tsx` | Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf) | yok | Hayır | İkinci kopya `aria-hidden` + `inert`; üzerine gelme/odak durdurur; hareket azaltmada durur ve kaydırılır |
 | `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç düğmesi elle geçirir |
 | `mesh-gradient.tsx` | Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co) | yok | Evet | Katman `aria-hidden`; yalnız `transform`, görünümden çıkınca durur, hareket azaltmada hiç oynamaz; kontrastı lekenin en yoğun yerinde ölç |
+| `connection-hero.tsx` | Entegrasyon bağlama penceresinin tepesi: iki uygulama karosu + bağlantı durumunu söyleyen üç nokta, arkada renk zemini | `mesh-gradient` | Evet | `role="img"` + tam cümle ("Pusula ile Kargo, bağlanıyor"); noktalar `aria-hidden`; hareket azaltmada sıralı yanma yok |
 | `morph-nav.tsx` | Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | Menü rolü yok: `nav` + `aria-expanded`/`aria-controls`; ↓ panele, Esc kapatır ve odak başlığa; kapalı panel `inert`; telefonda gruplar alt alta |
 | `arc-carousel.tsx` | Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | `region` + `aria-roledescription`; ←/→, Home/End, sürükleme, oklar; değişim "3 / 9: Ad" diye okunur; tekerlek dinlenmez, kendiliğinden dönmez |
 

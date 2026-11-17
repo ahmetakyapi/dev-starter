@@ -71,6 +71,35 @@ export const Thresholds: Story = {
   },
 };
 
+export const Ticks: Story = {
+  name: "Tik Görünümü (Kategori Kırılımı)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`look=\"ticks\"`: sık ve ince dikey tikler, dolu olanlar renkli. Kategori listesinde göz satırları tik sayısıyla karşılaştırır. `series` ile renk kategori kimliği olur (eşik tonlaması kapanır, etiketin önünde nokta).",
+      },
+    },
+  },
+  render: () => (
+    <Frame width="md" className="grid gap-5">
+      {[
+        { label: "İş Akışları", value: 2100, series: 2 as const },
+        { label: "Asistan", value: 1400, series: 5 as const },
+        { label: "Raporlar", value: 980, series: 3 as const },
+        { label: "Sesli Arama", value: 310, series: 4 as const },
+      ].map((r) => (
+        <Meter key={r.label} look="ticks" series={r.series} label={r.label} value={r.value} max={5000} valueText={`${r.value.toLocaleString("tr-TR")} kredi`} />
+      ))}
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getAllByRole("meter")).toHaveLength(4);
+    await expect(canvas.getByRole("meter", { name: "İş Akışları" })).toHaveAttribute("aria-valuetext", "2.100 kredi");
+  },
+};
+
 export const Segmented: Story = {
   name: "Bölümlü",
   render: () => (

@@ -907,6 +907,30 @@
       ]
     },
     {
+      "name": "connection-hero",
+      "type": "registry:ui",
+      "title": "Bağlantı Başlığı",
+      "description": "Entegrasyon bağlama penceresinin tepesi: iki uygulama karosu + bağlantı durumunu söyleyen üç nokta, arkada renk zemini",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/mesh-gradient.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "connection-hero",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/connection-hero.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "context-menu",
       "type": "registry:ui",
       "title": "Bağlam Menüsü",
@@ -1896,7 +1920,7 @@
       "name": "meter",
       "type": "registry:ui",
       "title": "Ölçer",
-      "description": "`Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım",
+      "description": "`Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım · `look=\"ticks\"`: kategori kırılımında ince tik ölçek, `series` ile kategori rengi",
       "dependencies": [
         "@base-ui/react@1.8.0"
       ],
@@ -2714,6 +2738,34 @@
       "files": [
         {
           "path": "snippets/ui/settings-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "share-panel",
+      "type": "registry:ui",
+      "title": "Paylaşım Paneli",
+      "description": "Paylaşım diyaloğunun gövdesi: bağlantı + kopyala, kitle düzeyinde erişim satırları (ekip, herkes) aç/kapa",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/copy-button.json",
+        "https://dev-starter-storybook.vercel.app/r/switch.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "share-panel",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/share-panel.tsx",
           "type": "registry:ui"
         }
       ]

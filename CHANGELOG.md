@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Paylaşım paneli, bağlantı başlığı, tik ölçek — 2026-11-17
+
+- **Yeni bileşenler (137 → 139, kit 104 → 106):** `share-panel`,
+  `connection-hero`.
+- **`meter` → `look="ticks"` + `series`:** kategori kırılımı için ince tik ölçek.
+- **Pusula:** Raporlar'da rapor paylaşma penceresi, Bildirimler'de yeniden
+  bağlama penceresi, Ayarlar'da kategoriye göre dosya alanı, Ekip Yükü tik ölçekte.
+
 ### Hizalama kuralı ve denetimi — 2026-11-17
 
 - **Kural** (`rules/design-tokens.md`): alt alta tekrar eden satırlarda aynı

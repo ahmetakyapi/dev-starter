@@ -17,7 +17,7 @@ import { PasswordField } from "@/components/ui/password-field";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
 import { CodeBlock } from "@/components/ui/code-block";
-import { SegmentedMeter } from "@/components/ui/meter";
+import { Meter, SegmentedMeter } from "@/components/ui/meter";
 import { SignaturePad, type SignatureValue } from "@/components/ui/signature-pad";
 import { TimeScrubber, formatClock } from "@/components/ui/time-scrubber";
 import { TocNav } from "@/components/ui/toc-nav";
@@ -376,14 +376,34 @@ export function AyarlarPage() {
           <WellTitle id="ayar-alan" hint={`${WORKSPACE.plan}: ${WORKSPACE.storage.totalGb} GB. Lejanttaki bir kalemin üzerine gel, payı öne çıksın.`}>
             Dosya Alanı
           </WellTitle>
-          <div className="rounded-xl bg-surface p-5 ring-1 ring-inset ring-line-soft">
-            <SegmentedMeter
-              size="lg"
-              label="Kullanılan Alan"
-              max={WORKSPACE.storage.totalGb}
-              segments={WORKSPACE.storage.parts}
-              format={(n) => `${n.toLocaleString("tr-TR", { maximumFractionDigits: 1 })} GB`}
-            />
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="rounded-xl bg-surface p-5 ring-1 ring-inset ring-line-soft">
+              <SegmentedMeter
+                size="lg"
+                label="Kullanılan Alan"
+                max={WORKSPACE.storage.totalGb}
+                segments={WORKSPACE.storage.parts}
+                format={(n) => `${n.toLocaleString("tr-TR", { maximumFractionDigits: 1 })} GB`}
+              />
+            </div>
+            {/* Kategoriye göre: her kalem kendi tik ölçeğinde, plan alanına (10 GB) oranla; renk bölümlü ölçerdekiyle aynı. */}
+            <section aria-labelledby="ayar-alan-kalem" className="grid content-start gap-4 rounded-xl p-5 ring-1 ring-inset ring-line-soft">
+              <h3 id="ayar-alan-kalem" className="text-small font-medium text-muted">
+                Kategoriye Göre · {WORKSPACE.storage.totalGb} GB içinde
+              </h3>
+              {WORKSPACE.storage.parts.map((part) => (
+                <Meter
+                  key={part.label}
+                  look="ticks"
+                  ticks={56}
+                  series={part.series}
+                  label={part.label}
+                  value={part.value}
+                  max={WORKSPACE.storage.totalGb}
+                  valueText={`${part.value.toLocaleString("tr-TR", { maximumFractionDigits: 1 })} GB`}
+                />
+              ))}
+            </section>
           </div>
         </Well>
 

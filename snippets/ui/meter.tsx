@@ -19,6 +19,12 @@ import { cn } from "@/lib/utils";
  * Dolgu `progress.tsx` ile aynı: iz kadar geniş hap, `translateX` ile kayar,
  * uç her değerde yuvarlak; genişlik animasyonu yok.
  *
+ * TİK GÖRÜNÜMÜ (`look="ticks"`, 2026-11 referans turu): düz çubuk yerine
+ * sık dikey tikler; dolu tikler renkli, kalanı iz rengi. Kategori kırılımı
+ * listesinde ("Ekler 3,1 GB", "Ahmet 3 / 4") göz satırları tik sayısıyla
+ * karşılaştırır, çubuk uzunluğunu tahmin etmez. `series` verilirse renk
+ * seri rengi (kategori kimliği) olur ve eşik tonlaması kapanır; etiketin
+ * önünde aynı renkte nokta çıkar (lejant gerekmez).
  * Değer metni `format` ile verilir: ham sayıyı birimiyle biçimlemek
  * çağıranın işi ("38,4 GB"). Verilmezse `tr-TR` yüzde.
  */
@@ -45,8 +51,16 @@ type MeterProps = {
   /** Yüksek değer İYİ ise (şifre gücü): renk sırası tersine döner. */
   inverted?: boolean;
   hint?: ReactNode;
+  /** `bar` (varsayılan) ya da `ticks`: sık dikey tikler. */
+  look?: "bar" | "ticks";
+  /** Tik sayısı (`look="ticks"`); dar alanda azalt. */
+  ticks?: number;
+  /** Sabit seri rengi (kategori): eşik tonlaması ve durum metni kapanır, etiketin önünde nokta. */
+  series?: 1 | 2 | 3 | 4 | 5 | 6;
   className?: string;
 };
+
+const SERIES_FILL = ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5", "bg-chart-6"] as const;
 
 export function Meter({
   value,
@@ -58,12 +72,18 @@ export function Meter({
   statusText = { warn: "Az Yer Kaldı", danger: "Neredeyse Dolu" },
   inverted = false,
   hint,
+  look = "bar",
+  ticks = 48,
+  series,
   className,
 }: MeterProps) {
   const hintId = useId();
   const ratio = Math.min(1, Math.max(0, (value - min) / (max - min)));
   const gauge = inverted ? 1 - ratio : ratio;
-  const level: Level = gauge >= thresholds.danger ? "danger" : gauge >= thresholds.warn ? "warn" : "ok";
+  const level: Level = series ? "ok" : gauge >= thresholds.danger ? "danger" : gauge >= thresholds.warn ? "warn" : "ok";
+  const fill = series ? SERIES_FILL[series - 1] : FILL[level];
+  // Sıfırdan büyük değer en az bir tik: "hiç yok" ile "çok az" ayrışsın.
+  const on = value > min ? Math.max(1, Math.round(ratio * ticks)) : 0;
   const shown = valueText ?? percent.format(ratio);
   const status = level === "ok" ? null : statusText[level];
 
@@ -77,22 +97,34 @@ export function Meter({
       className={cn("grid gap-2", className)}
     >
       <div className="flex items-baseline justify-between gap-3">
-        <Base.Label className="min-w-0 truncate text-base font-medium text-strong">{label}</Base.Label>
+        <Base.Label className="flex min-w-0 items-center gap-2 text-base font-medium text-strong">
+          {series ? <span aria-hidden className={cn("size-2 shrink-0 rounded-full", fill)} /> : null}
+          <span className="truncate">{label}</span>
+        </Base.Label>
         <span aria-hidden className="flex shrink-0 items-baseline gap-2 text-small tabular-nums">
           {status ? <span className={cn("font-semibold", TEXT[level])}>{status}</span> : null}
           <span className="font-medium text-strong">{shown}</span>
         </span>
       </div>
 
-      <Base.Track className="relative h-2 overflow-hidden rounded-full bg-chart-track">
-        <span
-          className={cn(
-            "absolute inset-0 rounded-full transition-[transform,background-color] duration-300 motion-reduce:transition-none",
-            FILL[level],
-          )}
-          style={{ transform: `translateX(-${(1 - ratio) * 100}%)` }}
-        />
-      </Base.Track>
+      {look === "ticks" ? (
+        // Tik İNCE ve sabit (4 px), aradaki boşluk genişliğe göre açılır: alanı bölüşen tik kalınlaşıp çubuğa dönüşüyordu.
+        <Base.Track className="flex h-6 items-stretch justify-between gap-px">
+          {Array.from({ length: ticks }, (_, i) => (
+            <span
+              key={i}
+              className={cn("w-1 min-w-px shrink rounded-full transition-colors duration-300 motion-reduce:transition-none", i < on ? fill : "bg-chart-track")}
+            />
+          ))}
+        </Base.Track>
+      ) : (
+        <Base.Track className="relative h-2 overflow-hidden rounded-full bg-chart-track">
+          <span
+            className={cn("absolute inset-0 rounded-full transition-[transform,background-color] duration-300 motion-reduce:transition-none", fill)}
+            style={{ transform: `translateX(-${(1 - ratio) * 100}%)` }}
+          />
+        </Base.Track>
+      )}
 
       {hint ? (
         <p id={hintId} className="text-small text-muted">

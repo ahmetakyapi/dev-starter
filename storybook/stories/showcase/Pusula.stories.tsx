@@ -274,6 +274,11 @@ export const Notifications: Story = {
     const again = await canvas.findByRole("dialog", { name: "Bildirim Tercihleri" });
     await expect(within(again).getByRole("checkbox", { name: "Onay İstekleri, SMS" })).not.toBeChecked();
     await userEvent.click(within(again).getByRole("button", { name: "Vazgeç" }));
+    // Yeniden Bağla: önce izinleri gösteren pencere, bağlanınca satır "Bağlandı".
+    await userEvent.click(canvas.getByRole("button", { name: "Yeniden Bağla" }));
+    const conn = await canvas.findByRole("dialog", { name: "Kargo Bağlantısı" });
+    await userEvent.click(within(conn).getByRole("button", { name: "Yeniden Bağla" }));
+    await waitFor(() => expect(within(canvas.getByRole("tabpanel")).getByText("Bağlandı")).toBeInTheDocument(), { timeout: 4000 });
     // Tek kayıt: sayfada okununca zil de sıfırlanır (zil ve sayfa aynı listeyi okur).
     await waitFor(() => expect(canvas.getByRole("button", { name: /Bildirimler, \d+ okunmamış/ })).toBeInTheDocument());
     await userEvent.click(canvas.getByRole("button", { name: "Tümünü Okundu Say" }));

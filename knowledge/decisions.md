@@ -1254,3 +1254,22 @@ durum rozeti (59 px → öncelik rozeti `min-w-18`).
 sütunlardaki aynı renkli rozetleri karıştırıyordu; gruplama yapısal yola
 göre. (3) Serbest etiket akışı (aynı biçimde çipler art arda) muaf. Betik
 eski hatayı geri koyunca yakaladığı doğrulandı.
+
+## Paylaşım, Bağlantı Başlığı, Tik Ölçek (2026-11-17)
+
+**Karar:** Dört referanstan üçü uygulandı (dil ve davranış):
+
+- **`share-panel`** (yeni): bağlantı + kopyala, kitle düzeyinde erişim
+  satırları (ekip / bağlantıya sahip herkes) aç/kapa; satırın tamamı
+  anahtarın etiketi. Pusula Raporlar → Hazır Raporlar → Paylaş: önizleme
+  kartı gömük sahnede, erişim rapor başına tutulur.
+- **`connection-hero`** (yeni): iki uygulama karosu, aralarında DURUM
+  söyleyen üç nokta (bağlı değil / bağlanıyor / bağlandı / hata), arkada
+  `mesh-gradient`. Pusula Bildirimler → "Yeniden Bağla" artık önce izinleri
+  gösteren pencere açar, sonra bağlar.
+- **`meter` → `look="ticks"`, `series`:** ince (4 px sabit) sık tikler;
+  kategori kırılımı. Pusula: Ayarlar → Dosya Alanı (kategoriye göre), Raporlar
+  → Ekip Yükü. İlk sürümde tikler alanı bölüşüp 8 px'e kalınlaşıyordu.
+
+*Alınmayan:* plan ve fiyat kartları — tanıtım şablonunda zaten var
+(`PricingPlans`); referanstaki çizim maskotlar alınmadı (görsel kopyalanmaz).

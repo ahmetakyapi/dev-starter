@@ -684,6 +684,26 @@
       "palettes": false
     },
     {
+      "name": "connection-hero",
+      "title": "Bağlantı Başlığı",
+      "category": "Tanıtım",
+      "description": "Entegrasyon bağlama penceresinin tepesi: iki uygulama karosu + bağlantı durumunu söyleyen üç nokta, arkada renk zemini",
+      "file": "snippets/ui/connection-hero.tsx",
+      "client": true,
+      "storyId": "connection-hero",
+      "registryDependencies": [
+        "mesh-gradient"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "context-menu",
       "title": "Bağlam Menüsü",
       "category": "Katmanlar",
@@ -1444,7 +1464,7 @@
       "name": "meter",
       "title": "Ölçer",
       "category": "Geri Bildirim",
-      "description": "`Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım",
+      "description": "`Meter`: doluluk/kota, eşikte ton · `SegmentedMeter`: dağılım · `look=\"ticks\"`: kategori kırılımında ince tik ölçek, `series` ile kategori rengi",
       "file": "snippets/ui/meter.tsx",
       "client": true,
       "storyId": "meter",
@@ -2025,6 +2045,28 @@
       "storyId": "settings-dialog",
       "registryDependencies": [
         "dialog"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "share-panel",
+      "title": "Paylaşım Paneli",
+      "category": "Katmanlar",
+      "description": "Paylaşım diyaloğunun gövdesi: bağlantı + kopyala, kitle düzeyinde erişim satırları (ekip, herkes) aç/kapa",
+      "file": "snippets/ui/share-panel.tsx",
+      "client": true,
+      "storyId": "share-panel",
+      "registryDependencies": [
+        "copy-button",
+        "switch"
       ],
       "templateFiles": [
         "lib/utils.ts"

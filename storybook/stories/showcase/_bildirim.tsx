@@ -8,6 +8,7 @@ import {
   CalendarPlus,
   Check,
   CircleCheck,
+  Compass,
   HardDrive,
   Mail,
   MailOpen,
@@ -19,11 +20,14 @@ import {
   Smartphone,
   Sparkles,
   TriangleAlert,
+  Truck,
 } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { ChannelMatrix, type MatrixValue } from "@/components/ui/channel-matrix";
+import { ConnectionHero } from "@/components/ui/connection-hero";
+import { Dialog } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
@@ -280,9 +284,21 @@ export function BildirimPage() {
       undo: () => patch(item.id, { done: undefined, read: false }),
     });
   };
-  const reconnect = (item: Item) => {
-    patch(item.id, { done: "Bağlandı", read: true });
-    notify({ tone: "success", title: "Kargo Bağlantısı Yenilendi", body: `${num.format(DELAYED.length)} siparişin takibi yeniden başladı.` });
+  // Yeniden bağlama penceresi: önce ne bağlandığını ve hangi izinleri aldığını gösterir, sonra bağlar.
+  const [connect, setConnect] = useState<{ item: Item; status: "idle" | "connecting" | "connected" } | null>(null);
+  const reconnect = (item: Item) => setConnect({ item, status: "idle" });
+  const runConnect = () => {
+    if (!connect) return;
+    const item = connect.item;
+    setConnect({ item, status: "connecting" });
+    window.setTimeout(() => {
+      setConnect({ item, status: "connected" });
+      window.setTimeout(() => {
+        setConnect(null);
+        patch(item.id, { done: "Bağlandı", read: true });
+        notify({ tone: "success", title: "Kargo Bağlantısı Yenilendi", body: `${num.format(DELAYED.length)} siparişin takibi yeniden başladı.` });
+      }, 700);
+    }, 1200);
   };
   const snooze = (item: Item, when: string) => {
     setItems((list) => list.filter((i) => i.id !== item.id));
@@ -494,6 +510,55 @@ export function BildirimPage() {
           </section>
         </div>
       </div>
+
+      <Dialog
+        open={Boolean(connect)}
+        onOpenChange={(next) => !next && connect?.status === "idle" && setConnect(null)}
+        title="Kargo Bağlantısı"
+        description="Pusula Kargo Entegrasyonu · anahtarın süresi bugün 10.00’da doldu."
+        footer={
+          <>
+            <Button variant="secondary" disabled={connect?.status !== "idle"} onClick={() => setConnect(null)}>
+              Vazgeç
+            </Button>
+            <Button disabled={connect?.status !== "idle"} onClick={runConnect}>
+              <Plug aria-hidden />
+              {connect?.status === "connecting" ? "Bağlanıyor…" : connect?.status === "connected" ? "Bağlandı" : "Yeniden Bağla"}
+            </Button>
+          </>
+        }
+      >
+        <div className="grid gap-4">
+          <ConnectionHero
+            from={{ label: "Pusula", icon: <Compass /> }}
+            to={{ label: "Kargo", icon: <Truck /> }}
+            status={connect?.status ?? "idle"}
+          />
+          <p aria-live="polite" className="sr-only">
+            {connect?.status === "connecting" ? "Bağlanıyor" : connect?.status === "connected" ? "Bağlandı" : ""}
+          </p>
+          <div className="grid gap-4 rounded-xl p-4 ring-1 ring-line">
+            <div>
+              <h3 className="text-base font-semibold text-strong">Hakkında</h3>
+              <p className="mt-1 text-base text-body">
+                Yoldaki ve geciken siparişlerin kargo durumunu 15 dakikada bir çeker; söz verilen tarih geçince talebi gecikme etiketiyle açar. Şu an {num.format(DELAYED.length)} siparişin takibi bekliyor.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-base font-semibold text-strong">İzinler</h3>
+              <ul aria-label="İzinler" className="mt-2 flex flex-wrap gap-1.5">
+                {["Kargo Takibi", "Sipariş Durumu", "Teslim Bildirimi", "Yalnız Okuma"].map((p) => (
+                  <li key={p}>
+                    <Badge shape="rounded" variant="outline">
+                      {p}
+                    </Badge>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Dialog>
 
       <Sheet
         open={prefsOpen}
