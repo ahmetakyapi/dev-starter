@@ -324,30 +324,63 @@ export const Settings: Story = {
 export const SignedOut: Story = {
   name: "Oturum Kapalı",
   args: { signedOut: true },
-  parameters: { docs: { description: { story: "Kenar çubuğundaki Oturumu Kapat buraya getirir; çalışma alanı e-postasıyla girince pano açılır." } } },
-  play: async ({ canvasElement, globals }) => {
-    const canvas = within(canvasElement);
-    await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@gmail.com");
-    await userEvent.type(canvas.getByLabelText("Şifre"), "pusula2026");
-    await userEvent.click(canvas.getByRole("button", { name: "Giriş Yap" }));
-    await canvas.findByText(/pusula\.app/, { selector: "[id$='-error'], p, span" }, { timeout: 3000 });
-    await settle(globals);
-  },
-};
-
-export const SampleAccount: Story = {
-  name: "Örnek Hesapla Giriş",
-  args: { signedOut: true },
   parameters: {
     docs: {
       description: {
-        story: "Şifre yazdırmadan tek tıkla giriş: form gönderilmez, tarayıcı “şifre kaydedilsin mi?” ya da veri ihlali uyarısı açmaz. Yalnız örnek uygulamada.",
+        story:
+          "Kenar çubuğundaki Oturumu Kapat buraya getirir. Şifre alanı yok (örnek uygulamada tarayıcı şifre kaydetmeyi sormasın): bu cihazda kayıtlı hesapla tek dokunuş ya da e-postaya giriş bağlantısı. Çalışma alanı dışındaki adres alanın altında reddedilir; bağlantı gönderilince “Bağlantıyı Aç” panoyu açar.",
       },
     },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(await canvas.findByRole("button", { name: /Örnek Hesapla Gir/ }));
+    // Şifre alanı yok: tarayıcının şifre yöneticisi devreye girmez.
+    await expect(canvasElement.querySelector('input[type="password"]')).toBeNull();
+    const email = await canvas.findByLabelText("E-Posta");
+    await userEvent.type(email, "ahmet@gmail.com");
+    await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
+    // Alanın altındaki hata (kayıtlı hesap satırı da "pusula.app" yazar: metni tam ara).
+    await canvas.findByText("Pusula hesabıyla gir: ad@pusula.app", {}, { timeout: 3000 });
+    await userEvent.clear(canvas.getByLabelText("E-Posta"));
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "ahmet@pusula.app");
+    await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
+    await canvas.findByRole("heading", { name: "Bağlantıyı Gönderdik" }, { timeout: 3000 });
+    await settle(globals);
+  },
+};
+
+export const SampleAccount: Story = {
+  name: "Kayıtlı Hesapla Giriş",
+  args: { signedOut: true },
+  parameters: {
+    docs: {
+      description: {
+        story: "Bu cihazda kayıtlı hesaba tek dokunuş: form gönderilmez, şifre sorulmaz, pano açılır.",
+      },
+    },
+  },
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: /Ahmet Akyapı olarak devam et/ }));
+    await canvas.findByRole("heading", { name: "Pano" }, { timeout: 3000 });
+    await settle(globals);
+  },
+};
+
+export const MagicLink: Story = {
+  name: "Bağlantıyla Giriş",
+  args: { signedOut: true },
+  parameters: { docs: { description: { story: "E-postaya giriş bağlantısı: gönderilince form “Bağlantıyı Gönderdik” paneline döner, bağlantı panoyu açar; “Başka Adres Kullan” forma geri getirir." } } },
+  play: async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@pusula.app");
+    await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
+    const heading = await canvas.findByRole("heading", { name: "Bağlantıyı Gönderdik" }, { timeout: 3000 });
+    await waitFor(() => expect(heading).toHaveFocus());
+    await userEvent.click(canvas.getByRole("button", { name: "Başka Adres Kullan" }));
+    await expect(canvas.getByLabelText("E-Posta")).toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
+    await userEvent.click(await canvas.findByRole("button", { name: /Bağlantıyı Aç/ }, { timeout: 3000 }));
     await canvas.findByRole("heading", { name: "Pano" }, { timeout: 3000 });
     await settle(globals);
   },

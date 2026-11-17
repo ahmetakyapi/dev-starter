@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Link from "next/link";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { AuthCard, type AuthState } from "@/components/ui/auth-card";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
@@ -152,10 +152,51 @@ export const SignUpWithoutProviders: Story = {
   args: { ...SIGN_UP, socialAction: undefined },
 };
 
+/** Bağlantı eylemi: geçerli adreste `sentTo` döner, kart "gönderildi" paneline geçer. */
+async function demoSendLink(_: AuthState, data: FormData): Promise<AuthState> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  const email = String(data.get("email") ?? "").trim();
+  if (!email.includes("@")) return { email, fieldErrors: { email: "Geçerli bir e-posta adresi yaz." } };
+  return { email, sentTo: email };
+}
+
+export const MagicLink: Story = {
+  name: "Bağlantıyla Giriş",
+  args: {
+    method: "link",
+    action: demoSendLink,
+    socialAction: undefined,
+    title: "E-Postayla Gir",
+    description: "Şifre yok: adresine tek kullanımlık giriş bağlantısı gelir.",
+    submitLabel: "Giriş Bağlantısı Gönder",
+    pendingLabel: "Gönderiliyor",
+    forgotHref: undefined,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`method=\"link\"`: şifre alanı yok. Eylem `{ sentTo }` döndürünce form “Bağlantıyı Gönderdik” paneline döner, başlık odak alır; “Başka Adres Kullan” forma geri getirir. Şifre alanı olmadığı için tarayıcı şifre kaydetmeyi sormaz.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvasElement.querySelector('input[type="password"]')).toBeNull();
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "deniz@ornek.com");
+    await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
+    const heading = await canvas.findByRole("heading", { name: "Bağlantıyı Gönderdik" });
+    await waitFor(() => expect(heading).toHaveFocus());
+    await expect(canvas.getByText("deniz@ornek.com")).toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Başka Adres Kullan" }));
+    await expect(canvas.getByLabelText("E-Posta")).toBeVisible();
+  },
+};
+
 export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: (args) => (
-    <Gallery cols={3}>
+    <Gallery cols={2}>
       <Cell label="Giriş · Sağlayıcılarla">
         <AuthCard {...args} />
       </Cell>
@@ -164,6 +205,9 @@ export const AllVariants: Story = {
       </Cell>
       <Cell label="Yalnız E-Posta">
         <AuthCard {...args} socialAction={undefined} title="E-Postayla Gir" description={undefined} />
+      </Cell>
+      <Cell label="Bağlantıyla · Şifresiz">
+        <AuthCard {...args} method="link" action={demoSendLink} socialAction={undefined} title="E-Postayla Gir" description={undefined} submitLabel="Giriş Bağlantısı Gönder" forgotHref={undefined} />
       </Cell>
     </Gallery>
   ),

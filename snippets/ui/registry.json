@@ -217,7 +217,7 @@
       "name": "auth-card",
       "title": "Giriş Kartı",
       "category": "Bloklar",
-      "description": "Giriş/kayıt kartı, sunucu eylemine bağlanır",
+      "description": "Giriş/kayıt kartı, sunucu eylemine bağlanır; `method=\"link\"` şifresiz (e-postaya giriş bağlantısı)",
       "file": "snippets/ui/auth-card.tsx",
       "client": true,
       "storyId": "auth-card",

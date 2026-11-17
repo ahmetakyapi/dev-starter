@@ -287,7 +287,7 @@
       "name": "auth-card",
       "type": "registry:ui",
       "title": "Giriş Kartı",
-      "description": "Giriş/kayıt kartı, sunucu eylemine bağlanır",
+      "description": "Giriş/kayıt kartı, sunucu eylemine bağlanır; `method=\"link\"` şifresiz (e-postaya giriş bağlantısı)",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],

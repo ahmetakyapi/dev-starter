@@ -7,6 +7,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Şifresiz giriş ekranı — 2026-11-17
+
+- `auth-card` → `method="link"`: e-postaya giriş bağlantısı, "Bağlantıyı
+  Gönderdik" paneli (`sentTo`, `sentNote`, `sentAction`), "Başka Adres Kullan"
+- Pusula giriş ekranı: şifre alanı yok (tarayıcı şifre kaydetmeyi sormaz);
+  kayıtlı hesapla tek dokunuş + bağlantıyla giriş; geniş ekranda bugün
+  bekleyen işleri gösteren renkli panel
+- `mistakes.md #122`
+
 ### Katalog haritası, kenar çubuğu ve Pusula tutarlılığı — 2026-11-17
 
 - Kapak: ilk ekranda katalog haritası (kenar çubuğunun üç bölümü, on bir

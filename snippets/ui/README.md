@@ -271,7 +271,7 @@ sohbeti, giriş, ayarlar, palet seçici.
 |-------|----------|------------|---------|-----------------|
 | `palette-switcher.tsx` | Alttan yüzen palet seçici + açık/koyu anahtarı; vitrin, tema denemesi | `ThemeToggle`, `app/palettes.css` | Evet | `role="radiogroup"`, gezici tabindex, oklar/Home/End; seçim halkası renkle değil kalınlıkla |
 | `app-shell.tsx` | Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik | `sheet`, `command-palette`, `kbd`, `avatar`, `next/link` | Evet | `nav` + grup başlıkları, `aria-current="page"`, daraltmada `aria-expanded`, ⌘B (metin alanında kapalı) |
-| `auth-card.tsx` | Giriş/kayıt kartı, sunucu eylemine bağlanır | `spinner`, `next/link` | Evet | Alan hatasında `aria-invalid` + `aria-describedby`, genel hata `role="alert"`, göster/gizle `aria-pressed`, doğru `autoComplete` |
+| `auth-card.tsx` | Giriş/kayıt kartı, sunucu eylemine bağlanır; `method="link"` şifresiz (e-postaya giriş bağlantısı) | `spinner`, `next/link` | Evet | Alan hatasında `aria-invalid` + `aria-describedby`, genel hata `role="alert"`, göster/gizle `aria-pressed`, doğru `autoComplete` |
 | `settings-dialog.tsx` | Sayfadan çıkmadan, anında etki eden ayarlar penceresi | `dialog`, `switch`, `select` | Evet | Dikey sekme listesi, oklar, Home/End; paneller `hidden` ile kalır, durum silinmez |
 | `agent-plan.tsx` | Ajanın çok adımlı planının kuşbakışı | lucide | Hayır | `<ol>`, `aria-current="step"`, gizli durum metni, `aria-live="polite"`; `<details>` ile JS'siz daraltma |
 | `chat-composer.tsx` | Sohbet giriş kutusu; `look="halo"`: boş başlangıç ekranında hale çerçeveli kutu | motion, `dropdown-menu` | Evet | Gizli etiket + klavye ipucu, IME'ye saygılı Enter, gönder/durdur adları, model menüsü radyo öğeleri |

@@ -31,7 +31,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 | Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
 | Nimbstia'dan Öğrenilenler (2026-11-03) | 115–119 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
-| Görsel Katalog Turları (2026-11-17) | 120–121 | storybook, kapsam, play, hero, kontrast, koyu-tema |
+| Görsel Katalog Turları (2026-11-17) | 120–122 | storybook, kapsam, play, hero, kontrast, koyu-tema |
 
 ---
 
@@ -2083,6 +2083,25 @@ plan hapı kalktı, yerine demoya inen cam duyuru bağlantısı.
 **Kural**: Renkli zemin `bg-primary` değil `bg-cta` (ya da ölçülmüş koyu ton); üstündeki birincil
 eylem zeminle ZIT (beyaz). Düğme gibi görünen her şey basılır; basılmıyorsa hap biçiminde olmaz.
 Renkli bölüm iki temada ekran görüntüsüyle denetlenir.
+
+### 122. Örnek Uygulamada Gerçek Şifre Formu: Tarayıcı "Şifre Kaydedilsin mi?" Sordu
+
+**Hata**: Pusula'nın giriş ekranında e-posta + şifre formu vardı; şifre yazılıp "Giriş Yap"a
+basılınca form kayboldu, Chrome bunu gerçek giriş sayıp şifreyi kaydetmeyi teklif etti. "Örnek
+Hesapla Gir" düğmesi bu yüzden eklenmişti ama asıl düğme hâlâ tetikliyordu. Sahibi: "burası için
+gerek yok, bu bir Storybook".
+
+**Sebep**: Tarayıcının şifre yöneticisi, KULLANICININ yazdığı şifre içeren form gönderilip sayfadan
+kaybolunca (ya da sayfa gezinince) girişi başarılı sayar. Örnek uygulamada başarılı giriş tam
+olarak budur: form gider, pano gelir. Kısmi çözüm (yan yola ikinci düğme) asıl yolu düzeltmedi.
+
+**Çözüm**: Pusula girişinde şifre alanı yok: bu cihazda kayıtlı hesapla tek dokunuş ve
+`AuthCard method="link"` (e-postaya giriş bağlantısı; gönderilince "Bağlantıyı Gönderdik"
+paneli, "Bağlantıyı Aç" panoyu açar). Play testi sayfada `input[type=password]` olmadığını sınar.
+
+**Kural**: Örnek uygulamada ve Storybook'ta başarıda kaybolan form şifre alanı taşımaz. Şifre
+alanını göstermek gereken bileşen hikâyesinde form başarıda yerinde kalır (tarayıcı başarısız
+giriş sayar, sormaz). Gerçek projede `AuthCard` şifreli haliyle ve doğru `autoComplete`le kalır.
 
 ---
 

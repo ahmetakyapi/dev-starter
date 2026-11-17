@@ -1,8 +1,8 @@
 "use client";
 
-import { AlertCircle, Eye, EyeOff } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, MailCheck } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useId, useState, type ReactNode } from "react";
+import { useActionState, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
@@ -33,12 +33,22 @@ import { cn } from "@/lib/utils";
  * alandan çalmaz. Bekleme sırasında düğme `aria-disabled` değil gerçekten
  * devre dışı, metni "Giriş Yapılıyor" olur. `autoComplete` doğru: tarayıcı
  * ve şifre yöneticisi alanları tanır.
+ *
+ * BAĞLANTIYLA GİRİŞ (`method="link"`): şifre alanı yok; e-postaya tek
+ * kullanımlık giriş bağlantısı gider. Eylem başarıda `{ sentTo: email }`
+ * döndürür, form yerini "Bağlantıyı Gönderdik" paneline bırakır (başlık
+ * odak alır, `role="status"`); "Başka Adres Kullan" forma döner.
+ * `sentAction` panelin eylem yuvası (ör. "E-Postayı Aç"). Örnek uygulama ve
+ * Storybook bunu kullanır: şifre alanı olmayan form gönderilip kaybolunca
+ * tarayıcı "şifre kaydedilsin mi?" diye sormaz.
  */
 
 export type AuthState = {
   error?: string;
   fieldErrors?: { email?: string; password?: string };
   email?: string;
+  /** `method="link"`: bağlantının gönderildiği adres; varsa "gönderildi" paneli. */
+  sentTo?: string;
 };
 
 export type AuthProvider = { id: string; label: string };
@@ -57,6 +67,12 @@ type AuthCardProps = {
   footer?: ReactNode;
   /** Kayıt formunda "new-password". */
   passwordAutoComplete?: "current-password" | "new-password";
+  /** `password` (varsayılan) e-posta + şifre; `link` yalnız e-posta, giriş bağlantısı gider. */
+  method?: "password" | "link";
+  /** `method="link"`: "gönderildi" panelinin açıklaması. */
+  sentNote?: (email: string) => ReactNode;
+  /** `method="link"`: "gönderildi" panelinin eylem yuvası. */
+  sentAction?: ReactNode;
   className?: string;
 };
 
@@ -79,10 +95,25 @@ export function AuthCard({
   forgotHref,
   footer,
   passwordAutoComplete = "current-password",
+  method = "password",
+  sentNote = (email) => (
+    <>
+      <span className="font-semibold text-strong">{email}</span> adresine giriş bağlantısı gönderildi. Bağlantı 15
+      dakika geçerli; gelmezse istenmeyen klasörüne bak.
+    </>
+  ),
+  sentAction,
   className,
 }: AuthCardProps) {
   const [state, formAction, pending] = useActionState(action, {});
   const [reveal, setReveal] = useState(false);
+  // "Başka Adres Kullan" bu yanıtı kapatır; aynı adrese yeniden gönderilince yeni yanıt nesnesi gelir, panel yine açılır.
+  const [dismissed, setDismissed] = useState<AuthState | null>(null);
+  const sent = method === "link" && state.sentTo && dismissed !== state ? state.sentTo : null;
+  const sentHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (sent) sentHeading.current?.focus();
+  }, [sent]);
   const id = useId();
   const emailError = state.fieldErrors?.email;
   const passwordError = state.fieldErrors?.password;
@@ -97,7 +128,30 @@ export function AuthCard({
           {description ? <p className="mt-1.5 text-base text-body">{description}</p> : null}
         </header>
 
-        {socialAction && providers.length > 0 ? (
+        {sent ? (
+          <div role="status" className="grid justify-items-start gap-3 rounded-lg bg-surface p-5">
+            <span
+              aria-hidden
+              className="grid size-10 place-items-center rounded-full bg-success-wash text-success [&_svg]:size-5"
+            >
+              <MailCheck strokeWidth={1.9} />
+            </span>
+            <h3 ref={sentHeading} tabIndex={-1} className="text-title font-semibold text-strong outline-none">
+              Bağlantıyı Gönderdik
+            </h3>
+            <p className="text-base text-body">{sentNote(sent)}</p>
+            {sentAction ? <div className="mt-1 grid w-full gap-2">{sentAction}</div> : null}
+            <button
+              type="button"
+              onClick={() => setDismissed(state)}
+              className="min-h-11 text-small font-medium text-primary-ink underline-offset-4 hover:underline"
+            >
+              Başka Adres Kullan
+            </button>
+          </div>
+        ) : null}
+
+        {!sent && socialAction && providers.length > 0 ? (
           <>
             <form action={socialAction} className="grid grid-cols-2 gap-2">
               {providers.map((provider) => (
@@ -127,7 +181,7 @@ export function AuthCard({
           </>
         ) : null}
 
-        <form action={formAction} noValidate className="grid gap-4">
+        <form action={formAction} noValidate hidden={!!sent} className="grid gap-4">
           {state.error ? (
             <p
               role="alert"
@@ -164,51 +218,53 @@ export function AuthCard({
             ) : null}
           </div>
 
-          <div className="grid gap-1.5">
-            <div className="flex items-baseline justify-between gap-3">
-              <label htmlFor={`${id}-password`} className="text-small font-semibold text-strong">
-                Şifre
-              </label>
-              {forgotHref ? (
-                <Link
-                  href={forgotHref}
-                  className="text-small font-medium text-primary-ink underline-offset-4 hover:underline"
+          {method === "password" ? (
+            <div className="grid gap-1.5">
+              <div className="flex items-baseline justify-between gap-3">
+                <label htmlFor={`${id}-password`} className="text-small font-semibold text-strong">
+                  Şifre
+                </label>
+                {forgotHref ? (
+                  <Link
+                    href={forgotHref}
+                    className="text-small font-medium text-primary-ink underline-offset-4 hover:underline"
+                  >
+                    Şifremi Unuttum
+                  </Link>
+                ) : null}
+              </div>
+              <div className="relative">
+                <input
+                  id={`${id}-password`}
+                  name="password"
+                  type={reveal ? "text" : "password"}
+                  autoComplete={passwordAutoComplete}
+                  required
+                  aria-invalid={passwordError ? true : undefined}
+                  aria-describedby={passwordError ? `${id}-password-error` : undefined}
+                  className={cn(FIELD, "pr-12")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setReveal((value) => !value)}
+                  // Fareyle basınca odak alanda kalsın; klavyede düğme yine odaklanır.
+                  onMouseDown={(event) => event.preventDefault()}
+                  aria-pressed={reveal}
+                  aria-controls={`${id}-password`}
+                  aria-label="Şifreyi Göster"
+                  title={reveal ? "Şifreyi Gizle" : "Şifreyi Göster"}
+                  className="absolute inset-y-0 right-0 inline-grid w-11 place-items-center rounded-r-md text-muted transition-colors hover:text-strong [&_svg]:size-[1.125rem]"
                 >
-                  Şifremi Unuttum
-                </Link>
+                  {reveal ? <EyeOff aria-hidden strokeWidth={1.75} /> : <Eye aria-hidden strokeWidth={1.75} />}
+                </button>
+              </div>
+              {passwordError ? (
+                <p id={`${id}-password-error`} className="text-small text-danger">
+                  {passwordError}
+                </p>
               ) : null}
             </div>
-            <div className="relative">
-              <input
-                id={`${id}-password`}
-                name="password"
-                type={reveal ? "text" : "password"}
-                autoComplete={passwordAutoComplete}
-                required
-                aria-invalid={passwordError ? true : undefined}
-                aria-describedby={passwordError ? `${id}-password-error` : undefined}
-                className={cn(FIELD, "pr-12")}
-              />
-              <button
-                type="button"
-                onClick={() => setReveal((value) => !value)}
-                // Fareyle basınca odak alanda kalsın; klavyede düğme yine odaklanır.
-                onMouseDown={(event) => event.preventDefault()}
-                aria-pressed={reveal}
-                aria-controls={`${id}-password`}
-                aria-label="Şifreyi Göster"
-                title={reveal ? "Şifreyi Gizle" : "Şifreyi Göster"}
-                className="absolute inset-y-0 right-0 inline-grid w-11 place-items-center rounded-r-md text-muted transition-colors hover:text-strong [&_svg]:size-[1.125rem]"
-              >
-                {reveal ? <EyeOff aria-hidden strokeWidth={1.75} /> : <Eye aria-hidden strokeWidth={1.75} />}
-              </button>
-            </div>
-            {passwordError ? (
-              <p id={`${id}-password-error`} className="text-small text-danger">
-                {passwordError}
-              </p>
-            ) : null}
-          </div>
+          ) : null}
 
           <button
             type="submit"

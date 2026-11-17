@@ -1362,3 +1362,16 @@ kalan işaretler zaten seçili seçenek ya da aynı sayfaya bağlantı).
 anında `index.json`dan okumak (ilk çizimde sayılar boş gelip zıplar;
 derleme anında ham metinden sayım seçildi).
 
+### Giriş Ekranı: Şifresiz, İki Sütun (2026-11-17)
+
+Sahibi: "Giriş Yap gerçekten giriş gibi çalışıp şifre kaydetmeyi soruyor; burası
+için gerek yok, giriş ekranı en iyi seviyeye gelsin". Pusula girişi artık iki
+şifresiz yol: bu cihazda kayıtlı hesap (Avatar + ad + e-posta, tek dokunuş) ve
+e-postaya giriş bağlantısı (`auth-card` → `method="link"`, kütüphaneye eklendi:
+`sentTo`, `sentNote`, `sentAction`; panel başlığı odak alır, "Başka Adres
+Kullan" forma döner). Geniş ekranda sağda ürünün renkli paneli
+(`.pusula-hero`): bugün bekleyen talep sayısı, en acil üç talep, müşteri
+şeridi; şeridin "Durdur" düğmesi renkli zeminde okunur hale getirildi.
+"Şifreli Bağlantı Kuruldu" büyük harf mono künyesi kalktı (`mistakes.md #115`
+dili). `mistakes.md #122`.
+
