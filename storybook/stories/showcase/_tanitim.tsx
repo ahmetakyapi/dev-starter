@@ -77,7 +77,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           <button
             type="button"
             onClick={onSignIn}
-            className="inline-flex min-h-9 items-center rounded-full bg-cta px-4 text-small font-medium text-on-brand shadow-cta"
+            className="inline-flex min-h-11 items-center rounded-full bg-cta pointer-fine:min-h-9 px-4 text-small font-medium text-on-brand shadow-cta"
           >
             Giriş Yap
           </button>
@@ -96,7 +96,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           </div>
           {/* Duyuru hapı: renkli zeminde cam, BASILIR (demoya iner). Eski plan
               hapı düğme gibi görünüp hiçbir şey yapmıyordu. */}
-          <LiquidGlassLink tone="media" href="#tanitim-demo" className="mb-8 min-h-9 gap-2 px-4 text-small">
+          <LiquidGlassLink tone="media" href="#tanitim-demo" className="mb-8 min-h-11 gap-2 px-4 text-small pointer-fine:min-h-9">
             <span aria-hidden className="size-1.5 rounded-full bg-success" />
             Yeni: Pencere Şeridi
             <ArrowRight aria-hidden className="size-3.5" />

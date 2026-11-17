@@ -11,7 +11,7 @@ import { MorphIcon } from "@/components/ui/morph-icon";
 import { QuickPoll } from "@/components/ui/quick-poll";
 import { Sheet } from "@/components/ui/sheet";
 import { TaskList } from "@/components/ui/task-list";
-import { BOARD, ME, MY_TASKS, TODAY, dayKey, num, shortDate } from "./_data";
+import { ME, MY_TASKS, TODAY, dayKey, num, shortDate } from "./_data";
 import { PageBar, SectionTitle, Well, WellTitle, useApp } from "./_ui";
 
 const TODAY_KEY = dayKey(TODAY);
@@ -32,8 +32,8 @@ function upcoming(columns: readonly KanbanColumn[]) {
 }
 
 export function GorevlerPage() {
-  const { notify } = useApp();
-  const [columns, setColumns] = useState<readonly KanbanColumn[]>(BOARD);
+  // Pano durumu uygulamada: kenar çubuğundaki "Görevler" rozeti ve başlık aynı sayıyı okur.
+  const { notify, board: columns, setBoard: setColumns } = useApp();
   const [tip, setTip] = useState(true);
   const [allUpcoming, setAllUpcoming] = useState(false);
   const [vote, setVote] = useState<string | null>(null);

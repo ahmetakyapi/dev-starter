@@ -59,6 +59,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Rating } from "@/components/ui/rating";
 import { Reactions, type Reaction } from "@/components/ui/reactions";
 import { SearchField, matchesTr } from "@/components/ui/search-field";
+import { Select, type SelectItem } from "@/components/ui/select";
 import { SelectionAction, SelectionBar } from "@/components/ui/selection-bar";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { DateRangePresets, rangeOf, type DateRangeValue, type RangePreset } from "@/components/ui/date-range-presets";
@@ -136,6 +137,14 @@ function initialFolder(params: Params): FolderId {
   return status ? `durum:${status}` : "tum";
 }
 
+/** Ağacın düz hali: ağacın gizlendiği genişlikte araç çubuğundaki seçici. */
+const FOLDER_ITEMS: SelectItem[] = [
+  { value: "tum", label: "Bütün Talepler" },
+  ...STATUSES.map((st) => ({ value: `durum:${st}`, label: st })),
+  ...TAGS.map((tag) => ({ value: `etiket:${tag}`, label: `Etiket: ${tag}` })),
+  ...TICKET_CHANNELS.map((ch) => ({ value: `kanal:${ch}`, label: `Kanal: ${ch}` })),
+];
+
 /** "Geldi" süzgecinin hazır aralıkları; örnek verinin bugünü `TODAY` (2 Kasım). */
 const WHEN: readonly RangePreset[] = [
   { id: "bugun", label: "Bugün", days: 1 },
@@ -167,7 +176,9 @@ export function GelenPage() {
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"liste" | "musteri">("liste");
-  const [showChannel, setShowChannel] = useState(true);
+  // Kanal sütunu geniş ekranda açık; 1280 px altında kapalı başlar (konu sütunu ~10 harfe iniyordu).
+  // "Görünüm" menüsünden her genişlikte açılır.
+  const [showChannel, setShowChannel] = useState(() => typeof window === "undefined" || window.matchMedia("(min-width: 80rem)").matches);
   const [showMessages, setShowMessages] = useState(false);
   const [when, setWhen] = useState<DateRangeValue>(ALL_TIME);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -528,8 +539,10 @@ export function GelenPage() {
         }
       />
 
-      <div className="grid grid-cols-1 flex-1 gap-4 p-4 sm:p-6 lg:grid-cols-[15rem_minmax(0,1fr)]">
-        <aside aria-label="Klasörler" className="hidden lg:block">
+      {/* Klasör ağacı yalnız geniş ekranda yanda (xl): 1024'te 240 px ağaç tabloyu sıkıştırıp konuyu
+          ~10 harfe kısaltıyordu. Daha darda aynı klasörler araç çubuğunda "Klasör" seçicisi. */}
+      <div className="grid grid-cols-1 flex-1 gap-4 p-4 sm:p-6 xl:grid-cols-[15rem_minmax(0,1fr)]">
+        <aside aria-label="Klasörler" className="hidden xl:block">
           <div className="sticky top-4 rounded-xl bg-overlay p-2 shadow-raised ring-1 ring-line">
             <TreeView
               aria-label="Talep Klasörleri"
@@ -575,6 +588,17 @@ export function GelenPage() {
                 placeholder="Müşteri ara"
                 emptyText="Bu adla müşteri yok."
                 className="w-full max-md:hidden sm:w-64"
+              />
+              <Select
+                label="Klasör"
+                hideLabel
+                items={FOLDER_ITEMS}
+                value={folder}
+                onValueChange={(v) => {
+                  setFolder(v ?? "tum");
+                  resetPage();
+                }}
+                className="w-full max-md:hidden sm:w-52 xl:hidden"
               />
               <DateRangePresets
                 label="Geldi"

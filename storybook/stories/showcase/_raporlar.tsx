@@ -465,7 +465,8 @@ export function RaporlarPage() {
             value={period}
             onValueChange={(v) => v && setPeriod(v as Period)}
             items={PERIODS.map((p) => ({ value: p.value, label: PERIOD_NAMES[p.value] }))}
-            className="w-40"
+            // Başlık eylemleri tek boy (36 px, dokunmatikte 44): öteki sayfalarla aynı.
+            className="w-40 pointer-fine:[&_[role=combobox]]:min-h-9"
           />
         }
       />

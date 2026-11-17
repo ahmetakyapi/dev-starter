@@ -385,7 +385,7 @@ export function BildirimPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         aria-label={`${item.label}: eylemler`}
-                        className="inline-grid size-9 place-items-center rounded-md text-muted transition-colors hover:bg-surface-raised hover:text-strong [&_svg]:size-4"
+                        className="inline-grid size-11 place-items-center pointer-fine:size-9 rounded-md text-muted transition-colors hover:bg-surface-raised hover:text-strong [&_svg]:size-4"
                       >
                         <MoreHorizontal aria-hidden />
                       </DropdownMenuTrigger>
@@ -435,7 +435,7 @@ export function BildirimPage() {
     <div className="flex min-h-full flex-col">
       <PageBar
         title="Bildirimler"
-        description={`${num.format(unread)} okunmamış · uygulama içinde, e-postayla ve SMS’le`}
+        description={`${num.format(unread)} Okunmamış · Uygulama İçi, E-Posta ve SMS`}
         actions={
           <>
             <Button variant="secondary" size="sm" disabled={!unread} onClick={() => setItems((list) => list.map((i) => ({ ...i, read: true })))}>
@@ -503,7 +503,7 @@ export function BildirimPage() {
                       type="button"
                       onClick={() => unsnooze(s.id)}
                       aria-label={`${s.label}: ertelemeyi geri al`}
-                      className="shrink-0 rounded-md px-2 py-1 text-small font-medium text-primary-ink transition-colors hover:bg-primary-wash"
+                      className="inline-flex min-h-11 shrink-0 items-center rounded-md px-2 text-small pointer-fine:min-h-7 font-medium text-primary-ink transition-colors hover:bg-primary-wash"
                     >
                       Geri Al
                     </button>

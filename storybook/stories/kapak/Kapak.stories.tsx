@@ -85,31 +85,14 @@ function BrandMark({ className }: { className?: string }) {
 
 function Masthead() {
   const enter = useEnter();
-  const links: [string, string][] = [
-    ["Başlangıç", "start--overview"],
-    ["Bileşenler", "showcase--all-in-one"],
-    ["Desenler", "pattern-library--overview"],
-    ["Pusula", "demo-app--overview"],
-  ];
   return (
     <m.header {...enter(0, 0)} className="flex items-center justify-between gap-4">
-      {/* Marka karosu burada YOK: kabuğun sidebar'ında hemen solda duruyor, iki işaret yan yana tekrar olurdu. */}
+      {/* Marka karosu burada YOK: kabuğun sidebar'ında hemen solda duruyor, iki işaret yan yana tekrar olurdu.
+          Üst menü de yok: aynı kapılar sağdaki haritada ve kenar çubuğunda (üç gezinme aynı ekranda kalabalıktı). */}
       <p className="flex items-center gap-2.5">
         <span className="text-read font-semibold tracking-tight text-strong">Görsel Katalog</span>
         <span className="rounded-full bg-surface px-2 py-0.5 font-mono text-micro text-muted tabular-nums">v{uiPackage.version}</span>
       </p>
-      <nav aria-label="Katalog" className="hidden items-center gap-1 md:flex">
-        {links.map(([label, id]) => (
-          <a
-            key={id}
-            href={to(id)}
-            target="_top"
-            className={cn("rounded-full px-3 py-1.5 text-base text-body transition-colors duration-150 hover:bg-surface hover:text-strong", FOCUS)}
-          >
-            {label}
-          </a>
-        ))}
-      </nav>
     </m.header>
   );
 }
@@ -244,7 +227,7 @@ function mapSections(): { label: string; rows: MapRow[] }[] {
       label: "Uygulamada",
       rows: [
         { name: "Pusula", note: "Aynı parçalarla kurulmuş uygulama", icon: Compass, id: "demo-app--overview", count: count(pusula?.stories ?? 0, "ekran") },
-        { name: "Ekranlar", note: "Giriş, gelen kutusu, açılış sayfası", icon: Monitor, id: firstOf(["Ekranlar"], SCREEN_ORDER) ?? "start--overview", count: count(under("Ekranlar").length, "şablon") },
+        { name: "Ekranlar", note: "Uygulama ekranları ve açılış sayfası", icon: Monitor, id: firstOf(["Ekranlar"], SCREEN_ORDER) ?? "start--overview", count: count(under("Ekranlar").length, "şablon") },
         { name: "Arşiv", note: "Bileşen kapsamı ve referanslar", icon: Archive, id: "coverage--table" },
       ],
     },
@@ -271,16 +254,16 @@ function CatalogMap() {
                 <a
                   href={to(row.id)}
                   target="_top"
-                  className={cn("group grid min-h-12 grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-3 rounded-xl px-2.5 py-1.5 transition-colors duration-150 hover:bg-surface", FOCUS)}
+                  className={cn("group grid min-h-12 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 sm:grid-cols-[auto_minmax(0,1fr)_auto_auto] rounded-xl px-2.5 py-1.5 transition-colors duration-150 hover:bg-surface", FOCUS)}
                 >
                   <span aria-hidden className="grid size-8 place-items-center rounded-lg bg-primary-wash text-primary-ink [&_svg]:size-4">
                     <row.icon strokeWidth={1.9} />
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate text-base font-semibold text-strong">{row.name}</span>
-                    <span className="block truncate text-small text-muted">{row.note}</span>
+                    <span className="line-clamp-2 text-small text-muted sm:block sm:truncate">{row.note}</span>
                   </span>
-                  <span className="w-24 text-right text-small text-muted tabular-nums">{row.count ?? ""}</span>
+                  <span className="w-24 text-right text-small text-muted tabular-nums max-sm:hidden">{row.count ?? ""}</span>
                   <ArrowUpRight aria-hidden className="size-4 text-muted transition-[translate,color] duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-strong" />
                 </a>
               </li>
@@ -294,7 +277,13 @@ function CatalogMap() {
 
 /** Kabuğun arama kutusunu açar: kapaktan ayrılmadan bileşen, desen ya da ekran ara. */
 function SearchLauncher() {
+  // Kabuk yoksa (hikâye tek başına, `iframe.html`) aranacak kenar çubuğu da yok: düğme kabuğu açar.
+  const inShell = typeof window !== "undefined" && window.top !== window && !!window.top?.document.getElementById("storybook-explorer-searchfield");
   const open = () => {
+    if (!inShell) {
+      window.location.href = "./?path=/story/cover--overview";
+      return;
+    }
     const field = window.top?.document.getElementById("storybook-explorer-searchfield") as HTMLInputElement | null;
     field?.focus();
     field?.select();
@@ -461,7 +450,7 @@ function ComponentGroups() {
           Her Parça Kendi Rafında
         </h2>
         <p className="max-w-[58ch] text-read text-body">
-          {COMPONENT_GROUPS.length} grup, kenar çubuğundaki sırayla; sayı o raftaki bileşen sayfası. Karta bas: grubun ilk bileşeni açılır.
+          {COMPONENT_GROUPS.length} grup, kenar çubuğundaki sırayla; sayı o raftaki bileşen sayfası (Her Şey Bir Arada kendi kurgusunda gruplar, sayıları farklıdır). Karta bas: grubun ilk bileşeni açılır.
         </p>
       </Reveal>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -481,7 +470,10 @@ function ComponentGroups() {
                       <span className="block truncate font-display text-title font-semibold text-strong">{group}</span>
                       <span className="block truncate text-small text-muted">{GROUP_NOTES[group]}</span>
                     </span>
-                    <span className="font-display text-title font-semibold text-strong tabular-nums">{list.length}</span>
+                    <span className="text-right">
+                      <span className="block font-display text-title font-semibold text-strong tabular-nums">{list.length}</span>
+                      <span className="block text-micro text-muted">sayfa</span>
+                    </span>
                   </span>
                   <span className="line-clamp-2 text-small text-body">
                     {names.slice(0, 5).join(" · ")}
@@ -710,9 +702,10 @@ export const Overview: Story = {
     const initial = PALETTES.find((p) => p.value === root.dataset.palette) ?? PALETTES[0];
     const other = initial.value === "jade" ? "Kobalt" : "Yeşim";
     await fireEvent.click(canvas.getByRole("radio", { name: other }));
-    await waitFor(() => expect(root.dataset.palette).toBe(other === "Yeşim" ? "jade" : "cobalt"));
+    // Palet global'i kabuk üzerinden döner; yük altında bir saniyeyi aşabiliyor (kapak Yeşim'de kalıyordu).
+    await waitFor(() => expect(root.dataset.palette).toBe(other === "Yeşim" ? "jade" : "cobalt"), { timeout: 5000 });
     await waitFor(() => expect(canvas.getByRole("radio", { name: other })).toBeChecked());
     await fireEvent.click(canvas.getByRole("radio", { name: initial.title }));
-    await waitFor(() => expect(root.dataset.palette).toBe(initial.value));
+    await waitFor(() => expect(root.dataset.palette).toBe(initial.value), { timeout: 5000 });
   },
 };

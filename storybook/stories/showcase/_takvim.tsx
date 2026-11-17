@@ -147,10 +147,10 @@ export function TakvimPage() {
       <div className="grid grid-cols-1 gap-4 p-4 sm:p-6">
         {/* Referans turu (2026-11): solda "Bugün" paneli (ay takvimi, Yapılacaklar / Etkinlikler),
             sağda ferah haftalık ızgara; ikisi tek kartta, aralarında saç çizgisi. */}
-        <section aria-labelledby="takvim-hafta" className="grid grid-cols-1 overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:grid-cols-[18rem_minmax(0,1fr)]">
+        <section aria-labelledby="takvim-hafta" className="grid grid-cols-1 overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line xl:grid-cols-[18rem_minmax(0,1fr)]">
           <TodayPanel range={range} setRange={setRange} inRange={inRange} days={days} next={next} />
 
-          <div className="min-w-0 border-t border-line-soft p-3 sm:p-4 lg:border-t-0 lg:border-l">
+          <div className="min-w-0 border-t border-line-soft p-3 sm:p-4 xl:border-t-0 xl:border-l">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-1">
               <div>
                 <h2 id="takvim-hafta" className="text-title font-semibold tracking-tight text-strong">
@@ -379,13 +379,19 @@ function TodayPanel({
   );
 
   return (
-    <aside aria-labelledby="takvim-bugun" className="flex min-w-0 flex-col gap-4 p-3 sm:p-4">
-      <div className="px-1">
+    // Yalnız geniş ekranda haftanın solunda (xl); daha darda haftanın üstünde, kendi içinde iki
+    // sütun: solda ay takvimi, sağda Yapılacaklar / Etkinlikler (1024'te hafta sıkışıyordu).
+    <aside
+      aria-labelledby="takvim-bugun"
+      className="flex min-w-0 flex-col gap-4 p-3 sm:p-4 md:grid md:grid-cols-[18rem_minmax(0,1fr)] md:items-start md:gap-x-6 xl:flex"
+    >
+      <div className="px-1 md:col-start-1">
         <h2 id="takvim-bugun" className="text-title font-semibold tracking-tight text-strong">
           Bugün
         </h2>
         <p className="mt-0.5 text-small text-muted">{longDate.format(TODAY)}</p>
       </div>
+      <div className="md:col-start-1">
       <DateCalendar
         mode="range"
         label="Gösterilen Aralık"
@@ -394,11 +400,12 @@ function TodayPanel({
         defaultMonth={TODAY}
         markedDates={(d) => markedDays.has(dayKey(d))}
       />
+      </div>
       <Tabs
         aria-label="Bugün Paneli"
         value={tab}
         onValueChange={setTab}
-        className="[&>[role=tablist]]:w-full [&>[role=tablist]>*]:flex-1 [&>[role=tablist]>*]:justify-center"
+        className="md:col-start-2 md:row-span-2 md:row-start-1 [&>[role=tablist]]:w-full [&>[role=tablist]>*]:flex-1 [&>[role=tablist]>*]:justify-center"
         items={[
           { value: "yapilacak", label: <span className="inline-flex items-center gap-1.5">Yapılacaklar <span className="text-small text-muted tabular-nums">{num.format(open)}</span></span>, panel: yapilacak },
           { value: "etkinlik", label: <span className="inline-flex items-center gap-1.5">Etkinlikler <span className="text-small text-muted tabular-nums">{num.format(inRange.length)}</span></span>, panel: etkinlik },
@@ -441,7 +448,7 @@ function TodoGroup({ group, items, onToggle, onAdd }: { group: Group; items: rea
             setAdding(true);
             setOpen(true);
           }}
-          className="inline-grid size-8 place-items-center rounded-md text-muted transition-colors hover:bg-surface hover:text-strong [&_svg]:size-4"
+          className="inline-grid size-11 place-items-center pointer-fine:size-8 rounded-md text-muted transition-colors hover:bg-surface hover:text-strong [&_svg]:size-4"
         >
           <Plus aria-hidden />
         </button>
@@ -455,7 +462,7 @@ function TodoGroup({ group, items, onToggle, onAdd }: { group: Group; items: rea
                   label={<span className={cn("text-small", t.done ? "text-muted line-through" : "text-body")}>{t.title}</span>}
                   checked={t.done}
                   onChange={() => onToggle(t.id)}
-                  className="min-h-9 py-1"
+                  className="min-h-11 py-1 pointer-fine:min-h-9"
                 />
               </li>
             ))}
@@ -475,7 +482,7 @@ function TodoGroup({ group, items, onToggle, onAdd }: { group: Group; items: rea
                   }}
                   onBlur={submit}
                   placeholder="Yeni iş, Enter ile ekle"
-                  className="mt-1 h-9 w-full rounded-md bg-surface px-2.5 text-small text-strong ring-1 ring-inset ring-line outline-none placeholder:text-muted focus:ring-2 focus:ring-line-focus"
+                  className="mt-1 h-11 w-full pointer-fine:h-9 rounded-md bg-surface px-2.5 text-small text-strong ring-1 ring-inset ring-line outline-none placeholder:text-muted focus:ring-2 focus:ring-line-focus"
                 />
               </li>
             ) : null}

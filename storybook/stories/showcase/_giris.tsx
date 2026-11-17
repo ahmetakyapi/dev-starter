@@ -8,12 +8,18 @@ import { Button } from "@/components/ui/Button";
 import { Marquee } from "@/components/ui/marquee";
 import { MorphNav, MorphNavGrid } from "@/components/ui/morph-nav";
 import { ScrambleText } from "@/components/ui/scramble-text";
-import { CUSTOMERS, DELAYED, ME, OPEN_TICKETS, TODAY, WORKSPACE, customer, longDate } from "./_data";
+import { CUSTOMERS, DELAYED, EVENTS, ME, OPEN_TICKETS, TODAY, WORKSPACE, customer, dayKey, longDate } from "./_data";
 
 /** Tanıtım sayfası aynı Storybook çerçevesinde açılır (Pusula → Tanıtım Sayfası). */
 const LANDING = "?id=demo-app--landing&viewMode=story";
 
 const PRIORITY_ORDER = { Acil: 0, Yüksek: 1, Normal: 2, Düşük: 3 } as const;
+const TODAY_EVENTS = EVENTS.filter((e) => dayKey(e.date) === dayKey(TODAY));
+const SUMMARY = [
+  { value: OPEN_TICKETS.filter((t) => t.priority === "Acil").length, label: "acil talep" },
+  { value: DELAYED.length, label: "geciken sipariş" },
+  { value: TODAY_EVENTS.length, label: "bugünkü toplantı" },
+];
 const WAITING = [...OPEN_TICKETS].sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]).slice(0, 3);
 
 /**
@@ -38,8 +44,8 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
   }
 
   return (
-    <div className="grid min-h-dvh bg-page lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-      <main id="icerik" className="flex min-w-0 flex-col px-4 pt-4 pb-8 sm:px-8">
+    <div className="grid min-h-dvh bg-page lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start">
+      <main id="icerik" className="flex min-h-dvh min-w-0 flex-col px-4 pt-4 pb-8 sm:px-8">
         {/* Sitenin menüsü giriş ekranında da: ürünü tanımayan ziyaretçi buradan tanıtıma döner. */}
         <MorphNav
           label="Site menüsü"
@@ -80,7 +86,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
           ]}
         />
 
-        <div className="grid flex-1 place-items-center py-10 sm:py-14">
+        <div className="grid flex-1 place-items-center py-8 sm:py-10">
           <div className="grid w-full max-w-sm gap-6">
             <header className="grid gap-1.5">
               <h1 className="font-display text-heading font-bold tracking-tight text-strong">Tekrar Hoş Geldin</h1>
@@ -141,7 +147,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
       </main>
 
       {/* Ürünün renkli paneli: zemin .pusula-hero (iki temada beyaz metin AA). Bilgi verir, eylem taşımaz. */}
-      <aside aria-labelledby="giris-bugun" className="pusula-hero relative isolate hidden overflow-hidden lg:m-3 lg:flex lg:flex-col lg:justify-between lg:rounded-[1.75rem] lg:p-10 xl:p-14">
+      <aside aria-labelledby="giris-bugun" className="pusula-hero relative isolate hidden overflow-hidden lg:sticky lg:top-3 lg:m-3 lg:flex lg:h-[calc(100dvh-1.5rem)] lg:flex-col lg:justify-between lg:rounded-[1.75rem] lg:p-10 xl:p-12">
         <div aria-hidden className="absolute -top-24 -right-24 -z-10 size-[28rem] rounded-full bg-primary-soft opacity-20 blur-3xl" />
         <div className="grid gap-8">
           <div className="grid gap-3">
@@ -160,11 +166,23 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
                     {t.id} · {customer(t.customerId).name}
                   </span>
                 </span>
-                <span className="w-18 shrink-0 rounded-full bg-on-brand/15 px-2.5 py-0.5 text-center text-small font-medium text-on-brand">{t.priority}</span>
+                {/* Beyaz hap + zeminin koyu tonu: yarı saydam beyaz hap mavi paneli açıp metni 3,5:1'e düşürüyordu. Acil'in noktası rengi tek işaret bırakmaz. */}
+                <span className="inline-flex w-20 shrink-0 items-center justify-center gap-1.5 rounded-full bg-on-brand px-2.5 py-0.5 text-small font-semibold">
+                  {t.priority === "Acil" ? <span aria-hidden className="size-1.5 rounded-full bg-danger" /> : null}
+                  <span className="pusula-hero-ink">{t.priority}</span>
+                </span>
               </li>
             ))}
           </ul>
         </div>
+        <dl className="grid max-w-md grid-cols-3 divide-x divide-on-brand/20 rounded-xl ring-1 ring-inset ring-on-brand/20">
+          {SUMMARY.map((s) => (
+            <div key={s.label} className="grid gap-0.5 px-4 py-3">
+              <dt className="order-2 text-small text-on-brand/80">{s.label}</dt>
+              <dd className="order-1 font-display text-heading font-bold text-on-brand tabular-nums">{s.value}</dd>
+            </div>
+          ))}
+        </dl>
         <section
           aria-labelledby="giris-musteriler"
           // Şeridin "Durdur" düğmesi `text-muted` gelir; renkli zeminde okunmuyordu.

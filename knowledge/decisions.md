@@ -1375,3 +1375,21 @@ Kullan" forma döner). Geniş ekranda sağda ürünün renkli paneli
 "Şifreli Bağlantı Kuruldu" büyük harf mono künyesi kalktı (`mistakes.md #115`
 dili). `mistakes.md #122`.
 
+### Tasarım Denetimi Turu (2026-11-17)
+
+`design-reviewer` 13 hikâyeyi 3 genişlik × 2 temada ölçtü (78 ekran;
+`docs/review/storybook-2026-11-17.md`, sonunda bulgu bulgu durum). Kararlar:
+- **Ara genişlik (1024) bir kırılım:** Pusula'da yan paneller (Gelen
+  Kutusu'nun klasör ağacı, Takvim'in Bugün paneli) yalnız `xl`de yanda; daha
+  darda ağaç araç çubuğunda seçici, Bugün paneli haftanın üstünde iki sütun.
+  Kanal sütunu 1280 altında kapalı başlar (Görünüm menüsünden açılır).
+- **Paylaşılan durum uygulamada:** ekip panosu (`board`) uygulama bağlamına
+  taşındı; rozet, başlık ve pano tek sayı, sayfa değişince iş kaybolmaz.
+- **Bekleme soldurmaz:** yüklenen düğme `opacity` ile solunca beyaz metin
+  2,2:1'e iniyordu; `auth-card` beklemede tam opak, örnekler `aria-busy`.
+- **Renkli zemindeki hap beyaz dolgulu:** yarı saydam beyaz hap mavi zemini
+  açıp metni 3,5:1'e düşürüyordu.
+- **Dokunma hedefi kalıbı:** `min-h-11 pointer-fine:min-h-9` (ya da
+  `size-11 pointer-fine:size-8`); bu turda Pusula sayfaları ve `toc-nav`.
+  Kalan bileşenler raporda "Açık".
+

@@ -119,7 +119,7 @@ export function TocNav({ sections, label = "Bu Sayfada", top = "0.75rem", classN
                   aria-current={on ? "location" : undefined}
                   onClick={(event) => go(event, s.id)}
                   className={cn(
-                    "inline-flex min-h-9 items-center gap-1.5 rounded-lg px-3 text-small font-medium whitespace-nowrap transition-[background-color,color,box-shadow] duration-200",
+                    "inline-flex min-h-11 items-center pointer-fine:min-h-9 gap-1.5 rounded-lg px-3 text-small font-medium whitespace-nowrap transition-[background-color,color,box-shadow] duration-200",
                     on ? "bg-overlay text-strong shadow-raised" : "text-muted hover:text-strong",
                   )}
                 >

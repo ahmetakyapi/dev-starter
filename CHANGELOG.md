@@ -7,6 +7,21 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Tasarım denetimi düzeltmeleri — 2026-11-17
+
+- 1024 px: Gelen Kutusu klasör ağacı yerine araç çubuğunda seçici, Kanal
+  sütunu kapalı başlar; Takvim'in Bugün paneli haftanın üstünde
+- Pusula: ekip panosu uygulama durumunda (rozet = başlık = pano); başlık
+  eylemleri tek boy; Bildirimler açıklaması Title Case; koyu temada soluk ve
+  gövde metni bir basamak açık; dokunmatikte 44 px hedefler
+- Giriş: renkli paneldeki haplar beyaz dolgulu (AA), panel ekran boyu, bugünün
+  özeti; `auth-card` beklemede soldurmaz
+- Kapak: üst menü kalktı, raflarda birim, telefonda iki satır açıklama, arama
+  kabuk dışında kabuğu açar; play'in palet beklemesi sağlam
+- `morph-nav` yinelenen anahtar, `task-list` devre dışı "Ekle" gri, `toc-nav`
+  dokunma hedefi
+- Denetim raporu: `docs/review/storybook-2026-11-17.md`
+
 ### Şifresiz giriş ekranı — 2026-11-17
 
 - `auth-card` → `method="link"`: e-postaya giriş bağlantısı, "Bağlantıyı

@@ -329,7 +329,8 @@ export function MorphNavGrid({
     <div className={cn("flex flex-col gap-3 md:flex-row", className)}>
       <ul className={cn("grid gap-1", links.length > 3 && "md:grid-cols-2", "md:w-max")}>
         {links.map(({ href, title, description, icon: Icon }) => (
-          <li key={href}>
+          // Anahtar adres + başlık: aynı bölüme giden iki bağlantı olabilir.
+          <li key={`${href}|${title}`}>
             <a
               href={href}
               className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-surface focus-visible:bg-surface md:w-64"

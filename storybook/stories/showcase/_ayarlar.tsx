@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import { Bell, Settings2, Shield, SlidersHorizontal, UserRound } from "lucide-react";
 import { BannerAlert } from "@/components/ui/banner-alert";
+import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { Dial } from "@/components/ui/dial";
@@ -138,6 +139,7 @@ const SECTIONS = [
 
 export function AyarlarPage() {
   const { notify } = useApp();
+  const [quickOpen, setQuickOpen] = useState(false);
   const [signature, setSignature] = useState(`${ME.name}\n${ME.role} · ${WORKSPACE.name}\n0258 *** 41 07`);
   const [twoStep, setTwoStep] = useState(true);
   const [digestAt, setDigestAt] = useState(8 * 60 + 30);
@@ -154,7 +156,16 @@ export function AyarlarPage() {
         title="Ayarlar"
         crumb="Çalışma Alanı"
         description={`${WORKSPACE.name} · ${WORKSPACE.plan} · Değişiklikler Anında Kaydedilir`}
-        actions={<SettingsDialog tabs={QUICK} triggerLabel="Hızlı Ayarlar" description="Bu cihazdaki Pusula tercihleri." />}
+        actions={
+          // Tetikleyici Pusula'nın başlık düğmesi (öteki sayfalarla aynı boy); pencere kontrollü.
+          <>
+            <Button variant="secondary" size="sm" aria-haspopup="dialog" onClick={() => setQuickOpen(true)}>
+              <Settings2 aria-hidden />
+              Hızlı Ayarlar
+            </Button>
+            <SettingsDialog tabs={QUICK} open={quickOpen} onOpenChange={setQuickOpen} title="Hızlı Ayarlar" description="Bu cihazdaki Pusula tercihleri." />
+          </>
+        }
       />
 
       <TocNav label="Ayar Bölümleri" sections={SECTIONS} className="px-4 pt-4 sm:px-6" />

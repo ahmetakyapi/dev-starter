@@ -1390,7 +1390,8 @@ function YuklemeGroup() {
             <Spinner size="sm" />
             <Spinner />
           </div>
-          <Button disabled size="sm">
+          {/* Bekleme `disabled` değil `aria-busy`: soluk düğmede beyaz metin 2,2:1'e düşüyordu; basılmasın diye yalnız işaretçi kapalı. */}
+          <Button aria-busy="true" size="sm" className="pointer-events-none">
             <Spinner size="sm" tone="current" label={null} />
             Kaydediliyor
           </Button>

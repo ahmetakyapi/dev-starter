@@ -269,7 +269,7 @@ export function AuthCard({
           <button
             type="submit"
             disabled={pending}
-            className="mt-2 flex min-h-11 items-center justify-center gap-2 rounded-md bg-cta px-4 text-base font-semibold text-on-brand shadow-cta transition-[opacity,scale] duration-150 hover:opacity-95 active:scale-[0.98] disabled:opacity-70"
+            className="mt-2 flex min-h-11 items-center justify-center gap-2 rounded-md bg-cta px-4 text-base font-semibold text-on-brand shadow-cta transition-[opacity,scale] duration-150 hover:opacity-95 active:scale-[0.98] disabled:cursor-progress disabled:hover:opacity-100 disabled:active:scale-100"
           >
             {pending ? <Spinner size="sm" label={null} className="text-on-brand" /> : null}
             {pending ? pendingLabel : submitLabel}

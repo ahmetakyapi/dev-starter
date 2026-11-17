@@ -308,7 +308,7 @@ export function TaskList({
           <button
             type="submit"
             disabled={!draft.trim()}
-            className="inline-flex h-11 shrink-0 items-center rounded-md bg-cta px-3 text-small font-semibold text-on-brand shadow-cta transition-opacity duration-150 disabled:cursor-not-allowed disabled:opacity-40 pointer-fine:h-8"
+            className="inline-flex h-11 shrink-0 items-center rounded-md bg-cta px-3 text-small font-semibold text-on-brand shadow-cta transition-opacity duration-150 disabled:cursor-not-allowed disabled:bg-none disabled:bg-surface-raised disabled:text-muted disabled:shadow-none pointer-fine:h-8"
           >
             Ekle
           </button>

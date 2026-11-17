@@ -4,7 +4,7 @@ import { createContext, useContext, type Dispatch, type ReactNode, type SetState
 import { LayoutGrid } from "lucide-react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { NotificationCenter, type NotificationItem } from "@/components/ui/notification-center";
-import type { Period } from "./_data";
+import type { BoardColumn, Period } from "./_data";
 import type { FeedItem } from "./_bildirim";
 import { cn } from "@/lib/utils";
 
@@ -78,6 +78,9 @@ type AppState = {
   setSnoozed: Dispatch<SetStateAction<FeedItem[]>>;
   /** Kısa bildirim (sağ altta, `toast`) + bildirim merkezine kayıt. */
   notify: (toast: Omit<Toast, "id">) => void;
+  /** Ekip panosu: Görevler sayfası, kenar çubuğu rozeti ve başlık aynı durumdan okur; sayfadan çıkınca kaybolmaz. */
+  board: readonly BoardColumn[];
+  setBoard: Dispatch<SetStateAction<readonly BoardColumn[]>>;
 };
 
 export const AppContext = createContext<AppState | null>(null);
