@@ -18,7 +18,7 @@ logo, görsel ve font projeden gelir; kod yalnız açık lisansla (MIT vb.) ve
 dosya başında atıfla uyarlanır. Ayrıntı `design-references.md` → Kullanım
 Şartı.
 
-**Sitede:** Storybook → Örnek Tasarım/Referans Arşivi (`/references`) bu
+**Sitede:** Storybook → Arşiv/Referanslar (`/references`) bu
 dosyayı derleme anında okur ve kart olarak gösterir: kartta yalnız ad,
 **Kısaca** sütunu (tek satır, ~60 karakter), tarih ve durum görünür; uzun
 açıklama burada kalır. Kapak görseli sitenin kendi paylaşım görseli

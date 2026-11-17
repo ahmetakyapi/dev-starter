@@ -1321,7 +1321,7 @@
       "name": "kanban-board",
       "title": "Kanban Panosu",
       "category": "Verimlilik",
-      "description": "Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih",
+      "description": "Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih; `onCardOpen` ile tık / Enter kartı açar",
       "file": "snippets/ui/kanban-board.tsx",
       "client": true,
       "storyId": "kanban-board",

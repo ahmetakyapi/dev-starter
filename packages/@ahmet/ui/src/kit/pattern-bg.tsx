@@ -12,7 +12,7 @@ import { cn } from "../utils";
  *   - `pattern`: tekrar eden desen (ızgara, nokta, çapraz, halka, gürültü…)
  *   - `fade`: desenin nerede sönüp kaybolacağı (maske; renk değil alfa)
  *   - `glow`: desenin altında, solmadan etkilenmeyen ışık (`horizon-top`…)
- * Hazır birleşimler `PATTERN_PRESETS`te (Storybook → Desen Kütüphanesi;
+ * Hazır birleşimler `PATTERN_PRESETS`te (Storybook → Desenler;
  * kartta "Kopyala" tam JSX'i verir).
  *
  * DEGRADE DİSİPLİNİ: ışık tek renk ailesi (birincil → saydam), yalnız

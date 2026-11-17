@@ -4,7 +4,7 @@ import { FileDropzone } from "@/components/ui/file-dropzone";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Seçim/Dosya Bırakma Alanı",
+  title: "Bileşenler/Form Girişleri/Dosya Bırakma Alanı",
   id: "file-dropzone",
   component: FileDropzone,
   tags: ["autodocs"],

@@ -31,6 +31,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 | Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
 | Nimbstia'dan Öğrenilenler (2026-11-03) | 115–119 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
+| Görsel Katalog Turları (2026-11-17) | 120–121 | storybook, kapsam, play, hero, kontrast, koyu-tema |
 
 ---
 
@@ -2043,7 +2044,47 @@ küçük), yer tutucu ve meta satırı cümle; em dash yerine ` · `; çeviri ta
 okunur. slop-scan temiz çıktısı "AI izi yok" demek değildir: degrade metin, renkli gölge ve
 bilgi taşımayan süs gözle de denetlenir.
 
+## Görsel Katalog Turları (2026-11-17)
+
+### 120. Yeni Bileşen Pusula'ya Girdi, "Her Şey Bir Arada"ya Girmedi: Kapsam Testi Kırık Kaldı
+
+**Hata**: Üç referans turunda eklenen 12 bileşen (paylaşım paneli, bağlantı başlığı, hızlı
+oylama, dağılarak çıkış…) Pusula'da kullanıldı, `coverage--table` yeşil kaldı; ama "Her Şey Bir
+Arada" sayfasının kendi kapsam testi (`showcase--all-in-one`: "141 bileşenin hepsi bu sayfada")
+129'da kırıldı ve main'e öyle gitti. Tur sonunda yalnız değişen hikâyelerin play'i koşuldu.
+
+**Sebep**: Kataloğun İKİ kapsam sayfası var (Pusula: uygulamada kullanım, Her Şey Bir Arada:
+tek sayfalık vitrin); tur kontrol listesi yalnız birini söylüyordu. Sayılar kaynaktan sayıldığı
+için kırılma ancak o sayfanın play'i koşunca görünür.
+
+**Çözüm**: Eksik 12 bileşen `amiral/_ekler.tsx`te kendi gruplarına kuyu olarak girdi,
+`_data.ts` → `GROUP_OF`a eklendi; `/harvest` kontrol listesine ikinci kuyu ve iki kapsam testi
+yazıldı.
+
+**Kural**: Yeni snippet = iki kuyu (Pusula'da gerçek kullanım + Her Şey Bir Arada'da gösterim).
+Tur bitmeden `coverage--table` VE `showcase--all-in-one` play'leri koşulur; "değişen hikâyeler
+geçti" yetmez, sayıyı kaynaktan sayan sayfalar her yeni dosyadan etkilenir.
+
+### 121. Renkli Kahramanda Aynı Tonda Düğme, Koyu Temada Açık Zemin
+
+**Hata**: Pusula tanıtım sayfasının kahramanı `bg-primary` zemindi; üstündeki birincil eylem cam
+(aynı mavi), yanındaki plan hapı düğme gibi görünüp hiçbir şey yapmıyordu. Koyu temada
+`--primary` açık camgöbeğine (`#35b8ff`) döndüğü için beyaz başlık ve düğmeler zeminde kayboldu.
+Sahibi: "mavi bir heroda butonlar var, çok kötü duruyor".
+
+**Sebep**: `--primary` iki temada aynı rolde değil: açıkta koyu, koyuda açık (koyu zeminde
+okunsun diye). Renkli zemin olarak kullanılınca koyu temada beyaz metin AA'yı kaybeder.
+Basılmayan hap, düğme diliyle konuşan süs.
+
+**Çözüm**: Kahraman zemini `bg-cta` (her palette, iki temada da koyu; beyaz metin AA); birincil
+eylem beyaz hap (yazısı CTA degradesi), ikincil eylem çizgili hayalet ve gerçekten demoya iner;
+plan hapı kalktı, yerine demoya inen cam duyuru bağlantısı.
+
+**Kural**: Renkli zemin `bg-primary` değil `bg-cta` (ya da ölçülmüş koyu ton); üstündeki birincil
+eylem zeminle ZIT (beyaz). Düğme gibi görünen her şey basılır; basılmıyorsa hap biçiminde olmaz.
+Renkli bölüm iki temada ekran görüntüsüyle denetlenir.
+
 ---
 
-*Son güncelleme: 2026-11-04*
+*Son güncelleme: 2026-11-17*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

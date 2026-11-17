@@ -8,7 +8,6 @@ import {
   Bold,
   Italic,
   Underline,
-  Search,
   Coffee,
   FileText,
   Flame,
@@ -148,6 +147,7 @@ import {
   type OrderStatus,
 } from "./_data";
 import { cn } from "@/lib/utils";
+import { FormEk, KatmanEk, SecimEk, VeriEk } from "./_ekler";
 import { Cell, CellGrid, GroupHead } from "./_ui";
 
 const NOV = (d: number) => new Date(2026, 10, d);
@@ -598,6 +598,7 @@ function SecimGroup() {
           </p>
         </div>
       </Cell>
+      <SecimEk />
     </CellGrid>
   );
 }
@@ -724,6 +725,7 @@ function FormGroup() {
           <TickRuler label="Bitiş Sıcaklığı" min={190} max={235} step={1} majorEvery={5} defaultValue={212} unit="°C" spacing={10} />
         </div>
       </Cell>
+      <FormEk />
     </CellGrid>
   );
 }
@@ -925,6 +927,7 @@ function KatmanGroup() {
           <NotificationCenter items={items} onMarkRead={(ids) => setItems((list) => list.map((n) => (ids.includes(n.id) ? { ...n, read: true } : n)))} />
         </div>
       </Cell>
+      <KatmanEk />
     </CellGrid>
   );
 }
@@ -1141,6 +1144,7 @@ function VeriGroup() {
           <WeekCalendar label="Atölyenin Bu Haftası" week="2026-11-02" events={WEEK} now="2026-11-02T09:40" startHour={8} endHour={16} hourHeight={56} />
         </div>
       </Cell>
+      <VeriEk />
     </CellGrid>
   );
 }

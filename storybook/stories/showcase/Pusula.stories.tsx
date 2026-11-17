@@ -41,7 +41,7 @@ async function command(root: HTMLElement, query: string) {
 }
 
 const meta = {
-  title: "Örnek Tasarım/Pusula Paneli",
+  title: "Pusula",
   id: "demo-app",
   component: PusulaApp,
   tags: ["autodocs"],
@@ -50,7 +50,7 @@ const meta = {
     docs: {
       description: {
         component:
-          `Pusula: küçük ekipler için destek + satış + görev + takvim + asistan paneli. Kataloğun ${TOTAL} bileşeninin hepsi tek bir kurgusal üründe, aynı sahte veriyle (Pusula, 2 Kasım 2026) birlikte çalışır: panodaki ciro = müşteriye göre listenin toplamı = rapor tablosunun dip satırı. Kenar çubuğu, ⌘K ve sayfa içi bağlantılar iç durumla gezer; dönem seçimi (Hafta/Ay/Yıl) bütün grafikleri birlikte değiştirir. Kapsam tablosu: Ekranlar/Showcase/Bileşen Kapsamı.`,
+          `Pusula: küçük ekipler için destek + satış + görev + takvim + asistan paneli. Kataloğun ${TOTAL} bileşeninin hepsi tek bir kurgusal üründe, aynı sahte veriyle (Pusula, 2 Kasım 2026) birlikte çalışır: panodaki ciro = müşteriye göre listenin toplamı = rapor tablosunun dip satırı. Kenar çubuğu, ⌘K ve sayfa içi bağlantılar iç durumla gezer; dönem seçimi (Hafta/Ay/Yıl) bütün grafikleri birlikte değiştirir. Kapsam tablosu: Arşiv → Bileşen Kapsamı.`,
       },
     },
   },
@@ -163,19 +163,30 @@ export const Tasks: Story = {
   name: "Görevler",
   args: { initialPage: "tasks" },
   parameters: {
-    docs: { description: { story: "Ekip panosu (kanban: fare, dokunma tutamağı ya da klavyeyle taşınır, Sürüyor kolonunda iş sınırı), kişinin bugünkü görev listesi ve yaklaşan son tarihler. Kart kolon değiştirince sonuç bildirim olarak gelir." } },
+    docs: { description: { story: "Ekip panosu (kanban: fare, dokunma tutamağı ya da klavyeyle taşınır, Sürüyor kolonunda iş sınırı), kişinin bugünkü görev listesi ve yaklaşan son tarihler. Karta basınca (ya da Enter) ayrıntı paneli açılır: sorumlu, son tarih, etiketler; oradan sonraki kolona taşınır ya da tamamlanır. Kart kolon değiştirince sonuç bildirim olarak gelir." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Görevler" });
     // Klavyeyle taşıma: Yapılacak'ın ilk kartı Sürüyor'a.
     const first = BOARD[0].cards[0];
-    const card = canvas.getByRole("button", { name: new RegExp(`^${first.title}`) });
+    // Panoda ara: "Yaklaşan Son Tarihler" satırları da aynı adla başlayan düğmeler.
+    const board = canvas.getByRole("region", { name: "Ekip İşleri" });
+    const card = within(board).getByRole("button", { name: new RegExp(`^${first.title}`) });
     card.focus();
     await userEvent.keyboard(" ");
     await userEvent.keyboard("{ArrowRight}");
     await userEvent.keyboard(" ");
     await within(document.body).findByText("Sürüyor Kolonuna Taşındı");
+    // Karta basınca ayrıntı paneli açılır; oradan "Tamamlandı" kartı Bitti'ye taşır.
+    const second = BOARD[0].cards[1];
+    await userEvent.click(within(board).getByRole("button", { name: new RegExp(`^${second.title}`) }));
+    const detail = await canvas.findByRole("dialog", { name: second.title });
+    await userEvent.click(within(detail).getByRole("button", { name: "Tamamlandı" }));
+    await waitFor(() => expect(detail).not.toBeVisible());
+    await within(document.body).findByText("İş Tamamlandı");
+    // Pano dışarıdan taşınınca yeniden kurulur: bölgeyi yeniden bul.
+    await waitFor(() => expect(canvas.getByRole("region", { name: "Ekip İşleri" }).querySelector(`[data-column="bitti"] [data-card="${second.id}"]`)).not.toBeNull());
     // Ekip kararı: oy ver, sonuç görünür; aynı seçeneğe yeniden basınca geri alınır.
     const opt = canvas.getByRole("button", { name: /^%10 · hacim artışı için/ });
     await userEvent.click(opt);
@@ -351,13 +362,16 @@ export const Landing: Story = {
       story: { inline: false, height: "900px" },
       description: {
         story:
-          "Oturum açmamış ziyaretçinin sayfası (Ribbon turu): kaydırınca üst kenara oturan menü, bulanıktan netleşen serif vurgulu başlık, görsel zemin üstünde sıvı cam eylem ve güven satırı, pencere şeridi + dock ile sayfada denenen ürün maketi, el yazısı ok notu, köşe maskotu; kavisli galeride hazır akışlar ve hareketli renk zeminli kapanış (Scrolltide turu).",
+          "Oturum açmamış ziyaretçinin sayfası (Ribbon turu): kaydırınca üst kenara oturan menü, bulanıktan netleşen serif vurgulu başlık, görsel zemin üstünde beyaz birincil eylem, demoya inen ikincil eylem, cam duyuru hapı ve güven satırı, pencere şeridi + dock ile sayfada denenen ürün maketi, el yazısı ok notu, köşe maskotu; kavisli galeride hazır akışlar ve hareketli renk zeminli kapanış (Scrolltide turu).",
       },
     },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Talepleri Kaybetmeden Yanıtla" });
+    // Renkli zemindeki iki eylem: biri giriş, öteki demoya iner (basılmayan hap kalmadı).
+    await expect(canvas.getAllByRole("button", { name: "Ücretsiz Dene" })[0]).toBeVisible();
+    await expect(canvas.getByRole("link", { name: "Demoyu Gör" })).toHaveAttribute("href", "#tanitim-demo");
     const dock = canvas.getByRole("toolbar", { name: "Pusula uygulamaları" });
     await userEvent.click(within(dock).getByRole("button", { name: "Takvim" }));
     await waitFor(() => expect(canvas.getByRole("img", { name: /odakta Takvim/ })).toBeInTheDocument());

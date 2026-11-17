@@ -21,6 +21,7 @@ import { Terminal } from "@/components/ui/terminal";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { ThinkingOrb } from "@/components/ui/thinking-orb";
 import { ToolCall } from "@/components/ui/tool-call";
+import { HareketEk } from "./_ekler";
 import { Cell, CellGrid } from "./_ui";
 
 /* Hareket ve Doku + Yapay Zekâ grupları (secki.dev turu, 2026-11-06). Her
@@ -177,6 +178,7 @@ export function HareketGroup() {
           </ExpandableCard>
         </div>
       </Cell>
+      <HareketEk />
     </CellGrid>
   );
 }

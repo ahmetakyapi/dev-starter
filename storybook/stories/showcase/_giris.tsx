@@ -8,7 +8,7 @@ import { MorphNav, MorphNavGrid } from "@/components/ui/morph-nav";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { CUSTOMERS, ME, OPEN_TICKETS, WORKSPACE } from "./_data";
 
-/** Tanıtım sayfası aynı Storybook çerçevesinde açılır (Pusula Paneli → Tanıtım Sayfası). */
+/** Tanıtım sayfası aynı Storybook çerçevesinde açılır (Pusula → Tanıtım Sayfası). */
 const LANDING = "?id=demo-app--landing&viewMode=story";
 
 /** Oturum kapalıyken: Pusula'ya giriş. Başarılı girişte pano açılır. */

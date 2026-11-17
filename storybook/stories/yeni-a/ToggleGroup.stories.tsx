@@ -41,7 +41,7 @@ const FILTERS: ToggleGroupItem<"unread" | "mention" | "assigned">[] = [
 ];
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Aç-Kapa Grubu",
+  title: "Bileşenler/Seçim/Aç-Kapa Grubu",
   id: "toggle-group",
   component: ToggleGroup<Format>,
   tags: ["autodocs"],

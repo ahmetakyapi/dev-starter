@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Keyboard } from "lucide-react";
+import { CalendarDays, CheckCircle2, Keyboard, ListTodo, MoveRight } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/Button";
 import { CloseButton } from "@/components/ui/close-button";
-import { KanbanBoard, type KanbanColumn } from "@/components/ui/kanban-board";
+import { KanbanBoard, type KanbanCard, type KanbanColumn } from "@/components/ui/kanban-board";
 import { MorphIcon } from "@/components/ui/morph-icon";
 import { QuickPoll } from "@/components/ui/quick-poll";
+import { Sheet } from "@/components/ui/sheet";
 import { TaskList } from "@/components/ui/task-list";
 import { BOARD, ME, MY_TASKS, TODAY, dayKey, num, shortDate } from "./_data";
 import { PageBar, SectionTitle, Well, WellTitle, useApp } from "./_ui";
@@ -35,6 +37,23 @@ export function GorevlerPage() {
   const [tip, setTip] = useState(true);
   const [allUpcoming, setAllUpcoming] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
+  // Açık kart: kimliği tutulur, ayrıntı her zaman panonun güncel durumundan okunur.
+  const [openId, setOpenId] = useState<string | null>(null);
+  // Pano kontrolsüz: dışarıdan (ayrıntı panelinden) taşıyınca yeniden kurulur.
+  const [boardKey, setBoardKey] = useState(0);
+  const openAt = openId ? columns.flatMap((c, ci) => c.cards.map((card) => ({ card, col: c, ci }))).find((x) => x.card.id === openId) : undefined;
+  const nextCol = openAt ? columns[openAt.ci + 1] : undefined;
+
+  const moveTo = (card: KanbanCard, targetId: string) => {
+    const target = columns.find((c) => c.id === targetId)!;
+    const next = columns.map((c) => ({
+      ...c,
+      cards: c.id === targetId ? [...c.cards.filter((k) => k.id !== card.id), card] : c.cards.filter((k) => k.id !== card.id),
+    }));
+    setColumns(next);
+    setBoardKey((k) => k + 1);
+    notify({ tone: target.done ? "success" : "info", title: target.done ? "İş Tamamlandı" : `${target.title} Kolonuna Taşındı`, body: card.title });
+  };
   const open = columns.filter((c) => !c.done).reduce((n, c) => n + c.cards.length, 0);
   const due = upcoming(columns);
   const dueToday = due.filter((x) => x.card.due! <= TODAY_KEY).length;
@@ -63,7 +82,7 @@ export function GorevlerPage() {
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-base font-semibold text-strong">Kartlar Klavyeyle de Taşınır</p>
-              <p className="mt-0.5 text-small text-muted">Karta odaklan, Boşluk ile tut, oklarla taşı, yeniden Boşluk ile bırak. Escape vazgeçer.</p>
+              <p className="mt-0.5 text-small text-muted">Karta bas ya da Enter: ayrıntı açılır. Boşluk ile tut, oklarla taşı, yeniden Boşluk ile bırak; Escape vazgeçer.</p>
             </div>
             <CloseButton aria-label="İpucunu Kapat" size="sm" onClick={() => setTip(false)} />
           </div>
@@ -71,7 +90,7 @@ export function GorevlerPage() {
 
         <section aria-labelledby="gorev-pano" className="grid grid-cols-1 gap-3">
           <SectionTitle id="gorev-pano" title="Ekip Panosu" note="Sürüyor kolonu en fazla 4 iş alır" />
-          <KanbanBoard label="Ekip İşleri" defaultColumns={BOARD} onChange={onChange} today={TODAY_KEY} />
+          <KanbanBoard key={boardKey} label="Ekip İşleri" defaultColumns={columns} onChange={onChange} onCardOpen={(c) => setOpenId(c.id)} today={TODAY_KEY} />
         </section>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -87,7 +106,12 @@ export function GorevlerPage() {
                 .map(({ card, column }) => {
                   const late = card.due! < TODAY_KEY;
                   return (
-                    <li key={card.id} className="flex items-center gap-3 rounded-lg bg-surface px-3 py-2.5 ring-1 ring-inset ring-line-soft">
+                    <li key={card.id}>
+                      <button
+                        type="button"
+                        onClick={() => setOpenId(card.id)}
+                        className="flex w-full items-center gap-3 rounded-lg bg-surface px-3 py-2.5 text-start ring-1 ring-inset ring-line-soft transition-colors duration-150 hover:bg-surface-raised"
+                      >
                       {card.assignee ? <Avatar name={card.assignee.name} size="sm" /> : null}
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-base font-medium text-strong">{card.title}</span>
@@ -98,6 +122,7 @@ export function GorevlerPage() {
                       <Badge tone={late ? "danger" : card.due === TODAY_KEY ? "warning" : "neutral"} className="shrink-0">
                         {late ? `Gecikti · ${shortDate.format(parse(card.due!))}` : card.due === TODAY_KEY ? "Bugün" : shortDate.format(parse(card.due!))}
                       </Badge>
+                      </button>
                     </li>
                   );
                 })}
@@ -137,6 +162,72 @@ export function GorevlerPage() {
           </Well>
         </div>
       </div>
+
+      <Sheet
+        open={!!openAt}
+        onOpenChange={(o) => !o && setOpenId(null)}
+        side="right"
+        icon={<ListTodo />}
+        title={openAt?.card.title ?? ""}
+        description={openAt ? `${openAt.col.title} kolonunda · Ekip Panosu` : undefined}
+        status={openAt ? <Badge tone={openAt.col.done ? "success" : "neutral"}>{openAt.col.title}</Badge> : undefined}
+        footerStart={
+          openAt && nextCol && !nextCol.done ? (
+            <Button variant="ghost" className="text-primary-ink" onClick={() => moveTo(openAt.card, nextCol.id)}>
+              <MoveRight aria-hidden />
+              {nextCol.title} Kolonuna Taşı
+            </Button>
+          ) : undefined
+        }
+        footer={
+          openAt ? (
+            <>
+              <Button variant="secondary" onClick={() => setOpenId(null)}>
+                Kapat
+              </Button>
+              {!openAt.col.done ? (
+                <Button
+                  onClick={() => {
+                    const done = columns.find((c) => c.done);
+                    if (done) moveTo(openAt.card, done.id);
+                    setOpenId(null);
+                  }}
+                >
+                  <CheckCircle2 aria-hidden />
+                  Tamamlandı
+                </Button>
+              ) : null}
+            </>
+          ) : undefined
+        }
+      >
+        {openAt ? (
+          <dl className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-6 gap-y-4 text-base">
+            <dt className="text-muted">Sorumlu</dt>
+            <dd className="flex min-w-0 items-center gap-2 text-strong">
+              {openAt.card.assignee ? (
+                <>
+                  <Avatar name={openAt.card.assignee.name} size="sm" />
+                  <span className="truncate">{openAt.card.assignee.name}</span>
+                </>
+              ) : (
+                "Atanmadı"
+              )}
+            </dd>
+            <dt className="text-muted">Son Tarih</dt>
+            <dd className="flex items-center gap-2 text-strong">
+              <CalendarDays aria-hidden className="size-4 text-muted" />
+              {openAt.card.due ? shortDate.format(parse(openAt.card.due)) : "Yok"}
+              {openAt.card.due && !openAt.col.done && openAt.card.due < TODAY_KEY ? <Badge tone="danger">Gecikti</Badge> : null}
+              {openAt.card.due === TODAY_KEY && !openAt.col.done ? <Badge tone="warning">Bugün</Badge> : null}
+            </dd>
+            <dt className="text-muted">Etiketler</dt>
+            <dd className="flex flex-wrap gap-1.5">
+              {openAt.card.tags?.length ? openAt.card.tags.map((t) => <Badge key={t.label}>{t.label}</Badge>) : <span className="text-muted">Yok</span>}
+            </dd>
+          </dl>
+        ) : null}
+      </Sheet>
     </div>
   );
 }

@@ -34,11 +34,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Showcase: Story = { name: "Showcase (Varsayılan)", args: { variant: "showcase" } };
-export const EditorialSplit: Story = { name: "Editorial Split", args: { variant: "editorial-split" } };
-export const Statement: Story = { name: "Statement", args: { variant: "statement" } };
-export const ProductFrame: Story = { name: "Product Frame", args: { variant: "product-frame" } };
-export const LiveData: Story = { name: "Live Data", args: { variant: "live-data" } };
-export const Bento: Story = { name: "Bento", args: { variant: "bento" } };
-export const Minimal: Story = { name: "Minimal", args: { variant: "minimal" } };
-export const ScrollStage: Story = { name: "Scroll Stage", args: { variant: "scroll-stage" } };
+export const Showcase: Story = { name: "Vitrin (Varsayılan)", args: { variant: "showcase" } };
+export const EditorialSplit: Story = { name: "İkiye Bölünmüş", args: { variant: "editorial-split" } };
+export const Statement: Story = { name: "Tek Cümle", args: { variant: "statement" } };
+export const ProductFrame: Story = { name: "Ürün Çerçevesi", args: { variant: "product-frame" } };
+export const LiveData: Story = { name: "Canlı Veri", args: { variant: "live-data" } };
+export const Bento: Story = { name: "Bento Izgara", args: { variant: "bento" } };
+export const Minimal: Story = { name: "Sade", args: { variant: "minimal" } };
+export const ScrollStage: Story = { name: "Kaydırmalı Sahne", args: { variant: "scroll-stage" } };

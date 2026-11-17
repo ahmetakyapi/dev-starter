@@ -1111,6 +1111,14 @@ kimlik taklidi olur, palet ve Inter kaldı.
 *Ne zaman değişir:* Bu dil başka bir projede de tutarsa `CARD`/`INK`/ölçü
 şeridi `snippets/ui`ye bileşen olarak taşınır (`/harvest` adım 3).
 
+### Değişti (2026-11-17) — Mürekkep düğme kalktı
+
+Sahibi: "sol menü ve ekranlar tutarlı değil". Pano'da birincil eylem mavi
+(`Talepleri Gör`, sahibinin isteği), Takvim'de siyah mürekkep hapı: aynı
+uygulamada iki ayrı "birincil" dili. Sayfa eylemi artık her ekranda paletin
+mavi `Button`ı, ikinciller `secondary` (Pano'nun "Tanıtım Turu" da hayaletten
+ikincile geçti). `.pusula-ink` yalnız marka karosunda kaldı; `INK` sabiti silindi.
+
 ## Assetora Turu — Dönem Bantları, Kayıt Listesi, Süzgeç Çekmecesi, Tarih Süzgeci (2026-11-16)
 
 **Karar:** assetora.vercel.app'ten (tek sayfalık gayrimenkul paneli) dört
@@ -1302,3 +1310,55 @@ Siparişler"), sayı birimiyle aynı satırda ("3 sipariş"), altında en uzun
 gecikme ve bekleyen tutar. Satır düzeni ekran değil KART genişliğine göre
 (container query): 1024 px'te müşteri adı kayboluyor, "+N Gün" iki satıra
 kırılıyordu. Rozetler 1440/1280/1024/768/390'da ölçüyle aynı hizada.
+
+## Katalog Haritası, Kenar Çubuğu ve Pusula Tutarlılığı (2026-11-17)
+
+**Bağlam:** Sahibi: "sol menü ve ekranlar tutarlı değil, bazı fonksiyonlar
+saçma duruyor, ilk ekranda her şeyin olduğu güzel bir ekranda karşılayalım,
+mavi heroda butonlar çok kötü duruyor, kullanımı kolay değil".
+
+**Karar:**
+- **Kenar çubuğu:** "Örnek Tasarım" klasörü kalktı; her öğe kendi adıyla üst
+  düzeyde. Başla (Kapak, Başlangıç, Vitrin, Her Şey Bir Arada) · Kütüphane
+  (Tema, Bileşenler, Grafikler, Bloklar, Desenler) · Uygulamada (Pusula,
+  Ekranlar, Arşiv: Bileşen Kapsamı + Referanslar). Adresler (`id`) değişmedi;
+  yalnız başlıklar taşındı, eski bağlantılar çalışır. Yanlış raftaki sekiz
+  bileşen yerine taşındı (Avatar, Rozet, Ayırıcı → Temel; Bölmeli Seçici,
+  Aç-Kapa Grubu → Seçim; Dosya Bırakma → Form; Kod Bloğu → Veri; Duyuru →
+  Geri Bildirim). Açılış sayfası üst bölüm varyantları Türkçe adlandı.
+  Geliştirme sunucusundaki "+" (yeni hikâye) ve "Show modified stories"
+  gizlendi: kataloğu gezen kişiye anlamsız.
+- **Kapak = katalog haritası:** ilk ekranın sağ yarısı kenar çubuğunun üç
+  bölümü ve on bir kapısı; her satır ne içerdiğini ve kaç parça olduğunu
+  söyler. Sayılar ve bağlantılar hikâye dosyalarından sayılır
+  (`stories/kapak/_harita.ts`; 779 hikâye adresinin hepsi Storybook'un
+  kuralıyla doğru türetildi). Solda kabuğun aramasını açan arama kutusu.
+  Altında on üç bileşen rafı (ad, sayı, içindeki ilk parçalar). Numune föyü
+  palet bölümüne indi; dört sayaç kalktı (harita aynı bilgiyi veriyor).
+- **Pusula tanıtım kahramanı:** zemin degrade ya da `bg-primary` değil,
+  koyulaştırılmış birincil (`.pusula-hero`, 10 palette iki temada beyaz ≥
+  5,5:1 ölçüldü); birincil eylem beyaz hap, ikincil "Demoyu Gör" gerçekten
+  demoya iner. Basılmayan plan hapı kalktı, yerine demoya inen cam duyuru
+  bağlantısı. Sabit duyuru destesi bölüm başlığının yanına (başlığa
+  biniyordu). `mistakes.md #121`.
+- **Görevler:** pano kartına basınca hiçbir şey olmuyordu; `kanban-board` →
+  `onCardOpen` (5 piksel eşiğin altındaki tık ve Enter; Boşluk taşımada
+  kalır). Pusula'da ayrıntı paneli: sorumlu, son tarih, etiketler; oradan
+  sonraki kolona taşı ya da tamamla. "Yaklaşan Son Tarihler" satırları da
+  aynı paneli açar.
+- **Odak halkası:** play'in son tıkladığı öğe odakta kalıyordu (kenar
+  çubuğunda "Pano" halkalı açılıyordu); `settle` açık pencere dışındaki
+  odağı bırakır.
+- **Her Şey Bir Arada:** son turlarda eklenen 12 bileşen bu sayfaya hiç
+  girmemişti, kapsam testi 129/141'de kırıktı (`mistakes.md #120`);
+  `amiral/_ekler.tsx`te kendi gruplarına kuyu olarak girdi.
+
+**Denetim:** her Pusula sayfasında bütün düğme ve bağlantılara tek tek
+basıldı, etkisi olmayan arandı; gerçek ölü öğe yalnız kanban kartıydı (geri
+kalan işaretler zaten seçili seçenek ya da aynı sayfaya bağlantı).
+
+**Alternatifler:** Pusula'nın 15 hikâyesini sayfa klasörlerine bölmek
+(derinlik bir tık artar, reddedildi); kapakta hikâye listesini çalışma
+anında `index.json`dan okumak (ilk çizimde sayılar boş gelip zıplar;
+derleme anında ham metinden sayım seçildi).
+

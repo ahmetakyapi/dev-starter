@@ -14,6 +14,7 @@ import { NoticeDeck } from "@/components/ui/notice-deck";
 import { TrustLine } from "@/components/ui/trust-line";
 import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
 import { BRAND, CAFES, ORDERS, SUBSCRIBERS, num } from "./_data";
+import { TanitimEk } from "./_ekler";
 import { Cell, CellGrid } from "./_ui";
 
 /* Tanıtım grubu (Ribbon ve offscreen.wtf turları, 2026-11-07): ziyaretçiye
@@ -195,6 +196,7 @@ export function TanitimGroup() {
           messages={["Merhaba!", `${CAFES.length} kafeye kahve gönderiyoruz.`, "Deneme paketi aşağıda."]}
         />
       </Cell>
+      <TanitimEk />
     </CellGrid>
   );
 }

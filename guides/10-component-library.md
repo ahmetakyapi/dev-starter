@@ -209,7 +209,7 @@ kaldığı için erişilebilirlik açığı değil.
 
 - **KanbanBoard**: durum bileşenin içinde; kalıcılık için `onChange`te sunucu eylemi. `today` verilmezse gecikme vurgusu yalnız istemcide. `limitMode="block"` dolu kolona bırakmayı reddeder. Kendi ağacında `domMax` yükler.
 - **WeekCalendar**: tarih seçmek için değil (`date-calendar`). Test ve hikâyede `now` ile saati sabitle. 45 dakikadan kısa blokta saat yalnız ekran okuyucuya söylenir.
-- **TaskList**: üst görevi işaretlemek alt görevleri bitirir, son alt görev bitince üst de biter. İş kolonlar arasında akıyorsa `kanban-board`.
+- **TaskList**: üst görevi işaretlemek alt görevleri bitirir, son alt görev bitince üst de biter. İş kolonlar arasında akıyorsa `kanban-board`; kartın ayrıntısı varsa `onCardOpen` ver (tık ve Enter açar, Boşluk taşır): basılınca hiçbir şey olmayan kart ölü öğedir.
 
 ### Form Girişleri
 

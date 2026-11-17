@@ -363,7 +363,7 @@ function Archive() {
 }
 
 const meta = {
-  title: "Örnek Tasarım/Referans Arşivi",
+  title: "Arşiv/Referanslar",
   id: "references",
   parameters: {
     layout: "fullscreen",
@@ -380,7 +380,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Overview: Story = {
-  name: "Referans Arşivi",
+  name: "Referanslar",
   render: () => <Archive />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -391,6 +391,8 @@ export const Overview: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Sonraki" }));
     await waitFor(() => expect(canvas.getByText(/^02 \/ \d{2}$/)).toBeVisible(), { timeout: 3000 });
     await userEvent.click(canvas.getByRole("radio", { name: /Galeriler/ }));
-    await expect(await canvas.findByRole("link", { name: /navbar\.gallery/ })).toBeVisible();
+    // Süzülen kartlar kısa bir solmayla girer: görünür olana dek bekle (anlık bakış yarı geçişi okuyordu).
+    const gallery = await canvas.findByRole("link", { name: /navbar\.gallery/ });
+    await waitFor(() => expect(gallery).toBeVisible(), { timeout: 3000 });
   },
 };

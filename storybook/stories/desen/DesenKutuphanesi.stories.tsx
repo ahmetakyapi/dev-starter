@@ -158,7 +158,7 @@ function Library() {
 }
 
 const meta = {
-  title: "Örnek Tasarım/Desen Kütüphanesi",
+  title: "Desenler",
   id: "pattern-library",
   tags: ["yeni"],
   parameters: { layout: "fullscreen", docs: { disable: true } },
@@ -169,7 +169,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Overview: Story = {
-  name: "Desen Kütüphanesi",
+  name: "Desenler",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: /^Izgara/ }));

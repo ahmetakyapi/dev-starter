@@ -10,9 +10,10 @@
  *    dörtten fazla kategori olduğunda görünür. Palet değişince (Verdant,
  *    Ember…) grafikler de onunla döner: ürün tek renk ailesinde kalır.
  *
- * 2. MÜREKKEP DÜĞME (`.pusula-ink`): ekranın tek birincil eylemi koyu,
- *    yukarıdan hafif aydınlanan bir hap. Renkli marka düğmesi sayfadaki veri
- *    renkleriyle yarışıyordu; mürekkep her paletle sakin kalır.
+ * 2. MÜREKKEP KARO (`.pusula-ink`): marka işaretinin koyu karosu (kabuk,
+ *    giriş, tanıtım menüsü). Eskiden ekranın birincil düğmesiydi; 2026-11-17'de
+ *    kaldırıldı: Pano mavi, Takvim siyah düğmeyle iki ayrı "birincil" dili
+ *    konuşuyordu. Sayfa eylemi artık her ekranda aynı mavi `Button`.
  */
 
 [data-product="pusula"] {
@@ -66,6 +67,16 @@
 .pusula-ink:hover {
   background-color: color-mix(in oklab, var(--text-strong) 86%, var(--page-bg));
 }
+
+/* Renkli kahraman (tanıtım sayfası). Zemin degrade DEĞİL, paletin birincil
+   rengi koyulaştırılmış düz ton: koyu temada `--primary` açık camgöbeğine
+   döndüğü için (`#35b8ff`) beyaz başlık okunmuyordu. Ölçüldü (10 palet):
+   açık temada %90 → beyazla ≥ 5,9:1, koyu temada %62 → ≥ 5,5:1.
+   `.pusula-hero-ink` aynı tonu beyaz düğmenin yazısına verir (zıt eylem). */
+.pusula-hero { background-color: color-mix(in oklab, var(--primary) 90%, black); }
+.pusula-hero-ink { color: color-mix(in oklab, var(--primary) 90%, black); }
+:root[data-theme="dark"] .pusula-hero { background-color: color-mix(in oklab, var(--primary) 62%, black); }
+:root[data-theme="dark"] .pusula-hero-ink { color: color-mix(in oklab, var(--primary) 62%, black); }
 
 /* Kıl çizgili ölçü şeridi: hücreler arasında dikey, telefonda yatay çizgi. */
 .pusula-strip > * + * {

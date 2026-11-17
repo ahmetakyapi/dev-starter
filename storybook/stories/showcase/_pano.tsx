@@ -35,7 +35,6 @@ import {
   RADAR_AXES,
   TARGET_SCALE,
   TODAY,
-  customer,
   longDate,
   num,
   orderDays,
@@ -165,7 +164,7 @@ export function PanoPage() {
         description={`Günaydın ${ME.name.split(" ")[0]} · ${longDate.format(TODAY)}`}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="group" onClick={() => setTour(true)}>
+            <Button variant="secondary" size="sm" className="group" onClick={() => setTour(true)}>
               <AnimatedIcon icon={Compass} motion="wiggle" />
               Tanıtım Turu
             </Button>

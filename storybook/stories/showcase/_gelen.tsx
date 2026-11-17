@@ -22,7 +22,7 @@ import {
   UserRoundCheck,
 } from "lucide-react";
 import { AssigneePicker, type Person } from "@/components/ui/assignee-picker";
-import { Avatar, AvatarGroup } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChipGroup, FilterChip, RemovableChip } from "@/components/ui/chip";
@@ -110,9 +110,9 @@ const TAGS = [...new Set(TICKETS.flatMap((t) => t.tags))].sort((a, b) => a.local
 const CUSTOMER_ITEMS: ComboboxItem[] = CUSTOMERS.map((c) => ({ value: c.id, label: c.name }));
 
 /** Ağaçtaki klasör kimliği: "tum", "durum:Açık", "etiket:Kargo", "kanal:Telefon". */
-type Folder = string;
+type FolderId = string;
 
-function folderLabel(folder: Folder) {
+function folderLabel(folder: FolderId) {
   const [kind, value] = folder.split(":");
   if (kind === "durum") return value;
   if (kind === "etiket") return `Etiket: ${value}`;
@@ -120,7 +120,7 @@ function folderLabel(folder: Folder) {
   return "Bütün Talepler";
 }
 
-function matchesFolder(t: Ticket, folder: Folder) {
+function matchesFolder(t: Ticket, folder: FolderId) {
   const [kind, value] = folder.split(":");
   if (kind === "durum") return t.status === value;
   if (kind === "etiket") return t.tags.includes(value);
@@ -129,7 +129,7 @@ function matchesFolder(t: Ticket, folder: Folder) {
 }
 
 /** Adresteki `tag`/`status` slug'ını ağaç klasörüne çevirir: `?tag=web-magaza` → "etiket:Web Mağaza". */
-function initialFolder(params: Params): Folder {
+function initialFolder(params: Params): FolderId {
   const tag = fromSlug([...new Set(TICKETS.flatMap((t) => t.tags))], params.tag);
   if (tag) return `etiket:${tag}`;
   const status = STATUSES.find((st) => STATUS_SLUG[st] === params.status);
@@ -161,7 +161,7 @@ export function GelenPage() {
   const [overrides, setOverrides] = useState<Record<string, Partial<Ticket>>>({});
   const [archived, setArchived] = useState<readonly string[]>([]);
   const [picked, setPicked] = useState<readonly string[]>([]);
-  const [folder, setFolder] = useState<Folder>(initialFolder(params));
+  const [folder, setFolder] = useState<FolderId>(initialFolder(params));
   const [who, setWho] = useState<ComboboxItem | null>(null);
   const [priorities, setPriorities] = useState<readonly Priority[]>([]);
   const [text, setText] = useState("");

@@ -106,7 +106,9 @@ export const SECTION_OF: Record<Page, string> = {
  *      verinin güncellendiği an ve zil. Kullanıcı nerede olduğunu her sayfada aynı
  *      yerden okur.
  *   2. Başlık bloğu: büyük ad, bir satır bağlam, sağda sayfanın eylemleri.
- *      Birincil eylem varsa `INK` sınıflı tek koyu hap.
+ *      Birincil eylem varsa tek mavi `Button` (varsayılan); diğerleri
+ *      `secondary`. Koyu mürekkep hap (eski `INK`) kaldırıldı: Pano mavi,
+ *      Takvim siyah düğmeyle iki farklı "birincil" dili konuşuyordu.
  */
 export function PageBar({
   title,
@@ -159,9 +161,6 @@ export function PageBar({
  */
 export const CARD =
   "rounded-xl bg-overlay p-1.5 shadow-raised ring-1 ring-line [&>.mt-auto>dl>div]:bg-surface [&>.mt-auto>dl>div]:shadow-none";
-
-/** Ekranın tek birincil eylemi: koyu mürekkep hap (pusula.css). `buttonClass` ile birlikte. */
-export const INK = "pusula-ink rounded-full";
 
 /** Yumuşak renk karosu: ölçü, rapor ve kategori ikonlarının zemini. */
 export function IconTile({ children, tone = "primary", className }: { children: ReactNode; tone?: "primary" | "success" | "warning" | "danger" | "neutral"; className?: string }) {

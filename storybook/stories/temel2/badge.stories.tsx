@@ -23,7 +23,7 @@ const CATEGORY = [
 ] as const;
 
 const meta = {
-  title: "Bileşenler/Seçim/Rozet",
+  title: "Bileşenler/Temel/Rozet",
   id: "badge",
   component: Badge,
   tags: ["autodocs"],

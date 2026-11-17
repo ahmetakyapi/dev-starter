@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Bölümün arkasına token renginde desen, solma maskesi ve ışık: üç bağımsız katman (`pattern`, `fade`, `glow`). Tema ve paletle kendiliğinden döner. Hazır birleşimlerin tamamı **Örnek Tasarım → Desen Kütüphanesi**nde; kartta “Kopyala” JSX'i verir. Kap `relative isolate` olmalı.",
+          "Bölümün arkasına token renginde desen, solma maskesi ve ışık: üç bağımsız katman (`pattern`, `fade`, `glow`). Tema ve paletle kendiliğinden döner. Hazır birleşimlerin tamamı **Desenler** sayfasında; kartta “Kopyala” JSX'i verir. Kap `relative isolate` olmalı.",
       },
     },
   },

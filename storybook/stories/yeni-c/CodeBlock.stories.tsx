@@ -27,7 +27,7 @@ export default defineConfig({
 });`;
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Kod Bloğu",
+  title: "Bileşenler/Veri/Kod Bloğu",
   id: "code-block",
   component: CodeBlock,
   tags: ["autodocs"],

@@ -44,6 +44,9 @@ import { Badge } from "@/components/ui/badge";
  * "Bugün" `today` prop'undan; verilmezse istemcide hesaplanır (sunucu ile
  * istemci saatinin farkı hidrasyon uyarısı üretmesin diye ilk çizimde yok).
  *
+ * KARTI AÇMAK: `onCardOpen` verilirse sürüklemeden bırakılan tık (5 piksel
+ * eşiğinin altı) ve klavyede Enter kartı açar (ayrıntı paneli); taşıma
+ * Boşluk'ta kalır. Verilmezse Enter da tutar (eski davranış).
  * Durum içeride (kontrolsüz): `defaultColumns` + `onChange(columns)`.
  * Sunucuya yazmak için `onChange`te sunucu eylemini çağır.
  */
@@ -175,6 +178,7 @@ function CardBody({ card, today, done, handle }: { card: KanbanCard; today: stri
 export function KanbanBoard({
   defaultColumns,
   onChange,
+  onCardOpen,
   label = "İş panosu",
   limitMode = "warn",
   today: todayProp,
@@ -182,6 +186,8 @@ export function KanbanBoard({
 }: {
   defaultColumns: readonly KanbanColumn[];
   onChange?: (columns: KanbanColumn[]) => void;
+  /** Kart tıklanınca / Enter'da: ayrıntıyı aç. Verilmezse kart yalnız taşınır. */
+  onCardOpen?: (card: KanbanCard) => void;
   /** Panonun okunan adı. */
   label?: string;
   limitMode?: "warn" | "block";
@@ -287,6 +293,12 @@ export function KanbanBoard({
     overRef.current = null;
     setDrag(null);
     setOver(null);
+    if (d && !d.started && drop) {
+      // Eşiğin altında kalan bas-bırak bir tıktır: kartı aç.
+      const hit = locate(columns, d.id);
+      if (hit) onCardOpen?.(hit.card);
+      return;
+    }
     if (!d?.started || !drop || !target) return;
     const cols = columns;
     const to = cols.find((c) => c.id === target.col)!;
@@ -358,6 +370,11 @@ export function KanbanBoard({
     if (!at) return;
     const key = event.key;
     if (!grab) {
+      if (key === "Enter" && onCardOpen) {
+        event.preventDefault();
+        onCardOpen(at.card);
+        return;
+      }
       if (key === " " || key === "Enter") {
         event.preventDefault();
         setGrab({ id, snapshot: columns });
@@ -413,7 +430,7 @@ export function KanbanBoard({
     <LazyMotion features={domMax}>
       <div className={cn("w-full", className)}>
         <p id={help} className="sr-only">
-          Taşımak için Boşluk tuşuna bas; yukarı ve aşağı ok sırayı, sol ve sağ ok kolonu değiştirir. Bırakmak için Boşluk, vazgeçmek için Escape.
+          {onCardOpen ? "Açmak için Enter. " : null}Taşımak için Boşluk tuşuna bas; yukarı ve aşağı ok sırayı, sol ve sağ ok kolonu değiştirir. Bırakmak için Boşluk, vazgeçmek için Escape.
         </p>
         <div
           ref={scroller}

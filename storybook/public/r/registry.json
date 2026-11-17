@@ -1739,7 +1739,7 @@
       "name": "kanban-board",
       "type": "registry:ui",
       "title": "Kanban Panosu",
-      "description": "Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih",
+      "description": "Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih; `onCardOpen` ile tık / Enter kartı açar",
       "dependencies": [
         "lucide-react@^1.51.0",
         "motion@^13.5.1"

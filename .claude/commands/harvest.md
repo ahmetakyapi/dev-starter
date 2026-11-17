@@ -99,7 +99,10 @@ Bir şablon kopyasında (scratchpad'e `templates/nextjs-fullstack` kopyala,
   kimlik İngilizce). Sabit konumlu öğe (`fixed`) içeren hikâye
   `parameters.docs.story.inline = false`. Her yeni bileşen Pusula'da
   (`storybook/stories/showcase/_*.tsx`) gerçek bir yerde kullanılır; yeni sayfa
-  dosyası açtıysan `Kapsam.stories.tsx` → `PAGE_OF`. Gereken font
+  dosyası açtıysan `Kapsam.stories.tsx` → `PAGE_OF`. Aynı bileşen "Her Şey
+  Bir Arada"da da bir kuyu alır (`storybook/stories/amiral/_ekler.tsx` ya da
+  grubun dosyası + `_data.ts` → `GROUP_OF`); iki kapsam testi de koşar:
+  `coverage--table` ve `showcase--all-in-one` (`mistakes.md #120`). Gereken font
   `.storybook/preview-head.html` + `preview.css`.
 - `knowledge/references.md` (en üste satır: ne aldık, nerede yaşıyor),
   `knowledge/decisions.md` (tur kararı), `guides/10` (ne zaman hangisi),

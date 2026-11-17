@@ -7,6 +7,24 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Katalog haritası, kenar çubuğu ve Pusula tutarlılığı — 2026-11-17
+
+- Kapak: ilk ekranda katalog haritası (kenar çubuğunun üç bölümü, on bir
+  kapı, sayılar hikâye dosyalarından), kabuğun aramasını açan arama kutusu,
+  on üç bileşen rafı; numune föyü palet bölümünde
+- Kenar çubuğu: "Örnek Tasarım" yerine Pusula, Desenler, Her Şey Bir Arada
+  ve Arşiv üst düzeyde; sekiz bileşen doğru rafa; üst bölüm varyantları
+  Türkçe; "+" ve "Show modified stories" gizli
+- `kanban-board` → `onCardOpen`: tık / Enter kartı açar; Pusula Görevler'de
+  kart ayrıntı paneli (taşı, tamamla), yaklaşan son tarihler de açar
+- Pusula tanıtım kahramanı: koyulaştırılmış birincil zemin (iki temada AA),
+  beyaz birincil eylem, demoya inen ikincil ve cam duyuru; duyuru destesi
+  bölüm başlığının yanında
+- Pusula: Takvim'in siyah düğmesi mavi `Button`; `INK` kalktı; play
+  sonundaki odak halkası temizlenir
+- Her Şey Bir Arada: eksik 12 bileşen kuyusuyla (kapsam 141/141)
+- `mistakes.md` #120–121, `/harvest` kontrol listesine ikinci kapsam sayfası
+
 ### Dissolve, Allo, x6sense turu + gecikme kartı — 2026-11-17
 
 - **Yeni bileşenler (139 → 141, kit 106 → 108):** `dissolve` (dağılarak

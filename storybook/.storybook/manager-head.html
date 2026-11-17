@@ -41,83 +41,111 @@
     font-family: "Schibsted Grotesk", "Inter", sans-serif; font-weight: 650; font-size: 13.5px; letter-spacing: -0.005em;
   }
 
-  /* ---- Kenar çubuğu bilgi mimarisi (2026-11, tasarım turu) ----
-     Üst düzey dokuz öğe ÜÇ bölümde: Başla (Kapak, Başlangıç, Vitrin) ·
-     Kütüphane (Tema, Bileşenler, Grafikler, Bloklar) · Uygulamada (Ekranlar,
-     Örnek Tasarım). Sıra preview.tsx → storySort ile aynı. Storybook'un düğüm
-     türüne göre verdiği karışık ikonlar (yer imi, klasör, ızgara) yerine her
-     öğenin anlamını söyleyen tek çizgi ikon (lucide, uygulamayla aynı aile;
-     maske, rengi paletle döner). Üst düzey öğelerin hepsi aynı ağırlıkta. */
+  /* ---- Kenar çubuğu bilgi mimarisi (2026-11-17, ikinci tasarım turu) ----
+     Üst düzey on iki öğe ÜÇ bölümde, hepsi kendi adıyla bir tıkta:
+       Başla      · Kapak, Başlangıç, Vitrin, Her Şey Bir Arada
+       Kütüphane  · Tema, Bileşenler, Grafikler, Bloklar, Desenler
+       Uygulamada · Pusula, Ekranlar, Arşiv
+     Eskiden "Örnek Tasarım" klasörü uygulamayı, desenleri ve kapsam
+     tablosunu tek belirsiz adın altına saklıyordu. Sıra preview.tsx →
+     storySort ile aynı. Storybook'un düğüm türüne göre verdiği karışık
+     ikonlar (yer imi, klasör, ızgara) yerine her öğenin anlamını söyleyen
+     tek çizgi ikon (lucide, uygulamayla aynı aile; maske, rengi paletle
+     döner). Üst düzey öğelerin hepsi aynı ağırlıkta. */
   #storybook-explorer-menu .sidebar-item[data-item-id="cover--overview"],
   #storybook-explorer-menu .sidebar-item[data-item-id="start--overview"],
   #storybook-explorer-menu .sidebar-item[data-item-id="vitrin"],
+  #storybook-explorer-menu .sidebar-item[data-item-id="showcase--all-in-one"],
   #storybook-explorer-menu .sidebar-item[data-item-id="tema"],
   #storybook-explorer-menu .sidebar-item[data-item-id="bileşenler"],
   #storybook-explorer-menu .sidebar-item[data-item-id="grafikler"],
   #storybook-explorer-menu .sidebar-item[data-item-id="bloklar"],
+  #storybook-explorer-menu .sidebar-item[data-item-id="pattern-library--overview"],
+  #storybook-explorer-menu .sidebar-item[data-item-id="pusula"],
   #storybook-explorer-menu .sidebar-item[data-item-id="ekranlar"],
-  #storybook-explorer-menu .sidebar-item[data-item-id="örnek-tasarım"] {
+  #storybook-explorer-menu .sidebar-item[data-item-id="arşiv"] {
     position: relative; margin-top: 2px;
   }
   #storybook-explorer-menu .sidebar-item[data-item-id="cover--overview"] > :is(a, button),
   #storybook-explorer-menu .sidebar-item[data-item-id="start--overview"] > :is(a, button),
   #storybook-explorer-menu .sidebar-item[data-item-id="vitrin"] > :is(a, button),
+  #storybook-explorer-menu .sidebar-item[data-item-id="showcase--all-in-one"] > :is(a, button),
   #storybook-explorer-menu .sidebar-item[data-item-id="tema"] > :is(a, button),
   #storybook-explorer-menu .sidebar-item[data-item-id="bileşenler"] > :is(a, button),
   #storybook-explorer-menu .sidebar-item[data-item-id="grafikler"] > :is(a, button),
   #storybook-explorer-menu .sidebar-item[data-item-id="bloklar"] > :is(a, button),
+  #storybook-explorer-menu .sidebar-item[data-item-id="pattern-library--overview"] > :is(a, button),
+  #storybook-explorer-menu .sidebar-item[data-item-id="pusula"] > :is(a, button),
   #storybook-explorer-menu .sidebar-item[data-item-id="ekranlar"] > :is(a, button),
-  #storybook-explorer-menu .sidebar-item[data-item-id="örnek-tasarım"] > :is(a, button) {
+  #storybook-explorer-menu .sidebar-item[data-item-id="arşiv"] > :is(a, button) {
     font-family: "Schibsted Grotesk", "Inter", sans-serif; font-weight: 600; font-size: 13.5px; letter-spacing: -0.005em;
   }
   /* Yerleşik tür ikonu gizlenir (açma oku iç içe div'de, o kalır). */
   #storybook-explorer-menu .sidebar-item[data-item-id="cover--overview"] > :is(a, button) > div:first-child > svg,
   #storybook-explorer-menu .sidebar-item[data-item-id="start--overview"] > :is(a, button) > div:first-child > svg,
   #storybook-explorer-menu .sidebar-item[data-item-id="vitrin"] > :is(a, button) > div:first-child > svg,
+  #storybook-explorer-menu .sidebar-item[data-item-id="showcase--all-in-one"] > :is(a, button) > div:first-child > svg,
   #storybook-explorer-menu .sidebar-item[data-item-id="tema"] > :is(a, button) > div:first-child > svg,
   #storybook-explorer-menu .sidebar-item[data-item-id="bileşenler"] > :is(a, button) > div:first-child > svg,
   #storybook-explorer-menu .sidebar-item[data-item-id="grafikler"] > :is(a, button) > div:first-child > svg,
   #storybook-explorer-menu .sidebar-item[data-item-id="bloklar"] > :is(a, button) > div:first-child > svg,
+  #storybook-explorer-menu .sidebar-item[data-item-id="pattern-library--overview"] > :is(a, button) > div:first-child > svg,
+  #storybook-explorer-menu .sidebar-item[data-item-id="pusula"] > :is(a, button) > div:first-child > svg,
   #storybook-explorer-menu .sidebar-item[data-item-id="ekranlar"] > :is(a, button) > div:first-child > svg,
-  #storybook-explorer-menu .sidebar-item[data-item-id="örnek-tasarım"] > :is(a, button) > div:first-child > svg { display: none; }
+  #storybook-explorer-menu .sidebar-item[data-item-id="arşiv"] > :is(a, button) > div:first-child > svg { display: none; }
   #storybook-explorer-menu .sidebar-item[data-item-id="cover--overview"] > :is(a, button) > div:first-child::after,
   #storybook-explorer-menu .sidebar-item[data-item-id="start--overview"] > :is(a, button) > div:first-child::after,
   #storybook-explorer-menu .sidebar-item[data-item-id="vitrin"] > :is(a, button) > div:first-child::after,
+  #storybook-explorer-menu .sidebar-item[data-item-id="showcase--all-in-one"] > :is(a, button) > div:first-child::after,
   #storybook-explorer-menu .sidebar-item[data-item-id="tema"] > :is(a, button) > div:first-child::after,
   #storybook-explorer-menu .sidebar-item[data-item-id="bileşenler"] > :is(a, button) > div:first-child::after,
   #storybook-explorer-menu .sidebar-item[data-item-id="grafikler"] > :is(a, button) > div:first-child::after,
   #storybook-explorer-menu .sidebar-item[data-item-id="bloklar"] > :is(a, button) > div:first-child::after,
+  #storybook-explorer-menu .sidebar-item[data-item-id="pattern-library--overview"] > :is(a, button) > div:first-child::after,
+  #storybook-explorer-menu .sidebar-item[data-item-id="pusula"] > :is(a, button) > div:first-child::after,
   #storybook-explorer-menu .sidebar-item[data-item-id="ekranlar"] > :is(a, button) > div:first-child::after,
-  #storybook-explorer-menu .sidebar-item[data-item-id="örnek-tasarım"] > :is(a, button) > div:first-child::after {
+  #storybook-explorer-menu .sidebar-item[data-item-id="arşiv"] > :is(a, button) > div:first-child::after {
     content: ""; display: block; flex: none; width: 15px; height: 15px; margin-inline-end: 2px;
     background: var(--ds-ink); opacity: 0.85; -webkit-mask: var(--ds-icon) center / contain no-repeat; mask: var(--ds-icon) center / contain no-repeat;
   }
   #storybook-explorer-menu .sidebar-item[data-item-id="cover--overview"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M15%2021v-8a1%201%200%200%200-1-1h-4a1%201%200%200%200-1%201v8%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M3%2010a2%202%200%200%201%20.709-1.528l7-6a2%202%200%200%201%202.582%200l7%206A2%202%200%200%201%2021%2010v9a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
   #storybook-explorer-menu .sidebar-item[data-item-id="start--overview"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2015v5s3.03-.55%204-2c1.08-1.62%200-5%200-5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M4.5%2016.5c-1.5%201.26-2%205-2%205s3.74-.5%205-2c.71-.84.7-2.13-.09-2.91a2.18%202.18%200%200%200-2.91-.09%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M9%2012a22%2022%200%200%201%202-3.95A12.88%2012.88%200%200%201%2022%202c0%202.72-.78%207.5-6%2011a22.4%2022.4%200%200%201-4%202z%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M9%2012H4s.55-3.03%202-4c1.62-1.08%205%20.05%205%20.05%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
   #storybook-explorer-menu .sidebar-item[data-item-id="vitrin"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%227%22%20height%3D%227%22%20x%3D%223%22%20y%3D%223%22%20rx%3D%221%22%3E%3C%2Frect%3E%3Crect%20width%3D%227%22%20height%3D%227%22%20x%3D%2214%22%20y%3D%223%22%20rx%3D%221%22%3E%3C%2Frect%3E%3Crect%20width%3D%227%22%20height%3D%227%22%20x%3D%2214%22%20y%3D%2214%22%20rx%3D%221%22%3E%3C%2Frect%3E%3Crect%20width%3D%227%22%20height%3D%227%22%20x%3D%223%22%20y%3D%2214%22%20rx%3D%221%22%3E%3C%2Frect%3E%3C%2Fsvg%3E"); }
+  #storybook-explorer-menu .sidebar-item[data-item-id="showcase--all-in-one"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%2218%22%20height%3D%2218%22%20x%3D%223%22%20y%3D%223%22%20rx%3D%222%22%3E%3C%2Frect%3E%3Cpath%20d%3D%22M3%209h18%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M9%2021V9%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
   #storybook-explorer-menu .sidebar-item[data-item-id="tema"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2022a1%201%200%200%201%200-20%2010%209%200%200%201%2010%209%205%205%200%200%201-5%205h-2.25a1.75%201.75%200%200%200-1.4%202.8l.3.4a1.75%201.75%200%200%201-1.4%202.8z%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%2213.5%22%20cy%3D%226.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22%3E%3C%2Fcircle%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%2210.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22%3E%3C%2Fcircle%3E%3Ccircle%20cx%3D%226.5%22%20cy%3D%2212.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22%3E%3C%2Fcircle%3E%3Ccircle%20cx%3D%228.5%22%20cy%3D%227.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22%3E%3C%2Fcircle%3E%3C%2Fsvg%3E"); }
   #storybook-explorer-menu .sidebar-item[data-item-id="bileşenler"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M10%2022V7a1%201%200%200%200-1-1H4a2%202%200%200%200-2%202v12a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2v-5a1%201%200%200%200-1-1H2%22%3E%3C%2Fpath%3E%3Crect%20x%3D%2214%22%20y%3D%222%22%20width%3D%228%22%20height%3D%228%22%20rx%3D%221%22%3E%3C%2Frect%3E%3C%2Fsvg%3E"); }
   #storybook-explorer-menu .sidebar-item[data-item-id="grafikler"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%203v16a2%202%200%200%200%202%202h16%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M18%2017V9%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M13%2017V5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M8%2017v-3%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
   #storybook-explorer-menu .sidebar-item[data-item-id="bloklar"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12.83%202.18a2%202%200%200%200-1.66%200L2.6%206.08a1%201%200%200%200%200%201.83l8.58%203.91a2%202%200%200%200%201.66%200l8.58-3.9a1%201%200%200%200%200-1.83z%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M2%2012a1%201%200%200%200%20.58.91l8.6%203.91a2%202%200%200%200%201.65%200l8.58-3.9A1%201%200%200%200%2022%2012%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M2%2017a1%201%200%200%200%20.58.91l8.6%203.91a2%202%200%200%200%201.65%200l8.58-3.9A1%201%200%200%200%2022%2017%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
+  #storybook-explorer-menu .sidebar-item[data-item-id="pattern-library--overview"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%2218%22%20height%3D%2218%22%20x%3D%223%22%20y%3D%223%22%20rx%3D%222%22%3E%3C%2Frect%3E%3Cpath%20d%3D%22M3%209h18%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M3%2015h18%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M9%203v18%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M15%203v18%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
+  #storybook-explorer-menu .sidebar-item[data-item-id="pusula"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%3E%3C%2Fcircle%3E%3Cpath%20d%3D%22m16.24%207.76-1.804%205.411a2%202%200%200%201-1.265%201.265L7.76%2016.24l1.804-5.411a2%202%200%200%201%201.265-1.265z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
   #storybook-explorer-menu .sidebar-item[data-item-id="ekranlar"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%2220%22%20height%3D%2214%22%20x%3D%222%22%20y%3D%223%22%20rx%3D%222%22%3E%3C%2Frect%3E%3Cline%20x1%3D%228%22%20x2%3D%2216%22%20y1%3D%2221%22%20y2%3D%2221%22%3E%3C%2Fline%3E%3Cline%20x1%3D%2212%22%20x2%3D%2212%22%20y1%3D%2217%22%20y2%3D%2221%22%3E%3C%2Fline%3E%3C%2Fsvg%3E"); }
-  #storybook-explorer-menu .sidebar-item[data-item-id="örnek-tasarım"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%2220%22%20height%3D%2216%22%20rx%3D%222%22%3E%3C%2Frect%3E%3Cpath%20d%3D%22M10%204v4%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M2%208h20%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M6%204v4%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
+  #storybook-explorer-menu .sidebar-item[data-item-id="arşiv"] > :is(a, button) > div:first-child::after { --ds-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%2220%22%20height%3D%225%22%20x%3D%222%22%20y%3D%223%22%20rx%3D%221%22%3E%3C%2Frect%3E%3Cpath%20d%3D%22M4%208v11a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V8%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M10%2012h4%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); }
 
   /* Bölüm etiketleri: küçük, soluk, Title Case (büyük harf yok). */
-  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="ekranlar"]) { margin-top: 44px !important; }
+  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="pusula"]) { margin-top: 44px !important; }
   #storybook-explorer-menu .sidebar-item[data-item-id="cover--overview"] { margin-top: 30px !important; }
   /* Satır kendi içinde taşmayı kırpar (metin kısaltması için); etiket satırın üstünde durduğundan bu üç satırda açılır. */
-  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="ekranlar"]) { overflow: visible; }
-  /* Açma oku olmayan üst düzey sayfalar (Kapak, Başlangıç) ikon sütununa hizalanır: ok + boşluk kadar içeri. */
-  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="start--overview"]) > a > div:first-child { margin-inline-start: 18px; }
-  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="ekranlar"])::after {
+  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="pusula"]) { overflow: visible; }
+  /* Açma oku olmayan üst düzey sayfalar ikon sütununa hizalanır: ok + boşluk kadar içeri. */
+  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="start--overview"], [data-item-id="showcase--all-in-one"], [data-item-id="pattern-library--overview"]) > a > div:first-child { margin-inline-start: 18px; }
+  #storybook-explorer-menu .sidebar-item:is([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="pusula"])::after {
     position: absolute; inset-inline-start: 10px; top: -22px; pointer-events: none;
     font: 500 11.5px/1 "Inter", sans-serif; color: var(--ds-muted); letter-spacing: 0;
   }
   #storybook-explorer-menu .sidebar-item[data-item-id="cover--overview"]::after { content: "Başla"; }
   #storybook-explorer-menu .sidebar-item[data-item-id="tema"]::after { content: "Kütüphane"; }
-  #storybook-explorer-menu .sidebar-item[data-item-id="ekranlar"]::after { content: "Uygulamada"; }
+  #storybook-explorer-menu .sidebar-item[data-item-id="pusula"]::after { content: "Uygulamada"; }
   /* Bölüm arası boşluğu artık etiketler kuruyor; eski tekdüze 14 px aralık yalnız onlarda. */
-  #storybook-explorer-menu .sidebar-item[data-nodetype="group"]:not([data-parent-id]):not([data-item-id="tema"], [data-item-id="ekranlar"]) { margin-top: 2px; }
+  #storybook-explorer-menu .sidebar-item[data-nodetype="group"]:not([data-parent-id]):not([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="pusula"]) { margin-top: 2px; }
+  #storybook-explorer-menu .sidebar-item[data-nodetype="component"]:not([data-parent-id]):not([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="pusula"]) { margin-top: 2px; }
+
+  /* Arama yanındaki "Yeni hikâye oluştur" (+) düğmesi: katalog okunur, bu
+     depoda hikâye elle ve kurala göre yazılır; düğme yalnız kafa karıştırıyordu
+     (geliştirme sunucusunda görünür, yayında zaten yok). */
+  button[aria-label="Create a new story"] { display: none !important; }
+  /* "Show modified stories" (git'e göre değişen hikâyeler): İngilizce ve
+     yalnız geliştirme sunucusunda, kataloğu gezen kişiye anlamsız. */
+  div:has(> button[aria-label="Show modified stories since last commit"]) { display: none !important; }
 
   /* Ağaç ikonları Storybook'un mor tonunda gelir; paletin mürekkebine çekilir. */
   #storybook-explorer-menu .sidebar-item svg { color: var(--ds-ink); opacity: 0.85; }

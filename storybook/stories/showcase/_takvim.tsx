@@ -35,7 +35,7 @@ import {
   shortDate,
   type CalendarEvent,
 } from "./_data";
-import { INK, PageBar, Well, WellTitle, useApp } from "./_ui";
+import { PageBar, Well, WellTitle, useApp } from "./_ui";
 import { useId } from "react";
 
 const KINDS = ["Görüşme", "Teslimat", "Numune", "İç Toplantı"] as const;
@@ -137,7 +137,7 @@ export function TakvimPage() {
         title="Takvim"
         description={`Kasım 2026 · ${num.format(monthEvents.length)} Etkinlik`}
         actions={
-          <Button size="sm" className={INK} onClick={() => document.getElementById("randevu")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+          <Button size="sm" onClick={() => document.getElementById("randevu")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
             <CalendarPlus aria-hidden />
             Randevu Oluştur
           </Button>

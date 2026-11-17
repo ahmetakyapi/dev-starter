@@ -4,14 +4,15 @@
 
 | Bölüm | İçerik |
 |-------|--------|
-| **Kapak** (en üstte) | Kataloğun ilk ekranı: paletin numune föyü (rol renkleri ve ölçülen kontrast seçili paletle döner, anahtar temayı değiştirir), on palet numunesi bütün arayüzü döndürür, sayılar, dört kapı ve kurulum. Sayfa niteliğindeki hikâyelerde eklenti paneli kendiliğinden kapanır |
-| **Örnek Tasarım** | **Her Şey Bir Arada**: bütün kataloğu tek uzun sayfada sergileyen vitrin (katalogdaki bütün bileşenler, 15 grafik, bloklar, 10 palet); **Desen Kütüphanesi**: 35 token'lı zemin, Önizle ve Kopyala; **Pusula Paneli**: aynı bileşenlerle kurulmuş uygulama; **Bileşen Kapsamı** |
-| Vitrin | Genel bakış + grup grup vitrin sayfaları (`snippets/ui/vitrin/`) |
-| Başlangıç, Tema | Manifesto; renkler (iki tema yan yana, WCAG oranları), 10 palet, tipografi, yüzeyler, grafik renkleri, hareket |
-| Bileşenler | `snippets/ui`nin bütün bileşenleri + şablonun ortak bileşenleri; her biri varsayılan, durumlar, bütün varyantlar, `play` etkileşimi |
-| Grafikler | 15 grafik + Analitik Panosu, Satış Özeti kompozisyonları |
-| Bloklar | Uygulama kabuğu, sohbet, giriş, ayarlar, ajan planı, palet seçici |
-| Ekranlar | Landing (tam sayfa, 8 üst bölüm varyantı, 11 bölüm), sistem sayfaları, uygulama ekranları |
+| **Kapak** (en üstte) | Kataloğun ilk ekranı ve haritası: solda kısa tanıtım, kabuğun aramasını açan arama kutusu ve iki eylem; sağda kenar çubuğunun üç bölümü ve on bir kapısı (ne içerdiği, kaç parça; sayılar ve bağlantılar hikâye dosyalarından sayılır, `stories/kapak/_harita.ts`). Altında on üç bileşen rafı, palet numunesi + numune föyü, dört öne çıkan sayfa ve kurulum. Sayfa niteliğindeki hikâyelerde eklenti paneli kendiliğinden kapanır |
+
+Kenar çubuğu üç bölüm, her öğe kendi adıyla bir tıkta:
+
+| Bölüm | Öğeler |
+|-------|--------|
+| Başla | Kapak · Başlangıç (manifesto, kurallar) · Vitrin (gruplara göre seçilmiş örnekler, `snippets/ui/vitrin/`) · **Her Şey Bir Arada** (bütün kütüphane tek uzun sayfada; kapsam 141/141) |
+| Kütüphane | Tema (renkler, 10 palet, tipografi, yüzeyler, grafik renkleri, hareket) · Bileşenler (13 raf: Temel → Yapay Zekâ; her biri varsayılan, durumlar, bütün varyantlar, `play`) · Grafikler (15 grafik + iki pano) · Bloklar · **Desenler** (35 token'lı zemin, Önizle ve Kopyala) |
+| Uygulamada | **Pusula** (aynı bileşenlerle kurulmuş uygulama: 15 ekran) · Ekranlar (uygulama ekranları; açılış sayfası: tam sayfa, 8 üst bölüm varyantı, bölümler, sistem sayfaları) · Arşiv (Bileşen Kapsamı, Referanslar) |
 
 Ekosistemin bileşenleri, ekranları ve temaları tek yerde, canlı: `snippets/ui`
 kütüphanesinin her bileşeni bütün durumlarıyla, landing şablonunun ekranları,

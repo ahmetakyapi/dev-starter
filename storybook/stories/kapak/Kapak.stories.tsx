@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { ArrowRight, ArrowUpRight, Check, Inbox } from "lucide-react";
+import { Archive, ArrowRight, ArrowUpRight, Blocks, ChartColumn, Check, Compass, Grid3x3, Inbox, Layers, LayoutGrid, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
 import { m, useReducedMotion } from "motion/react";
 import { useState, type ReactNode } from "react";
 import { useGlobals } from "storybook/preview-api";
@@ -9,6 +9,7 @@ import { AppWindow } from "@/components/ui/app-window";
 import { Badge } from "@/components/ui/badge";
 import { BarList } from "@/components/ui/bar-list";
 import { Dial } from "@/components/ui/dial";
+import { Kbd } from "@/components/ui/kbd";
 import { MarkAnnotate } from "@/components/ui/mark-annotate";
 import { PATTERN_PRESETS, PatternBackground } from "@/components/ui/pattern-bg";
 import { SlotText } from "@/components/ui/slot-text";
@@ -19,8 +20,8 @@ import { cn } from "@/lib/utils";
 import { palettes } from "../../../packages/@ahmet/theme/tokens";
 import uiPackage from "../../../packages/@ahmet/ui/package.json";
 import { PALETTES } from "../../.storybook/palettes";
-import { GROUPS } from "../amiral/_data";
-import { KIT_COUNT, STORY_COUNT, TOTAL, inGroup } from "../amiral/_kapsam";
+import { KIT_COUNT, TOTAL } from "../amiral/_kapsam";
+import { STORIES, firstOf, under } from "./_harita";
 
 /**
  * Kapak: kataloğun ilk ekranı. Konusu kimlik: tek token mimarisi, on palet,
@@ -204,29 +205,145 @@ function Stage({ palette, theme, onTheme }: { palette: PaletteName; theme: Theme
   );
 }
 
-function Hero({ palette, theme, onTheme }: { palette: PaletteName; theme: ThemeName; onTheme: (next: ThemeName) => void }) {
+/* ── Katalog haritası ───────────────────────────────────────────────────
+   İlk ekranın sağ yarısı: kenar çubuğunun üç bölümü ve on bir kapısı, her
+   biri ne içerdiğini ve kaç parça olduğunu söyler. Sayılar ve bağlantılar
+   `_harita.ts`ten (hikâye dosyalarından sayılır, elle yazılmaz). Sayı
+   sütunu her satırda aynı genişlikte: alt alta sayılar hizalı okunur. */
+
+/** preview.tsx → storySort ile aynı sıra: "ilk bileşen" kenar çubuğundaki ilk satır olsun. */
+const COMPONENT_GROUPS = ["Temel", "Düğme ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"] as const;
+const THEME_ORDER = ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"];
+const SCREEN_ORDER = ["Uygulama", "Açılış Sayfası"];
+
+type MapRow = { name: string; note: string; icon: LucideIcon; id: string; count?: string };
+const count = (n: number, unit: string) => `${n.toLocaleString("tr-TR")} ${unit}`;
+
+function mapSections(): { label: string; rows: MapRow[] }[] {
+  const pusula = under("Pusula")[0];
+  return [
+    {
+      label: "Başla",
+      rows: [
+        { name: "Başlangıç", note: "Manifesto, token'lar, kimlik kuralları", icon: Rocket, id: "start--overview" },
+        { name: "Vitrin", note: "Gruplara göre seçilmiş örnekler", icon: LayoutGrid, id: "gallery--overview", count: count(under("Vitrin")[0]?.stories ?? 0, "sayfa") },
+        { name: "Her Şey Bir Arada", note: "Bütün kütüphane tek uzun sayfada", icon: PanelsTopLeft, id: "showcase--all-in-one", count: count(TOTAL, "bileşen") },
+      ],
+    },
+    {
+      label: "Kütüphane",
+      rows: [
+        { name: "Tema", note: "Renk, palet, tipografi, yüzey, hareket", icon: Palette, id: firstOf(["Tema"], THEME_ORDER) ?? "colors--overview", count: count(under("Tema").length, "sayfa") },
+        { name: "Bileşenler", note: "Temelden yapay zekâya, raf raf", icon: Blocks, id: firstOf(["Bileşenler"], COMPONENT_GROUPS) ?? "start--overview", count: count(COMPONENT_GROUPS.length, "grup") },
+        { name: "Grafikler", note: "Çizgi, alan, huni, ısı haritası, pano", icon: ChartColumn, id: firstOf(["Grafikler"]) ?? "start--overview", count: count(under("Grafikler").length, "grafik") },
+        { name: "Bloklar", note: "Birden çok bileşenin hazır birleşimi", icon: Layers, id: firstOf(["Bloklar"]) ?? "start--overview", count: count(under("Bloklar").length, "blok") },
+        { name: "Desenler", note: "Önizle, kopyala: token'lı zeminler", icon: Grid3x3, id: "pattern-library--overview", count: count(PATTERN_PRESETS.length, "zemin") },
+      ],
+    },
+    {
+      label: "Uygulamada",
+      rows: [
+        { name: "Pusula", note: "Aynı parçalarla kurulmuş uygulama", icon: Compass, id: "demo-app--overview", count: count(pusula?.stories ?? 0, "ekran") },
+        { name: "Ekranlar", note: "Giriş, gelen kutusu, açılış sayfası", icon: Monitor, id: firstOf(["Ekranlar"], SCREEN_ORDER) ?? "start--overview", count: count(under("Ekranlar").length, "şablon") },
+        { name: "Arşiv", note: "Bileşen kapsamı ve referanslar", icon: Archive, id: "coverage--table" },
+      ],
+    },
+  ];
+}
+
+function CatalogMap() {
+  const reduce = useReducedMotion();
+  const sections = mapSections();
+  return (
+    <m.nav
+      aria-label="Katalog Haritası"
+      {...(reduce ? {} : { initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 }, transition: { duration: DUR.page, ease: EASE, delay: 0.2 } })}
+      className="grid gap-1 rounded-[1.75rem] bg-surface p-2 edge-lit"
+    >
+      {sections.map((section) => (
+        <section key={section.label} aria-labelledby={`harita-${section.label}`} className="rounded-[1.25rem] bg-overlay p-2 shadow-raised">
+          <h2 id={`harita-${section.label}`} className="px-2.5 pt-1.5 pb-1 text-small font-medium text-muted">
+            {section.label}
+          </h2>
+          <ul className="grid">
+            {section.rows.map((row) => (
+              <li key={row.name}>
+                <a
+                  href={to(row.id)}
+                  target="_top"
+                  className={cn("group grid min-h-12 grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-3 rounded-xl px-2.5 py-1.5 transition-colors duration-150 hover:bg-surface", FOCUS)}
+                >
+                  <span aria-hidden className="grid size-8 place-items-center rounded-lg bg-primary-wash text-primary-ink [&_svg]:size-4">
+                    <row.icon strokeWidth={1.9} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-base font-semibold text-strong">{row.name}</span>
+                    <span className="block truncate text-small text-muted">{row.note}</span>
+                  </span>
+                  <span className="w-24 text-right text-small text-muted tabular-nums">{row.count ?? ""}</span>
+                  <ArrowUpRight aria-hidden className="size-4 text-muted transition-[translate,color] duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-strong" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </m.nav>
+  );
+}
+
+/** Kabuğun arama kutusunu açar: kapaktan ayrılmadan bileşen, desen ya da ekran ara. */
+function SearchLauncher() {
+  const open = () => {
+    const field = window.top?.document.getElementById("storybook-explorer-searchfield") as HTMLInputElement | null;
+    field?.focus();
+    field?.select();
+  };
+  return (
+    <button
+      type="button"
+      onClick={open}
+      className={cn(
+        "flex min-h-12 w-full max-w-md items-center gap-3 rounded-full bg-overlay pr-2 pl-4 text-left text-base text-muted shadow-raised ring-1 ring-inset ring-line transition-[box-shadow] duration-200 hover:shadow-floating",
+        FOCUS,
+      )}
+    >
+      <Search aria-hidden className="size-4 shrink-0" />
+      <span className="min-w-0 flex-1 truncate">Bileşen, desen ya da ekran ara</span>
+      <span aria-hidden className="flex gap-1">
+        <Kbd>⌘</Kbd>
+        <Kbd>K</Kbd>
+      </span>
+    </button>
+  );
+}
+
+function Hero() {
   const enter = useEnter();
   return (
-    <section aria-labelledby="kapak-baslik" className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-16">
+    <section aria-labelledby="kapak-baslik" className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
       <div className="grid justify-items-start">
         <m.p {...enter(1)} className="font-mono text-small text-muted">
-          {TOTAL} bileşen · {PALETTES.length} palet · 2 tema
+          {TOTAL} bileşen · {STORIES.toLocaleString("tr-TR")} hikâye · {PALETTES.length} palet · 2 tema
         </m.p>
         <m.h1
           {...enter(2, 24)}
           id="kapak-baslik"
-          className="mt-5 font-display text-[clamp(3.25rem,8.2vw,6.5rem)] leading-[0.92] font-bold tracking-[-0.05em] text-strong"
+          className="mt-4 font-display text-[clamp(2.75rem,6vw,5rem)] leading-[0.94] font-bold tracking-[-0.05em] text-strong"
         >
           Tek Kimlik, <span className="display-ink block pb-[0.08em]">On Palet</span>
         </m.h1>
-        <m.p {...enter(4)} className="mt-6 max-w-[44ch] text-lead text-pretty text-body">
+        <m.p {...enter(4)} className="mt-5 max-w-[44ch] text-lead text-pretty text-body">
           Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. Her parça{" "}
           <MarkAnnotate type="underline" delay={900}>
             token&apos;dan
           </MarkAnnotate>{" "}
           çizilir, paletle birlikte döner.
         </m.p>
-        <m.div {...enter(5)} className="mt-8 flex flex-wrap gap-3">
+        <m.div {...enter(5)} className="mt-7 w-full">
+          <SearchLauncher />
+        </m.div>
+        <m.div {...enter(6)} className="mt-4 flex flex-wrap gap-3">
           <a
             href={to("showcase--all-in-one")}
             target="_top"
@@ -240,11 +357,11 @@ function Hero({ palette, theme, onTheme }: { palette: PaletteName; theme: ThemeN
             target="_top"
             className={cn("inline-flex min-h-12 items-center rounded-full bg-overlay px-6 text-base font-semibold text-strong shadow-raised hover:-translate-y-px hover:shadow-floating", PRESS, FOCUS)}
           >
-            Örnek Uygulamayı Aç
+            Pusula&apos;yı Aç
           </a>
         </m.div>
       </div>
-      <Stage palette={palette} theme={theme} onTheme={onTheme} />
+      <CatalogMap />
     </section>
   );
 }
@@ -252,7 +369,7 @@ function Hero({ palette, theme, onTheme }: { palette: PaletteName; theme: ThemeN
 /* ── Palet numuneleri ───────────────────────────────────────────────────
    Boya kartelası gibi dik numuneler; seçilen yerinden yükselir. Hareket
    (yükselme) tek kanal değil: halka ve onay işareti de aynı şeyi söyler. */
-function PaletteChips({ palette, theme, onPick }: { palette: PaletteName; theme: ThemeName; onPick: (value: PaletteName) => void }) {
+function PaletteChips({ palette, theme, onPick, onTheme }: { palette: PaletteName; theme: ThemeName; onPick: (value: PaletteName) => void; onTheme: (next: ThemeName) => void }) {
   const title = PALETTES.find((p) => p.value === palette)?.title ?? "Signature";
   return (
     <section aria-labelledby="kapak-palet" className="grid gap-8">
@@ -269,8 +386,10 @@ function PaletteChips({ palette, theme, onPick }: { palette: PaletteName; theme:
           seçili: <SlotText text={title} className="text-primary-ink" />
         </p>
       </Reveal>
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10">
+      <Stage palette={palette} theme={theme} onTheme={onTheme} />
       <Reveal>
-        <div role="radiogroup" aria-label="Palet" className="grid grid-cols-5 gap-2 pt-2 sm:gap-3 lg:grid-cols-10">
+        <div role="radiogroup" aria-label="Palet" className="grid grid-cols-5 gap-2 pt-2 sm:gap-3">
           {PALETTES.map((p) => {
             const on = p.value === palette;
             const tones = palettes[p.value][theme];
@@ -309,29 +428,72 @@ function PaletteChips({ palette, theme, onPick }: { palette: PaletteName; theme:
           })}
         </div>
       </Reveal>
+      </div>
     </section>
   );
 }
 
-function Figures() {
-  const items: [number, string, string][] = [
-    [TOTAL, "Bileşen", "hepsi kaynak olarak kopyalanır"],
-    [STORY_COUNT, "Hikâye", "her biri açık ve koyu temada"],
-    [PALETTES.length, "Palet", "tek token mimarisinde"],
-    [KIT_COUNT, "Paket Bileşeni", "@ahmetakyapi/ui içinde"],
-  ];
+/* ── Bileşen grupları ───────────────────────────────────────────────────
+   Kenar çubuğundaki on üç rafın hepsi bir bakışta: adı, kaç bileşen olduğu
+   ve içindeki ilk birkaç parça. "Aradığım şey nerede" sorusu kapakta
+   biter; kart grubun ilk bileşenini açar. */
+const GROUP_NOTES: Record<(typeof COMPONENT_GROUPS)[number], string> = {
+  Temel: "Her ekranın harfleri",
+  "Düğme ve İkon": "Basılan her şey",
+  "Form Girişleri": "Aynı etiket, yardım ve hata düzeni",
+  Seçim: "Anında etki eden kararlar",
+  Gezinme: "Nerede, nereye gidebilir",
+  Katmanlar: "Sayfanın üstüne açılanlar",
+  "Geri Bildirim": "Durum, uyarı, doluluk",
+  Yükleme: "Beklemenin biçimleri",
+  Veri: "Tablo, liste, sayı, ağaç",
+  Verimlilik: "Pano, görev, hafta",
+  "Hareket ve Doku": "Her hareket bir şey söyler",
+  Tanıtım: "Açılış sayfasının parçaları",
+  "Yapay Zekâ": "Asistan ne yaptığını gösterir",
+};
+
+function ComponentGroups() {
   return (
-    <dl className="grid grid-cols-2 gap-y-10 border-t border-line pt-10 lg:grid-cols-4">
-      {items.map(([n, label, note], i) => (
-        <RevealItem key={label} index={i} className="grid content-start gap-1 pr-4 lg:border-l lg:border-line lg:pl-6 lg:first:border-l-0 lg:first:pl-0">
-          <dt className="order-2 mt-2 text-base font-medium text-strong">{label}</dt>
-          <dd className="order-1 font-display text-[clamp(2.75rem,5.4vw,4.25rem)] leading-none font-semibold tracking-[-0.045em] text-strong tabular-nums">
-            {n.toLocaleString("tr-TR")}
-          </dd>
-          <dd className="order-3 text-small text-muted">{note}</dd>
-        </RevealItem>
-      ))}
-    </dl>
+    <section aria-labelledby="kapak-gruplar" className="grid gap-8">
+      <Reveal className="grid gap-2">
+        <h2 id="kapak-gruplar" className="font-display text-display font-bold text-strong">
+          Her Parça Kendi Rafında
+        </h2>
+        <p className="max-w-[58ch] text-read text-body">
+          {COMPONENT_GROUPS.length} grup, kenar çubuğundaki sırayla; sayı o raftaki bileşen sayfası. Karta bas: grubun ilk bileşeni açılır.
+        </p>
+      </Reveal>
+      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {COMPONENT_GROUPS.map((group, i) => {
+          const list = under("Bileşenler", group);
+          const names = list.map((c) => c.path[2]).filter(Boolean);
+          return (
+            <li key={group}>
+              <RevealItem index={i % 6} className="h-full">
+                <a
+                  href={to(firstOf(["Bileşenler", group]) ?? "start--overview")}
+                  target="_top"
+                  className={cn("group grid h-full content-start gap-3 rounded-2xl bg-surface p-4 transition-[background-color] duration-200 hover:bg-surface-raised", FOCUS)}
+                >
+                  <span className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                    <span className="min-w-0">
+                      <span className="block truncate font-display text-title font-semibold text-strong">{group}</span>
+                      <span className="block truncate text-small text-muted">{GROUP_NOTES[group]}</span>
+                    </span>
+                    <span className="font-display text-title font-semibold text-strong tabular-nums">{list.length}</span>
+                  </span>
+                  <span className="line-clamp-2 text-small text-body">
+                    {names.slice(0, 5).join(" · ")}
+                    {names.length > 5 ? ` ve ${names.length - 5} daha` : ""}
+                  </span>
+                </a>
+              </RevealItem>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 
@@ -383,7 +545,8 @@ function DoorCard({
 }
 
 function Doors() {
-  const groups = GROUPS.map((g) => ({ label: g.title, value: inGroup(g.id).length }))
+  // Aynı sayılar "Her Parça Kendi Rafında" kartlarındakiyle: kenar çubuğunun grupları.
+  const groups = COMPONENT_GROUPS.map((g) => ({ label: g, value: under("Bileşenler", g).length }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 4);
   const patterns = ["noktalar", "izgara", "halkalar"].map((key) => PATTERN_PRESETS.find((p) => p.id === key)).filter((p) => p !== undefined);
@@ -392,9 +555,9 @@ function Doors() {
     <section aria-labelledby="kapak-kapilar" className="grid gap-8">
       <Reveal className="grid gap-2">
         <h2 id="kapak-kapilar" className="font-display text-display font-bold text-strong">
-          Nereden Başlamalı
+          Dört Sayfada Katalog
         </h2>
-        <p className="max-w-[58ch] text-read text-body">Dört kapı. Kuralları oku, bütün kütüphaneyi tek sayfada gör, bir zemin seç ya da aynı parçalarla kurulmuş uygulamayı dolaş.</p>
+        <p className="max-w-[58ch] text-read text-body">Acelen varsa buradan: kuralları oku, bütün kütüphaneyi tek sayfada gör, bir zemin seç ya da aynı parçalarla kurulmuş uygulamayı dolaş.</p>
       </Reveal>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12">
         <DoorCard index={0} id="showcase--all-in-one" mark="01" title="Her Şey Bir Arada" note={`${TOTAL} bileşen tek sayfada, tek kurgunun verisiyle.`} className="lg:col-span-7">
@@ -412,7 +575,7 @@ function Doors() {
             </ul>
           </div>
         </DoorCard>
-        <DoorCard index={2} id="pattern-library--overview" mark="03" title="Desen Kütüphanesi" note={`${PATTERN_PRESETS.length} token'lı zemin; önizle, kopyala.`} className="lg:col-span-5">
+        <DoorCard index={2} id="pattern-library--overview" mark="03" title="Desenler" note={`${PATTERN_PRESETS.length} token'lı zemin; önizle, kopyala.`} className="lg:col-span-5">
           <div className="grid h-full grid-cols-3 gap-1.5 p-1.5">
             {samples.map((s) => (
               <div key={s.id} className="relative isolate overflow-hidden rounded-lg bg-surface">
@@ -421,7 +584,7 @@ function Doors() {
             ))}
           </div>
         </DoorCard>
-        <DoorCard index={3} id="demo-app--overview" mark="04" title="Pusula Paneli" note="Aynı parçalarla kurulmuş bir uygulama." className="lg:col-span-7">
+        <DoorCard index={3} id="demo-app--overview" mark="04" title="Pusula" note="Aynı parçalarla kurulmuş bir uygulama." className="lg:col-span-7">
           <div className="relative h-full bg-surface-sunken">
             <AppWindow title="Gelen Kutusu" icon={<Inbox className="size-3.5" />} focused className="absolute inset-x-6 top-6 h-64">
               <ul className="grid grid-cols-1 text-small">
@@ -528,10 +691,10 @@ export const Overview: Story = {
       <Frame>
         <div className="grid gap-10 lg:gap-14">
           <Masthead />
-          <Hero palette={palette} theme={theme} onTheme={setTheme} />
+          <Hero />
         </div>
-        <PaletteChips palette={palette} theme={theme} onPick={(value) => updateGlobals({ palette: value })} />
-        <Figures />
+        <ComponentGroups />
+        <PaletteChips palette={palette} theme={theme} onPick={(value) => updateGlobals({ palette: value })} onTheme={setTheme} />
         <Doors />
         <Install />
         <Colophon />

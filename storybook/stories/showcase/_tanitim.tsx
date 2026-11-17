@@ -1,20 +1,20 @@
 "use client";
 
 import "./pusula.css";
-import { CalendarDays, Compass, Inbox, ListChecks, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, Compass, Inbox, ListChecks, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Reveal, RevealItem } from "@/components/motion/Reveal";
 import { AppWindow, WindowStrip } from "@/components/ui/app-window";
 import { ArcCarousel } from "@/components/ui/arc-carousel";
 import { BlurIn } from "@/components/ui/blur-in";
 import { BookCover } from "@/components/ui/book-cover";
-import { CornerMascot } from "@/components/ui/corner-mascot";
 import { Dock } from "@/components/ui/dock";
 import { DockingNav } from "@/components/ui/docking-nav";
 import { DriftColumns } from "@/components/ui/drift-columns";
+import { CornerMascot } from "@/components/ui/corner-mascot";
 import { HandCallout } from "@/components/ui/hand-callout";
 import { Kbd } from "@/components/ui/kbd";
-import { LiquidGlass, LiquidGlassButton } from "@/components/ui/liquid-glass";
+import { LiquidGlassLink } from "@/components/ui/liquid-glass";
 import { MarkAnnotate } from "@/components/ui/mark-annotate";
 import { MeshGradient } from "@/components/ui/mesh-gradient";
 import { NoticeDeck } from "@/components/ui/notice-deck";
@@ -85,30 +85,53 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
       />
 
       <main>
-        <section className="relative isolate overflow-hidden px-4 pt-36 pb-24 text-center sm:pt-44 sm:pb-32">
-          {/* Görsel zemin: tek renk ailesinin lekeleri. Gerçek projede çizim ya da fotoğraf. */}
-          <div aria-hidden className="absolute inset-0 -z-10 bg-primary">
-            <div className="absolute -top-24 left-[8%] size-96 rounded-full bg-primary-hover opacity-90 blur-3xl" />
-            <div className="absolute top-32 right-[4%] size-[26rem] rounded-full bg-primary-soft opacity-50 blur-3xl" />
-            <div className="absolute bottom-[-6rem] left-1/3 size-80 rounded-full bg-brand opacity-70 blur-3xl" />
+        <section className="relative isolate overflow-hidden px-4 pt-32 pb-24 text-center sm:pt-36 sm:pb-32">
+          {/* Görsel zemin: paletin koyulaştırılmış birincil tonu (pusula.css →
+              .pusula-hero; her palette, iki temada beyaz metin ≥ 5,5:1) ve üstünde
+              aynı ailenin yumuşak lekeleri. Eskiden `bg-primary`ti: koyu temada açık
+              camgöbeğine dönüyor, beyaz başlık ve mavi düğmeler zeminde kayboluyordu. */}
+          <div aria-hidden className="pusula-hero absolute inset-0 -z-10">
+            <div className="absolute -top-32 left-[6%] size-[28rem] rounded-full bg-primary-soft opacity-20 blur-3xl" />
+            <div className="absolute top-40 right-[2%] size-[24rem] rounded-full bg-primary opacity-20 blur-3xl" />
           </div>
+          {/* Duyuru hapı: renkli zeminde cam, BASILIR (demoya iner). Eski plan
+              hapı düğme gibi görünüp hiçbir şey yapmıyordu. */}
+          <LiquidGlassLink tone="media" href="#tanitim-demo" className="mb-8 min-h-9 gap-2 px-4 text-small">
+            <span aria-hidden className="size-1.5 rounded-full bg-success" />
+            Yeni: Pencere Şeridi
+            <ArrowRight aria-hidden className="size-3.5" />
+          </LiquidGlassLink>
           <BlurIn as="h1" className="mx-auto max-w-4xl font-display text-[clamp(2.5rem,7vw,5.25rem)] leading-[1.05] font-semibold tracking-tight text-on-brand text-balance">
             Talepleri <em className="font-[family-name:var(--font-serif-face),serif] font-normal">Kaybetmeden</em> Yanıtla
           </BlurIn>
           <p className="mx-auto mt-6 max-w-xl text-lead text-on-brand/85">
             Destek, satış, görev ve takvim tek şeritte. Yeni talep açık işin yanına gelir; hiçbir pencere küçülmez.
           </p>
+          {/* Renkli zeminde birincil eylem BEYAZ hap (yazısı zeminin tonunda):
+              mavi üstünde mavi düğme kayboluyordu. İkincil eylem çizgili hayalet;
+              eskiden yanında düğme gibi görünen ama basılmayan plan hapı vardı. */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <LiquidGlassButton tone="media" onClick={onSignIn} className="h-12 px-7">
-              Ücretsiz Dene
-            </LiquidGlassButton>
-            <LiquidGlass tone="media">{WORKSPACE.plan} · {WORKSPACE.seats.total} Koltuk</LiquidGlass>
+            <button
+              type="button"
+              onClick={onSignIn}
+              className="inline-flex min-h-12 items-center rounded-full bg-on-brand px-7 text-base font-semibold shadow-floating transition-[translate,scale,box-shadow] duration-200 hover:-translate-y-px active:scale-[0.98] motion-reduce:hover:translate-y-0"
+            >
+              <span className="pusula-hero-ink">Ücretsiz Dene</span>
+            </button>
+            <a
+              href="#tanitim-demo"
+              className="inline-flex min-h-12 items-center rounded-full px-6 text-base font-medium text-on-brand ring-1 ring-inset ring-on-brand/40 transition-colors duration-200 hover:bg-on-brand/10"
+            >
+              Demoyu Gör
+            </a>
           </div>
           <TrustLine tone="media" className="mt-5" items={TRUST} />
         </section>
 
         <section id="tanitim-demo" aria-labelledby="tanitim-demo-baslik" className="mx-auto max-w-6xl scroll-mt-24 px-4 pt-20 pb-36 sm:px-6 sm:pt-28">
-          <Reveal>
+          {/* Duyuru destesi bölüm başlığının yanında: eskiden ekranın sol altına
+              sabitti ve kaydırınca başlıkların, kartların üstüne biniyordu. */}
+          <Reveal className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
             <div className="max-w-2xl">
               <p className="font-mono text-small text-primary-ink">Canlı Demo</p>
               <h2 id="tanitim-demo-baslik" className="mt-3 font-display text-heading font-bold text-strong sm:text-display">
@@ -118,6 +141,15 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
                 Alttaki raftan bir uygulama seç: şeritte onun penceresi odağa gelir.
               </p>
             </div>
+            <NoticeDeck
+            className="w-full max-w-sm shrink-0"
+            label="Pusula duyuruları"
+            items={[
+              { id: "surum", eyebrow: "Yeni Sürüm", title: "Pusula 3.1 yayında", body: "Pencere şeridi ve kısayol paleti." },
+              { id: "canli", eyebrow: "Canlı Yayın", title: "Cuma 20.00'de soru-cevap" },
+              { id: "duvar", eyebrow: "Duvar Kâğıtları", title: `${WALLPAPER_SCENES.length} yeni sahne indirilebilir` },
+            ]}
+          />
           </Reveal>
 
           <Reveal delay={0.08} className="relative">
@@ -296,15 +328,6 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
         <p>Örnek ürün: Tanıtım bileşenleriyle kurulmuş bir açılış sayfası.</p>
       </footer>
 
-      <NoticeDeck
-        className="fixed bottom-4 left-4 z-30 hidden sm:block"
-        label="Pusula duyuruları"
-        items={[
-          { id: "surum", eyebrow: "Yeni Sürüm", title: "Pusula 3.1 yayında", body: "Pencere şeridi ve kısayol paleti." },
-          { id: "canli", eyebrow: "Canlı Yayın", title: "Cuma 20.00'de soru-cevap" },
-          { id: "duvar", eyebrow: "Duvar Kâğıtları", title: `${WALLPAPER_SCENES.length} yeni sahne indirilebilir` },
-        ]}
-      />
       <CornerMascot messages={["Merhaba!", `${OPEN_TICKETS.length} talep yanıt bekliyor.`, "Demoyu denedin mi?"]} />
     </div>
   );

@@ -150,7 +150,7 @@ export function Hero({ covered, total, pusulaHref }: { covered: number; total: n
             Bileşenleri Gez <ArrowRight />
           </a>
           <a href={pusulaHref} target="_top" className={buttonClass({ variant: "secondary", size: "lg" })}>
-            Pusula Paneli'ni Aç
+            Pusula'yı Aç
           </a>
         </m.div>
       </div>

@@ -6,7 +6,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { settle } from "./_a11y";
 
 const meta = {
-  title: "Bileşenler/Geri Bildirim/Ayırıcı",
+  title: "Bileşenler/Temel/Ayırıcı",
   id: "divider",
   component: Divider,
   tags: ["autodocs"],

@@ -4,7 +4,7 @@ import { Announcement, DismissibleAnnouncement } from "@/components/ui/announcem
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Gezinme/Duyuru",
+  title: "Bileşenler/Geri Bildirim/Duyuru",
   id: "announcement",
   component: Announcement,
   tags: ["autodocs"],

@@ -224,7 +224,7 @@ function Install() {
       </ol>
       <ul className="mt-4 grid gap-4 md:grid-cols-3">
         {[
-          { href: PUSULA, icon: <Compass />, t: "Pusula Paneli'ni Aç", d: `Aynı ${TOTAL} bileşen, gezilebilen gerçek bir uygulamada.` },
+          { href: PUSULA, icon: <Compass />, t: "Pusula'yı Aç", d: `Aynı ${TOTAL} bileşen, gezilebilen gerçek bir uygulamada.` },
           { href: GALLERY, icon: <LayoutGrid />, t: "Vitrine Geç", d: "Grup grup vitrin sayfaları, her bileşen ayrı kuyuda." },
           { href: GETTING_STARTED, icon: <Rocket />, t: "Başlangıç", d: "Board dilinin dört ilkesi ve token sayfaları." },
         ].map((l) => (
@@ -396,7 +396,7 @@ function AllInOnePage() {
 /* --- Hikâye --------------------------------------------------------------- */
 
 const meta = {
-  title: "Örnek Tasarım/Her Şey Bir Arada",
+  title: "Her Şey Bir Arada",
   id: "showcase",
   component: AllInOnePage,
   // Tam ekran vitrin sayfası: otomatik belge sayfası işe yaramaz ve kök adreste

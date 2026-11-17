@@ -43,15 +43,19 @@ const preview: Preview = {
     // Belge kabı temayı izler; `lang: "tr"` Türkçe tireleme ve İ/ı dönüşümü için.
     docs: { page: DocsPageWithInstall, container: ThemedDocsContainer, lang: "tr" },
     options: {
-      // Vitrin yüzü en üstte: önce bir arada görülen örnek tasarım ve vitrin,
-      // sonra başlangıç, token'lar ve parça parça katalog.
+      // Üç bölüm (manager-head.html'deki etiketlerle aynı):
+      //   Başla      · Kapak, Başlangıç, Vitrin, Her Şey Bir Arada
+      //   Kütüphane  · Tema, Bileşenler, Grafikler, Bloklar, Desenler
+      //   Uygulamada · Pusula, Ekranlar, Arşiv
+      // Her öğe kendi adıyla üst düzeyde: eskiden "Örnek Tasarım" klasörü
+      // uygulamayı, deseni ve kapsam tablosunu aynı belirsiz adın altına saklıyordu.
       storySort: {
         order: [
-          // Üç bölüm (manager-head.html'deki etiketlerle aynı): Başla · Kütüphane · Uygulamada.
           "Kapak",
           "Başlangıç",
           "Vitrin",
           ["Genel Bakış", "Temel Kütüphane", "Form Girişleri", "Katman ve Geri Bildirim", "Grafikler", "Bloklar"],
+          "Her Şey Bir Arada",
           "Tema",
           ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"],
           "Bileşenler",
@@ -59,9 +63,12 @@ const preview: Preview = {
           ["Temel", "Düğme ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"],
           "Grafikler",
           "Bloklar",
+          "Desenler",
+          "Pusula",
           "Ekranlar",
-          "Örnek Tasarım",
-          ["Pusula Paneli", "Her Şey Bir Arada", "Desen Kütüphanesi", "Bileşen Kapsamı", "Referans Arşivi"],
+          ["Uygulama", "Açılış Sayfası"],
+          "Arşiv",
+          ["Bileşen Kapsamı", "Referanslar"],
         ],
       },
     },

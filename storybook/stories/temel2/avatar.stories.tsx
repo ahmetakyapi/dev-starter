@@ -4,7 +4,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { TEAM } from "./_data";
 
 const meta = {
-  title: "Bileşenler/Seçim/Avatar",
+  title: "Bileşenler/Temel/Avatar",
   id: "avatar",
   component: Avatar,
   tags: ["autodocs"],
