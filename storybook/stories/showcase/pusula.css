@@ -26,6 +26,26 @@
 }
 
 :root[data-theme="dark"] [data-product="pusula"] {
+  /* 3. KOYU KATMAN MERDİVENİ (Solid Glass referansı, 2026-11). Koyu temada
+     gölge görünmez; derinliği açılan gri basamaklar kurar. Ölçülen hedef:
+     sayfa #0d0d0d → kart #1d1d1d → kart içi #313131, kenar #2b2b2b.
+     Bizde dört basamak: kabuk (sayfa rengi) → içerik karosu (--pusula-tile)
+     → kart (--overlay) → kart içi panel, lejant çipi, ölçü karosu
+     (--surface, beyazın %6'sı). Kenar çizgisi koyu zeminde erimesin diye
+     %8'den %10'a. Giriş alanları ve sekme yuvaları BİLEREK gömük kalır
+     (--surface-sunken): açılırsa seçili sekmenin karosu yuvadan koyu
+     düşer, seçim tersine okunur. Açık tema değişmez. */
+  --overlay: #1c1c1e;
+  --pusula-tile: #121214;
+  --surface: rgb(255 255 255 / 0.06);
+  --surface-raised: rgb(255 255 255 / 0.1);
+  --surface-solid: color-mix(in srgb, var(--overlay) 93%, var(--text-strong));
+  --line: rgb(255 255 255 / 0.1);
+  --line-soft: rgb(255 255 255 / 0.065);
+  /* Kart içi zemin açılınca genel soluk metin (#8a8a8a) 4,21:1'e düşüyordu
+     (küçük metinde AA 4,5). #949496: karo 6,18 · kart 5,62 · kart içi 4,80;
+     gövde metninden (#a1a1a1) hâlâ bir ton soluk. */
+  --text-muted: #949496;
   --chart-2: color-mix(in oklab, var(--primary) 45%, var(--page-bg));
   --chart-3: color-mix(in oklab, var(--text-strong) 42%, var(--page-bg));
   --chart-4: #fbbf24;
@@ -60,3 +80,9 @@
   .pusula-strip > *:nth-child(n + 3) { border-top: 0; }
   .pusula-strip > * + * { border-left: 1px solid var(--line-soft); }
 }
+
+/* Koyu temada kabuk sayfa renginde, içerik karosu bir basamak yukarıda;
+   kartlar (--overlay) karonun üstünde ayrışır. Kabuğun `bg-surface`ı
+   Pusula'da açıldığı için çerçeve burada sayfa rengine sabitlenir. */
+:root[data-theme="dark"] .pusula-shell { background-color: var(--page-bg); }
+:root[data-theme="dark"] .pusula-shell #icerik { background-color: var(--pusula-tile); }

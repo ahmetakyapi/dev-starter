@@ -7,6 +7,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Pusula koyu tema: katman merdiveni — 2026-11-17
+
+- Kabuk → içerik karosu → kart → kart içi dört basamak (`#0c0c0d` →
+  `#121214` → `#1c1c1e` → `#29292b`), kenar çizgisi %10; yalnız Pusula.
+- Soluk metin `#949496` (kart içinde 4,80:1; önceki değer 4,21:1 ile AA
+  altındaydı).
+
 ### Bildirimler sayfası ve kanal tablosu — 2026-11-16
 
 - **Yeni bileşen (136 → 137, kit 103 → 104):** `channel-matrix`, olay ×

@@ -1190,3 +1190,27 @@ rozeti canlı okunmamış sayısını gösterir, işlem bildirimleri ("Randevu
 Oluşturuldu") da akışa düşer, ertelenenler sayfa değişince kaybolmaz. Eski
 `notifications()` örnek verisi kaldırıldı. Play testi "Tümünü Okundu Say"
 sonrası zilin sıfırlandığını denetliyor.
+
+## Pusula Koyu Tema — Katman Merdiveni (2026-11-17)
+
+**Karar:** Pusula'nın koyu temasına Solid Glass referansındaki katman
+merdiveni alındı (ölçülen hedef: sayfa #0d0d0d → kart #1d1d1d → kart içi
+#313131, kenar #2b2b2b). Yalnız ürün kökünde (`pusula.css`,
+`[data-product="pusula"]`); kataloğun genel koyu teması değişmedi.
+
+- Dört basamak: kabuk `#0c0c0d` (sayfa rengi) → içerik karosu `#121214`
+  (`--pusula-tile`) → kart `#1c1c1e` (`--overlay`) → kart içi `#29292b`
+  (`--surface`, beyazın %6'sı). Önceden kart ile içerik karosu aynı renkti,
+  kartlar yalnız çizgiyle ayrışıyordu.
+- Kenar çizgisi %8 → %10 beyaz (koyu zeminde erimesin).
+- **Soluk metin `#8a8a8a` → `#949496`:** açılan kart içi zeminde 4,21:1'e
+  düşüyordu (küçük metinde AA 4,5). Yeni değer karo 6,18 · kart 5,62 ·
+  kart içi 4,80.
+- Giriş alanları ve sekme yuvaları bilerek gömük kaldı (`--surface-sunken`):
+  açılırsa seçili sekmenin karosu yuvadan koyu düşer, seçim tersine okunur.
+- Referanstan ALINMAYAN: tamamen gri grafik (vurgu bilgisini siler),
+  çok büyük köşe yarıçapları (yoğun ekranda yer kaplar), eşik altı soluk metin.
+
+*Ne zaman değişir:* bu merdiven bir projede daha tutarsa genel koyu
+temaya (`globals.css` → `--overlay`, `--surface`, `--line`) taşınır; o
+zaman bütün kataloğun kontrastı yeniden ölçülür.
