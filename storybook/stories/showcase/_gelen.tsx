@@ -720,7 +720,8 @@ export function GelenPage() {
                     status: (
                       <>
                         <Badge tone={STATUS_TONE[t.status]} dot>{t.status}</Badge>
-                        <Badge tone={PRIORITY_TONE[t.priority]} variant={t.priority === "Düşük" ? "outline" : "soft"}>
+                        {/* Sabit genişlik: sağa yaslı grupta öncelik değişse de durum rozeti alt alta aynı hizada (hizalama kuralı). */}
+                        <Badge tone={PRIORITY_TONE[t.priority]} variant={t.priority === "Düşük" ? "outline" : "soft"} className="min-w-18 justify-center">
                           {t.priority}
                         </Badge>
                       </>

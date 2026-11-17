@@ -184,6 +184,29 @@ bırak — ama gerekçe "böyle daha güzel" değil, "şu sorunu şöyle çözü
 
 ---
 
+## Hizalama Kuralı — Alt Alta Tekrar Eden Satırlar
+
+Liste, tablo, kart yığını gibi **alt alta tekrar eden satırlarda aynı türden
+öğe her satırda aynı sütunda durur**: rozet, durum hapı, çip, sayı, tarih,
+eylem düğmesi. Göz sütunu bir kez bulur, satır satır yeniden aramaz.
+(Kaynak: Pusula gecikme kartında "+4 / +2 / +1 Gün" rozetleri müşteri
+adının ardından geldiği için her satırda başka yerdeydi; sahibi istedi,
+2026-11-17.)
+
+- **Değişken uzunluklu metnin ARDINA rozet koyma.** Rozet kendi sütununa
+  (`grid grid-cols-[minmax(0,1fr)_auto]`) ya da sabit genişlikli bir kaba
+  girer; ad kısalır (`truncate`), rozet yerinde kalır.
+- **Yan yana iki etiket varsa önündekinin genişliği sabittir.** "Yüksek /
+  Orta / Düşük" gibi değeri değişen ilk etiket `min-w-*` alır; arkasındaki
+  (son tarih, durum) her satırda aynı hizadan başlar. Sağa yaslı grupta da
+  aynısı: en sağdaki sabit genişlikte.
+- **Sayılar sağa yaslı ve `tabular-nums`;** boş değer "—", satırı kaydırmaz.
+- **İstisna, serbest etiket listesi:** aynı biçimde çipler art arda
+  ("Satış, Numune, Teklif") metin gibi akar; yalnız ilk çip hizalıdır.
+- **Denetim:** `cd storybook && npm run check:align` (çalışan Storybook'a
+  karşı, Pusula sayfaları × 1440 / 1024 / 390 px; sol ve sağ kenar 3 px'ten
+  fazla oynarsa hata). Görsel değişiklikten sonra koşulur.
+
 ## İstisnalar
 
 Bu durumlarda ihlal sayılmaz:

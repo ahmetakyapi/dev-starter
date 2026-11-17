@@ -1236,3 +1236,21 @@ görünümlü iş haftası; ikisi tek kartta.
 - **İş haftası (`weekdaysOnly`):** hafta sonu boş; beş sütun kartları
   okunur genişliğe çıkarır. Izgara 09–17, saat 112 px.
 - Emoji yerine tür ikonu (lucide; Görüşme, Teslimat, Numune, İç Toplantı).
+
+## Hizalama Kuralı (2026-11-17)
+
+**Karar:** Alt alta tekrar eden satırlarda aynı türden öğe (rozet, durum,
+çip, sayı, eylem) her satırda aynı sütunda durur; kural
+`rules/design-tokens.md` → "Hizalama Kuralı", ölçüm
+`storybook/scripts/check-alignment.mjs` (`npm run check:align`).
+
+İlk taramanın bulduğu ve düzeltilenler: Pano gecikme kartı "+N Gün"
+(34 px kayma → rozet kendi sütununda), Görevler son tarih çipi (16 px →
+öncelik çipi `min-w-18`, `task-list.tsx`), Gelen Kutusu telefon kart listesi
+durum rozeti (59 px → öncelik rozeti `min-w-18`).
+
+*Ölçüm dersleri:* (1) Denetim ilk sürümde sayfa hiç çizilmediğinde de
+"hizalı" diyordu; artık h1 yoksa HATA. (2) Sınıf adına göre gruplamak farklı
+sütunlardaki aynı renkli rozetleri karıştırıyordu; gruplama yapısal yola
+göre. (3) Serbest etiket akışı (aynı biçimde çipler art arda) muaf. Betik
+eski hatayı geri koyunca yakaladığı doğrulandı.

@@ -86,3 +86,12 @@ Canlı projelerin durumu: `knowledge/live-projects-audit.md`.
 Rehber, bileşen, agent, komut ya da mistakes kaydı eklenince/silinince:
 `npm run readme:assets` — README istatistik görselleri bu sayıları basar;
 unutulursa CI `verify:readme`de kırılır (health-check de yakalar).
+
+## Hizalama Denetimi
+
+`cd storybook && npm run check:align [-- --widths 1440,390 --url <storybook>]`:
+Pusula sayfalarında alt alta tekrar eden satırlardaki rozet/çip/hapların
+aynı sütunda olduğunu ölçer (`rules/design-tokens.md` → Hizalama Kuralı).
+Çalışan Storybook ve Playwright ister (ağ değil, tarayıcı); sayfa
+çizilmezse HATA verir, sessizce geçmez. Görsel değişiklikten sonra koşulur.
+

@@ -216,8 +216,9 @@ export function TaskList({
                           {task.title}
                         </label>
                         <p id={`${cb}-meta`} className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-micro">
+                          {/* min-w-18: "Yüksek" / "Orta" / "Düşük" aynı genişlikte; arkasındaki son tarih çipi alt alta satırlarda aynı hizadan başlar (hizalama kuralı). */}
                           {task.priority ? (
-                            <span className={cn("inline-flex h-5 items-center gap-1 rounded-sm px-1.5 font-medium", task.done ? "bg-surface-raised text-body" : PRIORITY[task.priority].className)}>
+                            <span className={cn("inline-flex h-5 min-w-18 items-center gap-1 rounded-sm px-1.5 font-medium", task.done ? "bg-surface-raised text-body" : PRIORITY[task.priority].className)}>
                               <Flag aria-hidden className="size-3" />
                               <span className="sr-only">Öncelik: </span>
                               {PRIORITY[task.priority].label}

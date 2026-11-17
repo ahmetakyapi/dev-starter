@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Hizalama kuralı ve denetimi — 2026-11-17
+
+- **Kural** (`rules/design-tokens.md`): alt alta tekrar eden satırlarda aynı
+  türden öğe aynı sütunda; değişken metnin ardına rozet konmaz.
+- **Denetim:** `storybook` → `npm run check:align` (Pusula × 1440/1024/390).
+- **Düzeltilen:** Pano gecikme rozetleri, `task-list` öncelik çipi
+  (`min-w-18`), Gelen Kutusu telefon listesi öncelik rozeti.
+
 ### Takvim: kart görünümü ve Bugün paneli — 2026-11-17
 
 - **`week-calendar` → `variant="card"`** (geriye uyumlu): ikonlu gri kart,

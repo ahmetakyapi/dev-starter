@@ -84,10 +84,11 @@ export function DelayCard() {
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <Avatar name={c.name} />
-                  <div className="min-w-0">
-                    <p className="flex items-center gap-2">
+                  <div className="min-w-0 flex-1">
+                    {/* Rozet adın ardından değil KENDİ SÜTUNUNDA: ad uzunluğu değişse de "+N Gün" alt alta aynı hizada (hizalama kuralı). */}
+                    <p className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
                       <span className="truncate text-base font-semibold text-strong">{c.name}</span>
-                      <span className="shrink-0 rounded-full bg-warning-fill px-2 py-0.5 text-micro font-bold text-on-warning-fill tabular-nums">
+                      <span className="rounded-full bg-warning-fill px-2 py-0.5 text-micro font-bold text-on-warning-fill tabular-nums">
                         +{late} Gün
                       </span>
                     </p>
