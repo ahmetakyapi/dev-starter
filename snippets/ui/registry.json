@@ -466,7 +466,7 @@
       "name": "chat-composer",
       "title": "Mesaj Kutusu",
       "category": "Bloklar",
-      "description": "Sohbet giriş kutusu",
+      "description": "Sohbet giriş kutusu; `look=\"halo\"`: boş başlangıç ekranında hale çerçeveli kutu",
       "file": "snippets/ui/chat-composer.tsx",
       "client": true,
       "storyId": "chat-composer",
@@ -787,7 +787,7 @@
       "name": "date-calendar",
       "title": "Takvim",
       "category": "Form Girişleri",
-      "description": "Satır içi ay takvimi; tek gün ya da aralık",
+      "description": "Satır içi ay takvimi; tek gün ya da aralık; `markedDates` ile etkinlik noktaları",
       "file": "snippets/ui/date-calendar.tsx",
       "client": true,
       "storyId": "date-calendar",
@@ -913,6 +913,19 @@
         "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
+      "palettes": false
+    },
+    {
+      "name": "dissolve",
+      "title": "Dağılarak Çıkış",
+      "category": "Tanıtım",
+      "description": "Onaylanmış kaldırmada öğe tanecik tanecik dağılır (sessize alınan bildirim, arşivlenen satır); `dissolveOut(el)` / `useDissolve()`",
+      "file": "snippets/ui/dissolve.tsx",
+      "client": true,
+      "storyId": "dissolve",
+      "registryDependencies": [],
+      "templateFiles": [],
+      "npm": {},
       "palettes": false
     },
     {
@@ -1732,6 +1745,25 @@
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "quick-poll",
+      "title": "Hızlı Oylama",
+      "category": "Form ve Gezinme",
+      "description": "Ekip içi küçük karar tek dokunuşla; sonuçlar oy verince görünür, kendi seçimine yeniden basmak geri alır",
+      "file": "snippets/ui/quick-poll.tsx",
+      "client": true,
+      "storyId": "quick-poll",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

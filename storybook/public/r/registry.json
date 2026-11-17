@@ -624,7 +624,7 @@
       "name": "chat-composer",
       "type": "registry:ui",
       "title": "Mesaj Kutusu",
-      "description": "Sohbet giriş kutusu",
+      "description": "Sohbet giriş kutusu; `look=\"halo\"`: boş başlangıç ekranında hale çerçeveli kutu",
       "dependencies": [
         "lucide-react@^1.51.0",
         "motion@^13.5.1"
@@ -1041,7 +1041,7 @@
       "name": "date-calendar",
       "type": "registry:ui",
       "title": "Takvim",
-      "description": "Satır içi ay takvimi; tek gün ya da aralık",
+      "description": "Satır içi ay takvimi; tek gün ya da aralık; `markedDates` ile etkinlik noktaları",
       "dependencies": [
         "lucide-react@^1.51.0",
         "motion@^13.5.1"
@@ -1194,6 +1194,26 @@
       "files": [
         {
           "path": "snippets/ui/digit-roll.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dissolve",
+      "type": "registry:ui",
+      "title": "Dağılarak Çıkış",
+      "description": "Onaylanmış kaldırmada öğe tanecik tanecik dağılır (sessize alınan bildirim, arşivlenen satır); `dissolveOut(el)` / `useDissolve()`",
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "dissolve",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/dissolve.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2322,6 +2342,32 @@
       "files": [
         {
           "path": "snippets/ui/progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "quick-poll",
+      "type": "registry:ui",
+      "title": "Hızlı Oylama",
+      "description": "Ekip içi küçük karar tek dokunuşla; sonuçlar oy verince görünür, kendi seçimine yeniden basmak geri alır",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "quick-poll",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/quick-poll.tsx",
           "type": "registry:ui"
         }
       ]

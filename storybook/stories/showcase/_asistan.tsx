@@ -30,7 +30,7 @@ import {
   tl,
   TODAY,
 } from "./_data";
-import { PageBar, href, useApp } from "./_ui";
+import { PageBar, href } from "./_ui";
 
 const PLAN_LABELS = PLAN_STEPS.map((s) => s.title);
 const STEP_MS = 2400;
@@ -295,6 +295,7 @@ export function AsistanPage() {
         </div>
         <div className="sticky bottom-0 mx-auto w-full max-w-3xl px-3 pb-3 sm:px-4 sm:pb-4">
           <ChatComposer
+            look="halo"
             onSend={send}
             onStop={() => {
               if (timer.current) window.clearTimeout(timer.current);

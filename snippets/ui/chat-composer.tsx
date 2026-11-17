@@ -52,6 +52,13 @@ type ChatComposerProps = {
   /** Metin alanının ekran okuyucu adı. */
   label?: string;
   disabled?: boolean;
+  /**
+   * `card` (varsayılan): kıl çizgili beyaz karo. `halo`: karo, vurgunun
+   * yıkanmış renginde bir halenin içinde; odakta hale koyulaşır. Sohbetin
+   * BOŞ başlangıç ekranında, kutu sayfanın tek eylemiyken (x6sense turu,
+   * 2026-11; degrade kenar yerine düz ton: degrade disiplini).
+   */
+  look?: "card" | "halo";
   className?: string;
 };
 
@@ -68,6 +75,7 @@ export function ChatComposer({
   onVoice,
   placeholder = "Bir şey sor ya da görev ver",
   label = "Mesaj",
+  look = "card",
   disabled = false,
   className,
 }: ChatComposerProps) {
@@ -106,12 +114,14 @@ export function ChatComposer({
     if (!streaming) submit();
   }
 
-  return (
+  const halo = look === "halo";
+  const form = (
     <form
       onSubmit={submit}
       className={cn(
         "rounded-xl border border-line bg-overlay p-2 shadow-floating transition-[border-color,box-shadow] focus-within:border-line-focus focus-within:shadow-focus",
-        className,
+        halo && "border-primary/15 shadow-raised focus-within:border-primary/40 focus-within:shadow-raised",
+        !halo && className,
       )}
     >
       <label htmlFor={`${id}-input`} className="sr-only">
@@ -223,5 +233,10 @@ export function ChatComposer({
         </button>
       </div>
     </form>
+  );
+  return halo ? (
+    <div className={cn("rounded-2xl bg-primary-wash p-1.5 ring-1 ring-inset ring-primary/10 transition-[box-shadow] duration-200 focus-within:ring-primary/25", className)}>{form}</div>
+  ) : (
+    form
   );
 }

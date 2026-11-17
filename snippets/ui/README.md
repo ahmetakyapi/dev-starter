@@ -114,6 +114,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `switch.tsx` | Anında etki eden aç/kapa | yerel giriş | Hayır | `role="switch"`, JS'siz form gönderimi; tutamak iki temada izine karşı ≥ 3:1 |
 | `checkbox.tsx` | Onay, çoklu seçim | yerel giriş | Hayır | Etiketin tamamı hedef; `indeterminate` ref ile; tik çizilerek gelir, hareket azaltmada anında |
 | `channel-matrix.tsx` | Olay × kanal tercih tablosu (bildirim, abonelik, izin); sütun başlığı bütün sütunu açar/kapar, kilitli satır | `checkbox` | Evet | Gerçek `<table>` + `caption`/`scope`; her kutu "Olay, Kanal" adını taşır; sütun kutusu üç durumlu (`indeterminate`); olay sütunu yapışkan |
+| `quick-poll.tsx` | Ekip içi küçük karar tek dokunuşla; sonuçlar oy verince görünür, kendi seçimine yeniden basmak geri alır | lucide | Evet | `aria-pressed` düğmeler (geri alınabilir oy); oydan sonra ad sonucu taşır ("yüzde 50, 3 oy"); toplam canlı bölgede |
 | `radio-group.tsx` | 2-6 görünür seçenek | yerel giriş | Hayır | `fieldset` + `legend`, tarayıcı ok gezinmesi; iç nokta 0.4'ten büyür, 0'dan değil |
 | `select.tsx` | 5-15 seçenek, dar yer | Base UI | Evet | Listbox, gizli yerel giriş, etiket bağı |
 | `combobox.tsx` | Çok seçenek, aranır | Base UI | Evet | `locale="tr-TR"` süzgeç, `aria-activedescendant` |
@@ -183,7 +184,7 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `textarea.tsx` | Çok satırlı metin, içeriğe göre büyür | yok | Evet | Sayaç alana bağlı; eşikte sabit cümleli canlı bölge |
 | `tag-input.tsx` | Serbest ya da önerili çoklu etiket | motion, lucide | Evet | Combobox + listbox, `aria-activedescendant`; ekleme ve silme canlı bölgede |
 | `color-picker.tsx` | Kullanıcının kendi rengi (etiket, kategori) | yok | Evet | İki `role="slider"`: alan ve ton; hex alanı; `aria-pressed` hazır renkler |
-| `date-calendar.tsx` | Satır içi ay takvimi; tek gün ya da aralık | motion, lucide | Evet | WAI-ARIA grid; oklar, Home/End, PageUp/PageDown (+Shift); `aria-current="date"` |
+| `date-calendar.tsx` | Satır içi ay takvimi; tek gün ya da aralık; `markedDates` ile etkinlik noktaları | motion, lucide | Evet | WAI-ARIA grid; oklar, Home/End, PageUp/PageDown (+Shift); `aria-current="date"` |
 | `date-picker.tsx` | Formda tarih alanı + açılır takvim | `date-calendar`, `popover` | Evet | Tetikleyicinin adı "etiket + değer"; açılınca odak seçili güne, kapanınca tetikleyiciye |
 | `date-range-presets.tsx` | Liste/rapor süzgecinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile süzme | `date-calendar`, `popover`, lucide | Evet | Tetikleyici adı "etiket + değer"; hazır aralıklar radyo grubu (oklar); bitiş günü seçilince kapanır, odak tetikleyiciye |
 | `time-field.tsx` | 24 saatlik SS:DD | lucide | Evet | İki `role="spinbutton"`; ok, PageUp/PageDown, rakamla yazınca ilerler |
@@ -248,6 +249,7 @@ Sayfası hikâyesi.
 | `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç düğmesi elle geçirir |
 | `mesh-gradient.tsx` | Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co) | yok | Evet | Katman `aria-hidden`; yalnız `transform`, görünümden çıkınca durur, hareket azaltmada hiç oynamaz; kontrastı lekenin en yoğun yerinde ölç |
 | `connection-hero.tsx` | Entegrasyon bağlama penceresinin tepesi: iki uygulama karosu + bağlantı durumunu söyleyen üç nokta, arkada renk zemini | `mesh-gradient` | Evet | `role="img"` + tam cümle ("Pusula ile Kargo, bağlanıyor"); noktalar `aria-hidden`; hareket azaltmada sıralı yanma yok |
+| `dissolve.tsx` | Onaylanmış kaldırmada öğe tanecik tanecik dağılır (sessize alınan bildirim, arşivlenen satır); `dissolveOut(el)` / `useDissolve()` | yok | Evet | Görsel eşlik; sonucu çağıran canlı bölgede söyler; hareket azaltmada 150 ms solma; filtre desteklenmezse solma |
 | `morph-nav.tsx` | Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | Menü rolü yok: `nav` + `aria-expanded`/`aria-controls`; ↓ panele, Esc kapatır ve odak başlığa; kapalı panel `inert`; telefonda gruplar alt alta |
 | `arc-carousel.tsx` | Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | `region` + `aria-roledescription`; ←/→, Home/End, sürükleme, oklar; değişim "3 / 9: Ad" diye okunur; tekerlek dinlenmez, kendiliğinden dönmez |
 
@@ -272,7 +274,7 @@ sohbeti, giriş, ayarlar, palet seçici.
 | `auth-card.tsx` | Giriş/kayıt kartı, sunucu eylemine bağlanır | `spinner`, `next/link` | Evet | Alan hatasında `aria-invalid` + `aria-describedby`, genel hata `role="alert"`, göster/gizle `aria-pressed`, doğru `autoComplete` |
 | `settings-dialog.tsx` | Sayfadan çıkmadan, anında etki eden ayarlar penceresi | `dialog`, `switch`, `select` | Evet | Dikey sekme listesi, oklar, Home/End; paneller `hidden` ile kalır, durum silinmez |
 | `agent-plan.tsx` | Ajanın çok adımlı planının kuşbakışı | lucide | Hayır | `<ol>`, `aria-current="step"`, gizli durum metni, `aria-live="polite"`; `<details>` ile JS'siz daraltma |
-| `chat-composer.tsx` | Sohbet giriş kutusu | motion, `dropdown-menu` | Evet | Gizli etiket + klavye ipucu, IME'ye saygılı Enter, gönder/durdur adları, model menüsü radyo öğeleri |
+| `chat-composer.tsx` | Sohbet giriş kutusu; `look="halo"`: boş başlangıç ekranında hale çerçeveli kutu | motion, `dropdown-menu` | Evet | Gizli etiket + klavye ipucu, IME'ye saygılı Enter, gönder/durdur adları, model menüsü radyo öğeleri |
 | `chat-thread.tsx` | Mesaj akışı, düşünüyor göstergesi, boş durum | motion | Evet | `role="log"`, akarken `aria-busy`, gizli "Sen:"/"Asistan:", düşünüyor `role="status"` |
 
 ## Bilinen Sınırlar

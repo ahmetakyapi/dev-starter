@@ -312,6 +312,8 @@ function TodayPanel({
     { id: "plansiz", label: "Planlanmamış", match: (t) => !t.due },
   ];
   const open = todos.filter((t) => !t.done).length;
+  // Ay takviminde etkinlik günleri (Pusula EVENTS: takvimle aynı kayıt).
+  const markedDays = new Set(EVENTS.map((e) => dayKey(e.date)));
 
   const yapilacak = (
     <div className="grid gap-1 pt-3">
@@ -384,7 +386,14 @@ function TodayPanel({
         </h2>
         <p className="mt-0.5 text-small text-muted">{longDate.format(TODAY)}</p>
       </div>
-      <DateCalendar mode="range" label="Gösterilen Aralık" value={range} onValueChange={(r) => setRange(r)} defaultMonth={TODAY} />
+      <DateCalendar
+        mode="range"
+        label="Gösterilen Aralık"
+        value={range}
+        onValueChange={(r) => setRange(r)}
+        defaultMonth={TODAY}
+        markedDates={(d) => markedDays.has(dayKey(d))}
+      />
       <Tabs
         aria-label="Bugün Paneli"
         value={tab}

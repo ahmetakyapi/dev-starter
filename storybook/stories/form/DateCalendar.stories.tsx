@@ -115,6 +115,26 @@ export const DisabledDays: Story = {
   },
 };
 
+/** Etkinlikli günler: 3, 4, 10, 17, 24 Kasım. */
+const BUSY = new Set([3, 4, 10, 17, 24]);
+
+export const MarkedDays: Story = {
+  name: "Etkinlik Noktaları",
+  parameters: { docs: { description: { story: "`markedDates`: etkinlik olan günlerin altında soluk nokta; ekran okuyucu \"…, etkinlik var\" der. Bugünün noktası vurgu renginde kalır." } } },
+  render: () => (
+    <Frame width="sm">
+      <Card>
+        <DateCalendar label="Randevu Günü" defaultMonth={NOV(1)} markedDates={(d) => d.getMonth() === 10 && BUSY.has(d.getDate())} />
+      </Card>
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: `${dayLabel.format(NOV(10))}, etkinlik var` })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: dayLabel.format(NOV(11)) })).toBeInTheDocument();
+  },
+};
+
 export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: { layout: "padded" },

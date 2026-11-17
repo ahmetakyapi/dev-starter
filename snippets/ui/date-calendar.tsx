@@ -27,6 +27,8 @@ import { cn } from "@/lib/utils";
  * haftanın başı/sonu, PageUp/PageDown ay, Shift+PageUp/PageDown yıl,
  * Enter/Space seç. Tek sekme durağı (gezici tabindex); odak ayı aşarsa ay
  * döner. Ay başlığı canlı bölge: önceki/sonraki düğmesi ayı söyletir.
+ * Etkinlik günleri (`markedDates`, Allo turu 2026-11): altta soluk nokta ve
+ * ekran okuyucuda "…, etkinlik var"; bugünün noktası vurgu renginde kalır.
  * Bugün `aria-current="date"` + altta nokta; devre dışı gün odaklanır ama
  * seçilmez (`aria-disabled`), klavye kullanıcısı onu atlamak zorunda kalmaz.
  *
@@ -43,6 +45,9 @@ type CommonProps = {
   min?: Date;
   max?: Date;
   isDateDisabled?: (date: Date) => boolean;
+  /** Bu günlerde bir şey var (etkinlik, son tarih): altta soluk nokta, adında `markedLabel`. */
+  markedDates?: (date: Date) => boolean;
+  markedLabel?: string;
   /** İlk görünen ay; verilmezse seçim ya da bugün. Sunucu çizimi için verin. */
   defaultMonth?: Date;
   /** Açılınca seçili (ya da bugünkü) güne odaklan: açılır kutu içinde. */
@@ -100,7 +105,7 @@ function useTodayKey() {
 }
 
 export function DateCalendar(props: DateCalendarProps) {
-  const { label, min, max, isDateDisabled, defaultMonth, autoFocus, className } = props;
+  const { label, min, max, isDateDisabled, markedDates, markedLabel = "etkinlik var", defaultMonth, autoFocus, className } = props;
   const isRange = props.mode === "range";
   const titleId = useId();
   const reduce = useReducedMotion();
@@ -296,7 +301,7 @@ export function DateCalendar(props: DateCalendarProps) {
                       type="button"
                       data-date={k}
                       tabIndex={k === key(focused) ? 0 : -1}
-                      aria-label={dayName.format(date)}
+                      aria-label={markedDates?.(date) ? `${dayName.format(date)}, ${markedLabel}` : dayName.format(date)}
                       aria-current={k === todayKey ? "date" : undefined}
                       aria-disabled={off || undefined}
                       onClick={() => select(date)}
@@ -315,12 +320,12 @@ export function DateCalendar(props: DateCalendarProps) {
                       )}
                     >
                       {date.getDate()}
-                      {k === todayKey ? (
+                      {k === todayKey || markedDates?.(date) ? (
                         <span
                           aria-hidden
                           className={cn(
                             "absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full",
-                            filled ? "bg-on-primary" : "bg-primary",
+                            filled ? "bg-on-primary" : k === todayKey ? "bg-primary" : "bg-muted",
                           )}
                         />
                       ) : null}

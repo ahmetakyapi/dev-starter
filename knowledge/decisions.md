@@ -1273,3 +1273,32 @@ eski hatayı geri koyunca yakaladığı doğrulandı.
 
 *Alınmayan:* plan ve fiyat kartları — tanıtım şablonunda zaten var
 (`PricingPlans`); referanstaki çizim maskotlar alınmadı (görsel kopyalanmaz).
+
+## Dissolve, Allo, x6sense Turu + Gecikme Kartı (2026-11-17)
+
+**Alınanlar (dil ve davranış, kod değil):**
+- **`dissolve`** (yeni): onaylanmış kaldırmada öğe tanecik tanecik dağılır.
+  Kaynak (dissolve.rselmi.com) her bileşeni kanvasa elle yeniden çiziyordu;
+  genellenemez. Bizde gerçek öğeye `feTurbulence` → alfa maskesi, eşik
+  zamanla kayar; hareket azaltmada ve filtre desteklenmezse solma.
+  Pusula: Bildirimler → Bu Konuyu Sessize Al.
+- **`quick-poll`** (yeni, Allo): sonuç oy verince görünür (sürü etkisi
+  yok), kendi seçimine yeniden basmak geri alır; `aria-pressed` düğmeler.
+  Pusula: Görevler → Ekip Kararı (panodaki fiyat listesi işine bağlı,
+  seçenekler %12 indirim sınırıyla tutarlı).
+- **`date-calendar` → `markedDates`** (Allo): etkinlik günü noktası.
+- **`chat-composer` → `look="halo"`** (x6sense): boş başlangıç ekranında
+  hale çerçevesi; degrade kenar yerine düz ton (degrade disiplini).
+
+**Alınmayanlar:** tutar tuş takımı, kayan vitrin rafı, etiket anahtarı,
+seçilebilir avatar grubu (Pusula'da yeri yok ya da küçük getiri); kayan
+yazma kutusu, medya karosu, bölüm kartı (x6sense: Pusula'nın işi değil);
+ember/vortex/goo gibi dekoratif tanecik efektleri, ses, çizimler, yazı
+tipleri (amacı tek cümleyle söylenemeyen hareket, varlık kopyalama).
+
+**Gecikme kartı (sahibinin isteği):** "3" başlığın üstünde tek başına
+duruyordu; artık başlık ne olduğunu söylüyor ("Teslim Tarihi Geçen
+Siparişler"), sayı birimiyle aynı satırda ("3 sipariş"), altında en uzun
+gecikme ve bekleyen tutar. Satır düzeni ekran değil KART genişliğine göre
+(container query): 1024 px'te müşteri adı kayboluyor, "+N Gün" iki satıra
+kırılıyordu. Rozetler 1440/1280/1024/768/390'da ölçüyle aynı hizada.

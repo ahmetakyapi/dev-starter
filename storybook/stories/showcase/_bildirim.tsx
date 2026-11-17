@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/Button";
 import { ChannelMatrix, type MatrixValue } from "@/components/ui/channel-matrix";
 import { ConnectionHero } from "@/components/ui/connection-hero";
 import { Dialog } from "@/components/ui/dialog";
+import { dissolveOut } from "@/components/ui/dissolve";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
@@ -404,7 +405,10 @@ export function BildirimPage() {
                         <DropdownMenuGroup>
                           <DropdownMenuItem
                             icon={<BellOff />}
-                            onClick={() => {
+                            onClick={async () => {
+                              // Kalıcı kaldırma: satır dağılarak gider (dissolve), sonra listeden çıkar.
+                              const row = [...document.querySelectorAll<HTMLElement>(`[data-feed-row="${item.id}"]`)].find((el) => el.offsetParent);
+                              if (row) await dissolveOut(row);
                               setItems((list) => list.filter((i) => i.id !== item.id));
                               notify({ tone: "info", title: "Bu Konu Sessize Alındı", body: "Yeni gelişmeler akışa düşmez; tercihlerden geri açılır." });
                             }}
@@ -606,6 +610,7 @@ export function BildirimPage() {
 function Row({ item, actions, children }: { item: Item; actions: ReactNode; children: ReactNode }) {
   return (
     <li
+      data-feed-row={item.id}
       className={cn(
         "relative flex gap-3 rounded-lg px-3 py-3 transition-colors duration-200",
         item.done ? "bg-success-wash" : "hover:bg-surface",

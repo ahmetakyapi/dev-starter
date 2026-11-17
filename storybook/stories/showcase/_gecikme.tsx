@@ -17,7 +17,13 @@ import { href } from "./_ui";
  *     çizgisinin takıldığı adımda; üçü de `warning-fill`, iki temada BİREBİR
  *     aynı ton. Metin hiçbir yerde turuncu dolguya yazılmaz, `on-warning-fill`
  *     ile (9,6:1).
- *   - TEK BAKIŞTA SAYI: rakam display puntoda, cümle onun altında.
+ *   - SAYI BAĞLAMIYLA: başlık ne olduğunu söyler ("Teslim Tarihi Geçen
+ *     Siparişler"), sayı birimiyle aynı satırda ("3 sipariş"), altında iki
+ *     özet satırı: en uzun gecikme · bekleyen tutar. (2026-11-17: önceden "3" başlığın üstünde tek başına
+ *     duruyordu; sahibi "tuhaf" buldu. Tek sayı bağlamsız kalınca okunmuyor.)
+ *   - SATIR KARTIN GENİŞLİĞİNE GÖRE (container query): yolculuk çizgisi
+ *     yalnız satır yeterince genişse yanda, değilse altta. Ekran genişliğine
+ *     bağlıyken 1024 px'te müşteri adı kayboluyor, rozet iki satıra kırılıyordu.
  *   - LİSTE CÜMLE DEĞİL: her sipariş kendi satırında; müşteri, sipariş no,
  *     tutar ve kaç gün geciktiği taranabilir. Satır, o siparişin talebine
  *     gider.
@@ -43,6 +49,12 @@ export function DelayCard() {
     return { o, c, late: age - PROMISE_DAYS, promised, ticket };
   }).sort((a, b) => b.late - a.late);
   const longest = Math.max(...rows.map((r) => r.late));
+  const waiting = rows.reduce((a, r) => a + r.o.total, 0);
+  const facts = [
+    { value: String(rows.length), label: "sipariş" },
+    { value: `${longest} gün`, label: "en uzun gecikme" },
+    { value: tl.format(waiting), label: "bekleyen tutar" },
+  ];
 
   return (
     <section aria-labelledby="pano-gecikme" data-tour="gecikme" className="edge-lit overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line">
@@ -55,13 +67,23 @@ export function DelayCard() {
               </span>
               <span className="text-small font-semibold text-warning">Teslimat Gecikmesi</span>
             </div>
-            <h2 id="pano-gecikme" className="mt-5 text-title font-semibold text-strong">
-              <span className="block text-display font-semibold tabular-nums">{rows.length}</span>
-              Sipariş Teslim Tarihini Geçti
+            <h2 id="pano-gecikme" className="mt-4 text-title font-semibold tracking-tight text-strong">
+              Teslim Tarihi Geçen Siparişler
             </h2>
-            <p className="mt-2 text-base text-body">
-              Hepsi kargo aktarma merkezinde bekliyor. En uzun bekleyen söz verilen tarihi {longest} gün geçti.
+            {/* Sayı birimiyle aynı satırda ("3 sipariş"), altında iki özet satırı: sayı tek başına durmaz, dar panelde de kesilmez. */}
+            <p className="mt-3 flex items-baseline gap-2">
+              <span className="text-display font-semibold tracking-tight text-strong tabular-nums">{rows.length}</span>
+              <span className="text-title font-semibold text-strong">sipariş</span>
             </p>
+            <dl className="mt-3 divide-y divide-line-soft border-y border-line-soft text-base">
+              {facts.slice(1).map((f) => (
+                <div key={f.label} className="flex items-center justify-between gap-3 py-2">
+                  <dt className="text-muted first-letter:uppercase">{f.label}</dt>
+                  <dd className="font-semibold text-strong tabular-nums">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-4 text-base text-body">Hepsi kargo aktarma merkezinde bekliyor; satıra basınca talebi açılır.</p>
           </div>
           <div className="grid gap-2">
             <a href={href("inbox", { tag: "gecikme" })} className={buttonClass({ variant: "primary", className: "w-full" })}>
@@ -77,10 +99,10 @@ export function DelayCard() {
 
         <ol aria-label="Geciken siparişler" className="grid auto-rows-fr grid-cols-1 divide-y divide-line-soft">
           {rows.map(({ o, c, late, promised, ticket }) => (
-            <li key={o.id} className="grid">
+            <li key={o.id} className="@container grid">
               <a
                 href={ticket ? href("inbox", { ticket: ticket.id }) : href("inbox", { tag: "gecikme" })}
-                className="group grid h-full gap-4 px-5 py-4 transition-colors duration-150 hover:bg-surface sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center"
+                className="group grid h-full content-center gap-3 px-5 py-4 transition-colors duration-150 hover:bg-surface @xl:grid-cols-[minmax(0,1fr)_minmax(0,15rem)] @xl:items-center @xl:gap-6"
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <Avatar name={c.name} />
@@ -88,7 +110,7 @@ export function DelayCard() {
                     {/* Rozet adın ardından değil KENDİ SÜTUNUNDA: ad uzunluğu değişse de "+N Gün" alt alta aynı hizada (hizalama kuralı). */}
                     <p className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
                       <span className="truncate text-base font-semibold text-strong">{c.name}</span>
-                      <span className="rounded-full bg-warning-fill px-2 py-0.5 text-micro font-bold text-on-warning-fill tabular-nums">
+                      <span className="rounded-full bg-warning-fill px-2 py-0.5 text-micro font-bold whitespace-nowrap text-on-warning-fill tabular-nums">
                         +{late} Gün
                       </span>
                     </p>

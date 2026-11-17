@@ -176,6 +176,13 @@ export const Tasks: Story = {
     await userEvent.keyboard("{ArrowRight}");
     await userEvent.keyboard(" ");
     await within(document.body).findByText("Sürüyor Kolonuna Taşındı");
+    // Ekip kararı: oy ver, sonuç görünür; aynı seçeneğe yeniden basınca geri alınır.
+    const opt = canvas.getByRole("button", { name: /^%10 · hacim artışı için/ });
+    await userEvent.click(opt);
+    await expect(opt).toHaveAttribute("aria-pressed", "true");
+    await expect(opt).toHaveAccessibleName(/yüzde 67, 4 oy, senin oyun/);
+    await userEvent.click(opt);
+    await expect(opt).toHaveAttribute("aria-pressed", "false");
     await settle(globals);
   },
 };

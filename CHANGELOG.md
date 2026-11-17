@@ -7,6 +7,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Dissolve, Allo, x6sense turu + gecikme kartı — 2026-11-17
+
+- **Yeni bileşenler (139 → 141, kit 106 → 108):** `dissolve` (dağılarak
+  çıkış), `quick-poll` (hızlı oylama).
+- **Eklemeler:** `date-calendar` `markedDates`, `chat-composer` `look="halo"`.
+- **Pusula:** Bildirimler'de sessize alınan satır dağılarak gider, Görevler'de
+  Ekip Kararı, Takvim'de etkinlik noktaları, Asistan'da hale kutusu.
+- **Gecikme kartı:** "3 sipariş" bağlamıyla ve iki özet satırıyla; satırlar
+  kart genişliğine göre (1024 px kırılması düzeldi).
+
 ### Paylaşım paneli, bağlantı başlığı, tik ölçek — 2026-11-17
 
 - **Yeni bileşenler (137 → 139, kit 104 → 106):** `share-panel`,

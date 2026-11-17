@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { CloseButton } from "@/components/ui/close-button";
 import { KanbanBoard, type KanbanColumn } from "@/components/ui/kanban-board";
 import { MorphIcon } from "@/components/ui/morph-icon";
+import { QuickPoll } from "@/components/ui/quick-poll";
 import { TaskList } from "@/components/ui/task-list";
 import { BOARD, ME, MY_TASKS, TODAY, dayKey, num, shortDate } from "./_data";
 import { PageBar, SectionTitle, Well, WellTitle, useApp } from "./_ui";
@@ -33,6 +34,7 @@ export function GorevlerPage() {
   const [columns, setColumns] = useState<readonly KanbanColumn[]>(BOARD);
   const [tip, setTip] = useState(true);
   const [allUpcoming, setAllUpcoming] = useState(false);
+  const [vote, setVote] = useState<string | null>(null);
   const open = columns.filter((c) => !c.done).reduce((n, c) => n + c.cards.length, 0);
   const due = upcoming(columns);
   const dueToday = due.filter((x) => x.card.due! <= TODAY_KEY).length;
@@ -112,6 +114,26 @@ export function GorevlerPage() {
                 {allUpcoming ? "Daha Az Göster" : `Tümünü Göster (${num.format(due.length)})`}
               </button>
             ) : null}
+          </Well>
+
+          {/* Ekip kararı: panodaki "Kasım fiyat listesi taslağı" (son tarih 6 Kas) için; seçenekler Ayarlar'daki %12 indirim sınırıyla tutarlı. */}
+          <Well labelledBy="gorev-karar" className="lg:col-span-2">
+            <WellTitle id="gorev-karar" hint="Panodaki işe bağlı küçük kararlar; sonuç oy verince görünür.">
+              Ekip Kararı
+            </WellTitle>
+            <QuickPoll
+              question="Kasım fiyat listesinde bayi indirimi kaç olsun?"
+              meta="Mert Aksoy soruyor · Kasım fiyat listesi taslağı · 6 Kas'a kadar"
+              options={[
+                { id: "8", label: "%8 · geçen yılla aynı" },
+                { id: "10", label: "%10 · hacim artışı için" },
+                { id: "12", label: "%12 · satış kuralının sınırı" },
+              ]}
+              counts={{ "8": 1, "10": 3, "12": 1 }}
+              value={vote}
+              onValueChange={setVote}
+              className="max-w-2xl"
+            />
           </Well>
         </div>
       </div>

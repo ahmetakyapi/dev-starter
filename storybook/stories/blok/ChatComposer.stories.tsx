@@ -107,6 +107,12 @@ export const SingleModel: Story = {
   args: { models: undefined, onAttach: undefined, onVoice: undefined, model: "Fable 5 Mini" },
 };
 
+export const Halo: Story = {
+  name: "Hale (Boş Başlangıç Ekranı)",
+  args: { look: "halo" },
+  parameters: { docs: { description: { story: "Kutu sayfanın tek eylemiyken: karo, vurgunun yıkanmış renginde bir halenin içinde; odakta hale koyulaşır. Gönder boşken soluk, yazınca dolar." } } },
+};
+
 export const Disabled: Story = { name: "Devre Dışı", args: { disabled: true, placeholder: "Bağlantı bekleniyor" } };
 
 export const AllVariants: Story = {
