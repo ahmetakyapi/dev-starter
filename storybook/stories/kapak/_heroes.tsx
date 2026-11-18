@@ -616,4 +616,272 @@ export function HeroOrb({ palette, theme, onPalette, showcase }: HeroProps) {
   );
 }
 
-export const HEROES = { f: HeroPrism, g: HeroWall, h: HeroLantern, i: HeroMagazine, j: HeroOrb } as const;
+export const HEROES_FJ = { f: HeroPrism, g: HeroWall, h: HeroLantern, i: HeroMagazine, j: HeroOrb } as const;
+
+/* ── K ve L: müze / atölye tarzı ─────────────────────────────────────────
+   Tek renkli sıcak taş tonları, ince serif başlık, mono künye, soluk ASCII
+   dokusu, ortada fiziksel bir nesne (metal kart). Renk yalnız kartın şeridinde
+   ve palet noktalarında: gerisi taş. Taş tonları token karışımı (page + strong
+   + accent-warm), sabit renk yok. */
+const SERIF = "font-[family-name:var(--font-serif-face),serif] font-normal";
+const stone = (pct: number) => `color-mix(in oklab, color-mix(in oklab, var(--text-strong) ${pct}%, var(--page-bg)) 94%, var(--accent-warm))`;
+
+/** ASCII alanı: dalga biçimli karakter yoğunluğu, tohumsuz ama sabit (sinüs). */
+const ASCII = (() => {
+  const chars = " .·:-=+*%#";
+  const rows: string[] = [];
+  for (let y = 0; y < 34; y++) {
+    let line = "";
+    for (let x = 0; x < 150; x++) {
+      const v = Math.sin(x / 11 + y / 5) * Math.cos(y / 7 - x / 23) + Math.sin((x + y * 2) / 17) * 0.6;
+      const i = Math.max(0, Math.min(chars.length - 1, Math.floor(((v + 1.6) / 3.2) * chars.length)));
+      line += chars[i];
+    }
+    rows.push(line);
+  }
+  return rows.join("\n");
+})();
+
+function AsciiField({ className }: { className?: string }) {
+  return (
+    <pre aria-hidden className={cn("pointer-events-none absolute inset-0 -z-10 overflow-hidden font-mono text-[9px] leading-[11px] text-muted select-none [mask-image:radial-gradient(ellipse_75%_70%_at_50%_60%,var(--text-strong)_15%,transparent_80%)]", className)}>
+      {ASCII}
+    </pre>
+  );
+}
+
+const DarkPill = ({ href, children }: { href: string; children: ReactNode }) => (
+  <a href={href} target="_top" className={cn("group inline-flex min-h-11 items-center gap-2 rounded-full px-5 font-mono text-small text-page shadow-raised ring-1 ring-inset ring-line-strong hover:-translate-y-px", PRESS, FOCUS)} style={{ backgroundColor: "var(--text-strong)" }}>
+    {children}
+    <ArrowRight aria-hidden className="size-3.5 transition-[translate] duration-200 group-hover:translate-x-0.5" />
+  </a>
+);
+const LightPill = ({ href, children }: { href: string; children: ReactNode }) => (
+  <a href={href} target="_top" className={cn("inline-flex min-h-11 items-center rounded-full bg-surface px-5 font-mono text-small text-strong ring-1 ring-inset ring-line hover:-translate-y-px hover:bg-overlay", PRESS, FOCUS)}>
+    {children}
+  </a>
+);
+
+/** Metal kart: fırçalanmış yüzey, çip, sağda paletin şeridi; imleçle eğilir, parlaması kayar, tıklayınca döner. */
+function MetalCard({ t, theme, flippable = false, className }: { t: Tour; theme: ThemeName; flippable?: boolean; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [back, setBack] = useState(false);
+  function onMove(e: ReactPointerEvent<HTMLDivElement>) {
+    if (t.still || e.pointerType !== "mouse") return;
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--rx", `${(0.5 - y) * 14}deg`);
+    el.style.setProperty("--ry", `${(x - 0.5) * 18}deg`);
+    el.style.setProperty("--gx", `${x * 100}%`);
+    el.style.setProperty("--gy", `${y * 100}%`);
+  }
+  function onLeave() {
+    ref.current?.style.setProperty("--rx", "0deg");
+    ref.current?.style.setProperty("--ry", "0deg");
+  }
+  // Kart iki temada da koyu grafit: koyu temada --text-strong açık olduğu için oran ters çevrilir.
+  const g = (pct: number) => stone(theme === "dark" ? 100 - pct : pct);
+  const metal = `linear-gradient(135deg, ${g(62)} 0%, ${g(78)} 38%, ${g(58)} 62%, ${g(72)} 100%)`;
+  const brushed = "repeating-linear-gradient(90deg, rgb(255 255 255 / .035) 0 1px, transparent 1px 3px)";
+  const face = "absolute inset-0 overflow-hidden rounded-[1.1rem] shadow-modal ring-1 ring-inset ring-line-strong [backface-visibility:hidden]";
+  const Body = (
+    <div
+      ref={ref}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      className={cn("relative aspect-[1.586] w-full [perspective:1200px]", className)}
+      style={{ "--rx": "0deg", "--ry": "0deg", "--gx": "30%", "--gy": "20%" } as CSSProperties}
+    >
+      <div
+        className="relative size-full transition-[transform] duration-700 ease-[cubic-bezier(.22,1,.36,1)] [transform-style:preserve-3d]"
+        style={{ transform: `rotateX(var(--rx)) rotateY(calc(var(--ry) + ${back ? 180 : 0}deg))` }}
+      >
+        {/* Ön yüz */}
+        <div className={face} style={{ backgroundImage: `${brushed}, ${metal}` }}>
+          <div className="absolute inset-y-0 right-0 w-[22%] transition-[background-image] duration-700" style={{ backgroundImage: t.sw.brandGradient }} />
+          <div className="absolute inset-y-0 right-[22%] w-px bg-on-brand/25" />
+          <div className="absolute top-[12%] left-[7%] grid h-[17%] w-[12%] grid-cols-3 gap-px overflow-hidden rounded-md p-px" style={{ backgroundColor: g(40) }}>
+            {Array.from({ length: 6 }, (_, i) => (
+              <span key={i} className="rounded-[2px]" style={{ backgroundColor: g(28) }} />
+            ))}
+          </div>
+          <span className="absolute top-[12%] right-[26%] font-mono text-micro text-on-brand/80">v{uiPackage.version}</span>
+          <div className="absolute bottom-[11%] left-[7%] grid gap-0.5 text-left text-on-brand">
+            <span className="font-mono text-[0.6rem] tracking-[0.18em] uppercase opacity-80">@ahmetakyapi/ui</span>
+            <span className={cn(SERIF, "text-[clamp(1.25rem,2.4vw,1.85rem)] leading-none")}>141 Bileşen</span>
+          </div>
+          <SlotText text={t.title} className="absolute right-[3%] bottom-[11%] w-[16%] justify-center font-mono text-[0.6rem] tracking-wide text-on-brand uppercase" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 mix-blend-soft-light" style={{ background: "radial-gradient(circle at var(--gx) var(--gy), rgb(255 255 255 / .55), transparent 45%)" }} />
+        </div>
+        {/* Arka yüz: paletin dört rengi ve kontrastı */}
+        <div className={cn(face, "[transform:rotateY(180deg)]")} style={{ backgroundImage: `${brushed}, ${metal}` }}>
+          <div className="absolute inset-x-0 top-[14%] h-[14%]" style={{ backgroundColor: g(85) }} />
+          <div className="absolute inset-x-[7%] bottom-[12%] grid grid-cols-4 gap-2">
+            {[t.sw.primary, t.sw.primarySoft, t.sw.primaryInk, t.sw.onPrimary].map((c, i) => (
+              <span key={i} className="grid gap-1 text-left">
+                <span className="aspect-square rounded-lg ring-1 ring-inset ring-on-brand/20" style={{ backgroundColor: c }} />
+                <span className="font-mono text-[0.55rem] text-on-brand/85">{c.toUpperCase()}</span>
+              </span>
+            ))}
+          </div>
+          <span className="absolute top-[36%] left-[7%] font-mono text-micro text-on-brand/85">
+            {t.title} · {ratioText(contrast(t.sw.onPrimary, t.sw.primary))}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+  if (!flippable) return Body;
+  return (
+    <button type="button" onClick={() => setBack((v) => !v)} aria-label={back ? "Kartın ön yüzünü göster" : "Kartı çevir, paletin renklerini göster"} className={cn("block w-full rounded-[1.1rem]", FOCUS)}>
+      {Body}
+    </button>
+  );
+}
+
+const TECH = ["Next.js 16", "React 19", "Tailwind v4", "Storybook 10", "TypeScript"];
+function TechRow({ className }: { className?: string }) {
+  return (
+    <ul className={cn("flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-base text-muted", className)} aria-label="Kullanılan teknolojiler">
+      {TECH.map((x, i) => (
+        <li key={x} className={cn(i % 2 ? SERIF + " text-lg italic" : "font-display font-semibold tracking-tight")}>
+          {x}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function SerifHead({ className }: { className?: string }) {
+  return (
+    <h1 id="kapak-baslik" className={cn(SERIF, "text-[clamp(3rem,7vw,6.25rem)] leading-[0.95] tracking-[-0.02em] text-strong", className)}>
+      <span className="block">Tek Kimlik,</span> <span className="block">On Palet</span>
+    </h1>
+  );
+}
+
+function MonoPill() {
+  return (
+    <p className="inline-flex items-center gap-2 rounded-full bg-surface py-1 pr-3 pl-1 font-mono text-micro text-body ring-1 ring-inset ring-line">
+      <span className="rounded-full px-2 py-0.5 text-page" style={{ backgroundColor: "var(--text-strong)" }}>
+        Yeni
+      </span>
+      On palet, iki tema, tek token mimarisi
+      <ArrowRight aria-hidden className="size-3" />
+    </p>
+  );
+}
+
+/** Taş kaide ve üstündeki nesne; altında müze etiketi. */
+function Plinth({ object, label, note, className }: { object: ReactNode; label: string; note: string; className?: string }) {
+  return (
+    <figure className={cn("grid justify-items-center", className)}>
+      <div className="relative z-10 -mb-3">{object}</div>
+      <div className="relative w-full">
+        <div className="h-4 rounded-t-[0.4rem]" style={{ background: `linear-gradient(180deg, ${stone(14)}, ${stone(20)})` }} />
+        <div className="h-[clamp(6rem,11vw,9rem)]" style={{ background: `linear-gradient(90deg, ${stone(22)} 0%, ${stone(12)} 45%, ${stone(18)} 100%)`, boxShadow: "inset 0 1px 0 rgb(255 255 255 / .25)" }} />
+      </div>
+      <figcaption className="mt-3 grid justify-items-center gap-0.5 font-mono text-micro text-muted">
+        <span className="text-strong">{label}</span>
+        <span>{note}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+const Sphere = () => (
+  <div
+    className="hx-breathe size-[clamp(7rem,13vw,11rem)] rounded-full shadow-floating"
+    style={{ background: `radial-gradient(circle at 34% 28%, ${stone(4)} 0%, ${stone(14)} 40%, ${stone(32)} 82%, ${stone(40)} 100%)` }}
+  />
+);
+const Arch = () => (
+  <div className="relative h-[clamp(9rem,16vw,13rem)] w-[clamp(6.5rem,11vw,9rem)] rounded-t-full shadow-floating" style={{ background: `linear-gradient(90deg, ${stone(26)} 0%, ${stone(10)} 46%, ${stone(20)} 100%)` }}>
+    <div className="absolute inset-x-[24%] top-[24%] bottom-0 rounded-t-full" style={{ background: `linear-gradient(90deg, ${stone(34)}, ${stone(24)})`, boxShadow: "inset 0 10px 18px rgb(0 0 0 / .18)" }} />
+  </div>
+);
+
+/* ── K · Müze ───────────────────────────────────────────────────────── */
+export function HeroMuseum({ palette, theme, onPalette, showcase }: HeroProps) {
+  const t = usePaletteTour(palette, theme, onPalette);
+  return (
+    <Shell t={t} showcase={showcase} className="justify-items-center text-center">
+      <div className="relative isolate grid w-full justify-items-center overflow-hidden rounded-[2rem] px-4 pt-12 ring-1 ring-inset ring-line-soft" style={{ background: `linear-gradient(180deg, ${stone(3)}, ${stone(6)})` }}>
+        <AsciiField className="opacity-30" />
+        <MonoPill />
+        <SerifHead className="mt-5 text-[clamp(2.75rem,5.6vw,5rem)]" />
+        <p className="mt-4 max-w-[46ch] text-base text-pretty text-body">Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. Her parça token&apos;dan çizilir; paleti değiştir, hepsi birlikte döner.</p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <DarkPill href={to("showcase--all-in-one")}>Bileşenleri Gez</DarkPill>
+          <LightPill href={to("demo-app--overview")}>Pusula&apos;yı Aç</LightPill>
+        </div>
+        <TechRow className="mt-8" />
+        {/* Sahne: iki kaide arasında kart. Kaideler zemine oturur, kart havada. */}
+        <div className="mt-4 grid w-full max-w-6xl grid-cols-1 items-end gap-4 sm:grid-cols-[1fr_minmax(0,1.6fr)_1fr] sm:gap-8">
+          <Plinth object={<Sphere />} label="No. 01 · Küre" note="taş, token'dan" className="hidden sm:grid" />
+          <div className="grid justify-items-center gap-5 self-center pb-16">
+            <MetalCard t={t} theme={theme} flippable className="max-w-md" />
+            <div className="flex items-center gap-2" onPointerLeave={() => t.preview(null)}>
+              {TOUR.map((p) => (
+                <button key={p} {...swatchProps(t, p, palette)} className={cn("grid size-7 place-items-center rounded-full", FOCUS)}>
+                  <span className={cn("block rounded-full transition-[width,height,filter] duration-300", p === t.shown ? "size-4 ring-1 ring-strong ring-offset-2 ring-offset-page" : "size-2.5 grayscale hover:grayscale-0")} style={{ backgroundImage: palettes[p][theme].brandGradient }} />
+                </button>
+              ))}
+              <PlayButton t={t} />
+            </div>
+          </div>
+          <Plinth object={<Arch />} label="No. 02 · Kemer" note="aynı taş, başka biçim" className="hidden sm:grid" />
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+/* ── L · Metal Kart ─────────────────────────────────────────────────── */
+export function HeroCard({ palette, theme, onPalette, showcase }: HeroProps) {
+  const t = usePaletteTour(palette, theme, onPalette);
+  return (
+    <Shell t={t} showcase={showcase} className="justify-items-center text-center">
+      <div className="relative isolate grid w-full justify-items-center px-4 pt-10">
+        <AsciiField className="opacity-30" />
+        <MonoPill />
+        <SerifHead className="mt-6" />
+        <p className="mt-5 max-w-[46ch] text-base text-pretty text-body">Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. Her parça token&apos;dan çizilir; paleti değiştir, hepsi birlikte döner.</p>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <DarkPill href={to("showcase--all-in-one")}>Bileşenleri Gez</DarkPill>
+          <LightPill href={to("demo-app--overview")}>Pusula&apos;yı Aç</LightPill>
+        </div>
+        <TechRow className="mt-12" />
+        {/* Kart: arkasında soluk bir kopya (deste), önde eğilen asıl kart. */}
+        <div className="relative mt-14 w-full max-w-[34rem]">
+          <div aria-hidden className="absolute inset-x-[6%] -top-4 h-full rounded-[1.1rem] ring-1 ring-inset ring-line" style={{ backgroundColor: stone(10) }} />
+          <div aria-hidden className="absolute inset-x-[3%] -top-2 h-full rounded-[1.1rem] ring-1 ring-inset ring-line" style={{ backgroundColor: stone(16) }} />
+          <MetalCard t={t} theme={theme} flippable />
+        </div>
+        <p className="mt-4 font-mono text-micro text-muted">Karta tıkla, arkası paletin renklerini gösterir</p>
+        {/* Palet satırı: gri ikonlar; üstüne gelince renklenir, tıklayınca katalog döner. */}
+        <div className="mt-12 grid w-full max-w-5xl grid-cols-5 gap-y-6 sm:grid-cols-10" onPointerLeave={() => t.preview(null)}>
+          {TOUR.map((p) => {
+            const active = p === t.shown;
+            return (
+              <button key={p} {...swatchProps(t, p, palette)} className={cn("group grid justify-items-center gap-2", FOCUS)}>
+                <span
+                  className={cn("grid size-11 place-items-center rounded-full shadow-raised ring-1 ring-inset ring-line transition-[filter,scale] duration-300", active ? "scale-110 grayscale-0" : "grayscale group-hover:grayscale-0")}
+                  style={{ backgroundImage: palettes[p][theme].brandGradient }}
+                />
+                <span className={cn("font-mono text-[0.625rem] tracking-wide uppercase", active ? "text-strong" : "text-muted")}>{TITLE[p]}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="mt-4">
+          <PlayButton t={t} />
+        </div>
+      </div>
+    </Shell>
+  );
+}
+export const HEROES = { ...HEROES_FJ, k: HeroMuseum, l: HeroCard } as const;
