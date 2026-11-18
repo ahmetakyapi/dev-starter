@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Bell, Check, FileText, Pause, Play, Search } from "lucide-react";
-import { m, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +16,6 @@ import { Sparkline } from "@/components/ui/sparkline";
 import { Spinner } from "@/components/ui/spinner";
 import { Stat } from "@/components/ui/stat";
 import { Switch } from "@/components/ui/switch";
-import { SlotText } from "@/components/ui/slot-text";
 import { DUR, EASE, STAGGER } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { palettes } from "../../../packages/@ahmet/theme/tokens";
@@ -329,8 +328,16 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
                 </button>
               ))}
               <span aria-hidden className="mx-1 h-6 w-px shrink-0 bg-line" />
-              <span className="hidden min-w-[6.5rem] items-baseline gap-1.5 text-left text-small sm:flex" aria-live="polite">
-                <SlotText text={TITLE[t.shown]} className="font-semibold text-strong" />
+              {/* Duyuru yalnız tur dururken: kendi dönen turda ekran okuyucu 3,6 sn'de bir palet adı okuyordu. */}
+              <span className="hidden min-w-[6.5rem] items-baseline gap-1.5 text-left text-small sm:flex" aria-live={t.playing ? "off" : "polite"}>
+                {/* Ad yumuşak geçişle değişir (harf harf yuvarlanan SlotText, turda anlık karelerde yarım okunuyordu). */}
+                <span className="relative inline-grid">
+                  <AnimatePresence initial={false} mode="popLayout">
+                    <m.span key={t.shown} className="font-semibold text-strong" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.25, ease: EASE }}>
+                      {TITLE[t.shown]}
+                    </m.span>
+                  </AnimatePresence>
+                </span>
                 <span className="text-muted">{t.previewing ? "önizleme" : "seçili"}</span>
               </span>
               {!still ? (
