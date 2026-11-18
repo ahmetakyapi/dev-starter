@@ -462,18 +462,23 @@ const HERO_CSS = `
 .kapak-spot { background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 30%), var(--primary-wash), transparent 68%); opacity: var(--lit, 0); transition: opacity .5s; }
 @keyframes kapak-drift-a { 0% { transform: translate3d(-8%, 0, 0) scale(1); } 100% { transform: translate3d(10%, 12%, 0) scale(1.15); } }
 @keyframes kapak-drift-b { 0% { transform: translate3d(6%, 8%, 0) scale(1.1); } 100% { transform: translate3d(-12%, -4%, 0) scale(.95); } }
-@keyframes kapak-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes kapak-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+/* Alan derinliği: numune varsayılan olarak SAKİN (soluk, buğulu, rengi kısık); imleç yaklaştıkça
+   --focus 0'dan 1'e çıkar ve netleşir. Başlık tek odak kalır, yan parçalar gözü yormaz.
+   backdrop-filter kullanılmaz: filtreli ebeveynin içinde bozuluyor. */
+.kapak-spec { --focus: var(--rest, .55); opacity: calc(.38 + .62 * var(--focus)); filter: blur(calc((1 - var(--focus)) * var(--dof, 1.6px))) saturate(calc(.55 + .45 * var(--focus))); transition: opacity .5s cubic-bezier(.22,1,.36,1), filter .5s cubic-bezier(.22,1,.36,1); }
+.kapak-spec figcaption { opacity: calc(var(--focus) * 1.8 - .8); transition: opacity .4s; }
 .kapak-drift-a { animation: kapak-drift-a 16s cubic-bezier(.45,0,.55,1) infinite alternate; }
 .kapak-drift-b { animation: kapak-drift-b 21s cubic-bezier(.45,0,.55,1) infinite alternate; }
-.kapak-bob { animation: kapak-bob 7s ease-in-out infinite; }
+.kapak-bob { animation: kapak-bob 9s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .kapak-drift-a, .kapak-drift-b, .kapak-bob { animation: none; } }`;
 
 /* Numune katmanları: yakın büyük ve net, uzak küçük, soluk ve hafif buğulu.
    İmleçle kayma derinlikle orantılı (yakın çok, uzak az): göz bunu derinlik okur. */
 const LAYER = {
-  near: { depth: 26, scale: 1, className: "" },
-  mid: { depth: 15, scale: 0.92, className: "opacity-95" },
-  far: { depth: 7, scale: 0.84, className: "opacity-80 blur-[0.6px]" },
+  near: { depth: 22, scale: 0.96, dof: "1.2px" },
+  mid: { depth: 13, scale: 0.88, dof: "1.7px" },
+  far: { depth: 6, scale: 0.8, dof: "2.2px" },
 } as const;
 
 /** İmleçle derinliğine göre kayan sarmalayıcı. */
@@ -491,7 +496,7 @@ function Parallax({ depth, sx, sy, still, className, children }: { depth: number
 function Specimen({ file, children, className }: { file: string; children: ReactNode; className?: string }) {
   return (
     <figure className={cn("grid justify-items-start gap-2", className)}>
-      <div className="rounded-[1.1rem] bg-overlay p-3 shadow-floating ring-1 ring-inset ring-line-soft">{children}</div>
+      <div className="edge-lit rounded-[1.25rem] bg-overlay/95 p-3 shadow-floating ring-1 ring-inset ring-line-soft">{children}</div>
       <figcaption className="flex items-center gap-1.5 pl-1 font-mono text-micro text-muted">
         <span aria-hidden className="size-1 rounded-full bg-primary" />
         {file}.tsx
@@ -506,6 +511,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
   const still = !!reduce || AUTOMATED;
   const sectionRef = useRef<HTMLElement>(null);
   const lightRef = useRef<HTMLDivElement>(null);
+  const specRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   /* Tur durumu: gösterilen palet = üstüne gelinen ?? turdaki ?? kataloğunki. */
   const [playing, setPlaying] = useState(!still);
@@ -562,8 +568,17 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     light.style.setProperty("--lit", "1");
     px.set(((e.clientX - rect.left) / rect.width) * 2 - 1);
     py.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    // Odak: imlece en yakın numune netleşir (120 px içinde tam, 520 px'te dinlenme hâli).
+    for (const el of specRefs.current) {
+      if (!el) continue;
+      const b = el.getBoundingClientRect();
+      const d = Math.hypot(e.clientX - (b.left + b.width / 2), e.clientY - (b.top + b.height / 2));
+      const f = Math.min(1, Math.max(0.55, 1 - ((d - 120) / 400) * 0.45));
+      el.style.setProperty("--focus", f.toFixed(3));
+    }
   }
   function onLeave() {
+    for (const el of specRefs.current) el?.style.removeProperty("--focus");
     lightRef.current?.style.setProperty("--lit", "0");
     px.set(0);
     py.set(0);
@@ -598,7 +613,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     {
       at: "top-[2%] left-[3%]",
       layer: "mid",
-      rot: -4,
+      rot: -1.5,
       from: [320, 180],
       node: (
         <Specimen file="button">
@@ -616,7 +631,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     {
       at: "top-[38%] -left-[2%]",
       layer: "near",
-      rot: 3,
+      rot: 1.5,
       from: [380, 0],
       node: (
         <Specimen file="area-chart">
@@ -638,7 +653,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     {
       at: "bottom-[0%] left-[7%]",
       layer: "far",
-      rot: -2,
+      rot: -1,
       from: [300, -160],
       node: (
         <Specimen file="avatar">
@@ -655,7 +670,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     {
       at: "top-[0%] right-[4%]",
       layer: "far",
-      rot: 3,
+      rot: 1.5,
       from: [-300, 180],
       node: (
         <Specimen file="switch">
@@ -668,7 +683,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     {
       at: "top-[40%] -right-[1%]",
       layer: "near",
-      rot: -3,
+      rot: -1.5,
       from: [-380, 0],
       node: (
         <Specimen file="contrast">
@@ -688,7 +703,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     {
       at: "bottom-[2%] right-[8%]",
       layer: "mid",
-      rot: 2,
+      rot: 1,
       from: [-300, -160],
       node: (
         <Specimen file="segmented-control">
@@ -725,7 +740,11 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
       <div ref={lightRef} aria-hidden className="pointer-events-none absolute inset-x-[-14%] -top-40 -z-10 h-[60rem] overflow-hidden">
         <div className="kapak-drift-a absolute top-[10%] left-[30%] size-[34rem] rounded-full bg-primary opacity-[0.14] blur-[120px]" />
         <div className="kapak-drift-b absolute top-[26%] right-[24%] size-[26rem] rounded-full bg-primary-soft opacity-[0.16] blur-[110px]" />
-        <PatternBackground pattern="dots" size={22} fade="edges" tone="primary" intensity={0} className="opacity-70" />
+        {/* Yörünge: başlığın arkasında ince eş merkezli halkalar, kenara doğru söner; numuneler bir yörüngede durur gibi. */}
+        <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_46%_52%_at_50%_44%,var(--text-strong)_20%,transparent_75%)] opacity-45">
+          <PatternBackground pattern="rings" size={84} tone="primary" intensity={0} />
+        </div>
+        <PatternBackground pattern="noise" tone="neutral" intensity={0} className="opacity-40" />
         <div className="kapak-spot absolute inset-0" />
       </div>
 
@@ -735,17 +754,24 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
           const layer = LAYER[s.layer];
           return (
             <Parallax key={i} depth={layer.depth} sx={sx} sy={sy} still={still} className={cn("absolute z-10 hidden xl:block", s.at, s.layer === "near" ? "z-20" : "")}>
+              <div
+                ref={(el) => {
+                  specRefs.current[i] = el;
+                }}
+                className="kapak-spec"
+                style={{ "--dof": layer.dof, "--rest": still ? 0.9 : 0.6 } as CSSProperties}
+              >
               <m.div
                 initial={still ? false : { opacity: 0, x: s.from[0], y: s.from[1], scale: 0.6, rotate: 0 }}
                 animate={{ opacity: 1, x: 0, y: 0, scale: layer.scale, rotate: s.rot }}
-                whileHover={still ? undefined : { rotate: 0, scale: layer.scale * 1.04 }}
+                whileHover={still ? undefined : { rotate: 0, scale: layer.scale * 1.03 }}
                 transition={{ type: "spring", stiffness: 60, damping: 14, mass: 1, delay: still ? 0 : 0.55 + i * 0.07 }}
-                className={layer.className}
               >
                 <div className="kapak-bob" style={{ animationDelay: `${-i * 1.3}s` }}>
                   {s.node}
                 </div>
               </m.div>
+              </div>
             </Parallax>
           );
         })}

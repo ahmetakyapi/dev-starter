@@ -1501,3 +1501,10 @@ karanlık sahne, D yüzen bileşenler, E kod ve görünüm. Seçilen D.
   eğim kapalı (OG görseli ve play testleri sabit çıksın). Otomatik değişim
   her an durdurulur (WCAG 2.2.2).
 - **Dar ekran:** numuneler `xl` altında gizli; telefonda başlık tek başına.
+- **Değişti (2026-11-18, ikinci tur):** sahibi "yandaki şeyler göz yormasın,
+  premium olsun" dedi. Numuneler artık alan derinliğiyle: varsayılan SAKİN
+  (soluk, buğulu, rengi kısık), imleç yaklaşınca netleşir ve dosya adı
+  belirir (`--focus` CSS değişkeni, yeniden çizim yok). Eğiklik ±1,5°,
+  salınım 5 px / 9 sn. Nokta dokusu kalktı; başlığın arkasında kenara doğru
+  sönen ince halkalar (yörünge) ve hafif gren. Kaynak: alan derinliği ve
+  yakınlıkla odak desenleri (Framer bileşenleri, CSS bulanıklık örnekleri).
