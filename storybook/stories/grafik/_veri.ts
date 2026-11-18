@@ -1,5 +1,5 @@
 /**
- * Grafik hikâyelerinin ortak örnek verisi. Üç senaryo: e-ticaret mağazası,
+ * Grafik hikayelerinin ortak örnek verisi. Üç senaryo: e-ticaret mağazası,
  * SaaS ürünü, destek ekibi. Sayılar uydurma ama birbiriyle tutarlı
  * (huninin her aşaması bir öncekinden küçük, kart değeri lejant toplamı). Tohumlu üreteçler: her
  * derlemede aynı çizim, görsel kıyas kararlı kalır.

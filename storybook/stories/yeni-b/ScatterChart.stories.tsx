@@ -74,7 +74,7 @@ export const Default: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "E-Posta" }));
     plot.focus();
     await userEvent.keyboard("{Home}");
-    await expect(live).toHaveTextContent(/^Kullanıcı Hikâyeleri \(Sosyal Medya\)/);
+    await expect(live).toHaveTextContent(/^Kullanıcı Hikayeleri \(Sosyal Medya\)/);
   },
 };
 

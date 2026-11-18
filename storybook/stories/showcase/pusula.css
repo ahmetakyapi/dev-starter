@@ -45,12 +45,12 @@
   --line-soft: rgb(255 255 255 / 0.065);
   /* Kart içi zemin açılınca genel soluk metin (#8a8a8a) 4,21:1'e düşüyordu
      (küçük metinde AA 4,5). #949496: karo 6,18 · kart 5,62 · kart içi 4,80;
-     gövde metninden (#a1a1a1) hâlâ bir ton soluk. */
+     gövde metninden (#a1a1a1) hala bir ton soluk. */
   --text-muted: #ababad;
   /* Değişti (2026-11-17, tasarım denetimi): kart içi panelin de üstündeki
      kabarık karoda (tarih hapı, depolama dökümü, ≈ rgb(62,62,64)) #949496
      4,13, gövde #a1a1a1 4,07 ölçüldü. Soluk #ababad → 4,66, gövde #bcbcbe →
-     5,6; ikisi arasında hâlâ bir ton fark var. */
+     5,6; ikisi arasında hala bir ton fark var. */
   --text-body: #bcbcbe;
   --chart-2: color-mix(in oklab, var(--primary) 45%, var(--page-bg));
   --chart-3: color-mix(in oklab, var(--text-strong) 42%, var(--page-bg));

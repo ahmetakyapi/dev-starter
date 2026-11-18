@@ -390,7 +390,7 @@ Her birinin sınırı yanında:
 
 ---
 
-## 14. Görsel Hikâyesi — Bento ve Ürün Kartları
+## 14. Görsel Hikayesi — Bento ve Ürün Kartları
 
 Bir bento kartının görseli (liste, grafik, takvim, akış, istem kutusu)
 yüklenip öylece durursa "ekran görüntüsü" gibi okunur. Görsel **ne işe
@@ -399,10 +399,10 @@ okur, takvim boş saati bulur. Bu, sayfayı canlı gösteren en ucuz harekettir;
 dekoratif parlamadan ve yüzen lekeden farklı olarak ürünü anlatır.
 (Uyarlandı: elayadesign/ai-design-skills → `design-to-motion`, MIT.)
 
-**Önce hikâyeyi tek cümleyle yaz**, sonra kur: "Yeni talep en üste düşer,
+**Önce hikayeyi tek cümleyle yaz**, sonra kur: "Yeni talep en üste düşer,
 eskiler bir sıra geri çekilir, sonuncusu çıkar."
 
-| Görsel | Hikâye |
+| Görsel | Hikaye |
 |--------|--------|
 | Yığın (talep, bildirim, dosya) | Yeni öğe üste iner, ötekiler bir basamak geri çekilir, sonuncusu çıkar |
 | Çizgi / alan grafiği | Bir okuyucu çizgi üstünde kayar, nokta eğriyi izler, ipucundaki değer sayar |
@@ -416,20 +416,20 @@ eskiler bir sıra geri çekilir, sonuncusu çıkar."
 **Kurallar**
 
 1. **Yalnızca görseli olan kart.** Yalnız metin taşıyan bölüm (başlık
-   bloğu, görüş, SSS, fiyat, kapanış) hikâye almaz; § 4'teki Reveal yeter.
-   Ürün ekranı önizlemesinde içerik yüklenir, hikâye **sorulmadan eklenmez**.
-2. **Tasarımda başlar, tasarımda biter.** Hikâyenin dinlenme karesi kartın
-   statik hâlidir. `prefers-reduced-motion: reduce` yalnızca o kareyi
-   gösterir; hikâye hiç çalışmaz.
+   bloğu, görüş, SSS, fiyat, kapanış) hikaye almaz; § 4'teki Reveal yeter.
+   Ürün ekranı önizlemesinde içerik yüklenir, hikaye **sorulmadan eklenmez**.
+2. **Tasarımda başlar, tasarımda biter.** Hikayenin dinlenme karesi kartın
+   statik halidir. `prefers-reduced-motion: reduce` yalnızca o kareyi
+   gösterir; hikaye hiç çalışmaz.
 3. **Görünürken oynar.** Kartın %30'u görününce giriş bir kez oynar
-   (`useInView(ref, { amount: 0.3, once: true })`); hikâye ekran dışına
+   (`useInView(ref, { amount: 0.3, once: true })`); hikaye ekran dışına
    çıkınca durur, dönünce kaldığı yerden sürer (`useInView` ikinci kez,
    `once` olmadan). Kaydırma dinleyicisi yok.
-4. **Bir kart, bir hikâye, 3–8 sn.** Her 1–2 saniyede bir görünür adım;
-   iki saniyede canlı olduğu anlaşılmıyorsa hikâye çekingendir.
+4. **Bir kart, bir hikaye, 3–8 sn.** Her 1–2 saniyede bir görünür adım;
+   iki saniyede canlı olduğu anlaşılmıyorsa hikaye çekingendir.
 5. **Kartlar aynı anda oynamaz.** Başlangıçları okuma sırasına göre
    kaydırılır; dikkat ekranda dolaşır. Aynı anda iki büyük hareket yok (§ 11).
-6. **Kartın kendi öğeleriyle.** Hikâyenin gerektirdiği yardımcı (imleç,
+6. **Kartın kendi öğeleriyle.** Hikayenin gerektirdiği yardımcı (imleç,
    yığının kopya öğesi) kartın diliyle çizilir ve dinlenme karesinde gizlidir.
    Tasarımda olmayan şekil eklenmez: kartın üst kenarına "yükleniyor çizgisi"
    konmaz.
@@ -454,7 +454,7 @@ eskiler bir sıra geri çekilir, sonuncusu çıkar."
 
 ```tsx
 "use client";
-// Yığın hikâyesi: yeni talep üste iner, sonuncusu çıkar. Görünmüyorken durur.
+// Yığın hikayesi: yeni talep üste iner, sonuncusu çıkar. Görünmüyorken durur.
 const ref = useRef<HTMLUListElement>(null);
 const visible = useInView(ref, { amount: 0.3 });
 const reduce = useReducedMotion();
@@ -523,8 +523,8 @@ animasyonu, `motion` 14'e geçiş (`x`/`y` donanım hızlandırması 14.2'de).
 - [ ] Her gezinmede oynayan giriş 200–500 ms bandında; kademede tek kahraman
 - [ ] Ölçülmüş veri 0'dan sayılmıyor
 - [ ] Magnetic/imleç efektleri `pointer: fine` altında
-- [ ] Bento görselinin hikâyesi tek cümleyle yazıldı; yalnız metin kartı hikâye almıyor
-- [ ] Hikâye tasarımda başlayıp bitiyor, ekran dışında duruyor, reduced-motion'da statik
+- [ ] Bento görselinin hikayesi tek cümleyle yazıldı; yalnız metin kartı hikaye almıyor
+- [ ] Hikaye tasarımda başlayıp bitiyor, ekran dışında duruyor, reduced-motion'da statik
 - [ ] Nesne `scale(0)`dan gelmiyor; tasarımda olmayan "yükleniyor çizgisi" yok
 - [ ] Fotoğrafta ve büyük başlıkta `filter` animasyonu yok; `view()` kabı `overflow: clip`
 - [ ] Günde yüzlerce görülen öğe (kısayol, palet) animasyonsuz; hover ≤ 150 ms

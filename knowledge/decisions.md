@@ -283,7 +283,7 @@ tamamı `guides/02-design-tokens.md` § 1.
   göre değişir.
 - `.app-bg` isteğe bağlı: köşelerde `--primary`nin çok düşük opaklıklı radial'ı.
 - Alternatif paletler aynı kurallarla: `verdant` (zümrüt; sağlık/terapi),
-  `ember` (kehribar; oyun/topluluk), `iris` (mor-indigo; yaratıcı/yapay zekâ).
+  `ember` (kehribar; oyun/topluluk), `iris` (mor-indigo; yaratıcı/yapay zeka).
   Değerler kontrast ölçülerek üretilir, uydurulmaz.
 
 **Neden değişti:** kullanıcı kararı. Açılış Zili'nin tek aileden kurulan
@@ -361,7 +361,7 @@ okundu ve çıkarılabilir desenler `knowledge/patterns.md → Agentic UI` ile
    → `templates/agentic-chat/README.md` → Lisans notu
 
 **Not (2026-10-03):** `templates/agentic-chat` overlay'i ve `/agentic` komutu
-POC için hazır; karar hâlâ açık.
+POC için hazır; karar hala açık.
 
 **Karar verilirse güncellenecek:** bu bölüm + `rules/agentic-ui.md`nin başındaki
 "benimsenmedi" notu + `CLAUDE.md` tech stack.
@@ -444,7 +444,7 @@ bizim token, punto ve hareket sistemimize çevrildi.
   hook'larda olduğu gibi (`mistakes.md` #52) davranışla doğrulanır.
 - **İç içe radius formülü** (`iç = dış − boşluk`, boşluk < 32 px) →
   `guides/02` § 4; göz kararı "bir basamak küçült"ün yerine.
-- **Görsel hikâyesi** (bento kartının görseli işini oynar, tasarımda başlar
+- **Görsel hikayesi** (bento kartının görseli işini oynar, tasarımda başlar
   ve biter, ekran dışında durur) → `guides/04` § 14.
 - **Örnek içerik gerçekçiliği ve sistem mesajı** → `guides/05` § 7.
 
@@ -653,7 +653,7 @@ popper) ve taşan diyalog açılışı (Settle modal): taşma yalnız küçük t
 çalışma alanının adı doğrudan Pusula, adresler `pusula.app` (sahibinin
 isteği).
 
-## Secki Turu — Hareket ve Doku, Yapay Zekâ Bileşenleri, Paket Kiti, Storybook Kabuğu (2026-11-06)
+## Secki Turu — Hareket ve Doku, Yapay Zeka Bileşenleri, Paket Kiti, Storybook Kabuğu (2026-11-06)
 
 **Karar:** secki.dev'in 332 bağlantısı tarandı; bileşen, hareket, desen ve
 skill kaynaklarından kütüphanemizde karşılığı olmayan 17 desen sıfırdan,
@@ -663,7 +663,7 @@ token'larımızla yazıldı (kod alınmadı). İki yeni grup:
   `animated-icon`, `morph-icon`, `pixel-loader`, `terminal`, `dial`,
   `book-cover`, `pattern-bg`, `halftone-image`, `mark-annotate`,
   `expandable-card`.
-- **Yapay Zekâ** (4): `thinking-orb`, `tool-call`, `reasoning`,
+- **Yapay Zeka** (4): `thinking-orb`, `tool-call`, `reasoning`,
   `stream-text`. Ajan arayüzünde "model ne yaptı"yı gösteren eksik parçalar
   (`rules/agentic-ui.md`: şeffaflık).
 
@@ -726,7 +726,7 @@ okununca yüklenirler. Uzun harita ve örnekler `docs/ECOSYSTEM.md`de
 (otomatik yüklenmez). Hiçbir kural silinmedi; her taşınan bölüm yeni
 yerinde bir "nereden geldi" notu taşır.
 
-**Neden:** Claude Code'un güncel resmî önerisi (code.claude.com/docs, 8
+**Neden:** Claude Code'un güncel resmi önerisi (code.claude.com/docs, 8
 Kasım 2026'da doğrulandı): CLAUDE.md dosya başına ~200 satır; uzun dosya
 bağlamı yer ve uyumu düşürür. `@path` içe aktarma bağlamı AZALTMAZ
 (başlangıçta yüklenir), bu yüzden kullanılmadı. Global dosya 17 KB'tı ve
@@ -820,8 +820,8 @@ kullanılmadı.
 
 ### Komut mu Skill mi — Değerlendirme (toplu taşıma YOK)
 
-`.claude/commands/*.md` hâlâ çalışıyor ve skill listesinde açıklamasıyla
-görünüyor (model çağırabilir); yeni iş için resmî öneri skill. Toplu
+`.claude/commands/*.md` hala çalışıyor ve skill listesinde açıklamasıyla
+görünüyor (model çağırabilir); yeni iş için resmi öneri skill. Toplu
 taşıma yapılmadı: bootstrap komutları tek tek `~/.claude/commands/`a
 bağlıyor, health-check `COMMANDS` listesi, kök CLAUDE.md tablosu ve README
 sayacı (`.claude/commands` sayısı, "Komut") aynı evreni sayıyor; taşıma
@@ -873,7 +873,7 @@ ilk turda paralel okuma talimatı. Gerekçe yukarıda.
 2. ~~**`gradient-text` yasağı fazla katı**~~ → ✅ 2026-08-16, yasak kaldırıldı;
    2026-10-03'te yeni projeler için "üç yer + tek aile" kimlik kuralı geldi.
 3. **Palet istisnaları**: `onepiece-hub` ✅ çözüldü. `ramazan-vakitleri`
-   (mor+pembe+mavi) `iris`e yakın; hâlâ açık.
+   (mor+pembe+mavi) `iris`e yakın; hala açık.
 ## Ribbon Turu — Tanıtım Bileşenleri (2026-11-07)
 
 **Karar:** meetribbon.app (Mac pencere yöneticisi) bölüm bölüm tarandı
@@ -927,15 +927,15 @@ Apple logosu, maskot çizimi, rozetler), sistem serif'i, ham sky/zinc paleti,
 kıtlık sayacı ("10 kişiden 10'u kaldı": doğrulanamayan aciliyet, veri
 dürüstlüğü). Ayrıntı `references.md` → Değerlendirilip Alınmayanlar.
 
-## Offscreen Turu — Duvar Kâğıtları, Süzülen Sütunlar, Duyuru Destesi (2026-11-07)
+## Offscreen Turu — Duvar Kağıtları, Süzülen Sütunlar, Duyuru Destesi (2026-11-07)
 
-**Karar:** offscreen.wtf (duvar kâğıdı galerisi) ilk `/harvest` turuyla
+**Karar:** offscreen.wtf (duvar kağıdı galerisi) ilk `/harvest` turuyla
 tarandı. Tıklanan noktadan daire açılan tema geçişi (`theme-toggle`) ve kumlu
 doku (`pattern-bg` → noise) bizde vardı. Üç yeni bileşen: `drift-columns`
 (zıt yönde süzülen sütunlar, yalnız CSS), `notice-deck` (köşede dönen duyuru
 destesi; sitedeki sponsor kartının duyuru karşılığı), `wallpaper`.
 
-**Duvar kâğıtları:** sitedeki görseller sanatçıların eseri, alınmadı. İlk
+**Duvar kağıtları:** sitedeki görseller sanatçıların eseri, alınmadı. İlk
 sürüm altı sahneyi paletin tonunu beyaz/siyahla karıştırarak çiziyordu;
 kullanıcı "güzel durmuyor" dedi (haklıydı: oklab karışımı bulanık ve
 kahverengiye çalan sahneler veriyordu). **Değişti (2026-11-07):** sekiz
@@ -943,7 +943,7 @@ illüstrasyon sahnesi, elle seçilmiş renk setleriyle (`token-ok-file`
 gerekçeli istisna: arayüz rengi değil resim rengi) ve gerçek işçilikle:
 katman başına ışık degradesi, katmanlar arası sis, güneşte geniş hale, kumda
 aydınlık/gölge yüzü ve sırt çizgisi, düzensiz kayalık zirveler, kutup
-ışığında yüzlerce dikey huzme, ipek çizgileri, kâğıt kesiminde gölge.
+ışığında yüzlerce dikey huzme, ipek çizgileri, kağıt kesiminde gölge.
 `downloadWallpaper()` Retina masaüstü (2880×1800) ve telefon (1290×2796)
 PNG'si üretir. Ders: illüstrasyonda token disiplini güzelliği öldürür;
 sınır arayüz ile resim arasında çizilir.
@@ -977,7 +977,7 @@ token'la sıfırdan yazıldı:
   canlanan TEK öğe; içerik mutlak konumlu olduğu için akış yeniden
   dizilmez (Base UI NavigationMenu aynı yolu kullanır). "Yalnız bileşimci"
   kuralına bilinçli, dosyada yazılı istisna.
-- `arc-carousel`: Arc Wave/Flow Tunnel'ın WebGL'siz hâli. Ders: aynı öğede
+- `arc-carousel`: Arc Wave/Flow Tunnel'ın WebGL'siz hali. Ders: aynı öğede
   `rotate` + `scale` uzak `transform-origin`den ölçekler, kart yaydan
   düşer; dönüş dış, küçülme iç katmanda (ölçümle bulundu: kart altı 615 px
   → 475 px, sahne 491 px).
@@ -1030,7 +1030,7 @@ bağımlılık ve versiyonlanan ikinci bir kanca dizini getirirdi.
 *Sınır:* `--no-verify` atlar; mesaj biçimi o aşamada bilinmez.
 
 **Karar 5 — Subagent slash komutu çağırmaz; rol dosyası komutu doğrudan yazar.**
-Açık `tools` listesi `Skill`i ve MCP araçlarını dışarıda bırakır (resmî belge).
+Açık `tools` listesi `Skill`i ve MCP araçlarını dışarıda bırakır (resmi belge).
 Wrapper'lara `Skill` eklemek yerine rol dosyalarındaki "Kullandığı Skills"
 tabloları kaldırıldı: komutlar orkestrasyon adımıdır, subagent'a verilirse iç
 içe dağıtım başlar. MCP gereken tek rol (`design-reviewer`) sunucuyu adıyla sayar.
@@ -1048,7 +1048,7 @@ eşitliği denetler.
   ölçülür, desen sayısı `PATTERN_PRESETS`ten gelir.
 - Marka işareti (degrade karo + kısalan üç çubuk) sidebar, kapak künyesi ve
   README'de aynıdır.
-- Sayfa niteliğindeki hikâyede eklenti paneli kapanır; yalnız biz kapattıysak
+- Sayfa niteliğindeki hikayede eklenti paneli kapanır; yalnız biz kapattıysak
   geri açılır.
 - Play fonksiyonu sayfayı kaydırmaz ve ziyaretçinin globalini değiştirip
   bırakmaz.
@@ -1158,7 +1158,7 @@ Tasarım). Sıra `preview.tsx → storySort`, etiketler `manager-head.html`.
   (lucide, uygulamayla aynı aile; CSS maskesi, rengi paletle döner).
   Storybook'un düğüm türüne göre verdiği yer imi / klasör / ızgara karışıklığı
   kalktı; açma oku olmayan sayfalar ikon sütununa hizalandı.
-- Bileşenler alt grupları temelden karmaşığa sıralı (Temel → … → Yapay Zekâ);
+- Bileşenler alt grupları temelden karmaşığa sıralı (Temel → … → Yapay Zeka);
   önceden dosya sırasıyla rastgeleydi.
 - Kabuk Türkçe: marka alt satırı "Görsel Katalog" (Inter; eşaralıklı küçük
   harf kod gibi okunuyordu), belge sayfaları "Belge" (yalnız görünen ad,
@@ -1326,12 +1326,12 @@ mavi heroda butonlar çok kötü duruyor, kullanımı kolay değil".
   bileşen yerine taşındı (Avatar, Rozet, Ayırıcı → Temel; Bölmeli Seçici,
   Aç-Kapa Grubu → Seçim; Dosya Bırakma → Form; Kod Bloğu → Veri; Duyuru →
   Geri Bildirim). Açılış sayfası üst bölüm varyantları Türkçe adlandı.
-  Geliştirme sunucusundaki "+" (yeni hikâye) ve "Show modified stories"
+  Geliştirme sunucusundaki "+" (yeni hikaye) ve "Show modified stories"
   gizlendi: kataloğu gezen kişiye anlamsız.
 - **Kapak = katalog haritası:** ilk ekranın sağ yarısı kenar çubuğunun üç
   bölümü ve on bir kapısı; her satır ne içerdiğini ve kaç parça olduğunu
-  söyler. Sayılar ve bağlantılar hikâye dosyalarından sayılır
-  (`stories/kapak/_harita.ts`; 779 hikâye adresinin hepsi Storybook'un
+  söyler. Sayılar ve bağlantılar hikaye dosyalarından sayılır
+  (`stories/kapak/_harita.ts`; 779 hikaye adresinin hepsi Storybook'un
   kuralıyla doğru türetildi). Solda kabuğun aramasını açan arama kutusu.
   Altında on üç bileşen rafı (ad, sayı, içindeki ilk parçalar). Numune föyü
   palet bölümüne indi; dört sayaç kalktı (harita aynı bilgiyi veriyor).
@@ -1357,8 +1357,8 @@ mavi heroda butonlar çok kötü duruyor, kullanımı kolay değil".
 basıldı, etkisi olmayan arandı; gerçek ölü öğe yalnız kanban kartıydı (geri
 kalan işaretler zaten seçili seçenek ya da aynı sayfaya bağlantı).
 
-**Alternatifler:** Pusula'nın 15 hikâyesini sayfa klasörlerine bölmek
-(derinlik bir tık artar, reddedildi); kapakta hikâye listesini çalışma
+**Alternatifler:** Pusula'nın 15 hikayesini sayfa klasörlerine bölmek
+(derinlik bir tık artar, reddedildi); kapakta hikaye listesini çalışma
 anında `index.json`dan okumak (ilk çizimde sayılar boş gelip zıplar;
 derleme anında ham metinden sayım seçildi).
 
@@ -1377,7 +1377,7 @@ dili). `mistakes.md #122`.
 
 ### Tasarım Denetimi Turu (2026-11-17)
 
-`design-reviewer` 13 hikâyeyi 3 genişlik × 2 temada ölçtü (78 ekran;
+`design-reviewer` 13 hikayeyi 3 genişlik × 2 temada ölçtü (78 ekran;
 `docs/review/storybook-2026-11-17.md`, sonunda bulgu bulgu durum). Kararlar:
 - **Ara genişlik (1024) bir kırılım:** Pusula'da yan paneller (Gelen
   Kutusu'nun klasör ağacı, Takvim'in Bugün paneli) yalnız `xl`de yanda; daha
@@ -1436,7 +1436,7 @@ yanıltır; doğrusal + en az %6 + yazılı sayı kaldı).
 
 Sahibi: "Kavurmaya Al yemek gibi duruyor; şirket isimleri tutarlı, kurumsal
 olsun; komik ya da başka anlam getiren şeyleri düzeltelim; sol menünün düzeni
-en iyi mi?". `content-editor` 779 hikâyeyi taradı (59 bulgu,
+en iyi mi?". `content-editor` 779 hikayeyi taradı (59 bulgu,
 `docs/review/metin-denetimi-2026-11-18.md`); hepsi uygulandı.
 - **Kahve kurgusu (Kıyı Kahve):** tek başına "kavurma" yemek gibi okunuyordu;
   "kavrum" da gündelik değil. Paketlerde gerçekten geçen terimler: kavrulma
@@ -1470,7 +1470,7 @@ en iyi mi?". `content-editor` 779 hikâyeyi taradı (59 bulgu,
 ### Örnek Veri Tutarlılığı (2026-11-18)
 
 Sahibi: "başka eksikler varsa düzelt, verilerde, mock datalarda". Bir ajan
-bütün hikâyelerdeki veriyi mantık açısından taradı (39 bulgu: tutmayan
+bütün hikayelerdeki veriyi mantık açısından taradı (39 bulgu: tutmayan
 toplamlar, yanlış gün adları, aynı ekranda çelişen durumlar); Pusula ve Kıyı
 Kahve veri dosyaları üretilen veriyle karşılaştırılarak elle denetlendi.
 - **Atıf yapan metin hesaplanır:** talep metni bağlı siparişin ürününü,
@@ -1508,3 +1508,14 @@ karanlık sahne, D yüzen bileşenler, E kod ve görünüm. Seçilen D.
   salınım 5 px / 9 sn. Nokta dokusu kalktı; başlığın arkasında kenara doğru
   sönen ince halkalar (yörünge) ve hafif gren. Kaynak: alan derinliği ve
   yakınlıkla odak desenleri (Framer bileşenleri, CSS bulanıklık örnekleri).
+
+### Şapka Kaldırıldı, insanca Kuruldu (2026-11-18)
+
+- **Şapka yok:** sahibinin kararı. "hikaye, zeka, hala, kağıt, resmi"; iki
+  repoda (dev-starter, ahmetakyapi.com) bütün metin. İşlevsel karakter
+  tabloları (arama katlaması `FOLD`/`TR_ASCII`, glif genişliği) dokunulmadı.
+  Eskiden katalog boyunca şapkalı yazım tutarlıydı (Zekâ, hikâye); insanca
+  da şapkayı iz sayıyor, karar onunla aynı yere geldi.
+- **insanca:** `machine/bootstrap.sh` → `INSANCA_REF` (sabit commit, kanca
+  yok, betik ağa çıkmaz). `content-editor` uzun metinde kullanır; Title Case
+  çakışmasında bizim kural geçer. Uzun tire yayın metninde yok.

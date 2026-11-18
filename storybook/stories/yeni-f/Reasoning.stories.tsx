@@ -11,7 +11,7 @@ const ANSWER =
   "Perşembe Selin'in üç boş aralığı var: 10:00, 13:30 ve 16:00. Sabah 10:00 en sakin olanı; istersen davetiyi hemen gönderebilirim.";
 
 const meta = {
-  title: "Bileşenler/Yapay Zekâ/Düşünce Bloğu",
+  title: "Bileşenler/Yapay Zeka/Düşünce Bloğu",
   id: "reasoning",
   component: Reasoning,
   tags: ["autodocs", "yeni"],

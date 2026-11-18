@@ -277,7 +277,7 @@ const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-manrop
   Ölçek basamağına denk gelmeyen sonuç en yakın **alt** basamağa iner.
   `design-reviewer` bunu ekranda `getComputedStyle` ile ölçer.
   (Formül: elayadesign/ai-design-skills, MIT; bizim ölçeğe uyarlandı.)
-- **Gölge merdiveni (2026-11 işçilik turu).** Derinlik hâlâ önce ton
+- **Gölge merdiveni (2026-11 işçilik turu).** Derinlik hala önce ton
   farkıyla kurulur; gölge yalnızca karoda (`raised`), yüzen öğede
   (`floating`) ve katmanda (`modal`). Her basamak **katmanlı ve negatif
   yayılmalı**: önce kenarı keskinleştiren 1 px kıl halka ya da kıl gölge,

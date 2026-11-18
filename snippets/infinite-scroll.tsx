@@ -11,7 +11,7 @@
  * Kullanım:
  *   const { ref, inView } = useInfiniteScroll()
  *
- *   // Tüm bağımlılıklar şart: sayfa yüklendikten sonra nöbetçi hâlâ
+ *   // Tüm bağımlılıklar şart: sayfa yüklendikten sonra nöbetçi hala
  *   // görünürse `inView` değişmez, değişen tek şey `isFetchingNextPage`
  *   useEffect(() => {
  *     if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage()

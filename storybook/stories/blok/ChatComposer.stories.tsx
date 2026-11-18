@@ -6,9 +6,9 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { MODELS } from "./_shared";
 
 /*
- * "Model Seçimi" hikâyesi menüyü gerçekten açar: snippet'te etiket radyo
+ * "Model Seçimi" hikayesi menüyü gerçekten açar: snippet'te etiket radyo
  * grubunun dışındayken Base UI 1.8 menü açılır açılmaz "MenuGroupContext is
- * missing" (#31) fırlatıyordu. Bu hikâye o hatanın geri dönmemesinin testi.
+ * missing" (#31) fırlatıyordu. Bu hikaye o hatanın geri dönmemesinin testi.
  */
 function WithModel(props: ComponentProps<typeof ChatComposer>) {
   const [model, setModel] = useState(props.model);

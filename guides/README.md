@@ -43,5 +43,5 @@ Acelen varsa: 01 → 08 → gerisi ihtiyaç anında.
 Bir projede bir kural bozulup düzeltildiyse üç yere yazılır: hatanın kendisi
 `knowledge/mistakes.md`ye, kalıcı desen `knowledge/patterns.md`ye, ve
 **sıradaki projede o hatayı hiç yaşatmayacak adım** buradaki ilgili rehbere.
-Rehber yalnızca "ne yap" der; uzun hikâye mistakes kaydında kalır ve buradan
+Rehber yalnızca "ne yap" der; uzun hikaye mistakes kaydında kalır ve buradan
 numarasıyla bağlanır.

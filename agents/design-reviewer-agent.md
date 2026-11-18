@@ -4,7 +4,7 @@
 değil **ekranından** okur.
 
 > UI/UX agent'ı tasarlar ve kurar. Design Reviewer kurulmuş olanı açar, ölçer,
-> puanlar. Açılış Zili'nin "ölçmeden değiştirme" kuralının agent hâli.
+> puanlar. Açılış Zili'nin "ölçmeden değiştirme" kuralının agent hali.
 
 Kayıtlı subagent: `.claude/agents/design-reviewer.md`.
 
@@ -80,8 +80,8 @@ Her hücrede topla:
 Ayrıca `prefers-reduced-motion: reduce` ile ana sayfayı bir kez aç: içerik
 görünür mü, opaklığı 0'da takılan öğe var mı.
 
-Bento ve ürün kartlarında görsel hikâyesi varsa (`guides/04-motion.md` § 14):
-kartı görünür alana getirip 4 sn izle (hikâye 2 sn içinde fark ediliyor mu,
+Bento ve ürün kartlarında görsel hikayesi varsa (`guides/04-motion.md` § 14):
+kartı görünür alana getirip 4 sn izle (hikaye 2 sn içinde fark ediliyor mu,
 kartlar aynı anda mı oynuyor), sonra ekran dışına kaydırıp
 `document.getAnimations()` ile sonsuz animasyonun durduğunu doğrula.
 

@@ -98,7 +98,7 @@ export const ErrorToast: Story = {
   // odak dışarıdayken `aria-hidden`, ekran okuyucu onun gizli `role="alert"`
   // kopyasını okur (iki kez okunmasın diye). Karo `tabindex=0` taşıdığı için
   // axe bunu "aria-hidden-focus" sayar; odak bölgeye girince (Tab, F6)
-  // `aria-hidden` kalkar. Yalnız bu kural, yalnız bu hikâyede susar.
+  // `aria-hidden` kalkar. Yalnız bu kural, yalnız bu hikayede susar.
   parameters: { a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } } },
   play: async ({ canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Hata" }));

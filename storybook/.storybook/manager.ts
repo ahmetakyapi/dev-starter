@@ -14,7 +14,7 @@ type Item = { name: string; tags?: string[]; type?: string; depth?: number; chil
 /**
  * Etiket: belge sayfaları "Docs" yerine "Belge" (yalnız görünen ad; adres
  * `…--docs` kalır, README bağlantıları ve İngilizce adres denetimi bozulmaz).
- * "yeni" etiketli hikâye grubunun adının yanında küçük "Yeni" hapı.
+ * "yeni" etiketli hikaye grubunun adının yanında küçük "Yeni" hapı.
  */
 function renderLabel(item: Item) {
   if (item.type === "docs" && item.name === "Docs") return "Belge";
@@ -62,7 +62,7 @@ addons.register("dev-starter/theme-sync", (api: API) => {
   api.on(GLOBALS_UPDATED, ({ globals }: { globals: Record<string, unknown> }) => apply(globals));
 });
 
-/* Sayfa niteliğindeki hikâyelerde (kapak, vitrin, örnek uygulama) eklenti
+/* Sayfa niteliğindeki hikayelerde (kapak, vitrin, örnek uygulama) eklenti
    paneli kapanır: kapak ilk ekranın üçte birini "This story has no controls"
    kutusuna veriyordu. Panel yalnız BİZ kapattıysak geri açılır; kullanıcı
    kendi kapattıysa bileşen sayfasına geçince kapalı kalır. */

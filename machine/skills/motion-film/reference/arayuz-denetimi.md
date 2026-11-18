@@ -60,7 +60,7 @@ geçişin yöntemi, kuralları ve ölçümle bulunan tuzaklarıdır.
 
 ## Açıklayıcı figür sayfada: son kareyi bas, ekran dışındaysa kur
 
-Figür bir kez oynar ama okuyucu onu **bitmiş hâliyle** de görebilmeli (JS
+Figür bir kez oynar ama okuyucu onu **bitmiş haliyle** de görebilmeli (JS
 yok, hareket azaltılmış, figür ilk ekranda). Desen (`PlayOnView`, Açılış
 Zili `components/motion/PlayOnView.tsx`):
 

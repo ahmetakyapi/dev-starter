@@ -90,7 +90,7 @@ Model tam yapıyı mı üretecek?
 ├─ Çıktı büyük / tekrar eden / şablonlaşabilir mi?
 │   └─ DSL SINIRI — model kompakt tarifi üretir, kod yapıyı derler
 │      Kazanç iki katlı: performans + kontrol
-│      Bedel: DSL'in öngörmediği istek imkânsız
+│      Bedel: DSL'in öngörmediği istek imkansız
 └─ Model bir seçim mi yapıyor?
     └─ Adaylar kümesini KOD belirlesin, seçimi KOD doğrulasın
        Eşleşmiyorsa fallback. Halüsinasyon yapısal olarak elenir.

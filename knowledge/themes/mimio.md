@@ -26,7 +26,7 @@ dünyasındaki iki gerçek nesneden türetilmiştir:
 çok oynanan görevi (Sıra Hafızası) tam olarak budur. Aynı nesne markanın
 işareti, kahraman görseli ve oyun tahtası olur. İmza vurgu rengi **oker `#b8763a`** bu bloğun rengidir ve seyrek kullanılır.
 
-**2. Değerlendirme kaydı** — kareli klinik kâğıt, persentil bantları, cetvel
+**2. Değerlendirme kaydı** — kareli klinik kağıt, persentil bantları, cetvel
 çentikleri. Açık tema zemini (`#f4efe4`, soğuk yeşile çalan nötr gri) ve
 başlık altı **cetvel çentiği motifi** buradan gelir.
 
@@ -47,7 +47,7 @@ Varsayılan tema **açık** — terapist gündüz, aydınlık bir odada çalış
 - **Uydurma veri YOK**: Kartlardaki her grafik gerçek kayıttan türer. Veri
   yoksa grafik hiç çizilmez — dekoratif kıvılcım çizgisi yasak.
 - **Zemin dokusu**: Bulanık "aurora" veya imleci takip eden spot yok; bej
-  kâğıt üzerinde 112px'lik milimetrik ızgara (`.paper-grid`), yalnızca
+  kağıt üzerinde 112px'lik milimetrik ızgara (`.paper-grid`), yalnızca
   kahraman bölümünde.
 - **Glassmorphism minimumda**: yalnızca sticky chrome katmanlarında
   (`backdrop-filter: blur(16-24px)`). Kartlar açık temada opak beyaz.
@@ -104,7 +104,7 @@ tema geçişi CSS variable override ile çalışır.
 | `--color-surface-strong` | `rgba(18,32,47,0.9)` | `#fdfbf6` | Modal, dropdown |
 | `--color-surface-elevated` | `rgba(255,255,255,0.055)` | `#fdfbf6` | Yükseltilmiş yüzey |
 
-> Açık temada yüzeyler **opak bej kâğıt** (`#fdfbf6`) — steril beyaz değil. Önceki sürümde yarı saydam lavanta
+> Açık temada yüzeyler **opak bej kağıt** (`#fdfbf6`) — steril beyaz değil. Önceki sürümde yarı saydam lavanta
 > kullanılıyordu; kartlar zeminden ayrışmıyor, kontrast AA'nın altına
 > düşüyordu. Ayrım artık gölge + kılcal nötr çizgiyle kuruluyor.
 
@@ -529,7 +529,7 @@ box-shadow: var(--shadow-elevated);
 | Ozellik | ahmetakyapi.com | Mimio |
 |---------|-----------------|-------|
 | Dark bg | `#04070d` | `#04070d` (ayni) |
-| Light bg | `#f5f7fb` (notr) | `#f4efe4` (soğuk kâğıt grisi) |
+| Light bg | `#f5f7fb` (notr) | `#f4efe4` (soğuk kağıt grisi) |
 | Tema sistemi | next-themes (`class`) | Custom (`data-theme`) |
 | Font | Manrope + IBM Plex Mono | Schibsted Grotesk + IBM Plex Mono |
 | Tailwind | v3 | **v4** (`@theme`) |

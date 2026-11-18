@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
  *   <Tooltip label="Ayarları Aç">
  *     <IconButton icon={Settings} aria-label="Ayarları Aç" showTitle={false} />
  *   </Tooltip>
- *   <InfoTip label="F/K Nedir">Fiyatın hisse başına kâra oranı.</InfoTip>
+ *   <InfoTip label="F/K Nedir">Fiyatın hisse başına kara oranı.</InfoTip>
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo + ince çizgisi + `shadow-modal`.
  * Tek satırlık etiket `rounded-lg` (24 piksellik `xl` otuz piksel yüksek bir

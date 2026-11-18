@@ -5,7 +5,7 @@ import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wa
 const ITEMS = WALLPAPER_SCENES.map((scene, i) => ({
   id: scene,
   title: WALLPAPER_NAMES[scene],
-  meta: `Duvar Kâğıdı · ${i + 1}. Sahne`,
+  meta: `Duvar Kağıdı · ${i + 1}. Sahne`,
   href: `#${scene}`,
   media: <Wallpaper scene={scene} />,
 }));
@@ -23,7 +23,7 @@ const meta = {
       },
     },
   },
-  args: { items: ITEMS, label: "Duvar Kâğıtları", visible: 3 },
+  args: { items: ITEMS, label: "Duvar Kağıtları", visible: 3 },
   render: (args) => (
     <div className="mx-auto max-w-5xl p-6">
       <ArcCarousel {...args} />

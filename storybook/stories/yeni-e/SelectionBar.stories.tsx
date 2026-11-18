@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SelectionAction, SelectionBar } from "@/components/ui/selection-bar";
 import { Frame } from "../_lib/Frame";
 
-const ROWS = ["PSL-1186 · Siparişimiz hâlâ teslim edilmedi", "PSL-1185 · Proformada çift KDV", "PSL-1184 · Toplu yenileme teklifi", "PSL-1183 · Ödeme adımı hata veriyor"];
+const ROWS = ["PSL-1186 · Siparişimiz hala teslim edilmedi", "PSL-1185 · Proformada çift KDV", "PSL-1184 · Toplu yenileme teklifi", "PSL-1183 · Ödeme adımı hata veriyor"];
 
 function Demo({ initial = [] as number[] }) {
   const [picked, setPicked] = useState<number[]>(initial);

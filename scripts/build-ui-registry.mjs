@@ -6,7 +6,7 @@
  *   node scripts/build-ui-registry.mjs --check  # ayrışma var mı (npm run verify:registry, CI)
  *   UI_REGISTRY_URL=http://localhost:4000/r node scripts/build-ui-registry.mjs --out /tmp/r   # yerel shadcn denemesi
  *
- * Üç çıktı, tek kaynak (bileşen dosyaları + README kataloğu + hikâye kimlikleri):
+ * Üç çıktı, tek kaynak (bileşen dosyaları + README kataloğu + hikaye kimlikleri):
  *   1. snippets/ui/registry.json — her bileşen: ad, dosya, Türkçe başlık ve
  *      kategori, istemci mi, doğrudan iç bağımlılıklar, şablondan gelen dosyalar
  *      ve npm paketleri (bu ikisi transitif; sürüm landing şablonundan),
@@ -90,7 +90,7 @@ const items = components.map((name) => {
   const cat = catalog.get(name)
   const story = stories.get(name)
   if (!cat) warnings.push(`${name}: snippets/ui/README.md kataloğunda yok (kategori "Diğer")`)
-  if (!story) warnings.push(`${name}: Storybook'ta meta id'si eşleşen hikâye yok`)
+  if (!story) warnings.push(`${name}: Storybook'ta meta id'si eşleşen hikaye yok`)
   for (const pkg of d.npm) if (!versions[pkg]) warnings.push(`${name}: "${pkg}" sürümü landing/storybook package.json'da yok`)
   return {
     name,
@@ -111,7 +111,7 @@ const items = components.map((name) => {
 
 const registry = {
   $comment:
-    'ÜRETİLDİ — elle düzenleme. Kaynak: snippets/ui/*.tsx + README kataloğu + storybook hikâye kimlikleri. Üreten: npm run registry:ui',
+    'ÜRETİLDİ — elle düzenleme. Kaynak: snippets/ui/*.tsx + README kataloğu + storybook hikaye kimlikleri. Üreten: npm run registry:ui',
   name: 'dev-starter-ui',
   homepage: BASE_URL.replace(/\/r$/, ''),
   shadcnBase: BASE_URL,

@@ -23,8 +23,8 @@ DIRECTOR § 6). Ama ortam ikiye ayrılır:
 | Olay | Tarif | Malzeme |
 |------|-------|---------|
 | damla / iniş | sinüs + 2,76× kısmi + alçak geçiren gürültü tıkı | cam + ıslaklık |
-| damga / mühür | 130 → 48 Hz kayan sinüs + kısa gürültü + yüksek tık | ahşap + kâğıt |
-| kalem | bant geçiren gürültü (3,6 kHz), düzey 35 ms'de bir tohumlu titrer | kâğıt lifi |
+| damga / mühür | 130 → 48 Hz kayan sinüs + kısa gürültü + yüksek tık | ahşap + kağıt |
+| kalem | bant geçiren gürültü (3,6 kHz), düzey 35 ms'de bir tohumlu titrer | kağıt lifi |
 | dev yazı girişi | filtresi 600 → 2400 Hz açılan gürültü | hava |
 | sel gelir / çekilir | alçak geçiren gürültü, filtre 220 ↔ 1500 Hz | su, metal değil |
 | daktilo | 6 × 12 ms yüksek geçiren tık | mekanik |

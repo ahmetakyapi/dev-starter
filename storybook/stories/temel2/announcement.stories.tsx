@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Sayfanın üst bölümündeki başlığın üstünde tek satırlık haber (\"Yeni · Grafikler geldi →\"); bilgi vermek için değil tıklanmak için durur. Noktasız ve yanıp sönmez; hapın tamamı tek bağlantı. Kapatılabilir hâlde × bağlantının kardeşidir ve kapatma tarayıcıda hatırlanır.",
+          "Sayfanın üst bölümündeki başlığın üstünde tek satırlık haber (\"Yeni · Grafikler geldi →\"); bilgi vermek için değil tıklanmak için durur. Noktasız ve yanıp sönmez; hapın tamamı tek bağlantı. Kapatılabilir halde × bağlantının kardeşidir ve kapatma tarayıcıda hatırlanır.",
       },
     },
   },

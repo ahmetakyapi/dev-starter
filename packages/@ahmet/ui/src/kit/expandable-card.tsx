@@ -10,7 +10,7 @@ import { cn } from "../utils";
  * Genişleyen kart: tıklanan kart yerinden büyüyerek pencereye dönüşür;
  * görseli ve başlığı aynı öğe olarak yeni yerine akar, ayrıntı sonra
  * belirir. Kapatınca kart yerine geri döner. Ürün, proje, ekip üyesi,
- * tarif: önce kısa kart, istenirse bütün hikâye. Göz bağlamı kaybetmez:
+ * tarif: önce kısa kart, istenirse bütün hikaye. Göz bağlamı kaybetmez:
  * pencere başka bir yerden açılmadı, kartın kendisi büyüdü.
  *
  * PAYLAŞILAN ÖĞE (`layoutId`): kabuk, görsel ve başlık aynı kimlikle iki

@@ -3,7 +3,7 @@ import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 /**
- * Grafik hikâyelerinin sahnesi. `ChartCard` kendisi gri bir kuyu
+ * Grafik hikayelerinin sahnesi. `ChartCard` kendisi gri bir kuyu
  * (`bg-surface`); onu bir de `Frame` kuyusuna koymak iki aynı gri yaratır,
  * sınır kaybolur. Bu yüzden grafik sayfa zemininde, yalnızca genişliği
  * sınırlı durur: boardui vitrinindeki gibi beyaz sayfa, gri kart, beyaz karo.

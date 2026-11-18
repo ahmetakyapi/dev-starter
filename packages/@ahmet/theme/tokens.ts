@@ -401,7 +401,7 @@ export const palettes = {
       ctaGradient: 'linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%)',
     },
   },
-  /** violet — menekşe; yaratıcı araç, yapay zekâ, topluluk */
+  /** violet — menekşe; yaratıcı araç, yapay zeka, topluluk */
   violet: {
     light: {
       primary: '#7c3aed',

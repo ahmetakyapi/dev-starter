@@ -1,4 +1,4 @@
-# Yönetmenlik — hikâye, okumalar, ilkeler, geçişler
+# Yönetmenlik — hikaye, okumalar, ilkeler, geçişler
 
 ## 0. Önce çıta: 1–2 referans eser
 
@@ -85,7 +85,7 @@ metin girişi taşmaz.
 
 | Geçiş | Ne anlatır | Nasıl |
 |-------|-----------|-------|
-| Biçim değiştirme (morph) | aynı şeyin başka hâli | iki nokta dizisi arasında `mix(a, b, ease.inOut(k))`; nokta sayısı eşit |
+| Biçim değiştirme (morph) | aynı şeyin başka hali | iki nokta dizisi arasında `mix(a, b, ease.inOut(k))`; nokta sayısı eşit |
 | Eşleşen kesme (match cut) | şekil/hareket kesmenin iki yanında aynı | DOM'daki buton damlası → tuvaldeki damla (konumu ölç, filme ver) |
 | Kamera taşıması | devamlılık | yakınlaşma bir sahnede başlar, öbüründe biter |
 | Sel (ink flood) | sert açık/koyu dönüş | `film-kit.ts → inverted`; selin merkezi bir öğe (çizginin ucu), çekilince başka öğe (terazinin mili) |
@@ -110,7 +110,7 @@ hareket üstünde ya da bilinçli şok kesme.
 - Çekingen pozlar; okunmayan tepkiler
 - Hareketsiz şeylerin her karede yeniden kaynaması (öğe başına tohum yok)
 - Kesme her yerde; film birden başlayıp birden bitiyor
-- Ekranda hikâyeyi tekrar eden yazı ("Kayboldum" levhası)
+- Ekranda hikayeyi tekrar eden yazı ("Kayboldum" levhası)
 - Kamera hızlı nesneyi kaçırıyor; kadrajda boş kare (bkz. `kamera.md`)
 - Künyeler birbirinin, butonun ya da çizginin üstünde (bkz. `inceleme-dongusu.md`)
 

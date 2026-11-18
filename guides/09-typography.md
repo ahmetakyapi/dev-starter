@@ -75,7 +75,7 @@ dosyasında; iki alt küme birlikte hepsini taşır. Gövde ya da başlıkta kul
   grafik dili taşıdığında (boardui.com'dan öğrenilen dil) Inter doğru seçim:
   göze batmaz, rakamları düzgün, `opsz` ekseniyle büyük puntoda sıkılaşır.
   Türkçe ve ₺ glifleri woff dosyasının cmap'inden okunarak doğrulandı
-  (Kasım 2026). Kimliği yalnızca font taşıyacaksa hâlâ `dense` ya da `product`.
+  (Kasım 2026). Kimliği yalnızca font taşıyacaksa hala `dense` ya da `product`.
 - **Fraunces yok.** Simayahi'de denendi ve reddedildi; yeniden önerme.
 
 ---

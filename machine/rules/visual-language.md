@@ -34,7 +34,7 @@ Ayrıntı: `~/dev-starter/guides/00-brand-identity.md`.
 
 **Palet (`data-palette`):** `signature` varsayılan — Açılış Zili'nin lacivert → mavi
 ailesi (açık `#0d74c4`, koyu `#35b8ff`); `verdant` (zümrüt; sağlık/terapi), `ember`
-(kehribar; oyun/topluluk), `iris` (mor-indigo; yaratıcı/yapay zekâ). Palet `/kickoff`ta
+(kehribar; oyun/topluluk), `iris` (mor-indigo; yaratıcı/yapay zeka). Palet `/kickoff`ta
 seçilir. Mevcut projeler kendi temalarıyla kalır.
 
 > **Not:** Mimio (Ağustos 2026, "Deniz" v2) kendi yolunu izler: imza mavi→cyan

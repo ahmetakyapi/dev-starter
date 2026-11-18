@@ -58,7 +58,7 @@ export const KAMPANYALAR: ScatterPoint[] = [
   { label: "Proje Yönetimi Araması", x: 31, y: 590, size: 19600, category: "arama" },
   { label: "Ücretsiz Deneme", x: 55, y: 980, size: 36200, category: "arama" },
   { label: "Kış İndirimi", x: 24, y: 310, size: 17800, category: "sosyal" },
-  { label: "Kullanıcı Hikâyeleri", x: 12, y: 190, size: 9400, category: "sosyal" },
+  { label: "Kullanıcı Hikayeleri", x: 12, y: 190, size: 9400, category: "sosyal" },
   { label: "Yeni Özellik Videosu", x: 37, y: 420, size: 26100, category: "sosyal" },
   { label: "Ekip Paketi Tanıtımı", x: 48, y: 380, size: 22500, category: "sosyal" },
   { label: "Haftalık Bülten", x: 4, y: 260, size: 6100, category: "eposta" },

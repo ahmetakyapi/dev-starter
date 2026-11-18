@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Üç boyutlu duran, üzerine gelince okura dönen kitap: rehber, e-kitap, kaynak kütüphanesi. Ön kapak, sayfa kenarı ve cilt kırığı saf CSS; tonlar token'dan (birincil, mürekkep, kâğıt). `href` verilirse bütün kitap tek bağlantı. Hareket azaltmada dönmez, ton açılır.",
+          "Üç boyutlu duran, üzerine gelince okura dönen kitap: rehber, e-kitap, kaynak kütüphanesi. Ön kapak, sayfa kenarı ve cilt kırığı saf CSS; tonlar token'dan (birincil, mürekkep, kağıt). `href` verilirse bütün kitap tek bağlantı. Hareket azaltmada dönmez, ton açılır.",
       },
     },
   },

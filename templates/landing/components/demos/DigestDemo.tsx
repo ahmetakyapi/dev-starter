@@ -10,7 +10,7 @@ import { TILE } from "./styles";
 type Digest = Extract<FeatureDemo, { kind: "digest" }>;
 
 /*
- * Hikâye: "Hafta akarken sütunlar nefes alır, sonra tasarımdaki boylarına
+ * Hikaye: "Hafta akarken sütunlar nefes alır, sonra tasarımdaki boylarına
  * geri oturur." Üç adımın biri tasarım karesi; okuyucu gerçek boyu hep görür.
  *
  * Sütun iz (`bg-chart-track`) içinde AŞAĞIDAN KAYARAK yükselir (`y`),
@@ -22,7 +22,7 @@ const BREATH = [0.62, 1.18, 0.84, 1.1, 0.7];
 export function DigestDemo({ demo, startDelay = 0 }: { demo: Digest; startDelay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const tick = useStory(ref, { interval: 1600, startDelay });
-  // İlk görünüşte sütunlar izden çizilir (bir kez); sonrası hikâye.
+  // İlk görünüşte sütunlar izden çizilir (bir kez); sonrası hikaye.
   const seen = useInView(ref, { once: true, amount: 0.3 });
   const max = Math.max(...demo.days.map((day) => day.value)) * 1.2;
   const phase = tick % 3;

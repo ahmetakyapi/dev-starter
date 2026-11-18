@@ -37,7 +37,7 @@ type ToastContextValue = Record<ToastVariant, (message: string) => void>
 const EASE = [0.22, 1, 0.36, 1] as const
 
 // Zemin opak `overlay`: yarı saydam bir durum rengi, altında kayan içerikle
-// birlikte okunmaz hâle geliyordu. Durumu kenarlık ve ikon taşır.
+// birlikte okunmaz hale geliyordu. Durumu kenarlık ve ikon taşır.
 const variantStyles: Record<ToastVariant, { border: string; icon: string }> = {
   success: { border: 'border-success/40', icon: 'text-success' },
   error: { border: 'border-danger/40', icon: 'text-danger' },

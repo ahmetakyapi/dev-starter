@@ -114,7 +114,7 @@ export default function Page() {
         </DismissibleAnnouncement>
         <h1 className="text-display font-bold tracking-tight">Katman, Geri Bildirim, Gezinme</h1>
         <p className="max-w-xl text-lead text-body">
-          Sağ tık menüsünden bildirim ziline, küçük parçaların doğru yapılmış hâli. Her biri ayrı dosya, kendi token’larımızla.
+          Sağ tık menüsünden bildirim ziline, küçük parçaların doğru yapılmış hali. Her biri ayrı dosya, kendi token’larımızla.
         </p>
       </header>
 
@@ -334,7 +334,7 @@ export default function Page() {
           </div>
         </Showcase>
 
-        <Showcase name="Duyuru" summary="Kahramanın üstünde tek satır haber; kapatılabilir hâli tarayıcıda hatırlanır." wide>
+        <Showcase name="Duyuru" summary="Kahramanın üstünde tek satır haber; kapatılabilir hali tarayıcıda hatırlanır." wide>
           <div className="grid justify-items-center gap-4">
             <Announcement href="/vitrin" tag="Yeni">
               Grafikler Geldi

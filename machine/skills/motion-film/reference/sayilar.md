@@ -108,7 +108,7 @@ nötr zemin (%57 / %43; kaynak: athemeroy/awesome-claude-5-5-videos
 `docs/color-modes.md`, `research-guide.md`, CC BY 4.0). Zemini yazmazsan
 model kendi varsayılanını seçer. LOOK satırında her zaman:
 
-- **zemin parlaklığı** açıkça: "açık kâğıt (`--color-page`, L* ~95)" ya da "koyu zemin (L* ~12)"; filmin içinde değişiyorsa hangi perdede
+- **zemin parlaklığı** açıkça: "açık kağıt (`--color-page`, L* ~95)" ya da "koyu zemin (L* ~12)"; filmin içinde değişiyorsa hangi perdede
 - ana renkler ve TEK vurgu (token adlarıyla)
 - planlar arası tutarlılık: zemin her planda aynı mı, sel/ters palet nerede döner
 
@@ -129,6 +129,6 @@ Akış her şeyi küçültür: anahtar pozları doğru gelenden %10–30 fazla i
 | "Premium hissettirsin" | girişler ease-out-quint, yaylar ζ 0,8, yazıda taşma yok |
 | "Sürüklüyor" | her beklemeyi 12 kare kısalt (120 BPM, 24 fps'te bir vuruş), kesmeler ızgarada kalsın |
 | "Kalabalık" | tek seferde tek kahraman; gerisi 150 ms sonra, yolunun %60'ı |
-| "Yapay zekâ gibi duruyor" | kullandığı varsayılanları ADIYLA say, her birini yasakla, yeniden render et |
+| "Yapay zeka gibi duruyor" | kullandığı varsayılanları ADIYLA say, her birini yasakla, yeniden render et |
 | "Sonu ani" | son kareyi 1,0 sn tut, %2 itiş, ζ 0,8'lik yayla otursun |
 | "Açılış yavaş" | ilk olay 0,5 sn içinde; ilk 0,3 sn'den sonra boş kare yok |

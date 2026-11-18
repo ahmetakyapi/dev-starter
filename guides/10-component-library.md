@@ -63,7 +63,7 @@ Ekim 2026 itibarıyla doğrulananlar (npm kayıtları ve paket belgeleri):
 4. **Ekip.** Radix, Floating UI ve MUI'nin yazarlarından; konumlama Floating
    UI ile aynı motor.
 
-**Bilinen bedel:** shadcn ekosisteminin varsayılanı hâlâ Radix; hazır örnek
+**Bilinen bedel:** shadcn ekosisteminin varsayılanı hala Radix; hazır örnek
 ve üçüncü taraf bileşen Radix için daha bol. Radix kullanan mevcut bir
 projede (shadcn tabanlı projeler) kütüphane değiştirilmez; oraya alınan bileşen
 Radix'e uyarlanır.
@@ -170,7 +170,7 @@ kaldığı için erişilebilirlik açığı değil.
 
 - **Switch** anında etki, **Checkbox** kaydet butonuna bağlı seçim.
 - **RadioGroup** 2-6 seçenek, **Select** 5-15, **Combobox** daha fazlası ya
-  da aranacaksa. Basit form alanında yerel `<select>` hâlâ doğru.
+  da aranacaksa. Basit form alanında yerel `<select>` hala doğru.
 - **Tabs** aynı sayfada içerik; **TabLinks** ayrı adresler (`aria-current`).
 - **Accordion**: SSS ve katlanır bölüm. Ekranın asıl içeriğini katlama.
 - **Breadcrumb**: üç ve daha derin hiyerarşide. Telefonda tek geri bağlantısı.
@@ -208,7 +208,7 @@ kaldığı için erişilebilirlik açığı değil.
 ### Verimlilik
 
 - **KanbanBoard**: durum bileşenin içinde; kalıcılık için `onChange`te sunucu eylemi. `today` verilmezse gecikme vurgusu yalnız istemcide. `limitMode="block"` dolu kolona bırakmayı reddeder. Kendi ağacında `domMax` yükler.
-- **WeekCalendar**: tarih seçmek için değil (`date-calendar`). Test ve hikâyede `now` ile saati sabitle. 45 dakikadan kısa blokta saat yalnız ekran okuyucuya söylenir.
+- **WeekCalendar**: tarih seçmek için değil (`date-calendar`). Test ve hikayede `now` ile saati sabitle. 45 dakikadan kısa blokta saat yalnız ekran okuyucuya söylenir.
 - **TaskList**: üst görevi işaretlemek alt görevleri bitirir, son alt görev bitince üst de biter. İş kolonlar arasında akıyorsa `kanban-board`; kartın ayrıntısı varsa `onCardOpen` ver (tık ve Enter açar, Boşluk taşır): basılınca hiçbir şey olmayan kart ölü öğedir.
 
 ### Form Girişleri

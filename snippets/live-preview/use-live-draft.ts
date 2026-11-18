@@ -43,7 +43,7 @@ type Options = {
  *   içerik  alanlar değişince (DRAFT_DELAY_MS sonra) bu oturumun taslağı yazılır, önizleme
  *           sayfayı tam yüklemeden yeniden çizer (router.refresh, kaydırma yerinde kalır)
  *   görünüm vars değişince önizlemeye anında CSS değişkeni olarak gider, istek yok
- * Durum alanların kendisinden çıkar: gönderilen son hâlle aynı mı (güncel), kaydedilenle aynı mı
+ * Durum alanların kendisinden çıkar: gönderilen son halle aynı mı (güncel), kaydedilenle aynı mı
  * (yayında), son gönderim reddedildi mi (hatalı).
  */
 export function useLiveDraft(key: string, fields: Record<string, string | null>, { save, vars, shared }: Options) {
@@ -95,7 +95,7 @@ export function useLiveDraft(key: string, fields: Record<string, string | null>,
     return () => window.clearTimeout(timer);
   }, [snapshot, pushed, key, session, save, preview]);
 
-  /** Kayıt yayına girdi: önizleme yayındaki hâle döner. (React Compiler kendisi ezberler.) */
+  /** Kayıt yayına girdi: önizleme yayındaki hale döner. (React Compiler kendisi ezberler.) */
   const markSaved = () => {
     setSaved(latest.current.snapshot);
     preview.current?.refresh();

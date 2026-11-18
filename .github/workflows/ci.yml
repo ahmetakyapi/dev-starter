@@ -267,7 +267,7 @@ jobs:
       - name: Build Storybook
         run: npm run build
 
-      # Kural: adresler İngilizce (görünen adlar Türkçe). Kimliksiz bir hikâye
+      # Kural: adresler İngilizce (görünen adlar Türkçe). Kimliksiz bir hikaye
       # Türkçe başlıktan "giriş--giris" gibi adres üretir; burada kırılır.
       - name: Story URLs are English
         run: npm run check:ids

@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Yapay zekâ ajanının çok adımlı işinin kuşbakışı: tamamlananlar üstü çizili, etkin adım beyaz karoda dönen halkayla, bekleyenler kesik çizgili. Durum tek sayıdan (`activeIndex`) türer; bileşen durum tutmaz, sunucuda da çizilir. Tek tek araç çağrıları ve onaylar için `agent-feed` / `agent-approval`.",
+          "Yapay zeka ajanının çok adımlı işinin kuşbakışı: tamamlananlar üstü çizili, etkin adım beyaz karoda dönen halkayla, bekleyenler kesik çizgili. Durum tek sayıdan (`activeIndex`) türer; bileşen durum tutmaz, sunucuda da çizilir. Tek tek araç çağrıları ve onaylar için `agent-feed` / `agent-approval`.",
       },
     },
   },
@@ -59,7 +59,7 @@ export const Collapsed: Story = {
     await expect(details).not.toHaveAttribute("open");
     const summary = canvasElement.querySelector("summary");
     if (!summary) throw new Error("summary yok");
-    // Aç ve yeniden kapat: hikâye daraltılmış haliyle kalsın.
+    // Aç ve yeniden kapat: hikaye daraltılmış haliyle kalsın.
     await userEvent.click(summary);
     await waitFor(() => expect(details).toHaveAttribute("open"));
     await userEvent.click(summary);

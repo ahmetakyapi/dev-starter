@@ -22,18 +22,18 @@ kopyalanmaz.
 | [wheresryan22/anatomy](https://github.com/wheresryan22/anatomy) | MIT | Açıklayıcı figür: "nesne açıklamanın kendisidir", Figür/Kahraman/Destan boyutu, doğruyu saf modelde tutmak, figür kartı (Fig n, başlık, ipucu, canlı künye), hareket kuralları (dt kırpma, takip, alt adımlı yay, `settle`, `burst`, boşta tur, ekran dışında durma ve SON kayıt tuzağı), erişilebilirlik (künye ≠ erişilebilir değer), çizgilerin bir şeyde bitmesi, 4× inceleme. `assets/figure-kit.ts` bu kuralların bizim yazdığımız kodu; anatomy'nin kendi kiti (izometrik SVG, lathe/tube, WebGL, 3D) bootstrap'le ayrıca kurulur. |
 | Florence (@flxrnc), *Opus 5.5 Motion Lab: Make Claude Animate Like a Studio* (X makalesi, Ekim 2026) | makale — fikirler ve sayılar, kendi sözlerimizle | Sıfat → sayı ilkesi ve A/B deneyi, sekiz satırlık yönlendirilmiş prompt (GOAL…QA), yasak listesi, render sözleşmesi (`renderAt(t)`, 0..N−1, `?t` dondurma, `getAnimations`), sayı tablosu (eğri, ζ, süre, kademe, vuruş ızgarası, bekleme, kamera, WCAG), animasyonun beş ilkesinin karelerle yazılışı, inceleme döngüsü (kare numaralı notlar, soğan kabuğu, hız grafiği, komşu kare farkı, sayısal denetim), ses ölçümü (1 kare sonra, telefon bandı, −14 LUFS, −2,2 dBTP), GIF zamanlama tuzağı. Kod (`motion-tokens.ts`, `--onion`, `--probe`, `--gif`) bizim. |
 | prompt-motion.com derlemesi | — | İyi prompt'ların ortak paydası: tek öğe hiç kesilmez (morph), kamera ölçek değiştirir, dev kinetik yazı, sert açık/koyu geçiş, her 1,5–2 sn yeni fikir, gerçek easing + squash/stretch + stagger + overlap + smear, "her from-state t=0'da (seek-safe)". |
-| Açılış Zili bekleme filmi | sahibinin | Bütün tekniklerin sınanmış hâli; ölçümle bulunan hatalar `inceleme-dongusu.md` § tuzaklar. |
+| Açılış Zili bekleme filmi | sahibinin | Bütün tekniklerin sınanmış hali; ölçümle bulunan hatalar `inceleme-dongusu.md` § tuzaklar. |
 
 ## Stillerden iki not (lemo-opuscar, kısaltılmış)
 
-**One-line (tek çizgi):** Kâğıttan hiç kalkmayan tek mürekkep çizgisi; sahneler
+**One-line (tek çizgi):** Kağıttan hiç kalkmayan tek mürekkep çizgisi; sahneler
 kesilmez, biçim değiştirir. Mürekkep yolun etrafında dolu çokgen; genişlik =
 taban × basınç (hızdan) × ince gürültü; yavaşlayınca göllenme; durunca
 sarkık damla; kalem çizilmez, gölgesi düşer; kamera ucu gecikme ve sezgiyle
 izler; tek vurgu rengi, bir kez. Tuzaklar: başıboş bağlantı çizgileri
 "kırışık" okunur (topoloji planla), yuvarlak leke ben gibi okunur.
 
-**Ink wash (mürekkep yıkama):** Boş kâğıt alanın kendisi; beş mürekkep tonu
-(yanık → berrak), ıslak katman kenarda pigment toplar, kuru fırça kâğıdı
+**Ink wash (mürekkep yıkama):** Boş kağıt alanın kendisi; beş mürekkep tonu
+(yanık → berrak), ıslak katman kenarda pigment toplar, kuru fırça kağıdı
 gösterir; tek kırmızı mühür; kesin hamleden önce durgunluk ve yavaş itiş;
 geçişler mürekkep açılması, kaydırma ya da sis — asla düz geçiş.

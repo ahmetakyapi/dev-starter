@@ -1,11 +1,11 @@
 /**
  * RollingNumber — kilometre sayacı gibi yuvarlanarak gelen display sayısı
  *
- * JAVASCRIPT YOK, SUNUCUDA ÇİZİLİR. Sayı biçimlendirilmiş hâliyle gelir
+ * JAVASCRIPT YOK, SUNUCUDA ÇİZİLİR. Sayı biçimlendirilmiş haliyle gelir
  * ("54.114,33 ₺"); her rakam kendi penceresinde 0–9 şeridinin iki turu
  * olarak basılır ve şerit CSS'le son rakamına kayar. İstemci sayacı
  * (değeri kare kare artırıp yeniden biçimlendiren) hem hidrasyonu bekler
- * hem ara karelerde "54.1" gibi yarım biçimler basar; burada son hâl
+ * hem ara karelerde "54.1" gibi yarım biçimler basar; burada son hal
  * zaten HTML'de.
  *
  * GENİŞLİK SIÇRAMAZ (CLS 0): pencerenin genişliğini son rakamın akıştaki

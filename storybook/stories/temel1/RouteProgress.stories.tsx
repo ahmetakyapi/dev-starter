@@ -27,7 +27,7 @@ function Controls() {
   );
 }
 
-/** Hikâye açılınca gezinme başlar, kapanınca durur (mağaza modül düzeyinde). */
+/** Hikaye açılınca gezinme başlar, kapanınca durur (mağaza modül düzeyinde). */
 function Running() {
   useEffect(() => {
     startRouteProgress();

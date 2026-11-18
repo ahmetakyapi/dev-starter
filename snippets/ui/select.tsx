@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * NEDEN YEREL `<select>` DEĞİL: yerel seçim telefonda en iyisi (sistem
  * tekerleği) ve form dostu; ama açık listesi stillenemez, iki temada
  * farklı görünür ve seçeneklere ikon ya da açıklama konamaz. Basit bir form
- * alanıysa yerel `<select>` hâlâ doğru seçim; şablonun `Field` diliyle
+ * alanıysa yerel `<select>` hala doğru seçim; şablonun `Field` diliyle
  * stilleyip kullan. Bu bileşen, görünüşü arayüzün parçası olan seçimler için.
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): tetikleyici beyaz karo (`bg-overlay`

@@ -1,4 +1,4 @@
-/* Form hikâyelerinin ortak verisi. Takvimler sabit bir aya (Kasım 2026)
+/* Form hikayelerinin ortak verisi. Takvimler sabit bir aya (Kasım 2026)
    bakar: ekran görüntüsü her gün aynı çıksın. */
 
 export const NOV = (d: number) => new Date(2026, 10, d);

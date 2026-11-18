@@ -10,7 +10,7 @@ import { chartBg, initials, TILE } from "./styles";
 type Inbox = Extract<FeatureDemo, { kind: "inbox" }>;
 
 /*
- * Hikâye: "Yeni talep en üste düşer, ötekiler bir sıra geri çekilir,
+ * Hikaye: "Yeni talep en üste düşer, ötekiler bir sıra geri çekilir,
  * sonuncusu çıkar; sağdaki kaynak sayacı bir artar."
  *
  * Satırlar sabit yükseklikte ve mutlak konumda: yer değişimi `layout` değil

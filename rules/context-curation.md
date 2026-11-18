@@ -129,7 +129,7 @@ Görev tanımının `oku:` alanı da aynı ilkeyle doldurulur: belge değil, bel
 | tech-radar.md, decisions.md | ✅ | Teknoloji önerisinin dayanağı |
 | guides/00-brand-identity.md | ✅ (Kickoff) | Palet seçimi |
 | live-projects-audit.md | ✅ (Roadmap) | Canlı durumun ölçümü |
-| CLAUDE.md, PRODUCT.md, ROUTEMAP.md, package.json, son 30 commit | ✅ (Roadmap) | Var olan projenin hâli |
+| CLAUDE.md, PRODUCT.md, ROUTEMAP.md, package.json, son 30 commit | ✅ (Roadmap) | Var olan projenin hali |
 | Kod dosyaları | ❌ (yalnız rota listesi ve bağımlılıklar) | Kod incelemiyor |
 | mistakes.md, patterns.md | ❌ | Uygulama ayrıntısı; plan aşamasında gürültü |
 

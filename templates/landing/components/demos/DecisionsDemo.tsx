@@ -9,7 +9,7 @@ import { chartBg, initials, TILE } from "./styles";
 type Decisions = Extract<FeatureDemo, { kind: "decisions" }>;
 
 /*
- * Hikâye: "Karar notu harf harf silinir, yerine yenisi yazılır."
+ * Hikaye: "Karar notu harf harf silinir, yerine yenisi yazılır."
  * guides/04 § 14 kural 7: metin yalnızca konu oysa değişir; yazma 55 ms,
  * silme daha hızlı ama yine harf harf (düz silme değil). İmleç saniyede bir
  * yanıp söner (CSS, `.caret`).

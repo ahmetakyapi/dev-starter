@@ -15,8 +15,8 @@ import type { ShellNavGroup } from "@/components/ui/app-shell";
 import { CommandPalette, type Command } from "@/components/ui/command-palette";
 
 /**
- * Blok ve ekran hikâyelerinin ortak verisi: tek bir hayalî ürün ("Pusula",
- * destek ekibinin yapay zekâ çalışma alanı). Bütün ekranlar aynı kabuğu,
+ * Blok ve ekran hikayelerinin ortak verisi: tek bir hayali ürün ("Pusula",
+ * destek ekibinin yapay zeka çalışma alanı). Bütün ekranlar aynı kabuğu,
  * aynı kullanıcıyı ve aynı planı paylaşır ki katalog tek ürün gibi okunsun.
  */
 

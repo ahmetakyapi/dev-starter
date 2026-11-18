@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Frame } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Yapay Zekâ/Araç Çağrısı",
+  title: "Bileşenler/Yapay Zeka/Araç Çağrısı",
   id: "tool-call",
   component: ToolCall,
   tags: ["autodocs", "yeni"],

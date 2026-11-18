@@ -238,7 +238,7 @@ GitHub'dan senkronu ve deploy sonrası `robots.txt` kontrolü:
 ## 9. Commit Kuralı
 
 **Bir oturumda iki-üç commit.** Her mikro düzeltme için ayrı commit, geçmişi
-taranamaz hâle getirir (Açılış Zili'nde bir oturumda altı commit oldu ve uyarı
+taranamaz hale getirir (Açılış Zili'nde bir oturumda altı commit oldu ve uyarı
 dört kez tekrarlandı).
 
 - İş sürerken yeni istek gelirse commit'i **ertele**; kuyruk boşalınca konu

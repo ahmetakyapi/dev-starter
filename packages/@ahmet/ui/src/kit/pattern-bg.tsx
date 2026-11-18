@@ -208,7 +208,7 @@ export const PATTERN_PRESETS: readonly { id: string; title: string; category: Pa
   { id: "genis-izgara", title: "Geniş Izgara", category: "Geometri", props: { pattern: "grid", size: 64, fade: "edges", glow: "bloom", intensity: 0.25 } },
   { id: "gren", title: "Gren", category: "Doku", props: { pattern: "noise", fade: "none" } },
   { id: "gren-isik", title: "Grenli Işık", category: "Doku", props: { pattern: "noise", glow: "horizon-top", intensity: 0.5 } },
-  { id: "kagit", title: "Kâğıt", category: "Doku", props: { pattern: "paper" } },
+  { id: "kagit", title: "Kağıt", category: "Doku", props: { pattern: "paper" } },
 ];
 
 /** Hazır birleşimin JSX'i: kütüphanedeki "Kopyala" butonu bunu panoya yazar. */

@@ -1,4 +1,4 @@
-# Mürekkep ve kâğıt — elle yapılmış görünüm
+# Mürekkep ve kağıt — elle yapılmış görünüm
 
 Hedef "bir insan bunu kare kare boyamış" hissi. Araçlar `assets/ink-engine.ts`
 ve `assets/film-kit.ts`te; aşağıda neyin neden öyle olduğu.
@@ -53,10 +53,10 @@ penShadow(ctx, pen.nib(now.idx), pal.ink);           // kalemin kendisi çizilme
 - Çentik/işaret gibi kalemle birlikte doğan şeyler `pen.at(...).idx`ten
   doğsun — doğrusal `i / n` kalemden önde ya da geride kalır.
 
-## Kâğıt
+## Kağıt
 
 - `fibres(ctx, w, h, pal.ink, cam.z, seed)` DÜNYA koordinatında çizilir:
-  kamera kayınca kâğıt da kayar, sahne "üstüne çizilen bir yüzey" olur.
+  kamera kayınca kağıt da kayar, sahne "üstüne çizilen bir yüzey" olur.
 - Yakında biraz belirginleşir, kalınlık zoom'la büyümez (`0,7 / z`).
 - Tam ekran gren ayrı bir katmanda ve videoda ffmpeg'de eklenir; sayfa
   içinde gren her kareyi sıkıştırılamaz yapar (lemo-opuscar TECHNIQUE).
@@ -73,7 +73,7 @@ const cover = inverted(ctx, flood, pal, p => ({ ...p, ink: p.paper, paper: p.ink
    ve **kırpma** yolu olur.
 3. Aynı dünya ters paletle bu kırpmanın içine çizilir: sınırı geçen çizgi
    rengini tam orada değiştirir.
-4. Dönen `cover` (0–1) DOM'a gider: altyazı ≥ 0,72'de kâğıt rengine döner.
+4. Dönen `cover` (0–1) DOM'a gider: altyazı ≥ 0,72'de kağıt rengine döner.
 
 Kaynak ve hedef birer ÖĞE olsun: sel bir çizginin ucundan dökülür, bir
 milin damlasına çekilir. Selin merkezi kamera dönüşümünden geçmiş EKRAN
@@ -87,14 +87,14 @@ noktası olmalı.
 - `splatter(t)`: çarpmadan sonra savrulan damlacıklar, tohumdan; `fade` ile
   kurur (başka şeklin üstünde çil gibi kalmasın).
 - `seal`: tek vurgu renginde kare; yazı `destination-out` ile **oyulur**
-  (arkadaki kâğıt görünür). Büyükten iner, değince ezilip toparlanır,
+  (arkadaki kağıt görünür). Büyükten iner, değince ezilip toparlanır,
   kenarından boya sıçrar. Pürüzler yalnız kenar bandında.
 
 ## Renk
 
-- Mürekkep = temanın en koyu metin rengi, kâğıt = OPAK sayfa zemini
+- Mürekkep = temanın en koyu metin rengi, kağıt = OPAK sayfa zemini
   (yarı saydam yüzey token'ı ters palette yanlış renk verir). Ters palette
-  kâğıt rengi metin olur.
+  kağıt rengi metin olur.
 - Tek vurgu rengi (pirinç, kırmızı mühür…), anlamlı yerde, bir kez ya da iki
   kez (kafiye için). Yön renkleri (yeşil/kırmızı) yalnız anlam taşıyorsa.
 - Logo karosunun zemini projenin logo token'ı (`--logo-plate` gibi); elle `#fff` yok.

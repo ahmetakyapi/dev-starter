@@ -54,7 +54,7 @@ allow kuralından önce gelir. Düz `git push` listede YOK ("commitle = push").
 Yeni `allow` kuralı paylaşılan ayara eklenmez; makineye özgü izin
 `settings.local.json`a.
 
-## Engelleme ve Filtre Sözleşmesi (Claude Code resmî belgesi, 8 Kasım 2026)
+## Engelleme ve Filtre Sözleşmesi (Claude Code resmi belgesi, 8 Kasım 2026)
 
 - **Engelleme yalnız exit 2** (gerekçe STDERR'de) ya da
   `hookSpecificOutput.permissionDecision: "deny"`. **exit 1 ENGELLEMEZ**;

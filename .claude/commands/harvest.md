@@ -41,7 +41,7 @@ Playwright MCP ya da `puppeteer-core` + sistem Chrome):
 Her bölüm için bir satır: **ne**, **nasıl** (ölçülen değerler), **neden işe
 yarıyor**. Sonra ekosistemle karşılaştır (dosyaları OKU, hafızadan söyleme):
 
-- `snippets/ui/README.md` kataloğu (gruplar: … Hareket ve Doku, Tanıtım, Yapay Zekâ)
+- `snippets/ui/README.md` kataloğu (gruplar: … Hareket ve Doku, Tanıtım, Yapay Zeka)
 - `templates/landing/components/` (kahramanlar, bölümler, `SiteHeader`, `Faq`)
 - `snippets/fonts/fonts.ts` preset'leri, `knowledge/patterns.md`,
   `knowledge/decisions.md` (daha önce reddedilen var mı?), `knowledge/references.md`
@@ -96,7 +96,7 @@ Bir şablon kopyasında (scratchpad'e `templates/nextjs-fullstack` kopyala,
 - `npm run registry:ui` ve `npm run kit:ui`; kit sayısı değiştiyse
   `packages/@ahmet/ui/README.md` + `package.json` açıklaması
 - Storybook: `storybook/stories/yeni-<harf>/<Ad>.stories.tsx` (`tags: ["autodocs", "yeni"]`,
-  kimlik İngilizce). Sabit konumlu öğe (`fixed`) içeren hikâye
+  kimlik İngilizce). Sabit konumlu öğe (`fixed`) içeren hikaye
   `parameters.docs.story.inline = false`. Her yeni bileşen Pusula'da
   (`storybook/stories/showcase/_*.tsx`) gerçek bir yerde kullanılır; yeni sayfa
   dosyası açtıysan `Kapsam.stories.tsx` → `PAGE_OF`. Aynı bileşen "Her Şey
@@ -107,7 +107,7 @@ Bir şablon kopyasında (scratchpad'e `templates/nextjs-fullstack` kopyala,
 - `knowledge/references.md` (en üste satır: ne aldık, nerede yaşıyor),
   `knowledge/decisions.md` (tur kararı), `guides/10` (ne zaman hangisi),
   `CHANGELOG.md` → Yayınlanmamış
-- Sayılar: `CLAUDE.md` (bileşen, kit, hikâye), sonra `npm run readme:assets`
+- Sayılar: `CLAUDE.md` (bileşen, kit, hikaye), sonra `npm run readme:assets`
 
 ## 6. Kapı
 

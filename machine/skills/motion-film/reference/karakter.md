@@ -43,7 +43,7 @@ boyanır; geçişte eskisi söner, yenisi gelir (hex karıştırma yok, her CSS 
   | Çok yakın | 90+ | kamera gözlere itilmiş |
 
   Kilit anlarda özne kare yüksekliğinin en az 1/3'ü (`yonetmenlik.md` § 6).
-- **Önce anahtar pozlar, durağan olarak.** Her planın hikâye pozlarını temas
+- **Önce anahtar pozlar, durağan olarak.** Her planın hikaye pozlarını temas
   sayfasında (`--range` anahtar anlarda) bak: siluet tek bakışta okunuyor mu,
   beden yaptığı işe yaslanıyor mu? Pozlar okunmuyorsa aradaki hareket kurtarmaz.
   Hareket pozlar okununca eklenir.
@@ -57,7 +57,7 @@ boyanır; geçişte eskisi söner, yenisi gelir (hex karıştırma yok, her CSS 
 - **Neden, sonra tepki.** Bir şey olur, karakter ona tepki verir (tepki,
   duygu değişimi, ona dönüş); tepki çoğu zaman en komik anıdır, süresini ver.
 - **Duygu planı bütün film için.** `emotions` anahtarlarını plan plan değil
-  filmin başından sonuna yaz; karakterin duygu yayı hikâyeyi izler.
+  filmin başından sonuna yaz; karakterin duygu yayı hikayeyi izler.
 - **Hiçbir şey durmaz:** her duygunun kendi boşta hareketi var; donmuş kare hata gibi okunur.
 - **Kaynama parça başına:** `id` karakter başına sabit; her parçanın tohumu
   `partSeed(id, parça)`. Sahneye girip çıkan karakter varsa `id`'yi mutlaka ver,
@@ -83,7 +83,7 @@ tek karelik komik patlama. Her ifadeyi son boyunda kontrol et: **kaş yönü**
 
 **İşaretler boyanır, yazılmaz:** ünlem, soru, ter damlası, kıvılcım, kalp, üç
 nokta, bulut, uyku kavisleri fırçayla çizilmiş işaretlerdir. Ekranda "!",
-"Zzz", konuşma balonu ya da hikâyeyi tekrar eden levha harfle yazılmaz.
+"Zzz", konuşma balonu ya da hikayeyi tekrar eden levha harfle yazılmaz.
 
 ## 4. Görünüş ve dönüş
 

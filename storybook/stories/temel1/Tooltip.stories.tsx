@@ -63,7 +63,7 @@ export const InfoTipClosed: Story = {
       <div className="pt-24">
         <p className="flex items-center gap-2 text-small font-medium text-muted">
           F/K Oranı
-          <InfoTip label="F/K Nedir">Hisse fiyatının hisse başına yıllık kâra oranı. Düşük değer, kâra göre ucuz demektir.</InfoTip>
+          <InfoTip label="F/K Nedir">Hisse fiyatının hisse başına yıllık kara oranı. Düşük değer, kara göre ucuz demektir.</InfoTip>
         </p>
         <p className="mt-1 text-display font-bold text-strong tabular-nums">14,2</p>
       </div>

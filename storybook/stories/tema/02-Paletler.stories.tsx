@@ -19,14 +19,14 @@ import { ThemeScope, useRootAttr, useRootVar, type ThemeName } from "./_lib/scop
 const INFO: Record<PaletteName, { title: string; use: string }> = {
   signature: { title: "Signature", use: "Varsayılan. Finans, veri, editoryal; Açılış Zili'nin lacivert → mavi ailesi." },
   cobalt: { title: "Kobalt", use: "Parlak mavi. SaaS, pano, üretkenlik aracı." },
-  violet: { title: "Menekşe", use: "Yaratıcı araç, yapay zekâ ürünü, topluluk." },
+  violet: { title: "Menekşe", use: "Yaratıcı araç, yapay zeka ürünü, topluluk." },
   rose: { title: "Gül", use: "Tüketici uygulaması, sosyal, yaşam tarzı." },
   ruby: { title: "Yakut", use: "Medya, spor, etkinlik. Yıkıcı eylem yine danger." },
   tangerine: { title: "Mandalina", use: "Yemek, alışveriş, enerjik tanıtım." },
   jade: { title: "Yeşim", use: "Finans, sağlık, sürdürülebilirlik." },
   verdant: { title: "Zümrüt", use: "Sağlık, terapi, doğa; gündüz, sakin." },
   ember: { title: "Kehribar", use: "Oyun, eğlence, topluluk; gece." },
-  iris: { title: "İris", use: "Mor → indigo. Yaratıcı araç, yapay zekâ ürünü." },
+  iris: { title: "İris", use: "Mor → indigo. Yaratıcı araç, yapay zeka ürünü." },
 };
 
 const ORDER: PaletteName[] = ["signature", "cobalt", "violet", "rose", "ruby", "tangerine", "jade", "verdant", "ember", "iris"];
@@ -268,7 +268,7 @@ function SeciliPalet() {
         </div>
       </Section>
       <Note className="mt-6">
-        Palet <Token>:root[data-palette]</Token> seçicisiyle yazılı; alt öğeye vermek işe yaramaz, bu yüzden bu hikâye toolbar'ı okur.
+        Palet <Token>:root[data-palette]</Token> seçicisiyle yazılı; alt öğeye vermek işe yaramaz, bu yüzden bu hikaye toolbar'ı okur.
       </Note>
     </DocPage>
   );

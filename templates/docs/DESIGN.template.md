@@ -1,5 +1,5 @@
 ---
-# ─── Makine-okunur token katmanı (resmî DESIGN.md spec) ─────────────────────
+# ─── Makine-okunur token katmanı (resmi DESIGN.md spec) ─────────────────────
 # Bu frontmatter'ı impeccable ve DESIGN.md-uyumlu araçlar okur; aşağıdaki
 # markdown bölümleri ise insan/agent bağlamıdır. Token'lar normatiftir.
 # Token referansı: {colors.primary} biçiminde. Bileşenler primitive'e referans
@@ -41,14 +41,14 @@ components:
 # Görsel Hafıza: [PROJE_ADI]
 
 > Bu dosya iki katmanlıdır:
-> - **Frontmatter** — resmî DESIGN.md spec'inin makine-okunur token şeması.
+> - **Frontmatter** — resmi DESIGN.md spec'inin makine-okunur token şeması.
 >   `/impeccable document` ve DESIGN.md-uyumlu araçlar bu katmanı okur.
 > - **9 bölüm** — ekosistemin kendi görsel hafıza formatı; agent'lar buradan
 >   pixel-perfect UI üretir.
 >
-> Bölümler resmî 8 bölümlük kanonik sıraya şöyle karşılık gelir:
+> Bölümler resmi 8 bölümlük kanonik sıraya şöyle karşılık gelir:
 >
-> | Bu dosya | Resmî DESIGN.md |
+> | Bu dosya | Resmi DESIGN.md |
 > |----------|-----------------|
 > | 1. Visual Theme & Atmosphere | `## Overview` |
 > | 2. Color Palette & Roles | `## Colors` |
@@ -58,7 +58,7 @@ components:
 > | 6. Depth & Elevation | `## Elevation & Depth` |
 > | 7. Do's and Don'ts | `## Do's and Don'ts` |
 > | 8. Responsive Behavior | `## Layout` (responsive kısmı) |
-> | 9. Agent Prompt Guide | *(ekosisteme özgü — resmî spec'te karşılığı yok)* |
+> | 9. Agent Prompt Guide | *(ekosisteme özgü — resmi spec'te karşılığı yok)* |
 >
 > `/impeccable document` çalıştırırsan çıktı kanonik başlıklarla gelir; bu
 > tabloyu kullanarak buraya taşı. Frontmatter'ı ezme — token'lar tek kaynaktır.

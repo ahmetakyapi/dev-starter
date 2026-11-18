@@ -104,7 +104,7 @@ Kimlik ortak, palet projeye göre (`~/dev-starter/guides/00-brand-identity.md`):
 | `signature` (varsayılan) | Finans, araç, editoryal, kişisel site |
 | `verdant` | Sağlık, terapi, doğa |
 | `ember` | Oyun, eğlence, topluluk |
-| `iris` | Yaratıcı araç, yapay zekâ ürünü |
+| `iris` | Yaratıcı araç, yapay zeka ürünü |
 
 Varsayılan tema: gündüz kullanılan araç → `light` (şablon varsayılanı),
 portfolyo/oyun → `dark`. `lib/theme.ts` içindeki `DEFAULT_THEME` ve `PALETTE`

@@ -207,7 +207,7 @@ brew install --cask cmux
   işlerinde headless Chrome'a ek bir yol; o yol kalkmaz.
 - **Dikkat:** `cmux hooks setup` Claude Code'a kendi hook'larını ekler.
   Çalıştırdıktan sonra `~/.claude/settings.json`a bak ve bir projede
-  commit deneyip gate-guard ile quality-scan'ın hâlâ tetiklendiğini gör.
+  commit deneyip gate-guard ile quality-scan'ın hala tetiklendiğini gör.
 - Lisans: masaüstü uygulaması GPL-3.0, ücretsiz (Manaflow). Yalnız macOS.
 - Alternatif: **Herdr** (`brew install herdr`) — her terminalin içinde
   çalışır, işler arka planda sürer, SSH ile telefondan bağlanılır; sunucuda

@@ -57,7 +57,7 @@ x = clamp(x, w / 2 / z, w - w / 2 / z);
 ## Ölçek ve çizgi
 
 - Fırça genişliği dünya biriminde: yaklaşınca kalınlaşır (makro mercek gibi
-  doğru). Kâğıt lifleri gibi doku çizgileri ise `lineWidth / z` — yoksa çizik gibi okunur.
+  doğru). Kağıt lifleri gibi doku çizgileri ise `lineWidth / z` — yoksa çizik gibi okunur.
 - Yakında çok ince ayrıntı (≥ 2 kat) çizilecekse genişliği ayrı kıs.
 
 ## Kamera ile künyeler

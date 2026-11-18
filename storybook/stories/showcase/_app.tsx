@@ -251,7 +251,7 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
       },
       { id: "acik", label: "Açık Talepleri Göster", hint: `${OPEN_TICKETS.filter((t) => t.status === "Açık").length} talep`, group: "Eylemler", icon: <Inbox />, onSelect: () => navigate("inbox", { status: "open" }) },
       { id: "gecikme", label: "Geciken Siparişlerin Talepleri", group: "Eylemler", icon: <TriangleAlert />, keywords: ["kargo"], onSelect: () => navigate("inbox", { tag: "gecikme" }) },
-      { id: "assistant", label: "Asistana Sor", group: "Eylemler", icon: <Sparkles />, keywords: ["yapay zekâ", "sohbet"], onSelect: () => navigate("assistant") },
+      { id: "assistant", label: "Asistana Sor", group: "Eylemler", icon: <Sparkles />, keywords: ["yapay zeka", "sohbet"], onSelect: () => navigate("assistant") },
       { id: "disa", label: "Siparişleri Dışa Aktar", hint: "CSV", group: "Eylemler", icon: <Download />, onSelect: () => navigate("reports", { tab: "export" }) },
       ...PERIODS.map((p) => ({
         id: `donem-${p.value}`,

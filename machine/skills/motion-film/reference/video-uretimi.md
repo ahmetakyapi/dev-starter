@@ -16,7 +16,7 @@ window.TIMELINE = [{ id: "acilis", start: 0, end: 6 }, ...];  // isteğe bağlı
 
 **TEXTS** ekrandaki her yazının kaydı. `id` yazıyı tanır (aynı id'de metin
 değişirse yeni yazıdır), `text` tam metin, `from`/`to` saniye: `from` yazının
-okunur hâle geldiği an (giriş animasyonu bitti), `to` ekrandan çıktığı an.
+okunur hale geldiği an (giriş animasyonu bitti), `to` ekrandan çıktığı an.
 Kutu isteğe bağlı ama verilmeli: `box: (t) => [x0, y0, x1, y1]` (mantıksal px,
 çizimle aynı ifadelerden), sabit dizi ya da `sel: "#baslik"` (DOM). Kutu varsa
 film-read yazının ömrü boyunca birkaç anda ölçer; hiç tam kadrajda değilse ihlal.
@@ -91,7 +91,7 @@ node $S/film-read.mjs film.html                                                 
 - Çıktı: libx264, crf 18, yuv420p, faststart, BT.709 etiketli. JPEG ara kare (PNG'den hızlı).
 - `--audio=mix.wav`: ses `--from`dan `to − from` kadar kesilip bindirilir
   (AAC 320k, `-shortest`): 3–6 sn deneme klibi de sesle senkron kalır.
-- `--grain`: x264 `-tune grain -x264-params aq-mode=3`. Kâğıt dokusu, gren,
+- `--grain`: x264 `-tune grain -x264-params aq-mode=3`. Kağıt dokusu, gren,
   ince tarama varsa: varsayılan ayar onları düz alanda yumuşatır, bantlama başlar.
   Gren sayfada değil ffmpeg'de eklenirse daha da iyi (sayfadaki gren her kareyi
   sıkıştırılamaz yapar).

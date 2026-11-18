@@ -7,6 +7,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Şapkasız yazım, insanca — 2026-11-18
+
+- Bütün metinde şapka kalktı (hikaye, zeka, hala, kağıt); arama katlama ve
+  glif genişliği tabloları korundu. Kayıt, kit ve README görselleri yenilendi
+- `insanca` (Türkçe yazım skill'i) sabit commit'le bootstrap'a girdi;
+  content-editor uzun metinde kullanır, eksik kalıplar ve "neyi bozmaz"
+  listesi rol tanımına işlendi; uzun tire yayın metninde yok
+- Tanıtım için yeni kahraman önizlemeleri (`?hero=f..l`, `h2`, `h3`);
+  varsayılan değişmedi
+
 ### Tanıtım kahramanı: yüzen bileşenler ve canlı palet turu — 2026-11-18
 
 - Beş yön denendi (kartela yelpazesi, renk şeritleri, karanlık sahne, yüzen
@@ -23,12 +33,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 - Bileşenler rafının adı yeniden Tanıtım (Pazarlama geri alındı)
 - Pusula: talebin metni bağlı siparişten hesaplanır (ürün, adet, KDV, adres);
-  bornoz şikâyeti havlu siparişine, Muğla adresi İstanbul'daki müşteriye
+  bornoz şikayeti havlu siparişine, Muğla adresi İstanbul'daki müşteriye
   bağlıydı. Acil işareti ve bildirimler "şimdi"den ileri gitmez; takvim ve
   pano talepleriyle eşleşir
 - Kıyı Kahve: lot sırası 43 → 47 tek çizgide; fiyatlar kilo fiyatıyla
   (790 ₺/kg) tutarlı; Ekim kapanışı panoyla aynı (henüz kontrolde)
-- Grafik hikâyeleri: kart değeri = lejant/seri toplamı (saçılım, radar,
+- Grafik hikayeleri: kart değeri = lejant/seri toplamı (saçılım, radar,
   alan, lejant, çubuk listesi), gün adları ve hafta sonu düşüşü takvimle
   aynı, "Yıl" görünümü son 12 tam ay; Tanıtım kolajında ciro ölçeği
   başlıkla tutarlı
@@ -88,7 +98,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 ### Katalog haritası, kenar çubuğu ve Pusula tutarlılığı — 2026-11-17
 
 - Kapak: ilk ekranda katalog haritası (kenar çubuğunun üç bölümü, on bir
-  kapı, sayılar hikâye dosyalarından), kabuğun aramasını açan arama kutusu,
+  kapı, sayılar hikaye dosyalarından), kabuğun aramasını açan arama kutusu,
   on üç bileşen rafı; numune föyü palet bölümünde
 - Kenar çubuğu: "Örnek Tasarım" yerine Pusula, Desenler, Her Şey Bir Arada
   ve Arşiv üst düzeyde; sekiz bileşen doğru rafa; üst bölüm varyantları
@@ -162,7 +172,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - Üç bölüm (Başla · Kütüphane · Uygulamada) ve bölüm etiketleri; üst düzey
   öğelerde anlamlı çizgi ikonlar; Bileşenler alt grupları temelden
   karmaşığa sıralı; Başlangıç Kapak'ın altında.
-- Türkçe kabuk: "Görsel Katalog", "Belge", "Ara"; iki hikâye adındaki kod
+- Türkçe kabuk: "Görsel Katalog", "Belge", "Ara"; iki hikaye adındaki kod
   değerleri ayıklandı.
 
 ### Yan panel anatomisi — 2026-11-16
@@ -219,7 +229,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   ekranı), `morph-nav` (tek kabuğu paneller arasında esneyen menü +
   `MorphNavGrid`), `arc-carousel` (çember yayına dizili galeri; ok, klavye,
   sürükleme), `password-field` (yazdıkça kural listesi + dilimli güç çubuğu).
-- **Storybook:** dört hikâye (`yeni-h`); Pusula'da Giriş üst menüsü,
+- **Storybook:** dört hikaye (`yeni-h`); Pusula'da Giriş üst menüsü,
   Ayarlar → Güvenlik'te yeni şifre, Tanıtım'da "Hazır Akışlar" galerisi ve
   renk zeminli kapanış.
 - **Referans Arşivi sayfası:** raf artık içerik hizasından başlıyor
@@ -238,7 +248,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   formülüyle render anında ölçülen kontrast seçili paletle döner), tek sırada
   on palet numunesi, sayı defteri (hepsi türetilir), içinde canlı parça
   taşıyan dört kapı kartı, giriş koreografisi ve bölüm Reveal'leri.
-  Sayfa niteliğindeki hikâyelerde eklenti paneli kendiliğinden kapanır;
+  Sayfa niteliğindeki hikayelerde eklenti paneli kendiliğinden kapanır;
   sidebar markasına üç çubuklu işaret.
 - **Düzeltme**: kapak açılışta aşağı kaymış geliyordu (play `userEvent` →
   `fireEvent`); bileşen belgelerinde "Projeye Al" üstündeki boşluk; Her Şey
@@ -268,7 +278,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ### Bağlam dosyaları: kısa CLAUDE.md, yol kapsamlı kurallar — 2026-11-08
 
-Claude Code'un güncel resmî önerilerine göre (`knowledge/decisions.md` →
+Claude Code'un güncel resmi önerilerine göre (`knowledge/decisions.md` →
 "Bağlam Dosyaları"; eski → yeni yer tablosu orada).
 
 #### Değişti
@@ -317,16 +327,16 @@ Claude Code'un güncel resmî önerilerine göre (`knowledge/decisions.md` →
 
 - bootstrap'te sabit commit'li dış skill kurulumu ortak `pinned_skill`
   fonksiyonu oldu (anatomy ve cinecode aynı yoldan; davranış aynı).
-### Offscreen turu (ilk /harvest): 3 bileşen, duvar kâğıtları — 2026-11-07
+### Offscreen turu (ilk /harvest): 3 bileşen, duvar kağıtları — 2026-11-07
 
-- `wallpaper`: 8 illüstrasyon duvar kâğıdı (gün batımı tepeleri, altın saat,
-  lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları), elle
+- `wallpaper`: 8 illüstrasyon duvar kağıdı (gün batımı tepeleri, altın saat,
+  lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları), elle
   seçilmiş renk setleri; `downloadWallpaper()` ile PNG (2880×1800, 1290×2796).
-  Storybook → Tanıtım/Duvar Kâğıdı'nda indirme butonları.
+  Storybook → Tanıtım/Duvar Kağıdı'nda indirme butonları.
 - `drift-columns`: zıt yönde sonsuz süzülen görsel sütunları (yalnız CSS).
 - `notice-deck`: köşede dönen duyuru destesi, "2/3" sayaç, durdurulabilir.
-- Pusula Tanıtım Sayfası: demo masaüstünün arkasında duvar kâğıdı, duvar
-  kâğıdı galerisi bölümü, duyuru destesi. Kit 94 → 97, katalog 129.
+- Pusula Tanıtım Sayfası: demo masaüstünün arkasında duvar kağıdı, duvar
+  kağıdı galerisi bölümü, duyuru destesi. Kit 94 → 97, katalog 129.
 - `/harvest` komutu, slop-scan 25 (sahte kıtlık), `/reference`, `/review-ui`
   § 9, `/new-project` ve strategist'e Ribbon dersleri.
 
@@ -349,9 +359,9 @@ alınmadı (`knowledge/decisions.md` → "Ribbon Turu").
 - **Font**: `snippets/fonts/fonts.ts` → isteğe bağlı `handFont` (Caveat,
   `--font-hand-face`), `theme-fonts.css` → `--font-hand`. Türkçe glifleri
   ve ₺ cmap'ten doğrulandı (`guides/09` § 2).
-- **Storybook**: "Bileşenler/Tanıtım" grubu (8 sayfa, 18 hikâye) ve Pusula
+- **Storybook**: "Bileşenler/Tanıtım" grubu (8 sayfa, 18 hikaye) ve Pusula
   → **Tanıtım Sayfası**: sekizinin birlikte çalıştığı, dock'tan seçilen
-  pencerenin şeritte odağa geldiği canlı örnek (`play` testli). Hikâye
+  pencerenin şeritte odağa geldiği canlı örnek (`play` testli). Hikaye
   sayısı 728 → 746.
 - **@ahmetakyapi/ui**: kit 86 → 94 bileşen (sürüm artışı `/release`e bırakıldı).
 - **guides/10** § 4 "Ribbon Turu", **knowledge/references.md** (alınan ve
@@ -379,7 +389,7 @@ alınmadı (`knowledge/decisions.md` → "Secki Turu").
   `book-cover` (3B kitap), `pattern-bg` (35 token'lı zemin: desen + solma +
   ışık), `halftone-image` (nokta / kare / ASCII), `mark-annotate` (kalem
   vurgusu), `expandable-card` (karttan pencereye paylaşılan öğe geçişi).
-- **Yapay Zekâ** (4 bileşen): `thinking-orb`, `tool-call` (durum, süre,
+- **Yapay Zeka** (4 bileşen): `thinking-orb`, `tool-call` (durum, süre,
   girdi/çıktı, onay yuvası), `reasoning` ("6 sn düşündü"), `stream-text`
   (yalnız yeni sözcük belirir).
 - **@ahmetakyapi/ui 3.1.0**: 86 bileşenlik kit, `snippets/ui`dan üretilir
@@ -504,7 +514,7 @@ bencho.dev'in mikro etkileşim dilinden öğrenildi, kod alınmadı
   sayı yok, genişlik sıçramaz, `tr-TR` biçim, reduced-motion'da yerinde.
 - Vitrin: Cetvel Seçici (bitiş sıcaklığı) ve Rakam Yuvarlama (bugün
   kavrulan); Pusula: Takvim → randevu süresi cetvelle, Pano → istatistik
-  değerleri dönem değişince yuvarlanır. Kapsam 92/92, 11 yeni hikâye.
+  değerleri dönem değişince yuvarlanır. Kapsam 92/92, 11 yeni hikaye.
 
 ### Adresler, örnek giriş, gecikme kartı, uyarı tonu — 2026-11-03
 
@@ -514,8 +524,8 @@ bencho.dev'in mikro etkileşim dilinden öğrenildi, kod alınmadı
   `?view=inbox&tag=gecikme&ticket=PSL-1186&page=2` (eski `?ekran=gelen&etiket=Gecikme&s=2`);
   ekran kimlikleri İngilizce (`dashboard`, `inbox`, `tasks`…), değerler küçük
   harfli slug (`slug()`/`fromSlug()`). Storybook tema değeri `light`/`dark`
-  (adreste `theme:A%C3%A7%C4%B1k` yerine `theme:dark`; eski değerler hâlâ
-  tanınır). Hikâye grubu `pusula` → `demo-app`; kısa adres `/demo`,
+  (adreste `theme:A%C3%A7%C4%B1k` yerine `theme:dark`; eski değerler hala
+  tanınır). Hikaye grubu `pusula` → `demo-app`; kısa adres `/demo`,
   `/demo/<ekran>`; eski `/pusula` kalıcı yönlenir.
 - **Örnek giriş**: "Örnek Hesapla Gir" butonu formu göndermez; Chrome'un
   "şifre kaydedilsin mi?" ve veri ihlali uyarıları demoda açılmaz.
@@ -578,7 +588,7 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
 
 #### Eklendi
 
-- **13 bileşen** (`snippets/ui`, her biri hikâyeli, play testli, axe temiz):
+- **13 bileşen** (`snippets/ui`, her biri hikayeli, play testli, axe temiz):
   `input`, `search-field`, `toast`, `hover-card`, `rating`, `toggle-group`;
   grafikler `line-chart`, `combo-chart`, `scatter-chart`, `activity-rings`;
   verimlilik `kanban-board` (klavyeyle sürükle-bırak, WIP sınırı),
@@ -591,7 +601,7 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
   belgesinde **Projeye Al** bloğu.
 - **Kısa adresler**: grup kimliği bileşenin dosya adı (`tooltip--default`,
   `showcase--all-in-one`); `vercel.json` yönlendirmeleri `/showcase`,
-  `/pusula`, `/gallery`, `/theme`, `/c/<ad>`, `/s/<ad>/<hikâye>`.
+  `/pusula`, `/gallery`, `/theme`, `/c/<ad>`, `/s/<ad>/<hikaye>`.
   `check:ids` 24 harf sınırı ve grup adı tekrarını da denetler.
 
 #### Değişti
@@ -608,7 +618,7 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
 - Kenar çubuğu: Örnek Tasarım ve Vitrin en üstte; Türkçede mantıksız ya da
   yarı İngilizce adlar düzeltildi (Kahraman → Üst Bölüm Varyantları,
   Atlıkarınca → Kart Kaydırıcı, Bölümlü Denetim → Bölmeli Seçici…).
-- **Kural: adresler İngilizce.** Her meta İngilizce `id`, hikâyeler İngilizce
+- **Kural: adresler İngilizce.** Her meta İngilizce `id`, hikayeler İngilizce
   adla dışa aktarılır; görünen adlar Türkçe. CI `npm run check:ids` ile denetler.
 
 ### Storybook görsel kataloğu — 2026-11-02
@@ -616,15 +626,15 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
 #### Eklendi
 
 - **`storybook/`** (Storybook 10.6.3, `@storybook/nextjs-vite`, kendi kilidi):
-  541 hikâye + 94 belge sayfası. Tema/palet araç çubuğu, şablonun gerçek
+  541 hikaye + 94 belge sayfası. Tema/palet araç çubuğu, şablonun gerçek
   CSS'i (kopya yok), `@/` içe aktaran dosyaya göre çözülür, markalı arayüz.
   Bölümler: Giriş, Tema (renkler/paletler/tipografi/yüzeyler/grafik/hareket),
   Bileşenler, Grafikler (+ iki pano), Bloklar, Ekranlar (landing, vitrin,
   uygulama), **Pusula showcase** (73/73 bileşen tek uygulamada).
-- CI: **Storybook Build** işi (tip denetimi + derleme); slop taraması hikâyeleri de kapsar.
+- CI: **Storybook Build** işi (tip denetimi + derleme); slop taraması hikayeleri de kapsar.
 - Kök komutlar: `npm run storybook`, `npm run storybook:build`.
 
-#### Düzeltildi (hikâyeler yakaladı)
+#### Düzeltildi (hikayeler yakaladı)
 
 - `chat-composer` model menüsü açılınca çöküyordu (Base UI GroupLabel grup dışında).
 - `command-palette` boş metin listbox içindeydi; `notification-center` zil adı
@@ -777,11 +787,11 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
   snippet'ler temiz olmalı), `audit-project.sh` § 11'de, Gate Pass 6'da ve
   `/review-ui`'nin ilk adımında çalışır.
 - **İç içe radius formülü** `guides/02-design-tokens.md` § 4: iç = dış − boşluk.
-- **Görsel hikâyesi** `guides/04-motion.md` § 14: bento kartının görseli işini
+- **Görsel hikayesi** `guides/04-motion.md` § 14: bento kartının görseli işini
   oynar; tasarımda başlar ve biter, ekran dışında durur, kartlar sırayla.
 - **Örnek içerik ve sistem mesajı** `guides/05-components.md` § 7.
 - **`design-reviewer`**: iç içe radius, tek taraflı şerit, ölü bağlantı /
-  `aria-current` ölçümleri ve hikâyenin ekran dışında durduğunun doğrulaması.
+  `aria-current` ölçümleri ve hikayenin ekran dışında durduğunun doğrulaması.
 
 #### Değişti
 
@@ -1220,7 +1230,7 @@ uygulandı, her grubu bağımsız bir gözden geçirici denetledi. Kalıcı ders
   döner parçayı da derleyip render ediyor.
 - Şablonların figür ESLint ayarına `@typescript-eslint/no-unused-expressions`
   (lathe.mjs'in kısa devre ifadesi; uyarısız lint için).
-- `aciklayici-figur.md` § 9: Kural Tezgâhı ve Seans Zili, ölçümle bulunan hatalar.
+- `aciklayici-figur.md` § 9: Kural Tezgahı ve Seans Zili, ölçümle bulunan hatalar.
 
 ### Eklendi — 2026-10-12 (ikinci geçiş: şablonlar)
 
@@ -1333,7 +1343,7 @@ uygulandı, her grubu bağımsız bir gözden geçirici denetledi. Kalıcı ders
   - `SKILL.md`: ortam kararı, yönetmenlik (kanca, okumalar, kafiyeli son,
     yerli hamle, doruktan önce durgunluk), hareket ilkeleri, doku, yazı,
     ses, inceleme döngüsü, teslim listesi.
-  - `reference/`: yönetmenlik, kamera, mürekkep ve kâğıt, kinetik yazı, ses,
+  - `reference/`: yönetmenlik, kamera, mürekkep ve kağıt, kinetik yazı, ses,
     inceleme döngüsü (ölçümle bulunan tuzaklar), video üretimi, prompt
     kalıpları, kaynaklar ve lisanslar.
   - `assets/`: `ink-engine.ts` (boil + basınçlı fırça), `film-kit.ts`

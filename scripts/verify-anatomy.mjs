@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * verify-anatomy — anatomy figür kiti iki şablonda HÂLÂ sorunsuz mu?
+ * verify-anatomy — anatomy figür kiti iki şablonda HALA sorunsuz mu?
  *
  * NEDEN VAR: anatomy bir npm paketi değil, neredeyse her gün değişen bir
  * skill deposu. Kiti şablona kopyalayan script (add-figure-kit.mjs) bir kez

@@ -55,7 +55,7 @@ güvenileceği aşağıda:
 **Kontrast sütunu neden zayıf:** `text-white` bir primary buton üzerinde
 *doğru* kullanımdır. Filtre iki eleme yapıyor (className'de herhangi bir
 `dark:` varyantı varsa, veya `bg-` varsa atla) ama zeminini ebeveynden alan
-elemanlar hâlâ listeye giriyor. Sayı **ihlal değil, aday** sayısıdır.
+elemanlar hala listeye giriyor. Sayı **ihlal değil, aday** sayısıdır.
 
 Denetim üç kez düzeltildikten sonra bu sonuçlar alındı — ilk turlarda detector
 çıktısını stderr'den okumadığı için "temiz" diyordu, tek temalı projelerde de
@@ -299,7 +299,7 @@ marka istisnası mı yoksa güncellenecek mi, karar gerekiyor.
 2. ~~**`rules/design-tokens.md` güncellemesi**~~ → ✅ Yasak tamamen kaldırıldı;
    kural token'lama + fallback şartına indirgendi
 3. ~~**`onepiece-hub` palet kararı**~~ → ✅ 2026-08-16, PR #3. Mor bilinçli tema
-   değilmiş, token'landı. **`ramazan-vakitleri`** (22 `bg-clip-text`) hâlâ açık:
+   değilmiş, token'landı. **`ramazan-vakitleri`** (22 `bg-clip-text`) hala açık:
    mor+pembe+mavi paleti CLAUDE.md'de belgeli, marka istisnası mı?
 4. **Mekanik düzeltmeler** — `elevenforge` (layout), `Mimio` (easing),
    `harfiyen` (gradient-text), `simayahi` (1 satır)

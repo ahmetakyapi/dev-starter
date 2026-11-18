@@ -3,7 +3,7 @@ import { expect, userEvent, within } from "storybook/test";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
-/* Pano iframe'de çoğu zaman izinsiz: hikâyeler sonucu bilinen bir taklitle sınar. */
+/* Pano iframe'de çoğu zaman izinsiz: hikayeler sonucu bilinen bir taklitle sınar. */
 function mockClipboard(ok: boolean) {
   const original = Object.getOwnPropertyDescriptor(navigator, "clipboard");
   Object.defineProperty(navigator, "clipboard", {

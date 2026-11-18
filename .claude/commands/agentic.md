@@ -30,7 +30,7 @@ sohbet geçmişini kart çöpüne çeviriyorsa yanlış kanaldasın.
 ### `dsl` — Model tam yapıyı mı üretecek?
 Çıktı büyük/tekrar eden/şablonlaşabilir ise DSL sınırı koy: model kompakt
 tarifi üretir, kod yapıyı deterministik derler. Kazanç iki katlı — performans
-ve kontrol. Bedel: DSL'in öngörmediği istek imkânsız.
+ve kontrol. Bedel: DSL'in öngörmediği istek imkansız.
 
 ### `feed` — Sohbet mi, akış mı?
 Kullanıcı ne isteyeceğini biliyorsa sohbet. Sistem kullanıcıyı tanıyor ve

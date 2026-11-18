@@ -1,17 +1,17 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**750+ hikâye** (güncel sayı Tanıtım sayfasında, derleme anında sayılır), her biri açık/koyu tema ve 10 palette. Storybook'un kendi kabuğu (sidebar, araç çubuğu, belge) da seçilen tema ve paletle döner:
+**750+ hikaye** (güncel sayı Tanıtım sayfasında, derleme anında sayılır), her biri açık/koyu tema ve 10 palette. Storybook'un kendi kabuğu (sidebar, araç çubuğu, belge) da seçilen tema ve paletle döner:
 
 | Bölüm | İçerik |
 |-------|--------|
-| **Tanıtım** (en üstte) | Kataloğun vitrini: ortalanmış başlık, iki eylem ve kabuğun aramasını açan kutu; altında katalogdaki gerçek bileşenlerden kurulmuş, çalışan bir kolaj (Pusula panosu, ekip oylaması, ayar kartı). Ardından katalog haritası (üç bölüm yan yana; sayılar ve bağlantılar hikâye dosyalarından, `stories/kapak/_harita.ts`), 15 raf, palet seçimi (numune föyü ile on palet eşit iki sütunda) ve kurulum. Paylaşım görseli bu kolajdan üretilir (`npm run og`) |
+| **Tanıtım** (en üstte) | Kataloğun vitrini: ortalanmış başlık, iki eylem ve kabuğun aramasını açan kutu; altında katalogdaki gerçek bileşenlerden kurulmuş, çalışan bir kolaj (Pusula panosu, ekip oylaması, ayar kartı). Ardından katalog haritası (üç bölüm yan yana; sayılar ve bağlantılar hikaye dosyalarından, `stories/kapak/_harita.ts`), 15 raf, palet seçimi (numune föyü ile on palet eşit iki sütunda) ve kurulum. Paylaşım görseli bu kolajdan üretilir (`npm run og`) |
 
 Kenar çubuğu üç bölüm, her öğe kendi adıyla bir tıkta:
 
 | Bölüm | Öğeler |
 |-------|--------|
 | Başla | Tanıtım · Başlangıç (manifesto, kurallar) · **Her Şey Bir Arada** (bütün kütüphane tek uzun sayfada; kapsam 141/141) · Vitrin (gruplara göre seçilmiş örnekler, `snippets/ui/vitrin/`) |
-| Kütüphane | Tema (renkler, 10 palet, tipografi, yüzeyler, grafik renkleri, hareket) · Bileşenler (13 raf: Temel → Tanıtım → Yapay Zekâ; her biri varsayılan, durumlar, bütün varyantlar, `play`) · Grafikler (15 grafik + iki pano) · Bloklar · **Desenler** (35 token'lı zemin, Önizle ve Kopyala) |
+| Kütüphane | Tema (renkler, 10 palet, tipografi, yüzeyler, grafik renkleri, hareket) · Bileşenler (13 raf: Temel → Tanıtım → Yapay Zeka; her biri varsayılan, durumlar, bütün varyantlar, `play`) · Grafikler (15 grafik + iki pano) · Bloklar · **Desenler** (35 token'lı zemin, Önizle ve Kopyala) |
 | Uygulamada | **Pusula** (aynı bileşenlerle kurulmuş uygulama: 15 ekran) · Ekranlar (uygulama ekranları; açılış sayfası: tam sayfa, 8 üst bölüm varyantı, bölümler, sistem sayfaları) · Arşiv (Bileşen Kapsamı, Referanslar) |
 
 Ekosistemin bileşenleri, ekranları ve temaları tek yerde, canlı: `snippets/ui`
@@ -23,7 +23,7 @@ hareket) görsel belgesi.
 cd storybook && npm ci     # ilk sefer
 npm run dev                # http://localhost:6006  (kökten: npm run storybook)
 npm run build              # storybook-static/      (kökten: npm run storybook:build)
-npm run typecheck          # hikâyeler + snippet'ler + şablon, tek tip denetimi
+npm run typecheck          # hikayeler + snippet'ler + şablon, tek tip denetimi
 ```
 
 ## Kabuk (Yönetici Arayüzü)
@@ -43,7 +43,7 @@ npm run typecheck          # hikâyeler + snippet'ler + şablon, tek tip denetim
 - **Tema** (Açık / Koyu) → `<html data-theme>`, şablonun gerçek mekanizması.
 - **Palet** (10 palet) → `<html data-palette>`; değerler şablonun
   `app/palettes.css`inden (tokens.ts'ten üretilir).
-- **Accessibility** sekmesi her hikâyede axe denetimini gösterir.
+- **Accessibility** sekmesi her hikayede axe denetimini gösterir.
 
 ## Nasıl Bağlanır (tek kaynak, kopya yok)
 
@@ -60,13 +60,13 @@ Storybook hiçbir bileşenin ya da token'ın kopyasını tutmaz:
   klasörün `node_modules`una yönlendirir: depo kökündeki dosyalar da aynı
   tipleri görür.
 
-Bir snippet ya da token değişince hikâye kendiliğinden günceldir; kırılırsa
+Bir snippet ya da token değişince hikaye kendiliğinden günceldir; kırılırsa
 CI'daki **Storybook Build** işi (tip denetimi + derleme) yakalar.
 
 ## Kural: Adresler İngilizce
 
 Görünen adlar (`title`, `name`) Türkçe; adres (URL) İngilizce. Her meta
-İngilizce bir `id` taşır, her hikâye İngilizce adla dışa aktarılır:
+İngilizce bir `id` taşır, her hikaye İngilizce adla dışa aktarılır:
 
 ```tsx
 const meta = { title: "Bileşenler/Katmanlar/Araç İpucu", id: "tooltip", … }
@@ -74,13 +74,13 @@ export const Default: Story = { name: "Varsayılan" }   // → tooltip--default
 ```
 
 Grup kimliği **kısa**: bileşenin dosya adı (`tooltip`, `area-chart`), en çok
-24 harf, grup adı (Bileşenler/Katmanlar) adrese girmez. Tek hikâyeli sayfada
+24 harf, grup adı (Bileşenler/Katmanlar) adrese girmez. Tek hikayeli sayfada
 dışa aktarım `Overview` (`colors--overview`), grup adı tekrar etmez.
 
 Kısa yönlendirmeler (`vercel.json`): `/showcase`, `/references` (referans arşivi; `knowledge/references.md`ten okunur), `/demo` (örnek uygulama
 Pusula; ekranı `/demo/inbox`, `/demo/settings`), `/gallery`, `/start`,
 `/theme`, `/palettes`, bir bileşenin belgesi `/c/<ad>` (ör. `/c/tooltip`),
-bir hikâye `/s/<ad>/<hikâye>` (ör. `/s/tooltip/default`). Eski `/pusula`
+bir hikaye `/s/<ad>/<hikaye>` (ör. `/s/tooltip/default`). Eski `/pusula`
 kalıcı olarak `/demo`ya yönlenir.
 
 Araç çubuğu değerleri de adrese girer, bu yüzden ASCII: tema `light`/`dark`
@@ -101,21 +101,21 @@ bağımlılıkları. Veri `snippets/ui/registry.json`dan (`.storybook/install-bl
 `public/r/*.json` shadcn kaydı, derlemede `/r/<ad>.json` olarak yayınlanır
 (`staticDirs`). İkisi de `npm run registry:ui` ile üretilir (depo kökü).
 
-## Hikâye Yazarken
+## Hikaye Yazarken
 
 `stories/_lib/Frame.tsx` → `Frame`, `Gallery`, `Cell`, `Screen` çerçeveleri:
 boardui vitrini gibi büyük gri kuyu, altında ad. Başlıklar Türkçe hiyerarşi
-(`Bileşenler/Katmanlar/Diyalog`), hikâye adları Türkçe, veri gerçekçi Türkçe,
+(`Bileşenler/Katmanlar/Diyalog`), hikaye adları Türkçe, veri gerçekçi Türkçe,
 renk yalnızca token sınıfından. Etkileşimli bileşende `play` ile bir
 etkileşimi sına (`storybook/test`).
 
 Sürümler sabit (`storybook` 10.6.3): 10.6.2'nin Next taklidinde
 `LayoutRouterContext.parentRenderTree` yoktu ve Next 16.4'ün `useRouter`ı
-çöküyordu; 10.6.3 bunu düzeltti. Yükseltmeden önce derleyip bir hikâyeyi çiz.
+çöküyordu; 10.6.3 bunu düzeltti. Yükseltmeden önce derleyip bir hikayeyi çiz.
 
 ## Doğrulama (Kasım 2026)
 
-Her grup hikâyeleri açık/koyu × 390/1280'de çizildi: `play` sonucu, konsol
+Her grup hikayeleri açık/koyu × 390/1280'de çizildi: `play` sonucu, konsol
 hatası, yatay taşma ve axe (ham + eklenti). Yakalanan snippet hataları
 kaynağında düzeltildi (chat-composer menü çökmesi, command-palette listbox,
 bildirim zili adı, stat/chart-card/textarea/time-field kontrastı,
@@ -130,7 +130,7 @@ azaltmada ekran dışında boş kalması, sr-only tabloların telefonda taşırm
   tabloda bitmeyen animasyon sayılır; geçiş bekleyen testler onu dışlamalı.
 - `route-progress` aynı adrese (yalnız sorgu değişen) bağlantıda da başlar ve
   10 sn güvenlik durdurmasına kadar kalır.
-- Yerel `<dialog>`a sentetik Escape test ortamında `cancel` üretmez; hikâyeler
+- Yerel `<dialog>`a sentetik Escape test ortamında `cancel` üretmez; hikayeler
   "Kapat" butonunu kullanır.
 - Takvimdeki "bugün" işareti gerçek saate bağlı; sabit sahte veri 2 Kasım 2026.
 

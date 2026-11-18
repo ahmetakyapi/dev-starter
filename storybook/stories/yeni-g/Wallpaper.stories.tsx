@@ -51,7 +51,7 @@ function Card({ scene }: { scene: WallpaperScene }) {
 }
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Duvar Kâğıdı",
+  title: "Bileşenler/Tanıtım/Duvar Kağıdı",
   id: "wallpaper",
   component: Wallpaper,
   tags: ["autodocs", "yeni"],
@@ -83,7 +83,7 @@ export const Desktop: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Wallpaper scene="alpine" className="aspect-[16/10] w-full max-w-4xl rounded-2xl p-6">
-      <WindowStrip role="img" aria-label="Şafak dağları duvar kâğıdı üstünde iki pencere, Notlar odakta" className="h-48">
+      <WindowStrip role="img" aria-label="Şafak dağları duvar kağıdı üstünde iki pencere, Notlar odakta" className="h-48">
         <AppWindow title="Notlar" icon={<NotebookPen />} focused className="w-64" />
         <AppWindow title="Posta" icon={<Mail />} className="w-56" />
       </WindowStrip>

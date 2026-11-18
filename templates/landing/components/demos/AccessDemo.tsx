@@ -11,7 +11,7 @@ import { TILE } from "./styles";
 type Access = Extract<FeatureDemo, { kind: "access" }>;
 
 /*
- * Hikâye: "Rol değişir, sekme göstergesi kayar, izin anahtarları o role göre
+ * Hikaye: "Rol değişir, sekme göstergesi kayar, izin anahtarları o role göre
  * açılıp kapanır."
  *
  * Gösterge eşit genişlikli sütunlarda `x: N × 100%` ile kayar (ölçüm ya da

@@ -53,14 +53,14 @@ arasından seçilir:
 - **Başarı neye benziyor?** Kişisel portfolyo parçası mı, gelir mi, bir
   topluluk mu? Hedef, kapsamı ve kaliteyi belirler.
 - **Kısıt:** süre, bütçe, tek kişi mi.
-- **Veri nereden geliyor?** Kullanıcı mı giriyor, bir API mı, yapay zekâ mı
+- **Veri nereden geliyor?** Kullanıcı mı giriyor, bir API mı, yapay zeka mı
   üretiyor? Veri kaynağı genelde en büyük risktir (Açılış Zili'nde sağlayıcı
   kotaları ve bayat veri tüm mimariyi belirledi).
 
 ### 2. Tara — piyasa ve rakipler
 
 - 4-8 rakip ya da muadil bul (yerli + yabancı). Her biri için: ne yapıyor, kime,
-  fiyat, en çok övülen ve en çok şikâyet edilen şey (mağaza yorumları, Reddit,
+  fiyat, en çok övülen ve en çok şikayet edilen şey (mağaza yorumları, Reddit,
   Ekşi Sözlük, Product Hunt, Twitter/X).
 - **Boşluk tablosu:** rakiplerin hiçbirinin iyi yapmadığı 2-3 şey. Strateji
   genelde buradan çıkar.
@@ -160,9 +160,9 @@ oturum** alır ve `/new-project`e o geçer; sen proje kurmazsın.
 ## Kalite Çıtası
 
 - ❌ "Kullanıcı deneyimi iyileştirilebilir." → ✅ "Kayıt formu 7 alan; rakip X
-  yalnız e-posta istiyor ve şikâyetlerin yarısı kayıt zorluğu. Alanları 2'ye
+  yalnız e-posta istiyor ve şikayetlerin yarısı kayıt zorluğu. Alanları 2'ye
   indir, kalanı ilk kullanımda sor."
-- ❌ "Yapay zekâ özelliği eklenebilir." → ✅ "Seans notlarından haftalık özet:
+- ❌ "Yapay zeka özelliği eklenebilir." → ✅ "Seans notlarından haftalık özet:
   Claude API, sunucu eylemi, çıktı doğrulama şeması, terapist onaylamadan
   kaydedilmez. Maliyet: seans başına ~X token (claude-api skill'iyle hesapla)."
 - Her öneri bir sonraki adıma dönüşebilecek kadar somut olmalı.

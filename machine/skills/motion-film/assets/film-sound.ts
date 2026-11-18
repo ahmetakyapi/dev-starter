@@ -2,7 +2,7 @@
  * Film sesi — dosyasız, Web Audio ile sentezlenen foley.
  *
  * Kaynak: Açılış Zili `components/ai/filmSound.ts`. Tarifler malzemeye göre
- * (lemo-opuscar ink-wash: "never a metal whoosh"): kâğıt ve mürekkep sesleri
+ * (lemo-opuscar ink-wash: "never a metal whoosh"): kağıt ve mürekkep sesleri
  * süzülmüş gürültüden, çan kısmi tonlardan.
  *
  * SAYFA İÇİ FİLM KURALLARI (reference/ses.md):
@@ -84,13 +84,13 @@ export const RECIPES = {
     tone(at, freq, { peak, decay: 0.22 }); tone(at, freq * 2.76, { peak: peak * 0.25, decay: 0.09 });
     noiseBurst(at, { type: "lowpass", freq: 700, peak: peak * 0.6, attack: 0.002, decay: 0.06 });
   },
-  /** Ahşap/kâğıt vuruşu: damga, mühür, iniş. */
+  /** Ahşap/kağıt vuruşu: damga, mühür, iniş. */
   thump: (at: number, peak = 0.5) => {
     tone(at, 130, { peak, decay: 0.2, glideTo: 48 });
     noiseBurst(at, { type: "lowpass", freq: 1100, peak: peak * 0.35, attack: 0.002, decay: 0.05 });
     noiseBurst(at + 0.01, { type: "highpass", freq: 3500, peak: peak * 0.08, attack: 0.002, decay: 0.12 });
   },
-  /** Kalem kâğıtta: bant geçiren gürültü, düzeyi 35 ms'de bir tohumlu titrer. */
+  /** Kalem kağıtta: bant geçiren gürültü, düzeyi 35 ms'de bir tohumlu titrer. */
   pen: (at: number, duration: number) => {
     if (!audio || !master || !noise) return;
     const src = audio.createBufferSource(); src.buffer = noise; src.loop = true;

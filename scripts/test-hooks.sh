@@ -607,7 +607,7 @@ CODE=$?
 
 # (u18) Tırnaklı pathspec (Next route grubu) + yalnız .md staged → muafiyet YOK
 # (tırnaklı bölge silinince pathspec görünmez oluyordu; `git commit <yol>`
-# çalışma ağacındaki hâli commit'ler)
+# çalışma ağacındaki hali commit'ler)
 git add README.md
 payload "git commit -m 'docs: notlar' 'app/(panel)/page.tsx'" | bash "$HOOKS/gate-guard.sh" >/dev/null 2>&1
 CODE=$?
@@ -945,7 +945,7 @@ printf '// bkz. mistakes.md #100\nexport const c = "#a4720f"\n' > atif.ts
 git add atif.ts
 OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)
 if printf '%s' "$OUT" | grep -q 'DESIGN TOKEN'; then ok "atıf + gerçek hex aynı dosyada → uyarır"; else no "gerçek hex uyarısı kaçmamalı" "DESIGN TOKEN" "uyarı yok"; fi
-# token-ok-file işaretli illüstrasyon dosyası (duvar kâğıdı) → hex uyarısı yok
+# token-ok-file işaretli illüstrasyon dosyası (duvar kağıdı) → hex uyarısı yok
 printf '// token-ok-file: illüstrasyon, renk seti elle seçildi\nexport const c = "#a4720f"\n' > atif.ts
 git add atif.ts
 OUT=$(payload "git commit -m 'feat: x'" | bash "$HOOKS/quality-scan.sh" 2>&1)

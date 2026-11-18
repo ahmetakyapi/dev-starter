@@ -4,7 +4,7 @@ Yönetim panelinde içerik, metin, görsel ya da yazı tipi düzenlenen her ekra
 yanında sitenin **kendisi** durur: masaüstü (1440 × 900) ve telefon (390 × 844)
 çerçevesinde, açık ve koyu temada, yazdıkça güncellenerek. Kural:
 [`rules/live-preview.md`](../../rules/live-preview.md). Kaynak: Geo Tour
-yönetim paneli (`ahmetakyapi/geo-tour`, Ekim 2026), projeden bağımsız hâle
+yönetim paneli (`ahmetakyapi/geo-tour`, Ekim 2026), projeden bağımsız hale
 getirildi.
 
 | Dosya | Nereye | Ne yapar |
@@ -28,7 +28,7 @@ Form alanı değişti
   └─ içerik (metin, görsel, sıra) ─► 320 ms bekle ──► saveDraft (Server Action) ──► content_drafts
                                                      └─► preview.refresh() ──► lp:refresh ──► router.refresh()
                                                                                     (sayfa tam yüklenmez, kaydırma yerinde)
-Kaydet ──► yayındaki tablo + geçmiş ──► clearDraft ──► markSaved() ──► önizleme "Yayındaki Hâli"
+Kaydet ──► yayındaki tablo + geçmiş ──► clearDraft ──► markSaved() ──► önizleme "Yayındaki Hali"
 ```
 
 Önizleme sitenin gerçek görünüm bileşenini (`HomeView`, `PostView`…) çizer;
@@ -132,7 +132,7 @@ için genel kuraldan SONRA (Next aynı anahtarda sonuncuyu uygular):
 ```
 
 Doğrulama: `curl -sI localhost:3000/admin/onizleme/home | grep -i frame` →
-`SAMEORIGIN`; `curl -sI localhost:3000/ | grep -i frame` → hâlâ `DENY`.
+`SAMEORIGIN`; `curl -sI localhost:3000/ | grep -i frame` → hala `DENY`.
 
 ```tsx
 // app/(admin)/admin/onizleme/[page]/page.tsx
@@ -278,7 +278,7 @@ Reveal hazır geldi; hidrasyon hatası yok (önceki `useState(createDraftSession
 - [ ] Yazmayı bırakınca ≤ 0,5 sn içinde önizleme güncel, kaydırma yerinde.
 - [ ] Yazı tipi ve punto seçimi istek beklemeden değişiyor.
 - [ ] Masaüstü ve telefon, açık ve koyu; seçim sayfa yenilenince hatırlanıyor.
-- [ ] Rozet: Yayındaki Hâli → Güncelleniyor → Kaydedilmemiş → (Kaydet) Yayındaki Hâli; hatalı alanda Hatalı Alan Var.
+- [ ] Rozet: Yayındaki Hali → Güncelleniyor → Kaydedilmemiş → (Kaydet) Yayındaki Hali; hatalı alanda Hatalı Alan Var.
 - [ ] Önizlemede bölüme tıklamak paneldeki alanı açıyor; alana odaklanmak önizlemeyi kaydırıyor.
 - [ ] Taslak canlı sitede görünmüyor (gizli pencerede kontrol); ikinci sekmedeki taslak birinciye karışmıyor.
 - [ ] Önizleme rotası oturumsuz 401/yönlendirme, `noindex`.

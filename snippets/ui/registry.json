@@ -1,5 +1,5 @@
 {
-  "$comment": "ÜRETİLDİ — elle düzenleme. Kaynak: snippets/ui/*.tsx + README kataloğu + storybook hikâye kimlikleri. Üreten: npm run registry:ui",
+  "$comment": "ÜRETİLDİ — elle düzenleme. Kaynak: snippets/ui/*.tsx + README kataloğu + storybook hikaye kimlikleri. Üreten: npm run registry:ui",
   "name": "dev-starter-ui",
   "homepage": "https://dev-starter-storybook.vercel.app",
   "shadcnBase": "https://dev-starter-storybook.vercel.app/r",
@@ -1851,7 +1851,7 @@
     {
       "name": "reasoning",
       "title": "Düşünce Bloğu",
-      "category": "Yapay Zekâ",
+      "category": "Yapay Zeka",
       "description": "Modelin düşüncesi: akarken açık ve sayan, bitince \"6 sn düşündü\" satırına iner",
       "file": "snippets/ui/reasoning.tsx",
       "client": true,
@@ -2324,7 +2324,7 @@
     {
       "name": "stream-text",
       "title": "Akan Metin",
-      "category": "Yapay Zekâ",
+      "category": "Yapay Zeka",
       "description": "Parça parça gelen yanıt: yalnız yeni sözcük belirir, önceki metin kıpırdamaz",
       "file": "snippets/ui/stream-text.tsx",
       "client": true,
@@ -2481,7 +2481,7 @@
     {
       "name": "thinking-orb",
       "title": "Düşünme Küresi",
-      "category": "Yapay Zekâ",
+      "category": "Yapay Zeka",
       "description": "Asistanın durumu: bekliyor, düşünüyor, konuşuyor (ses düzeyiyle)",
       "file": "snippets/ui/thinking-orb.tsx",
       "client": false,
@@ -2639,7 +2639,7 @@
     {
       "name": "tool-call",
       "title": "Araç Çağrısı",
-      "category": "Yapay Zekâ",
+      "category": "Yapay Zeka",
       "description": "Asistanın araç çağrısının kaydı: durum, süre, girdi, çıktı; onay yuvası",
       "file": "snippets/ui/tool-call.tsx",
       "client": false,
@@ -2757,9 +2757,9 @@
     },
     {
       "name": "wallpaper",
-      "title": "Duvar Kâğıdı",
+      "title": "Duvar Kağıdı",
       "category": "Tanıtım",
-      "description": "8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
+      "description": "8 illüstrasyon duvar kağıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
       "file": "snippets/ui/wallpaper.tsx",
       "client": false,
       "storyId": "wallpaper",

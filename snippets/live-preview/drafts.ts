@@ -54,7 +54,7 @@ export async function writeDraft(key: string, session: string, data: unknown): P
   await db.delete(contentDrafts).where(lt(contentDrafts.updatedAt, new Date(now.getTime() - DRAFT_TTL_MS)));
 }
 
-/** Kayıt yayına girdi: bu oturumun taslağı kalkar, önizleme yayındaki hâle döner. */
+/** Kayıt yayına girdi: bu oturumun taslağı kalkar, önizleme yayındaki hale döner. */
 export async function clearDraft(key: string, session: string): Promise<void> {
   await db.delete(contentDrafts).where(and(eq(contentDrafts.key, key), eq(contentDrafts.session, session)));
 }

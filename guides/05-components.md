@@ -54,7 +54,7 @@ karşılaştırma tablosu). Başlık kalıbı kutu değil ton.
 <PageHeader
   eyebrow="Bilançolar"
   title="Bu Haftanın Takvimi"
-  description="Açıklama tarihi yaklaşan şirketler, beklenen hisse başı kâr ile."
+  description="Açıklama tarihi yaklaşan şirketler, beklenen hisse başı kar ile."
   action={<DatePicker />}
 />
 ```
@@ -205,7 +205,7 @@ Bağlı kurallar:
 
 ## 4. Boş, Yükleme ve Hata Durumları
 
-Veri gösteren her panelin dört hâli vardır; tasarımda dördü de çizilir:
+Veri gösteren her panelin dört hali vardır; tasarımda dördü de çizilir:
 
 | Durum | Bileşen | Kural |
 |-------|---------|-------|
@@ -272,14 +272,15 @@ kullanıcının gündelik dilindeki karşılık kullanılır, sözlükten uydurm
 |-----------|-------------|-----|
 | buton | düğme | sahibinin kesin kuralı; `slop-scan.sh` YÜKSEK bulgu |
 | filtre, filtrelemek | süzgeç, süzmek | "Öncelik Filtresi", "Filtreleri Temizle" |
-| ikon | ikon | |
+| ikon | simge | |
 | sekme, menü, panel, kart, rozet | | zaten yerleşik |
+| hikaye, zeka, hala, kağıt, resmi | hikâye, zekâ, hâlâ, kâğıt, resmî | şapka yok (2026-11-18); arama katlama tabloları hariç |
 
 ---
 
 ## 7. Örnek İçerik ve Sistem Mesajı
 
-Şablonu "yapay zekâ yaptı" diye ele veren çoğu zaman renk değil, metindir.
+Şablonu "yapay zeka yaptı" diye ele veren çoğu zaman renk değil, metindir.
 Örnek içerik gerçek bir ürünün gerçek kullanıcılarından geliyormuş gibi
 okunmalı (`templates/landing/lib/content.ts` örnek alınır).
 

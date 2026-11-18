@@ -16,7 +16,7 @@ export async function settle(globals?: Record<string, unknown>) {
   // Tam sayfa görüntü ve denetim sayfanın başından: play aşağı kaydırmış olabilir.
   window.scrollTo({ top: 0 });
   // Play'in son tıkladığı öğe odakta kalırsa (kenar çubuğundaki "Pano")
-  // hikâyeyi açan kişi sebepsiz bir odak halkası görür. Açık pencere
+  // hikayeyi açan kişi sebepsiz bir odak halkası görür. Açık pencere
   // içindeki odak bırakılır: orada odak tuzağı bilerek tutar.
   const active = document.activeElement;
   if (active instanceof HTMLElement && active !== document.body && !active.closest("dialog[open], [role=dialog]")) active.blur();

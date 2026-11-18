@@ -5,7 +5,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Yapay Zekâ/Düşünme Küresi",
+  title: "Bileşenler/Yapay Zeka/Düşünme Küresi",
   id: "thinking-orb",
   component: ThinkingOrb,
   tags: ["autodocs", "yeni"],

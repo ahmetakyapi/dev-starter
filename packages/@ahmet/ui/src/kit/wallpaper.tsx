@@ -1,13 +1,13 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
-// token-ok-file: duvar kâğıdı bir illüstrasyon varlığıdır; sahnelerin renk setleri elle seçildi (palet token'larıyla karıştırma çamurlu, bulanık sonuç veriyordu — 2026-11-07 kullanıcı geri bildirimi). Arayüz rengi değil, resim rengi.
+// token-ok-file: duvar kağıdı bir illüstrasyon varlığıdır; sahnelerin renk setleri elle seçildi (palet token'larıyla karıştırma çamurlu, bulanık sonuç veriyordu — 2026-11-07 kullanıcı geri bildirimi). Arayüz rengi değil, resim rengi.
 import { useId, type ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
- * Duvar kâğıdı: çözünürlükten bağımsız (SVG) sekiz illüstrasyon sahnesi.
+ * Duvar kağıdı: çözünürlükten bağımsız (SVG) sekiz illüstrasyon sahnesi.
  * Masaüstü maketinin arkası (`app-window` + `dock`), tanıtım sayfasının
- * görsel zemini ya da `downloadWallpaper()` ile indirilen gerçek duvar kâğıdı
- * (Retina masaüstü 2880×1800, telefon 1290×2796). Storybook → Tanıtım/Duvar Kâğıdı.
+ * görsel zemini ya da `downloadWallpaper()` ile indirilen gerçek duvar kağıdı
+ * (Retina masaüstü 2880×1800, telefon 1290×2796). Storybook → Tanıtım/Duvar Kağıdı.
  *
  * RENK: arayüz token'ı DEĞİL, her sahnenin elle seçilmiş renk seti. İlk
  * sürüm paletin tek tonunu beyaz/siyahla karıştırıyordu; sonuç bulanık ve
@@ -41,7 +41,7 @@ export const WALLPAPER_NAMES: Record<WallpaperScene, string> = {
   aurora: "Kutup Işığı",
   silk: "İpek",
   mesh: "Gece Ağı",
-  paper: "Kâğıt Katmanları",
+  paper: "Kağıt Katmanları",
 };
 
 /* --- Geometri ------------------------------------------------------------ */

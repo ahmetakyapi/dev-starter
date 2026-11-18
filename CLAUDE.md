@@ -8,7 +8,7 @@ Projeye başlarken sırayla izlenecek rehber: `guides/` (00 kimlik → 01 ilk g�
 Global kuralların tek kaynağı: `machine/CLAUDE.md` (`~/.claude/CLAUDE.md` ona symlink);
 yol kapsamlı global kurallar `machine/rules/` (→ `~/.claude/rules/dev-starter/`).
 
-**Bu dosyanın sözleşmesi** (8 Kasım 2026, Claude Code resmî önerisi): her
+**Bu dosyanın sözleşmesi** (8 Kasım 2026, Claude Code resmi önerisi): her
 oturumda yüklenir, ~200 satırın altında kalır (`scripts/health-check.sh`
 denetler). Burada yalnız her oturumda gereken harita, kural ve adres durur.
 Belirli dizinlere ait ayrıntı `.claude/rules/*.md` içinde `paths:`

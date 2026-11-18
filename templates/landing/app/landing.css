@@ -208,7 +208,7 @@
      → huni çubukları soldan dolar → hafta sütunları aşağıdan → sayı yuvarlanır.
      Hepsi CSS: hidrasyonu beklemez. Çubuk ve sütun `clip-path` ile dolar
      (küçük öğe, tek seferlik açılış; guides/04 § 14 kural 9), köşe yarıçapı
-     ezilmez. Hareketi azaltan okuyucu bu bloğa hiç girmez: son hâl. */
+     ezilmez. Hareketi azaltan okuyucu bu bloğa hiç girmez: son hal. */
   @media (prefers-reduced-motion: no-preference) {
     .hero-fade {
       animation: hero-fade 0.6s var(--ease-brand) 0.28s both;

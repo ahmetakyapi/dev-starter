@@ -79,7 +79,7 @@ Son gözden geçirme: 2026-10-03
 | Yurt dışı ödeme / abonelik | Stripe | Dene | Yurt dışı şirket ya da Stripe Atlas gerekir. |
 | Vergi dahil satış (yurt dışı) | Lemon Squeezy ya da Paddle | Dene | Satıcı kayıtlı (MoR) olur, KDV yükünü alır. |
 
-## Yapay Zekâ
+## Yapay Zeka
 
 | İhtiyaç | Varsayılan | Halka | Not / ne zaman değil |
 |---|---|---|---|
@@ -88,7 +88,7 @@ Son gözden geçirme: 2026-10-03
 | Agent arayüzü (araç çağrısı UI'ı) | AG-UI + CopilotKit (`templates/agentic-chat`) | Dene | Kurallar `rules/agentic-ui.md`. |
 | Proaktif agent akışı (agent hazırlar, kullanıcı onaylar) | `nextjs-fullstack` → `/akis` (`snippets/agent-feed.tsx` + server action + cron üretici) | Dene | Kullanıcı verisi yoksa değil: yeni hesapta akış boş kalır, ilk günü sohbet taşır. |
 | Vektör arama | pgvector (Neon) | Dene | Ayrı vektör veritabanı ancak milyonlarca kayıtta. |
-| Yapay zekâ çıktısını yayımlamak | Önce doğrulama şeması, sonra yazma | Benimse | Açılış Zili `lib/content-write.ts`: tek yazma yolu, sürüm fotoğrafı. |
+| Yapay zeka çıktısını yayımlamak | Önce doğrulama şeması, sonra yazma | Benimse | Açılış Zili `lib/content-write.ts`: tek yazma yolu, sürüm fotoğrafı. |
 | Açıklayıcı figür ("nasıl çalışır") | anatomy skill'i + `scripts/add-figure-kit.mjs` | Dene | Bootstrap sabit commit'e kurar; uyum `npm run verify:anatomy`. Basit akış şeması gerekiyorsa değil. |
 
 ## İçerik, SEO, Ölçüm

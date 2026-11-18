@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "5-15 seçenekten biri, yer dar; daha azında radyo grubu, aranacaksa aranır seçim. Base UI listbox kalıbı: ok tuşları, harf yazarak atlama, Escape ile kapanma, gizli yerel giriş sayesinde form gönderimi. Basit form alanında yerel `<select>` hâlâ doğru seçim.",
+          "5-15 seçenekten biri, yer dar; daha azında radyo grubu, aranacaksa aranır seçim. Base UI listbox kalıbı: ok tuşları, harf yazarak atlama, Escape ile kapanma, gizli yerel giriş sayesinde form gönderimi. Basit form alanında yerel `<select>` hala doğru seçim.",
       },
     },
   },

@@ -303,7 +303,7 @@ export function SitePreview({ ref, views, status, cover, onSelect, hint }: Props
       ? { tone: "error", text: "Hatalı Alan Var" }
       : status === "draft"
         ? { tone: "draft", text: "Kaydedilmemiş" }
-        : { tone: "live", text: "Yayındaki Hâli" };
+        : { tone: "live", text: "Yayındaki Hali" };
 
   const screen = layout ? { w: layout.width * layout.scale, h: layout.height * layout.scale + layout.top } : null;
   const path = view.href === "/" ? "" : view.href;

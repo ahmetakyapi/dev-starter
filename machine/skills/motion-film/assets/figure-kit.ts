@@ -82,7 +82,7 @@ export type SettleState = { x: number; v: number };
 /**
  * Kritik sönümlü yaklaşım: aşmadan varır, hız da süreklidir (üstel takipten
  * yumuşak). Renk, parlaklık, frekans gibi "ileri geri gitmemesi" gereken
- * değerler için. Hâlâ hareket ediyorsa true (döngüyü canlı tutar).
+ * değerler için. Hala hareket ediyorsa true (döngüyü canlı tutar).
  */
 export function settle(s: SettleState, target: number, dt: number, seconds: number, calm = false) {
   if (calm) { s.x = target; s.v = 0; return false; }

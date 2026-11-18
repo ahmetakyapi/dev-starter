@@ -6,7 +6,7 @@ import { cn } from "../utils";
  * iki satır + sağda değer, başlıklı kart. Yer tuttuğu için içerik geldiğinde
  * sayfa zıplamaz. Genel bir dönen halka yerine bunu kullan.
  *
- * Şablonun `components/ui/Skeleton.tsx`ünün genişletilmiş hâli; ikisi aynı
+ * Şablonun `components/ui/Skeleton.tsx`ünün genişletilmiş hali; ikisi aynı
  * `.skeleton` yardımcısını (app/globals.css) kullanır. Hareketi azaltan
  * kullanıcıda nabız durur (globals.css'teki genel kural).
  *

@@ -208,7 +208,7 @@ function BasketDemo() {
           onChange={(event) => setPicked((p) => (event.target.checked ? [...p, b] : p.filter((x) => x !== b)))}
         />
       ))}
-      {/* grid-cols-1: örtük sütun `auto` olsaydı çubuk en geniş hâline açılıp telefonda kuyudan taşardı; böyle kendi içinde kayar. */}
+      {/* grid-cols-1: örtük sütun `auto` olsaydı çubuk en geniş haline açılıp telefonda kuyudan taşardı; böyle kendi içinde kayar. */}
       <div className="absolute inset-x-2 bottom-3 grid grid-cols-1">
         <SelectionBar position="sticky" count={picked.length} noun="kahve" onClear={() => setPicked([])}>
           <SelectionAction onClick={() => setPicked([])}>Kavurucu Sırasına Al</SelectionAction>

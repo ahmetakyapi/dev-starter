@@ -5,7 +5,7 @@ import { NoticeDeck } from "@/components/ui/notice-deck";
 const ITEMS = [
   { id: "surum", eyebrow: "Yeni Sürüm", title: "Pusula 3.1 yayında", body: "Pencere şeridi ve kısayol paleti.", action: <a href="/surum-notlari" className="text-primary-ink underline-offset-2 hover:underline">Sürüm notları</a> },
   { id: "canli", eyebrow: "Canlı Yayın", title: "Cuma 20.00'de soru-cevap" },
-  { id: "duvar", eyebrow: "Duvar Kâğıtları", title: "Altı yeni sahne", body: "Çalışma alanının paletiyle çizilir." },
+  { id: "duvar", eyebrow: "Duvar Kağıtları", title: "Altı yeni sahne", body: "Çalışma alanının paletiyle çizilir." },
 ];
 
 const meta = {

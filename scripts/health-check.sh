@@ -399,6 +399,12 @@ if grep -qE '^CINECODE_REF="[0-9a-f]{40}"' machine/bootstrap.sh; then
 else
   fail "machine/bootstrap.sh: CINECODE_REF 40 haneli sha degil — HEAD icerigi skill olarak baglanir"
 fi
+# Turkce yazim skill'i (insanca): dis kaynak, yalniz sabit commit'ten.
+if grep -qE '^INSANCA_REF="[0-9a-f]{40}"' machine/bootstrap.sh; then
+  pass "insanca tam commit'e sabitlenmis (bootstrap.sh INSANCA_REF)"
+else
+  fail "machine/bootstrap.sh: INSANCA_REF 40 haneli sha degil"
+fi
 
 # Yerel Node major'i .nvmrc ile ayni mi? Farkliysa bir sonraki npm install
 # CI'in reddedecegi bir kilit yazabilir.

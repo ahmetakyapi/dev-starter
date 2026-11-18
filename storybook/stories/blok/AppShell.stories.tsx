@@ -114,7 +114,7 @@ export const Collapsed: Story = {
     const toggle = canvasElement.querySelector("aside button[aria-expanded]");
     if (!visible(toggle)) return;
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
-    // ⌘B iki kez: önce açılır, sonra yeniden daralır (hikâye daraltılmış kalır).
+    // ⌘B iki kez: önce açılır, sonra yeniden daralır (hikaye daraltılmış kalır).
     await userEvent.keyboard("{Control>}b{/Control}");
     await waitFor(() => expect(toggle).toHaveAttribute("aria-expanded", "true"));
     await userEvent.keyboard("{Control>}b{/Control}");
@@ -140,7 +140,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   parameters: {
     layout: "padded",
-    docs: { description: { story: "İkinci kabuk yalnız görüntü (`inert`): bir sayfada iki kabuk yer işaretlerini yineler. Etkileşimli daraltma Daraltılmış hikâyesinde." } },
+    docs: { description: { story: "İkinci kabuk yalnız görüntü (`inert`): bir sayfada iki kabuk yer işaretlerini yineler. Etkileşimli daraltma Daraltılmış hikayesinde." } },
   },
   render: (args) => (
     <Gallery cols={2}>

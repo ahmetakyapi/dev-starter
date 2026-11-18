@@ -83,7 +83,7 @@ Her bileşen, açık ve koyu temada, on palette, bütün durumlarıyla
 [dev-starter-storybook.vercel.app](https://dev-starter-storybook.vercel.app/) adresinde. Kenar çubuğu üç bölüm:
 **Başla** (Tanıtım, Başlangıç, Her Şey Bir Arada, Vitrin) · **Kütüphane** (Tema,
 Bileşenler, Grafikler, Bloklar, Desenler) · **Uygulamada** (Pusula, Ekranlar,
-Arşiv). Her hikâyenin etkileşim testi, kontrast ve hizalama ölçümü her
+Arşiv). Her hikayenin etkileşim testi, kontrast ve hizalama ölçümü her
 görsel değişiklikten sonra koşar.
 
 <table>
@@ -167,7 +167,7 @@ SSR'da görünür kalır. → [`guides/04-motion.md`](guides/04-motion.md)
 ## Açıklayıcı Figürler
 
 Bir sistemin nasıl çalıştığını anlatan canlı figürler (Açılış Zili'ndeki Seans
-Zili, Kural Tezgâhı) [anatomy](https://github.com/wheresryan22/anatomy) kitiyle
+Zili, Kural Tezgahı) [anatomy](https://github.com/wheresryan22/anatomy) kitiyle
 çiziliyor (MIT): izometrik SVG, döndürülerek üretilen parçalar (çan, kubbe),
 zamana bağlı hareket. Kit bir npm paketi değil:
 
@@ -208,7 +208,7 @@ tek satırla değiştirilir. Görseller GitHub temana göre açık ya da koyu ge
 <table>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-live-data-dark.webp"><img alt="hero-live-data" src=".github/readme/shots/hero-live-data-light.webp" width="100%"></picture><br><b>Canlı Veri</b> · <code>live-data</code><br><sub>Ölçülebilir bir vaat ve sayıların gerçek kaynağı varsa. Varsayılan.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-statement-dark.webp"><img alt="hero-statement" src=".github/readme/shots/hero-statement-light.webp" width="100%"></picture><br><b>Tek Mesaj</b> · <code>statement</code><br><sub>Mesaj tek başına güçlüyse: lansman, manifesto.</sub></td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-editorial-split-dark.webp"><img alt="hero-editorial-split" src=".github/readme/shots/hero-editorial-split-light.webp" width="100%"></picture><br><b>İki Kolonlu Editoryal</b> · <code>editorial-split</code><br><sub>Gösterilecek gerçek bir ürün ekranı ya da fotoğraf varsa.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-product-frame-dark.webp"><img alt="hero-product-frame" src=".github/readme/shots/hero-product-frame-light.webp" width="100%"></picture><br><b>Ürün Çerçevesi</b> · <code>product-frame</code><br><sub>Satışı arayüzün kendisi yapıyorsa; çerçeve kaydırdıkça düzleşir.</sub></td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-bento-dark.webp"><img alt="hero-bento" src=".github/readme/shots/hero-bento-light.webp" width="100%"></picture><br><b>Bento</b> · <code>bento</code><br><sub>Eşit ağırlıkta 3-5 güçlü yön varsa.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-scroll-stage-dark.webp"><img alt="hero-scroll-stage" src=".github/readme/shots/hero-scroll-stage-light.webp" width="100%"></picture><br><b>Kaydırma Sahnesi</b> · <code>scroll-stage</code><br><sub>Hikâye üç adımda anlatılabiliyorsa.</sub></td></tr>
+<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-bento-dark.webp"><img alt="hero-bento" src=".github/readme/shots/hero-bento-light.webp" width="100%"></picture><br><b>Bento</b> · <code>bento</code><br><sub>Eşit ağırlıkta 3-5 güçlü yön varsa.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-scroll-stage-dark.webp"><img alt="hero-scroll-stage" src=".github/readme/shots/hero-scroll-stage-light.webp" width="100%"></picture><br><b>Kaydırma Sahnesi</b> · <code>scroll-stage</code><br><sub>Hikaye üç adımda anlatılabiliyorsa.</sub></td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-minimal-dark.webp"><img alt="hero-minimal" src=".github/readme/shots/hero-minimal-light.webp" width="100%"></picture><br><b>Minimal</b> · <code>minimal</code><br><sub>İçerik ağırlıklı sayfalar: blog, belge, rehber.</sub></td><td width="50%" valign="top"></td></tr>
 </table>
 
@@ -240,7 +240,7 @@ sınıflarına ve `cn()`'e dayanır, açık/koyu ve on palette doğru görünür
 | **Geri Bildirim ve Yükleme** | `toast` · `banner-alert` · `meter` · `progress` · `skeleton` · `spinner` · `route-progress` |
 | **Veri ve Verimlilik** | `data-table` · `record-list` · `tree-view` · `tree-table` · `stat` · `timeline` · `kanban-board` · `task-list` · `week-calendar` |
 | **Grafikler** | `area-chart` · `line-chart` · `combo-chart` · `funnel-chart` · `sankey-chart` · `heatmap` · `ring-chart` · `radar-chart` · `activity-rings` |
-| **Hareket, Tanıtım, Yapay Zekâ** | `pattern-bg` · `dissolve` · `slot-text` · `mesh-gradient` · `liquid-glass` · `app-window` · `thinking-orb` · `stream-text` · `tool-call` |
+| **Hareket, Tanıtım, Yapay Zeka** | `pattern-bg` · `dissolve` · `slot-text` · `mesh-gradient` · `liquid-glass` · `app-window` · `thinking-orb` · `stream-text` · `tool-call` |
 
 Tam liste, ne zaman hangisi ve bağımlılıklar: [`snippets/ui/README.md`](snippets/ui/README.md);
 hepsi canlı olarak [kataloğun Bileşenler rafında]({L}/).

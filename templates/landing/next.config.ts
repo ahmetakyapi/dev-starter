@@ -9,7 +9,7 @@ import { assertSiteUrlForBuild } from "./lib/env";
  * TAM CSP BİLİNÇLİ OLARAK YOK. Next'in satır içi önyükleme script'i ve satır
  * içi stiller `unsafe-inline` ister; o da CSP'nin XSS'e karşı faydasının
  * çoğunu götürür. Doğru CSP nonce tabanlıdır ve her sayfayı dinamik çizime
- * zorlar; ayrı bir karar. Yarım yapılmış hâli yanlış bir güvenlik hissi verir.
+ * zorlar; ayrı bir karar. Yarım yapılmış hali yanlış bir güvenlik hissi verir.
  *
  * `frame-ancestors` CSP olarak da veriliyor: modern tarayıcılarda
  * X-Frame-Options'tan önceliklidir, eski tarayıcılar ikincisini okur.

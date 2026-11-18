@@ -184,7 +184,7 @@ describe('imza degradesi', () => {
     )
   })
 
-  it('deprecated logo aliası hâlâ çözülür (geriye dönük uyumluluk)', () => {
+  it('deprecated logo aliası hala çözülür (geriye dönük uyumluluk)', () => {
     expect(gradients.logo).toBeTruthy()
   })
 })

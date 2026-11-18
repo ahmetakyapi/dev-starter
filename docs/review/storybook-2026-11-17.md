@@ -1,6 +1,6 @@
 # Tasarım Denetimi — dev-starter Storybook — 2026-11-17
 
-Matris: 13 hikâye × 3 genişlik (1440 / 1024 / 390) × 2 tema = **78 ekran** (hepsi açıldı; `demo-app--signed-out` ilk turda yük altında yüklenmedi, tek başına yeniden ölçüldü), ek olarak kabuk (sol menü) 1440 açık/koyu, 1024 açık, 390 açık/koyu.
+Matris: 13 hikaye × 3 genişlik (1440 / 1024 / 390) × 2 tema = **78 ekran** (hepsi açıldı; `demo-app--signed-out` ilk turda yük altında yüklenmedi, tek başına yeniden ölçüldü), ek olarak kabuk (sol menü) 1440 açık/koyu, 1024 açık, 390 açık/koyu.
 Yatay taşma: **0 / 78**. Konsol: 3 tür hata (aşağıda B-12, B-13). Hizalama denetimi (`npm run check:align`): **✓ 12 sayfa × 3 genişlik hizalı**. Kod taraması (`slop-scan.sh --quiet storybook/stories`): 0 yüksek, 10 uyarı (çoğu `text-[9px]` künyeleri).
 
 Yöntem: Playwright (Chromium), her hücrede 8,5 sn bekleme (play fonksiyonları), tam sayfa + kaydırarak viewport görüntüsü. Kontrast iki yolla ölçüldü: (1) `getComputedStyle` + ata zincirinin zemin bileşimi, (2) **piksel ölçümü**: metin saydamlaştırılıp altındaki zemin ekran görüntüsünden okundu (renkli/degrade zeminde tek güvenilir yol); yalnız medyan zeminde de eşiği geçemeyenler bulgu sayıldı. Butonlar gerçekten tıklandı (DOM değişimi, piksel farkı, `aria-*` değişimi, dosya seçici, gezinme). Dokunma hedefi 390'da, `::after` genişletmesi hesaba katılarak.
@@ -45,7 +45,7 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 
 **Y-4. 1024 px'te gelen kutusu tablosu: talep başlıkları 101 px'e sıkışıyor, Kanal sütunu kesik**
 - Sayfa: `demo-app--inbox` · 1024 · açık + koyu
-- Ölçüm: "Siparişimiz hâlâ teslim edilmedi" 209 px metin **101 px** sütunda; 8 talebin hepsi ~10 karakterde kesiliyor; Kanal sütunu "Tele", "E-P" diye görünür alanda yarım kalıyor (tablo yatay kaydırıyor, "devamı var" ipucu yok). Sol klasör ağacı 240 px yer kaplıyor.
+- Ölçüm: "Siparişimiz hala teslim edilmedi" 209 px metin **101 px** sütunda; 8 talebin hepsi ~10 karakterde kesiliyor; Kanal sütunu "Tele", "E-P" diye görünür alanda yarım kalıyor (tablo yatay kaydırıyor, "devamı var" ipucu yok). Sol klasör ağacı 240 px yer kaplıyor.
 - Kanıt: `demo-app--inbox-1024-light.png`
 - Öneri: 1024'te klasör ağacını daralt/katla (ikon rayı) ya da Durum + Öncelik sütunlarını başlık altına künye olarak indir; tablonun sağ kenarına kaydırma gölgesi (`guides/05-components.md` § 3 "Kaydırma saklanmaz").
 
@@ -73,7 +73,7 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 - Sayfa: `demo-app--*` · 1440 · açık
 - Ölçüm: aynı oturum verisiyle yükleme sonunda zil/rozet: Pano **3**, Görevler **5**, Takvim **4**, Raporlar **4**, Ayarlar **4**, Bildirimler sayfası **0** ("Tümünü Okundu Say" play'de basılıyor). Bildirimler açıklaması "0 okunmamış · uygulama içinde, e-postayla ve SMS'le" cümle biçiminde; diğer yedi sayfanın açıklaması Title Case ("8 Talep Yanıt Bekliyor · 5 Açık, 3 Beklemede").
 - Kanıt: `hdr-demo-app--notifications-1440.png`
-- Öneri: play'lerin ürettiği bildirimler hikâyeye özgü kalsın ya da başlangıç değeri her hikâyede aynı olsun; açıklamayı "0 Okunmamış · Uygulama İçi, E-Posta ve SMS" biçimine getir.
+- Öneri: play'lerin ürettiği bildirimler hikayeye özgü kalsın ya da başlangıç değeri her hikayede aynı olsun; açıklamayı "0 Okunmamış · Uygulama İçi, E-Posta ve SMS" biçimine getir.
 
 **O-4. Sayfa başlığı eylemleri farklı ölçü ve sayıda**
 - Sayfa: `demo-app--*` · 1440 + 390
@@ -108,7 +108,7 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 - Sayfa: `cover--overview` kabuk içinde · 1440 · açık
 - Ölçüm: ilk ekranda sol kenar çubuğu (Başla / Kütüphane / Uygulamada, 12 öğe), sağdaki harita kartı (aynı 3 bölüm, aynı 11 öğe, aynı ikonlar) ve üst gezinme (Başlangıç, Bileşenler, Desenler, Pusula) birlikte. Görünümün ~%40'ı (sağ sütun 500 px) kenar çubuğunun tekrarı; "Bileşenler" üst gezinmede `showcase--all-in-one`a, haritada `avatar--default`a gidiyor. "Ekranlar · Giriş, gelen kutusu, açılış sayfası" bağlantısı `settings-page--default`a (Ayarlar sayfası) açılıyor.
 - Kanıt: `shell2-1440-light.png`
-- Öneri: kabuk içindeyken haritayı "öne çıkan dört sayfa" ya da canlı önizleme ile değiştir (karşılama = "her şeyin olduğu" vitrin: palet + Pusula + bileşen kolajı ilk ekrana); aynı etiket aynı yere gitsin; "Ekranlar" ilk hikâyesi açıklamayla uyuşsun (giriş ekranı).
+- Öneri: kabuk içindeyken haritayı "öne çıkan dört sayfa" ya da canlı önizleme ile değiştir (karşılama = "her şeyin olduğu" vitrin: palet + Pusula + bileşen kolajı ilk ekrana); aynı etiket aynı yere gitsin; "Ekranlar" ilk hikayesi açıklamayla uyuşsun (giriş ekranı).
 
 **O-8. Play (etkileşim) testleri kırık / kalıcı durum bırakıyor**
 - `cover--overview` (1440 açık, 390 koyu): `AssertionError: expected 'jade' to be 'signature'`; test paleti Yeşim'de bırakıyor, kapak yeşil açılıyor (tam sayfa görüntüsünde Yeşim seçili).
@@ -127,7 +127,7 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 
 **D-5. Kapak 390: harita açıklamaları 118 px'e kısalıyor** — 11 açıklamanın hepsi ("Manifesto, token'la…", "Her Şey Bir Ara…") ellipsis; başlık "Her Şey Bir Arada" da kesik. Kanıt: `shell2-390.png`. Öneri: telefonda sayıyı (6 sayfa, 141 bileşen) açıklamanın altına indir, açıklama iki satır.
 
-**D-6. Kabuk telefonda "Kapak/Kapak"** — 390 alt çubuk hikâye yolunu "Kapak/Kapak" yazıyor (grup = hikâye adı). Öneri: tek hikâyeli sayfada adı gizle ya da hikâye adını "Genel Bakış" yap.
+**D-6. Kabuk telefonda "Kapak/Kapak"** — 390 alt çubuk hikaye yolunu "Kapak/Kapak" yazıyor (grup = hikaye adı). Öneri: tek hikayeli sayfada adı gizle ya da hikaye adını "Genel Bakış" yap.
 
 **D-7. Yinelenen React anahtarı** — `demo-app--signed-out`, `demo-app--magic-link` (her hücrede 2), `showcase--all-in-one` (1): "Encountered two children with the same key". Büyük olasılıkla müşteri şeridinin iki kopyası. Öneri: ikinci kopyada `key={`${id}-b`}`.
 
@@ -160,12 +160,12 @@ Ekran görüntüleri depoya alınmadı (2,6 MB; geçici dizinde kaldı). Bulgula
 | Y-5 Sayılar | Düzeldi | Kapak raflarında birim ("sayfa") ve açıklama; Her Şey Bir Arada kendi kurgusunda gruplar |
 | O-1 Giriş boş bant | Düzeldi | Panel ekran boyu ve yapışkan; ortada bugünün özeti (3 sayı), şerit ilk karede |
 | O-2 Görev rozeti | Düzeldi | Pano durumu uygulama bağlamında: rozet, başlık ve pano aynı sayı; sayfa değişince kaybolmaz |
-| O-3 Bildirim | Kısmen | Açıklama Title Case; hikâyeler arası sayı farkı play'lerin ürettiği bildirimlerden (bilerek) |
+| O-3 Bildirim | Kısmen | Açıklama Title Case; hikayeler arası sayı farkı play'lerin ürettiği bildirimlerden (bilerek) |
 | O-4 Başlık eylemleri | Düzeldi | Raporlar seçicisi ve Ayarlar butonu 36 px; Görevler'de eylem yok (bilinçli) |
 | O-5 Dokunma hedefleri | Kısmen | Bildirim satır menüsü, takvim "iş ekle", grup başlıkları, tanıtım menüsü ve duyuru hapı, Geri Al, ayar gezinmesi (`toc-nav`) dokunmatikte 44 px; arc-carousel, notice-deck, thinking-block, rapor kaydırıcı noktaları açık |
 | O-6 Koyu soluk metin | Düzeldi (Pusula) | Pusula koyu temasında soluk #ababad, gövde #bcbcbe; rozet tonları (Gecikti 4,17, Onaylandı 4,44) açık |
 | O-7 Kapakta üç gezinme | Kısmen | Üst menü kalktı; harita kaldı (sahibinin isteği: ilk ekranda her şey) |
-| O-8 Play | Düzeldi | Kapak paleti beklemesi 5 sn; gelen kutusu play'i masaüstü genişliğinde koşar (telefon hikâyesi ayrı) |
+| O-8 Play | Düzeldi | Kapak paleti beklemesi 5 sn; gelen kutusu play'i masaüstü genişliğinde koşar (telefon hikayesi ayrı) |
 | D-3 Devre dışı Ekle | Düzeldi | Gri, mavi değil |
 | D-4 Arama tek başına | Düzeldi | Kabuk yoksa kabuğu açar |
 | D-5 Kapak 390 | Düzeldi | Telefonda açıklama iki satır, sayı sütunu gizli |

@@ -46,7 +46,7 @@ export const Default: Story = {
     await userEvent.keyboard("{ArrowUp}");
     await expect(minute).toHaveAttribute("aria-valuetext", "35");
     await expect(args.onValueChange).toHaveBeenLastCalledWith("14:35");
-    // Odak çıkar: dinlenen hâl görünsün. Odaktaki segmentin kontrastı snippet
+    // Odak çıkar: dinlenen hal görünsün. Odaktaki segmentin kontrastı snippet
     // tarafında ayrıca raporlandı (primary-ink / primary-wash, 4,27:1).
     minute.blur();
   },

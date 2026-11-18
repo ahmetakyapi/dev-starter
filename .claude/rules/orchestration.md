@@ -65,7 +65,7 @@ Gerekçe `knowledge/decisions.md` → "Bağlam Dosyaları".
   belgesini düzelttiği için Edit'i tutar, yalnız NotebookEdit kapalı.
   health-check bu eşlemeyi denetler.
 - **Açık `tools` listesi MCP araçlarını ve `Skill`i dışarıda bırakır**
-  (resmî belge, 10 Kasım 2026). Sonuçları: (1) rol dosyası bir MCP aracını
+  (resmi belge, 10 Kasım 2026). Sonuçları: (1) rol dosyası bir MCP aracını
   "varsa kullan" diyorsa wrapper onu adıyla saymalıdır (`design-reviewer` →
   `mcp__playwright__*`); (2) subagent slash komutu/skill ÇAĞIRAMAZ — rol
   dosyasında "Kullandığı Skills" tablosu olmaz, yerine doğrudan çalışan

@@ -3,7 +3,7 @@ import { useState, type ReactNode } from "react";
 import { BlurIn } from "@/components/ui/blur-in";
 import { Frame } from "../_lib/Frame";
 
-/** Hikâyede yeniden oynatmak için: anahtar değişince öğe baştan kurulur, CSS animasyonu yeniden başlar. */
+/** Hikayede yeniden oynatmak için: anahtar değişince öğe baştan kurulur, CSS animasyonu yeniden başlar. */
 function Replay({ children }: { children: (key: number) => ReactNode }) {
   const [key, setKey] = useState(0);
   return (

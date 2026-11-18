@@ -88,7 +88,7 @@ export const NearLimit: Story = {
 
 export const LimitReached: Story = {
   name: "Sınır Dolu",
-  args: { label: "Şikâyet Açıklaması", defaultValue: FULL, hint: "Yazdığın metin müşteri hizmetlerine gider." },
+  args: { label: "Şikayet Açıklaması", defaultValue: FULL, hint: "Yazdığın metin müşteri hizmetlerine gider." },
   render: (args) => (
     <Frame width="sm">
       <Controlled {...args} />
@@ -127,7 +127,7 @@ export const AllVariants: Story = {
         <Textarea label="Teslimat Notu" maxLength={140} defaultValue={NEAR_LIMIT} className="w-full" />
       </Cell>
       <Cell label="Sınır Dolu">
-        <Textarea label="Şikâyet Açıklaması" maxLength={140} defaultValue={FULL} className="w-full" />
+        <Textarea label="Şikayet Açıklaması" maxLength={140} defaultValue={FULL} className="w-full" />
       </Cell>
       <Cell label="Hata">
         <Textarea label="İade Gerekçesi" defaultValue="Beğenmedim" error="Gerekçe en az 20 karakter olmalı." className="w-full" />

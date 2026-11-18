@@ -162,7 +162,7 @@ const DURATIONS: { key: keyof typeof DUR; use: string }[] = [
   { key: "page", use: "Sayfa geçişi, tema" },
 ];
 
-const STAGGER_ITEMS = ["Gelir", "Gider", "Kâr", "Nakit", "Alacak", "Stok"];
+const STAGGER_ITEMS = ["Gelir", "Gider", "Kar", "Nakit", "Alacak", "Stok"];
 
 function HareketSayfasi() {
   const reduce = useReducedMotion();

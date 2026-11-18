@@ -1,5 +1,5 @@
 ---
-# Makine-okunur token katmanı (resmî DESIGN.md spec)
+# Makine-okunur token katmanı (resmi DESIGN.md spec)
 
 # Kaynak: ~/Desktop/Projects/acilis-zili/app/globals.css — elle uydurulmadı
 name: Açılış Zili

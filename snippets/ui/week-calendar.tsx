@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
  * ŞU AN ÇİZGİSİ: bugünün kolonunda tehlike tonunda ince çizgi + nokta,
  * dakikada bir güncellenir. "Şu an" istemcide bilinir: sunucu çiziminde yok
  * (`useSyncExternalStore` sunucu anlık görüntüsü `null`), hidrasyon farkı
- * çıkmaz. Hikâye ve testte `now` ile sabitle.
+ * çıkmaz. Hikaye ve testte `now` ile sabitle.
  *
  * TELEFONDA (md altı) ızgara yerine GÜN GÜN LİSTE: yedi dar kolonda başlık
  * okunmaz. Üstte günler hap butonları (`aria-pressed`, gün adı + tarih +

@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   name: "Varsayılan",
-  /* Tıklar ve geri alır: hikâye bittiğinde tema araç çubuğundaki seçimde kalır. */
+  /* Tıklar ve geri alır: hikaye bittiğinde tema araç çubuğundaki seçimde kalır. */
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole("button");
     const label = button.getAttribute("aria-label");

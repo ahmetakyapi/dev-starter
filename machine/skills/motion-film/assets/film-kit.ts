@@ -7,7 +7,7 @@
  *
  * İçindekiler (ayrıntı: reference/*.md):
  *   kinetic        dev yazı, harf harf maskeden yükselir, hızlıyken iz bırakır
- *   tag            küçük künye, kâğıt renginde haleyle
+ *   tag            küçük künye, kağıt renginde haleyle
  *   followCamera   ucu geriden + önden ortalamayla izleyen kamera
  *   withCamera     dünya → ekran dönüşümü (tek fonksiyon)
  *   penTiming      kalem zamanı eğriliğe göre, basınç hıza göre
@@ -15,7 +15,7 @@
  *   inverted       aynı dünyayı ters paletle selin içine çizme
  *   teardrop       kalemin durduğu yerde sarkık damla
  *   seal           oyma yazılı mühür, basılınca ezilip toparlanır
- *   fibres         dünyaya bağlı kâğıt lifleri
+ *   fibres         dünyaya bağlı kağıt lifleri
  *   cuesBetween    (t0, t1] aralığındaki ses olayları
  *   glyphX         kerning'li koşuda i. harfin x'i (parça parça çizim, silme)
  *   beatAt / timeOfBeat   ölçülmüş vuruş ızgarasında zaman ↔ kesirli vuruş
@@ -108,7 +108,7 @@ export function glyphX(ctx: Ctx, text: string, i: number) {
   return ctx.measureText(text.slice(0, i + 1)).width - ctx.measureText(text[i]).width;
 }
 
-/** Küçük künye: maskeden yükselen tek satır, altında kâğıt renginde hale (çizgi içinden geçse de okunur). */
+/** Küçük künye: maskeden yükselen tek satır, altında kağıt renginde hale (çizgi içinden geçse de okunur). */
 export function tag(ctx: Ctx, text: string, x: number, y: number, k: number, o: { family: string; color: string; halo: string; size?: number; align?: CanvasTextAlign; alpha?: number }) {
   if (k <= 0) return;
   const size = o.size ?? 12;
@@ -202,7 +202,7 @@ export function penTiming(pts: Point[], o: { turnWeight?: number; poolTurn?: num
   return { at, pressure, pools, nib, turn };
 }
 
-/** Kalemin kâğıda düşen düz gölgesi (bulanık değil): ışık sol üstten, kalem sağ üste uzanır. */
+/** Kalemin kağıda düşen düz gölgesi (bulanık değil): ışık sol üstten, kalem sağ üste uzanır. */
 export function penShadow(ctx: Ctx, nib: Point, color: string, alpha = 0.075) {
   ctx.save();
   ctx.globalAlpha = alpha; ctx.fillStyle = color;
@@ -249,7 +249,7 @@ export function inverted<P extends { ink: string; paper: string }>(ctx: Ctx, flo
 }
 
 /* ----------------------------------------------------------------------- */
-/* Damla, mühür, kâğıt                                                       */
+/* Damla, mühür, kağıt                                                       */
 /* ----------------------------------------------------------------------- */
 
 /** Kalemin durduğu yer: ucu yukarıda, karnı sarkan damla ve kenarında gelgit çizgisi (yuvarlak leke ben gibi okunur). */
@@ -272,7 +272,7 @@ export function teardrop(ctx: Ctx, x: number, y: number, r: number, o: { color: 
 
 /**
  * Mühür: köşeleri hafif düzensiz kare, yazı içinden OYULUR (tuval delinir,
- * arkadaki kâğıt görünür). `k` basılıştan bu yana saniye: büyükten iner
+ * arkadaki kağıt görünür). `k` basılıştan bu yana saniye: büyükten iner
  * (0–0,42), değince ezilip toparlanır (tek küçük öğe, yaylı taşma serbest),
  * kenarından boya sıçrar. Pürüzler yalnız kenar bandında (ortada harf yanında
  * nokta gibi okunur).
@@ -305,7 +305,7 @@ export function seal(ctx: Ctx, x: number, y: number, size: number, k: number, o:
   if (settle > 0 && settle < 0.6) splatter(ctx, x + size * 0.5, y + size * 0.5, settle, { seed: o.seed + 5, count: 7, reach: size * 0.5, size: size * 0.035, color: o.fill, fade: 0.3 });
 }
 
-/** Kâğıt lifleri: DÜNYA koordinatında (kamera kayınca kâğıt da kayar), yakında belirgin, kalınlık zoom'la büyümez. */
+/** Kağıt lifleri: DÜNYA koordinatında (kamera kayınca kağıt da kayar), yakında belirgin, kalınlık zoom'la büyümez. */
 const FIBRES = new Map<string, { x: number; y: number; dx: number; dy: number; a: number }[]>();
 export function fibres(ctx: Ctx, w: number, h: number, color: string, zoom: number, seed: number) {
   const key = `${Math.round(w)}x${Math.round(h)}:${seed}`;

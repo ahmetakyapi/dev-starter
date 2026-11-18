@@ -160,7 +160,7 @@ function ChatScreen({ start, livePlan = false }: ChatScreenProps) {
 }
 
 const meta = {
-  title: "Ekranlar/Uygulama/Yapay Zekâ Sohbeti",
+  title: "Ekranlar/Uygulama/Yapay Zeka Sohbeti",
   id: "ai-chat",
   component: ChatScreen,
   tags: ["autodocs"],

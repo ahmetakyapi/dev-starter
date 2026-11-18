@@ -59,7 +59,7 @@ const TICKETS: readonly Ticket[] = [
     subject: "İadem onaylandı ama hesabıma geçmedi",
     preview: "İade onayı 9 gün önce geldi, bankam henüz bir şey görünmüyor diyor.",
     body: [
-      "İade talebim 24 Ekim'de onaylandı ama tutar hâlâ kartıma yansımadı. Bankam kendilerine bir işlem gelmediğini söylüyor.",
+      "İade talebim 24 Ekim'de onaylandı ama tutar hala kartıma yansımadı. Bankam kendilerine bir işlem gelmediğini söylüyor.",
       "İşlemin referans numarasını paylaşabilir misiniz?",
     ],
     time: "13:40",

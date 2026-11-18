@@ -57,7 +57,7 @@ Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini ön
    - Kahraman/LCP Reveal'e sarılı değil; reduced-motion'da `initial={false}` yok
    - Sayfa giriş animasyonunda fill-mode yok (fixed modalları kaydırır)
    - Magnetic/imleç efektleri yalnızca `pointer: fine`
-   - Bento görsel hikâyesi: tasarımda başlıyor/bitiyor, ekran dışında duruyor,
+   - Bento görsel hikayesi: tasarımda başlıyor/bitiyor, ekran dışında duruyor,
      kartlar aynı anda oynamıyor, nesne `scale(0)`dan gelmiyor (`guides/04` § 14)
 
 8. **Bileşen mimarisi**
@@ -73,6 +73,6 @@ Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini ön
      (`app-window`, `dock`); maket `role="img"` + tek cümle ya da `aria-hidden`
    - Sabit konumlu öğeler (menü, maskot, sohbet balonu, çerez bandı) 390'da
      metni ya da birincil eylemi örtmüyor mu; sayfada en çok bir oyunbaz öğe
-   - Hikâye: ürün denenebiliyorsa deneme yerine sayfada canlı demo var mı
+   - Hikaye: ürün denenebiliyorsa deneme yerine sayfada canlı demo var mı
 
 Sonucu Gate raporu formatında sun: her madde ✅ / ⚠️ / ❌, bulgu başına dosya:satır ve önerilen düzeltme.

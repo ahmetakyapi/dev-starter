@@ -5,7 +5,7 @@ import styles from "./rolling-number.module.css";
  * Kilometre sayacı gibi yuvarlanarak gelen display sayısı.
  * Kaynak: dev-starter `snippets/rolling-number.tsx` (gerekçeler orada).
  *
- * JAVASCRIPT YOK, SUNUCUDA ÇİZİLİR: son hâl zaten HTML'de, her rakamın
+ * JAVASCRIPT YOK, SUNUCUDA ÇİZİLİR: son hal zaten HTML'de, her rakamın
  * şeridi CSS'le yerine kayar. Genişlik sıçramaz (CLS 0), ekran okuyucu
  * sayıyı düz metin olarak duyar, hareketi azaltan okuyucu son kareyi görür.
  *

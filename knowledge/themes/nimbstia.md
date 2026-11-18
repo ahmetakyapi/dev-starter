@@ -1,6 +1,6 @@
 ---
 name: Nimbstia
-description: Klavye öncelikli macOS çalışma tezgâhı (Hammerspoon + WKWebView panelleri): pano, ekran görüntüsü, pencere düzeni, proje açıcı, durum merkezi
+description: Klavye öncelikli macOS çalışma tezgahı (Hammerspoon + WKWebView panelleri): pano, ekran görüntüsü, pencere düzeni, proje açıcı, durum merkezi
 colors:
   primary: '#2563ff'
   accent: '#2563ff'
@@ -50,7 +50,7 @@ Versiyon: Hammerspoon 1.0 + Lua, panel başına tek HTML (WKWebView, WebKit 16+)
 
 ## 1. Visual Theme & Atmosphere
 
-> **Kasım 2026 revizyonu, iki tur.** İlk tur shojimac.com'dan "kâğıt-mürekkep" yönü aldı
+> **Kasım 2026 revizyonu, iki tur.** İlk tur shojimac.com'dan "kağıt-mürekkep" yönü aldı
 > (siyah mürekkep birincil buton, büyük harf + geniş aralıklı Geist Mono etiketler, siyaha yakın
 > koyu tema). Sahibi reddetti: "çok siyah ve koyu, etiketler okunmuyor". İkinci tur
 > ui.wensity.com ve macOS widget'larından aydınlık, bir bakışta okunan yöne geçti; ardından

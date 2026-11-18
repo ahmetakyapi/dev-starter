@@ -49,7 +49,7 @@ Palet ürünün **kimin için ve ne zaman** kullanıldığından seçilir. Seçi
 | Kişisel site, portfolyo; akşam, merak | `signature` | Koyu |
 | Sağlık, terapi, doğa; gündüz, sakin | `verdant` | Açık |
 | Oyun, eğlence, topluluk; gece | `ember` | Koyu |
-| Yaratıcı araç, yapay zekâ ürünü | `iris` | Koyu ya da açık, ürüne göre |
+| Yaratıcı araç, yapay zeka ürünü | `iris` | Koyu ya da açık, ürüne göre |
 
 Kararsız kalındığında `signature` + açık tema. "Koyu havalı görünür" bir
 gerekçe değil: koyu tema gece kullanılan ürün içindir.
@@ -61,7 +61,7 @@ gerekçe değil: koyu tema gece kullanılan ürün içindir.
 | `ember` | ~`#b45309` | ~`#fbbf24` ailesi | Kehribar → turuncu |
 | `iris` | ~`#5b4bd6` | ~`#a5b4fc` ailesi | Mor → indigo |
 | `cobalt` | `#2563eb` | `#60a5fa` | Parlak mavi; SaaS, pano |
-| `violet` | `#7c3aed` | `#a78bfa` | Menekşe; yaratıcı araç, yapay zekâ |
+| `violet` | `#7c3aed` | `#a78bfa` | Menekşe; yaratıcı araç, yapay zeka |
 | `rose` | `#db2777` | `#f472b6` | Pembe; tüketici, sosyal |
 | `ruby` | `#dc2626` | `#f87171` | Kırmızı; medya, spor. Yıkıcı eylem yine `danger` |
 | `tangerine` | `#c2410c` | `#fb923c` | Turuncu; yemek, alışveriş |

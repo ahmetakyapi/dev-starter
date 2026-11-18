@@ -198,7 +198,7 @@ export function TanitimEk() {
         <ArcCarousel
           label="Harmanlar"
           visible={2}
-          items={["Sabah", "Dağ", "Kıyı", "Ev", "Dükkân"].map((title, i) => {
+          items={["Sabah", "Dağ", "Kıyı", "Ev", "Dükkan"].map((title, i) => {
             const Icon = icons[i];
             return {
               id: title,

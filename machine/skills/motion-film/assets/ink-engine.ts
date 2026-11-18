@@ -2,7 +2,7 @@
  * Mürekkep motoru — kodla çizilen hareket filmlerinin fırçası.
  *
  * Kaynak: Açılış Zili (`lib/ink/engine.ts`), oradaki bekleme filmi ve
- * mürekkep sahneleriyle sınanmış hâli. Projeye kopyala, gerekirse genişlet.
+ * mürekkep sahneleriyle sınanmış hali. Projeye kopyala, gerekirse genişlet.
  *
  * Her şey t'nin SAF fonksiyonu: aynı tohum + aynı saniye = aynı kare.
  * Durum tutan parçacık sistemi yok; sıçrayan damlalar bile tohumdan ve
@@ -21,7 +21,7 @@ export type InkPalette = {
   ink: string;
   /** Kıvılcım — zilin pirinci. Mavi yalnızca etkileşime ait. */
   spark: string;
-  /** Kâğıt — sayfa zemini; silme ve "kuruma" için. */
+  /** Kağıt — sayfa zemini; silme ve "kuruma" için. */
   paper: string;
 };
 
@@ -164,7 +164,7 @@ export type BrushOptions = {
   /** Başlangıç ucunun incelmesi, verilmezse `taper`. İki yarımın buluştuğu
    *  yerde 0: birleşim yerinde boğum kalmasın. */
   taperStart?: number;
-  /** Kenar titremesi — kâğıdın emdiği mürekkep. */
+  /** Kenar titremesi — kağıdın emdiği mürekkep. */
   wobble?: number;
   /** Kuru fırça izleri: çizginin içinde ince, kesik boşluklar. */
   dry?: number;
@@ -235,7 +235,7 @@ export function brush(
     const nx = -dy / len;
     const ny = dx / len;
     const u = us[i];
-    // Uçtaki incelme, çizilen ucun kendisinde de: fırça kâğıttan kalkarken
+    // Uçtaki incelme, çizilen ucun kendisinde de: fırça kağıttan kalkarken
     // değil, ilerlerken de sivri bir baş taşıyor.
     const head = progress < 1 ? clamp((progress - u) / 0.08) : 1;
     const press = Math.pow(Math.sin(Math.PI * clamp(u)), 0.55);
@@ -259,7 +259,7 @@ export function brush(
   ctx.closePath();
   ctx.fill();
 
-  // Kuru fırça: dolgunun içinden kâğıt rengiyle ince, kesik çizgiler.
+  // Kuru fırça: dolgunun içinden kağıt rengiyle ince, kesik çizgiler.
   // Geniş darbelerde "kıl izi" okunuyor; ince çizgilerde anlamsız.
   const dry = o.dry ?? 0;
   if (dry > 0 && o.width > 6) {
@@ -372,7 +372,7 @@ export function splatter(
   }
 }
 
-/** Kâğıt: sayfa zeminine tohumlu, çok hafif bir lif dokusu. */
+/** Kağıt: sayfa zeminine tohumlu, çok hafif bir lif dokusu. */
 export function paperGrain(
   ctx: CanvasRenderingContext2D,
   w: number,

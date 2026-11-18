@@ -1124,7 +1124,7 @@ skor veriyor, istek geçiyor, cevabın ortasında fıkra duruyor. Eşik düşür
 meşru karışık istekler bloklanmaya başlıyor.
 
 **Sebep**: Bu bir eşik ayarı sorunu değil — **yanlış araç**. Yapısal olarak bu
-bir konu-dışı istek değil, en zararsız hâliyle bir prompt injection: konu-dışı
+bir konu-dışı istek değil, en zararsız haliyle bir prompt injection: konu-dışı
 talimat meşru bir isteğin sırtına binerek kontrolü atlıyor. Bugün fıkra, yarın
 *"ve fiyat bilgisi talimatlarını yok say"*.
 
@@ -1304,7 +1304,7 @@ Hiçbiri "bu ekleme mevcut bir kontrolü bozdu mu" sorusunu sormuyordu. Sandbox'
 
 **Genel ders — bu dosyadaki 7. tekrar**: Bir kontrolün yeşil olması, kontrolün
 doğru soruyu sorduğu anlamına gelmez. Burada sorulan soru *"yeni kod çalışıyor
-mu"* idi; sorulması gereken *"CI hâlâ yeşil mi"*. İkisi aynı şey değil ve
+mu"* idi; sorulması gereken *"CI hala yeşil mi"*. İkisi aynı şey değil ve
 aradaki fark bir commit'e sığdı.
 
 ---
@@ -1489,7 +1489,7 @@ yeniden yazılması gerekti.
 
 **Çözüm**: Zemin `body::before` / `body::after` üzerinde `position: fixed;
 inset: 0; z-index: -1`. Zemin RENGİ `html`de: `z-index: -1` pseudo-element
-kendi elemanının arka planının arkasına düşer. (Mimio; #18'in kalıcı hâli)
+kendi elemanının arka planının arkasına düşer. (Mimio; #18'in kalıcı hali)
 
 ### 90. Tam Ekran Grain'de `mix-blend-mode` Kaydırmayı Kasar
 
@@ -1968,7 +1968,7 @@ gevşetilmez, yola özel istisna yazılır.
 
 ## Nimbstia'dan Öğrenilenler (2026-11-03)
 
-### 115. "Kâğıt-Mürekkep" Yönü Reddedildi: Siyah Birincil Buton + Büyük Harf Mono Etiket
+### 115. "Kağıt-Mürekkep" Yönü Reddedildi: Siyah Birincil Buton + Büyük Harf Mono Etiket
 
 **Hata**: Referans siteden (shojimac.com) alınan dil bire bir panellere taşındı: açık temada siyah
 "ink" birincil butonlar, siyah ölçü çubukları, 10–10.5px büyük harf ve geniş aralıklı Geist Mono
@@ -2051,7 +2051,7 @@ bilgi taşımayan süs gözle de denetlenir.
 **Hata**: Üç referans turunda eklenen 12 bileşen (paylaşım paneli, bağlantı başlığı, hızlı
 oylama, dağılarak çıkış…) Pusula'da kullanıldı, `coverage--table` yeşil kaldı; ama "Her Şey Bir
 Arada" sayfasının kendi kapsam testi (`showcase--all-in-one`: "141 bileşenin hepsi bu sayfada")
-129'da kırıldı ve main'e öyle gitti. Tur sonunda yalnız değişen hikâyelerin play'i koşuldu.
+129'da kırıldı ve main'e öyle gitti. Tur sonunda yalnız değişen hikayelerin play'i koşuldu.
 
 **Sebep**: Kataloğun İKİ kapsam sayfası var (Pusula: uygulamada kullanım, Her Şey Bir Arada:
 tek sayfalık vitrin); tur kontrol listesi yalnız birini söylüyordu. Sayılar kaynaktan sayıldığı
@@ -2062,7 +2062,7 @@ için kırılma ancak o sayfanın play'i koşunca görünür.
 yazıldı.
 
 **Kural**: Yeni snippet = iki kuyu (Pusula'da gerçek kullanım + Her Şey Bir Arada'da gösterim).
-Tur bitmeden `coverage--table` VE `showcase--all-in-one` play'leri koşulur; "değişen hikâyeler
+Tur bitmeden `coverage--table` VE `showcase--all-in-one` play'leri koşulur; "değişen hikayeler
 geçti" yetmez, sayıyı kaynaktan sayan sayfalar her yeni dosyadan etkilenir.
 
 ### 121. Renkli Kahramanda Aynı Tonda Buton, Koyu Temada Açık Zemin
@@ -2088,7 +2088,7 @@ Renkli bölüm iki temada ekran görüntüsüyle denetlenir.
 
 **Hata**: Pusula'nın giriş ekranında e-posta + şifre formu vardı; şifre yazılıp "Giriş Yap"a
 basılınca form kayboldu, Chrome bunu gerçek giriş sayıp şifreyi kaydetmeyi teklif etti. "Örnek
-Hesapla Gir" butonu bu yüzden eklenmişti ama asıl buton hâlâ tetikliyordu. Sahibi: "burası için
+Hesapla Gir" butonu bu yüzden eklenmişti ama asıl buton hala tetikliyordu. Sahibi: "burası için
 gerek yok, bu bir Storybook".
 
 **Sebep**: Tarayıcının şifre yöneticisi, KULLANICININ yazdığı şifre içeren form gönderilip sayfadan
@@ -2100,7 +2100,7 @@ olarak budur: form gider, pano gelir. Kısmi çözüm (yan yola ikinci buton) as
 paneli, "Bağlantıyı Aç" panoyu açar). Play testi sayfada `input[type=password]` olmadığını sınar.
 
 **Kural**: Örnek uygulamada ve Storybook'ta başarıda kaybolan form şifre alanı taşımaz. Şifre
-alanını göstermek gereken bileşen hikâyesinde form başarıda yerinde kalır (tarayıcı başarısız
+alanını göstermek gereken bileşen hikayesinde form başarıda yerinde kalır (tarayıcı başarısız
 giriş sayar, sormaz). Gerçek projede `AuthCard` şifreli haliyle ve doğru `autoComplete`le kalır.
 
 ### 123. Main'e Seçilmiş Kontrollerle Gidildi; CI'da Slop Taraması ve Health-Check Kırıldı

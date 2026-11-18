@@ -166,7 +166,7 @@ export function TanitimGroup() {
           ]}
         />
       </Cell>
-      <Cell file="wallpaper" name="Duvar Kâğıdı" note="Çözünürlükten bağımsız sekiz sahne; maketin arkası ya da indirilen resim." span={3} className="p-0">
+      <Cell file="wallpaper" name="Duvar Kağıdı" note="Çözünürlükten bağımsız sekiz sahne; maketin arkası ya da indirilen resim." span={3} className="p-0">
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl">
           <Wallpaper scene="lagoon" className="absolute inset-0" />
           <span className="absolute bottom-3 left-3 rounded-full bg-overlay px-3 py-1 text-micro font-medium text-strong shadow-raised">

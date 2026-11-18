@@ -12,7 +12,7 @@ import { chartBg, initials, TILE } from "./styles";
 type Rules = Extract<FeatureDemo, { kind: "rules" }>;
 
 /*
- * Hikâye: "Bir kural yanar, bağlantı çizgisi sahibine doğru dolar, sahibin
+ * Hikaye: "Bir kural yanar, bağlantı çizgisi sahibine doğru dolar, sahibin
  * karosu onay alır; sonra sıradaki kural."
  *
  * Çizgi `scaleX(0)`dan çizilir (çizgi nesne değildir, yoktan çizilmesi

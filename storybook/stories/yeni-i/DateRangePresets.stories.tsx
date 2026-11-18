@@ -3,7 +3,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { DateRangePresets, rangeOf, type DateRangeValue, type RangePreset } from "@/components/ui/date-range-presets";
 
-/** Sabit "bugün": hikâye her gün aynı görünsün (Pusula'nın örnek verisiyle aynı gün). */
+/** Sabit "bugün": hikaye her gün aynı görünsün (Pusula'nın örnek verisiyle aynı gün). */
 const TODAY = new Date(2026, 10, 2);
 const DAY = 86_400_000;
 /** Kurgusal sipariş günleri: son 40 günde düzensiz. */

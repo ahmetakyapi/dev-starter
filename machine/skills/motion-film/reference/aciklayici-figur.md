@@ -32,7 +32,7 @@ fiziksel şeyin** çalışması olsun; okuyucu makineyi tanıdığı için fikri
 | Bir önbellek anahtarı değişmediyse işi atlar | Pimli kilit: bütün pimler oturunca silindir döner, hiçbir şey yeniden çizilmez |
 | Yedi render hedefi, farklı bayt/teksel | Yedi çekmeceli dolap; her çekmecenin derinliği baytı kadar |
 | Ayrılabilir bulanıklık (49×49 yerine 49+49) | Çivi damgası yanında rayda iki tarak |
-| Bir hisseyi sınayan kural seti | Ölçü tezgâhı: her kural bir mastar, geçen yeşil yanar |
+| Bir hisseyi sınayan kural seti | Ölçü tezgahı: her kural bir mastar, geçen yeşil yanar |
 | Analiz: kanıtı tartmak | Terazi (Açılış Zili filminin IV. perdesi) |
 
 İki başarısızlık, ikisi de görüldü: **fazla soyut** (yüzen levhalar,
@@ -41,7 +41,7 @@ tek büyük levha: hacim yok, keşfedilecek parça yok). Çaresi aynı: tanınan
 bir makine, çok sayıda küçük, kesin, işlevli parçadan.
 
 **1× ve 4× kuralı.** 1×'te tek, net bir makine okunur. 4×'te her bölgede
-hâlâ bulunacak doğru bir şey vardır; çıplak bir yüz ya da boş bir köşe
+hala bulunacak doğru bir şey vardır; çıplak bir yüz ya da boş bir köşe
 "sakinlik" değil, bitmemiş iştir. Ayrıntı yapıdan gelir (ayak, ray, durdurucu,
 burç, topuz), dokudan değil.
 
@@ -90,7 +90,7 @@ proje klasöründe bir **`FACTS.md`** tutar ve onunla teslim edilir
   "bilinen kısıtlama yok" ve "ticari olmayan kullanım"** CC0 değildir:
   koşullarını (atıf, aynı lisansla paylaşım) kullanıcıya söyle ve **sor**.
 - **Kullanıcının kendi sayıları** (ciro, rapor, satış): iste, geldiği belgeyi
-  de iste. **Asla uydurma**, daha iyi hikâye için yuvarlama; üretilmiş
+  de iste. **Asla uydurma**, daha iyi hikaye için yuvarlama; üretilmiş
   görsel gerçek verinin yerine geçmez. Sayı yoksa yer tutucu ekranda yer
   tutucu olarak görünür ("— $").
 
@@ -112,7 +112,7 @@ Figür bir kartın içinde durur; dört köşe sabit görevlidir:
 
 - **Canlı künye (readout):** kısa, gerçek birimli, modelden: `block 2 · reads 14.0 px`.
   Parçaların BULUNDUĞU yerden okunur, hedeften değil. Evre sözcüğü ile yanındaki
-  sayı AYNI anın AYNI kaynağından gelir: "stroke sonu · 85 bar" diyen tezgâhta
+  sayı AYNI anın AYNI kaynağından gelir: "stroke sonu · 85 bar" diyen tezgahta
   sözcük modelden, sayı 0,25 sn geriden gelen bir ibreden geliyordu.
 - **Bilmediğin şeyin ilerlemesini uydurma.** Claude'un ne kadar süreceğini
   bilmiyoruz; ne kadar geçtiğini biliyoruz. Künye "Geçen 00:21" der, "%60" demez.
@@ -165,13 +165,13 @@ Figür bir kartın içinde durur; dört köşe sabit görevlidir:
 - **Çizgiler bir şeyde biter:** bir yüzde, başka bir çizgide ya da uç noktasında.
   Havada biten bağlantı, yüzeyin ortasında duran doku = kırık görünür. Bitmesi
   gereken doku SÖNER (`fade`), kesilmez.
-- **Katı, tel kafes değil:** her parça kâğıt rengiyle dolu, ressam sırasıyla
+- **Katı, tel kafes değil:** her parça kağıt rengiyle dolu, ressam sırasıyla
   (arkadan öne, alttan üste) boyanır; kesik gizli kenar yok.
 - **Ton hiyerarşisi:** taban `lo`, yapı `mid`, özne `hi`, okuyucunun izlemesi
   gereken TEK parça `lit`. Renk yalnız renk konunun kendisiyse.
 - **Yazı çizimde değil:** lejant ve açıklama kartın altında; ok, balon, ölçü oku yok.
 - **Hacim:** gerçek kalınlık, dört tonlu yanlar, açık üst, altında yumuşak hale.
-- **Kadraj:** nesne kartın %55–65'i, 390 px'te hâlâ okunur.
+- **Kadraj:** nesne kartın %55–65'i, 390 px'te hala okunur.
 
 ## 8. İnceleme — eleştirmen gibi
 
@@ -211,7 +211,7 @@ geçmiş raporlar, sekiz satırlık yönlendirme bileşenin başında).
 
 Aynı gün anatomy kitinin kendisiyle iki figür (12 Ekim yayında, `9346152`, `2435ed4`):
 
-- **Kural Tezgâhı** (`components/figures/rule-bench`, hisse seçimi raporu):
+- **Kural Tezgahı** (`components/figures/rule-bench`, hisse seçimi raporu):
   hisse bir iş parçası olarak yedi istasyondan geçer, her kural bir lamba.
   Ölçümle bulunan iki hata: kol sırt çizgisi vidaya 1,8 px kala bitiyordu
   (lines.mjs), imleç yalnız yatay mesafeye bakıp komşu istasyonu seçiyordu

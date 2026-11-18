@@ -260,7 +260,7 @@ function AnalitikPanosu({ baslangicDonemi = "ay" }: { baslangicDonemi?: Donem })
   );
 }
 
-/* ── Hikâyeler ──────────────────────────────────────────────────────────── */
+/* ── Hikayeler ──────────────────────────────────────────────────────────── */
 
 const meta = {
   title: "Grafikler/Pano/Analitik Panosu",

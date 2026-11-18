@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Sohbet giriş kutusu: büyüyen metin alanı, altında ek (+), model seçici
- * hap, mikrofon ve yuvarlak gönder butonu. Yapay zekâ sohbeti, destek
+ * hap, mikrofon ve yuvarlak gönder butonu. Yapay zeka sohbeti, destek
  * kutusu, not alma. Tek satırlık arama için `search-bar` daha doğru.
  *
  * Klavye: Enter gönderir, Shift+Enter satır açar. IME ile yazarken
@@ -171,7 +171,7 @@ export function ChatComposer({
             <DropdownMenuContent side="top">
               {/* Etiket grubun İÇİNDE: Base UI GroupLabel bir grup bağlamı ister,
                   dışarıda kalınca menü açılır açılmaz "MenuGroupContext is missing"
-                  (#31) fırlatır (Storybook hikâyesi yakaladı). */}
+                  (#31) fırlatır (Storybook hikayesi yakaladı). */}
               <DropdownMenuRadioGroup value={model} onValueChange={(value) => onModelChange?.(value as string)}>
                 <DropdownMenuLabel>Model</DropdownMenuLabel>
                 {models.map((name) => (

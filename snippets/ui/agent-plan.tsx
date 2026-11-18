@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Ajan planı: bir yapay zekâ ajanının çok adımlı işini adım adım gösteren
+ * Ajan planı: bir yapay zeka ajanının çok adımlı işini adım adım gösteren
  * liste ("4 Adım Kaldı"). Sohbette asistan mesajının içinde ya da bir görev
  * panelinin üstünde. Ajanın tek tek ARAÇ çağrılarını ve onaylarını göstermek
  * için `snippets/agent-feed.tsx`, `agent-approval.tsx`; bu bileşen planın

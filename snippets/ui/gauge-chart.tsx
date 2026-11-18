@@ -15,7 +15,7 @@ import type { Series } from "@/components/ui/chart-card";
  *
  * BOŞLUK UÇLARIN İÇİNDEN HESAPLANIR: yuvarlak uç yayı kalınlığının yarısı
  * kadar uzatır. Uç payı (`thickness / 2 / r` radyan) her parçanın iki
- * ucundan düşülmezse parçalar birbirine değer ve "boşluk" yalnızca kâğıtta
+ * ucundan düşülmezse parçalar birbirine değer ve "boşluk" yalnızca kağıtta
  * kalır. Hesap `gaugeSegments` içinde, saf ve test edilebilir.
  *
  * `max` verilir ve parçaların toplamı ondan küçükse kalan kısım İZ

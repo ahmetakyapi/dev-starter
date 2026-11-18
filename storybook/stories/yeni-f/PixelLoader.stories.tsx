@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Nokta matrisinde dolaşan ışık: üretim süren yapay zekâ kartı, geliştirici aracı, oyun ekranı. Beş desen (dalga, sarmal, nabız, yılan, yağmur); nokta hiç kaybolmaz (en sönük %18, boy 0,7). `role=\"status\"` + gizli etiket, hareket azaltmada durağan dama.",
+          "Nokta matrisinde dolaşan ışık: üretim süren yapay zeka kartı, geliştirici aracı, oyun ekranı. Beş desen (dalga, sarmal, nabız, yılan, yağmur); nokta hiç kaybolmaz (en sönük %18, boy 0,7). `role=\"status\"` + gizli etiket, hareket azaltmada durağan dama.",
       },
     },
   },

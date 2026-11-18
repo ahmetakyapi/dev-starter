@@ -77,7 +77,7 @@ eşiğini geçmiyordu.
 
 | Durum | Token | Koyu | Açık | Kullanım |
 |-------|-------|------|------|----------|
-| Pozitif/Kâr | `--success` | 162 88% 40% | 162 88% 27% | Fiyat artışı, kâr |
+| Pozitif/Kar | `--success` | 162 88% 40% | 162 88% 27% | Fiyat artışı, kar |
 | Negatif/Zarar | `--danger` | 355 85% 62% | 355 78% 47% | Fiyat düşüşü, zarar |
 | Uyarı | `--warning` | 38 92% 55% | 32 90% 38% | Bayat veri, kısmi sonuç |
 | Nötr/Bilgi | `--secondary` | 199 89% 48% | 199 89% 38% | Bilgi rozeti, ikincil seri |
@@ -526,7 +526,7 @@ renk yazmak açık temayı bozar.
 | Sessiz metin | `text-muted-foreground` |
 | Birincil vurgu | `bg-primary text-primary-foreground` |
 | İkincil vurgu | `text-secondary` |
-| Kâr | `text-success` |
+| Kar | `text-success` |
 | Zarar | `text-danger` |
 | Uyarı | `text-warning` |
 | Odak halkası | `ring-ring` |
@@ -535,7 +535,7 @@ renk yazmak açık temayı bozar.
 
 **Portföy Özeti Kartı:**
 > "`<Card>` içinde başlık `<CardTitle>`, ana değer `text-2xl font-semibold tracking-tight`
-> ve `data-numeric` (tablo rakamları için). Tutarı `<Money value={...} />`, kâr/zararı
+> ve `data-numeric` (tablo rakamları için). Tutarı `<Money value={...} />`, kar/zararı
 > `<Money value={...} signed />` ile bas — işaret ve renk bileşenden gelir, elle
 > `+`/`text-green` yazma. Değişim yüzdesi için `<ChangeBadge value={...} />`."
 

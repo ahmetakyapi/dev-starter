@@ -97,7 +97,7 @@ export function TaskList({
   defaultTasks: readonly Task[];
   onChange?: (tasks: Task[]) => void;
   title?: string;
-  /** `YYYY-MM-DD`; gecikme buna göre. Hikâye ve testte sabitle. */
+  /** `YYYY-MM-DD`; gecikme buna göre. Hikaye ve testte sabitle. */
   today?: string;
   defaultHideCompleted?: boolean;
   className?: string;

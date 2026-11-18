@@ -4,7 +4,7 @@ import { ExpandableCard } from "@/components/ui/expandable-card";
 import { PatternBackground } from "@/components/ui/pattern-bg";
 import { Frame } from "../_lib/Frame";
 
-/* Görsel yerine token'lı desen: hikâye ağ isteği yapmaz, palet değişince kart da döner. */
+/* Görsel yerine token'lı desen: hikaye ağ isteği yapmaz, palet değişince kart da döner. */
 function Art({ glow, pattern }: { glow: "horizon-top" | "corner" | "bloom"; pattern: "dots" | "rings" | "diagonal" }) {
   return (
     <span className="relative isolate block size-full bg-surface-sunken">

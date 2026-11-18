@@ -39,7 +39,7 @@ const preview: Preview = {
     a11y: { test: "error" },
     nextjs: { appDirectory: true },
     // Her bileşen belgesinin başında "Projeye Al" (registry.json'dan). Kendi
-    // docs.page'ini veren hikâye bunu ezer; kayıtta olmayan sayfada blok yok.
+    // docs.page'ini veren hikaye bunu ezer; kayıtta olmayan sayfada blok yok.
     // Belge kabı temayı izler; `lang: "tr"` Türkçe tireleme ve İ/ı dönüşümü için.
     docs: { page: DocsPageWithInstall, container: ThemedDocsContainer, lang: "tr" },
     options: {
@@ -60,8 +60,8 @@ const preview: Preview = {
           "Tema",
           ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"],
           "Bileşenler",
-          // Temelden karmaşığa: önce yapı taşları, sonra katmanlar, en sonda tanıtım ve yapay zekâ.
-          ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"],
+          // Temelden karmaşığa: önce yapı taşları, sonra katmanlar, en sonda tanıtım ve yapay zeka.
+          ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zeka"],
           "Grafikler",
           "Bloklar",
           "Desenler",

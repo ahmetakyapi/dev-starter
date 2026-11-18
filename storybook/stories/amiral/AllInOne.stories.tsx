@@ -99,7 +99,7 @@ function Numbers() {
     { value: count("blok"), label: "Blok", note: "kabuk, sohbet, giriş, ayarlar" },
     { value: PALETTE_COUNT, label: "Palet", note: "tek öznitelikle değişir" },
     { value: 2, label: "Tema", note: "açık ve koyu, her ikisinde AA" },
-    { value: STORY_COUNT, label: "Hikâye", note: "bu katalogda, kaynaktan sayıldı" },
+    { value: STORY_COUNT, label: "Hikaye", note: "bu katalogda, kaynaktan sayıldı" },
   ];
   return (
     <section aria-labelledby="sayilar" className="mt-24 sm:mt-32">
@@ -316,7 +316,7 @@ function AllInOnePage() {
                 Parçalar Birleşince, <span className="text-muted">Ürün Olur</span>
               </>
             }
-            lead="Uygulama kabuğunun içinde yapay zekâ asistanı planını adım adım yürütür; yaz ve gönder, cevap gelir. Giriş kartı ile ayarlar penceresi aynı dilde."
+            lead="Uygulama kabuğunun içinde yapay zeka asistanı planını adım adım yürütür; yaz ve gönder, cevap gelir. Giriş kartı ile ayarlar penceresi aynı dilde."
           />
           <Reveal className="mt-10">
             <Blocks />
@@ -393,7 +393,7 @@ function AllInOnePage() {
   );
 }
 
-/* --- Hikâye --------------------------------------------------------------- */
+/* --- Hikaye --------------------------------------------------------------- */
 
 const meta = {
   title: "Her Şey Bir Arada",

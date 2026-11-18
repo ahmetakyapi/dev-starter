@@ -48,7 +48,7 @@ yeniden kesmeyi gerektirir.
    `(key, session)`: site o tabloyu hiç okumaz, iki sekme birbirini ezmez,
    dünkü taslak bugünkü önizlemeye karışmaz. Kaydet yayındaki kaydı yazar,
    taslağı siler.
-7. **Durum görünür.** Rozet dört hâlden biri: `Yayındaki Hâli` · `Güncelleniyor`
+7. **Durum görünür.** Rozet dört halden biri: `Yayındaki Hali` · `Güncelleniyor`
    · `Kaydedilmemiş` · `Hatalı Alan Var`. Durum alanların kendisinden çıkar
    (gönderilenle, kaydedilenle karşılaştırma), ayrı bir bayrak tutulmaz.
 8. **İki yönlü bağ.** Önizlemede bölümün üzerine gelince çerçevesi ve adı

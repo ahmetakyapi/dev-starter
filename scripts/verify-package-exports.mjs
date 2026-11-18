@@ -124,7 +124,7 @@ for (const pkgDir of PACKAGES) {
     if (!target || !existsSync(resolve(pkgDir, target))) continue
     const code = await readFile(resolve(pkgDir, target), 'utf8')
     if (/from\s*['"]framer-motion['"]|require\(['"]framer-motion['"]\)/.test(code)) {
-      fail(`${pkg.name}: ${target} hâlâ 'framer-motion' import ediyor — 'motion/react' kullan`)
+      fail(`${pkg.name}: ${target} hala 'framer-motion' import ediyor — 'motion/react' kullan`)
     }
   }
 

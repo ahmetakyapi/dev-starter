@@ -124,7 +124,7 @@ const server = z.object({
 Kurallar:
 
 - **Boş string tanımsız sayılır.** `.env.local`de `FOO=` satırı "var ama boş"
-  değil "yok" demektir; aksi hâlde `z.string().url()` boş dizeye takılır.
+  değil "yok" demektir; aksi halde `z.string().url()` boş dizeye takılır.
 - **Yeni değişken = üç yer:** `.env.local`, `.env.example` (değersiz),
   Vercel → Settings → Environment Variables. Biri unutulursa build geçer,
   üretim çöker (`mistakes.md` #12).

@@ -34,7 +34,7 @@ komut açar.
    - `FAILED` → GATE_FAILED bulgularını story dosyasının **GATE-LOG** bölümüne
      ekle; Gate kolonunu FAILED → FIX_1 → FIX_2 sırasıyla ilerlet; düzeltmeyi
      ilgili agent'a yönlendir
-   - FIX_2 sonrası hâlâ FAILED → kolona `ESCALATED` yaz, kullanıcıya seçenekli
+   - FIX_2 sonrası hala FAILED → kolona `ESCALATED` yaz, kullanıcıya seçenekli
      özet sun
 5. Kullanıcıya üç satır özet ver:
 

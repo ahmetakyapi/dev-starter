@@ -884,4 +884,150 @@ export function HeroCard({ palette, theme, onPalette, showcase }: HeroProps) {
     </Shell>
   );
 }
-export const HEROES = { ...HEROES_FJ, k: HeroMuseum, l: HeroCard } as const;
+
+/* ── H2 · İskelet ve H3 · Gece: Fener'in iki gelişmiş hali ───────────────
+   Hikaye: karanlıkta İSKELET, ışıkta BİLEŞEN. Fenerin değmediği her parça
+   yükleniyor iskeletine döner (yalnız yaprak öğeler yuvarlak gri blok, metin
+   görünmez); fenerin dairesinde gerçek, renkli bileşen. İki katman aynı
+   ızgarayı aynı yerde çizer, yalnız maske değişir. Mercek kenarı yumuşak,
+   imleci ince bir halka izler; imleç yoksa fener kendi dolaşır.
+   H3 sahneyi temadan bağımsız karanlık bir odaya çevirir (rol değişkenleri
+   bölüme yerel; GEÇİCİ önizleme, seçilirse token olur). */
+const LANTERN_CSS = `
+.hx-skel * { color: transparent !important; box-shadow: none !important; border-color: transparent !important; background-image: none !important; background-color: transparent !important; }
+.hx-skel :where(*):not(:has(*)) { background-color: var(--skel) !important; border-radius: .45rem; }
+.hx-skel .hx-tile { background-color: transparent !important; outline: 1px solid var(--skel-line); outline-offset: -1px; }
+.hx-night { color-scheme: dark; --page-bg: #0b0b0d; --surface: rgb(255 255 255 / .04); --surface-raised: rgb(255 255 255 / .07); --overlay: #17171a; --text-strong: #f4f4f5; --text-body: #a3a3a8; --text-soft: #a3a3a8; --text-muted: #85858b; --line: rgb(255 255 255 / .08); --line-soft: rgb(255 255 255 / .05); --line-strong: rgb(255 255 255 / .14); --success: #3ddc97; --success-wash: rgb(61 220 151 / .12); --chart-track: rgb(255 255 255 / .08); background-color: var(--page-bg); color: var(--text-body); }`;
+
+function LanternStage({ t, palette, theme, night }: { t: Tour; palette: PaletteName; theme: ThemeName; night: boolean }) {
+  const stage = useRef<HTMLDivElement>(null);
+  const [lit, setLit] = useState(false);
+  useEffect(() => {
+    if (t.still || lit) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const el = stage.current;
+      if (el) {
+        const s = (now - start) / 1000;
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--fx", `${r.width * (0.5 + Math.sin(s * 0.32) * 0.36)}px`);
+        el.style.setProperty("--fy", `${r.height * (0.5 + Math.sin(s * 0.55 + 1) * 0.3)}px`);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [t.still, lit]);
+  function onMove(e: ReactPointerEvent<HTMLDivElement>) {
+    if (t.still || e.pointerType !== "mouse") return;
+    const el = stage.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setLit(true);
+    el.style.setProperty("--fx", `${e.clientX - r.left}px`);
+    el.style.setProperty("--fy", `${e.clientY - r.top}px`);
+  }
+  const R = night ? 300 : 340;
+  const lens = `radial-gradient(${R}px circle at var(--fx) var(--fy), var(--text-strong) 0%, var(--text-strong) 38%, transparent 70%)`;
+  // Ferah, hizalı ızgara: altı sütun, beş sıra, tek sütunlar yarım adım aşağıda. Başlığın
+  // çevresi (orta dört sütun, ilk sıra dışında) boş: parçalar başlığı çerçeveler, arkasına girmez.
+  const cols = 6;
+  const grid = (
+    <div className="grid gap-x-8 gap-y-10" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+      {Array.from({ length: cols * 5 }, (_, i) => {
+        const c = i % cols;
+        const r = Math.floor(i / cols);
+        const center = c >= 1 && c <= 4 && r >= 1;
+        return (
+          <div key={i} className={cn("grid place-items-center", c % 2 ? "translate-y-10" : "", center && "invisible")}>
+            <div className="hx-tile rounded-[1rem]">
+              <Tile k={i * 3 + 1} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+  const vars = night ? ({ ...paletteVars(t.shown, "dark"), "--skel": "rgb(255 255 255 / .07)", "--skel-line": "rgb(255 255 255 / .06)" } as CSSProperties) : ({ "--skel": "color-mix(in oklab, var(--text-strong) 7%, transparent)", "--skel-line": "color-mix(in oklab, var(--text-strong) 6%, transparent)" } as CSSProperties);
+  return (
+    <div
+      ref={stage}
+      onPointerMove={onMove}
+      onPointerLeave={() => setLit(false)}
+      className={cn("relative isolate grid w-full justify-items-center overflow-hidden rounded-[2.5rem] px-4 py-28 sm:py-36", night ? "hx-night" : "bg-surface ring-1 ring-inset ring-line-soft")}
+      style={{ "--fx": "50%", "--fy": "45%", ...vars } as CSSProperties}
+    >
+      <style href="kapak-lantern" precedence="default">
+        {LANTERN_CSS}
+      </style>
+      {/* İskelet katmanı: her yerde, sakin. */}
+      <div aria-hidden className="hx-skel pointer-events-none absolute inset-x-8 top-10 -z-10 hidden md:block">
+        {grid}
+      </div>
+      {/* Işık: gece sahnesinde sıcak, gündüz paletin yıkaması; mercekten geniş ve yumuşak. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{ background: night ? `radial-gradient(${R * 1.5}px circle at var(--fx) var(--fy), color-mix(in oklab, var(--accent-warm, #d3a04a) 22%, transparent), color-mix(in oklab, var(--primary) 10%, transparent) 45%, transparent 72%)` : `radial-gradient(${R * 1.4}px circle at var(--fx) var(--fy), var(--primary-wash), transparent 70%)` }}
+      />
+      {/* Bileşen katmanı: yalnız merceğin içinde. */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-8 top-10 -z-10 hidden md:block" style={{ maskImage: lens, WebkitMaskImage: lens }}>
+        {grid}
+      </div>
+      {/* Mercek halkası: imleci izleyen ince çizgi. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -z-10 hidden rounded-full ring-1 ring-line-strong md:block"
+        style={{ width: R * 1.2, height: R * 1.2, left: `calc(var(--fx) - ${R * 0.6}px)`, top: `calc(var(--fy) - ${R * 0.6}px)` }}
+      />
+      {/* Başlığın arkası: zeminin kendisiyle sakinleşir. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_34%_38%_at_50%_50%,var(--page-bg)_30%,transparent_100%)] opacity-80" style={night ? undefined : { background: "radial-gradient(ellipse 34% 38% at 50% 50%, var(--surface) 30%, transparent 100%)" }} />
+
+      <div className="grid justify-items-center px-2 text-center">
+        <p className="inline-flex items-center gap-2 rounded-full bg-overlay/80 py-1 pr-3.5 pl-1.5 text-small text-body shadow-raised ring-1 ring-inset ring-line-soft">
+          <span className="rounded-full bg-primary-wash px-2 py-0.5 font-semibold text-primary-ink">v{uiPackage.version}</span>
+          Karanlıkta iskelet, ışıkta bileşen
+        </p>
+        <h1 id="kapak-baslik" className="mt-7 font-display text-[clamp(3.25rem,8vw,7.5rem)] leading-[0.9] font-bold tracking-[-0.06em] text-strong">
+          <span className="block">Tek Kimlik,</span> <span className="display-ink block pb-[0.08em]">On Palet</span>
+        </h1>
+        <Lead className="mt-7 text-center" />
+        <Ctas center className="mt-9" />
+        <div className="mt-8 flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-overlay/85 p-1.5 shadow-raised ring-1 ring-inset ring-line-soft [scrollbar-width:none]" onPointerLeave={() => t.preview(null)}>
+          {TOUR.map((p) => (
+            <button key={p} {...swatchProps(t, p, palette)} className={cn("grid size-7 shrink-0 place-items-center rounded-full sm:size-8", FOCUS)}>
+              <span className={cn("block rounded-full transition-[width,height] duration-300", p === t.shown ? "size-5 ring-2 ring-strong ring-offset-2 ring-offset-overlay" : "size-3.5")} style={{ backgroundImage: palettes[p][night ? "dark" : theme].brandGradient }} />
+            </button>
+          ))}
+          <span aria-hidden className="mx-1 h-6 w-px shrink-0 bg-line" />
+          <span className="hidden min-w-[6.5rem] text-left text-small sm:inline" aria-live="polite">
+            <SlotText text={t.title} className="font-semibold text-strong" />
+          </span>
+          <PlayButton t={t} />
+        </div>
+        <p className="mt-4 hidden text-small text-muted md:block">İmleci gezdir: karanlıkta 141 bileşen bekliyor</p>
+      </div>
+    </div>
+  );
+}
+
+export function HeroSkeleton({ palette, theme, onPalette, showcase }: HeroProps) {
+  const t = usePaletteTour(palette, theme, onPalette);
+  return (
+    <Shell t={t} showcase={showcase} className="justify-items-center">
+      <LanternStage t={t} palette={palette} theme={theme} night={false} />
+    </Shell>
+  );
+}
+
+export function HeroNight({ palette, theme, onPalette, showcase }: HeroProps) {
+  const t = usePaletteTour(palette, theme, onPalette);
+  return (
+    <Shell t={t} showcase={showcase} className="justify-items-center">
+      <LanternStage t={t} palette={palette} theme={theme} night />
+    </Shell>
+  );
+}
+
+export const HEROES = { ...HEROES_FJ, k: HeroMuseum, l: HeroCard, h2: HeroSkeleton, h3: HeroNight } as const;

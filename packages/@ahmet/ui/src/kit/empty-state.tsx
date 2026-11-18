@@ -4,7 +4,7 @@ import { cn } from "../utils";
 
 /**
  * Boş durum, üç biçim. Şablonun `components/ui/EmptyState.tsx`ünün
- * genişletilmiş hâli; aynı dil, aynı sınıflar.
+ * genişletilmiş hali; aynı dil, aynı sınıflar.
  *
  * `variant="icon"` (varsayılan): panel içinde, ikonlu kutu. "Henüz Kayıt
  * Yok" + ne yapılacağını söyleyen bir cümle + tek eylem.

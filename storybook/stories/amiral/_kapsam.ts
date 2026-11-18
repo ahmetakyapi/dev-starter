@@ -40,7 +40,7 @@ const ANCHOR_OVERRIDE: Record<string, string> = {
 };
 export const anchorOf = (name: string) => `#${ANCHOR_OVERRIDE[name] ?? `b-${name}`}`;
 
-/** Katalogdaki hikâye sayısı: bütün hikâye dosyalarındaki `export const X: Story` bildirimleri. */
+/** Katalogdaki hikaye sayısı: bütün hikaye dosyalarındaki `export const X: Story` bildirimleri. */
 const STORY_SOURCES = import.meta.glob("../**/*.stories.tsx", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 export const STORY_COUNT = Object.values(STORY_SOURCES).reduce((n, text) => n + (text.match(/^export const \w+\s*:\s*Story\b/gm)?.length ?? 0), 0);
 export const STORY_FILES = Object.keys(STORY_SOURCES).length;

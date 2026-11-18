@@ -176,7 +176,7 @@ export const FONT_PRESETS = {
   technical: {
     sans: spaceGrotesk,
     mono: jetbrains,
-    note: "Yapay zekâ, geliştirici ürünü, teknik tanıtım. iris.",
+    note: "Yapay zeka, geliştirici ürünü, teknik tanıtım. iris.",
   },
   /** Yuvarlak, cana yakın tüketici uygulaması. */
   friendly: {
@@ -191,7 +191,7 @@ export const FONT_PRESETS = {
   board: {
     sans: inter,
     mono: jetbrains,
-    note: "Pano, grafik, bileşen vitrini, yapay zekâ sohbeti. cobalt, violet, rose, jade. Mono'da ₺ yok: tutarı sans ile yaz.",
+    note: "Pano, grafik, bileşen vitrini, yapay zeka sohbeti. cobalt, violet, rose, jade. Mono'da ₺ yok: tutarı sans ile yaz.",
   },
   /** Dar ve okunaklı; küçük puntoda yoğun tablo. */
   dense: {

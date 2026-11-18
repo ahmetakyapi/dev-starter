@@ -137,7 +137,7 @@ npm test 2>&1 | tail -20     # varsa; yoksa "test altyapısı yok" diye RAPORLA
 ```
 
 - Yeni fonksiyonlar için test var mı?
-- Mevcut testler hâlâ geçiyor mu?
+- Mevcut testler hala geçiyor mu?
 - `mistakes.md`'deki bilinen hatalar için regression testi var mı?
 
 Test altyapısı yoksa bunu **eksik olarak raporla**, sessizce geçme.
@@ -233,7 +233,7 @@ Gate Agent sorun bulduğunda:
    bölümüne ANA OTURUM ekler (Gate'in yazma aracı yok)
 3. İlgili agent (FE/BE/QA) düzeltir — bir sonraki denemeden önce GATE-LOG'u okur
 4. ROUTEMAP Gate kolonu ana oturumca ilerletilir: FAILED → FIX_1 → FIX_2
-5. FIX_2 sonrasında hâlâ FAILED → ESCALATED: BA kullanıcıya seçenekli özet sunar
+5. FIX_2 sonrasında hala FAILED → ESCALATED: BA kullanıcıya seçenekli özet sunar
 ```
 
 **Sonucun kaydı**: rapor `docs/gate/<story>.md` dosyasına yazılır (bu dizin

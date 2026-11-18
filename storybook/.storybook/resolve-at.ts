@@ -9,7 +9,7 @@ import type { Plugin } from "vite";
  *   - `snippets/ui/*.tsx` → birbirini `@/components/ui/<ad>` ile, yardımcıları
  *     `@/lib/utils`, `@/lib/motion` ile ister (projeye kopyalanınca böyle).
  *   - `templates/<şablon>/**` → kendi kökünü ister (`@/components/sections/…`).
- *   - `storybook/**` hikâyeleri → snippet'leri ve landing şablonunu ister.
+ *   - `storybook/**` hikayeleri → snippet'leri ve landing şablonunu ister.
  * Tek bir `alias` bunlardan yalnızca birini doğru çözer. Kural:
  *   1. İçe aktaran bir şablonun içindeyse kök O ŞABLON.
  *   2. Değilse `@/components/ui/<ad>` önce `snippets/ui/<ad>`, yoksa landing

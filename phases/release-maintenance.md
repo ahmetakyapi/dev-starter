@@ -177,7 +177,7 @@ Reaktif triage yetmez; canlı proje sessizce çürür. Aylık tur (ya da `/evolv
 - [ ] `npm outdated` + `npm audit` — kritik güvenlik yaması varsa HOTFIX
       triage'ına girer
 - [ ] Vercel panosunda hata oranı / CWV bozulması var mı
-- [ ] `/api/health` hâlâ 200 mü (uptime kontrolü)
+- [ ] `/api/health` hala 200 mü (uptime kontrolü)
 - [ ] Neon yedekleri ve migration durumu
 
 ### Maintenance Logu

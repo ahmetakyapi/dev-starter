@@ -276,7 +276,7 @@
   --palette-cta-gradient: linear-gradient(150deg, #b45309 0%, #7a3306 100%);
 }
 
-/* iris — mor-indigo; yaratıcı ve yapay zekâ ürünleri */
+/* iris — mor-indigo; yaratıcı ve yapay zeka ürünleri */
 :root[data-palette="iris"] {
   --palette-primary: #5b4bd6;
   --palette-primary-hover: #4636b8;
@@ -339,7 +339,7 @@
   --palette-cta-gradient: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
 }
 
-/* violet — menekşe; yaratıcı araç, yapay zekâ, topluluk */
+/* violet — menekşe; yaratıcı araç, yapay zeka, topluluk */
 :root[data-palette="violet"] {
   --palette-primary: #7c3aed;
   --palette-primary-hover: #6d28d9;

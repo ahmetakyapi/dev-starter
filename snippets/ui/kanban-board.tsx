@@ -191,7 +191,7 @@ export function KanbanBoard({
   /** Panonun okunan adı. */
   label?: string;
   limitMode?: "warn" | "block";
-  /** `YYYY-MM-DD`; gecikme vurgusu buna göre. Hikâye ve testte sabitle. */
+  /** `YYYY-MM-DD`; gecikme vurgusu buna göre. Hikaye ve testte sabitle. */
   today?: string;
   className?: string;
 }) {

@@ -87,7 +87,7 @@
 
 /* Üçü AYNI süre ve gecikmeyle: şerit görünür ve döner, kopya gizli,
    pencere kırpar. Hareketi azaltan okuyucu bu bloğa hiç girmez ve
-   doğrudan durağan hâli görür. */
+   doğrudan durağan hali görür. */
 @media (prefers-reduced-motion: no-preference) {
   .window,
   .strip,

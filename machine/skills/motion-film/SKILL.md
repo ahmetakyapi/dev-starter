@@ -6,7 +6,7 @@ description: >
   yapmak için yönetmenlik, teknik ve inceleme kiti. Teslimi MP4 olan kısa
   film, reklam ve müzik videosu cinecode skill'iyle yapılır (§ 1b); bu kit
   sayfa içi filmin ve iki kitin ortak sayılarının kaynağı. Canvas 2D / DOM ile saf
-  render(t) filmler: kamera, dev kinetik yazı, mürekkep ve kâğıt dokusu, boil,
+  render(t) filmler: kamera, dev kinetik yazı, mürekkep ve kağıt dokusu, boil,
   sel geçişi, mühür finali, Web Audio sesi; temas sayfası ve MP4 üretim script'leri.
   Use when asked to make a motion design film, animated explainer, launch video,
   kinetic type sequence, cinematic loading screen, visual explainer / animated
@@ -108,7 +108,7 @@ yargılanır. Kodu yazmadan önce yazılı bir tretman:
 4. **Her saniye bir olay; her 1,5–2 sn yeni bir fikir.** Ölü saniye hata gibi okunur.
 5. **Tek "yerli hamle"** (native move): yalnız bu ortamın yapabildiği geçiş, duygusal tepede (mürekkep seli, çizginin biçim değiştirmesi, harflerin logoya dönüşmesi).
 6. **Kesme yok, geçiş var.** Her dikiş bir geçiş: biçim değiştirme (morph), eşleşen kesme (match cut), kamera taşıması, sel, iris, fırça silmesi.
-7. **Son, açılışla kafiyelenir.** Aynı motif, değişmiş hâli (açılıştaki halka sonda zilin etrafına çekilir; logo damgası → mühür).
+7. **Son, açılışla kafiyelenir.** Aynı motif, değişmiş hali (açılıştaki halka sonda zilin etrafına çekilir; logo damgası → mühür).
 8. **Doruktan önce durgunluk.** Sonuç geldiğinde hemen patlatma: 0,3 sn hareket durulur, kamera usulca yaklaşır, sonra sel.
 
 ## 3. Hareket (ayrıntı: `reference/yonetmenlik.md` § ilkeler, `reference/kamera.md`)
@@ -124,7 +124,7 @@ yargılanır. Kodu yazmadan önce yazılı bir tretman:
 
 - **Boil:** çizgi kenarı saniyede 12 kez yeniden çizilir (tohum = kare sırası). Yalnız kenar gürültüsü kaynar; kuru fırça izleri sabit kalır.
 - **Kalem:** zaman eğriliğe göre (keskin dönüşte yavaşlar), basınç hıza göre (yavaş kalın), dönüşte mürekkep göllenir, kalkınca sarkık damla kalır, kalemin yalnız düz gölgesi görünür.
-- **Kâğıt:** lifler dünyaya bağlı, kamerayla kayar.
+- **Kağıt:** lifler dünyaya bağlı, kamerayla kayar.
 - **Sel:** aynı dünya ters paletle selin içine kırpılarak ikinci kez çizilir; sınırı geçen çizgi rengini orada değiştirir.
 - **Tek vurgu rengi**, anlamlı bir yerde (mühür, kıvılcım). Glow, blur, cam yok.
 
@@ -179,7 +179,7 @@ Bir sistemin nasıl çalıştığını anlatan figür ya da sayfa içi film içi
 (wheresryan22/anatomy, MIT; Meng To'nun "visual explainer" figürü):
 
 - **Nesne açıklamanın kendisidir:** kutu-ok-etiket değil, mekanizması kavrama
-  bire bir oturan gerçek bir makine (kilit, çekmeceli dolap, terazi, ölçü tezgâhı).
+  bire bir oturan gerçek bir makine (kilit, çekmeceli dolap, terazi, ölçü tezgahı).
   1×'te tek net nesne, 4×'te her bölgede bulunacak doğru bir parça.
 - **Kart anatomisi:** sol üst `Fig n`, sağ üst kısa başlık, sol alt etkileşim
   ipucu, sağ alt **canlı künye**; altında adlı **sahne çipleri** (her sahnede
@@ -239,7 +239,7 @@ kesmesiz geçiş).
 |-------|----------|
 | `reference/yonetmenlik.md` | Tretman, okumalar, animasyon ilkeleri, geçiş grameri, sık hatalar, çıta eserleri, "yine örnek film değil", çok agent'lı yapım |
 | `reference/kamera.md` | Takip, dalış, nefes, hızlı nesne kuralı, ≥ 4 hareket + imza plan, özne ≥ 1/3 |
-| `reference/murekkep-ve-kagit.md` | Fırça, boil, kalem, kâğıt, sel, damla, mühür, renk |
+| `reference/murekkep-ve-kagit.md` | Fırça, boil, kalem, kağıt, sel, damla, mühür, renk |
 | `reference/kinetik-yazi.md` | Tuval ve DOM kinetik yazı, kerning'li parça konumu, karaoke kuralları, künye, degrade tuzağı |
 | `reference/ses.md` | Sayfa içi ses kuralları, tarifler, video miksi, senkron noktaları, mono güvenliği, anlatım/TTS |
 | `reference/muzik-klibi.md` | Şarkıdan film: ölçülmüş vuruş ızgarası, sözden türeyen kesme, sözcük düzeyinde hizalama hattı, mp3 gecikme tuzağı, hak durumu |

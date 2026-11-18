@@ -2488,7 +2488,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Yapay Zekâ"
+        "Yapay Zeka"
       ],
       "meta": {
         "client": true,
@@ -3102,7 +3102,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Yapay Zekâ"
+        "Yapay Zeka"
       ],
       "meta": {
         "client": true,
@@ -3305,7 +3305,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Yapay Zekâ"
+        "Yapay Zeka"
       ],
       "meta": {
         "client": false,
@@ -3512,7 +3512,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Yapay Zekâ"
+        "Yapay Zeka"
       ],
       "meta": {
         "client": false,
@@ -3658,8 +3658,8 @@
     {
       "name": "wallpaper",
       "type": "registry:ui",
-      "title": "Duvar Kâğıdı",
-      "description": "8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
+      "title": "Duvar Kağıdı",
+      "description": "8 illüstrasyon duvar kağıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],

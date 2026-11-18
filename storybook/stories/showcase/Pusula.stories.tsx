@@ -30,7 +30,7 @@ async function go(root: HTMLElement, label: string) {
   await canvas.findByRole("heading", { level: 1, name: label }, { timeout: 3000 });
 }
 
-/** Katalogdaki bileşen sayısı: elle yazılmaz, snippets/ui klasöründen sayılır (Kapsam hikâyesiyle aynı yöntem). */
+/** Katalogdaki bileşen sayısı: elle yazılmaz, snippets/ui klasöründen sayılır (Kapsam hikayesiyle aynı yöntem). */
 const TOTAL = Object.keys(import.meta.glob("../../../snippets/ui/*.tsx")).length;
 
 async function command(root: HTMLElement, query: string) {
@@ -287,7 +287,7 @@ export const Notifications: Story = {
     await userEvent.click(column);
     await expect(within(sheet).getByRole("checkbox", { name: "Onay İstekleri, SMS" })).toBeChecked();
     await userEvent.click(within(sheet).getByRole("button", { name: "Vazgeç" }));
-    // Vazgeç taslağı atar: yeniden açınca SMS sütunu eski hâlinde.
+    // Vazgeç taslağı atar: yeniden açınca SMS sütunu eski halinde.
     await userEvent.click(canvas.getByRole("button", { name: "Tercihler" }));
     const again = await canvas.findByRole("dialog", { name: "Bildirim Tercihleri" });
     await expect(within(again).getByRole("checkbox", { name: "Onay İstekleri, SMS" })).not.toBeChecked();

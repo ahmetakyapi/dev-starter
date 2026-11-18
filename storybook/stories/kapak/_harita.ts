@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
 /**
- * Katalog haritası ELLE YAZILMAZ. Bütün hikâye dosyaları derleme anında ham
+ * Katalog haritası ELLE YAZILMAZ. Bütün hikaye dosyaları derleme anında ham
  * metin olarak okunur; her dosyanın `meta` nesnesinden `title` ve `id`,
- * `export const X: Story` bildirimlerinden hikâye adresleri çıkarılır
+ * `export const X: Story` bildirimlerinden hikaye adresleri çıkarılır
  * (Storybook'un kuralıyla: `AllInOne` → `all-in-one`, `Last7Days` →
  * `last-7-days`). Kapaktaki sayılar ve bağlantılar böylece kenar çubuğuyla
  * aynı kaynaktan gelir: yeni bileşen eklenince harita kendiliğinden büyür,
@@ -36,7 +36,7 @@ export const COMPONENTS: readonly CatalogComponent[] = Object.values(RAW)
 /** Bir üst düzey bölümün (ya da alt grubun) bileşenleri. */
 export const under = (...path: string[]) => COMPONENTS.filter((c) => path.every((p, i) => c.path[i] === p));
 
-/** Kenar çubuğundaki sırayla ilk bileşenin ilk hikâyesi (storySort sırası verilir). */
+/** Kenar çubuğundaki sırayla ilk bileşenin ilk hikayesi (storySort sırası verilir). */
 export function firstOf(path: readonly string[], order?: readonly string[]) {
   const list = under(...path);
   if (!order) return list[0]?.first;

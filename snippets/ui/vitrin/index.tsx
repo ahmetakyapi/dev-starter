@@ -19,7 +19,7 @@ const GROUPS = [
   { href: "/vitrin/form", title: "Form Girişleri", note: "Kaydırıcı, sayı alanı, doğrulama kodu, renk seçici, takvim, tarih ve saat.", count: 9 },
   { href: "/vitrin/feedback", title: "Katman ve Geri Bildirim", note: "Bağlam menüsü, bildirim merkezi, uyarı satırı, ilerleme, ölçer, atlıkarınca.", count: 10 },
   { href: "/vitrin/charts", title: "Grafikler", note: "Alan, gösterge, huni, ısı haritası, radar, sankey; ekrana girince çizilir.", count: 11 },
-  { href: "/vitrin/blocks", title: "Bloklar", note: "Uygulama kabuğu ve yapay zekâ sohbeti, giriş kartı, ayarlar, palet seçici.", count: 7 },
+  { href: "/vitrin/blocks", title: "Bloklar", note: "Uygulama kabuğu ve yapay zeka sohbeti, giriş kartı, ayarlar, palet seçici.", count: 7 },
 ] as const;
 
 export default function VitrinPage() {

@@ -7,7 +7,7 @@ tek sunucuda tam kontrol gerekince VPS
 (aciliszili.com, Ekim 2026) çalışan düzeni anlatır; dosya yolları o depoya
 (`ahmetakyapi/acilis-zili`, herkese açık) aittir ve kopyalanabilir.
 
-Uzun hikâyeler `knowledge/mistakes.md #100–101`te, kopyalanabilir desenler
+Uzun hikayeler `knowledge/mistakes.md #100–101`te, kopyalanabilir desenler
 `knowledge/patterns.md → GitHub Secrets → Sunucu Ortamı` ve
 `→ Markalı İşlem E-postası`nda.
 

@@ -60,7 +60,7 @@ export function TocNav({ sections, label = "Bu Sayfada", top = "0.75rem", classN
             setActive(pinned.current);
             return;
           }
-          // Kaydırma hâlâ yolda: aradan geçen bölümler etkin olmasın.
+          // Kaydırma hala yolda: aradan geçen bölümler etkin olmasın.
           if (!reached.current) return;
           pinned.current = null;
         }

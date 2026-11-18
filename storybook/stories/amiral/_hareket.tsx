@@ -24,8 +24,8 @@ import { ToolCall } from "@/components/ui/tool-call";
 import { HareketEk } from "./_ekler";
 import { Cell, CellGrid } from "./_ui";
 
-/* Hareket ve Doku + Yapay Zekâ grupları (secki.dev turu, 2026-11-06). Her
-   kuyu kendi bileşeninin gerçek kullanımı; kahve dükkânı verisi diğer
+/* Hareket ve Doku + Yapay Zeka grupları (secki.dev turu, 2026-11-06). Her
+   kuyu kendi bileşeninin gerçek kullanımı; kahve dükkanı verisi diğer
    gruplarla ortak dilde. */
 
 const BEANS = `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">

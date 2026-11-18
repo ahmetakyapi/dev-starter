@@ -11,7 +11,7 @@ import { useMotionPreference } from "@/hooks/useMotionPreference";
  * kıpırdadığında ağaç yeniden çizilmez.
  *
  * Yalnızca `(hover: hover) and (pointer: fine)` ve hareket serbestken.
- * Aksi hâlde düz bir `span`: sunucu çizimi ile aynı, hidrasyon farkı yok.
+ * Aksi halde düz bir `span`: sunucu çizimi ile aynı, hidrasyon farkı yok.
  */
 const PULL = 0.22;
 const SPRING = { stiffness: 180, damping: 18, mass: 0.6 } as const;

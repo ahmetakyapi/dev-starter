@@ -161,7 +161,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
    okunur ve kayıtlı kullanıcı adlarını ele verir (zamanlama orakülü).
    `DUMMY_HASH` sır değildir; rastgele bir dizenin hash'i.
 3. **Hesap bazlı kilit yok.** Kullanıcı adına sayaç, o adı bilen herkese
-   "istediğin hesabı kilitle" imkânı verir. Sınır IP başına.
+   "istediğin hesabı kilitle" imkanı verir. Sınır IP başına.
 4. **Veritabanı hatası "şifre hatalı" değildir.** Sorgu hatasını ayrı bir
    işaretle fırlat; yoksa kullanıcıya "kullanıcı adı veya şifre hatalı"
    denir ve şifresini değiştirmeye çalışır.

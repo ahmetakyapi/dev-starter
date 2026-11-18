@@ -20,7 +20,7 @@ import { StatementHero } from "./Statement";
  *  - live-data        Ürün ölçülebilir bir sonuç vaat ediyorsa ve sayıların gerçek kaynağı varsa.
  *  - bento            Tek cümleye sığmayan, eşit ağırlıkta 3-5 güçlü yön varsa (sayfada ikinci bir bento açma).
  *  - minimal          İçerik ağırlıklı sayfalar (belge, blog, değişiklik günlüğü); hero geri çekilmeli.
- *  - scroll-stage     Hikâye üç adımda anlatılabiliyorsa ve okuyucunun yavaşlaması isteniyorsa.
+ *  - scroll-stage     Hikaye üç adımda anlatılabiliyorsa ve okuyucunun yavaşlaması isteniyorsa.
  *
  * Ortak kurallar `./shared.tsx` başında.
  */

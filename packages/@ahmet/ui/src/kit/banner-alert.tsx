@@ -10,7 +10,7 @@ import { cn } from "../utils";
  * `toast`), kullanıcıyı durduran soru değil (o `dialog`).
  *
  * TON ZEMİNLE KURULUR, ŞERİTLE DEĞİL. Kartın tek kenarına renkli şerit
- * (`border-l-4`) yapay zekâ çıktısının en tanınır izi (rules/design-tokens
+ * (`border-l-4`) yapay zeka çıktısının en tanınır izi (rules/design-tokens
  * → AI-Slop). Burada tonu `*-wash` zemin, dört yanda aynı tonun çok
  * soluk ince çizgisi ve ikon rengi taşır; başlık ve metin `text-strong` /
  * `text-body` kalır (renkli gövde metni wash üstünde AA tutmaz).

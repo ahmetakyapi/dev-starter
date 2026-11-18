@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
  *
  * DOKU: `grain` ince film greni (SVG gürültüsü MASKE olarak, karışım modu
  * yok; `knowledge/patterns.md` → Film greni). `halftone` lekeleri eşit
- * aralıklı nokta ekranından gösterir: baskı dokusu, kâğıt zemin üstünde.
+ * aralıklı nokta ekranından gösterir: baskı dokusu, kağıt zemin üstünde.
  * Gerçek yarım ton (nokta boyu parlaklıkla değişen) fotoğraf için
  * `halftone-image.tsx`.
  *

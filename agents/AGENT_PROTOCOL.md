@@ -443,7 +443,7 @@ Kontrol listesi okumak yerine bunları **çalıştır**:
 | ahmetakyapi.com · onepiece-hub · derinay · harfiyen · simayahi · dungeon-mates | 14.2 | 18 | v3.4 |
 | ramazan-vakitleri | *(Vite)* | 18.2 | *(saf CSS)* |
 
-Çoğunluk hâlâ **Next 14 + React 18 + Tailwind v3**. **Yeni proje şablonları
+Çoğunluk hala **Next 14 + React 18 + Tailwind v3**. **Yeni proje şablonları
 3.0.0'dan (2026-10-03) beri Next 16 + React 19.2 + Tailwind v4 + `motion`**:
 yeni kod bu tech stack'e göre yazılır, eski projeler dokunuldukça yükseltilir.
 Yeni tech stack'in kuralları: `guides/` (özellikle `06-nextjs-16.md`).

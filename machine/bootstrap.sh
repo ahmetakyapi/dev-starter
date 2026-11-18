@@ -44,6 +44,14 @@ ANATOMY_REF="689dcf966e63d92be10a5d593c6e19e10acd4422"
 # sonra commit. health-check bu satırı denetler.
 CINECODE_REF="67f9807112b97ae253d4a5f0eccaccc46c3b2633"
 
+# insanca (tahiryildiz/insanca, MIT) — Türkçe metindeki yapay zeka izlerini
+# temizleyen yazım skill'i (56 kalıp, 17 akış kuralı, scripts/olcum.py sayısal
+# denetim). Kanca TAŞIMIZ, betik yalnız standart kütüphane ve ağa çıkmaz
+# (18 Kasım 2026'da okundu). content-editor uzun Türkçe metinde onu çağırır;
+# çakışan kurallarda bizimki geçer (agents/content-editor-agent.md → insanca).
+# Yükseltme: yeni SHA, SKILL.md ve references/ farkına bak, sonra commit.
+INSANCA_REF="00a4c45d13c86d81a282728d904b0ded5fa0030c"
+
 # Builtin eklentiler: pazar yeri gerekmez, yalnızca etkinleştirilir.
 BUILTIN_PLUGINS=("cc-plugin-you-should-know@builtin")
 
@@ -192,7 +200,7 @@ echo "▸ taste-skill"
 # CLI sürümü SABİT: `npx -y skills` her koşuda en günceli indirip ÇALIŞTIRIR —
 # kurulan skill'ler her oturumda talimat olarak okunduğundan bu bir tedarik
 # zinciri kontrolüdür. Yükseltme: sürümü bilerek değiştir, kurulumu gözden geçir.
-# (Kaynak depo Leonxlnx/taste-skill hâlâ HEAD'den gelir; skills CLI'ı ref
+# (Kaynak depo Leonxlnx/taste-skill hala HEAD'den gelir; skills CLI'ı ref
 # pin'i desteklemiyor. Kalıcı çözüm anatomy gibi vendor'lamak — tech-radar.)
 SKILLS_CLI_VERSION="1.7.2"
 run npx -y "skills@${SKILLS_CLI_VERSION}" add Leonxlnx/taste-skill -g -a claude-code -s "${TASTE_SKILLS[@]}" -y
@@ -244,6 +252,11 @@ echo "▸ cinecode (kodla film stüdyosu, sarpstar/cinecode, MIT) @ ${CINECODE_R
 # Kitin kendi "cinecode'u güncelle" (git pull) komutu sabit commit'te çalışmaz,
 # bilerek: yükseltme CINECODE_REF'i değiştirip bootstrap'i yeniden koşmaktır.
 pinned_skill cinecode https://github.com/sarpstar/cinecode "$CINECODE_REF"
+
+echo "▸ insanca (Türkçe yazım skill'i, tahiryildiz/insanca, MIT) @ ${INSANCA_REF:0:7}"
+# content-editor blog, rehber ve README gibi uzun Türkçe metinde kullanır;
+# ölçüm: python3 ~/.claude/skills/insanca/scripts/olcum.py metin.txt
+pinned_skill insanca https://github.com/tahiryildiz/insanca "$INSANCA_REF"
 
 echo "▸ Eklentiler"
 for p in "${BUILTIN_PLUGINS[@]}"; do

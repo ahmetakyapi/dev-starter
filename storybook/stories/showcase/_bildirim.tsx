@@ -106,7 +106,7 @@ export function buildItems(now = Date.now()): Item[] {
       label: `Can Demir senden bahsetti: ${late.id}`,
       title: (
         <>
-          <b className="font-medium">Can Demir</b> senden bahsetti: “@Ahmet {customer(late.customerId).name}’nın kargosu hâlâ aktarmada, müşteriyi sen arar mısın?”
+          <b className="font-medium">Can Demir</b> senden bahsetti: “@Ahmet {customer(late.customerId).name}’nın kargosu hala aktarmada, müşteriyi sen arar mısın?”
         </>
       ),
       meta: `Gelen Kutusu · ${late.id} · 25 dk önce`,
@@ -130,7 +130,7 @@ export function buildItems(now = Date.now()): Item[] {
     },
     {
       id: "b4",
-      // Talep 09.47'de geldi, ilk yanıt 18 dk sonra; düzeltme ondan sonra (eskiden "1 sa önce": şikâyetten önceydi).
+      // Talep 09.47'de geldi, ilk yanıt 18 dk sonra; düzeltme ondan sonra (eskiden "1 sa önce": şikayetten önceydi).
       at: ago(15),
       kind: "bilgi",
       day: "bugun",

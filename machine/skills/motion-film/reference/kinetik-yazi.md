@@ -73,7 +73,7 @@ oynanırken. Kurallar (kaynak: mexicat/pdoom-video, MIT):
   taşır: kalemle yazılır, eğri üstünde kayar, forma damgalanır, kumaşa
   dokunur, haritaya etiket olur. Ekranın altında ortalanmış satır klip değil,
   karaoke makinesidir. Erişilebilirlik ve arama için ayrıca `.srt`/WebVTT ver.
-- Tekrarlanan nakarat aynı yazıyla dönmez: aynı motif, her nakaratta değişmiş hâli.
+- Tekrarlanan nakarat aynı yazıyla dönmez: aynı motif, her nakaratta değişmiş hali.
 - Kesme sözden türer: satırın ilk kelimesinden önceki son vuruş (`cutAt`);
   ekrandaki satır sahne değişmeden önce yarıda kalmaz.
 - Okuma süresi kuralı (harf ÷ 15 + 1,5 sn) burada şarkıya teslim
@@ -120,6 +120,6 @@ export function KineticText({ text, delay = 0, stagger = 32 }: { text: string; d
 ## Künye (`tag`)
 
 Küçük etiketler (Zirve 191,86 · 20 Günlük · RSI 71): maskeden yükselir,
-altında 4 px kâğıt renginde hale (çizgi içinden geçse de okunur). Yerleşimi
+altında 4 px kağıt renginde hale (çizgi içinden geçse de okunur). Yerleşimi
 çakışmaya göre seç: zirve son seanslardaysa son kapanış künyesi alta iner;
 kadran ucun karşı yarısına gider; ekrana sabit butonların altında künye kalmaz.

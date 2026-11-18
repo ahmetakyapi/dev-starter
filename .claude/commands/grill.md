@@ -8,7 +8,7 @@ argument-hint: "[plan, story id ya da değişiklik tarifi — boşsa konuşmadak
 Konu: **$ARGUMENTS** (boşsa konuşmadaki son plan; o da yoksa kullanıcıdan
 bir cümlelik tarif iste).
 
-Amaç kod yazmak değil, **ortak anlayış**: plan kafada değil kâğıtta, gizli
+Amaç kod yazmak değil, **ortak anlayış**: plan kafada değil kağıtta, gizli
 bağımlılıklar (sıra, yan etki, unutulmuş çağrı) kodlamadan önce görünür.
 Fikir kaynağı Matt Pocock'un `grilling` skill'i (MIT,
 `~/dev-starter/knowledge/references.md` → § 4); metin ve akış bizim.

@@ -198,11 +198,11 @@ function Stage({ palette, theme, onTheme }: { palette: PaletteName; theme: Theme
 /* ── Katalog haritası ───────────────────────────────────────────────────
    İlk ekranın sağ yarısı: kenar çubuğunun üç bölümü ve on bir kapısı, her
    biri ne içerdiğini ve kaç parça olduğunu söyler. Sayılar ve bağlantılar
-   `_harita.ts`ten (hikâye dosyalarından sayılır, elle yazılmaz). Sayı
+   `_harita.ts`ten (hikaye dosyalarından sayılır, elle yazılmaz). Sayı
    sütunu her satırda aynı genişlikte: alt alta sayılar hizalı okunur. */
 
 /** preview.tsx → storySort ile aynı sıra: "ilk bileşen" kenar çubuğundaki ilk satır olsun. */
-const COMPONENT_GROUPS = ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"] as const;
+const COMPONENT_GROUPS = ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zeka"] as const;
 const THEME_ORDER = ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"];
 const SCREEN_ORDER = ["Uygulama", "Açılış Sayfası"];
 
@@ -224,7 +224,7 @@ function mapSections(): { label: string; rows: MapRow[] }[] {
       label: "Kütüphane",
       rows: [
         { name: "Tema", note: "Renk, palet, tipografi, yüzey, hareket", icon: Palette, id: firstOf(["Tema"], THEME_ORDER) ?? "colors--overview", count: count(under("Tema").length, "sayfa") },
-        { name: "Bileşenler", note: "Temelden yapay zekâya, raf raf", icon: Blocks, id: firstOf(["Bileşenler"], COMPONENT_GROUPS) ?? "start--overview", count: count(COMPONENT_GROUPS.length, "grup") },
+        { name: "Bileşenler", note: "Temelden yapay zekaya, raf raf", icon: Blocks, id: firstOf(["Bileşenler"], COMPONENT_GROUPS) ?? "start--overview", count: count(COMPONENT_GROUPS.length, "grup") },
         { name: "Grafikler", note: "Çizgi, alan, huni, ısı haritası, pano", icon: ChartColumn, id: firstOf(["Grafikler"]) ?? "start--overview", count: count(under("Grafikler").length, "grafik") },
         { name: "Bloklar", note: "Birden çok bileşenin hazır birleşimi", icon: Layers, id: firstOf(["Bloklar"]) ?? "start--overview", count: count(under("Bloklar").length, "blok") },
         { name: "Desenler", note: "Önizle, kopyala: token'lı zeminler", icon: Grid3x3, id: "pattern-library--overview", count: count(PATTERN_PRESETS.length, "zemin") },
@@ -288,7 +288,7 @@ function CatalogMap() {
 
 /** Kabuğun arama kutusunu açar: kapaktan ayrılmadan bileşen, desen ya da ekran ara. */
 function SearchLauncher({ compact = false }: { compact?: boolean }) {
-  // Kabuk yoksa (hikâye tek başına, `iframe.html`) aranacak kenar çubuğu da yok: buton kabuğu açar.
+  // Kabuk yoksa (hikaye tek başına, `iframe.html`) aranacak kenar çubuğu da yok: buton kabuğu açar.
   const inShell = typeof window !== "undefined" && window.top !== window && !!window.top?.document.getElementById("storybook-explorer-searchfield");
   const open = () => {
     if (!inShell) {
@@ -569,7 +569,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
     light.style.setProperty("--lit", "1");
     px.set(((e.clientX - rect.left) / rect.width) * 2 - 1);
     py.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
-    // Odak: imlece en yakın numune netleşir (120 px içinde tam, 520 px'te dinlenme hâli).
+    // Odak: imlece en yakın numune netleşir (120 px içinde tam, 520 px'te dinlenme hali).
     for (const el of specRefs.current) {
       if (!el) continue;
       const b = el.getBoundingClientRect();
@@ -606,7 +606,7 @@ function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: Them
   const title = PALETTES.find((p) => p.value === shown)?.title ?? shown;
   const previewing = shown !== palette;
   const activeIndex = TOUR.indexOf(shown);
-  const ogCounts = `${TOTAL} bileşen · ${STORIES.toLocaleString("tr-TR")} hikâye · ${PALETTES.length} palet · 2 tema`;
+  const ogCounts = `${TOTAL} bileşen · ${STORIES.toLocaleString("tr-TR")} hikaye · ${PALETTES.length} palet · 2 tema`;
   const bars = span === "gun" ? [44, 61, 38, 72, 55, 80, 66] : span === "hafta" ? [38, 52, 44, 66, 58, 74, 90] : [52, 48, 63, 70, 66, 84, 96];
 
   /* Altı numune, başlığın iki yanında üçer. Sıra: yakın → uzak dengeli dağılır. */
@@ -929,7 +929,7 @@ function MapSection() {
           <h2 id="kapak-harita" className="font-display text-display font-bold text-strong">
             Katalogda Ne Var
           </h2>
-          <p className="max-w-[58ch] text-read text-body">Kenar çubuğunun üç bölümü ve on bir kapısı; sayılar hikâye dosyalarından sayılır.</p>
+          <p className="max-w-[58ch] text-read text-body">Kenar çubuğunun üç bölümü ve on bir kapısı; sayılar hikaye dosyalarından sayılır.</p>
         </div>
       </Reveal>
       <CatalogMap />
@@ -1025,7 +1025,7 @@ const GROUP_NOTES: Record<(typeof COMPONENT_GROUPS)[number], string> = {
   Verimlilik: "Pano, görev, hafta",
   "Hareket ve Doku": "Her hareket bir şey söyler",
   Tanıtım: "Açılış sayfasının parçaları",
-  "Yapay Zekâ": "Asistan ne yaptığını gösterir",
+  "Yapay Zeka": "Asistan ne yaptığını gösterir",
 };
 
 function ComponentGroups() {

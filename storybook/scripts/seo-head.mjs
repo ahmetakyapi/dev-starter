@@ -3,7 +3,7 @@
  * Derleme sonrası: `storybook-static/index.html` başlığı. Storybook kabuğun
  * başlığını "<paket adı> - Storybook" diye basar; paylaşım önizlemesinde ve
  * sekmede "dev-starter · Görsel Katalog" görünsün. Gezinince Storybook
- * başlığı hikâyeye göre kendisi günceller (sorun değil, ilk yük bu).
+ * başlığı hikayeye göre kendisi günceller (sorun değil, ilk yük bu).
  */
 import { readFileSync, writeFileSync } from "node:fs";
 

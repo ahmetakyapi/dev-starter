@@ -77,7 +77,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
                 <MorphNavGrid
                   links={[
                     { href: `${LANDING}#tanitim-rehber-baslik`, title: "Rehberler", description: "Ekibin ilk haftası", icon: BookOpen },
-                    { href: `${LANDING}#tanitim-duvar-baslik`, title: "Duvar Kâğıtları", description: "Sekiz sahne, iki boy", icon: ImageIcon },
+                    { href: `${LANDING}#tanitim-duvar-baslik`, title: "Duvar Kağıtları", description: "Sekiz sahne, iki boy", icon: ImageIcon },
                   ]}
                 />
               ),

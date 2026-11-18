@@ -232,7 +232,7 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 Ribbon, Offscreen ve Scrolltide turları (meetribbon.app, offscreen.wtf, scrolltide.co; 2026-11-07/11). Görsel zeminli kahraman, sayfada
 denenen ürün maketi, kişiliği olan küçük dokunuşlar. Hepsi tanıtım sayfası
 içindir; uygulama ekranına ve forma taşıma. Canlı örnek: Pusula → Tanıtım
-Sayfası hikâyesi.
+Sayfası hikayesi.
 
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
@@ -244,7 +244,7 @@ Sayfası hikâyesi.
 | `docking-nav.tsx` | Görsel kahramanlı sayfada menü: boşluklu hap, kaydırınca üst kenara oturur | motion, lucide | Evet | `nav` + ad; telefonda `aria-expanded` panel, Esc kapatır ve odak butona döner, Tab ile çıkınca kapanır |
 | `corner-mascot.tsx` | Kişiliği olan tanıtım sayfasında köşe maskotu: göz takibi, göz kırpma, balon | motion | Evet | Buton adlı; balon `role="status"`; göz takibi ve kırpma hareket azaltmada ve dokunmatikte yok |
 | `trust-line.tsx` | Birincil eylemin altında en çok üç güvence ("Kart gerekmez · 2 dakikada kurulum") | lucide | Hayır | Ayraç `aria-hidden`, yerine görünmez virgül; `media` tonu görsel zemin üstü |
-| `wallpaper.tsx` | 8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`) | yok | Hayır | `aria-hidden` süs; hareket yok; sabit tohum, sunucu = istemci |
+| `wallpaper.tsx` | 8 illüstrasyon duvar kağıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`) | yok | Hayır | `aria-hidden` süs; hareket yok; sabit tohum, sunucu = istemci |
 | `drift-columns.tsx` | Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf) | yok | Hayır | İkinci kopya `aria-hidden` + `inert`; üzerine gelme/odak durdurur; hareket azaltmada durur ve kaydırılır |
 | `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç butonu elle geçirir |
 | `mesh-gradient.tsx` | Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co) | yok | Evet | Katman `aria-hidden`; yalnız `transform`, görünümden çıkınca durur, hareket azaltmada hiç oynamaz; kontrastı lekenin en yoğun yerinde ölç |
@@ -253,7 +253,7 @@ Sayfası hikâyesi.
 | `morph-nav.tsx` | Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | Menü rolü yok: `nav` + `aria-expanded`/`aria-controls`; ↓ panele, Esc kapatır ve odak başlığa; kapalı panel `inert`; telefonda gruplar alt alta |
 | `arc-carousel.tsx` | Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | `region` + `aria-roledescription`; ←/→, Home/End, sürükleme, oklar; değişim "3 / 9: Ad" diye okunur; tekerlek dinlenmez, kendiliğinden dönmez |
 
-### Yapay Zekâ
+### Yapay Zeka
 
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
@@ -264,7 +264,7 @@ Sayfası hikâyesi.
 
 ### Bloklar
 
-Birden çok bileşenin birleştiği hazır parçalar: uygulama kabuğu, yapay zekâ
+Birden çok bileşenin birleştiği hazır parçalar: uygulama kabuğu, yapay zeka
 sohbeti, giriş, ayarlar, palet seçici.
 
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |

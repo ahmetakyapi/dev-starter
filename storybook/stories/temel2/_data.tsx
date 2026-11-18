@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import type { Column } from "@/components/ui/data-table";
 
-/* temel2 hikâyelerinin ortak, gerçekçi Türkçe verisi (vitrin ile aynı dünya). */
+/* temel2 hikayelerinin ortak, gerçekçi Türkçe verisi (vitrin ile aynı dünya). */
 
 export type Order = {
   id: string;

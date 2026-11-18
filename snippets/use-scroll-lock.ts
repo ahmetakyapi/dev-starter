@@ -4,7 +4,7 @@
  * SAYAÇLI. Üst üste iki katman açıldığında (formun üstünde bir onay
  * diyaloğu) ilki kapanınca kilit erken çözülmez. Sayaçsız her katman
  * kapanışta `overflow = ''` yazıyordu: üstteki onay kapanınca alttaki modal
- * hâlâ açıkken sayfa kaymaya başlıyordu.
+ * hala açıkken sayfa kaymaya başlıyordu.
  *
  * Kilit `<html>`e kurulur, `body`ye değil: kaydırma kökte yaşıyor ve
  * `body { overflow: hidden }` bazı tarayıcılarda (iOS Safari) kökü durdurmaz.
@@ -146,7 +146,7 @@ export function useLayer(
     return () => {
       document.removeEventListener('keydown', onKey)
       layers.splice(layers.indexOf(node), 1)
-      // Panel çıkış animasyonunda hâlâ DOM'da; odak oradaki bir öğeye dönmesin.
+      // Panel çıkış animasyonunda hala DOM'da; odak oradaki bir öğeye dönmesin.
       // Açan öğe aynı anda kapanan alttaki katmandaysa da (onaylanınca modal da
       // kapanır) dönmez: kardeş sırasında bu temizlik modalınkinden SONRA
       // çalışır ve odağı kaybolacak butona geri çekerdi.

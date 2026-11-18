@@ -23,7 +23,7 @@ sor; değilse yol kapsamlı kurala ya da skill'e yaz. Tavan ~200 satır
 
 ## Kimlik
 
-Ahmet Akyapı — Full-Stack & AI Developer (web ürünleri + yapay zekâ katmanı: Claude API, agent arayüzleri).
+Ahmet Akyapı — Full-Stack & AI Developer (web ürünleri + yapay zeka katmanı: Claude API, agent arayüzleri).
 Kişisel projeler: ahmetakyapi.com, Açılış Zili, Mimio, Keskealsaydım, ElevenForge, simayahi
 Ekosistem referansı: `~/dev-starter/`
 

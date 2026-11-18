@@ -41,7 +41,7 @@ başına bir kez `bash ~/dev-starter/hooks/git-pre-commit.sh --install`.
 
 Bu dosya her oturumda yüklenir ve ~200 satırın altında kalır. Belirli
 dosyalara ait kurallar `.claude/rules/*.md` içinde, `paths:` frontmatter'ı
-eşleşen dosya okununca yüklenir (Claude Code resmî önerisi):
+eşleşen dosya okununca yüklenir (Claude Code resmi önerisi):
 - `tokens.md` (kimlik, palet, token: `*.tsx`, `*.css`)
 - `motion.md` (hareket: `*.tsx`, `lib/motion.ts`, `hooks/`)
 - `scene.md` (R3F sahnesi: `components/scene/`, `components/heroes/`)

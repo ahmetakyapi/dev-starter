@@ -84,7 +84,7 @@ başına seçer. Ne zaman: AYNI dalgadaki iki subagent aynı dosyalara yazacaksa
 ve `sinir:` ile ayrılamıyorsa. Bilinmesi gerekenler (Claude Code belgesi,
 10 Kasım 2026'da doğrulandı):
 
-- Worktree **varsayılan daldan** (commit'lenmiş hâlden) açılır, ana ağacın
+- Worktree **varsayılan daldan** (commit'lenmiş halden) açılır, ana ağacın
   commit'lenmemiş değişikliklerini GÖRMEZ. Bu yüzden önceki dalganın
   çıktısına bağımlı iş (ör. Wave 2 `frontend`, Wave 1 `backend`
   commit'lenmeden) worktree'de yapılmaz.
@@ -94,7 +94,7 @@ ve `sinir:` ile ayrılamıyorsa. Bilinmesi gerekenler (Claude Code belgesi,
 - Hook'lar worktree'de de koşar ve worktree'nin kendi ROUTEMAP'ini okur
   (`hooks/lib/routemap.sh`). Subagent commit atmadığı için Gate orada sorulmaz.
 
-Sıra (commit tek yerde, ana ağaçta atılır; Gate birleşmiş hâli denetler):
+Sıra (commit tek yerde, ana ağaçta atılır; Gate birleşmiş hali denetler):
 
 ```bash
 # 1. Subagent worktree'de yazar, commit ATMAZ; teslimde worktree yolunu döndürür.
@@ -129,7 +129,7 @@ Gate FAILED → rapor yapılandırılmış (hangi pass, kanıt, beklenen düzelt
     ↓
 İlgili subagent/rol düzeltir (GATE-LOG'u okuyarak; aynı kök nedene ikinci kez düşmek bulgudur)
     ↓
-ROUTEMAP Gate kolonu: FIX_1 → FIX_2 → hâlâ FAILED ise ESCALATED
+ROUTEMAP Gate kolonu: FIX_1 → FIX_2 → hala FAILED ise ESCALATED
     ↓
 ESCALATED: ana oturum durur, kullanıcıya seçenekli özet sunar
 ```

@@ -19,11 +19,11 @@ projeye bağlanmaz). Yollar depo köküne göredir.
    - `knowledge/tech-radar.md` ve `live-projects-audit.md`: son gözden geçirme
      60+ gün eskiyse yeniden denetim öner (`scripts/audit-project.sh`)
    - `knowledge/design-references.md`: 60+ gün eskiyse her bağlantıyı aç,
-     hâlâ tamamen ücretsiz mi bak; ücretli olan "Bilinçli Olarak Dışarıda"ya iner
-   - `knowledge/references.md`: bağlantılar hâlâ açılıyor mu; kapanan siteye
+     hala tamamen ücretsiz mi bak; ücretli olan "Bilinçli Olarak Dışarıda"ya iner
+   - `knowledge/references.md`: bağlantılar hala açılıyor mu; kapanan siteye
      "Durum" sütununda tarih düş, satırı silme
    - `patterns.md` ↔ `mistakes.md` çelişkisi: yeni kayıtların düzelttiği şeyi
-     hâlâ öğreten desen var mı
+     hala öğreten desen var mı
 3. **Dış tarama** (`researcher` subagent'ı): Claude Code ekosistemi ve benzer
    starter/orkestrasyon projelerinde (spec-kit, BMAD, agent-os, claude-flow
    vb.) son dönemde öne çıkan desenler; her bulgu kaynaklı ve "dev-starter'a

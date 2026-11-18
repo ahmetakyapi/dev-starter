@@ -11,14 +11,14 @@
 ## Kullanıcı ve An
 
 - **Kim:** [persona]
-- **Hangi anda kullanıyor:** [yer, cihaz, süre, ruh hâli]
+- **Hangi anda kullanıyor:** [yer, cihaz, süre, ruh hali]
 - **Şu an ne kullanıyor:** [gerçek rakip, Excel ya da WhatsApp dahil]
 - **Varsayılan tema:** [açık / koyu] — çünkü [an]
 - **Palet:** [signature / verdant / ember / iris / yeni] — çünkü [ürün karakteri]
 
 ## Piyasa
 
-| Ürün | Kime | Fiyat | En Çok Övülen | En Çok Şikâyet | Kaynak |
+| Ürün | Kime | Fiyat | En Çok Övülen | En Çok Şikayet | Kaynak |
 |---|---|---|---|---|---|
 | | | | | | |
 

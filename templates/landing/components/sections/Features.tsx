@@ -21,7 +21,7 @@ import { SectionHeading } from "./SectionHeading";
  *
  * Izgara: masaüstünde üstte geniş + dar, altta üç eşit; tablette iki sütun
  * (geniş kart tam satır), telefonda tek sütun. Demo sahnesi SABİT YÜKSEKLİK:
- * hikâye oynarken kart boyu ve sayfa kaymaz.
+ * hikaye oynarken kart boyu ve sayfa kaymaz.
  *
  * Kartlar aynı anda oynamaz (guides/04 § 14 kural 5): başlangıçları okuma
  * sırasına göre kaydırılmış.

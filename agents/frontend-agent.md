@@ -56,7 +56,7 @@ Bu agent kayıtlı subagent'tır: iş ona **Görev Tanımı** ile gelir (`AGENT_
 
 ## Sürüme Göre Yazma — Önce package.json'a Bak
 
-> **Ekosistem tek sürümde değil.** 12 projenin çoğunluğu hâlâ
+> **Ekosistem tek sürümde değil.** 12 projenin çoğunluğu hala
 > **Next 14 + React 18 + Tailwind v3**; `acilis-zili` ve `elevenforge`
 > Next 16 + React 19 + v4'te, `Mimio` ise Next 15 + v4.
 > **Yeni projeler (şablonlar 3.0.0) Next 16 + React 19.2 + Tailwind v4 + `motion`**;

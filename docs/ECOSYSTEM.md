@@ -2,7 +2,7 @@
 
 > 8 Kasım 2026'ya dek kök `CLAUDE.md`nin "Ekosistem Yapısı", "Proje Yaşam
 > Döngüsü" ve "Hızlı Başlangıç" bölümleriydi. Her oturumda bağlama yüklenen
-> CLAUDE.md'yi ~200 satırın altına indirmek için (Claude Code resmî önerisi)
+> CLAUDE.md'yi ~200 satırın altına indirmek için (Claude Code resmi önerisi)
 > buraya taşındı; kök `CLAUDE.md` kısa haritayı ve bu dosyanın adresini taşır
 > (`knowledge/decisions.md` → "Bağlam Dosyaları"). Bu dosya otomatik
 > yüklenmez: dizin yapısı, faz akışı ya da komut örneği gerektiğinde oku.
@@ -109,7 +109,7 @@ dev-starter/
 │   ├── agentic-chat/          → AG-UI overlay, 7 senaryo, anahtarsız, testli
 │   └── docs/                  → KICKOFF, PRODUCT, ROUTEMAP, DESIGN, ARCHITECTURE, SCREENS
 │
-├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 753 hikâye — Kapak, Tema, Bileşenler,
+├── storybook/                 → Görsel katalog (Storybook 10, kendi kilidi): 753 hikaye — Kapak, Tema, Bileşenler,
 │                                Grafikler, Bloklar, Ekranlar, Desenler, Pusula + Tanıtım (kapsam 141/141); kabuk tema ve paleti izler
 ├── snippets/                  → 22 hazır parça + ui/ kütüphanesi (141 bileşen + vitrin/) + fonts/ + live-preview/
 │   ├── reveal · theme-toggle · rolling-number · animated-number · scroll-progress

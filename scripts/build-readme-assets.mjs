@@ -27,14 +27,14 @@ const THEMES = ['light', 'dark']
 const PALETTE_COPY = {
   signature: { title: 'Signature', use: 'Araç, finans, editoryal' },
   cobalt: { title: 'Kobalt', use: 'SaaS, pano' },
-  violet: { title: 'Menekşe', use: 'Yaratıcı araç, yapay zekâ' },
+  violet: { title: 'Menekşe', use: 'Yaratıcı araç, yapay zeka' },
   rose: { title: 'Gül', use: 'Tüketici, sosyal' },
   ruby: { title: 'Yakut', use: 'Medya, spor' },
   tangerine: { title: 'Mandalina', use: 'Yemek, alışveriş' },
   jade: { title: 'Yeşim', use: 'Finans, sağlık' },
   verdant: { title: 'Zümrüt', use: 'Sağlık, terapi, doğa' },
   ember: { title: 'Kehribar', use: 'Oyun, topluluk' },
-  iris: { title: 'İris', use: 'Yapay zekâ, yaratıcı ürün' },
+  iris: { title: 'İris', use: 'Yapay zeka, yaratıcı ürün' },
 }
 const PALETTE_ORDER = [
   ...Object.keys(PALETTE_COPY).filter((name) => name in palettes),

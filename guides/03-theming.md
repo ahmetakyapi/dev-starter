@@ -87,7 +87,7 @@ Kozmetik bir tıklama için fazla. Değer gizli değil, `httpOnly` gerekmez;
 sunucu onu bir sonraki istekte okur. O yeniden çizimin getirdiği tek şey
 tarayıcı çubuğunun rengiydi, onu buton kendisi günceller.
 
-`suppressHydrationWarning` neden hâlâ var: istemci temayı DOM'da anında
+`suppressHydrationWarning` neden hala var: istemci temayı DOM'da anında
 değiştirir, sunucu yeni değeri ancak bir sonraki istekte görür. O arada
 React bir yeniden çizim yaparsa `data-theme` farkı uyarı üretmesin.
 

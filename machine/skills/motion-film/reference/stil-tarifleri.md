@@ -63,7 +63,7 @@ Parlak yüzey vurgusu ve fresnel ışıltısı alınmadı; derinlik ton farkıyl
 | Hareketler | çeyrek daire köşe ekseninde 90° döner, yarım daire bir modül kayar, üçgen ters döner, kare ikiye bölünür |
 | Dönüş ekseni | sırayla: kendi merkezi → köşesi → kare merkezi; ritim buradan |
 | Eğri | `ease-in-out` (quad) ya da doğrusal; **taşma YOK** — mekanik his özelliktir |
-| Palet | üç ana renk + siyah + kâğıt, token'lardan; baskı kayması en fazla 1–2 px |
+| Palet | üç ana renk + siyah + kağıt, token'lardan; baskı kayması en fazla 1–2 px |
 
 ## 5. Piksel
 
@@ -87,14 +87,14 @@ CRT filtresi ve fosfor ışıltısı alınmadı.
 
 Bir stili filmden filme taşırken neyin sabit, neyin her filmde yeniden
 verildiğini ayır (lemo-opuscar `styles/_template/STYLE.md`). Kart
-`STYLE.md` olarak projede durur; hikâye, plan listesi, açılış/kapanış,
+`STYLE.md` olarak projede durur; hikaye, plan listesi, açılış/kapanış,
 müzik temposu ve demo paleti KARTA GİRMEZ, onlar filmin tretmanına gider.
 
 **Hiç değişmeyen (her filmde aynı):**
 
 1. Öz ve "ne değildir": tek bakışta stili tanıtan 3–5 özellik + karıştırıldığı stillerle sınırı
-2. Malzeme ve çizim modeli (fırça, kâğıt, kaynama, katmanlar; neyin dünyaya, neyin ekrana bağlı olduğu)
-3. Renk MANTIĞI (kaç ton, zemin, vurgu neye ayrılmış, ne asla renklenmez) — **zemin parlaklığı açıkça yazılır**: "açık kâğıt, L* ~95" ya da "koyu zemin, L* ~12"; tek ortalama palet açık/koyu kararını gizler
+2. Malzeme ve çizim modeli (fırça, kağıt, kaynama, katmanlar; neyin dünyaya, neyin ekrana bağlı olduğu)
+3. Renk MANTIĞI (kaç ton, zemin, vurgu neye ayrılmış, ne asla renklenmez) — **zemin parlaklığı açıkça yazılır**: "açık kağıt, L* ~95" ya da "koyu zemin, L* ~12"; tek ortalama palet açık/koyu kararını gizler
 4. Yazı rolleri, punto aralıkları, okuma süresi kuralı (`sayilar.md` § bekleme)
 5. Hareket niteliği (fps, adım: birler/ikiler, ne kaynar, eğri ailesi, ne asla kıpırdamaz)
 6. Kamera sözlüğü (rota değil: hareket → ne anlatır → neye hizmet eder)
@@ -117,7 +117,7 @@ Kullanıcı bir stili "kendi sürümü" yapmak isterse önce değişiklikleri s�
 | **Karakteri değiştirir** | malzeme ve çizim modeli, renk mantığının kendisi, kamera sözlüğü | olur; her biriyle stilin neyi kaybettiğini söyle |
 | **Yasak** | öz ve "ne değildir", motor | bu artık başka bir stildir; daha yakın bir taban öner |
 
-Hikâye, yapı, açılış, kapanış, oyuncular ve tempo için yeni stil GEREKMEZ:
+Hikaye, yapı, açılış, kapanış, oyuncular ve tempo için yeni stil GEREKMEZ:
 her filmde zaten serbesttir. Bir turda en çok 5 değişiklik; fazlası sonucu
 yargılanamaz yapar. Ekosistem yasakları (glow, blur, cam, neon, mor degrade)
 hiçbir kovada açılmaz.
@@ -135,7 +135,7 @@ hiçbir kovada açılmaz.
 
 **Kanıt:** önce gerçek çizim koduyla TEK stil karesi, tabanın bir karesiyle
 yan yana; kullanıcı onaylamadan film yok. Sonra **15–30 sn'lik deneme filmi**:
-konu kullanıcınınki ya da hareketli basit bir şey (rüzgârda uçurtma, sabahın
+konu kullanıcınınki ya da hareketli basit bir şey (rüzgarda uçurtma, sabahın
 ilk tramvayı; tabanın örnek filmi değil), `CHANGES.md`deki her değişiklik en
 az bir kez ekranda, stilin yerli hamlesi bir kez; tek yapı, storyboard yok,
 ses var, anlatıcı ve altyazı yok. Teslimde her değişikliğin göründüğü saniyeyi listele.

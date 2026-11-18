@@ -7,7 +7,7 @@ const TEXT =
   "Kasım siparişleri ekimden %12 fazla. Artışın çoğu abonelikten geliyor: yeni 38 abonenin 21'i deneme paketiyle başladı. Toptan tarafı yatay; iki kafe siparişi aralığa kaydı.";
 
 const meta = {
-  title: "Bileşenler/Yapay Zekâ/Akan Metin",
+  title: "Bileşenler/Yapay Zeka/Akan Metin",
   id: "stream-text",
   component: StreamText,
   tags: ["autodocs", "yeni"],

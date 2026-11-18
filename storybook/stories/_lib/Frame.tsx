@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Hikâye çerçeveleri — boardui vitrini gibi: büyük yuvarlak gri kuyu, içinde
- * bileşen, altında ad + tek cümle. Bütün hikâyeler bunları kullanır ki katalog
+ * Hikaye çerçeveleri — boardui vitrini gibi: büyük yuvarlak gri kuyu, içinde
+ * bileşen, altında ad + tek cümle. Bütün hikayeler bunları kullanır ki katalog
  * tek bir el çıkmış gibi dursun.
  */
 

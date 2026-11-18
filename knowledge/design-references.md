@@ -41,7 +41,7 @@ bakılarak doğrulandı; curated.design eklendi)
 
 | Bölüm | Kaynak | Ne verir | Not |
 |---|---|---|---|
-| Üst menü (navbar) | [navbar.gallery](https://www.navbar.gallery/) | Gerçek sitelerin menüleri; her örnekte masaüstü ve telefon görüntüsü, "Visit Website" bağlantısı | Christina Liubynska'nın tek kişilik projesi; site hâlâ yeni örnek alıyor (Haziran 2026), bülteni Temmuz 2025'ten beri sessiz |
+| Üst menü (navbar) | [navbar.gallery](https://www.navbar.gallery/) | Gerçek sitelerin menüleri; her örnekte masaüstü ve telefon görüntüsü, "Visit Website" bağlantısı | Christina Liubynska'nın tek kişilik projesi; site hala yeni örnek alıyor (Haziran 2026), bülteni Temmuz 2025'ten beri sessiz |
 | Eylem çağrısı (CTA) | [cta.gallery](https://www.cta.gallery/) | Yalnız CTA bandının kırpılmış görüntüsü, masaüstü ve telefon; "View website" bağlantısı | Salim Lunat (Webestica). Detay sayfalarındaki büyük görsel şablon reklamıdır, asıl görüntü "Desktop view" olandır |
 | Alt bilgi (footer) | [footer.design](https://www.footer.design/) | Üslup filtreli alt bilgi galerisi (tipografik, minimal, koyu, cesur), "Visit website" | Benten Woodring ve Devin Fountain'ın boş zaman projesi; ana sayfada bir sponsorlu kart var |
 | 404 sayfası | [404s.design](https://www.404s.design/) | 1440 piksel görüntüler, üslup/etkileşim/sektör filtresi; her kart asıl 404 sayfasına gider | Finnian Sturdy ("by FS"); Mobbin sponsorlu kartı var |
@@ -60,5 +60,5 @@ asıl siteye bağlantı) geçer.
 |---|---|
 | scrolltide.co | Ücretli: 121 şablonun 4'ü ücretsiz, gerisi abonelikle. Şartlar yalnız kişisel ve müşteri işine izin veriyor. Önerildiği gönderideki "600+ prompt" sayısı sitede geçmiyor ve öneren kişi kendi ürünü olduğunu yazıyor. Şablonların çoğu React + Vite, bir kısmı GSAP/Three.js varsayıyor |
 | unsection.com | Freemium: ücretsiz katman kategori başına 30 bölüm; tamamı aylık 5 $ ya da ömür boyu 99 $ |
-| 60fps.design | Freemium: göz atmak ücretsiz, filtreler ve kod parçaları aylık 15 $; kod parçaları zaten yalnız SwiftUI (iOS), web değil. 16 Kasım 2026 yeniden bakıldı: hâlâ aynı (PRO 15 $/ay ya da 150 $/yıl), bölüm değil hareket referansı |
+| 60fps.design | Freemium: göz atmak ücretsiz, filtreler ve kod parçaları aylık 15 $; kod parçaları zaten yalnız SwiftUI (iOS), web değil. 16 Kasım 2026 yeniden bakıldı: hala aynı (PRO 15 $/ay ya da 150 $/yıl), bölüm değil hareket referansı |
 | mobbin.com | Freemium (16 Kasım 2026): ücretsizde sınırlı uygulama, akış/arama yok; Pro aylık 10 $. Web panel ve uygulama ekranları için en güçlü kaynak ama ekran görüntüsü kütüphanesi, asıl siteye bağlanmıyor |

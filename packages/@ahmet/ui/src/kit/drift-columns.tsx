@@ -4,7 +4,7 @@ import { cn } from "../utils";
 
 /**
  * Süzülen sütunlar: görsel kartları birkaç dikey sütunda, komşu sütunlar ZIT
- * yönde, çok yavaş ve sonsuz akar (offscreen.wtf'in kahramanı: duvar kâğıdı
+ * yönde, çok yavaş ve sonsuz akar (offscreen.wtf'in kahramanı: duvar kağıdı
  * galerisi kendi kendine kayan bir vitrin). Galeri, şablon, tema ya da
  * portfolyo sitesinin kahramanında "burada çok şey var" demenin sakin yolu.
  * İçerik sayfası ve veri ekranında değil.

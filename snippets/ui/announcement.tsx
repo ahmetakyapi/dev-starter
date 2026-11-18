@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
  * sayfaya GÖTÜRÜR; bilgi vermek için değil tıklanmak için durur.
  *
  * NOKTASIZ VE YANIP SÖNMEZ. "Kahraman başlığının üstünde yanıp sönen noktalı
- * rozet" slop listesinde: her yapay zekâ açılışında aynı. Burada künye kısa
+ * rozet" slop listesinde: her yapay zeka açılışında aynı. Burada künye kısa
  * bir sözcük ("Yeni") ve hap zeminde ton farkı; hareket yalnızca üstüne
  * gelince okun 2 piksel ilerlemesi.
  *

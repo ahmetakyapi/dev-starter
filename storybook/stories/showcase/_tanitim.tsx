@@ -42,7 +42,7 @@ const WINDOWS: readonly { id: WindowId; label: string; icon: typeof Inbox }[] = 
   { id: "asistan", label: "Asistan", icon: Sparkles },
 ];
 
-/** Kavisli galerideki hazır akışlar; kapakları duvar kâğıdı sahneleri. */
+/** Kavisli galerideki hazır akışlar; kapakları duvar kağıdı sahneleri. */
 const FLOWS = [
   { id: "destek", title: "Destek Kuyruğu", meta: "Öncelik · SLA · Devir" },
   { id: "satis", title: "Satış Takibi", meta: "Teklif · Sipariş · Hatırlatma" },
@@ -147,7 +147,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             items={[
               { id: "surum", eyebrow: "Yeni Sürüm", title: "Pusula 3.1 yayında", body: "Pencere şeridi ve kısayol paleti." },
               { id: "canli", eyebrow: "Canlı Yayın", title: "Cuma 20.00'de soru-cevap" },
-              { id: "duvar", eyebrow: "Duvar Kâğıtları", title: `${WALLPAPER_SCENES.length} yeni sahne indirilebilir` },
+              { id: "duvar", eyebrow: "Duvar Kağıtları", title: `${WALLPAPER_SCENES.length} yeni sahne indirilebilir` },
             ]}
           />
           </Reveal>
@@ -195,7 +195,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             </div>
           </Wallpaper>
           {/* Not, seçilecek yeri gösterir: ok rafın (dock) dibinden yukarı çıkar. Başlığın
-              yanındayken duvar kâğıdının boş köşesini gösteriyordu. */}
+              yanındayken duvar kağıdının boş köşesini gösteriyordu. */}
           <HandCallout direction="up-left" delay={500} className="absolute top-full left-[calc(50%+4.5rem)] mt-1 hidden sm:flex">
             buradan seç
           </HandCallout>
@@ -204,7 +204,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
 
         <section aria-labelledby="tanitim-duvar-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-28 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
           <Reveal>
-            <p className="font-mono text-small text-primary-ink">Duvar Kâğıtları</p>
+            <p className="font-mono text-small text-primary-ink">Duvar Kağıtları</p>
             <h2 id="tanitim-duvar-baslik" className="mt-3 font-display text-heading font-bold text-strong sm:text-display">
               Masaüstün İçin Sekiz Sahne
             </h2>

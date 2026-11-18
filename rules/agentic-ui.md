@@ -248,7 +248,7 @@ proje `.claude/skills/` altına kurulduğunda asistan güncel API'yi görür.
 |----------|------------------|----------|
 | **AG-UI** | Agent ↔ Kullanıcı | Tarayıcıya giden **tek** kablo. Run, streaming, tool call, adım, interrupt, state |
 | **MCP** | Agent → Araçlar | Süreç kontrolü bende kalsın, sadece veri/aksiyon lazım |
-| **A2A** | Agent → Agent | Bütün bir alt görevi, kendi zekâsı ve yaşam döngüsü olan bir sisteme devrediyorum |
+| **A2A** | Agent → Agent | Bütün bir alt görevi, kendi zekası ve yaşam döngüsü olan bir sisteme devrediyorum |
 | **A2UI** | Agent → UI yapısı | Model bileşen seçer, istemci nasıl göründüğüne karar verir. AG-UI içinde taşınır |
 | **MCP Apps** | Araç sonucu → Widget | Üçüncü taraf UI'ı sandbox'lı iframe'de göstermek. AG-UI içinde taşınır |
 

@@ -35,12 +35,12 @@ koruyan korkuluk o satırdır.
 - süs olarak yüzen parçacıklar
 - her şeyin aynı anda belirmesi
 - **her öğede soluklaş-ve-yukarı-kay** (Anthropic'in frontend-design skill'i
-  bunu "yapay zekâ üretimi gibi okunan" varsayılan diye anar)
+  bunu "yapay zeka üretimi gibi okunan" varsayılan diye anar)
 - her şeyin ortalandığı yerleşim
 - okunurken hareket eden yazı
 
 **Liste canlıdır:** her ilk render'dan sonra modelin yine de kullandığını
-adıyla ekle. "Jenerik yapay zekâ görünümünden kaçın" demek bir varsayılanı
+adıyla ekle. "Jenerik yapay zeka görünümünden kaçın" demek bir varsayılanı
 başkasıyla değiştirir; adı konmuş desen yasaklanır.
 
 ### Hiyerarşi satırı (SHOTS'un içine)
@@ -56,7 +56,7 @@ altında, yavaş sinüs, hiç durmaz. Gerisi bekler ya da %40'a kısılır.
   marka: palet token'ları, font, logo dosyası. Varsa gerçek veri.
 </girdiler>
 <yön>
-  Tek cümle hikâye. Stil (örn. tek çizgi mürekkep, kâğıt zemin, tek vurgu rengi).
+  Tek cümle hikaye. Stil (örn. tek çizgi mürekkep, kağıt zemin, tek vurgu rengi).
   Tek öğe hiç kesilmez; her sahne bir öncekinden biçim değiştirerek doğar.
   Kamera ölçek değiştirir (dalış, takip, geri çekiliş). Dev kinetik yazı.
   Her 1,5–2 sn yeni bir fikir. Son açılışla kafiyeli.
@@ -113,7 +113,7 @@ atom → kuark. Tek kamera dalışı, her ölçek bir öncekinin İÇİNDEN aç�
 tuzakları); her ölçekte künye ölçeği yazar (`1 m → 1 cm → 10 nm`).
 
 **Uzun tarih / sinematik** (@WinterArc2125, Austerlitz): önce **araştır**
-ve olay sırasını `FACTS.md`'ye yaz (`aciklayici-figur.md` § kanıt); hikâyeyi,
+ve olay sırasını `FACTS.md`'ye yaz (`aciklayici-figur.md` § kanıt); hikayeyi,
 tempoyu ve stratejinin anlatımını model kursun. Ekli referanslar (resim,
 fotoğraf) **his olarak, stil olarak değil**: ölçeği, havayı, kalabalığı al;
 daha güçlü bir görsel dil bulursa onu kullansın. "İnfografik ya da strateji
@@ -191,7 +191,7 @@ duraklatma (`film-page.html?counter`); son kayıttan önce kaldır.
 | Takılma, düşen kare | Yalnız transform ve opaklık; genişlik/yükseklik/top/left yok. |
 | GIF'te bantlaşma | Degrade yok; düz renk ya da paleti dither'la. |
 | Bulanık/titreyen yazı | Duran yazıyı tam piksele oturt; 2× çiz, küçült. |
-| Yazı okunmadan kıpırdıyor | Her yazı hâli animasyonu bittikten sonra boşluksuz harf ÷ 15 + 1,5 sn beklesin (`film-read.mjs`). |
+| Yazı okunmadan kıpırdıyor | Her yazı hali animasyonu bittikten sonra boşluksuz harf ÷ 15 + 1,5 sn beklesin (`film-read.mjs`). |
 | Her şey aynı anda | Tek seferde tek kahraman; gerisi 150 ms sonra, yolunun %60'ı. |
 
 **Düzeltme tutunca render sözleşmesine ekle.** Sözleşme laboratuvarın
