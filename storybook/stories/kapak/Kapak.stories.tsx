@@ -25,6 +25,7 @@ import { palettes } from "../../../packages/@ahmet/theme/tokens";
 import uiPackage from "../../../packages/@ahmet/ui/package.json";
 import { PALETTES } from "../../.storybook/palettes";
 import { KIT_COUNT, TOTAL } from "../amiral/_kapsam";
+import { HEROES } from "./_heroes";
 import { STORIES, firstOf, under } from "./_harita";
 
 /**
@@ -1161,7 +1162,13 @@ export const Overview: Story = {
       <Frame>
         <div className="grid gap-10 lg:gap-14">
           <Masthead />
-          <Hero palette={palette} theme={theme} onPalette={(value) => updateGlobals({ palette: value })} />
+          {(() => {
+            // GEÇİCİ: yeni yönlerin önizlemesi (?hero=f|g|h|i|j); seçim yapılınca kalkar.
+            const key = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("hero") : null;
+            const Alt = key && key in HEROES ? HEROES[key as keyof typeof HEROES] : null;
+            const onPalette = (value: PaletteName) => updateGlobals({ palette: value });
+            return Alt ? <Alt palette={palette} theme={theme} onPalette={onPalette} showcase={<Showcase />} /> : <Hero palette={palette} theme={theme} onPalette={onPalette} />;
+          })()}
         </div>
         <MapSection />
         <ComponentGroups />
