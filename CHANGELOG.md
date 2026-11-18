@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Tanıtım kahramanı: Fener — 2026-11-18
+
+- On yedi yön denendi; seçilen Fener. Sahnede on altı farklı gerçek
+  bileşen, dinlenirken renksiz ve soluk; fener imleci yumuşak gecikmeyle
+  izler, değdiği yerde bileşenler renkleriyle belirir, imleç yoksa kendi
+  dolaşır. Palet turu ve şeridi korundu. Önizleme kodu (`?hero=`) silindi
+- Referanslar şeridi içerik alanında kayar (kenar çubuğuna kadar gitmez)
+
 ### Şapkasız yazım, insanca — 2026-11-18
 
 - Bütün metinde şapka kalktı (hikaye, zeka, hala, kağıt); arama katlama ve

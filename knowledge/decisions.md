@@ -1519,3 +1519,18 @@ karanlık sahne, D yüzen bileşenler, E kod ve görünüm. Seçilen D.
 - **insanca:** `machine/bootstrap.sh` → `INSANCA_REF` (sabit commit, kanca
   yok, betik ağa çıkmaz). `content-editor` uzun metinde kullanır; Title Case
   çakışmasında bizim kural geçer. Uzun tire yayın metninde yok.
+
+### Tanıtım Kahramanı: Fener (2026-11-18)
+
+On yedi çalışan yön ekran görüntüsüyle sunuldu (yüzen bileşenler, kartela,
+prizma, duvar, dergi, küre, müze, metal kart, iskelet, plan çizimi...).
+Sahibi Fener'i seçti: "mantık bu, çok daha iyi hali". Kesinleşen hal:
+- Arka plan TEKRAR ETMEYEN on altı gerçek bileşen; başlığın sütunu boş,
+  parçalar iki yandan çerçeveler.
+- Dinlenme renksiz ve soluk (opaklık .22 / koyuda .18); başlık tek odak.
+- Fener imleci gecikmeyle izler (kare başına kalan yolun %12'si), imleç
+  1,5 sn durunca Lissajous yolunda kendi dolaşır; dokunmatikte dokunulan
+  yere gider. Telefonda sahne gizli.
+- Otomasyonda ve hareket azaltmada fener sabit sol bantta (OG kararlı).
+- Önceki "yüzen bileşen numuneleri" hali bunun yerine geçti; numune
+  kararındaki odak/derinlik notları tarihçe olarak kalır.
