@@ -10,7 +10,7 @@ import { cn } from "../utils";
  * Bağla") ve landing'in "tek komutla kur" satırı için.
  *
  * SEKMELER BİR SEKME LİSTESİ: ok tuşları seçimi taşır, Tab panele geçer
- * (gezici tabindex). Kopyala düğmesi HER ZAMAN görünen sekmenin kodunu alır.
+ * (gezici tabindex). Kopyala butonu HER ZAMAN görünen sekmenin kodunu alır.
  *
  * TERCİH HATIRLANIR (`persist`): kullanıcı bir blokta pnpm'i seçince aynı
  * anahtarı taşıyan bütün bloklar pnpm'e geçer ve sonraki ziyarette de pnpm

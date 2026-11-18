@@ -25,7 +25,7 @@ import { SeriesToggles } from "./line-chart";
  * söyler. Klavyede noktalar X sırasıyla gezilir (← →, Home End), seçim canlı
  * bölgede okunur.
  *
- * Kategori anahtarı aynı zamanda süzgeç (`SeriesToggles`, line-chart.tsx);
+ * Kategori anahtarı aynı zamanda filtre (`SeriesToggles`, line-chart.tsx);
  * eksen gizli kategoriyle yeniden ölçeklenmez: saçılımda konum karşılaştırma
  * içindir, kayan eksen yanıltır. Veri `sr-only` tabloda.
  *

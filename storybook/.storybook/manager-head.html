@@ -2,6 +2,31 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@500..800&display=swap&subset=latin-ext" rel="stylesheet" />
 <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+<!-- Paylaşım önizlemesi (WhatsApp, X, LinkedIn, Slack, Telegram). Görsel
+     `npm run og` ile Tanıtım sayfasının gerçek vitrininden üretilir
+     (scripts/build-og.mjs). Tarayıcılar ve botlar görseli MUTLAK adresle
+     ister; WhatsApp 600 KB altını, X `summary_large_image`i 2:1'e yakın
+     kırpar (1200 × 630 ikisine de uyar). Başlık derleme sonrası
+     scripts/seo-head.mjs ile yazılır (Storybook "<paket> - Storybook" basar). -->
+<meta name="description" content="Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. On palet, iki tema; her parça token'dan çizilir." />
+<meta name="theme-color" content="#0d74c4" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="tr_TR" />
+<meta property="og:site_name" content="dev-starter" />
+<meta property="og:url" content="https://dev-starter-storybook.vercel.app/" />
+<meta property="og:title" content="dev-starter · Görsel Katalog" />
+<meta property="og:description" content="Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. On palet, iki tema; her parça token'dan çizilir." />
+<meta property="og:image" content="https://dev-starter-storybook.vercel.app/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="dev-starter Görsel Katalog: Tek Kimlik, On Palet başlığı ve Pusula panosundan bir kare" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="dev-starter · Görsel Katalog" />
+<meta name="twitter:description" content="Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. On palet, iki tema." />
+<meta name="twitter:image" content="https://dev-starter-storybook.vercel.app/og.png" />
+<meta name="twitter:image:alt" content="dev-starter Görsel Katalog: Tek Kimlik, On Palet başlığı ve Pusula panosundan bir kare" />
 <style>
   /* dev-starter kabuğu. Seçiciler SB 10.6.3 manager/runtime.js'te doğrulandı
      (#storybook-explorer-menu, .sidebar-item[data-nodetype|data-selected]);
@@ -43,7 +68,7 @@
 
   /* ---- Kenar çubuğu bilgi mimarisi (2026-11-17, ikinci tasarım turu) ----
      Üst düzey on iki öğe ÜÇ bölümde, hepsi kendi adıyla bir tıkta:
-       Başla      · Kapak, Başlangıç, Vitrin, Her Şey Bir Arada
+       Başla      · Tanıtım, Başlangıç, Vitrin, Her Şey Bir Arada
        Kütüphane  · Tema, Bileşenler, Grafikler, Bloklar, Desenler
        Uygulamada · Pusula, Ekranlar, Arşiv
      Eskiden "Örnek Tasarım" klasörü uygulamayı, desenleri ve kapsam
@@ -139,8 +164,8 @@
   #storybook-explorer-menu .sidebar-item[data-nodetype="group"]:not([data-parent-id]):not([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="pusula"]) { margin-top: 2px; }
   #storybook-explorer-menu .sidebar-item[data-nodetype="component"]:not([data-parent-id]):not([data-item-id="cover--overview"], [data-item-id="tema"], [data-item-id="pusula"]) { margin-top: 2px; }
 
-  /* Arama yanındaki "Yeni hikâye oluştur" (+) düğmesi: katalog okunur, bu
-     depoda hikâye elle ve kurala göre yazılır; düğme yalnız kafa karıştırıyordu
+  /* Arama yanındaki "Yeni hikâye oluştur" (+) butonu: katalog okunur, bu
+     depoda hikâye elle ve kurala göre yazılır; buton yalnız kafa karıştırıyordu
      (geliştirme sunucusunda görünür, yayında zaten yok). */
   button[aria-label="Create a new story"] { display: none !important; }
   /* "Show modified stories" (git'e göre değişen hikâyeler): İngilizce ve
@@ -164,6 +189,9 @@
 
   /* "Yeni" hapı (renderLabel). */
   .ds-label { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+  /* Alt grup sayısı: sağa yaslı, soluk, eşit genişlikte rakam (alt alta hizalı). */
+  .ds-label { width: 100%; }
+  .ds-count { margin-left: auto; padding-inline-end: 6px; font: 500 11.5px/1 "Inter", sans-serif; color: var(--ds-muted); font-variant-numeric: tabular-nums; }
   .ds-new { flex: none; padding: 1px 6px; border-radius: 999px; font: 600 10px/1.5 "Inter", sans-serif;
     color: var(--ds-ink); background: var(--ds-wash); }
 

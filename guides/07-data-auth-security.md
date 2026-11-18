@@ -88,7 +88,7 @@ export const notes = pgTable("notes", {
 ```
 
 Yazılmazsa varsayılan `no action`: kullanıcı silinemez ve "hesabımı sil"
-düğmesi veritabanı hatası verir. Her ilişki için karar ver: sahibi gidince
+butonu veritabanı hatası verir. Her ilişki için karar ver: sahibi gidince
 çocuk gider mi (`cascade`), boşa mı düşer (`set null`), silme engellenir mi
 (`restrict`).
 

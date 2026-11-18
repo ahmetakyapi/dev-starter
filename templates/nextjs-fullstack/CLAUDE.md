@@ -96,7 +96,7 @@ Odak halkası `--line-focus`, dokunma hedefi en az 44 piksel. Her panelin bir
 
 ## Yazım: Title Case
 
-Başlık, düğme, sekme, rozet, etiket ve künyeler **Title Case**: "Yeni Kayıt",
+Başlık, buton, sekme, rozet, etiket ve künyeler **Title Case**: "Yeni Kayıt",
 "Tekrar Dene", "Ana Sayfaya Dön". Gövde metni, açıklama, yardım metni, hata
 mesajı gövdesi, `placeholder` ve `aria-label` cümle düzeninde.
 

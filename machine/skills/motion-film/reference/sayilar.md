@@ -28,7 +28,7 @@ yanıp sönme WCAG'dan. Kod: `assets/motion-tokens.ts`.
 
 ## Yaylar — tek sayı: sönüm oranı ζ
 
-Her kütüphane düğmelerine başka ad verir; hepsi tek sayıya çevrilir:
+Her kütüphane butonlarına başka ad verir; hepsi tek sayıya çevrilir:
 `ζ = c / (2·√(k·m))`.
 
 | ζ | His |

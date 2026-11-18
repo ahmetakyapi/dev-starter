@@ -3,9 +3,9 @@ import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
- * Masaüstü uygulama penceresi maketi: üç pencere düğmeli başlık çubuğu ve
+ * Masaüstü uygulama penceresi maketi: üç pencere butonlu başlık çubuğu ve
  * gövde. Ürünü ekran görüntüsü yerine CANLI parçalarla anlatmak için
- * (Ribbon'ın bento kartlarında her özellik, içinde gerçek simgeler olan
+ * (Ribbon'ın bento kartlarında her özellik, içinde gerçek ikonlar olan
  * küçük pencerelerle çizilmiş). Ekran görüntüsü bayatlar ve temayla dönmez;
  * maket token'la çizilir, iki temada da doğru, metni seçilebilir.
  *
@@ -17,9 +17,9 @@ import { cn } from "../utils";
  *   - `tone="inverse"`: ters zemin (açık temada koyu). Her iki temada koyu
  *     kalması gereken terminal için `terminal.tsx` var.
  *
- * Pencere düğmeleri süstür (`aria-hidden`); maket bir resimdir. Bütün
+ * Pencere butonları süstür (`aria-hidden`); maket bir resimdir. Bütün
  * sahneyi `role="img"` + `aria-label` ile tek cümleyle anlat ya da yanındaki
- * metin anlatıyorsa sahneyi `aria-hidden` yap. Düğmeler durum renklerinden
+ * metin anlatıyorsa sahneyi `aria-hidden` yap. Butonlar durum renklerinden
  * (danger, warning, success): paletle döner, sabit kırmızı-sarı-yeşil yok.
  *
  *   <AppWindow title="Notlar" icon={<NotebookPen />} focused className="w-56">
@@ -30,12 +30,12 @@ import { cn } from "../utils";
 type AppWindowProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
   /** Başlık çubuğundaki ad. */
   title?: ReactNode;
-  /** Başlığın solunda küçük simge (lucide ya da uygulama simgesi). */
+  /** Başlığın solunda küçük ikon (lucide ya da uygulama ikonu). */
   icon?: ReactNode;
   focused?: boolean;
   ghost?: boolean;
   tone?: "default" | "inverse";
-  /** Başlık çubuğunun sağı: sekme, arama, paylaş düğmesi maketi. */
+  /** Başlık çubuğunun sağı: sekme, arama, paylaş butonu maketi. */
   actions?: ReactNode;
 };
 

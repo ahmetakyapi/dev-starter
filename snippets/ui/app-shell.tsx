@@ -22,12 +22,12 @@ import { cn } from "@/lib/utils";
  * kabuk sakin kalır, yalnız eylemler renklenir.
  *
  * Daraltma: masaüstünde kenar çubuğu ikon sütununa iner (⌘B / Ctrl+B ya da
- * düğme). Genişlik ANİMASYONLA DEĞİŞMEZ: `width` geçişi her karede düzeni
+ * buton). Genişlik ANİMASYONLA DEĞİŞMEZ: `width` geçişi her karede düzeni
  * yeniden hesaplatır; sütun anında değişir, etiketler kısa bir solmayla
  * gelir. Daralmışken etiket `sr-only` kalır (ekran okuyucu yine okur) ve
  * `title` ile görünür ipucu olur.
  *
- * Telefonda (< lg) kenar çubuğu yok: üstte ince bir çubuk ve menü düğmesi;
+ * Telefonda (< lg) kenar çubuğu yok: üstte ince bir çubuk ve menü butonu;
  * gezinme alttan açılan `Sheet`te (başparmağın eriştiği yer). Bağlantıya
  * dokununca çekmece kapanır.
  *

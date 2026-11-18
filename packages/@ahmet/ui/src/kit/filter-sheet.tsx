@@ -5,22 +5,22 @@ import { Sheet } from "./sheet";
 import { cn } from "../utils";
 
 /**
- * Süzgeç çekmecesi: telefonda bütün süzgeç ve sıralama seçimleri alttan
- * açılan tek yüzeyde, dipte "Temizle" ve SONUÇ SAYISINI söyleyen ana düğme
+ * Filtre çekmecesi: telefonda bütün filtre ve sıralama seçimleri alttan
+ * açılan tek yüzeyde, dipte "Temizle" ve SONUÇ SAYISINI söyleyen ana buton
  * ("8 Talebi Göster"). `sheet.tsx`in üstüne kurulu.
  *
- * NE ZAMAN: masaüstünde araç çubuğuna sığan süzgeçler (arama, çipler,
+ * NE ZAMAN: masaüstünde araç çubuğuna sığan filtreler (arama, çipler,
  * açılır seçimler) telefonda yer kaplıyorsa; tablo listesinin üstüne tek bir
- * "Süzgeçler" düğmesi konur, gerisi burada. NE ZAMAN DEĞİL: tek bir süzgeç
+ * "Filtreler" butonu konur, gerisi burada. NE ZAMAN DEĞİL: tek bir filtre
  * varsa (`segmented-control` yeter) ya da seçim anında sonucu göstermeli ve
  * liste görünür kalmalıysa (masaüstü araç çubuğu, `chip.tsx`).
  *
- * Neden sonuç sayılı düğme: çekmece listeyi örter; kullanıcı seçtiği
- * süzgecin kaç kayıt bıraktığını göremez. Sayı düğmede olunca "0 sonuç"a
+ * Neden sonuç sayılı buton: çekmece listeyi örter; kullanıcı seçtiği
+ * filtrenin kaç kayıt bıraktığını göremez. Sayı butonda olunca "0 sonuç"a
  * düşmeden önce görür (Assetora turu 2026-11, davranış alındı, kod değil).
- * Seçimler ANINDA uygulanır (sayı gerçek); düğme yalnız çekmeceyi kapatır.
+ * Seçimler ANINDA uygulanır (sayı gerçek); buton yalnız çekmeceyi kapatır.
  *
- * Gruplar: `multiple` grup çoklu seçim (`aria-pressed` düğmeler, ✓ ile),
+ * Gruplar: `multiple` grup çoklu seçim (`aria-pressed` butonlar, ✓ ile),
  * tekli grup radyo grubu (`role="radiogroup"`, ok tuşları, gezici tabindex).
  * Renk tek ayırt edici değil: seçili çipte ✓ ve kalın kenar da var.
  * Sayı değişimi canlı bölgede okunur. Ek içerik (tarih takvimi, aralık)
@@ -77,7 +77,7 @@ export function FilterSheet({
   resultLabel = (n) => `${number.format(n)} Sonucu Göster`,
   onClear,
   canClear,
-  title = "Süzgeç ve Sıralama",
+  title = "Filtre ve Sıralama",
   description,
   clearLabel = "Temizle",
   children,

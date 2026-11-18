@@ -4,7 +4,7 @@
  * Escape ve arka plana tıklama ile kapanır, açıkken sayfa kaymaz
  * (`use-scroll-lock.ts`, sayaçlı: üstüne açılan onay diyaloğu kilidi
  * erken çözmez). Odak açılışta panele girer, Tab içeride döner, kapanınca
- * açan düğmeye döner; Escape yalnızca en üstteki katmanı kapatır (`useLayer`).
+ * açan butona döner; Escape yalnızca en üstteki katmanı kapatır (`useLayer`).
  * MotionProvider (LazyMotion + domAnimation) altında çalışır; bu yüzden
  * `motion.*` değil `m.*`.
  *

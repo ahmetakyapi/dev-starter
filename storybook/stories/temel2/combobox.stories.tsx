@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Çok sayıda seçenekten biri (şehir, sembol, kişi); yazdıkça süzülür, liste dışında değer kabul etmez. Süzgeç `locale=\"tr-TR\"`: \"istanbul\" yazan \"İstanbul\"u, \"ığdır\" yazan \"Iğdır\"ı bulur. Serbest metinli arama gerekiyorsa bu değil, Base UI `Autocomplete`.",
+          "Çok sayıda seçenekten biri (şehir, sembol, kişi); yazdıkça süzülür, liste dışında değer kabul etmez. Filtre `locale=\"tr-TR\"`: \"istanbul\" yazan \"İstanbul\"u, \"ığdır\" yazan \"Iğdır\"ı bulur. Serbest metinli arama gerekiyorsa bu değil, Base UI `Autocomplete`.",
       },
     },
   },
@@ -43,7 +43,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "Varsayılan" };
 
 export const TurkishFilter: Story = {
-  name: "Türkçe Süzgeç",
+  name: "Türkçe Filtre",
   parameters: { docs: { description: { story: "\"istanbul\" yazınca yalnızca \"İstanbul\" kalır; seçince girişe yazılır." } } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

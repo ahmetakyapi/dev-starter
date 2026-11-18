@@ -54,8 +54,8 @@ export const Header: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    // Geniş ekranda düğme display:none: erişilebilir adı boş hesaplanır, rolle
-    // bulunamaz. Telefonda menü düğmesi, geniş ekranda satır içi gezinme.
+    // Geniş ekranda buton display:none: erişilebilir adı boş hesaplanır, rolle
+    // bulunamaz. Telefonda menü butonu, geniş ekranda satır içi gezinme.
     const toggle = canvasElement.querySelector<HTMLButtonElement>('button[aria-label="Menüyü aç"]');
     await expect(toggle).not.toBeNull();
     if (!toggle || getComputedStyle(toggle).display === "none") {

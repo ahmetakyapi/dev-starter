@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Arkasındaki görüntüyü büken, kenarı ışık kıran cam hap. Fotoğraflı ya da çizimli kahramanın tek birincil eylemi için; düz zeminde bükülecek bir şey olmadığından `bg-cta` doğru düğmedir. Bükülme SVG `feDisplacementMap` ile ve yalnız Chromium'da; Safari ve Firefox'ta buğu ve kenar kalır, hiçbir yerde kırılmaz.",
+          "Arkasındaki görüntüyü büken, kenarı ışık kıran cam hap. Fotoğraflı ya da çizimli kahramanın tek birincil eylemi için; düz zeminde bükülecek bir şey olmadığından `bg-cta` doğru butondur. Bükülme SVG `feDisplacementMap` ile ve yalnız Chromium'da; Safari ve Firefox'ta buğu ve kenar kalır, hiçbir yerde kırılmaz.",
       },
     },
   },

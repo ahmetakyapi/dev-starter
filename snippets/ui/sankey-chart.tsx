@@ -32,7 +32,7 @@ import { SERIES_BG, type Series } from "@/components/ui/chart-card";
  *
  * Hareket: ekrana girince bantlar soldan sağa AKAR (kırpma dikdörtgeni
  * `scaleX`), düğümler belirir. Hareketi azaltan kullanıcıda süre 0.
- * Erişilebilirlik: her akış `sr-only` tabloda; etiketler düğme, odakla da
+ * Erişilebilirlik: her akış `sr-only` tabloda; etiketler buton, odakla da
  * yalıtır; seçili akışın satırı canlı bölge.
  */
 

@@ -22,9 +22,9 @@ import { cn } from "../utils";
  * tutar sağda `tabular-nums`.
  *
  * Erişilebilirlik: `ul` + adı (`label`); satırın ana eylemi BAŞLIK
- * (düğme ya da bağlantı), kartın tamamı ona genişletilmiş tıklama alanı
+ * (buton ya da bağlantı), kartın tamamı ona genişletilmiş tıklama alanı
  * (`after:inset-0`), yani ekran okuyucu satır başına tek eylem duyar ve
- * içteki başka düğmeler (`actions`) tıklanabilir kalır. Kişiler satırı
+ * içteki başka butonlar (`actions`) tıklanabilir kalır. Kişiler satırı
  * "Atanan: Ahmet" diye okunur; avatar süstür.
  *
  * Örnek:
@@ -53,7 +53,7 @@ export type RecordItem = {
   people?: readonly RecordPerson[];
   /** Kartın sağında başlıktan bağımsız ikincil eylem (seçim kutusu, menü). */
   actions?: ReactNode;
-  /** Ana eylem: başlık düğme olur. `href` verilirse bağlantı. */
+  /** Ana eylem: başlık buton olur. `href` verilirse bağlantı. */
   onSelect?: () => void;
   href?: string;
 };

@@ -25,13 +25,13 @@ Karar kaydı: [../knowledge/decisions.md](../knowledge/decisions.md) →
 | 4 | Degrade yalnızca üç yerde: kısa display başlık, birincil eylem, marka karosu | Her yerde olan degrade vurgu olmaktan çıkar (Mimio ve Açılış Zili aynı sonuca ayrı ayrı vardı) |
 | 5 | Degrade **tek renk ailesi** içinde: koyudan açığa aynı ton | Gökkuşağı degrade şablon hissi verir; tek aile bir malzeme gibi okunur |
 | 6 | Tek değişken yazı ailesi (+ gerekirse mono), rol adlı punto ölçeği, `text-wrap: balance/pretty` | Kontrast ikinci bir aileden değil ağırlıktan gelir |
-| 7 | Title Case başlık ve düğme; arayüz metninde em dash yok | Ses tutarlılığı; Türkçe `İ` doğru |
+| 7 | Title Case başlık ve buton; arayüz metninde em dash yok | Ses tutarlılığı; Türkçe `İ` doğru |
 | 8 | Tek hareket eğrisi `cubic-bezier(0.22, 1, 0.36, 1)`, `DUR` tablosu, reduced-motion | Hareket ritmi markanın sesi |
 | 9 | Radius ölçeği, 2 px odak halkası (`--line-focus`), 44 px dokunma hedefi | Erişilebilirlik bir tercih değil |
 | 10 | Açık tema yeniden tasarlanır; açıkta `--primary` bir basamak koyu, wash üstünde `-ink` | Ters çevrilmiş açık tema AA'yı tutmaz (ElevenForge) |
 
 ✅ Zümrüt paletli bir sağlık uygulaması: ton farkıyla kartlar, tek değişken
-   aile, yalnızca birincil düğmede zümrüt degradesi. Tanınır.
+   aile, yalnızca birincil butonda zümrüt degradesi. Tanınır.
 ❌ Mavi paletli ama her kartı glass, başlıkları üç renkli degrade, iki ayrı
    yazı ailesi. Renk "doğru" ama kimlik yok.
 

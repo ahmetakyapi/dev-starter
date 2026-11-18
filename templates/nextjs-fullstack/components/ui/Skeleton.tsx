@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Yükleme iskeleti. Şekli gelecek içeriğin şekli olur (satır, kutu, avatar);
- * genel bir dönen simge yerine. Yer tuttuğu için içerik geldiğinde sayfa
+ * genel bir dönen ikon yerine. Yer tuttuğu için içerik geldiğinde sayfa
  * zıplamaz. Ekran okuyucuya gizli: yükleniyor bilgisini kap (`aria-busy`) verir.
  */
 export function Skeleton({ className }: { className?: string }) {

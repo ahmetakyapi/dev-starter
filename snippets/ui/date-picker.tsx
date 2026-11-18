@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils";
  *
  * Açılır kutu Base UI (`popover.tsx`): dış tıklama ve Escape kapatır, odak
  * tetikleyiciye döner. Açılınca odak takvimin SEÇİLİ gününe gider (ilk
- * düğmeye, "Önceki Ay"a değil): klavye kullanıcısı oklarla hemen gezer.
+ * butona, "Önceki Ay"a değil): klavye kullanıcısı oklarla hemen gezer.
  * Tek günde seçim kutuyu kapatır; aralıkta bitiş günü seçilince kapanır.
  *
  * Tetikleyicinin adı "etiket + değer": ekran okuyucu "Giriş Tarihi,
- * 12 Kas 2026, düğme" der. Aralık `Intl.DateTimeFormat#formatRange` ile
+ * 12 Kas 2026, buton" der. Aralık `Intl.DateTimeFormat#formatRange` ile
  * yazılır ("12–18 Kas 2026"); ay ve yıl tekrarlanmaz.
  *
  * Form: `name` verilince gizli giriş `YYYY-AA-GG` taşır; aralıkta iki

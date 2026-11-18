@@ -52,9 +52,9 @@ export async function getTheme(): Promise<Theme> {
 }
 ```
 
-**Neden iki dosya:** tema düğmesi sabitleri (`THEME_COOKIE`, `THEME_COLOR`,
+**Neden iki dosya:** tema butonu sabitleri (`THEME_COOKIE`, `THEME_COLOR`,
 `isTheme`) istemcide okur. `next/headers` içe aktaran bir modül istemci
-paketine girdiği an derleme kırılır; sabitler o modülde kalırsa düğme onları
+paketine girdiği an derleme kırılır; sabitler o modülde kalırsa buton onları
 elle kopyalar ve üçüncü bir tema (§ 5) sessizce "light"a düşer.
 
 ```tsx
@@ -85,7 +85,7 @@ yazmak Next'e "veri değişti" der: yanıt bütün sayfayı sunucuda yeniden çi
 ön yükleme önbelleğini boşaltır, bir sonraki tıklama soğuk istek olur.
 Kozmetik bir tıklama için fazla. Değer gizli değil, `httpOnly` gerekmez;
 sunucu onu bir sonraki istekte okur. O yeniden çizimin getirdiği tek şey
-tarayıcı çubuğunun rengiydi, onu düğme kendisi günceller.
+tarayıcı çubuğunun rengiydi, onu buton kendisi günceller.
 
 `suppressHydrationWarning` neden hâlâ var: istemci temayı DOM'da anında
 değiştirir, sunucu yeni değeri ancak bir sonraki istekte görür. O arada
@@ -126,7 +126,7 @@ export const viewport: Viewport = { themeColor: THEME_COLOR[DEFAULT_THEME] };
   <head><script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} /></head>
 ```
 
-- Tema düğmesi `useSyncExternalStore(subscribe, readDomTheme, () => DEFAULT_THEME)`:
+- Tema butonu `useSyncExternalStore(subscribe, readDomTheme, () => DEFAULT_THEME)`:
   hidrasyondan hemen sonra doğru ikona geçer, `mounted` bekçisi gerekmez.
 - `themeColor` varsayılan temayla statik; script `meta[name=theme-color]`'ı da
   günceller (DOMContentLoaded'da tekrar, meta script'ten sonra basılabiliyor).
@@ -134,9 +134,9 @@ export const viewport: Viewport = { themeColor: THEME_COLOR[DEFAULT_THEME] };
   script'in hash'i).
 - Sunucu temayı bilmediği için LCP görselinde varsayılan temanınkini öne al
   (`ThemedImage theme={DEFAULT_THEME}`).
-- Çerezi düğme yazar (§ 2'deki `setThemeCookie`); sunucu onu hiç okumaz,
+- Çerezi buton yazar (§ 2'deki `setThemeCookie`); sunucu onu hiç okumaz,
   bir sonraki yüklemede script okur. Sayfa (`page.tsx`) da `cookies()`
-  okumaz, düğmeye `initialTheme={DEFAULT_THEME}` verir.
+  okumaz, butona `initialTheme={DEFAULT_THEME}` verir.
 
 **Karar kuralı:** sayfa kullanıcıya göre değişiyorsa (oturum, kişisel veri)
 zaten dinamiktir → sunucuda çerez. Değişmiyorsa → statik + script.
@@ -207,7 +207,7 @@ export async function generateViewport(): Promise<Viewport> {
 }
 ```
 
-Tıklamada sunucuya gidilmediği için çubuğun rengini düğme günceller
+Tıklamada sunucuya gidilmediği için çubuğun rengini buton günceller
 (`setThemeCookie`, § 2); sonraki istekte sunucu aynı değeri basar.
 
 ❌ `themeColor: [{ media: "(prefers-color-scheme: dark)", color: ... }]`
@@ -350,7 +350,7 @@ tesadüf değil.
 ## Kontrol Listesi
 
 - [ ] Dinamik üründe tema çerezden sunucuda basılıyor (satır içi script yok); statik vitrinde § 2b: `<head>`de `THEME_SCRIPT`, viewport statik
-- [ ] Çerezi düğme istemcide yazıyor; tema için server action yok
+- [ ] Çerezi buton istemcide yazıyor; tema için server action yok
 - [ ] `lib/theme.ts` `next/headers` içe aktarmıyor (`getTheme` → `lib/theme.server.ts`)
 - [ ] `DEFAULT_THEME` ürün sorusuna göre seçildi (01 § 0)
 - [ ] `themeColor` ürünün temasından

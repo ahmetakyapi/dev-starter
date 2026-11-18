@@ -11,7 +11,7 @@ import { useMotionPreference } from "@/hooks/useMotionPreference";
  *  - hareket serbest (`prefers-reduced-motion` yok),
  *  - hassas işaretçi VE en az 768 piksel genişlik,
  *  - tarayıcı boşa çıkınca: paketin değerlendirilmesi masaüstünde bile uzun
- *    bir görev; hidrasyondan hemen sonraki ilk tıklamanın (hero düğmesi, tema)
+ *    bir görev; hidrasyondan hemen sonraki ilk tıklamanın (hero butonu, tema)
  *    önüne düşmesin. Süs katmanı birkaç yüz milisaniye geç gelse kayıp yok.
  *
  * Telefonda ve hareketi azaltanda paket hiç inmez; altta duran `.hero-glow`

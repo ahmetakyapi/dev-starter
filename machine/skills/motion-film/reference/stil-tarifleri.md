@@ -81,7 +81,7 @@ Parlak yüzey vurgusu ve fresnel ışıltısı alınmadı; derinlik ton farkıyl
 Belirlilik: kaynak prompt'taki "60 Hz sabit adımlı güncelleme + havuzlu parçacık"
 render sözleşmesine uymaz. Kıvılcımın konumu tohumdan ve yaşından hesaplanır
 (`ink-engine → splatter` gibi), palet indeksi yaşla adım adım değişir.
-CRT süzgeci ve fosfor ışıltısı alınmadı.
+CRT filtresi ve fosfor ışıltısı alınmadı.
 
 ## 6. Film stili kartı
 

@@ -16,14 +16,14 @@ import { cn } from "@/lib/utils";
 
 /**
  * Sohbet giriş kutusu: büyüyen metin alanı, altında ek (+), model seçici
- * hap, mikrofon ve yuvarlak gönder düğmesi. Yapay zekâ sohbeti, destek
+ * hap, mikrofon ve yuvarlak gönder butonu. Yapay zekâ sohbeti, destek
  * kutusu, not alma. Tek satırlık arama için `search-bar` daha doğru.
  *
  * Klavye: Enter gönderir, Shift+Enter satır açar. IME ile yazarken
  * (`isComposing`) Enter seçimi onaylar, göndermez; yoksa Japonca/Çince
  * yazan kullanıcının yarım kelimesi gider.
  *
- * `status="streaming"`: gönder düğmesi DURDUR düğmesine dönüşür (aynı yer,
+ * `status="streaming"`: gönder butonu DURDUR butonuna dönüşür (aynı yer,
  * aynı boy; el aynı noktaya gider). Metin alanı kilitlenmez: kullanıcı
  * sıradaki mesajı yazmaya başlayabilir, Enter o sırada göndermez.
  *
@@ -33,10 +33,10 @@ import { cn } from "@/lib/utils";
  *
  * Model seçici menü (`dropdown-menu.tsx`, radyo öğeleri); `models`
  * verilmezse yalnız etiket olarak durur. `onAttach` / `onVoice`
- * verilmezse o düğme çizilmez: hiçbir şey yapmayan düğme bırakılmaz.
+ * verilmezse o buton çizilmez: hiçbir şey yapmayan buton bırakılmaz.
  *
  * Gönder birincil eylem: `bg-cta text-on-brand shadow-cta`; boşken soluk ve
- * devre dışı. Simge değişimi 0.85'ten gelen kısa bir ölçek + solma.
+ * devre dışı. İkon değişimi 0.85'ten gelen kısa bir ölçek + solma.
  */
 
 type ChatComposerProps = {

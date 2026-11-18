@@ -138,7 +138,7 @@ kinetik yazıda **saydam kalır** — düz renk kullan.
 ## 6. Ses (ayrıntı: `reference/ses.md`)
 
 Görünen her olayın bir sesi var; ses de zaman çizelgesinden hesaplanır
-(`cuesBetween`). Sayfa içinde **varsayılan kapalı**, görünür düğmeyle açılır,
+(`cuesBetween`). Sayfa içinde **varsayılan kapalı**, görünür butonla açılır,
 bağlam başlatan tıklamanın içinde açılır. Videoda: EV listesi → miks → −14 LUFS.
 
 ## 7. İnceleme döngüsü — ölçmeden teslim yok (ayrıntı: `reference/inceleme-dongusu.md`)
@@ -229,8 +229,8 @@ uygulanır: envanter → sınıf → sayı → ölçüm.
 | `scripts/film-read.mjs` | Okuma süresi denetimi (`window.TEXTS`): harf ÷ 15 + 1,5 sn, kadraj dışında kalan yazı; 0 geçti · 1 ihlal · 2 denetlenmedi |
 
 Çalışan büyük örnek: Açılış Zili `lib/ink/analysis-film.ts` (beş perdelik
-bekleme filmi), `components/ai/AnalysisFilm.tsx` (oynatıcı, ses düğmesi,
-hareketi azaltma), `components/ai/ClaudeWorkbench.tsx` (düğmeden filme
+bekleme filmi), `components/ai/AnalysisFilm.tsx` (oynatıcı, ses butonu,
+hareketi azaltma), `components/ai/ClaudeWorkbench.tsx` (butondan filme
 kesmesiz geçiş).
 
 ## Referanslar

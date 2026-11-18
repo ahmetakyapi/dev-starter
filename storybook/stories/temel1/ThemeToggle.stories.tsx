@@ -4,7 +4,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Cell, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Temel/Tema Düğmesi",
+  title: "Bileşenler/Temel/Tema Butonu",
   id: "theme-toggle",
   component: ThemeToggle,
   tags: ["autodocs"],
@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Açık/koyu tema düğmesi. Tema `<html data-theme>` özniteliğinde yaşar; düğme onu dinler, kendi durumunu tutmaz, böylece sayfadaki iki düğme hep aynı şeyi gösterir. Seçim çerezde saklanır; hareketi azaltmayan kullanıcıda geçiş tıklanan noktadan açılan bir görünüm geçişiyle olur.",
+          "Açık/koyu tema butonu. Tema `<html data-theme>` özniteliğinde yaşar; buton onu dinler, kendi durumunu tutmaz, böylece sayfadaki iki buton hep aynı şeyi gösterir. Seçim çerezde saklanır; hareketi azaltmayan kullanıcıda geçiş tıklanan noktadan açılan bir görünüm geçişiyle olur.",
       },
     },
   },

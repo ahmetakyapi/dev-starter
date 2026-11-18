@@ -71,7 +71,7 @@ export const Default: Story = {
     await expect(arama).toHaveAttribute("aria-pressed", "true");
     await userEvent.click(arama);
     await expect(arama).toHaveAttribute("aria-pressed", "false");
-    // Odak düğmede kalırsa yalıtım sürer; çizim tam haliyle kalsın
+    // Odak butonda kalırsa yalıtım sürer; çizim tam haliyle kalsın
     arama.blur();
   },
 };

@@ -23,7 +23,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Sıralı bir eksende 2-5 seriyi kıyaslamak için (kanala göre kayıt, şubeye göre satış); hacim okunacaksa alan grafiği. Lejant aynı zamanda süzgeç: seri gizlenince Y ekseni kalanlara göre yeniden ölçeklenir, son seri gizlenemez. Kesik çizgi (tahmin) ve hedef çizgisi renkten bağımsız ikinci işaret; veri her zaman `sr-only` tabloda.",
+          "Sıralı bir eksende 2-5 seriyi kıyaslamak için (kanala göre kayıt, şubeye göre satış); hacim okunacaksa alan grafiği. Lejant aynı zamanda filtre: seri gizlenince Y ekseni kalanlara göre yeniden ölçeklenir, son seri gizlenemez. Kesik çizgi (tahmin) ve hedef çizgisi renkten bağımsız ikinci işaret; veri her zaman `sr-only` tabloda.",
       },
     },
   },
@@ -77,7 +77,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const live = canvasElement.querySelector("figure [aria-live]");
-    // Lejant süzgeci: Reklam gizlenir, balon ve canlı bölge onu artık saymaz
+    // Lejant filtresi: Reklam gizlenir, balon ve canlı bölge onu artık saymaz
     const reklam = canvas.getByRole("button", { name: "Reklam" });
     await userEvent.click(reklam);
     await expect(reklam).toHaveAttribute("aria-pressed", "false");
@@ -155,7 +155,7 @@ export const AllVariants: Story = {
   name: "Bütün Varyantlar",
   render: () => (
     <Gallery cols={2}>
-      <GrafikHucre label="Dört seri, lejant süzgeç">
+      <GrafikHucre label="Dört seri, lejant filtre">
         <ChartCard id="cizgi-v1" label="Kanala Göre Yeni Kayıt" value={sayi(toplam(SON))} change={yuzde(toplam(SON), toplam(ONCEKI))}>
           <LineChart title="Kanala Göre Yeni Kayıt" labels={AYLAR} series={KANAL_KAYIT} unit="kayıt" height="h-44" />
         </ChartCard>

@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Kenarda duran el yazısı not ve çizilerek gelen ok; arayüzün bir noktasını gösterir (canlı demoda ilk dokunulacak yer). `mark-annotate` metnin üstüne çizer, bu metnin dışında durur. Yazı tipi `--font-hand-face` (fonts.ts → `handFont`, Caveat). Varsayılan süs; `onClick` ile düğme olur.",
+          "Kenarda duran el yazısı not ve çizilerek gelen ok; arayüzün bir noktasını gösterir (canlı demoda ilk dokunulacak yer). `mark-annotate` metnin üstüne çizer, bu metnin dışında durur. Yazı tipi `--font-hand-face` (fonts.ts → `handFont`, Caveat). Varsayılan süs; `onClick` ile buton olur.",
       },
     },
   },
@@ -46,7 +46,7 @@ export const Directions: Story = {
 };
 
 export const AsButton: Story = {
-  name: "Düğme Olarak",
+  name: "Buton Olarak",
   render: () => (
     <Frame>
       <HandCallout onClick={() => {}}>demoyu aç</HandCallout>

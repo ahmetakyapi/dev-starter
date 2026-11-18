@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Mesaja, nota ya da duyuruya tek dokunuşla tepki. Emoji yerine altı sabit ikon, her birinin Türkçe adı var. Hap bir aç-kapa düğmesi: `aria-pressed` senin tepkini, ad sayıyı söyler (“Beğendim: 3 kişi, sen dahil”). Sayısı sıfıra inen hap kalkar; gülen yüz artısı tepki ekler.",
+          "Mesaja, nota ya da duyuruya tek dokunuşla tepki. Emoji yerine altı sabit ikon, her birinin Türkçe adı var. Hap bir aç-kapa butonu: `aria-pressed` senin tepkini, ad sayıyı söyler (“Beğendim: 3 kişi, sen dahil”). Sayısı sıfıra inen hap kalkar; gülen yüz artısı tepki ekler.",
       },
     },
   },

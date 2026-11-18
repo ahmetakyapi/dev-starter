@@ -6,10 +6,10 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Açılır menü: bir düğmenin altındaki EYLEM listesi (Düzenle, Kopyala, Sil).
+ * Açılır menü: bir butonun altındaki EYLEM listesi (Düzenle, Kopyala, Sil).
  * Seçim için değil; bir değer seçtiriyorsan `select.tsx`.
  *
- * Base UI Menu: WAI-ARIA menu düğme kalıbı tam. Ok tuşları öğeler arasında
+ * Base UI Menu: WAI-ARIA menu buton kalıbı tam. Ok tuşları öğeler arasında
  * gezer, Home/End uçlara gider, harf yazmak o harfle başlayan öğeye atlar,
  * Escape kapatır ve odak TETİKLEYİCİYE döner, Tab menüyü kapatıp sıradaki
  * öğeye geçer. Elle yazılan menülerin hemen hepsi bunlardan en az birini

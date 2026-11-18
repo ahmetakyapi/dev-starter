@@ -185,7 +185,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
         </dl>
         <section
           aria-labelledby="giris-musteriler"
-          // Şeridin "Durdur" düğmesi `text-muted` gelir; renkli zeminde okunmuyordu.
+          // Şeridin "Durdur" butonu `text-muted` gelir; renkli zeminde okunmuyordu.
           className="grid gap-3 text-on-brand [&_.ui-marquee-control]:text-on-brand/85 [&_.ui-marquee-control:hover]:bg-on-brand/10 [&_.ui-marquee-control:hover]:text-on-brand"
         >
           <h2 id="giris-musteriler" className="text-small font-medium text-on-brand/75">

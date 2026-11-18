@@ -57,7 +57,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       lang="tr"
       data-theme={theme}
       data-palette={PALETTE}
-      // Tema düğmesi özniteliği istemcide değiştirir; sonraki sunucu çizimi
+      // Tema butonu özniteliği istemcide değiştirir; sonraki sunucu çizimi
       // aynı değeri basar ama araya giren kısa farkı React raporlamasın.
       suppressHydrationWarning
       // `iso`: anatomy figür kitinin token kapsamı. Kit `.iso[data-theme="light"]`

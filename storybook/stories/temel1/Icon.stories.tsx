@@ -24,7 +24,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 const GLYPHS = { Bell, Calendar, CreditCard, Download, FileText, Filter, Heart, Mail, Search, Settings, Share2, Star, Trash2, Upload, Users } as const;
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/İkon",
+  title: "Bileşenler/Buton ve İkon/İkon",
   id: "icon",
   component: Icon,
   tags: ["autodocs"],
@@ -32,7 +32,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "lucide-react sarmalayıcısı: tek boyut ölçeği (sm 16 · md 20 · lg 24) ve tek çizgi kalınlığı (1,75). Varsayılan olarak ekran okuyucudan gizlidir; ikon tek başına anlam taşıyorsa `label` ver. Düğmenin tek içeriği ikonsa etiketi düğmeye ver (`IconButton`).",
+          "lucide-react sarmalayıcısı: tek boyut ölçeği (sm 16 · md 20 · lg 24) ve tek çizgi kalınlığı (1,75). Varsayılan olarak ekran okuyucudan gizlidir; ikon tek başına anlam taşıyorsa `label` ver. Butonun tek içeriği ikonsa etiketi butona ver (`IconButton`).",
       },
     },
   },

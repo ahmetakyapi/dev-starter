@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "⌘K / Ctrl+K ile açılan, yerel `<dialog>` üstünde bir combobox: odak hep aramada kalır, ok tuşları etkin satırı taşır. Arama Türkçe küçük harfle karşılaştırır (“İ” → “i”), `keywords` eş anlamlılar içindir. Başlıktaki bir düğmeden açmak için `openCommandPalette()`.",
+          "⌘K / Ctrl+K ile açılan, yerel `<dialog>` üstünde bir combobox: odak hep aramada kalır, ok tuşları etkin satırı taşır. Arama Türkçe küçük harfle karşılaştırır (“İ” → “i”), `keywords` eş anlamlılar içindir. Başlıktaki bir butondan açmak için `openCommandPalette()`.",
       },
     },
   },
@@ -71,7 +71,7 @@ export const OpensWithShortcut: Story = {
 };
 
 export const OpensWithButton: Story = {
-  name: "Düğmeyle Açılır",
+  name: "Butonla Açılır",
   tags: ["!autodocs"],
   play: async ({ canvasElement, globals }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: /Ara ya da komut çalıştır/ }));

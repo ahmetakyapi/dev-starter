@@ -157,7 +157,7 @@ export function AyarlarPage() {
         crumb="Çalışma Alanı"
         description={`${WORKSPACE.name} · ${WORKSPACE.plan} · Değişiklikler Anında Kaydedilir`}
         actions={
-          // Tetikleyici Pusula'nın başlık düğmesi (öteki sayfalarla aynı boy); pencere kontrollü.
+          // Tetikleyici Pusula'nın başlık butonu (öteki sayfalarla aynı boy); pencere kontrollü.
           <>
             <Button variant="secondary" size="sm" aria-haspopup="dialog" onClick={() => setQuickOpen(true)}>
               <Settings2 aria-hidden />

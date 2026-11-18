@@ -145,7 +145,7 @@ const FOLDER_ITEMS: SelectItem[] = [
   ...TICKET_CHANNELS.map((ch) => ({ value: `kanal:${ch}`, label: `Kanal: ${ch}` })),
 ];
 
-/** "Geldi" süzgecinin hazır aralıkları; örnek verinin bugünü `TODAY` (2 Kasım). */
+/** "Geldi" filtresinin hazır aralıkları; örnek verinin bugünü `TODAY` (2 Kasım). */
 const WHEN: readonly RangePreset[] = [
   { id: "bugun", label: "Bugün", days: 1 },
   { id: "3", label: "Son 3 Gün", days: 3 },
@@ -154,7 +154,7 @@ const WHEN: readonly RangePreset[] = [
 ];
 const ALL_TIME: DateRangeValue = { kind: "preset", id: "tum" };
 
-/** Telefondaki süzgeç çekmecesinin sıralama seçenekleri → adresteki `sort`/`dir`. */
+/** Telefondaki filtre çekmecesinin sıralama seçenekleri → adresteki `sort`/`dir`. */
 const SORTS = [
   { value: "yeni", label: "En Yeni", sort: "tarih", dir: "desc" },
   { value: "eski", label: "En Eski", sort: "tarih", dir: "asc" },
@@ -197,7 +197,7 @@ export function GelenPage() {
       matchesFolder(t, folder) && (!who || t.customerId === who.value) && (!priorities.length || priorities.includes(t.priority)) && inSpan(t) && matchesQuery(t),
   );
 
-  /** Süzgeç değişince ilk sayfaya dön (adresteki sayfa numarası eskir). */
+  /** Filtre değişince ilk sayfaya dön (adresteki sayfa numarası eskir). */
   const resetPage = () => {
     if (params.page || params.tag || params.status) navigate("inbox", { sort: params.sort, dir: params.dir });
   };
@@ -456,7 +456,7 @@ export function GelenPage() {
     },
   ];
 
-  // Telefondaki süzgeç çekmecesi: masaüstü araç çubuğuyla AYNI durumu değiştirir, sayı gerçek.
+  // Telefondaki filtre çekmecesi: masaüstü araç çubuğuyla AYNI durumu değiştirir, sayı gerçek.
   const sortNow = SORTS.find((o) => o.sort === (params.sort ?? "tarih") && o.dir === (params.dir ?? "desc"))?.value ?? "yeni";
   const filterGroups: readonly FilterGroup[] = [
     { id: "sira", label: "Sıralama", options: SORTS.map((o) => ({ value: o.value, label: o.label })) },
@@ -503,7 +503,7 @@ export function GelenPage() {
                 <Share2 aria-hidden />
                 Paylaş
               </PopoverTrigger>
-              <PopoverContent title="Görünümü Paylaş" description="Bağlantıyı alan ekip arkadaşı aynı süzgeçleri görür.">
+              <PopoverContent title="Görünümü Paylaş" description="Bağlantıyı alan ekip arkadaşı aynı filtreleri görür.">
                 <div className="flex items-center gap-2 rounded-md bg-surface py-1 pr-1 pl-3 text-small text-body">
                   <span className="min-w-0 flex-1 truncate">pusula.app/{href("inbox", { sort: params.sort, dir: params.dir })}</span>
                   <CopyButton value={`https://pusula.app/${href("inbox", { sort: params.sort, dir: params.dir })}`} label="Bağlantıyı Kopyala" />
@@ -558,7 +558,7 @@ export function GelenPage() {
           </div>
         </aside>
 
-        {/* Ingot turu: süzgeç çubuğu, tablo ve sayfalama TEK kartta; araç
+        {/* Ingot turu: filtre çubuğu, tablo ve sayfalama TEK kartta; araç
             çubuğu kartın başı, sayfalama dibi (kıl çizgilerle ayrılır). */}
         <div className="grid min-w-0 grid-cols-1 content-start overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line">
           <div className="grid grid-cols-1 gap-3 border-b border-line-soft p-3 sm:p-4">
@@ -613,7 +613,7 @@ export function GelenPage() {
               />
               <Button variant="secondary" size="sm" className="md:hidden" onClick={() => setFiltersOpen(true)}>
                 <SlidersHorizontal aria-hidden />
-                Süzgeçler
+                Filtreler
                 {activeFilters ? (
                   <span className="rounded-full bg-primary px-1.5 text-micro font-semibold text-on-primary tabular-nums">
                     <span className="sr-only">, etkin: </span>
@@ -637,7 +637,7 @@ export function GelenPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <ChipGroup aria-label="Öncelik Süzgeci" className="max-md:hidden">
+              <ChipGroup aria-label="Öncelik Filtresi" className="max-md:hidden">
                 {PRIORITIES.map((p) => (
                   <FilterChip
                     key={p}
@@ -665,7 +665,7 @@ export function GelenPage() {
                 />
             </div>
             {folder !== "tum" || who || query ? (
-              <ChipGroup aria-label="Etkin Süzgeçler">
+              <ChipGroup aria-label="Etkin Filtreler">
                 {folder !== "tum" ? (
                   <RemovableChip label={`Kaldır: ${folderLabel(folder)}`} onRemove={() => setFolder("tum")}>
                     {folderLabel(folder)}
@@ -698,11 +698,11 @@ export function GelenPage() {
                 className="bg-transparent"
                 icon={<SearchX />}
                 titleAs="h2"
-                title="Bu Süzgeçlere Uyan Talep Yok"
+                title="Bu Filtrelere Uyan Talep Yok"
                 hint={`${folderLabel(folder)}${who ? `, ${who.label}` : ""}${priorities.length ? `, ${priorities.join(" / ")} öncelik` : ""}${query ? `, “${query}” araması` : ""} için kayıt bulunamadı.`}
                 action={
                   <Button variant="secondary" size="sm" onClick={clearAll}>
-                    Süzgeçleri Temizle
+                    Filtreleri Temizle
                   </Button>
                 }
               />

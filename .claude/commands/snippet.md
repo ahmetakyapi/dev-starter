@@ -63,7 +63,7 @@ aşağıdaki adımlarla uyarla.
   `modal`, `drawer`, `confirm` `./use-scroll-lock`tan `useScrollLock` +
   `useLayer` (katman yığını, odak, Escape) alır: o dosyayı yanına birlikte
   kopyala, katman başına ayrı kilit ya da Escape dinleyicisi yazma.
-- Arayüz metni Türkçe Title Case (başlık, düğme), em dash yok.
+- Arayüz metni Türkçe Title Case (başlık, buton), em dash yok.
 
 > `live-preview` bir **kit**tir (6 dosya): önce `~/dev-starter/snippets/live-preview/README.md`
 > ve `~/dev-starter/rules/live-preview.md`i oku, README'deki 1–7 adımını sırayla uygula

@@ -136,7 +136,7 @@ Otomatik araç sorunların yaklaşık üçte birini bulur; gerisi elle:
 - [ ] **Odak kırpılmıyor:** `overflow: hidden` kaplarda halka kesiliyorsa
       `outline-offset: -2px`
 - [ ] **Yapışkan başlık odağı örtmüyor:** `scroll-padding-block` (WCAG 2.4.11)
-- [ ] **VoiceOver** ile bir tur: başlık hiyerarşisi (h1 → h2), düğme adları,
+- [ ] **VoiceOver** ile bir tur: başlık hiyerarşisi (h1 → h2), buton adları,
       `aria-live` bildirimleri
 - [ ] **%200 yakınlaştırma** ve tarayıcıda büyük punto: metin kesilmiyor
 - [ ] **Kontrast** her iki temada ölçüldü (02 § 6)

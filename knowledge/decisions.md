@@ -229,7 +229,7 @@ projelerde (ahmetakyapi.com) kalır.
   yükleme önbelleğini boşaltır. Şablonda ölçüldü: her tıklama bir POST ve
   ana sayfanın tam RSC'si. Kozmetik bir tıklamanın bedeli değil.
 - `lib/theme.ts` `next/headers` içe aktardığı için istemci ondan değer
-  alamıyordu; düğme tema ayrıştırmayı elle kopyalıyordu (üçüncü tema
+  alamıyordu; buton tema ayrıştırmayı elle kopyalıyordu (üçüncü tema
   sessizce "light"a düşerdi).
 - Çerez gizli değil, `httpOnly` gerekmez; sunucu onu bir sonraki istekte
   okur. FOUC'suz ilk kare kararı aynen duruyor.
@@ -452,7 +452,7 @@ bizim token, punto ve hareket sistemimize çevrildi.
 
 | Onların kuralı | Neden almadık |
 |----------------|---------------|
-| Sentence case başlık ve düğme | Türkçe arayüzde Title Case kimlik değişmezi (00 § 1, #7) |
+| Sentence case başlık ve buton | Türkçe arayüzde Title Case kimlik değişmezi (00 § 1, #7) |
 | Inter/Roboto yasağı, Geist/Manrope/Poppins listesi | Aile seçimi `snippets/fonts` preset'leriyle ve ürünle yapılır; tek bir yasaklı ad listesi ürün kararını ezmez |
 | İtalik tamamen yasak | Editoryal preset'lerde (Instrument Serif) kasıtlı vurgu |
 | Kahraman başlığında beyaz → gri degrade | Bizde display degradesi tek renk ailesinden, palet token'ı (`--display-gradient`) |
@@ -483,7 +483,7 @@ projede sıfırdan yazılırsa sahte bir önizleme bileşenine kayıyor ve sited
 ayrışıyor; tek kaynak kit bunu önler.
 
 **Alternatifler:** (1) Formun içinde siteyi taklit eden önizleme bileşeni:
-siteden ayrışır, reddedildi. (2) "Önizle" düğmesiyle yeni sekmede taslak
+siteden ayrışır, reddedildi. (2) "Önizle" butonuyla yeni sekmede taslak
 sayfası: yazarken göremez, telefon ve koyu tema ayrı iş, reddedildi.
 (3) Draft Mode (`draftMode()`) + iframe: çerez tüm siteyi taslağa açar ve
 oturuma özel değil; kitteki `?oturum=` + ayrı tablo daha dar.
@@ -534,9 +534,9 @@ sistem, degrade disiplini) DEĞİŞMEDİ; yalnızca derinliğin işçiliği artt
   kenar + içeri çekilmiş yumuşak düşüş); koyuda üst kenarda ışık çizgisi
   ve %4'lük beyaz halka. `raised` açıkta da %3,5'lik halka taşır: beyaz
   karo beyaz sayfada ayrışır.
-- **Basılabilir düğme:** üstte ışık, altta gölge çizgisi, dış kıl halka ve
+- **Basılabilir buton:** üstte ışık, altta gölge çizgisi, dış kıl halka ve
   dolgunun kendi renginde (`color-mix`, `--primary`) kısa düşüş. Gri gölge
-  dolguyu kirli gösterir; renkli düşüş düğmeyi zemine bağlar.
+  dolguyu kirli gösterir; renkli düşüş butonu zemine bağlar.
 - **Kuyu ve odak halesi:** giriş alanları ve bölümlü denetim rayı içe
   oyulur (`shadow-well`); odakta 2 px çizginin yanına vurgunun %18'iyle
   4 px hale (`shadow-focus`). Çizgi WCAG'i tutar, hale yalnızca yumuşatır.
@@ -545,7 +545,7 @@ sistem, degrade disiplini) DEĞİŞMEDİ; yalnızca derinliğin işçiliği artt
   yerine yukarıdan sönen kenar.
 - **Sıkı display:** harf aralığı punto basamağıyla gelir (hero −0.035em).
 
-**Alınmayan:** kırmızı marka, WebGL sıvı metal düğme, imleci izleyen
+**Alınmayan:** kırmızı marka, WebGL sıvı metal buton, imleci izleyen
 etiket ve reklam alanları (bizim paletimiz ve "nedeni tek cümleyle
 yazılamayan hareket eklenmez" kuralı). Açık temada `#fafafa` zemin:
 board dilinin saf beyaz sayfa + gri kuyu ayrımını bozardı.
@@ -595,7 +595,7 @@ gibi "oyuncak" etkileşimler; nedeni tek cümleyle yazılamıyor
 (`guides/04-motion.md`). Tepki emojileri: arayüzde emoji yasak (slop).
 
 **Yan bulgu:** `dialog` ve `sheet` alt çubuğundaki `sm:[&>*]:w-auto` ikon
-düğmenin `size-11` genişliğini eziyordu; yanına `flex-1` düğme gelince 20
+butonun `size-11` genişliğini eziyordu; yanına `flex-1` buton gelince 20
 piksele düşüyordu (Pusula talep çekmecesi, "Bana Ata"). Kural yalnız
 telefonda tam genişlik (`max-sm:[&>*]:w-full`) oldu.
 
@@ -630,7 +630,7 @@ yazılamayan hareket), reklam/sponsor kartları, İngilizce "of" eki.
 `animated-number` (ara değerden sayan) yerinde; üç sayının işi
 `guides/10` § "Bencho Turu"nda ayrıldı.
 
-## EasyUI Turu — Toplu İşlem, Bölünmüş Düğme, Tur, İçindekiler (2026-11-04)
+## EasyUI Turu — Toplu İşlem, Bölünmüş Buton, Tur, İçindekiler (2026-11-04)
 
 **Karar:** easyui.site'nin 132 bileşenlik kataloğu kütüphanemizle tek tek
 karşılaştırıldı; çoğunun karşılığı zaten var. Karşılığı OLMAYAN ve iş
@@ -895,7 +895,7 @@ de Instrument Sans).
   Ürün maketi ekran görüntüsü değil, token'la çizilmiş, temayla dönen
   parçalar (`app-window`, `dock`). Pusula Tanıtım Sayfası bunu gösterir:
   dock'tan seçilen pencere şeritte odağa gelir.
-- **Güvenceyi tıklamanın dibine koy.** Her indirme düğmesinin altında aynı
+- **Güvenceyi tıklamanın dibine koy.** Her indirme butonunun altında aynı
   güven satırı. "Güvenli mi?" sorusu SSS'ye kadar beklemez (`trust-line`).
 - **Tek oyunbaz öğe.** Ciddi bir araç sitesinde sıcaklık tek yerden gelir:
   maskot ve el yazısı not. Sayfada bir maskot, bir-iki not; fazlası oyuncak.
@@ -911,7 +911,7 @@ de Instrument Sans).
   öğesi sarılmaz" kuralı korunur, bu tek istisna JS'siz.
 - `liquid-glass` üç katman: kenar (iç gölgeler, token'dan), buğu (her
   tarayıcı), bükülme (`backdrop-filter: url(#svg)`, yalnız Chromium).
-  Desteklemeyen tarayıcı bildirimi atlar, düğme sadeleşir ama kırılmaz.
+  Desteklemeyen tarayıcı bildirimi atlar, buton sadeleşir ama kırılmaz.
   `prefers-reduced-transparency`de opak.
 - `docking-nav` kaydırmayı `useSyncExternalStore` ile boole okur: yalnız
   eşikte çizim, sayfa ortasında yenilenince ilk karede doğru, efektte
@@ -919,7 +919,7 @@ de Instrument Sans).
 - `dock` büyümesi yalnız CSS (`:has()` ile komşular); ölçüm yok.
 - `handFont` (Caveat) preset'lerin parçası değil, isteğe bağlı yükleyici:
   tanımlı her next/font yükleyicisi sayfaya bağlanır (fonts.ts ölçümü).
-- `app-window` ve maskotta pencere düğmeleri durum token'larından (danger,
+- `app-window` ve maskotta pencere butonları durum token'larından (danger,
   warning, success); sabit kırmızı-sarı-yeşil yok, paletle döner.
 
 **Alınmayan:** varlıklar ve marka (piksel sanatı kahraman, suluboya kapanış,
@@ -1087,10 +1087,10 @@ Pusula'nın ortak parçalarında (`_ui.tsx`) yaşıyor:
   (önceki dönem), 3 mürekkep (nötr), 4-6 yardımcı. Genel dizi (limon, mavi,
   mor, pembe) on iki grafik yan yana gelince renk kataloğu gibi okunuyordu.
   Palet değişince grafikler de döner.
-- **Mürekkep düğme (`INK`):** sayfa başlığındaki birincil eylem (Takvim →
+- **Mürekkep buton (`INK`):** sayfa başlığındaki birincil eylem (Takvim →
   Randevu Oluştur) koyu degrade hap; logo karosu da aynı mürekkep.
-  Panodaki gecikme kartının "Talepleri Gör" düğmesi sahibinin isteğiyle
-  paletin mavi birincil düğmesi kaldı (2026-11-16): uyarı kartındaki tek
+  Panodaki gecikme kartının "Talepleri Gör" butonu sahibinin isteğiyle
+  paletin mavi birincil butonu kaldı (2026-11-16): uyarı kartındaki tek
   eylem renkli olunca daha çok çağırıyor.
 - **İki katlı sayfa başlığı:** ekmek kırıntısı (Pusula › Genel/Yönetim ›
   sayfa) + verinin güncellendiği an + zil; altında büyük başlık, tek satır bağlam,
@@ -1099,7 +1099,7 @@ Pusula'nın ortak parçalarında (`_ui.tsx`) yaşıyor:
   kartın içindeki panel gri ve gölgesiz (gömük), kart içinde kart yok.
 - **Ölçü şeridi:** dört ölçü tek kartın kıl çizgiyle bölünmüş hücreleri,
   altta kesik çizgiyle ayrılmış eğilim ve bir satır anlam ("Hedefin %91'i").
-- **Gelen Kutusu:** süzgeç çubuğu, tablo (gri başlık satırı) ve sayfalama tek
+- **Gelen Kutusu:** filtre çubuğu, tablo (gri başlık satırı) ve sayfalama tek
   kartta; talep numaraları eşaralıklı.
 - **Raporlar:** özet kartlarındaki süs ızgara yerine payı gösteren nokta-çubuk
   ölçek ve ne ölçtüğünü yazan çip.
@@ -1111,7 +1111,7 @@ kimlik taklidi olur, palet ve Inter kaldı.
 *Ne zaman değişir:* Bu dil başka bir projede de tutarsa `CARD`/`INK`/ölçü
 şeridi `snippets/ui`ye bileşen olarak taşınır (`/harvest` adım 3).
 
-### Değişti (2026-11-17) — Mürekkep düğme kalktı
+### Değişti (2026-11-17) — Mürekkep buton kalktı
 
 Sahibi: "sol menü ve ekranlar tutarlı değil". Pano'da birincil eylem mavi
 (`Talepleri Gör`, sahibinin isteği), Takvim'de siyah mürekkep hapı: aynı
@@ -1119,22 +1119,22 @@ uygulamada iki ayrı "birincil" dili. Sayfa eylemi artık her ekranda paletin
 mavi `Button`ı, ikinciller `secondary` (Pano'nun "Tanıtım Turu" da hayaletten
 ikincile geçti). `.pusula-ink` yalnız marka karosunda kaldı; `INK` sabiti silindi.
 
-## Assetora Turu — Dönem Bantları, Kayıt Listesi, Süzgeç Çekmecesi, Tarih Süzgeci (2026-11-16)
+## Assetora Turu — Dönem Bantları, Kayıt Listesi, Filtre Çekmecesi, Tarih Filtresi (2026-11-16)
 
 **Karar:** assetora.vercel.app'ten (tek sayfalık gayrimenkul paneli) dört
 davranış alındı, hepsi token'la sıfırdan yazıldı:
 `area-chart` → `bands` (kalıcı işaretli dönemler), `record-list` (tablonun
-telefondaki kart hali), `filter-sheet` (sonuç sayılı süzgeç çekmecesi),
+telefondaki kart hali), `filter-sheet` (sonuç sayılı filtre çekmecesi),
 `date-range-presets` (hazır aralık + özel aralık tek kutuda). Pusula'da
-Pano ciro grafiği (en iyi/en zayıf gün) ve Gelen Kutusu'nda (Geldi süzgeci,
-telefonda kart listesi ve süzgeç çekmecesi) gerçek veriyle çalışıyorlar.
+Pano ciro grafiği (en iyi/en zayıf gün) ve Gelen Kutusu'nda (Geldi filtresi,
+telefonda kart listesi ve filtre çekmecesi) gerçek veriyle çalışıyorlar.
 
 - **Bant ayrı grafik değil `area-chart`ın özelliği:** ayrı dosya aynı
   çizimin ikinci kopyası olurdu.
-- **Tarih süzgecinde tek tetikleyici:** kaynakta hazır menü ve takvim iki
-  ayrı düğmeydi; ikisi aynı değeri değiştirdiği için "hangisi geçerli?"
+- **Tarih filtresinde tek tetikleyici:** kaynakta hazır menü ve takvim iki
+  ayrı butondu; ikisi aynı değeri değiştirdiği için "hangisi geçerli?"
   sorusu doğuyordu.
-- **Süzgeç çekmecesinde seçim anında uygulanır,** ana düğme yalnız kapatır;
+- **Filtre çekmecesinde seçim anında uygulanır,** ana buton yalnız kapatır;
   sayı gerçek kalır ("0" iken "Uyan Talep Yok").
 
 *Alınmayanlar:* grafik çizgileri (kaynakta veri değil, tasarım aracından
@@ -1233,7 +1233,7 @@ görünümlü iş haftası; ikisi tek kartta.
 - **Kart süreyle zenginleşir, eşikler piksel ölçüsüyle:** başlık + saat
   (≈52 px) → iki satır başlık (≈76) → ikon (≈108) → katılımcılar (≈140) →
   tam genişlikte "Görüşmeye Katıl" (≈172); daha kısa kartta eylem sağ üstte
-  ikon düğmesi. Çakışan dar şeritte yalnız başlık ve saat. Başlık ve saat
+  ikon butonu. Çakışan dar şeritte yalnız başlık ve saat. Başlık ve saat
   `shrink-0`: sabit boylu dikey düzende iki satıra kırpılan başlık sıfıra
   büzülüyordu (ilk denemede kartlar başlıksız göründü).
 - **Tüm Gün satırı uydurma etkinlik değil:** Pusula'da "Son Tarih"
@@ -1291,7 +1291,7 @@ eski hatayı geri koyunca yakaladığı doğrulandı.
   zamanla kayar; hareket azaltmada ve filtre desteklenmezse solma.
   Pusula: Bildirimler → Bu Konuyu Sessize Al.
 - **`quick-poll`** (yeni, Allo): sonuç oy verince görünür (sürü etkisi
-  yok), kendi seçimine yeniden basmak geri alır; `aria-pressed` düğmeler.
+  yok), kendi seçimine yeniden basmak geri alır; `aria-pressed` butonlar.
   Pusula: Görevler → Ekip Kararı (panodaki fiyat listesi işine bağlı,
   seçenekler %12 indirim sınırıyla tutarlı).
 - **`date-calendar` → `markedDates`** (Allo): etkinlik günü noktası.
@@ -1353,7 +1353,7 @@ mavi heroda butonlar çok kötü duruyor, kullanımı kolay değil".
   girmemişti, kapsam testi 129/141'de kırıktı (`mistakes.md #120`);
   `amiral/_ekler.tsx`te kendi gruplarına kuyu olarak girdi.
 
-**Denetim:** her Pusula sayfasında bütün düğme ve bağlantılara tek tek
+**Denetim:** her Pusula sayfasında bütün buton ve bağlantılara tek tek
 basıldı, etkisi olmayan arandı; gerçek ölü öğe yalnız kanban kartıydı (geri
 kalan işaretler zaten seçili seçenek ya da aynı sayfaya bağlantı).
 
@@ -1371,7 +1371,7 @@ e-postaya giriş bağlantısı (`auth-card` → `method="link"`, kütüphaneye e
 `sentTo`, `sentNote`, `sentAction`; panel başlığı odak alır, "Başka Adres
 Kullan" forma döner). Geniş ekranda sağda ürünün renkli paneli
 (`.pusula-hero`): bugün bekleyen talep sayısı, en acil üç talep, müşteri
-şeridi; şeridin "Durdur" düğmesi renkli zeminde okunur hale getirildi.
+şeridi; şeridin "Durdur" butonu renkli zeminde okunur hale getirildi.
 "Şifreli Bağlantı Kuruldu" büyük harf mono künyesi kalktı (`mistakes.md #115`
 dili). `mistakes.md #122`.
 
@@ -1385,11 +1385,50 @@ dili). `mistakes.md #122`.
   Kanal sütunu 1280 altında kapalı başlar (Görünüm menüsünden açılır).
 - **Paylaşılan durum uygulamada:** ekip panosu (`board`) uygulama bağlamına
   taşındı; rozet, başlık ve pano tek sayı, sayfa değişince iş kaybolmaz.
-- **Bekleme soldurmaz:** yüklenen düğme `opacity` ile solunca beyaz metin
+- **Bekleme soldurmaz:** yüklenen buton `opacity` ile solunca beyaz metin
   2,2:1'e iniyordu; `auth-card` beklemede tam opak, örnekler `aria-busy`.
 - **Renkli zemindeki hap beyaz dolgulu:** yarı saydam beyaz hap mavi zemini
   açıp metni 3,5:1'e düşürüyordu.
 - **Dokunma hedefi kalıbı:** `min-h-11 pointer-fine:min-h-9` (ya da
   `size-11 pointer-fine:size-8`); bu turda Pusula sayfaları ve `toc-nav`.
   Kalan bileşenler raporda "Açık".
+
+## Tanıtım Sayfası, Paylaşım Önizlemesi, Terimler, Huni (2026-11-18)
+
+**Bağlam:** Sahibi: "Kapak'a Tanıtım diyelim, çok daha gösterişli ve premium
+olsun; palet bölümünde sağ sol dengesi yok; WhatsApp/X önizlemeleri; butona
+düğme demek kesinlikle yasak; grafik renkleri mantıklı mı; web hunisini
+bilemedim; referanslarda görseli olmayanlara görsel".
+
+**Karar:**
+- **Tanıtım (eski Kapak):** adres aynı (`cover--overview`). İlk ekran ortalı
+  başlık + eylemler + arama, altında GERÇEK bileşenlerden çalışan kolaj
+  (sahte ekran görüntüsü yok). Harita kendi bölümünde üç eşit sütun; raflar
+  15 (Grafikler ve Bloklar eklendi: üçlü ızgarada son satır tek kalmıyordu);
+  "Dört Sayfada Katalog" haritayı tekrarladığı için kalktı. Palet bölümü iki
+  eşit sütun, aynı çerçeve ve boy; "seçili" etiketi panelin başlığında.
+- **Paylaşım önizlemesi:** `manager-head.html`de Open Graph + X kartı (mutlak
+  adres), `public/og.png` (1200 × 630) Tanıtım kolajından `npm run og` ile
+  üretilir (`scripts/build-og.mjs`); iOS ikonu; derleme sonrası başlık
+  "dev-starter · Görsel Katalog" (`scripts/seo-head.mjs`).
+- **Yazılım Türkçesi:** "düğme" yerine **buton** (393 dosya, ek uyumuyla),
+  "süzgeç" yerine **filtre**, "simge" yerine **ikon**. `guides/05` § 6
+  tablosu; `slop-scan.sh` "düğme"yi YÜKSEK bulgu sayar.
+- **Grafik renk anlamı:** seri 1 = bu dönem / ana ölçü, seri 2 = önceki
+  dönem (paletin yıkanmış tonu), kanal renkleri `CHANNEL_SERIES`ten her
+  grafikte aynı. Memnuniyet grafiğinde "Bu Dönem" 2, "Önceki Dönem" turuncu
+  idi; düzeldi. Aynı ölçünün adımları (huni, aşama çubukları) TEK renk:
+  her aşamaya ayrı renk kategori gibi okunuyordu.
+- **Huni:** her sütunun üstünde aşama adı ve değeri, altında bir önceki
+  adıma göre dönüşüm (→ %28); bir önceki aşamanın soluk izi kaybı gösterir;
+  lejant varsayılan kapalı. Pusula'da kart adı "Web Mağaza Hunisi ·
+  Ziyaretten Siparişe" (eski "Mağaza Dönüşümü" neyi ölçtüğünü söylemiyordu).
+- **Referanslar:** görseli olmayan kart baş harf yerine sitenin / GitHub
+  deposunun paylaşım görseli, kendi projelerimizde ahmetakyapi.com ekran
+  görüntüsü; hiçbiri yoksa bölümüne göre kapak (ikon, desen, ad). Başlıkta
+  arşivin kendi kapaklarından mozaik; Şerit / Izgara görünümü.
+
+**Alternatifler:** paylaşım görselini elle çizmek (bayatlar; kolajdan
+üretmek seçildi); huniyi logaritmik ölçekle çizmek (küçük aşamayı büyütür,
+yanıltır; doğrusal + en az %6 + yazılı sayı kaldı).
 

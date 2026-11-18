@@ -8,7 +8,7 @@
 /* --- Düzenleyici + önizleme düzeni ----------------------------------------
    Geniş ekranda form solda, önizleme sağda yapışık; önizleme sütunu formdan
    biraz geniş, masaüstü penceresi okunur kalsın. Dar ekranda önizleme formun
-   altında, kaydet çubuğunda "Önizle" düğmesi tam ekranı açar. */
+   altında, kaydet çubuğunda "Önizle" butonu tam ekranı açar. */
 .lp-editor {
   display: grid;
   gap: 2.5rem;
@@ -102,7 +102,7 @@
   }
 }
 
-/* Cihaz ve tema seçimi: iki düğmelik hap */
+/* Cihaz ve tema seçimi: iki butonluk hap */
 .lp-seg,
 .lp-views {
   display: inline-flex;

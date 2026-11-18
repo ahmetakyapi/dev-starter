@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "`Tooltip` görsel etikettir: ikon düğmenin adını fareyle gelene ve klavyeyle odaklanana gösterir, dokunmatikte bilerek açılmaz; içine önemli bilgi konmaz. Okunması gereken açıklama için `InfoTip`: farede üzerine gelince, dokunmatikte tıklayınca açılır.",
+          "`Tooltip` görsel etikettir: ikon butonun adını fareyle gelene ve klavyeyle odaklanana gösterir, dokunmatikte bilerek açılmaz; içine önemli bilgi konmaz. Okunması gereken açıklama için `InfoTip`: farede üzerine gelince, dokunmatikte tıklayınca açılır.",
       },
     },
   },

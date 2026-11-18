@@ -4,11 +4,11 @@ import type { ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
- * Güven satırı: birincil eylemin hemen altında, küçük simge ve noktayla
- * ayrılmış kısa güvenceler. Ribbon her indirme düğmesinin altına aynı
+ * Güven satırı: birincil eylemin hemen altında, küçük ikon ve noktayla
+ * ayrılmış kısa güvenceler. Ribbon her indirme butonunun altına aynı
  * satırı koyar ("Apple onaylı · Geliştirici kimliğiyle imzalı · Gatekeeper'dan
  * temiz açılır"); tıklamadan hemen önceki "güvenli mi?" sorusunu orada,
- * düğmenin dibinde yanıtlar. Ödeme düğmesinin altında "Ödeme Stripe
+ * butonun dibinde yanıtlar. Ödeme butonunun altında "Ödeme Stripe
  * güvencesinde", kayıtta "Kart gerekmez · 2 dakikada kurulum".
  *
  * KURAL: en çok üç güvence, her biri doğrulanabilir bir olgu ("şifreli
@@ -24,7 +24,7 @@ import { cn } from "../utils";
 
 type TrustLineProps = {
   items: readonly ReactNode[];
-  /** Baştaki simge; varsayılan kalkan. `null` simgesiz. */
+  /** Baştaki ikon; varsayılan kalkan. `null` ikonsuz. */
   icon?: ReactNode | null;
   tone?: "default" | "media";
   align?: "center" | "start";

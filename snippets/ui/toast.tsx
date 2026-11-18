@@ -47,7 +47,7 @@ import { cn } from "@/lib/utils";
  *
  * GÖRÜNÜŞ ("board" dili): beyaz karo `bg-overlay` + kıl çizgisi +
  * `shadow-floating`, `rounded-xl`. Renkli zemin YOK: tür ikonun renginde
- * ve sözde; dört renkli kutu sayfada bağırırdı. Eylem ikincil karo düğme.
+ * ve sözde; dört renkli kutu sayfada bağırırdı. Eylem ikincil karo buton.
  *
  * TEK TOASTER: iki Toaster aynı yöneticiye abone olsa her bildirim iki kez
  * çıkardı. İkinci Toaster sessizce çizilmez, ilki kalkınca devralır
@@ -114,7 +114,7 @@ export const toast = Object.assign((title: ReactNode, options?: ToastOptions) =>
   warning: (title: ReactNode, options?: ToastOptions) => show("warning", title, options),
   info: (title: ReactNode, options?: ToastOptions) => show("info", title, options),
   loading: (title: ReactNode, options?: ToastOptions) => show("loading", title, options),
-  /** Yıkıcı eylemin ardından: "Geri Al" düğmeli başarı bildirimi, 8 sn. */
+  /** Yıkıcı eylemin ardından: "Geri Al" butonlu başarı bildirimi, 8 sn. */
   undo: (title: ReactNode, onUndo: () => void, options?: ToastOptions & { label?: string }) =>
     show("success", title, {
       timeout: 8000,

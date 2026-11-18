@@ -353,7 +353,7 @@ export default function VitrinBloklar() {
         <div className="grid gap-10 lg:grid-cols-2">
           <Showcase
             name="Giriş Kartı"
-            note="Sağlayıcı düğmeleri, e-posta ve şifre, sunucu eylemine bağlanan hata durumu."
+            note="Sağlayıcı butonları, e-posta ve şifre, sunucu eylemine bağlanan hata durumu."
             bodyClassName="border border-line bg-page"
           >
             <AuthCard

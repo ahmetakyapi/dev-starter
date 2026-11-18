@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
  *
  * ERİŞİLEBİLİRLİK: `role="region"` + ad; öndeki kart okunur, arkadakiler
  * `aria-hidden`. Değişim canlı bölgeye BİLDİRİLMEZ (kendiliğinden dönen içerik
- * ekran okuyucuyu sürekli bölerdi); sayaç düğmesi elle geçişi sağlar.
+ * ekran okuyucuyu sürekli bölerdi); sayaç butonu elle geçişi sağlar.
  *
  *   <NoticeDeck label="Duyurular" items={[{ id: "v3", eyebrow: "Yeni sürüm", title: "3.1 yayında", action: <a href="/surum">Notlar</a> }]} />
  */

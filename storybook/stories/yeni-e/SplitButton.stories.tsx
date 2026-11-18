@@ -5,7 +5,7 @@ import { SplitButton } from "@/components/ui/split-button";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Bölünmüş Düğme",
+  title: "Bileşenler/Buton ve İkon/Bölünmüş Buton",
   id: "split-button",
   component: SplitButton,
   tags: ["autodocs"],
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "En sık seçilen eylem ve aynı işin kardeşleri tek hapta (“CSV Olarak İndir” + ▾ Excel, PDF). İki ayrı düğme: sol yarı hemen yapar, ok menüyü açar (Base UI Menu: oklar, Escape, odak dönüşü). Farklı işler (Düzenle, Sil) tek düğmeye sıkıştırılmaz, onlar Açılır Menü.",
+          "En sık seçilen eylem ve aynı işin kardeşleri tek hapta (“CSV Olarak İndir” + ▾ Excel, PDF). İki ayrı buton: sol yarı hemen yapar, ok menüyü açar (Base UI Menu: oklar, Escape, odak dönüşü). Farklı işler (Düzenle, Sil) tek butona sıkıştırılmaz, onlar Açılır Menü.",
       },
     },
   },

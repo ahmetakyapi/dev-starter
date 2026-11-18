@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  * `rounded-xl`), ikon kuyunun üstünde beyaz bir karoda (`bg-overlay` +
  * `shadow-raised`, `rounded-lg`); kesikli çizgi kalktı (kesik kenar
  * "buraya bırak" der, boş liste bir bırakma alanı değil). Kuyunun içine
- * kart konmaz; eylem tek düğme.
+ * kart konmaz; eylem tek buton.
  *
  * Başlık Title Case; `hint` cümle düzeninde ve bir sonraki adımı söyler
  * ("İlk kaydı eklediğinde burada listelenecek."), suçlamaz ("Hiç kaydınız

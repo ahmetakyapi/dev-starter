@@ -4,7 +4,13 @@
  * görseldir; ekran görüntüsü değildir (`design-references.md` → Kullanım
  * Şartı). Görsel yoksa ya da yüklenmezse kart baş harfli kapağa düşer.
  *
- * Toplandı: 2026-11-04, ek üç site 2026-11-11 (sayfa başlığındaki `og:image` / `twitter:image`).
+ * Toplandı: 2026-11-04, ek üç site 2026-11-11, beş site 2026-11-18 (sayfa
+ * başlığındaki `og:image` / `twitter:image`).
+ *
+ * GitHub deposu: GitHub'ın kendi paylaşım görseli (`opengraph.githubassets.com`).
+ * Kendi projelerimiz: ahmetakyapi.com'daki ekran görüntüleri (bizim işimiz).
+ * Hiçbiri yoksa kart, bölümüne göre tasarlanmış kapağa düşer (Referanslar →
+ * `ConceptCover`): baş harf değil, adı ve türü söyleyen bir sahne.
  * Site görselini değiştirirse adres kırılabilir; kırılan kapak sessizce
  * yedeğe döner, sayfa bozulmaz.
  */
@@ -29,12 +35,35 @@ export const COVERS: Record<string, string> = {
   "offscreen.wtf": "https://offscreen.wtf/opengraph-image",
   "secki.dev": "https://secki.dev/og.jpg?v=2",
   "keepachangelog.com": "https://keepachangelog.com/assets/images/keep-a-changelog-opengraph-851f2d20.png",
+  "allo.joshpuckett.me": "https://allo.joshpuckett.me/og.png",
+  "ingotui.com": "https://ingotui.com/opengraph-image",
+  "patterncraft.fun": "https://patterncraft.fun/og-banner.png",
+  "lottiefiles.com": "https://stp-v4-cdn.lottiefiles.com/ogimage_Homepage_b5840ac00c.png",
+  "lenis.dev": "https://lenis.dev/og.png?v=1",
+};
+
+/** Kendi projelerimiz: kart adına göre, ahmetakyapi.com'daki ekran görüntüsü (açık tema, 640 px). */
+const SHOT = (slug: string) => `https://www.ahmetakyapi.com/projects/${slug}/desktop-light.w640.webp`;
+export const PROJECT_COVERS: Record<string, string> = {
+  "Açılış Zili": SHOT("acilis-zili"),
+  "Ramazan Vakitleri": SHOT("ramazan-vakitleri"),
+  "Keşke Alsaydım": SHOT("keskealsaydim"),
+  DigyNotes: SHOT("digynotes"),
+  Mimio: SHOT("mimio"),
+  "dev-starter Storybook": "./og.png",
+  "ahmetakyapi.com": "https://www.ahmetakyapi.com/opengraph-image",
 };
 
 export function coverOf(href: string | undefined) {
   if (!href) return undefined;
   try {
-    const host = new URL(href).hostname;
+    const url = new URL(href);
+    const host = url.hostname;
+    // GitHub deposu: GitHub'ın depo paylaşım görseli (yol: /sahip/depo).
+    if (host === "github.com") {
+      const [owner, repo] = url.pathname.split("/").filter(Boolean);
+      return owner && repo ? `https://opengraph.githubassets.com/dev-starter/${owner}/${repo}` : undefined;
+    }
     // Arşivde adres bazen www'lu bazen www'suz: ikisi de aynı kapağa düşer.
     return COVERS[host] ?? COVERS[host.replace(/^www\./, "")] ?? COVERS[`www.${host}`];
   } catch {

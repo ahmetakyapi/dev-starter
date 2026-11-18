@@ -12,7 +12,7 @@ const meta = {
       story: { inline: false, height: "520px" },
       description: {
         component:
-          "Sayfanın başında üstten boşluklu tam yuvarlak hap; kaydırınca üst kenara yapışır, üst köşeleri düzleşir, gölgesi derinleşir. Opak: görsel zeminli kahramanda okunurluk bozulmaz. Durum `useSyncExternalStore` ile boole okunur, yalnız eşikte yeniden çizilir. Telefonda bağlantılar açılan panelde; Esc kapatır, odak düğmeye döner.",
+          "Sayfanın başında üstten boşluklu tam yuvarlak hap; kaydırınca üst kenara yapışır, üst köşeleri düzleşir, gölgesi derinleşir. Opak: görsel zeminli kahramanda okunurluk bozulmaz. Durum `useSyncExternalStore` ile boole okunur, yalnız eşikte yeniden çizilir. Telefonda bağlantılar açılan panelde; Esc kapatır, odak butona döner.",
       },
     },
   },

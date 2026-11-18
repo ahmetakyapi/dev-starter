@@ -7,9 +7,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 /**
- * Tarih aralığı süzgeci: hazır aralıklar ("Son 7 Gün", "Son 30 Gün",
+ * Tarih aralığı filtresi: hazır aralıklar ("Son 7 Gün", "Son 30 Gün",
  * "Tümü") ve aynı açılır kutuda özel aralık takvimi. Liste ve rapor
- * süzgeçleri için: insanların çoğu "son 30 gün" ister, takvimde iki gün
+ * filtreleri için: insanların çoğu "son 30 gün" ister, takvimde iki gün
  * tıklamak zorunda kalmamalı; ama tam aralık gerekince ikinci bir
  * bileşene de gitmemeli.
  *
@@ -19,11 +19,11 @@ import { cn } from "@/lib/utils";
  * `segmented-control.tsx`: orada seçenek az ve hep görünür.
  *
  * Yöntem Assetora turundan (2026-11; davranış, kod değil). Onlarda hazır
- * menü ve takvim iki ayrı düğmeydi; burada tek tetikleyici, çünkü ikisi
- * aynı değeri değiştiriyor ve iki düğme "hangisi geçerli?" sorusu açıyordu.
+ * menü ve takvim iki ayrı butondu; burada tek tetikleyici, çünkü ikisi
+ * aynı değeri değiştiriyor ve iki buton "hangisi geçerli?" sorusu açıyordu.
  *
  * Değer `{ kind: "preset", id }` ya da `{ kind: "custom", start, end }`.
- * Süzme için `rangeOf(value, presets, today)` başlangıç ve bitişi verir
+ * Filtreleme için `rangeOf(value, presets, today)` başlangıç ve bitişi verir
  * (`null`: sınırsız). `today` dışarıdan: sunucu ve istemci aynı günü
  * görsün, örnek veride sabit tarih kullanılabilsin.
  *

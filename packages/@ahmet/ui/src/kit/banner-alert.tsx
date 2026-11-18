@@ -24,8 +24,8 @@ import { cn } from "../utils";
  * (sırası gelince). Canlı bölge DOM'a içeriğiyle birlikte girerse bazı
  * okuyucular kaçırır; kritik durumda kabı önceden boş bas.
  *
- * Eylem en fazla iki: `actions` (ikincil karo düğme ya da bağlantı).
- * Kapatılabilir satır `onDismiss` alır; × düğmesi `close-button.tsx`.
+ * Eylem en fazla iki: `actions` (ikincil karo buton ya da bağlantı).
+ * Kapatılabilir satır `onDismiss` alır; × butonu `close-button.tsx`.
  *
  * Sunucu bileşeni. Kuyu (`bg-surface`) içinde ya da sayfa zemininde durur;
  * kendisi kart değil, içine kart konmaz.
@@ -68,7 +68,7 @@ export function BannerAlert({
   const role = announce ? (tone === "danger" || tone === "warning" ? "alert" : "status") : undefined;
 
   /* Izgara: telefonda ikon | metin | ×, eylemler metnin altında; geniş
-     ekranda eylemler × düğmesinden önce aynı satırda. */
+     ekranda eylemler × butonundan önce aynı satırda. */
   return (
     <div
       role={role}

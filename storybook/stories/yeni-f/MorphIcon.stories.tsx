@@ -5,7 +5,7 @@ import { MorphIcon, type MorphShape } from "@/components/ui/morph-icon";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Biçim Değiştiren İkon",
+  title: "Bileşenler/Buton ve İkon/Biçim Değiştiren İkon",
   id: "morph-icon",
   component: MorphIcon,
   tags: ["autodocs", "yeni"],
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Aynı düğmenin iki hali arasında çizgiler yeniden dizilir: menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat. Göz düğmenin aynı düğme olduğunu görür. Her biçim üç çizgi, uçlar yayla kayar; gereksiz çizgi noktaya toplanıp söner. Hal bilgisi düğmenin adında.",
+          "Aynı butonun iki hali arasında çizgiler yeniden dizilir: menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat. Göz butonun aynı buton olduğunu görür. Her biçim üç çizgi, uçlar yayla kayar; gereksiz çizgi noktaya toplanıp söner. Hal bilgisi butonun adında.",
       },
     },
   },

@@ -10,7 +10,7 @@ import registry from "../../snippets/ui/registry.json";
  * yazılmış liste yok. Eşleme meta `id`sinden: kural gereği id = dosya adı,
  * istisnası (`track-bar-chart` → `bar-chart`) kayıtta `storyId` olarak durur.
  *
- * Görünüş board dili: gri kuyu, içinde beyaz karolar, kopyala düğmesi karoda.
+ * Görünüş board dili: gri kuyu, içinde beyaz karolar, kopyala butonu karoda.
  */
 
 type Item = (typeof registry.items)[number];

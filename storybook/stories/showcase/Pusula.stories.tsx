@@ -82,7 +82,7 @@ export const Overview: Story = {
     // 3. ⌘K → açık bir talep, gelen kutusunda ayrıntısıyla açılır
     await command(canvasElement, OPEN_TICKETS[0].id);
     const sheet = await canvas.findByRole("dialog", { name: OPEN_TICKETS[0].subject }, { timeout: 3000 });
-    // Sentetik Escape yerel <dialog>'un iptalini tetiklemez: kapat düğmesi.
+    // Sentetik Escape yerel <dialog>'un iptalini tetiklemez: kapat butonu.
     await userEvent.click(within(sheet).getByRole("button", { name: "Kapat" }));
     await waitFor(() => expect(sheet).not.toBeVisible());
     // 4. Kenar çubuğundan panoya dönüş
@@ -119,12 +119,12 @@ export const Inbox: Story = {
   name: "Gelen Kutusu",
   args: { initialPage: "inbox" },
   parameters: {
-    docs: { description: { story: "Talep tablosu: arama alanı (“/” kısayolu, Türkçe harf düzleme), öncelik çipleri, müşteri seçimi, sıralama ve sayfalama; atanan kişinin üstüne gelince önizleme kartı, satıra sağ tıklayınca bağlam menüsü, ada basınca yan çekmecede ayrıntı. Arşivleme bildirimi Geri Al düğmeli. Süzgeç boş kalınca boş durum." } },
+    docs: { description: { story: "Talep tablosu: arama alanı (“/” kısayolu, Türkçe harf düzleme), öncelik çipleri, müşteri seçimi, sıralama ve sayfalama; atanan kişinin üstüne gelince önizleme kartı, satıra sağ tıklayınca bağlam menüsü, ada basınca yan çekmecede ayrıntı. Arşivleme bildirimi Geri Al butonlu. Filtre boş kalınca boş durum." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     const atlas = TICKETS.filter((t) => t.customerId === "atlas");
-    // Öncelik süzgeci
+    // Öncelik filtresi
     const acil = await canvas.findByRole("button", { name: /^Acil/ });
     await userEvent.click(acil);
     await expect(acil).toHaveAttribute("aria-pressed", "true");
@@ -134,8 +134,8 @@ export const Inbox: Story = {
     if (!atlas.some((t) => t.priority === "Acil")) {
       await userEvent.type(canvas.getByRole("combobox", { name: "Müşteri" }), "Atlas");
       await userEvent.click(await within(document.body).findByRole("option", { name: "Atlas Konaklama" }));
-      await canvas.findByRole("heading", { name: "Bu Süzgeçlere Uyan Talep Yok" });
-      await userEvent.click(canvas.getByRole("button", { name: "Süzgeçleri Temizle" }));
+      await canvas.findByRole("heading", { name: "Bu Filtrelere Uyan Talep Yok" });
+      await userEvent.click(canvas.getByRole("button", { name: "Filtreleri Temizle" }));
     }
     await waitFor(() => expect(within(canvas.getByRole("table", { name: "Talepler" })).getAllByRole("row").length).toBe(9));
     // Sıralama: öncelik başlığı
@@ -170,7 +170,7 @@ export const Tasks: Story = {
     await canvas.findByRole("heading", { level: 1, name: "Görevler" });
     // Klavyeyle taşıma: Yapılacak'ın ilk kartı Sürüyor'a.
     const first = BOARD[0].cards[0];
-    // Panoda ara: "Yaklaşan Son Tarihler" satırları da aynı adla başlayan düğmeler.
+    // Panoda ara: "Yaklaşan Son Tarihler" satırları da aynı adla başlayan butonlar.
     const board = canvas.getByRole("region", { name: "Ekip İşleri" });
     const card = within(board).getByRole("button", { name: new RegExp(`^${first.title}`) });
     card.focus();
@@ -202,7 +202,7 @@ export const Calendar: Story = {
   name: "Takvim",
   args: { initialPage: "calendar" },
   parameters: {
-    docs: { description: { story: "Solda Bugün paneli (aralık seçen ay takvimi; Yapılacaklar son tarihe göre gruplu, gruba + ile iş eklenir; Etkinlikler ajandası), sağda kart görünümlü iş haftası: ikonlu kartlar, görüntülü görüşmede Katıl düğmesi, Son Tarih satırında ekip panosunun son tarihleri. Altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
+    docs: { description: { story: "Solda Bugün paneli (aralık seçen ay takvimi; Yapılacaklar son tarihe göre gruplu, gruba + ile iş eklenir; Etkinlikler ajandası), sağda kart görünümlü iş haftası: ikonlu kartlar, görüntülü görüşmede Katıl butonu, Son Tarih satırında ekip panosunun son tarihleri. Altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
@@ -270,7 +270,7 @@ export const Notifications: Story = {
     docs: {
       description: {
         story:
-          "Sekmeli ve gün gün gruplu akış; satırda işin kendisi (Onayla, Teklifi Aç, Yanıtla, Yeniden Bağla), ⋯ menüsünde okunma, erteleme, sessize alma. Onaylanan satır yeşile döner, bildirim Geri Al düğmeli. Sağda teslimat kanalları ve ertelenenler; Tercihler yan panelde olay × kanal tablosu (sütun başlığı bütün sütunu açar/kapar). Sayılar Pusula'nın verisinden. Zil kutusu ve kenar çubuğu rozeti aynı kaydı okur: burada okunan orada da okunmuş.",
+          "Sekmeli ve gün gün gruplu akış; satırda işin kendisi (Onayla, Teklifi Aç, Yanıtla, Yeniden Bağla), ⋯ menüsünde okunma, erteleme, sessize alma. Onaylanan satır yeşile döner, bildirim Geri Al butonlu. Sağda teslimat kanalları ve ertelenenler; Tercihler yan panelde olay × kanal tablosu (sütun başlığı bütün sütunu açar/kapar). Sayılar Pusula'nın verisinden. Zil kutusu ve kenar çubuğu rozeti aynı kaydı okur: burada okunan orada da okunmuş.",
       },
     },
   },

@@ -39,7 +39,7 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       // Odak kapanan menünün içindeyse öğesiyle birlikte silinir ve body'ye
-      // düşer; klavye kullanıcısı sayfanın başına atılmasın, açan düğmeye döner.
+      // düşer; klavye kullanıcısı sayfanın başına atılmasın, açan butona döner.
       const inside = menu.current?.contains(document.activeElement);
       setOpen(false);
       if (inside) menuButton.current?.focus();
@@ -116,8 +116,8 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
             id={menuId}
             aria-label="Mobil menü"
             // Odak menüden çıkınca (son öğeden Tab) menü kapanır: açık kalsa
-            // sıradaki odak, örtünün altında kalan hero düğmesine düşer ve
-            // görünmez (WCAG 2.4.11). Açan düğmeye dönen odak menüyü kapatmaz;
+            // sıradaki odak, örtünün altında kalan hero butonuna düşer ve
+            // görünmez (WCAG 2.4.11). Açan butona dönen odak menüyü kapatmaz;
             // pencere odağı kaybedince `relatedTarget` boş gelir, o da kapatmaz.
             onBlur={(event) => {
               const next = event.relatedTarget;

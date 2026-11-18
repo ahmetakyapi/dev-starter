@@ -92,7 +92,7 @@ export function SearchBar({
           type="button"
           onClick={() => {
             setValue('')
-            // Düğme kendini kaldırıyor: odak body'ye düşmesin, kutuya dönsün
+            // Buton kendini kaldırıyor: odak body'ye düşmesin, kutuya dönsün
             inputRef.current?.focus()
           }}
           className="absolute right-0 top-0 grid size-11 place-items-center text-muted transition-colors hover:text-strong"

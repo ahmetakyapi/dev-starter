@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
- * Panoya kopyala. Sonuç İKİ yoldan söylenir: ikon değişir (gören için) ve
+ * Panoya kopyala. Sonuç İKİ yoldan söylenir: ikon dağişir (gören için) ve
  * görünmez bir canlı bölge "Kopyalandı" der (ekran okuyucu için). Yalnızca
  * ikonun değişmesi, ekran okuyucu kullanıcısına hiçbir şey söylemez.
  *
@@ -13,10 +13,10 @@ import { cn } from "../utils";
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): ikon durum değişince yerinde döner:
  * eski ikon kaybolur, yenisi 0,85'ten ölçeklenip belirir (`key` her durumda
- * yeni öğe, giriş CSS anahtar karesiyle). Metinli düğme beyaz karo; ikon
- * düğme üzerine gelince yumuşak gri.
+ * yeni öğe, giriş CSS anahtar karesiyle). Metinli buton beyaz karo; ikon
+ * buton üzerine gelince yumuşak gri.
  *
- * `children` verilirse metinli düğme, verilmezse yalnızca ikon (44 piksel).
+ * `children` verilirse metinli buton, verilmezse yalnızca ikon (44 piksel).
  */
 
 /** Onayın ekranda kalma süresi. */
@@ -28,7 +28,7 @@ type Status = "idle" | "copied" | "failed";
 
 type CopyButtonProps = {
   value: string;
-  /** İkon düğmenin adı ve metinli düğmenin varsayılan metni. */
+  /** İkon butonun adı ve metinli butonun varsayılan metni. */
   label?: string;
   copiedLabel?: string;
   failedLabel?: string;

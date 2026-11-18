@@ -5,7 +5,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Açılır kutu: bir düğmeye bağlı, sayfayı kilitlemeyen küçük katman
+ * Açılır kutu: bir butona bağlı, sayfayı kilitlemeyen küçük katman
  * (filtre seçenekleri, kısa açıklama, paylaşım bağlantısı).
  *
  * Headless katman Base UI (`@base-ui/react`, kararı guides/10): konumlama
@@ -18,14 +18,14 @@ import { cn } from "@/lib/utils";
  *     <PopoverContent title="Filtreler">…</PopoverContent>
  *   </Popover>
  *
- * Tetikleyici kendi düğmeni taşıyacaksa: `<PopoverTrigger render={<Button />}>`.
+ * Tetikleyici kendi butonunu taşıyacaksa: `<PopoverTrigger render={<Button />}>`.
  * İçinde form varsa ve odak dışarı kaçmamalıysa: `<Popover modal="trap-focus">`
  * ve içeride bir `PopoverClose` (dokunmatik ekran okuyucu çıkış bulsun).
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `bg-overlay`, `rounded-xl`,
  * kıl çizgisi (`border-line`, eskiden `-strong`: gölge zaten ayırıyor) ve
  * katmanlı kısa gölge `shadow-modal`. Giriş 0,96'dan ölçek + opaklık,
- * kaynağı tetikleyici (`--transform-origin`): kutu düğmeden "çıkar".
+ * kaynağı tetikleyici (`--transform-origin`): kutu butondan "çıkar".
  *
  * Konum: Positioner `z-50` taşır. Sayfa kökünde `isolation: isolate` yoksa
  * başka bir yığın bağlamının altında kalabilir; kök layout'taki gövde

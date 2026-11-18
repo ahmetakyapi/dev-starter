@@ -2,7 +2,7 @@
  * Bellek içi, en iyi çaba hız sınırı.
  *
  * SINIRI: Vercel'de her sunucusuz örneğin kendi haritası var ve örnek
- * soğuyunca harita sıfırlanır. Yani bu bir GARANTİ değil, bir fren: "düğmeye
+ * soğuyunca harita sıfırlanır. Yani bu bir GARANTİ değil, bir fren: "butona
  * basılı tutma" ve döngüdeki basit script vakalarını keser, Redis bağımlılığı
  * eklemeden. Tam olarak bir kez olması gereken işler (ödeme, ödül) veritabanı
  * düzeyinde koşullu UPDATE ile korunur; gerçek dağıtık sınır gerekiyorsa

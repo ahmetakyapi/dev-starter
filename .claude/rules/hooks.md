@@ -86,7 +86,7 @@ Yeni `allow` kuralı paylaşılan ayara eklenmez; makineye özgü izin
   ve `/usr/bin/git commit` alt komut adı `git` olmadığı için filtreye takılır;
   lib bunları tanısa da hook koşmaz. Kabul edildi: `if` "best-effort"tur,
   sert sınır izin sistemidir. Script'ler kendi `hook_text_is_git_commit`
-  süzgecini KORUR (filtre değişirse ya da kaldırılırsa davranış aynı kalır).
+  filtresini KORUR (filtre değişirse ya da kaldırılırsa davranış aynı kalır).
 - `if` yalnız araç olaylarında değerlendirilir; `SessionStart`a `if` konursa
   hook HİÇ koşmaz.
 

@@ -15,7 +15,7 @@ function fireAll() {
   toast.success("Fatura gönderildi", { description: "FTR-2024-0148 · Özdemir Zeytincilik" });
 }
 
-/** Tetikleyici düğmeler: her biri bir tür. */
+/** Tetikleyici butonlar: her biri bir tür. */
 function Triggers() {
   return (
     <div className="flex flex-wrap justify-center gap-2">
@@ -104,7 +104,7 @@ export const ErrorToast: Story = {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Hata" }));
     // Hata iki yerde: görünen karo ve Base UI'ın gizli `role="alert"` kopyası.
     await expect((await body().findAllByText("Ödeme alınamadı")).length).toBeGreaterThan(0);
-    // Hata kendiliğinden kapanmaz; kapat düğmesi var. Base UI düğmeyi yığın
+    // Hata kendiliğinden kapanmaz; kapat butonu var. Base UI butonu yığın
     // kapalıyken ekran okuyucudan gizler (odak girince açılır), adla aranamaz.
     await expect(document.querySelector('[data-type="error"] button[aria-label="Bildirimi Kapat"]')).not.toBeNull();
   },

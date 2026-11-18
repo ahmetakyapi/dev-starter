@@ -4,7 +4,7 @@ import { HoldButton } from "@/components/ui/hold-button";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Basılı Tut Onayı",
+  title: "Bileşenler/Buton ve İkon/Basılı Tut Onayı",
   id: "hold-button",
   component: HoldButton,
   tags: ["autodocs"],

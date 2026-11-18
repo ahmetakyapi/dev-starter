@@ -71,7 +71,7 @@ yukarıdaki tablodaki dosyalarda. Hatalar: `~/dev-starter/knowledge/mistakes.md`
 ## Metin Yazımı
 
 ### Başlık büyük harf düzeni — Title Case
-Başlıklar, alt başlıklar, düğme etiketleri, sekme adları, kart başlıkları ve
+Başlıklar, alt başlıklar, buton etiketleri, sekme adları, kart başlıkları ve
 menü satırları **Title Case** yazılır:
 
 - ✅ `Yeni Danışan`, `Seansı Başlat`, `Haftalık Plan`, `Gelişim Eğrisi`

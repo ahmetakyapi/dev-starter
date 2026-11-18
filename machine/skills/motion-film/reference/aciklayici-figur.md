@@ -139,7 +139,7 @@ Figür bir kartın içinde durur; dört köşe sabit görevlidir:
   son etkileşimden 3,6 sn sonra döner; kullanıcının koyacağı hedefleri sürer.
   Turun ortasında basılan adım tuşu turun hedefinden değil görünen değerden adımlar.
 - **Oynatma — değer ışınlanmaz** (`carryLeg`, `walkLeg`, `planAt`, `crossings`):
-  "şunu göster" diyen düğme değeri hedefe KOYMAZ, bir plan başlatır. Plan
+  "şunu göster" diyen buton değeri hedefe KOYMAZ, bir plan başlatır. Plan
   bacaklardan oluşur: önce olaysız bir **taşıma** (başlangıca, kısa yoldan, 0,6–1,4
   sn), sonra olaylı bir **yürüyüş** (anlatılan süreç, 2–6,5 sn). Başlangıç anlatılan
   olayın biraz önünde seçilir ki olay yürüyüşün ortasında yaşansın. Olay, değer bir
@@ -152,7 +152,7 @@ Figür bir kartın içinde durur; dört köşe sabit görevlidir:
 
 ## 6. Erişilebilirlik
 
-- Kök odaklanabilir; sürekli denetimde `role="slider"`, ayrık seçimde `role="group"` + düğmeler.
+- Kök odaklanabilir; sürekli denetimde `role="slider"`, ayrık seçimde `role="group"` + butonlar.
 - `aria-valuetext` yalnız okuyucunun SEÇİMİ değişince yazılır, döngüden değil:
   odaktaki kaydırıcının değeri her karede değişirse ekran okuyucu durmadan sayı okur.
 - Görsel künye ile erişilebilir değer AYRI. Canlı bölge (`aria-live="polite"`)
@@ -229,15 +229,15 @@ hareketi azaltana tur yok. Kurulum `scripts/add-figure-kit.mjs` (`--lathe`).
 ### Seans Zili, üçüncü sürüm: "Günü Oynat" (12 Ekim, `3f12a99`)
 
 Sahibinin itirazı: "tıkladığı gibi değişmesin, smooth olsun; zil çalmak ne işe
-yarıyor anlamadım". İkinci sürümde seans düğmesi ibreyi seansa ışınlıyor, "Zili
-Çal" düğmesi bağlamsız tek vuruş yapıyordu. Zilin ne zaman ve neden çaldığı
-anlaşılmıyordu. Çözüm, zili bir süs düğmesi olmaktan çıkarıp saatin SONUCU yapmak:
+yarıyor anlamadım". İkinci sürümde seans butonu ibreyi seansa ışınlıyor, "Zili
+Çal" butonu bağlamsız tek vuruş yapıyordu. Zilin ne zaman ve neden çaldığı
+anlaşılmıyordu. Çözüm, zili bir süs butonu olmaktan çıkarıp saatin SONUCU yapmak:
 
 | Etkileşim | Plan | Sonuç |
 |---|---|---|
 | İlk görünüş | İbre 00:00'dan şimdiye 3,2 sn (ease-in-out-quart) | Yolda açılış ya da kapanışı geçerse zil çalar |
 | Seans kartı | Taşıma: seans başı − 20 dk (zilsiz) → yürüyüş: seans boyunca | Açılış ve kapanış zili yolda, sırayla |
-| Günü Oynat | Taşıma: ön seans − 20 dk → yürüyüş: akşam seansının sonuna (≤ 6,5 sn) | İki zil sırayla; düğmenin zemini ilerlemeyle dolar |
+| Günü Oynat | Taşıma: ön seans − 20 dk → yürüyüş: akşam seansının sonuna (≤ 6,5 sn) | İki zil sırayla; butonun zemini ilerlemeyle dolar |
 | Kadranda gezinme | Üstel takip (τ 0,22 sn), 15 dk çentik | 6 sn hareketsizlikte şimdiye döner |
 | Oynatma bitti | 4 sn bekle → tek taşıma bacağıyla şimdiye | Geri dönüş zilsiz |
 | Canlı saat | 5 sn'de bir doğrudan yerine koy, döngü uyur | Gerçek açılış/kapanış anında döngü uyanır, zil çalar |
@@ -251,7 +251,7 @@ Kurallar (`figure-kit.ts` → `carryLeg`, `walkLeg`, `planAt`, `crossings`):
   kare atlasa da zil kaçmaz, geri sarmak açılışı yeniden yaşatmaz, taşıma
   bacağında hiç sorulmaz (`planAt(...).events`).
 - **Görünen her şey İBREYİ izler**: seans rozeti, iki saat, çizelgedeki "şimdi" imi,
-  düğmenin ilerleme zemini. Hedefi gösteren üst bilgi, ibre daha yoldayken
+  butonun ilerleme zemini. Hedefi gösteren üst bilgi, ibre daha yoldayken
   "16:30" yazar ve hareket boşa düşer.
 - **Zil anı söylenir**: sahnede 2,4 sn "Açılış Zili · 16:30 TR" bildirimi, çizelgedeki
   zil imi pirince döner. Bildirimde yalnız birincil saat (iki saat iki satıra taşıyordu).

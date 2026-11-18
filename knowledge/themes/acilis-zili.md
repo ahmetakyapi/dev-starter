@@ -159,7 +159,7 @@ satırları, boş durum ve hata gövdeleri, ölçü altı mikro künyeler
 Lacivert karo, beyaz tören zili, ağız çubuğu marka mavisinde. İki temada
 **aynı karo** (sekme / ana ekran ikonu temayı bilemiyor); yalnızca iç kenar
 ve gölge temaya uyar. Önceki açık mavi degrade accent'le aynı aileden
-geldiği için işaret bir düğme gibi okunuyordu.
+geldiği için işaret bir buton gibi okunuyordu.
 ```css
 --mark-gradient: linear-gradient(135deg, #17345c 0%, #0a1a31 100%);
 --mark-edge: rgb(159 212 255 / .2);   /* koyu temada .3 */

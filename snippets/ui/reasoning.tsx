@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  * kullanıcı hiç dokunmadıysa.
  *
  * İçerik `text-muted`, solda yuvarlaksız ince çizgi (alıntı gibi;
- * kartın tek kenarında renkli şerit değil). Başlık düğmesi `aria-expanded`;
+ * kartın tek kenarında renkli şerit değil). Başlık butonu `aria-expanded`;
  * akış bitince "6 sn düşündü" canlı bölgede bir kez okunur. Hareketi
  * azaltan kullanıcıda parıltı düz metin olur.
  *

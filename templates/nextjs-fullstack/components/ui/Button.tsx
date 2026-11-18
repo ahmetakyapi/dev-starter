@@ -3,11 +3,11 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Düğme. `asChild` YOK: bağlantı görünümlü düğme için `ButtonLink`, düğme
+ * Buton. `asChild` YOK: bağlantı görünümlü buton için `ButtonLink`, buton
  * görünümlü başka bir öğe için `buttonClass()`.
  *
  * `brand` degrade taşır ve ekranda en fazla bir kez kullanılır (degrade
- * disiplini, app/globals.css başı). Geri kalan vurgulu düğmeler `primary`. Tek bir bileşenin iki öğe
+ * disiplini, app/globals.css başı). Geri kalan vurgulu butonlar `primary`. Tek bir bileşenin iki öğe
  * gibi davranması tip güvenliğini ve erişilebilirliği bulanıklaştırır.
  *
  * DOKUNMA HEDEFİ: dokunmatik işaretçide her boy en az 44px. `sm` yalnızca
@@ -19,7 +19,7 @@ const BASE =
 
 export const BUTTON_VARIANTS = {
   /* Ekranın TEK birincil eylemi: marka degradesi. Bir ekranda ikinci bir
-     `brand` düğme görüyorsan biri `primary` olmalı. */
+     `brand` buton görüyorsan biri `primary` olmalı. */
   brand: "bg-cta text-on-brand shadow-cta hover:brightness-95",
   primary: "bg-primary text-on-primary shadow-cta hover:bg-primary-hover",
   /* Beyaz karo: kenarı `shadow-raised`ın kıl halkası çizer (ayrı border

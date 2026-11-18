@@ -18,7 +18,7 @@
  * Kullanım:
  *   useScrollLock(open)
  *   useLayer(open, onClose, panelRef)              // panel: tabIndex={-1}
- *   useLayer(open, onCancel, panelRef, cancelRef)  // ilk odak belirli bir düğmede
+ *   useLayer(open, onCancel, panelRef, cancelRef)  // ilk odak belirli bir butonda
  */
 
 'use client'
@@ -118,11 +118,11 @@ export function useLayer(
       // Görünmeyen öğe (`hidden md:block`, kapalı `<details>`) sekme sırasında
       // yok sayılır; listede kalırsa "son öğe" o olur ve Tab panelden kaçar.
       // Sıra seçiciden değil öğenin gerçek `tabIndex`inden okunur: gezici
-      // sekmeli gruplar (segmented control, sekmeler) pasif düğmelerine
+      // sekmeli gruplar (segmented control, sekmeler) pasif butonlarına
       // `tabIndex={-1}` verir; seçici onları sayarsa "son öğe" tarayıcının hiç
-      // uğramadığı düğme olur ve Tab yine panelden kaçar.
+      // uğramadığı buton olur ve Tab yine panelden kaçar.
       // Düzen hesaplamayan ortamda (jsdom testleri) hiçbir öğenin kutusu
-      // yoktur: süzgeç her şeyi atacaksa yalnız sekme sırası süzülür.
+      // yoktur: filtre her şeyi atacaksa yalnız sekme sırası süzülür.
       const all = Array.from(node.querySelectorAll<HTMLElement>(FOCUSABLE))
       const tabbable = all.filter((el) => el.tabIndex >= 0)
       const visible = tabbable.filter((el) => el.getClientRects().length > 0)
@@ -149,7 +149,7 @@ export function useLayer(
       // Panel çıkış animasyonunda hâlâ DOM'da; odak oradaki bir öğeye dönmesin.
       // Açan öğe aynı anda kapanan alttaki katmandaysa da (onaylanınca modal da
       // kapanır) dönmez: kardeş sırasında bu temizlik modalınkinden SONRA
-      // çalışır ve odağı kaybolacak düğmeye geri çekerdi.
+      // çalışır ve odağı kaybolacak butona geri çekerdi.
       const host = opener?.closest('[aria-modal="true"]')
       if (opener?.isConnected && !node.contains(opener) && (!host || layers.includes(host))) {
         opener.focus()

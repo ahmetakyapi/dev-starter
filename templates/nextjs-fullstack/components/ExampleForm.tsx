@@ -12,7 +12,7 @@ const INITIAL: ExampleState = { status: "idle" };
  * `useActionState` + `Field` örneği. JavaScript yüklenmeden de çalışır:
  * form düz bir POST olarak gider, sunucu eylemi aynı durumu döndürür.
  *
- * Gönder düğmesi `disabled` OLMAZ: odaktaki düğme devre dışı kalınca odak
+ * Gönder butonu `disabled` OLMAZ: odaktaki buton devre dışı kalınca odak
  * `<body>`ye düşer ve klavye ya da ekran okuyucu kullanıcısı sayfanın başına
  * döner. İkinci gönderimi `onSubmit` keser (React 19 `preventDefault` görünce
  * eylemi çağırmaz); hata dönünce odak ilk geçersiz alana gider.

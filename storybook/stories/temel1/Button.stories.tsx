@@ -26,7 +26,7 @@ const VARIANT_LABELS: Record<ButtonVariant, string> = {
 };
 
 const meta = {
-  title: "Bileşenler/Temel/Düğme",
+  title: "Bileşenler/Temel/Buton",
   id: "button",
   component: Button,
   tags: ["autodocs"],
@@ -34,7 +34,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Şablonun düğmesi: altı varyant, dört boy. `brand` marka degradesini taşır ve bir ekranda en fazla bir kez kullanılır; öteki vurgulu eylemler `primary`. Bağlantı görünümlü düğme için `ButtonLink`, başka bir öğeye aynı görünüş için `buttonClass()`; dokunmatikte her boy en az 44 piksel.",
+          "Şablonun butonu: altı varyant, dört boy. `brand` marka degradesini taşır ve bir ekranda en fazla bir kez kullanılır; öteki vurgulu eylemler `primary`. Bağlantı görünümlü buton için `ButtonLink`, başka bir öğeye aynı görünüş için `buttonClass()`; dokunmatikte her boy en az 44 piksel.",
       },
     },
   },
@@ -112,7 +112,7 @@ export const Disabled: Story = {
 };
 
 export const AsLink: Story = {
-  name: "Bağlantı Düğmesi",
+  name: "Bağlantı Butonu",
   render: () => (
     <div className="flex flex-wrap items-center justify-center gap-3">
       <ButtonLink href="/fiyatlar">Fiyatları İncele</ButtonLink>

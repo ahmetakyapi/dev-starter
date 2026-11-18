@@ -51,7 +51,7 @@ Versiyon: Hammerspoon 1.0 + Lua, panel başına tek HTML (WKWebView, WebKit 16+)
 ## 1. Visual Theme & Atmosphere
 
 > **Kasım 2026 revizyonu, iki tur.** İlk tur shojimac.com'dan "kâğıt-mürekkep" yönü aldı
-> (siyah mürekkep birincil düğme, büyük harf + geniş aralıklı Geist Mono etiketler, siyaha yakın
+> (siyah mürekkep birincil buton, büyük harf + geniş aralıklı Geist Mono etiketler, siyaha yakın
 > koyu tema). Sahibi reddetti: "çok siyah ve koyu, etiketler okunmuyor". İkinci tur
 > ui.wensity.com ve macOS widget'larından aydınlık, bir bakışta okunan yöne geçti; ardından
 > "fazla renkli" geri bildirimiyle renk yalnız sinyale indirildi. Ders: `mistakes.md` #115–#118.
@@ -65,7 +65,7 @@ kartlar, yumuşak gölge, tek bir birincil eylem, renk yalnız anlam taşıdığ
 - Nötr kart + renk sinyal: durum çipi, araç ikonu glifi, Claude halkası, sistem halkaları
 - Tek birincil eylem: mavi degrade hap (Yapıştır, VS Code'da Aç, Kopyala)
 - Hareket: girişte 35 ms aralıklı yükselme, halkalar ve çubuklar dolarak gelir, bağlıyken radar nabzı
-- Açık + grafit koyu tema; panel başlığındaki güneş/ay düğmesi hepsini birlikte çevirir
+- Açık + grafit koyu tema; panel başlığındaki güneş/ay butonu hepsini birlikte çevirir
 
 ---
 
@@ -133,11 +133,11 @@ Panel: `0 0 0 .5px` kenar + 3 katman gölge. Koyu temada gölgeler `rgba(0,0,0,.
 | Yap | Yapma |
 |-----|-------|
 | Renk yalnız sinyal (durum, kimlik, ölçü) | Her widget'a doygun degrade zemin (#116) |
-| Tek mavi birincil eylem | Açık temada siyah "ink" düğme/rozet (#115) |
+| Tek mavi birincil eylem | Açık temada siyah "ink" buton/rozet (#115) |
 | Cümle düzeninde okunur etiket | Küçük büyük-harf mono etiket |
 | Fontu göm (Inter) | README görüntüsünü sistem fontuna güvenerek üret (#117) |
 | Dar kutuda metni ölç, alanı aç | Uzun Türkçe etiketi kesik bırak (#118) |
-| Başlık, düğme, rozet Title Case | Cümle düzeninde başlık, arayüzde em dash (#119) |
+| Başlık, buton, rozet Title Case | Cümle düzeninde başlık, arayüzde em dash (#119) |
 
 ## 8. Responsive Behavior
 
@@ -147,7 +147,7 @@ tüm animasyonları kısaltır. Tema "auto" iken macOS görünümünü izler.
 ## 9. Agent Prompt Guide
 
 "Nimbstia dilinde bir panel: Inter, beyaz 22px widget kartları, renk yalnız sinyal, tek mavi
-degrade birincil düğme, etiketler cümle düzeninde 12px, büyük sayılar 700 ağırlık ve sıkı
+degrade birincil buton, etiketler cümle düzeninde 12px, büyük sayılar 700 ağırlık ve sıkı
 aralık, mono yalnız veri. `theme.css` token'larını kullan; Türkçe dizgileri aynen koru, İngilizce
 `i18n.js` tablosundan gelir. Önizle: `node scripts/preview/shoot.js out <panel>`."
 

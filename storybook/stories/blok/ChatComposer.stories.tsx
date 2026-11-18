@@ -33,7 +33,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Sohbet giriş kutusu: içeriğe göre büyüyen metin alanı, ek, model seçici, mikrofon ve yuvarlak gönder. Enter gönderir, Shift+Enter satır açar, IME ile yazarken Enter göndermez. Yanıt akarken gönder düğmesi aynı yerde Durdur'a döner. Tek satırlık arama için `search-bar` daha doğru.",
+          "Sohbet giriş kutusu: içeriğe göre büyüyen metin alanı, ek, model seçici, mikrofon ve yuvarlak gönder. Enter gönderir, Shift+Enter satır açar, IME ile yazarken Enter göndermez. Yanıt akarken gönder butonu aynı yerde Durdur'a döner. Tek satırlık arama için `search-bar` daha doğru.",
       },
     },
   },
@@ -103,7 +103,7 @@ export const StreamingStop: Story = {
 
 export const SingleModel: Story = {
   name: "Tek Model",
-  parameters: { docs: { description: { story: "`models` verilmezse model yalnız etiket; `onAttach` / `onVoice` yoksa o düğmeler hiç çizilmez." } } },
+  parameters: { docs: { description: { story: "`models` verilmezse model yalnız etiket; `onAttach` / `onVoice` yoksa o butonlar hiç çizilmez." } } },
   args: { models: undefined, onAttach: undefined, onVoice: undefined, model: "Fable 5 Mini" },
 };
 

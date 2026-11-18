@@ -20,9 +20,9 @@ import { cn } from "@/lib/utils";
  * hareketi azaltanda anında. Durum kontrollü: `value` (senin oyun) ve
  * `counts` (sen hariç diğer oylar) çağırandan; bileşen yalnız gösterir.
  *
- * Erişilebilirlik: `role="radiogroup"` değil, aç-kapa düğmeleri
+ * Erişilebilirlik: `role="radiogroup"` değil, aç-kapa butonları
  * (`aria-pressed`): oy geri alınabilir, radyo bunu söyleyemez. Oy verilince
- * her düğmenin adı sonucu da taşır ("Kısa şablon, yüzde 50, 3 oy"); toplam
+ * her butonun adı sonucu da taşır ("Kısa şablon, yüzde 50, 3 oy"); toplam
  * canlı bölgede.
  *
  * Örnek:

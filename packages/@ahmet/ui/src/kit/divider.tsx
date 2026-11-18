@@ -10,7 +10,7 @@ import { cn } from "../utils";
  * - Yatay, etiketsiz: `<hr>`. Rolü kendiliğinden `separator`; ekran okuyucu
  *   "ayırıcı" der. Yalnızca konu değişiyorsa anlamlı; süs ise `decorative`.
  * - Dikey: `<div role="separator" aria-orientation="vertical">`. `<hr>`
- *   yatay varsayılır, dikeyliği ARIA söyler. Araç çubuğunda düğme grubunu
+ *   yatay varsayılır, dikeyliği ARIA söyler. Araç çubuğunda buton grubunu
  *   ayırırken en sık bu gerekir.
  * - Etiketli ("ya da"): kapsayıcı `separator` DEĞİL. `separator` rolünün
  *   çocukları sunumsaldır (ARIA): etiket ekran okuyucudan silinirdi ve

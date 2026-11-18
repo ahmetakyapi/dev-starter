@@ -4,8 +4,8 @@ import type { ComponentProps } from "react";
 import { cn } from "../utils";
 
 /**
- * Yalnızca ikon taşıyan düğme. `aria-label` TİPTE ZORUNLU: metinsiz bir
- * düğmenin adı yoksa ekran okuyucu "düğme" der ve susar. Etiketi Title Case
+ * Yalnızca ikon taşıyan buton. `aria-label` TİPTE ZORUNLU: metinsiz bir
+ * butonun adı yoksa ekran okuyucu "buton" der ve susar. Etiketi Title Case
  * yaz ("Ayarları Aç"); `title` aynı metni fareyle üzerine gelene gösterir.
  * Daha zengin bir ipucu için `tooltip.tsx` → `<Tooltip>` ile sar.
  *
@@ -13,13 +13,13 @@ import { cn } from "../utils";
  * işaretçide (fare) 36'ya iner; görsel küçülse de parmak hedefi küçülmez.
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): `ghost` üzerine gelince yumuşak gri
- * (vurgu yıkaması değil: ikon düğmeler çoğunlukla araç çubuğunda dizilir,
+ * (vurgu yıkaması değil: ikon butonlar çoğunlukla araç çubuğunda dizilir,
  * renkli hover sırayla yanıp sönerdi); `secondary` beyaz karo + kıl
- * çizgisi. Basılınca 0,95'e çöker (aşağı itme yerine: kare düğmede kayma
+ * çizgisi. Basılınca 0,95'e çöker (aşağı itme yerine: kare butonda kayma
  * hizayı bozuyordu).
  *
  * Base UI tetikleyicisi olarak kullanılabilir (`render={<IconButton … />}`):
- * ref ve gelen bütün prop'lar düğmeye yayılıyor (React 19, ref bir prop).
+ * ref ve gelen bütün prop'lar butona yayılıyor (React 19, ref bir prop).
  */
 
 const VARIANTS = {
@@ -36,7 +36,7 @@ const SIZES = {
 } as const;
 
 type IconButtonProps = Omit<ComponentProps<"button">, "aria-label" | "children"> & {
-  /** Zorunlu: düğmenin tek adı bu. */
+  /** Zorunlu: butonun tek adı bu. */
   "aria-label": string;
   icon: LucideIcon;
   variant?: keyof typeof VARIANTS;

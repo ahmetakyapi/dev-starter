@@ -3,7 +3,7 @@
  *
  * Tema SUNUCUDA basılır: layout `theme` çerezini okur ve
  * `<html data-theme={theme} suppressHydrationWarning>` yazar. Inline script
- * yok, ilk karede yanlış tema (FOUC) yok. Bu düğme yalnızca:
+ * yok, ilk karede yanlış tema (FOUC) yok. Bu buton yalnızca:
  *
  *   1. `<html data-theme>`ı ANINDA değiştirir (sunucuya gidiş beklenmez),
  *   2. çerezi yazar, bir sonraki istek sunucuda doğru temayla çizilsin,
@@ -39,9 +39,9 @@ function writeCookie(theme: Theme) {
   document.cookie = `${THEME_COOKIE}=${theme}; path=/; max-age=${ONE_YEAR}; samesite=lax${secure}`
 }
 
-// Tema `<html data-theme>`te yaşar; düğme onu DİNLER, kendi durumunu tutmaz.
-// Kendi durumu olsaydı başlıktaki ve sonradan açılan çekmecedeki iki düğme
-// ayrışır, eski `initial`la açılan düğmenin ilk tıklaması boşa giderdi.
+// Tema `<html data-theme>`te yaşar; buton onu DİNLER, kendi durumunu tutmaz.
+// Kendi durumu olsaydı başlıktaki ve sonradan açılan çekmecedeki iki buton
+// ayrışır, eski `initial`la açılan butonun ilk tıklaması boşa giderdi.
 function readTheme(): Theme {
   return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
 }
@@ -77,7 +77,7 @@ export function ThemeToggle({ initial, className }: { initial: Theme; className?
       apply()
       return
     }
-    // Klavyeyle tetiklenen tıklamada koordinat yok (detail 0): düğmenin ortası
+    // Klavyeyle tetiklenen tıklamada koordinat yok (detail 0): butonun ortası
     const box = e.currentTarget.getBoundingClientRect()
     const x = e.detail > 0 ? e.clientX : box.left + box.width / 2
     const y = e.detail > 0 ? e.clientY : box.top + box.height / 2

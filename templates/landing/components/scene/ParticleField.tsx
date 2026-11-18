@@ -9,7 +9,7 @@ import { CanvasTexture, Color, type Points } from "three";
  * `dynamic(..., { ssr: false })` ile yüklenir.
  *
  * RENK TOKEN'DAN: `--primary` hesaplanmış stilden okunur ve `<html
- * data-theme>` değişince yeniden okunur; tema düğmesine basınca sahne de
+ * data-theme>` değişince yeniden okunur; tema butonuna basınca sahne de
  * döner, palet değişince ayrıca bir şey yazmak gerekmez.
  *
  * KONUMLAR TOHUMLU: her yüklemede aynı bulut. `Math.random()` her hidrasyonda

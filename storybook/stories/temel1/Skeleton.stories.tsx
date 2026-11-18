@@ -85,7 +85,7 @@ export const AllVariants: Story = {
         <SkeletonRow />
         <SkeletonRow avatar={false} />
       </Cell>
-      <Cell label="SkeletonCard · Başlık, Metin, Düğme Yeri" className="block bg-overlay">
+      <Cell label="SkeletonCard · Başlık, Metin, Buton Yeri" className="block bg-overlay">
         <SkeletonCard />
       </Cell>
     </Gallery>

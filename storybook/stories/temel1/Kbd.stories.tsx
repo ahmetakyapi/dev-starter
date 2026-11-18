@@ -11,7 +11,7 @@ const SHORTCUTS = [
 ] as const;
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Klavye Tuşu",
+  title: "Bileşenler/Buton ve İkon/Klavye Tuşu",
   id: "kbd",
   component: Kbd,
   tags: ["autodocs"],
@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Klavye tuşu (`<kbd>`). Simgeli tuşlarda (⌘ ⇧ ⌥ ↵) `label` ver: ad görünmez metin olarak yazılır, simge gizlenir. Kısayolun tamamı için `KbdCombo` tek bir okunan ad taşır. Dokunmatikte kısayol anlamsızdır; ipuçlarını `pointer-fine:` ile gizlemek çoğu zaman doğru karar.",
+          "Klavye tuşu (`<kbd>`). İkonlu tuşlarda (⌘ ⇧ ⌥ ↵) `label` ver: ad görünmez metin olarak yazılır, ikon gizlenir. Kısayolun tamamı için `KbdCombo` tek bir okunan ad taşır. Dokunmatikte kısayol anlamsızdır; ipuçlarını `pointer-fine:` ile gizlemek çoğu zaman doğru karar.",
       },
     },
   },
@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "Varsayılan" };
 
 export const Symbolic: Story = {
-  name: "Simgeli",
+  name: "İkonlu",
   args: { children: "⌘", label: "Command" },
 };
 
@@ -81,7 +81,7 @@ export const AllVariants: Story = {
       <Cell label="Sözcük">
         <Kbd>Esc</Kbd>
       </Cell>
-      <Cell label="Simge (Adlı)">
+      <Cell label="İkon (Adlı)">
         <div className="flex gap-1.5">
           <Kbd label="Command">⌘</Kbd>
           <Kbd label="Shift">⇧</Kbd>

@@ -7,7 +7,7 @@ import { Cell, Gallery } from "../_lib/Frame";
 const GLYPHS = { Settings, Pencil, Share2, Trash2, MoreHorizontal } as const;
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/İkon Düğmesi",
+  title: "Bileşenler/Buton ve İkon/İkon Butonu",
   id: "icon-button",
   component: IconButton,
   tags: ["autodocs"],
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Yalnızca ikon taşıyan düğme; `aria-label` tipte zorunludur ve Title Case yazılır. Dokunmatikte her boy 44 piksel, `sm` yalnızca fareyle 36'ya iner. Daha zengin ipucu için `Tooltip` ile sar ve `showTitle={false}` ver.",
+          "Yalnızca ikon taşıyan buton; `aria-label` tipte zorunludur ve Title Case yazılır. Dokunmatikte her boy 44 piksel, `sm` yalnızca fareyle 36'ya iner. Daha zengin ipucu için `Tooltip` ile sar ve `showTitle={false}` ver.",
       },
     },
   },

@@ -37,7 +37,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Telefonda alttan, istenirse yandan açılan katman: filtreler, ayrıntı, kısa form. Diyalogla aynı temel (yerel `<dialog>`); alttan açılanda tutamaçtan aşağı sürüklemek kapatır, ama Kapat düğmesi ve Escape her zaman var. Alt dolgu güvenli alanı hesaba katar.",
+          "Telefonda alttan, istenirse yandan açılan katman: filtreler, ayrıntı, kısa form. Diyalogla aynı temel (yerel `<dialog>`); alttan açılanda tutamaçtan aşağı sürüklemek kapatır, ama Kapat butonu ve Escape her zaman var. Alt dolgu güvenli alanı hesaba katar.",
       },
     },
   },
@@ -153,7 +153,7 @@ export const DetailPanel: Story = {
         }
       >
         <p className="text-base text-body">
-          Başlıkta kimlik karosu ve durum hapı, bandın altında saç çizgisi; alt çubukta yıkıcı eylem onay düğmelerinin karşı kenarında.
+          Başlıkta kimlik karosu ve durum hapı, bandın altında saç çizgisi; alt çubukta yıkıcı eylem onay butonlarının karşı kenarında.
         </p>
       </Sheet>
     );

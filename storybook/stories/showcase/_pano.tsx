@@ -276,13 +276,13 @@ export function PanoPage() {
             <ChartCard
               className={CARD}
               id="pano-huni"
-              label="Mağaza Dönüşümü"
+              label="Web Mağaza Hunisi · Ziyaretten Siparişe"
               value={`%${conversion.toLocaleString("tr-TR")}`}
               change={Math.round((conversion - pct(s.prevFunnel.orders, s.prevFunnel.visits)) * 10) / 10}
               changeLabel={`puan, ${w.prevLabel}`}
             >
               <FunnelChart
-                title="Mağaza Dönüşümü"
+                title="Web Mağaza Hunisi"
                 stages={[
                   { label: "Ziyaret", value: s.funnel.visits },
                   { label: "Ürün İnceleme", value: s.funnel.views },
@@ -315,14 +315,14 @@ export function PanoPage() {
               changeLabel={w.prevLabel}
               action={
                 <InfoTip label="Dönüşüm nasıl hesaplanır">
-                  Dilimdeki sipariş sayısı bölü mağaza ziyareti (30 günlük dönemde üçer gün); dönemin toplamı Mağaza Dönüşümü hunisindeki orandır.
+                  Dilimdeki sipariş sayısı bölü mağaza ziyareti (30 günlük dönemde üçer gün); dönemin toplamı Web Mağaza Hunisi'ndeki orandır.
                 </InfoTip>
               }
             >
               <ComboChart
                 title="Sipariş ve Dönüşüm Oranı"
                 labels={groups.map((g) => g.label)}
-                bars={{ label: step > 1 ? `Sipariş (${step} Gün)` : "Sipariş", values: groups.map((g) => g.orders), series: 2, unit: "sipariş" }}
+                bars={{ label: step > 1 ? `Sipariş (${step} Gün)` : "Sipariş", values: groups.map((g) => g.orders), series: 1, unit: "sipariş" }}
                 line={{ label: "Dönüşüm", values: groups.map((g) => (g.visits ? g.orders / g.visits : 0)), series: 4, format: { style: "percent", maximumFractionDigits: 1 } }}
               />
             </ChartCard>
@@ -374,8 +374,8 @@ export function PanoPage() {
                 <ChartLegend
                   className="px-1 pb-1"
                   items={[
-                    { label: "Bu Dönem", value: avgScore, series: 2, unit: "ort." },
-                    { label: "Önceki Dönem", value: prevAvg, series: 4, unit: "ort." },
+                    { label: "Bu Dönem", value: avgScore, series: 1, unit: "ort." },
+                    { label: "Önceki Dönem", value: prevAvg, series: 2, unit: "ort." },
                   ]}
                 />
               }
@@ -385,8 +385,8 @@ export function PanoPage() {
                 unit="puan"
                 axes={RADAR_AXES}
                 series={[
-                  { label: "Bu Dönem", values: q.scores, series: 2 },
-                  { label: "Önceki Dönem", values: s.prevQuality.scores, series: 4 },
+                  { label: "Bu Dönem", values: q.scores, series: 1 },
+                  { label: "Önceki Dönem", values: s.prevQuality.scores, series: 2 },
                 ]}
               />
             </ChartCard>

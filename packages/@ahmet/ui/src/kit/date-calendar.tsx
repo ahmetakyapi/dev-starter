@@ -25,7 +25,7 @@ import { cn } from "../utils";
  * Klavye (WAI-ARIA grid, APG tarih seçici): ←/→ gün, ↑/↓ hafta, Home/End
  * haftanın başı/sonu, PageUp/PageDown ay, Shift+PageUp/PageDown yıl,
  * Enter/Space seç. Tek sekme durağı (gezici tabindex); odak ayı aşarsa ay
- * döner. Ay başlığı canlı bölge: önceki/sonraki düğmesi ayı söyletir.
+ * döner. Ay başlığı canlı bölge: önceki/sonraki butonu ayı söyletir.
  * Etkinlik günleri (`markedDates`, Allo turu 2026-11): altta soluk nokta ve
  * ekran okuyucuda "…, etkinlik var"; bugünün noktası vurgu renginde kalır.
  * Bugün `aria-current="date"` + altta nokta; devre dışı gün odaklanır ama

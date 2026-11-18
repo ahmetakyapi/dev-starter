@@ -73,7 +73,7 @@ const GROUPS: { id: string; title: string; description: string; rows: Row[] }[] 
       { key: "warning", name: "Uyarı", cls: "text-warning", swatch: "text-warning", kind: "status", use: "Bekliyor, eşik yakın" },
       { key: "warningWash", name: "Uyarı Yıkaması", cls: "bg-warning-wash", swatch: "bg-warning-wash text-warning", kind: "wash", ink: "warning", use: "Rozet, uyarı satırı" },
       { key: "danger", name: "Tehlike", cls: "text-danger", swatch: "text-danger", kind: "status", use: "Hata, düşüş, yıkıcı eylem" },
-      { key: "dangerWash", name: "Tehlike Yıkaması", cls: "bg-danger-wash", swatch: "bg-danger-wash text-danger", kind: "wash", ink: "danger", use: "Hata satırı, sil düğmesi" },
+      { key: "dangerWash", name: "Tehlike Yıkaması", cls: "bg-danger-wash", swatch: "bg-danger-wash text-danger", kind: "wash", ink: "danger", use: "Hata satırı, sil butonu" },
       { key: "accentWarm", name: "Sıcak Vurgu", cls: "bg-accent-warm", swatch: "bg-accent-warm", kind: "warm", use: "Seyrek tek nokta; metin rengi değil" },
     ],
   },

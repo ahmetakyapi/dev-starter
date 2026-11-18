@@ -189,7 +189,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Aramalı Seçim" note="Türkçe süzgeç: “istanbul” yazınca İstanbul bulunur.">
+        <Showcase name="Aramalı Seçim" note="Türkçe filtre: “istanbul” yazınca İstanbul bulunur.">
           <Combobox label="Şube" items={CITIES} placeholder="Şehir yazın" />
         </Showcase>
 
@@ -214,7 +214,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Aç-Kapa Düğmesi" note="Tutamak yayla kayar, basılıyken gideceği yöne uzar.">
+        <Showcase name="Aç-Kapa Butonu" note="Tutamak yayla kayar, basılıyken gideceği yöne uzar.">
           <div className="grid divide-y divide-line-soft">
             <Switch label="Bildirimler" hint="Yeni sipariş gelince haber ver." defaultChecked />
             <Switch label="Sessiz Saatler" />
@@ -316,7 +316,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Düğme Grubu" note="Kuyuda kaynaşmış satır; basılı düğme beyaz karo.">
+        <Showcase name="Buton Grubu" note="Kuyuda kaynaşmış satır; basılı buton beyaz karo.">
           <div className="grid justify-items-center gap-4">
             <ButtonGroup aria-label="Metin Biçimi" variant="well">
               {(
@@ -569,7 +569,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="İkon Düğmesi" note="Hayalet, ikincil, birincil ve tehlike; basınca 0,95'e çöker.">
+        <Showcase name="İkon Butonu" note="Hayalet, ikincil, birincil ve tehlike; basınca 0,95'e çöker.">
           <div className="flex justify-center gap-2">
             <IconButton icon={Bell} aria-label="Bildirimler" />
             <IconButton icon={Settings} aria-label="Ayarlar" variant="secondary" />

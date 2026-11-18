@@ -5,7 +5,7 @@ import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { FilterSheet, type FilterGroup, type FilterValue } from "@/components/ui/filter-sheet";
 
-/** Kurgusal ilan listesi: sayı süzgeçlerden gerçekten hesaplanır. */
+/** Kurgusal ilan listesi: sayı filtrelerden gerçekten hesaplanır. */
 const ITEMS = [
   { city: "İstanbul", type: "Daire", rooms: "2+1" },
   { city: "İstanbul", type: "Daire", rooms: "3+1" },
@@ -36,7 +36,7 @@ function Demo({ initiallyOpen = true }: { initiallyOpen?: boolean }) {
     <div className="mx-auto grid max-w-md gap-3 p-4">
       <Button variant="secondary" onClick={() => setOpen(true)} className="justify-self-start">
         <SlidersHorizontal aria-hidden />
-        Süzgeçler{active ? ` · ${active}` : ""}
+        Filtreler{active ? ` · ${active}` : ""}
       </Button>
       <p className="text-small text-muted">{rows.length} ilan listeleniyor.</p>
       <FilterSheet
@@ -55,7 +55,7 @@ function Demo({ initiallyOpen = true }: { initiallyOpen?: boolean }) {
 }
 
 const meta = {
-  title: "Bileşenler/Katmanlar/Süzgeç Çekmecesi",
+  title: "Bileşenler/Katmanlar/Filtre Çekmecesi",
   id: "filter-sheet",
   component: FilterSheet,
   tags: ["autodocs", "yeni"],
@@ -66,7 +66,7 @@ const meta = {
       story: { inline: false, height: "720px" },
       description: {
         component:
-          "Telefonda bütün süzgeç ve sıralama seçimleri alttan açılan tek yüzeyde; dipte Temizle ve SONUÇ SAYISINI söyleyen ana düğme (\"3 İlanı Göster\"). Seçimler anında uygulanır, sayı gerçek; kullanıcı listeyi göremese de 0 sonuca düşmeden önce görür. Tekli grup radyo grubu (ok tuşları), çoklu grup `aria-pressed`; seçili çipte ✓ ve kalın kenar da var, renk tek işaret değil. `sheet.tsx` üstüne kurulu. Assetora turundan. Pusula: Gelen Kutusu telefonda.",
+          "Telefonda bütün filtre ve sıralama seçimleri alttan açılan tek yüzeyde; dipte Temizle ve SONUÇ SAYISINI söyleyen ana buton (\"3 İlanı Göster\"). Seçimler anında uygulanır, sayı gerçek; kullanıcı listeyi göremese de 0 sonuca düşmeden önce görür. Tekli grup radyo grubu (ok tuşları), çoklu grup `aria-pressed`; seçili çipte ✓ ve kalın kenar da var, renk tek işaret değil. `sheet.tsx` üstüne kurulu. Assetora turundan. Pusula: Gelen Kutusu telefonda.",
       },
     },
   },
@@ -78,10 +78,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  name: "İlan Süzgeci",
+  name: "İlan Filtresi",
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
-    const sheet = await body.findByRole("dialog", { name: "Süzgeç ve Sıralama" });
+    const sheet = await body.findByRole("dialog", { name: "Filtre ve Sıralama" });
     await userEvent.click(within(sheet).getByRole("button", { name: /^İstanbul/ }));
     await expect(within(sheet).getByRole("button", { name: "3 İlanı Göster" })).toBeInTheDocument();
     await userEvent.click(within(sheet).getByRole("button", { name: /^Villa/ }));

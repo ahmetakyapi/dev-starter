@@ -89,7 +89,7 @@ export function undoOpen(row: Pick<FeedRow, "undoToken" | "undoExpiresAt">, now:
  * girmez: yarım kart çizmektense hiç çizme.
  *
  * Kapanmış iş "halledildi" satırı olarak açılır. Agent'ın kendi işi (`handled`)
- * başlık yerine kapanış özetini taşır, düğmesi yoktur. Kapanmış KARAR ise
+ * başlık yerine kapanış özetini taşır, butonu yoktur. Kapanmış KARAR ise
  * kulvarını, başlığını ve aksiyonlarını korur, özeti `resolvedSummary`de
  * gelir: Geri Al sunucuda kararı yeniden açar (`undoFeedAction`) ve istemci
  * reducer'ı aynı kartı, sayfa yenilendikten sonra da, karara döndürebilir.
@@ -136,7 +136,7 @@ export function authorizeFeedAction(
   const item = rowToFeedItem(row, now);
   if (!item) return { ok: false, error: "Bu iş okunamadı" };
 
-  // Düğme kartta yoksa istemci onu uyduramaz: liste sunucudaki öğeden okunur.
+  // Buton kartta yoksa istemci onu uyduramaz: liste sunucudaki öğeden okunur.
   const action = item.actions.find((a) => a.id === actionId);
   if (!action) return { ok: false, error: "Geçersiz aksiyon" };
   if (!knownActions.has(actionId)) return { ok: false, error: "Bu aksiyon henüz tanımlı değil" };

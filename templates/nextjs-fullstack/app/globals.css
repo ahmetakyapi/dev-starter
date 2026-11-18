@@ -50,14 +50,14 @@
   --shadow-sm: 0 0 0 1px rgb(10 10 10 / 0.035), 0 1px 1px -0.5px rgb(10 10 10 / 0.08), 0 2px 6px -2px rgb(10 10 10 / 0.08);
   --shadow-md: 0 0 0 1px rgb(10 10 10 / 0.04), 0 2px 4px -1px rgb(10 10 10 / 0.06), 0 8px 16px -4px rgb(10 10 10 / 0.08), 0 16px 32px -12px rgb(10 10 10 / 0.12);
   --shadow-overlay: 0 0 0 1px rgb(10 10 10 / 0.05), 0 4px 8px -2px rgb(10 10 10 / 0.06), 0 16px 32px -8px rgb(10 10 10 / 0.12), 0 32px 64px -16px rgb(10 10 10 / 0.2);
-  /* Dolgulu düğme: üstte ışık çizgisi, altta gölge çizgisi (hacim), dışta
+  /* Dolgulu buton: üstte ışık çizgisi, altta gölge çizgisi (hacim), dışta
      kıl çizgi ve dolgunun KENDİ RENGİNDE kısa bir düşüş. Renkli düşüş
-     düğmeyi zemine bağlar; gri gölge dolguyu kirli gösterir. */
+     butonu zemine bağlar; gri gölge dolguyu kirli gösterir. */
   --shadow-button:
     inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 -1px 0 rgb(0 0 0 / 0.12), 0 0 0 1px rgb(10 10 10 / 0.06),
     0 1px 2px rgb(10 10 10 / 0.12), 0 6px 14px -6px color-mix(in srgb, var(--primary) 55%, transparent);
   /* Kuyu (giriş alanı, bölümlü denetim rayı): içe doğru tek piksellik gölge.
-     Alan sayfaya OYULMUŞ okunur; düğme yükselir, alan çöker. */
+     Alan sayfaya OYULMUŞ okunur; buton yükselir, alan çöker. */
   --shadow-inset: inset 0 1px 2px rgb(10 10 10 / 0.06);
   /* Odak halesi: 2 px'lik odak çizgisinin (WCAG) dışına vurgunun %18'iyle
      yumuşak bir hale. Çizgiyi DEĞİŞTİRMEZ, yanına konur; tek başına 3:1'i
@@ -97,7 +97,7 @@
      rengi DEĞİL: beyaz zeminde 4,21:1, AA'nın altında. Uyarı metni `text-warning`. */
   --accent-warm: #a4720f;
 
-  /* Degrade düğme ve karo üstündeki metin her palette beyaz; CTA degradesi
+  /* Degrade buton ve karo üstündeki metin her palette beyaz; CTA degradesi
      buna göre koyu yarıdan seçilir (test ölçer). */
   --on-brand: #ffffff;
 

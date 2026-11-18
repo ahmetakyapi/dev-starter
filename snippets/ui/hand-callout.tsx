@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 /**
  * El yazısıyla not ve çizilerek gelen ok: arayüzün bir noktasını kenardan
  * gösterir. Ribbon'ın canlı demosundaki "turn ribbon on" notu, menü
- * çubuğundaki küçük simgeyi işaret eder; kimse aramadan bulur. Kullanım:
+ * çubuğundaki küçük ikonu işaret eder; kimse aramadan bulur. Kullanım:
  * canlı demoda ilk dokunulacak yer, fiyat kartında "en çok seçilen",
  * ekran görüntüsünde yeni özellik. Sayfada BİR, en çok iki tane.
  *
@@ -23,8 +23,8 @@ import { cn } from "@/lib/utils";
  * notu ve oku çizer. Telefonda hedefin yanında yer yoksa `hidden sm:flex`.
  *
  * ERİŞİLEBİLİRLİK: varsayılan süs (`aria-hidden`); söylediği şey sayfada
- * metin olarak da bulunmalı. `onClick` verilirse gerçek düğme olur ve notun
- * kendisi adıdır (Ribbon'da not, demoyu açan düğmenin ikinci yoluydu).
+ * metin olarak da bulunmalı. `onClick` verilirse gerçek buton olur ve notun
+ * kendisi adıdır (Ribbon'da not, demoyu açan butonun ikinci yoluydu).
  * Hareketi azaltan kullanıcıda ok doğrudan çizili.
  */
 

@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 
 /*
  * Mıknatıs ve eğim yalnızca GERÇEK bir fareyle anlamlı. Dokunmatikte
- * "üzerine gelme" yok; dokunuş öğeyi bir kez çekip bırakır ve düğme
+ * "üzerine gelme" yok; dokunuş öğeyi bir kez çekip bırakır ve buton
  * parmağın altından kayar. Eşik genişlik değil işaretçi türü.
  */
 const QUERY = "(hover: hover) and (pointer: fine)";

@@ -101,8 +101,8 @@ farkından gelir.
 | `--surface` | `bg-surface` | Kart = gri **kuyu**. İçindeki karo `bg-overlay shadow-raised`; kart içinde kart yok |
 | `--overlay` | `bg-overlay` | Karo, menü, diyalog. Açıkta beyaz, koyuda zeminden **açık** (`#18181a`) |
 | `--shadow-sm/md` | `shadow-raised/floating` | Açıkta kısa katmanlı gölge; koyuda üst kenarda 1 px ışık çizgisi (gölge koyuda görünmez, ışık görünür) |
-| `--shadow-button` | `shadow-cta` | Dolgulu düğme: üstte ışık, altta gölge çizgisi, kıl halka, dolgunun kendi renginde kısa düşüş |
-| `--shadow-inset` | `shadow-well` | Kuyu: giriş alanı, bölümlü denetim ve sekme rayı içe oyulur (düğme yükselir, alan çöker) |
+| `--shadow-button` | `shadow-cta` | Dolgulu buton: üstte ışık, altta gölge çizgisi, kıl halka, dolgunun kendi renginde kısa düşüş |
+| `--shadow-inset` | `shadow-well` | Kuyu: giriş alanı, bölümlü denetim ve sekme rayı içe oyulur (buton yükselir, alan çöker) |
 | `--shadow-ring` | `shadow-focus` | Metin alanında odak halesi; 2 px odak çizgisinin YANINA konur, yerine değil |
 | `--warning-fill` / `--on-warning-fill` | `bg-warning-fill text-on-warning-fill` | Uyarı DOLGUSU: ikon karosu, gecikme rozeti, nokta. İki temada birebir aynı turuncu (`#ff9f0a`); metin rengi `--warning` (açık `#965600`, koyu `#ff9f0a`, ikisi 34-36° aynı aile) |
 | `--edge-light` | `edge-lit` | Üstten ışıklı kenar: vitrin kartı, panel, pano kabuğu. Tekrar eden satıra değil |
@@ -171,7 +171,7 @@ Sözleşmedeki tam liste:
 - `--primary-wash` — vurgunun çok açık zemini (rozet, seçili satır).
 - `--primary-ink` — wash zemin üstüne yazılan metin. `--primary`den bir
   basamak koyu, çünkü `--primary` kendi wash'ının üstünde AA'yı tutmaz.
-- `--on-primary` — dolu `--primary` zemin üstündeki metin (düğme).
+- `--on-primary` — dolu `--primary` zemin üstündeki metin (buton).
 
 ```tsx
 ✅ <span className="bg-primary-wash text-primary-ink">Yeni</span>
@@ -293,7 +293,7 @@ const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-manrop
   aşağı doğru söner (%4). Yarı saydam zeminde de çalışır (`border-image`
   radius'u yok sayar, `background-clip` hilesi opak zemin ister). Öğenin
   kendi `::before`u varsa sınıfı dış sarmalayıcıya ver.
-- **Basış ölçekle.** Düğme `active:scale-[0.98]` (paket `0.97`); geçiş
+- **Basış ölçekle.** Buton `active:scale-[0.98]` (paket `0.97`); geçiş
   listesinde `transform` değil `scale` yazılır: v4 `scale-*`i bağımsız
   `scale` özelliğine derler, `transform` listedeyse basış hiç yumuşamaz.
 - **Aralık Tailwind'in 4 px ızgarası.** Paneller arası `gap-5`, panel içi
@@ -366,7 +366,7 @@ Varsayılan: metin düz renktir. İstisna yalnızca kısa display metninde ve d�
 - `.display-ink` içindeki bir çocuğa `opacity`/`transform` verme: yeni
   stacking context kırpmayı bozar.
 - Degrade yalnızca **üç yerde**: kısa display başlık (`.display-ink`),
-  birincil eylem düğmesi (`bg-cta text-on-brand`) ve marka karosu
+  birincil eylem butonu (`bg-cta text-on-brand`) ve marka karosu
   (`bg-brand`). Veri gösteren paneller ve gövde metni degrade taşımaz
   (Açılış Zili ve Mimio kuralı).
 - Marka degradesinin açık ucu beyaz metinle AA'yı geçmez (signature

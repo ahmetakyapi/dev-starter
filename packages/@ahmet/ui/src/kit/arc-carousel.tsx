@@ -22,14 +22,14 @@ import { cn } from "../utils";
  * ölçeklense uzak merkezden ölçeklenir ve kart yaydan aşağı düşer. Yarıçap ve adım telefonda küçük (560 px, 14°),
  * masaüstünde büyük (1000 px, 11.5°). Yalnız `transform` + `opacity`.
  *
- * ETKİLEŞİM: ok düğmeleri, galeri odaktayken ←/→ ve Home/End, yan karta
+ * ETKİLEŞİM: ok butonları, galeri odaktayken ←/→ ve Home/End, yan karta
  * tıklamak onu ortaya getirir, yatay sürükleme (dokunmatikte de; dikey
  * kaydırma serbest, `touch-action: pan-y`). Tekerlek DİNLENMEZ: sayfa
  * kaydırmasını ele geçirmez. Kendiliğinden dönmez.
  *
  * ERİŞİLEBİLİRLİK: `region` + `aria-roledescription="carousel"`; değişim
  * `aria-live="polite"` ile "3 / 9: Kıyı Yolu" diye okunur. Yan kartlar
- * "…, öne getir" adlı düğmeler; görünür pencerenin dışındakiler
+ * "…, öne getir" adlı butonlar; görünür pencerenin dışındakiler
  * `aria-hidden` + `tabIndex=-1`. Hareketi azaltan kullanıcıda geçiş anında.
  *
  *   <ArcCarousel
@@ -56,7 +56,7 @@ type ArcCarouselProps = {
   initialIndex?: number;
   /** Ortanın iki yanında kaç kart görünür. */
   visible?: number;
-  /** Bağlantı düğmesinin metni. */
+  /** Bağlantı butonunun metni. */
   linkLabel?: string;
   className?: string;
 };

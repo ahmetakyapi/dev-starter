@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
  * odağı değil etkin satırı taşır, böylece yazmaya devam edilebilir.
  *
  * Diyalog yerel: odak tuzağı ve Escape tarayıcıdan, odak kapanınca açan
- * öğeye döner. Başlıktaki bir düğmeden açmak için `openCommandPalette()`.
+ * öğeye döner. Başlıktaki bir butondan açmak için `openCommandPalette()`.
  * Modal `<dialog>` arkadaki sayfanın kaymasını durdurmaz; sayaçlı kaydırma
  * kilidi `dialog.tsx` ile aynı, yalnızca başka katmanın tuttuğu kilide
  * dokunmaz. Dosya tek başına kopyalanabilsin diye burada da var; ikisi
@@ -53,7 +53,7 @@ export type Command = {
 
 const OPEN_EVENT = "command-palette:open";
 
-/** Paleti ağacın herhangi bir yerinden aç (başlıktaki arama düğmesi). */
+/** Paleti ağacın herhangi bir yerinden aç (başlıktaki arama butonu). */
 export function openCommandPalette() {
   window.dispatchEvent(new Event(OPEN_EVENT));
 }

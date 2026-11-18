@@ -122,4 +122,4 @@ export function KineticText({ text, delay = 0, stagger = 32 }: { text: string; d
 Küçük etiketler (Zirve 191,86 · 20 Günlük · RSI 71): maskeden yükselir,
 altında 4 px kâğıt renginde hale (çizgi içinden geçse de okunur). Yerleşimi
 çakışmaya göre seç: zirve son seanslardaysa son kapanış künyesi alta iner;
-kadran ucun karşı yarısına gider; ekrana sabit düğmelerin altında künye kalmaz.
+kadran ucun karşı yarısına gider; ekrana sabit butonların altında künye kalmaz.

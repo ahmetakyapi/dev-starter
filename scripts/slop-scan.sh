@@ -145,6 +145,12 @@ report YUKSEK "Yer tutucu metin (Lorem, John Doe, Acme...)" \
 #    sozcuk tanimlayici olamaz: once/sonra `-`, `.`, `_`, `?`, `:` olmaz
 #    (iso-kit'in `seamless?: boolean`i, `data-seamless`). "Oyunun kurallari"
 #    yalniz "degistir"le kalip: oyun yazisinda duz anlamiyla gecer.
+# 7b. Yazilim Turkcesi: arayuzde "button" BUTON'dur, "dugme" degil (sahibinin
+#     kurali, 2026-11-18). Yorumlar da taranir: kod aciklamasi ekosistemin dili.
+report YUKSEK "Dugme sozcugu (buton olmali)" \
+  "Arayuzde ve aciklamada 'buton' yaz: 'Kopyala Butonu', 'butona bas'" \
+  "$(scan -niE '(^|[^[:alpha:]])d(ü|u)ğme' "$SCRIPT")"
+
 report YUKSEK "Pazarlama dolgusu sozcukleri" \
   "Urunun ne yaptigini duz yaz: 'Haftalik raporu 4 saatten 15 dakikaya indirir'" \
   "$(scan -niE '(devrim (yarat|niteli)|bir üst seviyeye|gücünü (keşfe|kullan|açığa)|potansiyelini (açığa|ortaya)|zahmetsiz|sorunsuz deneyim|çığır açan|dünya standartlarında|son teknoloji ürün|oyunun kurallarını değiştir|(^|[^-._$[:alnum:]])(revolutioni[sz]e|supercharge|cutting[- ]edge|next level|harness the power|world[- ]class|effortless(ly)?|seamless(ly)?|game[- ]chang|unlock (your|the) (potential|power)|elevate your)([^-_?:[:alnum:]]|$))' "$SCRIPT" | nocomment)"

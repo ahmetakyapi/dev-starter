@@ -26,12 +26,12 @@ import { Button, ButtonLink, buttonClass } from "@/components/ui/Button";
 - Varyant: `brand | primary | secondary | soft | ghost | danger`. Boy: `sm | md | lg | icon`.
   Board dili (2026-11): `brand`/`primary` üst kenar ışığı (`shadow-cta`), `secondary`
   beyaz karo (kuyunun üstünde de ayrışır), `soft` vurgunun yıkanmış hali.
-- **`asChild` yok.** Bağlantı görünümlü düğme `ButtonLink`, başka bir öğe
+- **`asChild` yok.** Bağlantı görünümlü buton `ButtonLink`, başka bir öğe
   `buttonClass()`. Tek bileşenin iki öğe gibi davranması tipi ve
   erişilebilirliği bulanıklaştırır.
 - `sm` dokunmatikte de 44 px; yalnızca fare altında (`pointer-fine:`) 36 px.
-- `type="button"` varsayılan. Form gönderen düğme `type="submit"`i açıkça
-  yazar; yoksa bir formun içindeki her düğme formu gönderir.
+- `type="button"` varsayılan. Form gönderen buton `type="submit"`i açıkça
+  yazar; yoksa bir formun içindeki her buton formu gönderir.
 - Ekranda **tek** `primary`. İki birincil eylem, hiçbirinin birincil
   olmadığı anlamına gelir.
 
@@ -104,8 +104,8 @@ ve `aria-describedby` ile bağlı, `aria-invalid` hata varken açık.
 React 19 eylem bitince formu sıfırlar, eylem hata dönse bile: eylem hata
 dönerken girilenleri `values` olarak da döndürür (şablonda `formToObject`;
 parola alanı varsa ondan çıkarılır, istemciye geri gitmez), alan onları
-`defaultValue` ile geri alır. Düğme `disabled` değil `aria-disabled`:
-odaktaki düğme devre dışı kalınca odak `<body>`ye düşer; ikinci gönderimi
+`defaultValue` ile geri alır. Buton `disabled` değil `aria-disabled`:
+odaktaki buton devre dışı kalınca odak `<body>`ye düşer; ikinci gönderimi
 `onSubmit` keser, hata dönünce bir `useEffect` odağı ilk `aria-invalid`
 alana taşır (`components/ExampleForm.tsx`).
 
@@ -121,7 +121,7 @@ Ayrıntısı [03-theming.md](03-theming.md) § 3.
 alınır, paket olarak kurulmaz:
 
 - **Bileşen kütüphanesi** — `~/dev-starter/snippets/ui/`: yükleme, ikon ve
-  düğme çeşitleri, popover / tooltip / dropdown / dialog / komut paleti /
+  buton çeşitleri, popover / tooltip / dropdown / dialog / komut paleti /
   sheet, veri tablosu, ağaç görünümü, sayfalama, istatistik, sparkline, form
   ve gezinme bileşenleri. Katalog, kurulum ve her bileşenin sınırları:
   [10-component-library.md](10-component-library.md).
@@ -252,7 +252,7 @@ Veri gösteren her panelin dört hâli vardır; tasarımda dördü de çizilir:
 
 ## 6. Title Case
 
-Başlık, düğme, sekme, rozet, tablo başlığı, künye: **Title Case**.
+Başlık, buton, sekme, rozet, tablo başlığı, künye: **Title Case**.
 Paragraf, açıklama, hata mesajı gövdesi, yer tutucu, `aria-label`: cümle.
 
 ✅ `Tümünü Gör` · `Hesabımı Sil` · `Son 30 Gün` · `15 Dakika Gecikmeli`
@@ -264,6 +264,16 @@ Paragraf, açıklama, hata mesajı gövdesi, yer tutucu, `aria-label`: cümle.
   `İ` değil. Küçültürken `toLocaleLowerCase("tr-TR")`.
 - Kısaltmalar olduğu gibi: `CSV`, `KVKK`, `EPS`.
 - Arayüz metninde em dash (—) yok; künyede ayraç ` · `.
+
+**Yazılım Türkçesi (2026-11-18):** arayüzde ve açıklamada yazılımcının ve
+kullanıcının gündelik dilindeki karşılık kullanılır, sözlükten uydurma değil.
+
+| ✅ Kullan | ❌ Kullanma | Not |
+|-----------|-------------|-----|
+| buton | düğme | sahibinin kesin kuralı; `slop-scan.sh` YÜKSEK bulgu |
+| filtre, filtrelemek | süzgeç, süzmek | "Öncelik Filtresi", "Filtreleri Temizle" |
+| ikon | ikon | |
+| sekme, menü, panel, kart, rozet | | zaten yerleşik |
 
 ---
 
@@ -288,7 +298,7 @@ Dana'ya gönderildi." Hata neyin başarısız olduğunu ve ne yapılacağını
 söyler: "Yükleme başarısız. Dosya 20 MB'tan büyük." Ünlem yok, "Oops",
 "Hay aksi", "Harika!" yok. `alert()` yok; satır içi hata ya da toast.
 
-**Ölü bağlantı yok.** `href="#"` ya gerçek adrese gider ya da düğme
+**Ölü bağlantı yok.** `href="#"` ya gerçek adrese gider ya da buton
 görünür biçimde `disabled` olur. Menüde etkin sayfa `aria-current="page"`
 ile işaretlenir ve görünür biçimde ayrışır.
 
@@ -302,9 +312,9 @@ sevimli mesaj, ölü bağlantı).
 
 - [ ] Ekran sırası: başlık → künye → ana görsel → ölçüler → metin → uyarılar → damga
 - [ ] Her panelin `h2`si var
-- [ ] Ekranda tek `primary` düğme
+- [ ] Ekranda tek `primary` buton
 - [ ] Dört veri durumu da çizildi
 - [ ] Dokunma hedefleri ≥ 44 px, dokunmatik input ≥ 16 px
-- [ ] Tüm başlık ve düğmeler Title Case, `capitalize` yok
+- [ ] Tüm başlık ve butonlar Title Case, `capitalize` yok
 - [ ] Örnek içerik gerçekçi (ad, marka, sayı, tarih), dolgu sözcüğü ve yer tutucu yok
 - [ ] Sistem mesajları sakin ve somut; `href="#"` yok, etkin sayfa `aria-current`

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 /**
  * Anahtar: ANINDA etki eden aç/kapa ayarı ("Bildirimler", "Koyu Tema").
- * Kaydet düğmesine bağlı bir seçimse `checkbox.tsx`: kullanıcı anahtarın
+ * Kaydet butonuna bağlı bir seçimse `checkbox.tsx`: kullanıcı anahtarın
  * çevrildiği anda bir şey olmasını bekler.
  *
  * YEREL GİRİŞ: `<input type="checkbox" role="switch">`. JavaScript'siz

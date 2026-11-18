@@ -6,7 +6,7 @@ import { ChipGroup, FilterChip, RemovableChip } from "@/components/ui/chip";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Seçim/Süzgeç Etiketi",
+  title: "Bileşenler/Seçim/Filtre Etiketi",
   id: "chip",
   component: FilterChip,
   tags: ["autodocs"],
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "`FilterChip` bir süzgeç: aç/kapa düğmesi (`aria-pressed`), seçiliyken zemin, metin ve ✓ birlikte değişir, genişlik zıplamaz. `RemovableChip` seçilmiş bir değer; yalnızca × bir düğmedir. `ChipGroup` grubu adlandırır. Tek seçimli süzgeç gerekiyorsa çip değil bölümlü denetim.",
+          "`FilterChip` bir filtre: aç/kapa butonu (`aria-pressed`), seçiliyken zemin, metin ve ✓ birlikte değişir, genişlik zıplamaz. `RemovableChip` seçilmiş bir değer; yalnızca × bir butondur. `ChipGroup` grubu adlandırır. Tek seçimli filtre gerekiyorsa çip değil bölümlü denetim.",
       },
     },
   },
@@ -68,7 +68,7 @@ const STATUS = [
 function FilterDemo() {
   const [on, setOn] = useState<Record<string, boolean>>({ Bekleyen: true, Gecikmiş: false, Kargoda: true, Tamamlanan: false });
   return (
-    <ChipGroup aria-label="Durum Süzgeci">
+    <ChipGroup aria-label="Durum Filtresi">
       {STATUS.map(([name, n]) => (
         <FilterChip key={name} selected={on[name]} count={n} onClick={() => setOn((f) => ({ ...f, [name]: !f[name] }))}>
           {name}
@@ -94,7 +94,7 @@ function RemovableDemo() {
   );
 }
 
-export const FilterGroup: Story = { name: "Süzgeç Grubu", render: () => <FilterDemo /> };
+export const FilterGroup: Story = { name: "Filtre Grubu", render: () => <FilterDemo /> };
 
 export const RemovableChips: Story = {
   name: "Kaldırılabilir Çipler",
@@ -113,7 +113,7 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={3}>
       <Cell label="FilterChip: Boş, Seçili, Sayılı, İkonlu">
-        <ChipGroup aria-label="Süzgeç Örnekleri" className="justify-center">
+        <ChipGroup aria-label="Filtre Örnekleri" className="justify-center">
           <FilterChip selected={false}>Bugün</FilterChip>
           <FilterChip selected>Bu Hafta</FilterChip>
           <FilterChip selected={false} count={1240}>
@@ -138,7 +138,7 @@ export const AllVariants: Story = {
           </RemovableChip>
         </ChipGroup>
       </Cell>
-      <Cell label="ChipGroup: Süzgeç Satırı">
+      <Cell label="ChipGroup: Filtre Satırı">
         <FilterDemo />
       </Cell>
     </Gallery>

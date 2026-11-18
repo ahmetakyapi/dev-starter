@@ -12,7 +12,7 @@ import { formatRatio, ratioOn, worstOnGradient } from "./_lib/color";
 import { DocPage, Note, PageHero, Section, ThemeLabel, Token } from "./_lib/doc";
 import { ThemeScope, useRootAttr, useRootVar, type ThemeName } from "./_lib/scope";
 
-/* Değerler `tokens.ts → palettes`ten; kartların içindeki düğme, karo ve
+/* Değerler `tokens.ts → palettes`ten; kartların içindeki buton, karo ve
    degrade başlık GERÇEK sınıflarla (`bg-cta`, `bg-brand`, `.display-ink`)
    o paletin kapsamında çizilir. Kullanım notları guides/00-brand-identity.md. */
 
@@ -132,7 +132,7 @@ function PaletlerSayfasi() {
         <div className="grid gap-4 sm:grid-cols-3">
           {[
             { cls: ".display-ink", text: "Kısa başlık; küçük puntoda -tight." },
-            { cls: "bg-cta text-on-brand", text: "Ekranda bir kez. Diğer vurgulu düğmeler primary." },
+            { cls: "bg-cta text-on-brand", text: "Ekranda bir kez. Diğer vurgulu butonlar primary." },
             { cls: "bg-brand", text: "Logo karosu. Açık ucu beyaz metinle AA tutmaz, üstüne yazı yok." },
           ].map((item, i) => (
             <div key={item.cls} className="rounded-2xl bg-surface p-5">
@@ -205,7 +205,7 @@ function SeciliPalet() {
       <Section id="bilesenler" title="Bileşenlerde" description="Aynı ekran, palet değişince yalnızca vurgu ailesi döner; gri sistem yerinde kalır.">
         <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
           <div className="rounded-2xl bg-surface p-5 sm:p-6">
-            <p className="text-small font-medium text-muted">Düğmeler</p>
+            <p className="text-small font-medium text-muted">Butonlar</p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button variant="brand">
                 Siparişi Onayla <ArrowRight />

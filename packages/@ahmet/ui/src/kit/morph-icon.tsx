@@ -7,15 +7,15 @@ import { cn } from "../utils";
  * Biçim değiştiren ikon: iki hal arasında çizgileri yeniden dizerek geçen
  * ikon. Menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat, aşağı ↔ yukarı,
  * kopyala sonrası onay. İkon değişimi bir ANLAM değişimi olduğunda (aynı
- * düğmenin iki hali) çapraz solma yerine biçim kayar: göz düğmenin aynı
- * düğme olduğunu, yalnız halinin değiştiğini görür.
+ * butonun iki hali) çapraz solma yerine biçim kayar: göz butonun aynı
+ * buton olduğunu, yalnız halinin değiştiğini görür.
  *
  * YAPI: her biçim 24 × 24 kutuda üç çizgi. Geçişte çizgilerin uçları yayla
  * yeni konumuna kayar (`SPRING.snappy`); biçimde gerekmeyen çizgi bir
  * noktaya toplanıp söner (sıfırdan büyüyen nesne değil, uçları birleşen
  * çizgi). Lucide'in çizgi dili: yuvarlak uç, 2 kalınlık, `currentColor`.
  *
- * İkon `aria-hidden`: hal bilgisi düğmenin adında ya da `aria-pressed`ında
+ * İkon `aria-hidden`: hal bilgisi butonun adında ya da `aria-pressed`ında
  * ("Menüyü Aç" / "Menüyü Kapat"). Hareketi azaltan kullanıcıda yerinde
  * değişir.
  *

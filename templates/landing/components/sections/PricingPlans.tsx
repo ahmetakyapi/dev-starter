@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 /*
  * Plan kartları + aylık/yıllık seçici.
  *
- * Seçici yerel radyo düğmeleri (`fieldset` + gizli `input`): ok tuşları,
+ * Seçici yerel radyo butonları (`fieldset` + gizli `input`): ok tuşları,
  * ekran okuyucu ve form davranışı tarayıcıdan. Görünen hap göstergesi eşit
  * iki sütunda `x: 0 | 100%` ile kayar (dönüşüm, ölçüm yok).
  *
@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
  * fiyatı doğrudan görür.
  *
  * Öne çıkan plan beyaz karo + yüzen gölge, ötekiler gri kuyu: ayrım degrade
- * ya da renkli kenar değil, ton ve yükseklik. Düğmesi `primary`: degradeli
+ * ya da renkli kenar değil, ton ve yükseklik. Butonu `primary`: degradeli
  * `brand` ekranda bir kez (hero ve kapanış).
  */
 export function PricingPlans({

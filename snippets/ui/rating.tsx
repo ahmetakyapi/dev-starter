@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  *    adı "5 üzerinden 4,5 puan"; yıldızlar tek tek okunmaz. Yarım yıldız
  *    çizilir (değer en yakın yarıma yuvarlanır, sözdeki sayı tam değer).
  *  - `RatingInput`: GİRİŞ (yorum formu, memnuniyet anketi). Görünmez YEREL
- *    radyo düğmeleri: ok tuşları, Tab'ın gruba bir kez girmesi, form
+ *    radyo butonları: ok tuşları, Tab'ın gruba bir kez girmesi, form
  *    gönderimi ve `required` tarayıcıdan gelir, JS'siz de çalışır. Kap
  *    `role="radiogroup"` + etiket bağı; her seçeneğin adı "5 üzerinden 4
  *    yıldız" (+ verilmişse sözlü karşılığı: "İyi").

@@ -69,7 +69,7 @@ prompt'a değil harness'a yaz.
   ve deseni var eden kontrolü yok eder
 - Acil durdurma (`abortRun`) her zaman erişilebilir olmalı — tek satırlık
   implementasyonun güvene etkisi büyüktür
-- **Onay kartında model yalnız hedefi ve açıklamayı yazar.** Soruyu, düğme
+- **Onay kartında model yalnız hedefi ve açıklamayı yazar.** Soruyu, buton
   setini ve id → anlam eşlemesini **kod** kurar. Seçenekleri (id + etiket) model
   yazarsa, enjeksiyona uğramış bir model `accept`i "Vazgeç" etiketinin
   arkasına koyar ya da ret seçeneğini hiç vermez. Okunamayan onay isteği

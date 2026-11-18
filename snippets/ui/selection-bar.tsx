@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils";
  * karışmaz (açıkta koyu, koyuda açık ada). Yıkıcı eylem dolgulu tehlike
  * hapı: ters zeminde tehlike metni AA tutmazdı.
  *
- * KLAVYE (WAI-ARIA toolbar): Tab çubuğa bir kez girer, ← → düğmeler
+ * KLAVYE (WAI-ARIA toolbar): Tab çubuğa bir kez girer, ← → butonlar
  * arasında gezer; Escape seçimi bırakır. Sayı değişince gizli canlı bölge
- * "3 talep seçildi" der; düğmelere odak zorla taşınmaz (kullanıcı satır
+ * "3 talep seçildi" der; butonlara odak zorla taşınmaz (kullanıcı satır
  * seçmeye devam ediyor olabilir).
  *
  * HAREKET: 16 px aşağıdan ve 0,96 ölçekten yayla gelir, sayı değişince
@@ -101,7 +101,7 @@ type SelectionActionProps = {
   icon?: ReactNode;
   onClick: () => void;
   tone?: "default" | "danger";
-  /** Yalnız ikonlu düğmede ad (zorunlu). */
+  /** Yalnız ikonlu butonda ad (zorunlu). */
   label?: string;
   disabled?: boolean;
 };

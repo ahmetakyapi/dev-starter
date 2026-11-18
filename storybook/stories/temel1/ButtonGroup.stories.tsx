@@ -27,7 +27,7 @@ function FormatToggles() {
 }
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Düğme Grubu",
+  title: "Bileşenler/Buton ve İkon/Buton Grubu",
   id: "button-group",
   component: ButtonGroup,
   tags: ["autodocs"],
@@ -35,7 +35,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Birbirine bağlı düğmeler (“Önceki / Bugün / Sonraki”). Grubun bir adı olur (`aria-label`). `attached` kenarları kaynaştırır; `well` gri kuyuda aç-kapa düğmeleri dizer, basılı (`aria-pressed`) olan beyaz karo olur. Tek seçim gerekiyorsa `SegmentedControl` kullan.",
+          "Birbirine bağlı butonlar (“Önceki / Bugün / Sonraki”). Grubun bir adı olur (`aria-label`). `attached` kenarları kaynaştırır; `well` gri kuyuda aç-kapa butonları dizer, basılı (`aria-pressed`) olan beyaz karo olur. Tek seçim gerekiyorsa `SegmentedControl` kullan.",
       },
     },
   },

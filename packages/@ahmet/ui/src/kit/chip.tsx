@@ -6,23 +6,23 @@ import { cn } from "../utils";
 /**
  * Çip: iki ayrı iş, iki ayrı bileşen.
  *
- * `FilterChip`: SÜZGEÇ. Aç/kapa bir düğmedir (`aria-pressed`), seçim
- * kutusu değil; ekran okuyucu "Bu Hafta, açma/kapama düğmesi, basılı" der.
+ * `FilterChip`: SÜZGEÇ. Aç/kapa bir butondur (`aria-pressed`), seçim
+ * kutusu değil; ekran okuyucu "Bu Hafta, açma/kapama butonu, basılı" der.
  * Seçiliyken zemin `bg-primary-wash`, metin `text-primary-ink` VE solda ✓
  * belirir: renk tek işaret değil. ✓ yer açarak değil, çipin iç boşluğunu
  * kullanarak gelir (genişlik zıplamaz): boşken sol iç boşluk 12, seçiliyken
  * ikon 14 + 6 boşluk + 8 kenar.
- * Tek seçimli süzgeç (yalnızca biri) gerekiyorsa çip değil
+ * Tek seçimli filtre (yalnızca biri) gerekiyorsa çip değil
  * `segmented-control.tsx`.
  *
  * `RemovableChip`: KALDIRILABİLİR değer (seçilmiş etiket, alıcı, şehir).
- * Çipin gövdesi düğme DEĞİL; yalnızca × düğme ve adı "Kaldır: İstanbul".
+ * Çipin gövdesi buton DEĞİL; yalnızca × buton ve adı "Kaldır: İstanbul".
  * Gövdeye tıklayınca silmek, okumaya çalışırken değer kaybettirir.
- * Kaldırıldıktan sonra odak yok olan düğmeyle birlikte kaybolur: üst
- * bileşen odağı bir sonraki çipin × düğmesine ya da girişe taşımalı.
+ * Kaldırıldıktan sonra odak yok olan butonla birlikte kaybolur: üst
+ * bileşen odağı bir sonraki çipin × butonuna ya da girişe taşımalı.
  *
- * `ChipGroup`: `role="group"` + ad ("Durum Süzgeci"). Çipler doğal Tab
- * sırasında; 10'dan fazla çip varsa süzgeç değil arama kutusu gerekir.
+ * `ChipGroup`: `role="group"` + ad ("Durum Filtresi"). Çipler doğal Tab
+ * sırasında; 10'dan fazla çip varsa filtre değil arama kutusu gerekir.
  *
  * Dokunmatikte çip satırı 44 piksel yükseklik, farede 32. Sunucu bileşeni:
  * `onClick` istemci bir üstten gelir.
@@ -70,7 +70,7 @@ export function FilterChip({ selected, icon, count: n, className, children, type
 
 type RemovableChipProps = {
   children: ReactNode;
-  /** Kaldırma düğmesinin adı için düz metin: "İstanbul". */
+  /** Kaldırma butonunun adı için düz metin: "İstanbul". */
   label: string;
   onRemove?: () => void;
   /** Çipin başında avatar ya da renk noktası. */
@@ -109,7 +109,7 @@ export function RemovableChip({ children, label, onRemove, leading, disabled, cl
 }
 
 type ChipGroupProps = ComponentProps<"div"> & {
-  /** Zorunlu: grubun adı, "Durum Süzgeci". */
+  /** Zorunlu: grubun adı, "Durum Filtresi". */
   "aria-label": string;
 };
 

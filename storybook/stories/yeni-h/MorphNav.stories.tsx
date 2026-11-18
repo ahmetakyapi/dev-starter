@@ -13,7 +13,7 @@ const meta = {
       story: { inline: false, height: "480px" },
       description: {
         component:
-          "Hap menüde bir başlığın üzerine gelince altında TEK bir kabuk açılır; başlıklar arasında gezerken aynı kabuk yeni panelin boyuna esner, içerik buğulanarak yön yön geçer, başlıkların arkasında vurgu karosu kayar. Menü rolü yok: `nav` + `aria-expanded`; ↓ panele iner, Esc kapatır ve odağı başlığa döndürür, kapalı paneller `inert`. Telefonda menü düğmesi bütün grupları alt alta açar. scrolltide.co turundan.",
+          "Hap menüde bir başlığın üzerine gelince altında TEK bir kabuk açılır; başlıklar arasında gezerken aynı kabuk yeni panelin boyuna esner, içerik buğulanarak yön yön geçer, başlıkların arkasında vurgu karosu kayar. Menü rolü yok: `nav` + `aria-expanded`; ↓ panele iner, Esc kapatır ve odağı başlığa döndürür, kapalı paneller `inert`. Telefonda menü butonu bütün grupları alt alta açar. scrolltide.co turundan.",
       },
     },
   },

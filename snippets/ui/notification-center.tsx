@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  *
  * LİSTE: güne göre gruplu (Bugün / Dün / Bu Hafta / Daha Önce), her grup
  * kendi başlığıyla `ul` (ekran okuyucu başlıklar arasında atlar). Satır
- * bir düğme: tıklamak okundu işaretler ve `onOpen` ile hedefe götürür.
+ * bir buton: tıklamak okundu işaretler ve `onOpen` ile hedefe götürür.
  * Okunmamış satırda başlık kalın + sağda nokta + gizli "Okunmadı" metni:
  * renk tek işaret değil.
  *
@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
  * Durum çağıranda: `items` + `onMarkRead(ids)`. Gerçek uygulamada
  * okundu bilgisi sunucuya yazılır, bileşen yalnızca söyler.
  *
- * Boş durum: ikon + tek cümle, düğme yok (yapılacak bir şey yok).
+ * Boş durum: ikon + tek cümle, buton yok (yapılacak bir şey yok).
  */
 
 export type NotificationItem = {

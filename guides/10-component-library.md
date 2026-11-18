@@ -49,7 +49,7 @@ Ekim 2026 itibarıyla doğrulananlar (npm kayıtları ve paket belgeleri):
 İkisi de bakımlı ve React 19 uyumlu; karar şu dört noktadan:
 
 1. **Combobox yerleşik.** Aranabilir seçim en zor erişilebilirlik
-   kalıplarından biri (combobox + listbox + `aria-activedescendant` + süzgeç).
+   kalıplarından biri (combobox + listbox + `aria-activedescendant` + filtre).
    Radix'te yok; ikinci bir kütüphane ya da elle yazmak gerekirdi. Base UI
    `locale` prop'uyla Türkçe karşılaştırma da yapıyor ("i" → "İstanbul",
    "ı" → "Iğdır"; galeride sınandı).
@@ -98,7 +98,7 @@ kaldığı için erişilebilirlik açığı değil.
 
 ### Yükleme
 
-- **Spinner**: düğme içi, tek hücre. Panel ya da sayfa için değil (iskelet).
+- **Spinner**: buton içi, tek hücre. Panel ya da sayfa için değil (iskelet).
 - **LoadingMark**: ekranın ortasındaki bekleme. Yüzde göstermez; döngü
   yalnızca beklemede, reduced-motion'da sabit.
 - **RouteProgress**: kök layout'ta bir kez, `<Suspense>` içinde. Sığ adres
@@ -108,18 +108,18 @@ kaldığı için erişilebilirlik açığı değil.
 - **Skeleton**: içeriğin şeklinde (`SkeletonText`, `SkeletonRow`,
   `SkeletonCard`). Kap `aria-busy` taşır.
 
-### Düğme ve İkon
+### Buton ve İkon
 
 - **Icon**: süs ikonu `aria-hidden` (varsayılan); anlam taşıyorsa `label`.
-- **IconButton**: metinsiz her düğme. `aria-label` tipte zorunlu.
+- **IconButton**: metinsiz her buton. `aria-label` tipte zorunlu.
 - **ButtonGroup**: bağlı eylemler. Seçim taşıyorsa SegmentedControl.
 - **SegmentedControl**: 2-5 kısa seçenek, anında etki ("Gün / Hafta / Ay").
   İçerik bölümü değişiyorsa Tabs. Gösterge `layoutId` ile kayar, bu
   `domMax` ister ve bileşen kendi `LazyMotion`ını açar; kökteki
   `domAnimation`a dokunma.
 - **CopyButton**: sonuç ekran okuyucuya da söylenir; izin yoksa "Kopyalanamadı".
-- **Kbd**: kısayol ipucu. Dokunmatikte gizle (`pointer-fine:`). Simgeli
-  tuşa `label` ("Command"): görünmez metin olarak okunur, simge gizlenir.
+- **Kbd**: kısayol ipucu. Dokunmatikte gizle (`pointer-fine:`). İkonlu
+  tuşa `label` ("Command"): görünmez metin olarak okunur, ikon gizlenir.
 
 ### Katmanlar
 
@@ -168,13 +168,13 @@ kaldığı için erişilebilirlik açığı değil.
 
 ### Form ve Gezinme
 
-- **Switch** anında etki, **Checkbox** kaydet düğmesine bağlı seçim.
+- **Switch** anında etki, **Checkbox** kaydet butonuna bağlı seçim.
 - **RadioGroup** 2-6 seçenek, **Select** 5-15, **Combobox** daha fazlası ya
   da aranacaksa. Basit form alanında yerel `<select>` hâlâ doğru.
 - **Tabs** aynı sayfada içerik; **TabLinks** ayrı adresler (`aria-current`).
 - **Accordion**: SSS ve katlanır bölüm. Ekranın asıl içeriğini katlama.
 - **Breadcrumb**: üç ve daha derin hiyerarşide. Telefonda tek geri bağlantısı.
-- **Badge**: durum ve kategori. Tıklanan etiket düğmedir, rozet değil.
+- **Badge**: durum ve kategori. Tıklanan etiket butondur, rozet değil.
 - **Avatar**: baş harf `toLocaleUpperCase("tr-TR")`. `next/image`
   gerektirmez; uzak avatar için `remotePatterns`a joker host yazmak
   `/_next/image`ı herkese açık bir görsel vekiline çevirirdi.
@@ -199,7 +199,7 @@ kaldığı için erişilebilirlik açığı değil.
 - **RadarChart**: en çok iki seri, kısa etiketler.
 - **SankeyChart**: yalnızca iki katman; ad 10-12 harfi geçmesin. Yerleşim saf `sankeyLayout`ta.
 - **BarList**: varsayılan büyükten küçüğe; anlamlı sıra varsa `sort={false}`.
-- **LineChart**: hacim okunacaksa `area-chart`. Lejant süzgeci Y eksenini kalan serilere göre yeniden ölçekler; tahmini `dashed` ile ver ki renkten bağımsız ayırt edilsin.
+- **LineChart**: hacim okunacaksa `area-chart`. Lejant filtresi Y eksenini kalan serilere göre yeniden ölçekler; tahmini `dashed` ile ver ki renkten bağımsız ayırt edilsin.
 - **ComboChart**: yalnız iki ölçünün birimi farklıysa. Oranı 0-1 ve `format: { style: "percent" }` ile ver; sağ eksen solun adım sayısına uyar, ızgara tek.
 - **ScatterChart**: zaman ekseni varsa bu değil. Kategori gizlenince eksen bilerek kaymaz; 64 px'ten uzak imleç nokta seçmez.
 - **ActivityRings**: ölçülerin birbirine oranı okunacaksa `ring-chart`. Beyaz karo üstünde `cut="stroke-overlay"`.
@@ -223,19 +223,19 @@ kaldığı için erişilebilirlik açığı değil.
 - **DatePicker**: gizli giriş `YYYY-AA-GG`; aralıkta `<name>-start`/`<name>-end`.
 - **TimeField**: 24 saat, değer sarılır; yarım değer `null`.
 - **Input**: içine bir şey (ikon, ₺, temizle, göz) konacaksa bu, yoksa şablonun `Field`ı. Önek görsel ipucudur; anlamı etiket taşır ("Tutar (₺)").
-- **SearchField**: süzme ve arama içindir; seçtirmek gerekiyorsa combobox, komut için komut paleti. Sayfada ⌘K paleti varsa `shortcut="/"`. Sunucuda süzülecekse `normalizeTr`/`matchesTr`'yi `lib/`e taşı.
+- **SearchField**: filtreleme ve arama içindir; seçtirmek gerekiyorsa combobox, komut için komut paleti. Sayfada ⌘K paleti varsa `shortcut="/"`. Sunucuda süzülecekse `normalizeTr`/`matchesTr`'yi `lib/`e taşı.
 - **Rating**: gösterimde `Rating`, formda `RatingInput`. Beş ayrık seçenek bir radyo grubudur, slider değil. Dolu yıldız `accent-warm`.
 
 ### Katman ve Geri Bildirim (ek)
 
-- **ContextMenu**: hızlandırıcıdır, tek kapı olamaz; aynı eylemler görünür bir "Daha Fazla" düğmesinde (`dropdown-menu`) de olsun. Alt menü en fazla bir düzey.
+- **ContextMenu**: hızlandırıcıdır, tek kapı olamaz; aynı eylemler görünür bir "Daha Fazla" butonunda (`dropdown-menu`) de olsun. Alt menü en fazla bir düzey.
 - **CloseButton**: her × buradan; adı neyi kapattığını söyler. `bleed` köşede hizayı bozmaz, 44 px korunur.
 - **Divider**: kart içinde kart yerine. "ya da" etiketli kap kasıtlı olarak `separator` değil.
 - **Progress / Meter**: iş bitecekse progress, kapasite ise meter. Süre bilinmiyorsa `value={null}`, uydurma yüzde yok. Dolgu `translateX` ile kayar. Meter eşikleri oran (0,75 / 0,9); yüksek değerin iyi olduğu ölçekte `inverted`.
 - **Announcement**: anahtar duyuruya özgü (`duyuru:<konu>-<tarih>`); kapatma satır içi betikle ilk boyamadan önce gizlenir (CSP'de nonce gerekir).
 - **NotificationCenter**: durum çağıranda (`items` + `onMarkRead`); rozet 9'dan sonra "9+".
 - **Carousel**: asıl mesajı 2. slayta koyma; etkin nokta `clip-path` ile uzar.
-- **Chip**: tek seçimli süzgeç için `segmented-control`. Çip kaldırılınca odağı taşımak üst bileşenin işi.
+- **Chip**: tek seçimli filtre için `segmented-control`. Çip kaldırılınca odağı taşımak üst bileşenin işi.
 - **BannerAlert**: sayfayla gelen satır sessiz; sonradan belirene `announce`. En fazla iki eylem.
 - **Toast** (`ui/toast.tsx`): `<Toaster />` sayfada bir kez; mount öncesi çağrılar sıraya girer. Karar gerekiyorsa dialog, kalıcı durum için banner-alert. Hata kendiliğinden kapanmaz; geri al için `toast.undo` (8 sn).
 - **HoverCard**: yalnız ek bilgi; içine tek yolu olan eylem koyma (Tab ile karta girilmez). Dokunmatikte iki dokunuş gerekir.
@@ -244,7 +244,7 @@ kaldığı için erişilebilirlik açığı değil.
 ### İşçilik Turu Bileşenleri (2026-11)
 
 - **CodeBlock**: belge, ayar ekranı ("Webhook ile Bağla") ve landing'in kurulum satırı. Kurulumda `installTabs(paket)` + `persist="pm"`: kullanıcının paket yöneticisi bütün bloklarda ve sonraki ziyarette hatırlanır. Renklendirme gerekiyorsa sunucuda üretip `children` ver; kopyalanan metin yine `code`.
-- **Marquee**: sayfada tek şerit; beş saniyeden uzunsa durdurma düğmesi kapatılmaz (WCAG 2.2.2). İçindeki bağlantılar bir kez Tab sırasına girer.
+- **Marquee**: sayfada tek şerit; beş saniyeden uzunsa durdurma butonu kapatılmaz (WCAG 2.2.2). İçindeki bağlantılar bir kez Tab sırasına girer.
 - **CompareSlider**: iki katman aynı boyda olmalı (kap uzun olandan boy alır). İçinde tıklanacak öğe koyma: kaydırıcı kabı kaplar. Görselde iki `alt` farkı anlatsın.
 - **TextShimmer**: etiket olarak, spinner'ın yanında değil. Uzun iş için `progress`; yüzde biliniyorsa parıltı değil sayı göster.
 
@@ -265,12 +265,12 @@ kaldığı için erişilebilirlik açığı değil.
 - **SplitButton**: kardeşler aynı işin biçimleriyse (CSV/Excel/PDF, Yayınla/Zamanla). Farklı işler (Düzenle, Sil) `dropdown-menu`.
 - **SelectionBar**: seçim durumu sayfada (`picked`), çubuk yalnız gösterir. Toplu işlem tek bildirim ve tek Geri Al ile; satır başına bildirim yığma.
 - **TocNav**: beş ve daha fazla bölümlü sayfada. Hedef başlıklara `scroll-mt-*` ver (yapışkan hapın boyu); kabuk içinde kullanıyorsan kaydırma kabı `app-shell`in içerik karosudur.
-- **ProductTour**: dört-beş adım, bir kez gösterilir; tekrar açma düğmesi ekranda kalır. Hedefe `data-tour="ad"` ver; seçici de olur.
+- **ProductTour**: dört-beş adım, bir kez gösterilir; tekrar açma butonu ekranda kalır. Hedefe `data-tour="ad"` ver; seçici de olur.
 - **AppShell kaydırması (değişti)**: masaüstünde kabuk ekran boyunda, kenar çubuğu yerinde, içerik karosu kendi içinde kayar; telefonda pencere kayar. Sayfa değişiminde başa dönmek için `#icerik`i de kaydır.
 
 ### Secki Turu (2026-11)
 
-- **Süren işin dili, kartta biri:** etiket `text-shimmer`, çerçeve `border-beam`, küre `thinking-orb`, nokta matrisi `pixel-loader`. Düğme içinde `spinner`.
+- **Süren işin dili, kartta biri:** etiket `text-shimmer`, çerçeve `border-beam`, küre `thinking-orb`, nokta matrisi `pixel-loader`. Buton içinde `spinner`.
 - **ToolCall / Reasoning / StreamText**: ajan yanıtının üç katmanı. Araç çağrısı tek satır, açınca girdi/çıktı; düşünce akarken açık, bitince "6 sn düşündü"; yanıt yalnız yeni sözcüğü belirterek akar. Mesaj listesi `chat-thread` (`role="log"`).
 - **SlotText ya da DigitRoll**: rakamsa `digit-roll`, etiketse `slot-text`. İkisi de ilk çizimde durağan.
 - **PatternBackground**: kap `relative isolate`; hazır birleşimler `PATTERN_PRESETS`. Stil `@layer components`te: `className="fixed"` bütün sayfa zemini yapar.
@@ -298,10 +298,10 @@ kaldığı için erişilebilirlik açığı değil.
 ### Assetora Turu (2026-11)
 
 - **Tablo telefonda:** satırlar karşılaştırılmayacaksa (talep, sipariş, ilan) `data-table` geniş ekranda + `record-list` dar ekranda (`max-md:hidden` / `md:hidden`, aynı `visible` dizisi, aynı ana eylem). Sütun kıyası asıl işse (fiyat listesi, rapor) tablo kalır, yapışkan ilk sütunla.
-- **Süzgeç telefonda:** araç çubuğu süzgeçleri (`chip`, `combobox`, tarih) `max-md:hidden`; yerine tek "Süzgeçler" düğmesi (etkin süzgeç sayısı rozetle) + `filter-sheet`. Çekmece masaüstüyle AYNI durumu değiştirir; sonuç sayısı gerçek, "0" iken düğme "Uyan Kayıt Yok" der.
-- **Tarih süzgeci:** liste/rapor süzgecinde `date-range-presets` (hazır aralıklar + özel aralık tek kutuda, süzme `rangeOf`); formda tek tarih/aralık `date-picker`; panoda dönem kıyası `segmented-control`.
+- **Filtre telefonda:** araç çubuğu filtreleri (`chip`, `combobox`, tarih) `max-md:hidden`; yerine tek "Filtreler" butonu (etkin filtre sayısı rozetle) + `filter-sheet`. Çekmece masaüstüyle AYNI durumu değiştirir; sonuç sayısı gerçek, "0" iken buton "Uyan Kayıt Yok" der.
+- **Tarih filtresi:** liste/rapor filtresinde `date-range-presets` (hazır aralıklar + özel aralık tek kutuda, filtreleme `rangeOf`); formda tek tarih/aralık `date-picker`; panoda dönem kıyası `segmented-control`.
 - **Grafikte dönem işaretleme:** "şuraya bak" denecek iki üç dönem `area-chart` → `bands` (en iyi/zayıf ay, kampanya haftası); bant verinin kendisinden hesaplanır, elle yazılmaz.
-- **Desen notları:** ölçü kartları telefonda alt alta dört kart yerine yatay kaydırılan şerit (`snap-x`, kart `min(78%,280px)`, sonraki kartın kenarı görünür); "önceki dönemle karşılaştır" anahtarı ikinci seriyi kullanıcının seçimine bırakır; gizli kısayollar (`/`, ⌘B) "?" düğmesinin açtığı listede `kbd` ile görünür olur; ölçü kartında iki tonlu başlık şeridi (ikon + ad + ⋯ menü) değerin üstünde.
+- **Desen notları:** ölçü kartları telefonda alt alta dört kart yerine yatay kaydırılan şerit (`snap-x`, kart `min(78%,280px)`, sonraki kartın kenarı görünür); "önceki dönemle karşılaştır" anahtarı ikinci seriyi kullanıcının seçimine bırakır; gizli kısayollar (`/`, ⌘B) "?" butonunun açtığı listede `kbd` ile görünür olur; ölçü kartında iki tonlu başlık şeridi (ikon + ad + ⋯ menü) değerin üstünde.
 
 ### Bloklar
 
@@ -310,7 +310,7 @@ kaldığı için erişilebilirlik açığı değil.
 - **AuthCard**: `action` `useActionState` imzasıyla; şifreyi geri döndürme; hata metni hangi alanın yanlış olduğunu söylemez; marka logosu/rengi yok.
 - **SettingsDialog**: satırlar `SettingsSection`/`SettingsRow` + `Switch`/`Select` (`hideLabel`); derin bağlantı gerekiyorsa ayrı rota + `TabLinks`.
 - **AgentPlan**: bütün durum tek `activeIndex`ten türer; ajan olaylarını bu sayıya indirmek çağıranın işi.
-- **ChatComposer**: `onAttach`/`onVoice` yoksa o düğme çizilmez; model menüsü ≥ 2 modelde açılır.
+- **ChatComposer**: `onAttach`/`onVoice` yoksa o buton çizilmez; model menüsü ≥ 2 modelde açılır.
 - **ChatThread**: kaydıran kap `data-chat-scroll` taşır; otomatik kaydırma yalnız kullanıcı sondaysa.
 
 ### Yönetim Paneli: Canlı Önizleme
@@ -372,7 +372,7 @@ tabloyu kaydırır.
 
 ## 6. Erişilebilirlik Kontrol Listesi
 
-- [ ] Metinsiz her düğmenin `aria-label`ı var (IconButton tipte zorunlu)
+- [ ] Metinsiz her butonun `aria-label`ı var (IconButton tipte zorunlu)
 - [ ] Süs ikonları `aria-hidden`
 - [ ] Odak halkası görünür, kırpan kabın içinde içeri alınmış
 - [ ] Dokunma hedefi ≥ 44 px (`min-h-11`), farede küçülebilir
@@ -445,7 +445,7 @@ Tailwind 4 + Base UI 1.8 şablon kopyasında geçici bir galeri sayfasında
 koyu temada yatay taşma yok, konsol hatası yok. Klavyeyle sınananlar: ağaç
 (oklar, Home/End, `ı` → "ışık.md", `İ` → "İzmir.md"), menü (oklar,
 Home/End, Escape sonrası odak tetikleyicide), diyalog (ilk odak Vazgeç,
-Escape sonrası odak açan düğmede), combobox Türkçe süzgeç, komut paleti.
+Escape sonrası odak açan butonda), combobox Türkçe filtre, komut paleti.
 Bu sırada bulunan iki hata düzeltildi: ızgara içindeki DataTable kökünün
 390 pikselde 677'ye taşması (`min-w-0`) ve koyu temada kapalı Switch
 başparmağının rayla kaynaşması.

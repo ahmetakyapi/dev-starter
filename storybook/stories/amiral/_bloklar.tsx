@@ -236,7 +236,7 @@ export function Blocks() {
         </AppShell>
       </BlockCell>
 
-      <BlockCell file="auth-card" name="Giriş Kartı" note="Sağlayıcı düğmeleri, e-posta ve şifre; sunucu eylemine bağlanır, hatası alanın altında." bodyClassName="border border-line bg-page">
+      <BlockCell file="auth-card" name="Giriş Kartı" note="Sağlayıcı butonları, e-posta ve şifre; sunucu eylemine bağlanır, hatası alanın altında." bodyClassName="border border-line bg-page">
         <AuthCard
           action={demoSignIn}
           socialAction={async () => {

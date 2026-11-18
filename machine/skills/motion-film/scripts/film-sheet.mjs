@@ -9,7 +9,7 @@
  *   (assets/film-page.html). Her kare render(t) ile, sırasız ve kesin.
  *
  *   CANLI (--live): gerçek bileşen, gerçek saat. İsteğe bağlı --click ile
- *   bir düğmeye basılır, kareler basıştan bu yana geçen saniyede alınır.
+ *   bir butona basılır, kareler basıştan bu yana geçen saniyede alınır.
  *   Kare süresi (rAF aralığı p50/p95) de ölçülür.
  *
  * Kullanım:

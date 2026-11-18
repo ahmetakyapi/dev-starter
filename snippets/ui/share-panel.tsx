@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  * Neden satır başına anahtar: paylaşımın kapsamı bir bakışta okunur ve geri
  * alınabilir; açılır menüdeki "Kimler görebilir: …" seçimi durumu gizler.
  * Hiçbir satır açık değilken bağlantı kopyalanabilir ama işe yaramaz: alan
- * bunu söyler ("Önce erişimi aç"), kopyala düğmesi kapanmaz (bağlantıyı
+ * bunu söyler ("Önce erişimi aç"), kopyala butonu kapanmaz (bağlantıyı
  * sonra açmak isteyen olabilir). Yöntem referans turundan (2026-11; dil ve
  * davranış, kod değil).
  *

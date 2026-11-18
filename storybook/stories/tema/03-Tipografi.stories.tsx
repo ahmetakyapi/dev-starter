@@ -11,7 +11,7 @@ import { DocPage, Note, PageHero, Section, Token } from "./_lib/doc";
 const SCALE: Record<(typeof TEXT_SIZES)[number], { cls: string; use: string; sample: string }> = {
   micro: { cls: "text-micro", use: "Eksen etiketi, künye", sample: "Son Güncelleme 14.32" },
   small: { cls: "text-small", use: "Yardım, rozet, etiket", sample: "Geçen haftaya göre +%5,2" },
-  base: { cls: "text-base", use: "Arayüz metni, düğme", sample: "Raporu indir ve ekiple paylaş" },
+  base: { cls: "text-base", use: "Arayüz metni, buton", sample: "Raporu indir ve ekiple paylaş" },
   read: { cls: "text-read", use: "Uzun okuma, paragraf", sample: "Işık sabah yedide salona düşer, gölge öğlene doğru kısalır." },
   lead: { cls: "text-lead", use: "Giriş paragrafı", sample: "Seans notların tek yerde, haftalık özet hazır." },
   title: { cls: "text-title", use: "Kart ve diyalog başlığı", sample: "Aylık Ziyaretçi" },

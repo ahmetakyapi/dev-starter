@@ -1,7 +1,16 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/banner-dark.svg">
-  <img alt="dev-starter — Fikirden Canlıya, Aynı Kimlikle" src=".github/readme/banner-light.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/cover-dark.png">
+  <img alt="dev-starter Görsel Katalog: Tek Kimlik, On Palet. Solda başlık, sağda katalogdaki gerçek bileşenlerden kurulmuş Pusula panosu, ekip oylaması ve ayar kartı" src=".github/readme/cover-light.png" width="100%">
 </picture>
+
+<p align="center">
+  <a href="https://dev-starter-storybook.vercel.app/"><b>Canlı Katalog</b></a> ·
+  <a href="https://dev-starter-storybook.vercel.app/demo">Pusula Örnek Uygulaması</a> ·
+  <a href="https://dev-starter-storybook.vercel.app/showcase">Her Şey Bir Arada</a> ·
+  <a href="snippets/ui/README.md">Bileşen Listesi</a> ·
+  <a href="guides/">Rehberler</a> ·
+  <a href="CHANGELOG.md">Değişiklikler</a>
+</p>
 
 <p align="center">
   <a href="https://github.com/ahmetakyapi/dev-starter/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/ahmetakyapi/dev-starter/actions/workflows/ci.yml/badge.svg"></a>
@@ -13,12 +22,11 @@
   <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/lisans-MIT-54677c"></a>
 </p>
 
-**dev-starter**, bütün projelerimin başladığı yer ve ortak hafızası. Bir fikri
-pazar araştırmasından geçirip plana çeviren agent'lar, güncel tech stack ile (Next 16,
-Tailwind v4, motion) hazır şablonlar, her projede aynı kalan bir marka kimliği,
-kopyalanabilir bileşenler ve ilk günden canlıya kadar sırayla izlenen rehberler
-burada. Yaşanan her hata, karar ve desen kaydediliyor; komutlar ve agent'lar her
-makinede tek kaynaktan kuruluyor.
+**dev-starter**, bütün projelerimin başladığı yer ve ortak hafızası:
+kopyalanabilir bileşenler, hazır Next.js şablonları, her projede aynı kalan bir
+marka kimliği ve fikirden canlıya sırayla izlenen rehberler. Bir fikri plana
+çeviren agent'lar, her değişiklikte koşan kalite kontrolleri ve yaşanan her
+hatanın kaydı da burada. Hepsi tek kaynaktan, her makinede aynı kurulur.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/readme/stats-dark.svg">
@@ -29,21 +37,68 @@ makinede tek kaynaktan kuruluyor.
 
 ## 60 Saniyede Başla
 
+Ne istediğine göre üç yol; üçü de aynı bileşenleri ve token'ları kullanır.
+
+**1. Var olan bir projeye bileşen al** (kaynak olarak; dosya senin olur):
+
 ```bash
-# Yeni makine: komutları, agent'ları, global kuralları ve skill'leri kurar
-git clone https://github.com/ahmetakyapi/dev-starter ~/Desktop/Projects/dev-starter
-bash ~/Desktop/Projects/dev-starter/machine/bootstrap.sh
+node ~/dev-starter/scripts/add-ui.mjs --list                    # kataloğu gruplara göre listele
+node ~/dev-starter/scripts/add-ui.mjs . date-picker --dry-run   # önce ne kopyalanacağını gör
+node ~/dev-starter/scripts/add-ui.mjs . date-picker --install   # bağımlılıklarıyla kur
 ```
 
-Sonra herhangi bir klasörde Claude Code içinde:
+**2. Paket olarak kur** (108 bileşen tek pakette, güncellemeyi sürüm taşır):
+
+```bash
+npm install @ahmetakyapi/theme @ahmetakyapi/ui motion
+```
+
+```css
+/* app/globals.css */
+@import "tailwindcss";
+@import "@ahmetakyapi/theme/theme.css";
+@import "@ahmetakyapi/ui/source.css";
+```
+
+**3. Yeni proje başlat** (Claude Code ile, fikirden şablona):
+
+```bash
+git clone https://github.com/ahmetakyapi/dev-starter ~/Desktop/Projects/dev-starter
+bash ~/Desktop/Projects/dev-starter/machine/bootstrap.sh   # komutlar, agent'lar, kurallar
+```
 
 ```text
 /kickoff ergoterapistler için seans takip uygulaması
 ```
 
-`strategist` agent'ı birkaç soru sorar, pazarı araştırır, 2-3 yön önerir, teknolojiyi
-seçer ve `docs/KICKOFF.md` yazar. Onay verdiğinde `/new-project` şablonu kurar,
-paleti uygular ve ilk doğrulamayı koşar.
+`strategist` agent'ı birkaç soru sorar, pazarı araştırır, 2-3 yön önerir ve
+`docs/KICKOFF.md` yazar; onaylayınca `/new-project` şablonu kurar, paleti uygular
+ve ilk doğrulamayı koşar.
+
+---
+
+## Canlı Katalog
+
+Her bileşen, açık ve koyu temada, on palette, bütün durumlarıyla
+[dev-starter-storybook.vercel.app](https://dev-starter-storybook.vercel.app/) adresinde. Kenar çubuğu üç bölüm:
+**Başla** (Tanıtım, Başlangıç, Vitrin, Her Şey Bir Arada) · **Kütüphane** (Tema,
+Bileşenler, Grafikler, Bloklar, Desenler) · **Uygulamada** (Pusula, Ekranlar,
+Arşiv). Her hikâyenin etkileşim testi, kontrast ve hizalama ölçümü her
+görsel değişiklikten sonra koşar.
+
+<table>
+<tr>
+<td width="68%" valign="top"><a href="https://dev-starter-storybook.vercel.app/"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/catalog-tanitim-dark.webp"><img alt="Tanıtım sayfası: Tek Kimlik, On Palet başlığı, arama ve gerçek bileşenlerden kurulmuş vitrin" src=".github/readme/shots/catalog-tanitim-light.webp" width="100%"></picture></a><br><b>Tanıtım</b> · kataloğun vitrini ve haritası</td>
+<td width="32%" valign="top" rowspan="2"><a href="https://dev-starter-storybook.vercel.app/demo"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/catalog-pusula-mobile-dark.webp"><img alt="Pusula panosu telefonda" src=".github/readme/shots/catalog-pusula-mobile-light.webp" width="100%"></picture></a><br><b>Pusula, telefonda</b></td>
+</tr>
+<tr>
+<td valign="top"><a href="https://dev-starter-storybook.vercel.app/demo"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/catalog-pusula-dark.webp"><img alt="Pusula panosu: teslim tarihi geçen siparişler, ölçü şeridi ve grafikler" src=".github/readme/shots/catalog-pusula-light.webp" width="100%"></picture></a><br><b>Pusula</b> · bütün bileşenler tek bir üründe: pano, gelen kutusu, görevler, takvim, asistan, raporlar</td>
+</tr>
+</table>
+
+Kısa adresler: [`/demo`](https://dev-starter-storybook.vercel.app/demo) (Pusula) · [`/showcase`](https://dev-starter-storybook.vercel.app/showcase) ·
+[`/start`](https://dev-starter-storybook.vercel.app/start) · [`/theme`](https://dev-starter-storybook.vercel.app/theme) · [`/palettes`](https://dev-starter-storybook.vercel.app/palettes) ·
+[`/references`](https://dev-starter-storybook.vercel.app/references) · bileşen belgesi `/c/<ad>` (ör. [`/c/date-picker`](https://dev-starter-storybook.vercel.app/c/date-picker)).
 
 ---
 
@@ -78,7 +133,7 @@ hareket eğrisi, aynı bileşen davranışı. Değişen tek şey **palet**. Vars
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/readme/palettes-dark.svg">
-  <img alt="On palet, açık ve koyu temada: her birinin marka karosu, başlık degradesi, rol renkleri ve düğmesi" src=".github/readme/palettes-light.svg" width="100%">
+  <img alt="On palet, açık ve koyu temada: her birinin marka karosu, başlık degradesi, rol renkleri ve butonu" src=".github/readme/palettes-light.svg" width="100%">
 </picture>
 
 | Her Projede Aynı | Projeye Göre Seçilen |
@@ -125,7 +180,7 @@ zamana bağlı hareket. Kit bir npm paketi değil:
 
 Hareket kuralları `motion-film` skill'inde: ekran dışında dur, hedefe yumuşak git,
 tek seferlik olayı kısa bir yükselme ve sönümle göster. **Oynatma deseni** de orada (Seans Zili →
-"Günü Oynat"): düğme değeri hedefe ışınlamaz; önce başlangıca taşır, sonra süreci
+"Günü Oynat"): buton değeri hedefe ışınlamaz; önce başlangıca taşır, sonra süreci
 yürütür. Zil, ibre açılışın ya da kapanışın üstünden ileri geçtiği an çalar, geri
 sarmak çaldırmaz. Hazır fonksiyonlar `carryLeg`, `walkLeg`, `planAt` ve `crossings`.
 → [`aciklayici-figur.md`](machine/skills/motion-film/reference/aciklayici-figur.md) ·
@@ -174,14 +229,21 @@ Kopyala-yapıştır kütüphane: her dosya tek başına projeye eklenir, yalnız
 sınıflarına ve `cn()`'e dayanır, açık/koyu ve on palette doğru görünür.
 `/snippet <ad>` uyarlayarak kopyalar.
 
-| Grup | Bileşenler |
+| Raf | Örnekler |
 |---|---|
-| **Yükleme** | `spinner` · `loading-mark` · `route-progress` · `skeleton` |
-| **Düğme ve İkon** | `icon` · `icon-button` (`aria-label` tipte zorunlu) · `button-group` · `segmented-control` · `copy-button` · `kbd` |
-| **Katmanlar** | `dialog` · `sheet` (yerel `<dialog>`) · `popover` · `tooltip` + `InfoTip` · `dropdown-menu` · `command-palette` (⌘K) |
-| **Veri** | `data-table` (adreste sıralama, yapışkan sütun, karşılaştırma çubuğu) · `tree-view` · `tree-table` · `pagination` · `stat` · `sparkline` |
-| **Form** | `switch` · `checkbox` · `radio-group` · `select` · `combobox` (Türkçe süzer) · `file-dropzone` |
-| **Gezinme ve Durum** | `tabs` · `accordion` · `breadcrumb` · `badge` · `avatar` · `stepper` · `timeline` · `empty-state` |
+| **Temel** | `badge` · `avatar` · `divider` · `empty-state` · `reactions` |
+| **Buton ve İkon** | `icon-button` (`aria-label` tipte zorunlu) · `button-group` · `split-button` · `copy-button` · `hold-button` · `kbd` |
+| **Form Girişleri** | `date-picker` · `date-range-presets` · `number-field` · `input-otp` · `password-field` · `tag-input` · `file-dropzone` · `signature-pad` |
+| **Seçim** | `switch` · `checkbox` · `segmented-control` · `combobox` (Türkçe arar) · `assignee-picker` · `channel-matrix` · `quick-poll` |
+| **Gezinme** | `tabs` · `accordion` · `breadcrumb` · `stepper` · `toc-nav` · `marquee` |
+| **Katmanlar** | `dialog` · `sheet` · `popover` · `tooltip` · `dropdown-menu` · `command-palette` (⌘K) · `filter-sheet` · `share-panel` · `product-tour` |
+| **Geri Bildirim ve Yükleme** | `toast` · `banner-alert` · `meter` · `progress` · `skeleton` · `spinner` · `route-progress` |
+| **Veri ve Verimlilik** | `data-table` · `record-list` · `tree-view` · `tree-table` · `stat` · `timeline` · `kanban-board` · `task-list` · `week-calendar` |
+| **Grafikler** | `area-chart` · `line-chart` · `combo-chart` · `funnel-chart` · `sankey-chart` · `heatmap` · `ring-chart` · `radar-chart` · `activity-rings` |
+| **Hareket, Tanıtım, Yapay Zekâ** | `pattern-bg` · `dissolve` · `slot-text` · `mesh-gradient` · `liquid-glass` · `app-window` · `thinking-orb` · `stream-text` · `tool-call` |
+
+Tam liste, ne zaman hangisi ve bağımlılıklar: [`snippets/ui/README.md`](snippets/ui/README.md);
+hepsi canlı olarak [kataloğun Bileşenler rafında]({L}/).
 
 Menü, açılır pencere ve konumlandırma gibi erişilebilirliği zor parçalar
 [Base UI](https://base-ui.com) üzerinde, görünüm tamamen token'la. Ağaç ve
@@ -189,7 +251,7 @@ ağaç tablo WAI-ARIA klavye haritasını eksiksiz uygular (oklar, Home/End,
 yazarak arama; `ı` ile `I`, `i` ile `İ` doğru eşleşir).
 
 <table>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/ui-controls-dark.webp"><img alt="Yükleme, düğmeler, katmanlar, seçim denetimleri" src=".github/readme/shots/ui-controls-light.webp" width="100%"></picture></td>
+<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/ui-controls-dark.webp"><img alt="Yükleme, butonlar, katmanlar, seçim denetimleri" src=".github/readme/shots/ui-controls-light.webp" width="100%"></picture></td>
 <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/ui-data-dark.webp"><img alt="Ağaç, ağaç tablo, ölçüler, veri tablosu" src=".github/readme/shots/ui-data-light.webp" width="100%"></picture></td></tr>
 <tr><td colspan="2"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/ui-forms-dark.webp"><img alt="Form denetimleri, rozet, adım ve zaman çizelgesi" src=".github/readme/shots/ui-forms-light.webp" width="100%"></picture></td></tr>
 </table>
@@ -216,7 +278,7 @@ projede yaşandığı yazar.
 | 00 | [Marka Kimliği](guides/00-brand-identity.md) | Değişmezler, proje türüne göre palet ve tema seçimi, yeni paletin ölçülerek türetilmesi |
 | 01 | [Kickoff](guides/01-kickoff.md) | `/kickoff`'tan ilk deploy'a ilk gün ve ilk hafta listesi |
 | 02 | [Tasarım Token'ları](guides/02-design-tokens.md) | İki katman, rol adları, `-ink`/`-wash`, punto ve twMerge tuzakları, kontrast |
-| 03 | [Tema](guides/03-theming.md) | Çerez + sunucuda `data-theme`, view transition'lı düğme, zemin katmanları |
+| 03 | [Tema](guides/03-theming.md) | Çerez + sunucuda `data-theme`, view transition'lı buton, zemin katmanları |
 | 04 | [Hareket](guides/04-motion.md) | LazyMotion, süre tablosu, Reveal kuralları, kaydırma ve sayfa geçişleri |
 | 05 | [Bileşenler](guides/05-components.md) | Şablon bileşenleri, ekran düzeni sırası, boş/yükleme/hata durumları |
 | 06 | [Next.js 16](guides/06-nextjs-16.md) | `proxy.ts`, async API'ler, önbellek katmanları, soft 404, React 19 formları |

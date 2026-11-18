@@ -329,7 +329,7 @@ export function NoteForm({ notes }: { notes: Note[] }) {
 
 - `useFormStatus` **formun içindeki** bir bileşende çağrılır; formu basan
   bileşende çağrılırsa hep `pending: false` döner.
-- Gönder düğmesi `disabled` değil `aria-disabled`: odaktaki düğme devre dışı
+- Gönder butonu `disabled` değil `aria-disabled`: odaktaki buton devre dışı
   kalınca odak `<body>`ye düşer, klavye kullanıcısı sayfanın başına döner.
   İkinci gönderimi formun `onSubmit`i keser (React 19 `preventDefault`
   görünce eylemi çağırmaz); hata dönünce bir `useEffect` odağı ilk
@@ -358,7 +358,7 @@ startTransition(() => { router.refresh(); reset(); });
 ## 11. Server Actions Güvenliği
 
 Her `"use server"` fonksiyonu **herkese açık bir POST ucudur.** Arayüzde
-düğmesi görünmüyor olması korunduğu anlamına gelmez.
+butonu görünmüyor olması korunduğu anlamına gelmez.
 
 ```ts
 "use server";

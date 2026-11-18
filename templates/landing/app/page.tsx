@@ -41,7 +41,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
   return (
     <>
       <ScrollProgress />
-      {/* Sunucu çerezi okumaz (sayfa statik); düğme hidrasyondan hemen sonra
+      {/* Sunucu çerezi okumaz (sayfa statik); buton hidrasyondan hemen sonra
           `<html data-theme>`daki gerçek temaya geçer. */}
       <SiteHeader initialTheme={DEFAULT_THEME} />
       <main id="icerik">

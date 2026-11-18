@@ -19,8 +19,8 @@ import { cn } from "@/lib/utils";
  * tik 5 adım, 2,4 saniyeden sonra 10 adım. 0'dan 500'e varmak böylece
  * 30 saniye değil birkaç saniye sürer; tek dokunuş yine tek adımdır.
  *
- * Düğmeler beyaz karo (gri kuyunun içinde), dokunmatikte 44 px, ince
- * işaretçide 32 px. Sınırda düğme devre dışı kalır: "neden artmıyor?"
+ * Butonlar beyaz karo (gri kuyunun içinde), dokunmatikte 44 px, ince
+ * işaretçide 32 px. Sınırda buton devre dışı kalır: "neden artmıyor?"
  * sorusunu görünüş cevaplar.
  *
  *   <NumberField label="Kişi Sayısı" defaultValue={2} min={1} max={12} />

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 /*
  * Tema `<html data-theme>` özniteliğinde yaşar; bileşen onu DİNLER, kendi
- * durumunu tutmaz. Böylece aynı sayfada iki düğme olsa da ikisi aynı şeyi
+ * durumunu tutmaz. Böylece aynı sayfada iki buton olsa da ikisi aynı şeyi
  * gösterir ve sunucunun bastığı değerle hidrasyon uyuşmazlığı çıkmaz.
  */
 function readTheme(): Theme {
@@ -59,7 +59,7 @@ export function ThemeToggle({ initialTheme, className }: { initialTheme: Theme; 
       return;
     }
 
-    // Klavyeyle tetiklenen tıklamada koordinat yok (detail 0): düğmenin ortası.
+    // Klavyeyle tetiklenen tıklamada koordinat yok (detail 0): butonun ortası.
     const box = event.currentTarget.getBoundingClientRect();
     const x = event.detail > 0 ? event.clientX : box.left + box.width / 2;
     const y = event.detail > 0 ? event.clientY : box.top + box.height / 2;

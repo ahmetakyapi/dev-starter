@@ -13,7 +13,7 @@ import { useFinePointer } from './useFinePointer'
  */
 export function useMagnetic(strength = 0.26) {
   // Hareket azaltma isteyen kullanıcıda ve dokunmatikte element imlece hiç
-  // çekilmez: dokunuşun ürettiği mousemove düğmeyi parmağın altından kaydırır
+  // çekilmez: dokunuşun ürettiği mousemove butonu parmağın altından kaydırır
   // ve mouseleave gelene kadar orada bırakır. Hook'lar koşulsuz çağrılır
   // (hook kuralları), etkisi strength ile sıfırlanır; çizilen öğe aynı
   // kaldığı için hidrasyon farkı da doğmaz.

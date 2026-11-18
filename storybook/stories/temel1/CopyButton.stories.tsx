@@ -19,7 +19,7 @@ function mockClipboard(ok: boolean) {
 const LINK = "https://pano.acme.com.tr/davet/7KQ2-M4XD";
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Kopyala Düğmesi",
+  title: "Bileşenler/Buton ve İkon/Kopyala Butonu",
   id: "copy-button",
   component: CopyButton,
   tags: ["autodocs"],
@@ -27,7 +27,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Panoya kopyalar ve sonucu iki yoldan söyler: ikon değişir, görünmez canlı bölge “Kopyalandı” der. Pano izni yoksa sessizce başarılı görünmez, “Kopyalanamadı” der. `children` verilirse metinli düğme, verilmezse 44 piksellik ikon düğme.",
+          "Panoya kopyalar ve sonucu iki yoldan söyler: ikon dağişir, görünmez canlı bölge “Kopyalandı” der. Pano izni yoksa sessizce başarılı görünmez, “Kopyalanamadı” der. `children` verilirse metinli buton, verilmezse 44 piksellik ikon buton.",
       },
     },
   },

@@ -273,9 +273,9 @@ export default function Page() {
           />
         </Showcase>
 
-        <Showcase name="Süzgeç Etiketi" summary="Süzgeç çipi aria-pressed taşır; kaldırılabilir çipte yalnızca × bir düğme.">
+        <Showcase name="Filtre Etiketi" summary="Filtre çipi aria-pressed taşır; kaldırılabilir çipte yalnızca × bir buton.">
           <div className="grid w-full gap-5">
-            <ChipGroup aria-label="Durum Süzgeci">
+            <ChipGroup aria-label="Durum Filtresi">
               {Object.entries(filters).map(([name, on], index) => (
                 <FilterChip
                   key={name}
@@ -303,7 +303,7 @@ export default function Page() {
           </div>
         </Showcase>
 
-        <Showcase name="Kapat Düğmesi" summary="Görsel 28–32 piksel, dokunma alanı 44; halka dairenin çevresinde.">
+        <Showcase name="Kapat Butonu" summary="Görsel 28–32 piksel, dokunma alanı 44; halka dairenin çevresinde.">
           <div className="flex items-center gap-8">
             <div className="relative w-56 rounded-xl bg-overlay p-4 shadow-raised">
               <div className="absolute top-3 right-3">

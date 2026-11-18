@@ -6,14 +6,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from "@/lib/utils";
 
 /**
- * Bölünmüş düğme: en sık seçilen eylem ve aynı işin kardeşleri tek hapta
+ * Bölünmüş buton: en sık seçilen eylem ve aynı işin kardeşleri tek hapta
  * ("CSV Olarak İndir" + ▾ Excel, PDF). Kardeşler GERÇEKTEN aynı işin
- * biçimleriyse kullan; farklı işler (Düzenle, Sil, Paylaş) tek düğmeye
+ * biçimleriyse kullan; farklı işler (Düzenle, Sil, Paylaş) tek butona
  * sıkıştırılmaz, onlar `dropdown-menu`.
  *
  * İKİ AYRI DÜĞME, TEK GÖRÜNÜŞ: sol yarı ana eylemi hemen yapar, sağdaki ok
- * menüyü açar. Ekran okuyucu ikisini ayrı duyar: ana düğme kendi adıyla,
- * ok "Diğer Biçimler" (değiştirilebilir) + menü düğmesi bilgisiyle (Base UI
+ * menüyü açar. Ekran okuyucu ikisini ayrı duyar: ana buton kendi adıyla,
+ * ok "Diğer Biçimler" (değiştirilebilir) + menü butonu bilgisiyle (Base UI
  * Menu: oklar, Home/End, harfle atlama, Escape, odak dönüşü).
  *
  * GÖRÜNÜŞ: iki yarı arasında 1 px'lik aralık (dolgunun kendi tonunda
@@ -42,7 +42,7 @@ type SplitButtonProps = {
   children: ReactNode;
   onClick: () => void;
   items: readonly SplitItem[];
-  /** Ok düğmesinin adı. */
+  /** Ok butonunun adı. */
   menuLabel?: string;
   variant?: keyof typeof TONES;
   disabled?: boolean;

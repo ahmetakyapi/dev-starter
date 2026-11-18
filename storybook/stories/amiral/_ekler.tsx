@@ -85,13 +85,13 @@ export function FormEk() {
   const [range, setRange] = useState<DateRangeValue>({ kind: "preset", id: "30" });
   return (
     <>
-      <Cell file="date-range-presets" name="Tarih Aralığı Süzgeci" note="Hazır aralıklar tek dokunuşta; özel aralık iki ayrı takvimde." span={3}>
+      <Cell file="date-range-presets" name="Tarih Aralığı Filtresi" note="Hazır aralıklar tek dokunuşta; özel aralık iki ayrı takvimde." span={3}>
         <div className="grid justify-items-center gap-3">
           <DateRangePresets label="Sipariş Tarihi" presets={PRESETS} value={range} onValueChange={setRange} today={TODAY} />
           <p className="text-small text-muted">Tabloyu ve grafikleri birlikte süzer.</p>
         </div>
       </Cell>
-      <Cell file="password-field" name="Kurallı Şifre" note="Kurallar yazdıkça yeşerir; göster düğmesi alanın içinde." span={3} align="stretch">
+      <Cell file="password-field" name="Kurallı Şifre" note="Kurallar yazdıkça yeşerir; göster butonu alanın içinde." span={3} align="stretch">
         <PasswordField label="Yeni Şifre" name="yeni-sifre" autoComplete="new-password" />
       </Cell>
     </>
@@ -119,11 +119,11 @@ export function KatmanEk() {
   const result = 10 - (filters.kavurma?.length ? 5 : 0) - (filters.koken?.length ? 2 : 0);
   return (
     <>
-      <Cell file="filter-sheet" name="Süzgeç Çekmecesi" note="Telefonda süzgeçler alttan açılır; düğme kaç kayıt kalacağını söyler." span={3}>
+      <Cell file="filter-sheet" name="Filtre Çekmecesi" note="Telefonda filtreler alttan açılır; buton kaç kayıt kalacağını söyler." span={3}>
         <div className="grid justify-items-center gap-3">
           <Button variant="secondary" onClick={() => setOpen(true)}>
             <SlidersHorizontal aria-hidden />
-            Süzgeçler{picked ? ` · ${picked}` : ""}
+            Filtreler{picked ? ` · ${picked}` : ""}
           </Button>
           <p className="text-small text-muted">{num.format(result)} çekirdek listeleniyor</p>
         </div>

@@ -51,29 +51,29 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
-| `spinner.tsx` | Satır içi, düğme içi kısa bekleme | yok | Hayır | `role="status"` + gizli etiket; reduced-motion'da sabit yay |
+| `spinner.tsx` | Satır içi, buton içi kısa bekleme | yok | Hayır | `role="status"` + gizli etiket; reduced-motion'da sabit yay |
 | `loading-mark.tsx` | Sayfa/kart düzeyinde bekleme, marka halkası | yok | Hayır | `role="status"`; döngü yalnızca beklemede, reduced-motion'da sabit |
 | `route-progress.tsx` | Kök layout'ta gezinme göstergesi | `next/navigation` | Evet | Canlı bölge hep DOM'da; hap 420 ms sonra; `<Suspense>` şart |
 | `skeleton.tsx` | Gelecek içeriğin şeklinde iskelet | `.skeleton` | Hayır | `aria-hidden`; kap `aria-busy` taşır |
 | `text-shimmer.tsx` | Süren işin metin etiketi ("Asistan düşünüyor…") | yok | Hayır | Renk değil alfa maskesi; en sönük kare %60, AA; `live` ile `role="status"`; reduced-motion'da düz metin |
 
-### Düğme ve İkon
+### Buton ve İkon
 
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `icon.tsx` | lucide ikonu, tek boyut ölçeği | lucide | Hayır | Varsayılan `aria-hidden`; `label` verilirse `role="img"` |
-| `icon-button.tsx` | Yalnız ikonlu düğme | lucide | Hayır | `aria-label` TİPTE zorunlu; 44 px |
-| `button-group.tsx` | Bağlı düğmeler | yok | Hayır | `role="group"` + ad; `well`de basılı durum `aria-pressed` |
+| `icon-button.tsx` | Yalnız ikonlu buton | lucide | Hayır | `aria-label` TİPTE zorunlu; 44 px |
+| `button-group.tsx` | Bağlı butonlar | yok | Hayır | `role="group"` + ad; `well`de basılı durum `aria-pressed` |
 | `segmented-control.tsx` | 2-5 seçenekten biri, anında etki | motion (`domMax`) | Evet | Radyo grubu, gezici tabindex, ok tuşları |
 | `copy-button.tsx` | Panoya kopyala | lucide | Evet | Sonuç canlı bölgede; hata da söylenir |
 | `code-block.tsx` | Kurulum komutu, yapılandırma, API örneği; paket yöneticisi sekmeleri | `copy-button` | Evet | Sekme listesi, ok tuşları; kaydırılabilir `pre` odaklanır; `$` istemi kopyalanmaz ve okunmaz; `persist` tercihi paylaşır |
 | `hold-button.tsx` | Yıkıcı ama geri alınabilir eylemde diyalogsuz onay (arşivle, listeden çıkar) | lucide | Evet | Tıklama onaylamaz, ipucu `aria-describedby`; Boşluk/Enter basılı tutulur; dolgu `clip-path`, metin her an AA; sonuç `role="status"` |
-| `split-button.tsx` | Ana eylem + aynı işin diğer biçimleri ("CSV" + ▾ Excel, PDF) | `dropdown-menu`, lucide | Evet | İki ayrı düğme: ana eylem kendi adıyla, ok "Diğer Biçimler" menü düğmesi (Base UI Menu) |
-| `kbd.tsx` | Klavye tuşu, kısayol | yok | Hayır | Simgeli tuşta `label`; kombinasyon tek ad |
+| `split-button.tsx` | Ana eylem + aynı işin diğer biçimleri ("CSV" + ▾ Excel, PDF) | `dropdown-menu`, lucide | Evet | İki ayrı buton: ana eylem kendi adıyla, ok "Diğer Biçimler" menü butonu (Base UI Menu) |
+| `kbd.tsx` | Klavye tuşu, kısayol | yok | Hayır | İkonlu tuşta `label`; kombinasyon tek ad |
 | `close-button.tsx` | Diyalog, uyarı, çip, duyuru kapatma | lucide | Hayır | `aria-label` TİPTE zorunlu; 44 px dokunma alanı (görsel 28/32); odak halkası dairede |
-| `chip.tsx` | `FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup` | lucide | Hayır | Süzgeç `aria-pressed` + ✓; yalnız × düğme, adı "Kaldır: İstanbul"; grup `role="group"` + ad |
+| `chip.tsx` | `FilterChip`: filtre · `RemovableChip`: seçilmiş değer · `ChipGroup` | lucide | Hayır | Filtre `aria-pressed` + ✓; yalnız × buton, adı "Kaldır: İstanbul"; grup `role="group"` + ad |
 | `reactions.tsx` | Mesaja/nota tek dokunuşla tepki (Beğendim, Bakıyorum, Tamam) | Base UI (`popover`), lucide | Evet | Emoji yok, ikon + Türkçe ad; hap `aria-pressed`, adı sayıyı söyler; sıfıra inen hap kalkar |
-| `toggle-group.tsx` | Basılı/basılı değil düğmeler: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost` | Base UI, `tooltip`, `kbd`, lucide | Evet | `aria-pressed`, gezici tabindex ve oklar; yalnız ikonlu öğede `label` tipte zorunlu + tooltip |
+| `toggle-group.tsx` | Basılı/basılı değil butonlar: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost` | Base UI, `tooltip`, `kbd`, lucide | Evet | `aria-pressed`, gezici tabindex ve oklar; yalnız ikonlu öğede `label` tipte zorunlu + tooltip |
 | `assignee-picker.tsx` | Kişi atama: talep, görev, kart (tekli ya da çoklu) | Base UI (`popover`), `avatar`, lucide | Evet | Tetikleyici adı durumu söyler; `combobox` + `listbox`, `aria-activedescendant`, ↑↓ Home End Enter; Türkçe harf düzleyen arama |
 
 ### Katmanlar
@@ -82,12 +82,12 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 |-------|----------|------------|---------|-----------------|
 | `dialog.tsx` | Onay, kısa form, yıkıcı eylem | yerel `<dialog>` | Evet | Odak tuzağı ve Escape tarayıcıdan, odak açana döner, sayaçlı kilit |
 | `sheet.tsx` | Telefonda alttan çekmece, masaüstünde yan panel; yan panelde `icon` (kimlik karosu), `status` (durum hapı), `footerStart` (karşı kenarda yıkıcı eylem), `size="lg"` (ayrıntı paneli) | yerel `<dialog>` | Evet | Diyalogla aynı; sürükleme tek yol değil |
-| `filter-sheet.tsx` | Telefonda bütün süzgeç ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana düğme ("8 Talebi Göster") | `sheet`, lucide | Evet | Tekli grup radyo grubu (oklar, gezici tabindex), çoklu grup `aria-pressed`; seçili çipte ✓ + kalın kenar; sayı canlı bölgede |
+| `filter-sheet.tsx` | Telefonda bütün filtre ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana buton ("8 Talebi Göster") | `sheet`, lucide | Evet | Tekli grup radyo grubu (oklar, gezici tabindex), çoklu grup `aria-pressed`; seçili çipte ✓ + kalın kenar; sayı canlı bölgede |
 | `share-panel.tsx` | Paylaşım diyaloğunun gövdesi: bağlantı + kopyala, kitle düzeyinde erişim satırları (ekip, herkes) aç/kapa | `copy-button`, `switch`, lucide | Evet | Satırın tamamı anahtarın etiketi ("Pusula Ekibi, Ekip, 6 kişi"); erişim kapalıyken uyarı metni; kopyalama sonucu canlı bölgede |
 | `popover.tsx` | Sayfayı kilitlemeyen küçük kutu | Base UI | Evet | Dış tıklama, Escape, odak dönüşü |
 | `product-tour.tsx` | Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım) | `react-dom` (portal), lucide | Evet | Kart diyalog: odak, Tab döngüsü, ← → adım, Escape kapatır ve odak açana döner; bulunamayan hedef atlanır |
 | `tooltip.tsx` | `Tooltip`: görsel etiket · `InfoTip`: açıklama | Base UI | Evet | Tooltip dokunmatikte açılmaz (bilinçli); InfoTip tıklamayla açılır |
-| `dropdown-menu.tsx` | Eylem menüsü | Base UI | Evet | Menü düğmesi kalıbı tam: oklar, Home/End, harf, Escape |
+| `dropdown-menu.tsx` | Eylem menüsü | Base UI | Evet | Menü butonu kalıbı tam: oklar, Home/End, harf, Escape |
 | `command-palette.tsx` | ⌘K / Ctrl+K komut paleti | yerel `<dialog>` | Evet | Combobox + listbox, `aria-activedescendant`, Türkçe arama |
 | `context-menu.tsx` | Nesne üstünde sağ tık / uzun basma eylemleri | Base UI, `kbd` | Evet | Menü klavye haritası tam, alt menü sağ/sol okla; yıkıcı öğe ayrı grupta; kısayol `aria-hidden` |
 | `notification-center.tsx` | Üst çubukta zil + bildirim listesi | Base UI, lucide | Evet | Zil adı sayıyı söyler ("Bildirimler, 3 okunmamış"); gruplar başlıklı `ul`; `<time dateTime>` |
@@ -114,10 +114,10 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `switch.tsx` | Anında etki eden aç/kapa | yerel giriş | Hayır | `role="switch"`, JS'siz form gönderimi; tutamak iki temada izine karşı ≥ 3:1 |
 | `checkbox.tsx` | Onay, çoklu seçim | yerel giriş | Hayır | Etiketin tamamı hedef; `indeterminate` ref ile; tik çizilerek gelir, hareket azaltmada anında |
 | `channel-matrix.tsx` | Olay × kanal tercih tablosu (bildirim, abonelik, izin); sütun başlığı bütün sütunu açar/kapar, kilitli satır | `checkbox` | Evet | Gerçek `<table>` + `caption`/`scope`; her kutu "Olay, Kanal" adını taşır; sütun kutusu üç durumlu (`indeterminate`); olay sütunu yapışkan |
-| `quick-poll.tsx` | Ekip içi küçük karar tek dokunuşla; sonuçlar oy verince görünür, kendi seçimine yeniden basmak geri alır | lucide | Evet | `aria-pressed` düğmeler (geri alınabilir oy); oydan sonra ad sonucu taşır ("yüzde 50, 3 oy"); toplam canlı bölgede |
+| `quick-poll.tsx` | Ekip içi küçük karar tek dokunuşla; sonuçlar oy verince görünür, kendi seçimine yeniden basmak geri alır | lucide | Evet | `aria-pressed` butonlar (geri alınabilir oy); oydan sonra ad sonucu taşır ("yüzde 50, 3 oy"); toplam canlı bölgede |
 | `radio-group.tsx` | 2-6 görünür seçenek | yerel giriş | Hayır | `fieldset` + `legend`, tarayıcı ok gezinmesi; iç nokta 0.4'ten büyür, 0'dan değil |
 | `select.tsx` | 5-15 seçenek, dar yer | Base UI | Evet | Listbox, gizli yerel giriş, etiket bağı |
-| `combobox.tsx` | Çok seçenek, aranır | Base UI | Evet | `locale="tr-TR"` süzgeç, `aria-activedescendant` |
+| `combobox.tsx` | Çok seçenek, aranır | Base UI | Evet | `locale="tr-TR"` filtre, `aria-activedescendant` |
 | `tabs.tsx` | `Tabs`: sayfa içi · `TabLinks`: ayrı adresler | `next/link` | Evet | WAI-ARIA tabs; bağlantı sekmesi `aria-current`; kayan karo hareket azaltmada yerinde |
 | `accordion.tsx` | SSS, katlanır bölüm | yerel `<details>` | Evet* | Ctrl+F kapalı içeriği bulur; açılınca bastığın yerde kalır |
 | `breadcrumb.tsx` | Konum çubuğu | `next/link` | Hayır | Son öğe `aria-current`; ikonlar `aria-hidden`; `iconOnly`de ad gizli metin |
@@ -131,7 +131,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `announcement.tsx` | Kahraman üstü duyuru hapı; kapatılabilir varyant | `next/link`, lucide, `close-button` | Evet | Hap tek bağlantı, × kardeş öğe; noktasız, yanıp sönmez |
 | `carousel.tsx` | Yan yana kaydırılan kartlar | lucide, motion | Evet | `aria-roledescription` carousel/slide; ←/→ Home/End; canlı bölge konumu söyler; otomatik oynatma yok |
 | `toc-nav.tsx` | Uzun sayfada yapışkan içindekiler + okuma ilerlemesi | yok | Evet | `nav` + `aria-current="location"`; tık başlığa kaydırır ve odak verir; ilerleme kaydırmaya bağlı CSS |
-| `marquee.tsx` | Kayan şerit: logolar, entegrasyonlar (sayfada tek) | lucide | Evet | WCAG 2.2.2: görünür durdurma düğmesi (`aria-pressed`), üzerine gelince/odakta bekler; kopya `aria-hidden` + `inert`; reduced-motion'da durağan |
+| `marquee.tsx` | Kayan şerit: logolar, entegrasyonlar (sayfada tek) | lucide | Evet | WCAG 2.2.2: görünür durdurma butonu (`aria-pressed`), üzerine gelince/odakta bekler; kopya `aria-hidden` + `inert`; reduced-motion'da durağan |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -156,19 +156,19 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `chart-card.tsx` | Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları | yok | Hayır | `section` + başlık; lejant `dl`; değişim "artış/düşüş" diye okunur |
-| `stage-bars.tsx` | Huni aşamaları, iz üstünde hap çubuk | `chart-card` | Hayır | `ol`; değer ve pay metinde, çubuk `aria-hidden` |
+| `stage-bars.tsx` | Huni aşamaları, iz üstünde tek renkli hap çubuk | `chart-card` | Hayır | `ol`; değer ve pay metinde, çubuk `aria-hidden` |
 | `track-bar-chart.tsx` | Sıralı tek seri (ay, gün), iz üstünde sütun | `chart-card` | Hayır | Görsel `aria-hidden`, veri `sr-only` tabloda |
 | `ring-chart.tsx` | 2-5 kategorinin iç içe halkası, ortada değer | yok | Hayır | `role="img"` + `title`; her yayın kendi `title`ı |
 | `area-chart.tsx` | Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon; `bands` ile kalıcı işaretli dönemler (en iyi/zayıf ay) | `chart-card`, motion | Evet | Veri `sr-only` tabloda; çizim `aria-hidden`; odaklan + ←→ Home End, seçilen nokta canlı bölgede; bantlar tablo altı cümlede ve banda girince canlı bölgede |
 | `gauge-chart.tsx` | Bütünün 2-4 parçası ya da tek doluluk (`max`); yarım daire, ortada büyük yüzde | `chart-card`, motion | Evet | `role="img"` + bütün parçaları sayan ad; her yayın `title`ı |
-| `funnel-chart.tsx` | Daralan aşamalar (`curve`/`step`), sütun başına yüzde hapı, altta lejant | `chart-card`, motion | Evet | Aşamalar `sr-only` `ol` ("ilk aşamaya göre %30"); lejant `dl` |
+| `funnel-chart.tsx` | Daralan aşamalar (`curve`/`step`), tek renk; sütunda ad + değer, altında adım dönüşümü, kayıp izi | `chart-card`, motion | Evet | Aşamalar `sr-only` `ol` ("ilk aşamaya göre %30"); lejant `dl` |
 | `heatmap.tsx` | Günlük bir sayının haftalar × günler ritmi, 5 basamak, Az ↔ Çok | motion | Evet | Aylık toplamlar `sr-only` tabloda; ızgara odaklanır, oklarla gün gün, canlı bölge |
 | `radar-chart.tsx` | 5-8 ölçütte 1-2 profil | `chart-card`, motion | Evet | `sr-only` tablo (ölçüt × seri); noktaların `title`ı |
-| `sankey-chart.tsx` | İki katmanlı akış (kaynak → hedef), sağda "Ad · %22", düğüm/akış yalıtma | `chart-card`, motion | Evet | Akışlar `sr-only` tabloda; etiketler `aria-pressed` düğme; seçili akış canlı bölgede |
+| `sankey-chart.tsx` | İki katmanlı akış (kaynak → hedef), sağda "Ad · %22", düğüm/akış yalıtma | `chart-card`, motion | Evet | Akışlar `sr-only` tabloda; etiketler `aria-pressed` buton; seçili akış canlı bölgede |
 | `bar-list.tsx` | Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu | `chart-card`, motion, `next/link` | Evet | `ol` + ad; dolgu `aria-hidden`; bağlantılı satır 44/36 px |
-| `line-chart.tsx` | Sıralı eksende 2-5 seriyi kıyaslamak; kesik tahmin, hedef çizgisi, lejant süzgeç | `chart-card`, `area-chart`, motion | Evet | Veri `sr-only` tabloda; lejant `aria-pressed` düğmeler, son seri gizlenemez; ←→ Home End ile gezilir, seçim canlı bölgede |
+| `line-chart.tsx` | Sıralı eksende 2-5 seriyi kıyaslamak; kesik tahmin, hedef çizgisi, lejant filtre | `chart-card`, `area-chart`, motion | Evet | Veri `sr-only` tabloda; lejant `aria-pressed` butonlar, son seri gizlenemez; ←→ Home End ile gezilir, seçim canlı bölgede |
 | `combo-chart.tsx` | Birimi farklı iki ölçü: sütun hacmi (sol eksen) ve çizgi oranı (sağ eksen) | `chart-card`, `area-chart`, motion | Evet | Veri `sr-only` tabloda; eksen anahtarı biçimle de ayırt eder (kare / noktalı çizgi); ←→ Home End |
-| `scatter-chart.tsx` | İki ölçünün ilişkisi; nokta boyu üçüncü ölçü (√ alan), renk kategori | `chart-card`, `line-chart`, motion | Evet | Veri `sr-only` tabloda; klavyede X sırasıyla gezilir; kategori süzgeci `aria-pressed` |
+| `scatter-chart.tsx` | İki ölçünün ilişkisi; nokta boyu üçüncü ölçü (√ alan), renk kategori | `chart-card`, `line-chart`, motion | Evet | Veri `sr-only` tabloda; klavyede X sırasıyla gezilir; kategori filtresi `aria-pressed` |
 | `activity-rings.tsx` | Her ölçü kendi hedefine göre tam tur; %100 aşılırsa ikinci tur | `chart-card`, motion | Evet | Çizim `aria-hidden`, aynı bilgi `ul` listede; liste kapalıysa çizim `role="img"` ve özet adı taşır |
 
 ### Form Girişleri
@@ -179,21 +179,21 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `slider.tsx` | Aralıkta yaklaşık değer; tek tutamak ya da aralık | Base UI | Evet | Gizli `input type="range"`; aralıkta tutamak adları ve `aria-valuetext` Türkçe; balon `aria-hidden` |
-| `number-field.tsx` | Kesin küçük sayı (adet, kişi), tr-TR biçim | Base UI, lucide | Evet | Ok/Shift ile ×10; düğmeler "Azalt / Artır"; sınırda düğme devre dışı |
+| `number-field.tsx` | Kesin küçük sayı (adet, kişi), tr-TR biçim | Base UI, lucide | Evet | Ok/Shift ile ×10; butonlar "Azalt / Artır"; sınırda buton devre dışı |
 | `input-otp.tsx` | Sabit uzunlukta tek kullanımlık kod | Base UI | Evet | `autocomplete="one-time-code"`, tek sekme durağı, kutu adları "Hane N / 6" |
 | `textarea.tsx` | Çok satırlı metin, içeriğe göre büyür | yok | Evet | Sayaç alana bağlı; eşikte sabit cümleli canlı bölge |
 | `tag-input.tsx` | Serbest ya da önerili çoklu etiket | motion, lucide | Evet | Combobox + listbox, `aria-activedescendant`; ekleme ve silme canlı bölgede |
 | `color-picker.tsx` | Kullanıcının kendi rengi (etiket, kategori) | yok | Evet | İki `role="slider"`: alan ve ton; hex alanı; `aria-pressed` hazır renkler |
 | `date-calendar.tsx` | Satır içi ay takvimi; tek gün ya da aralık; `markedDates` ile etkinlik noktaları | motion, lucide | Evet | WAI-ARIA grid; oklar, Home/End, PageUp/PageDown (+Shift); `aria-current="date"` |
 | `date-picker.tsx` | Formda tarih alanı + açılır takvim | `date-calendar`, `popover` | Evet | Tetikleyicinin adı "etiket + değer"; açılınca odak seçili güne, kapanınca tetikleyiciye |
-| `date-range-presets.tsx` | Liste/rapor süzgecinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile süzme | `date-calendar`, `popover`, lucide | Evet | Tetikleyici adı "etiket + değer"; hazır aralıklar radyo grubu (oklar); bitiş günü seçilince kapanır, odak tetikleyiciye |
+| `date-range-presets.tsx` | Liste/rapor filtresinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile filtreleme | `date-calendar`, `popover`, lucide | Evet | Tetikleyici adı "etiket + değer"; hazır aralıklar radyo grubu (oklar); bitiş günü seçilince kapanır, odak tetikleyiciye |
 | `time-field.tsx` | 24 saatlik SS:DD | lucide | Evet | İki `role="spinbutton"`; ok, PageUp/PageDown, rakamla yazınca ilerler |
 | `time-scrubber.tsx` | Günün akışında bir an (özet saati, hatırlatma); cetvel sürüklenir | yok | Evet | `role="slider"`, ← → dilim, PageUp/Down saat, Home/End; değer metni "09.30"; tekerlek ve dokunmatik |
 | `signature-pad.tsx` | Teslim tutanağı, sözleşme onayı; çizerek ya da yazarak imza | lucide | Evet | Çizim işaretçi ister: "Yazarak" yolu klavyeyle aynı işi yapar; değer SVG (`currentColor`), tema değişince yeniden çizilir |
 
 | `tick-ruler.tsx` | Sürekli değerde "aşağı yukarı şurası": saat, süre, sıcaklık; kayan cetvel, ortada sabit gösterge | `digit-roll`, motion | Evet | `role="slider"` + `aria-valuetext`; oklar, PageUp/PageDown büyük çentik, Home/End; klavyede değer hemen kesinleşir; yatay tekerlek, dikey kaydırma sayfada (`pan-y`) |
 | `input.tsx` | Tek satır metin; ikon, önek/sonek (₺, .com), temizle, şifre göster/gizle; sm/md/lg | lucide | Evet | Field düzeni (etiket, `aria-describedby`, `aria-invalid`); göster/gizle `aria-pressed` + sabit ad; temizle odağı alana geri verir; dokunmatikte 44 px |
-| `search-field.tsx` | Liste süzme, site araması: gecikmeli `onSearch`, yükleniyor, "/" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch` | `kbd`, `spinner`, lucide | Evet | `type="search"`, `aria-keyshortcuts`; "Aranıyor" ve "N sonuç" sabit canlı bölgede; Escape önce temizler, sonra odağı bırakır |
+| `search-field.tsx` | Liste filtreleme, site araması: gecikmeli `onSearch`, yükleniyor, "/" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch` | `kbd`, `spinner`, lucide | Evet | `type="search"`, `aria-keyshortcuts`; "Aranıyor" ve "N sonuç" sabit canlı bölgede; Escape önce temizler, sonra odağı bırakır |
 | `rating.tsx` | `Rating` gösterim (yarım yıldız) · `RatingInput` giriş (isteğe bağlı yarım adım) | lucide | Evet | Gösterim tek `role="img"`; giriş `radiogroup` + görünmez yerel radyolar (oklar, `required`, JS'siz gönderim) |
 | `password-field.tsx` | Yeni şifre (kayıt, sıfırlama, ayarlar): yazdıkça kural listesi ve dilimli güç çubuğu; `rules` ile özelleşir (scrolltide.co) | `input`, lucide | Evet | Liste alanın `aria-describedby`ında, maddede gizli "karşılandı"; güç sözcükle de yazılır; canlı bölge yalnız sayı değişince; yapıştırma serbest |
 
@@ -202,8 +202,8 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `kanban-board.tsx` | Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih; `onCardOpen` ile tık / Enter kartı açar | motion (`domMax`), lucide, `badge`, `avatar` | Evet | Klavye: Boşluk tut, ↑↓ sıra, ←→ kolon, Boşluk bırak, Escape geri al; her adım `aria-live`; dokunmada tutamaktan |
-| `week-calendar.tsx` | Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste; `variant="card"`: ikonlu gri kart, katılımcı, Katıl düğmesi, büyük gün numarası, saat dilimi, Tüm Gün satırı, `weekdaysOnly` | lucide | Evet | Gün başına `role="group"` + başlık, etkinlikler `ol`; gün hapları `aria-pressed` |
-| `task-list.tsx` | Görev listesi: onay, öncelik, son tarih, alt görevler, tamamlananları gizle, satır içi ekleme | `checkbox`, motion, lucide | Evet | Kısmi alt görevde `indeterminate`; açma düğmesi `aria-expanded` + "2 / 4"; ekleme ve işaretleme canlı bölgede |
+| `week-calendar.tsx` | Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste; `variant="card"`: ikonlu gri kart, katılımcı, Katıl butonu, büyük gün numarası, saat dilimi, Tüm Gün satırı, `weekdaysOnly` | lucide | Evet | Gün başına `role="group"` + başlık, etkinlikler `ol`; gün hapları `aria-pressed` |
+| `task-list.tsx` | Görev listesi: onay, öncelik, son tarih, alt görevler, tamamlananları gizle, satır içi ekleme | `checkbox`, motion, lucide | Evet | Kısmi alt görevde `indeterminate`; açma butonu `aria-expanded` + "2 / 4"; ekleme ve işaretleme canlı bölgede |
 
 ### Hareket ve Doku
 
@@ -216,8 +216,8 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 | `border-beam.tsx` | Çalışan kartın çerçevesinde dolaşan ışık: yazan asistan, süren içe aktarma | yok | Hayır | Süs: durum metni çağıranda (`aria-busy`); hareket azaltmada durağan çerçeve |
 | `slot-text.tsx` | Değişen etiketin harfleri yerine yuvarlanır ("Kaydet" → "Kaydedildi"); değişmeyen harf yerinde | motion | Evet | Tam metin `sr-only`, harfler `aria-hidden`; `live` ile `role="status"`; ilk çizim durağan |
 | `scramble-text.tsx` | Kısa display metni rastgele karakterlerden çözülerek gelir; tek sefer | motion (`useInView`) | Evet | Gerçek metin `sr-only`, karışan katman `aria-hidden`; hover tetiği odakta da çalışır |
-| `animated-icon.tsx` | Düğmenin üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile) | lucide | Hayır | İkon `aria-hidden`; hover yalnız ince işaretçide, odakta da oynar; hareket azaltmada durur |
-| `morph-icon.tsx` | Aynı düğmenin iki hali (menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat) | motion | Evet | İkon `aria-hidden`; hal bilgisi düğmenin adında ya da `aria-expanded`/`aria-pressed`ında |
+| `animated-icon.tsx` | Butonun üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile) | lucide | Hayır | İkon `aria-hidden`; hover yalnız ince işaretçide, odakta da oynar; hareket azaltmada durur |
+| `morph-icon.tsx` | Aynı butonun iki hali (menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat) | motion | Evet | İkon `aria-hidden`; hal bilgisi butonun adında ya da `aria-expanded`/`aria-pressed`ında |
 | `pixel-loader.tsx` | Kart düzeyinde bekleme, nokta matrisinde desen (dalga, sarmal, nabız, yılan, yağmur) | yok | Hayır | `role="status"` + gizli etiket; nokta hiç kaybolmaz; hareket azaltmada durağan dama |
 | `terminal.tsx` | Tanıtım ve belgede kurulum akışı: komut yazılır, çıktı satır satır gelir | `copy-button`, motion, lucide | Evet | Döküm `sr-only` listede tek seferde; canlandırılan katman `aria-hidden`; döngü yok, "Yeniden Oynat" |
 | `dial.tsx` | Kontrol panelinde sürekli değer (sıcaklık, ses, oran); 270° kadran | `digit-roll` | Evet | `role="slider"`, oklar, PageUp/PageDown, Home/End, `aria-valuetext` birimle; tekerlek yalnız odakta |
@@ -238,15 +238,15 @@ Sayfası hikâyesi.
 |-------|----------|------------|---------|-----------------|
 | `liquid-glass.tsx` | Fotoğraf/çizim üstündeki tek birincil eylem; cam künye (`LiquidGlass`, `LiquidGlassLink`, `LiquidGlassButton`) | yok | Hayır | Katmanlar `aria-hidden`; bükülme yalnız Chromium, öteki tarayıcıda buğu kalır; şeffaflık azaltmada opak; `media` tonunda kontrastı zeminde ölç |
 | `blur-in.tsx` | Kahraman başlığı sözcük sözcük buğudan netleşir; `<em>` tek parça (serif vurgu) | yok | Hayır | CSS animasyonu: JS ve hidrasyon beklemez (LCP); okunan kopya `sr-only` bütün halinde; hareket azaltmada doğrudan net |
-| `hand-callout.tsx` | El yazısı not + çizilerek gelen ok; demoda ilk dokunulacak yeri gösterir | motion (`useInView`), `--font-hand-face` | Evet | Varsayılan `aria-hidden` (bilgi metinde de olmalı); `onClick` ile adı notun kendisi olan düğme |
-| `app-window.tsx` | Ürünü ekran görüntüsü yerine token'la çizilmiş pencerelerle anlat; `WindowStrip` şerit | yok | Hayır | Pencere düğmeleri süs; sahne `role="img"` + tek cümle ya da `aria-hidden`; renkler durum token'larından |
-| `dock.tsx` | Maketin uygulama rafı: üzerine gelince yükselen simgeler, komşular da biraz | yok | Hayır | `onSelect` yoksa süs; varsa `toolbar` + adlı düğmeler, açık olan adında; büyüme yalnız ince işaretçide |
-| `docking-nav.tsx` | Görsel kahramanlı sayfada menü: boşluklu hap, kaydırınca üst kenara oturur | motion, lucide | Evet | `nav` + ad; telefonda `aria-expanded` panel, Esc kapatır ve odak düğmeye döner, Tab ile çıkınca kapanır |
-| `corner-mascot.tsx` | Kişiliği olan tanıtım sayfasında köşe maskotu: göz takibi, göz kırpma, balon | motion | Evet | Düğme adlı; balon `role="status"`; göz takibi ve kırpma hareket azaltmada ve dokunmatikte yok |
+| `hand-callout.tsx` | El yazısı not + çizilerek gelen ok; demoda ilk dokunulacak yeri gösterir | motion (`useInView`), `--font-hand-face` | Evet | Varsayılan `aria-hidden` (bilgi metinde de olmalı); `onClick` ile adı notun kendisi olan buton |
+| `app-window.tsx` | Ürünü ekran görüntüsü yerine token'la çizilmiş pencerelerle anlat; `WindowStrip` şerit | yok | Hayır | Pencere butonları süs; sahne `role="img"` + tek cümle ya da `aria-hidden`; renkler durum token'larından |
+| `dock.tsx` | Maketin uygulama rafı: üzerine gelince yükselen ikonlar, komşular da biraz | yok | Hayır | `onSelect` yoksa süs; varsa `toolbar` + adlı butonlar, açık olan adında; büyüme yalnız ince işaretçide |
+| `docking-nav.tsx` | Görsel kahramanlı sayfada menü: boşluklu hap, kaydırınca üst kenara oturur | motion, lucide | Evet | `nav` + ad; telefonda `aria-expanded` panel, Esc kapatır ve odak butona döner, Tab ile çıkınca kapanır |
+| `corner-mascot.tsx` | Kişiliği olan tanıtım sayfasında köşe maskotu: göz takibi, göz kırpma, balon | motion | Evet | Buton adlı; balon `role="status"`; göz takibi ve kırpma hareket azaltmada ve dokunmatikte yok |
 | `trust-line.tsx` | Birincil eylemin altında en çok üç güvence ("Kart gerekmez · 2 dakikada kurulum") | lucide | Hayır | Ayraç `aria-hidden`, yerine görünmez virgül; `media` tonu görsel zemin üstü |
 | `wallpaper.tsx` | 8 illüstrasyon duvar kâğıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`) | yok | Hayır | `aria-hidden` süs; hareket yok; sabit tohum, sunucu = istemci |
 | `drift-columns.tsx` | Galeri/portfolyo kahramanında zıt yönde sonsuz süzülen görsel sütunları (offscreen.wtf) | yok | Hayır | İkinci kopya `aria-hidden` + `inert`; üzerine gelme/odak durdurur; hareket azaltmada durur ve kaydırılır |
-| `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç düğmesi elle geçirir |
+| `notice-deck.tsx` | Köşede üst üste duyuru kartları, kendiliğinden döner, "2/3" sayaç (sürüm notu, etkinlik) | motion (`useReducedMotion`), lucide | Evet | `region` + ad; arkadakiler `aria-hidden`; dönüş duyurulmaz, durdurulabilir; sayaç butonu elle geçirir |
 | `mesh-gradient.tsx` | Kahraman ve kapanış eyleminin arkasında yavaş süzülen renk zemini; `primary`/`neutral` ton, `soft`/`vivid` yoğunluk, `grain` ya da `halftone` doku, `scrim` örtü (scrolltide.co) | yok | Evet | Katman `aria-hidden`; yalnız `transform`, görünümden çıkınca durur, hareket azaltmada hiç oynamaz; kontrastı lekenin en yoğun yerinde ölç |
 | `connection-hero.tsx` | Entegrasyon bağlama penceresinin tepesi: iki uygulama karosu + bağlantı durumunu söyleyen üç nokta, arkada renk zemini | `mesh-gradient` | Evet | `role="img"` + tam cümle ("Pusula ile Kargo, bağlanıyor"); noktalar `aria-hidden`; hareket azaltmada sıralı yanma yok |
 | `dissolve.tsx` | Onaylanmış kaldırmada öğe tanecik tanecik dağılır (sessize alınan bildirim, arşivlenen satır); `dissolveOut(el)` / `useDissolve()` | yok | Evet | Görsel eşlik; sonucu çağıran canlı bölgede söyler; hareket azaltmada 150 ms solma; filtre desteklenmezse solma |

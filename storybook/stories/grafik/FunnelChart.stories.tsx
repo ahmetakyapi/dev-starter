@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Soldan sağa daralan aşamalar: \"nerede kaybediyoruz\" sorusunun bir bakışta cevabı, en dik iniş göze ilk çarpar. Sayı şekle bırakılmaz; her sütunda ilk aşamaya göre yüzde hapı, altta tam değerli lejant. `curve` yumuşak, `step` keskin geçiş; kesin kıyas gerekiyorsa aşama çubukları.",
+          "Soldan sağa daralan aşamalar: \"hangi adımda kaybediyoruz\" sorusunun bir bakışta cevabı. Tek seri rengi; her sütunda bir önceki aşamanın soluk izi kaybı gösterir. Aşama adı ve değeri sütunun üstünde, altında bir önceki adıma göre dönüşüm (→ %28). `curve` yumuşak, `step` keskin geçiş; `series` rengi seçer; kesin kıyas gerekiyorsa aşama çubukları.",
       },
     },
   },
@@ -33,7 +33,7 @@ const meta = {
     title: "Ödeme Hunisi",
     stages: ODEME_HUNISI,
     shape: "curve",
-    legend: true,
+    legend: false,
     height: "h-40",
     asamaSayisi: 4,
   },
@@ -112,8 +112,8 @@ export const LongLabel: Story = {
 };
 
 export const WithoutLegend: Story = {
-  name: "Lejantsız, SaaS Kayıt",
-  args: { title: "Kayıt Hunisi", stages: KAYIT_HUNISI, legend: false, asamaSayisi: 6 },
+  name: "SaaS Kayıt Hunisi",
+  args: { title: "Kayıt Hunisi", stages: KAYIT_HUNISI, asamaSayisi: 6 },
 };
 
 export const Mobile: Story = {
@@ -132,7 +132,7 @@ export const AllVariants: Story = {
           </ChartCard>
         </GrafikHucre>
       ))}
-      <GrafikHucre label="Altı Aşama, Lejantsız">
+      <GrafikHucre label="Altı Aşama">
         <ChartCard id="huni-alti" label="Kayıt Hunisi" value={oran(KAYIT_HUNISI)} change={2.4}>
           <FunnelChart title="Kayıt hunisi" stages={KAYIT_HUNISI} legend={false} />
         </ChartCard>

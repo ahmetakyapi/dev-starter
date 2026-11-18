@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Canlı İkon",
+  title: "Bileşenler/Buton ve İkon/Canlı İkon",
   id: "animated-icon",
   component: AnimatedIcon,
   tags: ["autodocs", "yeni"],
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Düğmenin üzerine gelince (ve klavye odağında) ikon anlamına uygun küçük bir hareket yapar: zil sallanır, ok dürter, yenile döner. Düğmeye `group` sınıfı ver. Hover yalnız ince işaretçide; hareket azaltmada hiç oynamaz. Saf CSS.",
+          "Butonun üzerine gelince (ve klavye odağında) ikon anlamına uygun küçük bir hareket yapar: zil sallanır, ok dürter, yenile döner. Butona `group` sınıfı ver. Hover yalnız ince işaretçide; hareket azaltmada hiç oynamaz. Saf CSS.",
       },
     },
   },

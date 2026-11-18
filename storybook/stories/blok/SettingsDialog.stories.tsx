@@ -6,7 +6,7 @@ import { SettingsDialog } from "@/components/ui/settings-dialog";
 import { Cell, Gallery } from "../_lib/Frame";
 import { SETTINGS_TABS } from "./settings-data";
 
-/** Açık başlayan, kapatılınca düğmesiyle yeniden açılan kontrollü pencere. */
+/** Açık başlayan, kapatılınca butonuyla yeniden açılan kontrollü pencere. */
 function OpenSettings(props: ComponentProps<typeof SettingsDialog>) {
   const [open, setOpen] = useState(true);
   return (
@@ -34,7 +34,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Sayfadan çıkmadan açılan, anında etki eden ayarlar penceresi: solda sekmeler (telefonda üstte yatay kayar), sağda anahtar ve seçim satırları; Kaydet düğmesi yok. Ayar sayfası uzunsa ya da derin bağlantı gerekiyorsa ayrı rota daha doğru.",
+          "Sayfadan çıkmadan açılan, anında etki eden ayarlar penceresi: solda sekmeler (telefonda üstte yatay kayar), sağda anahtar ve seçim satırları; Kaydet butonu yok. Ayar sayfası uzunsa ya da derin bağlantı gerekiyorsa ayrı rota daha doğru.",
       },
       story: { inline: false, height: "34rem" },
     },
@@ -75,8 +75,8 @@ export const NotificationsTab: Story = { name: "Bildirimler Sekmesi", args: { de
 export const PrivacyTab: Story = { name: "Gizlilik Sekmesi", args: { defaultTab: "gizlilik" } };
 
 export const CustomTrigger: Story = {
-  name: "Kendi Düğmesiyle",
-  parameters: { docs: { description: { story: "Kontrolsüz kullanım: `triggerLabel` ile kendi düğmesini çizer." } } },
+  name: "Kendi Butonuyla",
+  parameters: { docs: { description: { story: "Kontrolsüz kullanım: `triggerLabel` ile kendi butonunu çizer." } } },
   render: (args) => <SettingsDialog {...args} />,
   args: { triggerLabel: "Ayarlar" },
   play: async ({ canvasElement }) => {

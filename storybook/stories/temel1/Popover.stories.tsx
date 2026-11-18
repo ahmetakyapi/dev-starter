@@ -17,7 +17,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Bir düğmeye bağlı, sayfayı kilitlemeyen küçük katman: filtre seçenekleri, kısa açıklama, paylaşım bağlantısı. Konumlama, dış tıklama ve Escape ile kapanma, odağın tetikleyiciye dönmesi Base UI'dan. İçinde form varsa `modal=\"trap-focus\"` ve bir `PopoverClose` ver.",
+          "Bir butona bağlı, sayfayı kilitlemeyen küçük katman: filtre seçenekleri, kısa açıklama, paylaşım bağlantısı. Konumlama, dış tıklama ve Escape ile kapanma, odağın tetikleyiciye dönmesi Base UI'dan. İçinde form varsa `modal=\"trap-focus\"` ve bir `PopoverClose` ver.",
       },
     },
   },

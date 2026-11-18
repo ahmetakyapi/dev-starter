@@ -39,7 +39,7 @@ const sizes: Record<Size, string> = {
 
 // Basış `active:scale-*` ile: v4 bunu bağımsız `scale` özelliğine derler, geçiş
 // listesinde `transform` değil `scale` olmalı. `transform` listede olursa
-// mıknatıslı düğmede motion'ın her kare yazdığı transform'u CSS bir kez daha
+// mıknatıslı butonda motion'ın her kare yazdığı transform'u CSS bir kez daha
 // yumuşatır ve çekim imlecin gerisinde kalır.
 const base =
   'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,border-color,box-shadow,scale,filter] duration-150 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus'
@@ -75,7 +75,7 @@ export function Button({
     const motionSafe = withoutMotionConflicts(props)
     // Tüketicinin stili ve fare işleyicileri mıknatısı ezmez, onunla birleşir:
     // prop birleştiren bir tetikleyici (tooltip, popover) `onMouseLeave`
-    // verse de sıfırlama çalışır ve düğme imlecin son konumunda kalmaz.
+    // verse de sıfırlama çalışır ve buton imlecin son konumunda kalmaz.
     return (
       <m.button
         type={type}

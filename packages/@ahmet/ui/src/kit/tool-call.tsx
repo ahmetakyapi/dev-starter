@@ -18,7 +18,7 @@ import { cn } from "../utils";
  * Durum metinle de yazılır ("Çalışıyor", "Tamamlandı"); renk tek işaret değil.
  *
  * AÇMA `<details>`: JavaScript'siz çalışır, Ctrl+F kapalı içeriği bulur,
- * ekran okuyucu `summary`yi düğme olarak okur. Girdi nesne verilirse JSON
+ * ekran okuyucu `summary`yi buton olarak okur. Girdi nesne verilirse JSON
  * olarak biçimlenir; çıktı metin, nesne ya da hazır bileşen olabilir.
  * Sunucu bileşeni.
  *
@@ -43,7 +43,7 @@ type ToolCallProps = {
   input?: unknown;
   output?: ReactNode | Record<string, unknown> | unknown[];
   durationMs?: number;
-  /** `pending` halinde Onayla / Reddet düğmeleri. */
+  /** `pending` halinde Onayla / Reddet butonları. */
   actions?: ReactNode;
   defaultOpen?: boolean;
   className?: string;

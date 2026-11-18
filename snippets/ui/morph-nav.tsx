@@ -39,10 +39,10 @@ import { cn } from "@/lib/utils";
  * vurgu karosu `transform` + `width`. Hareket azaltmada hepsi anında.
  *
  * ERİŞİLEBİLİRLİK: menü rolü YOK (gezinme bağlantılarıdır, uygulama menüsü
- * değil): `nav` + açma düğmeleri `aria-expanded` + `aria-controls`. Fareyle
+ * değil): `nav` + açma butonları `aria-expanded` + `aria-controls`. Fareyle
  * üzerine gelince açılır (yalnız ince işaretçi), tıklamayla da açılır/kapanır.
  * ↓ panelin ilk bağlantısına, Esc kapatır ve odağı başlığa döndürür, odak
- * menüden çıkınca kapanır. Kapalı paneller `inert`. Telefonda menü düğmesi
+ * menüden çıkınca kapanır. Kapalı paneller `inert`. Telefonda menü butonu
  * bütün grupları alt alta açar (ince işaretçi yoksa hover hiç devrede değil).
  *
  *   <MorphNav

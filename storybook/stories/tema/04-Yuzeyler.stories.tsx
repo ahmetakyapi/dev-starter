@@ -78,7 +78,7 @@ const LAYERS = [
 
 const RADII = [
   { cls: "rounded-sm", box: "rounded-sm", use: "Seçim karosu, köşeli rozet" },
-  { cls: "rounded-md", box: "rounded-md", use: "Düğme, giriş alanı" },
+  { cls: "rounded-md", box: "rounded-md", use: "Buton, giriş alanı" },
   { cls: "rounded-lg", box: "rounded-lg", use: "Lejant karosu, kod bloğu" },
   { cls: "rounded-xl", box: "rounded-xl", use: "Grafik kartı, menü, açılır" },
   { cls: "rounded-2xl", box: "rounded-2xl", use: "Vitrin kuyusu, büyük kart" },
@@ -109,7 +109,7 @@ const SHADOWS = [
   { cls: "shadow-raised", v: "--shadow-sm", tile: "rounded-xl bg-overlay shadow-raised", use: "Karo, lejant" },
   { cls: "shadow-floating", v: "--shadow-md", tile: "rounded-xl bg-overlay shadow-floating", use: "Sürüklenen, öne çıkan" },
   { cls: "shadow-modal", v: "--shadow-overlay", tile: "rounded-xl bg-overlay shadow-modal", use: "Menü, diyalog" },
-  { cls: "shadow-cta", v: "--shadow-button", tile: "rounded-md bg-cta shadow-cta", use: "Dolgulu düğme" },
+  { cls: "shadow-cta", v: "--shadow-button", tile: "rounded-md bg-cta shadow-cta", use: "Dolgulu buton" },
 ];
 
 function Shadows({ theme }: { theme: ThemeName }) {

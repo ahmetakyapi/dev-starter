@@ -5,7 +5,7 @@ import { cn } from "../utils";
 /**
  * Piksel yükleyici: nokta matrisinde dolaşan ışık. Spinner'ın karakterli
  * kardeşi: üretim süren yapay zekâ kartı, terminal havası taşıyan geliştirici
- * aracı, oyun ve topluluk ekranları. Düğme içi kısa beklemede `spinner`
+ * aracı, oyun ve topluluk ekranları. Buton içi kısa beklemede `spinner`
  * kalır; bu, kart ya da bölüm düzeyinde.
  *
  * DESENLER: noktaların gecikmesi desene göre hesaplanır, animasyon tek

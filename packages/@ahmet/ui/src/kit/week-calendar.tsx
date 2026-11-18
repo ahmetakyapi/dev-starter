@@ -24,7 +24,7 @@ import { cn } from "../utils";
  * çıkmaz. Hikâye ve testte `now` ile sabitle.
  *
  * TELEFONDA (md altı) ızgara yerine GÜN GÜN LİSTE: yedi dar kolonda başlık
- * okunmaz. Üstte günler hap düğmeleri (`aria-pressed`, gün adı + tarih +
+ * okunmaz. Üstte günler hap butonları (`aria-pressed`, gün adı + tarih +
  * etkinlik sayısı), altında seçili günün saat sıralı listesi. Varsayılan
  * gün bugün (haftadaysa), değilse haftanın ilk günü.
  *
@@ -32,16 +32,16 @@ import { cn } from "../utils";
  * yerine sade gri kart; süre uzadıkça kart daha çok şey söyler: 30 dk
  * başlık + saat, sonra iki satır başlık, ikon, katılımcılar, eylem (eşikler
  * piksel yüksekliğe göre, `CardBlock`)
- * ("Görüşmeye Katıl"; daha kısa kartta sağ üstte ikon düğmesi). Kategori rengi küçük noktada kalır (renk sinyal,
+ * ("Görüşmeye Katıl"; daha kısa kartta sağ üstte ikon butonu). Kategori rengi küçük noktada kalır (renk sinyal,
  * zemin değil). Başlıkta büyük gün numarası, bugünün altında çizgi; sol
  * üstte saat dilimi (`timeZone`). `allDay` etkinlikler ızgaranın üstünde
  * "Tüm Gün" satırında (son tarihler, tatiller); gün başına iki çip, kalanı
- * "+N". Eylem düğmesi kartın DIŞINDA ama üstünde konumlanır: `onSelect`
- * düğmesinin içine düğme konmaz.
+ * "+N". Eylem butonu kartın DIŞINDA ama üstünde konumlanır: `onSelect`
+ * butonunun içine buton konmaz.
  *
  * Erişilebilirlik: her gün `role="group"` + gizli başlık ("4 Kasım
  * Çarşamba"; `section` değil: yedi gün yedi landmark olup sayfa haritasını
- * boğardı), etkinlikler `ol` içinde. `onSelect` verilirse bloklar düğme
+ * boğardı), etkinlikler `ol` içinde. `onSelect` verilirse bloklar buton
  * olur ve adı GÖRÜNEN metinle aynı sırada (başlık, saat, yer; WCAG 2.5.3):
  * kısa blokta saat görünmese de `sr-only` olarak adda. Saat sütunu
  * `aria-hidden`. Gün adları ve tarihler `tr-TR`;
@@ -462,7 +462,7 @@ function CardBlock({
   const people = e.attendees ?? [];
   const showPeople = people.length > 0 && height >= 140 && !narrow;
   const showAction = Boolean(e.action) && height >= 172 && !narrow;
-  // Kısa kartta eylem kaybolmasın: sağ üstte ikon düğmesi (adı tam metin).
+  // Kısa kartta eylem kaybolmasın: sağ üstte ikon butonu (adı tam metin).
   const showActionIcon = Boolean(e.action) && !showAction && height >= 40;
   return (
     <div className="relative size-full">
@@ -523,7 +523,7 @@ function CardBlock({
   );
 }
 
-/** Blok kabı: `onSelect` varsa düğme, yoksa düz öğe; okunan metin saatle başlar. */
+/** Blok kabı: `onSelect` varsa buton, yoksa düz öğe; okunan metin saatle başlar. */
 function EventShell({
   event,
   onSelect,

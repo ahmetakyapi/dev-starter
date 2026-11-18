@@ -18,7 +18,7 @@ istisnasız. Paylaşılan veri → tool DEĞİL, protokolün state kanalı.
 
 ### `kontrol` — Onay mı, Action Card mı, hiç mi?
 Geri alınabilir → Action Card + Undo (sorma, yap, geri almayı sun).
-Geri alınamaz → önden onay (`useHumanInTheLoop`). Düğmeler ve id → anlam KODDA
+Geri alınamaz → önden onay (`useHumanInTheLoop`). Butonlar ve id → anlam KODDA
 sabit; model yalnız hedefi ve açıklamayı yazar, argüman `safeParse` edilir.
 Kırmızı çizgi → tool'u agent'a verme; yönlendiren bir tool ver.
 
@@ -66,7 +66,7 @@ Snippet'ler: `/snippet agent-tool`, `/snippet action-card`, `/snippet agent-appr
 `~/dev-starter/agents/agentic-ui-agent.md → Teslim Öncesi Kontrol Listesi` maddelerini tek tek
 geç. Özellikle: tool sonucu cast ediliyor mu (#58), `followUp: false` modele
 söylendi mi (#59), `@ag-ui/*` sürümü sabit mi (#71), tool argümanı `safeParse`
-ediliyor mu, onay düğmeleri modelden mi geliyor.
+ediliyor mu, onay butonları modelden mi geliyor.
 
 ## Doğrulama Disiplini
 

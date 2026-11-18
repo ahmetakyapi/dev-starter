@@ -3,7 +3,7 @@
  *
  * Telefonda tam genişlik, masaüstünde sabit genişlik. Sağ ya da sol,
  * Escape ve arka plan desteği. Kilit sayaçlı (`use-scroll-lock.ts`); odak
- * panele girer, Tab içeride döner, kapanınca açan düğmeye döner (`useLayer`).
+ * panele girer, Tab içeride döner, kapanınca açan butona döner (`useLayer`).
  * MotionProvider (LazyMotion + domAnimation) altında çalışır.
  *
  * Katman body'ye portal'lanır: menü çekmecesi çoğu zaman `.glass` (backdrop-

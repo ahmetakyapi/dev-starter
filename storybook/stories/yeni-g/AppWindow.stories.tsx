@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Üç pencere düğmeli masaüstü penceresi maketi. Ürünü ekran görüntüsü yerine token'la çizilmiş canlı parçalarla anlatır: iki temada doğru, metni seçilebilir, bayatlamaz. `focused` tek pencerede, `ghost` henüz açılmamış pencere. `WindowStrip` pencereleri ekranın dışına taşarak dizer.",
+          "Üç pencere butonlu masaüstü penceresi maketi. Ürünü ekran görüntüsü yerine token'la çizilmiş canlı parçalarla anlatır: iki temada doğru, metni seçilebilir, bayatlamaz. `focused` tek pencerede, `ghost` henüz açılmamış pencere. `WindowStrip` pencereleri ekranın dışına taşarak dizer.",
       },
     },
   },

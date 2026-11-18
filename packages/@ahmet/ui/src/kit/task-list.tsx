@@ -22,13 +22,13 @@ import { Checkbox } from "./checkbox";
  * kırmızıyla bağırmak gürültü). "Bugün" `today` prop'undan; verilmezse
  * istemcide hesaplanır, sunucu çiziminde yok (hidrasyon farkı çıkmaz).
  *
- * ALT GÖREVLER: üst satırda "2 / 4" sayaçlı açma düğmesi
+ * ALT GÖREVLER: üst satırda "2 / 4" sayaçlı açma butonu
  * (`aria-expanded`). Kısmen bitmişse üst kutu BELİRSİZ (`indeterminate`,
  * çizgi). Üstü işaretlemek bütün altları bitirir, kaldırmak hepsini açar;
  * son alt görev işaretlenince üst de tamamlanır. Kurallar tek yerde
  * (`toggleTask`, `toggleSub`; saf).
  *
- * "Tamamlananları Gizle" bir `aria-pressed` düğme; gizlenen satır kısa bir
+ * "Tamamlananları Gizle" bir `aria-pressed` buton; gizlenen satır kısa bir
  * kayma + solmayla çıkar (yükseklik animasyonu yok: düzen titremesi).
  * Altta satır içi ekleme: yaz, Enter; Escape temizler. Ekleme, işaretleme
  * ve gizleme canlı bölgede duyurulur.
@@ -285,7 +285,7 @@ export function TaskList({
           </ul>
         ) : (
           <p className="px-4 py-8 text-center text-small text-muted">
-            {tasks.length ? "Hepsi tamam. Gizlenen görevleri görmek için düğmeyi kapat." : "Henüz görev yok. İlkini aşağıya yaz."}
+            {tasks.length ? "Hepsi tamam. Gizlenen görevleri görmek için butonu kapat." : "Henüz görev yok. İlkini aşağıya yaz."}
           </p>
         )}
 

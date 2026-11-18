@@ -5,16 +5,16 @@ import { cn } from "../utils";
 /**
  * Klavye tuşu. `<kbd>` anlamı taşır; ekran okuyucu içeriği okur.
  *
- * Simgeli tuşlar (⌘ ⇧ ⌥ ↵) ekran okuyucuda ya hiç ya da garip okunur; simge
+ * İkonlu tuşlar (⌘ ⇧ ⌥ ↵) ekran okuyucuda ya hiç ya da garip okunur; ikon
  * kullanırken `label` ver ("Command"). Ad görünmez METİN olarak yazılır,
- * simge gizlenir: `<kbd>`nin rolü yok ve rolsüz öğeye `aria-label` konamaz
- * (ARIA 1.2), ekran okuyucu onu yok sayıp yine simgeyi okurdu. `KbdCombo`
+ * ikon gizlenir: `<kbd>`nin rolü yok ve rolsüz öğeye `aria-label` konamaz
+ * (ARIA 1.2), ekran okuyucu onu yok sayıp yine ikonu okurdu. `KbdCombo`
  * tuşları "+" ile değil boşlukla dizer; kısayolun tamamı için tek bir
  * `aria-label` taşır (`role="img"` sayesinde geçerli).
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz küçük karo (`bg-overlay`), kıl
  * çizgisi ve kısa gölge; eski kalın alt kenar (`border-b-2`) daktilo tuşu
- * gibi ağırdı. Yazı mono değil gövde fontu: ↑ ↓ ↵ ⌘ gibi simgeler Inter'de
+ * gibi ağırdı. Yazı mono değil gövde fontu: ↑ ↓ ↵ ⌘ gibi ikonlar Inter'de
  * daha dengeli, harfler aynı genişlikte görünür (`tabular-nums`).
  *
  * Dokunmatik ekranda klavye kısayolu anlamsız: kısayol ipuçlarını

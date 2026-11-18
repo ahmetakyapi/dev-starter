@@ -5,7 +5,7 @@
  * Durum renkleri token'dan (`success`/`danger`/`warning`);
  * ikonlar lucide, emoji değil. Bölge `aria-live="polite"`: ekran okuyucu
  * mesajı okur ama sürmekte olan konuşmayı kesmez. Her bildirimin kapatma
- * düğmesi var; hata bildirimi süreyle kaybolmaz, kullanıcı kapatana kadar
+ * butonu var; hata bildirimi süreyle kaybolmaz, kullanıcı kapatana kadar
  * kalır (okumasını bitirmeden kaybolan hata mesajı, WCAG 2.2.1).
  *
  * Kullanım:

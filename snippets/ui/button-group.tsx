@@ -2,8 +2,8 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * Birbirine bağlı düğmeler: "Önceki / Bugün / Sonraki", "Kopyala | ⌄" gibi.
- * Grup bir `role="group"` ve ADI var (`aria-label`); ekran okuyucu düğmeleri
+ * Birbirine bağlı butonlar: "Önceki / Bugün / Sonraki", "Kopyala | ⌄" gibi.
+ * Grup bir `role="group"` ve ADI var (`aria-label`); ekran okuyucu butonları
  * neyin parçası olduğunu bilerek okur.
  *
  * İKİ GÖRÜNÜŞ ("board" dili, 2026-11):
@@ -11,15 +11,15 @@ import { cn } from '@/lib/utils'
  *     iç köşeler düzleşir; tek parça bir satır. Çocuklar şablonun `Button`ı
  *     (`variant="secondary"`) ya da `IconButton`.
  *   `well`: gri kuyuda kaynaşmış satır; çocuklar `variant="ghost"`. Basılı
- *     (`aria-pressed="true"`) düğme BEYAZ KARO olur (`bg-overlay` +
+ *     (`aria-pressed="true"`) buton BEYAZ KARO olur (`bg-overlay` +
  *     `shadow-raised`): araç çubuğundaki "Kalın / İtalik" gibi aç-kapa
- *     düğmeleri için.
+ *     butonları için.
  *
  * Seçim TEK ise (biri seçili, ötekiler değil) bu değil `segmented-control.tsx`:
  * orada seçili durum `aria-checked` ile söylenir ve gösterge kayar. Bu
- * bileşende her düğme kendi işini yapar; `aria-pressed` bağımsız aç-kapa.
+ * bileşende her buton kendi işini yapar; `aria-pressed` bağımsız aç-kapa.
  *
- * Odak halkası komşunun altında kalmasın diye odaklı düğme öne alınır (`z-10`).
+ * Odak halkası komşunun altında kalmasın diye odaklı buton öne alınır (`z-10`).
  */
 
 type ButtonGroupProps = ComponentProps<'div'> & {

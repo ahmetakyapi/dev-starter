@@ -68,7 +68,7 @@ yeniden kesmeyi gerektirir.
 
 - **≥ 1280 px:** form solda, önizleme sağda yapışık sütun (`.lp-editor`),
   önizleme sütunu formdan biraz geniş; masaüstü penceresi sütunun boyunu doldurur.
-- **< 1280 px:** önizleme formun altında; kaydet çubuğunda "Önizle" düğmesi
+- **< 1280 px:** önizleme formun altında; kaydet çubuğunda "Önizle" butonu
   tam ekranı açar. Tam ekran Esc ile kapanır, odak geri döner.
 - Telefon görünümünde "Sitede Aç" bağlantısı altta, masaüstünde adres çubuğunda.
 - Yüklenirken kaydın kapağı bulanık durur, üstünde "Önizleme Hazırlanıyor".

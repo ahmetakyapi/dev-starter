@@ -82,7 +82,7 @@
   --shadow-sm: 0 0 0 1px rgb(10 10 10 / 0.035), 0 1px 1px -0.5px rgb(10 10 10 / 0.08), 0 2px 6px -2px rgb(10 10 10 / 0.08);
   --shadow-md: 0 0 0 1px rgb(10 10 10 / 0.04), 0 2px 4px -1px rgb(10 10 10 / 0.06), 0 8px 16px -4px rgb(10 10 10 / 0.08), 0 16px 32px -12px rgb(10 10 10 / 0.12);
   --shadow-overlay: 0 0 0 1px rgb(10 10 10 / 0.05), 0 4px 8px -2px rgb(10 10 10 / 0.06), 0 16px 32px -8px rgb(10 10 10 / 0.12), 0 32px 64px -16px rgb(10 10 10 / 0.2);
-  /* Dolgulu düğme: üstte ışık, altta gölge çizgisi, dışta kıl çizgi ve
+  /* Dolgulu buton: üstte ışık, altta gölge çizgisi, dışta kıl çizgi ve
      dolgunun kendi renginde kısa düşüş. */
   --shadow-button:
     inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 -1px 0 rgb(0 0 0 / 0.12), 0 0 0 1px rgb(10 10 10 / 0.06),
@@ -174,7 +174,7 @@
   --display-gradient-tight: var(--palette-display-gradient-tight);
   --brand-gradient: var(--palette-brand-gradient);
   --cta-gradient: var(--palette-cta-gradient);
-  /* Degrade düğme üstündeki metin her palette beyaz; CTA degradesi buna göre
+  /* Degrade buton üstündeki metin her palette beyaz; CTA degradesi buna göre
      ailenin koyu yarısından seçilir (her durak test edilir). */
   --on-brand: #ffffff;
 }
@@ -184,7 +184,7 @@
    bloğu (0,3,0) ikisinden de güçlü. Koyu temada yanlışlıkla açık paletin
    kalmaması bu sıraya ve özgüllüğe bağlı; blokları yeniden sıralama.
    Marka karosu degradesi iki temada AYNI: sekme ve ana ekran ikonu temayı
-   bilemez. CTA degradesi de iki temada aynı: düğme ailenin koyu yarısında,
+   bilemez. CTA degradesi de iki temada aynı: buton ailenin koyu yarısında,
    beyaz metin iki zeminde de okunur. */
 
 /* signature — imza paleti, Açılış Zili mavi ailesi (varsayılan) */
@@ -308,7 +308,7 @@
 /* ─── 2b. Parlak paletler (2026-11, "board" dili) ─────────────────────────
    Tailwind ramplarından, tek aile. Açıkta dolgu 600 (turuncu ve yeşilde
    700: 600 beyaz metinle AA tutmaz), koyuda 400. CTA degradesi YUKARIDAN
-   AŞAĞI aynı rengin bir basamak koyusuna iner: düğmeye ışık üstten düşer.
+   AŞAĞI aynı rengin bir basamak koyusuna iner: butona ışık üstten düşer.
    Değerler tokens.ts ile birebir, kontrastı contract testi ölçer. */
 /* cobalt — parlak mavi; SaaS, pano, üretkenlik aracı */
 :root[data-palette="cobalt"] {

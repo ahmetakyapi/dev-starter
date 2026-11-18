@@ -211,7 +211,7 @@ export const PATTERN_PRESETS: readonly { id: string; title: string; category: Pa
   { id: "kagit", title: "Kâğıt", category: "Doku", props: { pattern: "paper" } },
 ];
 
-/** Hazır birleşimin JSX'i: kütüphanedeki "Kopyala" düğmesi bunu panoya yazar. */
+/** Hazır birleşimin JSX'i: kütüphanedeki "Kopyala" butonu bunu panoya yazar. */
 export function presetSnippet(props: PatternBackgroundProps): string {
   const attrs = Object.entries(props)
     .filter(([, v]) => v !== undefined)

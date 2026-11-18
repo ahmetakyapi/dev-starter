@@ -122,7 +122,7 @@ function SettingsPage() {
                     <div className="grid grid-cols-1 gap-3 py-3">
                       <div>
                         <p className="text-base font-medium text-strong">Renk Paleti</p>
-                        <p className="mt-0.5 text-small text-muted">Eylemler ve vurgular bu renge döner; sağdaki düğme açık/koyu temayı değiştirir.</p>
+                        <p className="mt-0.5 text-small text-muted">Eylemler ve vurgular bu renge döner; sağdaki buton açık/koyu temayı değiştirir.</p>
                       </div>
                       <PaletteSwitcher initialPalette={PALETTE} initialTheme={DEFAULT_THEME} floating={false} className="w-fit max-w-full shadow-raised" />
                     </div>

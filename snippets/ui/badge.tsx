@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 /**
  * Rozet: kısa durum ya da kategori etiketi ("Taslak", "Tamamlandı",
- * "Bekliyor"). Etkileşimsiz; tıklanan bir etiket gerekiyorsa düğme ya da
+ * "Bekliyor"). Etkileşimsiz; tıklanan bir etiket gerekiyorsa buton ya da
  * bağlantı yap.
  *
  * Metin Title Case ve kısa (bir-iki kelime). Durum rozetinde renk TEK

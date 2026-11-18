@@ -82,7 +82,7 @@ export const ErrorPageWithoutDigest: Story = {
  * (globals.css yüklenmemiş olabilir): Storybook kökünün içine çizilemez.
  * Statik HTML'i bir iframe'de gösterilir. Sayfa `prefers-color-scheme`
  * izler; iframe içinde bu sorgu çerçeve öğesinin `color-scheme`ine bakar,
- * o yüzden araç çubuğundaki tema oraya yazılır. Düğme statik çıktıda tıklanmaz.
+ * o yüzden araç çubuğundaki tema oraya yazılır. Buton statik çıktıda tıklanmaz.
  */
 export const GlobalErrorPage: Story = {
   name: "Genel Hata Sayfası",

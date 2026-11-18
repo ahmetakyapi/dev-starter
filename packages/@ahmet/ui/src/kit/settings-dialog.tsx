@@ -22,9 +22,9 @@ import { cn } from "../utils";
  *
  * Paneller gizlenir, sökülmez (`hidden`): sekme değiştirince yarım kalan
  * bir alan sıfırlanmaz. Satırlar için `SettingsSection` + mevcut
- * `switch.tsx` ve `select.tsx`; anahtar anında uygular, Kaydet düğmesi yok.
+ * `switch.tsx` ve `select.tsx`; anahtar anında uygular, Kaydet butonu yok.
  *
- * Kontrollü (`open` + `onOpenChange`) ya da kendi düğmesiyle
+ * Kontrollü (`open` + `onOpenChange`) ya da kendi butonuyla
  * (`triggerLabel`) kullanılır.
  */
 
@@ -34,7 +34,7 @@ type SettingsDialogProps = {
   tabs: readonly SettingsTab[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Kontrolsüz kullanımda tetikleyici düğmenin metni. */
+  /** Kontrolsüz kullanımda tetikleyici butonun metni. */
   triggerLabel?: string;
   title?: string;
   description?: string;
@@ -178,7 +178,7 @@ export function SettingsSection({
   );
 }
 
-/** Solda etiket + açıklama, sağda denetim (Select, düğme). Anahtar için doğrudan `Switch`. */
+/** Solda etiket + açıklama, sağda denetim (Select, buton). Anahtar için doğrudan `Switch`. */
 export function SettingsRow({
   label,
   hint,

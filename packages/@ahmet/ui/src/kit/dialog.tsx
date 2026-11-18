@@ -11,7 +11,7 @@ import { cn } from "../utils";
  *   - Escape: `cancel` olayı; burada yakalanıp kontrollü duruma çevriliyor;
  *   - üst katman (top layer): z-index savaşı yok, `overflow: hidden` bir ata
  *     diyaloğu kesemez.
- * Bizim eklediklerimiz: arka plana tıklayınca kapanma, odağın açan düğmeye
+ * Bizim eklediklerimiz: arka plana tıklayınca kapanma, odağın açan butona
  * DÖNMESİ (tarayıcılar bunu tutarlı yapmıyor) ve sayfa kaydırma kilidi.
  *
  * Kaydırma kilidi `html:has(dialog[open])` ile YAPILMAZ: kökteki `:has()`
@@ -32,7 +32,7 @@ import { cn } from "../utils";
  * ona `data-autofocus` ver. `autoFocus` DEĞİL: React istemcide `autofocus`
  * özniteliğini yazmaz (yalnızca sunucu çiziminde), bağlanırken çağırdığı
  * `focus()` da kapalı diyalogda boşa gider; istemci gezinmesinden sonra ilk
- * odak Kapat düğmesine düşerdi. Yıkıcı bir onayda `data-autofocus` "Vazgeç"te.
+ * odak Kapat butonuna düşerdi. Yıkıcı bir onayda `data-autofocus` "Vazgeç"te.
  *
  * Yerel kapanış da duruma yansır (`<form method="dialog">`, tarayıcının
  * zorla kapatması): yoksa `open` açık kalır, kaydırma kilidi çözülmez ve
@@ -102,7 +102,7 @@ export function Dialog({
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (!dialog.open) dialog.showModal();
     // Kapalı iç içe bir diyaloğun içeriği de DOM'da durur; ilk eşleşme onun
-    // görünmez düğmesi olursa odak hiçbir yere gitmez. Yalnız bu diyaloğun kendi hedefi.
+    // görünmez butonu olursa odak hiçbir yere gitmez. Yalnız bu diyaloğun kendi hedefi.
     [...dialog.querySelectorAll<HTMLElement>("[data-autofocus]")]
       .find((el) => el.closest("dialog") === dialog)
       ?.focus();

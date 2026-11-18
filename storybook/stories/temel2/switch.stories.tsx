@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Seçim/Aç-Kapa Düğmesi",
+  title: "Bileşenler/Seçim/Aç-Kapa Butonu",
   id: "switch",
   component: Switch,
   tags: ["autodocs"],
@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Anında etki eden aç/kapa ayarı (\"Bildirimler\", \"Koyu Tema\"); kaydet düğmesine bağlı bir seçimse onay kutusu kullan. Yerel `<input type=\"checkbox\" role=\"switch\">`: JavaScript'siz çalışır, formla gönderilir, ekran okuyucu \"anahtar, açık\" der.",
+          "Anında etki eden aç/kapa ayarı (\"Bildirimler\", \"Koyu Tema\"); kaydet butonuna bağlı bir seçimse onay kutusu kullan. Yerel `<input type=\"checkbox\" role=\"switch\">`: JavaScript'siz çalışır, formla gönderilir, ekran okuyucu \"anahtar, açık\" der.",
       },
     },
   },

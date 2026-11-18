@@ -434,7 +434,7 @@ export const GROUP_OF: Record<string, GroupId> = {
 };
 
 export const GROUPS: readonly { id: GroupId; title: string; note: string; section: string }[] = [
-  { id: "temel", title: "Temel", note: "İkon, düğme, rozet, avatar: her ekranın harfleri.", section: "bilesenler" },
+  { id: "temel", title: "Temel", note: "İkon, buton, rozet, avatar: her ekranın harfleri.", section: "bilesenler" },
   { id: "secim", title: "Seçim", note: "Aç-kapa, onay, seçenek ve arama; anında etki eden kararlar.", section: "bilesenler" },
   { id: "form", title: "Form", note: "Sayıdan takvime, hepsi aynı etiket, yardım ve hata düzeninde.", section: "bilesenler" },
   { id: "katman", title: "Katmanlar", note: "Sayfanın üstüne açılanlar: odak tuzağı, Escape, odak dönüşü.", section: "bilesenler" },

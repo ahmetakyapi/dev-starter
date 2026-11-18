@@ -65,7 +65,7 @@ export async function runFeedAction(input: unknown): Promise<ActionResult> {
   const handler = FEED_HANDLERS[actionId];
   if (!row || !handler) return fail("Bu iş bulunamadı"); // authorize zaten eler; tip daraltma
 
-  // ÖNCE SAHİPLEN: iki sekmeden aynı anda basılan düğme işi iki kez yapmasın.
+  // ÖNCE SAHİPLEN: iki sekmeden aynı anda basılan buton işi iki kez yapmasın.
   const [claimed] = await db
     .update(feedItems)
     .set({ resolvedAt: now })

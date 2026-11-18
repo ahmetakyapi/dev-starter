@@ -45,7 +45,7 @@ export const serverSchema = z
     if (env.NODE_ENV === "production" && !env.AUTH_SECRET) {
       ctx.addIssue({ code: "custom", path: ["AUTH_SECRET"], message: "üretimde zorunlu" });
     }
-    // Sağlayıcı yarım tanımlıysa giriş düğmesi görünür ama çalışmaz.
+    // Sağlayıcı yarım tanımlıysa giriş butonu görünür ama çalışmaz.
     if (Boolean(env.AUTH_GITHUB_ID) !== Boolean(env.AUTH_GITHUB_SECRET)) {
       ctx.addIssue({
         code: "custom",

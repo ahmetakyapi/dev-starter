@@ -17,7 +17,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Kaydet düğmesine bağlı ya da çoklu seçim; anında etki eden ayar için anahtar. Yerel giriş `appearance-none` ile çizilir: formla gönderilir, `:checked`, `:indeterminate`, `:disabled` doğrudan stil olur. Belirsiz durum \"bazıları seçili\" demektir ve `ref` ile kurulur.",
+          "Kaydet butonuna bağlı ya da çoklu seçim; anında etki eden ayar için anahtar. Yerel giriş `appearance-none` ile çizilir: formla gönderilir, `:checked`, `:indeterminate`, `:disabled` doğrudan stil olur. Belirsiz durum \"bazıları seçili\" demektir ve `ref` ile kurulur.",
       },
     },
   },

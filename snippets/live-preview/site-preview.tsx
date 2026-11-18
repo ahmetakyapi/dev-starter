@@ -21,7 +21,7 @@ export type SitePreviewHandle = {
   vars: (vars: Record<string, string>) => void;
   /** Düzenlenen bölüme kay, çerçevesini tut */
   focus: (section: string, page?: string) => void;
-  /** Tam ekran önizlemeyi aç (dar ekranda kaydet çubuğundaki "Önizle" düğmesinden) */
+  /** Tam ekran önizlemeyi aç (dar ekranda kaydet çubuğundaki "Önizle" butonundan) */
   expand: () => void;
 };
 
@@ -247,7 +247,7 @@ export function SitePreview({ ref, views, status, cover, onSelect, hint }: Props
     return () => observer.disconnect();
   }, []);
 
-  // Büyütülmüş görünüm: Esc kapatır, odak kapatma düğmesinde başlar ve geri döner
+  // Büyütülmüş görünüm: Esc kapatır, odak kapatma butonunda başlar ve geri döner
   useEffect(() => {
     if (!expanded) return;
     const root = document.documentElement;

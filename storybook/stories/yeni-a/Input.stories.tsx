@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Tek satırlık metin: ad, e-posta, tutar, alan adı, şifre. Şablonun `Field` düzeniyle aynı (etiket, yardım, hata, `aria-describedby`); alanın içine ikon, önek/sonek (₺, .com), temizle ya da şifre göster düğmesi gerekince bu. Önek görsel ipucudur, anlamı etiket taşımalı (\"Tutar (₺)\").",
+          "Tek satırlık metin: ad, e-posta, tutar, alan adı, şifre. Şablonun `Field` düzeniyle aynı (etiket, yardım, hata, `aria-describedby`); alanın içine ikon, önek/sonek (₺, .com), temizle ya da şifre göster butonu gerekince bu. Önek görsel ipucudur, anlamı etiket taşımalı (\"Tutar (₺)\").",
       },
     },
   },
@@ -107,7 +107,7 @@ export const Password: Story = {
     type: "password",
     placeholder: undefined,
     defaultValue: "zeytin-2024!",
-    hint: "En az 10 karakter; bir rakam ve bir simge.",
+    hint: "En az 10 karakter; bir rakam ve bir ikon.",
     autoComplete: "new-password",
   },
   play: async ({ canvasElement }) => {
@@ -162,7 +162,7 @@ export const Sizes: Story = {
   render: () => (
     <Frame width="sm">
       <div className="grid gap-5">
-        <Input size="sm" label="Küçük" leadingIcon={User} placeholder="Tablo içi süzgeç" />
+        <Input size="sm" label="Küçük" leadingIcon={User} placeholder="Tablo içi filtre" />
         <Input size="md" label="Orta" leadingIcon={User} placeholder="Form alanı" />
         <Input size="lg" label="Büyük" leadingIcon={User} placeholder="Tek alanlı sayfa" />
       </div>

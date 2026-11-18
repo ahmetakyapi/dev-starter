@@ -5,9 +5,9 @@ import { cn } from "../utils";
 /**
  * Sıvı cam: arkasındaki görüntüyü hafifçe büken, kenarı ışık kıran cam hap.
  * Fotoğraflı ya da çizimli kahramanın üstündeki TEK birincil eylem (Ribbon'ın
- * gökyüzü kahramanındaki "İndir" düğmesi) ve görsel zeminli kapanış çağrısı.
+ * gökyüzü kahramanındaki "İndir" butonu) ve görsel zeminli kapanış çağrısı.
  * Düz zeminde (`bg-page`) kullanma: bükülecek bir şey yoksa sadece bulanık,
- * gri bir hap kalır; orada `bg-cta` doğru düğmedir.
+ * gri bir hap kalır; orada `bg-cta` doğru butondur.
  *
  * KATMANLAR (hepsi `aria-hidden`, içerik en üstte):
  *   1. kenar: çok katmanlı iç gölge. Sol üst ve sağ alt köşede ince, koyu
@@ -134,7 +134,7 @@ export function LiquidGlassLink({
   );
 }
 
-/** Cam düğme. `type` varsayılanı `button` (formu yanlışlıkla göndermesin). */
+/** Cam buton. `type` varsayılanı `button` (formu yanlışlıkla göndermesin). */
 export function LiquidGlassButton({
   tone = "auto",
   strength = 60,

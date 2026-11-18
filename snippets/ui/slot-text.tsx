@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Kayan metin: metin DEĞİŞİNCE harfler slot makinesi gibi yerine yuvarlanır.
- * Durum etiketi ("Taslak" → "Yayında"), sekme başlığı, düğmenin yeni hali
+ * Durum etiketi ("Taslak" → "Yayında"), sekme başlığı, butonun yeni hali
  * ("Kopyala" → "Kopyalandı"), dönen kahraman sözcüğü. Rakam için
  * `digit-roll` var (yalnız değişen basamak, ara sayı yok); bu dosya her
  * karakterde çalışır ve değişmeyen harfi YERİNDE bırakır: "Kaydet" →

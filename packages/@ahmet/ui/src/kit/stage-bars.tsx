@@ -1,7 +1,7 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
 import type { ReactNode } from "react";
 import { cn } from "../utils";
-import { SERIES_BG } from "./chart-card";
+import { SERIES_BG, type Series } from "./chart-card";
 
 /**
  * Aşama çubukları: bir hunideki adımlar (ziyaret → kayıt → aktif → ücretli)
@@ -23,6 +23,10 @@ import { SERIES_BG } from "./chart-card";
  * Fareyle bir satırın üstüne gelince diğerleri geri çekilir (`:has`, JS yok);
  * bu yalnızca bir süs, bilgi her satırda zaten yazılı.
  *
+ * TEK RENK (2026-11-18): aşamalar aynı ölçünün adımları; eskiden her satır
+ * ayrı `--chart-*` rengindeydi ve renk bir kategori gibi okunuyordu. Bütün
+ * satırlar tek seri rengi (`series`, varsayılan 1); farkı uzunluk söyler.
+ *
  * İkon dolgunun üstünde `text-chart-ink`: seri renkleri iki temada da açık
  * pastel, ikon ikisinde de koyu kalır.
  */
@@ -34,11 +38,14 @@ const number = new Intl.NumberFormat("tr-TR");
 export function StageBars({
   stages,
   title,
+  series = 1,
   className,
 }: {
   stages: readonly Stage[];
   /** Ekran okuyucu adı: "Kayıt Hunisi". */
   title: string;
+  /** Dolgu rengi (`--chart-N`); bütün aşamalarda aynı. */
+  series?: Series;
   className?: string;
 }) {
   const base = stages[0]?.value || 1;
@@ -56,7 +63,7 @@ export function StageBars({
             <span className="truncate text-right text-base text-body">{stage.label}</span>
             <span aria-hidden className="relative h-6 overflow-hidden rounded-full bg-chart-track">
               <span
-                className={cn("absolute inset-y-0 left-0 flex items-center rounded-full pl-2 text-chart-ink [&_svg]:size-3.5", SERIES_BG[i % SERIES_BG.length])}
+                className={cn("absolute inset-y-0 left-0 flex items-center rounded-full pl-2 text-chart-ink [&_svg]:size-3.5", SERIES_BG[(series - 1) % SERIES_BG.length])}
                 style={{ width: `${width}%` }}
               >
                 {stage.icon}

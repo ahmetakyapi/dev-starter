@@ -180,7 +180,7 @@ export default async function HomePage() {
           </Panel>
 
           <Panel className="lg:col-span-2">
-            <PanelHeader title="Düğmeler" meta="Dokunmatik ekranda her boy en az 44 piksel. Degradeli brand düğme ekranda bir kez: başlıktaki." />
+            <PanelHeader title="Butonlar" meta="Dokunmatik ekranda her boy en az 44 piksel. Degradeli brand buton ekranda bir kez: başlıktaki." />
             <div className="flex flex-wrap items-center gap-3">
               <Button>Birincil</Button>
               <Button variant="secondary">İkincil</Button>

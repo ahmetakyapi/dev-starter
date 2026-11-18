@@ -6,7 +6,7 @@
  * süzülmüş gürültüden, çan kısmi tonlardan.
  *
  * SAYFA İÇİ FİLM KURALLARI (reference/ses.md):
- *   - Varsayılan KAPALI; görünür bir düğmeyle açılır, tercih localStorage'da.
+ *   - Varsayılan KAPALI; görünür bir butonla açılır, tercih localStorage'da.
  *   - Tarayıcı sesi yalnız kullanıcı hareketiyle başlatır: tercih açıksa
  *     filmi başlatan tıklamanın içinde `primeSound()` çağır.
  *   - Olaylar çizimle AYNI zaman çizelgesinden gelir (`cuesBetween`), her
@@ -103,7 +103,7 @@ export const RECIPES = {
   },
   /** Yükselen hava (dev yazının girişi). Tepe `at + 0,12`: yazı oturduğunda doruk. */
   rise: (at: number) => noiseBurst(at, { type: "bandpass", freq: 600, q: 0.6, peak: 0.05, attack: 0.12, decay: 0.25, sweepTo: 2400 }),
-  /** Sel gelir / çekilir: süzgeci açılan / kapanan gürültü (metal whoosh değil). `swellIn` tepesi `at + 0,55`. */
+  /** Sel gelir / çekilir: filtresi açılan / kapanan gürültü (metal whoosh değil). `swellIn` tepesi `at + 0,55`. */
   swellIn: (at: number) => noiseBurst(at, { type: "lowpass", freq: 220, peak: 0.16, attack: 0.55, decay: 0.6, sweepTo: 1500 }),
   swellOut: (at: number) => noiseBurst(at, { type: "lowpass", freq: 1500, peak: 0.12, attack: 0.3, decay: 0.8, sweepTo: 200 }),
   /** Daktilo: altı kısa tık. */

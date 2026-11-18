@@ -87,8 +87,8 @@ kez kullanma. Ritim yoğun / ferah sırayla, vurgu koyu zemin değil TON farkı.
 - **Üst künye (eyebrow) yalnızca hero'da.** Bölüm başlıkları künyesiz.
 - **Tek niyet, tek etiket.** Kayıt eylemi her yerde "Ücretsiz Başla" ve aynı
   adrese gider; test bunu denetler.
-- **`brand` (degradeli) düğme ekranda bir kez:** hero ve kapanış. İkisi aynı
-  ekrana hiç düşmez. Başlıktaki ve fiyattaki düğmeler `primary`.
+- **`brand` (degradeli) buton ekranda bir kez:** hero ve kapanış. İkisi aynı
+  ekrana hiç düşmez. Başlıktaki ve fiyattaki butonlar `primary`.
 - **Tek kayan şerit** (logo). Üzerine gelince ve altındaki "Şeridi Durdur"
   kutusuyla durur (WCAG 2.2.2; klavye ve dokunmatiğin tek yolu), hareketi
   azaltanda durağan ve denetim gizli.
@@ -117,14 +117,14 @@ Kimlik, palet ve token kuralları `.claude/rules/tokens.md`de (bileşen/stil dos
 
 - Tema çerezde, sayfa yine statik (`○`): layout varsayılanı basar,
   `<head>`deki küçük script (`lib/theme.ts` → `THEME_SCRIPT`) ilk boyamadan
-  önce çerezdeki temayı ve `theme-color`ı yazar (guides/03 § 2b). Düğme
+  önce çerezdeki temayı ve `theme-color`ı yazar (guides/03 § 2b). Buton
   çerezi istemcide yazar. Varsayılan açık, next-themes yok, FOUC yok.
   Layout ya da sayfa `cookies()`/`headers()` okursa her ziyaret sunucu
   çizimine döner (`ƒ`); build çıktısında `○ /` kalmalı.
 
 ## Yazım: Title Case
 
-Başlık, düğme, sekme, rozet, etiket ve künyeler **Title Case**: "Yeni Kayıt",
+Başlık, buton, sekme, rozet, etiket ve künyeler **Title Case**: "Yeni Kayıt",
 "Tekrar Dene", "Ana Sayfaya Dön". Gövde metni, açıklama, yardım metni, hata
 mesajı gövdesi, `placeholder` ve `aria-label` cümle düzeninde.
 

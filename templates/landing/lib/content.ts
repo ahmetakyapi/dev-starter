@@ -10,7 +10,7 @@ import { SITE_DESCRIPTION, SITE_NAME } from "./site";
  * okur. İkon alanları bileşen referansı taşır; istemci bileşenine prop
  * olarak GEÇİRİLMEZ (fonksiyon sınırı aşamaz), sunucuda çizilir.
  *
- * YAZIM: başlık, düğme, etiket ve künye Title Case; açıklama ve SSS yanıtı
+ * YAZIM: başlık, buton, etiket ve künye Title Case; açıklama ve SSS yanıtı
  * cümle. Arayüz metninde uzun tire yok (`tests/content.test.ts` denetler).
  *
  * SAYILAR ÖRNEKTİR. Hero, pano, özellik demoları ve fiyatlardaki rakamlar

@@ -7,7 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 /**
- * Giriş kartı: sosyal sağlayıcı düğmeleri, "ya da" ayırıcı, e-posta + şifre
+ * Giriş kartı: sosyal sağlayıcı butonları, "ya da" ayırıcı, e-posta + şifre
  * (göster/gizle), hata durumu, birincil CTA. `/giris`, `/kayit` sayfasının
  * ortası. Kayıt için aynı kart: `title`, `submitLabel`, `footer` değişir.
  *
@@ -23,14 +23,14 @@ import { cn } from "@/lib/utils";
  *     // yanlış olduğunu SÖYLEMEZ ("e-posta ya da şifre hatalı").
  *   }
  *
- * Sosyal düğmeler ayrı bir form: `socialAction` sağlayıcıyı `provider`
+ * Sosyal butonlar ayrı bir form: `socialAction` sağlayıcıyı `provider`
  * alanında alır. Marka logosu ve marka rengi YOK: logolar lisanslı varlık
  * ve rengi sakin kabuğu bozar; nötr bir harf karosu + sağlayıcı adı yeter,
  * kullanıcı adı okuyarak seçer.
  *
  * Erişilebilirlik: alan hataları `aria-invalid` + `aria-describedby`, genel
- * hata `role="alert"`; göster/gizle düğmesi `aria-pressed` taşır ve odağı
- * alandan çalmaz. Bekleme sırasında düğme `aria-disabled` değil gerçekten
+ * hata `role="alert"`; göster/gizle butonu `aria-pressed` taşır ve odağı
+ * alandan çalmaz. Bekleme sırasında buton `aria-disabled` değil gerçekten
  * devre dışı, metni "Giriş Yapılıyor" olur. `autoComplete` doğru: tarayıcı
  * ve şifre yöneticisi alanları tanır.
  *
@@ -247,7 +247,7 @@ export function AuthCard({
                 <button
                   type="button"
                   onClick={() => setReveal((value) => !value)}
-                  // Fareyle basınca odak alanda kalsın; klavyede düğme yine odaklanır.
+                  // Fareyle basınca odak alanda kalsın; klavyede buton yine odaklanır.
                   onMouseDown={(event) => event.preventDefault()}
                   aria-pressed={reveal}
                   aria-controls={`${id}-password`}

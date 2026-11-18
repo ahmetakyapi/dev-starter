@@ -141,7 +141,7 @@ export function TanitimGroup() {
       <Cell file="app-window" name="Uygulama Penceresi" note="Ürünü ekran görüntüsü değil, token'la çizilmiş canlı maketle anlatır." span={4} align="stretch">
         <DesktopDemo />
       </Cell>
-      <Cell file="dock" name="Uygulama Rafı" note="Simge yükselir, komşuları da biraz; basınca pencere odağa gelir." span={2}>
+      <Cell file="dock" name="Uygulama Rafı" note="İkon yükselir, komşuları da biraz; basınca pencere odağa gelir." span={2}>
         <div className="grid justify-items-center gap-3">
           <Dock
             items={[
@@ -150,7 +150,7 @@ export function TanitimGroup() {
               { id: "kargo", label: "Kargo", icon: <Truck className="text-body" /> },
             ]}
           />
-          <p className="text-center text-small text-muted">Pencere maketindeki raf aynı bileşen, düğmeli kipte.</p>
+          <p className="text-center text-small text-muted">Pencere maketindeki raf aynı bileşen, butonlu kipte.</p>
         </div>
       </Cell>
       <Cell file="docking-nav" name="Yuvaya Oturan Menü" note="Baştan hap; kaydırınca üst kenara oturur, köşeleri düzleşir." span={3} align="stretch">

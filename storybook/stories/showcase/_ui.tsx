@@ -58,7 +58,7 @@ export type Toast = {
   title: string;
   body?: string;
   tone: "success" | "info";
-  /** Verilirse bildirimde "Geri Al" düğmesi (silme, arşivleme). */
+  /** Verilirse bildirimde "Geri Al" butonu (silme, arşivleme). */
   undo?: () => void;
 };
 
@@ -111,7 +111,7 @@ export const SECTION_OF: Record<Page, string> = {
  *   2. Başlık bloğu: büyük ad, bir satır bağlam, sağda sayfanın eylemleri.
  *      Birincil eylem varsa tek mavi `Button` (varsayılan); diğerleri
  *      `secondary`. Koyu mürekkep hap (eski `INK`) kaldırıldı: Pano mavi,
- *      Takvim siyah düğmeyle iki farklı "birincil" dili konuşuyordu.
+ *      Takvim siyah butonla iki farklı "birincil" dili konuşuyordu.
  */
 export function PageBar({
   title,

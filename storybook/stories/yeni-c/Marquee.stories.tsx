@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Müşteri logoları, entegrasyonlar, kısa alıntılar. Sayfada tek şerit. Üzerine gelmek ve odaklanmak bekletir; görünür “Şeridi Durdur” düğmesi WCAG 2.2.2 için varsayılan açık (klavye ve dokunmatiğin tek yolu). Döngü için ikinci kopya `aria-hidden` + `inert`: liste bir kez okunur, bağlantılar Tab sırasına bir kez girer. Hareketi azaltanda durağan, sarılan bir sıra.",
+          "Müşteri logoları, entegrasyonlar, kısa alıntılar. Sayfada tek şerit. Üzerine gelmek ve odaklanmak bekletir; görünür “Şeridi Durdur” butonu WCAG 2.2.2 için varsayılan açık (klavye ve dokunmatiğin tek yolu). Döngü için ikinci kopya `aria-hidden` + `inert`: liste bir kez okunur, bağlantılar Tab sırasına bir kez girer. Hareketi azaltanda durağan, sarılan bir sıra.",
       },
     },
   },
@@ -65,7 +65,7 @@ export const Reverse: Story = {
 };
 
 export const WithoutControl: Story = {
-  name: "Düğmesiz (Kısa Şerit)",
+  name: "Butonsuz (Kısa Şerit)",
   args: { control: false, duration: 4 },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).queryByRole("button")).toBeNull();

@@ -12,12 +12,12 @@ import { cn } from "../utils";
  * kilidi tek bir modüle (`use-scroll-lock.ts`) taşı.
  *
  * `side="bottom"` (varsayılan): tutamaçtan aşağı sürükleyince kapanır
- * (`DRAG_CLOSE` pikselden fazla). Sürükleme tek yol değil: Kapat düğmesi
+ * (`DRAG_CLOSE` pikselden fazla). Sürükleme tek yol değil: Kapat butonu
  * ve Escape her zaman var; hareket kısıtı olan kullanıcı sürüklemek zorunda
  * kalmaz.
  *
  * Güvenli alan: alt kenardaki dolgu `env(safe-area-inset-bottom)` taşır;
- * yoksa ana ekran çubuğu son düğmenin üstüne biner.
+ * yoksa ana ekran çubuğu son butonun üstüne biner.
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo, açık kenarlarda `rounded-2xl`,
  * kıl çizgisi ve `shadow-modal`. Kayma imza eğrisiyle (yaysız: büyük bir
@@ -30,7 +30,7 @@ import { cn } from "../utils";
  * satırının sağında durum hapı ("Bağlı", "Açık"), başlık bandı saç
  * çizgisiyle içerikten ayrılır. Alt çubukta `footerStart` sola yaslanır:
  * yıkıcı ya da ayrı türden eylem ("Bağlantıyı Kes", "Arşivle") onaylama
- * düğmelerinin yanına değil karşı kenara düşer, kazara basılmaz.
+ * butonlarının yanına değil karşı kenara düşer, kazara basılmaz.
  * `size="lg"`: içinde liste ve ayar satırları olan ayrıntı paneli (36rem).
  * İlk odak ve yerel kapanış `dialog.tsx` ile aynı: başka bir öğe için
  * `data-autofocus` (`autoFocus` istemcide işlemez), `<form method="dialog">`
@@ -71,7 +71,7 @@ type SheetProps = {
   footerStart?: ReactNode;
   /** Başlığın solunda kimlik karosu (ikon ya da logo). */
   icon?: ReactNode;
-  /** Başlık satırının sağında, kapat düğmesinden önce: durum hapı. */
+  /** Başlık satırının sağında, kapat butonundan önce: durum hapı. */
   status?: ReactNode;
   /** `right`: masaüstünde yan panel; telefonda da sağdan açılır. */
   side?: "bottom" | "right";
@@ -110,7 +110,7 @@ export function Sheet({
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (!dialog.open) dialog.showModal();
     // Kapalı iç içe bir diyaloğun içeriği de DOM'da durur; ilk eşleşme onun
-    // görünmez düğmesi olursa odak hiçbir yere gitmez. Yalnız bu diyaloğun kendi hedefi.
+    // görünmez butonu olursa odak hiçbir yere gitmez. Yalnız bu diyaloğun kendi hedefi.
     [...dialog.querySelectorAll<HTMLElement>("[data-autofocus]")]
       .find((el) => el.closest("dialog") === dialog)
       ?.focus();

@@ -82,7 +82,7 @@ export function SkeletonRow({ avatar = true, value = true, className }: { avatar
   );
 }
 
-/** Panel kartı: başlık, künye, metin ve altta düğme yeri. Gri kuyu, kenarlıksız. */
+/** Panel kartı: başlık, künye, metin ve altta buton yeri. Gri kuyu, kenarlıksız. */
 export function SkeletonCard({ lines = 3, action = true, className }: { lines?: number; action?: boolean; className?: string }) {
   return (
     <span aria-hidden className={cn("block rounded-xl bg-surface p-5 sm:p-6", className)}>

@@ -50,7 +50,7 @@ agent galeriyi tarayıp "en iyisini" seçmez.
 
 Kurmadan önce `~/dev-starter/snippets/ui/README.md` kataloğuna bak: referanstaki
 parçanın hazır karşılığı çoğu zaman var. Örnek: kaydırınca kenara oturan
-menü → `docking-nav`, görsel üstü cam düğme → `liquid-glass`, buğudan gelen
+menü → `docking-nav`, görsel üstü cam buton → `liquid-glass`, buğudan gelen
 başlık → `blur-in`, ekran görüntüsü yerine ürün maketi → `app-window` +
 `dock`, eylem altı güvence → `trust-line`, el notu → `hand-callout`
 (Tanıtım grubu). Varsa `add-ui` ile kur, yapıyı onun üstüne oturt. Karşılığı
@@ -82,7 +82,7 @@ Renk, yazı tipi, metin, logo, ikon seti, görsel, birebir ölçü, kod.
 ## Eşleme
 | Referanstaki rol | Projedeki karşılık |
 |---|---|
-| <ör. koyu zeminde parlak birincil düğme> | <`Button variant="primary"`, paletin degradesi> |
+| <ör. koyu zeminde parlak birincil buton> | <`Button variant="primary"`, paletin degradesi> |
 ```
 
 ## 4. Kur
@@ -91,8 +91,8 @@ Renk, yazı tipi, metin, logo, ikon seti, görsel, birebir ölçü, kod.
   görev tanımına görüntüyü değil `docs/references/<bölüm>.md` yolunu koy.
 - Token dışı renk yok, Title Case, ekranda tek `primary`, şablon bileşenleri
   (`Button`/`ButtonLink`, `Panel`). Telefondaki menü `snippets/ui/sheet.tsx`
-  üstüne kurulur: odak içeride döner, Escape kapatır, odak açan düğmeye
-  döner (`guides/10 § 5`); açan düğme `aria-expanded` taşır. 390'da dokunma
+  üstüne kurulur: odak içeride döner, Escape kapatır, odak açan butona
+  döner (`guides/10 § 5`); açan buton `aria-expanded` taşır. 390'da dokunma
   hedefi 44 px; hareket yalnız `transform`/`opacity`.
 - Referans GSAP, Three.js ya da Lenis ile yapılmışsa önce CSS (kaydırmaya
   bağlı animasyon dahil) ve `motion/react` karşılığı aranır. GSAP yalnız

@@ -15,7 +15,7 @@ import { cn } from "../utils";
  *
  * DURUM GÖZLEMCİYLE, KAYDIRMA DİNLEYİCİSİZ: hangi slaytın göründüğünü
  * `IntersectionObserver` söyler (her karede çalışan scroll dinleyicisi
- * slop listesinde). Etkin nokta = görünen ilk slayt; ok düğmeleri ilk/son
+ * slop listesinde). Etkin nokta = görünen ilk slayt; ok butonları ilk/son
  * slayt tam görünürken `aria-disabled` (gerçek `disabled` odağı sayfanın
  * başına atardı: sona kadar "Sonraki"ye basan klavye kullanıcısı yerini kaybeder).
  *
@@ -29,11 +29,11 @@ import { cn } from "../utils";
  * `aria-roledescription="carousel"` + ad; her slayt `role="group"` +
  * `aria-roledescription="slide"` + "2 / 5". Kaydırma alanı odaklanabilir
  * (klavyeyle kaydırılabilir bölge kuralı); ←/→ bir slayt, Home/End uçlar.
- * Konum değişimi düğmeyle ya da klavyeyle yapıldıysa gizli canlı bölge
+ * Konum değişimi butonla ya da klavyeyle yapıldıysa gizli canlı bölge
  * "Slayt 3 / 5" der; parmakla kaydırırken susar. Otomatik oynatma YOK:
- * kendi kendine dönen içerik okunmaz ve WCAG 2.2.2 durdurma düğmesi ister.
+ * kendi kendine dönen içerik okunmaz ve WCAG 2.2.2 durdurma butonu ister.
  *
- * Hareketi azaltan kullanıcıda düğme ve klavye anında atlar (`behavior:
+ * Hareketi azaltan kullanıcıda buton ve klavye anında atlar (`behavior:
  * "auto"`), nokta ve ok geçişleri de kapanır.
  */
 

@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Küçük, satır içi bekleme işareti: düğme içi, tek hücre, kısa istek. Sayfa ya da panel düzeyinde iskelet (`Skeleton`) kullan. Düğmenin metni zaten bir şey söylüyorsa `label={null}` ver; düğme içinde `tone=\"current\"` metin rengini alır.",
+          "Küçük, satır içi bekleme işareti: buton içi, tek hücre, kısa istek. Sayfa ya da panel düzeyinde iskelet (`Skeleton`) kullan. Butonun metni zaten bir şey söylüyorsa `label={null}` ver; buton içinde `tone=\"current\"` metin rengini alır.",
       },
     },
   },
@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "Varsayılan" };
 
 export const InButton: Story = {
-  name: "Düğme İçinde",
+  name: "Buton İçinde",
   render: () => (
     <div className="flex flex-wrap items-center justify-center gap-3">
       <Button variant="brand" disabled aria-busy="true">
@@ -74,7 +74,7 @@ export const AllVariants: Story = {
           <Spinner tone="muted" label="Sönük tonda yükleniyor" />
         </div>
       </Cell>
-      <Cell label="current: Düğmenin Metin Rengi">
+      <Cell label="current: Butonun Metin Rengi">
         <Button variant="primary" disabled aria-busy="true">
           <Spinner size="sm" tone="current" label={null} />
           Kaydediliyor

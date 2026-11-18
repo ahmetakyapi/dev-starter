@@ -37,7 +37,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Altta cam rafta simgeler: üzerine gelinen yükselir, komşuları da biraz (yalnız CSS, `:has()`). Açık uygulamanın altında nokta. `onSelect` yoksa süs (`aria-hidden`), varsa simgeler gerçek düğme ve raf `toolbar`. Büyüme yalnız ince işaretçide ve hareketi azaltmayanda.",
+          "Altta cam rafta ikonlar: üzerine gelinen yükselir, komşuları da biraz (yalnız CSS, `:has()`). Açık uygulamanın altında nokta. `onSelect` yoksa süs (`aria-hidden`), varsa ikonlar gerçek buton ve raf `toolbar`. Büyüme yalnız ince işaretçide ve hareketi azaltmayanda.",
       },
     },
   },

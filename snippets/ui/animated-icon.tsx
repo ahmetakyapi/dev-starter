@@ -2,13 +2,13 @@ import type { ComponentType, CSSProperties, SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Canlı ikon: lucide ikonu, sahibi olan düğmenin ya da kartın üzerine
+ * Canlı ikon: lucide ikonu, sahibi olan butonun ya da kartın üzerine
  * gelince (ve klavye odağında) anlamına uygun küçük bir hareket yapar.
  * Zil sallanır, ok dürter, yenile döner, kalp atar. Hareket İKONUN
  * ANLAMINI söyler; her ikona aynı zıplamayı verme.
  *
- * TETİK `group`: en yakın `.group` öğesi (düğme, bağlantı, kart) üzerine
- * gelinince ya da `:focus-visible` olunca. Düğmeye `group` sınıfı ver.
+ * TETİK `group`: en yakın `.group` öğesi (buton, bağlantı, kart) üzerine
+ * gelinince ya da `:focus-visible` olunca. Butona `group` sınıfı ver.
  * `self`: ikonun kendi üstüne gelince. `always`: süren durumda (yenileniyor)
  * sürekli; `loop` ile yalnız `spin` ve `ring` mantıklı.
  *
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  * dokunuş takılı kalan bir hover bırakmasın. Süreler 450-650 ms, eğri
  * `--ease-brand`; `pop` 1,18'e büyür, 0'dan değil.
  *
- * İkon her zaman `aria-hidden` (adı düğmenin). Hareketi azaltan kullanıcıda
+ * İkon her zaman `aria-hidden` (adı butonun). Hareketi azaltan kullanıcıda
  * hiç oynamaz. Sunucu bileşeni: yalnız CSS.
  *
  *   <button className="group …"><AnimatedIcon icon={Bell} motion="ring" /> Bildirimler</button>

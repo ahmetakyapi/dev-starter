@@ -36,7 +36,7 @@ export default function ErrorBoundary({
             Tekrar Dene
           </Button>
           {/* TAM yükleme: aynı adrese yumuşak gezinme (Link) hata sınırını
-              sıfırlamaz; hata ana sayfadaysa (tek sayfalık sitede hep) düğme
+              sıfırlamaz; hata ana sayfadaysa (tek sayfalık sitede hep) buton
               hiçbir şey yapmazdı. Eski dağıtımın parçası (ChunkLoadError) da
               ancak böyle tazelenir. */}
           <Button variant="ghost" onClick={() => window.location.assign(new URL("/", window.location.origin))}>

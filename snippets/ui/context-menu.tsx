@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * GİZLİ BİR KAPIDIR, TEK KAPI OLAMAZ. Sağ tık keşfedilmez; klavyede
  * Shift+F10 / Menü tuşu ancak tarayıcı `contextmenu` olayı üretirse ve
  * tetikleyici odaklanabilirse çalışır, menü de imleç yerine köşede açılabilir.
- * Aynı eylemler nesnenin üzerinde görünür bir "Daha Fazla" düğmesiyle
+ * Aynı eylemler nesnenin üzerinde görünür bir "Daha Fazla" butonuyla
  * (`dropdown-menu.tsx`) de sunulmalı; bu menü hızlandırıcıdır.
  *
  * Base UI ContextMenu: imleç konumunda açılır, uzun basmayı (dokunmatik)

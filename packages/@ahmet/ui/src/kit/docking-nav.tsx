@@ -21,8 +21,8 @@ import { cn } from "../utils";
  * çizilir, sayfa ortasında yenilenince de ilk karede doğru durumdadır
  * (efekt içinde setState yok). Hareketi azaltan kullanıcıda anında.
  *
- * TELEFON: bağlantılar menü düğmesinin altında açılan panelde. Esc kapatır
- * ve odağı düğmeye döndürür; panelden Tab ile çıkınca kapanır.
+ * TELEFON: bağlantılar menü butonunun altında açılan panelde. Esc kapatır
+ * ve odağı butona döndürür; panelden Tab ile çıkınca kapanır.
  *
  *   <DockingNav
  *     brand={<a href="/" className="font-bold text-strong">Ribbon</a>}

@@ -27,7 +27,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Ekip içi küçük karar tek dokunuşla. Oydan önce sonuçlar gizli (sürü etkisi olmasın); oy verince çubuklar oranına dolar, yüzdeler belirir, önde olan koyu. Kendi seçimine yeniden basmak oyu geri alır. Aç-kapa düğmeleri (`aria-pressed`): oy geri alınabilir, radyo bunu söyleyemez. Allo turundan. Pusula: Görevler → Ekip Kararı.",
+          "Ekip içi küçük karar tek dokunuşla. Oydan önce sonuçlar gizli (sürü etkisi olmasın); oy verince çubuklar oranına dolar, yüzdeler belirir, önde olan koyu. Kendi seçimine yeniden basmak oyu geri alır. Aç-kapa butonları (`aria-pressed`): oy geri alınabilir, radyo bunu söyleyemez. Allo turundan. Pusula: Görevler → Ekip Kararı.",
       },
     },
   },

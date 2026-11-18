@@ -40,7 +40,7 @@ export const notes = pgTable(
 /**
  * AI akışı (`/akis`, `lib/feed.ts`). Bir satır = kullanıcıya hazırlanmış bir iş.
  *
- * `item` istemciye giden görünümdür (başlık, gerekçe, taslak, düğmeler);
+ * `item` istemciye giden görünümdür (başlık, gerekçe, taslak, butonlar);
  * `payload` aksiyonun GERÇEK girdisidir (alıcı adresi, takvim kimliği) ve
  * istemciye hiç gitmez. Sunucu aksiyonu çalıştırırken alıcıyı istemciden
  * değil buradan okur.

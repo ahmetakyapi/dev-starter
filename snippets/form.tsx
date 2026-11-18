@@ -28,10 +28,10 @@
  * `formToObject` gibi yalnızca metin alanları, parola hariç) ve alan onları
  * `defaultValue` ile geri alır. Yoksa her doğrulama hatası formu boşaltır.
  *
- * Gönder düğmesi ve alanlar bekleme sırasında `disabled` OLMAZ: odaktaki
- * düğme devre dışı kalınca odak `<body>`ye düşer ve klavye ya da ekran
+ * Gönder butonu ve alanlar bekleme sırasında `disabled` OLMAZ: odaktaki
+ * buton devre dışı kalınca odak `<body>`ye düşer ve klavye ya da ekran
  * okuyucu kullanıcısı sayfanın başına döner. İkinci gönderimi `onSubmit`
- * keser (React 19 `preventDefault` görünce eylemi çağırmaz), düğme
+ * keser (React 19 `preventDefault` görünce eylemi çağırmaz), buton
  * `aria-disabled` ile bekliyor görünür; hata dönünce odak ilk geçersiz
  * alana gider. Aynı desen: nextjs-fullstack şablonundaki
  * `components/ExampleForm.tsx`.

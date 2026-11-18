@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Birincil eylemin hemen altında simge ve noktayla ayrılmış kısa güvenceler: tıklamadan önceki \"güvenli mi?\" sorusunu düğmenin dibinde yanıtlar. En çok üç, her biri doğrulanabilir olgu; sıfat değil. Ayraç `aria-hidden`, ekran okuyucu görünmez virgül duyar.",
+          "Birincil eylemin hemen altında ikon ve noktayla ayrılmış kısa güvenceler: tıklamadan önceki \"güvenli mi?\" sorusunu butonun dibinde yanıtlar. En çok üç, her biri doğrulanabilir olgu; sıfat değil. Ayraç `aria-hidden`, ekran okuyucu görünmez virgül duyar.",
       },
     },
   },
@@ -31,7 +31,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { name: "İndirme Düğmesi Altında" };
+export const Default: Story = { name: "İndirme Butonu Altında" };
 
 export const Variants: Story = {
   name: "Kullanımlar",

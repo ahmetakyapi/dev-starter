@@ -56,7 +56,7 @@ export const Default: Story = {
     await userEvent.keyboard("{Enter}");
     await expect(option).toHaveAttribute("aria-selected", "true");
     await userEvent.keyboard("{Escape}");
-    // Odak, açılır pencere kapanış geçişi bitince düğmeye döner (anında değil).
+    // Odak, açılır pencere kapanış geçişi bitince butona döner (anında değil).
     await waitFor(() => expect(canvas.getByRole("button", { name: "İzleyenler: Mert Aksoy, Can Demir, Burak Öztürk" })).toHaveFocus());
   },
 };

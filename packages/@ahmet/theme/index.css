@@ -37,7 +37,7 @@
   }
 
   /* Dolgulu yüzeyde wash dolguyu boyayamaz ve text-strong dolgunun rengine
-     düşer (koyu temada birincil düğmede 1,5–2:1). Dolgunun kendi çifti
+     düşer (koyu temada birincil butonda 1,5–2:1). Dolgunun kendi çifti
      kullanılır: birincilde ters çevrilir (on-primary / primary, sözleşmede
      AA), CTA degradesinde düz ters renk yok, beyaz metin kalır ve zemin
      bir tık aydınlanır (sözleşme: her durakta ≥ 3:1). */
@@ -62,7 +62,7 @@
      dış halkasını ata keser (WCAG 2.4.11); <Surface> her zaman
      overflow-hidden. Halka yalnızca orada ya da `.focus-inset` ile içeri
      alınır: içerideki halka öğenin kendi zeminine çizilir, `bg-primary` /
-     `bg-cta` dolgulu düğmede dolguyla aynı renk olur ve odak kaybolur.
+     `bg-cta` dolgulu butonda dolguyla aynı renk olur ve odak kaybolur.
      Üstteki kuraldan SONRA gelmeli (eşit özgüllük). */
   :where(
       .focus-inset,

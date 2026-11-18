@@ -171,7 +171,7 @@ VERİSİ olan dosya (renk seçici, onun vitrini) başında
 | `transition-all` | `width`/`height` da animasyona girer, neyin hareket ettiği belirsizleşir | `transition-[transform,opacity]`, `transition-colors` |
 | `font-black` (900) | Slop başlığının imzası; tek ailede kontrastı ağırlık değil punto kurar | Üst sınır 800 ve sıkı tracking (Açılış Zili böyle kullanır); çoğu başlıkta `font-bold` yeter |
 | Kahraman başlığının üstünde yanıp sönen noktalı rozet | Her yapay zekâ açılış sayfasında aynı | En fazla bir kısa künye, noktasız (`hero.eyebrow`) |
-| Ölü bağlantı (`href="#"`) | Hiçbir yere gitmez, klavyede başa zıplar | Gerçek adres, ya da `disabled` düğme; menüde etkin sayfa `aria-current="page"` |
+| Ölü bağlantı (`href="#"`) | Hiçbir yere gitmez, klavyede başa zıplar | Gerçek adres, ya da `disabled` buton; menüde etkin sayfa `aria-current="page"` |
 | `alert()` / `confirm()` | Tasarım dışı, mobilde kaba | Satır içi hata, `snippets/confirm.tsx`, `snippets/toast.tsx` |
 | Gökkuşağı degrade (`from-purple via-pink to-orange`) | Kimlik kuralı 5'i bozar | Tek aile, token'dan |
 | Lorem, "John Doe", "Acme", pazarlama dolgusu ("bir üst seviyeye", "seamless") | Ürün ne yaptığını söylemiyor | Gerçek taslak metin, `guides/05-components.md` § 7 |
@@ -188,7 +188,7 @@ bırak — ama gerekçe "böyle daha güzel" değil, "şu sorunu şöyle çözü
 
 Liste, tablo, kart yığını gibi **alt alta tekrar eden satırlarda aynı türden
 öğe her satırda aynı sütunda durur**: rozet, durum hapı, çip, sayı, tarih,
-eylem düğmesi. Göz sütunu bir kez bulur, satır satır yeniden aramaz.
+eylem butonu. Göz sütunu bir kez bulur, satır satır yeniden aramaz.
 (Kaynak: Pusula gecikme kartında "+4 / +2 / +1 Gün" rozetleri müşteri
 adının ardından geldiği için her satırda başka yerdeydi; sahibi istedi,
 2026-11-17.)

@@ -169,7 +169,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Uygulama kabuğu içinde ajan sohbeti: asistan mesajında ajan planı, altta giriş kutusu. Mesaj gönderince önce düşünüyor göstergesi, sonra yanıt kelime kelime akar; akarken gönder düğmesi Durdur olur. Telefonda kenar çubuğu alttan açılan çekmece.",
+          "Uygulama kabuğu içinde ajan sohbeti: asistan mesajında ajan planı, altta giriş kutusu. Mesaj gönderince önce düşünüyor göstergesi, sonra yanıt kelime kelime akar; akarken gönder butonu Durdur olur. Telefonda kenar çubuğu alttan açılan çekmece.",
       },
       story: { inline: false, height: "48rem" },
     },

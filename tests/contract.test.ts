@@ -296,7 +296,7 @@ describe('theme.css ↔ tokens.ts', () => {
     expect(onBrand).toContain('color: var(--on-brand)')
   })
 
-  // İçe alınan halka öğenin kendi zeminine çizilir: dolgulu düğmede dolguyla
+  // İçe alınan halka öğenin kendi zeminine çizilir: dolgulu butonda dolguyla
   // aynı renk olur. Kırpan kabın HER torununa uygulanan kural odağı siler.
   it('odak halkası yalnızca kartı dolduran öğede ya da .focus-inset ile içeride', () => {
     expect(INDEX_CSS).not.toMatch(/overflow-x-auto\)\s*:focus-visible/)

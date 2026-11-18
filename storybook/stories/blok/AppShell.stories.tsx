@@ -58,7 +58,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Oturum açılmış her ekranın iskeleti: gri kuyuda kenar çubuğu, içerik beyaz karoda. Masaüstünde ⌘B ya da düğmeyle ikon sütununa daralır; telefonda (< lg) üst çubuk ve alttan açılan çekmece. Tanıtım sayfası için değil; orada üst gezinme çubuğu kullan.",
+          "Oturum açılmış her ekranın iskeleti: gri kuyuda kenar çubuğu, içerik beyaz karoda. Masaüstünde ⌘B ya da butonla ikon sütununa daralır; telefonda (< lg) üst çubuk ve alttan açılan çekmece. Tanıtım sayfası için değil; orada üst gezinme çubuğu kullan.",
       },
     },
   },
@@ -93,7 +93,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Masaüstü düğmesi telefonda gizli: yalnızca görünürse tıklanır. */
+/** Masaüstü butonu telefonda gizli: yalnızca görünürse tıklanır. */
 function visible(el: Element | null): el is HTMLElement {
   return !!el && (el as HTMLElement).offsetParent !== null;
 }
@@ -125,7 +125,7 @@ export const Collapsed: Story = {
 export const MobileMenuOpen: Story = {
   name: "Telefonda Menü Açık",
   parameters: {
-    docs: { description: { story: "Telefonda menü düğmesi gezinmeyi alttan açılan çekmecede açar. Masaüstü genişliğinde kenar çubuğu zaten görünür." } },
+    docs: { description: { story: "Telefonda menü butonu gezinmeyi alttan açılan çekmecede açar. Masaüstü genişliğinde kenar çubuğu zaten görünür." } },
   },
   play: async ({ canvasElement }) => {
     const opener = canvasElement.querySelector('button[aria-label="Gezinmeyi Aç"]');

@@ -69,7 +69,7 @@ export const Shapes: Story = {
   parameters: { layout: "padded" },
   render: () => (
     <Gallery cols={3}>
-      <Cell label="Hap düğme, kalın çerçeve">
+      <Cell label="Hap buton, kalın çerçeve">
         <BorderBeam as="span" width={2} duration={3} className="inline-flex min-h-11 items-center rounded-full bg-overlay px-5 text-base font-medium text-strong shadow-raised">
           Canlı Yayında
         </BorderBeam>

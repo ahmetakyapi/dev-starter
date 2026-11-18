@@ -23,7 +23,7 @@ import { cn } from "../utils";
  *   `well`: gri kuyu (`bg-surface rounded-xl p-1.5`) içinde her öğe beyaz
  *     karo (`bg-overlay shadow-raised rounded-lg`); ayar ya da özellik
  *     panelleri. Kuyu → karo tek seviye: karo içine kart konmaz.
- * Chevron küçük yuvarlak bir düğme gibi durur, açılınca döner; özete
+ * Chevron küçük yuvarlak bir buton gibi durur, açılınca döner; özete
  * gelince arka planı yumuşak griye döner (tıklanabilir olduğunu söyler).
  *
  * Açılış animasyonu `::details-content` + `interpolate-size` (yalnızca

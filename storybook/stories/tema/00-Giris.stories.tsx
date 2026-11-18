@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import { AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonClass } from "@/components/ui/Button";
-import { ChartCard, ChartLegend } from "@/components/ui/chart-card";
+import { ChartCard } from "@/components/ui/chart-card";
 import { CopyButton } from "@/components/ui/copy-button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { StageBars } from "@/components/ui/stage-bars";
@@ -51,15 +51,19 @@ function Composition() {
           />
         }
         footer={
-          <ChartLegend
-            className="px-1 pb-1"
-            items={[
-              { label: "Ziyaret", value: 11800, series: 1, unit: "kişi" },
-              { label: "Kayıt", value: 7900, series: 2, unit: "kişi" },
-              { label: "Aktif", value: 4310, series: 3, unit: "kişi" },
-              { label: "Ücretli", value: 1240, series: 4, unit: "kişi" },
-            ]}
-          />
+          // Aşamalar tek renk (aynı ölçünün adımları); altta renk lejantı yerine adım dönüşümleri.
+          <dl className="grid grid-cols-3 gap-2 px-1 pb-1">
+            {[
+              ["Ziyaret → Kayıt", "%67"],
+              ["Kayıt → Aktif", "%55"],
+              ["Aktif → Ücretli", "%29"],
+            ].map(([step, rate]) => (
+              <div key={step} className="rounded-lg bg-overlay px-3 py-2.5 shadow-raised">
+                <dt className="truncate text-small text-muted">{step}</dt>
+                <dd className="mt-0.5 text-base font-semibold text-strong tabular-nums">{rate}</dd>
+              </div>
+            ))}
+          </dl>
         }
       >
         <StageBars
@@ -189,7 +193,7 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
 ];
 
 const OTHER = [
-  { t: "Bileşenler", d: "Düğmeden diyaloğa; her biri durumları ve klavye davranışıyla." },
+  { t: "Bileşenler", d: "Butondan diyaloğa; her biri durumları ve klavye davranışıyla." },
   { t: "Grafikler", d: "ChartCard kuyusunda, lejant karolarıyla on bir grafik." },
   { t: "Bloklar", d: "Uygulama kabuğu, sohbet, giriş, ayarlar: birleşmiş parçalar." },
   { t: "Ekranlar", d: "Şablonların tam sayfaları, iki temada." },

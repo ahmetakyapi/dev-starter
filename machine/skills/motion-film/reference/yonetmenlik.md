@@ -23,7 +23,7 @@ Dünya:      zemin, küçük palet, ışık; filmin boyunca renk yayı (soğuk �
 Motif:      tekrar eden ve sonda karşılığını bulan şey.
 Yerli hamle: yalnız bu ortamın yapabildiği geçiş; duygusal tepede.
 Perdeler:
-  I   0,0–6,0   [giriş: düğmeden uçan damla]  ne görünür · OLAY · kamera
+  I   0,0–6,0   [giriş: butondan uçan damla]  ne görünür · OLAY · kamera
       okumalar: 0,0–0,6 damla iner (göz neredeyse orada)
                 0,6–1,4 logo damgalanır, ad yazılır
                 ...
@@ -86,7 +86,7 @@ metin girişi taşmaz.
 | Geçiş | Ne anlatır | Nasıl |
 |-------|-----------|-------|
 | Biçim değiştirme (morph) | aynı şeyin başka hâli | iki nokta dizisi arasında `mix(a, b, ease.inOut(k))`; nokta sayısı eşit |
-| Eşleşen kesme (match cut) | şekil/hareket kesmenin iki yanında aynı | DOM'daki düğme damlası → tuvaldeki damla (konumu ölç, filme ver) |
+| Eşleşen kesme (match cut) | şekil/hareket kesmenin iki yanında aynı | DOM'daki buton damlası → tuvaldeki damla (konumu ölç, filme ver) |
 | Kamera taşıması | devamlılık | yakınlaşma bir sahnede başlar, öbüründe biter |
 | Sel (ink flood) | sert açık/koyu dönüş | `film-kit.ts → inverted`; selin merkezi bir öğe (çizginin ucu), çekilince başka öğe (terazinin mili) |
 | İris / şekilli iris | bir özneye kapanış | dünya → ekran fonksiyonuyla özneye nişan |
@@ -112,7 +112,7 @@ hareket üstünde ya da bilinçli şok kesme.
 - Kesme her yerde; film birden başlayıp birden bitiyor
 - Ekranda hikâyeyi tekrar eden yazı ("Kayboldum" levhası)
 - Kamera hızlı nesneyi kaçırıyor; kadrajda boş kare (bkz. `kamera.md`)
-- Künyeler birbirinin, düğmenin ya da çizginin üstünde (bkz. `inceleme-dongusu.md`)
+- Künyeler birbirinin, butonun ya da çizginin üstünde (bkz. `inceleme-dongusu.md`)
 
 lemo-opuscar'ın en sık gördükleri (`DIRECTOR.md` § 10):
 

@@ -236,7 +236,7 @@ function TourDemo() {
         steps={[
           { target: "#b-code-block", title: "Kod Bloğu", body: "Paket yöneticisi seçimi bütün bloklarda hatırlanır." },
           { target: "#b-hold-button", title: "Basılı Tut Onayı", body: "Kazara tıklama arşivlemez; bırakınca geri sarılır." },
-          { target: "#b-product-tour", title: "Ve Bu Tur", body: "Escape kapatır, odak bu düğmeye döner." },
+          { target: "#b-product-tour", title: "Ve Bu Tur", body: "Escape kapatır, odak bu butona döner." },
         ]}
       />
     </div>
@@ -277,7 +277,7 @@ function TemelGroup() {
           ))}
         </ul>
       </Cell>
-      <Cell file="icon-button" name="İkon Düğmesi" note="Adı tipte zorunlu; dört ton, dokunmatikte 44 piksel." size="sm">
+      <Cell file="icon-button" name="İkon Butonu" note="Adı tipte zorunlu; dört ton, dokunmatikte 44 piksel." size="sm">
         <div className="flex justify-center gap-2">
           <IconButton icon={Bell} aria-label="Bildirimler" />
           <IconButton icon={Settings} aria-label="Ayarlar" variant="secondary" />
@@ -285,7 +285,7 @@ function TemelGroup() {
           <IconButton icon={Trash2} aria-label="Sil" variant="danger" />
         </div>
       </Cell>
-      <Cell file="button-group" name="Düğme Grubu" note="Kuyuda kaynaşmış satır; basılı düğme beyaz karoya çıkar." size="sm">
+      <Cell file="button-group" name="Buton Grubu" note="Kuyuda kaynaşmış satır; basılı buton beyaz karoya çıkar." size="sm">
         <div className="grid justify-items-center gap-3">
           <ButtonGroup aria-label="Görünüm" variant="well">
             <IconButton icon={LayoutGrid} aria-label="Izgara" size="sm" aria-pressed={view === "izgara"} onClick={() => setView("izgara")} />
@@ -329,7 +329,7 @@ function TemelGroup() {
           ))}
         </dl>
       </Cell>
-      <Cell file="close-button" name="Kapat Düğmesi" note="Görsel 28–32 piksel, dokunma alanı 44; halka dairede." size="sm">
+      <Cell file="close-button" name="Kapat Butonu" note="Görsel 28–32 piksel, dokunma alanı 44; halka dairede." size="sm">
         {tip ? (
           <div className="relative mx-auto max-w-64 rounded-xl bg-overlay p-4 shadow-raised">
             <div className="absolute top-2.5 right-2.5">
@@ -395,7 +395,7 @@ function TemelGroup() {
           <CodeBlock title="lib/siparis.ts" code={'import { siparis } from "@kiyi/siparis-sdk";\n\nawait siparis.olustur({ urun: "Etiyopya Yirgacheffe", adet: 2 });'} />
         </div>
       </Cell>
-      <Cell file="marquee" name="Kayan Şerit" note="Üzerine gelince ve düğmeyle durur (WCAG 2.2.2); kopya ekran okuyucudan gizli." span={3}>
+      <Cell file="marquee" name="Kayan Şerit" note="Üzerine gelince ve butonla durur (WCAG 2.2.2); kopya ekran okuyucudan gizli." span={3}>
         <Marquee label="Kıyı Kahve'nin Tedarikçileri" duration={30}>
           {SUPPLIERS.map(({ name, Glyph }) => (
             <span key={name} className="inline-flex items-center gap-2 rounded-full bg-overlay px-3.5 py-2 text-base font-semibold text-strong shadow-raised">
@@ -411,7 +411,7 @@ function TemelGroup() {
       <Cell file="hold-button" name="Basılı Tut Onayı" note="Kazara tıklama arşivlemez; bırakınca geri sarılır, klavyede Boşluk basılı." span={3}>
         <HoldDemo />
       </Cell>
-      <Cell file="reactions" name="Tepkiler" note="İkonla, emojisiz; hap aç-kapa düğmesi, adı sayıyı ve senin tepkini söyler." span={2}>
+      <Cell file="reactions" name="Tepkiler" note="İkonla, emojisiz; hap aç-kapa butonu, adı sayıyı ve senin tepkini söyler." span={2}>
         <div className="mx-auto grid max-w-72 gap-2.5">
           <p className="rounded-xl bg-overlay px-4 py-3 text-base text-strong shadow-raised">Kasım harmanı kavruldu, yarın rafta.</p>
           <Reactions label="Ekip tepkileri" defaultValue={[{ kind: "tebrik", count: 4, mine: true }, { kind: "ates", count: 2 }]} />
@@ -423,7 +423,7 @@ function TemelGroup() {
       <Cell file="signature-pad" name="İmza Alanı" note="Çizerek ya da yazarak; değer SVG, tema değişince yeniden çizilir." span={2} align="stretch">
         <SignaturePad label="Teslim Alan" height={120} />
       </Cell>
-      <Cell file="split-button" name="Bölünmüş Düğme" note="Ana eylem hemen çalışır, ok aynı işin diğer biçimlerini açar." span={2}>
+      <Cell file="split-button" name="Bölünmüş Buton" note="Ana eylem hemen çalışır, ok aynı işin diğer biçimlerini açar." span={2}>
         <div className="grid justify-items-center gap-3">
           <SplitButton onClick={() => undefined} items={[{ label: "Excel (.xlsx)", onSelect: () => undefined }, { label: "PDF Özeti", onSelect: () => undefined }]}>
             CSV Olarak İndir
@@ -509,7 +509,7 @@ function SecimGroup() {
           <Select label="Teslim Edilecek Kafe" defaultValue="alsancak" items={CAFES.map((c) => ({ value: c.value, label: c.label }))} />
         </div>
       </Cell>
-      <Cell file="combobox" name="Aramalı Seçim" note="Türkçe süzgeç: “etiyop” yazınca Etiyopya bulunur." span={3}>
+      <Cell file="combobox" name="Aramalı Seçim" note="Türkçe filtre: “etiyop” yazınca Etiyopya bulunur." span={3}>
         <div className="mx-auto max-w-sm">
           <Combobox label="Menşe Ülke" items={ORIGINS} placeholder="Ülke yazın" />
         </div>
@@ -531,7 +531,7 @@ function SecimGroup() {
           </p>
         </div>
       </Cell>
-      <Cell file="chip" name="Süzgeç Etiketi" note="Süzgeç çipi basılı durum taşır; kaldırılabilir çipte yalnız × düğme." span={3}>
+      <Cell file="chip" name="Filtre Etiketi" note="Filtre çipi basılı durum taşır; kaldırılabilir çipte yalnız × buton." span={3}>
         <div className="grid gap-4">
           <ChipGroup aria-label="Sipariş Durumu">
             {Object.entries(filters).map(([name, on], i) => (
@@ -572,7 +572,7 @@ function SecimGroup() {
           </ul>
         </div>
       </Cell>
-      <Cell file="toggle-group" name="Aç-Kapa Grubu" note="Her düğme basılı ya da değil; hiçbiri de geçerli. İkonun adı ipucunda." span={3}>
+      <Cell file="toggle-group" name="Aç-Kapa Grubu" note="Her buton basılı ya da değil; hiçbiri de geçerli. İkonun adı ipucunda." span={3}>
         <div className="mx-auto grid max-w-sm gap-4">
           <ToggleGroup<Format>
             aria-label="Metin Biçimi"
@@ -664,7 +664,7 @@ function FormGroup() {
           />
         </div>
       </Cell>
-      <Cell file="number-field" name="Sayı Alanı" note="Kesin küçük sayı; Shift ile on katı, sınırda düğme kapanır." span={3}>
+      <Cell file="number-field" name="Sayı Alanı" note="Kesin küçük sayı; Shift ile on katı, sınırda buton kapanır." span={3}>
         <div className="mx-auto grid max-w-xs gap-6">
           <NumberField label="Paket Adedi" defaultValue={12} min={1} max={60} hint="Toptanda en az 12 paket." />
           <NumberField label="Kilo Fiyatı" defaultValue={2640} min={0} step={20} format={{ style: "currency", currency: "TRY", maximumFractionDigits: 0 }} />
@@ -732,7 +732,7 @@ function FormGroup() {
 
 /* --- Katmanlar ----------------------------------------------------------- */
 
-/** Katman hücrelerinde tetikleyicinin bağlamı: düğme boşlukta değil, ait olduğu nesnenin karosunda. */
+/** Katman hücrelerinde tetikleyicinin bağlamı: buton boşlukta değil, ait olduğu nesnenin karosunda. */
 function ContextTile({ title, meta, children }: { title: string; meta: string; children: ReactNode }) {
   return (
     <div className="mx-auto flex w-full max-w-sm flex-wrap items-center justify-between gap-3 rounded-xl bg-overlay py-3 pr-3 pl-4 shadow-raised">
@@ -863,18 +863,18 @@ function KatmanGroup() {
       <Cell file="sheet" name="Yan Panel" note="Telefonda alttan çekmece, masaüstünde sağdan panel.">
         <ContextTile title="Siparişler" meta="14 Açık · 3 Kanal">
           <Button variant="secondary" size="sm" onClick={() => setSheet(true)}>
-            Süzgeçler
+            Filtreler
           </Button>
         </ContextTile>
         <Sheet
           open={sheet}
           onOpenChange={setSheet}
-          title="Süzgeçler"
+          title="Filtreler"
           description="Sipariş listesini daralt."
           footer={<Button onClick={() => setSheet(false)}>Uygula</Button>}
         >
           <RadioGroup
-            name="kanal-suzgec"
+            name="kanal-filtre"
             legend="Kanal"
             defaultValue="hepsi"
             options={[
@@ -1384,13 +1384,13 @@ function YuklemeGroup() {
   }
   return (
     <CellGrid className="lg:grid-cols-5">
-      <Cell file="spinner" name="Dönen Gösterge" note="Satır içi ve düğme içi kısa bekleme." span={1} size="sm">
+      <Cell file="spinner" name="Dönen Gösterge" note="Satır içi ve buton içi kısa bekleme." span={1} size="sm">
         <div className="grid justify-items-center gap-4">
           <div className="flex items-center gap-4">
             <Spinner size="sm" />
             <Spinner />
           </div>
-          {/* Bekleme `disabled` değil `aria-busy`: soluk düğmede beyaz metin 2,2:1'e düşüyordu; basılmasın diye yalnız işaretçi kapalı. */}
+          {/* Bekleme `disabled` değil `aria-busy`: soluk butonda beyaz metin 2,2:1'e düşüyordu; basılmasın diye yalnız işaretçi kapalı. */}
           <Button aria-busy="true" size="sm" className="pointer-events-none">
             <Spinner size="sm" tone="current" label={null} />
             Kaydediliyor

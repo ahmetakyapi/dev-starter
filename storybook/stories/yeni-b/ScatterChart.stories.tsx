@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "İki ölçü arasındaki ilişki (harcama ↔ kayıt); nokta boyu isteğe bağlı üçüncü ölçü, alanla (√) ölçeklenir, rengi kategori. İmleçte ekran pikselinde en yakın nokta seçilir; klavyede noktalar X sırasıyla gezilir. Kategori anahtarı süzgeç, ama eksen kaymaz: saçılımda konum kıyas içindir.",
+          "İki ölçü arasındaki ilişki (harcama ↔ kayıt); nokta boyu isteğe bağlı üçüncü ölçü, alanla (√) ölçeklenir, rengi kategori. İmleçte ekran pikselinde en yakın nokta seçilir; klavyede noktalar X sırasıyla gezilir. Kategori anahtarı filtre, ama eksen kaymaz: saçılımda konum kıyas içindir.",
       },
     },
   },

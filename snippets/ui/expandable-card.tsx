@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
  * yol, dosya başı notuna bak).
  *
  * PENCERE KURALLARI: `role="dialog"` + `aria-modal`, adı başlıktan; açılınca
- * odak Kapat düğmesine, Tab pencere içinde döner, Escape ve zemin tıklaması
+ * odak Kapat butonuna, Tab pencere içinde döner, Escape ve zemin tıklaması
  * kapatır, odak karta geri döner; sayfa kaydırması kilitli. Telefonda
  * pencere ekranın altına yaslı tam genişlik.
  *

@@ -75,7 +75,7 @@ Aksiyon geri alınabilir mi?
 │         Sorma. Yap, göster, geri almayı sun.
 │         Undo modele uğramaz: doğrudan, deterministik, token'sız.
 ├─ Hayır → ÖNDEN ONAY (useHumanInTheLoop)
-│          Düğmeler ve id→anlam kodda sabit; model yalnız hedefi ve
+│          Butonlar ve id→anlam kodda sabit; model yalnız hedefi ve
 │          açıklamayı yazar. Sunucu aynı çağrının sonucu `accept` ise yapar.
 └─ Kırmızı çizgi mi? (hesap silme, toplu silme, para transferi)
     └─ TOOL'U AGENT'A VERME
@@ -107,7 +107,7 @@ Bu agent'ın çıktısı aşağıdakiler olmadan Gate'e gitmez:
 - [ ] Tool **argümanı** handler'da ve render'da `safeParse` ediliyor (CopilotKit doğrulamaz)
 - [ ] `useFrontendTool`/`useRenderTool` deps'ine fonksiyon konmuyor (JSON.stringify ile karşılaştırılır; güncel callback ref'ten)
 - [ ] `followUp: false` olan her tool'un açıklamasında turu bitirdiği yazıyor
-- [ ] Geri alınamaz her aksiyon önden onaydan geçiyor; onayın düğmeleri ve anlamı kodda sabit
+- [ ] Geri alınamaz her aksiyon önden onaydan geçiyor; onayın butonları ve anlamı kodda sabit
 - [ ] Kırmızı çizgi aksiyonlarının tool'u **yok**
 - [ ] Yetki kontrolü tool'un içinde, prompt'ta değil
 - [ ] Token/oran limiti tanımlı

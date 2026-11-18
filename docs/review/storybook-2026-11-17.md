@@ -3,7 +3,7 @@
 Matris: 13 hikâye × 3 genişlik (1440 / 1024 / 390) × 2 tema = **78 ekran** (hepsi açıldı; `demo-app--signed-out` ilk turda yük altında yüklenmedi, tek başına yeniden ölçüldü), ek olarak kabuk (sol menü) 1440 açık/koyu, 1024 açık, 390 açık/koyu.
 Yatay taşma: **0 / 78**. Konsol: 3 tür hata (aşağıda B-12, B-13). Hizalama denetimi (`npm run check:align`): **✓ 12 sayfa × 3 genişlik hizalı**. Kod taraması (`slop-scan.sh --quiet storybook/stories`): 0 yüksek, 10 uyarı (çoğu `text-[9px]` künyeleri).
 
-Yöntem: Playwright (Chromium), her hücrede 8,5 sn bekleme (play fonksiyonları), tam sayfa + kaydırarak viewport görüntüsü. Kontrast iki yolla ölçüldü: (1) `getComputedStyle` + ata zincirinin zemin bileşimi, (2) **piksel ölçümü**: metin saydamlaştırılıp altındaki zemin ekran görüntüsünden okundu (renkli/degrade zeminde tek güvenilir yol); yalnız medyan zeminde de eşiği geçemeyenler bulgu sayıldı. Düğmeler gerçekten tıklandı (DOM değişimi, piksel farkı, `aria-*` değişimi, dosya seçici, gezinme). Dokunma hedefi 390'da, `::after` genişletmesi hesaba katılarak.
+Yöntem: Playwright (Chromium), her hücrede 8,5 sn bekleme (play fonksiyonları), tam sayfa + kaydırarak viewport görüntüsü. Kontrast iki yolla ölçüldü: (1) `getComputedStyle` + ata zincirinin zemin bileşimi, (2) **piksel ölçümü**: metin saydamlaştırılıp altındaki zemin ekran görüntüsünden okundu (renkli/degrade zeminde tek güvenilir yol); yalnız medyan zeminde de eşiği geçemeyenler bulgu sayıldı. Butonlar gerçekten tıklandı (DOM değişimi, piksel farkı, `aria-*` değişimi, dosya seçici, gezinme). Dokunma hedefi 390'da, `::after` genişletmesi hesaba katılarak.
 
 Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya adı yazılı). Ham ölçüm çıktıları ve betikler: `/tmp/claude-0/dr/out/` (`results-all.json`, `deep-*.json`, `clicks-*.json`; geçici).
 
@@ -14,7 +14,7 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 | Hiyerarşi | 4 | Sayfa başlıkları tek ölçüde (24 px / 600 / −0.6 px, sol 280 px, üst 84 px); kapakta harita kenar çubuğunu tekrarlıyor. |
 | Tipografi | 4 | Ölçek tutarlı; 1024'te takvim ve gelen kutusu başlıkları 34–101 px'e sıkışıp okunmaz kısalıyor. |
 | Aralık ve Hiza | 4 | Hizalama denetimi temiz; giriş ekranının mavi panelinde ~290 px boş bant. |
-| Renk ve Tema | 3 | Renkli zeminde iki yerde AA kırılıyor (giriş hapları, yüklenen düğme); koyu temada soluk metin kabarık yüzeyde 3,96–4,17. |
+| Renk ve Tema | 3 | Renkli zeminde iki yerde AA kırılıyor (giriş hapları, yüklenen buton); koyu temada soluk metin kabarık yüzeyde 3,96–4,17. |
 | Hareket | 4 | Hareket azaltmada içerik görünür, sonsuz animasyon 0; play fonksiyonları sayfa durumunu kalıcı değiştiriyor. |
 | Durumlar | 3 | Görev tamamlanınca başlık 8→7 olurken kenar çubuğu rozeti 8'de kalıyor. |
 | Erişilebilirlik | 3 | Odak halkaları her durakta var; 390'da 36 ve 32 px hedefler, iki play testi kırık. |
@@ -31,9 +31,9 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 - Kanıt: `crop-login-pills-light.png`, `crop-login-pills-dark.png`
 - Öneri: `storybook/stories/showcase/_giris.tsx:163` hapı açık zemine çevirme, koyulaştır: `bg-black/20` (ya da `--brand-ink` gibi panelin koyu tonu) + `text-on-brand`. Alternatif: beyaz dolgu + `text-primary-ink`. Öncelik farkı için `Acil`e nokta/ikon ekle. Her iki temada piksel ölçümüyle ≥ 4,5 doğrula.
 
-**Y-2. Yüklenen (pending) düğme renkli zeminde okunmuyor**
+**Y-2. Yüklenen (pending) buton renkli zeminde okunmuyor**
 - Sayfa: `showcase--all-in-one` `#b-spinner` (ve aynı desen `demo-app--magic-link` "Gönderiliyor") · 1440 + 390 · açık + koyu
-- Ölçüm (piksel): "Kaydediliyor" 12 px / 600; **açıkta beyaz metin rgb(129,180,221) zeminde 2,21:1; koyuda rgb(6,18,31) metin rgb(36,102,138) zeminde 3,00:1**. Düğme bütünüyle `opacity` ile soluyor, metin de soluyor.
+- Ölçüm (piksel): "Kaydediliyor" 12 px / 600; **açıkta beyaz metin rgb(129,180,221) zeminde 2,21:1; koyuda rgb(6,18,31) metin rgb(36,102,138) zeminde 3,00:1**. Buton bütünüyle `opacity` ile soluyor, metin de soluyor.
 - Kanıt: `crop-spinner-light.png`, `crop-spinner-dark.png`; giriş akışında "Gönderiliyor" aynı biçimde (`demo-app--magic-link` 1440 açık tam sayfa görüntüsü, ilk tur)
 - Öneri: yüklenme durumunda dolguyu soldurma; `aria-busy` + dönen gösterge yeter. Gerekirse yalnız ikon/dolgu tonu değişsin (`bg-primary-hover`), metin `text-on-primary` tam opaklıkta kalsın. `disabled:opacity-50` yalnız gerçek devre dışı durum için.
 
@@ -77,21 +77,21 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 
 **O-4. Sayfa başlığı eylemleri farklı ölçü ve sayıda**
 - Sayfa: `demo-app--*` · 1440 + 390
-- Ölçüm (başlık sağındaki denetimler): Pano "Tanıtım Turu" **36 px** + Hafta/Ay/Yıl **32 px** (iki denetim); Gelen Kutusu Paylaş + Görünüm **36**; Takvim "Randevu Oluştur" **36**; Asistan "Yeni Sohbet" **36**; Bildirimler iki düğme **36**; Raporlar "Son 30 Gün" **40**; Ayarlar "Hızlı Ayarlar" **40**; Görevler **yok**. (`guides/05-components.md` § PageHeader: "sağda o ekranın **tek** denetimi".)
+- Ölçüm (başlık sağındaki denetimler): Pano "Tanıtım Turu" **36 px** + Hafta/Ay/Yıl **32 px** (iki denetim); Gelen Kutusu Paylaş + Görünüm **36**; Takvim "Randevu Oluştur" **36**; Asistan "Yeni Sohbet" **36**; Bildirimler iki buton **36**; Raporlar "Son 30 Gün" **40**; Ayarlar "Hızlı Ayarlar" **40**; Görevler **yok**. (`guides/05-components.md` § PageHeader: "sağda o ekranın **tek** denetimi".)
 - Kanıt: `hdr-demo-app--*-1440.png` (ölçüm tablosu), `hdr-demo-app--notifications-1440.png`
 - Öneri: başlık eylemi tek boy (`size="sm"` = 36 px masaüstü, 44 px dokunmatik); Raporlar ve Ayarlar 40 → 36. Görevler'e "Görev Ekle" ya da bilinçli boşluk; Pano'da Hafta/Ay/Yıl'ı panelin içine indir.
 
 **O-5. Telefonda 44 px altı dokunma hedefleri**
 - Sayfa / ölçüm (390, açık ve koyu aynı):
-  - `demo-app--notifications`: satır eylem düğmeleri **36 × 36** (8 adet), "Geri Al" **55 × 26**
+  - `demo-app--notifications`: satır eylem butonları **36 × 36** (8 adet), "Geri Al" **55 × 26**
   - `demo-app--calendar`: "… grubuna iş ekle" **32 × 32** (4), grup başlıkları **282 × 40** (4), hafta okları **40 × 44**
   - `demo-app--reports`: kaydırıcı noktaları **24 × 44** (5), "Diğer Biçimler" **36 × 44**
   - `demo-app--settings`: bölüm gezinmesi hapları (01 Profil … 11 Webhook) **36 px** yüksek (11 adet)
-  - `demo-app--landing`: üst çubuk "Giriş Yap" **83 × 36**, "Yeni: Pencere Şeridi" **177 × 36**, "Bu Akışla Dene" **137 × 36**; tanıtım duyurusu kapat/sıradaki **32 × 32**; şerit rafı düğmeleri **36 × 40**
+  - `demo-app--landing`: üst çubuk "Giriş Yap" **83 × 36**, "Yeni: Pencere Şeridi" **177 × 36**, "Bu Akışla Dene" **137 × 36**; tanıtım duyurusu kapat/sıradaki **32 × 32**; şerit rafı butonları **36 × 40**
   - `demo-app--assistant`: "Düşünüyor · 2 sn" **125 × 36**
   - `showcase--all-in-one`: grup gezinme hapları **36 px** (Temel, Seçim, Form …)
 - Kanıt: ölçüm çıktısı (results-all.json → `touch`)
-- Öneri: `tap-44` sınıfı ya da `min-h-11 pointer-fine:min-h-9` (şablondaki `Button sm` kuralı); takvimdeki `size-8` ikon düğmeleri `size-11 pointer-fine:size-8`.
+- Öneri: `tap-44` sınıfı ya da `min-h-11 pointer-fine:min-h-9` (şablondaki `Button sm` kuralı); takvimdeki `size-8` ikon butonları `size-11 pointer-fine:size-8`.
 
 **O-6. Koyu temada soluk metin kabarık yüzeyde 4,5'in altında**
 - Sayfa / ölçüm (koyu):
@@ -119,11 +119,11 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 
 **D-1. Her Şey Bir Arada · Kanal Tablosu (yeni kuyu) telefonda kesik, ipucu yok** — `#b-channel-matrix` 390: kaydırma kabı `scrollWidth 480 > clientWidth 310`; "E-Posta" sütunu "E-P" diye kesik, SMS görünmüyor, sağ kenarda görünür gölge yok. Başlık hücreleri açıkta rgb(107,107,107)/rgb(235,235,235) **4,47:1**. Kanıt: `channel-matrix-390.png`. Öneri: sağ kenar maskesi (`mask-image: linear-gradient(to left, transparent, #000 24px)`), başlık metni `text-body`.
 
-**D-2. Alt palet çubuğu telefonda 10 paletin 2,5'unu saklıyor** — `showcase--all-in-one` 390: çubuk 358 px, iç şerit `scrollWidth 440 > 291`; Kehribar ve İris görünmez, Zümrüt yarım. Ayrıca masaüstünde çubuk kuyu başlıklarının üstüne biniyor ("Metin Alanı" künyesi altında kalıyor). Kanıt: `palettebar-390.png`. Öneri: telefonda tek "Palet" düğmesi + açılır panel, ya da iki satır; sayfa altına çubuk yüksekliği kadar `padding-bottom`.
+**D-2. Alt palet çubuğu telefonda 10 paletin 2,5'unu saklıyor** — `showcase--all-in-one` 390: çubuk 358 px, iç şerit `scrollWidth 440 > 291`; Kehribar ve İris görünmez, Zümrüt yarım. Ayrıca masaüstünde çubuk kuyu başlıklarının üstüne biniyor ("Metin Alanı" künyesi altında kalıyor). Kanıt: `palettebar-390.png`. Öneri: telefonda tek "Palet" butonu + açılır panel, ya da iki satır; sayfa altına çubuk yüksekliği kadar `padding-bottom`.
 
 **D-3. Devre dışı "Ekle" çok soluk** — `#b-task-list` ve `demo-app--tasks`: beyaz metin rgb(159,188,218) zeminde **1,89:1**. WCAG devre dışı öğeyi muaf tutar ama "basılınca bir şey olmaz mı?" sorusunu doğurur. Öneri: devre dışıda `bg-surface-raised text-muted` (gri), mavi kalmasın.
 
-**D-4. Kapak arama kutusu yalnız kabukta çalışıyor** — `cover--overview` tek başına (`iframe.html`) açıldığında "Bileşen, desen ya da ekran ara" basılınca **DOM/odak değişimi 0**; kabukta Storybook aramasına odaklanıyor (doğrulandı). Öneri: kabuk yoksa düğmeyi gizle ya da `?path=` ile kabuğa gönder.
+**D-4. Kapak arama kutusu yalnız kabukta çalışıyor** — `cover--overview` tek başına (`iframe.html`) açıldığında "Bileşen, desen ya da ekran ara" basılınca **DOM/odak değişimi 0**; kabukta Storybook aramasına odaklanıyor (doğrulandı). Öneri: kabuk yoksa butonu gizle ya da `?path=` ile kabuğa gönder.
 
 **D-5. Kapak 390: harita açıklamaları 118 px'e kısalıyor** — 11 açıklamanın hepsi ("Manifesto, token'la…", "Her Şey Bir Ara…") ellipsis; başlık "Her Şey Bir Arada" da kesik. Kanıt: `shell2-390.png`. Öneri: telefonda sayıyı (6 sayfa, 141 bileşen) açıklamanın altına indir, açıklama iki satır.
 
@@ -137,7 +137,7 @@ Kanıt dosyaları: `docs/review/storybook-2026-11-17/` (aşağıda yalnız dosya
 - Pusula sayfa başlıkları bire bir aynı: h1 24 px / 600 / −0.6 px, 1440'ta x=280 y=84, 390'da x=24 y=132; açıklama hep 14 px; kenar çubuğunda etkin sayfa `aria-current="page"` ve görünür biçimde ayrışıyor.
 - Odak halkası her ölçülen durakta görünür (2 px `--line-focus` çizgi ya da halka gölgesi); tanıtım sayfasının mavi üst bölümünde "Demoyu Gör" beyaz odak çizgisi taşıyor.
 - Tanıtım sayfası mavi üst bölümü: "Ücretsiz Dene" (beyaz dolgu) ve "Demoyu Gör" (çizgili) piksel ölçümünde AA'yı geçiyor; çapa bağlantıları (#tanitim-demo, #tanitim-kisayol) hedefe kayıyor.
-- Tıklama turu: kapak (46 öğe), giriş (40), tanıtım (21), 8 uygulama sayfası ve showcase'in channel-matrix → dissolve aralığı (119 öğe) — gerçekten basılan her düğmede görünür etki var (menü, diyalog, filtre, dosya seçici, gezinme). Kırık bağlantı (`href="#"`) yok.
+- Tıklama turu: kapak (46 öğe), giriş (40), tanıtım (21), 8 uygulama sayfası ve showcase'in channel-matrix → dissolve aralığı (119 öğe) — gerçekten basılan her butonda görünür etki var (menü, diyalog, filtre, dosya seçici, gezinme). Kırık bağlantı (`href="#"`) yok.
 - Hareket azaltmada kapak, tanıtım ve giriş sayfasında opaklığı 0'da kalan içerik yok, çalışan animasyon 0.
 
 ## Fırsatlar
@@ -154,14 +154,14 @@ Ekran görüntüleri depoya alınmadı (2,6 MB; geçici dizinde kaldı). Bulgula
 | Bulgu | Durum | Ne yapıldı |
 |---|---|---|
 | Y-1 Giriş hapları | Düzeldi | Beyaz hap + zeminin koyu tonu (`.pusula-hero-ink`, ≥ 5,5:1); Acil'de nokta |
-| Y-2 Yüklenen düğme | Düzeldi | `auth-card` beklemede soldurmuyor; Her Şey Bir Arada'daki örnek `aria-busy` |
+| Y-2 Yüklenen buton | Düzeldi | `auth-card` beklemede soldurmuyor; Her Şey Bir Arada'daki örnek `aria-busy` |
 | Y-3 Takvim 1024 | Düzeldi | "Bugün" paneli xl altında haftanın üstünde, kendi içinde iki sütun |
 | Y-4 Gelen kutusu 1024 | Düzeldi | Klasör ağacı xl'de; daha darda araç çubuğunda "Klasör" seçicisi; Kanal sütunu 1280 altında kapalı başlar |
 | Y-5 Sayılar | Düzeldi | Kapak raflarında birim ("sayfa") ve açıklama; Her Şey Bir Arada kendi kurgusunda gruplar |
 | O-1 Giriş boş bant | Düzeldi | Panel ekran boyu ve yapışkan; ortada bugünün özeti (3 sayı), şerit ilk karede |
 | O-2 Görev rozeti | Düzeldi | Pano durumu uygulama bağlamında: rozet, başlık ve pano aynı sayı; sayfa değişince kaybolmaz |
 | O-3 Bildirim | Kısmen | Açıklama Title Case; hikâyeler arası sayı farkı play'lerin ürettiği bildirimlerden (bilerek) |
-| O-4 Başlık eylemleri | Düzeldi | Raporlar seçicisi ve Ayarlar düğmesi 36 px; Görevler'de eylem yok (bilinçli) |
+| O-4 Başlık eylemleri | Düzeldi | Raporlar seçicisi ve Ayarlar butonu 36 px; Görevler'de eylem yok (bilinçli) |
 | O-5 Dokunma hedefleri | Kısmen | Bildirim satır menüsü, takvim "iş ekle", grup başlıkları, tanıtım menüsü ve duyuru hapı, Geri Al, ayar gezinmesi (`toc-nav`) dokunmatikte 44 px; arc-carousel, notice-deck, thinking-block, rapor kaydırıcı noktaları açık |
 | O-6 Koyu soluk metin | Düzeldi (Pusula) | Pusula koyu temasında soluk #ababad, gövde #bcbcbe; rozet tonları (Gecikti 4,17, Onaylandı 4,44) açık |
 | O-7 Kapakta üç gezinme | Kısmen | Üst menü kalktı; harita kaldı (sahibinin isteği: ilk ekranda her şey) |

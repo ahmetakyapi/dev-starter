@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
  * Metin girişi: ad, e-posta, tutar, alan adı, şifre. Şablonun `Field`ıyla
  * aynı düzen (etiket → alan → yardım ya da hata, `aria-describedby` bağı);
  * `Field` çıplak alan, bu dosya alanın içine bir şey koymak gerektiğinde:
- * ikon, önek/sonek (₺, .com), temizle düğmesi, şifre göster/gizle.
+ * ikon, önek/sonek (₺, .com), temizle butonu, şifre göster/gizle.
  * Çok satır için `textarea.tsx`, kesin sayı için `number-field.tsx`, arama
  * için `search-field.tsx` (kısayol, gecikmeli arama).
  *
- * GÖRÜNEN KUTU `div`, ODAK `input`: önek, ikon ve düğmeler kutunun içinde
+ * GÖRÜNEN KUTU `div`, ODAK `input`: önek, ikon ve butonlar kutunun içinde
  * dursun diye çerçeve kapta; odak halkası `has-[input:focus-visible]` ile
  * kaba çizilir. İkon süs (`aria-hidden`); önek/sonek görünür metin ama
  * alanın ADINA girmez: "₺" görsel ipucu, anlamı etiket taşımalı ("Tutar
@@ -23,13 +23,13 @@ import { cn } from "@/lib/utils";
  * `onChange`i hem denetimli hem denetimsiz kullanımda çalışır (ayrı bir
  * `onClear` gerekmez, istenirse var).
  *
- * ŞİFRE: `type="password"` verilince göz düğmesi kendiliğinden gelir;
+ * ŞİFRE: `type="password"` verilince göz butonu kendiliğinden gelir;
  * `aria-pressed` + sabit ad ("Şifreyi Göster"): durum adda değil basılı
  * bilgisinde, ekran okuyucu "basılı / basılı değil" der. Göster/gizle
  * odağı alandan almaz (`onMouseDown` engellenir), imleç yerinde kalır.
  *
  * BOY: `sm` 36, `md` 40, `lg` 48 px; dokunmatikte sm ve md de 44 px
- * (`pointer-fine:` ile masaüstünde küçülür). İç düğmeler dokunmatikte
+ * (`pointer-fine:` ile masaüstünde küçülür). İç butonlar dokunmatikte
  * 44 px'lik görünmez alana sahip, görselleri 28 px.
  *
  * DURUMLAR: `disabled` soluk ve tıklanmaz; `readOnly` kuyu zemini kalkar,
@@ -60,7 +60,7 @@ type InputProps = Omit<ComponentProps<"input">, "id" | "size" | "prefix"> & {
   prefix?: ReactNode;
   /** Değerden sonra sabit metin: ".com", "kg", "gün". */
   suffix?: ReactNode;
-  /** Değer varken × düğmesi. */
+  /** Değer varken × butonu. */
   clearable?: boolean;
   onClear?: () => void;
   /** Dış kabın sınıfı; `inputClassName` alanın kendisi. */
@@ -155,7 +155,7 @@ export function Input({
           className={cn(
             s.text,
             "h-full min-w-0 flex-1 bg-transparent text-strong outline-none placeholder:text-muted disabled:cursor-not-allowed",
-            // Tarayıcının kendi temizle/göz düğmeleri bizimkilerle çakışmasın.
+            // Tarayıcının kendi temizle/göz butonları bizimkilerle çakışmasın.
             "[&::-ms-reveal]:hidden [&::-webkit-search-cancel-button]:appearance-none",
             inputClassName,
           )}

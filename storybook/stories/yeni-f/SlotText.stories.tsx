@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Metin değişince harfler slot makinesi gibi yerine yuvarlanır; değişmeyen harf yerinde kalır (“Kaydet” → “Kaydedildi”). Durum etiketi, düğmenin yeni hali, dönen kahraman sözcüğü. İlk çizim durağan, tam metin `sr-only`, `live` ile duyurulur.",
+          "Metin değişince harfler slot makinesi gibi yerine yuvarlanır; değişmeyen harf yerinde kalır (“Kaydet” → “Kaydedildi”). Durum etiketi, butonun yeni hali, dönen kahraman sözcüğü. İlk çizim durağan, tam metin `sr-only`, `live` ile duyurulur.",
       },
     },
   },

@@ -8,7 +8,7 @@ import { cn } from "../utils";
 /**
  * Arama alanı: liste süzme, tablo içi arama, üst çubukta site araması.
  * Yazdıkça GECİKMELİ `onSearch` (varsayılan 250 ms), istek sürerken dönen
- * gösterge, temizle düğmesi ve sayfa geneli kısayol ("/" ya da ⌘K).
+ * gösterge, temizle butonu ve sayfa geneli kısayol ("/" ya da ⌘K).
  * Sonuçları açılır listede seçtirmek gerekiyorsa `combobox.tsx`; komut
  * çalıştırmak içinse `command-palette.tsx`. Sıradan metin için `input.tsx`.
  *

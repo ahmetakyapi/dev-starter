@@ -140,7 +140,7 @@ export function idleTour(o: { startAfter?: number; resumeAfter?: number; period:
 /*
  * Açılış Zili → Seans Zili ("Günü Oynat", 12 Ekim 2026). Sahibinin itirazı:
  * "tıkladığı gibi değişmesin, smooth olsun; zil çalmak ne işe yarıyor".
- * Kural: düğme değeri HİÇBİR YERE KOYMAZ, bir PLAN başlatır. Plan bacaklardan
+ * Kural: buton değeri HİÇBİR YERE KOYMAZ, bir PLAN başlatır. Plan bacaklardan
  * oluşur; her bacak yumuşak başlar, yumuşak durur. İki tür bacak var:
  *
  *   taşıma (events: false)  değeri başlangıç noktasına götürür; yolda geçilen

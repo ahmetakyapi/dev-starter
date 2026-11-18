@@ -70,10 +70,10 @@ export const Illustrated: Story = {
     scene: <SearchScene />,
     icon: undefined,
     title: "Sonuç Bulunamadı",
-    hint: "“Kayseri şubesi” için eşleşen kayıt yok. Yazımı kontrol et ya da süzgeçleri temizle.",
+    hint: "“Kayseri şubesi” için eşleşen kayıt yok. Yazımı kontrol et ya da filtreleri temizle.",
     action: (
       <Button variant="secondary" size="sm">
-        Süzgeçleri Temizle
+        Filtreleri Temizle
       </Button>
     ),
   },
@@ -95,7 +95,7 @@ export const AllVariants: Story = {
         <EmptyState icon={<FileText />} title="Henüz Fatura Yok" hint="İlk siparişin tamamlandığında burada listelenecek." action={<Button size="sm">Fatura Oluştur</Button>} />
       </Cell>
       <Cell label="scene: Sayfa Düzeyi" className="place-items-stretch">
-        <EmptyState variant="scene" scene={<SearchScene />} title="Sonuç Bulunamadı" hint="Yazımı kontrol et ya da süzgeçleri temizle." />
+        <EmptyState variant="scene" scene={<SearchScene />} title="Sonuç Bulunamadı" hint="Yazımı kontrol et ya da filtreleri temizle." />
       </Cell>
       <Cell label="inline: Küçük Liste">
         <EmptyState variant="inline" title="Bu Hafta Etkinlik Yok" />

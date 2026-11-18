@@ -5,7 +5,7 @@ import { CloseButton } from "@/components/ui/close-button";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Düğme ve İkon/Kapat Düğmesi",
+  title: "Bileşenler/Buton ve İkon/Kapat Butonu",
   id: "close-button",
   component: CloseButton,
   tags: ["autodocs"],

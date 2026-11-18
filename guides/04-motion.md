@@ -111,7 +111,7 @@ eğri ease-in. motion'da `exit={{ opacity: 0, transition: exitOf(0.16) }}`.
 
 | Tür | Süre | Örnek |
 |-----|------|-------|
-| Mikro | 120–180 ms | Hover rengi, düğme basışı, onay işareti |
+| Mikro | 120–180 ms | Hover rengi, buton basışı, onay işareti |
 | Panel | 240–320 ms | Açılır menü, akordeon, sekme alt çizgisi, çekmece |
 | Sayfa | 400–600 ms | Kahraman girişi, rota geçişi, tema dairesi |
 | Ortam | ≥ 8 s, döngü | Aurora sürüklenmesi (yalnız görünürken) |
@@ -369,7 +369,7 @@ Her birinin sınırı yanında:
 |-------|-------|-------|
 | **Satır satır başlık** | Her satır `overflow: hidden` kabında, iç span `translateY(100%) → 0`, 60 ms kademe | Yalnızca display başlık; metin DOM'da tek parça kalır (`aria-label` gerekmez) |
 | **Maskeli görsel açılışı** | `clip-path: inset(100% 0 0 0) → inset(0)`, 600 ms | Kahraman görseli değilse; LCP görseli maskelenmez |
-| **Magnetic düğme** | İmlece doğru `x/y` yay, güç 0,2–0,3 | Yalnızca `(hover: hover) and (pointer: fine)`; dokunmatikte kapalı |
+| **Magnetic buton** | İmlece doğru `x/y` yay, güç 0,2–0,3 | Yalnızca `(hover: hover) and (pointer: fine)`; dokunmatikte kapalı |
 | **Paralaks** | `useScroll` + `useTransform`, ±40 px | Bir ekranda tek katman; reduced-motion'da sıfır |
 | **Marquee** | CSS `translateX(-50%)` döngüsü, iki kopya | Görünür durdurma denetimi şart (WCAG 2.2.2; hover klavyede ve dokunmatikte yok), ek olarak hover'da durur; ikinci kopya `aria-hidden` (+ `tabIndex={-1}` bağlantıysa), reduced-motion'da statik |
 | **Sayaç** | `RollingFigure` | İlk ekranda bir kez |
@@ -498,7 +498,7 @@ Kaynak ve gerekçe: `knowledge/references.md` → secki.dev.
   `transform-origin: var(--transform-origin)` (Base UI verir); pencere
   (dialog) merkezde kalır.
 - **İkon çizgisi metnin ağırlığına uyar.** 400 → 1,5 · 500-600 → 2 ·
-  700 → 2,5. Düğme içi ikon ile etiket aynı "kalemle" yazılmış görünür.
+  700 → 2,5. Buton içi ikon ile etiket aynı "kalemle" yazılmış görünür.
 - **Süren işin dili:** etiket (`text-shimmer`), çerçeve (`border-beam`),
   küre (`thinking-orb`), nokta matrisi (`pixel-loader`). Aynı kartta en çok
   biri: hepsi birden "çalışıyor"u bağırır.

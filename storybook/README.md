@@ -1,16 +1,16 @@
 # storybook — dev-starter Görsel Kataloğu
 
-**750+ hikâye** (güncel sayı Kapak'ta, derleme anında sayılır), her biri açık/koyu tema ve 10 palette. Storybook'un kendi kabuğu (sidebar, araç çubuğu, belge) da seçilen tema ve paletle döner:
+**750+ hikâye** (güncel sayı Tanıtım sayfasında, derleme anında sayılır), her biri açık/koyu tema ve 10 palette. Storybook'un kendi kabuğu (sidebar, araç çubuğu, belge) da seçilen tema ve paletle döner:
 
 | Bölüm | İçerik |
 |-------|--------|
-| **Kapak** (en üstte) | Kataloğun ilk ekranı ve haritası: solda kısa tanıtım, kabuğun aramasını açan arama kutusu ve iki eylem; sağda kenar çubuğunun üç bölümü ve on bir kapısı (ne içerdiği, kaç parça; sayılar ve bağlantılar hikâye dosyalarından sayılır, `stories/kapak/_harita.ts`). Altında on üç bileşen rafı, palet numunesi + numune föyü, dört öne çıkan sayfa ve kurulum. Sayfa niteliğindeki hikâyelerde eklenti paneli kendiliğinden kapanır |
+| **Tanıtım** (en üstte) | Kataloğun vitrini: ortalanmış başlık, iki eylem ve kabuğun aramasını açan kutu; altında katalogdaki gerçek bileşenlerden kurulmuş, çalışan bir kolaj (Pusula panosu, ekip oylaması, ayar kartı). Ardından katalog haritası (üç bölüm yan yana; sayılar ve bağlantılar hikâye dosyalarından, `stories/kapak/_harita.ts`), 15 raf, palet seçimi (numune föyü ile on palet eşit iki sütunda) ve kurulum. Paylaşım görseli bu kolajdan üretilir (`npm run og`) |
 
 Kenar çubuğu üç bölüm, her öğe kendi adıyla bir tıkta:
 
 | Bölüm | Öğeler |
 |-------|--------|
-| Başla | Kapak · Başlangıç (manifesto, kurallar) · Vitrin (gruplara göre seçilmiş örnekler, `snippets/ui/vitrin/`) · **Her Şey Bir Arada** (bütün kütüphane tek uzun sayfada; kapsam 141/141) |
+| Başla | Tanıtım · Başlangıç (manifesto, kurallar) · Vitrin (gruplara göre seçilmiş örnekler, `snippets/ui/vitrin/`) · **Her Şey Bir Arada** (bütün kütüphane tek uzun sayfada; kapsam 141/141) |
 | Kütüphane | Tema (renkler, 10 palet, tipografi, yüzeyler, grafik renkleri, hareket) · Bileşenler (13 raf: Temel → Yapay Zekâ; her biri varsayılan, durumlar, bütün varyantlar, `play`) · Grafikler (15 grafik + iki pano) · Bloklar · **Desenler** (35 token'lı zemin, Önizle ve Kopyala) |
 | Uygulamada | **Pusula** (aynı bileşenlerle kurulmuş uygulama: 15 ekran) · Ekranlar (uygulama ekranları; açılış sayfası: tam sayfa, 8 üst bölüm varyantı, bölümler, sistem sayfaları) · Arşiv (Bileşen Kapsamı, Referanslar) |
 
@@ -95,7 +95,7 @@ bozuk adresler üretir. `npm run check:ids` (CI'da derlemeden sonra) yalnızca
 ## Projeye Al Bloğu ve shadcn Kaydı
 
 Her bileşen belgesinin (`/c/<ad>`) başında "Projeye Al": `add-ui` ve shadcn
-kurulum komutları (kopyala düğmeli), iç bileşen, şablon dosyası ve npm
+kurulum komutları (kopyala butonlu), iç bileşen, şablon dosyası ve npm
 bağımlılıkları. Veri `snippets/ui/registry.json`dan (`.storybook/install-block.tsx`,
 `parameters.docs.page`); eşleme meta `id`sinden, istisna kayıttaki `storyId`.
 `public/r/*.json` shadcn kaydı, derlemede `/r/<ad>.json` olarak yayınlanır
@@ -131,6 +131,6 @@ azaltmada ekran dışında boş kalması, sr-only tabloların telefonda taşırm
 - `route-progress` aynı adrese (yalnız sorgu değişen) bağlantıda da başlar ve
   10 sn güvenlik durdurmasına kadar kalır.
 - Yerel `<dialog>`a sentetik Escape test ortamında `cancel` üretmez; hikâyeler
-  "Kapat" düğmesini kullanır.
+  "Kapat" butonunu kullanır.
 - Takvimdeki "bugün" işareti gerçek saate bağlı; sabit sahte veri 2 Kasım 2026.
 

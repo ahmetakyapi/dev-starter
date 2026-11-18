@@ -612,7 +612,7 @@ Arkadaşlarınla <span className="text-gradient">Çiz, Tahmin Et</span> ve Eğle
 ```
 
 ### 39. Avatar/Renk Seçici Düzensiz Layout
-**Hata**: 12 renk düğmesi iki satıra bölündüğünde ilk satır input yanında, ikinci satır altında — düzensiz görünüyor
+**Hata**: 12 renk butonu iki satıra bölündüğünde ilk satır input yanında, ikinci satır altında — düzensiz görünüyor
 **Çözüm**: Tek satır `overflow-x-auto` ile veya input'tan ayrı bölüm olarak yerleştir:
 ```tsx
 // ✅ Compact single row
@@ -1100,7 +1100,7 @@ useEffect(() => {
 
 ### 66. Developer Mesajını Sohbette Göstermek
 
-**Hata**: Kullanıcı bir düğmeye bastı, sohbet geçmişinde onun ağzından
+**Hata**: Kullanıcı bir butona bastı, sohbet geçmişinde onun ağzından
 *"Şu planı şimdi uygula. TÜM 2 adımı, TAM olarak bu sırada…"* yazıyor.
 
 **Sebep**: Uygulamanın kendi beslediği talimat `role: 'user'` ile gönderiliyor.
@@ -1795,7 +1795,7 @@ yazıldığında onu ihlal eden şablon aynı commit'te düzeltilir.
 ### 105. React 19 Formu Doğrulama Hatasında Kullanıcının Yazdığını Sildi
 
 **Hata**: `snippets/form.tsx` ile kurulan formda tek alan hatalı olunca bütün
-alanlar boşaldı. Gönderirken `disabled` olan düğme odaktayken devre dışı
+alanlar boşaldı. Gönderirken `disabled` olan buton odaktayken devre dışı
 kaldı, klavye kullanıcısı `<body>`'ye düştü.
 
 **Sebep**: React 19 `<form action>` eylem bitince kontrolsüz alanları sıfırlar
@@ -1803,14 +1803,14 @@ kaldı, klavye kullanıcısı `<body>`'ye düştü.
 Odaktaki öğeyi `disabled` yapmak odağı belgeye atar.
 
 **Çözüm**: Eylem hata dönerken `values`ı da döndürür, alan
-`defaultValue={state.values?.ad}` ile geri alır. Düğme `aria-disabled` +
+`defaultValue={state.values?.ad}` ile geri alır. Buton `aria-disabled` +
 `onSubmit`te bekleme koruması; hata dönünce odak ilk `aria-invalid` alana
 (`ExampleForm.tsx`, `snippets/form.tsx`, `guides/05`).
 
 **Kural**: Her form "hata dön, yazılanlar yerinde mi, odak nerede" diye
 klavyeyle denenir.
 
-### 106. Onay Kartında Düğmenin Anlamını Model Seçiyordu
+### 106. Onay Kartında Butonun Anlamını Model Seçiyordu
 
 **Hata**: `snippets/agent-approval.tsx` seçenekleri (`id` + etiket) modelin
 tool argümanlarından çiziyordu. Model ya da modeli yönlendiren bir enjeksiyon
@@ -1822,7 +1822,7 @@ CopilotKit zod şemasını modele gönderir ama gelen argümanı doğrulamaz (ya
 `JSON.parse`). 2026-10-15'teki "anlam sunucuda" önlemi yükü kaldırmış,
 id → etiket eşlemesini modelde bırakmıştı.
 
-**Çözüm**: Model yalnız `{ flightId, message }` yazar; düğme seti ve
+**Çözüm**: Model yalnız `{ flightId, message }` yazar; buton seti ve
 id → anlam tablosu kodda sabit; argüman `safeParse`, geçersizse kart `decline`
 ile kapanır. Sunucu yalnız aynı `toolCallId`nin sonucu `accept` çözülürse ve
 sahiplik doğrulanırsa iş yapar.
@@ -1968,10 +1968,10 @@ gevşetilmez, yola özel istisna yazılır.
 
 ## Nimbstia'dan Öğrenilenler (2026-11-03)
 
-### 115. "Kâğıt-Mürekkep" Yönü Reddedildi: Siyah Birincil Düğme + Büyük Harf Mono Etiket
+### 115. "Kâğıt-Mürekkep" Yönü Reddedildi: Siyah Birincil Buton + Büyük Harf Mono Etiket
 
 **Hata**: Referans siteden (shojimac.com) alınan dil bire bir panellere taşındı: açık temada siyah
-"ink" birincil düğmeler, siyah ölçü çubukları, 10–10.5px büyük harf ve geniş aralıklı Geist Mono
+"ink" birincil butonlar, siyah ölçü çubukları, 10–10.5px büyük harf ve geniş aralıklı Geist Mono
 etiketler, siyaha yakın (`#0f0f11`) koyu tema. Sahibi: "çok siyah ve koyu hissettiriyor, etiketler
 göze hitap etmiyor".
 
@@ -2030,12 +2030,12 @@ satıra bölmek satır ritmini bozar. Türkçe karşılıklar İngilizceden orta
 ### 119. Ekosistem Kuralı Web Dışı Projeye Taşınmadı: Title Case ve Em Dash
 
 **Hata**: Nimbstia (Hammerspoon + HTML paneller) Next şablonundan doğmadığı için `guides/05 § 6`
-hiç uygulanmadı: başlık ve düğmelerin bir kısmı cümle düzenindeydi ("Son kontrol", "filtresinde
+hiç uygulanmadı: başlık ve butonların bir kısmı cümle düzenindeydi ("Son kontrol", "filtresinde
 öğe yok"), İngilizce çevirilerde "Multi-line Text", arayüzde em dash. Sahibi iki ayrı turda
 düzeltme istedi. `slop-scan.sh` 8 dosyayı taradı ve 0 bulgu verdi; degrade başlık, renkli
 parıltı gölgeleri ve dekoratif radar gibi izleri yakalayacak kuralı yoktu.
 
-**Çözüm**: Tüm panellerde başlık, düğme, sekme, rozet, künye etiketi Title Case (bağlaçlar
+**Çözüm**: Tüm panellerde başlık, buton, sekme, rozet, künye etiketi Title Case (bağlaçlar
 küçük), yer tutucu ve meta satırı cümle; em dash yerine ` · `; çeviri tablosu (`i18n.js`)
 İngilizce Title Case ile. slop-scan'e `capitalize` kuralı eklendi (#16).
 
@@ -2065,35 +2065,35 @@ yazıldı.
 Tur bitmeden `coverage--table` VE `showcase--all-in-one` play'leri koşulur; "değişen hikâyeler
 geçti" yetmez, sayıyı kaynaktan sayan sayfalar her yeni dosyadan etkilenir.
 
-### 121. Renkli Kahramanda Aynı Tonda Düğme, Koyu Temada Açık Zemin
+### 121. Renkli Kahramanda Aynı Tonda Buton, Koyu Temada Açık Zemin
 
 **Hata**: Pusula tanıtım sayfasının kahramanı `bg-primary` zemindi; üstündeki birincil eylem cam
-(aynı mavi), yanındaki plan hapı düğme gibi görünüp hiçbir şey yapmıyordu. Koyu temada
-`--primary` açık camgöbeğine (`#35b8ff`) döndüğü için beyaz başlık ve düğmeler zeminde kayboldu.
+(aynı mavi), yanındaki plan hapı buton gibi görünüp hiçbir şey yapmıyordu. Koyu temada
+`--primary` açık camgöbeğine (`#35b8ff`) döndüğü için beyaz başlık ve butonlar zeminde kayboldu.
 Sahibi: "mavi bir heroda butonlar var, çok kötü duruyor".
 
 **Sebep**: `--primary` iki temada aynı rolde değil: açıkta koyu, koyuda açık (koyu zeminde
 okunsun diye). Renkli zemin olarak kullanılınca koyu temada beyaz metin AA'yı kaybeder.
-Basılmayan hap, düğme diliyle konuşan süs.
+Basılmayan hap, buton diliyle konuşan süs.
 
 **Çözüm**: Kahraman zemini `bg-cta` (her palette, iki temada da koyu; beyaz metin AA); birincil
 eylem beyaz hap (yazısı CTA degradesi), ikincil eylem çizgili hayalet ve gerçekten demoya iner;
 plan hapı kalktı, yerine demoya inen cam duyuru bağlantısı.
 
 **Kural**: Renkli zemin `bg-primary` değil `bg-cta` (ya da ölçülmüş koyu ton); üstündeki birincil
-eylem zeminle ZIT (beyaz). Düğme gibi görünen her şey basılır; basılmıyorsa hap biçiminde olmaz.
+eylem zeminle ZIT (beyaz). Buton gibi görünen her şey basılır; basılmıyorsa hap biçiminde olmaz.
 Renkli bölüm iki temada ekran görüntüsüyle denetlenir.
 
 ### 122. Örnek Uygulamada Gerçek Şifre Formu: Tarayıcı "Şifre Kaydedilsin mi?" Sordu
 
 **Hata**: Pusula'nın giriş ekranında e-posta + şifre formu vardı; şifre yazılıp "Giriş Yap"a
 basılınca form kayboldu, Chrome bunu gerçek giriş sayıp şifreyi kaydetmeyi teklif etti. "Örnek
-Hesapla Gir" düğmesi bu yüzden eklenmişti ama asıl düğme hâlâ tetikliyordu. Sahibi: "burası için
+Hesapla Gir" butonu bu yüzden eklenmişti ama asıl buton hâlâ tetikliyordu. Sahibi: "burası için
 gerek yok, bu bir Storybook".
 
 **Sebep**: Tarayıcının şifre yöneticisi, KULLANICININ yazdığı şifre içeren form gönderilip sayfadan
 kaybolunca (ya da sayfa gezinince) girişi başarılı sayar. Örnek uygulamada başarılı giriş tam
-olarak budur: form gider, pano gelir. Kısmi çözüm (yan yola ikinci düğme) asıl yolu düzeltmedi.
+olarak budur: form gider, pano gelir. Kısmi çözüm (yan yola ikinci buton) asıl yolu düzeltmedi.
 
 **Çözüm**: Pusula girişinde şifre alanı yok: bu cihazda kayıtlı hesapla tek dokunuş ve
 `AuthCard method="link"` (e-postaya giriş bağlantısı; gönderilince "Bağlantıyı Gönderdik"

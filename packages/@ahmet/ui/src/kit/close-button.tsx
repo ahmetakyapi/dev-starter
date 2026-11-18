@@ -4,14 +4,14 @@ import type { ComponentProps } from "react";
 import { cn } from "../utils";
 
 /**
- * Kapatma düğmesi: diyalog, uyarı satırı, duyuru hapı, çip. "Küçük ×"
+ * Kapatma butonu: diyalog, uyarı satırı, duyuru hapı, çip. "Küçük ×"
  * ekranın en sık yanlış yapılan öğesi; burada dört şey doğru:
  *
- * 1. DOKUNMA ALANI GÖRSELDEN BÜYÜK. Düğmenin kendisi 44 × 44 piksel
+ * 1. DOKUNMA ALANI GÖRSELDEN BÜYÜK. Butonun kendisi 44 × 44 piksel
  *    (WCAG 2.5.5), görünen daire 32 (`md`) ya da 28 (`sm`). Fazlası negatif
  *    kenar boşluğuyla taşar: düzende yalnızca görsel kadar yer tutar, parmak
  *    yine 44 piksel bulur. Sağ üst köşeye konduğunda `-m-1.5` hizayı bozmaz.
- * 2. AD TİPTE ZORUNLU. "×" bir ad değil; ekran okuyucu "çarpı düğmesi" der.
+ * 2. AD TİPTE ZORUNLU. "×" bir ad değil; ekran okuyucu "çarpı butonu" der.
  *    Neyi kapattığını söyle: "Duyuruyu Kapat", "Filtreyi Kaldır".
  * 3. ODAK HALKASI DAİRENİN ÇEVRESİNDE. Tarayıcı halkası 44 piksellik
  *    görünmez kutuya çizilse havada asılı bir kare görünürdü; halka
@@ -33,7 +33,7 @@ type CloseButtonProps = Omit<ComponentProps<"button">, "aria-label" | "children"
   /** Zorunlu: neyi kapattığını söyler ("Bildirimi Kapat"). */
   "aria-label": string;
   size?: keyof typeof SIZES;
-  /** Kapalıyken taşma yok: düğme düzende 44 piksel yer kaplar. */
+  /** Kapalıyken taşma yok: buton düzende 44 piksel yer kaplar. */
   bleed?: boolean;
   /** Koyu ya da renkli zemin üstünde (wash satırı) hover tonunu değiştir. */
   tone?: "default" | "onWash";

@@ -13,7 +13,7 @@ import { cn } from "../utils";
  * çocukları DOM'da yok; ekran okuyucu yalnızca görüneni sayar.
  *
  * SATIR ODAĞI: odak hücrede değil SATIRDA gezer (APG'nin satır odaklı
- * treegrid biçimi). Hücreleri tek tek gezmek, içinde düğme olmayan bir
+ * treegrid biçimi). Hücreleri tek tek gezmek, içinde buton olmayan bir
  * okuma tablosunda ok tuşuna dört kat fazla bastırır. Tablo Tab sırasına
  * tek durak olarak girer.
  *

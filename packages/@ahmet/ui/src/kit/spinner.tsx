@@ -2,12 +2,12 @@
 import { cn } from "../utils";
 
 /**
- * Spinner: küçük, satır içi bekleme işareti (düğme içi, tek hücre, kısa
+ * Spinner: küçük, satır içi bekleme işareti (buton içi, tek hücre, kısa
  * istek). Sayfa ya da panel düzeyinde bekleme için `skeleton.tsx`: yapıyı
  * tutan iskelet, dönen bir halkadan daha az zıplatır.
  *
- * Ekran okuyucu `label`i duyar (`role="status"`). Düğme içinde kullanırken
- * düğmenin kendi metni zaten bir şey söylüyorsa `label={null}` ver; aynı
+ * Ekran okuyucu `label`i duyar (`role="status"`). Buton içinde kullanırken
+ * butonun kendi metni zaten bir şey söylüyorsa `label={null}` ver; aynı
  * cümle iki kez okunmasın.
  *
  * Hareketi azaltan kullanıcıda dönmez; yay olarak durur. Durağan yay da
@@ -15,8 +15,8 @@ import { cn } from "../utils";
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): ince iz halkası + çeyrek yay, 0,75 sn'de
  * bir tur (1 sn üstü ağır, 0,5 altı telaşlı görünür). `tone="current"`
- * düğmenin metin rengini alır: `bg-cta` düğmede beyaz, ikincilde koyu;
- * düğme içinde vurgu mavisi sırıtırdı.
+ * butonun metin rengini alır: `bg-cta` butonda beyaz, ikincilde koyu;
+ * buton içinde vurgu mavisi sırıtırdı.
  */
 
 const SIZES = { sm: "size-4", md: "size-5", lg: "size-8" } as const;

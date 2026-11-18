@@ -6,10 +6,10 @@ DIRECTOR § 6). Ama ortam ikiye ayrılır:
 ## Sayfa içi film (bekleme, açılış)
 
 - **Varsayılan kapalı.** Bir ürün sayfasında kendiliğinden ses kabalık.
-  Filmin köşesinde küçük bir düğme ("Ses Açık / Ses Kapalı", `aria-pressed`),
+  Filmin köşesinde küçük bir buton ("Ses Açık / Ses Kapalı", `aria-pressed`),
   tercih `localStorage`'da (`film-sound.ts → soundPreferred / setSoundPreferred`).
 - **Kullanıcı hareketi şart.** Tarayıcı `AudioContext`i yalnız tıklama içinde
-  başlatır: tercih açıksa filmi başlatan düğmenin `onClick`inde `primeSound()`.
+  başlatır: tercih açıksa filmi başlatan butonun `onClick`inde `primeSound()`.
 - **Olaylar zaman çizelgesinden.** Çizimin anlarını tek fonksiyonda topla
   (ör. `openingTimes()`), sesi oradan hesapla. Her karede `(son, şimdi]`
   aralığını sor (`cuesBetween`) ve çal; aralık nasıl bölünürse bölünsün olay
@@ -25,8 +25,8 @@ DIRECTOR § 6). Ama ortam ikiye ayrılır:
 | damla / iniş | sinüs + 2,76× kısmi + alçak geçiren gürültü tıkı | cam + ıslaklık |
 | damga / mühür | 130 → 48 Hz kayan sinüs + kısa gürültü + yüksek tık | ahşap + kâğıt |
 | kalem | bant geçiren gürültü (3,6 kHz), düzey 35 ms'de bir tohumlu titrer | kâğıt lifi |
-| dev yazı girişi | süzgeci 600 → 2400 Hz açılan gürültü | hava |
-| sel gelir / çekilir | alçak geçiren gürültü, süzgeç 220 ↔ 1500 Hz | su, metal değil |
+| dev yazı girişi | filtresi 600 → 2400 Hz açılan gürültü | hava |
+| sel gelir / çekilir | alçak geçiren gürültü, filtre 220 ↔ 1500 Hz | su, metal değil |
 | daktilo | 6 × 12 ms yüksek geçiren tık | mekanik |
 | çan | kısmi tonlar 0,5 / 1 / 1,19 / 1,56 / 2 / 2,51 / 3,01 × taban, 0,6–2,6 sn sönüm | pirinç |
 
@@ -75,7 +75,7 @@ o nokta görsel olayın anına konur (kaynak: mg-styles-15, MIT):
 Telefon çoğu zaman mono çalar; sol-sağ farkı orada yok olur ya da birbirini siler.
 
 - Genişletme **M/S** ile (`L = m + s`, `R = m − s`); tek kanala gecikmeli kopya
-  (Haas) KOYMA — monoda tarak süzgeci olur, ses içi boş ve metalik çıkar.
+  (Haas) KOYMA — monoda tarak filtresi olur, ses içi boş ve metalik çıkar.
 - 120 Hz altı mono; stereo örnek kaydı (aralıklı çift mikrofon) yüklerken
   kanallar zamanda hizalanır.
 - Ölç: L/R korelasyonu **> 0,3** sağlıklı, **< 0** faz sorunu. Mono toplamın

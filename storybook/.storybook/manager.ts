@@ -9,7 +9,7 @@ import { THEMES, lightTheme, paletteCss } from "./manager-theme";
    `GLOBALS_UPDATED`) + `api.setOptions({ theme })`. Seçili satırın rengi
    paletten (manager-head.html, değişkenler `paletteCss()`ten). */
 
-type Item = { name: string; tags?: string[]; type?: string };
+type Item = { name: string; tags?: string[]; type?: string; depth?: number; children?: string[] };
 
 /**
  * Etiket: belge sayfaları "Docs" yerine "Belge" (yalnız görünen ad; adres
@@ -18,12 +18,17 @@ type Item = { name: string; tags?: string[]; type?: string };
  */
 function renderLabel(item: Item) {
   if (item.type === "docs" && item.name === "Docs") return "Belge";
-  if (!item.tags?.includes("yeni") || item.type === "story" || item.type === "docs") return undefined;
+  // Alt grup (Bileşenler/Temel, Ekranlar/Uygulama…): yanında kaç sayfa olduğu,
+  // soluk ve sağa yaslı. Grubu açmadan "burada ne kadar şey var" okunur.
+  const count = item.type === "group" && (item.depth ?? 0) > 0 && item.children?.length ? item.children.length : 0;
+  const isNew = item.tags?.includes("yeni") && item.type !== "story" && item.type !== "docs";
+  if (!count && !isNew) return undefined;
   return createElement(
     "span",
     { className: "ds-label" },
     item.name,
-    createElement("span", { className: "ds-new", "aria-label": "yeni bileşen" }, "Yeni"),
+    isNew ? createElement("span", { className: "ds-new", "aria-label": "yeni bileşen" }, "Yeni") : null,
+    count ? createElement("span", { className: "ds-count", "aria-label": `${count} sayfa` }, String(count)) : null,
   );
 }
 

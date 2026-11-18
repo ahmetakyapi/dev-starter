@@ -101,7 +101,7 @@ export function HareketGroup() {
           </Button>
         </div>
       </Cell>
-      <Cell file="morph-icon" name="Biçim Değiştiren İkon" note="Aynı düğmenin iki hali arasında çizgiler yeniden dizilir." span={2}>
+      <Cell file="morph-icon" name="Biçim Değiştiren İkon" note="Aynı butonun iki hali arasında çizgiler yeniden dizilir." span={2}>
         <div className="grid justify-items-center">
           <MenuToggle />
         </div>
@@ -122,7 +122,7 @@ export function HareketGroup() {
           ]}
         />
       </Cell>
-      <Cell file="dial" name="Döner Düğme" note="270° kadran; sürükle, oklar ya da odaktayken tekerlek." span={3}>
+      <Cell file="dial" name="Döner Buton" note="270° kadran; sürükle, oklar ya da odaktayken tekerlek." span={3}>
         <div className="flex flex-wrap justify-center gap-6">
           <Dial label="Öğütme" min={1} max={40} defaultValue={18} size={116} />
           <Dial label="Su" min={85} max={96} defaultValue={93} unit="°C" size={116} />

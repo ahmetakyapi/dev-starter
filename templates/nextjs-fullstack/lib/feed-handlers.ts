@@ -1,7 +1,7 @@
 import type { FeedItemRow } from "./schema";
 
 /**
- * Akış aksiyonlarının GERÇEK işi. Kartın düğmesi `actionId` taşır; burada
+ * Akış aksiyonlarının GERÇEK işi. Kartın butonu `actionId` taşır; burada
  * o kimliğe bir işleyici yoksa aksiyon reddedilir (`authorizeFeedAction`).
  *
  * İşleyici girdisini `row.payload`tan okur, istemciden değil: alıcı adresi,

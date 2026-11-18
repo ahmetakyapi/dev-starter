@@ -50,7 +50,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Basılı / basılı değil düğmeler (`aria-pressed`): araç çubuğunda Kalın · İtalik, görünümde Izgara · Liste. `multiple` ile birden çoğu basılı; tekli kipte basılı düğmeye yeniden basmak onu bırakır. Hep biri seçili olmalıysa segmented-control. Yalnız ikonlu öğenin adı tipte zorunlu ve tooltip'te görünür.",
+          "Basılı / basılı değil butonlar (`aria-pressed`): araç çubuğunda Kalın · İtalik, görünümde Izgara · Liste. `multiple` ile birden çoğu basılı; tekli kipte basılı butona yeniden basmak onu bırakır. Hep biri seçili olmalıysa segmented-control. Yalnız ikonlu öğenin adı tipte zorunlu ve tooltip'te görünür.",
       },
     },
   },
@@ -92,7 +92,7 @@ export const Default: Story = {
     await userEvent.click(italic);
     await expect(italic).toHaveAttribute("aria-pressed", "true");
     await expect(bold).toHaveAttribute("aria-pressed", "true");
-    // Oklar düğmeler arasında dolaşır.
+    // Oklar butonlar arasında dolaşır.
     await userEvent.keyboard("{ArrowRight}");
     await expect(canvas.getByRole("button", { name: "Altı Çizili" })).toHaveFocus();
   },
@@ -144,7 +144,7 @@ export const Disabled: Story = {
   render: () => (
     <Frame width="sm">
       <div className="flex justify-center">
-        <ToggleGroup aria-label="Bildirim Süzgeci" items={FILTERS} multiple defaultValue={["unread"]} />
+        <ToggleGroup aria-label="Bildirim Filtresi" items={FILTERS} multiple defaultValue={["unread"]} />
       </div>
     </Frame>
   ),
@@ -168,7 +168,7 @@ export const AllVariants: Story = {
         <ToggleGroup aria-label="Metin Biçimi" items={FORMAT} multiple defaultValue={["underline"]} variant="ghost" size="sm" />
       </Cell>
       <Cell label="Yalnız metin, devre dışı öğe">
-        <ToggleGroup aria-label="Bildirim Süzgeci" items={FILTERS} multiple defaultValue={["mention"]} />
+        <ToggleGroup aria-label="Bildirim Filtresi" items={FILTERS} multiple defaultValue={["mention"]} />
       </Cell>
       <Cell label="Dikey">
         <ToggleGroup aria-label="Hizalama" items={ALIGN} defaultValue={["right"]} orientation="vertical" />

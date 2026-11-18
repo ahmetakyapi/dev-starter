@@ -7,6 +7,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Tanıtım sayfası, paylaşım önizlemesi, terimler, huni — 2026-11-18
+
+- Tanıtım (eski Kapak): ortalı başlık, gerçek bileşenlerden çalışan kolaj,
+  üç sütunlu katalog haritası, 15 raf, dengeli palet bölümü
+- Paylaşım: Open Graph + X kartı, `public/og.png` (`npm run og`), iOS ikonu,
+  derleme sonrası başlık
+- Terimler: düğme → buton, süzgeç → filtre, simge → ikon; slop taraması
+  "düğme"yi yakalar; `guides/05` § 6 tablosu
+- `funnel-chart`: tek renk, aşama adı ve değeri sütunda, adım dönüşümü, kayıp
+  izi, `series`; `stage-bars`: tek renk, `series`
+- Pusula: dönem renkleri tutarlı (bu dönem 1, önceki 2), "Web Mağaza Hunisi"
+- Referanslar: her karta görsel (paylaşım görseli, GitHub, proje ekran
+  görüntüsü, bölüm kapağı), başlıkta mozaik, Şerit / Izgara
+
 ### Tasarım denetimi düzeltmeleri — 2026-11-17
 
 - 1024 px: Gelen Kutusu klasör ağacı yerine araç çubuğunda seçici, Kanal
@@ -44,7 +58,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - Pusula tanıtım kahramanı: koyulaştırılmış birincil zemin (iki temada AA),
   beyaz birincil eylem, demoya inen ikincil ve cam duyuru; duyuru destesi
   bölüm başlığının yanında
-- Pusula: Takvim'in siyah düğmesi mavi `Button`; `INK` kalktı; play
+- Pusula: Takvim'in siyah butonu mavi `Button`; `INK` kalktı; play
   sonundaki odak halkası temizlenir
 - Her Şey Bir Arada: eksik 12 bileşen kuyusuyla (kapsam 141/141)
 - `mistakes.md` #120–121, `/harvest` kontrol listesine ikinci kapsam sayfası
@@ -78,7 +92,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 ### Takvim: kart görünümü ve Bugün paneli — 2026-11-17
 
 - **`week-calendar` → `variant="card"`** (geriye uyumlu): ikonlu gri kart,
-  katılımcı yığını, Görüşmeye Katıl düğmesi (kısa kartta ikon), büyük gün
+  katılımcı yığını, Görüşmeye Katıl butonu (kısa kartta ikon), büyük gün
   numarası ve bugün çizgisi, saat dilimi etiketi, Tüm Gün satırı
   (`allDay`), `weekdaysOnly`; çakışan dar şeritte sade kart.
 - **Pusula Takvim:** solda Bugün paneli (ay takvimi, gruplu Yapılacaklar +
@@ -97,7 +111,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - **Yeni bileşen (136 → 137, kit 103 → 104):** `channel-matrix`, olay ×
   kanal tercih tablosu; üç durumlu sütun kutusu, kilitli satır.
 - **Pusula → Bildirimler:** sekmeli ve gün gün gruplu akış, satır içi
-  eylemler (onaylanan satır yeşile döner, Geri Al düğmeli bildirim), ⋯
+  eylemler (onaylanan satır yeşile döner, Geri Al butonlu bildirim), ⋯
   menüsü (okunma, erteleme, sessize alma), Teslimat ve Ertelenenler
   kartları, taslakla çalışan Tercihler paneli.
 - **Tek bildirim kaydı:** zil kutusu, Bildirimler sayfası ve kenar çubuğu
@@ -124,13 +138,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 ### Assetora turu: dört yeni davranış — 2026-11-16
 
 - **Yeni bileşenler (133 → 136):** `record-list` (tablonun telefondaki
-  kart hali), `filter-sheet` (sonuç sayılı süzgeç çekmecesi),
+  kart hali), `filter-sheet` (sonuç sayılı filtre çekmecesi),
   `date-range-presets` (hazır aralık + özel aralık takvimi, `rangeOf`).
 - **`area-chart` → `bands`:** kalıcı işaretli dönemler (tam boy sütun, iki
   serinin değer çipleri, tonlu eksen etiketi; ekran okuyucuda cümle ve
   canlı bölge).
 - **Pusula:** Pano ciro grafiğinde en iyi/en zayıf gün; Gelen Kutusu'nda
-  "Geldi" tarih süzgeci, telefonda kart listesi ve süzgeç çekmecesi.
+  "Geldi" tarih filtresi, telefonda kart listesi ve filtre çekmecesi.
 - **Kit 101 → 103** (`date-range-presets` popover'a bağlı, kitin dışında).
 - **Bilgi tabanı:** `references.md`, `decisions.md` → "Assetora Turu",
   `guides/10` → Assetora Turu (ne zaman hangisi + desen notları).
@@ -139,7 +153,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 - **Örnek uygulamanın bütün sayfaları** (Pano, Gelen Kutusu, Görevler,
   Takvim, Asistan, Raporlar, Ayarlar) yeni ortak dille: ekmek kırıntılı üst
-  çubuk + büyük başlık, mürekkep hap birincil düğme, kıl halkalı beyaz
+  çubuk + büyük başlık, mürekkep hap birincil buton, kıl halkalı beyaz
   kartlar, kart içinde gömük paneller, panoda tek kartlık ölçü şeridi,
   Gelen Kutusu'nda tek kart tablo, Raporlar'da nokta-çubuk ölçekli özetler.
 - **Ürün kökünde grafik paleti** (`storybook/stories/showcase/pusula.css`):
@@ -268,7 +282,7 @@ Claude Code'un güncel resmî önerilerine göre (`knowledge/decisions.md` →
 - `wallpaper`: 8 illüstrasyon duvar kâğıdı (gün batımı tepeleri, altın saat,
   lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kâğıt katmanları), elle
   seçilmiş renk setleri; `downloadWallpaper()` ile PNG (2880×1800, 1290×2796).
-  Storybook → Tanıtım/Duvar Kâğıdı'nda indirme düğmeleri.
+  Storybook → Tanıtım/Duvar Kâğıdı'nda indirme butonları.
 - `drift-columns`: zıt yönde sonsuz süzülen görsel sütunları (yalnız CSS).
 - `notice-deck`: köşede dönen duyuru destesi, "2/3" sayaç, durdurulabilir.
 - Pusula Tanıtım Sayfası: demo masaüstünün arkasında duvar kâğıdı, duvar
@@ -284,7 +298,7 @@ alınmadı (`knowledge/decisions.md` → "Ribbon Turu").
 #### Eklendi
 
 - **Tanıtım** (8 bileşen, hepsi pakette): `liquid-glass` (görsel zemin
-  üstünde SVG bükülmeli cam düğme; bükülme yalnız Chromium, öteki
+  üstünde SVG bükülmeli cam buton; bükülme yalnız Chromium, öteki
   tarayıcıda buğu + kenar), `blur-in` (kahraman başlığı sözcük sözcük
   buğudan netleşir; CSS, JS beklemez; `<em>` vurgu tek parça), `hand-callout`
   (el yazısı not + çizilerek gelen ok), `app-window` + `WindowStrip`
@@ -343,7 +357,7 @@ alınmadı (`knowledge/decisions.md` → "Secki Turu").
   yerine geçiş, ikon çizgisi ağırlığı; dış kaynakların bizden ayrıldığı beş
   nokta "Açık kararlar"da.
 
-### EasyUI turu: seçim çubuğu, bölünmüş düğme, ürün turu, içindekiler — 2026-11-04
+### EasyUI turu: seçim çubuğu, bölünmüş buton, ürün turu, içindekiler — 2026-11-04
 
 Referans easyui.site (davranış öğrenildi, kod alınmadı; `knowledge/decisions.md` → "EasyUI Turu").
 
@@ -433,7 +447,7 @@ Referans bencho.dev (davranış öğrenildi, kod alınmadı; `knowledge/decision
 
 #### Düzeltildi
 
-- `dialog` / `sheet` alt çubuğunda ikon düğme 20 piksele sıkışıyordu
+- `dialog` / `sheet` alt çubuğunda ikon buton 20 piksele sıkışıyordu
   (masaüstünde `w-auto` `size-11`i eziyordu); tam genişlik yalnız telefonda.
 
 ### Bencho turu: sakin sayı, cetvel, rakam yuvarlama — 2026-11-04
@@ -463,9 +477,9 @@ bencho.dev'in mikro etkileşim dilinden öğrenildi, kod alınmadı
   (adreste `theme:A%C3%A7%C4%B1k` yerine `theme:dark`; eski değerler hâlâ
   tanınır). Hikâye grubu `pusula` → `demo-app`; kısa adres `/demo`,
   `/demo/<ekran>`; eski `/pusula` kalıcı yönlenir.
-- **Örnek giriş**: "Örnek Hesapla Gir" düğmesi formu göndermez; Chrome'un
+- **Örnek giriş**: "Örnek Hesapla Gir" butonu formu göndermez; Chrome'un
   "şifre kaydedilsin mi?" ve veri ihlali uyarıları demoda açılmaz.
-  `auth-card` gönder düğmesi basışta `scale`.
+  `auth-card` gönder butonu basışta `scale`.
 - **Uyarı tonu**: `--warning` tek hue ailesinde (açık `#965600`, koyu
   `#ff9f0a`), yeni `--warning-fill` / `--on-warning-fill` iki temada aynı.
 - **Pano gecikme kartı**: tam genişlik kahverengi şerit yerine nötr kuyu,
@@ -479,7 +493,7 @@ bencho.dev'in mikro etkileşim dilinden öğrenildi, kod alınmadı
 - **`code-block`**: başlıkta dosya adı ya da sekmeler (npm / pnpm / yarn /
   bun, `installTabs()`), kopyala; `persist` ile seçim aynı anahtarlı
   bloklarda ve sonraki ziyarette hatırlanır; `$` istemi kopyalanmaz.
-- **`marquee`**: kayan şerit; WCAG 2.2.2 görünür durdurma düğmesi, kopya
+- **`marquee`**: kayan şerit; WCAG 2.2.2 görünür durdurma butonu, kopya
   `aria-hidden` + `inert`, hareketi azaltanda durağan.
 - **`compare-slider`**: önce / sonra; yerel `range` (klavye, dokunma, ekran
   okuyucu), `clip-path` kırpma, opak önceki katman.
@@ -506,7 +520,7 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
   `globals.css`i ve `@ahmetakyapi/theme` birlikte.
 - **`shadow-cta`**: iç ışık + iç gölge çizgisi + kıl halka + dolgu renginde
   düşüş (`color-mix`).
-- **Düğme**: `secondary` çizgisiz karo, üzerine gelince `shadow-floating`e
+- **Buton**: `secondary` çizgisiz karo, üzerine gelince `shadow-floating`e
   yükselir; basış `active:scale-[0.98]` ve geçiş listesinde `scale` (eski
   `translate-y-px` + `transform` listesi basışı hiç yumuşatmıyordu).
 - **Punto harf aralığı**: `title` → `hero` basamakla sıkılaşır (−0.01 → −0.035em);
@@ -516,7 +530,7 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
 #### Eklendi
 
 - `shadow-well` (içe oyulmuş kuyu): 11 giriş alanı + bölümlü denetim,
-  sekme, düğme ve geçiş grubu rayları.
+  sekme, buton ve geçiş grubu rayları.
 - `shadow-focus` (odak halesi): metin alanlarında 2 px odak çizgisinin yanına.
 - `edge-lit` utility: maskeli, üstten ışıklı kenar; vitrin ve Storybook kartları.
 
@@ -542,7 +556,7 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
 
 #### Değişti
 
-- Storybook ve vitrin metinlerinde başlık, alt başlık, düğme ve rozetler
+- Storybook ve vitrin metinlerinde başlık, alt başlık, buton ve rozetler
   **Title Case** (439 metin); "E-Posta" yazımı rehberle birleşti; bileşen
   varsayılanları "Plan Tamamlandı", "Bildirim Yok", "Sol Eksen".
 
@@ -740,7 +754,7 @@ Referans ui.wensity.com (dil öğrenildi, kod alınmadı; `knowledge/decisions.m
 
 #### Eklendi
 
-- **Oynatma deseni** (Açılış Zili → Seans Zili, "Günü Oynat"): düğme değeri
+- **Oynatma deseni** (Açılış Zili → Seans Zili, "Günü Oynat"): buton değeri
   hedefe ışınlamaz, bacaklardan oluşan bir plan başlatır. `figure-kit.ts`e
   `carryLeg` (olaysız taşıma, periyotlu değerde kısa yoldan), `walkLeg` (olaylı
   yürüyüş), `planAt`, `planLength` ve `crossings` (ileri geçilen işaretler; geri
@@ -835,7 +849,7 @@ uygulandı, her grubu bağımsız bir gözden geçirici denetledi. Kalıcı ders
   sunucu bileşeninde istemci referansına dönüşüyordu (#84). `typesVersions`
   yedeği dahil; `verify:exports` iki yeni girişi de denetler.
 - **`useFinePointer`** (paket): mıknatıs, eğim ve parıltı efektleri artık
-  dokunmatikte kapalı; dokunulan düğme yerinde takılı kalmıyordu.
+  dokunmatikte kapalı; dokunulan buton yerinde takılı kalmıyordu.
 - **Paket temasında `bg-cta` + `--on-brand`**, `shadow-raised/floating/modal`
   ve punto satır yükseklikleri: paket token API'si şablonlarla aynı adları
   taşır.
@@ -876,8 +890,8 @@ uygulandı, her grubu bağımsız bir gözden geçirici denetledi. Kalıcı ders
 
 #### Düzeltildi — güvenlik
 
-- **Onay kartında düğmenin anlamını model seçiyordu** (`agent-approval`):
-  `accept` id'si "Vazgeç" etiketinin arkasına konabiliyordu. Düğme seti ve
+- **Onay kartında butonun anlamını model seçiyordu** (`agent-approval`):
+  `accept` id'si "Vazgeç" etiketinin arkasına konabiliyordu. Buton seti ve
   id → anlam kodda sabit, argümanlar `safeParse`, geçersizse ret (#106).
 - **Commit kapısı kaçışları**: `cd` sonrası gate ve sır taraması boşa
   dönüyordu; apostroflu komut ve tırnaklı pathspec tespiti siliyordu; büyük
@@ -903,7 +917,7 @@ uygulandı, her grubu bağımsız bir gözden geçirici denetledi. Kalıcı ders
 - **proxy.ts** parçalı Auth.js çerezini (`.0`, `.1`) görmüyor, büyük JWT'li
   kullanıcıyı `/hesap`tan sonsuz girişe atıyordu.
 - **Form snippet'i** doğrulama hatasında bütün alanları siliyordu (React 19
-  sıfırlaması); gönder düğmesi odağı `<body>`'ye düşürüyordu (#105).
+  sıfırlaması); gönder butonu odağı `<body>`'ye düşürüyordu (#105).
 - **Reveal** negatif kenar boşluğu sayfa sonundaki küçük öğeyi hiç
   göstermiyordu; kademe gecikmesi tavanlı; `.scroll-reveal` sayfa sonunda
   tamamlanıyor.

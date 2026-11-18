@@ -148,5 +148,5 @@ sayımı (yukarıdaki tablolardan), dayanaksız iddialar listesi, başlık öner
 ### Arayüz metni modu
 Sözlük dosyalarını (`lib/i18n/dictionaries/*`) ya da bileşenlerdeki metni
 tara: Title Case, em dash, çeviri kokan ifadeler, boş durum cümleleri
-(yardımcı mı, suçlayıcı mı), hata mesajları (ne oldu + ne yapmalı), düğme
+(yardımcı mı, suçlayıcı mı), hata mesajları (ne oldu + ne yapmalı), buton
 fiilleri (eylemi söylüyor mu: "Kaydet" değil "Planı Kaydet").

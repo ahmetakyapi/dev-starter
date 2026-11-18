@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * gelince okun 2 piksel ilerlemesi.
  *
  * TIKLAMA ALANI: hapın tamamı tek bağlantı (`next/link`). Kapatılabilir
- * varyantta × düğmesi bağlantının İÇİNDE DEĞİL, kardeşidir: iç içe
+ * varyantta × butonu bağlantının İÇİNDE DEĞİL, kardeşidir: iç içe
  * etkileşimli öğe geçersiz HTML'dir ve ekran okuyucuda ikisi birden okunur.
  *
  * KAPATMA HATIRLANIR, HİDRASYON GÜVENLİ:

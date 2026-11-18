@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "`RatingInput` giriş (yorum formu, anket): görünmez yerel radyo düğmeleri, ok tuşları, form gönderimi; seçenek adları \"5 üzerinden 4 yıldız, İyi\". `Rating` gösterim: tek `role=\"img\"`, adı \"5 üzerinden 4,6 puan\", yarım yıldız çizer. Seçili yıldıza yeniden basmak seçimi kaldırır.",
+          "`RatingInput` giriş (yorum formu, anket): görünmez yerel radyo butonları, ok tuşları, form gönderimi; seçenek adları \"5 üzerinden 4 yıldız, İyi\". `Rating` gösterim: tek `role=\"img\"`, adı \"5 üzerinden 4,6 puan\", yarım yıldız çizer. Seçili yıldıza yeniden basmak seçimi kaldırır.",
       },
     },
   },

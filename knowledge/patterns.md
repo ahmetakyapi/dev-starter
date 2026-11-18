@@ -109,7 +109,7 @@ export async function GET() {
 ### Tema: `data-theme` + Çerez + Sunucuda Çizim (varsayılan, 2026-10-03)
 
 ```tsx
-// lib/theme.ts — "use client" DEĞİL, next/headers YOK (düğme de okur)
+// lib/theme.ts — "use client" DEĞİL, next/headers YOK (buton da okur)
 export const THEME_COOKIE = 'theme'
 export const THEMES = ['dark', 'light'] as const
 export type Theme = (typeof THEMES)[number]
@@ -267,7 +267,7 @@ import { modalBackdrop, modalPanel } from '@/lib/variants'
 
 ### Oynatma: Değer Işınlanmaz (Açılış Zili, Seans Zili)
 
-"Şunu göster" diyen düğme (seansı oynat, günü oynat) değeri hedefe koymaz, bir
+"Şunu göster" diyen buton (seansı oynat, günü oynat) değeri hedefe koymaz, bir
 plan başlatır: önce olaysız **taşıma** (başlangıca, kısa yoldan), sonra olaylı
 **yürüyüş** (anlatılan süreç). Olay (zil, bildirim) değer bir işaretin üstünden
 ileri geçince tetiklenir; taşıma ve geri sarma olay üretmez. Bitince birkaç
@@ -1041,10 +1041,10 @@ uygulama kullanıcısı okuyamaz) → yaz + `fsync` → `os.replace` → dizin
 ### Markalı İşlem E-postası (Açılış Zili)
 Tek kap (`lib/email-layout.ts`) her postayı giydirir: marka satırı → koyu
 kahraman bandı (GIF + başlık + tek cümle) → gövde (selam, paragraf,
-düğme, künye çipleri, kopyalanabilir adres, kenarlı not) → dip ("yanıt
+buton, künye çipleri, kopyalanabilir adres, kenarlı not) → dip ("yanıt
 almayan adres" + site/KVKK bağlantıları). Kurallar: tablo + satır içi
 stil; animasyon GIF (Gmail CSS animasyonunu siler); GIF zemini bantla aynı
-düz renk; `bgcolor` + degradeli kurşun geçirmez düğme; preheader; düz metin
+düz renk; `bgcolor` + degradeli kurşun geçirmez buton; preheader; düz metin
 sürümü aynı sırada; `<style>` yalnız ilerleme (koyu tema, ışık,
 `prefers-reduced-motion`). GIF script'le: sharp ile SVG kareleri →
 `sharp(frames, { join: { animated: true } }).gif({ delay, loop: 0 })`
@@ -1293,7 +1293,7 @@ type FrontendTool<T> = {
   argüman şemaya karşı **doğrulanmaz** (yalnız `JSON.parse`). Yan etkiden ve
   çizimden önce `safeParse`.
 - `useHumanInTheLoop` cevabı bir sonraki run'a **tool mesajı** olarak gider,
-  `resume` göndermez. Onayın düğmeleri ve id → anlam eşlemesi kodda sabit
+  `resume` göndermez. Onayın butonları ve id → anlam eşlemesi kodda sabit
   kalmalı: model seçenek de yazarsa `accept`i "Vazgeç"in arkasına koyabilir.
 
 **Çalışan referans**: `snippets/agent-tool.tsx`, `snippets/action-card.tsx`,
@@ -1575,7 +1575,7 @@ Ortak dosyalar `apps/web/src/app/craft.css` + `components/ui/Sketch.tsx`
   iki yarım `mask: radial-gradient(...)` ile; çentik yüksekliği `--stub` değişkeni,
   koçan büyüyünce (QR) o da güncellenir.
 - **Boş sandalye:** lobide oda kapasitesi kadar hücre; boşlar kesik kalem çizgisi
-  (dört `repeating-linear-gradient` kenar), ilki kurucuya "Bot Oturt" düğmesi.
+  (dört `repeating-linear-gradient` kenar), ilki kurucuya "Bot Oturt" butonu.
   Boş alan kalmaz, kaç kişi eksik olduğu görünür.
 - **Kürsü sırayla:** 3. → 2. → 1.; blok `clip-path: inset(100% 0 0 0)`dan açılır
   (yükseklik animasyonu yok), kazananın adı kürsü bitene kadar bekler.

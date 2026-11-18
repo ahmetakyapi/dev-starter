@@ -17,7 +17,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Köşede üst üste duran duyuru kartları: öndeki aralıkla arkaya kayar, sayaç \"2/3\" der, arkadaki kartların kenarı görünür. Duyuru, sürüm notu, etkinlik; hata ve sonuç bildirimi için değil (`toast`). Üzerine gelince ve odakta durur, hareketi azaltanda kendiliğinden dönmez; değişim ekran okuyucuya duyurulmaz, sayaç düğmesi elle geçirir.",
+          "Köşede üst üste duran duyuru kartları: öndeki aralıkla arkaya kayar, sayaç \"2/3\" der, arkadaki kartların kenarı görünür. Duyuru, sürüm notu, etkinlik; hata ve sonuç bildirimi için değil (`toast`). Üzerine gelince ve odakta durur, hareketi azaltanda kendiliğinden dönmez; değişim ekran okuyucuya duyurulmaz, sayaç butonu elle geçirir.",
       },
     },
   },

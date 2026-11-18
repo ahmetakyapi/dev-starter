@@ -27,7 +27,7 @@ import { EVENTS, OPEN_TICKETS, WORKSPACE } from "./_data";
  * (2026-11-07) parçaları bir arada: yuvaya oturan menü, bulanıktan netleşen
  * serif vurgulu başlık, görsel zemin üstünde sıvı cam eylem ve güven satırı,
  * pencere şeridi + dock ile canlı ürün maketi, el yazısı ok notu, köşe maskotu.
- * Dock'taki simgeye basınca şeritte o pencere odağa gelir: maket bir resim
+ * Dock'taki ikona basınca şeritte o pencere odağa gelir: maket bir resim
  * değil, sayfada denenen küçük bir demo.
  */
 
@@ -89,13 +89,13 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           {/* Görsel zemin: paletin koyulaştırılmış birincil tonu (pusula.css →
               .pusula-hero; her palette, iki temada beyaz metin ≥ 5,5:1) ve üstünde
               aynı ailenin yumuşak lekeleri. Eskiden `bg-primary`ti: koyu temada açık
-              camgöbeğine dönüyor, beyaz başlık ve mavi düğmeler zeminde kayboluyordu. */}
+              camgöbeğine dönüyor, beyaz başlık ve mavi butonlar zeminde kayboluyordu. */}
           <div aria-hidden className="pusula-hero absolute inset-0 -z-10">
             <div className="absolute -top-32 left-[6%] size-[28rem] rounded-full bg-primary-soft opacity-20 blur-3xl" />
             <div className="absolute top-40 right-[2%] size-[24rem] rounded-full bg-primary opacity-20 blur-3xl" />
           </div>
           {/* Duyuru hapı: renkli zeminde cam, BASILIR (demoya iner). Eski plan
-              hapı düğme gibi görünüp hiçbir şey yapmıyordu. */}
+              hapı buton gibi görünüp hiçbir şey yapmıyordu. */}
           <LiquidGlassLink tone="media" href="#tanitim-demo" className="mb-8 min-h-11 gap-2 px-4 text-small pointer-fine:min-h-9">
             <span aria-hidden className="size-1.5 rounded-full bg-success" />
             Yeni: Pencere Şeridi
@@ -108,8 +108,8 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             Destek, satış, görev ve takvim tek şeritte. Yeni talep açık işin yanına gelir; hiçbir pencere küçülmez.
           </p>
           {/* Renkli zeminde birincil eylem BEYAZ hap (yazısı zeminin tonunda):
-              mavi üstünde mavi düğme kayboluyordu. İkincil eylem çizgili hayalet;
-              eskiden yanında düğme gibi görünen ama basılmayan plan hapı vardı. */}
+              mavi üstünde mavi buton kayboluyordu. İkincil eylem çizgili hayalet;
+              eskiden yanında buton gibi görünen ama basılmayan plan hapı vardı. */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"

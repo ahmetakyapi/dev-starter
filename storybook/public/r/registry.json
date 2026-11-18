@@ -102,7 +102,7 @@
       "name": "animated-icon",
       "type": "registry:ui",
       "title": "Canlı İkon",
-      "description": "Düğmenin üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile)",
+      "description": "Butonun üzerine gelince ikon anlamına uygun hareket eder (zil, ok, yenile)",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
@@ -269,7 +269,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -511,13 +511,13 @@
     {
       "name": "button-group",
       "type": "registry:ui",
-      "title": "Düğme Grubu",
-      "description": "Bağlı düğmeler",
+      "title": "Buton Grubu",
+      "description": "Bağlı butonlar",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": false,
@@ -702,8 +702,8 @@
     {
       "name": "chip",
       "type": "registry:ui",
-      "title": "Süzgeç Etiketi",
-      "description": "`FilterChip`: süzgeç · `RemovableChip`: seçilmiş değer · `ChipGroup`",
+      "title": "Filtre Etiketi",
+      "description": "`FilterChip`: filtre · `RemovableChip`: seçilmiş değer · `ChipGroup`",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
@@ -711,7 +711,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": false,
@@ -728,7 +728,7 @@
     {
       "name": "close-button",
       "type": "registry:ui",
-      "title": "Kapat Düğmesi",
+      "title": "Kapat Butonu",
       "description": "Diyalog, uyarı, çip, duyuru kapatma",
       "dependencies": [
         "lucide-react@^1.51.0"
@@ -737,7 +737,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": false,
@@ -761,7 +761,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -961,7 +961,7 @@
     {
       "name": "copy-button",
       "type": "registry:ui",
-      "title": "Kopyala Düğmesi",
+      "title": "Kopyala Butonu",
       "description": "Panoya kopyala",
       "dependencies": [
         "lucide-react@^1.51.0"
@@ -970,7 +970,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -1096,8 +1096,8 @@
     {
       "name": "date-range-presets",
       "type": "registry:ui",
-      "title": "Tarih Aralığı Süzgeci",
-      "description": "Liste/rapor süzgecinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile süzme",
+      "title": "Tarih Aralığı Filtresi",
+      "description": "Liste/rapor filtresinde hazır aralıklar (Son 7/30 Gün, Tümü) + aynı kutuda özel aralık takvimi; `rangeOf()` ile filtreleme",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
@@ -1124,7 +1124,7 @@
     {
       "name": "dial",
       "type": "registry:ui",
-      "title": "Döner Düğme",
+      "title": "Döner Buton",
       "description": "Kontrol panelinde sürekli değer (sıcaklık, ses, oran); 270° kadran",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/digit-roll.json",
@@ -1245,7 +1245,7 @@
       "name": "dock",
       "type": "registry:ui",
       "title": "Uygulama Rafı",
-      "description": "Maketin uygulama rafı: üzerine gelince yükselen simgeler, komşular da biraz",
+      "description": "Maketin uygulama rafı: üzerine gelince yükselen ikonlar, komşular da biraz",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
@@ -1422,8 +1422,8 @@
     {
       "name": "filter-sheet",
       "type": "registry:ui",
-      "title": "Süzgeç Çekmecesi",
-      "description": "Telefonda bütün süzgeç ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana düğme (\"8 Talebi Göster\")",
+      "title": "Filtre Çekmecesi",
+      "description": "Telefonda bütün filtre ve sıralama tek çekmecede; dipte Temizle ve sonuç sayılı ana buton (\"8 Talebi Göster\")",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
@@ -1450,7 +1450,7 @@
       "name": "funnel-chart",
       "type": "registry:ui",
       "title": "Huni Grafiği",
-      "description": "Daralan aşamalar (`curve`/`step`), sütun başına yüzde hapı, altta lejant",
+      "description": "Daralan aşamalar (`curve`/`step`), tek renk; sütunda ad + değer, altında adım dönüşümü, kayıp izi",
       "dependencies": [
         "motion@^13.5.1"
       ],
@@ -1590,7 +1590,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -1643,7 +1643,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": false,
@@ -1660,8 +1660,8 @@
     {
       "name": "icon-button",
       "type": "registry:ui",
-      "title": "İkon Düğmesi",
-      "description": "Yalnız ikonlu düğme",
+      "title": "İkon Butonu",
+      "description": "Yalnız ikonlu buton",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
@@ -1669,7 +1669,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": false,
@@ -1773,7 +1773,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": false,
@@ -1791,7 +1791,7 @@
       "name": "line-chart",
       "type": "registry:ui",
       "title": "Çizgi Grafiği",
-      "description": "Sıralı eksende 2-5 seriyi kıyaslamak; kesik tahmin, hedef çizgisi, lejant süzgeç",
+      "description": "Sıralı eksende 2-5 seriyi kıyaslamak; kesik tahmin, hedef çizgisi, lejant filtre",
       "dependencies": [
         "motion@^13.5.1"
       ],
@@ -1966,7 +1966,7 @@
       "name": "morph-icon",
       "type": "registry:ui",
       "title": "Biçim Değiştiren İkon",
-      "description": "Aynı düğmenin iki hali (menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat)",
+      "description": "Aynı butonun iki hali (menü ↔ kapat, artı ↔ eksi, oynat ↔ duraklat)",
       "dependencies": [
         "motion@^13.5.1"
       ],
@@ -2461,7 +2461,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -2656,7 +2656,7 @@
       "name": "search-field",
       "type": "registry:ui",
       "title": "Arama Alanı",
-      "description": "Liste süzme, site araması: gecikmeli `onSearch`, yükleniyor, \"/\" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch`",
+      "description": "Liste filtreleme, site araması: gecikmeli `onSearch`, yükleniyor, \"/\" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch`",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
@@ -2693,7 +2693,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -2971,7 +2971,7 @@
       "name": "spinner",
       "type": "registry:ui",
       "title": "Dönen Gösterge",
-      "description": "Satır içi, düğme içi kısa bekleme",
+      "description": "Satır içi, buton içi kısa bekleme",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
@@ -2993,7 +2993,7 @@
     {
       "name": "split-button",
       "type": "registry:ui",
-      "title": "Bölünmüş Düğme",
+      "title": "Bölünmüş Buton",
       "description": "Ana eylem + aynı işin diğer biçimleri (\"CSV\" + ▾ Excel, PDF)",
       "dependencies": [
         "lucide-react@^1.51.0"
@@ -3003,7 +3003,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -3021,7 +3021,7 @@
       "name": "stage-bars",
       "type": "registry:ui",
       "title": "Aşama Çubukları",
-      "description": "Huni aşamaları, iz üstünde hap çubuk",
+      "description": "Huni aşamaları, iz üstünde tek renkli hap çubuk",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
         "https://dev-starter-storybook.vercel.app/r/chart-card.json"
@@ -3119,7 +3119,7 @@
     {
       "name": "switch",
       "type": "registry:ui",
-      "title": "Aç-Kapa Düğmesi",
+      "title": "Aç-Kapa Butonu",
       "description": "Anında etki eden aç/kapa",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
@@ -3473,7 +3473,7 @@
       "name": "toggle-group",
       "type": "registry:ui",
       "title": "Aç-Kapa Grubu",
-      "description": "Basılı/basılı değil düğmeler: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost`",
+      "description": "Basılı/basılı değil butonlar: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost`",
       "dependencies": [
         "@base-ui/react@1.8.0",
         "lucide-react@^1.51.0"
@@ -3484,7 +3484,7 @@
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
       "categories": [
-        "Düğme ve İkon"
+        "Buton ve İkon"
       ],
       "meta": {
         "client": true,
@@ -3682,7 +3682,7 @@
       "name": "week-calendar",
       "type": "registry:ui",
       "title": "Haftalık Takvim",
-      "description": "Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste; `variant=\"card\"`: ikonlu gri kart, katılımcı, Katıl düğmesi, büyük gün numarası, saat dilimi, Tüm Gün satırı, `weekdaysOnly`",
+      "description": "Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste; `variant=\"card\"`: ikonlu gri kart, katılımcı, Katıl butonu, büyük gün numarası, saat dilimi, Tüm Gün satırı, `weekdaysOnly`",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],

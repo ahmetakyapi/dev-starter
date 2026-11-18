@@ -82,7 +82,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Bir nesnenin üzerinde sağ tık ya da uzun basmayla açılan eylem listesi. Gizli bir kapıdır, tek kapı olamaz: aynı eylemler görünür bir “Daha Fazla” düğmesiyle (`DropdownMenu`) de sunulmalı. Yıkıcı öğe ayırıcıdan sonra ayrı grupta; kısayollar yalnızca hatırlatıcıdır.",
+          "Bir nesnenin üzerinde sağ tık ya da uzun basmayla açılan eylem listesi. Gizli bir kapıdır, tek kapı olamaz: aynı eylemler görünür bir “Daha Fazla” butonuyla (`DropdownMenu`) de sunulmalı. Yıkıcı öğe ayırıcıdan sonra ayrı grupta; kısayollar yalnızca hatırlatıcıdır.",
       },
     },
   },

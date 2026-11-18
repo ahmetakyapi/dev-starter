@@ -17,7 +17,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Kesin ve küçük bir sayı için (kişi sayısı, adet, gün). Değer yaklaşıksa Kaydırıcı; telefon ya da posta kodu gibi sayı görünümlü metin için düz metin alanı kullanın. Sınıra gelince ilgili düğme devre dışı kalır, basılı tutunca adım hızlanır.",
+          "Kesin ve küçük bir sayı için (kişi sayısı, adet, gün). Değer yaklaşıksa Kaydırıcı; telefon ya da posta kodu gibi sayı görünümlü metin için düz metin alanı kullanın. Sınıra gelince ilgili buton devre dışı kalır, basılı tutunca adım hızlanır.",
       },
     },
   },

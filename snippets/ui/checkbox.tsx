@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * Onay kutusu: kaydet düğmesine bağlı ya da çoklu seçim. Anında etki eden
+ * Onay kutusu: kaydet butonuna bağlı ya da çoklu seçim. Anında etki eden
  * ayar için `switch.tsx`.
  *
  * YEREL GİRİŞ, `appearance-none` ile çizilmiş: JavaScript'siz çalışır,

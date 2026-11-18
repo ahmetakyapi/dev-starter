@@ -44,14 +44,14 @@ const preview: Preview = {
     docs: { page: DocsPageWithInstall, container: ThemedDocsContainer, lang: "tr" },
     options: {
       // Üç bölüm (manager-head.html'deki etiketlerle aynı):
-      //   Başla      · Kapak, Başlangıç, Vitrin, Her Şey Bir Arada
+      //   Başla      · Tanıtım, Başlangıç, Vitrin, Her Şey Bir Arada
       //   Kütüphane  · Tema, Bileşenler, Grafikler, Bloklar, Desenler
       //   Uygulamada · Pusula, Ekranlar, Arşiv
       // Her öğe kendi adıyla üst düzeyde: eskiden "Örnek Tasarım" klasörü
       // uygulamayı, deseni ve kapsam tablosunu aynı belirsiz adın altına saklıyordu.
       storySort: {
         order: [
-          "Kapak",
+          "Tanıtım",
           "Başlangıç",
           "Vitrin",
           ["Genel Bakış", "Temel Kütüphane", "Form Girişleri", "Katman ve Geri Bildirim", "Grafikler", "Bloklar"],
@@ -60,7 +60,7 @@ const preview: Preview = {
           ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"],
           "Bileşenler",
           // Temelden karmaşığa: önce yapı taşları, sonra katmanlar, en sonda tanıtım ve yapay zekâ.
-          ["Temel", "Düğme ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"],
+          ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"],
           "Grafikler",
           "Bloklar",
           "Desenler",

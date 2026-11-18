@@ -23,7 +23,7 @@ kontrolleri commit'ten önce ELLE çalıştır.
   `bg-white` ve `dark:` yok; tema `data-theme` ile token'dan döner.
 - **Hareket** `motion/react` ve `m.*` (kökte `LazyMotion`); `framer-motion`
   yok. Yalnız `transform`/`opacity`; hareketi azaltan kullanıcıya saygı.
-- **Arayüz metni Türkçe**, başlık ve düğmede Title Case; `capitalize` ya da
+- **Arayüz metni Türkçe**, başlık ve butonda Title Case; `capitalize` ya da
   `toUpperCase` yok (Türkçe i → I hatası). Emoji ikon yok, `lucide-react`.
 - **Next 16**: `proxy.ts` (middleware değil), `params`/`cookies()` async.
   Kod yazmadan önce yukarıdaki bloktaki Next belgelerine bak.

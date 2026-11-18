@@ -185,7 +185,7 @@ export const AllVariants: Story = {
       <Cell label="⌘K ipucu">
         <SearchField label="Belgelerde Ara" placeholder="Belgelerde ara" shortcut="mod+k" className="w-full" />
       </Cell>
-      <Cell label="Dolu, temizle düğmesi">
+      <Cell label="Dolu, temizle butonu">
         <SearchField label="Sipariş Ara" defaultValue="Kadıköy" className="w-full" />
       </Cell>
       <Cell label="Yükleniyor">

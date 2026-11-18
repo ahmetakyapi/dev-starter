@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
 /* Tarayıcı çubuğunun rengi işletim sisteminden değil SİTENİN temasından.
    Statik: varsayılan temanın rengi basılır, çerezdeki tema farklıysa
-   `THEME_SCRIPT` ilk boyamadan önce, düğme de tıklamada günceller. */
+   `THEME_SCRIPT` ilk boyamadan önce, buton da tıklamada günceller. */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -83,7 +83,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="tr"
       data-theme={DEFAULT_THEME}
       data-palette={PALETTE}
-      // Script özniteliği hidrasyondan önce, düğme sonra değiştirir; sunucu
+      // Script özniteliği hidrasyondan önce, buton sonra değiştirir; sunucu
       // HTML'iyle aradaki bu farkı React raporlamasın.
       suppressHydrationWarning
       // `iso`: anatomy figür kitinin token kapsamı. Kit `.iso[data-theme="light"]`

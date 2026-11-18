@@ -8,18 +8,18 @@ import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 /**
- * Aç-kapa grubu: her biri BASILI / BASILI DEĞİL olan düğmeler (metin
+ * Aç-kapa grubu: her biri BASILI / BASILI DEĞİL olan butonlar (metin
  * düzenleyicide Kalın · İtalik · Altı Çizili; görünümde Izgara · Liste;
- * süzgeçte "Yalnız Okunmamış"). `multiple` ile birden çoğu basılı olabilir.
+ * filtrede "Yalnız Okunmamış"). `multiple` ile birden çoğu basılı olabilir.
  *
  * NE ZAMAN BU, NE ZAMAN ÖTEKİ: seçimler birbirini dışlıyor VE hep biri seçili
  * olmak zorundaysa (Gün / Hafta / Ay) `segmented-control.tsx`: anlamı radyo
- * grubu. Araç çubuğunda biçim düğmeleri, ya da "hiçbiri" de geçerliyse bu:
+ * grubu. Araç çubuğunda biçim butonları, ya da "hiçbiri" de geçerliyse bu:
  * anlamı `aria-pressed`. Tek bir aç/kapa ayarı için `switch.tsx`.
  *
  * HEADLESS KATMAN Base UI Toggle Group: `aria-pressed`, gezici tabindex
- * (Tab gruba bir kez girer, oklar düğmeler arasında dolaşır, uçta başa
- * döner), devre dışı öğeyi atlama ondan. Tekli kipte basılı düğmeye
+ * (Tab gruba bir kez girer, oklar butonlar arasında dolaşır, uçta başa
+ * döner), devre dışı öğeyi atlama ondan. Tekli kipte basılı butona
  * yeniden basmak onu bırakır (hiçbiri seçili değil): "zorunlu tek seçim"
  * isteniyorsa segmented-control.
  *
@@ -28,10 +28,10 @@ import { cn } from "@/lib/utils";
  * görünür; varsa kısayol da orada (`Kbd`) ve `aria-keyshortcuts`ta.
  * Kısayolun kendisini bağlamak çağıranın işi (düzenleyici zaten dinler).
  *
- * GÖRÜNÜŞ ("board" dili): `well` (varsayılan) gri kuyu, basılı düğme
+ * GÖRÜNÜŞ ("board" dili): `well` (varsayılan) gri kuyu, basılı buton
  * kuyunun üstünde BEYAZ KARO (`bg-overlay shadow-raised`): durum renkle
  * değil yükseklikle okunur. `ghost` araç çubuğu içinde kuyusuz; basılı
- * düğme `bg-primary-wash text-primary-ink`. Basınca 0,96'ya çöker,
+ * buton `bg-primary-wash text-primary-ink`. Basınca 0,96'ya çöker,
  * hareket azaltmada çökmez. Dokunmatikte 44 px, ince işaretçide 32/36.
  *
  *   <ToggleGroup aria-label="Metin Biçimi" multiple defaultValue={["bold"]}

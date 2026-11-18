@@ -22,8 +22,8 @@ import { cn } from "../utils";
  * `formData.getAll(name)`.
  *
  * Çip beyaz karo, 0.9'dan büyüyerek gelir (hareket azaltanda yalnız solar).
- * Kapatma düğmesi dokunmatikte 32 px; asıl dokunmatik yol çipin kendisi
- * değil Backspace olmadığı için düğme her çipte görünür durur.
+ * Kapatma butonu dokunmatikte 32 px; asıl dokunmatik yol çipin kendisi
+ * değil Backspace olmadığı için buton her çipte görünür durur.
  *
  *   <TagInput label="Beceriler" suggestions={["Figma", "React", "Kullanıcı Araştırması"]}
  *     defaultValue={["Figma"]} name="beceri" />

@@ -15,14 +15,14 @@ import { cn } from "@/lib/utils";
  *
  * OYNATMA: görünür olunca başlar (`startOnView`). Komut harf harf yazılır
  * (`typingSpeed` ms/harf), sonra çıktılar 220 ms arayla düşer. Bitince
- * "Yeniden Oynat" düğmesi gelir; döngü yok (WCAG 2.2.2: kendiliğinden
+ * "Yeniden Oynat" butonu gelir; döngü yok (WCAG 2.2.2: kendiliğinden
  * hareket eden içerik durdurulabilir olmalı, en kolayı hiç döngüye
  * girmemek).
  *
  * GÖRÜNÜŞ: board kuyusu (`bg-surface`), başlık çubuğunda üç nötr nokta;
  * trafik ışığı renkleri yok (sabit renk ve dikkat dağıtıcı). Komut satırı
  * `text-strong`, istem `text-primary-ink`, çıktı tonları `muted`, `success`,
- * `danger`. Kopyala düğmesi yalnız komutları kopyalar, istem ve çıktıyı değil.
+ * `danger`. Kopyala butonu yalnız komutları kopyalar, istem ve çıktıyı değil.
  *
  * ERİŞİLEBİLİRLİK: canlandırılan katman `aria-hidden`; ekran okuyucu
  * dökümün tamamını baştan, tek seferde okur (`sr-only` liste). Hareketi

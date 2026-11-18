@@ -107,7 +107,7 @@ function conversation(productStep: number): ChatMessage[] {
         <AgentMessage id="tasarim" time="14:04">
           <p>
             Üst bölümde ekran görüntüsü yerine <strong>canlı pano</strong> öneriyorum: ziyaretçi ürünü ilk
-            ekranda çalışırken görür. Deneme düğmesini kaydırınca da görünür tutarım; telefonda alt kenarda sabit.
+            ekranda çalışırken görür. Deneme butonunu kaydırınca da görünür tutarım; telefonda alt kenarda sabit.
           </p>
           <p>Kontrast ve dokunma hedefleri iki temada da AA; taslak yarın 11.00'de hazır.</p>
         </AgentMessage>
@@ -119,7 +119,7 @@ function conversation(productStep: number): ChatMessage[] {
 const REPLIES: Record<AgentId, string> = {
   urun: "Not aldım. Deneyi iki hafta koşturursak 0,05 anlamlılıkla sonucu okuyabiliriz; ilk haftanın verisini cuma paylaşırım.",
   pazarlama: "E-posta listesine aynı başlıkla bir duyuru hazırlarım; gönderimi deney başladıktan iki gün sonraya koyalım.",
-  tasarim: "Varyant B'de düğme metnini “Ücretsiz Dene” yerine “14 Gün Dene” yapıyorum; süre yazınca tıklama artıyor.",
+  tasarim: "Varyant B'de buton metnini “Ücretsiz Dene” yerine “14 Gün Dene” yapıyorum; süre yazınca tıklama artıyor.",
 };
 
 /* --- Ekran ---------------------------------------------------------------- */

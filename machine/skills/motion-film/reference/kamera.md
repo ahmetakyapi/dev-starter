@@ -63,5 +63,5 @@ x = clamp(x, w / 2 / z, w - w / 2 / z);
 ## Kamera ile künyeler
 
 Künyeler dünyada (kamerayla büyür). Kamera itişi künyeleri kenara iterse
-yerleşimi tam zoom'da da ölç. Ekrana sabit kalması gereken öğe (ses düğmesi,
+yerleşimi tam zoom'da da ölç. Ekrana sabit kalması gereken öğe (ses butonu,
 ilerleme çizgisi) DOM'da, tuvalin dışında.

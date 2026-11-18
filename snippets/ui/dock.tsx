@@ -2,21 +2,21 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Uygulama rafı (dock): altta yuvarlak cam rafta simgeler. Üzerine gelinen
- * simge yükselip büyür, KOMŞULARI da biraz (yalnız CSS, `:has()` ile;
+ * Uygulama rafı (dock): altta yuvarlak cam rafta ikonlar. Üzerine gelinen
+ * ikon yükselip büyür, KOMŞULARI da biraz (yalnız CSS, `:has()` ile;
  * ölçüm ve JavaScript yok). Açık uygulamanın altında nokta. Ürün maketinde
  * masaüstü sahnesini tamamlar (`app-window.tsx` ile) ya da tanıtım
  * sayfasında "hangi araçlarla çalışır" satırı olur.
  *
  * İki kip:
- *   - `onSelect` YOK: süs. Raf `aria-hidden`, simgeler `span`.
- *   - `onSelect` VAR: her simge gerçek düğme, adı `label`; raf `role="toolbar"`.
- *     Ok tuşu gezintisi yok (sekme sırası yeterli, en çok sekiz simge).
+ *   - `onSelect` YOK: süs. Raf `aria-hidden`, ikonlar `span`.
+ *   - `onSelect` VAR: her ikon gerçek buton, adı `label`; raf `role="toolbar"`.
+ *     Ok tuşu gezintisi yok (sekme sırası yeterli, en çok sekiz ikon).
  *
  * Büyüme yalnız ince işaretçide (`pointer-fine`) ve hareketi azaltmayanda;
- * dokunmatikte basınca küçük bir çöküş yeter. Simge boyutu `size` ile
- * (`md` telefonda `sm`e iner: sekiz simge 390 pikselde sığsın);
- * simgenin kendisi (uygulama logosu, `<img>` ya da lucide) çağırandan.
+ * dokunmatikte basınca küçük bir çöküş yeter. İkon boyutu `size` ile
+ * (`md` telefonda `sm`e iner: sekiz ikon 390 pikselde sığsın);
+ * ikonun kendisi (uygulama logosu, `<img>` ya da lucide) çağırandan.
  *
  *   <Dock items={[{ id: "notlar", label: "Notlar", icon: <img src="/i/notlar.png" alt="" />, active: true }]} />
  */

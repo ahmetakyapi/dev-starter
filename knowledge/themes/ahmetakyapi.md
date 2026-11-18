@@ -10,7 +10,7 @@
 > - **Kimlik:** `signature` palet (Açılış Zili mavisi), varsayılan tema KOYU
 >   (`#070d16`), açık `#f7f9fb`. Schibsted Grotesk + IBM Plex Mono. Derinlik
 >   tonla; glass yalnız sticky başlıkta. Degrade üç yerde: isim imzası
->   (`.display-ink`), birincil düğme, logo.
+>   (`.display-ink`), birincil buton, logo.
 > - **Tema:** çerez `theme` + `<head>`'deki `THEME_SCRIPT`; sayfalar STATİK
 >   (`guides/03-theming.md` § 2b, `mistakes.md` #93).
 > - **Unvan:** "Full-Stack & AI Developer" (`lib/nav.ts` → `JOB_TITLE`).

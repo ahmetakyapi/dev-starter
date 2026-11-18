@@ -199,7 +199,7 @@ yazım asıl siteyi dizinden çekmez), Vercel önizlemesini de açamaz.
 (`lib/email-layout.ts`; desen `patterns.md → Markalı İşlem E-postası`):
 
 - Düzen tablo, stil satır içi; `<style>` yalnız ilerleme (Apple Mail koyu
-  tema renkleri, düğme ışığı, `prefers-reduced-motion`).
+  tema renkleri, buton ışığı, `prefers-reduced-motion`).
 - **Animasyon GIF**: Gmail CSS animasyonunu ve SVG'yi siler, GIF'i oynatır.
   GIF script'le üretilir (`scripts/build-email-assets.mjs`, sharp
   `join: { animated: true }`), elle değil. 1,4 sn vuruş + uzun duraklama.
@@ -209,7 +209,7 @@ yazım asıl siteyi dizinden çekmez), Vercel önizlemesini de açamaz.
   çevrilmez ve bant içinde dikdörtgen olarak görünür. Testte iOS Gmail'e de
   bak; uyuşmazlığı ya kabul edip yaz ya da GIF kenarını bantla eritecek
   biçimde üret.
-- "Kurşun geçirmez" düğme: dolgulu `<a>`, arka plan `bgcolor` + degrade.
+- "Kurşun geçirmez" buton: dolgulu `<a>`, arka plan `bgcolor` + degrade.
 - Gizli önizleme satırı (preheader) + düz metin sürümü aynı sırada.
 - Görseller mutlak adresle (bağlantının `origin`inden).
 - Tarayıcıda 390 pikselde açık/koyu ekran görüntüsüyle kontrol et.
@@ -223,7 +223,7 @@ yazım asıl siteyi dizinden çekmez), Vercel önizlemesini de açamaz.
 - Service worker yalnız bildirim taşır, `fetch` önbelleği yok (bayat veri).
 - iOS'ta yalnız ana ekrana eklenmiş PWA'da (16.4+); Mac Chrome'da sistem
   bildirim izni de gerekir.
-- Ayarlar'da "Deneme Bildirimi Gönder" düğmesi: kurulumun tek tık testi.
+- Ayarlar'da "Deneme Bildirimi Gönder" butonu: kurulumun tek tık testi.
 - **Kutu + push tek giriş noktası** (`notifyUser`): bildirim satırı
   kullanıcının dilinde kutuya yazılır, sonra push gider. Push kapalı
   cihazda kayıt yine kalır; ikisi asla ayrı düşmez.

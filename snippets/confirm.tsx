@@ -2,11 +2,11 @@
  * Confirm — onay diyaloğu
  *
  * Geri alınamayan işlemler (silme, iptal) için. Escape ile vazgeçilir,
- * odak açılışta VAZGEÇ düğmesine gider: Enter'a refleksle basan kullanıcı
+ * odak açılışta VAZGEÇ butonuna gider: Enter'a refleksle basan kullanıcı
  * yanlışlıkla silmesin. Kilit sayaçlı (`use-scroll-lock.ts`): bir modalın
  * üstünde açılıp kapanınca alttaki modalın kilidi yerinde kalır. Katman
  * yığını (`useLayer`) aynı durumda Escape'i yalnızca onaya verir; kapanınca
- * odak onayı açan düğmeye döner. Katman body'ye portal'lanır (bkz. modal.tsx).
+ * odak onayı açan butona döner. Katman body'ye portal'lanır (bkz. modal.tsx).
  *
  * Kullanım:
  *   <Confirm

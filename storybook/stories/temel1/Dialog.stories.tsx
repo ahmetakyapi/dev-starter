@@ -17,7 +17,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Yerel `<dialog>` + `showModal()`: odak tuzağı, Escape ve üst katman tarayıcıdan; arka plana tıklayınca kapanma, odağın açan düğmeye dönmesi ve kaydırma kilidi bileşenden. Form doldurulan diyalogda `dismissible={false}` ver; yıkıcı onayda ilk odak `data-autofocus` ile “Vazgeç”te.",
+          "Yerel `<dialog>` + `showModal()`: odak tuzağı, Escape ve üst katman tarayıcıdan; arka plana tıklayınca kapanma, odağın açan butona dönmesi ve kaydırma kilidi bileşenden. Form doldurulan diyalogda `dismissible={false}` ver; yıkıcı onayda ilk odak `data-autofocus` ile “Vazgeç”te.",
       },
     },
   },

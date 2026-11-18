@@ -7,13 +7,13 @@ import { cn } from "@/lib/utils";
 /**
  * Basılı tut onayı: yıkıcı ama GERİ ALINABİLİR eylemde onay diyaloğunun
  * yerine ("Arşivle", "Listeden Çıkar", "Oturumu Kapat"). Basılı tutunca
- * düğme soldan sağa dolar; süre dolmadan bırakılırsa geri sarılır, hiçbir
+ * buton soldan sağa dolar; süre dolmadan bırakılırsa geri sarılır, hiçbir
  * şey olmaz. Kazara tıklama eylemi tetiklemez, kasıtlı olan diyalog
  * açmadan biter. Geri alınamaz eylemde (hesap silme) `confirm` diyaloğu
  * kullan: orada sonucun yazıyla okunması gerekir.
  *
  * KLAVYE: Boşluk ya da Enter BASILI tutulur (tekrar eden `keydown` yok
- * sayılır); bırakınca iptal. Tıklama tek başına onaylamaz, bu yüzden düğme
+ * sayılır); bırakınca iptal. Tıklama tek başına onaylamaz, bu yüzden buton
  * altındaki ipucu (`aria-describedby`) bunu her kullanıcıya söyler:
  * "Onaylamak için basılı tut".
  *
@@ -41,7 +41,7 @@ type HoldButtonProps = {
   holdMs?: number;
   doneLabel?: string;
   hint?: string;
-  /** İpucunu yalnız görsel olarak gizle (ekran okuyucu yine duyar). Düğmenin adı
+  /** İpucunu yalnız görsel olarak gizle (ekran okuyucu yine duyar). Butonun adı
       zaten "Basılı Tutarak …" diyorsa: alt çubukta ikinci satır kalabalık yapar. */
   hideHint?: boolean;
   tone?: keyof typeof TONES;

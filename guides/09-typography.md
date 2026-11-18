@@ -201,7 +201,7 @@ ad çakışması tuzakları [02 § 3](02-design-tokens.md#3-punto-ölçeği-ve-a
 |-------|-------|-----|
 | `text-micro` | 11 | Mono künye, klavye ipucu |
 | `text-small` | 12 | Etiket, alan adı, tablo başlığı, rozet |
-| `text-base` | 14 | Arayüz varsayılanı: düğme, liste, tablo gövdesi |
+| `text-base` | 14 | Arayüz varsayılanı: buton, liste, tablo gövdesi |
 | `text-read` | 16 | Okuma gövdesi |
 | `text-lead` | 18 | Sayfa açıklaması, giriş paragrafı |
 | `text-title` | 20 | Panel başlığı (h2) |
@@ -288,7 +288,7 @@ tipografi açısından üç not:
 
 ## 10. Title Case ve Türkçe Büyük Harf
 
-Başlık, düğme, sekme, rozet, tablo başlığı **Title Case**; paragraf,
+Başlık, buton, sekme, rozet, tablo başlığı **Title Case**; paragraf,
 açıklama, hata gövdesi, `placeholder` ve `aria-label` cümleleri cümle düzeni.
 Bağlaçlar (ve, ile, için, de/da, mi) başta değilse küçük: "Faiz, Tahvil ve
 Getiri Eğrisi".
@@ -298,7 +298,7 @@ Getiri Eğrisi".
   "Istanbul Ve Izmir" yapıyor; hem noktalı İ kayboluyor hem bağlaç büyüyor.
   Title Case metne elle yazılır.
 - **Büyük harfe çevirme `toLocaleUpperCase("tr-TR")`**, küçültme
-  `toLocaleLowerCase("tr-TR")`. Baş harf (`avatar.tsx`), arama süzgeci
+  `toLocaleLowerCase("tr-TR")`. Baş harf (`avatar.tsx`), arama filtresi
   (`combobox.tsx` → `locale="tr-TR"`, `command-palette.tsx`, `tree-view.tsx`)
   bu kuralla yazıldı.
 - **`uppercase` sınıfı `lang="tr"` altında doğru çalışır.** Aynı ölçümde

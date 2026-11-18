@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * Sayfa karartılır, hedef öğe bir "pencere" ile açıkta kalır; yanında kısa
  * başlık + bir cümle, "2 / 4" ve Geri / İleri. Dört-beş adımı geçme: uzun
  * tur okunmaz, atlanır. Tur bir kez gösterilir; tekrar açma yolu (bir
- * "Turu Başlat" düğmesi) ekranda kalır.
+ * "Turu Başlat" butonu) ekranda kalır.
  *
  * HEDEF `data-tour` ya da seçici: `target: "ozet"` → `[data-tour="ozet"]`;
  * `target: "a[href*=inbox]"` gibi seçici de olur. Bulunamayan adım

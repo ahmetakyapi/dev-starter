@@ -49,7 +49,7 @@ export const Default: Story = {
   args: { onSelect: fn() },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
-    // Etkinlik düğmesinin adı görünen metinden (başlık, saat, yer); tıklayınca onSelect gelir.
+    // Etkinlik butonunun adı görünen metinden (başlık, saat, yer); tıklayınca onSelect gelir.
     // Hem ızgarada hem (telefonda) listede aynı ad var: görünür olanı seç.
     const blok = canvas.getAllByRole("button", { name: /Ödeme Akışı Atölyesi/ })[0];
     await userEvent.click(blok);
@@ -76,7 +76,7 @@ export const CardVariant: Story = {
     docs: {
       description: {
         story:
-          "Sade gri kart; süre uzadıkça kart daha çok şey söyler: başlık + saat → iki satır başlık → ikon → katılımcılar → \"Görüşmeye Katıl\" (kısa kartta sağ üstte ikon düğmesi). Büyük gün numarası ve bugünün altında çizgi, sol üstte saat dilimi, ızgaranın üstünde Tüm Gün satırı. `weekdaysOnly` ile Pazartesi–Cuma.",
+          "Sade gri kart; süre uzadıkça kart daha çok şey söyler: başlık + saat → iki satır başlık → ikon → katılımcılar → \"Görüşmeye Katıl\" (kısa kartta sağ üstte ikon butonu). Büyük gün numarası ve bugünün altında çizgi, sol üstte saat dilimi, ızgaranın üstünde Tüm Gün satırı. `weekdaysOnly` ile Pazartesi–Cuma.",
       },
     },
   },

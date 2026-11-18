@@ -36,13 +36,13 @@ Varsayılan tema **açık** — terapist gündüz, aydınlık bir odada çalış
 
 **Temel Karakteristikler:**
 - **Font (tek grotesk + mono)**: Schibsted Grotesk her yerde — başlıktan
-  düğme etiketine. Kontrast ikinci bir aileden değil, ağırlık (400-900) ve
+  buton etiketine. Kontrast ikinci bir aileden değil, ağırlık (400-900) ve
   harf aralığından gelir. IBM Plex Mono yalnızca sayısal okumalarda (skor,
   süre, persentil, span).
 - **Renk stratejisi**: Mavi birincil + oker imza + anlam renkleri
   (yosun/kiremit/arduvaz mavi). Birincil yeşil olduğu için "başarı" ayrı bir
   renge ayrıldı: orman yeşili `#3f7d4f`. Mavi yapı ve eylemi, bej zemini taşır.
-- **Degrade YOK**: İki renkli degrade düğmeler, degrade başlıklar ve
+- **Degrade YOK**: İki renkli degrade butonlar, degrade başlıklar ve
   degrade yıkanmış kartlar kaldırıldı. Yerine düz dolgu + kılcal çerçeve.
 - **Uydurma veri YOK**: Kartlardaki her grafik gerçek kayıttan türer. Veri
   yoksa grafik hiç çizilmez — dekoratif kıvılcım çizgisi yasak.
@@ -428,7 +428,7 @@ box-shadow: var(--shadow-elevated);
 - `tailwind.config.ts` oluşturma — tüm tokenlar `globals.css` `@theme {}` bloğunda
 - `console.log` commit'e bırakma
 - Magic number kullanma — spacing ve radius için daima token
-- **İki renkli degrade kullanma** — ne düğmede, ne başlıkta, ne kart zemininde.
+- **İki renkli degrade kullanma** — ne butonda, ne başlıkta, ne kart zemininde.
   Degrade bu markanın terk ettiği şeyin ta kendisi. Düz dolgu + cetvel çentiği.
 - **Okeri (`--color-signal`) birincil eylem rengi yapma** — imza vurgusudur,
   seyrek kullanılır. Birincil her zaman mavi.

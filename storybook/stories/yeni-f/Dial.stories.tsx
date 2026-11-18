@@ -4,7 +4,7 @@ import { Dial } from "@/components/ui/dial";
 import { Frame } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Form Girişleri/Döner Düğme",
+  title: "Bileşenler/Form Girişleri/Döner Buton",
   id: "dial",
   component: Dial,
   tags: ["autodocs", "yeni"],

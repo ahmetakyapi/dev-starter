@@ -31,7 +31,7 @@ function Demo() {
 }
 
 const meta = {
-  title: "Bileşenler/Form Girişleri/Tarih Aralığı Süzgeci",
+  title: "Bileşenler/Form Girişleri/Tarih Aralığı Filtresi",
   id: "date-range-presets",
   component: DateRangePresets,
   tags: ["autodocs", "yeni"],
@@ -39,7 +39,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Hazır aralıklar (Son 7 / 30 / 90 Gün, Tümü) ve aynı açılır kutuda özel aralık takvimi. İnsanların çoğu \"son 30 gün\" ister, takvimde iki gün tıklamamalı; tam aralık gerekince de ikinci bir bileşene gitmemeli. Süzme için `rangeOf(value, presets, today)`. Hazır aralıklar radyo grubu (ok tuşları); bitiş günü seçilince kutu kapanır, odak tetikleyiciye döner. Assetora turundan (orada iki ayrı düğmeydi, burada tek). Pusula: Gelen Kutusu → Geldi.",
+          "Hazır aralıklar (Son 7 / 30 / 90 Gün, Tümü) ve aynı açılır kutuda özel aralık takvimi. İnsanların çoğu \"son 30 gün\" ister, takvimde iki gün tıklamamalı; tam aralık gerekince de ikinci bir bileşene gitmemeli. Filtreleme için `rangeOf(value, presets, today)`. Hazır aralıklar radyo grubu (ok tuşları); bitiş günü seçilince kutu kapanır, odak tetikleyiciye döner. Assetora turundan (orada iki ayrı butondu, burada tek). Pusula: Gelen Kutusu → Geldi.",
       },
     },
   },

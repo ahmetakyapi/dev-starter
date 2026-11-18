@@ -11,7 +11,7 @@ import { monotonePath, niceTicks } from "./area-chart";
  * okunacaksa `area-chart.tsx` (dolgu hacmi anlatır); burada dolgu yok, çünkü
  * beş dolgu üst üste binince hiçbiri okunmaz.
  *
- * LEJANT AYNI ZAMANDA SÜZGEÇ: her seri bir `aria-pressed` düğmesi; tıklayınca
+ * LEJANT AYNI ZAMANDA SÜZGEÇ: her seri bir `aria-pressed` butonu; tıklayınca
  * çizgi söner ve Y ekseni KALAN serilere göre yeniden ölçeklenir (küçük bir
  * seri büyüğün gölgesinde düz çizgi gibi kalmasın). Son görünen seri
  * gizlenemez: boş grafik bir cevap değil. Gizli seri balonda da tabloda da
@@ -52,7 +52,7 @@ const W = 600;
 const H = 200;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-/** Lejant-süzgeç: seri başına bir `aria-pressed` düğme. `scatter-chart` da kullanır. */
+/** Lejant-filtre: seri başına bir `aria-pressed` buton. `scatter-chart` da kullanır. */
 export function SeriesToggles({
   items,
   hidden,
@@ -78,7 +78,7 @@ export function SeriesToggles({
             key={item.key}
             type="button"
             aria-pressed={on}
-            // Son görünen seri kapatılamaz; düğme odakta kalsın diye `disabled` değil.
+            // Son görünen seri kapatılamaz; buton odakta kalsın diye `disabled` değil.
             aria-disabled={last || undefined}
             title={last ? "En az bir seri görünür kalır" : undefined}
             onClick={() => !last && onToggle(item.key)}
@@ -133,7 +133,7 @@ export function LineChart({
   markers?: boolean;
   /** Başta gizli serilerin adları. */
   defaultHidden?: readonly string[];
-  /** Lejant-süzgeç düğmeleri; kapatılırsa lejantı sen ver (`ChartLegend`). */
+  /** Lejant-filtre butonları; kapatılırsa lejantı sen ver (`ChartLegend`). */
   showToggles?: boolean;
   height?: string;
   className?: string;

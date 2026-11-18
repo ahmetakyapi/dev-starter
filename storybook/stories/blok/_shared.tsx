@@ -74,7 +74,7 @@ export function SignOutButton() {
   );
 }
 
-/** Kabuğun arama düğmesi ⌘K paletini açar: palet sayfada olmalı. */
+/** Kabuğun arama butonu ⌘K paletini açar: palet sayfada olmalı. */
 export function ShellCommands() {
   const commands: Command[] = NAV.flatMap((group) =>
     group.items.map((item) => ({

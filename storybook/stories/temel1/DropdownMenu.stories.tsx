@@ -31,7 +31,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Bir düğmenin altındaki eylem listesi (Düzenle, Kopyala, Sil); değer seçtirmek için `Select` kullan. WAI-ARIA menü kalıbı Base UI'dan: oklar, Home/End, harfle atlama, Escape ile kapanıp odağın tetikleyiciye dönmesi. Başka sayfaya giden öğe `DropdownMenuLinkItem`; yıkıcı öğe ayırıcıdan sonra ve `tone=\"danger\"`.",
+          "Bir butonun altındaki eylem listesi (Düzenle, Kopyala, Sil); değer seçtirmek için `Select` kullan. WAI-ARIA menü kalıbı Base UI'dan: oklar, Home/End, harfle atlama, Escape ile kapanıp odağın tetikleyiciye dönmesi. Başka sayfaya giden öğe `DropdownMenuLinkItem`; yıkıcı öğe ayırıcıdan sonra ve `tone=\"danger\"`.",
       },
     },
   },

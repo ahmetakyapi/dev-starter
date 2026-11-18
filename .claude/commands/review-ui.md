@@ -36,7 +36,7 @@ Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini ön
 
 4. **Ekran düzeni** (`~/dev-starter/guides/05-components.md` § 3)
    - Sıra: başlık → künye → ana görsel → ölçü ızgarası → metin → uyarılar → damga
-   - Her panelin `h2`si var mı? Ekranda tek `primary` düğme mi?
+   - Her panelin `h2`si var mı? Ekranda tek `primary` buton mu?
    - Boş / yükleniyor / hata durumları çizilmiş mi; iskelet yapıyla eşleşiyor mu?
    - Örnek içerik gerçekçi mi (ad, marka, sayı, tarih); sistem mesajı sakin ve
      somut mu; `href="#"` yok, etkin sayfa `aria-current` (`guides/05` § 7)
@@ -48,8 +48,8 @@ Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini ön
 
 6. **Erişilebilirlik**
    - Dokunma hedefi ≥ 44 px, görünür `focus-visible` halkası (kırpan kapta `-2px` offset)
-   - İkon düğmelerde `aria-label`, görsellerde `alt`, klavye ile tam akış
-   - Title Case başlık/düğme; `capitalize` / `toUpperCase` yok
+   - İkon butonlarda `aria-label`, görsellerde `alt`, klavye ile tam akış
+   - Title Case başlık/buton; `capitalize` / `toUpperCase` yok
 
 7. **Hareket** (`~/dev-starter/guides/04-motion.md`)
    - `motion/react` + `m.*`; `framer-motion` yeni projede yok

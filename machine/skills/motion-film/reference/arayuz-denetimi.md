@@ -106,7 +106,7 @@ Böylece nesnenin kendisi soruyu cevaplar.
 - [ ] Modül CSS'inde eğrisiz `transition`/`animation` yok; elle `cubic-bezier` yok
 - [ ] Çıkışlar girişin %50–60'ı, ease-in
 - [ ] Her gezinmede oynayan giriş ≤ 500 ms; kademede tek kahraman
-- [ ] `left`/`top`/`width`/`margin` animasyonu yok (bilinçli tek düğme morfu hariç, gerekçesi yorumda)
+- [ ] `left`/`top`/`width`/`margin` animasyonu yok (bilinçli tek buton morfu hariç, gerekçesi yorumda)
 - [ ] Ölçülmüş veri 0'dan sayılmıyor; okunan yazı küçülmüyor
 - [ ] Kalıcı döngüler (canlı nokta, işaret) ≥ 2,4 sn ve `--ease-loop`; yükleme döngüleri geçici
 - [ ] Açıklayıcı figür son kareyi basıyor, yalnız ekran dışındayken kuruluyor

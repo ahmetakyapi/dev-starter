@@ -9,16 +9,16 @@ import { cn } from "@/lib/utils";
 /**
  * İki bileşen, iki ayrı iş:
  *
- * `Tooltip`: GÖRSEL ETİKET. İkon düğmenin adını fareyle üzerine gelene ve
+ * `Tooltip`: GÖRSEL ETİKET. İkon butonun adını fareyle üzerine gelene ve
  * klavyeyle odaklanana gösterir. Base UI tooltip'i dokunmatikte BİLEREK
  * açmaz: uzun basma tarayıcının bağlam menüsüyle çakışır ve keşfedilemez.
- * Bu yüzden tooltip'e hiçbir zaman önemli bilgi konmaz; düğmenin adı zaten
+ * Bu yüzden tooltip'e hiçbir zaman önemli bilgi konmaz; butonun adı zaten
  * `aria-label`da durur, tooltip yalnızca onu görünür kılar.
  *
  * `InfoTip`: AÇIKLAMA. "Bu sayı ne demek?" sorusunun cevabı gibi okunması
  * gereken metin. Popover üzerine kurulu: farede üzerine gelince, dokunmatikte
  * TIKLAYINCA açılır (uzun basma değil), Escape ve dış tıklama kapatır,
- * ekran okuyucu düğmenin ardından içeriği okur.
+ * ekran okuyucu butonun ardından içeriği okur.
  *
  *   <Tooltip label="Ayarları Aç">
  *     <IconButton icon={Settings} aria-label="Ayarları Aç" showTitle={false} />
@@ -63,7 +63,7 @@ export function Tooltip({ label, children, side = "top", delay = 500 }: TooltipP
 }
 
 type InfoTipProps = {
-  /** Düğmenin adı ve açılan kutunun başlığı: "F/K Nedir". */
+  /** Butonun adı ve açılan kutunun başlığı: "F/K Nedir". */
   label: string;
   /** Açıklama metni: cümle düzeninde, birkaç satır. */
   children: ReactNode;

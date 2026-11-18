@@ -10,7 +10,7 @@ import { cn } from "../utils";
  * WCAG 2.2.2 (Durdur, Duraklat, Gizle): beş saniyeden uzun süren otomatik
  * hareketin durdurulabilmesi ZORUNLU. Üzerine gelmek ve odaklanmak şeridi
  * bekletir ama ikisi de tek yol olamaz (klavye ve dokunmatikte üzerine
- * gelinmez); bu yüzden görünür "Şeridi Durdur" düğmesi varsayılan açık.
+ * gelinmez); bu yüzden görünür "Şeridi Durdur" butonu varsayılan açık.
  * Kapatmak yalnızca şerit beş saniyeden kısa sürüyorsa meşru.
  *
  * İÇERİK İKİ KEZ ÇİZİLİR, BİR KEZ OKUNUR: kesintisiz döngü için ikinci kopya
@@ -19,7 +19,7 @@ import { cn } from "../utils";
  *
  * HAREKET CSS'TE ve yalnız `transform`: iz kendi genişliğinin yarısı kadar
  * kayar, süre içerik uzunluğundan bağımsız `duration` saniyesi. Hareketi
- * azaltan kullanıcıda şerit durağan, sarılan bir sıra olur ve düğme
+ * azaltan kullanıcıda şerit durağan, sarılan bir sıra olur ve buton
  * gizlenir (durduracak hareket yok).
  *
  * KENARLAR SÖNER: maske alfa ile (`mask-image`), renk değil; zemin ne olursa
@@ -51,7 +51,7 @@ type MarqueeProps = {
   duration?: number;
   /** Sağdan sola (varsayılan) ya da soldan sağa. */
   reverse?: boolean;
-  /** Görünür durdurma düğmesi. Yalnız 5 saniyeden kısa şeritte kapat. */
+  /** Görünür durdurma butonu. Yalnız 5 saniyeden kısa şeritte kapat. */
   control?: boolean;
   /** Öğeler arası boşluk (rem). */
   gap?: number;

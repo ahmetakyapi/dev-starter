@@ -59,7 +59,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Giriş ve kayıt kartı: sağlayıcı düğmeleri, e-posta, göster/gizle şifre ve sunucu eylemine bağlanan hata durumu. Yetki kararı sunucuda; hata metni hangi alanın yanlış olduğunu söylemez. Marka logosu ve marka rengi yok, sağlayıcı adı okunarak seçilir.",
+          "Giriş ve kayıt kartı: sağlayıcı butonları, e-posta, göster/gizle şifre ve sunucu eylemine bağlanan hata durumu. Yetki kararı sunucuda; hata metni hangi alanın yanlış olduğunu söylemez. Marka logosu ve marka rengi yok, sağlayıcı adı okunarak seçilir.",
       },
     },
   },

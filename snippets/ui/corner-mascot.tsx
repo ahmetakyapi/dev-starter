@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
  * boyunca köşede bekleyen maskotu, ciddi bir araç sitesine sıcaklık katan
  * tek oyunbaz öğe. Markanın kişiliği olan tanıtım sayfası için; uygulama
  * içinde, form akışında ve ödeme sayfasında KULLANMA (dikkat dağıtır,
- * düğmelerin üstüne biner).
+ * butonların üstüne biner).
  *
  * YÜZ: iki yuvarlak pencere, içlerinde göz bebekleri ve iki yanak; token'la
  * çizilir, paletle döner. Markanın kendi maskotu varsa `face` ile ver;
@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
  *   - Göz kırpma CSS animasyonu, 5,2 s'de bir; hareketi azaltanda yok.
  *   - Balon `role="status"`: söylediği ekran okuyucuya da ulaşır. 3,2 s sonra
  *     kapanır; her dokunuşta sıradaki mesaj.
- *   - Düğme 76 px (telefonda 64), sayfanın sağ alt köşesinde; çerez bandı
+ *   - Buton 76 px (telefonda 64), sayfanın sağ alt köşesinde; çerez bandı
  *     ya da sohbet balonu aynı köşedeyse `className` ile kaydır.
  *
  *   <CornerMascot messages={["Merhaba!", "Fiyatlar aşağıda.", "Demoyu denedin mi?"]} />
@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 
 type CornerMascotProps = {
   messages?: readonly string[];
-  /** Düğmenin erişilebilir adı. */
+  /** Butonun erişilebilir adı. */
   label?: string;
   /** Yerleşik yüz yerine markanın maskotu (göz takibi olmaz). */
   face?: ReactNode;

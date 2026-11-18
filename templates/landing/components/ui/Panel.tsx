@@ -24,7 +24,7 @@ type PanelHeaderProps = {
   title: ReactNode;
   /** Başlığın altında tek satırlık künye ya da açıklama. */
   meta?: ReactNode;
-  /** Sağda tek denetim (düğme, bağlantı). */
+  /** Sağda tek denetim (buton, bağlantı). */
   action?: ReactNode;
   className?: string;
 };

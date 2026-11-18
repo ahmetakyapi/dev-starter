@@ -7,7 +7,7 @@ import { finalCta, hero } from "@/lib/content";
 
 /*
  * Kapanış: sayfanın son eylemi. Hero ile aynı etiket ve aynı adres (tek
- * kayıt niyeti, tek etiket). Degradeli `brand` düğme burada ikinci kez
+ * kayıt niyeti, tek etiket). Degradeli `brand` buton burada ikinci kez
  * görünür ama hero ile aynı ekrana hiç düşmez: kural "ekranda bir kez".
  *
  * Büyük gri kuyu, başlık hero ölçeğinde ve sıkı: sayfa açıldığı sesle

@@ -14,7 +14,7 @@
    node $S/film-sheet.mjs film.html --strip=3.2:3.8 --cols=7 --out=out/strip.png
    ```
 3. **Canlı bileşen:** sözleşme sayfası değil, ürünün kendisi; gerçek saat,
-   gerçek düğme. Kare süresi de ölçülür.
+   gerçek buton. Kare süresi de ölçülür.
    ```bash
    node $S/film-sheet.mjs http://localhost:3000/onizleme --live --click="[data-start]" \
      --times=0.2,0.6,1.2,2,3,5,8 --selector=main --size=390x844 --dark --out=out/live.png
@@ -153,12 +153,12 @@ Yavaş ağı da dene: görsel 2–3 sn geciksin, film ne yapıyor?
 | Şeritler kutu gibi görünüyor | Yılan sırasında komşu şeritler uç noktayı paylaşınca dikey kenar oluştu | Her parça yalnız kendi noktalarını çizsin; bağlantı ayrı darbe, söner |
 | Dev kelime selin dışında yarım harfler | Kelime sel ekranı kaplamadan başladı, normal paletle çizildi | Kelimeyi sel tamamlanınca başlat |
 | Künyeler üst üste | Zirve son seanslarda, son kapanış künyesiyle aynı yerde; kadran uç künyesiyle aynı köşede | Çakışmaya göre yer seç; hale ekle |
-| Künye ses düğmesinin altında | Grafiğin üst payı DOM düğmesini hesaba katmıyordu | Üst payı düğmenin altından başlat |
+| Künye ses butonunun altında | Grafiğin üst payı DOM butonunu hesaba katmıyordu | Üst payı butonun altından başlat |
 | Damgada logo yerine "NV" | Film başladığında logo inmemişti | Logoyu önceden indir + `decode()`; film ≤ 450 ms beklesin; yoldaysa karo boş beklesin |
 | Logo film sırasında değişince film baştan başladı | Logo efektin bağımlılığındaydı | Filme verilen logoyu başlatma anında dondur |
 | Mühürde ".NVDA" | Rastgele pürüz harfin yanına düştü | Pürüzler yalnız kenar bandında |
 | Uzun sembolde künye perde sonrasına taştı | Kalem süresi sabitti | Süreyi perde sonuna göre sınırla; birim testle |
-| Liste kutu kadar dar, ad tek harf | Açılır liste girdinin genişliğinde | Satırın (girdi + düğme) genişliği |
+| Liste kutu kadar dar, ad tek harf | Açılır liste girdinin genişliğinde | Satırın (girdi + buton) genişliği |
 | Koyu temada açılır liste saydam | Yüzey token'ı koyu temada yarı saydam | Opak yüzey token'ı |
 
 ## Saha tuzakları — başkalarının ölçtükleri
@@ -176,11 +176,11 @@ sözlerimizle; her prompt yaratıcısına aittir (handle ile anıldı).
 | Hızlı savurmada (whip) hayalet kopyalar | Hızlı planlarda **≥ 8 alt kare** (`--subframes=8`); 4 yetmez | @twoclipping |
 | Biçim değiştiren şey geçişte sıçrıyor | Biçim değiştirme ayrıldığı sahnenin **aynı kamera dönüşümünün** içinde kalır | @twoclipping |
 | Sel bitince bir kare yarım ekran değişiyor | Seli köşelerin ötesine taşır (≥ köşegen), ~0,3 sn sürsün; dolunca tam kare dikdörtgene geç | @twoclipping |
-| Chromium'da `backdrop-filter: url()` yer değiştirme haritasını yanlış okuyor | Sahneyi klonla, süzgeci kopyaya uygula | @twoclipping |
+| Chromium'da `backdrop-filter: url()` yer değiştirme haritasını yanlış okuyor | Sahneyi klonla, filtreyi kopyaya uygula | @twoclipping |
 | Video `<video>`da ileri sarılmıyor | `python -m http.server` aralık isteğini (Range) desteklemiyor; blob URL ya da aralık destekli sunucu | @twoclipping |
 | Maske bütün kutuyu dolduruyor | Siluet ALFA kanalında olsun; kare kenarında kesilen uzuv düz kenar verir, maskeyi kadrajın dışına uzat | @twoclipping |
 | Aynı öğeyi gösteren iki sahne arasında atlama | O sahnelere **ortak bir zoom fonksiyonu**; giden sahneyi geçişin altında çiz | @twoclipping |
-| 3D kartın iki yüzü birden görünüyor | `preserve-3d` öğesine opaklık ya da süzgeç verme (düzleşir); wrapper'ı söndür | @raphaelaubryy |
+| 3D kartın iki yüzü birden görünüyor | `preserve-3d` öğesine opaklık ya da filtre verme (düzleşir); wrapper'ı söndür | @raphaelaubryy |
 | Eşleşen kesmede öğe kayıyor | Konumları **çalışma anında ölç** (`getBoundingClientRect`), elle yazma | @raphaelaubryy |
 | İmleç hedefi ıskalıyor, sıçrıyor | İmleci hedefin **varacağı** yere nişanla; hız **< 65 px/kare** | @flxrnc |
 | Döngü ekinde tekleme ya da çift kare | `[0, süre)` dışa aktar, son kare ilk kareyi tekrarlamaz; sesi de döngüle | @thegrootdev |

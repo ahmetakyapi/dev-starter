@@ -5,19 +5,19 @@ import { DigitRoll } from "@/components/ui/digit-roll";
 import { cn } from "@/lib/utils";
 
 /**
- * Döner düğme: dairesel kadranda sürekli değer. Ses düzeyi, sıcaklık,
+ * Döner buton: dairesel kadranda sürekli değer. Ses düzeyi, sıcaklık,
  * yoğunluk, karışım oranı: elle "biraz daha" ayarlanan, kesin rakamdan çok
  * hissin önemli olduğu değer. Kesin küçük sayıda `number-field`, düz
  * aralıkta `slider` daha hızlıdır; kadran, birkaç ayarın yan yana durduğu
  * kontrol panelinde (stüdyo, kahve makinesi, aydınlatma) yer kazandırır.
  *
  * KADRAN 270°: -135°'ten +135°'e çentikler, değer yayı birincil renkte
- * dolar, düğme gövdesi beyaz karo ve üstündeki işaret değeri gösterir.
+ * dolar, buton gövdesi beyaz karo ve üstündeki işaret değeri gösterir.
  * Ortada değer `digit-roll` ile: yalnız değişen rakam yuvarlanır.
  *
  * SÜRÜKLEME DOĞRUSAL: yukarı ya da sağa çekmek artırır (müzik
  * yazılımlarının alışkanlığı); daire çizmek gerekmez. 160 piksel tüm aralık,
- * Shift ile on kat ince. Tekerlek yalnız düğme ODAKTAYKEN çalışır: sayfayı
+ * Shift ile on kat ince. Tekerlek yalnız buton ODAKTAYKEN çalışır: sayfayı
  * kaydıran kullanıcının değeri yanlışlıkla değişmesin.
  *
  * KLAVYE (`role="slider"`): ← ↓ azaltır, → ↑ artırır, PageUp/PageDown on
