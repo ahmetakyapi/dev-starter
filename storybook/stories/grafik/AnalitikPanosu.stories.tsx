@@ -292,7 +292,7 @@ export const Default: Story = {
     await expect(canvas.getByText("2 – 31 Ekim 2026")).toBeInTheDocument();
     // Dönem değişince bütün pano birlikte güncellenir
     await userEvent.click(canvas.getByRole("radio", { name: "Yıl" }));
-    await expect(canvas.getByText("Ocak – Aralık 2026")).toBeInTheDocument();
+    await expect(canvas.getByText("Kasım 2025 – Ekim 2026")).toBeInTheDocument();
     await userEvent.click(canvas.getByRole("radio", { name: "Ay" }));
     await expect(canvas.getByRole("radio", { name: "Ay" })).toBeChecked();
   },

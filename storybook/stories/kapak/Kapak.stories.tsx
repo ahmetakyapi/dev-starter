@@ -361,10 +361,11 @@ function Showcase() {
                 title="Aylık Ciro, Son 12 Ay ve Önceki 12 Ay"
                 labels={MONTHS}
                 series={[
-                  { label: "Son 12 Ay", values: THIS_YEAR, series: 1 },
-                  { label: "Önceki 12 Ay", values: LAST_YEAR, series: 2 },
+                  { label: "Son 12 Ay", values: THIS_YEAR.map((v) => v * 1000), series: 1 },
+                  { label: "Önceki 12 Ay", values: LAST_YEAR.map((v) => v * 1000), series: 2 },
                 ]}
-                unit="bin ₺"
+                // Eksen "₺1,5 Mn": "bin ₺" birimiyle kısaltma "1,5 B" (bin bin ₺) okunuyordu.
+                valueFormat={{ style: "currency", currency: "TRY", notation: "compact", maximumFractionDigits: 1 }}
                 height="h-52 lg:h-64"
               />
             </div>
