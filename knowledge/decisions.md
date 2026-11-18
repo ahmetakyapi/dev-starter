@@ -1534,3 +1534,11 @@ Sahibi Fener'i seçti: "mantık bu, çok daha iyi hali". Kesinleşen hal:
 - Otomasyonda ve hareket azaltmada fener sabit sol bantta (OG kararlı).
 - Önceki "yüzen bileşen numuneleri" hali bunun yerine geçti; numune
   kararındaki odak/derinlik notları tarihçe olarak kalır.
+- **Değişti (2026-11-18, ikinci tur):** sahibi "arkadakiler kaysın, üzerine
+  gelince renklensin, uygulamada kullandığımız gerçek bileşenler olsun" dedi.
+  Sahne artık iki yanda birer kayan sütun (karşılıklı yön, 70/76 sn); içinde
+  `snippets/ui`dan gerçek bileşenler: Button, Stat, Switch, Rating, Progress,
+  SegmentedControl, AvatarGroup, Sparkline, Badge, Checkbox, FilterChip, Kbd,
+  Spinner. Işık maskesi yerine her parça kendi odağını taşır (`--f`, fenere
+  uzaklıktan): bütün kart birlikte renklenir, yarım kesik görünmez. İmleç
+  sahnedeyken kayma durur. Sütunlar `inert` (odaklanmaz, okunmaz).

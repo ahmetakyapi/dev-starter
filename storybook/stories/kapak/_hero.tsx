@@ -1,9 +1,21 @@
 "use client";
 
-import { ArrowRight, Bell, Check, FileText, Pause, Play, Search, Star } from "lucide-react";
+import { ArrowRight, Bell, Check, FileText, Pause, Play, Search } from "lucide-react";
 import { m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { AvatarGroup } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FilterChip } from "@/components/ui/chip";
+import { Kbd } from "@/components/ui/kbd";
+import { Progress } from "@/components/ui/progress";
+import { Rating } from "@/components/ui/rating";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { Sparkline } from "@/components/ui/sparkline";
+import { Spinner } from "@/components/ui/spinner";
+import { Stat } from "@/components/ui/stat";
+import { Switch } from "@/components/ui/switch";
 import { SlotText } from "@/components/ui/slot-text";
 import { DUR, EASE, STAGGER } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -12,9 +24,9 @@ import uiPackage from "../../../packages/@ahmet/ui/package.json";
 import { PALETTES } from "../../.storybook/palettes";
 
 /**
- * Tanıtım kahramanı: FENER. Sahnede katalogdan on altı farklı, gerçek
- * bileşen durur; dinlenirken soluk ve renksiz (başlık tek odak), imlecin
- * fenerinin değdiği yerde renkleriyle belirir. Fener imleci yumuşak bir
+ * Tanıtım kahramanı: FENER. Sahnenin iki yanında katalogdaki GERÇEK
+ * bileşenler (snippets/ui) kayan sütunlarda durur; dinlenirken soluk ve
+ * renksiz (başlık tek odak), fener yaklaştıkça parça parça renklenir. Fener imleci yumuşak bir
  * gecikmeyle izler; imleç yoksa sahnede yavaşça kendi dolaşır.
  *
  * Seçim: 18 Kasım 2026, on yedi yön içinden (yelpaze, şerit, küre, dergi,
@@ -61,10 +73,16 @@ const CSS = `
 @layer base {
   .kf-tour, .kf-tour * { transition-property: color, background-color, border-color, fill, stroke, box-shadow; transition-duration: 600ms; transition-timing-function: cubic-bezier(.22,1,.36,1); }
 }
-/* Dinlenme: renksiz ve soluk; başlığın okunurluğunu bozmaz. */
-.kf-rest { opacity: .22; filter: grayscale(1); }
-.dark .kf-rest, [data-theme="dark"] .kf-rest { opacity: .18; }
-.kf-tile { transition: translate .5s cubic-bezier(.22,1,.36,1); }`;
+@keyframes kf-up { to { transform: translateY(-50%); } }
+@keyframes kf-down { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+.kf-up { animation: kf-up linear infinite; }
+.kf-down { animation: kf-down linear infinite; }
+.kf-stage:hover .kf-up, .kf-stage:hover .kf-down { animation-play-state: paused; }
+/* Her parça kendi odağını taşır (--f, 0-1): dinlenirken renksiz ve soluk, fener yaklaştıkça
+   netleşir, renklenir, hafifçe öne gelir. Yeniden çizim yok; değişken JS'ten. */
+.kf-cell { --f: 0; opacity: calc(.2 + .8 * var(--f)); filter: grayscale(calc(1 - var(--f))); transform: scale(calc(.96 + .04 * var(--f))); transition: opacity .35s, filter .35s, transform .35s cubic-bezier(.22,1,.36,1); }
+[data-theme="dark"] .kf-cell { opacity: calc(.16 + .84 * var(--f)); }
+@media (prefers-reduced-motion: reduce) { .kf-up, .kf-down { animation: none; } }`;
 
 function usePaletteTour(palette: PaletteName, onPalette: (p: PaletteName) => void, still: boolean) {
   const [playing, setPlaying] = useState(!still);
@@ -104,56 +122,85 @@ function usePaletteTour(palette: PaletteName, onPalette: (p: PaletteName) => voi
   };
 }
 
-type Spot = { x: number; y: number; node: ReactNode };
-const Card = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <div className={cn("rounded-[1rem] bg-overlay p-3 shadow-raised ring-1 ring-inset ring-line-soft", className)}>{children}</div>
+const noop = () => {};
+const Tile = ({ children, w = "w-60" }: { children: ReactNode; w?: string }) => (
+  <div className={cn("kf-tile rounded-[1.1rem] bg-overlay p-3.5 shadow-raised ring-1 ring-inset ring-line-soft", w)}>{children}</div>
 );
 
-/* On altı parça, hiçbiri tekrar etmez. Konumlar sahnenin yüzdesi: sol bant 2-24, sağ bant 72-90;
-   orta sütun (başlık) boş. */
-const MOSAIC: Spot[] = [
-  { x: 3, y: 9, node: <Card><div className="grid grid-cols-7 gap-1 text-center text-[0.6rem] text-muted">{["P", "S", "Ç", "P", "C", "C", "P"].map((d, i) => <span key={i}>{d}</span>)}{Array.from({ length: 21 }, (_, i) => <span key={`d${i}`} className={cn("grid size-5 place-items-center rounded-md", i === 9 ? "bg-primary text-on-primary" : "text-body")}>{i + 1}</span>)}</div></Card> },
-  { x: 19, y: 6, node: <Card className="w-44"><div className="grid gap-2 text-left"><span className="text-small font-semibold text-strong">Fiyat listesini güncelle</span><span className="flex items-center justify-between"><span className="rounded-full bg-primary-wash px-2 py-0.5 text-micro font-semibold text-primary-ink">Satış</span><AvatarGroup size="sm" label="Atanan" people={[{ name: "Mert Aksoy" }]} /></span></div></Card> },
-  { x: 2, y: 40, node: <Card><span className="flex items-center gap-2 text-small font-medium text-strong"><span className="grid size-6 place-items-center rounded-full bg-success-wash text-success"><Check className="size-3.5" strokeWidth={3} /></span>Değişiklik kaydedildi</span></Card> },
-  { x: 13, y: 29, node: <Card className="w-40"><svg viewBox="0 0 160 60" className="h-14 w-full" aria-hidden><polyline fill="none" className="stroke-primary" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" points="0,48 22,40 44,44 66,26 88,32 110,14 132,20 160,6" /></svg><span className="mt-1 block text-left text-micro text-muted">Son 7 gün · +%12</span></Card> },
-  { x: 4, y: 62, node: <Card><span className="flex gap-1.5">{["bg-primary", "bg-primary-soft", "bg-primary-wash", "bg-success", "bg-warning"].map((c) => <span key={c} className={cn("size-7 rounded-lg", c)} />)}</span></Card> },
-  { x: 9, y: 55, node: <Card className="w-44"><span className="grid gap-2 text-left"><span className="flex justify-between text-micro text-muted"><span>Ses</span><span>64</span></span><span className="relative h-1.5 rounded-full bg-surface"><span className="absolute inset-y-0 left-0 w-[64%] rounded-full bg-primary" /><span className="absolute top-1/2 left-[64%] size-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-overlay shadow-raised ring-1 ring-line" /></span></span></Card> },
-  { x: 8, y: 80, node: <Card><span className="flex gap-1 rounded-lg bg-surface p-1 text-small">{["Genel", "Ekip", "Fatura"].map((x, i) => <span key={x} className={cn("rounded-md px-2.5 py-1", i === 1 ? "bg-overlay font-semibold text-strong shadow-raised" : "text-muted")}>{x}</span>)}</span></Card> },
-  { x: 76, y: 7, node: <Card><span className="flex items-center gap-3"><AvatarGroup size="sm" label="Ekip" people={[{ name: "Zeynep Kaya" }, { name: "Selin Arslan" }, { name: "Can Demir" }]} /><span className="text-left text-micro leading-tight text-muted"><b className="block text-small text-strong">3 kişi</b>şu an burada</span></span></Card> },
-  { x: 86, y: 22, node: <Card><span className="flex items-center gap-2 text-small"><FileText className="size-4 text-primary" /><span className="text-strong">rapor.pdf</span><span className="text-muted">2,4 MB</span></span></Card> },
-  { x: 77, y: 31, node: <Card className="w-44"><span className="flex items-center gap-2 rounded-lg bg-surface px-2.5 py-2 text-small text-muted ring-1 ring-inset ring-line"><Search className="size-4" />Bileşen ara</span></Card> },
-  { x: 87, y: 42, node: <Card><span className="flex gap-0.5 text-warning">{Array.from({ length: 5 }, (_, i) => <Star key={i} className={cn("size-4", i < 4 && "fill-current")} />)}</span></Card> },
-  { x: 76, y: 50, node: <Card><span className="flex items-center gap-3"><svg viewBox="0 0 36 36" className="size-11 -rotate-90" aria-hidden><circle cx="18" cy="18" r="15" fill="none" className="stroke-surface" strokeWidth="4" /><circle cx="18" cy="18" r="15" fill="none" className="stroke-primary" strokeWidth="4" strokeDasharray="94" strokeDashoffset="28" strokeLinecap="round" /></svg><span className="text-left text-micro leading-tight text-muted"><b className="block text-small text-strong">%70</b>tamamlandı</span></span></Card> },
-  { x: 88, y: 62, node: <Card><span className="flex flex-wrap gap-1.5">{["Kargo", "Fatura"].map((x) => <span key={x} className="rounded-full bg-primary-wash px-2.5 py-1 text-micro font-semibold text-primary-ink">{x}</span>)}</span></Card> },
-  { x: 74, y: 67, node: <Card className="w-52"><pre className="text-left font-mono text-[0.65rem] leading-5 text-body"><span className="text-primary-ink">--primary</span>: <span className="text-strong">#0D74C4</span>;{"\n"}<span className="text-primary-ink">--radius</span>: <span className="text-strong">12px</span>;</pre></Card> },
-  { x: 86, y: 80, node: <Card><span className="flex items-center gap-2 text-small"><span className="relative grid size-7 place-items-center rounded-full bg-primary-wash text-primary-ink"><Bell className="size-3.5" /><span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-danger" /></span><span className="text-strong">2 yeni talep</span></span></Card> },
-  { x: 74, y: 84, node: <Card><span className="flex gap-1 text-small">{["‹", "1", "2", "3", "›"].map((x, i) => <span key={i} className={cn("grid size-7 place-items-center rounded-md", x === "2" ? "bg-primary text-on-primary" : "text-body")}>{x}</span>)}</span></Card> },
+/* Sahnenin parçaları: katalogdaki GERÇEK bileşenler (snippets/ui), uygulamada nasıl duruyorsa öyle.
+   İki yanda birer sütun (on parça, hiçbiri tekrar etmez); sütun kendi içinde iki kez (dikişsiz kayma). */
+const COLUMNS: ReactNode[][] = [
+  [
+    <Tile key="a"><Button size="sm">Değişiklikleri Kaydet</Button></Tile>,
+    <Tile key="b"><Stat label="Haftalık Ciro" value="₺84.120" change={6.4} changeLabel="geçen haftaya göre" /></Tile>,
+    <Tile key="c"><Switch label="Bildirimler" hint="Acil talepler anında" defaultChecked /></Tile>,
+    <Tile key="d" w="w-auto"><Rating value={4} showValue count={128} /></Tile>,
+    <Tile key="e"><Progress value={68} label="Yükleniyor" valueText="%68" /></Tile>,
+  ],
+  [
+    <Tile key="a" w="w-auto"><SegmentedControl aria-label="Dönem" size="sm" value="hafta" onValueChange={noop} options={[{ value: "gun", label: "Gün" }, { value: "hafta", label: "Hafta" }, { value: "ay", label: "Ay" }]} /></Tile>,
+    <Tile key="b" w="w-auto"><span className="flex items-center gap-3"><AvatarGroup size="sm" label="Ekip" people={[{ name: "Zeynep Kaya" }, { name: "Mert Aksoy" }, { name: "Selin Arslan" }]} /><span className="text-left text-small leading-tight"><b className="block text-strong">3 kişi</b><span className="text-muted">şu an burada</span></span></span></Tile>,
+    <Tile key="c"><span className="grid gap-1 text-left"><span className="text-small text-muted">Son 7 gün</span><Sparkline values={[12, 18, 14, 22, 19, 28, 31]} title="Son 7 gün" width={200} height={40} /></span></Tile>,
+    <Tile key="d" w="w-auto"><span className="flex gap-1.5"><Badge tone="success">Yayında</Badge><Badge tone="primary">Yeni</Badge><Badge tone="warning">Taslak</Badge></span></Tile>,
+    <Tile key="e"><Checkbox label="Haftalık özeti e-postayla al" defaultChecked /></Tile>,
+  ],
+  [
+    <Tile key="a" w="w-auto"><span className="flex flex-wrap gap-1.5"><FilterChip selected count={12}>Kargo</FilterChip><FilterChip selected={false} count={4}>Fatura</FilterChip></span></Tile>,
+    <Tile key="b"><Stat label="Açık Talep" value="9" change={-12.5} changeLabel="dünden" /></Tile>,
+    <Tile key="c" w="w-auto"><span className="flex items-center gap-2 text-small text-muted"><Search className="size-4" />Bileşen ara<Kbd>⌘</Kbd><Kbd>K</Kbd></span></Tile>,
+    <Tile key="d" w="w-auto"><span className="flex items-center gap-3 text-small"><Spinner size="sm" label={null} /><span className="text-strong">Eşitleniyor</span></span></Tile>,
+    <Tile key="e" w="w-auto"><span className="flex items-center gap-2 text-small"><FileText className="size-4 text-primary-ink" /><span className="text-strong">rapor.pdf</span><span className="text-muted">2,4 MB</span></span></Tile>,
+  ],
+  [
+    <Tile key="a"><Switch label="Koyu Tema" hint="Sistemi izler" /></Tile>,
+    <Tile key="b" w="w-auto"><Button size="sm" variant="secondary">Taslağı Önizle</Button></Tile>,
+    <Tile key="c"><Progress value={42} label="Depolama" valueText="4,2 / 10 GB" /></Tile>,
+    <Tile key="d" w="w-auto"><span className="flex items-center gap-2 text-small font-medium text-strong"><span className="grid size-6 place-items-center rounded-full bg-success-wash text-success"><Check className="size-3.5" strokeWidth={3} /></span>Değişiklik kaydedildi</span></Tile>,
+    <Tile key="e" w="w-auto"><span className="flex items-center gap-2 text-small"><span className="relative grid size-7 place-items-center rounded-full bg-primary-wash text-primary-ink"><Bell className="size-3.5" /><span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-danger" /></span><span className="text-strong">2 yeni talep</span></span></Tile>,
+  ],
 ];
 
-function Spots({ items }: { items: Spot[] }) {
+/** Kayan sütun: içerik iki kez, -%50'ye kayar (dikişsiz). Yön ve hız sütuna göre. */
+function Column({ items, dir, dur, still }: { items: ReactNode[]; dir: "up" | "down"; dur: number; still: boolean }) {
   return (
-    <>
-      {items.map((s, i) => (
-        <div key={i} className="absolute" style={{ left: `${s.x}%`, top: `${s.y}%` }}>
-          {s.node}
-        </div>
-      ))}
-    </>
+    <div className="h-full overflow-hidden">
+      <div className={cn("grid justify-items-center gap-6", !still && (dir === "up" ? "kf-up" : "kf-down"))} style={{ animationDuration: `${dur}s` }}>
+        {[...items, ...items].map((node, i) => (
+          <div key={i} className="kf-cell">
+            {node}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
 /** Fener: imleci yumuşak gecikmeyle izler (her karede kalan yolun %12'si); imleç 1,5 sn
- *  durunca yavaş bir Lissajous yoluna döner. Konum CSS değişkeni: yeniden çizim yok. */
+ *  durunca yavaş bir Lissajous yoluna döner. Her karede parçaların fenere uzaklığı ölçülür,
+ *  odak (`--f`) yakında 1, 320 px'te 0. Konum ve odak CSS değişkeni: yeniden çizim yok. */
 function useLantern(stage: React.RefObject<HTMLDivElement | null>, still: boolean) {
   const target = useRef<{ x: number; y: number } | null>(null);
   const lastMove = useRef(0);
   useEffect(() => {
     const el = stage.current;
     if (!el) return;
+    const focus = (fx: number, fy: number) => {
+      const sr = el.getBoundingClientRect();
+      el.querySelectorAll<HTMLElement>(".kf-cell").forEach((c) => {
+        const b = c.getBoundingClientRect();
+        const d = Math.hypot(b.left + b.width / 2 - sr.left - fx, b.top + b.height / 2 - sr.top - fy);
+        const f = Math.max(0, Math.min(1, 1 - (d - 70) / 250));
+        c.style.setProperty("--f", (f * f * (3 - 2 * f)).toFixed(3));
+      });
+    };
     if (still) {
-      el.style.setProperty("--fx", "20%");
-      el.style.setProperty("--fy", "42%");
-      return;
+      // Otomasyon ve hareket azaltma: fener sol bantta sabit (OG görseli kararlı).
+      const fx = el.clientWidth * 0.18;
+      const fy = el.clientHeight * 0.42;
+      el.style.setProperty("--fx", `${fx}px`);
+      el.style.setProperty("--fy", `${fy}px`);
+      const id = window.setTimeout(() => focus(fx, fy), 50);
+      return () => window.clearTimeout(id);
     }
     let raf = 0;
     let x = el.clientWidth * 0.22;
@@ -176,6 +223,7 @@ function useLantern(stage: React.RefObject<HTMLDivElement | null>, still: boolea
       y += (ty - y) * 0.12;
       el.style.setProperty("--fx", `${x.toFixed(1)}px`);
       el.style.setProperty("--fy", `${y.toFixed(1)}px`);
+      focus(x, y);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -198,8 +246,7 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
   const enter = (step: number, y = 16) =>
     still ? {} : { initial: { opacity: 0, y }, animate: { opacity: 1, y: 0 }, transition: { duration: DUR.slow, ease: EASE, delay: step * STAGGER } };
   const R = 300;
-  const lens = `radial-gradient(${R}px circle at var(--fx) var(--fy), var(--text-strong) 0%, var(--text-strong) 36%, transparent 72%)`;
-  const ogCounts = `141 bileşen · 781 hikaye · ${PALETTES.length} palet · 2 tema`;
+    const ogCounts = `141 bileşen · 781 hikaye · ${PALETTES.length} palet · 2 tema`;
   return (
     <section
       ref={t.ref}
@@ -214,19 +261,18 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
         ref={stage}
         onPointerMove={onMove}
         onPointerDown={onMove}
-        className="relative isolate grid w-full justify-items-center overflow-hidden rounded-[2.5rem] bg-surface px-4 py-28 ring-1 ring-inset ring-line-soft sm:py-36"
+        className="kf-stage relative isolate grid w-full justify-items-center overflow-hidden rounded-[2.5rem] bg-surface px-4 py-28 ring-1 ring-inset ring-line-soft sm:py-36"
         style={{ "--fx": "22%", "--fy": "40%" } as CSSProperties}
       >
-        {/* 1 · Dinlenen sahne: bütün parçalar, renksiz ve soluk. */}
-        <div aria-hidden className="kf-rest pointer-events-none absolute inset-0 -z-10 hidden md:block">
-          <Spots items={MOSAIC} />
+        {/* Sahne: iki yanda birer sütun gerçek bileşen, karşılıklı yönlerde kayar; üst ve alt kenarda
+            söner. Başlığın sütunu (orta, 2,3 pay) boş. İmleç sahnedeyken kayma durur (okunsun). */}
+        <div aria-hidden inert className="pointer-events-none absolute inset-0 -z-10 hidden grid-cols-[minmax(0,1fr)_minmax(0,2.3fr)_minmax(0,1fr)] gap-6 px-8 [mask-image:linear-gradient(to_bottom,transparent,var(--text-strong)_14%,var(--text-strong)_86%,transparent)] lg:grid">
+          <Column items={[...COLUMNS[0], ...COLUMNS[1]]} dir="up" dur={70} still={still} />
+          <span />
+          <Column items={[...COLUMNS[2], ...COLUMNS[3]]} dir="down" dur={76} still={still} />
         </div>
-        {/* 2 · Işık: fenerin altında paletin yumuşak yıkaması, mercekten geniş. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden md:block" style={{ background: `radial-gradient(${R * 1.5}px circle at var(--fx) var(--fy), var(--primary-wash), transparent 70%)` }} />
-        {/* 3 · Fener: aynı parçalar aynı yerde, yalnız merceğin içinde ve renkli. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden md:block" style={{ maskImage: lens, WebkitMaskImage: lens }}>
-          <Spots items={MOSAIC} />
-        </div>
+        {/* Işık: fenerin altında paletin yumuşak yıkaması. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden lg:block" style={{ background: `radial-gradient(${R * 1.4}px circle at var(--fx) var(--fy), var(--primary-wash), transparent 70%)` }} />
         {/* 4 · Başlığın arkası: zeminin kendisiyle sakinleşir (fener başlığın altından geçerken okunurluk korunur). */}
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(ellipse 30% 40% at 50% 50%, var(--surface) 35%, transparent 100%)" }} />
 
@@ -293,7 +339,7 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
                 </button>
               ) : null}
             </div>
-            <p className="hidden text-small text-muted md:block">İmleci gezdir: sahnede 141 bileşenden on altısı bekliyor</p>
+            <p className="hidden text-small text-muted lg:block">İmleci yaklaştır: arkadakiler katalogdaki gerçek bileşenler</p>
           </m.div>
         </div>
       </div>
