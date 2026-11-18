@@ -33,8 +33,8 @@ const meta = {
           </PopoverTrigger>
           <PopoverContent title="Panoyu Paylaş" description="Bağlantıya sahip herkes yalnızca okuyabilir.">
             <div className="flex items-center gap-2 rounded-md bg-surface-sunken py-1 pr-1 pl-3">
-              <code className="min-w-0 flex-1 truncate font-mono text-small text-body">pano.acme.com.tr/p/q3-satis</code>
-              <CopyButton value="https://pano.acme.com.tr/p/q3-satis" label="Bağlantıyı Kopyala" />
+              <code className="min-w-0 flex-1 truncate font-mono text-small text-body">pano.ozdemir.com.tr/p/q3-satis</code>
+              <CopyButton value="https://pano.ozdemir.com.tr/p/q3-satis" label="Bağlantıyı Kopyala" />
             </div>
           </PopoverContent>
         </Popover>

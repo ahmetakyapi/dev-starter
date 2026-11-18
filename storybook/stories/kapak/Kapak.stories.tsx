@@ -320,9 +320,12 @@ function SearchLauncher() {
    çalışan bir kompozisyon (sahte ekran görüntüsü yok). Solda Pusula'nın
    panosu (ölçü + alan grafiği), sağda üstte ekip oylaması, altta ayar
    kartı. Hepsi seçili palet ve temayla döner; oy verilir, anahtar açılır. */
-const MONTHS = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
-const THIS_YEAR = [62, 58, 71, 69, 78, 84, 80, 91, 96, 104, 112, 118];
-const LAST_YEAR = [48, 51, 55, 60, 58, 66, 70, 68, 75, 79, 83, 90];
+/* Pusula'nın "bugünü" 2 Kasım: grafik son on iki TAM ay (Kas–Eki), bin ₺.
+   Son ay (1.088) başlıktaki 30 günlük cironun (₺1,09 M) karşılığı; eskiden
+   grafik ayda 118 bin gösteriyordu, başlıkla dokuz kat çelişiyordu. */
+const MONTHS = ["Kas", "Ara", "Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki"];
+const THIS_YEAR = [640, 690, 580, 620, 710, 760, 830, 880, 840, 910, 1010, 1088];
+const LAST_YEAR = [520, 560, 470, 500, 560, 600, 650, 700, 680, 720, 790, 860];
 
 function Showcase() {
   const reduce = useReducedMotion();
@@ -355,11 +358,11 @@ function Showcase() {
                 ))}
               </dl>
               <AreaChart
-                title="Aylık Ciro, Bu Yıl ve Geçen Yıl"
+                title="Aylık Ciro, Son 12 Ay ve Önceki 12 Ay"
                 labels={MONTHS}
                 series={[
-                  { label: "Bu Yıl", values: THIS_YEAR, series: 1 },
-                  { label: "Geçen Yıl", values: LAST_YEAR, series: 2 },
+                  { label: "Son 12 Ay", values: THIS_YEAR, series: 1 },
+                  { label: "Önceki 12 Ay", values: LAST_YEAR, series: 2 },
                 ]}
                 unit="bin ₺"
                 height="h-52 lg:h-64"

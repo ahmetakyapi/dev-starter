@@ -77,7 +77,7 @@ export const Invalid: Story = {
 
 export const FourDigits: Story = {
   name: "Dört Hane, Ayraçsız",
-  args: { label: "Kart Şifresi Onayı", length: 4, groupAt: 0, hint: "Kartının son dört hanesi." },
+  args: { label: "Kartın Son Dört Hanesi", length: 4, groupAt: 0, hint: "Kartının üzerindeki son dört rakam." },
 };
 
 export const Disabled: Story = {

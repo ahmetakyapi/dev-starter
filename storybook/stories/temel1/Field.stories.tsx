@@ -25,7 +25,7 @@ const meta = {
     label: "E-Posta",
     name: "email",
     type: "email",
-    placeholder: "ahmet@acme.com.tr",
+    placeholder: "ahmet@ozdemir.com.tr",
     autoComplete: "email",
   },
 } satisfies Meta<typeof Field>;
@@ -37,8 +37,8 @@ export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const input = within(canvasElement).getByLabelText("E-Posta");
-    await userEvent.type(input, "ahmet@acme.com.tr");
-    await expect(input).toHaveValue("ahmet@acme.com.tr");
+    await userEvent.type(input, "ahmet@ozdemir.com.tr");
+    await expect(input).toHaveValue("ahmet@ozdemir.com.tr");
   },
 };
 
@@ -50,7 +50,7 @@ export const Hint: Story = {
 export const Error: Story = {
   name: "Hata",
   args: {
-    defaultValue: "ahmet@acme",
+    defaultValue: "ahmet@ozdemir",
     hint: "Fatura ve hesap bildirimleri bu adrese gider.",
     error: "Geçerli bir e-posta adresi girin.",
   },

@@ -667,7 +667,7 @@ function FormGroup() {
       <Cell file="number-field" name="Sayı Alanı" note="Kesin küçük sayı; Shift ile on katı, sınırda buton kapanır." span={3}>
         <div className="mx-auto grid max-w-xs gap-6">
           <NumberField label="Paket Adedi" defaultValue={12} min={1} max={60} hint="Toptanda en az 12 paket." />
-          <NumberField label="Kilo Fiyatı" defaultValue={2640} min={0} step={20} format={{ style: "currency", currency: "TRY", maximumFractionDigits: 0 }} />
+          <NumberField label="Kilo Fiyatı" defaultValue={680} min={0} step={20} format={{ style: "currency", currency: "TRY", maximumFractionDigits: 0 }} />
         </div>
       </Cell>
       <Cell file="input-otp" name="Doğrulama Kodu" note="Yapıştırınca hanelere dağılır, yazdıkça ilerler.">
@@ -1026,7 +1026,7 @@ const TODAY_TASKS: readonly Task[] = [
       { id: "t2c", title: "Matbaaya PDF gönder", done: false },
     ],
   },
-  { id: "t3", title: "Ekim kapanışını Barış'la imzala", done: true, priority: "medium", due: "2026-11-02" },
+  { id: "t3", title: "Ekim kapanışını Barış'la imzala", done: false, priority: "medium", due: "2026-11-06" },
   { id: "t4", title: "Açık atölye günü duyurusu", done: false, priority: "low", due: "2026-11-05" },
 ];
 
@@ -1168,7 +1168,7 @@ function GeriGroup() {
               </Button>
             }
           />
-          <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 fatura eşleşti, fark yok." />
+          <BannerAlert tone="info" title="Ekim Kapanışı Cuma 11.00’de" description="Faturaların eşleşmesi kontrolde; şu ana kadar fark yok." />
           <BannerAlert tone="info" title="Yeşil Çekirdek Fiyatları Her Gün 15.30'da Güncellenir" />
         </div>
       </Cell>

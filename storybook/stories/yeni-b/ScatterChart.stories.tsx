@@ -125,12 +125,12 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={2}>
       <GrafikHucre label="Üç ölçü, dört kategori">
-        <ChartCard id="sacilim-v1" label="Kampanya Harcaması ve Yeni Kayıt" value="6.350 kayıt" change={12.4}>
+        <ChartCard id="sacilim-v1" label="Kampanya Harcaması ve Yeni Kayıt" value="5.730 kayıt" change={12.4}>
           <ScatterChart title="Kampanya Harcaması ve Yeni Kayıt" points={KAMPANYALAR} categories={KANALLAR} x={HARCAMA} y={KAYIT} size={TIKLAMA} height="h-56" />
         </ChartCard>
       </GrafikHucre>
       <GrafikHucre label="İki ölçü, tek boy">
-        <ChartCard id="sacilim-v2" label="Harcama ve Kayıt, Tek Boy" value="6.350 kayıt">
+        <ChartCard id="sacilim-v2" label="Harcama ve Kayıt, Tek Boy" value="5.730 kayıt">
           <ScatterChart title="Kampanya Harcaması ve Yeni Kayıt" points={KAMPANYALAR} categories={KANALLAR} x={HARCAMA} y={KAYIT} height="h-56" />
         </ChartCard>
       </GrafikHucre>

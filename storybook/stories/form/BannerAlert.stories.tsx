@@ -72,7 +72,7 @@ export const FourTones: Story = {
     <Frame width="lg">
       <div className="grid gap-3">
         <BannerAlert tone="info" title="Kur Bilgisi TCMB'den 15.30'da Güncellenir" />
-        <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
+        <BannerAlert tone="success" title="Eylül Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
         <BannerAlert tone="warning" title="Fatura Adresi Eksik" description="Kasım faturası adres girilene kadar kesilmeyecek." />
         <BannerAlert tone="danger" title="Banka Eşitlemesi Başarısız" description="Banka bağlantısının süresi doldu." />
       </div>
@@ -144,7 +144,7 @@ export const AllVariants: Story = {
         <BannerAlert tone="info" title="Kur Bilgisi TCMB'den 15.30'da Güncellenir" />
       </Cell>
       <Cell label="Başarı, Açıklamalı" className="place-items-stretch">
-        <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
+        <BannerAlert tone="success" title="Eylül Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
       </Cell>
       <Cell label="Uyarı, Kapatılabilir" className="place-items-stretch">
         <BannerAlert tone="warning" title="Deneme Süreniz 4 Gün Sonra Bitiyor" description="Düzenleme kapanır, veriler kalır." onDismiss={() => {}} />

@@ -128,7 +128,7 @@ export const Invalid: Story = {
     type: "tel",
     leadingIcon: Phone,
     defaultValue: "0532 41",
-    error: "Telefon numarası 10 haneli olmalı.",
+    error: "Telefon numarası 11 haneli olmalı.",
     placeholder: "05xx xxx xx xx",
   },
 };
@@ -191,7 +191,7 @@ export const AllVariants: Story = {
         <Input label="Şifre" type="password" defaultValue="zeytin-2024!" className="w-full" />
       </Cell>
       <Cell label="Hata">
-        <Input label="Telefon" leadingIcon={Phone} defaultValue="0532 41" error="Telefon numarası 10 haneli olmalı." className="w-full" />
+        <Input label="Telefon" leadingIcon={Phone} defaultValue="0532 41" error="Telefon numarası 11 haneli olmalı." className="w-full" />
       </Cell>
       <Cell label="Salt okunur">
         <Input label="Müşteri No" readOnly defaultValue="MS-20481" className="w-full" />

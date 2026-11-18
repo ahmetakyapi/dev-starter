@@ -191,7 +191,7 @@ export const AllVariants: Story = {
   render: () => (
     <Gallery cols={2}>
       <GrafikHucre label="İki Seri, Sayı">
-        <ChartCard id="alan-v1" label="Aylık Yeni Kayıt" value={sayi(toplam(KAYIT_BU_YIL))} change={yuzdeDegisim(toplam(KAYIT_BU_YIL), toplam(KAYIT_GECEN_YIL))}>
+        <ChartCard id="alan-v1" label="Yeni Kayıt · Bu Yıl" value={sayi(toplam(KAYIT_BU_YIL))} change={yuzdeDegisim(toplam(KAYIT_BU_YIL), toplam(KAYIT_GECEN_YIL))}>
           <AreaChart
             title="Aylık Yeni Kayıt"
             labels={AYLAR}
@@ -205,7 +205,7 @@ export const AllVariants: Story = {
         </ChartCard>
       </GrafikHucre>
       <GrafikHucre label="Tek Seri, Para Birimi">
-        <ChartCard id="alan-v2" label="Aylık Ciro" value="₺7.848.000" change={18.2}>
+        <ChartCard id="alan-v2" label="Ciro · Bu Yıl" value={`₺${sayi(toplam(CIRO_BU_YIL) * 1000)}`} change={yuzdeDegisim(toplam(CIRO_BU_YIL), toplam(CIRO_GECEN_YIL))}>
           <AreaChart
             title="Aylık Ciro"
             labels={AYLAR}

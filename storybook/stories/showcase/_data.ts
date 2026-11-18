@@ -136,7 +136,7 @@ export const CUSTOMERS: readonly Customer[] = [
   { id: "lavanta", name: "Lavanta Spa", contact: "Deniz Uçar", city: "Antalya", district: "Muratpaşa", street: "Lara Caddesi No. 205", basket: 7600, weight: 0.8, channels: [5, 2, 0] },
   { id: "cinar", name: "Çınar Kafe Zinciri", contact: "Gizem Sarı", city: "Ankara", district: "Çankaya", street: "Tunalı Hilmi Caddesi No. 61", basket: 6900, weight: 1.0, channels: [5, 2, 1] },
   { id: "nehir", name: "Nehir Butik Otel", contact: "Pınar Aydın", city: "Eskişehir", district: "Odunpazarı", street: "Kurşunlu Sokak No. 9", basket: 5700, weight: 0.7, channels: [4, 3, 0] },
-  { id: "mavi", name: "Mavi Köşk Butik", contact: "Okan Er", city: "İzmir", district: "Alsancak", street: "Kıbrıs Şehitleri Caddesi No. 77", basket: 4600, weight: 1.1, channels: [6, 1, 1] },
+  { id: "mavi", name: "Mavi Köşk Butik", contact: "Okan Er", city: "İzmir", district: "Konak", street: "Alsancak, Kıbrıs Şehitleri Caddesi No. 77", basket: 4600, weight: 1.1, channels: [6, 1, 1] },
   { id: "kuzey", name: "Kuzey Ev Tekstili", contact: "Emre Bulut", city: "Trabzon", district: "Ortahisar", street: "Uzun Sokak No. 33", basket: 3900, weight: 0.8, channels: [1, 1, 5] },
 ];
 export const customer = (id: string) => CUSTOMERS.find((c) => c.id === id) ?? CUSTOMERS[0];

@@ -55,11 +55,11 @@ export const NextToText: Story = {
       <ul className="grid gap-3">
         <li className="flex items-center gap-2 text-base text-body">
           <Icon icon={Mail} className="text-muted" />
-          elif.yildiz@acme.com.tr
+          elif.yildiz@ozdemir.com.tr
         </li>
         <li className="flex items-center gap-2 text-base text-body">
           <Icon icon={Calendar} className="text-muted" />
-          14 Kasım 2026, Cuma
+          13 Kasım 2026, Cuma
         </li>
         <li className="flex items-center gap-2 text-read font-semibold text-strong">
           <Icon icon={Users} size="md" className="text-primary-ink" />

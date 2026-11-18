@@ -78,7 +78,7 @@ export const StatGridExample: Story = {
   render: () => (
     <StatGrid className="rounded-xl bg-overlay p-5 shadow-raised">
       <Stat label="Haftalık Ciro" value="₺84.120" change={6.4} changeLabel="geçen haftaya göre" />
-      <Stat label="Sipariş" value="1.128" change={-2.3} changeLabel="geçen haftaya göre" />
+      <Stat label="Sipariş" value="113" change={-2.3} changeLabel="geçen haftaya göre" />
       <Stat label="İade Oranı" value="%1,9" change={-0.4} positiveIsGood={false} changeLabel="geçen haftaya göre" />
       <Stat label="Sepet Ortalaması" value="₺746" change={0} changeLabel="geçen haftaya göre" />
     </StatGrid>

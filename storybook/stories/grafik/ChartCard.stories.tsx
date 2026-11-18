@@ -161,7 +161,7 @@ export const AllVariants: Story = {
         <ChartCard
           id="v-lejant2"
           label="Tarayıcıya Göre Ziyaretçi"
-          value="925"
+          value="835"
           change={5.2}
           footer={<ChartLegend className="px-1 pb-1" items={TARAYICI.slice(0, 4).map((t) => ({ ...t }))} />}
         >
@@ -172,7 +172,7 @@ export const AllVariants: Story = {
         <ChartCard
           id="v-lejant3"
           label="Destek Kanalı"
-          value="9.610"
+          value="9.000"
           change={4.1}
           footer={
             <ChartLegend

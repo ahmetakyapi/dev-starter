@@ -14,8 +14,8 @@ const Tile = ({ children }: { children: React.ReactNode }) => (
 
 /** Kurgusal satış kayıtları. Numaralar Pusula'nınkilerle çakışmaz (SP-29xx): aynı numara orada başka ürün ve durumla geçiyordu. */
 const ROWS = [
-  { id: "SP-2914", title: "Lavanta Spa · Peştemal Seti", sub: "Antalya · 60 adet", total: 7480, date: "2 Kas", status: "Teslim Edildi", tone: "success", owner: "Ahmet Akyapı", buyer: "Deniz Uçar", icon: <Hotel /> },
-  { id: "SP-2921", title: "Çınar Kafe Zinciri · Havlu", sub: "Ankara · 120 adet", total: 9120, date: "31 Eki", status: "Kargoda", tone: "primary", owner: "Can Demir", buyer: "Gizem Sarı", icon: <Building2 /> },
+  { id: "SP-2914", title: "Lavanta Spa · Peştemal Seti", sub: "Antalya · 60 adet", total: 7480, date: "29 Eki", status: "Teslim Edildi", tone: "success", owner: "Mert Aksoy", buyer: "Deniz Uçar", icon: <Hotel /> },
+  { id: "SP-2921", title: "Çınar Kafe Zinciri · Havlu", sub: "Ankara · 120 adet", total: 9120, date: "31 Eki", status: "Kargoda", tone: "primary", owner: "Selin Arslan", buyer: "Gizem Sarı", icon: <Building2 /> },
   { id: "SP-2933", title: "Atlas Konaklama · Bornoz", sub: "İstanbul · 90 adet", total: 16540, date: "1 Kas", status: "Gecikti", tone: "danger", owner: "Mert Aksoy", buyer: "Seda Kılıç", icon: <Home /> },
 ] as const;
 

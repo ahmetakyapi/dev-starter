@@ -1,7 +1,7 @@
 /**
  * Grafik hikâyelerinin ortak örnek verisi. Üç senaryo: e-ticaret mağazası,
  * SaaS ürünü, destek ekibi. Sayılar uydurma ama birbiriyle tutarlı
- * (huninin ilk aşaması = ziyaret toplamı gibi). Tohumlu üreteçler: her
+ * (huninin her aşaması bir öncekinden küçük, kart değeri lejant toplamı). Tohumlu üreteçler: her
  * derlemede aynı çizim, görsel kıyas kararlı kalır.
  */
 
@@ -17,7 +17,7 @@ export const KAYIT_BU_YIL = [2840, 3120, 3560, 3410, 3980, 4420, 4180, 4650, 512
 export const KAYIT_GECEN_YIL = [2210, 2380, 2590, 2720, 2650, 3010, 3240, 3180, 3460, 3720, 3900, 4110] as const;
 
 /* Destek: son 14 gün açılan bilet */
-export const SON_14_GUN = ["20 Eki", "21 Eki", "22 Eki", "23 Eki", "24 Eki", "25 Eki", "26 Eki", "27 Eki", "28 Eki", "29 Eki", "30 Eki", "31 Eki", "1 Kas", "2 Kas"] as const;
+export const SON_14_GUN = ["19 Eki", "20 Eki", "21 Eki", "22 Eki", "23 Eki", "24 Eki", "25 Eki", "26 Eki", "27 Eki", "28 Eki", "29 Eki", "30 Eki", "31 Eki", "1 Kas"] as const;
 export const BILET_ACILAN = [184, 172, 196, 158, 141, 62, 48, 203, 189, 177, 166, 150, 57, 41] as const;
 export const BILET_COZULEN = [171, 180, 185, 166, 152, 70, 55, 188, 194, 181, 170, 158, 63, 49] as const;
 

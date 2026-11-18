@@ -140,7 +140,7 @@ export const AllVariants: Story = {
         </ChartCard>
       </GrafikHucre>
       <GrafikHucre label="Tek Profil, Beş Ölçüt">
-        <ChartCard id="r-v2" label="Sürüm 3.2" value="89">
+        <ChartCard id="r-v2" label="Sürüm 3.2" value="87">
           <RadarChart title="Sürüm 3.2" axes={["Hız", "SEO", "Güvenlik", "Kararlılık", "Kullanım"]} series={[{ label: "Sürüm 3.2", values: [92, 88, 81, 90, 82], series: 6 }]} />
         </ChartCard>
       </GrafikHucre>

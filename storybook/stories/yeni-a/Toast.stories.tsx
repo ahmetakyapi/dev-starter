@@ -12,7 +12,7 @@ function fireAll() {
   toast.info("Rapor hazırlanıyor", { description: "Hazır olunca e-posta da gelecek." });
   toast.warning("Depolama %90 dolu", { description: "Eski yedekleri silmeyi düşün." });
   toast.error("Ödeme alınamadı", { description: "Kart limiti yetersiz; başka kart dene." });
-  toast.success("Fatura gönderildi", { description: "FTR-2024-0148 · Özdemir Zeytincilik" });
+  toast.success("Fatura gönderildi", { description: "FTR-2026-0148 · Özdemir Zeytincilik" });
 }
 
 /** Tetikleyici butonlar: her biri bir tür. */

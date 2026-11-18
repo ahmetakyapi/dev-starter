@@ -13,7 +13,7 @@ import { Stat } from "@/components/ui/stat";
 import { cn } from "@/lib/utils";
 import { Screen } from "../_lib/Frame";
 import { OzetKarolari } from "./_sahne";
-import { AYLAR, GUNLER, gunluk, sayi, toplam, yuzdeDegisim } from "./_veri";
+import { GUNLER, gunluk, sayi, toplam, yuzdeDegisim } from "./_veri";
 
 /* ── Veri: dönem seçimi bütün panoyu birlikte değiştirir ───────────────── */
 
@@ -23,7 +23,7 @@ const OTUZ_GUN = Array.from({ length: 30 }, (_, i) => `${i + 2} Eki`);
 const dalga = (n: number, taban: number, genlik: number, kaydir: number) =>
   Array.from({ length: n }, (_, i) => {
     const gun = i % 7;
-    const haftaSonu = gun === 5 || gun === 6 ? 0.68 : 1;
+    const haftaSonu = gun === 1 || gun === 2 ? 0.68 : 1; // i=0 → 2 Ekim Cuma: 1 ve 2 Cumartesi, Pazar
     return Math.round((taban + Math.sin((i + kaydir) / 3.1) * genlik + i * (taban / 160)) * haftaSonu);
   });
 
@@ -36,12 +36,13 @@ const SERI: Record<Donem, { labels: readonly string[]; bu: readonly number[]; on
     gore: "geçen haftaya göre",
   },
   ay: { labels: OTUZ_GUN, bu: dalga(30, 1380, 220, 0), once: dalga(30, 1210, 190, 2), oncekiAd: "Geçen Ay", gore: "geçen aya göre" },
+  // Pano 2 Kasım'da: Yıl son on iki TAM ay (Kasım ve Aralık 2026 henüz gelmedi).
   yil: {
-    labels: AYLAR,
+    labels: ["Kas", "Ara", "Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki"],
     bu: [31200, 33850, 38400, 36900, 40120, 43800, 41960, 45230, 48900, 51420, 55680, 59310],
     once: [26400, 27900, 30100, 31240, 30980, 34100, 35620, 35010, 37900, 40150, 42300, 44820],
-    oncekiAd: "Geçen Yıl",
-    gore: "geçen yıla göre",
+    oncekiAd: "Önceki 12 Ay",
+    gore: "önceki 12 aya göre",
   },
 };
 
@@ -54,7 +55,7 @@ const DONEMLER = [
 const ALT_BASLIK: Record<Donem, string> = {
   hafta: "26 Ekim – 1 Kasım 2026",
   ay: "2 – 31 Ekim 2026",
-  yil: "Ocak – Aralık 2026",
+  yil: "Kasım 2025 – Ekim 2026",
 };
 
 const URUN = [
@@ -76,11 +77,12 @@ const KAYNAK = [
 ] as const;
 /* Kaynağa göre sonuç payı: sipariş, sepette kaldı, ayrıldı */
 const SONUC: Record<string, readonly [number, number, number]> = {
-  arama: [0.052, 0.14, 0.808],
-  sosyal: [0.021, 0.09, 0.889],
-  dogrudan: [0.061, 0.16, 0.779],
-  eposta: [0.074, 0.21, 0.716],
-  reklam: [0.033, 0.12, 0.847],
+  // Sipariş payları ağırlıklı toplamı %4,13: panodaki Sipariş kartı ve hunideki %4,12 ile aynı (eskiden %4,69'du).
+  arama: [0.046, 0.14, 0.814],
+  sosyal: [0.018, 0.09, 0.892],
+  dogrudan: [0.054, 0.16, 0.786],
+  eposta: [0.065, 0.21, 0.725],
+  reklam: [0.029, 0.12, 0.851],
 };
 
 /** Son 22 hafta günlük sipariş: dönemden bağımsız (ritim panosu). */

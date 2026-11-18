@@ -16,7 +16,7 @@ function mockClipboard(ok: boolean) {
   };
 }
 
-const LINK = "https://pano.acme.com.tr/davet/7KQ2-M4XD";
+const LINK = "https://pano.ozdemir.com.tr/davet/7KQ2-M4XD";
 
 const meta = {
   title: "Bileşenler/Buton ve İkon/Kopyala Butonu",

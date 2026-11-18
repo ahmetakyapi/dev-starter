@@ -124,7 +124,7 @@ function InviteDialog({ initialOpen }: { initialOpen: boolean }) {
         }
       >
         <form className="grid gap-4" onSubmit={(event) => event.preventDefault()}>
-          <Field label="E-Posta" name="email" type="email" placeholder="mert.aksoy@acme.com.tr" data-autofocus />
+          <Field label="E-Posta" name="email" type="email" placeholder="mert.aksoy@ozdemir.com.tr" data-autofocus />
           <Field label="Rol" name="rol" defaultValue="Düzenleyici" hint="Yönetici, Düzenleyici ya da Okuyucu." />
         </form>
       </Dialog>

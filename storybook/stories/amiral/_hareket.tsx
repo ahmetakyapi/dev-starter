@@ -156,7 +156,7 @@ export function HareketGroup() {
         <div className="mx-auto grid max-w-sm grid-cols-2 gap-3">
           <ExpandableCard
             title="Kıyı Harmanı"
-            summary="1 kg · 640 ₺"
+            summary="1 kg · 790 ₺"
             media={
               <span className="relative isolate block size-full">
                 <PatternBackground pattern="dots" glow="corner" size={12} tone="primary" intensity={0.55} />
@@ -167,7 +167,7 @@ export function HareketGroup() {
           </ExpandableCard>
           <ExpandableCard
             title="Yirgacheffe"
-            summary="250 g · 420 ₺"
+            summary="250 g · 340 ₺"
             media={
               <span className="relative isolate block size-full">
                 <PatternBackground pattern="rings" glow="bloom" size={14} tone="primary" intensity={0.45} />

@@ -28,7 +28,7 @@ export const KANAL_KAYIT = [
   { label: "E-Posta", values: [320, 420, 510, 480, 650, 770, 630, 820, 940, 1010, 1100, 1170], series: 4 },
 ] as const;
 
-/** Aylık toplam kayıt hedefi (dört kanal ayrı ayrı değil, en güçlü kanalın hedefi). */
+/** Organik kanalın aylık kayıt hedefi (dört kanalın toplamı değil). */
 export const ORGANIK_HEDEF = 2000;
 
 /* Haftalık aktif kullanıcı: gerçekleşen ve tahmin (kesik) */

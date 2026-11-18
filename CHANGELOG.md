@@ -7,6 +7,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Örnek veri denetimi — 2026-11-18
+
+- Bileşenler rafının adı yeniden Tanıtım (Pazarlama geri alındı)
+- Pusula: talebin metni bağlı siparişten hesaplanır (ürün, adet, KDV, adres);
+  bornoz şikâyeti havlu siparişine, Muğla adresi İstanbul'daki müşteriye
+  bağlıydı. Acil işareti ve bildirimler "şimdi"den ileri gitmez; takvim ve
+  pano talepleriyle eşleşir
+- Kıyı Kahve: lot sırası 43 → 47 tek çizgide; fiyatlar kilo fiyatıyla
+  (790 ₺/kg) tutarlı; Ekim kapanışı panoyla aynı (henüz kontrolde)
+- Grafik hikâyeleri: kart değeri = lejant/seri toplamı (saçılım, radar,
+  alan, lejant, çubuk listesi), gün adları ve hafta sonu düşüşü takvimle
+  aynı, "Yıl" görünümü son 12 tam ay; Tanıtım kolajında ciro ölçeği
+  başlıkla tutarlı
+- Çakışan sipariş numaraları, 2024'lü fatura no, acme yer tutucusu, telefon
+  hane sayısı, Pazar'ı kapalı takvimde Pazar'ı içeren aralık düzeltildi
+
 ### Metin denetimi, kurgu adları, CI paritesi — 2026-11-18
 
 - 59 bulguluk metin denetimi uygulandı: çift anlamlı ve birebir çeviri

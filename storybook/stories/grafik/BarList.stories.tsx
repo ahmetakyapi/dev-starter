@@ -163,7 +163,7 @@ export const AllVariants: Story = {
     <Gallery cols={3}>
       {([1, 2, 3, 4, 5, 6] as const).map((s) => (
         <GrafikHucre key={s} label={`Seri ${s}`}>
-          <ChartCard id={`bl-v${s}`} label={`Trafik Kaynakları · Seri ${s}`} value={sayi(toplam(KANALLAR.map((k) => k.value)))}>
+          <ChartCard id={`bl-v${s}`} label={`Trafik Kaynakları · Seri ${s}`} value={sayi(toplam(KANALLAR.slice(0, 4).map((k) => k.value)))}>
             <BarList title={`Trafik kaynakları, seri ${s}`} items={KANALLAR.slice(0, 4)} series={s} />
           </ChartCard>
         </GrafikHucre>

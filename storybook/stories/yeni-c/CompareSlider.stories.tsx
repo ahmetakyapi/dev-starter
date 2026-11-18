@@ -13,7 +13,7 @@ function Draft({ tone, text }: { tone: "old" | "new"; text: string }) {
 }
 
 const OLD = "Sayın müşterimiz, siparişiniz kargoya verilmiştir. Gecikme için özür dileriz.";
-const NEW = "Merhaba Seda, SP-2041 numaralı siparişiniz aktarma merkezinde iki gündür bekliyor. Yarın dağıtıma çıkacak; takip bağlantısını akşam ileteceğim.";
+const NEW = "Merhaba Can, SP-2044 numaralı siparişiniz aktarma merkezinde iki gündür bekliyor. Yarın dağıtıma çıkacak; takip bağlantısını akşam ileteceğim.";
 
 function Tiles({ cols }: { cols: number }) {
   return (

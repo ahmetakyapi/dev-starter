@@ -601,7 +601,7 @@ export function BildirimPage() {
             <Select label="Sessiz Saatler" items={QUIET} value={draft.quiet} onValueChange={(v) => setDraft((d) => ({ ...d, quiet: v }))} />
             <Select label="E-Posta Özeti" items={DIGEST} value={draft.digest} onValueChange={(v) => setDraft((d) => ({ ...d, digest: v }))} />
           </div>
-          <Switch label="Acil talepler sessiz saatlerde de gelir" hint="İlk yanıt hedefine 15 dakikadan az kalan Acil talepler SMS’le gelir." defaultChecked />
+          <Switch label="Acil talepler sessiz saatlerde de gelir" hint="İlk yanıt hedefine 10 dakikadan az kalan Acil talepler SMS’le gelir." defaultChecked />
         </div>
       </Sheet>
     </div>

@@ -14,7 +14,7 @@ function Card({ children }: { children: ReactNode }) {
 }
 
 function RangeDemo() {
-  const [value, setValue] = useState<DateRange | null>({ start: NOV(12), end: NOV(18) });
+  const [value, setValue] = useState<DateRange | null>({ start: NOV(16), end: NOV(21) });
   return (
     <div className="grid justify-items-center gap-3">
       <Card>
@@ -147,7 +147,7 @@ export const AllVariants: Story = {
       </Cell>
       <Cell label="Aralık, Haftayı Aşan">
         <Card>
-          <DateCalendar mode="range" label="Konaklama" defaultValue={{ start: NOV(12), end: NOV(18) }} defaultMonth={NOV(1)} />
+          <DateCalendar mode="range" label="Konaklama" defaultValue={{ start: NOV(16), end: NOV(21) }} defaultMonth={NOV(1)} />
         </Card>
       </Cell>
       <Cell label="Pazar Kapalı, Sınırlı">

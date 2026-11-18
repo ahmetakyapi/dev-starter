@@ -78,12 +78,12 @@ function makeNotifications(): NotificationItem[] {
   const now = Date.now();
   const ago = (min: number) => new Date(now - min * 60_000).toISOString();
   return [
-    { id: "1", actor: "Elif Yıldız", title: "Elif Yıldız Q3 Raporuna Yorum Yaptı", body: "“Kasım satırındaki artış kampanyadan mı geliyor?”", at: ago(3), read: false },
+    { id: "1", actor: "Elif Yıldız", title: "Elif Yıldız Q3 Raporuna Yorum Yaptı", body: "“Eylül satırındaki artış kampanyadan mı geliyor?”", at: ago(3), read: false },
     { id: "2", actor: "Mert Aksoy", title: "Mert Aksoy Sizi “Bütçe 2027” Panosuna Ekledi", at: ago(42), read: false },
     { id: "3", icon: Download, title: "Dışa Aktarma Hazır", body: "Ekim müşteri listesi (2.418 satır) indirilebilir.", at: ago(130), read: false },
     { id: "4", icon: CreditCard, title: "Kasım Faturası Ödendi", body: "₺1.249,00 · Kurumsal plan", at: ago(60 * 20), read: true },
     { id: "5", actor: "Deniz Kaya", title: "Deniz Kaya “Ürün Yol Haritası” Belgesini Paylaştı", at: ago(60 * 26), read: true },
-    { id: "6", icon: CalendarClock, title: "Deneme Süreniz 4 Gün Sonra Bitiyor", at: ago(60 * 24 * 3), read: true },
+    { id: "6", icon: CalendarClock, title: "Kayıtlı Kartınızın Süresi 30 Kasım’da Doluyor", at: ago(60 * 24 * 3), read: true },
   ];
 }
 
@@ -219,7 +219,7 @@ export default function Page() {
                 </button>
               }
             />
-            <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
+            <BannerAlert tone="success" title="Eylül Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
             <BannerAlert tone="info" title="Kur Bilgisi TCMB’den 15.30’da Güncellenir" />
           </div>
         </Showcase>

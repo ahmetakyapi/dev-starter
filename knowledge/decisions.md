@@ -1466,3 +1466,21 @@ en iyi mi?". `content-editor` 779 hikâyeyi taradı (59 bulgu,
   yıkıcı eylem açık zeminde koyu kırmızı. Siyah dolgu ekranın en ağır öğesi
   oluyordu (#115 ile aynı itiraz).
 
+
+### Örnek Veri Tutarlılığı (2026-11-18)
+
+Sahibi: "başka eksikler varsa düzelt, verilerde, mock datalarda". Bir ajan
+bütün hikâyelerdeki veriyi mantık açısından taradı (39 bulgu: tutmayan
+toplamlar, yanlış gün adları, aynı ekranda çelişen durumlar); Pusula ve Kıyı
+Kahve veri dosyaları üretilen veriyle karşılaştırılarak elle denetlendi.
+- **Atıf yapan metin hesaplanır:** talep metni bağlı siparişin ürününü,
+  adedini, tutarını ya da adresini anıyorsa siparişten üretilir (Draft
+  `preview` işlev olabilir). Elle yazılan "30 adet bornoz", tohumlu üreteçte
+  havlu siparişine bağlanmıştı.
+- **"Şimdi"den ileri gitmez:** olay akışı ve bildirimler kurgunun bugününden
+  (Pusula 2 Kas 10.40) sonraya düşmez; "Yıl" görünümleri son 12 TAM ay.
+- **Kart = görünen veri:** grafik kartındaki değer, aynı karttaki seri ya da
+  lejantın toplamıdır; dilimlenmiş lejantta dilimin toplamı.
+- **Alınmayan iki öneri:** entegrasyon şeridindeki gerçek ürün adları
+  (Slack, Trendyol…) ve takvimdeki kargo şubesi adı kaldı: entegrasyon
+  listesi gerçek servisleri gösterir, kurgu şirketi taklit etmez.
