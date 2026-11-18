@@ -1484,3 +1484,20 @@ Kahve veri dosyaları üretilen veriyle karşılaştırılarak elle denetlendi.
 - **Alınmayan iki öneri:** entegrasyon şeridindeki gerçek ürün adları
   (Slack, Trendyol…) ve takvimdeki kargo şubesi adı kaldı: entegrasyon
   listesi gerçek servisleri gösterir, kurgu şirketi taklit etmez.
+
+### Tanıtım Kahramanı: Yüzen Bileşenler (2026-11-18)
+
+Sahibi: "çok sıradan duruyor, seçenek sun". Beş çalışan yön kuruldu ve
+ekran görüntüsüyle sunuldu: A kartela yelpazesi, B renk şeritleri, C
+karanlık sahne, D yüzen bileşenler, E kod ve görünüm. Seçilen D.
+- **Gösteren kahraman:** başlık "Tek Kimlik, On Palet" diyor; tur bunu
+  gösterir. Rol değişkenleri (`--primary`, degradeler) bölüme satır içi
+  verilir, katalog yerinde kalır; tıklama araç çubuğu global'ini değiştirir.
+  Renk geçişi `@layer base` içinde (utility geçişlerini ezmesin).
+- **Numune, süs değil:** yüzen parçalar katalogdaki gerçek bileşenler,
+  altlarında dosya adı; dokunulur, çalışır. Derinlik üç katman (ölçek,
+  saydamlık, buğu, kayma katsayısı).
+- **Kararlılık:** `navigator.webdriver` ve hareket azaltmada tur, ışık ve
+  eğim kapalı (OG görseli ve play testleri sabit çıksın). Otomatik değişim
+  her an durdurulur (WCAG 2.2.2).
+- **Dar ekran:** numuneler `xl` altında gizli; telefonda başlık tek başına.

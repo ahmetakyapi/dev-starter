@@ -39,9 +39,14 @@ async function capture(theme) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 2 });
   await page.goto(`${base}/iframe.html?id=cover--overview&viewMode=story&globals=theme:${theme};palette:signature`, { waitUntil: "networkidle" });
   await page.waitForTimeout(6000); // giriş hareketi ve play bitsin
-  const collage = await page.locator("section[aria-labelledby=kapak-baslik] > div.mt-14").first().screenshot({ type: "png" });
+  // Kolaj ilk ekranın altında: grafik görünüme girince çizilir. Önce kaydır, çizim bitsin, sonra çek.
+  const shot = page.locator("section[aria-labelledby=kapak-baslik] > div.mt-14").first();
+  await shot.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(2500);
+  const collage = await shot.screenshot({ type: "png" });
   const h1 = await page.locator("#kapak-baslik").innerText();
-  const counts = await page.locator("section[aria-labelledby=kapak-baslik] > p").first().innerText();
+  // Sayılar künye hapının `data-og-counts`ından (hap artık sürüm + yığın yazıyor).
+  const counts = await page.locator("[data-og-counts]").first().getAttribute("data-og-counts");
   await page.close();
   return { collage, h1, counts };
 }
@@ -83,7 +88,7 @@ async function compose({ theme, shot, out, scale = 1 }) {
   <h1>${shot.h1.replace(/,\s*/, ",<span>")}</span></h1>
   <p>Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar.</p>
 </div>
-<div class="meta">${shot.counts.replace(/^v[\d.]+\s*/, "").replace(/(\d[\d.]*)/g, "<b>$1</b>")}</div>
+<div class="meta">${shot.counts.replace(/(\d[\d.]*)/g, "<b>$1</b>")}</div>
 <div class="shot"><img src="data:image/png;base64,${shot.collage.toString("base64")}"></div>
 </body></html>`, { waitUntil: "networkidle" });
   await og.waitForTimeout(500);

@@ -7,6 +7,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Tanıtım kahramanı: yüzen bileşenler ve canlı palet turu — 2026-11-18
+
+- Beş yön denendi (kartela yelpazesi, renk şeritleri, karanlık sahne, yüzen
+  bileşenler, kod ve görünüm); sahibi yüzen bileşenleri seçti
+- Başlığın çevresinde altı gerçek bileşen numunesi (dosya adıyla), üç derinlik
+  katmanı, imleçle kayma, merkezden saçılan giriş; numuneler çalışır
+- Palet turu: on palet 3,6 sn'de bir kahramanı yeniden boyar (rol
+  değişkenleri bölüme yerel), üstüne gelince önizler, tıklayınca bütün
+  kataloğa geçer; durdur butonu, hareket azaltmada ve otomasyonda kapalı
+- Kolaj kaydırmayla doğrulur; arama künyeye taşındı; ızgara zemin kalktı
+- `build-og.mjs`: sayılar `data-og-counts`tan, kolaj çizim bitince çekilir
+
 ### Örnek veri denetimi — 2026-11-18
 
 - Bileşenler rafının adı yeniden Tanıtım (Pazarlama geri alındı)

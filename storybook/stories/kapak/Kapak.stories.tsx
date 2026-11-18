@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import "../showcase/pusula.css";
-import { Archive, ArrowRight, ArrowUpRight, Blocks, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
-import { m, useReducedMotion } from "motion/react";
-import { useState, type ReactNode } from "react";
+import { Archive, ArrowRight, ArrowUpRight, Blocks, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, Monitor, Palette, PanelsTopLeft, Pause, Play, Rocket, Search, type LucideIcon } from "lucide-react";
+import { m, type MotionValue, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { useGlobals } from "storybook/preview-api";
 import { expect, fireEvent, waitFor, within } from "storybook/test";
 import { Reveal, RevealItem } from "@/components/motion/Reveal";
@@ -90,13 +90,15 @@ function BrandMark({ className }: { className?: string }) {
 function Masthead() {
   const enter = useEnter();
   return (
-    <m.header {...enter(0, 0)} className="flex items-center justify-between gap-4">
+    <m.header {...enter(0, 0)} className="relative z-10 flex items-center justify-between gap-4">
       {/* Marka karosu burada YOK: kabuğun sidebar'ında hemen solda duruyor, iki işaret yan yana tekrar olurdu.
           Üst menü de yok: aynı kapılar sağdaki haritada ve kenar çubuğunda (üç gezinme aynı ekranda kalabalıktı). */}
       <p className="flex items-center gap-2.5">
         <span className="text-read font-semibold tracking-tight text-strong">Görsel Katalog</span>
         <span className="rounded-full bg-surface px-2 py-0.5 font-mono text-micro text-muted tabular-nums">v{uiPackage.version}</span>
       </p>
+      {/* Arama künyenin karşısında: kahramanın altında eylem kalabalığı yapıyordu (iki buton + arama + palet şeridi). */}
+      <SearchLauncher compact />
     </m.header>
   );
 }
@@ -284,7 +286,7 @@ function CatalogMap() {
 }
 
 /** Kabuğun arama kutusunu açar: kapaktan ayrılmadan bileşen, desen ya da ekran ara. */
-function SearchLauncher() {
+function SearchLauncher({ compact = false }: { compact?: boolean }) {
   // Kabuk yoksa (hikâye tek başına, `iframe.html`) aranacak kenar çubuğu da yok: buton kabuğu açar.
   const inShell = typeof window !== "undefined" && window.top !== window && !!window.top?.document.getElementById("storybook-explorer-searchfield");
   const open = () => {
@@ -301,13 +303,14 @@ function SearchLauncher() {
       type="button"
       onClick={open}
       className={cn(
-        "flex min-h-12 w-full max-w-md items-center gap-3 rounded-full bg-overlay pr-2 pl-4 text-left text-base text-muted shadow-raised ring-1 ring-inset ring-line transition-[box-shadow] duration-200 hover:shadow-floating",
+        "flex items-center gap-3 rounded-full bg-overlay text-left text-muted shadow-raised ring-1 ring-inset ring-line transition-[box-shadow] duration-200 hover:shadow-floating",
+        compact ? "min-h-11 w-11 justify-center sm:w-72 sm:justify-start sm:pr-1.5 sm:pl-3.5 text-small" : "min-h-12 w-full max-w-md pr-2 pl-4 text-base",
         FOCUS,
       )}
     >
       <Search aria-hidden className="size-4 shrink-0" />
-      <span className="min-w-0 flex-1 truncate">Bileşen, desen ya da ekran ara</span>
-      <span aria-hidden className="flex gap-1">
+      <span className={cn("min-w-0 flex-1 truncate", compact && "sr-only sm:not-sr-only")}>Bileşen, desen ya da ekran ara</span>
+      <span aria-hidden className={cn("flex gap-1", compact && "hidden sm:flex")}>
         <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
       </span>
@@ -350,7 +353,7 @@ function Showcase() {
                 ].map(([label, value, change]) => (
                   <div key={label} className="grid min-w-0 gap-1 px-3 py-3 sm:px-4">
                     <dt className="truncate text-small text-muted">{label}</dt>
-                    <dd className="text-title font-semibold tracking-tight text-strong tabular-nums">{value}</dd>
+                    <dd className="text-read font-semibold tracking-tight whitespace-nowrap text-strong tabular-nums sm:text-title">{value}</dd>
                     <dd>
                       <Badge tone="success">{change}</Badge>
                     </dd>
@@ -413,57 +416,478 @@ function Showcase() {
   );
 }
 
-function Hero() {
-  const enter = useEnter();
+/* ── Kahraman: canlı palet turu ─────────────────────────────────────────
+   Başlık "Tek Kimlik, On Palet" diyor; kahraman bunu GÖSTERİR. Rol
+   değişkenleri (`--primary`, degradeler…) bu bölüme satır içi verilir:
+   başlığın mürekkebi, butonlar, ışık ve alttaki kolaj (Pusula'nın grafik
+   rengi dahil) seçilen paletle yeniden boyanır, kataloğun geri kalanı
+   yerinde durur. Tur kendiliğinden döner; üstüne gelince önizler, tıklayınca
+   palet bütün kataloğa (araç çubuğu global'i) geçer.
+
+   Hareket kuralları: dönüş 3,6 sn'de bir, renk geçişi 600 ms (yalnız renk
+   özellikleri). Tur ekrandan çıkınca, sekme gizlenince, imleç şeridin
+   üstündeyken durur; "Durdur" butonu her an (WCAG 2.2.2). Hareketi azaltan
+   kullanıcıda ve otomasyonda (OG görseli, play testleri: `navigator.webdriver`)
+   tur, ışık ve eğim kapalı: sahne durağan ve kararlı. */
+const TOUR_MS = 3600;
+const TOUR = PALETTES.map((p) => p.value as PaletteName);
+const AUTOMATED = typeof navigator !== "undefined" && navigator.webdriver === true;
+
+function paletteVars(p: PaletteName, theme: ThemeName): CSSProperties {
+  const v = palettes[p][theme];
+  return {
+    "--primary": v.primary,
+    "--primary-hover": v.primaryHover,
+    "--primary-soft": v.primarySoft,
+    "--primary-wash": v.primaryWash,
+    "--primary-ink": v.primaryInk,
+    "--on-primary": v.onPrimary,
+    "--line-focus": v.primary,
+    "--app-glow": v.appGlow,
+    "--display-gradient": v.displayGradient,
+    "--display-gradient-tight": v.displayGradientTight,
+    "--brand-gradient": v.brandGradient,
+    "--cta-gradient": v.ctaGradient,
+  } as CSSProperties;
+}
+
+const grade = (ratio: number) => (ratio >= 7 ? "AAA" : ratio >= 4.5 ? "AA" : "AA Büyük");
+const ratioText = (ratio: number) => `${ratio.toFixed(1).replace(".", ",")}:1`;
+
+const HERO_CSS = `
+@layer base {
+  /* Palet değişince renkler süzülür; transform/opacity geçişleri utility'lerde kalır (katman sırası). */
+  .kapak-tour, .kapak-tour * { transition-property: color, background-color, border-color, fill, stroke, box-shadow, outline-color; transition-duration: 600ms; transition-timing-function: cubic-bezier(.22,1,.36,1); }
+}
+.kapak-spot { background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 30%), var(--primary-wash), transparent 68%); opacity: var(--lit, 0); transition: opacity .5s; }
+@keyframes kapak-drift-a { 0% { transform: translate3d(-8%, 0, 0) scale(1); } 100% { transform: translate3d(10%, 12%, 0) scale(1.15); } }
+@keyframes kapak-drift-b { 0% { transform: translate3d(6%, 8%, 0) scale(1.1); } 100% { transform: translate3d(-12%, -4%, 0) scale(.95); } }
+@keyframes kapak-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.kapak-drift-a { animation: kapak-drift-a 16s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.kapak-drift-b { animation: kapak-drift-b 21s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.kapak-bob { animation: kapak-bob 7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .kapak-drift-a, .kapak-drift-b, .kapak-bob { animation: none; } }`;
+
+/* Numune katmanları: yakın büyük ve net, uzak küçük, soluk ve hafif buğulu.
+   İmleçle kayma derinlikle orantılı (yakın çok, uzak az): göz bunu derinlik okur. */
+const LAYER = {
+  near: { depth: 26, scale: 1, className: "" },
+  mid: { depth: 15, scale: 0.92, className: "opacity-95" },
+  far: { depth: 7, scale: 0.84, className: "opacity-80 blur-[0.6px]" },
+} as const;
+
+/** İmleçle derinliğine göre kayan sarmalayıcı. */
+function Parallax({ depth, sx, sy, still, className, children }: { depth: number; sx: MotionValue<number>; sy: MotionValue<number>; still: boolean; className?: string; children: ReactNode }) {
+  const x = useTransform(sx, (v) => v * depth);
+  const y = useTransform(sy, (v) => v * depth * 0.7);
   return (
-    <section aria-labelledby="kapak-baslik" className="relative isolate grid justify-items-center text-center">
-      {/* Zemin: tek renk ailesinin ızgarası, kenarlara doğru söner; başlığın arkasında yumuşak ışık. */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-[-10%] -top-24 -z-10 h-[40rem]">
-        <PatternBackground pattern="grid" size={44} fade="top" glow="bloom" tone="primary" intensity={0.3} />
+    <m.div className={className} style={still ? undefined : { x, y }}>
+      {children}
+    </m.div>
+  );
+}
+
+/** Numune: kartın altında dosya adı, katalogdaki gerçek bileşen. */
+function Specimen({ file, children, className }: { file: string; children: ReactNode; className?: string }) {
+  return (
+    <figure className={cn("grid justify-items-start gap-2", className)}>
+      <div className="rounded-[1.1rem] bg-overlay p-3 shadow-floating ring-1 ring-inset ring-line-soft">{children}</div>
+      <figcaption className="flex items-center gap-1.5 pl-1 font-mono text-micro text-muted">
+        <span aria-hidden className="size-1 rounded-full bg-primary" />
+        {file}.tsx
+      </figcaption>
+    </figure>
+  );
+}
+
+function Hero({ palette, theme, onPalette }: { palette: PaletteName; theme: ThemeName; onPalette: (next: PaletteName) => void }) {
+  const enter = useEnter();
+  const reduce = useReducedMotion();
+  const still = !!reduce || AUTOMATED;
+  const sectionRef = useRef<HTMLElement>(null);
+  const lightRef = useRef<HTMLDivElement>(null);
+
+  /* Tur durumu: gösterilen palet = üstüne gelinen ?? turdaki ?? kataloğunki. */
+  const [playing, setPlaying] = useState(!still);
+  const [index, setIndex] = useState(() => Math.max(0, TOUR.indexOf(palette)));
+  const [hover, setHover] = useState<PaletteName | null>(null);
+  const [inView, setInView] = useState(true);
+  const [pageVisible, setPageVisible] = useState(true);
+  const running = playing && !hover && inView && pageVisible;
+  const shown: PaletteName = hover ?? (playing ? TOUR[index] : palette);
+
+  useEffect(() => {
+    if (!running) return;
+    const id = window.setTimeout(() => setIndex((i) => (i + 1) % TOUR.length), TOUR_MS);
+    return () => window.clearTimeout(id);
+  }, [running, index]);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.15 });
+    io.observe(el);
+    const onVis = () => setPageVisible(document.visibilityState === "visible");
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, []);
+  useEffect(() => {
+    if (!playing) setIndex(Math.max(0, TOUR.indexOf(palette)));
+  }, [palette, playing]);
+
+  /* "On Palet" mürekkebi: degrade geçiş yapamaz; eski paletin kopyası üstte söner. */
+  const [ghost, setGhost] = useState<{ p: PaletteName; k: number } | null>(null);
+  const last = useRef(shown);
+  useEffect(() => {
+    if (last.current === shown) return;
+    if (!still) setGhost({ p: last.current, k: performance.now() });
+    last.current = shown;
+  }, [shown, still]);
+
+  /* İmleç: arkadaki ışık imleci izler, numuneler derinliklerine göre kayar. */
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const sx = useSpring(px, { stiffness: 80, damping: 18, mass: 0.8 });
+  const sy = useSpring(py, { stiffness: 80, damping: 18, mass: 0.8 });
+  function onMove(e: ReactPointerEvent<HTMLElement>) {
+    if (still || e.pointerType !== "mouse") return;
+    const light = lightRef.current;
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!light || !rect) return;
+    const lr = light.getBoundingClientRect();
+    light.style.setProperty("--mx", `${e.clientX - lr.left}px`);
+    light.style.setProperty("--my", `${e.clientY - lr.top}px`);
+    light.style.setProperty("--lit", "1");
+    px.set(((e.clientX - rect.left) / rect.width) * 2 - 1);
+    py.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
+  }
+  function onLeave() {
+    lightRef.current?.style.setProperty("--lit", "0");
+    px.set(0);
+    py.set(0);
+  }
+
+  /* Kolaj kaydırmayla doğrulur: 14° yatık ve hafif küçük gelir, ekranın üçte birinde düzleşir. */
+  const stageRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: stageRef, offset: ["start end", "start 0.3"] });
+  const tilt = useTransform(scrollYProgress, [0, 1], [14, 0]);
+  const lift = useTransform(scrollYProgress, [0, 1], [0.94, 1]);
+
+  /* Numunelerin kendi durumu: dokunulur, çalışır. */
+  const [saved, setSaved] = useState(false);
+  const [notify, setNotify] = useState(true);
+  const [span, setSpan] = useState("hafta");
+  useEffect(() => {
+    if (!saved) return;
+    const id = window.setTimeout(() => setSaved(false), 1600);
+    return () => window.clearTimeout(id);
+  }, [saved]);
+
+  const sw = palettes[shown][theme];
+  const ratio = contrast(sw.onPrimary, sw.primary);
+  const title = PALETTES.find((p) => p.value === shown)?.title ?? shown;
+  const previewing = shown !== palette;
+  const activeIndex = TOUR.indexOf(shown);
+  const ogCounts = `${TOTAL} bileşen · ${STORIES.toLocaleString("tr-TR")} hikâye · ${PALETTES.length} palet · 2 tema`;
+  const bars = span === "gun" ? [44, 61, 38, 72, 55, 80, 66] : span === "hafta" ? [38, 52, 44, 66, 58, 74, 90] : [52, 48, 63, 70, 66, 84, 96];
+
+  /* Altı numune, başlığın iki yanında üçer. Sıra: yakın → uzak dengeli dağılır. */
+  const specimens: { at: string; layer: keyof typeof LAYER; rot: number; from: [number, number]; node: ReactNode }[] = [
+    {
+      at: "top-[2%] left-[3%]",
+      layer: "mid",
+      rot: -4,
+      from: [320, 180],
+      node: (
+        <Specimen file="button">
+          <button
+            type="button"
+            onClick={() => setSaved(true)}
+            className={cn("inline-flex min-h-10 items-center gap-2 rounded-full bg-cta px-5 text-small font-semibold text-on-brand shadow-cta", PRESS, FOCUS)}
+          >
+            {saved ? <Check aria-hidden className="size-4" strokeWidth={2.5} /> : null}
+            {saved ? "Kaydedildi" : "Değişiklikleri Kaydet"}
+          </button>
+        </Specimen>
+      ),
+    },
+    {
+      at: "top-[38%] -left-[2%]",
+      layer: "near",
+      rot: 3,
+      from: [380, 0],
+      node: (
+        <Specimen file="area-chart">
+          <div className="grid w-60 gap-3 p-1 text-left">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-small text-muted">Haftalık Ciro</span>
+              <Badge tone="success">+%6,4</Badge>
+            </div>
+            <span className="font-display text-heading leading-none font-bold tracking-[-0.03em] text-strong">₺84.120</span>
+            <div aria-hidden className="flex h-14 items-end gap-1.5">
+              {bars.map((h, i) => (
+                <span key={i} className={cn("flex-1 rounded-t-[0.3rem] transition-[height] duration-500 ease-out", i === bars.length - 1 ? "bg-primary" : "bg-primary-wash")} style={{ height: `${h}%` }} />
+              ))}
+            </div>
+          </div>
+        </Specimen>
+      ),
+    },
+    {
+      at: "bottom-[0%] left-[7%]",
+      layer: "far",
+      rot: -2,
+      from: [300, -160],
+      node: (
+        <Specimen file="avatar">
+          <div className="flex items-center gap-3 pr-2">
+            <AvatarGroup size="md" label="Düzenleyenler" people={[{ name: "Zeynep Kaya" }, { name: "Mert Aksoy" }, { name: "Selin Arslan" }, { name: "Can Demir" }]} />
+            <span className="text-left text-small leading-tight">
+              <span className="block font-semibold text-strong">4 kişi</span>
+              <span className="text-muted">şu an düzenliyor</span>
+            </span>
+          </div>
+        </Specimen>
+      ),
+    },
+    {
+      at: "top-[0%] right-[4%]",
+      layer: "far",
+      rot: 3,
+      from: [-300, 180],
+      node: (
+        <Specimen file="switch">
+          <div className="w-60 rounded-[0.7rem] bg-surface px-3 text-left">
+            <Switch label="Bildirimler" hint={notify ? "Acil talepler anında gelir" : "Yalnız günlük özet"} checked={notify} onChange={(e) => setNotify(e.target.checked)} />
+          </div>
+        </Specimen>
+      ),
+    },
+    {
+      at: "top-[40%] -right-[1%]",
+      layer: "near",
+      rot: -3,
+      from: [-380, 0],
+      node: (
+        <Specimen file="contrast">
+          <div className="grid w-52 gap-2 p-1 text-left">
+            <span className="text-small text-muted">Birincil üstünde metin</span>
+            <span className="flex items-center gap-2.5">
+              <span aria-hidden className="grid size-10 place-items-center rounded-[0.7rem] bg-primary font-display text-base font-bold text-on-primary">Aa</span>
+              <span className="grid">
+                <SlotText text={ratioText(ratio)} className="font-display text-title leading-tight font-bold tracking-[-0.02em] text-strong" />
+                <span className="text-micro font-semibold text-success">WCAG {grade(ratio)}</span>
+              </span>
+            </span>
+          </div>
+        </Specimen>
+      ),
+    },
+    {
+      at: "bottom-[2%] right-[8%]",
+      layer: "mid",
+      rot: 2,
+      from: [-300, -160],
+      node: (
+        <Specimen file="segmented-control">
+          <SegmentedControl
+            aria-label="Grafik dönemi"
+            size="sm"
+            value={span}
+            onValueChange={setSpan}
+            options={[
+              { value: "gun", label: "Gün" },
+              { value: "hafta", label: "Hafta" },
+              { value: "ay", label: "Ay" },
+            ]}
+          />
+        </Specimen>
+      ),
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-labelledby="kapak-baslik"
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      // minmax(0,1fr): en geniş içerik sütunu ekrandan taşırmasın.
+      className={cn("relative isolate grid grid-cols-[minmax(0,1fr)] justify-items-center gap-y-12 text-center", !still && "kapak-tour")}
+      style={previewing ? paletteVars(shown, theme) : undefined}
+    >
+      <style href="kapak-hero" precedence="default">
+        {HERO_CSS}
+      </style>
+      {/* Zemin: ızgara yok. Başlığın arkasında paletin iki yavaş bulutu, imleci izleyen ışık, soluk nokta dokusu. */}
+      <div ref={lightRef} aria-hidden className="pointer-events-none absolute inset-x-[-14%] -top-40 -z-10 h-[60rem] overflow-hidden">
+        <div className="kapak-drift-a absolute top-[10%] left-[30%] size-[34rem] rounded-full bg-primary opacity-[0.14] blur-[120px]" />
+        <div className="kapak-drift-b absolute top-[26%] right-[24%] size-[26rem] rounded-full bg-primary-soft opacity-[0.16] blur-[110px]" />
+        <PatternBackground pattern="dots" size={22} fade="edges" tone="primary" intensity={0} className="opacity-70" />
+        <div className="kapak-spot absolute inset-0" />
       </div>
-      <m.p
-        {...enter(1)}
-        className="inline-flex items-center gap-2 rounded-full bg-overlay py-1 pr-3.5 pl-2 text-small text-body shadow-raised ring-1 ring-inset ring-line-soft"
-      >
-        <span className="rounded-full bg-primary-wash px-2 py-0.5 font-semibold text-primary-ink">v{uiPackage.version}</span>
-        {TOTAL} bileşen · {STORIES.toLocaleString("tr-TR")} hikâye · {PALETTES.length} palet · 2 tema
-      </m.p>
-      <m.h1
-        {...enter(2, 24)}
-        id="kapak-baslik"
-        className="mt-7 max-w-[14ch] font-display text-[clamp(3rem,8vw,6.75rem)] leading-[0.92] font-bold tracking-[-0.055em] text-balance text-strong"
-      >
-        Tek Kimlik, <span className="display-ink pb-[0.08em]">On Palet</span>
-      </m.h1>
-      <m.p {...enter(4)} className="mt-6 max-w-[52ch] text-lead text-pretty text-body">
-        Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. Her parça{" "}
-        <MarkAnnotate type="underline" delay={900}>
-          token&apos;dan
-        </MarkAnnotate>{" "}
-        çizilir, paletle birlikte döner.
-      </m.p>
-      <m.div {...enter(5)} className="mt-8 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
-        <a
-          href={to("showcase--all-in-one")}
-          target="_top"
-          className={cn("group inline-flex min-h-12 items-center gap-2 rounded-full bg-cta px-6 text-base font-semibold text-on-brand shadow-cta hover:-translate-y-px", PRESS, FOCUS)}
+
+      <div className="relative grid w-full min-w-0 justify-items-center py-4 xl:py-20">
+        {/* Numuneler başlığın arkasından saçılır (merkezden dışarı), sonra derinliklerinde süzülür. Geniş ekranda; dar ekranda başlık tek başına. */}
+        {specimens.map((s, i) => {
+          const layer = LAYER[s.layer];
+          return (
+            <Parallax key={i} depth={layer.depth} sx={sx} sy={sy} still={still} className={cn("absolute z-10 hidden xl:block", s.at, s.layer === "near" ? "z-20" : "")}>
+              <m.div
+                initial={still ? false : { opacity: 0, x: s.from[0], y: s.from[1], scale: 0.6, rotate: 0 }}
+                animate={{ opacity: 1, x: 0, y: 0, scale: layer.scale, rotate: s.rot }}
+                whileHover={still ? undefined : { rotate: 0, scale: layer.scale * 1.04 }}
+                transition={{ type: "spring", stiffness: 60, damping: 14, mass: 1, delay: still ? 0 : 0.55 + i * 0.07 }}
+                className={layer.className}
+              >
+                <div className="kapak-bob" style={{ animationDelay: `${-i * 1.3}s` }}>
+                  {s.node}
+                </div>
+              </m.div>
+            </Parallax>
+          );
+        })}
+
+        <m.p
+          {...enter(1)}
+          data-og-counts={ogCounts}
+          className="relative z-30 inline-flex items-center gap-2 rounded-full bg-overlay/80 py-1 pr-3.5 pl-1.5 text-small text-body shadow-raised ring-1 ring-inset ring-line-soft backdrop-blur"
         >
-          Bileşenleri Gez
-          <ArrowRight aria-hidden strokeWidth={2.25} className="size-4 transition-[translate] duration-200 group-hover:translate-x-0.5" />
-        </a>
-        <a
-          href={to("demo-app--overview")}
-          target="_top"
-          className={cn("inline-flex min-h-12 items-center rounded-full bg-overlay px-6 text-base font-semibold text-strong shadow-raised hover:-translate-y-px hover:shadow-floating", PRESS, FOCUS)}
+          <span className="rounded-full bg-primary-wash px-2 py-0.5 font-semibold text-primary-ink">v{uiPackage.version}</span>
+          Next 16 · React 19 · Tailwind v4
+        </m.p>
+
+        <h1
+          id="kapak-baslik"
+          className="relative z-30 mt-7 font-display text-[clamp(3.25rem,8.4vw,7.75rem)] leading-[0.9] font-bold tracking-[-0.06em] text-strong"
         >
-          Pusula&apos;yı Aç
-        </a>
-      </m.div>
-      <m.div {...enter(6)} className="mt-4 flex w-full justify-center">
-        <SearchLauncher />
-      </m.div>
-      <div className="mt-14 w-full sm:mt-16">
-        <Showcase />
+          {/* İki satır, iki parça: "Tek Kimlik," sabit, "On Palet" paletle döner. Parçalar buğudan çıkar. */}
+          <m.span
+            className="block"
+            initial={still ? false : { opacity: 0, y: 32, filter: "blur(14px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}
+          >
+            Tek Kimlik,
+          </m.span>{" "}
+          <m.span
+            className="relative block"
+            initial={still ? false : { opacity: 0, y: 32, filter: "blur(14px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.85, ease: EASE, delay: 0.22 }}
+          >
+            <span className="display-ink pb-[0.08em]">On Palet</span>
+            {ghost ? (
+              <m.span
+                key={ghost.k}
+                aria-hidden
+                className="display-ink pointer-events-none absolute inset-0 pb-[0.08em]"
+                style={paletteVars(ghost.p, theme)}
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 0.7, ease: EASE }}
+                onAnimationComplete={() => setGhost((g) => (g?.k === ghost.k ? null : g))}
+              >
+                On Palet
+              </m.span>
+            ) : null}
+          </m.span>
+        </h1>
+
+        <m.p {...enter(4)} className="relative z-30 mt-7 max-w-[44ch] text-lead text-pretty text-body">
+          Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. Her parça{" "}
+          <MarkAnnotate type="underline" delay={900}>
+            token&apos;dan
+          </MarkAnnotate>{" "}
+          çizilir; paleti değiştir, hepsi birlikte döner.
+        </m.p>
+
+        <m.div {...enter(5)} className="relative z-30 mt-9 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
+          <a
+            href={to("showcase--all-in-one")}
+            target="_top"
+            className={cn(
+              "group relative inline-flex min-h-12 items-center gap-2 overflow-hidden rounded-full bg-cta px-6 text-base font-semibold text-on-brand shadow-cta hover:-translate-y-px",
+              PRESS,
+              FOCUS,
+            )}
+          >
+            {/* Işık süpürmesi: imleç gelince bir kez geçer. */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full skew-x-[-20deg] bg-on-brand/25 blur-sm transition-[translate] duration-700 ease-out group-hover:translate-x-[380%]"
+            />
+            Bileşenleri Gez
+            <ArrowRight aria-hidden strokeWidth={2.25} className="size-4 transition-[translate] duration-200 group-hover:translate-x-0.5" />
+          </a>
+          <a
+            href={to("demo-app--overview")}
+            target="_top"
+            className={cn("inline-flex min-h-12 items-center rounded-full bg-overlay px-6 text-base font-semibold text-strong shadow-raised hover:-translate-y-px hover:shadow-floating", PRESS, FOCUS)}
+          >
+            Pusula&apos;yı Aç
+          </a>
+        </m.div>
+
+        {/* Palet şeridi: turun göstergesi ve kumandası. Üstüne gel: önizle; tıkla: bütün katalog o paletle döner. */}
+        <m.div {...enter(6)} className="relative z-30 mt-10 grid justify-items-center gap-2.5">
+          <div className="flex max-w-full items-center gap-1 rounded-full bg-overlay/85 p-1.5 shadow-raised ring-1 ring-inset ring-line-soft backdrop-blur" onPointerLeave={() => setHover(null)}>
+            <div role="group" aria-label="Palet önizlemesi" className="flex items-center gap-0.5 overflow-x-auto px-0.5 [scrollbar-width:none]">
+              {TOUR.map((p, i) => (
+                <button
+                  key={p}
+                  type="button"
+                  aria-label={`${PALETTES[i].title} paletini kataloğa uygula`}
+                  aria-pressed={p === palette}
+                  onPointerEnter={(e) => e.pointerType === "mouse" && setHover(p)}
+                  onFocus={() => setHover(p)}
+                  onBlur={() => setHover(null)}
+                  onClick={() => {
+                    setPlaying(false);
+                    setHover(null);
+                    onPalette(p);
+                  }}
+                  className={cn("grid size-7 shrink-0 place-items-center rounded-full sm:size-9", FOCUS)}
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "block rounded-full shadow-raised transition-[width,height,box-shadow] duration-300",
+                      i === activeIndex ? "size-5 ring-2 ring-strong ring-offset-2 ring-offset-overlay sm:size-6" : "size-3.5 sm:size-4.5",
+                    )}
+                    style={{ backgroundImage: palettes[p][theme].brandGradient }}
+                  />
+                </button>
+              ))}
+            </div>
+            <span aria-hidden className="mx-1 h-6 w-px shrink-0 bg-line" />
+            <span className="hidden min-w-[7rem] items-baseline gap-1.5 text-left text-small sm:flex" aria-live="polite">
+              <SlotText text={title} className="font-semibold text-strong" />
+              <span className="text-muted">{previewing ? "önizleme" : "seçili"}</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => setPlaying((v) => !v)}
+              disabled={still}
+              aria-label={playing ? "Palet turunu durdur" : "Palet turunu başlat"}
+              className={cn("grid size-9 shrink-0 place-items-center rounded-full text-body hover:bg-surface hover:text-strong disabled:hidden", FOCUS)}
+            >
+              {playing ? <Pause aria-hidden className="size-4" /> : <Play aria-hidden className="size-4" />}
+            </button>
+          </div>
+          <p className="text-small text-muted">
+            <span className="hidden sm:inline">Üstüne gel, önizle · </span>Tıkla, bütün katalog o paletle döner
+          </p>
+        </m.div>
+      </div>
+
+      {/* build-og.mjs bu sarmalayıcıyı (`> div.mt-14`) yakalar: sınıfı ve yeri sabit. */}
+      <div ref={stageRef} className="relative col-span-full mt-14 w-full [perspective:1800px] sm:mt-20">
+        <m.div style={still ? undefined : { rotateX: tilt, scale: lift, transformOrigin: "50% 0%" }}>
+          <Showcase />
+        </m.div>
       </div>
     </section>
   );
@@ -711,7 +1135,7 @@ export const Overview: Story = {
       <Frame>
         <div className="grid gap-10 lg:gap-14">
           <Masthead />
-          <Hero />
+          <Hero palette={palette} theme={theme} onPalette={(value) => updateGlobals({ palette: value })} />
         </div>
         <MapSection />
         <ComponentGroups />
