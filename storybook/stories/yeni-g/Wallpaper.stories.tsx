@@ -51,7 +51,7 @@ function Card({ scene }: { scene: WallpaperScene }) {
 }
 
 const meta = {
-  title: "Bileşenler/Pazarlama/Duvar Kâğıdı",
+  title: "Bileşenler/Tanıtım/Duvar Kâğıdı",
   id: "wallpaper",
   component: Wallpaper,
   tags: ["autodocs", "yeni"],

@@ -11,7 +11,7 @@ Kenar çubuğu üç bölüm, her öğe kendi adıyla bir tıkta:
 | Bölüm | Öğeler |
 |-------|--------|
 | Başla | Tanıtım · Başlangıç (manifesto, kurallar) · **Her Şey Bir Arada** (bütün kütüphane tek uzun sayfada; kapsam 141/141) · Vitrin (gruplara göre seçilmiş örnekler, `snippets/ui/vitrin/`) |
-| Kütüphane | Tema (renkler, 10 palet, tipografi, yüzeyler, grafik renkleri, hareket) · Bileşenler (13 raf: Temel → Pazarlama → Yapay Zekâ; her biri varsayılan, durumlar, bütün varyantlar, `play`) · Grafikler (15 grafik + iki pano) · Bloklar · **Desenler** (35 token'lı zemin, Önizle ve Kopyala) |
+| Kütüphane | Tema (renkler, 10 palet, tipografi, yüzeyler, grafik renkleri, hareket) · Bileşenler (13 raf: Temel → Tanıtım → Yapay Zekâ; her biri varsayılan, durumlar, bütün varyantlar, `play`) · Grafikler (15 grafik + iki pano) · Bloklar · **Desenler** (35 token'lı zemin, Önizle ve Kopyala) |
 | Uygulamada | **Pusula** (aynı bileşenlerle kurulmuş uygulama: 15 ekran) · Ekranlar (uygulama ekranları; açılış sayfası: tam sayfa, 8 üst bölüm varyantı, bölümler, sistem sayfaları) · Arşiv (Bileşen Kapsamı, Referanslar) |
 
 Ekosistemin bileşenleri, ekranları ve temaları tek yerde, canlı: `snippets/ui`

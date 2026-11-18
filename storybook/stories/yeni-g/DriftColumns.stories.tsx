@@ -5,7 +5,7 @@ import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wa
 const TILES = [...WALLPAPER_SCENES, ...WALLPAPER_SCENES];
 
 const meta = {
-  title: "Bileşenler/Pazarlama/Süzülen Sütunlar",
+  title: "Bileşenler/Tanıtım/Süzülen Sütunlar",
   id: "drift-columns",
   component: DriftColumns,
   tags: ["autodocs", "yeni"],

@@ -12,11 +12,11 @@ const Tile = ({ children }: { children: React.ReactNode }) => (
   <span className="grid size-11 place-items-center rounded-lg bg-surface text-muted ring-1 ring-line [&_svg]:size-5">{children}</span>
 );
 
-/** Kurgusal satış kayıtları (Pusula'nın örnek verisinden bağımsız). */
+/** Kurgusal satış kayıtları. Numaralar Pusula'nınkilerle çakışmaz (SP-29xx): aynı numara orada başka ürün ve durumla geçiyordu. */
 const ROWS = [
-  { id: "SP-3491", title: "Lavanta Spa · Peştemal Seti", sub: "Antalya · 60 adet", total: 7330, date: "2 Kas", status: "Teslim Edildi", tone: "success", owner: "Ahmet Akyapı", buyer: "Deniz Uçar", icon: <Hotel /> },
-  { id: "SP-3500", title: "Çınar Kafe Zinciri · Havlu", sub: "Ankara · 120 adet", total: 7820, date: "31 Eki", status: "Kargoda", tone: "primary", owner: "Can Demir", buyer: "Gizem Sarı", icon: <Building2 /> },
-  { id: "SP-3507", title: "Atlas Konaklama · Bornoz", sub: "İstanbul · 90 adet", total: 16090, date: "1 Kas", status: "Gecikti", tone: "danger", owner: "Mert Aksoy", buyer: "Seda Kılıç", icon: <Home /> },
+  { id: "SP-2914", title: "Lavanta Spa · Peştemal Seti", sub: "Antalya · 60 adet", total: 7480, date: "2 Kas", status: "Teslim Edildi", tone: "success", owner: "Ahmet Akyapı", buyer: "Deniz Uçar", icon: <Hotel /> },
+  { id: "SP-2921", title: "Çınar Kafe Zinciri · Havlu", sub: "Ankara · 120 adet", total: 9120, date: "31 Eki", status: "Kargoda", tone: "primary", owner: "Can Demir", buyer: "Gizem Sarı", icon: <Building2 /> },
+  { id: "SP-2933", title: "Atlas Konaklama · Bornoz", sub: "İstanbul · 90 adet", total: 16540, date: "1 Kas", status: "Gecikti", tone: "danger", owner: "Mert Aksoy", buyer: "Seda Kılıç", icon: <Home /> },
 ] as const;
 
 function Demo({ label }: { label: string }) {
@@ -78,6 +78,6 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("list", { name: "Siparişler" }).querySelectorAll("li")).toHaveLength(3);
     await userEvent.click(canvas.getByRole("button", { name: /Atlas Konaklama/ }));
-    await canvas.findByText("SP-3507 açıldı");
+    await canvas.findByText("SP-2933 açıldı");
   },
 };

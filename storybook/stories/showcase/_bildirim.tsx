@@ -130,17 +130,18 @@ export function buildItems(now = Date.now()): Item[] {
     },
     {
       id: "b4",
-      at: ago(60),
+      // Talep 09.47'de geldi, ilk yanıt 18 dk sonra; düzeltme ondan sonra (eskiden "1 sa önce": şikâyetten önceydi).
+      at: ago(15),
       kind: "bilgi",
       day: "bugun",
       actor: member(invoice.assignee).name,
-      label: `${member(invoice.assignee).name} düzeltilmiş faturayı yükledi`,
+      label: `${member(invoice.assignee).name} düzeltilmiş proformayı yükledi`,
       title: (
         <>
-          <b className="font-medium">{member(invoice.assignee).name}</b> düzeltilmiş faturayı <Mono>{invoice.id}</Mono> talebine yükledi
+          <b className="font-medium">{member(invoice.assignee).name}</b> düzeltilmiş proformayı <Mono>{invoice.id}</Mono> talebine yükledi
         </>
       ),
-      meta: `Gelen Kutusu · ${customer(invoice.customerId).name} · 1 sa önce`,
+      meta: `Gelen Kutusu · ${customer(invoice.customerId).name} · 15 dk önce`,
       read: true,
     },
     {

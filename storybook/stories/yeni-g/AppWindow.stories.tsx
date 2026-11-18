@@ -11,7 +11,7 @@ const Lines = () => (
 );
 
 const meta = {
-  title: "Bileşenler/Pazarlama/Uygulama Penceresi",
+  title: "Bileşenler/Tanıtım/Uygulama Penceresi",
   id: "app-window",
   component: AppWindow,
   tags: ["autodocs", "yeni"],

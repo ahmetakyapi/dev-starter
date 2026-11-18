@@ -8,7 +8,7 @@ const FROM = { label: "Pusula", icon: <Compass /> };
 const TO = { label: "Kargo", icon: <Truck /> };
 
 const meta = {
-  title: "Bileşenler/Pazarlama/Bağlantı Başlığı",
+  title: "Bileşenler/Tanıtım/Bağlantı Başlığı",
   id: "connection-hero",
   component: ConnectionHero,
   tags: ["autodocs", "yeni"],

@@ -100,7 +100,7 @@ const WEBHOOK_TABS = [
   },
   {
     label: "JavaScript",
-    code: `await fetch("${WEBHOOK_URL}", {\n  method: "POST",\n  headers: { "Content-Type": "application/json", "Pusula-Imza": imza },\n  body: JSON.stringify({ olay: "talep.acildi", talep: "T-1042" }),\n});`,
+    code: `await fetch("${WEBHOOK_URL}", {\n  method: "POST",\n  headers: { "Content-Type": "application/json", "Pusula-Imza": imza },\n  body: JSON.stringify({ olay: "talep.acildi", talep: "PSL-1186" }),\n});`,
   },
 ] as const;
 

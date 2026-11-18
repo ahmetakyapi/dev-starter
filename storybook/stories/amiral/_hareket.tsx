@@ -51,7 +51,7 @@ function StatusSlot() {
   }, [states.length]);
   return (
     <p className="text-center text-title font-semibold text-strong">
-      Lot 214: <SlotText text={states[i]} className="text-primary-ink" />
+      Lot 45: <SlotText text={states[i]} className="text-primary-ink" />
     </p>
   );
 }

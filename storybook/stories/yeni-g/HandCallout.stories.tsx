@@ -3,7 +3,7 @@ import { HandCallout } from "@/components/ui/hand-callout";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const meta = {
-  title: "Bileşenler/Pazarlama/El Yazısı Not",
+  title: "Bileşenler/Tanıtım/El Yazısı Not",
   id: "hand-callout",
   component: HandCallout,
   tags: ["autodocs", "yeni"],

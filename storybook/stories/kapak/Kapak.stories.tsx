@@ -199,7 +199,7 @@ function Stage({ palette, theme, onTheme }: { palette: PaletteName; theme: Theme
    sütunu her satırda aynı genişlikte: alt alta sayılar hizalı okunur. */
 
 /** preview.tsx → storySort ile aynı sıra: "ilk bileşen" kenar çubuğundaki ilk satır olsun. */
-const COMPONENT_GROUPS = ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Pazarlama", "Yapay Zekâ"] as const;
+const COMPONENT_GROUPS = ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"] as const;
 const THEME_ORDER = ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"];
 const SCREEN_ORDER = ["Uygulama", "Açılış Sayfası"];
 
@@ -569,7 +569,7 @@ const GROUP_NOTES: Record<(typeof COMPONENT_GROUPS)[number], string> = {
   Veri: "Tablo, liste, sayı, ağaç",
   Verimlilik: "Pano, görev, hafta",
   "Hareket ve Doku": "Her hareket bir şey söyler",
-  Pazarlama: "Açılış sayfasının parçaları",
+  Tanıtım: "Açılış sayfasının parçaları",
   "Yapay Zekâ": "Asistan ne yaptığını gösterir",
 };
 

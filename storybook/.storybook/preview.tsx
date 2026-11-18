@@ -61,7 +61,7 @@ const preview: Preview = {
           ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"],
           "Bileşenler",
           // Temelden karmaşığa: önce yapı taşları, sonra katmanlar, en sonda tanıtım ve yapay zekâ.
-          ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Pazarlama", "Yapay Zekâ"],
+          ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"],
           "Grafikler",
           "Bloklar",
           "Desenler",

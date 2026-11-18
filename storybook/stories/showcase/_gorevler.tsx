@@ -141,14 +141,14 @@ export function GorevlerPage() {
             ) : null}
           </Well>
 
-          {/* Ekip kararı: panodaki "Kasım fiyat listesi taslağı" (son tarih 6 Kas) için; seçenekler Ayarlar'daki %12 indirim sınırıyla tutarlı. */}
+          {/* Ekip kararı: panodaki "Kış sezonu fiyat listesi taslağı" (son tarih 6 Kas) için; seçenekler Ayarlar'daki %12 indirim sınırıyla tutarlı. */}
           <Well labelledBy="gorev-karar" className="lg:col-span-2">
             <WellTitle id="gorev-karar" hint="Panodaki işe bağlı küçük kararlar; sonuç oy verince görünür.">
               Ekip Kararı
             </WellTitle>
             <QuickPoll
-              question="Kasım fiyat listesinde bayi indirimi kaç olsun?"
-              meta="Mert Aksoy soruyor · Kasım fiyat listesi taslağı · 6 Kas'a kadar"
+              question="Kış sezonu fiyat listesinde bayi indirimi kaç olsun?"
+              meta="Mert Aksoy soruyor · Kış sezonu fiyat listesi taslağı · 6 Kas'a kadar"
               options={[
                 { id: "8", label: "%8 · geçen yılla aynı" },
                 { id: "10", label: "%10 · hacim artışı için" },

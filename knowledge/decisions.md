@@ -1458,6 +1458,10 @@ en iyi mi?". `content-editor` 779 hikâyeyi taradı (59 bulgu,
 - **Menü:** Bileşenler'deki "Tanıtım" rafı en üstteki Tanıtım sayfasıyla
   aynı adı taşıyordu → **Pazarlama**. Başla'da amiral "Her Şey Bir Arada",
   "Vitrin"den önce.
+  - **Değişti (2026-11-18):** raf adı yeniden **Tanıtım**. Sahibi "Pazarlama"yı
+    sevmedi; raf ziyaretçiye ürünü tanıtan açılış sayfası parçalarını tutuyor,
+    "Tanıtım" işi daha doğru söylüyor. Ad çakışması bölüm yoluyla ayrılıyor
+    (Başla/Tanıtım sayfa, Bileşenler/Tanıtım raf).
 - **Seçim çubuğu:** siyah ters ada → beyaz yükselen ada (gölge + çerçeve),
   yıkıcı eylem açık zeminde koyu kırmızı. Siyah dolgu ekranın en ağır öğesi
   oluyordu (#115 ile aynı itiraz).

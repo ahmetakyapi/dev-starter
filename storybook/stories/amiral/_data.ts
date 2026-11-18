@@ -269,8 +269,8 @@ export const ORDERS: readonly Order[] = [
 ];
 
 export const ORDER_TIMELINE = [
-  { id: "1", at: "2026-10-30T10:12", when: "30 Ekim, 10.12", title: "Sipariş Alındı", description: "Urla Bağ Evi · 12 kg espresso harmanı", tone: "primary" as const },
-  { id: "2", at: "2026-10-31T08:40", when: "31 Ekim, 08.40", title: "Kavruldu", description: "Lot 44, orta-koyu", tone: "neutral" as const },
+  { id: "1", at: "2026-10-30T10:12", when: "30 Ekim, 10.12", title: "Sipariş Alındı", description: "Urla Bağ Evi · 12 kg Kıyı Harmanı", tone: "primary" as const },
+  { id: "2", at: "2026-10-31T08:40", when: "31 Ekim, 08.40", title: "Kavruldu", description: "Lot 43 · Kıyı Harmanı, orta-koyu", tone: "neutral" as const },
   { id: "3", at: "2026-11-01T16:05", when: "1 Kasım, 16.05", title: "Kargo Gecikti", description: "Çiğli aktarma merkezinde bir gün bekledi.", tone: "warning" as const },
 ];
 
@@ -279,7 +279,7 @@ export const ORDER_TIMELINE = [
 const ago = (minutes: number) => new Date(TODAY.getTime() - minutes * 60_000);
 export const NOTIFICATIONS = [
   { id: "n1", actor: "Selin Başaran", title: "Selin Başaran Alsancak Demleme Siparişini Onayladı", body: "24 kg · Kıyı Harmanı", at: ago(4), read: false },
-  { id: "n2", actor: "Kerem Arıkan", title: "Kerem Arıkan Lot 44'ü Kavurdu", body: "Brezilya Cerrado · 36 kg", at: ago(38), read: false },
+  { id: "n2", actor: "Kerem Arıkan", title: "Kerem Arıkan Lot 44'ü Paketledi", body: "Brezilya Cerrado · 36 kg · 31 Ekim'de kavrulup dinlendirildi", at: ago(38), read: false },
   { id: "n3", actor: "Ece Doğan", title: "Ece Doğan Bir İade Talebini Çözdü", at: ago(150), read: false },
   { id: "n4", actor: "Onur Tekin", title: "Onur Tekin Kargo Anlaşmasını Yeniledi", at: ago(60 * 22), read: true },
 ] as const;
@@ -444,7 +444,7 @@ export const GROUPS: readonly { id: GroupId; title: string; note: string; sectio
   { id: "yukleme", title: "Yükleme", note: "Beklemenin beş biçimi; hareket azaltıldığında durağan.", section: "bilesenler" },
   { id: "hareket", title: "Hareket ve Doku", note: "Işık, yuvarlanan harf, kalem çizgisi, desen: her hareket bir şey söyler, hareket azaltmada durur.", section: "bilesenler" },
   { id: "ajan", title: "Yapay Zekâ", note: "Asistanın durumu, aracı, düşüncesi ve akan yanıtı; model ne yaptığını gösterir.", section: "bilesenler" },
-  { id: "tanitim", title: "Pazarlama", note: "Ziyaretçiye dönük açılış sayfası: netleşen başlık, cam eylem, canlı maket, köşedeki maskot.", section: "bilesenler" },
+  { id: "tanitim", title: "Tanıtım", note: "Ziyaretçiye dönük açılış sayfası: netleşen başlık, cam eylem, canlı maket, köşedeki maskot.", section: "bilesenler" },
   { id: "grafik", title: "Grafikler", note: "ChartCard kuyusunda, lejant karolarında; seri rengi yalnız --chart-*.", section: "grafikler" },
   { id: "blok", title: "Bloklar", note: "Birden çok bileşenin birleştiği hazır parçalar.", section: "bloklar" },
 ];

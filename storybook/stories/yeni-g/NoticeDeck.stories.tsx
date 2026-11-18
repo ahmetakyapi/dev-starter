@@ -9,7 +9,7 @@ const ITEMS = [
 ];
 
 const meta = {
-  title: "Bileşenler/Pazarlama/Duyuru Destesi",
+  title: "Bileşenler/Tanıtım/Duyuru Destesi",
   id: "notice-deck",
   component: NoticeDeck,
   tags: ["autodocs", "yeni"],

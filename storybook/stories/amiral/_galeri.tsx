@@ -1269,6 +1269,8 @@ const SLIDES = [
 ];
 
 const PEAK = ROAST_WEEK.reduce((a, d) => (d.value > a.value ? d : a));
+/** Gün adı veriden: elle "Perşembe" yazılıydı, veri değişince yalan söylerdi. */
+const DAY_NAME: Record<string, string> = { Pzt: "Pazartesi", Sal: "Salı", Çar: "Çarşamba", Per: "Perşembe", Cum: "Cuma", Cmt: "Cumartesi", Paz: "Pazar" };
 
 /** Sekme paneli: üç küçük karo. */
 function Facts({ items }: { items: readonly (readonly [string, string])[] }) {
@@ -1302,7 +1304,7 @@ function GezinmeGroup() {
           aria-label="Atölye Bölümleri"
           items={[
               { value: "genel", label: "Genel", panel: <Facts items={[["Kavrulan", `${num.format(ROAST_TOTAL)} kg`], ["Web Siparişi", num.format(OCTOBER_ORDERS)], ["Abone", num.format(SUBSCRIBERS)]]} /> },
-            { value: "kavrum", label: "Kavurucu", panel: <Facts items={[["En Yoğun Gün", "Perşembe"], ["O Gün", `${num.format(PEAK.value)} kg`], ["Lot", "44"]]} /> },
+            { value: "kavrum", label: "Kavurucu", panel: <Facts items={[["En Yoğun Gün", DAY_NAME[PEAK.label]], ["O Gün", `${num.format(PEAK.value)} kg`], ["Son Lot", "44 · Cerrado"]]} /> },
             { value: "toptan", label: "Toptan", panel: <Facts items={[["Kafe", num.format(CAFES.length)], ["Ort. Sipariş", "18 kg"], ["Geciken", "1"]]} /> },
           ]}
         />

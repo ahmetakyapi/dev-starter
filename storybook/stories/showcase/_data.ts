@@ -2,8 +2,13 @@
  * Pusula: bütün sahte veri tek yerde.
  *
  * Kurgu: Pusula, Denizli'de otellere, kafelere ve butiklere ev tekstili
- * satan altı kişilik bir ekibin destek + satış + takvim + asistan paneli;
- * çalışma alanının adı da Pusula (ayrı bir firma adı yok). Bugün 2 Kasım 2026, Pazartesi, 10.40.
+ * satan Lidya Tekstil A.Ş.'nin altı kişilik ekibi, destek + satış + takvim +
+ * asistan işini Pusula'da yürütür (ürün `PRODUCT`, şirket `WORKSPACE`).
+ * Bugün 2 Kasım 2026, Pazartesi, 10.40.
+ *
+ * Talep metinleri bağlı siparişe atıf yapıyorsa (ürün, adet, tutar, adres)
+ * metin siparişten HESAPLANIR: elle yazılan "30 adet bornoz" üretilen
+ * siparişte havlu çıkıyordu (2026-11-18 veri denetimi).
  *
  * TUTARLILIK İLKESİ: hiçbir toplam elle yazılmaz. Siparişler ve talepler
  * tohumlu bir üreteçle (her derlemede aynı) bir kez üretilir; panodaki
@@ -114,6 +119,9 @@ export type Customer = {
   name: string;
   contact: string;
   city: string;
+  /** Teslimat adresinin ilçesi ve sokağı (adres değişikliği talebi bunu okur). */
+  district: string;
+  street: string;
   /** Ortalama sipariş tutarı (₺) ve sipariş sıklığı ağırlığı: üretecin girdisi. */
   basket: number;
   weight: number;
@@ -122,14 +130,14 @@ export type Customer = {
 };
 
 export const CUSTOMERS: readonly Customer[] = [
-  { id: "atlas", name: "Atlas Konaklama", contact: "Seda Kılıç", city: "İstanbul", basket: 17800, weight: 1.3, channels: [2, 5, 1] },
-  { id: "defne", name: "Defne Otel", contact: "Ayşe Tunç", city: "Bodrum", basket: 13600, weight: 1.1, channels: [3, 4, 1] },
-  { id: "ege", name: "Ege Yaşam Mağazaları", contact: "Hakan Polat", city: "Muğla", basket: 9400, weight: 1.2, channels: [1, 1, 6] },
-  { id: "lavanta", name: "Lavanta Spa", contact: "Deniz Uçar", city: "Antalya", basket: 7600, weight: 0.8, channels: [5, 2, 0] },
-  { id: "cinar", name: "Çınar Kafe Zinciri", contact: "Gizem Sarı", city: "Ankara", basket: 6900, weight: 1.0, channels: [5, 2, 1] },
-  { id: "nehir", name: "Nehir Butik Otel", contact: "Pınar Aydın", city: "Eskişehir", basket: 5700, weight: 0.7, channels: [4, 3, 0] },
-  { id: "mavi", name: "Mavi Köşk Butik", contact: "Okan Er", city: "İzmir", basket: 4600, weight: 1.1, channels: [6, 1, 1] },
-  { id: "kuzey", name: "Kuzey Ev Tekstili", contact: "Emre Bulut", city: "Trabzon", basket: 3900, weight: 0.8, channels: [1, 1, 5] },
+  { id: "atlas", name: "Atlas Konaklama", contact: "Seda Kılıç", city: "İstanbul", district: "Şişli", street: "Halaskargazi Caddesi No. 112", basket: 17800, weight: 1.3, channels: [2, 5, 1] },
+  { id: "defne", name: "Defne Otel", contact: "Ayşe Tunç", city: "Bodrum", district: "Bodrum", street: "Kumbahçe Mahallesi, Neyzen Tevfik Caddesi No. 48", basket: 13600, weight: 1.1, channels: [3, 4, 1] },
+  { id: "ege", name: "Ege Yaşam Mağazaları", contact: "Hakan Polat", city: "Muğla", district: "Menteşe", street: "Kordon Caddesi No. 14", basket: 9400, weight: 1.2, channels: [1, 1, 6] },
+  { id: "lavanta", name: "Lavanta Spa", contact: "Deniz Uçar", city: "Antalya", district: "Muratpaşa", street: "Lara Caddesi No. 205", basket: 7600, weight: 0.8, channels: [5, 2, 0] },
+  { id: "cinar", name: "Çınar Kafe Zinciri", contact: "Gizem Sarı", city: "Ankara", district: "Çankaya", street: "Tunalı Hilmi Caddesi No. 61", basket: 6900, weight: 1.0, channels: [5, 2, 1] },
+  { id: "nehir", name: "Nehir Butik Otel", contact: "Pınar Aydın", city: "Eskişehir", district: "Odunpazarı", street: "Kurşunlu Sokak No. 9", basket: 5700, weight: 0.7, channels: [4, 3, 0] },
+  { id: "mavi", name: "Mavi Köşk Butik", contact: "Okan Er", city: "İzmir", district: "Alsancak", street: "Kıbrıs Şehitleri Caddesi No. 77", basket: 4600, weight: 1.1, channels: [6, 1, 1] },
+  { id: "kuzey", name: "Kuzey Ev Tekstili", contact: "Emre Bulut", city: "Trabzon", district: "Ortahisar", street: "Uzun Sokak No. 33", basket: 3900, weight: 0.8, channels: [1, 1, 5] },
 ];
 export const customer = (id: string) => CUSTOMERS.find((c) => c.id === id) ?? CUSTOMERS[0];
 
@@ -284,25 +292,26 @@ type Draft = {
   tags: readonly string[];
   messages: number;
   watchers?: readonly string[];
-  preview: string;
+  /** Metin siparişe atıf yapıyorsa işlev: bağlı sipariş ve müşteriden üretilir. */
+  preview: string | ((ctx: { customer: Customer; order?: Order }) => string);
   satisfied?: boolean;
-  /** Sayı: DELAYED[n]'in siparişi; "son": müşterinin son siparişi. */
-  order?: number | "son";
+  /** Sayı: DELAYED[n]'in siparişi; "son": müşterinin son siparişi; "teslim": son TESLİM EDİLMİŞ siparişi. */
+  order?: number | "son" | "teslim";
 };
 
 /* Gelen kutusunun son sekiz günü elle yazıldı; müşteri sayıysa geciken
    siparişin sahibi (siparişler üretildiği için adı burada bilinmez). */
 const DRAFTS: readonly Draft[] = [
   { back: 0, at: "10:12", subject: "Siparişimiz hâlâ teslim edilmedi", customerId: 0, channel: "Telefon", priority: "Acil", status: "Açık", assignee: "ahmet", firstResponseMin: 6, tags: ["Kargo", "Gecikme"], messages: 3, watchers: ["can", "mert"], order: 0, preview: "Kargo takip numarası 4 gündür aynı aktarma merkezinde görünüyor. Hafta sonu açılışımız var." },
-  { back: 0, at: "09:47", subject: "Kasım faturasında KDV iki kez yansımış", customerId: "defne", channel: "E-Posta", priority: "Yüksek", status: "Açık", assignee: "burak", firstResponseMin: 18, tags: ["Fatura"], messages: 2, watchers: ["ahmet"], order: "son", preview: "Fatura toplamı sipariş onayından 2.312 TL fazla. Düzeltilmiş faturayı bekliyoruz." },
+  { back: 0, at: "09:47", subject: "Proforma faturada KDV iki kez hesaplanmış", customerId: "defne", channel: "E-Posta", priority: "Yüksek", status: "Açık", assignee: "burak", firstResponseMin: 18, tags: ["Fatura"], messages: 2, watchers: ["ahmet"], order: "son", preview: ({ order }) => `${order?.id ?? "Sipariş"} proformasının toplamı onaydaki ${tl.format(order?.total ?? 0)} tutarından ${tl.format(kdvOf(order?.total ?? 0))} fazla; KDV iki kez eklenmiş. Düzeltilmiş proformayı bekliyoruz.` },
   { back: 0, at: "09:05", subject: "Toplu yenileme için teklif rica ediyoruz", customerId: "atlas", channel: "E-Posta", priority: "Normal", status: "Açık", assignee: "mert", firstResponseMin: null, tags: ["Teklif"], messages: 1, preview: "Üç otelimizde 420 oda için havlu ve nevresim yenilemesi planlıyoruz; Aralık teslim mümkün mü?" },
   { back: 0, at: "08:31", subject: "Web mağazada ödeme adımı hata veriyor", customerId: "mavi", channel: "Canlı Sohbet", priority: "Yüksek", status: "Açık", assignee: "zeynep", firstResponseMin: 2, tags: ["Web Mağaza", "Ödeme"], messages: 6, watchers: ["can"], preview: "Kartla ödemede '3D doğrulama tamamlanamadı' uyarısı çıkıyor, iki kez denedim." },
   { back: 1, at: "17:20", subject: "Peştemal renk kartelası isteği", customerId: "lavanta", channel: "Web Formu", priority: "Düşük", status: "Beklemede", assignee: "selin", firstResponseMin: 41, tags: ["Numune"], messages: 2, preview: "Yeni spa katımız için toprak tonlarında peştemal arıyoruz, kartela gönderebilir misiniz?" },
   { back: 1, at: "15:02", subject: "Kargo gecikmesi: açılış haftası", customerId: 1, channel: "E-Posta", priority: "Acil", status: "Açık", assignee: "can", firstResponseMin: 12, tags: ["Kargo", "Gecikme"], messages: 4, watchers: ["ahmet"], order: 1, preview: "Sipariş beş gündür yolda görünüyor. Teslim tarihi için net bir gün verebilir misiniz?" },
-  { back: 1, at: "11:44", subject: "Bornoz bedenleri karışık gelmiş", customerId: "nehir", channel: "Telefon", priority: "Normal", status: "Beklemede", assignee: "zeynep", firstResponseMin: 9, tags: ["İade", "Ürün"], messages: 5, order: "son", preview: "L beden yerine 30 adet M gelmiş. Değişim için kuryeyi ne zaman gönderirsiniz?" },
+  { back: 1, at: "11:44", subject: "Teslim edilen kolide eksik ürün var", customerId: "nehir", channel: "Telefon", priority: "Normal", status: "Beklemede", assignee: "zeynep", firstResponseMin: 9, tags: ["İade", "Ürün"], messages: 5, order: "teslim", preview: ({ order }) => `${order?.id ?? "Son sipariş"} teslim edildi ama ${order ? shortfall(order) : "kolide eksik ürün var"}. Eksiği ne zaman gönderirsiniz?` },
   { back: 2, at: "16:35", subject: "Bayi fiyat listesi güncellemesi", customerId: "ege", channel: "E-Posta", priority: "Normal", status: "Çözüldü", assignee: "mert", firstResponseMin: 33, tags: ["Fiyat"], messages: 3, satisfied: true, preview: "2027 fiyat listesini PDF olarak paylaşabilir misiniz?" },
   { back: 2, at: "10:10", subject: "Havlu dokuma sıklığı hakkında soru", customerId: "cinar", channel: "Canlı Sohbet", priority: "Düşük", status: "Çözüldü", assignee: "zeynep", firstResponseMin: 1, tags: ["Ürün"], messages: 4, satisfied: true, preview: "500 gr/m² ile 600 gr/m² arasındaki fark kurumada ne kadar?" },
-  { back: 3, at: "13:25", subject: "Siparişin teslim adresi değişecek", customerId: 2, channel: "Telefon", priority: "Yüksek", status: "Beklemede", assignee: "can", firstResponseMin: 4, tags: ["Kargo"], messages: 3, order: 2, preview: "Mağaza taşındı; yeni adres Menteşe Kordon Caddesi No. 14. Kargoya iletir misiniz?" },
+  { back: 3, at: "13:25", subject: "Siparişin teslim adresi değişecek", customerId: 2, channel: "Telefon", priority: "Yüksek", status: "Beklemede", assignee: "can", firstResponseMin: 4, tags: ["Kargo"], messages: 3, order: 2, preview: ({ customer: c, order }) => `${order?.id ?? "Sipariş"} için teslim adresi değişti: depomuz yerine ${c.district} şubemize, ${c.street}, ${c.city}. Kargoya iletir misiniz?` },
   { back: 3, at: "09:58", subject: "Fatura adresi yanlış görünüyor", customerId: "kuzey", channel: "Web Formu", priority: "Normal", status: "Çözüldü", assignee: "burak", firstResponseMin: 27, tags: ["Fatura"], messages: 2, satisfied: true, preview: "Faturada eski vergi dairesi yazıyor, Karadeniz VD olmalı." },
   { back: 4, at: "18:05", subject: "Hafta sonu teslimat seçeneği var mı?", customerId: "defne", channel: "Canlı Sohbet", priority: "Düşük", status: "Çözüldü", assignee: "ahmet", firstResponseMin: 1, tags: ["Kargo"], messages: 3, satisfied: true, preview: "Cumartesi resepsiyon açık, teslimat o gün yapılabilir mi?" },
   { back: 4, at: "14:12", subject: "Masa örtüsünde leke var", customerId: "cinar", channel: "E-Posta", priority: "Normal", status: "Çözüldü", assignee: "zeynep", firstResponseMin: 22, tags: ["İade", "Ürün"], messages: 5, satisfied: false, preview: "40 örtünün 6'sında aynı yerde sarı leke var; fotoğrafları ekledim." },
@@ -316,6 +325,16 @@ const DRAFTS: readonly Draft[] = [
   { back: 7, at: "12:30", subject: "Mutfak önlüğü beden tablosu", customerId: "cinar", channel: "E-Posta", priority: "Düşük", status: "Çözüldü", assignee: "selin", firstResponseMin: 31, tags: ["Ürün"], messages: 2, satisfied: true, preview: "Önlüklerin boy ölçülerini paylaşır mısınız?" },
   { back: 7, at: "09:10", subject: "E-fatura yerine e-arşiv isteği", customerId: "mavi", channel: "E-Posta", priority: "Düşük", status: "Çözüldü", assignee: "burak", firstResponseMin: 24, tags: ["Fatura"], messages: 2, satisfied: true, preview: "Şirket türümüz değişti, faturaları e-arşiv olarak kesebilir misiniz?" },
 ];
+
+/** Fiyatlar KDV dahil (%20): toplamın içindeki KDV. */
+const kdvOf = (total: number) => Math.round(total - total / 1.2);
+
+/** "Otel Havlu Seti · 130 adet" → "130 yerine 120 adet Otel Havlu Seti gelmiş". */
+function shortfall(o: Order) {
+  const [product, qtyText] = o.items.split(" · ");
+  const qty = Number.parseInt(qtyText ?? "", 10) || 0;
+  return `${qty} yerine ${qty - 10} adet ${product} gelmiş`;
+}
 
 /** Sekiz günden eski talepler yalnızca özet olarak (pano ve raporlar için). */
 const DETAIL_DAYS = 8;
@@ -356,7 +375,9 @@ function buildTickets(): Ticket[] {
         ? DELAYED[d.order]?.id
         : d.order === "son"
           ? [...ORDERS].reverse().find((o) => o.customerId === customerId && o.date < date)?.id
-          : undefined;
+          : d.order === "teslim"
+            ? [...ORDERS].reverse().find((o) => o.customerId === customerId && o.date < date && o.status === "Teslim Edildi")?.id
+            : undefined;
     return {
       id: `PSL-${1186 - i}`,
       subject: d.subject,
@@ -373,7 +394,7 @@ function buildTickets(): Ticket[] {
       tags: d.tags,
       messages: d.messages,
       watchers: d.watchers ?? [],
-      preview: d.preview,
+      preview: typeof d.preview === "function" ? d.preview({ customer: customer(customerId), order: orderId ? order(orderId) : undefined }) : d.preview,
     };
   });
 }
@@ -394,8 +415,10 @@ export function ticketEvents(t: Ticket) {
     events.push({ id: "yanit", at: plus(t.firstResponseMin), title: "İlk Yanıt Gönderildi", description: `${t.firstResponseMin} dakikada`, tone: "primary" });
   if (t.status === "Beklemede") events.push({ id: "bekle", at: plus((t.firstResponseMin ?? 0) + 25), title: "Müşteri Yanıtı Bekleniyor", tone: "warning" });
   if (t.status === "Çözüldü") events.push({ id: "coz", at: plus((t.firstResponseMin ?? 0) + 140), title: "Çözüldü Olarak Kapatıldı", tone: "success" });
-  if (t.priority === "Acil" && t.status === "Açık") events.push({ id: "acil", at: plus(30), title: "Acil Olarak İşaretlendi", tone: "danger" });
-  return events.sort((a, b) => a.at.getTime() - b.at.getTime());
+  // Acil işareti atamayla birlikte konur (eskiden +30 dk: bugünün talebinde saat 10.42, yani gelecekte görünüyordu).
+  if (t.priority === "Acil" && t.status === "Açık") events.push({ id: "acil", at: plus(2), title: "Acil Olarak İşaretlendi", tone: "danger" });
+  // Akış "şimdi"den ileri gitmez: bugünün talebinde henüz olmamış adım gösterilmez.
+  return events.filter((e) => e.at <= TODAY).sort((a, b) => a.at.getTime() - b.at.getTime());
 }
 
 /* --- Dönemler ------------------------------------------------------------ */
@@ -609,12 +632,12 @@ export const EVENTS: readonly CalendarEvent[] = [
   ev("e2", 2, "14:00", 45, { title: "Toplu Yenileme Teklifi Görüşmesi", customerId: "atlas", kind: "Görüşme", owner: "mert", place: "Görüntülü Görüşme" }),
   ev("e3", 3, "10:00", 60, { title: "Açılış Öncesi Teslimat", customerId: DELAYED[0]?.customerId ?? "cinar", kind: "Teslimat", owner: "can", place: "Müşteri Adresi" }),
   ev("e4", 4, "15:30", 30, { title: "Peştemal Kartelası Sunumu", customerId: "lavanta", kind: "Numune", owner: "selin", place: "Görüntülü Görüşme" }),
-  ev("e5", 5, "09:30", 45, { title: "Bornoz Değişimi Teslimatı", customerId: "nehir", kind: "Teslimat", owner: "can", place: "Müşteri Adresi" }),
-  ev("e6", 6, "13:00", 60, { title: "Kasım Fiyat Listesi Gözden Geçirme", kind: "İç Toplantı", owner: "mert", place: "Toplantı Odası" }),
+  ev("e5", 5, "09:30", 45, { title: "Eksik Ürün Teslimatı", customerId: "nehir", kind: "Teslimat", owner: "can", place: "Müşteri Adresi" }),
+  ev("e6", 6, "13:00", 60, { title: "Kış Sezonu Fiyat Listesi Gözden Geçirme", kind: "İç Toplantı", owner: "mert", place: "Toplantı Odası" }),
   ev("e7", 10, "11:00", 45, { title: "Bayi Yıllık Değerlendirme", customerId: "ege", kind: "Görüşme", owner: "mert", place: "Muğla Mağazası" }),
   ev("e8", 12, "14:30", 30, { title: "Fatura Mutabakatı", customerId: "defne", kind: "Görüşme", owner: "burak", place: "Telefon" }),
   ev("e9", 17, "10:30", 60, { title: "Yeni Sezon Numune Teslimi", customerId: "mavi", kind: "Numune", owner: "selin", place: "İzmir Showroom" }),
-  ev("e10", 19, "16:00", 30, { title: "Çeyrek Kapanış Toplantısı", kind: "İç Toplantı", owner: "ahmet", place: "Toplantı Odası" }),
+  ev("e10", 19, "16:00", 30, { title: "Aylık Destek Değerlendirmesi", kind: "İç Toplantı", owner: "ahmet", place: "Toplantı Odası" }),
   ev("e11", 24, "09:00", 90, { title: "Otel Açılışı Toplu Teslimat", customerId: "atlas", kind: "Teslimat", owner: "can", place: "Atlas Pera" }),
   ev("e12", 26, "15:00", 45, { title: "Logo Nakışı Onay Görüşmesi", customerId: "atlas", kind: "Görüşme", owner: "selin", place: "Görüntülü Görüşme" }),
 ];
@@ -643,8 +666,8 @@ export const BOARD: readonly BoardColumn[] = [
     cards: [
       card("g1", "Atlas 420 oda teklif tablosu", "Satış", "mert", "2026-11-04", "Teklif"),
       card("g2", "Lavanta için peştemal kartelası hazırla", "Satış", "selin", "2026-11-04", "Numune"),
-      card("g3", "Nehir Butik bornoz değişimi kuryesi", "Operasyon", "can", "2026-11-05", "İade"),
-      card("g4", "Kasım fiyat listesi taslağı", "Satış", "mert", "2026-11-06"),
+      card("g3", "Nehir Butik eksik ürün gönderimi", "Operasyon", "can", "2026-11-05", "İade"),
+      card("g4", "Kış sezonu fiyat listesi taslağı", "Satış", "mert", "2026-11-06"),
     ],
   },
   {
@@ -653,8 +676,8 @@ export const BOARD: readonly BoardColumn[] = [
     limit: 4,
     cards: [
       card("g5", `${delayedName(0)} gecikmesi için kargoyu ara`, "Operasyon", "can", "2026-11-02", "Gecikme"),
-      card("g6", "Defne Otel düzeltilmiş faturası", "Muhasebe", "burak", "2026-11-03", "Fatura"),
-      card("g7", "Web mağaza 3D ödeme hatası", "Destek", "zeynep", "2026-10-31", "Ödeme"),
+      card("g6", "Defne Otel düzeltilmiş proforması", "Muhasebe", "burak", "2026-11-03", "Fatura"),
+      card("g7", "Web mağaza 3D ödeme hatası", "Destek", "zeynep", "2026-11-03", "Ödeme"),
     ],
   },
   {

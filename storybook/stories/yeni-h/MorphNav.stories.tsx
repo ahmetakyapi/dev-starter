@@ -3,7 +3,7 @@ import { BookOpen, CalendarDays, Inbox, ListChecks, Newspaper, Sparkles } from "
 import { MorphNav, MorphNavGrid } from "@/components/ui/morph-nav";
 
 const meta = {
-  title: "Bileşenler/Pazarlama/Biçim Değiştiren Menü",
+  title: "Bileşenler/Tanıtım/Biçim Değiştiren Menü",
   id: "morph-nav",
   component: MorphNav,
   tags: ["autodocs", "yeni"],

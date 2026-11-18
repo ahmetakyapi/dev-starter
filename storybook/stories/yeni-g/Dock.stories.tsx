@@ -29,7 +29,7 @@ function Interactive() {
 }
 
 const meta = {
-  title: "Bileşenler/Pazarlama/Uygulama Rafı",
+  title: "Bileşenler/Tanıtım/Uygulama Rafı",
   id: "dock",
   component: Dock,
   tags: ["autodocs", "yeni"],
