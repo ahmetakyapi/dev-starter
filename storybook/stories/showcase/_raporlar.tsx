@@ -521,7 +521,7 @@ export function RaporlarPage() {
                   notify({
                     tone: "success",
                     title: "Paylaşım Güncellendi",
-                    body: `${shared.title} · ${[a.team && "Pusula ekibi", a.link && "bağlantıya sahip herkes"].filter(Boolean).join(" ve ") || "yalnız sen"}`,
+                    body: `${shared.title} · ${[a.team && `${WORKSPACE.name} ekibi`, a.link && "bağlantıya sahip herkes"].filter(Boolean).join(" ve ") || "yalnız sen"}`,
                   });
                 }}
               >
@@ -550,11 +550,11 @@ export function RaporlarPage() {
               </article>
             </div>
             <SharePanel
-              link={`https://pusula.app/r/${shared.id}?donem=${shared.period}`}
+              link={`https://lidya.pusula.app/r/${shared.id}?donem=${shared.period}`}
               access={[
                 {
                   id: "ekip",
-                  label: "Pusula Ekibi",
+                  label: `${WORKSPACE.name} Ekibi`,
                   tag: "Ekip",
                   people: TEAM.map((m) => m.name),
                   checked: access(shared.id).team,

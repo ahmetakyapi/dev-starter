@@ -27,7 +27,8 @@
     "registry:ui": "node scripts/build-ui-registry.mjs",
     "verify:registry": "node scripts/build-ui-registry.mjs --check",
     "kit:ui": "node scripts/build-ui-package.mjs",
-    "verify:kit": "node scripts/build-ui-package.mjs --check"
+    "verify:kit": "node scripts/build-ui-package.mjs --check",
+    "ci:local": "bash scripts/ci-local.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

@@ -55,7 +55,7 @@ const GROUPS: { id: string; title: string; description: string; rows: Row[] }[] 
   {
     id: "cizgi",
     title: "Çizgiler",
-    description: "Kıl çizgisi alanı ayırır, vurgu taşımaz. Kuyu zaten ton farkıyla ayrıldığı için çoğu kartta çizgi hiç yok.",
+    description: "İnce çizgisi alanı ayırır, vurgu taşımaz. Kuyu zaten ton farkıyla ayrıldığı için çoğu kartta çizgi hiç yok.",
     rows: [
       { key: "lineSoft", name: "Yumuşak Çizgi", cls: "border-line-soft", swatch: "border-2 border-line-soft", kind: "line", use: "Liste içi ayırıcı" },
       { key: "line", name: "Çizgi", cls: "border-line", swatch: "border-2 border-line", kind: "line", use: "Varsayılan kenarlık, bölüm ayırıcı" },
@@ -69,11 +69,11 @@ const GROUPS: { id: string; title: string; description: string; rows: Row[] }[] 
       "Mürekkepler kendi yıkamalarının üstünde AA ölçülür; oran o yüzden wash satırında mürekkep ile wash arasında. Renk tek işaret değildir: metin ve ikon her zaman yanında.",
     rows: [
       { key: "success", name: "Başarı", cls: "text-success", swatch: "text-success", kind: "status", use: "Tamamlandı, artış" },
-      { key: "successWash", name: "Başarı Yıkaması", cls: "bg-success-wash", swatch: "bg-success-wash text-success", kind: "wash", ink: "success", use: "Rozet, değişim hapı" },
+      { key: "successWash", name: "Başarı Zemini", cls: "bg-success-wash", swatch: "bg-success-wash text-success", kind: "wash", ink: "success", use: "Rozet, değişim hapı" },
       { key: "warning", name: "Uyarı", cls: "text-warning", swatch: "text-warning", kind: "status", use: "Bekliyor, eşik yakın" },
-      { key: "warningWash", name: "Uyarı Yıkaması", cls: "bg-warning-wash", swatch: "bg-warning-wash text-warning", kind: "wash", ink: "warning", use: "Rozet, uyarı satırı" },
+      { key: "warningWash", name: "Uyarı Zemini", cls: "bg-warning-wash", swatch: "bg-warning-wash text-warning", kind: "wash", ink: "warning", use: "Rozet, uyarı satırı" },
       { key: "danger", name: "Tehlike", cls: "text-danger", swatch: "text-danger", kind: "status", use: "Hata, düşüş, yıkıcı eylem" },
-      { key: "dangerWash", name: "Tehlike Yıkaması", cls: "bg-danger-wash", swatch: "bg-danger-wash text-danger", kind: "wash", ink: "danger", use: "Hata satırı, sil butonu" },
+      { key: "dangerWash", name: "Tehlike Zemini", cls: "bg-danger-wash", swatch: "bg-danger-wash text-danger", kind: "wash", ink: "danger", use: "Hata satırı, sil butonu" },
       { key: "accentWarm", name: "Sıcak Vurgu", cls: "bg-accent-warm", swatch: "bg-accent-warm", kind: "warm", use: "Seyrek tek nokta; metin rengi değil" },
     ],
   },

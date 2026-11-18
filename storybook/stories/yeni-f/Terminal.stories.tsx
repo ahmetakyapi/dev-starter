@@ -25,7 +25,7 @@ const meta = {
       },
     },
   },
-  args: { lines: INSTALL, title: "~/kahve-dukkani" },
+  args: { lines: INSTALL, title: "~/kiyi-kahve" },
   render: (args) => (
     <Frame width="lg">
       <Terminal {...args} />

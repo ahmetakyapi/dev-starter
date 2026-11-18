@@ -411,7 +411,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Açılır Kart ve Araç İpucu" note="Beyaz karo, kıl çizgisi, tetikleyiciden 0,96 ölçekle çıkar.">
+        <Showcase name="Açılır Kart ve Araç İpucu" note="Beyaz karo, ince çizgisi, tetikleyiciden 0,96 ölçekle çıkar.">
           <div className="flex items-center justify-center gap-4">
             <Popover>
               <PopoverTrigger render={<Button variant="secondary" />}>Paylaş</PopoverTrigger>
@@ -432,7 +432,7 @@ export default function Vitrin() {
           </div>
         </Showcase>
 
-        <Showcase name="Veri Tablosu" note="Soluk başlık, kıl çizgili satırlar, üzerine gelince yumuşak gri." wide className="items-start">
+        <Showcase name="Veri Tablosu" note="Soluk başlık, ince çizgili satırlar, üzerine gelince yumuşak gri." wide className="items-start">
           <DataTable caption="Son Siparişler" columns={COLUMNS} rows={ORDERS} rowKey={(r) => r.id} sort={{ key: "total", dir: "desc" }} sortHref={(k, d) => `?sort=${k}&dir=${d}`} minWidth="34rem" />
         </Showcase>
 
@@ -451,7 +451,7 @@ export default function Vitrin() {
           />
         </Showcase>
 
-        <Showcase name="Zaman Çizelgesi" note="Nokta kendi tonunun yıkamasında; ikonlu olay beyaz karo.">
+        <Showcase name="Zaman Çizelgesi" note="Nokta kendi tonunun açık zemininde; ikonlu olay beyaz karo.">
           <Timeline
             events={[
               { id: "1", at: "2026-10-28T09:12", when: "28 Ekim, 09.12", title: "Sipariş Alındı", tone: "primary" },

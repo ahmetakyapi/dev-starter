@@ -442,7 +442,9 @@ fi
 SLOP_DIRS=()
 for d in templates snippets packages/@ahmet/ui/src; do [ -d "$d" ] && SLOP_DIRS+=("$d"); done
 if [ ${#SLOP_DIRS[@]} -gt 0 ]; then
-  SLOP_OUT=$(bash scripts/slop-scan.sh --quiet "${SLOP_DIRS[@]}" 2>&1)
+  # `|| true`: tarama YUKSEK bulguda 1 doner; `set -e` altinda betik burada
+  # aciklamasiz cikiyordu (CI'da "exit code 1", hangi kontrol belli degil).
+  SLOP_OUT=$(bash scripts/slop-scan.sh --quiet "${SLOP_DIRS[@]}" 2>&1 || true)
   SLOP_CODE=$?
   SLOP_SUM=$(printf '%s\n' "$SLOP_OUT" | grep 'SONUC' | sed 's/.*SONUC: //')
   if [ $SLOP_CODE -ne 0 ]; then

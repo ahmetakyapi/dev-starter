@@ -53,7 +53,7 @@ type ChatComposerProps = {
   label?: string;
   disabled?: boolean;
   /**
-   * `card` (varsayılan): kıl çizgili beyaz karo. `halo`: karo, vurgunun
+   * `card` (varsayılan): ince çizgili beyaz karo. `halo`: karo, vurgunun
    * yıkanmış renginde bir halenin içinde; odakta hale koyulaşır. Sohbetin
    * BOŞ başlangıç ekranında, kutu sayfanın tek eylemiyken (x6sense turu,
    * 2026-11; degrade kenar yerine düz ton: degrade disiplini).

@@ -7,9 +7,9 @@ import { Cell, Gallery } from "../_lib/Frame";
 import { BRAND, ContentBar, NAV, ROUTES, ShellCommands, SignOutButton, USER } from "./_shared";
 
 const ACTIVITY = [
-  { who: "Planlama Ajanı", what: "Destek talepleri özetini bitirdi", when: "12 dk önce" },
+  { who: "Planlama Asistanı", what: "Destek talepleri özetini bitirdi", when: "12 dk önce" },
   { who: "Mert Aksoy", what: "Fatura iadesi talebini sana atadı", when: "40 dk önce" },
-  { who: "Rapor Ajanı", what: "Ekim memnuniyet raporunu paylaşıma hazırladı", when: "2 sa önce" },
+  { who: "Rapor Asistanı", what: "Ekim memnuniyet raporunu paylaşıma hazırladı", when: "2 sa önce" },
   { who: "Zeynep Kaya", what: "Kargo gecikmesi şablonunu güncelledi", when: "Dün 17:05" },
 ];
 

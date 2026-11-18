@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
  *     </DropdownMenuContent>
  *   </DropdownMenu>
  *
- * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `rounded-xl` + kıl çizgisi +
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `rounded-xl` + ince çizgisi +
  * `shadow-modal`, iç boşluk `p-1.5`. Vurgulu öğe YUMUŞAK GRİ
  * (`bg-surface-raised`): renkli vurgu her ok tuşunda göz alırdı, gri yalnızca
  * "buradasın" der. Seçim işareti (onay ya da radyo) SAĞDA, `primary-ink`:

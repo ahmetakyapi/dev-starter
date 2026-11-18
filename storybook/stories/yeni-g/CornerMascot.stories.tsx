@@ -3,7 +3,7 @@ import { expect, userEvent, within } from "storybook/test";
 import { CornerMascot } from "@/components/ui/corner-mascot";
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Köşe Maskotu",
+  title: "Bileşenler/Pazarlama/Köşe Maskotu",
   id: "corner-mascot",
   component: CornerMascot,
   tags: ["autodocs", "yeni"],

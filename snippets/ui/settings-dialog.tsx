@@ -160,7 +160,7 @@ export function SettingsDialog({
   );
 }
 
-/** Bir paneldeki başlıklı satır grubu; satırlar arasında kıl çizgisi. */
+/** Bir paneldeki başlıklı satır grubu; satırlar arasında ince çizgisi. */
 export function SettingsSection({
   title,
   description,

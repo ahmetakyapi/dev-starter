@@ -95,7 +95,7 @@ function ReservationForm({ initial }: { initial?: { range: DateRange; tags: stri
         <div className="grid gap-5 rounded-lg bg-overlay p-5 shadow-raised">
           {/* `[&>div]:min-w-0`: number-field kökü dar kolonda taşıyor (snippet hatası, raporlandı). */}
           <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-            <NumberField label="Misafir Sayısı" value={guests} onValueChange={setGuests} min={1} max={6} hint="Bebekler sayılmaz." name="misafir" className="[&>div]:min-w-0" />
+            <NumberField label="Misafir Sayısı" value={guests} onValueChange={setGuests} min={1} max={6} hint="2 yaş altı çocuklar sayıya dahil değildir." name="misafir" className="[&>div]:min-w-0" />
             <TimeField label="Tahmini Giriş Saati" value={arrival} onValueChange={setArrival} minuteStep={15} hint="Resepsiyon 24 saat açık." name="giris-saati" />
           </div>
 

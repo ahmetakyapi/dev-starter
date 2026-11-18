@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
  * ve içeride bir `PopoverClose` (dokunmatik ekran okuyucu çıkış bulsun).
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `bg-overlay`, `rounded-xl`,
- * kıl çizgisi (`border-line`, eskiden `-strong`: gölge zaten ayırıyor) ve
+ * ince çizgisi (`border-line`, eskiden `-strong`: gölge zaten ayırıyor) ve
  * katmanlı kısa gölge `shadow-modal`. Giriş 0,96'dan ölçek + opaklık,
  * kaynağı tetikleyici (`--transform-origin`): kutu butondan "çıkar".
  *

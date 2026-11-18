@@ -50,6 +50,12 @@ export const pop = { initial: { scale: 0 }, animate: { scale: 1 } };
 export const mesaj = "Oops, bir şey ters gitti";
 window.addEventListener("scroll", () => document.body.classList.toggle("k"));
 EOF
+# "Dugme" kurali: kucuk, Basta-buyuk ve TAMAMI BUYUK (grep -i Turkce Ü/Ğ'yi katlamaz; mistakes.md #123).
+cat > "$SANDBOX/kirli/terim.tsx" <<'EOF'
+export const a = "Kopyala Düğmesi";
+// HAP BİR AÇ-KAPA DÜĞMESİ
+export const b = "butona bas, düğmeye değil";
+EOF
 
 OUT=$(bash "$SCAN" "$SANDBOX/kirli" 2>&1)
 CODE=$?
@@ -68,6 +74,7 @@ expect "[YUKSEK] Pazarlama dolgusu sozcukleri — 2 adet"
 expect "[YUKSEK] Gokkusagi degrade"
 expect "[YUKSEK] JSX icinde emoji ikon"
 expect "[YUKSEK] text-transform: capitalize"
+expect "[YUKSEK] Dugme sozcugu (buton olmali) — 3 adet"
 expect "[UYARI] Kaydirma dinleyicisi"
 expect "[UYARI] Nesne scale(0)"
 expect "[UYARI] Keyfi punto"

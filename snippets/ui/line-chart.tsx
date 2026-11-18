@@ -12,7 +12,7 @@ import { monotonePath, niceTicks } from "@/components/ui/area-chart";
  * okunacaksa `area-chart.tsx` (dolgu hacmi anlatır); burada dolgu yok, çünkü
  * beş dolgu üst üste binince hiçbiri okunmaz.
  *
- * LEJANT AYNI ZAMANDA SÜZGEÇ: her seri bir `aria-pressed` butonu; tıklayınca
+ * LEJANT AYNI ZAMANDA FİLTRE: her seri bir `aria-pressed` butonu; tıklayınca
  * çizgi söner ve Y ekseni KALAN serilere göre yeniden ölçeklenir (küçük bir
  * seri büyüğün gölgesinde düz çizgi gibi kalmasın). Son görünen seri
  * gizlenemez: boş grafik bir cevap değil. Gizli seri balonda da tabloda da

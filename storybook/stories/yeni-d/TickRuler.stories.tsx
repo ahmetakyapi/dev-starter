@@ -124,7 +124,7 @@ export const AllVariants: Story = {
       </Cell>
       <Cell label="Ondalık · Birimli">
         <div className="w-full rounded-2xl bg-overlay p-5 shadow-raised">
-          <TickRuler label="Kavurma Ağırlığı" min={1} max={15} step={0.5} majorEvery={2} defaultValue={6} unit="kg" formatTick={(v) => String(v)} spacing={14} />
+          <TickRuler label="Lot Ağırlığı" min={1} max={15} step={0.5} majorEvery={2} defaultValue={6} unit="kg" formatTick={(v) => String(v)} spacing={14} />
         </div>
       </Cell>
       <Cell label="Sık Çentik · Etiket Seyrek">

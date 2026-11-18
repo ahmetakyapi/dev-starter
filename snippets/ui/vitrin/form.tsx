@@ -100,7 +100,7 @@ export default function Vitrin() {
 
         <Showcase name="Sayı Alanı" summary="Eksi ve artı karolu sayı alanı; basılı tutunca hızlanır.">
           <div className="grid w-full max-w-xs gap-6">
-            <NumberField label="Misafir Sayısı" defaultValue={2} min={1} max={12} hint="Bebekler sayılmaz." />
+            <NumberField label="Misafir Sayısı" defaultValue={2} min={1} max={12} hint="2 yaş altı çocuklar sayıya dahil değildir." />
             <NumberField
               label="Aylık Bütçe"
               defaultValue={12500}

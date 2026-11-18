@@ -38,7 +38,7 @@ function CityFilter(props: Partial<ComponentProps<typeof SearchField>>) {
     <div className="grid gap-3">
       <SearchField
         label="İl Ara"
-        placeholder="İl adı yaz; cankaya, igdir de olur"
+        placeholder="İl adı yaz; canakkale, igdir de olur"
         loading={loading}
         resultCount={results.length}
         onSearch={(next) => {

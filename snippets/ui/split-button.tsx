@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
  * biçimleriyse kullan; farklı işler (Düzenle, Sil, Paylaş) tek butona
  * sıkıştırılmaz, onlar `dropdown-menu`.
  *
- * İKİ AYRI DÜĞME, TEK GÖRÜNÜŞ: sol yarı ana eylemi hemen yapar, sağdaki ok
+ * İKİ AYRI BUTON, TEK GÖRÜNÜŞ: sol yarı ana eylemi hemen yapar, sağdaki ok
  * menüyü açar. Ekran okuyucu ikisini ayrı duyar: ana buton kendi adıyla,
  * ok "Diğer Biçimler" (değiştirilebilir) + menü butonu bilgisiyle (Base UI
  * Menu: oklar, Home/End, harfle atlama, Escape, odak dönüşü).

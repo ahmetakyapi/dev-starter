@@ -20,7 +20,7 @@ import { MeshGradient } from "@/components/ui/mesh-gradient";
 import { NoticeDeck } from "@/components/ui/notice-deck";
 import { TrustLine } from "@/components/ui/trust-line";
 import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
-import { EVENTS, OPEN_TICKETS, WORKSPACE } from "./_data";
+import { EVENTS, OPEN_TICKETS, PRODUCT } from "./_data";
 
 /**
  * Pusula'nın tanıtım sayfası (oturum açmamış ziyaretçi). Ribbon turunun
@@ -66,7 +66,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             <span aria-hidden className="pusula-ink grid size-7 place-items-center rounded-lg">
               <Compass className="size-4" />
             </span>
-            {WORKSPACE.name}
+            {PRODUCT.name}
           </span>
         }
         links={[
@@ -292,8 +292,8 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             </p>
           </Reveal>
           <Reveal delay={0.08} className="flex flex-wrap justify-center gap-6 rounded-2xl bg-surface px-4 py-10 edge-lit sm:gap-10">
-            <BookCover title="Başlangıç Rehberi" subtitle="Gelen kutusu, görevler, takvim" author={WORKSPACE.name} mark="01" width={128} />
-            <BookCover tone="ink" title="Destek El Kitabı" subtitle="Yanıt dili ve öncelikler" author={WORKSPACE.name} mark="02" width={128} />
+            <BookCover title="Başlangıç Rehberi" subtitle="Gelen kutusu, görevler, takvim" author={PRODUCT.name} mark="01" width={128} />
+            <BookCover tone="ink" title="Destek El Kitabı" subtitle="Yanıt dili ve öncelikler" author={PRODUCT.name} mark="02" width={128} />
           </Reveal>
         </section>
 
@@ -323,7 +323,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           <span aria-hidden className="grid size-6 place-items-center rounded-sm bg-brand text-on-brand">
             <Compass className="size-3.5" />
           </span>
-          {WORKSPACE.name}
+          {PRODUCT.name}
         </p>
         <p>Örnek ürün: Tanıtım bileşenleriyle kurulmuş bir açılış sayfası.</p>
       </footer>

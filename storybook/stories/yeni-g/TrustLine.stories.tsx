@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { Media } from "./_media";
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Güven Satırı",
+  title: "Bileşenler/Pazarlama/Güven Satırı",
   id: "trust-line",
   component: TrustLine,
   tags: ["autodocs", "yeni"],

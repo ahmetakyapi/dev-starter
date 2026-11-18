@@ -48,7 +48,7 @@ export const BRAND = { name: "Kıyı Kahve", city: "İzmir", domain: "kiyikahve.
 
 export const TEAM = [
   { name: "Ahmet Akyapı", role: "Kurucu" },
-  { name: "Kerem Arıkan", role: "Kavurma Ustası" },
+  { name: "Kerem Arıkan", role: "Kahve Kavurucusu" },
   { name: "Selin Başaran", role: "Toptan Satış" },
   { name: "Onur Tekin", role: "Operasyon" },
   { name: "Ece Doğan", role: "Müşteri Deneyimi" },
@@ -189,7 +189,7 @@ export const SUB_FUNNEL = [
   { label: "Altı Ay ve Üstü", value: 236 },
 ] as const;
 
-/* --- Kavurma: geçen hafta, kg ------------------------------------------- */
+/* --- Kavrulan kahve: geçen hafta, kg ------------------------------------------- */
 
 export const ROAST_WEEK = [
   { label: "Pzt", value: 182 },
@@ -248,12 +248,12 @@ export const OCTOBER_GOALS = [
 
 export const CAFES = [
   { value: "bornova", label: "Bornova Kitap Kafe" },
-  { value: "alsancak", label: "Alsancak Demlik" },
+  { value: "alsancak", label: "Alsancak Demleme" },
   { value: "urla", label: "Urla Bağ Evi" },
   { value: "karsiyaka", label: "Karşıyaka Fırın" },
   { value: "cesme", label: "Çeşme Liman Kafe" },
-  { value: "goztepe", label: "Göztepe Kooperatif" },
-  { value: "buca", label: "Buca Köşe Kahvecisi" },
+  { value: "goztepe", label: "Göztepe Sahil Kafe" },
+  { value: "buca", label: "Buca Köşe Kahve" },
   { value: "seferihisar", label: "Seferihisar Sakin Kafe" },
 ] as const;
 
@@ -261,7 +261,7 @@ export type OrderStatus = "Hazırlanıyor" | "Yolda" | "Teslim Edildi" | "Gecikt
 export type Order = { id: string; customer: string; channel: string; kg: number; total: number; status: OrderStatus };
 
 export const ORDERS: readonly Order[] = [
-  { id: "KK-3192", customer: "Alsancak Demlik", channel: "Toptan", kg: 24, total: 15840, status: "Hazırlanıyor" },
+  { id: "KK-3192", customer: "Alsancak Demleme", channel: "Toptan", kg: 24, total: 15840, status: "Hazırlanıyor" },
   { id: "KK-3191", customer: "Mine Sezer", channel: "Web", kg: 1.5, total: 1185, status: "Yolda" },
   { id: "KK-3189", customer: "Urla Bağ Evi", channel: "Toptan", kg: 12, total: 8160, status: "Gecikti" },
   { id: "KK-3188", customer: "Tolga Ersoy", channel: "Abonelik", kg: 1, total: 690, status: "Teslim Edildi" },
@@ -270,16 +270,16 @@ export const ORDERS: readonly Order[] = [
 
 export const ORDER_TIMELINE = [
   { id: "1", at: "2026-10-30T10:12", when: "30 Ekim, 10.12", title: "Sipariş Alındı", description: "Urla Bağ Evi · 12 kg espresso harmanı", tone: "primary" as const },
-  { id: "2", at: "2026-10-31T08:40", when: "31 Ekim, 08.40", title: "Kavruldu", description: "Parti 44, orta-koyu", tone: "neutral" as const },
-  { id: "3", at: "2026-11-01T16:05", when: "1 Kasım, 16.05", title: "Kargo Gecikti", description: "Seferihisar aktarmasında bir gün bekledi.", tone: "warning" as const },
+  { id: "2", at: "2026-10-31T08:40", when: "31 Ekim, 08.40", title: "Kavruldu", description: "Lot 44, orta-koyu", tone: "neutral" as const },
+  { id: "3", at: "2026-11-01T16:05", when: "1 Kasım, 16.05", title: "Kargo Gecikti", description: "Çiğli aktarma merkezinde bir gün bekledi.", tone: "warning" as const },
 ];
 
 /* --- Bildirimler -------------------------------------------------------- */
 
 const ago = (minutes: number) => new Date(TODAY.getTime() - minutes * 60_000);
 export const NOTIFICATIONS = [
-  { id: "n1", actor: "Selin Başaran", title: "Selin Başaran Alsancak Demlik Siparişini Onayladı", body: "24 kg · Kıyı Harmanı", at: ago(4), read: false },
-  { id: "n2", actor: "Kerem Arıkan", title: "Kerem Arıkan 44. Partiyi Kavurdu", body: "Brezilya Cerrado · 36 kg", at: ago(38), read: false },
+  { id: "n1", actor: "Selin Başaran", title: "Selin Başaran Alsancak Demleme Siparişini Onayladı", body: "24 kg · Kıyı Harmanı", at: ago(4), read: false },
+  { id: "n2", actor: "Kerem Arıkan", title: "Kerem Arıkan Lot 44'ü Kavurdu", body: "Brezilya Cerrado · 36 kg", at: ago(38), read: false },
   { id: "n3", actor: "Ece Doğan", title: "Ece Doğan Bir İade Talebini Çözdü", at: ago(150), read: false },
   { id: "n4", actor: "Onur Tekin", title: "Onur Tekin Kargo Anlaşmasını Yeniledi", at: ago(60 * 22), read: true },
 ] as const;
@@ -444,7 +444,7 @@ export const GROUPS: readonly { id: GroupId; title: string; note: string; sectio
   { id: "yukleme", title: "Yükleme", note: "Beklemenin beş biçimi; hareket azaltıldığında durağan.", section: "bilesenler" },
   { id: "hareket", title: "Hareket ve Doku", note: "Işık, yuvarlanan harf, kalem çizgisi, desen: her hareket bir şey söyler, hareket azaltmada durur.", section: "bilesenler" },
   { id: "ajan", title: "Yapay Zekâ", note: "Asistanın durumu, aracı, düşüncesi ve akan yanıtı; model ne yaptığını gösterir.", section: "bilesenler" },
-  { id: "tanitim", title: "Tanıtım", note: "Ziyaretçiye dönük açılış sayfası: netleşen başlık, cam eylem, canlı maket, köşedeki maskot.", section: "bilesenler" },
+  { id: "tanitim", title: "Pazarlama", note: "Ziyaretçiye dönük açılış sayfası: netleşen başlık, cam eylem, canlı maket, köşedeki maskot.", section: "bilesenler" },
   { id: "grafik", title: "Grafikler", note: "ChartCard kuyusunda, lejant karolarında; seri rengi yalnız --chart-*.", section: "grafikler" },
   { id: "blok", title: "Bloklar", note: "Birden çok bileşenin birleştiği hazır parçalar.", section: "bloklar" },
 ];

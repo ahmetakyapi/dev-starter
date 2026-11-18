@@ -16,11 +16,11 @@ import { cn } from "@/lib/utils";
  * ok tuşları, Enter ile seçim, Escape ile kapanma. Elle yazması en zor
  * kalıplardan biri; burada headless kütüphane tartışmasız.
  *
- * TÜRKÇE SÜZGEÇ: `locale="tr-TR"` karşılaştırmayı Türkçe yapar; "istanbul"
+ * TÜRKÇE FİLTRE: `locale="tr-TR"` karşılaştırmayı Türkçe yapar; "istanbul"
  * yazan "İstanbul"u, "ığdır" yazan "Iğdır"ı bulur. Varsayılan tarayıcının
  * dili ve İngilizce bir tarayıcıda "i" ile "İ" eşleşmez.
  *
- * GÖRÜNÜŞ ("board" dili, 2026-11): giriş beyaz karo + kıl çizgisi, odakta
+ * GÖRÜNÜŞ ("board" dili, 2026-11): giriş beyaz karo + ince çizgisi, odakta
  * vurgu çizgisi ve yumuşak halka (`ring-primary-wash`). Liste `rounded-xl`
  * karo, `p-1.5`; vurgulu öğe yumuşak gri, seçili öğede SAĞDA tik.
  *

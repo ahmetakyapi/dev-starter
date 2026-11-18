@@ -158,7 +158,7 @@ export function NotificationCenter({ items, onMarkRead, onOpen, className }: Not
                   <BellOff aria-hidden className="size-[1.125rem]" strokeWidth={1.75} />
                 </span>
                 <p className="text-base font-medium text-strong">Bildirim Yok</p>
-                <p className="text-small text-muted">Biri sizi andığında ya da bir iş bittiğinde burada görünür.</p>
+                <p className="text-small text-muted">Biri senden bahsettiğinde ya da bir iş bittiğinde burada görünür.</p>
               </div>
             ) : (
               <div className="overflow-y-auto overscroll-contain p-1.5">

@@ -1432,3 +1432,33 @@ bilemedim; referanslarda görseli olmayanlara görsel".
 üretmek seçildi); huniyi logaritmik ölçekle çizmek (küçük aşamayı büyütür,
 yanıltır; doğrusal + en az %6 + yazılı sayı kaldı).
 
+### Metin Denetimi, Kurgu Adları, Menü (2026-11-18)
+
+Sahibi: "Kavurmaya Al yemek gibi duruyor; şirket isimleri tutarlı, kurumsal
+olsun; komik ya da başka anlam getiren şeyleri düzeltelim; sol menünün düzeni
+en iyi mi?". `content-editor` 779 hikâyeyi taradı (59 bulgu,
+`docs/review/metin-denetimi-2026-11-18.md`); hepsi uygulandı.
+- **Kahve kurgusu (Kıyı Kahve):** tek başına "kavurma" yemek gibi okunuyordu;
+  "kavrum" da gündelik değil. Paketlerde gerçekten geçen terimler: kavrulma
+  derecesi / tarihi, kavurucu (makine ve ekip), **lot** (bir seferde
+  kavrulan çekirdek; "parti" eğlence ya da siyaset çağrışımı yapıyordu).
+  Marka her yerde "Kıyı Kahve", alan adı kiyikahve.com.tr; tedarikçi ve
+  müşteri listeleri ayrıldı.
+- **Pusula:** ürün ile onu kullanan şirket ayrıldı. Ürün **Pusula**
+  (`PRODUCT`), şirket **Lidya Tekstil A.Ş.** (Denizli, otel ve mağazalara
+  ev tekstili); e-postalar `@lidyatekstil.com.tr`, çalışma alanı
+  `lidya.pusula.app`. Talep numaraları her yerde `PSL-…`.
+- **Ad havuzu:** "Atlas" yalnız Pusula'nın müşterisinde; asistan modeli
+  "Fable 4"; Acme → Ata Lojistik; gerçek banka adı (Garanti BBVA) hata
+  senaryosundan çıktı. Aynı kurguda bir kişi iki soyadla geçmez, ekip
+  üyesi kendi şirketine müşteri olmaz.
+- **Birebir çeviri kokanlar:** kod dondurma → Kod Kilidi, kıl çizgi → ince
+  çizgi, yıkama → zemin, bilet → talep, senkron → eşitleme, Hale → Işık
+  Halkası, Bento Izgara → Bento Düzeni, "Kişisine Atandı" → "Atandı: …".
+- **Menü:** Bileşenler'deki "Tanıtım" rafı en üstteki Tanıtım sayfasıyla
+  aynı adı taşıyordu → **Pazarlama**. Başla'da amiral "Her Şey Bir Arada",
+  "Vitrin"den önce.
+- **Seçim çubuğu:** siyah ters ada → beyaz yükselen ada (gölge + çerçeve),
+  yıkıcı eylem açık zeminde koyu kırmızı. Siyah dolgu ekranın en ağır öğesi
+  oluyordu (#115 ile aynı itiraz).
+

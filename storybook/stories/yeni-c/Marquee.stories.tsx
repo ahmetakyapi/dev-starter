@@ -5,12 +5,12 @@ import { Marquee } from "@/components/ui/marquee";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const LOGOS = [
-  { name: "Nehir Butik", Glyph: Package },
-  { name: "Liman Kavurma", Glyph: Flame },
-  { name: "Ege Süt", Glyph: Coffee },
-  { name: "Atlas Lojistik", Glyph: Truck },
-  { name: "Çarşı Pazarı", Glyph: Store },
-  { name: "Yirgacheffe Kooperatifi", Glyph: Bean },
+  { name: "Bornova Kitap Kafe", Glyph: Coffee },
+  { name: "Urla Bağ Evi", Glyph: Store },
+  { name: "Alsancak Demleme", Glyph: Flame },
+  { name: "Çeşme Liman Kafe", Glyph: Package },
+  { name: "Göztepe Sahil Kafe", Glyph: Truck },
+  { name: "Buca Köşe Kahve", Glyph: Bean },
 ] as const;
 
 const items = LOGOS.map(({ name, Glyph }) => (

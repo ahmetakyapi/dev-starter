@@ -6,7 +6,7 @@ import { cn } from "../utils";
 /**
  * Çip: iki ayrı iş, iki ayrı bileşen.
  *
- * `FilterChip`: SÜZGEÇ. Aç/kapa bir butondur (`aria-pressed`), seçim
+ * `FilterChip`: FİLTRE. Aç/kapa bir butondur (`aria-pressed`), seçim
  * kutusu değil; ekran okuyucu "Bu Hafta, açma/kapama butonu, basılı" der.
  * Seçiliyken zemin `bg-primary-wash`, metin `text-primary-ink` VE solda ✓
  * belirir: renk tek işaret değil. ✓ yer açarak değil, çipin iç boşluğunu

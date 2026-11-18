@@ -75,7 +75,7 @@ export const AllStates: Story = {
         <Field label="Ad Soyad" name="ad" placeholder="Elif Yıldız" className="w-full max-w-xs" />
       </Cell>
       <Cell label="Dolu, İpuçlu">
-        <Field label="Şirket" name="sirket" defaultValue="Acme Lojistik A.Ş." hint="Faturada görünecek unvan." className="w-full max-w-xs" />
+        <Field label="Şirket" name="sirket" defaultValue="Ata Lojistik A.Ş." hint="Faturada görünecek unvan." className="w-full max-w-xs" />
       </Cell>
       <Cell label="Hata (İpucu Gizlenir)">
         <Field

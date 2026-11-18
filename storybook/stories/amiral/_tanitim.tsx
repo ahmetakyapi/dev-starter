@@ -145,7 +145,7 @@ export function TanitimGroup() {
         <div className="grid justify-items-center gap-3">
           <Dock
             items={[
-              { id: "kavurma", label: "Kavurma", icon: <Coffee className="text-body" />, active: true },
+              { id: "kavrum", label: "Kavurucu", icon: <Coffee className="text-body" />, active: true },
               { id: "depo", label: "Depo", icon: <Package className="text-body" /> },
               { id: "kargo", label: "Kargo", icon: <Truck className="text-body" /> },
             ]}
@@ -160,7 +160,7 @@ export function TanitimGroup() {
         <NoticeDeck
           label={`${BRAND.name} duyuruları`}
           items={[
-            { id: "hasat", eyebrow: "Yeni Hasat", title: "Etiyopya Sidamo geldi", body: "250 g paketler cuma kavrumunda." },
+            { id: "hasat", eyebrow: "Yeni Hasat", title: "Etiyopya Sidamo geldi", body: "250 g paketler cuma günü kavrulacak." },
             { id: "atolye", eyebrow: "Atölye", title: "Cumartesi 11.00'de V60 dersi" },
             { id: "toptan", eyebrow: "Toptan", title: `${CAFES.length} kafe her hafta bizden alıyor` },
           ]}

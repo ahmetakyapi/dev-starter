@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
- * Ayırıcı: içeriği iki parçaya bölen kıl çizgi. Kart içinde ikinci bir kart
+ * Ayırıcı: içeriği iki parçaya bölen ince çizgi. Kart içinde ikinci bir kart
  * açmak yerine (slop) bölümler bununla ayrılır.
  *
  * ANLAM ÜÇ DURUMDA FARKLI:

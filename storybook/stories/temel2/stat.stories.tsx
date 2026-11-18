@@ -66,7 +66,7 @@ export const NoChange: Story = { name: "Değişim Bilgisi Yok", args: { change: 
 export const Large: Story = { name: "Büyük", args: { size: "lg", label: "Toplam Ciro", value: "₺8,4", unit: "milyon" } };
 
 export const StatGridExample: Story = {
-  name: "Ölçü Izgarası",
+  name: "Dört Ölçü Yan Yana",
   parameters: { bare: true },
   decorators: [
     (Story) => (

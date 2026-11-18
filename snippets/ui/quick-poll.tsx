@@ -34,7 +34,7 @@ export type PollOption = { id: string; label: string };
 
 type QuickPollProps = {
   question: string;
-  /** Kısa bağlam: "Mert soruyor · Cuma'ya kadar". */
+  /** Kısa bağlam: "Mert soruyor · cumaya kadar". */
   meta?: string;
   options: readonly PollOption[];
   /** Senin dışındaki oylar. */

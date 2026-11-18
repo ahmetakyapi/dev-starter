@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
  * varmış gibi gösterirdi. Çubuk `aria-hidden`: sayının kopyası.
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): başlık satırı soluk (`text-muted`,
- * orta ağırlık), satırlar arasında kıl çizgisi, üzerine gelinen satır
+ * orta ağırlık), satırlar arasında ince çizgisi, üzerine gelinen satır
  * hafif gri (`bg-surface`). Yapışkan ilk hücre de aynı tonu alır: opak
  * zeminin üstüne bir ton katmanı daha serilir, yoksa satırın geri kalanı
  * grileşirken ilk sütun beyaz kalırdı.

@@ -11,7 +11,7 @@ const Lines = () => (
 );
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Uygulama Penceresi",
+  title: "Bileşenler/Pazarlama/Uygulama Penceresi",
   id: "app-window",
   component: AppWindow,
   tags: ["autodocs", "yeni"],
@@ -57,7 +57,7 @@ export const States: Story = {
         <AppWindow title="Posta" icon={<Mail />} ghost className="h-36 w-full" />
       </Cell>
       <Cell label='tone="inverse"'>
-        <AppWindow title="Uçbirim" icon={<SquareTerminal />} tone="inverse" className="h-36 w-full">
+        <AppWindow title="Terminal" icon={<SquareTerminal />} tone="inverse" className="h-36 w-full">
           <pre className="p-3 font-mono text-micro text-page/80">$ npm test{"\n"}tamam.</pre>
         </AppWindow>
       </Cell>
@@ -77,7 +77,7 @@ export const Strip: Story = {
           <Lines />
         </AppWindow>
         <AppWindow title="Posta" icon={<Mail />} ghost className="w-56" />
-        <AppWindow title="Uçbirim" icon={<SquareTerminal />} className="w-56">
+        <AppWindow title="Terminal" icon={<SquareTerminal />} className="w-56">
           <Lines />
         </AppWindow>
       </WindowStrip>

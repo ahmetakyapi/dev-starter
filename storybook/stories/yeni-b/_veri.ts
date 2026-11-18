@@ -99,7 +99,7 @@ export const SPRINT: KanbanColumn[] = [
     cards: [
       { id: "PUS-142", title: "Fatura e-postasına PDF eki", tags: [{ label: "Faturalama", tone: "chart-3" }], assignee: MERT, due: "2026-11-12" },
       { id: "PUS-147", title: "Ekip davetinde rol seçimi", tags: [{ label: "Ekip", tone: "chart-1" }, { label: "Tasarım", tone: "chart-5" }], assignee: ZEYNEP, due: "2026-11-10" },
-      { id: "PUS-151", title: "Karanlık temada grafik ipuçları", tags: [{ label: "Arayüz", tone: "chart-5" }], due: "2026-11-14" },
+      { id: "PUS-151", title: "Koyu temada grafik ipuçları", tags: [{ label: "Arayüz", tone: "chart-5" }], due: "2026-11-14" },
     ],
   },
   {
@@ -142,10 +142,10 @@ export const TOPLANTILAR: CalendarEvent[] = [
   { id: "t3", title: "Müşteri Görüşmesi: Kuzey Lojistik", start: "2026-11-03T10:00", end: "2026-11-03T11:00", location: "Çevrim İçi", series: 3 },
   { id: "t4", title: "Kod İnceleme", start: "2026-11-03T10:30", end: "2026-11-03T11:30", series: 4 },
   { id: "t5", title: "Öğle Arası", start: "2026-11-03T12:30", end: "2026-11-03T13:30", series: 6 },
-  { id: "t6", title: "Günlük Eşleşme", start: "2026-11-04T09:00", end: "2026-11-04T09:15", series: 1 },
+  { id: "t6", title: "Sabah Toplantısı", start: "2026-11-04T09:00", end: "2026-11-04T09:15", series: 1 },
   { id: "t7", title: "Ödeme Akışı Atölyesi", start: "2026-11-04T10:00", end: "2026-11-04T12:00", location: "Atölye Salonu", series: 2 },
   { id: "t8", title: "Ürün Demosu Provası", start: "2026-11-04T11:00", end: "2026-11-04T12:00", location: "Toplantı Odası 1", series: 5 },
-  { id: "t9", title: "Destek Ekibiyle Senkron", start: "2026-11-04T11:30", end: "2026-11-04T12:30", series: 3 },
+  { id: "t9", title: "Destek Ekibiyle Haftalık Görüşme", start: "2026-11-04T11:30", end: "2026-11-04T12:30", series: 3 },
   { id: "t10", title: "Birebir: Elif", start: "2026-11-04T15:00", end: "2026-11-04T15:30", series: 4 },
   { id: "t11", title: "Sprint Gözden Geçirme", start: "2026-11-05T13:00", end: "2026-11-05T14:30", location: "Toplantı Odası 2", series: 1 },
   { id: "t12", title: "İşe Alım Görüşmesi", start: "2026-11-05T16:00", end: "2026-11-05T17:00", location: "Çevrim İçi", series: 6 },

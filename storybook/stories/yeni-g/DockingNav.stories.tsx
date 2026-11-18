@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { DockingNav } from "@/components/ui/docking-nav";
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Yuvaya Oturan Menü",
+  title: "Bileşenler/Pazarlama/Yuvaya Oturan Menü",
   id: "docking-nav",
   component: DockingNav,
   tags: ["autodocs", "yeni"],

@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  * giden bağlantı ekran okuyucuda boş bir durak olur.
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): geçerli sayfa BEYAZ KARO (`bg-overlay`
- * + kıl çizgisi + `shadow-raised`), ötekiler düz; üzerine gelince yumuşak
+ * + ince çizgisi + `shadow-raised`), ötekiler düz; üzerine gelince yumuşak
  * gri. Dolu vurgu kutusu sayfalamayı ekranın en bağıran öğesi yapıyordu.
  *
  * `scroll`: liste sayfanın tepesindeyse varsayılan (true) doğru, yeni sayfa

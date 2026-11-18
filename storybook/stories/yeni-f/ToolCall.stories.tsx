@@ -21,7 +21,7 @@ const meta = {
     label: "Takvim Araması",
     status: "success",
     durationMs: 840,
-    input: { kişi: "Selin Aydın", gün: "2026-11-12", süre_dk: 30 },
+    input: { kişi: "Selin Başaran", gün: "2026-11-12", süre_dk: 30 },
     output: { boş_aralıklar: ["10:00-10:30", "13:30-14:00", "16:00-16:30"] },
     defaultOpen: true,
   },
@@ -47,7 +47,7 @@ export const States: Story = {
           name="email.send"
           label="Tedarikçiye E-posta"
           status="pending"
-          input={{ alıcı: "satis@kiyikavurma.com.tr", konu: "Kasım siparişi: 40 kg Kıyı Harmanı" }}
+          input={{ alıcı: "satis@kiyikahve.com.tr", konu: "Kasım siparişi: 40 kg Kıyı Harmanı" }}
           actions={
             <>
               <Button size="sm" variant="secondary">Reddet</Button>

@@ -17,7 +17,7 @@ function Replay({ children }: { children: (key: number) => ReactNode }) {
 }
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Bulanıktan Netleşen Başlık",
+  title: "Bileşenler/Pazarlama/Bulanıktan Netleşen Başlık",
   id: "blur-in",
   component: BlurIn,
   tags: ["autodocs", "yeni"],

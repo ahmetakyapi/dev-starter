@@ -73,6 +73,7 @@ Kurallar bash hook'larıyla fiziksel olarak uygulanır (`.claude/settings.json`,
 `.claude/rules/hooks.md`.
 
 ```bash
+npm run ci:local                 # CI'ın yerelde koşan bütün adımları — main'e göndermeden önce TEMİZ (mistakes #123)
 bash scripts/health-check.sh     # ekosistem bütünlüğü (15 kategori) — her değişiklikten sonra TEMİZ
 bash scripts/test-hooks.sh       # hook davranış testleri
 bash scripts/slop-scan.sh <yol>  # AI slop taraması · npm run verify:agentic / verify:anatomy (ağ, opt-in)

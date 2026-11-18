@@ -199,7 +199,7 @@ function Stage({ palette, theme, onTheme }: { palette: PaletteName; theme: Theme
    sütunu her satırda aynı genişlikte: alt alta sayılar hizalı okunur. */
 
 /** preview.tsx → storySort ile aynı sıra: "ilk bileşen" kenar çubuğundaki ilk satır olsun. */
-const COMPONENT_GROUPS = ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Tanıtım", "Yapay Zekâ"] as const;
+const COMPONENT_GROUPS = ["Temel", "Buton ve İkon", "Form Girişleri", "Seçim", "Gezinme", "Katmanlar", "Geri Bildirim", "Yükleme", "Veri", "Verimlilik", "Hareket ve Doku", "Pazarlama", "Yapay Zekâ"] as const;
 const THEME_ORDER = ["Renkler", "Paletler", "Tipografi", "Yüzeyler", "Grafik Renkleri", "Hareket"];
 const SCREEN_ORDER = ["Uygulama", "Açılış Sayfası"];
 
@@ -213,8 +213,8 @@ function mapSections(): { label: string; rows: MapRow[] }[] {
       label: "Başla",
       rows: [
         { name: "Başlangıç", note: "Manifesto, token'lar, kimlik kuralları", icon: Rocket, id: "start--overview" },
-        { name: "Vitrin", note: "Gruplara göre seçilmiş örnekler", icon: LayoutGrid, id: "gallery--overview", count: count(under("Vitrin")[0]?.stories ?? 0, "sayfa") },
         { name: "Her Şey Bir Arada", note: "Bütün kütüphane tek uzun sayfada", icon: PanelsTopLeft, id: "showcase--all-in-one", count: count(TOTAL, "bileşen") },
+        { name: "Vitrin", note: "Gruplara göre seçilmiş örnekler", icon: LayoutGrid, id: "gallery--overview", count: count(under("Vitrin")[0]?.stories ?? 0, "sayfa") },
       ],
     },
     {
@@ -370,7 +370,7 @@ function Showcase() {
         <m.section {...tile(1)} aria-label="Ekip Oylaması Örneği" className="min-w-0 rounded-[1.25rem] bg-overlay p-4 shadow-raised sm:p-5 lg:col-span-5">
           <QuickPoll
             question="Yeni sezonda hangi palet?"
-            meta="Tasarım ekibi · Cuma'ya kadar"
+            meta="Tasarım ekibi · cumaya kadar"
             options={[
               { id: "signature", label: "Signature · mavi" },
               { id: "jade", label: "Yeşim · yeşil" },
@@ -387,7 +387,7 @@ function Showcase() {
               <p className="text-small text-muted">Haftalık Özet</p>
               <p className="mt-0.5 truncate text-base font-semibold text-strong">Pazartesi 09.00, ekibe</p>
             </div>
-            <AvatarGroup size="sm" label="Alıcılar" people={[{ name: "Derya Aksoy" }, { name: "Kerem Yıldız" }, { name: "Selin Başaran" }, { name: "Mert Aksoy" }]} />
+            <AvatarGroup size="sm" label="Alıcılar" people={[{ name: "Zeynep Kaya" }, { name: "Mert Aksoy" }, { name: "Selin Arslan" }, { name: "Can Demir" }]} />
           </div>
           <SegmentedControl
             aria-label="Özet Sıklığı"
@@ -569,7 +569,7 @@ const GROUP_NOTES: Record<(typeof COMPONENT_GROUPS)[number], string> = {
   Veri: "Tablo, liste, sayı, ağaç",
   Verimlilik: "Pano, görev, hafta",
   "Hareket ve Doku": "Her hareket bir şey söyler",
-  Tanıtım: "Açılış sayfasının parçaları",
+  Pazarlama: "Açılış sayfasının parçaları",
   "Yapay Zekâ": "Asistan ne yaptığını gösterir",
 };
 

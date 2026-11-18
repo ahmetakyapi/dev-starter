@@ -20,7 +20,7 @@ import { cn } from "../utils";
  * yoksa ana ekran çubuğu son butonun üstüne biner.
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo, açık kenarlarda `rounded-2xl`,
- * kıl çizgisi ve `shadow-modal`. Kayma imza eğrisiyle (yaysız: büyük bir
+ * ince çizgisi ve `shadow-modal`. Kayma imza eğrisiyle (yaysız: büyük bir
  * yüzeyin aşıp geri gelmesi ekranı sallar); tutamak basılınca koyulaşır
  * ve hafifçe genişler, sürüklenebilir olduğunu söyler. Eylem satırı
  * diyalogdaki gibi hafif gri bir kuyu.

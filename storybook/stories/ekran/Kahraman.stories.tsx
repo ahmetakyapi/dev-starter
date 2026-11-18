@@ -39,6 +39,6 @@ export const EditorialSplit: Story = { name: "İkiye Bölünmüş", args: { vari
 export const Statement: Story = { name: "Tek Cümle", args: { variant: "statement" } };
 export const ProductFrame: Story = { name: "Ürün Çerçevesi", args: { variant: "product-frame" } };
 export const LiveData: Story = { name: "Canlı Veri", args: { variant: "live-data" } };
-export const Bento: Story = { name: "Bento Izgara", args: { variant: "bento" } };
+export const Bento: Story = { name: "Bento Düzeni", args: { variant: "bento" } };
 export const Minimal: Story = { name: "Sade", args: { variant: "minimal" } };
 export const ScrollStage: Story = { name: "Kaydırmalı Sahne", args: { variant: "scroll-stage" } };

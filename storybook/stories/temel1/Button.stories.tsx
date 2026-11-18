@@ -10,7 +10,7 @@ const VARIANTS = Object.keys(BUTTON_VARIANTS) as ButtonVariant[];
 const VARIANT_NOTES: Record<ButtonVariant, string> = {
   brand: "brand · Ekranın Tek Birincil Eylemi",
   primary: "primary · Öteki Vurgulu Eylemler",
-  secondary: "secondary · Beyaz Karo, Kıl Çizgisi",
+  secondary: "secondary · Beyaz Karo, İnce Çizgisi",
   soft: "soft · Renkli ama İkinci Derece",
   ghost: "ghost · Araç Çubuğu, Satır İçi",
   danger: "danger · Yıkıcı Eylem",
@@ -20,7 +20,7 @@ const VARIANT_LABELS: Record<ButtonVariant, string> = {
   brand: "Ücretsiz Başla",
   primary: "Kaydet",
   secondary: "Dışa Aktar",
-  soft: "Taslağa Kaydet",
+  soft: "Taslak Olarak Kaydet",
   ghost: "Vazgeç",
   danger: "Sil",
 };

@@ -32,7 +32,7 @@ import { cn } from "../utils";
  * 44 px'lik görünmez alana sahip, görselleri 28 px.
  *
  * DURUMLAR: `disabled` soluk ve tıklanmaz; `readOnly` kuyu zemini kalkar,
- * kıl çizgi kalır (seçilebilir, kopyalanabilir, odaklanır); `error` kırmızı
+ * ince çizgi kalır (seçilebilir, kopyalanabilir, odaklanır); `error` kırmızı
  * kenar + `aria-invalid`, yardım metninin yerini hata alır.
  *
  *   <Input label="Tutar" prefix="₺" inputMode="decimal" placeholder="0,00" />

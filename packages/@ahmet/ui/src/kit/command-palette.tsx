@@ -24,7 +24,7 @@ import { cn } from "../utils";
  * (`router.push`, tema değişimi). Palet gezinmeyi kendisi yapmaz, bu yüzden
  * herhangi bir yönlendiriciye bağlı değil.
  *
- * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `rounded-2xl` + kıl çizgisi +
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo `rounded-2xl` + ince çizgisi +
  * `shadow-modal`, giriş 0,96'dan ölçek + opaklık. Üstte arama, ortada
  * `p-1.5` liste; etkin satır yumuşak gri (`bg-surface-raised`), ikonu ve
  * kısayol hapları sağda (`kbd.tsx`). Altta "Gezin ↑ ↓ · Seç ↵ · Kapat Esc"

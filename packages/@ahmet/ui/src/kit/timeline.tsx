@@ -11,7 +11,7 @@ import { cn } from "../utils";
  * "2 Saat Önce"); burada biçimleme yok, çünkü göreli zaman sunucuda ve
  * istemcide farklı çıkar (hidrasyon uyuşmazlığı).
  *
- * İŞARET ("board" dili, 2026-11): nokta, kendi tonunun yıkamasından bir
+ * İŞARET ("board" dili, 2026-11): nokta, kendi tonunun açık zemininden bir
  * halkanın içinde; zemin rengine bağlı `ring-page` hilesi yok, çizelge
  * kuyuda da karoda da aynı görünür. Olayın `icon`u varsa nokta yerine
  * beyaz küçük bir karo (ikon süs, `aria-hidden`). Çizgi işaretlere

@@ -18,7 +18,7 @@ import { cn } from "../utils";
  * korumanın tıklama dinleyicisi için; katlama JS'siz de çalışır.
  *
  * İKİ GÖRÜNÜŞ (`variant`, "board" dili 2026-11):
- *   `line` (varsayılan): kıl çizgisiyle ayrılmış satırlar; SSS gibi uzun
+ *   `line` (varsayılan): ince çizgisiyle ayrılmış satırlar; SSS gibi uzun
  *     metin listeleri.
  *   `well`: gri kuyu (`bg-surface rounded-xl p-1.5`) içinde her öğe beyaz
  *     karo (`bg-overlay shadow-raised rounded-lg`); ayar ya da özellik

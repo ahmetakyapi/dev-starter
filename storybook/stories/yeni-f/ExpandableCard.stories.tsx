@@ -14,9 +14,9 @@ function Art({ glow, pattern }: { glow: "horizon-top" | "corner" | "bloom"; patt
 }
 
 const ROASTS = [
-  { title: "Kıyı Harmanı", summary: "Orta kavrum · 1 kg", art: <Art glow="horizon-top" pattern="dots" />, body: "Brezilya Cerrado ve Etiyopya Sidamo karışımı. Fındık, sütlü çikolata ve hafif portakal kabuğu. Espresso ve moka potta dengeli; filtrede 1:16 oranla dene. Kavrumdan sonraki 5-21 gün arası en iyi dönemi." },
-  { title: "Yirgacheffe", summary: "Açık kavrum · 250 g", art: <Art glow="corner" pattern="rings" />, body: "Yıkanmış işlem, 1.900-2.200 m. Bergamot, yasemin, limon. V60 ve Chemex için; 94 °C su, 3 dakikada bitir." },
-  { title: "Huila", summary: "Orta kavrum · 250 g", art: <Art glow="bloom" pattern="diagonal" />, body: "Kolombiya'nın güneyinden, küçük üretici kooperatifi. Kırmızı elma, karamel, yuvarlak gövde. Sütlü içeceklerde öne çıkar." },
+  { title: "Kıyı Harmanı", summary: "Orta kavrulma · 1 kg", art: <Art glow="horizon-top" pattern="dots" />, body: "Brezilya Cerrado ve Etiyopya Sidamo karışımı. Fındık, sütlü çikolata ve hafif portakal kabuğu. Espresso ve moka potta dengeli; filtrede 1:16 oranla dene. Kavrulduktan sonraki 5-21 gün arası en iyi dönemi." },
+  { title: "Yirgacheffe", summary: "Açık kavrulma · 250 g", art: <Art glow="corner" pattern="rings" />, body: "Yıkanmış işlem, 1.900-2.200 m. Bergamot, yasemin, limon. V60 ve Chemex için; 94 °C su, 3 dakikada bitir." },
+  { title: "Huila", summary: "Orta kavrulma · 250 g", art: <Art glow="bloom" pattern="diagonal" />, body: "Kolombiya'nın güneyinden, küçük üretici kooperatifi. Kırmızı elma, karamel, yuvarlak gövde. Sütlü içeceklerde öne çıkar." },
 ];
 
 const meta = {

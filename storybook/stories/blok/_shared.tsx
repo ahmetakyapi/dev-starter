@@ -98,7 +98,7 @@ export const PLAN: readonly PlanStep[] = [
 ];
 export const PLAN_LABELS = PLAN.map((step) => String(step.title));
 
-export const MODELS = ["Fable 5", "Fable 5 Mini", "Atlas 2"] as const;
+export const MODELS = ["Fable 5", "Fable 5 Mini", "Fable 4"] as const;
 
 export const SUGGESTIONS = [
   "Bu haftanın satış özetini çıkar",

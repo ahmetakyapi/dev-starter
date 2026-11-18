@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * 2026-11). Aşağıdan kayma yerine ölçek: diyalog ekranın ortasında doğar,
  * bir yerden gelmez. Desteklemeyen tarayıcıda animasyonsuz açılır, bozulmaz.
  *
- * GÖRÜNÜŞ: beyaz karo `rounded-2xl` + kıl çizgisi + `shadow-modal`; eylem
+ * GÖRÜNÜŞ: beyaz karo `rounded-2xl` + ince çizgisi + `shadow-modal`; eylem
  * satırı kutunun dibinde hafif gri bir kuyu (`bg-surface`): içerikle
  * eylemleri çizgisiz ayırır.
  *

@@ -134,8 +134,8 @@ const now = Date.now();
 const MIN = 60_000;
 const NOTIFICATIONS: NotificationItem[] = [
   { id: "n1", title: "Mert Aksoy Talebi Sana Atadı", body: "T-4821 · Siparişim 6 gündür aynı şubede bekliyor", at: new Date(now - 8 * MIN), read: false, actor: "Mert Aksoy" },
-  { id: "n2", title: "Planlama Ajanı Özeti Bitirdi", body: "Destek talepleri özeti paylaşıma hazır.", at: new Date(now - 42 * MIN), read: false, icon: Bot },
-  { id: "n3", title: "Onay Bekleniyor: Toplu İade", body: "Rapor Ajanı 12 iade için onayını istiyor.", at: new Date(now - 3 * 60 * MIN), read: false, icon: CreditCard },
+  { id: "n2", title: "Planlama Asistanı Özeti Bitirdi", body: "Destek talepleri özeti paylaşıma hazır.", at: new Date(now - 42 * MIN), read: false, icon: Bot },
+  { id: "n3", title: "Onay Bekleniyor: Toplu İade", body: "Rapor Asistanı 12 iade için onayını istiyor.", at: new Date(now - 3 * 60 * MIN), read: false, icon: CreditCard },
   { id: "n4", title: "Zeynep Kaya Yorum Yaptı", body: "“Kargo şablonunu güncelledim, bakar mısın?”", at: new Date(now - 26 * 60 * MIN), read: true, actor: "Zeynep Kaya" },
   { id: "n5", title: "Haftalık Rapor Gönderildi", at: new Date(now - 4 * 24 * 60 * MIN), read: true, icon: CircleCheck },
 ];
@@ -285,7 +285,7 @@ function TicketDetail({ ticket, onBack, onArchive }: { ticket: Ticket; onBack?: 
 function ListHeader({ filter, onFilter, count }: { filter: Filter; onFilter: (f: Filter) => void; count: number }) {
   return (
     <div className="grid gap-2 px-3 pt-3 pb-2">
-      <SegmentedControl<Filter> options={FILTERS} value={filter} onValueChange={onFilter} aria-label="Talepleri süz" size="sm" />
+      <SegmentedControl<Filter> options={FILTERS} value={filter} onValueChange={onFilter} aria-label="Talepleri filtrele" size="sm" />
       <p className="px-1 text-small text-muted" aria-live="polite">
         {count.toLocaleString("tr-TR")} talep
       </p>
@@ -403,7 +403,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "Varsayılan" };
 
 export const Filtering: Story = {
-  name: "Süzme ve Seçim",
+  name: "Filtreleme ve Seçim",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("radio", { name: "Bana Atanan" }));

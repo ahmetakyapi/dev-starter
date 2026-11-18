@@ -45,7 +45,7 @@ import { cn } from "@/lib/utils";
  * Yükseklik geçişi (150 ms) bilinçli: yığın açılınca arkadaki karolar
  * gerçek boylarına uzar, transform tek başına bunu yapamaz.
  *
- * GÖRÜNÜŞ ("board" dili): beyaz karo `bg-overlay` + kıl çizgisi +
+ * GÖRÜNÜŞ ("board" dili): beyaz karo `bg-overlay` + ince çizgisi +
  * `shadow-floating`, `rounded-xl`. Renkli zemin YOK: tür ikonun renginde
  * ve sözde; dört renkli kutu sayfada bağırırdı. Eylem ikincil karo buton.
  *

@@ -22,7 +22,7 @@ function FilterBody() {
           </label>
         ))}
       </fieldset>
-      <Field label="Müşteri" name="musteri" placeholder="Acme Lojistik" />
+      <Field label="Müşteri" name="musteri" placeholder="Ata Lojistik" />
       <Field label="En Az Tutar (₺)" name="tutar" type="number" inputMode="numeric" placeholder="5.000" />
     </div>
   );
@@ -46,7 +46,7 @@ const meta = {
     open: false,
     onOpenChange: fn(),
     title: "Filtreler",
-    description: "Faturaları duruma, müşteriye ve tutara göre süzün.",
+    description: "Faturaları duruma, müşteriye ve tutara göre filtreleyin.",
     side: "bottom",
   },
   render: function Render(args) {
@@ -125,7 +125,7 @@ export const DetailPanel: Story = {
     side: "right",
     size: "lg",
     title: "Kargo Entegrasyonu",
-    description: "Pusula ekibi · Ahmet Akyapı bağladı, 12 Eyl",
+    description: "Lidya Tekstil ekibi · Ahmet Akyapı bağladı, 12 Eyl",
   },
   render: (args) => {
     const [, update] = useArgs();

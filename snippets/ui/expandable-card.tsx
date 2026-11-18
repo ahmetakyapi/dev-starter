@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
  *
  * Hareketi azaltan kullanıcıda büyüme yok: pencere yerinde solarak gelir.
  *
- *   <ExpandableCard title="Kıyı Harmanı" summary="Orta kavrum, 1 kg" media={<img … />}>Uzun açıklama…</ExpandableCard>
+ *   <ExpandableCard title="Kıyı Harmanı" summary="Orta kavrulma, 1 kg" media={<img … />}>Uzun açıklama…</ExpandableCard>
  */
 
 type ExpandableCardProps = {

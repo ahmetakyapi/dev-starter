@@ -107,7 +107,7 @@ export const Password: Story = {
     type: "password",
     placeholder: undefined,
     defaultValue: "zeytin-2024!",
-    hint: "En az 10 karakter; bir rakam ve bir ikon.",
+    hint: "En az 10 karakter; bir rakam ve bir sembol.",
     autoComplete: "new-password",
   },
   play: async ({ canvasElement }) => {

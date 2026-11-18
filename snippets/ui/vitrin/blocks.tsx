@@ -63,7 +63,7 @@ const PLAN: readonly PlanStep[] = [
 ];
 const PLAN_LABELS = PLAN.map((step) => String(step.title));
 
-const MODELS = ["Fable 5", "Fable 5 Mini", "Atlas 2"] as const;
+const MODELS = ["Fable 5", "Fable 5 Mini", "Fable 4"] as const;
 
 const REPLIES = [
   "Not aldım. Rapor bitince bu başlığı en üste taşırım.",

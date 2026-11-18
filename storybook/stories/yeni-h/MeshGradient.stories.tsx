@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { MeshGradient } from "@/components/ui/mesh-gradient";
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Hareketli Renk Zemini",
+  title: "Bileşenler/Pazarlama/Hareketli Renk Zemini",
   id: "mesh-gradient",
   component: MeshGradient,
   tags: ["autodocs", "yeni"],

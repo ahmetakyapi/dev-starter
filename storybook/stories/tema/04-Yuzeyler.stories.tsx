@@ -72,8 +72,8 @@ function Hierarchy({ theme }: { theme: ThemeName }) {
 const LAYERS = [
   { n: 1, name: "Sayfa", cls: "bg-page", text: "Saf beyaz; koyuda #0c0c0d, saf siyah değil." },
   { n: 2, name: "Kuyu", cls: "bg-surface", text: "Kart ve grafik kabı. Kenarlık yok, ton farkı sınırı çizer." },
-  { n: 3, name: "Karo", cls: "bg-overlay shadow-raised", text: "Kuyunun içindeki parça. Kıl kadar gölge." },
-  { n: 4, name: "Katman", cls: "bg-overlay shadow-modal", text: "Gerçekten yüzen: menü, diyalog. Opak, kıl çizgili." },
+  { n: 3, name: "Karo", cls: "bg-overlay shadow-raised", text: "Kuyunun içindeki parça. Çok hafif gölge." },
+  { n: 4, name: "Katman", cls: "bg-overlay shadow-modal", text: "Gerçekten yüzen: menü, diyalog. Opak, ince çizgili." },
 ];
 
 const RADII = [

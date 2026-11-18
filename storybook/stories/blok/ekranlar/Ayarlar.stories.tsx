@@ -26,7 +26,7 @@ const SECTIONS = [
   { id: "hesap", label: "Hesap", icon: <ShieldAlert /> },
 ] as const;
 
-/** Bölüm: solda başlık + açıklama, sağda satırlar; bölümler arasında kıl çizgisi. */
+/** Bölüm: solda başlık + açıklama, sağda satırlar; bölümler arasında ince çizgisi. */
 function Section({ id, title, description, children }: { id: string; title: string; description: string; children: ReactNode }) {
   return (
     <section
@@ -98,12 +98,12 @@ function SettingsPage() {
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field label="Ad Soyad" name="ad" defaultValue={USER.name} autoComplete="name" />
-                      <Field label="Unvan" name="unvan" defaultValue="Destek Ekibi Lideri" autoComplete="organization-title" />
+                      <Field label="Unvan" name="unvan" defaultValue="Destek Lideri" autoComplete="organization-title" />
                       <Field
                         label="E-Posta"
                         name="eposta"
                         type="email"
-                        defaultValue="ahmet@pusula.app"
+                        defaultValue="ahmet@lidyatekstil.com.tr"
                         autoComplete="email"
                         hint="Değiştirirsen yeni adrese doğrulama bağlantısı gider."
                         className="sm:col-span-2"

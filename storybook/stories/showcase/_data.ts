@@ -65,8 +65,15 @@ function weighted<T>(rand: () => number, items: readonly T[], weight: (item: T) 
 
 /* --- Ekip ve çalışma alanı ---------------------------------------------- */
 
+/** Ürün: Pusula. Onu kullanan şirket ayrı (eskiden ikisi de "Pusula"ydı; e-postalar
+ *  `@pusula.app`, giriş "Pusula hesabıyla gir" diyordu, ürünle müşteri karışıyordu). */
+export const PRODUCT = { name: "Pusula", domain: "pusula.app" } as const;
+
+/** Pusula'yı kullanan şirket: Denizli'de otel ve mağazalara ev tekstili satan bir toptancı. */
 export const WORKSPACE = {
-  name: "Pusula",
+  name: "Lidya Tekstil",
+  legalName: "Lidya Tekstil A.Ş.",
+  slug: "lidya",
   city: "Denizli",
   plan: "Ekip Planı",
   seats: { used: 6, total: 8 },
@@ -81,18 +88,21 @@ export const WORKSPACE = {
       { label: "Yedek", value: 0.7, series: 5 },
     ],
   },
-  domain: "pusula.app",
+  /** Şirketin e-posta alanı. */
+  domain: "lidyatekstil.com.tr",
+  /** Pusula'daki çalışma alanı adresi. */
+  appUrl: "https://lidya.pusula.app",
 } as const;
 
 export type Member = { id: string; name: string; role: string; email: string };
 
 export const TEAM: readonly Member[] = [
-  { id: "ahmet", name: "Ahmet Akyapı", role: "Destek Lideri", email: "ahmet@pusula.app" },
-  { id: "zeynep", name: "Zeynep Kaya", role: "Destek Uzmanı", email: "zeynep@pusula.app" },
-  { id: "mert", name: "Mert Aksoy", role: "Satış Sorumlusu", email: "mert@pusula.app" },
-  { id: "selin", name: "Selin Arslan", role: "Satış Temsilcisi", email: "selin@pusula.app" },
-  { id: "can", name: "Can Demir", role: "Operasyon", email: "can@pusula.app" },
-  { id: "burak", name: "Burak Öztürk", role: "Muhasebe", email: "burak@pusula.app" },
+  { id: "ahmet", name: "Ahmet Akyapı", role: "Destek Lideri", email: "ahmet@lidyatekstil.com.tr" },
+  { id: "zeynep", name: "Zeynep Kaya", role: "Destek Uzmanı", email: "zeynep@lidyatekstil.com.tr" },
+  { id: "mert", name: "Mert Aksoy", role: "Satış Sorumlusu", email: "mert@lidyatekstil.com.tr" },
+  { id: "selin", name: "Selin Arslan", role: "Satış Temsilcisi", email: "selin@lidyatekstil.com.tr" },
+  { id: "can", name: "Can Demir", role: "Operasyon", email: "can@lidyatekstil.com.tr" },
+  { id: "burak", name: "Burak Öztürk", role: "Muhasebe", email: "burak@lidyatekstil.com.tr" },
 ];
 export const ME = TEAM[0];
 export const member = (id: string) => TEAM.find((m) => m.id === id) ?? TEAM[0];
@@ -378,7 +388,7 @@ export function ticketEvents(t: Ticket) {
   const plus = (min: number) => new Date(t.date.getTime() + min * 60_000);
   const events: { id: string; at: Date; title: string; description?: string; tone: "neutral" | "primary" | "success" | "warning" | "danger" }[] = [
     { id: "olustu", at: t.date, title: `${t.channel} ile Geldi`, description: customer(t.customerId).contact, tone: "neutral" },
-    { id: "atandi", at: plus(1), title: `${member(t.assignee).name} Kişisine Atandı`, tone: "primary" },
+    { id: "atandi", at: plus(1), title: `Atandı: ${member(t.assignee).name}`, tone: "primary" },
   ];
   if (t.firstResponseMin !== null)
     events.push({ id: "yanit", at: plus(t.firstResponseMin), title: "İlk Yanıt Gönderildi", description: `${t.firstResponseMin} dakikada`, tone: "primary" });
@@ -689,7 +699,7 @@ export const MY_TASKS: readonly MyTask[] = [
 
 /* --- Asistan ------------------------------------------------------------- */
 
-export const ASSISTANT_MODELS = ["Fable 5", "Fable 5 Mini", "Atlas 2"] as const;
+export const ASSISTANT_MODELS = ["Fable 5", "Fable 5 Mini", "Fable 4"] as const;
 
 export const PLAN_STEPS = [
   { id: "oku", title: "Açık Talepleri ve Siparişleri Oku" },

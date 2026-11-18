@@ -40,7 +40,7 @@ export function PageHero({
   );
 }
 
-/** Bölüm: kıl çizgisiyle ayrılır, başlık + bir iki cümle açıklama. */
+/** Bölüm: ince çizgisiyle ayrılır, başlık + bir iki cümle açıklama. */
 export function Section({
   id,
   title,

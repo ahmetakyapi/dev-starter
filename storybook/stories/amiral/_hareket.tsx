@@ -51,7 +51,7 @@ function StatusSlot() {
   }, [states.length]);
   return (
     <p className="text-center text-title font-semibold text-strong">
-      Parti 214: <SlotText text={states[i]} className="text-primary-ink" />
+      Lot 214: <SlotText text={states[i]} className="text-primary-ink" />
     </p>
   );
 }
@@ -114,9 +114,9 @@ export function HareketGroup() {
       </Cell>
       <Cell file="terminal" name="Terminal" note="Kurulum akışı harf harf yazılır; bitince yeniden oynatılır." span={3} align="stretch">
         <Terminal
-          title="~/kahve-dukkani"
+          title="~/kiyi-kahve"
           lines={[
-            { kind: "command", text: "npm run seed -- --sube kadikoy" },
+            { kind: "command", text: "npm run seed -- --sube alsancak" },
             { kind: "output", text: "38 ürün, 214 sipariş, 12 abone eklendi" },
             { kind: "output", text: "✓ Tohum verisi hazır", tone: "success" },
           ]}
@@ -130,8 +130,8 @@ export function HareketGroup() {
       </Cell>
       <Cell file="book-cover" name="Kitap Kapağı" note="Rehber ve e-kitap; üzerine gelince okura döner." span={2} size="lg">
         <div className="flex justify-center gap-6">
-          <BookCover title="Demleme Rehberi" subtitle="V60, Chemex, moka" author="Kıyı Kavurma" mark="01" width={132} />
-          <BookCover tone="ink" title="Toptan Katalog" subtitle="Kasım 2026" author="Kıyı Kavurma" mark="02" width={132} />
+          <BookCover title="Demleme Rehberi" subtitle="V60, Chemex, moka" author="Kıyı Kahve" mark="01" width={132} />
+          <BookCover tone="ink" title="Toptan Katalog" subtitle="Kasım 2026" author="Kıyı Kahve" mark="02" width={132} />
         </div>
       </Cell>
       <Cell file="pattern-bg" name="Desen Zemin" note="Token renginde desen, solma ve ışık; paletle döner." span={2} size="lg" className="relative isolate overflow-hidden">
@@ -163,7 +163,7 @@ export function HareketGroup() {
               </span>
             }
           >
-            Brezilya Cerrado ve Etiyopya Sidamo. Fındık, sütlü çikolata, hafif portakal kabuğu. Kavrumdan sonra 5-21 gün arası en iyi dönemi.
+            Brezilya Cerrado ve Etiyopya Sidamo. Fındık, sütlü çikolata, hafif portakal kabuğu. Kavrulduktan sonra 5-21 gün arası en iyi dönemi.
           </ExpandableCard>
           <ExpandableCard
             title="Yirgacheffe"
@@ -184,7 +184,7 @@ export function HareketGroup() {
 }
 
 const THOUGHT =
-  "Ekimde 1 kg paketlerin payı arttı; kasımda abonelik yenilemeleri 12'sinde toplanıyor. Kavurmayı 10'una çekersek paketler dinlenmiş gider.";
+  "Ekimde 1 kg paketlerin payı arttı; kasımda abonelik yenilemeleri 12'sinde toplanıyor. Kavurucu takvimini 10'una çekersek paketler dinlenmiş gider.";
 
 export function AjanGroup() {
   return (
@@ -198,7 +198,7 @@ export function AjanGroup() {
       </Cell>
       <Cell file="tool-call" name="Araç Çağrısı" note="Ne yaptı, durumu, süresi; açınca girdi ve çıktı." span={4} align="stretch">
         <div className="grid gap-2">
-          <ToolCall name="roast.schedule" label="Kavurma Takvimi" status="running" input={{ ay: "2026-11" }} />
+          <ToolCall name="roast.schedule" label="Kavurucu Takvimi" status="running" input={{ ay: "2026-11" }} />
           <ToolCall
             name="orders.forecast"
             label="Abonelik Tahmini"
@@ -215,7 +215,7 @@ export function AjanGroup() {
         </Reasoning>
       </Cell>
       <Cell file="stream-text" name="Akan Metin" note="Yalnız yeni gelen sözcük belirir; önceki metin kıpırdamaz." span={3} align="stretch">
-        <StreamText text="Kavurmayı 10 Kasım'a çekmeyi öneririm: 214 yenilemenin çoğu 12'sinde, paketler iki gün dinlenmiş gider." className="text-base text-strong" />
+        <StreamText text="Kavurucu takvimini 10 Kasım'a çekmeyi öneririm: 214 yenilemenin çoğu 12'sinde, paketler iki gün dinlenmiş gider." className="text-base text-strong" />
       </Cell>
     </CellGrid>
   );

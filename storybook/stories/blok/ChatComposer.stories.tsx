@@ -108,9 +108,9 @@ export const SingleModel: Story = {
 };
 
 export const Halo: Story = {
-  name: "Hale (Boş Başlangıç Ekranı)",
+  name: "Işık Halkası (Boş Başlangıç Ekranı)",
   args: { look: "halo" },
-  parameters: { docs: { description: { story: "Kutu sayfanın tek eylemiyken: karo, vurgunun yıkanmış renginde bir halenin içinde; odakta hale koyulaşır. Gönder boşken soluk, yazınca dolar." } } },
+  parameters: { docs: { description: { story: "Kutu sayfanın tek eylemiyken: karo, vurgunun açık tonunda bir ışık halkasının içinde; odakta halka koyulaşır. Gönder boşken soluk, yazınca dolar." } } },
 };
 
 export const Disabled: Story = { name: "Devre Dışı", args: { disabled: true, placeholder: "Bağlantı bekleniyor" } };

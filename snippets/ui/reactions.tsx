@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  * çizilir, tonu kontrol edilemez). Altı sabit tepki lucide ikonuyla, her
  * birinin Türkçe adı var; ad hem ipucu hem ekran okuyucu metni.
  *
- * HAP BİR AÇ-KAPA DÜĞMESİ: `aria-pressed` "senin tepkin var mı"yı söyler,
+ * HAP BİR AÇ-KAPA BUTONU: `aria-pressed` "senin tepkin var mı"yı söyler,
  * ad sayıyı içerir ("Beğendim: 3 kişi, sen dahil"). Senin tepkin vurgu
  * yıkamasıyla ayrılır (renk tek işaret değil: basılı durum + ad).
  * Sayısı sıfıra inen hap kalkar.

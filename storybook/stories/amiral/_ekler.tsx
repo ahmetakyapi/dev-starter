@@ -28,13 +28,13 @@ import { Cell } from "./_ui";
 
 /**
  * Sonradan eklenen bileşenlerin kuyuları (2026-11 turları): her biri kendi
- * grubunun ızgarasına, grubun son satırı olarak girer. Aynı kahve kavurma
+ * grubunun ızgarasına, grubun son satırı olarak girer. Aynı Kıyı Kahve
  * kurgusu ve verisi; ikişer ikişer (span 3) ya da tek başına tam satır.
  */
 
 /* ── Seçim ──────────────────────────────────────────────────────────────── */
 export function SecimEk() {
-  const [matrix, setMatrix] = useState<MatrixValue>({ siparis: ["app", "mail"], kavurma: ["app"], stok: ["app", "sms"] });
+  const [matrix, setMatrix] = useState<MatrixValue>({ siparis: ["app", "mail"], kavrum: ["app"], stok: ["app", "sms"] });
   const [vote, setVote] = useState<string | null>(null);
   return (
     <>
@@ -48,7 +48,7 @@ export function SecimEk() {
           ]}
           rows={[
             { id: "siparis", label: "Yeni Sipariş" },
-            { id: "kavurma", label: "Kavurma Bitti" },
+            { id: "kavrum", label: "Lot Kavruldu" },
             { id: "stok", label: "Stok Azaldı", hint: "Çekirdek 5 kg altı" },
           ]}
           value={matrix}
@@ -58,7 +58,7 @@ export function SecimEk() {
       <Cell file="quick-poll" name="Hızlı Oylama" note="Sonuç oy verince açılır; kendi oyuna yeniden basmak geri alır." span={3} align="stretch">
         <QuickPoll
           question="Kış harmanı hangi çekirdekle açılsın?"
-          meta="Kavurma ekibi · Cuma'ya kadar"
+          meta="Kavurucu ekibi · cumaya kadar"
           options={[
             { id: "etiyopya", label: "Etiyopya Yirgacheffe" },
             { id: "kolombiya", label: "Kolombiya Huila" },
@@ -88,7 +88,7 @@ export function FormEk() {
       <Cell file="date-range-presets" name="Tarih Aralığı Filtresi" note="Hazır aralıklar tek dokunuşta; özel aralık iki ayrı takvimde." span={3}>
         <div className="grid justify-items-center gap-3">
           <DateRangePresets label="Sipariş Tarihi" presets={PRESETS} value={range} onValueChange={setRange} today={TODAY} />
-          <p className="text-small text-muted">Tabloyu ve grafikleri birlikte süzer.</p>
+          <p className="text-small text-muted">Tabloyu ve grafikleri birlikte filtreler.</p>
         </div>
       </Cell>
       <Cell file="password-field" name="Kurallı Şifre" note="Kurallar yazdıkça yeşerir; göster butonu alanın içinde." span={3} align="stretch">
@@ -106,17 +106,17 @@ const ROAST = [
 ];
 const ORIGIN = [
   { value: "afrika", label: "Afrika", count: 4 },
-  { value: "amerika", label: "Amerika", count: 5 },
+  { value: "amerika", label: "Latin Amerika", count: 5 },
   { value: "asya", label: "Asya", count: 1 },
 ];
 
 export function KatmanEk() {
   const [open, setOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterValue>({ kavurma: ["orta"], koken: [] });
+  const [filters, setFilters] = useState<FilterValue>({ kavrum: ["orta"], koken: [] });
   const [team, setTeam] = useState(true);
   const [anyone, setAnyone] = useState(false);
   const picked = Object.values(filters).flat().length;
-  const result = 10 - (filters.kavurma?.length ? 5 : 0) - (filters.koken?.length ? 2 : 0);
+  const result = 10 - (filters.kavrum?.length ? 5 : 0) - (filters.koken?.length ? 2 : 0);
   return (
     <>
       <Cell file="filter-sheet" name="Filtre Çekmecesi" note="Telefonda filtreler alttan açılır; buton kaç kayıt kalacağını söyler." span={3}>
@@ -131,21 +131,21 @@ export function KatmanEk() {
           open={open}
           onOpenChange={setOpen}
           groups={[
-            { id: "kavurma", label: "Kavurma", options: ROAST, multiple: true },
+            { id: "kavrum", label: "Kavrulma", options: ROAST, multiple: true },
             { id: "koken", label: "Köken", options: ORIGIN, multiple: true },
           ]}
           value={filters}
           onValueChange={setFilters}
           resultCount={result}
-          resultLabel={(n) => `${num.format(n)} Çekirdeği Göster`}
-          onClear={() => setFilters({ kavurma: [], koken: [] })}
+          resultLabel={(n) => `${num.format(n)} Kahveyi Göster`}
+          onClear={() => setFilters({ kavrum: [], koken: [] })}
         />
       </Cell>
       <Cell file="share-panel" name="Paylaşım Paneli" note="Bağlantı ve kopyala; kimlerin gördüğü satır satır aç-kapa." span={3} align="stretch">
         <SharePanel
           link={`https://${BRAND.domain}/r/kasim`}
           access={[
-            { id: "ekip", label: "Kavurma Ekibi", tag: "Ekip", people: ["Deniz Kaya", "Ece Tan", "Mert Aksoy"], checked: team, onCheckedChange: setTeam },
+            { id: "ekip", label: "Kavurucu Ekibi", tag: "Ekip", people: ["Kerem Arıkan", "Selin Başaran", "Onur Tekin"], checked: team, onCheckedChange: setTeam },
             { id: "herkes", label: "Bağlantıya Sahip Herkes", tag: "Herkese Açık", icon: <Compass />, checked: anyone, onCheckedChange: setAnyone },
           ]}
         />
@@ -230,7 +230,7 @@ export function TanitimEk() {
 }
 
 /* ── Hareket ────────────────────────────────────────────────────────────── */
-const NOTES = ["Etiyopya çuvalı 5 kg altına indi", "Kolombiya kavurması bitti", "Kargo 14.00'te alacak"];
+const NOTES = ["Etiyopya çuvalı 5 kg altına indi", "Kolombiya lotu kavruldu", "Kargo 14.00'te alacak"];
 
 export function HareketEk() {
   const [items, setItems] = useState(NOTES);

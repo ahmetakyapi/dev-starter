@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Marquee } from "@/components/ui/marquee";
 import { MorphNav, MorphNavGrid } from "@/components/ui/morph-nav";
 import { ScrambleText } from "@/components/ui/scramble-text";
-import { CUSTOMERS, DELAYED, EVENTS, ME, OPEN_TICKETS, TODAY, WORKSPACE, customer, dayKey, longDate } from "./_data";
+import { CUSTOMERS, DELAYED, EVENTS, ME, OPEN_TICKETS, TODAY, PRODUCT, WORKSPACE, customer, dayKey, longDate } from "./_data";
 
 /** Tanıtım sayfası aynı Storybook çerçevesinde açılır (Pusula → Tanıtım Sayfası). */
 const LANDING = "?id=demo-app--landing&viewMode=story";
@@ -54,7 +54,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
               <span aria-hidden className="pusula-ink inline-grid size-7 place-items-center rounded-lg">
                 <Compass className="size-4" strokeWidth={2.25} />
               </span>
-              {WORKSPACE.name}
+              {PRODUCT.name}
             </span>
           }
           items={[

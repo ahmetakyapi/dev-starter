@@ -193,7 +193,7 @@ export function Dashboard() {
       </Tile>
 
       <Tile file="track-bar-chart" className="lg:col-span-3">
-        <ChartCard id="g-kavurma" label="Haftalık Kavurma" value={`${num.format(ROAST_TOTAL)} kg`} change={change(ROAST_TOTAL, ROAST_PREV)} changeLabel="önceki haftaya göre" action={<FileTag file="track-bar-chart" />}>
+        <ChartCard id="g-kavrum" label="Haftalık Kavrulan Kahve" value={`${num.format(ROAST_TOTAL)} kg`} change={change(ROAST_TOTAL, ROAST_PREV)} changeLabel="önceki haftaya göre" action={<FileTag file="track-bar-chart" />}>
           <TrackBarChart title="Geçen Hafta Kavrulan Kahve" data={ROAST_WEEK} series={3} format={(v) => `${num.format(v)} kg`} height="h-40" />
         </ChartCard>
       </Tile>

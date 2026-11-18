@@ -7,6 +7,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Metin denetimi, kurgu adları, CI paritesi — 2026-11-18
+
+- 59 bulguluk metin denetimi uygulandı: çift anlamlı ve birebir çeviri
+  ifadeler, tutarsız şirket ve kişi adları, Title Case
+- Kahve kurgusu: kavrulma, kavurucu, lot; marka her yerde Kıyı Kahve
+- Pusula: ürün Pusula, şirket Lidya Tekstil A.Ş. (`PRODUCT` / `WORKSPACE`)
+- Menü: "Tanıtım" rafı → Pazarlama; Her Şey Bir Arada Vitrin'den önce
+- `selection-bar`: siyah ters ada yerine beyaz yükselen ada
+- `npm run ci:local`: CI'ın yerelde koşan adımları; slop kuralı Türkçe büyük
+  harfi yakalar ve sınanır; health-check slop bulgusunda sessiz çökmez
+- `mistakes.md #123`
+
 ### Tanıtım sayfası, paylaşım önizlemesi, terimler, huni — 2026-11-18
 
 - Tanıtım (eski Kapak): ortalı başlık, gerçek bileşenlerden çalışan kolaj,

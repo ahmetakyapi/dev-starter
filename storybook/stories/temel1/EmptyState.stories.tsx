@@ -45,7 +45,7 @@ export const NoSearchResults: Story = {
   name: "Arama Sonucu Yok",
   args: {
     title: "Eşleşen Müşteri Yok",
-    hint: "“Kuzey Mimarlık” için sonuç bulunamadı. Yazımı kontrol edin ya da filtreleri temizleyin.",
+    hint: "“Sedir Mimarlık” için sonuç bulunamadı. Yazımı kontrol edin ya da filtreleri temizleyin.",
     icon: <FileSearch aria-hidden />,
     action: <Button variant="secondary">Filtreleri Temizle</Button>,
   },
@@ -53,7 +53,7 @@ export const NoSearchResults: Story = {
 
 export const WithoutIconOrAction: Story = {
   name: "İkonsuz, Eylemsiz",
-  args: { title: "Bildirim Yok", hint: "Biri sizi andığında burada görünür.", icon: undefined, action: undefined },
+  args: { title: "Bildirim Yok", hint: "Biri senden bahsettiğinde burada görünür.", icon: undefined, action: undefined },
 };
 
 export const NotFound: Story = {

@@ -94,7 +94,7 @@ export const Overview: Story = {
 export const Dashboard: Story = {
   name: "Pano",
   parameters: {
-    docs: { description: { story: "Kıl çizgiyle bölünmüş dört hücreli ölçü şeridi ve on iki grafik; dönem seçimi hepsini birlikte değiştirir. Sipariş ve dönüşüm birleşik grafikte, dönem hedefleri aktivite halkalarında. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
+    docs: { description: { story: "İnce çizgiyle bölünmüş dört hücreli ölçü şeridi ve on iki grafik; dönem seçimi hepsini birlikte değiştirir. Sipariş ve dönüşüm birleşik grafikte, dönem hedefleri aktivite halkalarında. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
   },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
@@ -339,10 +339,10 @@ export const SignedOut: Story = {
     const email = await canvas.findByLabelText("E-Posta");
     await userEvent.type(email, "ahmet@gmail.com");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
-    // Alanın altındaki hata (kayıtlı hesap satırı da "pusula.app" yazar: metni tam ara).
-    await canvas.findByText("Pusula hesabıyla gir: ad@pusula.app", {}, { timeout: 3000 });
+    // Alanın altındaki hata (kayıtlı hesap satırı da "lidyatekstil.com.tr" yazar: metni tam ara).
+    await canvas.findByText("Lidya Tekstil hesabıyla gir: ad@lidyatekstil.com.tr", {}, { timeout: 3000 });
     await userEvent.clear(canvas.getByLabelText("E-Posta"));
-    await userEvent.type(canvas.getByLabelText("E-Posta"), "ahmet@pusula.app");
+    await userEvent.type(canvas.getByLabelText("E-Posta"), "ahmet@lidyatekstil.com.tr");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
     await canvas.findByRole("heading", { name: "Bağlantıyı Gönderdik" }, { timeout: 3000 });
     await settle(globals);
@@ -373,7 +373,7 @@ export const MagicLink: Story = {
   parameters: { docs: { description: { story: "E-postaya giriş bağlantısı: gönderilince form “Bağlantıyı Gönderdik” paneline döner, bağlantı panoyu açar; “Başka Adres Kullan” forma geri getirir." } } },
   play: async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
-    await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@pusula.app");
+    await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@lidyatekstil.com.tr");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
     const heading = await canvas.findByRole("heading", { name: "Bağlantıyı Gönderdik" }, { timeout: 3000 });
     await waitFor(() => expect(heading).toHaveFocus());

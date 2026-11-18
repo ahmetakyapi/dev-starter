@@ -5,7 +5,7 @@ import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { Media } from "./_media";
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Sıvı Cam",
+  title: "Bileşenler/Pazarlama/Sıvı Cam",
   id: "liquid-glass",
   component: LiquidGlassLink,
   tags: ["autodocs", "yeni"],

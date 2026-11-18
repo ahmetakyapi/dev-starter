@@ -5,9 +5,9 @@ import { Panel, PanelHeader } from "@/components/ui/Panel";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
 const INVOICES = [
-  { id: "FTR-2026-1184", customer: "Acme Lojistik", amount: "₺18.420,00", status: "Ödendi" },
+  { id: "FTR-2026-1184", customer: "Ata Lojistik", amount: "₺18.420,00", status: "Ödendi" },
   { id: "FTR-2026-1183", customer: "Deniz Yazılım", amount: "₺6.250,00", status: "Bekliyor" },
-  { id: "FTR-2026-1179", customer: "Kuzey Mimarlık", amount: "₺12.900,00", status: "Ödendi" },
+  { id: "FTR-2026-1179", customer: "Sedir Mimarlık", amount: "₺12.900,00", status: "Ödendi" },
 ];
 
 function InvoiceList() {

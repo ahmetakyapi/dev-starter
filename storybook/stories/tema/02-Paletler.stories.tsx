@@ -213,7 +213,7 @@ function SeciliPalet() {
               <Button variant="primary">
                 <Plus /> Yeni Kayıt
               </Button>
-              <Button variant="soft">Taslağa Kaydet</Button>
+              <Button variant="soft">Taslak Olarak Kaydet</Button>
               <Button variant="secondary">Önizle</Button>
               <Button variant="ghost">Vazgeç</Button>
             </div>

@@ -211,8 +211,8 @@ export default function Page() {
             )}
             <BannerAlert
               tone="danger"
-              title="Banka Senkronu Başarısız"
-              description="Garanti BBVA bağlantısının süresi doldu; son işlemler 28 Eki’den beri gelmiyor."
+              title="Banka Eşitlemesi Başarısız"
+              description="Banka bağlantısının süresi doldu; son işlemler 28 Eki’den beri gelmiyor."
               actions={
                 <button className={SECONDARY}>
                   <RefreshCw aria-hidden className="size-4" /> Yeniden Bağla

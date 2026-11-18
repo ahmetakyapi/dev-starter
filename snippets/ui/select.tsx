@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
  * stilleyip kullan. Bu bileşen, görünüşü arayüzün parçası olan seçimler için.
  *
  * GÖRÜNÜŞ ("board" dili, 2026-11): tetikleyici beyaz karo (`bg-overlay`
- * + kıl çizgisi + `shadow-raised`), açıkken vurgu çizgisi ve yumuşak halka.
+ * + ince çizgisi + `shadow-raised`), açıkken vurgu çizgisi ve yumuşak halka.
  * Liste `rounded-xl` karo, `p-1.5`; vurgulu öğe yumuşak gri
  * (`bg-surface-raised`), seçili öğede SAĞDA tik (`primary-ink`): etiketler
  * sol kenarda hizalı kalır.

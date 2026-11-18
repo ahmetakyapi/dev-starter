@@ -14,9 +14,9 @@ function Demo() {
       <h2 className="text-title font-semibold text-strong">Panoyu Paylaş</h2>
       <p className="mt-1 mb-5 text-base text-muted">Ekiple ya da bağlantıyla.</p>
       <SharePanel
-        link="https://pusula.app/p/pano?donem=ay"
+        link="https://lidya.pusula.app/p/pano?donem=ay"
         access={[
-          { id: "ekip", label: "Pusula Ekibi", tag: "Ekip", people: TEAM, checked: team, onCheckedChange: setTeam },
+          { id: "ekip", label: "Lidya Tekstil Ekibi", tag: "Ekip", people: TEAM, checked: team, onCheckedChange: setTeam },
           { id: "herkes", label: "Bağlantıya sahip herkes", tag: "Herkese Açık", icon: <Globe />, checked: link, onCheckedChange: setLink },
         ]}
       />
@@ -37,7 +37,7 @@ const meta = {
       },
     },
   },
-  args: { link: "https://pusula.app/p/pano", access: [] },
+  args: { link: "https://lidya.pusula.app/p/pano", access: [] },
   render: () => <Demo />,
 } satisfies Meta<typeof SharePanel>;
 
@@ -48,7 +48,7 @@ export const Default: Story = {
   name: "Ekip ve Bağlantı",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const team = canvas.getByRole("switch", { name: /Pusula Ekibi/ });
+    const team = canvas.getByRole("switch", { name: /Lidya Tekstil Ekibi/ });
     await expect(team).toBeChecked();
     await userEvent.click(team);
     await canvas.findByText(/Erişim kapalı/);

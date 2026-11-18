@@ -68,7 +68,7 @@ export function PeriodControl({ size = "md" }: { size?: "sm" | "md" }) {
 
 /**
  * Ölçü şeridi hücresi (Ingot turu): dört ölçü ayrı gri karolar yerine TEK
- * kartın kıl çizgiyle bölünmüş hücreleri. Göz dört sayıyı bir satır olarak
+ * kartın ince çizgiyle bölünmüş hücreleri. Göz dört sayıyı bir satır olarak
  * okur; karşılaştırma kolaylaşır. Altta kesik çizgiyle ayrılmış eğilim ve
  * dönemin kısa adı.
  */

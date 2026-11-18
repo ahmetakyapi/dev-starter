@@ -39,7 +39,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Bir bölümün kalıcı durumunu bildirir (ödeme bilgisi eksik, senkron başarısız). Geçici sonuç için toast, kullanıcıyı durduran soru için diyalog kullanın. Ton tek kenar şeridiyle değil wash zemin ve ikonla kurulur; sonradan beliren satıra `announce` verin.",
+          "Bir bölümün kalıcı durumunu bildirir (ödeme bilgisi eksik, eşitleme başarısız). Geçici sonuç için toast, kullanıcıyı durduran soru için diyalog kullanın. Ton tek kenar şeridiyle değil wash zemin ve ikonla kurulur; sonradan beliren satıra `announce` verin.",
       },
     },
   },
@@ -74,7 +74,7 @@ export const FourTones: Story = {
         <BannerAlert tone="info" title="Kur Bilgisi TCMB'den 15.30'da Güncellenir" />
         <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 işlem eşleşti, fark yok." />
         <BannerAlert tone="warning" title="Fatura Adresi Eksik" description="Kasım faturası adres girilene kadar kesilmeyecek." />
-        <BannerAlert tone="danger" title="Banka Senkronu Başarısız" description="Garanti BBVA bağlantısının süresi doldu." />
+        <BannerAlert tone="danger" title="Banka Eşitlemesi Başarısız" description="Banka bağlantısının süresi doldu." />
       </div>
     </Frame>
   ),
@@ -84,8 +84,8 @@ export const WithAction: Story = {
   name: "Eylemli",
   args: {
     tone: "danger",
-    title: "Banka Senkronu Başarısız",
-    description: "Garanti BBVA bağlantısının süresi doldu; son işlemler 28 Ekim'den beri gelmiyor.",
+    title: "Banka Eşitlemesi Başarısız",
+    description: "Banka bağlantısının süresi doldu; son işlemler 28 Ekim'den beri gelmiyor.",
     actions: (
       <Button variant="secondary" size="sm">
         <RefreshCw aria-hidden /> Yeniden Bağla
@@ -152,7 +152,7 @@ export const AllVariants: Story = {
       <Cell label="Hata, Eylemli" className="place-items-stretch">
         <BannerAlert
           tone="danger"
-          title="Banka Senkronu Başarısız"
+          title="Banka Eşitlemesi Başarısız"
           description="Bağlantının süresi doldu."
           actions={
             <Button variant="secondary" size="sm">

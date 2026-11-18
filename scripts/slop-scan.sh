@@ -147,9 +147,11 @@ report YUKSEK "Yer tutucu metin (Lorem, John Doe, Acme...)" \
 #    yalniz "degistir"le kalip: oyun yazisinda duz anlamiyla gecer.
 # 7b. Yazilim Turkcesi: arayuzde "button" BUTON'dur, "dugme" degil (sahibinin
 #     kurali, 2026-11-18). Yorumlar da taranir: kod aciklamasi ekosistemin dili.
+#     Buyuk harf ACIK yazilir: `grep -i` Turkce Ü/Ğ'yi her yerelde katlamaz,
+#     "DÜĞME" yereldeki taramadan kacip CI'da yakalanmisti (mistakes.md #123).
 report YUKSEK "Dugme sozcugu (buton olmali)" \
   "Arayuzde ve aciklamada 'buton' yaz: 'Kopyala Butonu', 'butona bas'" \
-  "$(scan -niE '(^|[^[:alpha:]])d(ü|u)ğme' "$SCRIPT")"
+  "$(scan -nE '(^|[^[:alpha:]])[dD](ü|u|Ü|U)(ğ|Ğ)(m|M)(e|E)' "$SCRIPT")"
 
 report YUKSEK "Pazarlama dolgusu sozcukleri" \
   "Urunun ne yaptigini duz yaz: 'Haftalik raporu 4 saatten 15 dakikaya indirir'" \

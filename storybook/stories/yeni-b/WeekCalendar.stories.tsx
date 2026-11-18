@@ -65,8 +65,8 @@ const KART: CalendarEvent[] = [
     attendees: ["Elif Şahin", "Burak Öztürk", "Selin Arslan", "Mert Aksoy", "Can Demir"].slice(0, (Number(e.id.slice(1)) % 5) + 1),
     action: e.location === "Çevrim İçi" ? { label: "Görüşmeye Katıl", icon: <Video />, onClick: fn() } : undefined,
   })),
-  { id: "s1", title: "Ödeme sağlayıcı sözleşmesi", start: "2026-11-03T00:00", end: "2026-11-03T23:59", allDay: true, series: 6 },
-  { id: "s2", title: "Sürüm 2.4 kod dondurma", start: "2026-11-05T00:00", end: "2026-11-05T23:59", allDay: true, series: 2 },
+  { id: "s1", title: "Ödeme Sağlayıcı Sözleşmesi", start: "2026-11-03T00:00", end: "2026-11-03T23:59", allDay: true, series: 6 },
+  { id: "s2", title: "Sürüm 2.4 Kod Kilidi", start: "2026-11-05T00:00", end: "2026-11-05T23:59", allDay: true, series: 2 },
 ];
 
 export const CardVariant: Story = {

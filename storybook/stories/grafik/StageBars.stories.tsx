@@ -93,7 +93,7 @@ export const FewData: Story = {
 export const ZeroStage: Story = {
   name: "Sıfır Değerli Aşama",
   args: {
-    title: "Kurumsal Hunisi",
+    title: "Kurumsal Satış Hunisi",
     stages: [
       { label: "Demo Talebi", value: 64 },
       { label: "Görüşme", value: 21 },
@@ -159,9 +159,9 @@ export const AllVariants: Story = {
         </ChartCard>
       </GrafikHucre>
       <GrafikHucre label="Sıfır Değerli Son Aşama">
-        <ChartCard id="sb-v4" label="Kurumsal Hunisi" value="64" change={-8.6}>
+        <ChartCard id="sb-v4" label="Kurumsal Satış Hunisi" value="64" change={-8.6}>
           <StageBars
-            title="Kurumsal Hunisi"
+            title="Kurumsal Satış Hunisi"
             stages={[
               { label: "Demo", value: 64 },
               { label: "Teklif", value: 6 },

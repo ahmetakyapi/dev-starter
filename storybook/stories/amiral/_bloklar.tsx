@@ -46,7 +46,7 @@ const NAV: readonly ShellNavGroup[] = [
   {
     label: "Atölye",
     items: [
-      { href: "#kavurma", label: "Kavurma", icon: <Flame /> },
+      { href: "#kavrum", label: "Kavurucu", icon: <Flame /> },
       { href: "#stok", label: "Stok", icon: <Package /> },
       { href: "#kafeler", label: "Kafeler", icon: <Store />, badge: 8 },
     ],
@@ -56,7 +56,7 @@ const NAV: readonly ShellNavGroup[] = [
 const PLAN: readonly PlanStep[] = [
   { id: "oku", title: "Ekim Siparişlerini Oku" },
   { id: "ayir", title: "Kanallara Ayır" },
-  { id: "kavurma", title: "Kavurma Kayıtlarıyla Eşleştir", detail: `${num.format(ROAST_TOTAL)} kg geçen haftanın partileri karşılaştırılıyor` },
+  { id: "kavrum", title: "Lot Kayıtlarıyla Eşleştir", detail: `${num.format(ROAST_TOTAL)} kg geçen haftanın lotları karşılaştırılıyor` },
   { id: "stok", title: "Kasım Stok İhtiyacını Hesapla" },
   { id: "rapor", title: "Kurucuya Özet Yaz" },
 ];
@@ -96,7 +96,7 @@ function ChatApp() {
       content: (
         <div className="grid gap-3">
           <p>
-            Ekim'de web mağazadan <strong>{num.format(OCTOBER_ORDERS)} sipariş</strong> geldi. Önce kanalları ayırıp kavurma kayıtlarıyla eşleştiriyorum,
+            Ekim'de web mağazadan <strong>{num.format(OCTOBER_ORDERS)} sipariş</strong> geldi. Önce kanalları ayırıp lot kayıtlarıyla eşleştiriyorum,
             sonra Kasım ihtiyacını çıkaracağım.
           </p>
           <AgentPlan steps={PLAN} activeIndex={step} stepLabels={PLAN_LABELS} />
@@ -164,7 +164,7 @@ const SETTINGS: readonly SettingsTab[] = [
         <SettingsRow label="Varsayılan Kafe" hint="Toptan sipariş formunda ilk seçenek">
           <Select label="Varsayılan Kafe" hideLabel defaultValue="alsancak" items={CAFES.map((c) => ({ value: c.value, label: c.label }))} />
         </SettingsRow>
-        <Switch label="Kavurma Tarihini Pakete Bas" hint="Etikette gün ve parti numarası." defaultChecked />
+        <Switch label="Kavrulma Tarihini Pakete Bas" hint="Etikette gün ve lot numarası." defaultChecked />
       </SettingsSection>
     ),
   },
@@ -258,7 +258,7 @@ export function Blocks() {
         <div className="grid w-full max-w-sm gap-3">
           <ul className="grid gap-1.5" aria-label="Ayar Özeti">
             {[
-              ["Varsayılan Kafe", "Alsancak Demlik"],
+              ["Varsayılan Kafe", "Alsancak Demleme"],
               ["Bildirimler", "2 açık"],
               ["İki Adımlı Doğrulama", "Açık"],
             ].map(([k, v]) => (

@@ -15,6 +15,19 @@ paths:
 > (`knowledge/decisions.md` → "Bağlam Dosyaları"). Komutların kısa listesi
 > kök `CLAUDE.md`de kaldı.
 
+## CI Paritesi (main'e göndermeden önce)
+
+```bash
+npm run ci:local              # Quality Checks + Ecosystem Health + Storybook tip/adres
+npm run ci:local -- --build   # + Storybook derlemesi
+```
+
+`scripts/ci-local.sh`, `.github/workflows/ci.yml`deki yerelde koşabilen
+adımları AYNI komut ve sırayla çalıştırır; kırılan adımın kaydını basar.
+Ağ isteyen `verify:agentic` ve `verify:anatomy` dışarıda. CI'a adım eklenince
+buraya da eklenir. Gerekçe: `mistakes.md #123` (seçilmiş kontroller geçti,
+CI'da slop taraması ve health-check kırıldı).
+
 ## Ecosystem Health Check
 
 ```bash

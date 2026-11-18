@@ -96,7 +96,7 @@ const WEBHOOK_URL = `https://api.${WORKSPACE.domain}/talep`;
 const WEBHOOK_TABS = [
   {
     label: "cURL",
-    code: `curl -X POST ${WEBHOOK_URL} \\\n  -H "Content-Type: application/json" \\\n  -H "Pusula-Imza: sha256=…" \\\n  -d '{"olay":"talep.acildi","talep":"T-1042"}'`,
+    code: `curl -X POST ${WEBHOOK_URL} \\\n  -H "Content-Type: application/json" \\\n  -H "Pusula-Imza: sha256=…" \\\n  -d '{"olay":"talep.acildi","talep":"PSL-1186"}'`,
   },
   {
     label: "JavaScript",

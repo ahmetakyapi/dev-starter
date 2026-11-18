@@ -222,7 +222,7 @@ const CHANNELS = [
 
 const EVENTS = [
   { id: "acil", label: "Acil Talep", hint: "Öncelik Acil olan yeni talep" },
-  { id: "bahsedilme", label: "Senden Bahsedilmesi", hint: "@ahmet yorumlarda ve notlarda" },
+  { id: "bahsedilme", label: "Senden Bahsedildiğinde", hint: "@ahmet yorumlarda ve notlarda" },
   { id: "onay", label: "Onay İstekleri", hint: "İndirim ve iade onayları" },
   { id: "gecikme", label: "Geciken Sipariş", hint: "Kargo teslim tarihini geçince" },
   { id: "sla", label: "Yanıt Süresi Doluyor", hint: "İlk yanıt hedefine 10 dakika kala" },
@@ -600,7 +600,7 @@ export function BildirimPage() {
             <Select label="Sessiz Saatler" items={QUIET} value={draft.quiet} onValueChange={(v) => setDraft((d) => ({ ...d, quiet: v }))} />
             <Select label="E-Posta Özeti" items={DIGEST} value={draft.digest} onValueChange={(v) => setDraft((d) => ({ ...d, digest: v }))} />
           </div>
-          <Switch label="Acil talepler sessiz saatleri deler" hint="İlk yanıt hedefine 15 dakikadan az kalan Acil talepler SMS’le gelir." defaultChecked />
+          <Switch label="Acil talepler sessiz saatlerde de gelir" hint="İlk yanıt hedefine 15 dakikadan az kalan Acil talepler SMS’le gelir." defaultChecked />
         </div>
       </Sheet>
     </div>

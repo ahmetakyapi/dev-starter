@@ -200,7 +200,7 @@ export const hero = {
 /** Uydurma müşteri adları: işaretleri `components/sections/Logos.tsx` adından üretir. */
 export const logos = {
   title: "Bu Ekipler Her Gün Kullanıyor",
-  names: ["Kuzey Lojistik", "Mavera", "Atlas Gıda", "Pervane", "Lodos Yazılım", "Demirhan", "Selvi Sağlık", "Karafil"],
+  names: ["Kuzey Lojistik", "Mavera", "Ilgaz Gıda", "Pervane", "Lodos Yazılım", "Demirhan", "Selvi Sağlık", "Karafil"],
   /** Şeridin altındaki durdurma denetimi (WCAG 2.2.2). */
   pause: "Şeridi Durdur",
 } as const;
@@ -254,7 +254,7 @@ export const features = {
         ages: ["Şimdi", "4 Dk", "11 Dk"],
         items: [
           { source: "E-posta", title: "Ekim faturasının kopyası", from: "Kuzey Lojistik" },
-          { source: "Sohbet", title: "Teslim adresi değişikliği", from: "Atlas Gıda" },
+          { source: "Sohbet", title: "Teslim adresi değişikliği", from: "Ilgaz Gıda" },
           { source: "Web Formu", title: "Yeni kullanıcı daveti", from: "Pervane" },
           { source: "API", title: "Sipariş #8812 iptal edildi", from: "Mavera" },
           { source: "E-posta", title: "Sözleşme yenileme sorusu", from: "Selvi Sağlık" },
@@ -413,7 +413,7 @@ export const testimonials = {
     {
       quote: "Kurallar bir kez yazıldı, talepler kendiliğinden dağılıyor.",
       name: "Kaan Yıldırım",
-      role: "Destek Ekibi Lideri, Mavera",
+      role: "Destek Lideri, Mavera",
     },
     {
       quote: "Bir kararın neden alındığını aramak zorunda kalmıyoruz, işin yanında duruyor.",

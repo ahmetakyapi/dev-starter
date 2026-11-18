@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  * VARSAYILAN `aria-hidden`. İkonların çoğu yanındaki metnin süsü; ekran
  * okuyucu "görüntü" diye okumamalı. İkon TEK BAŞINA anlam taşıyorsa (tablo
  * hücresindeki onay işareti) `label` ver: o zaman `role="img"` ile adı okunur.
- * Butonun tek içeriği ikonsa etiketi ikona değil DÜĞMEYE ver
+ * Butonun tek içeriği ikonsa etiketi ikona değil BUTONA ver
  * (`icon-button.tsx`, `aria-label` zorunlu).
  *
  * Boyut ölçeği metinle eşleşir: sm → text-small/base satırı, md → read,

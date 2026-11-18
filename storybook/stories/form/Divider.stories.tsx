@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "İçeriği iki parçaya bölen kıl çizgi; kart içinde ikinci kart açmak yerine bölümler bununla ayrılır. Dikey ayırıcı `aria-orientation` taşır; etiketli olan (\"ya da\") separator değildir ki etiket ekran okuyucuda kaybolmasın. Yalnızca görsel ritimse `decorative`.",
+          "İçeriği iki parçaya bölen ince çizgi; kart içinde ikinci kart açmak yerine bölümler bununla ayrılır. Dikey ayırıcı `aria-orientation` taşır; etiketli olan (\"ya da\") separator değildir ki etiket ekran okuyucuda kaybolmasın. Yalnızca görsel ritimse `decorative`.",
       },
     },
   },

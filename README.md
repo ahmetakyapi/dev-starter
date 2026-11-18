@@ -81,7 +81,7 @@ ve ilk doğrulamayı koşar.
 
 Her bileşen, açık ve koyu temada, on palette, bütün durumlarıyla
 [dev-starter-storybook.vercel.app](https://dev-starter-storybook.vercel.app/) adresinde. Kenar çubuğu üç bölüm:
-**Başla** (Tanıtım, Başlangıç, Vitrin, Her Şey Bir Arada) · **Kütüphane** (Tema,
+**Başla** (Tanıtım, Başlangıç, Her Şey Bir Arada, Vitrin) · **Kütüphane** (Tema,
 Bileşenler, Grafikler, Bloklar, Desenler) · **Uygulamada** (Pusula, Ekranlar,
 Arşiv). Her hikâyenin etkileşim testi, kontrast ve hizalama ölçümü her
 görsel değişiklikten sonra koşar.
@@ -240,7 +240,7 @@ sınıflarına ve `cn()`'e dayanır, açık/koyu ve on palette doğru görünür
 | **Geri Bildirim ve Yükleme** | `toast` · `banner-alert` · `meter` · `progress` · `skeleton` · `spinner` · `route-progress` |
 | **Veri ve Verimlilik** | `data-table` · `record-list` · `tree-view` · `tree-table` · `stat` · `timeline` · `kanban-board` · `task-list` · `week-calendar` |
 | **Grafikler** | `area-chart` · `line-chart` · `combo-chart` · `funnel-chart` · `sankey-chart` · `heatmap` · `ring-chart` · `radar-chart` · `activity-rings` |
-| **Hareket, Tanıtım, Yapay Zekâ** | `pattern-bg` · `dissolve` · `slot-text` · `mesh-gradient` · `liquid-glass` · `app-window` · `thinking-orb` · `stream-text` · `tool-call` |
+| **Hareket, Pazarlama, Yapay Zekâ** | `pattern-bg` · `dissolve` · `slot-text` · `mesh-gradient` · `liquid-glass` · `app-window` · `thinking-orb` · `stream-text` · `tool-call` |
 
 Tam liste, ne zaman hangisi ve bağımlılıklar: [`snippets/ui/README.md`](snippets/ui/README.md);
 hepsi canlı olarak [kataloğun Bileşenler rafında]({L}/).

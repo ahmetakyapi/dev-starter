@@ -31,7 +31,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 | Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
 | Nimbstia'dan Öğrenilenler (2026-11-03) | 115–119 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
-| Görsel Katalog Turları (2026-11-17) | 120–122 | storybook, kapsam, play, hero, kontrast, koyu-tema |
+| Görsel Katalog Turları (2026-11-17) | 120–123 | storybook, kapsam, play, hero, kontrast, koyu-tema |
 
 ---
 
@@ -2103,7 +2103,29 @@ paneli, "Bağlantıyı Aç" panoyu açar). Play testi sayfada `input[type=passwo
 alanını göstermek gereken bileşen hikâyesinde form başarıda yerinde kalır (tarayıcı başarısız
 giriş sayar, sormaz). Gerçek projede `AuthCard` şifreli haliyle ve doğru `autoComplete`le kalır.
 
+### 123. Main'e Seçilmiş Kontrollerle Gidildi; CI'da Slop Taraması ve Health-Check Kırıldı
+
+**Hata**: "düğme → buton" değişikliğinden sonra main'e gönderilen commit CI'da iki işte kırmızıya
+düştü (5/7). Dört yorumda TAMAMI BÜYÜK "DÜĞME/DÜĞMESİ" kalmıştı; CI'daki slop taraması bunu yeni
+kuralla YÜKSEK saydı. Aynı tarama health-check'in içinde de çağrılıyordu ve betik `set -e` altında
+AÇIKLAMA YAZMADAN çıktı (CI'da yalnız "exit code 1"). Sahibi kırmızı commit'i GitHub'da gördü.
+
+**Sebep**: (1) Değiştirme betiği yalnız `d`/`D` ile başlayıp küçük harfle süren biçimleri
+tanıyordu. (2) Yereldeki doğrulama `grep -i` ile yapıldı; `grep -i` Türkçe Ü/Ğ'yi her yerelde
+katlamaz, "DÜĞME" yerelde görünmedi. (3) Main'e göndermeden önce CI'ın adımları değil, "değişene
+göre seçilmiş" kontroller koşuldu (slop taraması yalnız iki dizinde, health-check yalnız SONUC
+satırına bakılarak). (4) health-check `SLOP_OUT=$(...)` atamasında `|| true` yoktu.
+
+**Çözüm**: Büyük harfli biçimler düzeldi; kural Türkçe büyük harfleri açıkça yazar
+(`[dD](ü|u|Ü|U)(ğ|Ğ)…`) ve `test-slop-scan.sh`te üç biçimli örnekle sınanır; health-check
+taramayı `|| true` ile çağırıp bulguyu raporlar. `npm run ci:local` (`scripts/ci-local.sh`): CI'ın
+yerelde koşabilen bütün adımları aynı komut ve sırayla, kırılan adımın kaydıyla.
+
+**Kural**: main'e göndermeden önce `npm run ci:local` temiz (Storybook değiştiyse `-- --build`).
+Toplu metin değişikliğinde büyük harf, Başta-büyük ve küçük biçim ayrı ayrı aranır; Türkçe
+karakterli aramada `grep -i`e güvenilmez (Python ya da açık karakter sınıfı).
+
 ---
 
-*Son güncelleme: 2026-11-17*
+*Son güncelleme: 2026-11-18*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

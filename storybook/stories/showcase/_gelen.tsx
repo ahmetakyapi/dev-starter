@@ -505,8 +505,8 @@ export function GelenPage() {
               </PopoverTrigger>
               <PopoverContent title="Görünümü Paylaş" description="Bağlantıyı alan ekip arkadaşı aynı filtreleri görür.">
                 <div className="flex items-center gap-2 rounded-md bg-surface py-1 pr-1 pl-3 text-small text-body">
-                  <span className="min-w-0 flex-1 truncate">pusula.app/{href("inbox", { sort: params.sort, dir: params.dir })}</span>
-                  <CopyButton value={`https://pusula.app/${href("inbox", { sort: params.sort, dir: params.dir })}`} label="Bağlantıyı Kopyala" />
+                  <span className="min-w-0 flex-1 truncate">lidya.pusula.app/{href("inbox", { sort: params.sort, dir: params.dir })}</span>
+                  <CopyButton value={`https://lidya.pusula.app/${href("inbox", { sort: params.sort, dir: params.dir })}`} label="Bağlantıyı Kopyala" />
                 </div>
               </PopoverContent>
             </Popover>
@@ -559,7 +559,7 @@ export function GelenPage() {
         </aside>
 
         {/* Ingot turu: filtre çubuğu, tablo ve sayfalama TEK kartta; araç
-            çubuğu kartın başı, sayfalama dibi (kıl çizgilerle ayrılır). */}
+            çubuğu kartın başı, sayfalama dibi (ince çizgilerle ayrılır). */}
         <div className="grid min-w-0 grid-cols-1 content-start overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line">
           <div className="grid grid-cols-1 gap-3 border-b border-line-soft p-3 sm:p-4">
             <div className="flex flex-wrap items-end gap-3">
@@ -873,7 +873,7 @@ export function GelenPage() {
             t={current}
             onAssign={(assignee) => {
               setOverrides((o) => ({ ...o, [current.id]: { ...o[current.id], assignee } }));
-              notify({ tone: "info", title: `${current.id} ${member(assignee).name.split(" ")[0]} Kişisine Atandı`, body: current.subject });
+              notify({ tone: "info", title: `${current.id}, ${member(assignee).name.split(" ")[0]} Üstlendi`, body: current.subject });
             }}
           />
         ) : null}
@@ -900,7 +900,7 @@ function PanelLabel({ id, children }: { id: string; children: ReactNode }) {
   );
 }
 
-/** Kıl çizgili bilgi satırı: solda ad, sağda değer. */
+/** İnce çizgili bilgi satırı: solda ad, sağda değer. */
 function InfoRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex min-h-12 items-center justify-between gap-4 px-4 py-2">

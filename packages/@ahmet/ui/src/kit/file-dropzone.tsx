@@ -33,7 +33,7 @@ import { cn } from "../utils";
  * dosya uzantısından tahmin; değiştirilebilir. Sunucu dosyayı yeniden
  * doğrulamalı: boyut, sihirli baytlar (dosyanın ilk baytları), uzantı.
  *
- * GÖRÜNÜŞ ("board" dili, 2026-11): gri kuyu, kesikli kıl çizgisi (burada
+ * GÖRÜNÜŞ ("board" dili, 2026-11): gri kuyu, kesikli ince çizgisi (burada
  * kesik kenar anlamlı: "buraya bırak"), ikon beyaz bir karoda. Dosya
  * üstüne gelince alan vurgu yıkamasına döner, karo hafifçe yükselir.
  * Kabul edilen dosyalar beyaz karo satırlar (ad + boyut), reddedilenler

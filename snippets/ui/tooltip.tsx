@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  *   </Tooltip>
  *   <InfoTip label="F/K Nedir">Fiyatın hisse başına kâra oranı.</InfoTip>
  *
- * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo + kıl çizgisi + `shadow-modal`.
+ * GÖRÜNÜŞ ("board" dili, 2026-11): beyaz karo + ince çizgisi + `shadow-modal`.
  * Tek satırlık etiket `rounded-lg` (24 piksellik `xl` otuz piksel yüksek bir
  * kutuda hapa dönerdi), açıklama kutusu `rounded-xl`. Giriş 0,96'dan,
  * kaynağı tetikleyici.

@@ -156,7 +156,7 @@ const NOV = (d: number) => new Date(2026, 10, d);
 
 const GLYPHS = [
   { icon: Bean, label: "Çekirdek" },
-  { icon: Flame, label: "Kavurma" },
+  { icon: Flame, label: "Kavurucu" },
   { icon: Package, label: "Paket" },
   { icon: Truck, label: "Kargo" },
 ] as const;
@@ -166,8 +166,8 @@ const SUPPLIERS = [
   { name: "Ege Süt", Glyph: Coffee },
   { name: "Rota Lojistik", Glyph: Truck },
   { name: "Ambalaj Atölyesi", Glyph: Package },
-  { name: "Liman Kavurma", Glyph: Flame },
-  { name: "Çarşı Pazarı", Glyph: Store },
+  { name: "Liman Ambalaj", Glyph: Flame },
+  { name: "Kemeraltı Ekipman", Glyph: Store },
 ] as const;
 
 const CREW = TEAM.map((t, i) => ({ id: `k${i}`, name: t.name, detail: t.role }));
@@ -179,7 +179,7 @@ function PickerDemo() {
     <dl className="mx-auto grid w-full max-w-72 gap-3">
       {(
         [
-          ["Kavurma Ekibi", true, roasters, setRoasters],
+          ["Kavurucu Ekibi", true, roasters, setRoasters],
           ["Sorumlu", false, owner, setOwner],
         ] as const
       ).map(([label, multiple, value, set]) => (
@@ -210,8 +210,8 @@ function BasketDemo() {
       ))}
       {/* grid-cols-1: örtük sütun `auto` olsaydı çubuk en geniş hâline açılıp telefonda kuyudan taşardı; böyle kendi içinde kayar. */}
       <div className="absolute inset-x-2 bottom-3 grid grid-cols-1">
-        <SelectionBar position="sticky" count={picked.length} noun="çekirdek" onClear={() => setPicked([])}>
-          <SelectionAction onClick={() => setPicked([])}>Kavurmaya Al</SelectionAction>
+        <SelectionBar position="sticky" count={picked.length} noun="kahve" onClear={() => setPicked([])}>
+          <SelectionAction onClick={() => setPicked([])}>Kavurucu Sırasına Al</SelectionAction>
           <SelectionAction tone="danger" onClick={() => setPicked([])}>
             Stoktan Düş
           </SelectionAction>
@@ -236,7 +236,7 @@ function TourDemo() {
         steps={[
           { target: "#b-code-block", title: "Kod Bloğu", body: "Paket yöneticisi seçimi bütün bloklarda hatırlanır." },
           { target: "#b-hold-button", title: "Basılı Tut Onayı", body: "Kazara tıklama arşivlemez; bırakınca geri sarılır." },
-          { target: "#b-product-tour", title: "Ve Bu Tur", body: "Escape kapatır, odak bu butona döner." },
+          { target: "#b-product-tour", title: "Bu Tur da Bir Bileşen", body: "Escape kapatır, odak bu butona döner." },
         ]}
       />
     </div>
@@ -245,7 +245,7 @@ function TourDemo() {
 
 function ScrubberDemo() {
   const [at, setAt] = useState(7 * 60 + 30);
-  return <TimeScrubber label="Kavurma Başlangıcı" value={at} onValueChange={setAt} min={5 * 60} max={12 * 60} hint="Sabah Partisi" />;
+  return <TimeScrubber label="Kavurucu Açılış Saati" value={at} onValueChange={setAt} min={5 * 60} max={12 * 60} hint="Sabah Vardiyası" />;
 }
 
 function HoldDemo() {
@@ -346,7 +346,7 @@ function TemelGroup() {
           </div>
         )}
       </Cell>
-      <Cell file="badge" name="Rozet" note="Durum tonu yıkama + mürekkep; kategori tonu grafik pasteli." size="sm">
+      <Cell file="badge" name="Rozet" note="Durum tonu: açık zemin + koyu yazı; kategori tonu grafik pasteli." size="sm">
         <div className="flex flex-wrap justify-center gap-2">
           <Badge tone="success" dot>
             Teslim Edildi
@@ -433,7 +433,7 @@ function TemelGroup() {
           </SplitButton>
         </div>
       </Cell>
-      <Cell file="selection-bar" name="Seçim Çubuğu" note="Satır seçilince alttan yükselen ters ada; ← → gezinir, Escape bırakır." span={4} align="stretch">
+      <Cell file="selection-bar" name="Seçim Çubuğu" note="Satır seçilince alttan yükselen beyaz ada; ← → gezinir, Escape bırakır." span={4} align="stretch">
         <BasketDemo />
       </Cell>
       <Cell file="toc-nav" name="Bölüm Gezintisi" note="Okunan bölüm vurgulu, altta okuma ilerlemesi; bu sayfanın bölümlerine gider." span={3}>
@@ -487,7 +487,7 @@ function SecimGroup() {
       </Cell>
       <Cell file="checkbox" name="Onay Kutusu" note="Tik çizilerek gelir; belirsiz durum çizgiyle." align="stretch">
         <div className="grid">
-          <Checkbox label="Haftalık Kavurma Raporu" hint="Pazartesi sabahı e-postayla." defaultChecked />
+          <Checkbox label="Haftalık Kavurucu Raporu" hint="Pazartesi sabahı e-postayla." defaultChecked />
           <Checkbox label="Stok Uyarıları" />
           <Checkbox ref={partial} label="Bütün Kafeler" hint="8 kafeden 5'i seçili." />
         </div>
@@ -517,7 +517,7 @@ function SecimGroup() {
       <Cell file="segmented-control" name="Bölmeli Seçici" note="2-5 seçenekten biri; gri kuyu üstünde beyaz karo kayar." span={3}>
         <div className="grid justify-items-center gap-4">
           <SegmentedControl
-            aria-label="Kavurma Derecesi"
+            aria-label="Kavrulma Derecesi"
             value={roast}
             onValueChange={setRoast}
             options={[
@@ -594,7 +594,7 @@ function SecimGroup() {
               format.includes("alti") && "underline underline-offset-4",
             )}
           >
-            Etiket notu: şeftali ve yasemin, açık kavrum.
+            Etiket notu: şeftali ve yasemin, açık kavrulma.
           </p>
         </div>
       </Cell>
@@ -615,7 +615,7 @@ const LABEL_COLORS = [
 
 function FormGroup() {
   const [range, setRange] = useState<DateRange | null>({ start: NOV(9), end: NOV(13) });
-  const [note, setNote] = useState("Arka kapıdan teslim; sabah 08.00'den önce gelirseniz zili çalın, kavurma odasındayız.");
+  const [note, setNote] = useState("Arka kapıdan teslim; sabah 08.00'den önce gelirseniz zili çalın, kavurucunun başındayız.");
   return (
     <CellGrid>
       <Cell file="date-calendar" name="Takvim" note="Pazartesi başlayan ay; aralık uçları dolgulu, Pazar günleri kapalı." span={4} size="lg">
@@ -693,7 +693,7 @@ function FormGroup() {
       <Cell file="time-field" name="Saat Alanı" note="SS:DD segmentleri; oklarla artır, rakamla yaz.">
         <div className="mx-auto grid max-w-xs gap-6">
           <TimeField label="Teslim Saati" defaultValue="08:30" minuteStep={15} />
-          <TimeField label="Kavurma Başlangıcı" defaultValue="06:45" hint="24 saat düzeninde." />
+          <TimeField label="Kavurucu Açılış Saati" defaultValue="06:45" hint="24 saat düzeninde." />
         </div>
       </Cell>
       <Cell file="file-dropzone" name="Dosya Bırakma Alanı" note="Klavyeyle açılır; reddedilen dosya nedeniyle okunur.">
@@ -755,10 +755,10 @@ function RoastCounter() {
       <span className="text-base font-medium text-strong">Bugün Kavrulan</span>
       <p aria-live="polite" className="flex items-baseline gap-1.5 text-strong">
         <DigitRoll value={total} format={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }} className="text-display font-medium tracking-tight" />
-        <span className="text-base text-muted">kg · {count} parti</span>
+        <span className="text-base text-muted">kg · {count} lot</span>
       </p>
       <Button variant="secondary" size="sm" disabled={count === ROAST_BATCHES.length} onClick={() => setCount((c) => c + 1)}>
-        Parti Ekle
+        Lot Ekle
       </Button>
     </div>
   );
@@ -771,7 +771,7 @@ function KatmanGroup() {
   return (
     <CellGrid>
       <Cell file="dropdown-menu" name="Açılır Menü" note="Oklar, Home/End, harfle atlama; yıkıcı öğe ayrı grupta.">
-        <ContextTile title="KK-3192 · Alsancak Demlik" meta="24 kg Kıyı Harmanı · ₺15.840">
+        <ContextTile title="KK-3192 · Alsancak Demleme" meta="24 kg Kıyı Harmanı · ₺15.840">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger render={<Button variant="secondary" size="sm" />}>Eylemler</DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -819,7 +819,7 @@ function KatmanGroup() {
       </Cell>
       <Cell file="hover-card" name="Önizleme Kartı" note="Bağlantının ardındaki kişi, gitmeden; üzerine gel ya da odaklan.">
         <p className="mx-auto max-w-64 text-base text-body">
-          Alsancak Demlik siparişini{" "}
+          Alsancak Demleme siparişini{" "}
           <HoverCard href="#b-avatar" trigger={TEAM[2].name} side="bottom" align="start">
             <ProfilePreview
               name={TEAM[2].name}
@@ -847,7 +847,7 @@ function KatmanGroup() {
           onOpenChange={setDialog}
           size="sm"
           title="Siparişi İptal Et"
-          description="KK-3192 iptal edilir ve Alsancak Demlik'e bildirim gider. Bu işlem geri alınamaz."
+          description="KK-3192 iptal edilir ve Alsancak Demleme'e bildirim gider. Bu işlem geri alınamaz."
           footer={
             <>
               <Button variant="secondary" data-autofocus onClick={() => setDialog(false)}>
@@ -901,12 +901,12 @@ function KatmanGroup() {
       </Cell>
       <Cell file="tooltip" name="Araç İpucu" note="Görsel etiket üzerine gelince; açıklama InfoTip'le tıklanınca.">
         <div className="flex items-center justify-center gap-4">
-          <Tooltip label="Kavurma Ayarları">
-            <IconButton icon={Flame} aria-label="Kavurma Ayarları" variant="secondary" showTitle={false} />
+          <Tooltip label="Kavurucu Ayarları">
+            <IconButton icon={Flame} aria-label="Kavurucu Ayarları" variant="secondary" showTitle={false} />
           </Tooltip>
           <span className="inline-flex items-center gap-2 text-base text-body">
-            Ağırlık Kaybı
-            <InfoTip label="Ağırlık Kaybı Nedir">Kavurmada çekirdeğin yitirdiği su; orta kavurmada yüzde 14 civarı.</InfoTip>
+            Kavrulma Firesi
+            <InfoTip label="Kavrulma Firesi Nedir">Kavrulurken çekirdeğin yitirdiği su; orta kavrulmada yüzde 14 civarı.</InfoTip>
           </span>
         </div>
       </Cell>
@@ -962,16 +962,16 @@ const SPARK = [
   { name: "Brezilya Cerrado", values: [40, 38, 39, 36, 37, 35, 36, 34, 33, 34, 32, 31] },
 ] as const;
 
-/** Atölyenin bu haftası: kavurma, teslimat ve tadım. Urla teslimatı gecikme uyarısındaki yeni tahmin. */
+/** Atölyenin bu haftası: kavurucu, teslimat ve tadım. Urla teslimatı gecikme uyarısındaki yeni tahmin. */
 const WEEK: readonly CalendarEvent[] = [
   { id: "w1", title: "Haftalık Plan", start: "2026-11-02T09:00", end: "2026-11-02T09:30", location: "Atölye", series: 4 },
-  { id: "w2", title: "Kavurma · Parti 45", start: "2026-11-02T10:00", end: "2026-11-02T12:00", location: "Kavurma Odası", series: 3 },
-  { id: "w3", title: "Alsancak Demlik Kargoya", start: "2026-11-02T15:00", end: "2026-11-02T15:30", location: "Yurtiçi Şubesi", series: 2 },
+  { id: "w2", title: "Kavurucu · Lot 45", start: "2026-11-02T10:00", end: "2026-11-02T12:00", location: "Atölye", series: 3 },
+  { id: "w3", title: "Alsancak Demleme Kargoya", start: "2026-11-02T15:00", end: "2026-11-02T15:30", location: "Yurtiçi Şubesi", series: 2 },
   { id: "w4", title: "Urla Bağ Evi Teslimatı", start: "2026-11-03T10:30", end: "2026-11-03T11:30", location: "Urla", series: 2 },
-  { id: "w5", title: "Kavurma · Parti 46", start: "2026-11-03T13:00", end: "2026-11-03T15:00", location: "Kavurma Odası", series: 3 },
+  { id: "w5", title: "Kavurucu · Lot 46", start: "2026-11-03T13:00", end: "2026-11-03T15:00", location: "Atölye", series: 3 },
   { id: "w6", title: "Guji Tadımı", start: "2026-11-04T10:00", end: "2026-11-04T11:00", location: "Tadım Masası", series: 5 },
   { id: "w7", title: "Matbaa Görüşmesi", start: "2026-11-04T10:30", end: "2026-11-04T11:15", location: "Görüntülü", series: 4 },
-  { id: "w8", title: "Kavurma · Parti 47", start: "2026-11-05T09:30", end: "2026-11-05T12:30", location: "Kavurma Odası", series: 3 },
+  { id: "w8", title: "Kavurucu · Lot 47", start: "2026-11-05T09:30", end: "2026-11-05T12:30", location: "Atölye", series: 3 },
   { id: "w9", title: "Bornova Kitap Kafe Teslimatı", start: "2026-11-05T14:00", end: "2026-11-05T14:45", location: "Bornova", series: 2 },
   { id: "w10", title: "Ekim Kapanışı", start: "2026-11-06T11:00", end: "2026-11-06T12:00", location: "Atölye", series: 4 },
   { id: "w11", title: "Açık Atölye Günü", start: "2026-11-07T11:00", end: "2026-11-07T14:00", location: "Atölye", series: 5 },
@@ -992,7 +992,7 @@ const BOARD: readonly KanbanColumn[] = [
     title: "Sürüyor",
     limit: 3,
     cards: [
-      { id: "k4", title: "Alsancak Demlik · 24 kg Kıyı Harmanı", tags: [{ label: "Toptan", tone: "chart-3" }], assignee: { name: TEAM[1].name }, due: "2026-11-02" },
+      { id: "k4", title: "Alsancak Demleme · 24 kg Kıyı Harmanı", tags: [{ label: "Toptan", tone: "chart-3" }], assignee: { name: TEAM[1].name }, due: "2026-11-02" },
       { id: "k5", title: "Urla Bağ Evi gecikmesi için kafeyi ara", tags: [{ label: "Toptan", tone: "chart-3" }, { label: "Kargo", tone: "neutral" }], assignee: { name: TEAM[2].name }, due: "2026-11-01" },
     ],
   },
@@ -1006,7 +1006,7 @@ const BOARD: readonly KanbanColumn[] = [
     title: "Bitti",
     done: true,
     cards: [
-      { id: "k7", title: "Parti 44 · Brezilya Cerrado", tags: [{ label: "Kavurma", tone: "chart-6" }], assignee: { name: TEAM[1].name }, due: "2026-10-31" },
+      { id: "k7", title: "Lot 44 · Brezilya Cerrado", tags: [{ label: "Kavurucu", tone: "chart-6" }], assignee: { name: TEAM[1].name }, due: "2026-10-31" },
       { id: "k8", title: "Kargo anlaşmasını yenile", tags: [{ label: "Kargo", tone: "neutral" }], assignee: { name: TEAM[3].name }, due: "2026-11-01" },
     ],
   },
@@ -1089,7 +1089,7 @@ function VeriGroup() {
       </Cell>
       <Cell file="tree-view" name="Ağaç Görünümü" note="Klasör ağacı; oklar, Home/End ve yazarak arama." span={2} align="stretch">
         <TreeView
-          aria-label="Kavurma Reçeteleri"
+          aria-label="Kavurma Profilleri"
           defaultExpanded={["espresso"]}
           selectedId="kiyi"
           nodes={[
@@ -1107,7 +1107,7 @@ function VeriGroup() {
           ]}
         />
       </Cell>
-      <Cell file="timeline" name="Zaman Çizelgesi" note="Tarihli olaylar; nokta kendi tonunun yıkamasında." span={2} align="stretch">
+      <Cell file="timeline" name="Zaman Çizelgesi" note="Tarihli olaylar; nokta kendi tonunun açık zemininde." span={2} align="stretch">
         <Timeline events={ORDER_TIMELINE} />
       </Cell>
       <Cell file="sparkline" name="Mini Grafik" note="Eksensiz eğilim; tablo satırında yer kaplamaz." span={2} align="stretch">
@@ -1156,12 +1156,12 @@ function GeriGroup() {
   const [deleted, setDeleted] = useState(false);
   return (
     <CellGrid>
-      <Cell file="banner-alert" name="Uyarı Satırı" note="Dört ton yıkama zeminde; ikon, başlık, eylem. Tek kenar şeridi yok." span={4} align="stretch">
+      <Cell file="banner-alert" name="Uyarı Satırı" note="Dört ton, açık zeminde; ikon, başlık, eylem. Tek kenar şeridi yok." span={4} align="stretch">
         <div className="grid gap-3">
           <BannerAlert
             tone="warning"
             title="Urla Bağ Evi Teslimatı Bir Gün Gecikti"
-            description="Seferihisar aktarmasında bekledi; yeni tahmin 3 Kasım öğleden önce."
+            description="Çiğli aktarma merkezinde bekledi; yeni tahmin 3 Kasım öğleden önce."
             actions={
               <Button variant="secondary" size="sm">
                 Kafeye Haber Ver
@@ -1169,13 +1169,13 @@ function GeriGroup() {
             }
           />
           <BannerAlert tone="success" title="Ekim Kapanışı Tamamlandı" description="214 fatura eşleşti, fark yok." />
-          <BannerAlert tone="info" title="Yeşil Çekirdek Kuru Her Gün 15.30'da Güncellenir" />
+          <BannerAlert tone="info" title="Yeşil Çekirdek Fiyatları Her Gün 15.30'da Güncellenir" />
         </div>
       </Cell>
       <Cell file="meter" name="Ölçer" note="Doluluk; eşikte ton ve durum metni birlikte değişir." span={2} align="stretch">
         <div className="grid gap-6">
           <Meter label="Çekirdek Deposu" value={3.4} max={4} valueText="3,4 / 4 ton" />
-          <Meter label="Kavurma Kapasitesi" value={1147} max={1600} valueText="1.147 / 1.600 kg" />
+          <Meter label="Kavurucu Kapasitesi" value={1147} max={1600} valueText="1.147 / 1.600 kg" />
           <SegmentedMeter
             size="lg"
             label="Depo Dağılımı"
@@ -1248,7 +1248,7 @@ function GeriGroup() {
       <Cell file="announcement" name="Duyuru" note="Kahramanın üstünde tek satırlık haber; hap tek bağlantı." span={3}>
         <div className="grid justify-items-center gap-3">
           <Announcement href="#grafikler" tag="Yeni">
-            Kavurma Raporu Panoda
+            Kavurucu Raporu Panoda
           </Announcement>
           <Announcement href="#tema" tag="Sürüm 3.0">
             On Palet, İki Tema
@@ -1262,10 +1262,10 @@ function GeriGroup() {
 /* --- Gezinme ------------------------------------------------------------- */
 
 const SLIDES = [
-  { tag: "Kasım Kahvesi", title: "Etiyopya Guji", body: "Şeftali, yasemin, bal. Açık kavrum, filtre için.", series: "bg-chart-2/30" },
+  { tag: "Kasım Kahvesi", title: "Etiyopya Guji", body: "Şeftali, yasemin, bal. Açık kavrulma, filtre için.", series: "bg-chart-2/30" },
   { tag: "Harman", title: "Kıyı Harmanı", body: "Fındık ve sütlü çikolata; espressoda kremalı.", series: "bg-chart-3/30" },
-  { tag: "Sınırlı Parti", title: "Kenya Nyeri AA", body: "Frenk üzümü ve greyfurt; yalnızca 60 paket.", series: "bg-chart-4/30" },
-  { tag: "Kafeler İçin", title: "Gece Harmanı", body: "Koyu kavrum, sütle güçlü; 5 kg toptan torba.", series: "bg-chart-1/30" },
+  { tag: "Sınırlı Lot", title: "Kenya Nyeri AA", body: "Frenk üzümü ve greyfurt; yalnızca 60 paket.", series: "bg-chart-4/30" },
+  { tag: "Kafeler İçin", title: "Gece Harmanı", body: "Koyu kavrulma, sütle güçlü; 5 kg toptan torba.", series: "bg-chart-1/30" },
 ];
 
 const PEAK = ROAST_WEEK.reduce((a, d) => (d.value > a.value ? d : a));
@@ -1301,8 +1301,8 @@ function GezinmeGroup() {
         <Tabs
           aria-label="Atölye Bölümleri"
           items={[
-              { value: "genel", label: "Genel", panel: <Facts items={[["Kavrum", `${num.format(ROAST_TOTAL)} kg`], ["Web Siparişi", num.format(OCTOBER_ORDERS)], ["Abone", num.format(SUBSCRIBERS)]]} /> },
-            { value: "kavurma", label: "Kavurma", panel: <Facts items={[["En Yoğun Gün", "Perşembe"], ["O Gün", `${num.format(PEAK.value)} kg`], ["Parti", "44"]]} /> },
+              { value: "genel", label: "Genel", panel: <Facts items={[["Kavrulan", `${num.format(ROAST_TOTAL)} kg`], ["Web Siparişi", num.format(OCTOBER_ORDERS)], ["Abone", num.format(SUBSCRIBERS)]]} /> },
+            { value: "kavrum", label: "Kavurucu", panel: <Facts items={[["En Yoğun Gün", "Perşembe"], ["O Gün", `${num.format(PEAK.value)} kg`], ["Lot", "44"]]} /> },
             { value: "toptan", label: "Toptan", panel: <Facts items={[["Kafe", num.format(CAFES.length)], ["Ort. Sipariş", "18 kg"], ["Geciken", "1"]]} /> },
           ]}
         />
@@ -1336,7 +1336,7 @@ function GezinmeGroup() {
       <Cell file="accordion" name="Açılır Bölümler" note="Yerel details; Ctrl+F kapalı içeriği de bulur." span={2} align="stretch">
         <Accordion variant="well" className="bg-transparent p-0">
           <AccordionItem title="Kahve Ne Kadar Taze?" defaultOpen exclusive="sss">
-            Sipariş gelince kavrulur; paket kavurmadan en geç iki gün sonra yola çıkar.
+            Sipariş gelince kavrulur; paket kavrulduktan en geç iki gün sonra yola çıkar.
           </AccordionItem>
           <AccordionItem title="Toptan En Az Ne Kadar?" exclusive="sss">
             Kafeler için en az 12 paket ya da 5 kg torba.

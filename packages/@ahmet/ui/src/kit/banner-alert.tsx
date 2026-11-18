@@ -6,13 +6,13 @@ import { cn } from "../utils";
 
 /**
  * Sayfa içi uyarı satırı: bir BÖLÜMÜN durumu (ödeme bilgisi eksik, deneme
- * süresi bitiyor, senkron başarısız). Geçici sonuç bildirimi değil (o
+ * süresi bitiyor, eşitleme başarısız). Geçici sonuç bildirimi değil (o
  * `toast`), kullanıcıyı durduran soru değil (o `dialog`).
  *
  * TON ZEMİNLE KURULUR, ŞERİTLE DEĞİL. Kartın tek kenarına renkli şerit
  * (`border-l-4`) yapay zekâ çıktısının en tanınır izi (rules/design-tokens
  * → AI-Slop). Burada tonu `*-wash` zemin, dört yanda aynı tonun çok
- * soluk kıl çizgisi ve ikon rengi taşır; başlık ve metin `text-strong` /
+ * soluk ince çizgisi ve ikon rengi taşır; başlık ve metin `text-strong` /
  * `text-body` kalır (renkli gövde metni wash üstünde AA tutmaz).
  *
  * İKON TONA GÖRE DEĞİŞİR: renk tek işaret değil. Bilgi `Info`, başarı

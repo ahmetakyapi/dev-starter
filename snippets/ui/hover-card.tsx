@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * girilmez. Kartın içine "Takip Et" gibi tek yolu olan bir eylem koyma;
  * eylem bağlantının gittiği sayfada.
  *
- * GÖRÜNÜŞ ("board" dili): beyaz karo `bg-overlay` + kıl çizgisi +
+ * GÖRÜNÜŞ ("board" dili): beyaz karo `bg-overlay` + ince çizgisi +
  * `shadow-modal`, `rounded-xl`; istatistikler gri kuyu içinde (`bg-surface`
  * şeridi, kart içinde kart değil: tek seviye). Giriş 0,96'dan ölçek +
  * opaklık, kaynağı tetikleyici; hareket azaltmada yalnız opaklık.

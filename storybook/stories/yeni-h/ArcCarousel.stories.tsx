@@ -11,7 +11,7 @@ const ITEMS = WALLPAPER_SCENES.map((scene, i) => ({
 }));
 
 const meta = {
-  title: "Bileşenler/Tanıtım/Kavisli Galeri",
+  title: "Bileşenler/Pazarlama/Kavisli Galeri",
   id: "arc-carousel",
   component: ArcCarousel,
   tags: ["autodocs", "yeni"],

@@ -27,7 +27,7 @@ const meta = {
     min: 1,
     max: 12,
     step: 1,
-    hint: "Bebekler sayılmaz.",
+    hint: "2 yaş altı çocuklar sayıya dahil değildir.",
     disabled: false,
     onValueChange: fn(),
   },

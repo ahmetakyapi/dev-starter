@@ -139,7 +139,7 @@ function AnalitikPanosu({ baslangicDonemi = "ay" }: { baslangicDonemi?: Donem })
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4 px-1">
           <div>
-            <p className="text-small font-medium text-muted">Kuzey Ev Tekstil · Mağaza</p>
+            <p className="text-small font-medium text-muted">Pera Market · Mağaza</p>
             <h1 className="mt-1 text-heading font-semibold tracking-tight text-strong">Analitik</h1>
             <p className="mt-1 text-small text-muted">{ALT_BASLIK[donem]}</p>
           </div>

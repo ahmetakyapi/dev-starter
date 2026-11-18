@@ -143,7 +143,7 @@ export const AllVariants: Story = {
         </ChartCard>
       </GrafikHucre>
       <GrafikHucre label="Düşüş">
-        <ChartCard id="v-dusus" label="Sepeti Terk" value="%68,4" change={-3.1}>
+        <ChartCard id="v-dusus" label="Terk Edilen Sepet" value="%68,4" change={-3.1}>
           <p className="text-small text-muted">Grafik alanı</p>
         </ChartCard>
       </GrafikHucre>
