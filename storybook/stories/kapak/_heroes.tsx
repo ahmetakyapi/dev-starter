@@ -14,7 +14,7 @@
  * satır içi), üstüne gelince önizler, tıklayınca kataloğa geçer; hareket
  * azaltmada ve otomasyonda tur ve hareket kapalı.
  */
-import { ArrowRight, Check, Pause, Play } from "lucide-react";
+import { ArrowRight, Bell, Check, FileText, Pause, Play, Search, Star } from "lucide-react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { AvatarGroup } from "@/components/ui/avatar";
@@ -897,9 +897,15 @@ const LANTERN_CSS = `
 .hx-skel * { color: transparent !important; box-shadow: none !important; border-color: transparent !important; background-image: none !important; background-color: transparent !important; }
 .hx-skel :where(*):not(:has(*)) { background-color: var(--skel) !important; border-radius: .45rem; }
 .hx-skel .hx-tile { background-color: transparent !important; outline: 1px solid var(--skel-line); outline-offset: -1px; }
+.hx-wire * { color: transparent !important; box-shadow: none !important; background: transparent !important; border-color: transparent !important; }
+.hx-wire .hx-frame :where(*) { outline: 1px dashed var(--wire); outline-offset: -1px; border-radius: .35rem; }
+.hx-wire .hx-frame { outline: 1px solid var(--wire); outline-offset: -1px; }
+.hx-wire .hx-frame > :first-child, .hx-wire .hx-frame > :first-child * { outline: none; }
+.hx-wire span:not(.hx-frame *) { color: var(--wire) !important; }
+.hx-faint { opacity: .14; filter: grayscale(1) blur(.3px); }
 .hx-night { color-scheme: dark; --page-bg: #0b0b0d; --surface: rgb(255 255 255 / .04); --surface-raised: rgb(255 255 255 / .07); --overlay: #17171a; --text-strong: #f4f4f5; --text-body: #a3a3a8; --text-soft: #a3a3a8; --text-muted: #85858b; --line: rgb(255 255 255 / .08); --line-soft: rgb(255 255 255 / .05); --line-strong: rgb(255 255 255 / .14); --success: #3ddc97; --success-wash: rgb(61 220 151 / .12); --chart-track: rgb(255 255 255 / .08); background-color: var(--page-bg); color: var(--text-body); }`;
 
-function LanternStage({ t, palette, theme, night }: { t: Tour; palette: PaletteName; theme: ThemeName; night: boolean }) {
+function LanternStage({ t, palette, theme, night, layer, base = "skel" }: { t: Tour; palette: PaletteName; theme: ThemeName; night: boolean; layer?: ReactNode; base?: "skel" | "wire" | "faint" }) {
   const stage = useRef<HTMLDivElement>(null);
   const [lit, setLit] = useState(false);
   useEffect(() => {
@@ -949,7 +955,7 @@ function LanternStage({ t, palette, theme, night }: { t: Tour; palette: PaletteN
       })}
     </div>
   );
-  const vars = night ? ({ ...paletteVars(t.shown, "dark"), "--skel": "rgb(255 255 255 / .07)", "--skel-line": "rgb(255 255 255 / .06)" } as CSSProperties) : ({ "--skel": "color-mix(in oklab, var(--text-strong) 7%, transparent)", "--skel-line": "color-mix(in oklab, var(--text-strong) 6%, transparent)" } as CSSProperties);
+  const vars = night ? ({ ...paletteVars(t.shown, "dark"), "--skel": "rgb(255 255 255 / .07)", "--skel-line": "rgb(255 255 255 / .06)", "--wire": "rgb(255 255 255 / .12)" } as CSSProperties) : ({ "--skel": "color-mix(in oklab, var(--text-strong) 7%, transparent)", "--skel-line": "color-mix(in oklab, var(--text-strong) 6%, transparent)", "--wire": "color-mix(in oklab, var(--primary) 30%, transparent)" } as CSSProperties);
   return (
     <div
       ref={stage}
@@ -962,8 +968,8 @@ function LanternStage({ t, palette, theme, night }: { t: Tour; palette: PaletteN
         {LANTERN_CSS}
       </style>
       {/* İskelet katmanı: her yerde, sakin. */}
-      <div aria-hidden className="hx-skel pointer-events-none absolute inset-x-8 top-10 -z-10 hidden md:block">
-        {grid}
+      <div aria-hidden className={cn(`hx-${base} pointer-events-none absolute -z-10 hidden md:block`, layer ? "inset-0" : "inset-x-8 top-10")}>
+        {layer ?? grid}
       </div>
       {/* Işık: gece sahnesinde sıcak, gündüz paletin yıkaması; mercekten geniş ve yumuşak. */}
       <div
@@ -972,8 +978,8 @@ function LanternStage({ t, palette, theme, night }: { t: Tour; palette: PaletteN
         style={{ background: night ? `radial-gradient(${R * 1.5}px circle at var(--fx) var(--fy), color-mix(in oklab, var(--accent-warm, #d3a04a) 22%, transparent), color-mix(in oklab, var(--primary) 10%, transparent) 45%, transparent 72%)` : `radial-gradient(${R * 1.4}px circle at var(--fx) var(--fy), var(--primary-wash), transparent 70%)` }}
       />
       {/* Bileşen katmanı: yalnız merceğin içinde. */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-8 top-10 -z-10 hidden md:block" style={{ maskImage: lens, WebkitMaskImage: lens }}>
-        {grid}
+      <div aria-hidden className={cn("pointer-events-none absolute -z-10 hidden md:block", layer ? "inset-0" : "inset-x-8 top-10")} style={{ maskImage: lens, WebkitMaskImage: lens }}>
+        {layer ?? grid}
       </div>
       {/* Mercek halkası: imleci izleyen ince çizgi. */}
       <div
@@ -1030,4 +1036,103 @@ export function HeroNight({ palette, theme, onPalette, showcase }: HeroProps) {
   );
 }
 
-export const HEROES = { ...HEROES_FJ, k: HeroMuseum, l: HeroCard, h2: HeroSkeleton, h3: HeroNight } as const;
+
+/* ── Fener arka planları: B1 Mozaik, B2 Plan Çizimi, B3 Tasarım Föyü ────────
+   Aynı mercek; değişen yalnız arka planın İÇERİĞİ. Parçalar elle yerleşir:
+   başlığın çevresi (orta sütun) boş, iki yan bant ve köşeler dolu. */
+type Spot = { x: number; y: number; node: ReactNode; w?: number };
+function Spots({ items }: { items: Spot[] }) {
+  return (
+    <>
+      {items.map((s, i) => (
+        <div key={i} className="absolute" style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.w }}>
+          {s.node}
+        </div>
+      ))}
+    </>
+  );
+}
+const Card = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <div className={cn("hx-tile rounded-[1rem] bg-overlay p-3 shadow-raised ring-1 ring-inset ring-line-soft", className)}>{children}</div>
+);
+
+/* B1 · Mozaik: on altı farklı parça, hiçbiri tekrar etmez. */
+const MOSAIC: Spot[] = [
+  { x: 3, y: 9, node: <Card><div className="grid grid-cols-7 gap-1 text-center text-[0.6rem] text-muted">{["P", "S", "Ç", "P", "C", "C", "P"].map((d, i) => <span key={i}>{d}</span>)}{Array.from({ length: 21 }, (_, i) => <span key={`d${i}`} className={cn("grid size-5 place-items-center rounded-md", i === 9 ? "bg-primary text-on-primary" : "text-body")}>{i + 1}</span>)}</div></Card> },
+  { x: 19, y: 6, node: <Card className="w-44"><div className="grid gap-2 text-left"><span className="text-small font-semibold text-strong">Fiyat listesini güncelle</span><span className="flex items-center justify-between"><span className="rounded-full bg-primary-wash px-2 py-0.5 text-micro font-semibold text-primary-ink">Satış</span><AvatarGroup size="sm" label="Atanan" people={[{ name: "Mert Aksoy" }]} /></span></div></Card> },
+  { x: 2, y: 40, node: <Card><span className="flex items-center gap-2 text-small font-medium text-strong"><span className="grid size-6 place-items-center rounded-full bg-success-wash text-success"><Check className="size-3.5" strokeWidth={3} /></span>Değişiklik kaydedildi</span></Card> },
+  { x: 12, y: 29, node: <Card className="w-44"><svg viewBox="0 0 160 60" className="h-14 w-full" aria-hidden><polyline fill="none" className="stroke-primary" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" points="0,48 22,40 44,44 66,26 88,32 110,14 132,20 160,6" /></svg><span className="mt-1 block text-left text-micro text-muted">Son 7 gün · +%12</span></Card> },
+  { x: 4, y: 62, node: <Card><span className="flex gap-1.5">{["bg-primary", "bg-primary-soft", "bg-primary-wash", "bg-success", "bg-warning"].map((c) => <span key={c} className={cn("size-7 rounded-lg", c)} />)}</span></Card> },
+  { x: 16, y: 54, node: <Card className="w-44"><span className="grid gap-2 text-left"><span className="flex justify-between text-micro text-muted"><span>Ses</span><span>64</span></span><span className="relative h-1.5 rounded-full bg-surface"><span className="absolute inset-y-0 left-0 w-[64%] rounded-full bg-primary" /><span className="absolute top-1/2 left-[64%] size-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-overlay shadow-raised ring-1 ring-line" /></span></span></Card> },
+  { x: 8, y: 80, node: <Card><span className="flex gap-1 rounded-lg bg-surface p-1 text-small">{["Genel", "Ekip", "Fatura"].map((x, i) => <span key={x} className={cn("rounded-md px-2.5 py-1", i === 1 ? "bg-overlay font-semibold text-strong shadow-raised" : "text-muted")}>{x}</span>)}</span></Card> },
+  { x: 76, y: 7, node: <Card><span className="flex items-center gap-3"><AvatarGroup size="sm" label="Ekip" people={[{ name: "Zeynep Kaya" }, { name: "Selin Arslan" }, { name: "Can Demir" }]} /><span className="text-left text-micro leading-tight text-muted"><b className="block text-small text-strong">3 kişi</b>şu an burada</span></span></Card> },
+  { x: 86, y: 22, node: <Card><span className="flex items-center gap-2 text-small"><FileText className="size-4 text-primary" /><span className="text-strong">rapor.pdf</span><span className="text-muted">2,4 MB</span></span></Card> },
+  { x: 74, y: 30, node: <Card className="w-48"><span className="flex items-center gap-2 rounded-lg bg-surface px-2.5 py-2 text-small text-muted ring-1 ring-inset ring-line"><Search className="size-4" />Bileşen ara</span></Card> },
+  { x: 87, y: 42, node: <Card><span className="flex gap-0.5 text-warning">{Array.from({ length: 5 }, (_, i) => <Star key={i} className={cn("size-4", i < 4 && "fill-current")} />)}</span></Card> },
+  { x: 76, y: 50, node: <Card><span className="flex items-center gap-3"><svg viewBox="0 0 36 36" className="size-11 -rotate-90" aria-hidden><circle cx="18" cy="18" r="15" fill="none" className="stroke-surface" strokeWidth="4" /><circle cx="18" cy="18" r="15" fill="none" className="stroke-primary" strokeWidth="4" strokeDasharray="94" strokeDashoffset="28" strokeLinecap="round" /></svg><span className="text-left text-micro leading-tight text-muted"><b className="block text-small text-strong">%70</b>tamamlandı</span></span></Card> },
+  { x: 88, y: 62, node: <Card><span className="flex flex-wrap gap-1.5">{["Kargo", "Fatura"].map((x) => <span key={x} className="rounded-full bg-primary-wash px-2.5 py-1 text-micro font-semibold text-primary-ink">{x}</span>)}</span></Card> },
+  { x: 74, y: 68, node: <Card className="w-52"><pre className="text-left font-mono text-[0.65rem] leading-5 text-body"><span className="text-primary-ink">--primary</span>: <span className="text-strong">#0D74C4</span>;{"\n"}<span className="text-primary-ink">--radius</span>: <span className="text-strong">12px</span>;</pre></Card> },
+  { x: 86, y: 80, node: <Card><span className="flex items-center gap-2 text-small"><span className="relative grid size-7 place-items-center rounded-full bg-primary-wash text-primary-ink"><Bell className="size-3.5" /><span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-danger" /></span><span className="text-strong">2 yeni talep</span></span></Card> },
+  { x: 72, y: 86, node: <Card><span className="flex gap-1 text-small">{["‹", "1", "2", "3", "›"].map((x, i) => <span key={i} className={cn("grid size-7 place-items-center rounded-md", x === "2" ? "bg-primary text-on-primary" : "text-body")}>{x}</span>)}</span></Card> },
+];
+
+/* B2 · Plan Çizimi: altı küçük ekran taslağı; sakinken kesikli çizgi, ışıkta dolu. */
+function Frame({ kind }: { kind: number }) {
+  const bar = <div className="flex h-4 items-center gap-1 px-2"><span className="size-1.5 rounded-full bg-line-strong" /><span className="size-1.5 rounded-full bg-line-strong" /><span className="size-1.5 rounded-full bg-line-strong" /></div>;
+  const bodies: ReactNode[] = [
+    <div key="pano" className="grid grid-cols-3 gap-1.5 p-2"><span className="h-9 rounded-md bg-primary-wash" /><span className="h-9 rounded-md bg-surface" /><span className="h-9 rounded-md bg-surface" /><span className="col-span-3 flex h-14 items-end gap-1 rounded-md bg-surface p-1.5">{[30, 55, 40, 70, 50, 85, 65].map((h, i) => <span key={i} className={cn("flex-1 rounded-sm", i === 5 ? "bg-primary" : "bg-primary-wash")} style={{ height: `${h}%` }} />)}</span></div>,
+    <div key="gelen" className="grid grid-cols-[3rem_1fr] gap-1.5 p-2"><div className="grid gap-1">{[0, 1, 2, 3].map((i) => <span key={i} className={cn("h-3 rounded-sm", i === 0 ? "bg-primary-wash" : "bg-surface")} />)}</div><div className="grid gap-1">{[0, 1, 2, 3, 4].map((i) => <span key={i} className="flex h-3.5 items-center gap-1 rounded-sm bg-surface px-1"><span className={cn("size-1.5 rounded-full", i < 2 ? "bg-primary" : "bg-line-strong")} /><span className="h-1 flex-1 rounded-full bg-line" /></span>)}</div></div>,
+    <div key="takvim" className="grid grid-cols-7 gap-1 p-2">{Array.from({ length: 28 }, (_, i) => <span key={i} className={cn("h-4 rounded-sm", i === 10 || i === 17 ? "bg-primary" : i % 6 === 0 ? "bg-primary-wash" : "bg-surface")} />)}</div>,
+    <div key="kanban" className="grid grid-cols-3 gap-1.5 p-2">{[3, 2, 1].map((n, c) => <div key={c} className="grid content-start gap-1 rounded-md bg-surface p-1">{Array.from({ length: n }, (_, i) => <span key={i} className={cn("h-5 rounded-sm bg-overlay", c === 1 && i === 0 && "ring-1 ring-primary")} />)}</div>)}</div>,
+    <div key="sohbet" className="grid gap-1.5 p-2"><span className="h-5 w-3/4 rounded-lg bg-surface" /><span className="ml-auto h-5 w-2/3 rounded-lg bg-primary" /><span className="h-5 w-1/2 rounded-lg bg-surface" /><span className="mt-1 h-6 rounded-full bg-surface ring-1 ring-inset ring-line" /></div>,
+    <div key="ayar" className="grid gap-1.5 p-2">{[0, 1, 2, 3].map((i) => <span key={i} className="flex h-6 items-center justify-between rounded-md bg-surface px-1.5"><span className="h-1.5 w-1/2 rounded-full bg-line-strong" /><span className={cn("h-3 w-6 rounded-full", i % 2 ? "bg-line-strong" : "bg-primary")} /></span>)}</div>,
+  ];
+  const names = ["Pano", "Gelen Kutusu", "Takvim", "Görevler", "Asistan", "Ayarlar"];
+  return (
+    <div className="grid gap-1.5">
+      <div className="hx-frame hx-tile w-56 overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-inset ring-line-soft">
+        {bar}
+        {bodies[kind]}
+      </div>
+      <span className="pl-1 text-left font-mono text-micro text-muted">{names[kind]}</span>
+    </div>
+  );
+}
+const BLUEPRINT: Spot[] = [
+  { x: 3, y: 8, node: <Frame kind={0} /> },
+  { x: 8, y: 38, node: <Frame kind={1} /> },
+  { x: 2, y: 66, node: <Frame kind={2} /> },
+  { x: 78, y: 8, node: <Frame kind={3} /> },
+  { x: 73, y: 38, node: <Frame kind={4} /> },
+  { x: 79, y: 66, node: <Frame kind={5} /> },
+];
+
+/* B3 · Tasarım Föyü: dört yazı karakteri, renk, köşe, gölge, aralık. */
+const SPEC: Spot[] = [
+  { x: 4, y: 8, node: <span className="font-display text-[4.5rem] leading-none font-bold tracking-tight text-strong">Aa</span> },
+  { x: 4, y: 24, node: <span className="font-mono text-micro text-muted">Schibsted Grotesk · 700</span> },
+  { x: 16, y: 34, node: <span className={cn(SERIF, "text-[4rem] leading-none text-strong")}>Aa</span> },
+  { x: 16, y: 48, node: <span className="font-mono text-micro text-muted">Instrument Serif</span> },
+  { x: 3, y: 56, node: <span className="grid gap-1.5 text-left">{[["bg-primary", "--primary"], ["bg-primary-soft", "--primary-soft"], ["bg-primary-ink", "--primary-ink"]].map(([c, n]) => <span key={n} className="flex items-center gap-2 font-mono text-micro text-body"><span className={cn("size-5 rounded-md", c)} />{n}</span>)}</span> },
+  { x: 7, y: 80, node: <span className="flex items-end gap-2">{[4, 8, 12, 16, 24].map((r) => <span key={r} className="grid justify-items-center gap-1"><span className="size-8 bg-primary-wash ring-1 ring-inset ring-primary/40" style={{ borderRadius: r }} /><span className="font-mono text-[0.6rem] text-muted">{r}</span></span>)}</span> },
+  { x: 80, y: 8, node: <span className="font-sans text-[4.5rem] leading-none font-medium tracking-tight text-strong">Aa</span> },
+  { x: 80, y: 24, node: <span className="font-mono text-micro text-muted">Inter · 500</span> },
+  { x: 72, y: 34, node: <span className="font-mono text-[3.5rem] leading-none text-strong">Aa</span> },
+  { x: 72, y: 48, node: <span className="font-mono text-micro text-muted">JetBrains Mono</span> },
+  { x: 82, y: 56, node: <span className="flex gap-3">{["shadow-raised", "shadow-floating", "shadow-modal"].map((sh) => <span key={sh} className={cn("size-10 rounded-xl bg-overlay", sh)} />)}</span> },
+  { x: 74, y: 78, node: <span className="grid gap-1 text-left"><span className="flex items-end gap-1">{[4, 8, 12, 16, 24, 32].map((w) => <span key={w} className="h-6 rounded-sm bg-primary" style={{ width: w }} />)}</span><span className="font-mono text-[0.6rem] text-muted">aralık · 4 → 32</span></span> },
+];
+
+function LanternBg({ palette, theme, onPalette, showcase, layer, base }: HeroProps & { layer: Spot[]; base: "skel" | "wire" | "faint" }) {
+  const t = usePaletteTour(palette, theme, onPalette);
+  return (
+    <Shell t={t} showcase={showcase} className="justify-items-center">
+      <LanternStage t={t} palette={palette} theme={theme} night={false} base={base} layer={<Spots items={layer} />} />
+    </Shell>
+  );
+}
+export const HeroMosaic = (p: HeroProps) => <LanternBg {...p} layer={MOSAIC} base="skel" />;
+export const HeroBlueprint = (p: HeroProps) => <LanternBg {...p} layer={BLUEPRINT} base="wire" />;
+export const HeroSpec = (p: HeroProps) => <LanternBg {...p} layer={SPEC} base="faint" />;
+
+export const HEROES = { ...HEROES_FJ, k: HeroMuseum, l: HeroCard, h2: HeroSkeleton, h3: HeroNight, b1: HeroMosaic, b2: HeroBlueprint, b3: HeroSpec } as const;

@@ -55,8 +55,13 @@ const SHORT: Record<string, string> = {
 
 const CSS = `
 /* İçerik hizası: başlığın 72rem kabıyla aynı sol kenar; dar ekranda 1rem. */
-.ref-shelf { --gutter: max(1rem, calc((100% - 72rem) / 2)); }
-.ref-stage { scrollbar-width: none; padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
+/* Şerit içerik alanında kayar (ızgara görünümüyle aynı genişlik, max-w-6xl): eskiden tam genişlikti,
+   kaydırınca kartlar kenar çubuğunun dibine kadar gidiyordu (18 Kasım 2026). Kenarlardaki 1rem'lik
+   solma kartı kesik göstermez; dinlenirken ilk kart ızgaranın sol kenarıyla hizalı. */
+.ref-shelf { --gutter: 1rem; }
+.ref-stage { scrollbar-width: none; padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+  -webkit-mask-image: linear-gradient(to right, transparent, var(--text-strong) var(--gutter), var(--text-strong) calc(100% - var(--gutter)), transparent);
+  mask-image: linear-gradient(to right, transparent, var(--text-strong) var(--gutter), var(--text-strong) calc(100% - var(--gutter)), transparent); }
 .ref-stage::-webkit-scrollbar { display: none; }
 @supports (animation-timeline: view()) {
   .ref-dim { animation: ref-dim linear both; animation-timeline: view(inline); animation-range: entry 0% exit 100%; }
@@ -287,7 +292,7 @@ function Stage({ label, cards }: { label: string; cards: View[] }) {
     "grid size-11 place-items-center rounded-full bg-overlay text-strong shadow-raised ring-1 ring-line-soft transition-[opacity,scale,box-shadow] duration-200 hover:shadow-floating active:scale-95 aria-disabled:pointer-events-none aria-disabled:opacity-35";
 
   return (
-    <section aria-roledescription="carousel" aria-label={label} className="ref-shelf relative grid gap-2">
+    <section aria-roledescription="carousel" aria-label={label} className="ref-shelf relative mx-auto grid w-full max-w-6xl gap-2 sm:px-8 lg:px-12">
       <div
         ref={scroller}
         tabIndex={0}
@@ -422,7 +427,7 @@ function Archive() {
           {layout === "serit" ? (
             <Stage label={label} cards={cards} />
           ) : (
-            <ul aria-label={label} className="mx-auto grid w-full max-w-6xl gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
+            <ul aria-label={label} className="mx-auto grid w-full max-w-6xl gap-4 px-4 sm:grid-cols-2 sm:px-12 lg:grid-cols-3 lg:px-16">
               {cards.map((v, i) => (
                 <li key={v.id} className="flex">
                   <Card v={v} index={i} total={cards.length} fluid />
