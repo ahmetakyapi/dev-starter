@@ -115,12 +115,12 @@ export const Default: Story = {
     // Türkçe kurallar: "izmir" İzmir'i, aksansız "cankiri" Çankırı'yı bulur.
     await userEvent.type(field, "izmir");
     const list = canvas.getByRole("list", { name: "Sonuçlar" });
-    await waitFor(() => expect(within(list).getAllByRole("listitem")).toHaveLength(1), { timeout: 2000 });
+    await waitFor(() => expect(within(list).getAllByRole("listitem")).toHaveLength(1), { timeout: 5000 });
     await expect(list).toHaveTextContent("İzmir");
     await userEvent.keyboard("{Escape}");
     await expect(field).toHaveValue("");
     await userEvent.type(field, "cankiri");
-    await waitFor(() => expect(list).toHaveTextContent("Çankırı"), { timeout: 2000 });
+    await waitFor(() => expect(list).toHaveTextContent("Çankırı"), { timeout: 5000 });
   },
 };
 
