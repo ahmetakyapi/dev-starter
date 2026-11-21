@@ -38,6 +38,7 @@ import {
 import { IconButton } from "@/components/ui/icon-button";
 import { IntegrationCard } from "@/components/ui/integration-card";
 import { PermissionList, type Permission } from "@/components/ui/permission-list";
+import { PolicyChecks } from "@/components/ui/policy-checks";
 import { SearchField, matchesTr } from "@/components/ui/search-field";
 import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
@@ -474,6 +475,14 @@ export function EntegrasyonlarPage({ initialDetail }: { initialDetail?: AppId })
               title="BÜLTENCİ ŞUNLARI YAPABİLECEK"
               items={connecting.scopes}
               footnote={`${connecting.name} sayfasında yetkilendirme (OAuth) ile güvenle bağlanır.`}
+            />
+            <PolicyChecks
+              title="Bağlanmadan Önce"
+              checks={[
+                { id: "yetki", label: "Yetkilendirme (OAuth) ile bağlanır", detail: "Parola paylaşılmaz.", state: "pass" },
+                { id: "kapsam", label: `${connecting.scopes.length} izin istenecek`, detail: "Ayrıntıdan her an geri alınır.", state: connecting.scopes.length > 3 ? "warn" : "pass" },
+                { id: "para", label: isPayment(connecting) ? "Para birimi seçili" : "Eşitleme aralığı hazır", state: "pass" },
+              ]}
             />
             {isPayment(connecting) ? (
               <>

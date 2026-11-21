@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "policy-checks",
+  "type": "registry:ui",
+  "title": "Politika Kontrolleri",
+  "description": "Talebin onaydan önce geçtiği otomatik denetimler: satır başına geçti/uyarı/başarısız + sağda kısa gerekçe; özet satırı kontrollerden türer",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/policy-checks.tsx",
+      "content": "import { Check, TriangleAlert, X } from \"lucide-react\";\nimport type { ElementType, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Politika kontrolleri: bir talebin onaydan ÖNCE geçtiği otomatik denetimler\n * (\"Bütçe içinde\", \"Onaylı satıcı\", \"Mevcut aracı kopyalıyor\"). Her satır tek\n * durum (geçti, uyarı, başarısız) ve sağda kısa gerekçe. Onaylayan kişi\n * ayrıntı panelinde \"neden güvenli ya da şüpheli\" sorusunu satırlara bakarak\n * yanıtlar. Spendix onay kuyruğunun \"Policy checks\" bloğundan alındı (yapı;\n * kod, metin, görsel alınmadı).\n *\n * `state`: `pass` onay işareti, `warn` üçgen, `fail` çarpı. Durum RENK TEK\n * İŞARET DEĞİL: üç ikonun şekli farklı ve her satırda ekran okuyucuya\n * \"Geçti:\", \"Uyarı:\" ya da \"Başarısız:\" öneki okunur (görünmez). Renk\n * (`success`, `warning`, `danger`) yalnız ikonda.\n *\n * ÖZET satırı kontrollerden TÜRER: \"2 / 3 kontrol temiz · 1 uyarı\"; elle\n * yazılan özet (`summary`) listeyle çelişebilir, bu yüzden yalnız ek bir cümle\n * (ör. \"Onay için başka koşul yok\") için verilir ve türeyen satırın yanına\n * eklenir. Boş listede özet yazılmaz.\n *\n * `headingLevel`: başlık düzeyi (varsayılan 3). `title` verilmezse başlık\n * çizilmez (üst bileşen kendi başlığını koyar). Sunucu bileşeni; `ul` +\n * `role=\"list\"` (Safari liste semantiğini korusun).\n *\n *   <PolicyChecks title=\"Politika Kontrolleri\" checks={[\n *     { id: \"butce\", label: \"Pazarlama bütçesi içinde\", detail: \"₺3.860 kalıyor\", state: \"pass\" },\n *     { id: \"kopya\", label: \"Mevcut aracı kopyalıyor\", detail: \"1 koltuk kayıtlı\", state: \"warn\" },\n *   ]} />\n */\n\nexport type CheckState = \"pass\" | \"warn\" | \"fail\";\n\nconst STATE = {\n  pass: { Icon: Check, label: \"Geçti\", ink: \"text-success\" },\n  warn: { Icon: TriangleAlert, label: \"Uyarı\", ink: \"text-warning\" },\n  fail: { Icon: X, label: \"Başarısız\", ink: \"text-danger\" },\n} as const;\n\nexport type PolicyCheck = { id: string; label: ReactNode; detail?: ReactNode; state: CheckState };\n\nexport function PolicyChecks({\n  checks,\n  title,\n  summary,\n  headingLevel = 3,\n  className,\n}: {\n  checks: readonly PolicyCheck[];\n  title?: ReactNode;\n  /** Türeyen özetin yanına eklenen cümle. */\n  summary?: ReactNode;\n  headingLevel?: 2 | 3 | 4;\n  className?: string;\n}) {\n  const H = `h${headingLevel}` as ElementType;\n  const clean = checks.filter((c) => c.state === \"pass\").length;\n  const warns = checks.filter((c) => c.state === \"warn\").length;\n  const fails = checks.filter((c) => c.state === \"fail\").length;\n  const derived = `${clean} / ${checks.length} kontrol temiz${warns ? ` · ${warns} uyarı` : \"\"}${fails ? ` · ${fails} başarısız` : \"\"}`;\n  return (\n    <section className={cn(\"min-w-0\", className)}>\n      {title || checks.length > 0 ? (\n        <div className=\"flex flex-wrap items-center justify-between gap-x-3 gap-y-1\">\n          {title ? <H className=\"text-read font-semibold text-strong\">{title}</H> : <span />}\n          {checks.length > 0 ? (\n            <p className=\"text-small text-muted\">\n              {derived}\n              {summary ? <> · {summary}</> : null}\n            </p>\n          ) : null}\n        </div>\n      ) : null}\n      <ul role=\"list\" className=\"mt-1 divide-y divide-line-soft\">\n        {checks.map((c) => {\n          const s = STATE[c.state];\n          return (\n            <li key={c.id} className=\"flex items-center gap-2.5 py-2.5 text-base\">\n              <s.Icon aria-hidden strokeWidth={2.25} className={cn(\"size-4 shrink-0\", s.ink)} />\n              <span className=\"min-w-0 flex-1 text-strong\">\n                <span className=\"sr-only\">{s.label}: </span>\n                {c.label}\n              </span>\n              {c.detail ? <span className=\"shrink-0 text-end text-small text-muted tabular-nums\">{c.detail}</span> : null}\n            </li>\n          );\n        })}\n      </ul>\n    </section>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Geri Bildirim"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "policy-checks",
+    "palettes": false
+  }
+}

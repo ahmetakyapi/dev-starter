@@ -6,6 +6,8 @@ import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { GaugeChart } from "@/components/ui/gauge-chart";
+import { ImpactBar } from "@/components/ui/impact-bar";
+import { InsightCallout } from "@/components/ui/insight-callout";
 import { RegionMap, type MapRegion } from "@/components/ui/region-map";
 import { StatusList } from "@/components/ui/status-list";
 import { TreeTable, type TreeTableRow } from "@/components/ui/tree-table";
@@ -218,9 +220,9 @@ function TransformerDetail({ id, go }: { id: string; go: PageProps["go"] }) {
       </div>
 
       {outage ? (
-        <p role="status" className="flex flex-wrap items-center gap-2 rounded-xl bg-danger-wash px-4 py-3 text-base text-strong ring-1 ring-danger/30">
-          <Zap aria-hidden className="size-4 text-danger" /> Bu trafo, <a href={href("outages", { id: outage.id })} className="font-semibold underline-offset-2 hover:underline">{outage.id}</a> arızasının içinde: {fmtNum(outage.affected)} abone enerjisiz.
-        </p>
+        <InsightCallout kind="warning" label="Açık Arıza" title={`${outage.id} Arızasının İçinde`} headingLevel={3} icon={Zap}>
+          Bu trafo <a href={href("outages", { id: outage.id })} className="font-semibold underline-offset-2 hover:underline">{outage.id}</a> arızasının içinde: {fmtNum(outage.affected)} abone enerjisiz.
+        </InsightCallout>
       ) : null}
 
       <div className="grid gap-5 lg:grid-cols-5">
@@ -228,7 +230,12 @@ function TransformerDetail({ id, go }: { id: string; go: PageProps["go"] }) {
           <div className="grid gap-3 p-4 sm:p-5">
             <GaugeChart title={`${t.name} doluluğu`} parts={[{ label: "Doluluk", value: pct, series: 1 }]} max={Math.max(100, pct)} label="Doluluk" />
             <p className="text-center text-small text-muted"><Badge tone={tone} dot>{TONE_LABEL[tone]}</Badge> · yük {fmtDec(l?.loadKw ?? 0)} kW · bağlı {fmtNum(l?.connectedKva ?? 0)} kVA</p>
-            {pct >= LIMIT ? <p className="rounded-lg bg-danger-wash p-3 text-small text-strong">Doluluk %{LIMIT} sınırının üstünde. {transfer ? `Yük aktarımı için aynı fiderdeki ${transformer(transfer.id).name} (${fmtPct(transfer.loadPct)}) uygun görünüyor.` : "Aynı fiderde aktarım için boş trafo yok."}</p> : null}
+            <ImpactBar label="Kapasite Kullanımı" current={l?.loadKw ?? 0} added={0} limit={t.kva * 0.9} warnAt={LIMIT} format={(n) => `${fmtDec(n, 0)} kW`} />
+            {pct >= LIMIT ? (
+              <InsightCallout kind="warning" label="Öneri" title="Yük Dengeleme Öner" headingLevel={3}>
+                Doluluk %{LIMIT} sınırının üstünde. {transfer ? `Yük aktarımı için aynı fiderdeki ${transformer(transfer.id).name} (${fmtPct(transfer.loadPct)}) uygun görünüyor.` : "Aynı fiderde aktarım için boş trafo yok."}
+              </InsightCallout>
+            ) : null}
           </div>
         </Panel>
         <Panel id="trafo-egri" title="24 Saatlik Yük" note={`Tepe saat ${String(peakHour).padStart(2, "0")}:00 · kapasiteye oran (%)`} className="lg:col-span-3">

@@ -7,7 +7,11 @@ import { Button } from "@/components/ui/Button";
 import { Combobox, type ComboboxItem } from "@/components/ui/combobox";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { FactorList } from "@/components/ui/factor-list";
 import { FileDropzone } from "@/components/ui/file-dropzone";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
+import { ValueDiff } from "@/components/ui/value-diff";
 import { Input } from "@/components/ui/input";
 import { KanbanBoard, type KanbanCard, type KanbanColumn } from "@/components/ui/kanban-board";
 import { LineChart } from "@/components/ui/line-chart";
@@ -208,7 +212,7 @@ export function KacakPage({ params, go }: PageProps) {
         <Panel id="kacak-dtr" title="Trafo Bazında Açık Vaka" note="Açık vakaların bağlı olduğu dağıtım trafoları: kayıp-kaçak kümelenmesi.">
           <div className="p-4 sm:p-5">
             {trRows.length ? <BarTarget aria-label="Trafoya Göre Açık Kaçak Vakası" format={(v) => `${fmtNum(v)} vaka`} rows={trRows} /> : <EmptyStateX title="Trafo Bağlı Vaka Yok" hint="Açık vakaların sayaçları bir dağıtım trafosuna bağlı değil." />}
-            <p className="mt-3 text-small text-muted">Aynı trafoda birikim, teknik olmayan kaybın o bölümde yoğunlaştığına işaret eder; saha denetimini oraya yönlendir.</p>
+            <div className="mt-3"><InsightCallout kind="insight" label="Öneri" title="Saha Denetimini Yönlendir" headingLevel={3}>Aynı trafoda birikim, teknik olmayan kaybın o bölümde yoğunlaştığına işaret eder; saha denetimini oraya yönlendir.</InsightCallout></div>
           </div>
         </Panel>
       </div>
@@ -293,6 +297,15 @@ function LeakDetail({ l, go, can }: { l: LeakCase; go: PageProps["go"]; can: boo
   const series = consumption12(l.meterId);
   const events = useMemo<TimelineEvent[]>(() => (meter ? meterEvents(meter) : []).filter((e) => ["kapak", "manyetik", "gerilim", "saat"].includes(e.kind)).slice(0, 8).map((e) => ({ id: e.id, at: e.at.toISOString(), when: dateTime(e.at), title: e.title, description: e.detail, tone: e.tone })), [meter]);
 
+  const drop = useMemo(() => {
+    const v = series.values;
+    if (v.length < 6) return null;
+    const recent = v.slice(-3);
+    const before = v.slice(0, -3);
+    const avgR = recent.reduce((x, y) => x + y, 0) / recent.length;
+    const avgB = before.reduce((x, y) => x + y, 0) / before.length;
+    return avgB > 0 ? Math.round(((avgB - avgR) / avgB) * 100) : null;
+  }, [series]);
   const [kwh, setKwh] = useState(String(l.estimatedKwh));
   const [months, setMonths] = useState(String(l.months));
   const [finding, setFinding] = useState<string | null>("kapak");
@@ -301,6 +314,12 @@ function LeakDetail({ l, go, can }: { l: LeakCase; go: PageProps["go"]; can: boo
   const [saved, setSaved] = useState(false);
   const kwhN = Math.max(0, Number(kwh) || 0);
   const calc = leakBreakdown(kwhN);
+
+  const reportChecks: PolicyCheck[] = [
+    { id: "bulgu", label: "Bulgu", detail: finding ? "Tespit edilen bulgu seçildi" : "Bulgu seçilmedi", state: finding ? "pass" : "fail" },
+    { id: "not", label: "Saha Notu", detail: notes.trim().length >= 10 ? "Not yeterli" : "En az 10 karakterlik not önerilir", state: notes.trim().length >= 10 ? "pass" : "warn" },
+    { id: "imza", label: "İmza", detail: signed ? "Personel imzası alındı" : "Kaydetmek için imza gerekir", state: signed ? "pass" : "fail" },
+  ];
 
   const advance = () => {
     if (!next) return;
@@ -336,6 +355,17 @@ function LeakDetail({ l, go, can }: { l: LeakCase; go: PageProps["go"]; can: boo
           ]}
         />
 
+        <FactorList
+          title="Neden Şüpheli"
+          severity={l.amount >= 50_000 * 100 ? "high" : l.amount >= 10_000 * 100 ? "medium" : "low"}
+          factors={[
+            { label: "Kaynak", value: SOURCE_LABEL[l.source], hint: l.flag, tone: "neutral" },
+            { label: "Tüketim Düşüşü", value: drop === null ? "Veri Yok" : `%${fmtNum(Math.max(0, drop))}`, hint: "Son üç ay, önceki dokuz aya göre", tone: drop !== null && drop >= 30 ? "danger" : drop !== null && drop >= 15 ? "warning" : "neutral" },
+            { label: "Sayaç Olayı", value: fmtNum(events.length), hint: "Kapak, manyetik, gerilim, saat", tone: events.length >= 3 ? "warning" : "neutral" },
+            { label: "Tahmini Süre", value: `${fmtNum(l.months)} Ay`, hint: "Bedel bu süreyle hesaplanır", tone: "neutral" },
+          ]}
+        />
+
         <div className="grid gap-5 xl:grid-cols-5">
           <Panel id="kd-tuketim" title="Son 12 Ay Tüketim" note="Düşüş ya da sıçrama kaçağın başladığı dönemi işaret eder (kWh)." className="xl:col-span-3">
             <div className="p-4 sm:p-5">
@@ -361,7 +391,7 @@ function LeakDetail({ l, go, can }: { l: LeakCase; go: PageProps["go"]; can: boo
                       {saved ? "Tutanak Kaydedildi" : "Tutanağı Kaydet"}
                     </Button>
                   ) : null}
-                  {!signed ? <p className="text-small text-muted">Kaydetmek için imza gerekir.</p> : null}
+                  <PolicyChecks title="Tutanak Kontrolleri" checks={reportChecks} />
                 </>
               ) : (
                 <p className="text-small text-muted">Vaka tutanak aşamasına gelince bulgu, saha notu, fotoğraf ve imza buradan girilir.{wo ? " Saha kontrolü iş emri yolda." : ""}</p>
@@ -382,6 +412,14 @@ function LeakDetail({ l, go, can }: { l: LeakCase; go: PageProps["go"]; can: boo
                 <div className="flex justify-between"><dt className="text-muted">Vergi ve fonlar × {fmtDec(LEAK_PARAMS.taxFactor, 1)}</dt><dd className="font-medium text-strong tabular-nums">{fmtTl(calc.total)}</dd></div>
                 <div className="flex justify-between border-t border-line-soft pt-1"><dt className="font-semibold text-strong">Kaçak Bedeli</dt><dd className="font-semibold text-strong tabular-nums">{fmtTl(calc.total)}</dd></div>
               </dl>
+              {kwhN && calc.total !== l.amount ? (
+                <ValueDiff
+                  rows={[
+                    { label: "Kayıtlı Bedel", groups: fmtTl(l.amount).split("."), tone: "neutral" },
+                    { label: "Hesaplanan Bedel", groups: fmtTl(calc.total).split("."), tone: calc.total > l.amount ? "bad" : "good" },
+                  ]}
+                />
+              ) : null}
               {can && idx < 4 ? <Button size="sm" variant="secondary" className="w-fit" disabled={!kwhN} onClick={() => { setLeakAmount(l.id, kwhN, Math.max(1, Number(months) || 1)); notify({ title: "Bedel Hesaplandı", body: `${fmtNum(kwhN)} kWh · ${fmtTl(calc.total, 0)}`, tone: "success" }); }}>Bedeli Kaydet</Button> : <p className="text-small text-muted">Bedel itiraz aşamasından sonra değiştirilemez.</p>}
             </div>
           </Panel>

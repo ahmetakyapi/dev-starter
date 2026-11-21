@@ -10,10 +10,11 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
 import { Stepper } from "@/components/ui/stepper";
+import { InsightCallout } from "@/components/ui/insight-callout";
 import { Switch } from "@/components/ui/switch";
 import { TickMeter } from "@/components/ui/tick-meter";
 import { SUBSTATIONS, SUPPLIERS, TODAY, TODAY_KEY, TRANSFORMERS, dayLabel, region, supplier, KIND_LABEL, type Customer, type Meter } from "./_data";
-import type { StockMeter } from "./_data-yeni";
+import { TRANSFORMER_LOADS, type StockMeter } from "./_data-yeni";
 import { fmtNum, fmtTl } from "./_kit";
 import { useCan } from "./_permissions";
 import { getSettings } from "./_settings";
@@ -575,6 +576,7 @@ export function KayitPage({ params, go }: PageProps) {
                         items={[{ value: "tek-zamanli", label: "Tek Zamanlı" }, { value: "cok-zamanli", label: "Çok Zamanlı (T1/T2/T3)" }]}
                       />
                     </div>
+                    <CapacityInsight form={form} />
                     <div className="rounded-xl bg-surface p-3">
                       <Switch
                         label="Tedarikçimi Kendim Seçeceğim"
@@ -750,6 +752,32 @@ export function KayitPage({ params, go }: PageProps) {
         </div>
       </PageBody>
     </>
+  );
+}
+
+/** Tesisat adımı önerisi: yöredeki dağıtım trafosunun boş kapasitesi ve serbest tüketici uygunluğu (örnek hesap). */
+function CapacityInsight({ form }: { form: Form }) {
+  const [regionId] = form.area.split("|");
+  const tr = TRANSFORMERS.find((x) => x.regionId === regionId) ?? TRANSFORMERS[0];
+  const load = TRANSFORMER_LOADS.find((x) => x.id === tr.id);
+  const kw = Number(form.power) || 0;
+  if (!load || kw <= 0) return null;
+  const usable = Math.round(tr.kva * 0.9);
+  const free = Math.max(0, Math.round(usable - load.loadKw));
+  const tight = kw > free;
+  const free2 = freeEligible(form);
+  return (
+    <InsightCallout
+      title={tight ? "Trafo Kapasitesi Yetersiz Olabilir" : "Bağlantı İçin Kapasite Uygun"}
+      kind={tight ? "warning" : "insight"}
+      label={tight ? "Dikkat" : "Öneri"}
+      headingLevel={3}
+    >
+      {tight
+        ? `Yöredeki ${tr.name} trafosunda yaklaşık ${fmtNum(free)} kW boş kapasite var; talep ${fmtNum(kw)} kW. Sözleşme gücünü düşürmek ya da trafo güçlendirme için keşif planlamak gerekebilir.`
+        : `Yöredeki ${tr.name} trafosunda yaklaşık ${fmtNum(free)} kW boş kapasite var; talep ${fmtNum(kw)} kW ile bağlantı karşılanır.`}{" "}
+      {free2 ? "Tahmini yıllık tüketim serbest tüketici sınırını aşıyor: tedarikçi seçilebilir." : "Tahmini yıllık tüketim serbest tüketici sınırının altında: görevli tedarik şirketi atanır."}
+    </InsightCallout>
   );
 }
 

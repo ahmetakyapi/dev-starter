@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/Button";
 import { Combobox, type ComboboxItem } from "@/components/ui/combobox";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { FactorList } from "@/components/ui/factor-list";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
+import { ValueDiff } from "@/components/ui/value-diff";
 import { Input } from "@/components/ui/input";
 import { KanbanBoard, type KanbanCard, type KanbanColumn } from "@/components/ui/kanban-board";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
@@ -57,6 +61,8 @@ const LABEL_OF: Record<string, (v: string) => string> = {
 const isOpen = (w: WorkOrderX) => w.status !== "tamamlandi" && w.status !== "iptal";
 const elapsedH = (w: WorkOrderX) => (TODAY.getTime() - w.createdAt.getTime()) / 3_600_000;
 const slaLeft = (w: WorkOrderX) => Math.round((w.slaHours - elapsedH(w)) * 10) / 10;
+/** Seri numarasını üçerli gruplara böler (fark vurgusu için). */
+const chunk = (v: string) => v.match(/.{1,3}/g) ?? [v];
 const crewOf = (regionId: string) => CREWS[Math.max(0, REGIONS.findIndex((r) => r.id === regionId))];
 
 /** Bağlı kaydın sayfası: kimlik önekinden. */
@@ -358,6 +364,19 @@ function DetailSheet({ w, view, canEdit, onClose, go, onComplete }: { w: WorkOrd
         {w ? (
           <div className="grid gap-5">
             <p className="rounded-lg bg-surface p-3 text-base text-strong">{w.reason}</p>
+            {isOpen(w) ? (
+              <FactorList
+                title="Neden Önce Yapılmalı"
+                headingLevel={3}
+                severity={slaLeft(w) < 0 ? "high" : slaLeft(w) < 2 ? "medium" : "low"}
+                factors={[
+                  { label: "SLA", value: slaLeft(w) < 0 ? `${fmtDur(-slaLeft(w) * 60)} Aşıldı` : `${fmtDur(slaLeft(w) * 60)} Kaldı`, hint: `${w.slaHours} saat hedef`, tone: slaLeft(w) < 0 ? "danger" : slaLeft(w) < 2 ? "warning" : "neutral" },
+                  { label: "Ekip", value: w.assignee ? "Atandı" : "Atanmadı", hint: w.assignee ?? "Önce ekip yönlendir", tone: w.assignee ? "neutral" : "warning" },
+                  { label: "Bağlı Kayıt", value: link ? link.label : "Yok", hint: link ? "Arıza ya da çağrıyla bağlantılı" : "Bağımsız iş emri", tone: "neutral" },
+                  { label: "Açık Kalma", value: fmtDur(Math.round(elapsedH(w) * 60)), hint: "Açılıştan bu yana", tone: "neutral" },
+                ]}
+              />
+            ) : null}
             <dl className="grid gap-x-4 gap-y-2 text-small sm:grid-cols-2">
               <div><dt className="text-muted">Müşteri</dt><dd className="font-medium text-strong">{cust ? <a href={href("customers", { id: cust.id })} className="hover:underline">{cust.name}</a> : "Bölge geneli"}</dd></div>
               <div><dt className="text-muted">Sayaç</dt><dd className="font-medium text-strong">{meter ? <a href={href("meters", { id: meter })} className="kz-mono hover:underline">{meter}</a> : "—"}</dd></div>
@@ -427,6 +446,13 @@ function CompleteDialog({ w, onClose }: { w: WorkOrderX | null; onClose: () => v
     setF({ oldSerial: "", oldIndex: "", newSerial: "", newIndex: "", seal: "", note: "" });
     onClose();
   };
+  const doneChecks: PolicyCheck[] = [
+    { id: "eski", label: "Sökülen Sayaç", detail: f.oldSerial.trim() ? "Seri numarası girildi" : "Seri numarası gerekli", state: f.oldSerial.trim() ? "pass" : "fail" },
+    ...(w?.type === "sayac-degisim"
+      ? [{ id: "yeni", label: "Takılan Sayaç", detail: f.newSerial.trim() ? "Seri numarası girildi" : "Seri numarası gerekli", state: (f.newSerial.trim() ? "pass" : "fail") as PolicyCheck["state"] }]
+      : []),
+    { id: "muhur", label: "Mühür", detail: f.seal.trim() ? "Mühür numarası girildi" : "Mühür numarası girilmedi", state: f.seal.trim() ? "pass" : "warn" },
+  ];
   const field = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setF((s) => ({ ...s, [k]: e.target.value }));
   return (
     <Dialog
@@ -460,8 +486,31 @@ function CompleteDialog({ w, onClose }: { w: WorkOrderX | null; onClose: () => v
         <div className="sm:col-span-2">
           <Textarea label="Saha Notu" value={f.note} onChange={field("note")} minRows={2} />
         </div>
-        {w?.type === "kesme" ? <p className="rounded-lg bg-warning-wash p-3 text-small text-strong sm:col-span-2">Tamamlanınca müşteri enerjisi kesildi olarak işaretlenir ve sayaç rölesi açılır.</p> : null}
-        {w?.type === "baglama" ? <p className="rounded-lg bg-surface p-3 text-small text-body sm:col-span-2">Tamamlanınca enerji yeniden bağlanır ve kesme aşaması temizlenir.</p> : null}
+        {w?.type === "sayac-degisim" && f.oldSerial.trim() && f.newSerial.trim() ? (
+          <div className="sm:col-span-2">
+            <ValueDiff
+              rows={[
+                { label: "Sökülen Sayaç", groups: chunk(f.oldSerial.trim()), tone: "bad", note: f.oldIndex ? `Son endeks ${fmtNum(Number(f.oldIndex) || 0)} kWh` : undefined },
+                { label: "Takılan Sayaç", groups: chunk(f.newSerial.trim()), tone: "good", note: f.newIndex ? `İlk endeks ${fmtNum(Number(f.newIndex) || 0)} kWh` : undefined },
+              ]}
+            />
+          </div>
+        ) : null}
+        {swap ? (
+          <div className="sm:col-span-2">
+            <PolicyChecks title="Tamamlama Kontrolleri" checks={doneChecks} />
+          </div>
+        ) : null}
+        {w?.type === "kesme" ? (
+          <div className="sm:col-span-2">
+            <InsightCallout kind="warning" label="Sonuç" title="Enerji Kesilecek" headingLevel={3}>Tamamlanınca müşteri enerjisi kesildi olarak işaretlenir ve sayaç rölesi açılır.</InsightCallout>
+          </div>
+        ) : null}
+        {w?.type === "baglama" ? (
+          <div className="sm:col-span-2">
+            <InsightCallout kind="success" label="Sonuç" title="Enerji Yeniden Bağlanır" headingLevel={3}>Tamamlanınca enerji yeniden bağlanır ve kesme aşaması temizlenir.</InsightCallout>
+          </div>
+        ) : null}
       </div>
     </Dialog>
   );

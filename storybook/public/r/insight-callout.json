@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "insight-callout",
+  "type": "registry:ui",
+  "title": "Öneri Kutusu",
+  "description": "Bir kaydın yanında kısa öneri/içgörü: tür etiketi, başlık, 2-3 cümle, en çok iki eylem; `insight`/`warning`/`success`. `banner-alert` bölümü, bu kutu kaydı anlatır",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/insight-callout.tsx",
+      "content": "import { CircleCheck, Sparkles, TriangleAlert, type LucideIcon } from \"lucide-react\";\nimport { useId, type ElementType, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Öneri kutusu: içeriğin İÇİNDE, ilgili kayda bağlı kısa bir değerlendirme ve\n * onu izleyen eylem (\"Kazan dairesi 21 gün içinde arızalanabilir: Bakımı\n * 30 Ekim'den önce planla\", \"Bu fatura neden reddedildi\", \"Yedi açık boşluğun\n * ortak nedeni var\"). Fixora, Clearbill, Noticeline ve Spendix ekranlarında\n * aynı kalıp: başlık, 2-3 cümle, bir ya da iki eylem.\n *\n * FARKI: `banner-alert` bir BÖLÜMÜN durumunu söyler (ödeme bilgisi eksik,\n * eşitleme başarısız) ve sayfanın üstünde durur. Bu kutu bir KAYDIN yanında\n * durur, başlığı gerçek bir başlıktır (`headingLevel`) ve içinde gövde\n * metni ile eylemler vardır. Geçici sonuç `toast`, durduran soru `dialog`.\n *\n * ÜÇ TÜR, ÜÇ ZEMİN: `insight` (varsayılan, primary-wash), `warning`\n * (warning-wash), `success` (success-wash). Zemin tonu ince bir çerçeveyle\n * gelir; kartın tek kenarına renkli şerit YOK (rules/design-tokens → AI-Slop).\n * Başlık ve gövde `text-strong` / `text-body` kalır (renkli gövde metni\n * wash üstünde AA tutmaz); yalnız ikon ve küçük tür etiketi tonu taşır.\n *\n * TÜR ETİKETİ (\"Öneri\", \"Dikkat\", \"Sonuç\") metindir: renk tek işaret değil.\n * Etiketi çağıran değiştirir (`label`); bileşen \"yapay zeka\" iddiası taşımaz.\n * Önerinin kaynağı bir model ise etiketi çağıran dürüstçe yazar (\"Model\n * önerisi\"), kural motoruysa \"Kural\".\n *\n * İKON süstür (`aria-hidden`), `icon` ile değişir. Başlık `h3` varsayılan;\n * sayfanın başlık sırasına uysun diye `headingLevel` (2-6). Kutu `aside` ve\n * başlığıyla adlanır. Eylemler `actions` yuvasında (ikincil buton/bağlantı,\n * en çok iki).\n *\n * Sunucu bileşeni. Kuyu (`bg-surface`) ya da beyaz kart içinde durur;\n * kendisi kart değildir, içine kart konmaz.\n *\n *   <InsightCallout title=\"Kazan Dairesi Arızası Yaklaşıyor\" label=\"Öneri\"\n *     actions={<Button variant=\"secondary\" size=\"sm\">Servis Planla</Button>}>\n *     Kazanın 21 gün içinde arızalanması olası. 30 Ekim'den önce bakım yaptırmak\n *     tahmini ₺6.400'lik acil onarımı önler.\n *   </InsightCallout>\n */\n\nconst KINDS = {\n  insight: { icon: Sparkles, wash: \"bg-primary-wash border-primary/15\", ink: \"text-primary-ink\", label: \"Öneri\" },\n  warning: { icon: TriangleAlert, wash: \"bg-warning-wash border-warning/20\", ink: \"text-warning\", label: \"Dikkat\" },\n  success: { icon: CircleCheck, wash: \"bg-success-wash border-success/15\", ink: \"text-success\", label: \"Sonuç\" },\n} as const satisfies Record<string, { icon: LucideIcon; wash: string; ink: string; label: string }>;\n\nexport type InsightKind = keyof typeof KINDS;\n\ntype InsightCalloutProps = {\n  title: ReactNode;\n  children: ReactNode;\n  kind?: InsightKind;\n  /** Küçük tür etiketi; verilmezse türün varsayılanı (\"Öneri\", \"Dikkat\", \"Sonuç\"). */\n  label?: string;\n  icon?: LucideIcon;\n  /** Sağda değil gövdenin altında: en çok iki ikincil buton ya da bağlantı. */\n  actions?: ReactNode;\n  headingLevel?: 2 | 3 | 4 | 5 | 6;\n  className?: string;\n};\n\nexport function InsightCallout({ title, children, kind = \"insight\", label, icon, actions, headingLevel = 3, className }: InsightCalloutProps) {\n  const tone = KINDS[kind];\n  const Icon = icon ?? tone.icon;\n  const Heading = `h${headingLevel}` as ElementType;\n  const id = useId();\n  return (\n    <aside aria-labelledby={id} className={cn(\"grid gap-2 rounded-xl border p-4 text-base text-body\", tone.wash, className)}>\n      <div className=\"flex items-center gap-2\">\n        <Icon aria-hidden className={cn(\"size-4 shrink-0\", tone.ink)} strokeWidth={1.75} />\n        <span className={cn(\"text-small font-medium\", tone.ink)}>{label ?? tone.label}</span>\n      </div>\n      <Heading id={id} className=\"text-base font-semibold text-strong\">\n        {title}\n      </Heading>\n      <div className=\"text-base leading-relaxed text-body\">{children}</div>\n      {actions ? <div className=\"mt-1 flex flex-wrap items-center gap-2\">{actions}</div> : null}\n    </aside>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Geri Bildirim"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "insight-callout",
+    "palettes": false
+  }
+}

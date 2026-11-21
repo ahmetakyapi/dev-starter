@@ -31,6 +31,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ME, TAG_COLORS, TAG_SUGGESTIONS, TICKETS, WORKSPACE } from "./_data";
 import { HelpWell, IntegrationsWell } from "./_ayarlar-ek";
 import { ActivityWell } from "./_ek-l";
+import { SetupWell } from "./_ek-n";
 import { PageBar, Well, WellTitle, useApp } from "./_ui";
 
 const LANGS = [
@@ -431,6 +432,7 @@ export function AyarlarPage() {
         </Well>
 
         <ActivityWell />
+        <SetupWell />
 
         <HelpWell />
       </div>

@@ -603,6 +603,25 @@
       "palettes": false
     },
     {
+      "name": "choice-chips",
+      "title": "Çoklu Seçim Çipleri",
+      "category": "Form Girişleri",
+      "description": "Listeden birden çok etiket (bina sistemleri, ilgi alanı): seçili çip koyu + ✓, isteğe `max`; `FilterChip` süzer, bu alan formdur",
+      "file": "snippets/ui/choice-chips.tsx",
+      "client": true,
+      "storyId": "choice-chips",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "close-button",
       "title": "Kapat Butonu",
       "category": "Buton ve İkon",
@@ -1140,6 +1159,24 @@
       "palettes": false
     },
     {
+      "name": "factor-list",
+      "title": "Etken Listesi",
+      "category": "Veri",
+      "description": "Bir kaydın NEDEN öne alındığı: başlıkta genel önem (Düşük–Kritik, dört çubuklu sinyal), altında etiket solda değer sağda satırları; ikon karosu yok",
+      "file": "snippets/ui/factor-list.tsx",
+      "client": false,
+      "storyId": "factor-list",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "feature-tile",
       "title": "Özellik Karosu",
       "category": "Tanıtım",
@@ -1225,6 +1262,27 @@
       "client": true,
       "storyId": "focus-stack",
       "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "forecast-chart",
+      "title": "Tahmin Grafiği",
+      "category": "Grafik",
+      "description": "Tek ölçünün geçmişi ve iki geleceği (marj, ciro, kapasite): gerçekleşen çizgi bugünden sonra \"mevcut yol\" ve \"değişikliklerle yol\"a ayrılır; olası aralık bandı, hedef çizgisi; Y ekseni sıfırdan başlamaz",
+      "file": "snippets/ui/forecast-chart.tsx",
+      "client": true,
+      "storyId": "forecast-chart",
+      "registryDependencies": [
+        "area-chart"
+      ],
       "templateFiles": [
         "lib/utils.ts"
       ],
@@ -1431,6 +1489,24 @@
       "palettes": false
     },
     {
+      "name": "impact-bar",
+      "title": "Etki Çubuğu",
+      "category": "Geri Bildirim",
+      "description": "Bir işlemin bütçeye/kotaya EKLEDİĞİ: harcanan + çizgili eklenen dilim + kalan iz, \"önce → sonra / limit · yüzde\"; limit aşılırsa `danger` + işaretçi (durum için `meter`, gidişat için `tick-meter`)",
+      "file": "snippets/ui/impact-bar.tsx",
+      "client": false,
+      "storyId": "impact-bar",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "input",
       "title": "Metin Girişi",
       "category": "Form Girişleri",
@@ -1464,6 +1540,25 @@
       "npm": {
         "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "insight-callout",
+      "title": "Öneri Kutusu",
+      "category": "Geri Bildirim",
+      "description": "Bir kaydın yanında kısa öneri/içgörü: tür etiketi, başlık, 2-3 cümle, en çok iki eylem; `insight`/`warning`/`success`. `banner-alert` bölümü, bu kutu kaydı anlatır",
+      "file": "snippets/ui/insight-callout.tsx",
+      "client": false,
+      "storyId": "insight-callout",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1523,6 +1618,26 @@
       "client": false,
       "storyId": "kbd",
       "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "lever-card",
+      "title": "Kaldıraç Kartı",
+      "category": "Form Girişleri",
+      "description": "Senaryo kaldıracı: anahtar, büyük etki değeri (\"+1,5 puan\"), hedef açığının kapanan payı; `LeverGrid` dört karolu satır; `ForecastChart` ile birlikte",
+      "file": "snippets/ui/lever-card.tsx",
+      "client": true,
+      "storyId": "lever-card",
+      "registryDependencies": [
+        "switch"
+      ],
       "templateFiles": [
         "lib/utils.ts"
       ],
@@ -1766,6 +1881,25 @@
       "palettes": false
     },
     {
+      "name": "option-cards",
+      "title": "Seçenek Kartları",
+      "category": "Form Girişleri",
+      "description": "Birbirini dışlayan 2-5 yoldan biri, her yolun sonucu kartta yazılı; Önerilen rozeti, kilitli seçenek gerekçesiyle (çözüm yolu, ret nedeni, plan)",
+      "file": "snippets/ui/option-cards.tsx",
+      "client": true,
+      "storyId": "option-cards",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "pagination",
       "title": "Sayfalama",
       "category": "Veri",
@@ -1896,6 +2030,25 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "policy-checks",
+      "title": "Politika Kontrolleri",
+      "category": "Geri Bildirim",
+      "description": "Talebin onaydan önce geçtiği otomatik denetimler: satır başına geçti/uyarı/başarısız + sağda kısa gerekçe; özet satırı kontrollerden türer",
+      "file": "snippets/ui/policy-checks.tsx",
+      "client": false,
+      "storyId": "policy-checks",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -2366,6 +2519,25 @@
       "registryDependencies": [
         "dialog"
       ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "setup-card",
+      "title": "Kurulum Kartı",
+      "category": "Form ve Gezinme",
+      "description": "Kenar çubuğu dibinde kurulum çağrısı: başlık, tek cümle, ilerleme halkası (3 / 4), Atla ve Sonraki",
+      "file": "snippets/ui/setup-card.tsx",
+      "client": true,
+      "storyId": "setup-card",
+      "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
       ],
@@ -3101,7 +3273,7 @@
       "name": "track-bar-chart",
       "title": "Sütun Grafiği",
       "category": "Grafik",
-      "description": "Sıralı tek seri (ay, gün), iz üstünde sütun",
+      "description": "Sıralı tek seri (ay, gün), iz üstünde sütun; `threshold` ile hedef çizgisi, aşan sütun `warning`",
       "file": "snippets/ui/track-bar-chart.tsx",
       "client": false,
       "storyId": "bar-chart",
@@ -3170,6 +3342,24 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "value-diff",
+      "title": "Değer Farkı",
+      "category": "Veri",
+      "description": "Aynı kimliğin iki kaynaktaki yazılışı alt alta, FARKLI grup vurgulu (fatura vergi no ↔ doğrulanmış kayıt, IBAN, seri no); grup sayısı satırlardan türer",
+      "file": "snippets/ui/value-diff.tsx",
+      "client": false,
+      "storyId": "value-diff",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

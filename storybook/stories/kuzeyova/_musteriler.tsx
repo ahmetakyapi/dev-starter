@@ -35,7 +35,9 @@ import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { FilterGroup, FilterValue } from "@/components/ui/filter-sheet";
+import { FactorList } from "@/components/ui/factor-list";
 import { HoldButton } from "@/components/ui/hold-button";
+import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
@@ -728,6 +730,21 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
   const usageByPeriod = PERIODS_12.map((p) => readings.filter((r) => r.period === p).reduce((sum, r) => sum + r.usage.total, 0));
   const hasUsage = usageByPeriod.some((v) => v > 0);
   const anomaly = usageAnomaly(usageByPeriod, readings, c.kind);
+  const riskFactors = (() => {
+    const bad = meters.filter((m) => m.status !== "okunuyor");
+    if (account.overdue === 0 && bad.length === 0) return null;
+    const noComm = bad.filter((m) => m.status === "iletisim-yok").length;
+    const faulty = bad.filter((m) => m.status === "arizali").length;
+    const tamper = bad.filter((m) => m.status === "mudahale").length;
+    const severity: "medium" | "high" | "critical" = account.overdue >= 3 || tamper > 0 || faulty > 0 ? "critical" : account.overdue >= 2 ? "high" : "medium";
+    const factors = [
+      { label: "Geciken Fatura", value: account.overdue > 0 ? `${account.overdue} fatura` : "Yok", tone: account.overdue >= 2 ? ("danger" as const) : account.overdue === 1 ? ("warning" as const) : ("neutral" as const) },
+      { label: "Açık Bakiye", value: account.balance > 0 ? tl(account.balance) : "Yok", hint: account.balance > 0 ? "Gecikme zammı dahil değil" : undefined, tone: account.balance > 0 ? ("warning" as const) : ("neutral" as const) },
+      { label: "Sayaç Durumu", value: bad.length ? `${bad.length} sayaçta sorun` : "Sorun yok", hint: bad.length ? bad.map((m) => `${m.serial}: ${m.status === "iletisim-yok" ? "iletişim yok" : m.status === "arizali" ? "arızalı" : "müdahale şüphesi"}`).join("; ") : undefined, tone: faulty + tamper > 0 ? ("danger" as const) : bad.length ? ("warning" as const) : ("neutral" as const) },
+      { label: "Haberleşme", value: noComm > 0 ? `${noComm} sayaçta kesik` : "Sağlıklı", tone: noComm > 0 ? ("warning" as const) : ("neutral" as const) },
+    ];
+    return { severity, factors };
+  })();
   const lastUsage = usageByPeriod[usageByPeriod.length - 1] || usageByPeriod[usageByPeriod.length - 2] || 0;
   const avg12 = hasUsage ? Math.round(usageByPeriod.reduce((a, b) => a + b, 0) / usageByPeriod.filter((v) => v > 0).length) : 0;
   const lastInvoice = invoices.at(-1);
@@ -897,15 +914,13 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
                   label: "Genel Bakış",
                   panel: (
                     <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-5">
-                      {account.overdue > 0 ? (
-                        <Alert tone="danger" title={`${account.overdue} faturası vadesini geçti`}>
-                          Toplam gecikmiş bakiye {tl(account.balance)}. Ödeme planı önerilebilir ya da kesme süreci başlatılabilir.
-                        </Alert>
-                      ) : null}
-                      {meters.some((m) => m.status !== "okunuyor") ? (
-                        <Alert tone="warning" title="Sayaçta Sorun Var">
-                          {meters.filter((m) => m.status !== "okunuyor").map((m) => `${m.serial}: ${m.status === "iletisim-yok" ? "iletişim yok" : m.status === "arizali" ? "arızalı" : "müdahale şüphesi"}`).join("; ")}.
-                        </Alert>
+                      {riskFactors ? (
+                        <div className="rounded-xl bg-surface p-4 sm:p-5">
+                          <FactorList title="Neden Riskli" severity={riskFactors.severity} factors={riskFactors.factors} headingLevel={3} />
+                          <p className="mt-3 text-small text-muted">
+                            {account.overdue > 0 ? "Ödeme planı önerilebilir ya da kesme süreci başlatılabilir." : "Saha ekibi sayaç kaydını kontrol etmeli."}
+                          </p>
+                        </div>
                       ) : null}
                       <Panel title="Aylık Tüketim" note="Son 12 dönem, kWh (çarpan dahil)" id="detay-tuketim">
                         <div className="grid gap-3 p-4 sm:p-5">
@@ -1375,6 +1390,26 @@ const WORK_REASONS = {
   baglama: ["Borç ödendi", "Abone talebi", "Bakım tamamlandı", "Hatalı kesme düzeltmesi"],
 } as const;
 
+/** Kesme politikası sonucunu denetim satırlarına çevirir (motorun `blockers` metinlerinden). */
+function cutChecks(p: ReturnType<typeof cutEligibility>): PolicyCheck[] {
+  const blocked = (prefix: string) => p.blockers.find((b) => b.startsWith(prefix));
+  const row = (id: string, label: string, ok: string, bad: string | undefined): PolicyCheck => ({ id, label, state: bad ? "fail" : "pass", detail: bad ?? ok });
+  const known = ["Gecikme ", "Yazılı ihtar", "İhtar bekleme", "Açık fatura itirazı", "Aktif ödeme planı", "Açık bakiye yok"];
+  const hassas = p.blockers.find((b) => b.endsWith("kesme listesine alınmaz"));
+  const checks: PolicyCheck[] = [
+    row("ihtar", "Yazılı İhtar", p.noticeAt ? `Tebliğ edildi (${dayLabel(p.noticeAt)})` : "Yapıldı", blocked("Yazılı ihtar")),
+    row("bekleme", "İhtar Bekleme Süresi", "Süre doldu", blocked("İhtar bekleme")),
+    row("gecikme", "Gecikme Süresi", `${p.overdueDays} gün`, blocked("Gecikme ")),
+    row("bakiye", "Açık Bakiye", "Borç açık", blocked("Açık bakiye yok")),
+    row("hassas", "Hassas Abone", "Muaf değil", hassas),
+    row("itiraz", "Açık İtiraz", "Yok", blocked("Açık fatura itirazı")),
+    row("plan", "Ödeme Planı", "Aktif plan yok", blocked("Aktif ödeme planı")),
+  ];
+  for (const b of p.blockers) if (!known.some((k) => b.startsWith(k)) && b !== hassas) checks.push({ id: b, label: "Durum", state: "fail", detail: b });
+  for (const w of p.warnings) checks.push({ id: w, label: "Not", state: "warn", detail: w });
+  return checks;
+}
+
 function WorkDialog({ open, onClose, customer: c, balance }: { open: boolean; onClose: () => void; customer: Customer; balance: number }) {
   const { notify } = useApp();
   const kind = c.status === "kesik" ? "baglama" : "kesme";
@@ -1433,23 +1468,12 @@ function WorkDialog({ open, onClose, customer: c, balance }: { open: boolean; on
       <div className="grid gap-4">
         <Select label="Neden" value={reason} onValueChange={(v) => v && setReason(v)} items={WORK_REASONS[kind].map((r) => ({ value: r, label: r }))} />
         {policy ? (
-          <div className="grid gap-3 rounded-xl bg-surface p-4 text-base">
-            <p className="font-semibold text-strong">{policy.eligible ? "Kesme politikasına uygun" : "Kesme politikası: şimdilik kesilemez"}</p>
-            {policy.blockers.length ? (
-              <ul className="grid gap-1.5">
-                {policy.blockers.map((b) => (
-                  <li key={b} className="flex items-start gap-2 text-body">
-                    <X aria-hidden className="mt-0.5 size-4 shrink-0 text-danger" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-body">Yazılı ihtar tamam, bekleme süresi doldu, engel yok.</p>
-            )}
-            {policy.warnings.map((w) => (
-              <p key={w} className="text-small text-muted">{w}</p>
-            ))}
+          <div className="grid gap-3">
+            <PolicyChecks
+              title={policy.eligible ? "Kesme Politikasına Uygun" : "Kesme Politikası: Şimdilik Kesilemez"}
+              headingLevel={3}
+              checks={cutChecks(policy)}
+            />
             {policy.noticeAt ? (
               <p className="text-small text-muted">İhtar {dayLabel(policy.noticeAt)}{policy.earliest ? ` · en erken kesme ${dayLabel(policy.earliest)}` : ""}. Gecikme {policy.overdueDays} gün.</p>
             ) : balance > 0 ? (

@@ -5,6 +5,7 @@ import { ArrowRight, ClipboardList, FilePlus2, Gauge, MessageSquare, Wallet, X, 
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { PolicyChecks } from "@/components/ui/policy-checks";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
 import type { FilterGroup, FilterValue } from "@/components/ui/filter-sheet";
@@ -449,10 +450,18 @@ function ApplicationSheet({ app, onClose, go }: { app: Application | undefined; 
               </ol>
             </div>
           )}
-          {!closed && !gate.ok ? (
-            <div role="note" className="flex items-start gap-3 rounded-xl bg-warning-wash px-4 py-3 text-base ring-1 ring-warning/20">
-              <ClipboardList aria-hidden className="mt-0.5 size-5 shrink-0 text-warning" />
-              <p className="text-body"><strong className="font-semibold text-strong">Sonraki aşama için engel:</strong> {gate.reason}.</p>
+          {!closed ? (
+            <div className="rounded-xl bg-surface p-4 sm:p-5">
+              <PolicyChecks
+                title="Enerjilendirme Kapısı"
+                headingLevel={3}
+                summary={gate.ok ? "Sonraki aşamaya geçilebilir" : `Engel: ${gate.reason}`}
+                checks={[
+                  { id: "evrak", label: "Evrak Kontrolü", detail: `${docsDone(app)} / ${app.docs.length} tamam`, state: missingDocs.length === 0 ? "pass" : app.stage === "evrak" ? "fail" : "warn" },
+                  { id: "bedel", label: "Bağlantı Bedeli", detail: app.feePaid ? `${fmtTl(app.connectionFee)} tahsil edildi` : "Tahsilat bekliyor", state: app.feePaid ? "pass" : idx >= stageIndex("bedel") ? "fail" : "warn" },
+                  { id: "sayac", label: "Sayaç Tahsisi", detail: app.meterSerial ? `${app.meterSerial} tahsis edildi` : "Stoktan sayaç ayrılmadı", state: app.meterSerial ? "pass" : idx >= stageIndex("montaj") ? "fail" : "warn" },
+                ]}
+              />
             </div>
           ) : null}
           {app.stage === "red" ? <p role="note" className="rounded-xl bg-danger-wash px-4 py-3 text-base text-body ring-1 ring-danger/20">{app.note}</p> : null}

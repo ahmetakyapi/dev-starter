@@ -53,6 +53,9 @@ import {
   type ReadingSource,
 } from "./_data";
 import { READER_NAMES, buildImportRows, buildRoutesLive, downloadCsv, readingDelay, readingUi, type EntryLogItem, type ImportRow, type Route } from "./_data-sayac";
+import { PolicyChecks } from "@/components/ui/policy-checks";
+import { FactorList } from "@/components/ui/factor-list";
+import { OptionCards } from "@/components/ui/option-cards";
 import { effectiveReadings, enterReading, resolveReading, useMeterOps, type ReadingDecision } from "./_ops";
 import { audit } from "./_audit";
 import { useCan } from "./_permissions";
@@ -539,14 +542,11 @@ function EntryTab({ prefill, setPrefill }: { prefill: string | null; setPrefill:
                   {meter?.multiZone ? <div><dt className="text-small text-muted">T2 · T3</dt><dd className="text-base text-body tabular-nums">{kwh(calc.u2)} · {kwh(calc.u3)}</dd></div> : <div><dt className="text-small text-muted">Çarpan</dt><dd className="text-base text-body">×{meter?.multiplier}</dd></div>}
                 </dl>
                 {expected > 0 ? <TickMeter label="Beklenene Göre" value={Math.max(0, Math.round(calc.total))} max={Math.max(expected, 1)} ticks={20} text={`%${Math.round((Math.max(calc.total, 0) / expected) * 100)}`} /> : null}
-                <ul aria-label="Doğrulama Sonuçları" className="grid gap-2">
-                  {calc.checks.map((c, i) => (
-                    <li key={i} className={`flex items-start gap-2 rounded-lg p-3 text-base ${c.tone === "success" ? "bg-success-wash text-strong" : c.tone === "danger" ? "bg-danger-wash text-strong" : "bg-warning-wash text-strong"}`}>
-                      {c.tone === "success" ? <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0 text-success" /> : <AlertTriangle aria-hidden className={`mt-0.5 size-4 shrink-0 ${c.tone === "danger" ? "text-danger" : "text-warning"}`} />}
-                      <span><span className="sr-only">{c.tone === "success" ? "Uygun: " : c.tone === "danger" ? "Hata: " : "Uyarı: "}</span>{c.text}</span>
-                    </li>
-                  ))}
-                </ul>
+                <PolicyChecks
+                  title="Doğrulama Sonuçları"
+                  headingLevel={3}
+                  checks={calc.checks.map((c, i) => ({ id: String(i), label: c.text, state: c.tone === "success" ? "pass" : c.tone === "danger" ? "fail" : "warn" }))}
+                />
                 {calc.reverse ? (
                   <div className="grid gap-3 rounded-lg bg-surface p-3">
                     <label className="flex cursor-pointer items-start gap-3 text-base text-body">
@@ -791,6 +791,37 @@ function ReadingSheet({ reading, onResolve, onClose, go }: { reading: Reading | 
             </ul>
           ) : reading.status === "bekliyor" ? (
             <p className="rounded-lg bg-surface p-3 text-base text-muted">Bu okuma henüz yapılmadı; planlanan gün {dayLabel(reading.date)}.</p>
+          ) : null}
+
+          {isSuspect ? (
+            <FactorList
+              title="Neden Şüpheli"
+              headingLevel={3}
+              severity={reading.flags.length > 1 ? "high" : "medium"}
+              factors={[
+                { label: "Bu Dönem Tüketim", value: kwh(reading.usage.total), tone: "danger" },
+                { label: "Beklenen (Son 3 Dönem)", value: exp ? kwh(exp) : "—" },
+                { label: "Sapma", value: exp ? `%${Math.round((reading.usage.total / exp) * 100) - 100}` : "—", tone: "warning", hint: "Önceki üç doğrulanmış okumanın ortalamasına göre" },
+                ...reading.flags.map((f) => ({ label: FLAG_LABEL[f], value: "Bayrak", tone: "warning" as const })),
+              ]}
+            />
+          ) : null}
+
+          {isSuspect ? (
+            <OptionCards
+              legend="Önerilen Eylem"
+              name={`okuma-eylem-${reading.id}`}
+              defaultValue={reading.flags.includes("ani-sicrama") ? "yeniden" : "dogrulandi"}
+              onValueChange={(v) => {
+                if (v === "duzeltildi") setFixing(true);
+              }}
+              options={[
+                { value: "dogrulandi", title: "Onayla", description: "Okuma doğru kabul edilir ve faturaya yansır." },
+                { value: "duzeltildi", title: "Düzelt", description: "T1 endeksini elle düzeltip yeniden hesapla." },
+                { value: "yeniden", title: "Yeniden Okuma İste", description: "Saha ekibine yeni görev açılır.", badge: "Önerilen" },
+                { value: "tahmini", title: "Tahmini Yaz", description: "Son üç dönem ortalamasıyla geçici değer yazılır." },
+              ]}
+            />
           ) : null}
 
           {fixing && isSuspect ? (

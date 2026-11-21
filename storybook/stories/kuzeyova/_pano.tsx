@@ -6,6 +6,7 @@ import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { ChartCard } from "@/components/ui/chart-card";
+import { InsightCallout } from "@/components/ui/insight-callout";
 import { ComboChart } from "@/components/ui/combo-chart";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { RegionMap, type MapRegion } from "@/components/ui/region-map";
@@ -313,6 +314,20 @@ export function PanoPage({ go, params }: PageProps) {
       />
       <PageBody>
         <TodayBand />
+
+        {commsLost > 0 ? (
+          <InsightCallout
+            title="İletişimi Kopan Sayaçlara Önce Bak"
+            label="Öneri"
+            actions={
+              <Button size="sm" variant="secondary" onClick={() => go("meters", { tab: "kesik" })}>
+                Sayaçları Aç
+              </Button>
+            }
+          >
+            {fmtNum(commsLost)} sayaç iletişim kurmuyor; tahakkuk tahmine düşmeden saha ekibine iş emri aç.
+          </InsightCallout>
+        ) : null}
 
         <PageHero primary={metrics[heroKey]} secondary={order.slice(0, 6).map((k) => metrics[k])} />
 

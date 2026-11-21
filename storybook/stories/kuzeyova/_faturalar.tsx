@@ -26,6 +26,12 @@ import { ChartCard } from "@/components/ui/chart-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { FactorList } from "@/components/ui/factor-list";
+import { ImpactBar } from "@/components/ui/impact-bar";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { OptionCards } from "@/components/ui/option-cards";
+import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
+import { ValueDiff } from "@/components/ui/value-diff";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { FilterGroup, FilterValue } from "@/components/ui/filter-sheet";
 import { HoldButton } from "@/components/ui/hold-button";
@@ -752,6 +758,15 @@ function ExtendDialog({ open, onOpenChange, ids, onDone }: { open: boolean; onOp
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   const needsApproval = Number(days) > EXTEND_DIRECT_MAX_DAYS;
+  const extendChecks: PolicyCheck[] = [
+    { id: "adet", label: "Tek işlemde fatura sayısı", detail: `${ids.length} / 50`, state: ids.length > 0 && ids.length <= 50 ? "pass" : "fail" },
+    needsApproval
+      ? { id: "sinir", label: "Doğrudan uygulama sınırı", detail: `${EXTEND_DIRECT_MAX_DAYS} günü aşıyor: ikinci yetkilinin onayı gerekir (ÖRNEK kural)`, state: "warn" }
+      : { id: "sinir", label: "Doğrudan uygulama sınırı", detail: `${EXTEND_DIRECT_MAX_DAYS} gün içinde, hemen uygulanır ve geri alınabilir`, state: "pass" },
+    reason.trim().length >= 5
+      ? { id: "gerekce", label: "Gerekçe", detail: "Denetim izine yazılacak", state: "pass" }
+      : { id: "gerekce", label: "Gerekçe", detail: "En az 5 karakter yazın", state: "warn" },
+  ];
   useEffect(() => {
     if (!open) {
       setReason("");
@@ -780,11 +795,24 @@ function ExtendDialog({ open, onOpenChange, ids, onDone }: { open: boolean; onOp
       }
     >
       <div className="grid gap-3">
-        <Select label="Uzatma Süresi" items={[{ value: "7", label: "7 Gün" }, { value: "14", label: "14 Gün" }, { value: "30", label: "30 Gün" }, { value: "45", label: "45 Gün (Onay Gerekir)" }, { value: "60", label: "60 Gün (Onay Gerekir)" }]} value={days} onValueChange={(v) => setDays(v ?? "14")} />
+        <OptionCards
+          legend="Uzatma Süresi"
+          value={days}
+          onValueChange={setDays}
+          options={[
+            { value: "7", title: "7 Gün", description: "Kısa ödeme sözü; zam bu tarihe kadar durur." },
+            { value: "14", title: "14 Gün", description: "Standart süre, doğrudan uygulanır.", badge: "Önerilen" },
+            { value: "30", title: "30 Gün", description: "Doğrudan uygulanabilen en uzun süre." },
+            { value: "45", title: "45 Gün", description: "İkinci yetkilinin onayına gider.", badge: "Onay Gerekir" },
+            { value: "60", title: "60 Gün", description: "İkinci yetkilinin onayına gider.", badge: "Onay Gerekir" },
+          ]}
+        />
         <Textarea label="Gerekçe" value={reason} onChange={(e) => setReason(e.target.value)} minRows={2} maxLength={200} error={error || undefined} hint="Denetim izine yazılır." />
-        <p className="text-small text-muted">
-          {needsApproval ? `${EXTEND_DIRECT_MAX_DAYS} günü aşan uzatma ikinci bir yetkilinin onayını bekler (ÖRNEK kural).` : "Bu işlem fatura geçmişine yazılır; “Geri al” ile döndürülebilir."} Tek işlemde en çok 50 fatura.
-        </p>
+        <PolicyChecks
+          title="Ön Kontroller"
+          headingLevel={3}
+          checks={extendChecks}
+        />
       </div>
     </Dialog>
   );
@@ -828,7 +856,18 @@ function CallDialog({ invoice, onClose }: { invoice: EffectiveInvoice | null; on
         </>
       }
     >
-      <div className="grid gap-3">
+      <div className="grid gap-4">
+        <FactorList
+          title="Neden Önce Aranmalı"
+          headingLevel={3}
+          severity={overdueDays(invoice) > 90 ? "critical" : overdueDays(invoice) > 60 ? "high" : overdueDays(invoice) > 30 ? "medium" : "low"}
+          factors={[
+            { label: "Gecikme Yaşı", value: `${num.format(overdueDays(invoice))} gün`, tone: overdueDays(invoice) > 60 ? "danger" : "warning" },
+            { label: "Kalan Tutar", value: tl(dueNow(invoice).total), hint: dueNow(invoice).fee > 0 ? `${tl(dueNow(invoice).fee)} gecikme zammı dahil` : undefined },
+            { label: "Söz Tarihi", value: followUpOf(invoice.customerId).promiseDate ? dayLabel(followUpOf(invoice.customerId).promiseDate!) : "Yok", tone: promiseBroken(followUpOf(invoice.customerId)) ? "danger" : "neutral", hint: promiseBroken(followUpOf(invoice.customerId)) ? "Söz tutulmadı" : undefined },
+            { label: "İtiraz", value: invoice.status === "itirazli" ? "Açık itiraz var" : "Yok", tone: invoice.status === "itirazli" ? "warning" : "neutral" },
+          ]}
+        />
         <Select label="Görüşme Sonucu" items={(["ulasilamadi", "soz-verdi", "plan-onerildi"] as const).map((s) => ({ value: s, label: CALL_STATE_LABEL[s] }))} value={state} onValueChange={(v) => setState((v as CallState) ?? "ulasilamadi")} />
         {state === "soz-verdi" ? <Input label="Söz Verilen Tarih" type="date" min={dayKey(addDays(parseDay(TODAY_KEY), 1))} value={date} onChange={(e) => setDate(e.target.value)} error={error || undefined} /> : null}
         <Textarea label="Not" value={note} onChange={(e) => setNote(e.target.value)} minRows={2} maxLength={200} error={state === "soz-verdi" ? undefined : error || undefined} />
@@ -979,21 +1018,31 @@ function AccrualDialog({ open, onOpenChange, go }: { open: boolean; onOpenChange
               <div><dt className="text-muted">Vade</dt><dd className="mt-0.5 text-body">{fullDate.format(parseDay(drafts[0]?.due ?? TODAY_KEY))}</dd></div>
             </dl>
           )}
-          {preview.flaggedExcluded > 0 ? (
-            <p className="flex items-start gap-2 rounded-lg bg-warning-wash p-3 text-small text-warning">
-              <ShieldAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-              <span><strong className="font-semibold">{num.format(preview.flaggedExcluded)} şüpheli okuma hariç tutuldu.</strong> Okumalar sayfasında onaylanınca bir sonraki tahakkukta kesilir.</span>
-            </p>
-          ) : null}
-          {preview.pending > 0 ? (
-            <p className="flex items-start gap-2 rounded-lg bg-warning-wash p-3 text-small text-warning">
-              <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-              <span><strong className="font-semibold">{num.format(preview.pending)} okuma hâlâ bekliyor.</strong> Bu aboneler faturalanmaz.</span>
-            </p>
-          ) : null}
-          {preview.estimated > 0 ? (
-            <p className="rounded-lg bg-surface p-3 text-small text-body">{num.format(preview.estimated)} faturada tahmini endeks var: gerçek okuma gelince fark mahsup edilir (düzeltme faturası).</p>
-          ) : null}
+          {already ? null : (
+            <ImpactBar
+              label="Okuma Kapsamı"
+              current={Math.max(0, preview.eligible - drafts.length)}
+              added={drafts.length}
+              limit={Math.max(1, preview.eligible + preview.flaggedExcluded + preview.pending)}
+              format={(n) => `${num.format(n)} okuma`}
+            />
+          )}
+          <PolicyChecks
+            title="Ön Kontroller"
+            headingLevel={3}
+            checks={[
+              preview.flaggedExcluded > 0
+                ? { id: "supheli", label: "Şüpheli okuma hariç", detail: `${num.format(preview.flaggedExcluded)} okuma Okumalar sayfasında onaylanınca sonraki tahakkukta kesilir`, state: "pass" }
+                : { id: "supheli", label: "Şüpheli okuma", detail: "Hariç tutulacak okuma yok", state: "pass" },
+              preview.pending > 0
+                ? { id: "bekleyen", label: "Bekleyen okuma", detail: `${num.format(preview.pending)} abone bu turda faturalanmaz`, state: "warn" }
+                : { id: "bekleyen", label: "Bekleyen okuma", detail: "Tüm okumalar alındı", state: "pass" },
+              preview.estimated > 0
+                ? { id: "tahmini", label: "Tahmini endeks", detail: `${num.format(preview.estimated)} faturada: gerçek okuma gelince fark mahsup edilir`, state: "warn" }
+                : { id: "tahmini", label: "Tahmini endeks", detail: "Mahsup bekleyen yok", state: "pass" },
+              { id: "cift", label: "Çift tahakkuk", detail: already ? "Bu dönem zaten kesilmiş" : "Dönem için kesilmiş fatura yok, kapı açık", state: already ? "fail" : "pass" },
+            ]}
+          />
         </div>
       ) : step === "calisiyor" ? (
         <div className="grid gap-3 py-2">
@@ -1229,7 +1278,21 @@ function InvoiceDetail({ id, go }: { id: string; go: PageProps["go"] }) {
                 <div><dt className="text-muted">Gecikme Zammı</dt><dd className="kz-mono mt-0.5 font-semibold text-strong">{tl(due.fee)}</dd></div>
                 <div className="col-span-2 border-t border-line-soft pt-2"><dt className="text-muted">Kalan Toplam</dt><dd className="kz-mono mt-0.5 text-read font-semibold text-strong">{tl(due.total)}</dd></div>
               </dl>
-              {inv.status === "odendi" && due.fee > 0 ? <p className="rounded-lg bg-warning-wash p-3 text-small text-warning">Anapara ödendi ama gecikme zammı tahsil edilmedi: fatura zam ödenene kadar kapanmaz.</p> : null}
+              {inv.status === "odendi" && due.fee > 0 ? (
+                <InsightCallout kind="warning" title="Gecikme Zammı Tahsil Edilmedi" headingLevel={3} label="Dikkat">
+                  Anapara ödendi ama {tl(due.fee)} gecikme zammı bekliyor: fatura zam ödenene kadar kapanmaz.
+                </InsightCallout>
+              ) : null}
+              {inv.status === "itirazli" ? (
+                <InsightCallout kind="warning" title="İtiraz Açık, Tahsilat Durdu" headingLevel={3} label="Dikkat">
+                  İtiraz karara bağlanana dek tahsilat ve kesme işlemi yapılmaz. Karar İtirazlar ve Mahsup sayfasında verilir.
+                </InsightCallout>
+              ) : null}
+              {isOverdue(inv) && inv.status !== "itirazli" && due.fee > 0 && inv.status !== "odendi" ? (
+                <InsightCallout title="Gecikme Zammı Doğuyor" headingLevel={3} label="Öneri">
+                  {late} gündür gecikmiş: günlük zam işliyor. Vade uzatma ya da ödeme planıyla zammı durdurabilirsiniz.
+                </InsightCallout>
+              ) : null}
               {inv.cancelled ? <p className="text-small text-muted">Bu fatura iptal edildi.</p> : null}
             </div>
           </Panel>
@@ -1380,7 +1443,18 @@ function DisputeDialog({ open, onOpenChange, inv }: { open: boolean; onOpenChang
       }
     >
       <div className="grid gap-3">
-        <Select label="Neden" items={["Tüketim yüksek", "Sayaç doğruluğu", "Yanlış tarife", "Mükerrer fatura", "Diğer"].map((v) => ({ value: v, label: v }))} value={reason} onValueChange={(v) => setReason(v ?? "Diğer")} />
+        <OptionCards
+          legend="İtiraz Nedeni"
+          value={reason}
+          onValueChange={setReason}
+          options={[
+            { value: "Tüketim yüksek", title: "Tüketim Yüksek", description: "Önceki dönemlere göre beklenmedik sıçrama." },
+            { value: "Sayaç doğruluğu", title: "Sayaç Doğruluğu", description: "Sayaç testi talep edilir; sonuç gelene dek tahsilat durur." },
+            { value: "Yanlış tarife", title: "Yanlış Tarife", description: "Abone türü ya da tarife kaydı hatalı." },
+            { value: "Mükerrer fatura", title: "Mükerrer Fatura", description: "Aynı dönem için iki fatura kesilmiş." },
+            { value: "Diğer", title: "Diğer", description: "Açıklama alanına nedeni yazın." },
+          ]}
+        />
         <Textarea label="Açıklama" value={note} onChange={(e) => setNote(e.target.value)} minRows={2} maxLength={240} />
       </div>
     </Dialog>
@@ -1389,6 +1463,7 @@ function DisputeDialog({ open, onOpenChange, inv }: { open: boolean; onOpenChang
 
 function CancelDialog({ open, onOpenChange, inv, go }: { open: boolean; onOpenChange: (o: boolean) => void; inv: EffectiveInvoice; go: PageProps["go"] }) {
   const { notify } = useApp();
+  const fin = useFinance();
   return (
     <Dialog
       open={open}
@@ -1417,6 +1492,14 @@ function CancelDialog({ open, onOpenChange, inv, go }: { open: boolean; onOpenCh
         </>
       }
     >
+      <div className="mb-3">
+        <ValueDiff
+          rows={[
+            { label: "İptal Edilecek Fatura", groups: inv.id.split("-"), tone: "bad", note: `${tl(inv.total)} · ${inv.period}` },
+            { label: "Kesilecek Düzeltme", groups: `${inv.id.split("-D")[0]}-D${allInvoices(fin).filter((x) => x.corrects === inv.id).length + 1}`.split("-"), tone: "good", note: "Aynı okumadan yeniden hesaplanır" },
+          ]}
+        />
+      </div>
       <p className="flex items-start gap-2 rounded-lg bg-danger-wash p-3 text-small text-danger">
         <FilePlus2 aria-hidden className="mt-0.5 size-4 shrink-0" />
         <span>Fatura iptali iki göz kuralına bağlı olabilir. Onay gerekiyorsa işlem, ikinci yetkili onaylayınca uygulanır; düzeltme faturası o zaman elle kesilir.</span>
