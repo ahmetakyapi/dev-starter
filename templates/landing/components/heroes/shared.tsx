@@ -59,10 +59,13 @@ export function HeroActions({
   primary,
   secondary,
   className,
+  tone = "default",
 }: {
   primary: Link;
   secondary: Link | null;
   className?: string;
+  /** `media`: sabit koyu görsel zemin üstü; ikincil eylem açık yazı. */
+  tone?: "default" | "media";
 }) {
   return (
     <div className={cn("flex flex-wrap items-center gap-3", className)}>
@@ -73,7 +76,10 @@ export function HeroActions({
         </a>
       </Magnetic>
       {secondary ? (
-        <a href={secondary.href} className={buttonClass({ variant: "ghost", size: "lg" })}>
+        <a
+          href={secondary.href}
+          className={buttonClass({ variant: "ghost", size: "lg", className: tone === "media" ? "text-on-brand hover:bg-on-brand/10 hover:text-on-brand" : undefined })}
+        >
           {secondary.label}
         </a>
       ) : null}

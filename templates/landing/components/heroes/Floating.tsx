@@ -19,14 +19,14 @@ export function FloatingHero() {
   return (
     <section id="ust" aria-label="Giriş" className="relative isolate">
       <FloatCards className="min-h-[34rem] lg:min-h-[calc(100dvh-4rem)]">
-        <FloatCard at={{ left: "-2%", top: "12%" }} rotate={-5} depth={1} className="w-60">
+        <FloatCard at={{ left: "3%", top: "12%" }} rotate={-5} depth={1} className="w-60">
           <p className="text-micro text-muted">{funnel.title}</p>
           <p className="mt-1 text-display font-semibold text-strong tabular-nums">{first.value.toLocaleString("tr-TR")}</p>
           <p className="text-micro text-muted">
             {first.label} → {last.label}: {last.value.toLocaleString("tr-TR")}
           </p>
         </FloatCard>
-        <FloatCard at={{ right: "-1%", top: "8%" }} rotate={4} depth={2} delay={2} className="w-64">
+        <FloatCard at={{ right: "2%", top: "8%" }} rotate={4} depth={2} delay={2} className="w-64">
           <p className="text-micro text-muted">{closed.title}</p>
           <div className="mt-3 flex h-16 items-end gap-1.5">
             {closed.weekly.map((value, i) => (
