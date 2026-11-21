@@ -66,7 +66,7 @@ addons.register("dev-starter/theme-sync", (api: API) => {
    paneli kapanır: kapak ilk ekranın üçte birini "This story has no controls"
    kutusuna veriyordu. Panel yalnız BİZ kapattıysak geri açılır; kullanıcı
    kendi kapattıysa bileşen sayfasına geçince kapalı kalır. */
-const PAGE_STORIES = /^(cover|showcase|demo-app|start|pattern-library|references|landing|gallery)--/;
+const PAGE_STORIES = /^(cover|showcase|demo-app|edas-portal|start|pattern-library|references|landing|gallery)--/;
 
 addons.register("dev-starter/page-stories", (api: API) => {
   let hiddenByUs = false;

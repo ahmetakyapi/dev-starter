@@ -883,7 +883,7 @@
       "name": "command-palette",
       "type": "registry:ui",
       "title": "Komut Paleti",
-      "description": "⌘K / Ctrl+K komut paleti",
+      "description": "⌘K / Ctrl+K komut paleti (`maxResults` ile yüzlerce kayıtta liste sınırı)",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
