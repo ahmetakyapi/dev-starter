@@ -97,7 +97,7 @@ export function FeatureTile({
 
   const copy = (
     <div className={cn("relative", tone === "sky" ? "pt-5" : "px-6 pt-6 sm:px-7 sm:pt-7")}>
-      <h3 className="pr-8 text-title font-medium">{heading}</h3>
+      <h3 className={cn("pr-8 text-title font-medium", inverse ? "text-on-brand" : "text-strong")}>{heading}</h3>
       {description ? (
         <p className={cn("mt-2 max-w-md text-base", inverse ? "text-on-brand/75" : tone === "sky" ? "text-muted" : "text-body")}>{description}</p>
       ) : null}

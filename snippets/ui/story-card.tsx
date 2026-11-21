@@ -116,7 +116,7 @@ export function StoryCard({
         <div className={cn("min-w-0 text-title font-medium", inverse ? "text-on-brand" : "text-strong")}>{logo}</div>
         {tone === "plain" ? cta : null}
         {sample ? (
-          <span className="rounded-full bg-warning-wash px-2 py-0.5 text-micro font-medium text-warning">ÖRNEK</span>
+          <span className={cn("rounded-full px-2 py-0.5 text-micro font-medium", inverse ? "bg-on-brand/20 text-on-brand backdrop-blur-sm" : "bg-warning-wash text-warning")}>ÖRNEK</span>
         ) : null}
       </div>
 

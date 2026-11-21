@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
  * başlıkları). Ağırlığı renk kontrastı taşır; font, boyut, satır aynı kalır.
  * Hero ve bölüm başlığı, "hakkımızda" cümlesi, manifesto.
  *
- * Kural: vurgulanan şey cümlenin ANLAMI olsun ("güvenle yönet"), süs olsun
+ * Kural: soluk bölüm yalnız BÜYÜK metinde (≥ 24 px) kullan; küçük gövde metninde %60 kontrast AA altına iner. Vurgulanan şey cümlenin ANLAMI olsun ("güvenle yönet"), süs olsun
  * diye iki yarıya bölme. Soluk bölüm yine okunur kalmalı: en az AA kontrast
  * (`text-muted` beyaz üstünde 5:1; `media` tonu görsel üstünde `on-brand/60`,
  * görselin kendisi karartılmadıysa ÖLÇ).
@@ -66,8 +66,8 @@ export function ToneText({ children, as: Tag = "h2", tone = "default", fade, cla
       className={cn(
         "text-balance",
         media ? "text-on-brand [--tone-strong:var(--on-brand)]" : "text-strong [--tone-strong:var(--text-strong)]",
-        // Soluk bölüm: yazı renginin %55'i, token'ın kendisinden türer (iki temada da döner).
-        "[&_.ui-tone-soft]:text-[color-mix(in_srgb,currentColor_55%,transparent)]",
+        // Soluk bölüm: yazı renginin %60'i, token'ın kendisinden türer (iki temada da döner).
+        "[&_.ui-tone-soft]:text-[color-mix(in_srgb,currentColor_60%,transparent)]",
         "[&_em]:font-display [&_em]:font-normal [&_em]:italic",
         fade ? "ui-tone-fade" : null,
         className,
