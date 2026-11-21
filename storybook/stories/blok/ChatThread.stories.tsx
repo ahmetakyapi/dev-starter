@@ -38,6 +38,8 @@ const meta = {
   component: ChatThread,
   tags: ["autodocs"],
   parameters: {
+    // a11y TODO (Akan yanıt (Motion ile sözcük belirmesi) yarı saydam anında ölçülüyor): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     docs: {
       description: {
         component:

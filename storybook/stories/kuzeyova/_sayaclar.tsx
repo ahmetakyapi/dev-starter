@@ -366,7 +366,7 @@ function MeterList({ params, go }: PageProps) {
             ))}
           </span>
         ) : (
-          <span className="text-small text-muted">{all.length ? "Durumda belirtildi" : "Sorun yok"}</span>
+          <span className="text-small text-muted">{all.length ? <><span aria-hidden>—</span><span className="sr-only">Durum sütununda belirtildi</span></> : "Sorun yok"}</span>
         );
       },
     },

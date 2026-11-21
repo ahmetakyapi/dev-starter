@@ -107,7 +107,7 @@ export function AssigneePicker({ label, people, value, onValueChange, multiple =
       }}
     >
       <PopoverTrigger
-        aria-label={`${label}: ${spoken}`}
+        aria-label={`${label}: ${spoken}${extra > 0 ? `, +${extra}` : ""}`}
         className={cn(
           "group inline-flex min-h-11 items-center rounded-full py-1 pr-1 pl-1 transition-[background-color] duration-150 hover:bg-surface-raised pointer-fine:min-h-9",
           className,

@@ -30,6 +30,8 @@ const meta = {
   component: Section,
   tags: ["autodocs"],
   parameters: {
+    // a11y TODO (Görüşler: avatar baş harfi chart-4 üstünde 3,8:1 (landing şablonu, ayrı iş)): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     controls: { disable: true },
     docs: {

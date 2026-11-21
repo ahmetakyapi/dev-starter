@@ -695,7 +695,7 @@ export function RaporlarPage({ params, go }: PageProps) {
               <div key={k} className="bg-overlay p-3.5">
                 <dt className="text-small text-muted">{k}</dt>
                 <dd className="mt-0.5 text-base font-semibold text-strong tabular-nums">{v}</dd>
-                <p className="text-small text-muted">{f}</p>
+                <dd className="text-small text-muted">{f}</dd>
               </div>
             ))}
           </dl>

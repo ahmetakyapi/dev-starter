@@ -51,6 +51,11 @@ export const Default: Story = {
     // Gerçek liste bir kez okunur; kopya erişilebilirlik ağacında yok.
     await expect(canvas.getAllByRole("list", { name: "Müşterilerimiz" })).toHaveLength(1);
     await expect(canvas.getAllByRole("listitem")).toHaveLength(LOGOS.length);
+    // Hareket azaltmada şerit hiç kaymaz ve durdurma butonu çizilmez (bkz. belge yorumu).
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      await expect(canvas.queryByRole("button", { name: "Şeridi Durdur" })).toBeNull();
+      return;
+    }
     const toggle = canvas.getByRole("button", { name: "Şeridi Durdur" });
     await expect(toggle).toHaveAttribute("aria-pressed", "false");
     await userEvent.click(toggle);

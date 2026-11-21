@@ -1,5 +1,5 @@
 /**
- * Kuzeyova Portalı: yeni modüllerin tohumlu başlangıç verisi (başvurular, kaçak
+ * Portal: yeni modüllerin tohumlu başlangıç verisi (başvurular, kaçak
  * vakaları, sayaç stoku, çağrılar, trafo yükü, üreticiler, itirazlar, alacaklar,
  * KVKK). Hepsi `_data.ts` ile AYNI müşteri, sayaç, okuma ve fatura listelerinden
  * türer (uydurma bağımsız sayı yok) ve `_store.ts` dilimlerinin başlangıç değeridir.

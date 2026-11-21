@@ -43,8 +43,8 @@ async function command(root: HTMLElement, query: string) {
 }
 
 const meta = {
-  title: "Kuzeyova Portalı",
-  id: "kuzeyova-portal",
+  title: "Portal",
+  id: "portal",
   component: KuzeyovaApp,
   // autodocs YOK: kenar çubuğundan açınca açıklama sayfası değil doğrudan uygulama (Overview) açılır.
   parameters: {

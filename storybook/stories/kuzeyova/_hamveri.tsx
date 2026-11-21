@@ -463,7 +463,7 @@ export function HamVeriPage({ params, go }: PageProps) {
                             İstek Gönderildi
                           </Badge>
                         ) : (
-                          <Button variant="secondary" size="sm" onClick={() => request([g.id])} aria-label={`${dayLabel(g.day)} ${g.from}–${g.to} aralığını yeniden iste`}>
+                          <Button variant="secondary" size="sm" onClick={() => request([g.id])} aria-label={`Yeniden İste: ${dayLabel(g.day)} ${g.from}–${g.to} aralığı`}>
                             Yeniden İste
                           </Button>
                         )}

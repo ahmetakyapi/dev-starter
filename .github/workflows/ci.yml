@@ -271,3 +271,41 @@ jobs:
       # Türkçe başlıktan "giriş--giris" gibi adres üretir; burada kırılır.
       - name: Story URLs are English
         run: npm run check:ids
+
+  storybook-tests:
+    name: Storybook Tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    # Neden ayri is: hikayelerin `play` fonksiyonlari ve a11y denetimi (axe) gercek
+    # Chromium'da kosar (Vitest + @storybook/addon-vitest). Build isinden bagimsiz
+    # ve paralel: ana hatti yavaslatmaz. Eskiden 150'den fazla `play` ve
+    # `a11y: { test: "error" }` ayari vardi ama CI'da hicbiri kosmuyordu; koşunun
+    # ilk gunu bir Select hatasini (liste hic acilmiyordu) yakaladi.
+    # Dislananlar ve a11y TODO listesi: storybook/A11Y-DURUM.md. Yerelde:
+    # npm run ci:local -- --tests
+
+    defaults:
+      run:
+        working-directory: storybook
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: storybook/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Chromium surumu storybook/package.json'daki playwright pin'iyle gelir.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run story tests (play + a11y)
+        run: npm run test:stories

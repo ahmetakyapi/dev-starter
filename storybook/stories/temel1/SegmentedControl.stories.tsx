@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import { useArgs } from "storybook/preview-api";
+import { useLocalArgs } from "../_lib/useLocalArgs";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { SegmentedControl, type SegmentOption } from "@/components/ui/segmented-control";
 import { Cell, Gallery } from "../_lib/Frame";
@@ -37,10 +37,10 @@ const meta = {
   },
   args: { options: RANGE, value: "hafta", "aria-label": "Zaman Aralığı", size: "md", onValueChange: fn() },
   render: function Render(args) {
-    const [, updateArgs] = useArgs();
+    const [live, updateArgs] = useLocalArgs(args);
     return (
       <SegmentedControl
-        {...args}
+        {...live}
         onValueChange={(value) => {
           updateArgs({ value });
           args.onValueChange(value);

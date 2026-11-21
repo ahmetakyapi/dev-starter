@@ -45,7 +45,7 @@ export const Default: Story = {
     await expect(canvas.getByText(/sonuçlar oy verince görünür/)).toBeInTheDocument();
     const opt = canvas.getByRole("button", { name: /^Kısa ve net şablon/ });
     await userEvent.click(opt);
-    await expect(opt).toHaveAccessibleName(/yüzde 60, 3 oy, senin oyun/);
+    await expect(opt).toHaveAccessibleName(/%60, 3 oy, senin oyun/);
     await userEvent.click(canvas.getByRole("button", { name: /^Telefonla arayalım/ }));
     await expect(opt).toHaveAttribute("aria-pressed", "false");
   },

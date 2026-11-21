@@ -69,14 +69,14 @@ export function ChannelMatrix({ caption, hideCaption = true, channels, rows, val
         <caption className={cn(hideCaption ? "sr-only" : "px-4 pt-3 text-start text-small font-medium text-muted")}>{caption}</caption>
         <thead>
           <tr className="bg-surface-solid">
-            <th scope="col" className="sticky left-0 z-10 bg-surface-solid px-4 py-2.5 text-start text-small font-medium text-muted">
+            <th scope="col" className="sticky left-0 z-10 bg-surface-solid px-4 py-2.5 text-start text-small font-medium text-soft">
               {rowHeader}
             </th>
             {channels.map((ch) => {
               const on = editable.filter((r) => has(r.id, ch.id)).length;
               const all = editable.length > 0 && on === editable.length;
               return (
-                <th key={ch.id} scope="col" className="w-28 px-3 py-2.5 text-small font-medium whitespace-nowrap text-muted">
+                <th key={ch.id} scope="col" className="w-28 px-3 py-2.5 text-small font-medium whitespace-nowrap text-soft">
                   <span className="flex flex-col items-center gap-1.5">
                     {ch.label}
                     <Checkbox

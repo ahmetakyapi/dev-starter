@@ -667,6 +667,8 @@ export const Overview: Story = {
     await expect(canvas.getByRole("heading", { level: 1 })).toHaveTextContent("Tek Kimlik, On Palet");
     // fireEvent: userEvent odağı karoya taşır ve sayfayı kaydırır; kapak açılışta
     // en üstte kalmalı. Sınama sonunda ziyaretçinin paleti (adresten gelen) geri yüklenir.
+    // Palet global'i Storybook kanalından döner; Vitest'te (taşınabilir hikaye) kanal yok, bu adım atlanır.
+    if (typeof (globalThis as { __vitest_browser__?: unknown }).__vitest_browser__ !== "undefined") return;
     const initial = PALETTES.find((p) => p.value === root.dataset.palette) ?? PALETTES[0];
     const other = initial.value === "jade" ? "Kobalt" : "Yeşim";
     await fireEvent.click(canvas.getByRole("radio", { name: other }));

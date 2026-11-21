@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, userEvent, within } from "storybook/test";
+import { useState } from "react";
+import { expect, screen, userEvent, waitFor, within } from "storybook/test";
+import { Button } from "@/components/ui/Button";
+import { Dialog } from "@/components/ui/dialog";
 import { Select } from "@/components/ui/select";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 import { CITIES } from "./_data";
@@ -50,7 +53,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
     await userEvent.click(canvas.getByRole("combobox"));
-    await userEvent.click(await body.findByRole("option", { name: "Bursa" }));
+    await userEvent.click(await body.findByRole("option", { name: "Bursa" }, { timeout: 5000 }));
     await expect(canvas.getByRole("combobox")).toHaveTextContent("Bursa");
   },
 };
@@ -80,4 +83,37 @@ export const AllVariants: Story = {
       </Cell>
     </Gallery>
   ),
+};
+
+function InDialog() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Teslimatı Düzenle</Button>
+      <Dialog open={open} onOpenChange={setOpen} title="Teslimat Şehri" description="Listeyi pencerenin içinden aç.">
+        <Select label="Şehir" items={ITEMS} defaultValue="izmir" className="w-full" />
+      </Dialog>
+    </>
+  );
+}
+
+export const InsideDialog: Story = {
+  name: "Pencere İçinde",
+  parameters: { bare: true },
+  tags: ["!autodocs"],
+  render: () => (
+    <Frame width="sm" className="min-h-80">
+      <InDialog />
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Teslimatı Düzenle" }));
+    const dialog = await screen.findByRole("dialog", { name: "Teslimat Şehri" });
+    await userEvent.click(within(dialog).getByRole("combobox"));
+    // Liste üst katmandaki <dialog>un içine taşınır: pencerenin ARKASINDA kalmaz.
+    const option = await screen.findByRole("option", { name: "Bursa" });
+    await expect(dialog.contains(option)).toBe(true);
+    await userEvent.click(option);
+    await waitFor(() => expect(within(dialog).getByRole("combobox")).toHaveTextContent("Bursa"));
+  },
 };

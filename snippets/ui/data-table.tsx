@@ -205,6 +205,9 @@ export function DataTable<Row>({
                         {column.header}
                         <SortIcon aria-hidden className={cn("size-3.5", !current && "opacity-50")} strokeWidth={2} />
                       </Link>
+                    ) : column.header === "" || column.header === null || column.header === undefined ? (
+                      // Boş başlık (seçim kutusu, satır eylemi) ekran okuyucuda adsız kalmasın.
+                      <span className="sr-only">Eylemler</span>
                     ) : (
                       column.header
                     )}

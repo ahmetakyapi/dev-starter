@@ -300,7 +300,12 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
       width: "1rem",
       render: (c) => {
         const reason = riskReason(c);
-        return <span aria-hidden className={`block h-10 w-1 rounded-full ${reason ? (reason.startsWith("Sayaç") ? "bg-warning" : "bg-danger") : "bg-line"}`} />;
+        return (
+          <>
+            <span aria-hidden className={`block h-10 w-1 rounded-full ${reason ? (reason.startsWith("Sayaç") ? "bg-warning" : "bg-danger") : "bg-line"}`} />
+            <span className="sr-only">{reason ?? "Risk işareti yok"}</span>
+          </>
+        );
       },
     },
     {
@@ -827,33 +832,25 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
               </div>
             </div>
             <dl className="grid gap-3 text-base">
-              <div className="flex items-start gap-2.5">
-                <Phone aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />
-                <div className="min-w-0">
-                  <dt className="text-small text-muted">Telefon</dt>
-                  <dd className="kz-mono text-strong">{shown.phone}</dd>
-                </div>
+              <div className="grid grid-cols-[1rem_minmax(0,1fr)] gap-x-2.5">
+                <Phone aria-hidden className="col-start-1 row-span-2 mt-0.5 size-4 text-muted" />
+                <dt className="col-start-2 min-w-0 text-small text-muted">Telefon</dt>
+                <dd className="col-start-2 min-w-0 kz-mono text-strong">{shown.phone}</dd>
               </div>
-              <div className="flex items-start gap-2.5">
-                <Mail aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />
-                <div className="min-w-0">
-                  <dt className="text-small text-muted">E-posta</dt>
-                  <dd className="break-all text-strong">{shown.email}</dd>
-                </div>
+              <div className="grid grid-cols-[1rem_minmax(0,1fr)] gap-x-2.5">
+                <Mail aria-hidden className="col-start-1 row-span-2 mt-0.5 size-4 text-muted" />
+                <dt className="col-start-2 min-w-0 text-small text-muted">E-posta</dt>
+                <dd className="col-start-2 min-w-0 break-all text-strong">{shown.email}</dd>
               </div>
-              <div className="flex items-start gap-2.5">
-                <MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />
-                <div className="min-w-0">
-                  <dt className="text-small text-muted">Adres</dt>
-                  <dd className="text-strong">{c.address}</dd>
-                </div>
+              <div className="grid grid-cols-[1rem_minmax(0,1fr)] gap-x-2.5">
+                <MapPin aria-hidden className="col-start-1 row-span-2 mt-0.5 size-4 text-muted" />
+                <dt className="col-start-2 min-w-0 text-small text-muted">Adres</dt>
+                <dd className="col-start-2 min-w-0 text-strong">{c.address}</dd>
               </div>
-              <div className="flex items-start gap-2.5">
-                <Receipt aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />
-                <div className="min-w-0">
-                  <dt className="text-small text-muted">{c.kind === "bireysel" ? "T.C. Kimlik No" : "Vergi Kimlik No"}</dt>
-                  <dd className="kz-mono text-strong">{c.taxMasked}</dd>
-                </div>
+              <div className="grid grid-cols-[1rem_minmax(0,1fr)] gap-x-2.5">
+                <Receipt aria-hidden className="col-start-1 row-span-2 mt-0.5 size-4 text-muted" />
+                <dt className="col-start-2 min-w-0 text-small text-muted">{c.kind === "bireysel" ? "T.C. Kimlik No" : "Vergi Kimlik No"}</dt>
+                <dd className="col-start-2 min-w-0 kz-mono text-strong">{c.taxMasked}</dd>
               </div>
             </dl>
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line-soft pt-3">

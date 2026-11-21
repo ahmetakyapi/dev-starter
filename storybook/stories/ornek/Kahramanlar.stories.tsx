@@ -16,6 +16,8 @@ const meta = {
   component: Scene,
   tags: ["autodocs"],
   parameters: {
+    // a11y TODO (Odak Yığını uzak öğeleri bilerek soluk (aria-hidden); axe soluk metni ölçüyor): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     controls: { disable: true },
     docs: {

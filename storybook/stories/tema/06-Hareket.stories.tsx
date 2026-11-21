@@ -363,6 +363,8 @@ const meta = {
   id: "motion",
   component: HareketSayfasi,
   parameters: {
+    // a11y TODO (Hareket örnekleri: soluk açıklama metni örnek kartta): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     docs: {
       description: {

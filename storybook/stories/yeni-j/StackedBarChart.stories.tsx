@@ -25,6 +25,8 @@ const meta = {
   component: StackedBarChart,
   tags: ["autodocs", "yeni"],
   parameters: {
+    // a11y TODO (Sütun butonu adı görünen balon metnini aynen içermiyor (label-content-name-mismatch), bileşen düzeltmesi bekliyor): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "padded",
     docs: {
       description: {

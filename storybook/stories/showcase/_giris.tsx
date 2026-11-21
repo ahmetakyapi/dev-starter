@@ -103,7 +103,6 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
               <button
                 type="button"
                 onClick={onSignedIn}
-                aria-label={`${ME.name} olarak devam et`}
                 className="group flex w-full items-center gap-3 rounded-xl bg-overlay p-3 text-start shadow-raised transition-[box-shadow,scale] duration-150 hover:shadow-floating active:scale-[0.99]"
               >
                 <Avatar name={ME.name} size="md" />
@@ -113,6 +112,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
                     {ME.email} · {ME.role}
                   </span>
                 </span>
+                <span className="sr-only">olarak devam et</span>
                 <ChevronRight aria-hidden className="size-4 text-muted transition-[translate] duration-200 group-hover:translate-x-0.5" />
               </button>
             </section>
