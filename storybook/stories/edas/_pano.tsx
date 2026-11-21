@@ -36,7 +36,8 @@ import {
   WORK_TYPE_LABEL,
   balanceOf,
   clock,
-  collectionOf,
+  collectionIn,
+  type Invoice,
   customer,
   daysBetween,
   loadCurve,
@@ -55,6 +56,10 @@ import {
   type Period,
   type WorkOrderType,
 } from "./_data";
+import { useDerived } from "./_core";
+import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, useLiveStats, activeCustomers } from "./_selectors";
+import { effectiveMeters } from "./_ops";
+import { WORK_TYPE_LABEL as WORK_LABEL_X, type WorkType } from "./_store";
 import { CARD, IconTile, MetricStrip, PageBody, PageHead, SampleNote, href, useApp, type PageProps } from "./_ui";
 
 /** Enerji miktarı, okunur birimle: ≥ 1 milyon kWh → GWh, değilse MWh. */
@@ -136,7 +141,7 @@ type Attention = {
 /** Dikkat gerektirenler: aynı listelerden süzülen dört kaynak, tek tabloda. */
 function buildAttention(): Attention[] {
   const rows: Attention[] = [];
-  FLAGGED_READINGS.filter((r) => r.period === CURRENT_PERIOD)
+  flaggedReadings(CURRENT_PERIOD)
     .slice(0, 4)
     .forEach((r) =>
       rows.push({
@@ -149,7 +154,7 @@ function buildAttention(): Attention[] {
         sort: 3,
       }),
     );
-  [...OVERDUE_INVOICES]
+  overdueInvoices()
     .sort((a, b) => balanceOf(b) - balanceOf(a))
     .slice(0, 4)
     .forEach((i) =>
@@ -163,7 +168,7 @@ function buildAttention(): Attention[] {
         sort: 2,
       }),
     );
-  METERS.filter((m) => m.status === "iletisim-yok")
+  commsLostMeters()
     .sort((a, b) => a.lastSeen.getTime() - b.lastSeen.getTime())
     .slice(0, 3)
     .forEach((m) =>
@@ -177,7 +182,7 @@ function buildAttention(): Attention[] {
         sort: 1,
       }),
     );
-  OPEN_OUTAGES.slice(0, 2).forEach((o) =>
+  openOutages().slice(0, 2).forEach((o) =>
     rows.push({
       id: o.id,
       kind: "ariza",
@@ -198,7 +203,7 @@ const KIND = {
   ariza: { label: "Arıza", icon: <Zap />, tone: "danger" as const },
 };
 
-const WORK_COLOR: Record<WorkOrderType, 1 | 2 | 3 | 4 | 5 | 6> = { kesme: 6, baglama: 5, "sayac-degisim": 3, "okuma-turu": 1, kontrol: 4 };
+const WORK_COLOR: Record<WorkType, 1 | 2 | 3 | 4 | 5 | 6> = { kesme: 6, baglama: 5, "sayac-degisim": 3, "okuma-turu": 1, kontrol: 4, sokum: 3, kesif: 2, montaj: 2, ariza: 6 };
 
 function ModeLink({ attention, go }: { attention: Attention; go: PageProps["go"] }) {
   return (
@@ -217,7 +222,11 @@ function ModeLink({ attention, go }: { attention: Attention; go: PageProps["go"]
 
 export function PanoPage({ go }: PageProps) {
   const { period } = useApp();
-  const stats = useMemo(() => periodStats(period), [period]);
+  const stats = useLiveStats(period);
+  const activeNow = useDerived(activeCustomers);
+  const meters = useDerived(effectiveMeters);
+  const outagesNow = useDerived(openOutages);
+  const upcoming = useDerived(() => openWorkOrders().filter((w) => w.status !== "tamamlandi" && w.scheduled >= new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate())).sort((a, b) => a.scheduled.getTime() - b.scheduled.getTime()));
   const label = PERIODS.find((p) => p.value === period)!.label;
   const prevLabel = period === "1" ? "önceki aya göre" : `önceki ${period} aya göre`;
 
@@ -225,7 +234,8 @@ export function PanoPage({ go }: PageProps) {
   const done = PERIODS_12.slice(0, 11);
   const usageTrend = done.map((p) => READINGS.filter((r) => r.period === p && r.status !== "bekliyor").reduce((s, r) => s + r.usage.total, 0));
   const billedTrend = done.map((p) => INVOICES.filter((i) => i.period === p).reduce((s, i) => s + i.total, 0));
-  const rateTrend = done.map(collectionOf);
+  const liveInv = useDerived(activeInvoices);
+  const rateTrend = done.map((p) => collectionIn(p, liveInv as Invoice[]));
   const lossTrend = done.map((p) => {
     const rows = regionLoss(p);
     return pct(rows.reduce((s, x) => s + x.lossKwh, 0), rows.reduce((s, x) => s + x.input, 0));
@@ -240,7 +250,7 @@ export function PanoPage({ go }: PageProps) {
   }, [period]);
   const monthLabels = chartPeriods.map((p) => monthShort.format(parseDay(p)).replace(".", ""));
   const billedBars = chartPeriods.map((p) => Math.round(INVOICES.filter((i) => i.period === p).reduce((s, i) => s + i.total, 0) / 100));
-  const rateLine = chartPeriods.map((p) => collectionOf(p) / 100);
+  const rateLine = chartPeriods.map((p) => collectionIn(p, liveInv as Invoice[]) / 100);
 
   /* Bölge kayıp/kaçak: pencere ortalaması, giriş enerjisi ağırlıklı. */
   const losses = useMemo(() => {
@@ -257,7 +267,7 @@ export function PanoPage({ go }: PageProps) {
   const yesterday = loadCurve(1);
   const lastWeek = loadCurve(7);
 
-  const attention = useMemo(buildAttention, []);
+  const attention = useDerived(buildAttention);
   const attentionColumns: readonly Column<Attention>[] = [
     {
       key: "kind",
@@ -285,26 +295,26 @@ export function PanoPage({ go }: PageProps) {
     href: href(r.to.page, r.to.params),
   }));
 
-  const schedule: ScheduleItem[] = UPCOMING_WORK.slice(0, 7).map((w) => {
+  const schedule: ScheduleItem[] = upcoming.slice(0, 7).map((w) => {
     const days = daysBetween(TODAY, w.scheduled);
     return {
       id: w.id,
       at: `${w.scheduled.getFullYear()}-${String(w.scheduled.getMonth() + 1).padStart(2, "0")}-${String(w.scheduled.getDate()).padStart(2, "0")}T${clock.format(w.scheduled)}`,
       time: clock.format(w.scheduled),
       day: days === 0 ? "Bugün" : days === 1 ? "Yarın" : new Intl.DateTimeFormat("tr-TR", { weekday: "short", day: "numeric" }).format(w.scheduled),
-      title: WORK_TYPE_LABEL[w.type],
+      title: WORK_LABEL_X[w.type],
       detail: w.customerId ? `${customer(w.customerId).name} · ${w.reason}` : w.reason,
       color: WORK_COLOR[w.type],
     };
   });
 
-  const openOutageSub = OPEN_OUTAGES.reduce((s, o) => s + o.affected, 0);
+  const openOutageSub = outagesNow.reduce((s, o) => s + o.affected, 0);
 
   return (
     <>
       <PageHead
         title="Pano"
-        description={`Pilot bölge · ${num.format(stats.active)} aktif abone, ${num.format(METERS.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
+        description={`Pilot bölge · ${num.format(stats.active)} aktif abone, ${num.format(meters.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
         actions={
           <>
             <PeriodControl />
@@ -325,7 +335,7 @@ export function PanoPage({ go }: PageProps) {
             value={<DigitRoll value={num.format(stats.active)} />}
             change={null}
             changeLabel=""
-            foot={KINDS.map((k) => `${KIND_LABEL[k]} ${num.format(CUSTOMERS.filter((c) => c.status === "aktif" && c.kind === k).length)}`).join(" · ")}
+            foot={KINDS.map((k) => `${KIND_LABEL[k]} ${num.format(activeNow.filter((c) => c.kind === k).length)}`).join(" · ")}
           />
           <StatCell
             icon={<Zap />}
@@ -379,7 +389,7 @@ export function PanoPage({ go }: PageProps) {
             series={flaggedTrend}
             trend="Aylık şüpheli okuma sayısı"
             tone="warning"
-            foot={`${METERS.filter((m) => m.status === "iletisim-yok").length} iletişim yok, ${METERS.filter((m) => m.status === "arizali").length} arızalı sayaç`}
+            foot={`${meters.filter((m) => m.status === "iletisim-yok").length} iletişim yok, ${meters.filter((m) => m.status === "arizali").length} arızalı sayaç`}
           />
         </MetricStrip>
 
@@ -446,7 +456,7 @@ export function PanoPage({ go }: PageProps) {
                 <h2 id="pano-sirada" className="text-small font-medium text-muted">
                   Sıradaki İşler
                 </h2>
-                <p className="mt-1 text-heading font-semibold tracking-tight text-strong">{num.format(UPCOMING_WORK.length)} planlı iş</p>
+                <p className="mt-1 text-heading font-semibold tracking-tight text-strong">{num.format(upcoming.length)} planlı iş</p>
               </header>
               <div className="px-3 pb-3">
                 <ScheduleList label="Planlı iş emirleri" items={schedule} />

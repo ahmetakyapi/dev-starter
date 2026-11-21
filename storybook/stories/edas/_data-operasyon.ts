@@ -11,7 +11,9 @@ import {
   INVOICES,
   METERS,
   OUTAGES,
+  FEEDERS,
   PERIODS_12,
+  REGION_READ_DAYS,
   READINGS,
   REGIONS,
   SUBSTATIONS,
@@ -30,6 +32,7 @@ import {
   type Outage,
   type Supplier,
 } from "./_data";
+import { DEFAULT_PARAMS, computeInvoice } from "./_billing";
 
 /* --- Küçük yardımcılar (yerel kopya: `_data.ts` bunları dışa aktarmıyor) ------ */
 
@@ -85,7 +88,12 @@ export const supplierUsage = (supplierId: string, period: string) => USAGE.get(s
 export const distributionBilled = (supplierId: string, period: string) =>
   INVOICES.filter((i) => i.supplierId === supplierId && i.period === period).reduce((s, i) => s + i.distribution, 0);
 
-/** Tedarikçinin gönderdiği toplu fatura: bazılarında küçük bir fark var (mutabakat uyarısı). */
+/**
+ * Dağıtım bedeli TOPLU FATURASI: bunu dağıtım şirketi (EDAŞ) keser ve tedarikçiye
+ * gönderir (`Invoice.issuer = "dagitim"`); abone faturasını tedarikçi keser. Fark:
+ * toplu fatura − tedarikçinin abone faturalarındaki dağıtım bedeli toplamı;
+ * bazılarında küçük bir fark var ve tedarikçi buna İTİRAZ edebilir (mutabakat).
+ */
 const BATCH_DELTA: Record<string, number> = { "S-03": 0.018, "S-05": -0.009 };
 export const batchInvoiced = (supplierId: string, period: string) => Math.round(distributionBilled(supplierId, period) * (1 + (BATCH_DELTA[supplierId] ?? 0)));
 
@@ -195,10 +203,12 @@ export const COMMIT_MONTHS: Record<string, number> = { "S-01": 0, "S-02": 12, "S
 export function customerOffers(c: Customer) {
   const mine = READINGS.filter((r) => r.customerId === c.id && r.status !== "bekliyor").slice(-3);
   const avg = mine.length ? mine.reduce((s, r) => s + r.usage.total, 0) / mine.length : c.baseKwh;
-  const vat = c.kind === "tarim" ? 1.1 : 1.2;
+  const multi = c.tariff === "cok-zamanli";
+  const usage = multi ? { t1: avg * 0.46, t2: avg * 0.3, t3: avg * 0.24, total: avg } : { t1: avg, t2: 0, t3: 0, total: avg };
+  /* Teklif, gerçek faturayla AYNI hesap çekirdeği (`_billing.ts`): dilim fiyatları, dağıtım, vergiler. */
   return SUPPLIERS.map((s) => {
-    const monthly = avg * (s.unitPrice + DIST_RATE[c.kind] + YEKDEM_RATE) * vat;
-    return { supplier: s, commit: COMMIT_MONTHS[s.id], monthly: Math.round(monthly * 100), current: s.id === c.supplierId, eligible: s.kind === "gorevli" || c.free };
+    const bill = computeInvoice({ kind: c.kind, voltage: c.voltage, usage, prices: s.prices }, DEFAULT_PARAMS);
+    return { supplier: s, commit: COMMIT_MONTHS[s.id], monthly: bill.total, current: s.id === c.supplierId, eligible: s.kind === "gorevli" || c.free };
   });
 }
 
@@ -238,13 +248,20 @@ export function outageTimeline(o: Outage) {
 }
 
 /** Etkilenen abonelerden örnek bölge listesi: bölgedeki ilk `n` müşteri (sabit sıra). */
-export const affectedSample = (o: Outage, n = 8) => CUSTOMERS.filter((c) => c.regionId === o.regionId).slice(0, n);
+export const affectedSample = (o: Outage, n = 8) => {
+  const trs = o.transformerIds ?? [];
+  const ids = new Set(METERS.filter((m) => o.feederId && FEEDERS.some((f) => f.id === o.feederId) && trs.includes(m.transformerId ?? "")).map((m) => m.customerId));
+  const onFeeder = CUSTOMERS.filter((c) => ids.has(c.id));
+  return (onFeeder.length ? onFeeder : CUSTOMERS.filter((c) => c.regionId === o.regionId)).slice(0, n);
+};
 
 /** SAIDI (abone başına dakika) ve SAIFI (abone başına kesinti): plansız kayıtlar, son `days` gün. */
+export const LONG_OUTAGE_MINUTES = 3;
 export function reliability(days: number) {
   const from = addDays(TODAY, -days).getTime();
-  const rows = OUTAGE_LIST.filter((o) => o.kind === "plansiz" && o.start.getTime() >= from && o.start.getTime() <= TODAY.getTime());
-  const total = CUSTOMERS.length;
+  /* Yalnız UZUN kesintiler (> 3 dk) sayılır; payda = aktif abone sayısı (kapalı ve kesik hariç). */
+  const rows = OUTAGE_LIST.filter((o) => o.kind === "plansiz" && o.start.getTime() >= from && o.start.getTime() <= TODAY.getTime() && minutesOf(o) > LONG_OUTAGE_MINUTES);
+  const total = CUSTOMERS.filter((c) => c.status === "aktif").length;
   const minutes = rows.reduce((s, o) => s + o.affected * minutesOf(o), 0);
   const events = rows.reduce((s, o) => s + o.affected, 0);
   const resolved = rows.filter((o) => o.status === "cozuldu");
@@ -324,16 +341,24 @@ export const PERMISSION_START: Record<string, readonly RoleId[]> = {
 
 export type Tariff = { id: string; label: string; unit: string; value: number; effective: string; by: string; note: string };
 export const TARIFFS_START: readonly Tariff[] = [
-  { id: "dist-bireysel", label: "Dağıtım Bedeli, Konut", unit: "TL/kWh", value: DIST_RATE.bireysel, effective: "2026-07-01", by: "Aylin Yıldırım", note: "Düzenleyici kurul kararı" },
-  { id: "dist-ticari", label: "Dağıtım Bedeli, Ticarethane", unit: "TL/kWh", value: DIST_RATE.ticari, effective: "2026-07-01", by: "Aylin Yıldırım", note: "Düzenleyici kurul kararı" },
+  { id: "dist-bireysel", label: "Dağıtım Bedeli, Konut", unit: "TL/kWh", value: DIST_RATE.bireysel, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "dist-ticari", label: "Dağıtım Bedeli, Ticarethane", unit: "TL/kWh", value: DIST_RATE.ticari, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
   { id: "dist-sanayi", label: "Dağıtım Bedeli, Sanayi", unit: "TL/kWh", value: DIST_RATE.sanayi, effective: "2026-07-01", by: "Aylin Yıldırım", note: "OG abone" },
   { id: "dist-tarim", label: "Dağıtım Bedeli, Tarımsal Sulama", unit: "TL/kWh", value: DIST_RATE.tarim, effective: "2026-07-01", by: "Aylin Yıldırım", note: "Sulama sezonu tarifesi" },
   { id: "yekdem", label: "YEKDEM Bedeli", unit: "TL/kWh", value: YEKDEM_RATE, effective: "2026-10-01", by: "Selin Akgül", note: "Aylık ilan edilen birim bedel" },
-  { id: "fon-konut", label: "Enerji Fonu, Konut", unit: "% (enerji bedeli)", value: 3, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Yasal oran" },
-  { id: "fon-diger", label: "Enerji Fonu, Diğer Aboneler", unit: "% (enerji bedeli)", value: 1, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Yasal oran" },
+  { id: "fon-konut", label: "Enerji Fonu, Konut", unit: "% (enerji bedeli)", value: 3, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "fon-diger", label: "Enerji Fonu, Diğer Aboneler", unit: "% (enerji bedeli)", value: 1, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
   { id: "btv", label: "Belediye Tüketim Vergisi, Konut ve Ticarethane", unit: "% (enerji + dağıtım)", value: 5, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Sanayide %1, tarımda yok" },
   { id: "kdv", label: "KDV, Konut ve Ticarethane", unit: "%", value: 20, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Tarımsal sulamada %10" },
-  { id: "gecikme", label: "Gecikme Zammı", unit: "% (aylık)", value: 2.5, effective: "2025-01-01", by: "Selin Akgül", note: "Vade sonrası aylık, gün bazlı işler" },
+  { id: "gecikme", label: "Gecikme Zammı", unit: "% (aylık)", value: 2.5, effective: "2024-01-01", by: "Selin Akgül", note: "ÖRNEK PARAMETRE · vade sonrası gün bazlı, tarih aralıklı oran tablosu" },
+  { id: "iletim", label: "İletim (Sistem Kullanım) Bedeli", unit: "TL/kWh", value: DEFAULT_PARAMS.transmission, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · faturada dağıtım kaleminin içinde" },
+  { id: "reaktif-endukt", label: "Reaktif Sınır, Endüktif", unit: "% (aktife oran)", value: DEFAULT_PARAMS.reactiveInductiveLimit * 100, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı; konut muaf" },
+  { id: "reaktif-kapasitif", label: "Reaktif Sınır, Kapasitif", unit: "% (aktife oran)", value: DEFAULT_PARAMS.reactiveCapacitiveLimit * 100, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "reaktif-bedel", label: "Aşan Reaktif Bedeli", unit: "TL/kVArh", value: DEFAULT_PARAMS.reactiveRate, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE" },
+  { id: "guc-asim", label: "Sözleşme Gücü Aşım Bedeli", unit: "TL/kW", value: DEFAULT_PARAMS.powerOverRate, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · yalnız OG" },
+  { id: "t2-carpan", label: "Puant (T2) Fiyat Çarpanı", unit: "× T1", value: DEFAULT_PARAMS.zoneMultiplier.t2, effective: "2025-01-01", by: "Aylin Yıldırım", note: `ÖRNEK PARAMETRE · ${DEFAULT_PARAMS.zoneHours.t2}` },
+  { id: "t3-carpan", label: "Gece (T3) Fiyat Çarpanı", unit: "× T1", value: DEFAULT_PARAMS.zoneMultiplier.t3, effective: "2025-01-01", by: "Aylin Yıldırım", note: `ÖRNEK PARAMETRE · ${DEFAULT_PARAMS.zoneHours.t3}` },
+  { id: "serbest-limit", label: "Serbest Tüketici Yıllık Sınırı", unit: "kWh/yıl", value: 3000, effective: "2026-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · yıllık tüketime göre belirlenir, doğrulanmalı" },
 ];
 
 export type TariffChange = { id: string; label: string; from: number; to: number; effective: string; by: string };
@@ -348,7 +373,8 @@ export const READERS = ["Kerem Şahin", "Derya Kalkan", "Mehmet Aral", "Esin Ça
 export const READ_ROUTES_START = REGIONS.map((r, i) => ({
   regionId: r.id,
   reader: READERS[i],
-  day: [3, 5, 8, 10, 14, 1][i],
+  day: REGION_READ_DAYS[r.id][0],
+  days: REGION_READ_DAYS[r.id].join(", "),
   meters: METERS.filter((m) => customer(m.customerId).regionId === r.id).length,
 }));
 

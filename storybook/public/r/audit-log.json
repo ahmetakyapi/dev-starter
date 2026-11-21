@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "audit-log",
+  "type": "registry:ui",
+  "title": "Denetim Kaydı",
+  "description": "Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA; reddedilen deneme \"Reddedildi\" metniyle; süzgeç yuvası",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/audit-log.tsx",
+      "content": "import { ArrowRight, ShieldX } from \"lucide-react\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Denetim kaydı görüntüleyici: \"kim, ne zaman, neyi, neyden neye değiştirdi\".\n * Her satır bir olay: yapan kişi, eylem, hedef (kayıt kimliği, mono), zaman\n * ve isteğe bağlı ÖNCE → SONRA farkı. Reddedilen deneme (yetkisiz işlem)\n * açıkça \"Reddedildi\" metniyle işaretlenir.\n *\n * NE ZAMAN: ayarlar, uyum ve yönetici ekranlarında \"değişiklik geçmişi\".\n * Bir kaydın kendi geçmişi (sipariş, sayaç) için `timeline.tsx`; bu bileşen\n * HESABIN/SİSTEMİN geçmişi: birden çok kişi, birden çok kayıt, süzülebilir.\n *\n * Günlük değişmezdir: bileşen yalnız OKUR (silme/düzenleme yok). Süzgeç ve\n * dışa aktarma çağıranın işi: `toolbar` yuvasına arama/`active-filters` ve\n * \"Dışa aktar\" konur. Zaman ÇAĞIRANDAN gelir (`at` ISO, `when` görünen metin):\n * göreli zaman sunucu ve istemcide farklı çıkar (hidrasyon uyuşmazlığı), burada\n * biçimleme yok.\n *\n * ERİŞİLEBİLİRLİK: `ol` + ad; her zaman `<time dateTime>`. Fark satırında\n * \"Önce:\" ve \"Sonra:\" görünmez etiketlerle okunur (ok yalnız süs); eski değer\n * üstü çizili ama okunur kalır. Reddedilen satır renkle değil \"Reddedildi\"\n * metni ve ikonla belli. Yeni kayıtlar listeye eklenince duyurmak istersen\n * çağıran canlı bölge kurar (liste kendisi canlı bölge değil). İçine\n * etkileşimli öğe koyma.\n *\n *   <AuditLog\n *     label=\"Denetim Günlüğü\"\n *     entries={[{ id: \"1\", at: \"2026-11-21T10:40:00+03:00\", when: \"21 Kas 10:40\", actor: \"Aylin Yıldırım\",\n *       action: \"Tarife güncelledi\", target: \"T-AG-KONUT\", before: \"₺3,12\", after: \"₺3,28\" }]}\n *     toolbar={<ActiveFilters … />}\n *   />\n */\n\nexport type AuditEntry = {\n  id: string;\n  /** ISO zaman: `<time dateTime>`. */\n  at: string;\n  /** Görünen zaman: \"21 Kas, 10:40\". */\n  when: ReactNode;\n  actor: string;\n  /** Rol ya da birim, ikinci satır: \"Tahsilat Uzmanı\". */\n  actorDetail?: string;\n  action: string;\n  /** Hedef kayıt: \"F-202610-0083\" (mono). */\n  target?: string;\n  before?: string;\n  after?: string;\n  /** Reddedilen deneme: yetki yok, iki göz onayı reddi. */\n  denied?: boolean;\n};\n\ntype AuditLogProps = {\n  entries: readonly AuditEntry[];\n  label?: string;\n  /** Üstte süzgeç ve dışa aktarma yuvası. */\n  toolbar?: ReactNode;\n  emptyText?: string;\n  className?: string;\n};\n\nexport function AuditLog({ entries, label = \"Denetim Günlüğü\", toolbar, emptyText = \"Eşleşen kayıt yok.\", className }: AuditLogProps) {\n  return (\n    <div className={cn(\"min-w-0\", className)}>\n      {toolbar ? <div className=\"mb-3\">{toolbar}</div> : null}\n      {entries.length === 0 ? (\n        <p className=\"rounded-lg border border-dashed border-line px-4 py-8 text-center text-base text-muted\">{emptyText}</p>\n      ) : (\n        <ol role=\"list\" aria-label={label} className=\"divide-y divide-line-soft\">\n          {entries.map((e) => (\n            <li key={e.id} className=\"grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 py-3\">\n              <p className=\"min-w-0 text-base text-body\">\n                <span className=\"font-medium text-strong\">{e.actor}</span>\n                {e.actorDetail ? <span className=\"text-muted\"> ({e.actorDetail})</span> : null} {e.action}\n                {e.target ? <> <span className=\"font-mono text-small tabular-nums text-strong\">{e.target}</span></> : null}\n              </p>\n              <time dateTime={e.at} className=\"text-small whitespace-nowrap text-muted tabular-nums\">\n                {e.when}\n              </time>\n              {e.denied ? (\n                <p className=\"col-span-2 inline-flex items-center gap-1.5 text-small font-medium text-danger\">\n                  <ShieldX aria-hidden className=\"size-3.5\" />\n                  Reddedildi\n                  {e.after ? <span className=\"font-normal text-muted\">: {e.after}</span> : null}\n                </p>\n              ) : e.before !== undefined || e.after !== undefined ? (\n                <p className=\"col-span-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-small\">\n                  {e.before !== undefined ? (\n                    <span className=\"text-muted\">\n                      <span className=\"sr-only\">Önce: </span>\n                      <del className=\"decoration-muted/60\">{e.before}</del>\n                    </span>\n                  ) : null}\n                  {e.before !== undefined && e.after !== undefined ? <ArrowRight aria-hidden className=\"size-3 text-muted\" /> : null}\n                  {e.after !== undefined ? (\n                    <span className=\"font-medium text-strong\">\n                      <span className=\"sr-only\">Sonra: </span>\n                      {e.after}\n                    </span>\n                  ) : null}\n                </p>\n              ) : null}\n            </li>\n          ))}\n        </ol>\n      )}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "audit-log",
+    "palettes": false
+  }
+}

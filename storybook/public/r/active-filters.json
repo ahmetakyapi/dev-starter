@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "active-filters",
+  "type": "registry:ui",
+  "title": "Etkin Süzgeçler",
+  "description": "Listenin üstünde etkin süzgeç çipleri + \"Temizle\" (3+ süzgeçli liste): neden kısaldığı gözün önünde; süzgeç yoksa hiçbir şey çizmez",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/chip.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/active-filters.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { RemovableChip } from \"@/components/ui/chip\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Etkin süzgeç çipleri: listenin üstünde \"şu an neye bakıyorum\" satırı.\n * Her etkin süzgeç (\"Durum: Geciken\", \"Bölge: Kıyı\") kaldırılabilir bir çip,\n * sonda tek \"Temizle\" butonu. Süzgeçler çekmeceye ya da açılır listelere\n * gömüldüğünde bile liste neden kısaldı sorusunun cevabı gözün önünde kalır;\n * filtre yığını (4 açılır liste + sekmeler) tek satıra iner.\n *\n * NE ZAMAN: üç ya da daha çok süzgeci olan her liste (müşteri, fatura, sayaç).\n * Tek süzgeç ya da yalnız sekme varsa gerekmez. Süzgeç oluşturucusu için\n * `filter-sheet.tsx`; bu bileşen yalnız sonucu gösterir ve geri alır.\n *\n * Hiçbir süzgeç yoksa HİÇBİR ŞEY çizmez (`null`): boş bir satır yer tutmaz.\n * Durum çağıranda; bileşen `onRemove(id)` ve `onClear()` çağırır. Sunucu\n * bileşeni: fonksiyon prop'larını istemci bir üst bileşen verir.\n *\n * ERİŞİLEBİLİRLİK: `role=\"group\"` + ad; her çipin × butonu \"Kaldır: Durum,\n * Geciken\" diye adlanır (`RemovableChip`). Kaldırılan çip DOM'dan çıkınca odak\n * kaybolur: çağıran odağı bir sonraki çipin × butonuna ya da arama kutusuna\n * taşımalı. Sonuç sayısı (`summary`) görünen metindir, canlı bölge DEĞİL;\n * süzgeç değişince sayıyı duyurmak istiyorsan çağıran kendi `role=\"status\"`\n * bölgesine yazar.\n *\n *   <ActiveFilters\n *     filters={[{ id: \"status\", label: \"Durum\", value: \"Geciken\" }]}\n *     onRemove={(id) => clear(id)}\n *     onClear={clearAll}\n *     summary=\"37 fatura\"\n *   />\n */\n\nexport type ActiveFilter = {\n  id: string;\n  /** Süzgecin adı: \"Durum\". */\n  label: string;\n  /** Seçili değer: \"Geciken\". */\n  value: ReactNode;\n  /** Kaldır butonunun adı için düz metin; verilmezse `label`. */\n  valueText?: string;\n};\n\ntype ActiveFiltersProps = {\n  filters: readonly ActiveFilter[];\n  onRemove?: (id: string) => void;\n  onClear?: () => void;\n  /** Grubun ekran okuyucu adı. */\n  label?: string;\n  clearLabel?: string;\n  /** Görünen sonuç özeti: \"37 fatura\". */\n  summary?: ReactNode;\n  className?: string;\n};\n\nexport function ActiveFilters({\n  filters,\n  onRemove,\n  onClear,\n  label = \"Etkin Süzgeçler\",\n  clearLabel = \"Temizle\",\n  summary,\n  className,\n}: ActiveFiltersProps) {\n  if (filters.length === 0) return null;\n  return (\n    <div role=\"group\" aria-label={label} className={cn(\"flex flex-wrap items-center gap-2\", className)}>\n      {filters.map((f) => (\n        <RemovableChip key={f.id} label={`${f.label}, ${f.valueText ?? (typeof f.value === \"string\" ? f.value : f.label)}`} onRemove={onRemove ? () => onRemove(f.id) : undefined}>\n          <span className=\"text-muted\">{f.label}:</span> {f.value}\n        </RemovableChip>\n      ))}\n      {onClear && filters.length > 1 ? (\n        <button\n          type=\"button\"\n          onClick={onClear}\n          className=\"min-h-11 cursor-pointer rounded-md px-2 text-base font-medium text-primary-ink underline-offset-4 hover:underline pointer-fine:min-h-8\"\n        >\n          {clearLabel}\n        </button>\n      ) : null}\n      {summary ? <span className=\"ml-auto text-small text-muted tabular-nums\">{summary}</span> : null}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "active-filters",
+    "palettes": false
+  }
+}

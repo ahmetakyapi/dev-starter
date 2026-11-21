@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "check:ids": "node scripts/check-story-ids.mjs",
     "check:align": "node scripts/check-alignment.mjs",
+    "verify:edas": "node scripts/verify-edas-data.mjs",
     "og": "node scripts/build-og.mjs"
   },
   "dependencies": {

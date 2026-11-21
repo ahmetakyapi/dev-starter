@@ -493,7 +493,7 @@ function MeterDetailBody({ m, go }: { m: Meter; go: PageProps["go"] }) {
       href: href("readings", { id: r.id }),
     }));
 
-  const SHORT_SOURCE = { uzaktan: "Uzaktan", saha: "Saha", tahmini: "Tahmini", beyan: "Beyan" } as const;
+  const SHORT_SOURCE = { uzaktan: "Uzaktan", saha: "Saha", tahmini: "Tahmini", beyan: "Beyan", yok: "Bekliyor" } as const;
   const readingColumns: readonly Column<(typeof readings)[number]>[] = [
     { key: "period", header: "Dönem", render: (r) => <a href={href("readings", { id: r.id })} className="font-semibold text-strong hover:underline">{periodLabel(r.period)}</a> },
     { key: "date", header: "Okuma günü", render: (r) => dayLabel(r.date) },

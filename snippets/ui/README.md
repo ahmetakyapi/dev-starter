@@ -107,6 +107,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `sparkline.tsx` | Eksensiz mini eğri | yok | Hayır | `role="img"` + `title` |
 | `record-list.tsx` | Tablonun telefondaki hali: üç katlı kart (ne · ne zaman/durum · kim); `data-table` ile `max-md:hidden` / `md:hidden` çifti | yok | Hayır | `ul` + ad; ana eylem başlık, kart ona genişletilmiş tıklama alanı (satır başına tek eylem); kişiler "Atanan: Ad" okunur |
 | `schedule-list.tsx` | Sıradakiler: saat + gün, renkli çubuk, başlık ve tek satır açıklama, sağda uygulama ikonları | `chart-card` (seri rengi) | Hayır | `ul`, her saat `<time dateTime>`, ikonlar `aria-hidden`; `href`'li satır tam bağlantı |
+| `audit-log.tsx` | Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA; reddedilen deneme "Reddedildi" metniyle; süzgeç yuvası | lucide | Hayır | `ol` + ad, her zaman `<time dateTime>`, fark satırında görünmez "Önce/Sonra" etiketi, eski değer üstü çizili ama okunur; zaman çağıranda (hidrasyon) |
 
 ### Form ve Gezinme
 
@@ -137,6 +138,8 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `integration-card.tsx` | Entegrasyon ızgarası kartı: bağlıysa "Bağlı" hapı + eşitleme zamanı + anahtar, değilse "Bağla" butonu + kurulum maliyeti; `menu` yuvası; `IntegrationGrid` | `badge`, `switch`, lucide | Evet | `article` + `h3`; anahtar "Ad: eşitleme", buton "Ad uygulamasını bağla"; kartın tamamı tıklanmaz (iç içe etkileşim yok) |
 | `permission-list.tsx` | Bağlantı penceresinde "Uygulama şunları yapabilecek" dökümü; Okur/Yazar rozeti, güvence satırı | lucide | Hayır | `ul`; erişim türü renkle değil metinle; ikon `aria-hidden` |
 | `category-card.tsx` | Yardım merkezi ve kaynak kütüphanesi konu karosu; renkli ikon karosu, "12 makale →"; `CategoryGrid` | lucide | Hayır | Gerilmiş tek bağlantı; ad başlık, açıklama `aria-describedby` ile "12 makale"; `focus-within` halkası |
+| `active-filters.tsx` | Listenin üstünde etkin süzgeç çipleri + "Temizle" (3+ süzgeçli liste): neden kısaldığı gözün önünde; süzgeç yoksa hiçbir şey çizmez | `chip` | Hayır | `role="group"` + ad; her çipin × butonu "Kaldır: Durum, Geciken"; odağı kaldırınca çağıran taşır; sonuç özeti canlı bölge değil |
+| `saved-views.tsx` | Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, "Görünümü Kaydet" satır içi ad alanı | `chip`, lucide | Evet | Grup + ad; görünüm `aria-pressed` + ✓; kayıt adı boş/uzun/yinelenen olamaz (`role="alert"`, `aria-invalid`); Enter kaydeder, Esc vazgeçer; odak düğmeye döner |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -179,6 +182,7 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 | `stacked-bar-chart.tsx` | Bir toplamın neyden oluştuğu: günün/ayın sütunu serilerin yığılı hali; vurgulu sütun doygun, balon "44/gün" | `chart-card`, `@/lib/utils` | Evet | Sütunlar odaklanabilir butonlar (gezici tabindex, ← → Home End), adı seri değerlerini ve toplamı söyler; ayrı tablo yok; hareket azaltmada geçişler anında |
 | `path-graph.tsx` | Bağımlılığı olan 6-15 işin aşama sütunlarında kritik yolu: teslimi belirleyen zincir kalın `danger`, boşluklu bağlantı ince; solda Bugün, sağda hedef | yok | Hayır | Çizim `aria-hidden`; `sr-only` liste her işi "kritik yolda, engelli, şunlardan sonra" diye okur; tuval yatay kayar, odaklanabilir bölge; sabit düzen (hidrasyon farkı yok) |
 | `tick-meter.tsx` | Birimi sayılabilen işin gidişatı (tahmin / harcanan, biten görev): dolu, aşan (`danger`) ve planlanan (çizgili) çentikler, isteğe eşik işaretçisi | yok | Hayır | `role="meter"` + `aria-valuetext`; aşım rengin yanında görünen metin ve okunan cümleyle söylenir |
+| `region-map.tsx` | Bölgeye göre dağılım (kayıp, arıza yoğunluğu, şube cirosu) şematik SVG haritada: değer ölçeği ya da açık durum tonu, balon, seçilebilir bölge; gerçek coğrafya değil, çağıran poligonları verir | yok | Evet | Bölge `role="button"` (`onSelect` varsa) ya da `img` + ad, Enter/Boşluk seçer, odak halkası; asıl veri `sr-only` tabloda; renk tek işaret değil (balon, tablo, eşik aşan bölgeye çizgili kenar) |
 
 ### Form Girişleri
 
@@ -288,7 +292,7 @@ sohbeti, giriş, ayarlar, palet seçici.
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
 | `palette-switcher.tsx` | Alttan yüzen palet seçici + açık/koyu anahtarı; vitrin, tema denemesi | `ThemeToggle`, `app/palettes.css` | Evet | `role="radiogroup"`, gezici tabindex, oklar/Home/End; seçim halkası renkle değil kalınlıkla |
-| `app-shell.tsx` | Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik | `sheet`, `command-palette`, `kbd`, `avatar`, `next/link` | Evet | `nav` + grup başlıkları, `aria-current="page"`, daraltmada `aria-expanded`, ⌘B (metin alanında kapalı) |
+| `app-shell.tsx` | Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik; telefonda `mobileActions` (üst çubuk sağı) ve `bottomBar` (alt sekme çubuğu, `openMenu` ile) | `sheet`, `command-palette`, `kbd`, `avatar`, `next/link` | Evet | `nav` + grup başlıkları, `aria-current="page"`, daraltmada `aria-expanded`, ⌘B (metin alanında kapalı) |
 | `auth-card.tsx` | Giriş/kayıt kartı, sunucu eylemine bağlanır; `method="link"` şifresiz (e-postaya giriş bağlantısı) | `spinner`, `next/link` | Evet | Alan hatasında `aria-invalid` + `aria-describedby`, genel hata `role="alert"`, göster/gizle `aria-pressed`, doğru `autoComplete` |
 | `settings-dialog.tsx` | Sayfadan çıkmadan, anında etki eden ayarlar penceresi | `dialog`, `switch`, `select` | Evet | Dikey sekme listesi, oklar, Home/End; paneller `hidden` ile kalır, durum silinmez |
 | `agent-plan.tsx` | Ajanın çok adımlı planının kuşbakışı | lucide | Hayır | `<ol>`, `aria-current="step"`, gizli durum metni, `aria-live="polite"`; `<details>` ile JS'siz daraltma |

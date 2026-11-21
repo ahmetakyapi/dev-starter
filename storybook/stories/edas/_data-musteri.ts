@@ -1,6 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { bump, useStoreVersion } from "./_core";
+import { audit } from "./_audit";
+import { allInvoices, getFinance, isOverdue } from "./_data-finans";
 import {
   CUSTOMERS,
   INVOICES,
@@ -89,7 +91,7 @@ export type Note = { id: string; author: string; when: string; text: string };
 export type WorkRequest = { id: string; kind: "kesme" | "baglama"; reason: string; date: string };
 
 export type CustomerPatch = Partial<
-  Pick<Customer, "phone" | "email" | "status" | "supplierId" | "autoPay" | "address" | "tariff">
+  Pick<Customer, "phone" | "email" | "status" | "supplierId" | "autoPay" | "address" | "tariff" | "tags">
 > & { pendingWork?: WorkRequest | null; closed?: boolean; supplierChange?: { supplierId: string; date: string } | null };
 
 type Store = {
@@ -99,26 +101,19 @@ type Store = {
   patches: Map<string, CustomerPatch>;
   history: Map<string, HistoryEvent[]>;
   notes: Map<string, Note[]>;
-  listeners: Set<() => void>;
 };
 
-const store: Store = { version: 0, added: [], addedMeters: [], patches: new Map(), history: new Map(), notes: new Map(), listeners: new Set() };
+const store: Store = { version: 0, added: [], addedMeters: [], patches: new Map(), history: new Map(), notes: new Map() };
 
+/** Değişiklik tek yayın kanalına (`_core.ts`) gider: bütün sayfalar aynı anda güncellenir. */
 function emit() {
   store.version += 1;
-  store.listeners.forEach((l) => l());
+  bump();
 }
 
-/** Depo her değişince sayfayı yeniden çizdirir. Dönen sayı yalnız bağımlılık içindir. */
+/** Depo her değişince sayfayı yeniden çizdirir. Dönen sayı yalnız bağımlılık içindir (tek depo sürümü). */
 export function useCustomerStore(): number {
-  return useSyncExternalStore(
-    (listener) => {
-      store.listeners.add(listener);
-      return () => store.listeners.delete(listener);
-    },
-    () => store.version,
-    () => store.version,
-  );
+  return useStoreVersion();
 }
 
 const stamp = () => ({ at: TODAY_KEY, when: "Bugün, 10:40" });
@@ -126,7 +121,10 @@ let seq = 1;
 
 export function patchCustomer(id: string, patch: CustomerPatch, event?: Omit<HistoryEvent, "id" | "at" | "when">) {
   store.patches.set(id, { ...store.patches.get(id), ...patch });
-  if (event) addHistory(id, event, false);
+  if (event) {
+    addHistory(id, event, false);
+    audit(event.title, id, undefined, event.description);
+  }
   emit();
 }
 
@@ -140,6 +138,7 @@ export function addNote(id: string, text: string) {
   const list = store.notes.get(id) ?? [];
   store.notes.set(id, [{ id: `n-${seq++}`, author: "Aylin Yıldırım", when: "Bugün, 10:40", text }, ...list]);
   addHistory(id, { title: "Not eklendi", description: text.length > 70 ? `${text.slice(0, 70)}…` : text, tone: "neutral" }, false);
+  audit("Müşteri notu ekledi", id, undefined, text.length > 60 ? `${text.slice(0, 60)}…` : text);
   emit();
 }
 
@@ -147,6 +146,7 @@ export function addCustomer(customer: Customer, meter: Meter) {
   store.added = [customer, ...store.added];
   store.addedMeters = [meter, ...store.addedMeters];
   addHistory(customer.id, { title: "Abonelik açıldı", description: "Müşteri kaydı sihirbazıyla oluşturuldu.", tone: "success" }, false);
+  audit("Müşteri kaydetti", `${customer.id} · ${customer.name}`, undefined, `Sayaç ${meter.serial}`);
   emit();
 }
 
@@ -171,15 +171,27 @@ export const historyOf = (id: string): HistoryEvent[] => store.history.get(id) ?
 export const notesOf = (id: string): Note[] => store.notes.get(id) ?? [];
 export const isAdded = (id: string) => store.added.some((c) => c.id === id);
 
-/** Müşteri başına açık bakiye (kuruş) ve geciken fatura sayısı; bir kez hesaplanır. */
-const balances = new Map<string, { balance: number; overdue: number }>();
-for (const inv of INVOICES) {
-  const b = balances.get(inv.customerId) ?? { balance: 0, overdue: 0 };
-  if (inv.status !== "odendi") b.balance += balanceOf(inv);
-  if (inv.status === "gecikti" || (inv.status === "kismi" && inv.due < TODAY_KEY)) b.overdue += 1;
-  balances.set(inv.customerId, b);
+/**
+ * Müşteri başına açık bakiye (kuruş) ve geciken fatura sayısı: CANLI finans
+ * deposundan; bir ödeme girilince bakiye ve "riskli" rozeti anında değişir.
+ * Finans durumu (nesne kimliği) değişene dek bir kez hesaplanır.
+ */
+let balanceCache: { source: unknown; map: Map<string, { balance: number; overdue: number }> } | null = null;
+function balances() {
+  const fin = getFinance();
+  if (balanceCache?.source === fin) return balanceCache.map;
+  const map = new Map<string, { balance: number; overdue: number }>();
+  for (const inv of allInvoices(fin)) {
+    if (inv.cancelled) continue;
+    const b = map.get(inv.customerId) ?? { balance: 0, overdue: 0 };
+    if (inv.status !== "odendi") b.balance += inv.total - inv.paid;
+    if (isOverdue(inv) || (inv.status === "kismi" && inv.due < TODAY_KEY)) b.overdue += 1;
+    map.set(inv.customerId, b);
+  }
+  balanceCache = { source: fin, map };
+  return map;
 }
-export const accountOf = (id: string) => balances.get(id) ?? { balance: 0, overdue: 0 };
+export const accountOf = (id: string) => balances().get(id) ?? { balance: 0, overdue: 0 };
 
 /** Riskli: iki ya da daha çok geciken faturası olan ya da sayacında müdahale/arıza şüphesi olan abone. */
 export function isRisky(c: Customer): boolean {
@@ -245,7 +257,7 @@ export const TAGS = ["Öncelikli Müşteri", "Hassas Abone (Tıbbi Cihaz)", "Yak
 /** Aboneye ait örnek sözleşme bilgisi (gerçek tutar ya da hüküm değildir). */
 export function contractOf(c: Customer) {
   const sup = SUPPLIERS.find((s) => s.id === c.supplierId) ?? SUPPLIERS[0];
-  const power = c.voltage === "OG" ? Math.max(250, Math.round(c.baseKwh / 180) * 10) : c.kind === "bireysel" ? 8 : c.kind === "tarim" ? 22 : 18;
+  const power = c.contractKw ?? (c.voltage === "OG" ? Math.max(250, Math.round(c.baseKwh / 180) * 10) : c.kind === "bireysel" ? 8 : c.kind === "tarim" ? 22 : 18);
   return {
     supplier: sup,
     power,

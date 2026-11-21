@@ -13,6 +13,7 @@ import { Sheet } from "@/components/ui/sheet";
 import { TaskList } from "@/components/ui/task-list";
 import { ME, MY_TASKS, TODAY, dayKey, num, shortDate } from "./_data";
 import { LaunchPath } from "./_gorevler-ek";
+import { TaskViewsWell } from "./_ek-l";
 import { PageBar, SectionTitle, Well, WellTitle, useApp } from "./_ui";
 
 const TODAY_KEY = dayKey(TODAY);
@@ -95,6 +96,8 @@ export function GorevlerPage() {
         </section>
 
         <LaunchPath />
+
+        <TaskViewsWell />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <TaskList title={`${ME.name.split(" ")[0]} · Bugün`} defaultTasks={MY_TASKS} today={TODAY_KEY} className="h-full p-3" />

@@ -96,7 +96,7 @@ import {
   useCustomerStore,
   type ListQuery,
 } from "./_data-musteri";
-import { InvoiceBadge, CustomerBadge, MeterBadge, PageBody, PageHead, Panel, ReadingBadge, SampleNote, href, useApp, type PageProps, type Params } from "./_ui";
+import { InvoiceBadge, CustomerBadge, MeterBadge, MetricStrip, PageBody, PageHead, Panel, ReadingBadge, SampleNote, href, useApp, type PageProps, type Params } from "./_ui";
 
 const PAGE_SIZE = 20;
 
@@ -326,14 +326,14 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
         }
       />
       <PageBody>
-        <div className="edas-strip overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line [&>*]:min-w-0">
+        <MetricStrip>
           <Cell icon={<Users />} label="Toplam Abone" value={num.format(all.length)} foot={KINDS.map((k) => `${KIND_LABEL[k]} ${all.filter((c) => c.kind === k).length}`).join(" · ")} />
           <Cell icon={<Building2 />} label="Serbest Tüketici" value={num.format(counts.serbest)} foot={`${Math.round((counts.serbest / all.length) * 100)}% tedarikçisini seçmiş`} />
           <Cell icon={<Wallet />} label="Otomatik Ödeme" value={`%${Math.round((autoPay / all.length) * 100)}`} foot={`${num.format(autoPay)} talimat`} />
           <Cell icon={<TriangleAlert />} label="Riskli Abone" value={num.format(counts.riskli)} foot="Geciken fatura ya da sayaç şüphesi" />
           <Cell icon={<PowerOff />} label="Enerjisi Kesik" value={num.format(counts.kesik)} foot="Yeniden bağlama bekleyenler dahil" />
           <Cell icon={<Gauge />} label="Okunan Sayaç" value={`%${Math.round((all.filter((c) => metersFor(c.id).every((m) => m.status === "okunuyor")).length / all.length) * 100)}`} foot="Tüm sayaçları sağlıklı aboneler" />
-        </div>
+        </MetricStrip>
 
         <Panel
           title="Abone Listesi"

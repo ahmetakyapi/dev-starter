@@ -30,6 +30,7 @@ import { Terminal } from "@/components/ui/terminal";
 import { Textarea } from "@/components/ui/textarea";
 import { ME, TAG_COLORS, TAG_SUGGESTIONS, TICKETS, WORKSPACE } from "./_data";
 import { HelpWell, IntegrationsWell } from "./_ayarlar-ek";
+import { ActivityWell } from "./_ek-l";
 import { PageBar, Well, WellTitle, useApp } from "./_ui";
 
 const LANGS = [
@@ -428,6 +429,8 @@ export function AyarlarPage() {
           <CodeBlock tabs={WEBHOOK_TABS} persist="pusula-webhook" aria-label="Webhook örneği" />
           <Terminal title="Bağlantı Testi" lines={WEBHOOK_TEST} copyable={false} />
         </Well>
+
+        <ActivityWell />
 
         <HelpWell />
       </div>
