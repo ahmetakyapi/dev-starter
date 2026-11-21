@@ -12,6 +12,8 @@
     "verify:exports": "node scripts/verify-package-exports.mjs",
     "verify:lock": "node scripts/verify-lockfile.mjs",
     "health": "bash scripts/health-check.sh",
+    "direction": "node scripts/pick-direction.mjs",
+    "verify:direction": "node scripts/test-pick-direction.mjs && node scripts/pick-direction.mjs --check",
     "lint": "eslint packages snippets",
     "test": "vitest run",
     "typecheck": "tsc --noEmit --project packages/@ahmet/ui/tsconfig.json",

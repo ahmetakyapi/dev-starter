@@ -16,7 +16,7 @@ import { RecordList, type RecordItem } from "@/components/ui/record-list";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { Select } from "@/components/ui/select";
 import { Tabs } from "@/components/ui/tabs";
-import { KIND_LABEL, KINDS, REGIONS, TODAY, daysBetween, num, parseDay, periodStats, type Period } from "./_data";
+import { KIND_LABEL, KINDS, REGIONS, TODAY, dayLabel, daysBetween, num, parseDay, periodStats, type Period } from "./_data";
 import {
   CADENCE_LABEL,
   CATEGORIES,
@@ -176,7 +176,7 @@ export function RaporlarPage({ params, go }: PageProps) {
       const head = `${dimLabel};${m.label}`;
       const body = result.rows.map((r) => `${r.label};${String(r.value).replace(".", ",")}`);
       download(`rapor_${dim}_${measure}.csv`, [head, ...body, `Toplam;${String(result.total).replace(".", ",")}`].join("\r\n"));
-      notify({ title: "CSV indirildi", body: `${result.rows.length} satır`, tone: "success" });
+      notify({ title: "CSV İndirildi", body: `${result.rows.length} satır`, tone: "success" });
       audit("Raporu dışa aktardı", `${m.label} · ${dimLabel}`, undefined, "CSV");
     } else if (kind === "pdf") {
       /* PDF: tarayıcının yazdırma penceresi (PDF olarak kaydet). Yalnız önizleme paneli basılır. */
@@ -193,7 +193,7 @@ export function RaporlarPage({ params, go }: PageProps) {
       }
       audit("Raporu yazdırdı", `${m.label} · ${dimLabel}`, undefined, "PDF");
     } else {
-      notify({ title: "Excel dosyası hazırlandı (örnek)", body: "Örnek ortamda Excel üretilmez; CSV gerçekten iner, PDF için yazdırma açılır", tone: "info" });
+      notify({ title: "Excel Dosyası Hazırlandı (Örnek)", body: "Örnek ortamda Excel üretilmez; CSV gerçekten iner, PDF için yazdırma açılır", tone: "info" });
     }
   };
 
@@ -225,12 +225,12 @@ export function RaporlarPage({ params, go }: PageProps) {
   const runNow = (id: string) => {
     setSaved((list) => list.map((r) => (r.id === id ? { ...r, lastRun: "2026-11-21 10:40", status: "basarili" } : r)));
     audit("Raporu çalıştırdı", saved.find((r) => r.id === id)?.name ?? id);
-    notify({ title: "Rapor çalıştırıldı", body: saved.find((r) => r.id === id)?.name, tone: "success" });
+    notify({ title: "Rapor Çalıştırıldı", body: saved.find((r) => r.id === id)?.name, tone: "success" });
   };
   const removeReport = (r: SavedReport) => {
     setSaved((list) => list.filter((x) => x.id !== r.id));
     audit("Raporu sildi", r.name);
-    notify({ title: "Rapor silindi", body: r.name, tone: "info", undo: () => setSaved((list) => (list.some((x) => x.id === r.id) ? list : [r, ...list])) });
+    notify({ title: "Rapor Silindi", body: r.name, tone: "info", undo: () => setSaved((list) => (list.some((x) => x.id === r.id) ? list : [r, ...list])) });
   };
   const togglePause = (id: string) => setSaved((list) => list.map((r) => (r.id === id ? { ...r, paused: !r.paused } : r)));
 
@@ -239,7 +239,7 @@ export function RaporlarPage({ params, go }: PageProps) {
     const ref = `BLD-2026-${110490 + Object.keys(refs).length}`;
     filingRefsSlice.set((r) => ({ ...r, [sending.id]: ref }));
     audit("Düzenleyici bildirimi gönderdi", sending.title, undefined, ref);
-    notify({ title: "Bildirim gönderildi", body: `${sending.title} · ${ref}`, tone: "success" });
+    notify({ title: "Bildirim Gönderildi", body: `${sending.title} · ${ref}`, tone: "success" });
     setSending(null);
   };
 
@@ -409,7 +409,7 @@ export function RaporlarPage({ params, go }: PageProps) {
             <EmptyState variant="inline" title="Bu Tanımda Veri Yok" hint="Süzgeci gevşet ya da dönemi uzat." />
           ) : dim === "month" ? (
             <AreaChart
-              title={`${m.label}, aylık`}
+              title={`${m.label} (Aylık)`}
               labels={result.rows.map((r) => r.label.split(" ")[0].slice(0, 3))}
               series={[{ label: m.label, values: result.rows.map((r) => r.value), series: 1 }]}
               valueFormat={m.unit === "TL" ? { notation: "compact", maximumFractionDigits: 1 } : { maximumFractionDigits: m.unit === "%" ? 1 : 0 }}
@@ -417,7 +417,7 @@ export function RaporlarPage({ params, go }: PageProps) {
             />
           ) : (
             <BarList
-              title={`${m.label}, ${dimLabel}`}
+              title={`${m.label} (${dimLabel})`}
               columns={[dimLabel, m.label]}
               items={result.rows.map((r) => ({ label: r.label, value: m.unit === "%" ? r.value : r.value }))}
               sort={false}
@@ -429,10 +429,10 @@ export function RaporlarPage({ params, go }: PageProps) {
           {result.rows.length ? (
             <>
               <div className="max-md:hidden">
-                <DataTable caption={`${m.label}, ${dimLabel}`} columns={columns} rows={result.rows} rowKey={(r) => r.label} density="compact" on="surface" stickyFirst={false} minWidth="30rem" />
+                <DataTable caption={`${m.label} (${dimLabel})`} columns={columns} rows={result.rows} rowKey={(r) => r.label} density="compact" on="surface" stickyFirst={false} minWidth="30rem" />
               </div>
               <div className="md:hidden">
-                <RecordList label={`${m.label}, ${dimLabel}`} items={items} />
+                <RecordList label={`${m.label} (${dimLabel})`} items={items} />
               </div>
             </>
           ) : null}
@@ -547,7 +547,7 @@ export function RaporlarPage({ params, go }: PageProps) {
     <div className="grid gap-5">
       <Strip>
         <Cell icon={<Send />} label="Bekleyen Bildirim" value={num.format(pendingFilings.length)} foot="Gönderilmeyi bekleyen" tone={pendingFilings.length ? "warning" : "success"} />
-        <Cell icon={<CircleAlert />} label="Süresi Geçen" value={num.format(late)} foot={filings.find((f) => f.status === "gecikti")?.checks.find((c) => !c.ok)?.label ?? "Süreler içinde"} tone={late ? "danger" : "success"} />
+        <Cell icon={<CircleAlert />} label="Süresi Geçen" value={num.format(late)} foot={filings.find((f) => f.status === "gecikti")?.checks.find((c) => !c.ok)?.label ?? "Hepsi süresinde"} tone={late ? "danger" : "success"} />
         <Cell icon={<Zap />} label="SAIFI (30 Gün)" value={fmtDec(rel30.saifi, 2)} foot="Abone başına kesinti sayısı" />
         <Cell icon={<Zap />} label="SAIDI (30 Gün)" value={`${fmtDec(rel30.saidi, 1)} dk`} foot={`${rel30.count} uzun kesinti`} />
       </Strip>
@@ -570,7 +570,7 @@ export function RaporlarPage({ params, go }: PageProps) {
                   <div className="min-w-[min(100%,16rem)] flex-1">
                     <p className="text-base font-semibold text-strong">{f.title}</p>
                     <p className="text-small text-muted">
-                      {f.period} · son tarih {f.deadline}
+                      {f.period} · son tarih {dayLabel(f.deadline)}
                       {f.status === "gonderildi" ? ` · ${f.reference}` : left < 0 ? ` · ${-left} gün geçti` : ` · ${left} gün kaldı`}
                     </p>
                   </div>
@@ -634,7 +634,7 @@ export function RaporlarPage({ params, go }: PageProps) {
           { label: "Tahsilat Oranı", value: fmtPct(live.collectionRate), delta: Math.round((live.collectionRate - live.collectionBefore) * 10) / 10, goodWhen: "up", deltaLabel: "önceki aya göre", foot: COLLECTION_SCOPE },
           { label: "SAIDI · 30 Gün", value: `${fmtDec(rel30.saidi, 1)} dk`, foot: `SAIFI ${fmtDec(rel30.saifi, 2)} · ${rel30.count} uzun kesinti` },
           { label: "Okuma Oranı", value: fmtPct(readRate), foot: `${fmtNum(nowReadings.filter((r) => r.status === "bekliyor").length)} sayaç bekliyor` },
-          { label: "Açık İtiraz", value: fmtNum(openDisp), foot: lateDisp ? `${lateDisp} tanesinin süresi aştı` : "Süreler içinde", to: { page: "disputes" } },
+          { label: "Açık İtiraz", value: fmtNum(openDisp), foot: lateDisp ? `${lateDisp} tanesi süresini aştı` : "Hepsi süresinde", to: { page: "disputes" } },
           { label: "İş Emri / Onay", value: `${fmtNum(slaOver)} / ${fmtNum(approvalsOpen)}`, foot: "SLA aşan iş emri / bekleyen onay", to: { page: "workorders" } },
         ]}
       />
@@ -648,7 +648,7 @@ export function RaporlarPage({ params, go }: PageProps) {
               <li key={f.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5">
                 <span className="min-w-0">
                   <span className="block truncate text-base font-medium text-strong">{f.title}</span>
-                  <span className="block text-small text-muted">{f.period} · son tarih {f.deadline} · {left < 0 ? `${-left} gün geçti` : `${left} gün kaldı`}{missing.length ? ` · ${missing.length} doğrulama eksik` : ""}</span>
+                  <span className="block text-small text-muted">{f.period} · son tarih {dayLabel(f.deadline)} · {left < 0 ? `${-left} gün geçti` : `${left} gün kaldı`}{missing.length ? ` · ${missing.length} doğrulama eksik` : ""}</span>
                 </span>
                 <span className="flex items-center gap-2">
                   <Badge tone={FILING_TONE[f.status]} dot>{FILING_LABEL[f.status]}</Badge>

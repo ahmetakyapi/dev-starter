@@ -112,7 +112,7 @@ export default function Page() {
         <DismissibleAnnouncement href="/vitrin" tag="Yeni" storageKey="duyuru:vitrin-geri-bildirim">
           Grafikler Panoya Geldi
         </DismissibleAnnouncement>
-        <h1 className="text-display font-bold tracking-tight">Katman, Geri Bildirim, Gezinme</h1>
+        <h1 className="text-display font-bold tracking-tight">Katman Geri Bildirim ve Gezinme</h1>
         <p className="max-w-xl text-lead text-body">
           Sağ tık menüsünden bildirim ziline, küçük parçaların doğru yapılmış hali. Her biri ayrı dosya, kendi token’larımızla.
         </p>

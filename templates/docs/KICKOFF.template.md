@@ -38,6 +38,19 @@ Konumlandırma: … · Kazanç: … · Risk: … · Kalbi: …
 
 **Önerim:** Yön [X], çünkü …
 
+## Tasarım Yönü
+
+Katalog: `~/dev-starter/knowledge/design-directions.md` · Son beş projenin yönü: [direction-log'dan]
+
+| Aday | Yön | Neden bu ürüne | Hero | Kabuk | Kart ve popup | Yasak |
+|---|---|---|---|---|---|---|
+| A | | | | | | |
+| B | | | | | | |
+| C | | | | | | |
+
+**Seçilen:** [kimlik] — çünkü [tek cümle]. Palet: [signature / verdant / ember / iris / marka]
+(marka rengi var mı: [evet/hayır]). Önceki projelerle aynı yön mü: [hayır / gerekçe]
+
 ## Teknoloji Kararları
 
 Şablon: `nextjs-fullstack` / `landing` / `+ agentic-chat`

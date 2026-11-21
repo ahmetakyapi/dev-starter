@@ -2,7 +2,7 @@
  * İş günü takvimi (saf; hiçbir şeye bağımlı değil). Kesme/bağlama emirleri,
  * banka ödemeleri ve saha işleri iş gününe oturur.
  *
- * Resmî tatil listesi ÖRNEKTİR (gerçek takvim değil): Ayarlar → Kesme Politikası
+ * Resmi tatil listesi ÖRNEKTİR (gerçek takvim değil): Ayarlar → Kesme Kuralları
  * kendi listesini taşır; bu liste yalnız başlangıç değeridir.
  */
 

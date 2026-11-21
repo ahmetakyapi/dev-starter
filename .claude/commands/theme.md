@@ -10,6 +10,15 @@ her projeden çağrılabilir; kaynaklar `~/dev-starter/` altında.
 `~/dev-starter/guides/02-design-tokens.md` (token mimarisi),
 `~/dev-starter/guides/03-theming.md` (tema sistemi).
 
+## 0. Tasarım yönü paletin önündedir
+
+Proje `docs/DESIGN.md` frontmatter'ında `direction:` taşıyorsa paleti o yönün
+palet ailesinden seç (`~/dev-starter/knowledge/design-directions.md`); marka
+rengi varsa yön yalnız hero/kabuk/kart/popup seçer. `direction:` yoksa önce
+yön seçilir (`/kickoff` ya da `node ~/dev-starter/scripts/pick-direction.mjs`).
+Son beş projeyle aynı palet + aynı hero birleşimi gerekçesiz uygulanmaz
+(`~/dev-starter/knowledge/direction-log.md`).
+
 ## 1. Projenin sürümünü tespit et
 
 ```bash

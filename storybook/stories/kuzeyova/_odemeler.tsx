@@ -335,7 +335,7 @@ function Reconcile() {
           </div>
         </Panel>
 
-        <Panel title="Son Dört Gün, Kanallara Göre" note="Sistemdeki ödemelerin mutabakat durumu." className="xl:col-span-3">
+        <Panel title="Son Dört Gün Kanallara Göre" note="Sistemdeki ödemelerin mutabakat durumu." className="xl:col-span-3">
           <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Kanal Mutabakat Özeti">
             <table className="kz-mono w-full min-w-[34rem] text-small">
               <caption className="sr-only">Kanallara göre mutabık, bekleyen ve tutar farklı ödeme sayıları</caption>
@@ -450,7 +450,7 @@ function Reconcile() {
                 ? "Mükerrer satırı aboneye iade etmek ya da avans yazmak doğrudur; faturaya atamak borcu iki kez düşürür."
                 : lineDialog.kind === "fazla"
                   ? "Fazla tutarı sonraki faturaya sayılacak avans olarak almak en az sürtünmeyle kapanır."
-                  : "Eksik tutarı faturaya atayın; fatura kısmi ödenmiş kalır ve kalan bakiye tahsilat kuyruğunda görünür."}
+                  : "Eksik tutarı faturaya atayın; fatura kısmi ödenmiş kalır ve kalan bakiye tahsilat listesinda görünür."}
             </InsightCallout>
             <OptionCards
               legend="Nasıl Kapansın"
@@ -609,7 +609,7 @@ function Plans() {
           </div>
           {chosen && preview.length > 0 ? (
             <div className="grid gap-3 rounded-lg bg-surface p-3">
-              <ImpactBar label="İlk Taksit, Plan Toplamının" current={0} added={preview[0].amount} limit={total} format={(v) => tl(v)} />
+              <ImpactBar label="Plan Toplamına Göre İlk Taksit" current={0} added={preview[0].amount} limit={total} format={(v) => tl(v)} />
               <PolicyChecks
                 title="Ön Kontroller"
                 headingLevel={3}
@@ -766,7 +766,7 @@ function Cuts({ go }: { go: PageProps["go"] }) {
   const [picked, setPicked] = useState<readonly string[]>([]);
   const [confirm, setConfirm] = useState(false);
 
-  /* Aday: vadesi geçmiş borcu olan; ihtar, bekleme, hassas abone, plan ve itiraz kuralları `cutEligibility`den. */
+  /* Kesilebilecek aboneler: vadesi geçmiş borcu olan; ihtar, bekleme, hassas abone, plan ve itiraz kuralları `cutEligibility`den. */
   const candidates: (Candidate & { e: ReturnType<typeof cutEligibility> })[] = useMemo(() => {
     const map = new Map<string, Candidate>();
     for (const i of allInvoices(fin).filter(isOverdue)) {
@@ -817,7 +817,7 @@ function Cuts({ go }: { go: PageProps["go"] }) {
   const columns: readonly Column<(typeof candidates)[number]>[] = [
     {
       key: "pick",
-      header: <Checkbox aria-label="Bütün Adayları Seç" checked={allPicked} onChange={(e) => setPicked(e.target.checked ? candidates.map((c) => c.customerId) : [])} />,
+      header: <Checkbox aria-label="Bütün Aboneleri Seç" checked={allPicked} onChange={(e) => setPicked(e.target.checked ? candidates.map((c) => c.customerId) : [])} />,
       width: "3rem",
       render: (c) => <Checkbox aria-label={`${customer(c.customerId).name} seç`} checked={picked.includes(c.customerId)} onChange={(e) => setPicked(e.target.checked ? [...picked, c.customerId] : picked.filter((x) => x !== c.customerId))} />,
     },
@@ -859,7 +859,7 @@ function Cuts({ go }: { go: PageProps["go"] }) {
     }
     notify({
       title: created ? `${created} kesme emri oluşturuldu` : pending ? `${pending} kesme emri ikinci göz onayında` : "Kesme emri verilemedi",
-      body: [created ? `Planlı zaman: ${slotText(slot)}.` : "", pending ? `${pending} emir ikinci yetkilinin onayını bekliyor (Ayarlar → Uyum Merkezi).` : "", blocked.length ? `${blocked.length} abone politika nedeniyle atlandı.` : ""].filter(Boolean).join(" "),
+      body: [created ? `Planlı zaman: ${slotText(slot)}.` : "", pending ? `${pending} emir ikinci yetkilinin onayını bekliyor (Ayarlar → Uyum Merkezi).` : "", blocked.length ? `${blocked.length} abone kural nedeniyle atlandı.` : ""].filter(Boolean).join(" "),
       tone: created ? "success" : "info",
     });
     setPicked([]);
@@ -879,11 +879,11 @@ function Cuts({ go }: { go: PageProps["go"] }) {
             valueFormat={{ maximumFractionDigits: 0 }}
           />
           <p className="mt-3 rounded-lg bg-surface p-3 text-small text-body">
-            Kesme emri iş günü ve mesai içine planlanır: şu an en erken <strong className="font-semibold text-strong">{slotText(slot)}</strong>. Hafta sonu ve resmî tatilde emir verilmez.
+            Kesme emri iş günü ve mesai içine planlanır: şu an en erken <strong className="font-semibold text-strong">{slotText(slot)}</strong>. Hafta sonu ve resmi tatilde emir verilmez.
           </p>
         </ChartCard>
         <Panel
-          title="Kesme Aday Listesi"
+          title="Kesilebilecek Aboneler"
           note={`${num.format(eligible.length)} abone kesilebilir. Yazılı ihtar, bekleme süresi, hassas abone, itiraz ve ödeme planı kuralları uygulanır (ÖRNEK parametre).`}
           className="self-start xl:col-span-3"
           actions={
@@ -909,15 +909,15 @@ function Cuts({ go }: { go: PageProps["go"] }) {
           {!canCut ? <p className="border-b border-line-soft bg-warning-wash px-4 py-2 text-small text-warning sm:px-5">Kesme ve bağlama emri yetkiniz yok: liste yalnız izleme amaçlı.</p> : null}
           {candidates.length === 0 ? (
             <div className="p-4">
-              <EmptyState icon={<CheckCircle2 />} title="Kesme Adayı Yok" hint="Vadesi geçen bakiyesi olan abone kalmadı." />
+              <EmptyState icon={<CheckCircle2 />} title="Kesilecek Abone Yok" hint="Vadesi geçen bakiyesi olan abone kalmadı." />
             </div>
           ) : (
             <>
               <div className="max-md:hidden">
-                <DataTable<(typeof candidates)[number]> caption="Kesme adayları" columns={columns} rows={candidates} rowKey={(c) => c.customerId} density="comfortable" on="surface" minWidth="36rem" />
+                <DataTable<(typeof candidates)[number]> caption="Kesilebilecek aboneler" columns={columns} rows={candidates} rowKey={(c) => c.customerId} density="comfortable" on="surface" minWidth="36rem" />
               </div>
               <div className="px-3 pb-3 md:hidden">
-                <RecordList label="Kesme Adayları" items={items} />
+                <RecordList label="Kesilebilecek Aboneler" items={items} />
               </div>
             </>
           )}
@@ -1053,7 +1053,7 @@ export function OdemelerPage({ params, go }: PageProps) {
         description={`${num.format(all.length)} tahsilat kaydı · ${num.format(waiting)} mutabakat bekliyor`}
         actions={
           <Button variant="secondary" size="sm" onClick={() => go("invoices", { status: "kuyruk" })}>
-            Tahsilat Kuyruğu
+            Tahsilat Listesi
           </Button>
         }
       />
@@ -1064,7 +1064,7 @@ export function OdemelerPage({ params, go }: PageProps) {
             { label: "Tahsilat Oranı", value: fmtPct(rate), foot: COLLECTION_SCOPE, goodWhen: "up" },
             { label: "Mutabakat Bekleyen", value: fmtNum(waiting), foot: "Kapatılmayı bekleyen ödeme", to: { page: "payments", params: { tab: "mutabakat" } } },
             { label: "Zam (Tahsil Edilen)", value: fmtTlCompact(collectedFees), foot: "Bu ay ödemeyle gelen" },
-            { label: "Zam (Doğan, Ödenmemiş)", value: fmtTlCompact(accruedFees), foot: "Vadesi geçmiş faturalarda işliyor", goodWhen: "down", to: { page: "payments", params: { tab: "kesme" } } },
+            { label: "Zam (Doğan ve Ödenmemiş)", value: fmtTlCompact(accruedFees), foot: "Vadesi geçmiş faturalarda işliyor", goodWhen: "down", to: { page: "payments", params: { tab: "kesme" } } },
             { label: "Ödeme Planlı Abone", value: fmtNum(activePlans.length), foot: `${fmtTlCompact(activePlans.reduce((s, p) => s + p.total, 0))} plan toplamı`, to: { page: "payments", params: { tab: "planlar" } } },
             { label: "Ortalama Tahsilat", value: fmtTl(month.length ? Math.round(month.reduce((s, p) => s + p.amount, 0) / month.length) : 0), foot: "Bu ay ödeme başına" },
           ]}

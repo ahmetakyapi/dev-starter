@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Bell, Check, FileText, Pause, Play, Search, Truck } from "lucide-react";
+import { ArrowRight, Bell, ChevronDown, Check, FileText, Pause, Play, Search, Truck } from "lucide-react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { AvatarGroup } from "@/components/ui/avatar";
@@ -33,8 +33,9 @@ import { PALETTES } from "../../.storybook/palettes";
 import { KIT_COUNT, STORY_COUNT, TOTAL } from "../amiral/_kapsam";
 
 /**
- * Tanıtım kahramanı: FENER. Sahnenin iki yanında katalogdaki GERÇEK
- * bileşenler (snippets/ui) kayan sütunlarda durur; dinlenirken soluk ve
+ * Tanıtım kahramanı: FENER. Sahnede katalogdaki GERÇEK
+ * bileşenler (snippets/ui) üç yatay şeritte, zıt yönlerde, hafif eğik akar
+ * (üstte küçük ve silik, altta büyük ve net, ortada yalnız kenarlarda); dinlenirken soluk ve
  * renksiz (başlık tek odak), fener yaklaştıkça parça parça renklenir. Fener imleci yumuşak bir
  * gecikmeyle izler; imleç yoksa sahnede yavaşça kendi dolaşır.
  *
@@ -82,16 +83,18 @@ const CSS = `
 @layer base {
   .kf-tour, .kf-tour * { transition-property: color, background-color, border-color, fill, stroke, box-shadow; transition-duration: 600ms; transition-timing-function: cubic-bezier(.22,1,.36,1); }
 }
-@keyframes kf-up { to { transform: translateY(-50%); } }
-@keyframes kf-down { from { transform: translateY(-50%); } to { transform: translateY(0); } }
-.kf-up { animation: kf-up linear infinite; }
-.kf-down { animation: kf-down linear infinite; }
-.kf-stage:hover .kf-up, .kf-stage:hover .kf-down { animation-play-state: paused; }
+@keyframes kf-left { to { transform: translate3d(-50%, 0, 0); } }
+@keyframes kf-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+.kf-left { animation: kf-left linear infinite; will-change: transform; }
+.kf-right { animation: kf-right linear infinite; will-change: transform; }
+.kf-row { -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent); }
+/* Ortadaki sıra yalnız iki kenarda görünür: başlığın arkası sakin kalır. */
+.kf-row-mid { -webkit-mask-image: linear-gradient(to right, #000, transparent 26%, transparent 74%, #000); mask-image: linear-gradient(to right, #000, transparent 26%, transparent 74%, #000); }
 /* Her parça kendi odağını taşır (--f, 0-1): dinlenirken renksiz ve soluk, fener yaklaştıkça
    netleşir, renklenir, hafifçe öne gelir. Yeniden çizim yok; değişken JS'ten. */
-.kf-cell { --f: 0; opacity: calc(.34 + .66 * var(--f)); filter: grayscale(calc(1 - var(--f))); transform: scale(calc(.96 + .04 * var(--f))); transition: opacity .35s, filter .35s, transform .35s cubic-bezier(.22,1,.36,1); }
-[data-theme="dark"] .kf-cell { opacity: calc(.28 + .72 * var(--f)); }
-@media (prefers-reduced-motion: reduce) { .kf-up, .kf-down { animation: none; } }`;
+.kf-cell { --f: 0; opacity: calc(.5 + .5 * var(--f)); filter: grayscale(calc(.8 - .8 * var(--f))); transform: scale(calc(.96 + .04 * var(--f))); transition: opacity .35s, filter .35s, transform .35s cubic-bezier(.22,1,.36,1); }
+[data-theme="dark"] .kf-cell { opacity: calc(.42 + .58 * var(--f)); }
+@media (prefers-reduced-motion: reduce) { .kf-left, .kf-right { animation: none; } }`;
 
 function usePaletteTour(palette: PaletteName, onPalette: (p: PaletteName) => void, still: boolean) {
   const [playing, setPlaying] = useState(!still);
@@ -215,13 +218,21 @@ const COLUMNS: ReactNode[][] = [
   ],
 ];
 
-/** Kayan sütun: içerik iki kez, -%50'ye kayar (dikişsiz). Yön ve hız sütuna göre. */
-function Column({ items, dir, dur, still }: { items: ReactNode[]; dir: "up" | "down"; dur: number; still: boolean }) {
+/* Şeritler: alçak parçalar (a-e) üstte ve altta sırayla, yüksek parçalar (grafik, takvim, entegrasyon,
+   durum; anahtarı f/g) ortadaki şeride, orası yalnız iki kenarda görünür. Hiçbiri tekrar etmez. */
+const isTall = (n: ReactNode) => ["f", "g"].includes(String((n as { key?: string }).key));
+const ALL = COLUMNS.flat();
+const SHORT = ALL.filter((n) => !isTall(n));
+const ROWS: ReactNode[][] = [SHORT.filter((_, i) => i % 2 === 0), ALL.filter(isTall), SHORT.filter((_, i) => i % 2 === 1)];
+
+/** Kayan şerit: içerik iki kez, -%50'ye kayar (dikişsiz; aralık `mr`, `gap` değil, böylece
+ *  iki kopya tam yarım uzunlukta). Yön ve hız şeride göre; yalnız `transform` animasyonu. */
+function Row({ items, dir, dur, still, className }: { items: ReactNode[]; dir: "left" | "right"; dur: number; still: boolean; className?: string }) {
   return (
-    <div className="h-full overflow-hidden">
-      <div className={cn("grid justify-items-center gap-6", !still && (dir === "up" ? "kf-up" : "kf-down"))} style={{ animationDuration: `${dur}s` }}>
+    <div className={cn("kf-row overflow-hidden", className)}>
+      <div className={cn("flex w-max items-center", still ? "-ml-[6%]" : dir === "left" ? "kf-left" : "kf-right")} style={{ animationDuration: `${dur}s` }}>
         {[...items, ...items].map((node, i) => (
-          <div key={i} className="kf-cell">
+          <div key={i} className="kf-cell mr-5 shrink-0 sm:mr-7">
             {node}
           </div>
         ))}
@@ -258,6 +269,7 @@ function useLantern(stage: React.RefObject<HTMLDivElement | null>, still: boolea
       return () => window.clearTimeout(id);
     }
     let raf = 0;
+    let rate = 1;
     let x = el.clientWidth * 0.22;
     let y = el.clientHeight * 0.4;
     const start = performance.now();
@@ -279,6 +291,14 @@ function useLantern(stage: React.RefObject<HTMLDivElement | null>, still: boolea
       el.style.setProperty("--fx", `${x.toFixed(1)}px`);
       el.style.setProperty("--fy", `${y.toFixed(1)}px`);
       focus(x, y);
+      // İmleç sahnedeyken şeritler yavaşlar (okunsun), çıkınca yeniden hızlanır.
+      const want = target.current && now - lastMove.current < 1500 ? 0.12 : 1;
+      if (Math.abs(want - rate) > 0.005) {
+        rate += (want - rate) * 0.08;
+        el.getAnimations({ subtree: true }).forEach((a) => {
+          a.playbackRate = rate;
+        });
+      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -316,20 +336,21 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
         ref={stage}
         onPointerMove={onMove}
         onPointerDown={onMove}
-        className="kf-stage relative isolate grid w-full grid-cols-[minmax(0,1fr)] justify-items-center overflow-hidden rounded-[2.5rem] bg-surface px-4 py-28 ring-1 ring-inset ring-line-soft sm:py-36"
+        className="kf-stage relative isolate grid w-full grid-cols-[minmax(0,1fr)] justify-items-center overflow-hidden min-h-[42rem] content-center rounded-[2.5rem] bg-surface px-4 pt-32 pb-56 ring-1 ring-inset ring-line-soft sm:min-h-[44rem] sm:pt-32 sm:pb-52"
         style={{ "--fx": "22%", "--fy": "40%" } as CSSProperties}
       >
-        {/* Sahne: iki yanda birer sütun gerçek bileşen, karşılıklı yönlerde kayar; üst ve alt kenarda
-            söner. Başlığın sütunu (orta, 2,3 pay) boş. İmleç sahnedeyken kayma durur (okunsun). */}
-        <div aria-hidden inert className="pointer-events-none absolute inset-0 -z-10 hidden grid-cols-[minmax(0,1fr)_minmax(0,2.3fr)_minmax(0,1fr)] gap-6 px-8 [mask-image:linear-gradient(to_bottom,transparent,var(--text-strong)_14%,var(--text-strong)_86%,transparent)] lg:grid">
-          <Column items={[...COLUMNS[0], ...COLUMNS[1]]} dir="up" dur={70} still={still} />
-          <span />
-          <Column items={[...COLUMNS[2], ...COLUMNS[3]]} dir="down" dur={76} still={still} />
+        {/* Sahne: gerçek bileşenler üç yatay şeritte, zıt yönlerde kayar; bütün sahne hafif eğik.
+            Üst şerit küçük ve silik, alt şerit büyük ve net (derinlik); ortadaki şerit yalnız kenarlarda
+            görünür. Başlık ortada, arkası sakin. Fener yaklaştıkça şerit yavaşlar, parçalar renklenir. */}
+        <div aria-hidden inert className="pointer-events-none absolute -inset-x-[12%] inset-y-0 -z-10 -rotate-[4deg] sm:-inset-x-[8%]">
+          <Row items={ROWS[0]} dir="left" dur={95} still={still} className="absolute inset-x-0 top-[3%] scale-[.78] opacity-75 sm:top-[4%] sm:scale-[.85]" />
+          <Row items={ROWS[1]} dir="right" dur={110} still={still} className="kf-row-mid absolute inset-x-0 top-1/2 hidden -translate-y-1/2 lg:block" />
+          <Row items={ROWS[2]} dir="right" dur={80} still={still} className="absolute inset-x-0 bottom-[8%] scale-[.92] sm:bottom-[9%] sm:scale-100" />
         </div>
         {/* Işık: fenerin altında paletin yumuşak yıkaması. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden lg:block" style={{ background: `radial-gradient(${R * 1.4}px circle at var(--fx) var(--fy), var(--primary-wash), transparent 70%)` }} />
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 block" style={{ background: `radial-gradient(${R * 1.4}px circle at var(--fx) var(--fy), var(--primary-wash), transparent 70%)` }} />
         {/* 4 · Başlığın arkası: zeminin kendisiyle sakinleşir (fener başlığın altından geçerken okunurluk korunur). */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(ellipse 30% 40% at 50% 50%, var(--surface) 35%, transparent 100%)" }} />
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(ellipse 46% 36% at 50% 50%, var(--surface) 40%, transparent 100%)" }} />
 
         <div className="grid w-full min-w-0 justify-items-center text-center">
           <m.p {...enter(1)} data-og-counts={ogCounts}>
@@ -339,7 +360,7 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
           </m.p>
           <ToneText as="h1" id="kapak-baslik" className="mt-8 font-display text-[clamp(3.25rem,8vw,7.5rem)] leading-[0.9] font-bold tracking-[-0.06em]">
             <m.span className="block" initial={still ? false : { y: 28, filter: "blur(12px)" }} animate={{ y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}>
-              <span className="text-soft">Tek Kimlik,</span>
+              <span className="text-soft">Tek Kimlik</span>
             </m.span>{" "}
             <m.span className="display-ink block pb-[0.08em]" initial={still ? false : { y: 28, filter: "blur(12px)" }} animate={{ y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.22 }}>
               On Palet
@@ -409,6 +430,10 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
             <p className="hidden text-small text-muted lg:block">İmleci yaklaştır: arkadakiler katalogdaki gerçek bileşenler</p>
           </m.div>
         </div>
+        {/* Sonraki bölümü ima eden ipucu: alt kenarda, sahnenin içinde. */}
+        <span aria-hidden className="pointer-events-none absolute bottom-3 left-1/2 grid -translate-x-1/2 place-items-center text-muted">
+          <ChevronDown className={cn("size-5", !still && "animate-bounce")} />
+        </span>
       </div>
       {/* Gerçek sayılar: bileşen ve hikaye dosyalardan sayılır, palet sayısı palettes.ts'ten. */}
       <m.div {...enter(8)} className="col-span-full -mt-4 w-full border-y border-line py-10">

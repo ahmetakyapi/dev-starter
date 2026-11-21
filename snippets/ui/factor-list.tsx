@@ -17,6 +17,11 @@ import { cn } from "@/lib/utils";
  * rozetinin metni görünür ("Kritik") ve ekran okuyucuya "Önem: Kritik" olarak
  * gider. Çubuk sayısı önem düzeyiyle aynı (1-4).
  *
+ * SATIR UZUNLUĞU: bileşen en çok 28rem (`max-w-md`) genişler ve kapta SOLA
+ * yaslanır. Geniş bir sütunda etiket solda, değer en sağda kalırsa göz satırı
+ * izleyemez (aradaki boşluk 600px'i aşar); iki sütunlu ızgarada değer etikete
+ * yakın durur. Daha geniş istersen `className="max-w-none"`.
+ *
  * Yapı: `dl` > her etken `div` > `dt` (etiket, isteğe sönük ipucu dt içinde)
  * + `dd` (değer). `dd` dışında doğrudan `p` yok (axe `definition-list`).
  * `headingLevel`: başlık düzeyi (varsayılan 3). Sunucu bileşeni.
@@ -65,7 +70,7 @@ export function FactorList({
   const H = `h${headingLevel}` as ElementType;
   const sev = SEVERITY[severity];
   return (
-    <section className={cn("min-w-0", className)}>
+    <section className={cn("min-w-0 max-w-md", className)}>
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <H className="text-read font-semibold text-strong">{title}</H>
         <p className={cn("flex items-center gap-2 text-small font-semibold", sev.text)}>
@@ -86,12 +91,12 @@ export function FactorList({
       </div>
       <dl className="mt-2 divide-y divide-line-soft">
         {factors.map((f, i) => (
-          <div key={i} className="flex items-baseline justify-between gap-4 py-2.5">
-            <dt className="min-w-0 text-base text-body">
+          <div key={i} className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-5 py-2.5">
+            <dt className="text-base text-body">
               {f.label}
               {f.hint ? <span className="block text-small text-muted">{f.hint}</span> : null}
             </dt>
-            <dd className={cn("shrink-0 text-end text-base font-semibold tabular-nums", VALUE_TONE[f.tone ?? "neutral"])}>{f.value}</dd>
+            <dd className={cn("text-end text-base font-semibold tabular-nums", VALUE_TONE[f.tone ?? "neutral"])}>{f.value}</dd>
           </div>
         ))}
       </dl>

@@ -184,7 +184,7 @@ export const TRANSFERS: readonly Transfer[] = (() => {
   });
 })();
 
-/** Son 12 ayda tedarikçiler arası geçen müşteri sayısı (akış diyagramı). */
+/** Son 12 ayda tedarikçiler arası geçen abone sayısı (akış diyagramı). */
 export const FLOW_LINKS = (() => {
   const rand = seeded(7710);
   const links: { source: string; target: string; value: number }[] = [];
@@ -197,7 +197,7 @@ export const FLOW_LINKS = (() => {
   return links;
 })();
 
-/** Bir müşterinin tedarikçi seçenekleri: tahmini aylık fatura son üç ayın ortalamasından. */
+/** Bir abonenin tedarikçi seçenekleri: tahmini aylık fatura son üç ayın ortalamasından. */
 export const COMMIT_MONTHS: Record<string, number> = { "S-01": 0, "S-02": 12, "S-03": 12, "S-04": 6, "S-05": 12, "S-06": 24 };
 
 export function customerOffers(c: Customer) {
@@ -247,7 +247,7 @@ export function outageTimeline(o: Outage) {
   return OUTAGE_STEPS.slice(0, total).map((step, i) => ({ ...step, at: new Date(base + offsets[i] * 60_000) }));
 }
 
-/** Etkilenen abonelerden örnek bölge listesi: bölgedeki ilk `n` müşteri (sabit sıra). */
+/** Etkilenen abonelerden örnek bölge listesi: bölgedeki ilk `n` abone (sabit sıra). */
 export const affectedSample = (o: Outage, n = 8) => {
   const trs = o.transformerIds ?? [];
   const ids = new Set(METERS.filter((m) => o.feederId && FEEDERS.some((f) => f.id === o.feederId) && trs.includes(m.transformerId ?? "")).map((m) => m.customerId));
@@ -298,7 +298,7 @@ export const ROLES: readonly { id: RoleId; label: string; hint: string }[] = [
   { id: "yonetici", label: "Yönetici", hint: "Bütün modüller, ayarlar ve kullanıcı yönetimi" },
   { id: "okuma", label: "Okuma Sorumlusu", hint: "Sayaç, okuma ve ham veri" },
   { id: "tahsilat", label: "Tahsilat", hint: "Fatura, ödeme ve ödeme planı" },
-  { id: "musteri", label: "Müşteri Hizmetleri", hint: "Müşteri kaydı, itiraz ve arıza bildirimi" },
+  { id: "musteri", label: "Müşteri Hizmetleri", hint: "Abone kaydı, itiraz ve arıza bildirimi" },
   { id: "denetci", label: "Denetçi", hint: "Yalnız okuma; denetim günlüğünü görür" },
 ];
 
@@ -316,7 +316,7 @@ export const USERS: readonly SettingsUser[] = [
 
 export type Permission = { id: string; label: string; hint: string; locked?: boolean };
 export const PERMISSIONS: readonly Permission[] = [
-  { id: "musteri", label: "Müşteri Kaydı ve Düzenleme", hint: "Abone aç, kapat, bilgi güncelle" },
+  { id: "musteri", label: "Abone Kaydı ve Düzenleme", hint: "Abone aç, kapat, bilgi güncelle" },
   { id: "sayac", label: "Sayaç Tanımlama ve Değişim", hint: "Seri no, çarpan, trafo oranı" },
   { id: "okuma", label: "Okuma Onayı ve Düzeltme", hint: "Şüpheli okumayı onayla ya da düzelt" },
   { id: "hamveri", label: "Ham Veri Görüntüleme", hint: "15 dakikalık yük profili, dışa aktarma" },
@@ -342,19 +342,19 @@ export const PERMISSION_START: Record<string, readonly RoleId[]> = {
 
 export type Tariff = { id: string; label: string; unit: string; value: number; effective: string; by: string; note: string };
 export const TARIFFS_START: readonly Tariff[] = [
-  { id: "dist-bireysel", label: "Dağıtım Bedeli, Konut", unit: "TL/kWh", value: DIST_RATE.bireysel, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
-  { id: "dist-ticari", label: "Dağıtım Bedeli, Ticarethane", unit: "TL/kWh", value: DIST_RATE.ticari, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
-  { id: "dist-sanayi", label: "Dağıtım Bedeli, Sanayi", unit: "TL/kWh", value: DIST_RATE.sanayi, effective: "2026-07-01", by: "Aylin Yıldırım", note: "OG abone" },
-  { id: "dist-tarim", label: "Dağıtım Bedeli, Tarımsal Sulama", unit: "TL/kWh", value: DIST_RATE.tarim, effective: "2026-07-01", by: "Aylin Yıldırım", note: "Sulama sezonu tarifesi" },
+  { id: "dist-bireysel", label: "Dağıtım Bedeli (Konut)", unit: "TL/kWh", value: DIST_RATE.bireysel, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "dist-ticari", label: "Dağıtım Bedeli (Ticarethane)", unit: "TL/kWh", value: DIST_RATE.ticari, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "dist-sanayi", label: "Dağıtım Bedeli (Sanayi)", unit: "TL/kWh", value: DIST_RATE.sanayi, effective: "2026-07-01", by: "Aylin Yıldırım", note: "OG abone" },
+  { id: "dist-tarim", label: "Dağıtım Bedeli (Tarımsal Sulama)", unit: "TL/kWh", value: DIST_RATE.tarim, effective: "2026-07-01", by: "Aylin Yıldırım", note: "Sulama sezonu tarifesi" },
   { id: "yekdem", label: "YEKDEM Bedeli", unit: "TL/kWh", value: YEKDEM_RATE, effective: "2026-10-01", by: "Selin Akgül", note: "Aylık ilan edilen birim bedel" },
-  { id: "fon-konut", label: "Enerji Fonu, Konut", unit: "% (enerji bedeli)", value: 3, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
-  { id: "fon-diger", label: "Enerji Fonu, Diğer Aboneler", unit: "% (enerji bedeli)", value: 1, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
-  { id: "btv", label: "Belediye Tüketim Vergisi, Konut ve Ticarethane", unit: "% (enerji + dağıtım)", value: 5, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Sanayide %1, tarımda yok" },
-  { id: "kdv", label: "KDV, Konut ve Ticarethane", unit: "%", value: 20, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Tarımsal sulamada %10" },
+  { id: "fon-konut", label: "Enerji Fonu (Konut)", unit: "% (enerji bedeli)", value: 3, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "fon-diger", label: "Enerji Fonu (Diğer Aboneler)", unit: "% (enerji bedeli)", value: 1, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "btv", label: "Belediye Tüketim Vergisi (Konut ve Ticarethane)", unit: "% (enerji + dağıtım)", value: 5, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Sanayide %1, tarımda yok" },
+  { id: "kdv", label: "KDV (Konut ve Ticarethane)", unit: "%", value: 20, effective: "2025-01-01", by: "Aylin Yıldırım", note: "Tarımsal sulamada %10" },
   { id: "gecikme", label: "Gecikme Zammı", unit: "% (aylık)", value: 2.5, effective: "2024-01-01", by: "Selin Akgül", note: "ÖRNEK PARAMETRE · vade sonrası gün bazlı, tarih aralıklı oran tablosu" },
   { id: "iletim", label: "İletim (Sistem Kullanım) Bedeli", unit: "TL/kWh", value: DEFAULT_PARAMS.transmission, effective: "2026-07-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · faturada dağıtım kaleminin içinde" },
-  { id: "reaktif-endukt", label: "Reaktif Sınır, Endüktif", unit: "% (aktife oran)", value: DEFAULT_PARAMS.reactiveInductiveLimit * 100, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı; konut muaf" },
-  { id: "reaktif-kapasitif", label: "Reaktif Sınır, Kapasitif", unit: "% (aktife oran)", value: DEFAULT_PARAMS.reactiveCapacitiveLimit * 100, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
+  { id: "reaktif-endukt", label: "Reaktif Sınır (Endüktif)", unit: "% (aktife oran)", value: DEFAULT_PARAMS.reactiveInductiveLimit * 100, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı; konut muaf" },
+  { id: "reaktif-kapasitif", label: "Reaktif Sınır (Kapasitif)", unit: "% (aktife oran)", value: DEFAULT_PARAMS.reactiveCapacitiveLimit * 100, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · doğrulanmalı" },
   { id: "reaktif-bedel", label: "Aşan Reaktif Bedeli", unit: "TL/kVArh", value: DEFAULT_PARAMS.reactiveRate, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE" },
   { id: "guc-asim", label: "Sözleşme Gücü Aşım Bedeli", unit: "TL/kW", value: DEFAULT_PARAMS.powerOverRate, effective: "2025-01-01", by: "Aylin Yıldırım", note: "ÖRNEK PARAMETRE · yalnız OG" },
   { id: "t2-carpan", label: "Puant (T2) Fiyat Çarpanı", unit: "× T1", value: DEFAULT_PARAMS.zoneMultiplier.t2, effective: "2025-01-01", by: "Aylin Yıldırım", note: `ÖRNEK PARAMETRE · ${DEFAULT_PARAMS.zoneHours.t2}` },
@@ -365,8 +365,8 @@ export const TARIFFS_START: readonly Tariff[] = [
 export type TariffChange = { id: string; label: string; from: number; to: number; effective: string; by: string };
 export const TARIFF_HISTORY: readonly TariffChange[] = [
   { id: "h1", label: "YEKDEM Bedeli", from: 0.05, to: 0.06, effective: "2026-10-01", by: "Selin Akgül" },
-  { id: "h2", label: "Dağıtım Bedeli, Konut", from: 0.74, to: 0.79, effective: "2026-07-01", by: "Aylin Yıldırım" },
-  { id: "h3", label: "Dağıtım Bedeli, Ticarethane", from: 0.62, to: 0.66, effective: "2026-07-01", by: "Aylin Yıldırım" },
+  { id: "h2", label: "Dağıtım Bedeli (Konut)", from: 0.74, to: 0.79, effective: "2026-07-01", by: "Aylin Yıldırım" },
+  { id: "h3", label: "Dağıtım Bedeli (Ticarethane)", from: 0.62, to: 0.66, effective: "2026-07-01", by: "Aylin Yıldırım" },
   { id: "h4", label: "YEKDEM Bedeli", from: 0.07, to: 0.05, effective: "2026-07-01", by: "Selin Akgül" },
 ];
 
@@ -396,7 +396,7 @@ export const TEMPLATES_START: readonly Template[] = [
   { id: "vade", label: "Vade Hatırlatma", channel: "sms", active: true, body: "Sayin {ad}, {tutar} tutarindaki faturanizin son odeme gunu {son_odeme}. Odeme icin: portal." },
   { id: "ariza", label: "Arıza Bildirimi", channel: "sms", active: true, body: "{bolge} bolgesinde ariza nedeniyle elektrik kesintisi var. Ekiplerimiz calisiyor, tahmini sure {sure}." },
   { id: "planli", label: "Planlı Kesinti Duyurusu", channel: "both", active: true, body: "Bakim calismasi nedeniyle {tarih} tarihinde {bolge} bolgesinde elektrik kesilecektir. Anlayisiniz icin tesekkur ederiz." },
-  { id: "odeme", label: "Ödeme Alındı", channel: "mail", active: true, body: "Sayin {ad}, {abone_no} numarali tesisat icin {tutar} tutarindaki odemeniz alinmistir." },
+  { id: "odeme", label: "Ödeme Alındı", channel: "mail", active: true, body: "Sayın {ad}, {abone_no} numaralı tesisat için {tutar} tutarındaki ödemeniz alınmıştır." },
   { id: "okuma", label: "Okuma Hatırlatma", channel: "sms", active: false, body: "Sayin {ad}, sayaciniz {tarih} tarihinde okunacaktir. Sayacin erisilebilir olmasi gerekir." },
 ];
 
@@ -412,7 +412,7 @@ export const INTEGRATIONS: readonly { id: IntegrationId; name: string; category:
 /* --- Denetim günlüğü -------------------------------------------------------------- */
 
 export type AuditEntry = { id: string; at: Date; user: string; action: string; target: string; ip: string; ok: boolean };
-export const AUDIT_ACTIONS = ["Okuma onayladı", "Okumayı düzeltti", "Fatura itirazını kapattı", "Tarife güncelledi", "Sayaç değiştirdi", "Kullanıcı davet etti", "Rapor indirdi", "Kesme emri oluşturdu", "Giriş yaptı", "Şablon düzenledi", "Mutabakatı onayladı", "Müşteri kaydetti"] as const;
+export const AUDIT_ACTIONS = ["Okuma onayladı", "Okumayı düzeltti", "Fatura itirazını kapattı", "Tarife güncelledi", "Sayaç değiştirdi", "Kullanıcı davet etti", "Rapor indirdi", "Kesme emri oluşturdu", "Giriş yaptı", "Şablon düzenledi", "Mutabakatı onayladı", "Abone kaydetti"] as const;
 
 export const AUDIT_LOG: readonly AuditEntry[] = (() => {
   const rand = seeded(90210);

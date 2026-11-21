@@ -97,7 +97,7 @@ function PaletlerSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Paletler"
-        title="On Palet, Tek Kimlik"
+        title="On Palet Tek Kimlik"
         lead="Palet yalnızca vurgu ailesini ve degradeleri değiştirir; zemin, metin ve durum renkleri sistemde kalır. Her palet iki temada ölçülür: CTA'nın beyaz metni her durakta, ink kendi wash'ı üstünde AA."
       >
         <div className="mt-8 flex flex-wrap gap-2" aria-hidden>

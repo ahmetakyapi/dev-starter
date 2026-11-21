@@ -40,6 +40,7 @@ export function Kart() {
       <video autoPlay loop src="/a.mp4" />
       <div className="will-change-transform" />
       <p>Erken fiyat: son 3 koltuk</p>
+      <h1 className="text-hero">Tek Kimlik, On Palet</h1>
     </div>
   );
 }
@@ -48,6 +49,7 @@ cat > "$SANDBOX/kirli/hareket.ts" <<'EOF'
 import { Home } from "@mui/icons-material";
 export const pop = { initial: { scale: 0 }, animate: { scale: 1 } };
 export const mesaj = "Oops, bir şey ters gitti";
+export const sayfa = { title: "Hızlı, Sade ve Güvenli" };
 window.addEventListener("scroll", () => document.body.classList.toggle("k"));
 EOF
 # "Dugme" kurali: kucuk, Basta-buyuk ve TAMAMI BUYUK (grep -i Turkce Ü/Ğ'yi katlamaz; mistakes.md #123).
@@ -90,6 +92,8 @@ expect "[UYARI] Hover'da keyframe"
 expect "[UYARI] muted olmayan autoPlay"
 expect "[UYARI] Kalici will-change"
 expect "[UYARI] Sahte kitlik / aciliyet"
+expect "[YUKSEK] Basliklarda virgul (h1/h2) — 1 adet"
+expect "[UYARI] Baslik alaninda virgul"
 
 # ─── Temiz ornek: benzer gorunen ama dogru kullanimlar ───────────────────────
 mkdir -p "$SANDBOX/temiz"
@@ -113,6 +117,8 @@ export function Temiz() {
       <article className="prose prose-blockquote:border-l-4 prose-code:rounded">Metin</article>
       <div data-seamless="">iso</div>
       <a href="#">Başa Dön</a>{/* slop-ok: kasitli; test susturmayi dogrular */}
+      <h1 className="text-hero">Tek Kimlik ve On Palet</h1>
+      <h2 className="text-title">{ad}, merhaba</h2>
       <main className="min-h-dvh text-strong bg-surface" />
       <svg><path fill="currentColor" className="stroke-line" /></svg>
       <span className={TONE[ton]}>esleme tablosu</span>

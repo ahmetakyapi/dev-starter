@@ -161,15 +161,15 @@ function Delta({ value, goodWhen = "neutral", label }: { value: number; goodWhen
 /**
  * Ölçü hücresi: etiket (küçük, sönük) · değer (orta boy, tabular) · tek satır bağlam.
  * Sayı DEV değil: sayfanın ölçü şeridi tek bir okuma satırıdır, her hücre aynı dilde.
- * `size="lg"` şeridin ilk hücresi: yalnız biraz büyük değer ve gri kuyu zemini (ayrı dev
- * kart değil). Değişim metin olarak bağlam satırının başında; eğilim çizgisi değerin yanında.
+ * `size="lg"` şeridin ilk hücresi: yalnız biraz büyük değer (gri zemin ve ayrı dev
+ * kart yok; ayrım sağ kenardaki kıl çizgidir). Değişim metin olarak bağlam satırının başında; eğilim çizgisi değerin yanında.
  * Etiket HER ZAMAN büyük harfle başlar (Title Case).
  */
 export function Metric({ label, value, unit, delta, deltaLabel, goodWhen, spark, foot, icon, visual, to, size = "md", className }: MetricProps) {
   const lg = size === "lg";
   const context = foot ?? deltaLabel;
   return (
-    <div className={cn("relative flex min-w-0 flex-col justify-center gap-0.5", lg ? "gap-1 bg-surface p-4" : "px-4 py-2.5", to && "transition-colors hover:bg-surface-raised focus-within:bg-surface-raised", className)}>
+    <div className={cn("relative flex min-w-0 flex-col justify-center gap-0.5", lg ? "gap-1 bg-overlay px-4 py-3.5 lg:px-5" : "px-4 py-2.5", to && "transition-colors hover:bg-surface-raised focus-within:bg-surface-raised", className)}>
       <p className="flex min-w-0 items-center gap-1.5 text-small font-medium text-muted" title={label}>
         {icon ? <span aria-hidden className="shrink-0 [&_svg]:size-3.5">{icon}</span> : null}
         {to ? (
@@ -198,7 +198,7 @@ export function Metric({ label, value, unit, delta, deltaLabel, goodWhen, spark,
   );
 }
 
-/** Yaş dağılımı (vadesi geçmiş alacak): tek yığılı çubuk + dört kova, sol kahraman kartın altını doldurur. */
+/** Yaş dağılımı (vadesi geçmiş alacak): tek yığılı çubuk + dört aralık, sol kahraman kartın altını doldurur. */
 export type AgingBucket = { id: string; label: string; value: number; count: number };
 export function AgingBars({ buckets, format, className }: { buckets: readonly AgingBucket[]; format: (value: number) => string; className?: string }) {
   const total = buckets.reduce((s, b) => s + b.value, 0) || 1;
@@ -216,7 +216,7 @@ export function AgingBars({ buckets, format, className }: { buckets: readonly Ag
           <div key={b.id} className="flex min-w-0 items-center justify-between gap-1.5" title={`${b.label}: ${format(b.value)} · ${b.count} fatura`}>
             <dt className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
               <span className={cn("size-1.5 shrink-0 rounded-full", tones[i] ?? "bg-muted")} />
-              <span>{b.label.replace(" gün", " g").replace("Daha eski", "90+ g")}</span>
+              <span>{b.label.replace(" gün", " g").replace("Daha eski", "90 g+")}</span>
             </dt>
             <dd className="shrink-0 font-medium text-strong tabular-nums">{format(b.value)}</dd>
           </div>
@@ -227,29 +227,28 @@ export function AgingBars({ buckets, format, className }: { buckets: readonly Ag
 }
 
 /**
- * Sayfa ölçü şeridi: ilk hücre (`primary`) sayfanın sorusu, hafif vurgulu (gri kuyu,
- * biraz büyük değer, isteğe dağılım çubuğu); yanında ikincil ölçüler kıl çizgiyle bölünmüş
- * tek bir yüzeyde. Ayrı dev kart, ikon karosu ve pastel hap yok. Dar ekranda birincil üstte,
- * ikincil ölçüler 2 sütun. Etiketler Title Case.
+ * Sayfa ölçü şeridi: ilk hücre (`primary`) sayfanın sorusu, biraz büyük değer (isteğe bağlı dağılım
+ * çubuğu); yanında ikincil ölçüler kıl çizgiyle bölünmüş tek bir yüzeyde. Ayrı dev kart, gri kuyu,
+ * ikon karosu ve pastel hap yok. Izgara hücre sayısına uyar: BOŞ HÜCRE KALMAZ, son satır eksikse
+ * son ölçü kalan sütunlara yayılır (5 ölçü → 3 + 1 + geniş 1). Dar ekranda 2 sütun; tek kalan son
+ * ölçü tam genişlik. Etiketler Title Case.
  */
 export function PageHero({ primary, secondary, className }: { primary: MetricProps; secondary: readonly MetricProps[]; className?: string }) {
   const items = secondary.slice(0, 6);
-  const cols = items.length <= 4 ? Math.max(items.length, 1) : 3;
-  const fill = (cols - (items.length % cols)) % cols;
+  const n = items.length;
+  const cols = n <= 4 ? Math.max(n, 1) : 3;
+  const rest = n % cols;
+  const lastSpan = rest === 0 ? 1 : cols - rest + 1;
   return (
-    <section aria-label="Öne Çıkan Ölçüler" className={cn("grid overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]", className)}>
+    <section aria-label="Öne Çıkan Ölçüler" className={cn("grid overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]", className)}>
       <Metric {...primary} size="lg" className="border-b border-line-soft lg:border-r lg:border-b-0" />
       <div
         className="grid grid-cols-2 gap-px bg-line-soft lg:grid-cols-(--hero-cols)"
-        style={{ "--hero-cols": `repeat(${cols}, minmax(0, 1fr))` } as CSSProperties}
+        style={{ "--hero-cols": `repeat(${cols}, minmax(0, 1fr))`, "--hero-last": lastSpan } as CSSProperties}
       >
-        {items.map((m) => (
-          <Metric key={m.label} {...m} className="bg-overlay" />
+        {items.map((m, i) => (
+          <Metric key={m.label} {...m} className={cn("bg-overlay", i === n - 1 && lastSpan > 1 && "lg:col-span-(--hero-last)", i === n - 1 && n % 2 === 1 && "max-lg:col-span-2")} />
         ))}
-        {Array.from({ length: fill }, (_, i) => (
-          <div key={`fill-${i}`} aria-hidden className="hidden bg-overlay lg:block" />
-        ))}
-        {items.length % 2 === 1 ? <div aria-hidden className="bg-overlay lg:hidden" /> : null}
       </div>
     </section>
   );
@@ -278,14 +277,14 @@ function todayItems(role: string): TodayItem[] {
       ];
     case "tahsilat":
       return [
-        { id: "geciken", count: overdue.length, label: `Vadesi Geçmiş Fatura · ${fmtTlCompact(overdueTotal())}`, hint: oldestHint, tone: "danger", to: { page: "invoices", params: { status: "gecikti" } }, cta: "Kuyruğu Aç" },
+        { id: "geciken", count: overdue.length, label: `Vadesi Geçmiş Fatura · ${fmtTlCompact(overdueTotal())}`, hint: oldestHint, tone: "danger", to: { page: "invoices", params: { status: "gecikti" } }, cta: "Listeyi Aç" },
         { id: "itiraz", count: disputeSlaBreaches().length, label: "İtiraz Süresi Aşıldı", tone: "warning", to: { page: "disputes" }, cta: "İtirazlar" },
         { id: "baglama", count: reconnectBreaches().length, label: "Bağlama Süresi Aşıldı", tone: "danger", to: { page: "workorders" }, cta: "İş Emirleri" },
       ];
     case "musteri":
       return [
         { id: "ariza", count: openOutages().length, label: `Açık Arıza · ${fmtNum(affected)} Abone Etkilendi`, tone: "danger", to: { page: "outages", params: { status: "acik" } }, cta: "Arızalar" },
-        { id: "aday", count: faultCandidates().length, label: "Arıza Adayı Trafo (3+ Çağrı)", tone: "warning", to: { page: "calls", params: { tab: "aday" } }, cta: "Çağrıları Gör" },
+        { id: "aday", count: faultCandidates().length, label: "Olası Ortak Arıza: Trafo (3+ Çağrı)", tone: "warning", to: { page: "calls", params: { tab: "aday" } }, cta: "Çağrıları Gör" },
         { id: "cagri", count: openCalls().length, label: "Açık Çağrı", tone: "neutral", to: { page: "calls" }, cta: "Çağrı Merkezi" },
       ];
     case "denetci":
@@ -309,12 +308,12 @@ const TONE_DOT = { danger: "bg-danger", warning: "bg-warning", neutral: "bg-mute
 const TONE_INK = { danger: "text-danger", warning: "text-warning", neutral: "text-muted" } as const;
 
 /**
- * Bugün Senin İşin: rolün günlük iş kuyruğu. Nötr yüzeyde satır satır liste (renkli dolgulu
+ * Bugün Senin İşin: rolün günlük iş listesi. Nötr yüzeyde satır satır liste (renkli dolgulu
  * kart, dev sayı yok): solda anlam noktası, küçük sayı rozeti, Title Case başlık, sönük tek satır
  * ipucu (anlam sözcüğü görünür: renk tek işaret değil), sağda ikincil eylem. Satırın tamamı
  * bağlantı. Boş başlıklar alta tek cümleye toplanır; hepsi boşsa tek cümle.
  */
-export function TodayBand({ className }: { className?: string }) {
+export function TodayBand({ className, tip }: { className?: string; tip?: ReactNode }) {
   const role = useRole();
   const items = useDerived(() => todayItems(role), [role]);
   const label = ROLES.find((r) => r.id === role)?.label ?? "";
@@ -336,7 +335,7 @@ export function TodayBand({ className }: { className?: string }) {
           {open.map((i) => (
             <li key={i.id} className="relative flex min-w-0 items-center gap-3 px-4 py-2.5 transition-colors focus-within:bg-surface hover:bg-surface sm:px-5">
               <span aria-hidden className={cn("size-2 shrink-0 rounded-full", TONE_DOT[i.tone])} />
-              <span className="min-w-8 shrink-0 rounded-md bg-surface px-1.5 py-0.5 text-center text-base font-semibold text-strong tabular-nums ring-1 ring-line-soft">{fmtNum(i.count)}</span>
+              <span className="min-w-7 shrink-0 text-read font-semibold text-strong tabular-nums">{fmtNum(i.count)}</span>
               <span className="grid min-w-0 flex-1 content-center">
                 <span className="truncate text-base font-medium text-strong" title={i.label}>
                   {i.label}
@@ -359,6 +358,7 @@ export function TodayBand({ className }: { className?: string }) {
       ) : (
         <p className="px-4 py-4 text-base text-muted sm:px-5">Bugün için bekleyen iş yok.</p>
       )}
+      {tip ? <div className="border-t border-line-soft px-4 py-2.5 text-small text-body sm:px-5">{tip}</div> : null}
       {open.length > 0 && clear.length > 0 ? (
         <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 border-t border-line-soft px-4 py-2 text-small text-muted sm:px-5">
           <Check aria-hidden className="size-3.5 shrink-0 text-success" />
@@ -366,6 +366,31 @@ export function TodayBand({ className }: { className?: string }) {
           <span>{clear.map((i) => i.label).join(" · ")}</span>
         </p>
       ) : null}
+    </section>
+  );
+}
+
+/**
+ * Olası ortak arıza şeridi: aynı trafoya gelen çağrı kümeleri. Tek uyarı yüzeyi, her küme bir
+ * satır (iç içe kart yok): ikon, tek cümle, sağda eylem. Yalnız anlam rengi (`warning`).
+ */
+export type CandidateItem = { id: string; title: string; detail: string; action?: ReactNode };
+export function CandidateStrip({ items, className }: { items: readonly CandidateItem[]; className?: string }) {
+  if (items.length === 0) return null;
+  return (
+    <section aria-label="Olası Ortak Arızalar" className={cn("overflow-hidden rounded-xl bg-warning-wash ring-1 ring-warning/30", className)}>
+      <ul role="list" className="divide-y divide-warning/20">
+        {items.map((c) => (
+          <li key={c.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-5">
+            <AlertTriangle aria-hidden className="size-4 shrink-0 text-warning" />
+            <p className="min-w-[min(100%,16rem)] flex-1 text-base text-strong">
+              <span className="font-semibold">{c.title}</span>
+              <span className="block text-small text-body">{c.detail}</span>
+            </p>
+            {c.action}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

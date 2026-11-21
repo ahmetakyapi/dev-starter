@@ -324,6 +324,23 @@ else
   warn "Tema dosyasi bulunamadi"
 fi
 
+# Tasarim yonu sistemi: katalog <-> kayit <-> komutlar tutarli mi?
+# Her yon ayni anda 10 alan tasimali; kayittaki her yon katalogda olmali; yeni
+# projenin yon secimi /kickoff ve /new-project komutlarinda ZORUNLU adim olmali.
+if [ -f knowledge/design-directions.md ] && [ -f knowledge/direction-log.md ] && [ -f scripts/pick-direction.mjs ]; then
+  DIR_OUT=$(node scripts/pick-direction.mjs --check 2>&1) && pass "Tasarim yonleri: $DIR_OUT" || fail "Tasarim yonleri tutarsiz: $DIR_OUT"
+  DIR_TEST=$(node scripts/test-pick-direction.mjs 2>&1) && pass "pick-direction davranis testi gecti" || fail "pick-direction testi kirik: $(echo "$DIR_TEST" | grep -E '❌|Error' | head -2)"
+  for f in .claude/commands/kickoff.md .claude/commands/new-project.md .claude/commands/theme.md agents/strategist-agent.md templates/docs/DESIGN.template.md templates/docs/KICKOFF.template.md; do
+    if grep -q "design-directions" "$f" 2>/dev/null; then
+      pass "$f yon katalogunu anar"
+    else
+      fail "$f 'knowledge/design-directions.md'yi anmiyor (Tasarim Yonu adimi eksik)"
+    fi
+  done
+else
+  fail "Tasarim yonu sistemi EKSIK (knowledge/design-directions.md, direction-log.md, scripts/pick-direction.mjs)"
+fi
+
 # ─── 8. Package Consistency ──────────────────────────────────────────────────
 header "Paket Tutarliligi"
 

@@ -116,7 +116,7 @@ const INITIAL: Form = {
 let DRAFT: { form: Form; step: number } | null = null;
 
 const STEPS = [
-  { label: "Müşteri", description: "Tür ve kimlik" },
+  { label: "Abone", description: "Tür ve kimlik" },
   { label: "İletişim", description: "Telefon, e-posta" },
   { label: "Tesisat", description: "Adres ve tarife" },
   { label: "Sayaç", description: "Atama, endeks" },
@@ -361,7 +361,7 @@ export function KayitPage({ params, go }: PageProps) {
     const rec = buildRecords(form, stock);
     addCustomer(rec.customer, rec.meter);
     if (form.meterMode === "pool" && form.poolId) allocateStock(form.poolId, { customerId: rec.customer.id });
-    audit("Müşteri kaydı tamamladı", rec.customer.id, undefined, `${rec.customer.name} · ${rec.meter.serial}`);
+    audit("Abone kaydı tamamladı", rec.customer.id, undefined, `${rec.customer.name} · ${rec.meter.serial}`);
     DRAFT = null;
     setDone(rec);
     notify({ title: "Abonelik Açıldı", body: `${rec.customer.id} · ${rec.customer.name}`, tone: "success" });
@@ -406,7 +406,7 @@ export function KayitPage({ params, go }: PageProps) {
   }
 
   if (done) return <Basari record={done} onNew={reset} go={go} />;
-  if (!canEdit) return <><PageHead title="Müşteri Kaydı" /><PageBody><p className="text-base text-muted">Müşteri kaydı için düzenleme yetkisi gerekir.</p></PageBody></>;
+  if (!canEdit) return <><PageHead title="Abone Kaydı" /><PageBody><p className="text-base text-muted">Abone kaydı için düzenleme yetkisi gerekir.</p></PageBody></>;
 
   const kind = KIND_BY_TARIFF(form.tariff);
   const [regionId, district] = form.area.split("|");
@@ -414,7 +414,7 @@ export function KayitPage({ params, go }: PageProps) {
   return (
     <>
       <PageHead
-        title="Müşteri Kaydı"
+        title="Abone Kaydı"
         description="Yeni abone, tesisat, sayaç ve ödeme talimatı tek akışta. Her adım doğrulanır."
         actions={
           <>
@@ -469,7 +469,7 @@ export function KayitPage({ params, go }: PageProps) {
                   <>
                     <RadioGroup
                       name="kind"
-                      legend="Müşteri Türü"
+                      legend="Abone Türü"
                       orientation="horizontal"
                       value={form.kind}
                       onChange={(v) => {
@@ -503,7 +503,7 @@ export function KayitPage({ params, go }: PageProps) {
                           </a>
                         </p>
                         <div className="mt-2">
-                          <Checkbox label="Aynı Müşteriye Ek Tesisat Olarak Aç" checked={form.addOnTenancy} onChange={(e) => set("addOnTenancy", e.target.checked)} />
+                          <Checkbox label="Aynı Aboneye Ek Tesisat Olarak Aç" checked={form.addOnTenancy} onChange={(e) => set("addOnTenancy", e.target.checked)} />
                         </div>
                       </div>
                     ) : null}
@@ -518,7 +518,7 @@ export function KayitPage({ params, go }: PageProps) {
                     </div>
                     <div className="grid gap-1 rounded-xl bg-surface p-3">
                       <Switch label="SMS ile Bilgilendirme" hint="Fatura, kesinti ve okuma günü mesajları." checked={form.sms} onChange={(e) => set("sms", e.target.checked)} />
-                      <Switch label="E-Fatura" hint="Fatura e-posta ile iletilir, kâğıt fatura gönderilmez." checked={form.eInvoice} onChange={(e) => set("eInvoice", e.target.checked)} />
+                      <Switch label="E-Fatura" hint="Fatura e-posta ile iletilir, kağıt fatura gönderilmez." checked={form.eInvoice} onChange={(e) => set("eInvoice", e.target.checked)} />
                     </div>
                     <div>
                       <Checkbox label="KVKK aydınlatma metnini okudum, kişisel verilerimin işlenmesini anladım." name="kvkk" checked={form.kvkk} onChange={(e) => set("kvkk", e.target.checked)} />
@@ -547,7 +547,7 @@ export function KayitPage({ params, go }: PageProps) {
                           </a>
                         </p>
                         <div className="mt-2">
-                          <Checkbox label="Farklı Bir Bağımsız Bölüm, Yeni Tesisat Açılacak" checked={form.addressAck} onChange={(e) => set("addressAck", e.target.checked)} />
+                          <Checkbox label="Farklı Bağımsız Bölüm: Yeni Tesisat Açılacak" checked={form.addressAck} onChange={(e) => set("addressAck", e.target.checked)} />
                         </div>
                       </div>
                     ) : null}
@@ -691,7 +691,7 @@ export function KayitPage({ params, go }: PageProps) {
                 {step === 5 ? (
                   <div className="grid gap-4">
                     <div className="grid gap-3 sm:grid-cols-2">
-                      <Summary title="Müşteri" onEdit={() => setStep(0)} rows={[[form.kind === "bireysel" ? "Ad Soyad" : "Unvan", form.name], [idLabel(form), `${"•".repeat(Math.max(0, form.idNo.length - 3))}${form.idNo.slice(-3)}`], ["Ek Tesisat", form.addOnTenancy ? "Evet, mevcut müşteriye" : "Hayır"]]} />
+                      <Summary title="Abone" onEdit={() => setStep(0)} rows={[[form.kind === "bireysel" ? "Ad Soyad" : "Unvan", form.name], [idLabel(form), `${"•".repeat(Math.max(0, form.idNo.length - 3))}${form.idNo.slice(-3)}`], ["Ek Tesisat", form.addOnTenancy ? "Evet, mevcut aboneye" : "Hayır"]]} />
                       <Summary title="İletişim" onEdit={() => setStep(1)} rows={[["Telefon", fmtPhone(form.phone)], ["E-Posta", form.email], ["Bilgilendirme", [form.sms && "SMS", form.eInvoice && "E-fatura"].filter(Boolean).join(", ") || "Yok"]]} />
                       <Summary title="Tesisat" onEdit={() => setStep(2)} rows={[["Adres", `${form.street}, ${district}`], ["Bölge", region(regionId).name], ["Gerilim ve Güç", `${form.voltage} · ${form.power} kW`], ["Tarife", `${TARIFFS.find((t) => t.value === form.tariff)?.label} · ${form.zone === "tek-zamanli" ? "tek zamanlı" : "çok zamanlı"}`], ["Tedarikçi", form.free && freeEligible(form) ? supplier(form.supplierId).name : `${SUPPLIERS[0].name} (görevli)`]]} />
                       <Summary title="Sayaç" onEdit={() => setStep(3)} rows={[["Sayaç", form.meterMode === "pool" ? (stock.find((m) => m.id === form.poolId)?.serial ?? "—") : form.serial.toUpperCase()], ["Çarpan", fmtNum(multiplierOf(form))], ["İlk Endeks", form.zone === "cok-zamanli" ? `${form.idx1} / ${form.idx2} / ${form.idx3} kWh` : `${form.idx1} kWh`], ["Mühür", form.seal]]} />
@@ -734,7 +734,7 @@ export function KayitPage({ params, go }: PageProps) {
           <aside aria-label="Canlı Özet" className="grid content-start gap-5 xl:sticky xl:top-4 xl:self-start">
             <Panel title="Canlı Özet" note="Girdikçe dolar" id="kayit-ozet">
               <dl className="grid gap-3 p-4 text-base sm:p-5">
-                <Live label="Müşteri" value={form.name || "—"} done={form.name.length >= 3} />
+                <Live label="Abone" value={form.name || "—"} done={form.name.length >= 3} />
                 <Live label={idLabel(form)} value={form.idNo ? `${"•".repeat(Math.max(0, form.idNo.length - 3))}${form.idNo.slice(-3)}` : "—"} done={form.kind === "bireysel" ? validTckn(form.idNo) : validVkn(form.idNo)} />
                 <Live label="Telefon" value={form.phone ? fmtPhone(form.phone) : "—"} done={validPhone(form.phone)} />
                 <Live label="Adres" value={form.street ? `${form.street}, ${district}` : "—"} done={form.street.length >= 6} />
@@ -825,7 +825,7 @@ function Basari({ record, onNew, go }: { record: { customer: Customer; meter: Me
   const { customer: c, meter: m } = record;
   return (
     <>
-      <PageHead title="Müşteri Kaydı" description="Kayıt tamamlandı." />
+      <PageHead title="Abone Kaydı" description="Kayıt tamamlandı." />
       <PageBody>
         <section aria-labelledby="kayit-basari" className="mx-auto grid w-full max-w-2xl gap-5 rounded-xl bg-overlay p-6 text-center shadow-raised ring-1 ring-line sm:p-8">
           <span aria-hidden className="mx-auto grid size-12 place-items-center rounded-full bg-success-wash text-success">
@@ -876,12 +876,12 @@ function Basari({ record, onNew, go }: { record: { customer: Customer; meter: Me
                 notify({ title: "SMS Gönderildi", body: "Abone numarası ve karşılama mesajı kayıtlı telefona iletildi.", tone: "success" });
               }}
             >
-              <MessageSquare /> Müşteriye SMS Gönder
+              <MessageSquare /> Aboneye SMS Gönder
             </Button>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 border-t border-line-soft pt-5">
             <Button variant="primary" onClick={() => go("customers", { id: c.id })}>
-              <UserPlus /> Müşteri Kartını Aç
+              <UserPlus /> Abone Kartını Aç
             </Button>
             <a className={buttonClass({ variant: "ghost" })} href={href("meters", { id: m.id })}>
               <Gauge /> Sayacı Gör
@@ -902,7 +902,7 @@ function ContractDialog({ open, onClose, customer: c, meter: m }: { open: boolea
   const sup = supplier(c.supplierId);
   const rows: readonly (readonly [string, string])[] = [
     ["Abone No", c.id],
-    ["Müşteri", c.name],
+    ["Abone", c.name],
     ["Tesisat No", c.installation],
     ["Adres", c.address],
     ["Gerilim ve Sözleşme Gücü", `${c.voltage === "OG" ? "Orta gerilim" : "Alçak gerilim"} · ${fmtNum(c.contractKw ?? 0)} kW`],

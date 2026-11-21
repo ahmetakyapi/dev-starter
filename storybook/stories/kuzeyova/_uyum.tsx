@@ -95,7 +95,7 @@ export function UyumPage({ params }: PageProps) {
         actions={
           session.viewAs ? (
             <Button size="sm" variant="secondary" onClick={() => setViewAs(null)}>
-              <UserCog aria-hidden /> Kendi rolüme dön
+              <UserCog aria-hidden /> Kendi Rolüme Dön
             </Button>
           ) : undefined
         }
@@ -140,7 +140,7 @@ function ApprovalsTab() {
 
   const act = (a: Approval, ok: boolean, why?: string) => {
     const r = decide(a.id, ok, why);
-    if (!r.ok) notify({ title: "Karar verilemedi", body: DECIDE_ERROR[r.reason] ?? r.reason, tone: "info" });
+    if (!r.ok) notify({ title: "Karar Verilemedi", body: DECIDE_ERROR[r.reason] ?? r.reason, tone: "info" });
     else notify({ title: ok ? "Onaylandı, işlem uygulandı" : "Reddedildi", body: a.summary, tone: ok ? "success" : "info" });
   };
 
@@ -175,10 +175,10 @@ function ApprovalsTab() {
 
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5">
-      <Panel id="uy-onay" title="Onay Kuyruğu" note={`Giriş yapan: ${me.name}. İsteği açan kişi kendi isteğini onaylayamaz; kararı veren, ilgili işlemin yetkisine sahip olmalı.`}>
+      <Panel id="uy-onay" title="Onay Bekleyenler" note={`Giriş yapan: ${me.name}. İsteği açan kişi kendi isteğini onaylayamaz; kararı veren, ilgili işlemin yetkisine sahip olmalı.`}>
         {stuck.length ? (
           <div role="note" className="m-3 rounded-lg bg-warning-wash p-3 text-base text-body sm:m-4">
-            <span className="font-semibold text-strong">{stuck.length} istek için onaylayabilecek başka kullanıcı yok.</span> İlgili izin yalnız isteği açan kişide. Ayarlar → Kullanıcılar ve Roller'den başka bir role izin verin, ya da aşağıdaki "İkinci Göz" politikasını kapatın.
+            <span className="font-semibold text-strong">{stuck.length} istek için onaylayabilecek başka kullanıcı yok.</span> İlgili izin yalnız isteği açan kişide. Ayarlar → Kullanıcılar ve Roller'den başka bir role izin verin, ya da aşağıdaki "İkinci Göz" kuralını kapatın.
           </div>
         ) : null}
         {approvals.length === 0 ? (
@@ -195,7 +195,7 @@ function ApprovalsTab() {
         )}
       </Panel>
 
-      <Panel id="uy-politika" title="Hangi İşlemler İkinci Göz İster" note="Politika değişikliği denetim izine işlenir.">
+      <Panel id="uy-politika" title="Hangi İşlemler İkinci Göz İster" note="Kural değişikliği denetim izine işlenir.">
         <div className="grid gap-3 p-4 sm:p-5">
           {(Object.keys(APPROVAL_LABEL) as ApprovalKind[]).map((kind) => (
             <Switch
@@ -205,7 +205,7 @@ function ApprovalsTab() {
               checked={policy[kind]}
               onChange={(e) => {
                 setApprovalPolicy(kind, e.target.checked);
-                audit("Onay politikasını değiştirdi", APPROVAL_LABEL[kind], policy[kind] ? "Açık" : "Kapalı", e.target.checked ? "Açık" : "Kapalı");
+                audit("Onay kuralını değiştirdi", APPROVAL_LABEL[kind], policy[kind] ? "Açık" : "Kapalı", e.target.checked ? "Açık" : "Kapalı");
               }}
             />
           ))}
@@ -356,7 +356,7 @@ export function AuditTab() {
   const exportCsv = () => {
     downloadCsv("denetim-izi.csv", [["Zaman", "Kullanıcı", "Rol", "İşlem", "Hedef", "Önce", "Sonra", "Sonuç", "Kaynak"], ...rows.map((a) => [dateTime(a.at), a.user, roleLabel(a.role), a.action, a.target, a.before ?? "", a.after ?? "", a.ok ? "Başarılı" : "Reddedildi", a.origin === "portal" ? "Bu oturum" : "Geçmiş"])]);
     audit("Denetim izini dışa aktardı", `${rows.length} kayıt`);
-    notify({ title: "Denetim izi indirildi", body: `${rows.length} kayıt · CSV`, tone: "success" });
+    notify({ title: "Denetim İzi İndirildi", body: `${rows.length} kayıt · CSV`, tone: "success" });
   };
 
   const toolbar = (
@@ -530,7 +530,7 @@ function KvkkTab() {
         footer={
           <>
             <Button variant="ghost" onClick={() => setNewReq(false)}>Vazgeç</Button>
-            <Button variant="primary" disabled={!cust} onClick={() => { const r = createDataRequest(cust!.id, (kind ?? "erisim") as DataRequestKind); notify({ title: "Talep açıldı", body: `${r.id} · ${cust!.name}`, tone: "success" }); setNewReq(false); setCid(""); }}>Talebi Aç</Button>
+            <Button variant="primary" disabled={!cust} onClick={() => { const r = createDataRequest(cust!.id, (kind ?? "erisim") as DataRequestKind); notify({ title: "Talep Açıldı", body: `${r.id} · ${cust!.name}`, tone: "success" }); setNewReq(false); setCid(""); }}>Talebi Aç</Button>
           </>
         }
       >
@@ -553,7 +553,7 @@ function KvkkTab() {
               disabled={!rcust || why.trim().length < 10}
               onClick={() => {
                 revealMasked(rcust!.id, FIELDS.find((f) => f.value === field)?.label ?? "", why.trim());
-                notify({ title: "Erişim kaydedildi", body: `${rcust!.name} · ${FIELDS.find((f) => f.value === field)?.label}`, tone: "success" });
+                notify({ title: "Erişim Kaydedildi", body: `${rcust!.name} · ${FIELDS.find((f) => f.value === field)?.label}`, tone: "success" });
                 setReveal(false);
                 setWhy("");
                 setRcid("");
@@ -609,7 +609,7 @@ function SessionTab() {
         </div>
       </Panel>
 
-      <Panel id="uy-2fa" title="İkinci Doğrulama" note={forceTwoFactor ? "Politika: bütün kullanıcılarda zorunlu." : "Politika: zorunlu değil. Ayarlar → Kullanıcılar ve Roller'den açılır."}>
+      <Panel id="uy-2fa" title="İkinci Doğrulama" note={forceTwoFactor ? "Kural: bütün kullanıcılarda zorunlu." : "Kural: zorunlu değil. Ayarlar → Kullanıcılar ve Roller'den açılır."}>
         <ul role="list" className="divide-y divide-line-soft">
           {users.map((u) => (
             <li key={u.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5">

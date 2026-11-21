@@ -21,6 +21,9 @@ import { cn } from "../utils";
  * (ör. "Onay için başka koşul yok") için verilir ve türeyen satırın yanına
  * eklenir. Boş listede özet yazılmaz.
  *
+ * SATIR UZUNLUĞU: en çok 36rem (`max-w-xl`), sola yaslı; geniş kapta etiket ile
+ * sağdaki gerekçe arası açılınca satır izlenemez. Geniş istersen `max-w-none`.
+ *
  * `headingLevel`: başlık düzeyi (varsayılan 3). `title` verilmezse başlık
  * çizilmez (üst bileşen kendi başlığını koyar). Sunucu bileşeni; `ul` +
  * `role="list"` (Safari liste semantiğini korusun).
@@ -61,7 +64,7 @@ export function PolicyChecks({
   const fails = checks.filter((c) => c.state === "fail").length;
   const derived = `${clean} / ${checks.length} kontrol temiz${warns ? ` · ${warns} uyarı` : ""}${fails ? ` · ${fails} başarısız` : ""}`;
   return (
-    <section className={cn("min-w-0", className)}>
+    <section className={cn("min-w-0 max-w-xl", className)}>
       {title || checks.length > 0 ? (
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           {title ? <H className="text-read font-semibold text-strong">{title}</H> : <span />}

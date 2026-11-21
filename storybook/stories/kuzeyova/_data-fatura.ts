@@ -24,7 +24,7 @@ import { TEMPLATES_START, TEMPLATE_SAMPLE } from "./_data-operasyon";
 
 /**
  * Faturalar ve Ödemeler sayfalarının ORTAK yardımcıları: fatura kalemleri,
- * tahsilat kuyruğu (aranma durumu, söz tarihi), kayıtlı görünümler, ödeme
+ * tahsilat listesi (aranma durumu, söz tarihi), kayıtlı görünümler, ödeme
  * doğrulama, vade uzatma (limit + gerekçe + yetki + iki göz) ve tahakkuk
  * önizlemesi. Durum `_core.ts`'in tek yayın kanalındaki dilimlerde durur;
  * motor mantığına (`_billing.ts`, `_store.ts`) dokunmaz, onları çağırır.
@@ -113,7 +113,7 @@ export function checkPayment(inv: EffectiveInvoice, input: { amount: number; ref
   if (due.fee > 0 && input.amount > 0 && input.amount < due.fee) errors.push(`Tutar gecikme zammından (${new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(due.fee / 100)}) az. Ödeme önce zamdan, sonra anaparadan düşer.`);
   const principalPaid = Math.min(Math.max(0, input.amount - due.fee), due.principal);
   const excess = Math.max(0, input.amount - due.fee - due.principal);
-  if (excess > 0) warnings.push("Tutar borcun üstünde: fazlası müşterinin avans alacağına yazılır.");
+  if (excess > 0) warnings.push("Tutar borcun üstünde: fazlası abonenin avans alacağına yazılır.");
   return { errors, warnings, principal: principalPaid, fee: due.fee, excess };
 }
 
@@ -159,7 +159,7 @@ export function logFollowUp(customerId: string, state: CallState, input: { promi
 
 export const followUpOf = (customerId: string): FollowUp => getFollowUps()[customerId] ?? { state: "aranmadi", by: "", at: "" };
 
-/** Söz tarihi gelmiş (ya da geçmiş) ve hâlâ ödemeyen abone mi? */
+/** Söz tarihi gelmiş (ya da geçmiş) ve hala ödemeyen abone mi? */
 export const promiseBroken = (f: FollowUp) => f.state === "soz-verdi" && !!f.promiseDate && f.promiseDate <= TODAY_KEY;
 
 /* ======================================================================== */

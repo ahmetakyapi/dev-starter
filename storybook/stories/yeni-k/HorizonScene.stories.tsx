@@ -40,7 +40,7 @@ const meta = {
           </AppWindow>
         }
       >
-        <h1 className="font-display text-hero tracking-tight text-strong">Destek, sakin ve düzenli.</h1>
+        <h1 className="font-display text-hero tracking-tight text-strong">Sakin ve Düzenli Destek</h1>
         <p className="mx-auto mt-4 max-w-xl text-lead text-soft">Talepler, görevler ve takvim tek ekranda.</p>
       </HorizonScene>
     </div>

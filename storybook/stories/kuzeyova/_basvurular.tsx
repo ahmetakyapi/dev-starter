@@ -136,7 +136,7 @@ export function BasvurularPage({ params, go }: PageProps) {
   };
   const avgDays = stats.done.length ? stats.done.reduce((s, a) => s + totalDays(a), 0) / stats.done.length : 0;
 
-  // Huni: aşamaya ulaşan başvuru sayısı (reddedilenler hariç)
+  // AÅama daÄÄ±lÄ±mÄ±: aşamaya ulaşan başvuru sayısı (reddedilenler hariç)
   const live = apps.filter((a) => a.stage !== "red");
   const funnel = APPLICATION_STAGES.map((s, i) => ({ label: s.label, value: live.filter((a) => stageIndex(a.stage) >= i).length, note: s.hint }));
 
@@ -272,9 +272,9 @@ export function BasvurularPage({ params, go }: PageProps) {
           ]}
         />
 
-        <Panel title="Aşama Hunisi" note="Her aşamaya ulaşan başvuru sayısı (reddedilenler hariç)" id="basvuru-huni">
+        <Panel title="Aşama Dağılımı" note="Her aşamaya ulaşan başvuru sayısı (reddedilenler hariç)" id="basvuru-huni">
           <div className="p-4 sm:p-5">
-            <StageBars title="Başvuru Aşama Hunisi" stages={funnel} />
+            <StageBars title="Başvuru Aşama Dağılımı" stages={funnel} />
           </div>
         </Panel>
 
@@ -416,7 +416,7 @@ function ApplicationSheet({ app, onClose, go }: { app: Application | undefined; 
           closed ? (
             app.stage === "tamam" ? (
               <a className={buttonClass({ variant: "primary" })} href={href("customers", { q: app.applicant })}>
-                Müşteriyi Gör <ArrowRight />
+                Aboneyi Gör <ArrowRight />
               </a>
             ) : (
               <Button variant="secondary" onClick={onClose}>Kapat</Button>
@@ -453,7 +453,7 @@ function ApplicationSheet({ app, onClose, go }: { app: Application | undefined; 
           {!closed ? (
             <div className="rounded-xl bg-surface p-4 sm:p-5">
               <PolicyChecks
-                title="Enerjilendirme Kapısı"
+                title="Enerjilendirme Kontrolü"
                 headingLevel={3}
                 summary={gate.ok ? "Sonraki aşamaya geçilebilir" : `Engel: ${gate.reason}`}
                 checks={[

@@ -129,7 +129,7 @@ export function setOutageEta(id: string, etaMin: number) {
   audit("Arıza süresini güncelledi", id, undefined, `${etaMin} dk`);
 }
 export function sendOutageSms(id: string, count: number) {
-  addOutageEvent(id, "Müşterilere SMS gönderildi", "neutral", `${count} abone`, { smsSent: (outageState.get().patches[id]?.smsSent ?? 0) + count });
+  addOutageEvent(id, "Abonelere SMS gönderildi", "neutral", `${count} abone`, { smsSent: (outageState.get().patches[id]?.smsSent ?? 0) + count });
   audit("Arıza SMS'i gönderdi", id, undefined, `${count} abone`);
 }
 export function closeOutage(id: string) {

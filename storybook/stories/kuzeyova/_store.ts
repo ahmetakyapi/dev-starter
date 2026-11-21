@@ -43,10 +43,10 @@ import { NOTICES, SUBSTATIONS, SUPPLIERS, TODAY, TODAY_KEY, TRANSFORMERS, WORK_O
  * Portal'ının TEK deposu: ortak bayrak, yeni varlıklar ve bütün sayfa
  * eylemleri burada. Kaynak dilimler:
  *   - `_data-finans.ts`  faturalar, ödemeler, planlar, mutabakat, kesme aşamaları
- *   - `_data-musteri.ts` müşteri yamaları, notlar, geçmiş, yeni müşteri/sayaç
+ *   - `_data-musteri.ts` abone yamaları, notlar, geçmiş, yeni abone/sayaç
  *   - `_ops.ts`          okuma, sayaç ve arıza yamaları
  *   - `_settings.ts`     tarife ve fatura parametreleri
- *   - `_cutpolicy.ts`    kesme politikası ve ihtar tarihleri
+ *   - `_cutpolicy.ts`    kesme kuralları ve ihtar tarihleri
  *   - `_permissions.ts`  oturum, rol, yetki matrisi, iki göz onayı
  *   - `_audit.ts`        denetim izi
  *   - bu dosya           iş emirleri, başvurular, kaçak, stok, çağrı, itiraz, alacak, üretici, KVKK, bildirim
@@ -173,7 +173,7 @@ export function assignWorkOrder(id: string, assignee: string) {
   audit("İş emrini atadı", id, undefined, assignee);
 }
 
-/** Durum makinesinde bir adım ilerler; tamamlanınca yan etkiler (müşteri durumu, röle, stok) işler. */
+/** Durum makinesinde bir adım ilerler; tamamlanınca yan etkiler (abone durumu, röle, stok) işler. */
 export function advanceWorkOrder(id: string, result?: WorkResult) {
   const w = workOrders.get().find((x) => x.id === id);
   if (!w || w.status === "tamamlandi" || w.status === "iptal") return;
@@ -236,7 +236,7 @@ function createCutOrder(customerId: string, reason: string): WorkOrderX {
   return wo;
 }
 
-/** Kesme emri: yetki, politika (ihtar, bekleme, hassas abone, itiraz, plan) ve iki göz onayı denetlenir. */
+/** Kesme emri: yetki, kural (ihtar, bekleme, hassas abone, itiraz, plan) ve iki göz onayı denetlenir. */
 export function requestCut(customerId: string, reason: string): CutResult {
   if (!can("kesme")) {
     auditDenied("Kesme emri verdi", customerId);
@@ -244,7 +244,7 @@ export function requestCut(customerId: string, reason: string): CutResult {
   }
   const e = cutEligibility(customerId);
   if (!e.eligible) {
-    audit("Kesme emri reddedildi (politika)", customerId, undefined, e.blockers.join("; "), false);
+    audit("Kesme emri reddedildi (kural)", customerId, undefined, e.blockers.join("; "), false);
     return { ok: false, status: "engelli", blockers: e.blockers };
   }
   if (requiresFourEyes("kesme")) {
@@ -338,7 +338,7 @@ export function createApplication(input: NewApplication): Application {
     stage: "basvuru",
     createdAt: TODAY_KEY,
     stageSince: TODAY_KEY,
-    docs: ["Kimlik ya da vergi levhası", "Tapu ya da kira sözleşmesi", "Mimari/elektrik projesi", "İskan ya da yapı ruhsatı", "Vekâletname (varsa)"].map((label, i) => ({ id: `d${i}`, label, ok: false })),
+    docs: ["Kimlik ya da vergi levhası", "Tapu ya da kira sözleşmesi", "Mimari/elektrik projesi", "İskan ya da yapı ruhsatı", "Vekaletname (varsa)"].map((label, i) => ({ id: `d${i}`, label, ok: false })),
     connectionFee: (input.powerKw * (input.voltage === "OG" ? 690 : 410) + 18_000) * 100,
     deposit: Math.round(input.powerKw * 6_000),
     feePaid: false,
@@ -388,7 +388,7 @@ export function advanceApplication(id: string): StageGate {
   audit("Başvuruyu ilerletti", id, a.stage, next);
   return { ok: true };
 }
-/** Enerjilendirme: abonelik açılır (müşteri + sayaç oluşur), tahsisli stok sayaç ona bağlanır. */
+/** Enerjilendirme: abonelik açılır (abone + sayaç oluşur), tahsisli stok sayaç ona bağlanır. */
 function energizeApplication(a: Application) {
   const tr = TRANSFORMERS.find((t) => t.regionId === a.regionId) ?? TRANSFORMERS[0];
   const sub = SUBSTATIONS.find((s) => s.id === tr.substationId) ?? SUBSTATIONS[0];
@@ -551,13 +551,13 @@ export function linkCallToOutage(callId: string, outageId: string) {
   calls.set((l) => l.map((c) => (c.id === callId ? { ...c, outageId, status: "islemde" as const } : c)));
   audit("Çağrıyı arızaya bağladı", callId, undefined, outageId);
 }
-/** Aynı DTR'ye gelen açık arıza çağrılarını tek arıza kaydına çevirir (arıza adayı). */
+/** Aynı DTR'ye gelen açık arıza çağrılarını tek arıza kaydına çevirir (olası arıza). */
 export function createOutageFromCalls(transformerId: string) {
   const tr = TRANSFORMERS.find((t) => t.id === transformerId);
   const open = calls.get().filter((c) => c.transformerId === transformerId && c.kind === "ariza" && c.status === "acik" && !c.outageId);
   if (!tr || !open.length) return null;
   const crew = ["Ekip A (Merkez)", "Ekip B (Kıyı)", "Ekip C (Vadi)", "Ekip D (Ova)", "Ekip E (Yayla)", "Ekip F (Sanayi)"][["merkez", "kiyi", "vadi", "ova", "yayla", "sanayi"].indexOf(tr.regionId)] ?? "Ekip A (Merkez)";
-  const o = createOutage({ kind: "plansiz", substationId: tr.substationId, regionId: tr.regionId, feederId: tr.feederId, transformerIds: [tr.id], start: new Date(2026, 10, 21, 9, 0), end: null, cause: "Çağrı kümesinden arıza adayı", crew });
+  const o = createOutage({ kind: "plansiz", substationId: tr.substationId, regionId: tr.regionId, feederId: tr.feederId, transformerIds: [tr.id], start: new Date(2026, 10, 21, 9, 0), end: null, cause: "Çağrı kümesinden olası arıza", crew });
   open.forEach((c) => linkCallToOutage(c.id, o.id));
   assignOutageCrew(o.id, crew);
   createWorkOrder({ type: "ariza", regionId: tr.regionId, reason: `${o.id} onarımı`, linkedId: o.id, assignee: crew, slaHours: 4 });

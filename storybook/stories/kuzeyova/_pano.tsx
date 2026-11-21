@@ -1,29 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BookOpenCheck, Gauge, Receipt, Users, WifiOff, Zap } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Gauge, Lightbulb, Receipt, Users, WifiOff, Zap } from "lucide-react";
 import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { ChartCard } from "@/components/ui/chart-card";
-import { InsightCallout } from "@/components/ui/insight-callout";
 import { ComboChart } from "@/components/ui/combo-chart";
-import { DataTable, type Column } from "@/components/ui/data-table";
 import { RegionMap, type MapRegion } from "@/components/ui/region-map";
-import { RecordList, type RecordItem } from "@/components/ui/record-list";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { StatusList } from "@/components/ui/status-list";
 import {
   CURRENT_PERIOD,
-  FLAGGED_READINGS,
   FLAG_LABEL,
   INVOICES,
-  KINDS,
-  KIND_LABEL,
   PERIODS,
   PERIODS_12,
-  READINGS,
   SYSTEMS,
   TODAY,
   balanceOf,
@@ -36,7 +28,6 @@ import {
   meterById,
   monthShort,
   num,
-  outageDaily,
   parseDay,
   pct,
   periodLabel,
@@ -46,15 +37,15 @@ import {
   type Period,
 } from "./_data";
 import { useDerived } from "./_core";
-import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, useLiveStats, activeCustomers } from "./_selectors";
+import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, useLiveStats } from "./_selectors";
 import { effectiveMeters } from "./_ops";
 import { WORK_TYPE_LABEL as WORK_LABEL_X, type WorkType } from "./_store";
 import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
 import { useRole } from "./_permissions";
 import { COLLECTION_SCOPE, flaggedReadings as flagged, overdueTotal, useBadges } from "./_selectors";
 import { useAging } from "./_data-pano";
-import { AgingBars, BarTarget, PageHero, TodayBand, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
-import { CARD, IconTile, PageBody, PageHead, href, useApp, type PageProps } from "./_ui";
+import { AgingBars, BarTarget, PageHero, RowAnchor, RowLink, TodayBand, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
+import { PageBody, PageHead, Panel, useApp, type PageProps } from "./_ui";
 
 /** Dönem seçici: panonun bütün ölçülerini ve grafiklerini birlikte değiştirir. */
 export function PeriodControl({ size = "md" }: { size?: "sm" | "md" }) {
@@ -150,20 +141,10 @@ const KIND = {
 
 const WORK_COLOR: Record<WorkType, 1 | 2 | 3 | 4 | 5 | 6> = { kesme: 6, baglama: 5, "sayac-degisim": 3, "okuma-turu": 1, kontrol: 4, sokum: 3, kesif: 2, montaj: 2, ariza: 6 };
 
-function ModeLink({ attention, go }: { attention: Attention; go: PageProps["go"] }) {
-  return (
-    <a
-      href={href(attention.to.page, attention.to.params)}
-      onClick={(e) => {
-        e.preventDefault();
-        go(attention.to.page, attention.to.params);
-      }}
-      className="inline-flex min-h-9 items-center gap-1 rounded-md px-2 text-small font-semibold text-primary-ink hover:bg-primary-wash"
-    >
-      İncele <ArrowRight aria-hidden className="size-3.5" />
-    </a>
-  );
-}
+/** Tek katmanlı kart: Panel ile aynı yüzey (iç içe kart yok). */
+const FLAT = "bg-overlay shadow-raised ring-1 ring-line";
+const SYSTEM_DOT = { operational: "bg-success", degraded: "bg-warning", outage: "bg-danger", maintenance: "bg-muted" } as const;
+const SYSTEM_TEXT = { operational: "Çalışıyor", degraded: "Yavaş", outage: "Kesinti", maintenance: "Bakımda" } as const;
 
 const ROLE_HERO: Record<string, string> = { okuma: "supheli", tahsilat: "tahsilat", musteri: "ariza", denetci: "tahsilat", yonetici: "tahsilat" };
 
@@ -172,7 +153,6 @@ export function PanoPage({ go, params }: PageProps) {
   const role = useRole();
   const stats = useLiveStats(period);
   const badges = useBadges();
-  const activeNow = useDerived(activeCustomers);
   const meters = useDerived(effectiveMeters);
   const outagesNow = useDerived(openOutages);
   const owed = useDerived(overdueTotal);
@@ -187,17 +167,7 @@ export function PanoPage({ go, params }: PageProps) {
   const prevLabel = period === "1" ? "önceki aya göre" : `önceki ${period} aya göre`;
   const [selected, setSelected] = useState<string | null>(null);
 
-  /* Eğilim çizgileri: tamamlanan on bir dönemin her biri (aynı listelerden). */
-  const done = PERIODS_12.slice(0, 11);
-  const usageTrend = done.map((p) => READINGS.filter((r) => r.period === p && r.status !== "bekliyor").reduce((s, r) => s + r.usage.total, 0));
   const liveInv = useDerived(activeInvoices);
-  const rateTrend = done.map((p) => collectionIn(p, liveInv as Invoice[]));
-  const lossTrend = done.map((p) => {
-    const rows = regionLoss(p);
-    return pct(rows.reduce((s, x) => s + x.lossKwh, 0), rows.reduce((s, x) => s + x.input, 0));
-  });
-  const flaggedTrend = done.map((p) => FLAGGED_READINGS.filter((r) => r.period === p).length);
-  const outageTrend = outageDaily(10);
 
   /* Grafik dönemi: seçili pencere, en az üç ay. */
   const chartPeriods = useMemo(() => {
@@ -235,34 +205,8 @@ export function PanoPage({ go, params }: PageProps) {
   const lastWeek = loadCurve(7);
 
   const attention = useDerived(buildAttention);
-  const attentionColumns: readonly Column<Attention>[] = [
-    {
-      key: "kind",
-      header: "Tür",
-      render: (r) => (
-        <span className="inline-flex items-center gap-2">
-          <IconTile tone={KIND[r.kind].tone}>{KIND[r.kind].icon}</IconTile>
-          <span className="text-body">{KIND[r.kind].label}</span>
-        </span>
-      ),
-    },
-    { key: "what", header: "Durum", render: (r) => <span className="font-medium text-strong">{r.what}</span> },
-    { key: "who", header: "Abone / Konum", render: (r) => r.who },
-    { key: "detail", header: "Ayrıntı", render: (r) => <span className="kz-mono text-body">{r.detail}</span> },
-    { key: "act", header: <span className="sr-only">İşlem</span>, render: (r) => <ModeLink attention={r} go={go} /> },
-  ];
-  const attentionItems: RecordItem[] = attention.map((r) => ({
-    id: r.id,
-    title: r.who,
-    subtitle: r.what,
-    leading: <IconTile tone={KIND[r.kind].tone}>{KIND[r.kind].icon}</IconTile>,
-    value: r.detail,
-    status: <Badge tone={KIND[r.kind].tone}>{KIND[r.kind].label}</Badge>,
-    onSelect: () => go(r.to.page, r.to.params),
-    href: href(r.to.page, r.to.params),
-  }));
 
-  const schedule: ScheduleItem[] = upcoming.slice(0, 7).map((w) => {
+  const schedule: ScheduleItem[] = upcoming.slice(0, 6).map((w) => {
     const days = daysBetween(TODAY, w.scheduled);
     return {
       id: w.id,
@@ -280,26 +224,42 @@ export function PanoPage({ go, params }: PageProps) {
   const faulty = meters.filter((m) => m.status === "arizali").length;
   const pctChange = (now: number, before: number) => (before ? Math.round(((now - before) / before) * 1000) / 10 : undefined);
 
-  /* Kahraman: rolün bugünkü en önemli sayısı; ikincil ölçüler her rolde aynı beş-altı ölçü, kahraman olan hariç. */
+  /* Kahraman: rolün bugünkü en önemli sayısı; ikincil ölçüler her rolde aynı altı ölçü, kahraman olan hariç.
+     Eğilim çizgisi yok: hepsi aynı satır düzeninde (etiket, değer, değişim). */
   const metrics: Record<string, MetricProps> = {
-    supheli: { label: "Onay Bekleyen Şüpheli Okuma", value: fmtNum(flaggedNow), foot: `${fmtNum(badges.readings)} bu dönemde · önce bunları onayla ya da düzelt`, spark: flaggedTrend, to: { page: "readings", params: { status: "supheli" } }, icon: <BookOpenCheck /> },
-    tahsilat: { label: "Vadesi Geçmiş Alacak", value: fmtTlCompact(owed), foot: `${fmtNum(badges.invoices)} fatura · tahsilat kuyruğunu aç`, visual: <AgingBars buckets={aging} format={fmtTlCompact} />, to: { page: "invoices", params: { status: "gecikti" } }, icon: <Receipt /> },
-    ariza: { label: "Açık Arızada Etkilenen Abone", value: fmtNum(openOutageSub), foot: `${fmtNum(stats.openOutages)} açık arıza · arıza listesini aç`, spark: outageTrend, to: { page: "outages", params: { status: "acik" } }, icon: <Zap /> },
-    abone: { label: "Aktif Abone", value: fmtNum(stats.active), foot: KINDS.map((k) => `${KIND_LABEL[k]} ${fmtNum(activeNow.filter((c) => c.kind === k).length)}`).join(" · "), to: { page: "customers" }, icon: <Users /> },
-    tuketim: { label: `Tüketim · ${label}`, value: fmtKwh(stats.usage), delta: pctChange(stats.usage, stats.usageBefore), goodWhen: "neutral", deltaLabel: prevLabel, spark: usageTrend, foot: "Okunan sayaçların toplamı", icon: <Zap /> },
-    oran: { label: "Tahsilat Oranı", value: fmtPct(stats.collectionRate), delta: Math.round((stats.collectionRate - stats.collectionBefore) * 10) / 10, goodWhen: "up", deltaLabel: prevLabel, spark: rateTrend, foot: COLLECTION_SCOPE, to: { page: "payments" }, icon: <Receipt /> },
-    kayip: { label: "Kayıp / Kaçak", value: fmtPct(stats.lossPct), delta: Math.round((stats.lossPct - stats.lossBefore) * 10) / 10, goodWhen: "down", deltaLabel: prevLabel, spark: lossTrend, foot: `${overRegions.length} bölge hedefin üstünde`, to: { page: "dashboard", params: { focus: "kayip" } }, icon: <Gauge /> },
-    ariza2: { label: "Açık Arıza", value: fmtNum(stats.openOutages), foot: `${fmtNum(openOutageSub)} abone etkileniyor`, spark: outageTrend, to: { page: "outages", params: { status: "acik" } }, icon: <Zap /> },
-    okunamayan: { label: "Okunamayan Sayaç", value: fmtNum(stats.unreadable), foot: `${commsLost} iletişim yok · ${faulty} arızalı`, spark: flaggedTrend, to: { page: "meters", params: { tab: "kesik" } }, icon: <WifiOff /> },
+    supheli: { label: "Onay Bekleyen Şüpheli Okuma", value: fmtNum(flaggedNow), foot: `${fmtNum(badges.readings)} bu dönemde · önce bunları onayla`, to: { page: "readings", params: { status: "supheli" } }, icon: <BookOpenCheck /> },
+    tahsilat: { label: "Vadesi Geçmiş Alacak", value: fmtTlCompact(owed), foot: `${fmtNum(badges.invoices)} fatura · listeyi aç`, visual: <AgingBars buckets={aging} format={fmtTlCompact} />, to: { page: "invoices", params: { status: "gecikti" } }, icon: <Receipt /> },
+    ariza: { label: "Açık Arızada Etkilenen Abone", value: fmtNum(openOutageSub), foot: `${fmtNum(stats.openOutages)} açık arıza · listeyi aç`, to: { page: "outages", params: { status: "acik" } }, icon: <Zap /> },
+    abone: { label: "Aktif Abone", value: fmtNum(stats.active), foot: `${fmtNum(meters.length)} sayaç`, to: { page: "customers" }, icon: <Users /> },
+    tuketim: { label: `Tüketim · ${label}`, value: fmtKwh(stats.usage), delta: pctChange(stats.usage, stats.usageBefore), goodWhen: "neutral", deltaLabel: prevLabel, icon: <Zap /> },
+    oran: { label: "Tahsilat Oranı", value: fmtPct(stats.collectionRate), delta: Math.round((stats.collectionRate - stats.collectionBefore) * 10) / 10, goodWhen: "up", deltaLabel: prevLabel, to: { page: "payments" }, icon: <Receipt /> },
+    kayip: { label: "Kayıp / Kaçak", value: fmtPct(stats.lossPct), delta: Math.round((stats.lossPct - stats.lossBefore) * 10) / 10, goodWhen: "down", deltaLabel: prevLabel, foot: `${overRegions.length} bölge hedef üstü`, to: { page: "dashboard", params: { focus: "kayip" } }, icon: <Gauge /> },
+    ariza2: { label: "Açık Arıza", value: fmtNum(stats.openOutages), foot: `${fmtNum(openOutageSub)} abone etkileniyor`, to: { page: "outages", params: { status: "acik" } }, icon: <Zap /> },
+    okunamayan: { label: "Okunamayan Sayaç", value: fmtNum(stats.unreadable), foot: `${commsLost} iletişim yok · ${faulty} arızalı`, to: { page: "meters", params: { tab: "kesik" } }, icon: <WifiOff /> },
   };
   const heroKey = ROLE_HERO[role] ?? "tahsilat";
-  const order = ["abone", "tuketim", "oran", "kayip", "ariza2", "okunamayan"].filter((k) => !(heroKey === "ariza" && k === "ariza2") && !(heroKey === "tahsilat" && k === "oran" && false));
+  const order = ["abone", "tuketim", "oran", "kayip", "ariza2", "okunamayan"].filter((k) => !(heroKey === "ariza" && k === "ariza2"));
+  const secondary = order.slice(0, heroKey === "ariza" ? 5 : 6).map((k) => metrics[k]);
+
+  const tip =
+    commsLost > 0 ? (
+      <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span className="inline-flex items-center gap-1.5">
+          <Lightbulb aria-hidden className="size-3.5 text-primary-ink" />
+          <span className="font-semibold text-strong">Öneri</span>
+        </span>
+        <span className="min-w-0 flex-1 basis-64 text-muted">{fmtNum(commsLost)} sayaç iletişim kurmuyor. Tahakkuk tahmine düşmeden saha ekibine iş emri aç.</span>
+        <Button size="sm" variant="ghost" onClick={() => go("meters", { tab: "kesik" })}>
+          Sayaçları Aç
+        </Button>
+      </p>
+    ) : null;
 
   return (
     <>
       <PageHead
         title="Pano"
-        description={`Pilot bölge · ${fmtNum(stats.active)} aktif abone, ${fmtNum(meters.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
+        description={`Pilot Bölge · ${fmtNum(stats.active)} aktif abone · ${fmtNum(meters.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
         actions={
           <>
             <PeriodControl />
@@ -307,64 +267,68 @@ export function PanoPage({ go, params }: PageProps) {
               Raporlar
             </Button>
             <Button variant="primary" size="sm" onClick={() => go("register")}>
-              Yeni Müşteri
+              Yeni Abone
             </Button>
           </>
         }
       />
       <PageBody>
-        <TodayBand />
+        <TodayBand tip={tip} />
 
-        {commsLost > 0 ? (
-          <InsightCallout
-            title="İletişimi Kopan Sayaçlara Önce Bak"
-            label="Öneri"
+        <PageHero primary={metrics[heroKey]} secondary={secondary} />
+
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
+          <Panel
+            id="pano-dikkat"
+            title="Dikkat Gerektirenler"
+            note="En acil olan üstte"
+            className="xl:col-span-3"
             actions={
-              <Button size="sm" variant="secondary" onClick={() => go("meters", { tab: "kesik" })}>
-                Sayaçları Aç
-              </Button>
-            }
-          >
-            {fmtNum(commsLost)} sayaç iletişim kurmuyor; tahakkuk tahmine düşmeden saha ekibine iş emri aç.
-          </InsightCallout>
-        ) : null}
-
-        <PageHero primary={metrics[heroKey]} secondary={order.slice(0, 6).map((k) => metrics[k])} />
-
-        <section aria-labelledby="pano-dikkat" className={CARD}>
-          <div className="rounded-lg bg-overlay">
-            <header className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-5">
-              <div>
-                <h2 id="pano-dikkat" className="text-read font-semibold text-strong">
-                  Dikkat Gerektirenler
-                </h2>
-                <p className="text-small text-muted">Şüpheli okuma, geciken fatura, iletişimi kopan sayaç ve açık arıza: en acil olan üstte.</p>
-              </div>
               <Badge tone="danger" dot>
                 {attention.length} kayıt
               </Badge>
-            </header>
-            <div className="max-md:hidden">
-              <DataTable<Attention> caption="Dikkat gerektirenler" columns={attentionColumns} rows={attention} rowKey={(r) => r.id} density="comfortable" on="surface" stickyFirst={false} />
+            }
+          >
+            <ul role="list" aria-label="Dikkat Gerektirenler" className="divide-y divide-line-soft">
+              {attention.slice(0, 7).map((r) => (
+                <li key={r.id}>
+                  <RowLink className="flex items-center gap-3 px-4 py-2.5 sm:px-5">
+                    <span aria-hidden className={`size-2 shrink-0 rounded-full ${KIND[r.kind].tone === "danger" ? "bg-danger" : "bg-warning"}`} />
+                    <div className="grid min-w-0 flex-1">
+                      <RowAnchor to={{ page: r.to.page, params: r.to.params }} className="truncate text-base">
+                        {r.what}
+                      </RowAnchor>
+                      <p className="truncate text-small text-muted">
+                        {KIND[r.kind].label} · {r.who}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-small text-body tabular-nums max-sm:hidden">{r.detail}</span>
+                    <ArrowRight aria-hidden className="size-3.5 shrink-0 text-muted" />
+                  </RowLink>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+
+          <Panel id="pano-sirada" title="Sıradaki İşler" note={`${fmtNum(upcoming.length)} planlı iş`} className="xl:col-span-2">
+            <div className="p-4 sm:p-5">
+              <ScheduleList label="Planlı İş Emirleri" items={schedule} />
             </div>
-            <div className="px-3 pb-3 md:hidden">
-              <RecordList label="Dikkat Gerektirenler" items={attentionItems} />
-            </div>
-          </div>
-        </section>
+          </Panel>
+        </div>
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
           <ChartCard
             id="pano-yuk"
-            className={`${CARD} xl:col-span-3`}
+            className={`${FLAT} xl:col-span-3`}
             label="Günlük Yük Eğrisi"
             value={`${fmtDec(peak(yesterday), 2)} MW`}
             change={Math.round(((peak(yesterday) - peak(lastWeek)) / peak(lastWeek)) * 1000) / 10}
             changeLabel="geçen haftaya göre (dünün tepe yükü)"
-            action={<Badge tone="neutral">Saatlik, MW</Badge>}
+            action={<Badge tone="neutral">Saatlik · MW</Badge>}
           >
             <AreaChart
-              title="Günlük Yük Eğrisi, Dün ve Geçen Hafta Aynı Gün"
+              title="Günlük Yük Eğrisi: Dün ve Geçen Hafta Aynı Gün"
               labels={yesterday.map((_, h) => String(h).padStart(2, "0"))}
               series={[
                 { label: "Dün", values: yesterday, series: 1 },
@@ -377,14 +341,14 @@ export function PanoPage({ go, params }: PageProps) {
 
           <ChartCard
             id="pano-tahsilat"
-            className={`${CARD} xl:col-span-2`}
+            className={`${FLAT} xl:col-span-2`}
             label="Tahakkuk ve Tahsilat"
             value={fmtTl(stats.billed, 0)}
             change={pctChange(stats.billed, stats.billedBefore) ?? null}
             changeLabel={prevLabel}
           >
             <ComboChart
-              title="Aylık Tahakkuk (sütun, TL) ve Tahsilat Oranı (çizgi, %)"
+              title="Aylık Tahakkuk (sütun TL) ve Tahsilat Oranı (çizgi %)"
               labels={monthLabels}
               bars={{ label: "Tahakkuk", values: billedBars, series: 1, unit: "₺", format: { notation: "compact", maximumFractionDigits: 1 } }}
               line={{ label: "Tahsilat Oranı", values: rateLine, series: 2, format: { style: "percent", maximumFractionDigits: 1 } }}
@@ -394,10 +358,10 @@ export function PanoPage({ go, params }: PageProps) {
         </div>
 
         <div id="pano-kayip" className="grid scroll-mt-4 grid-cols-1 gap-5 xl:grid-cols-5">
-          <ChartCard id="pano-harita" className={`${CARD} xl:col-span-3`} label="Bölge Haritası · Kayıp / Kaçak" value={fmtPct(stats.lossPct)} change={null} action={<Badge tone={overRegions.length ? "danger" : "success"} dot>{overRegions.length ? `${overRegions.length} bölge hedefin üstünde` : "Bütün bölgeler hedefte"}</Badge>}>
+          <ChartCard id="pano-harita" className={`${FLAT} xl:col-span-3`} label="Bölge Haritası · Kayıp / Kaçak" value={fmtPct(stats.lossPct)} change={null} action={<Badge tone={overRegions.length ? "danger" : "success"} dot>{overRegions.length ? `${overRegions.length} bölge hedefin üstünde` : "Bütün bölgeler hedefte"}</Badge>}>
             <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_14rem] md:items-center">
               <RegionMap title="Bölgeye Göre Kayıp ve Kaçak Oranı" regions={mapRegions} viewBox={MAP_VIEWBOX} format={(v) => fmtPct(v)} selectedId={selected} onSelect={(id) => setSelected((cur) => (cur === id ? null : id))} legend={["Hedefte", "Hedef üstü"]} />
-              <div className="rounded-lg bg-surface p-3 text-base">
+              <div className="border-line-soft text-base md:border-l md:pl-4">
                 {picked ? (
                   <>
                     <p className="font-semibold text-strong">{picked.region.name}</p>
@@ -412,7 +376,7 @@ export function PanoPage({ go, params }: PageProps) {
             </div>
           </ChartCard>
 
-          <ChartCard id="pano-kayip-liste" className={`${CARD} xl:col-span-2`} label="Hedefe Göre Sıralama" value={`${overRegions.length} / ${losses.length} bölge hedef üstünde`} change={null} action={<Badge tone="neutral">{label}</Badge>}>
+          <ChartCard id="pano-kayip-liste" className={`${FLAT} xl:col-span-2`} label="Hedefe Göre Sıralama" value={`${overRegions.length} / ${losses.length} bölge hedef üstünde`} change={null} action={<Badge tone="neutral">{label}</Badge>}>
             <BarTarget
               aria-label="Bölgeye Göre Kayıp ve Kaçak Oranı"
               rows={[...losses].sort((a, b) => b.lossPct - b.target - (a.lossPct - a.target)).map((l) => ({ id: l.region.id, label: l.region.name, value: l.lossPct, target: l.target }))}
@@ -421,26 +385,21 @@ export function PanoPage({ go, params }: PageProps) {
           </ChartCard>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-          <section aria-labelledby="pano-sirada" className={`${CARD} xl:col-span-3`}>
-            <div className="flex h-full flex-col rounded-lg bg-surface p-2">
-              <header className="px-3 pt-3 pb-2">
-                <h2 id="pano-sirada" className="text-small font-medium text-muted">
-                  Sıradaki İşler
-                </h2>
-                <p className="mt-1 text-heading font-semibold tracking-tight text-strong">{fmtNum(upcoming.length)} planlı iş</p>
-              </header>
-              <div className="px-3 pb-3">
-                <ScheduleList label="Planlı İş Emirleri" items={schedule} />
-              </div>
-            </div>
-          </section>
-          <div className={`${CARD} xl:col-span-2`}>
-            <div className="rounded-lg bg-surface p-3">
-              <StatusList title="Sistem Durumu" items={SYSTEMS.map((s) => ({ id: s.id, label: s.label, status: s.status }))} incident="Son olay: 20 Kas, GSM ağ geçidi yavaşlığı" headingLevel={2} />
-            </div>
-          </div>
-        </div>
+        <section aria-labelledby="pano-sistem" className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl bg-overlay px-4 py-3 text-small shadow-raised ring-1 ring-line sm:px-5">
+          <h2 id="pano-sistem" className="font-semibold text-strong">
+            Sistem Durumu
+          </h2>
+          <ul role="list" className="flex flex-1 flex-wrap items-center gap-x-5 gap-y-1.5">
+            {SYSTEMS.map((sys) => (
+              <li key={sys.id} className="inline-flex items-center gap-1.5 text-body">
+                <span aria-hidden className={`size-2 rounded-full ${SYSTEM_DOT[sys.status]}`} />
+                {sys.label}
+                <span className="text-muted">· {SYSTEM_TEXT[sys.status]}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-muted">Son olay: 20 Kas · GSM ağ geçidi yavaşlığı</p>
+        </section>
       </PageBody>
     </>
   );

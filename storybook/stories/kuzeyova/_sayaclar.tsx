@@ -110,7 +110,7 @@ import { MetricStrip, MeterBadge, PageBody, PageHead, Panel, ReadingBadge, href,
  * dönünce kaybolmaz. Görünüm ve durum adresten de gelir (`?tab=kesik`, `?status=`).
  *
  * İŞLEMLER depoya yazılır, yerel durum değil: röle TEK yoldan (kesme/bağlama
- * emri → iş emri → müşteri durumu), sayaç değişimi ve arıza kaydı gerçek iş
+ * emri → iş emri → abone durumu), sayaç değişimi ve arıza kaydı gerçek iş
  * emri, saat senkronu ve tur planı sayaç yamasında, hepsi denetim günlüğünde.
  */
 
@@ -144,7 +144,7 @@ const VIEWS: readonly ViewDef[] = [
   { id: "hepsi", label: "Hepsi", test: () => true },
   { id: "uzaktan", label: "Uzaktan Okunan", test: (r) => r.m.comm !== "elle" },
   { id: "elle", label: "Elle Okunan", test: (r) => r.m.comm === "elle" },
-  { id: "kesik", label: "Haberleşmesi Kesik", test: (r) => r.m.status === "iletisim-yok" },
+  { id: "kesik", label: "İletişim Yok", test: (r) => r.m.status === "iletisim-yok" },
   { id: "alarmli", label: "Alarmlı", test: (r) => r.alarm },
   { id: "muayene", label: "Muayenesi Geçen", test: (r) => r.overdue },
 ];
@@ -410,10 +410,10 @@ function MeterList({ params, go }: PageProps) {
         actions={
           <>
             <Button variant="secondary" size="sm" onClick={() => exportRows(sorted, "sayaclar-2026-11.csv")}>
-              <Download aria-hidden /> CSV indir
+              <Download aria-hidden /> CSV İndir
             </Button>
             <Button variant="primary" size="sm" onClick={() => go("readings", { tab: "tur" })}>
-              <ClipboardList aria-hidden /> Okuma turları{inRoute ? ` (${inRoute} sayaç eklendi)` : ""}
+              <ClipboardList aria-hidden /> Okuma Turları{inRoute ? ` (${inRoute} sayaç eklendi)` : ""}
             </Button>
           </>
         }
@@ -422,7 +422,7 @@ function MeterList({ params, go }: PageProps) {
         <MetricStrip>
           <Metric icon={<Gauge />} label="Toplam Sayaç" value={fmtNum(rows.length)} foot={`${fmtNum(rows.filter((r) => r.m.multiplier > 1).length)} OG çarpanlı`} to={{ page: "meters", params: { tab: "hepsi" } }} />
           <Metric icon={<Wifi />} label="Uzaktan Okunan" value={fmtPct((remote.length / rows.length) * 100)} foot={`AMI ${fmtNum(rows.filter((r) => r.m.comm === "ami").length)} · GSM ${fmtNum(rows.filter((r) => r.m.comm === "gsm").length)}`} to={{ page: "meters", params: { tab: "uzaktan" } }} />
-          <Metric icon={<WifiOff />} label="İletişim Kesik" value={fmtNum(offline)} foot="Saha turuna ekle" to={{ page: "meters", params: { tab: "kesik" } }} />
+          <Metric icon={<WifiOff />} label="İletişim Yok" value={fmtNum(offline)} foot="Saha turuna ekle" to={{ page: "meters", params: { tab: "kesik" } }} />
           <Metric icon={<Wrench />} label="Arızalı / Şüpheli" value={fmtNum(faulty + suspect)} foot={`${faulty} arızalı · ${suspect} şüphe`} to={{ page: "meters", params: { tab: "bugun" } }} />
           <Metric icon={<Repeat />} label="Muayenesi Geçen" value={fmtNum(counts.muayene)} foot="Süresi dolan" to={{ page: "meters", params: { tab: "muayene" } }} />
           <Metric icon={<ShieldAlert />} label="Kapak / Manyetik Alarm" value={fmtNum(counts.alarmli)} foot="Son 3 dönem" to={{ page: "meters", params: { tab: "alarmli" } }} />
@@ -676,7 +676,7 @@ function MeterDetailBody({ m, go }: { m: Meter; go: PageProps["go"] }) {
 
   const driftLabel = drift === 0 ? "Sapma yok" : `${drift > 0 ? "+" : "−"}${Math.abs(drift)} sn`;
   const liveIndex = { t1: current.index.t1 + 14, t2: current.index.t2 + (m.multiZone ? 6 : 0), t3: current.index.t3 + (m.multiZone ? 4 : 0) };
-  const relayText = pending ? `${pending.kind === "kesme" ? "Kesme" : "Bağlama"} emri bekliyor (${pending.id}, ${pending.date})` : cutOff ? "açık (enerji kesik)" : "kapalı (enerji var)";
+  const relayText = pending ? `${pending.kind === "kesme" ? "Kesme" : "Bağlama"} emri bekliyor (${pending.id}, ${dayLabel(pending.date)})` : cutOff ? "açık (enerji kesik)" : "kapalı (enerji var)";
 
   return (
     <>
@@ -692,7 +692,7 @@ function MeterDetailBody({ m, go }: { m: Meter; go: PageProps["go"] }) {
         actions={
           <>
             <Button variant="ghost" size="sm" onClick={() => go("meters")}>
-              <ArrowLeft aria-hidden /> Sayaçlara dön
+              <ArrowLeft aria-hidden /> Sayaçlara Dön
             </Button>
             <Button variant="primary" size="sm" onClick={startLive} disabled={live.state === "reading" || m.status === "iletisim-yok"}>
               {live.state === "reading" ? <Spinner size="sm" label="Okunuyor" /> : <RadioTower aria-hidden />} Anlık okuma iste
@@ -832,7 +832,7 @@ function MeterDetailBody({ m, go }: { m: Meter; go: PageProps["go"] }) {
                 Tesisat <Mono>{c.installation}</Mono> · {c.voltage} · {c.tariff === "cok-zamanli" ? "çok zamanlı" : "tek zamanlı"}
               </p>
               <div className="flex flex-wrap gap-2">
-                <Button variant="secondary" size="sm" onClick={() => go("customers", { id: c.id })}>Müşteri Kartı</Button>
+                <Button variant="secondary" size="sm" onClick={() => go("customers", { id: c.id })}>Abone Kartı</Button>
                 <Button variant="secondary" size="sm" onClick={() => go("invoices", { customer: c.id })}>Faturaları</Button>
               </div>
             </div>
@@ -841,19 +841,19 @@ function MeterDetailBody({ m, go }: { m: Meter; go: PageProps["go"] }) {
           <Panel title="İşlemler" note="Hepsi denetim günlüğüne yazılır" id="islemler">
             <div className="grid gap-2 p-3 sm:p-4">
               <Button variant="secondary" size="sm" className="justify-start" onClick={startLive} disabled={live.state === "reading" || m.status === "iletisim-yok"}>
-                <RadioTower aria-hidden /> Anlık okuma iste
+                <RadioTower aria-hidden /> Anlık Okuma İste
               </Button>
               <Button variant="secondary" size="sm" className="justify-start" onClick={syncClock} disabled={drift === 0 || m.comm === "elle"}>
-                <Clock3 aria-hidden /> Saati senkronla {drift !== 0 ? `(${driftLabel})` : ""}
+                <Clock3 aria-hidden /> Saati Senkronla {drift !== 0 ? `(${driftLabel})` : ""}
               </Button>
               <Button variant="secondary" size="sm" className="justify-start" onClick={() => setDialog("relay")} disabled={m.comm === "elle" || !canCut || !!pending} title={!canCut ? "Kesme/Bağlama Yetkiniz Yok" : undefined}>
                 {cutOff ? <Power aria-hidden /> : <PowerOff aria-hidden />} {cutOff ? "Enerjiyi yeniden bağla" : "Enerji kesme emri ver"}
               </Button>
               <Button variant="secondary" size="sm" className="justify-start" onClick={() => setDialog("replace")} disabled={!canMeter} title={!canMeter ? "Sayaç Değişim Yetkiniz Yok" : undefined}>
-                <Repeat aria-hidden /> Sayaç değişimi iş emri
+                <Repeat aria-hidden /> Sayaç Değişimi İş Emri
               </Button>
               <Button variant="secondary" size="sm" className="justify-start" onClick={() => setDialog("fault")}>
-                <Wrench aria-hidden /> Arıza kaydı aç
+                <Wrench aria-hidden /> Arıza Kaydı Aç
               </Button>
               <Button variant="secondary" size="sm" className="justify-start" onClick={addToRoute} disabled={!!ops.inRoute}>
                 {ops.inRoute ? <CheckCircle2 aria-hidden /> : <CalendarClock aria-hidden />} {ops.inRoute ? "Tur planına eklendi" : "Tur planına ekle"}
@@ -923,7 +923,7 @@ function RelayDialog({ open, onClose, cutting, meter, customerId, go }: { open: 
     }
     close();
     if (r.status === "onay-bekliyor") notify({ title: "İki Göz Onayı Bekleniyor", body: `${meter.serial}: kesme emri onaylanınca iş emri açılır.`, tone: "info" });
-    else notify({ title: "Kesme İş Emri Açıldı", body: `${r.workOrder.id}: ${meter.serial}. İş Emirleri sayfasında izlenir; tamamlanınca müşteri durumu ve röle güncellenir.`, tone: "success" });
+    else notify({ title: "Kesme İş Emri Açıldı", body: `${r.workOrder.id}: ${meter.serial}. İş Emirleri sayfasında izlenir; tamamlanınca abone durumu ve röle güncellenir.`, tone: "success" });
   };
   const confirmReconnect = () => {
     const wo = requestReconnect(customerId, label);
@@ -937,13 +937,13 @@ function RelayDialog({ open, onClose, cutting, meter, customerId, go }: { open: 
       open={open}
       onOpenChange={(o) => !o && close()}
       title={cutting ? "Enerji Kesme Emri" : "Enerjiyi Yeniden Bağla"}
-      description={cutting ? `${meter.serial} abonesi için kesme iş emri açılır. Röle iş emri tamamlanınca açılır; kesme tek yoldan gider (Ödemeler ve Müşteriler aynı kaydı görür).` : `${meter.serial} abonesi için bağlama iş emri açılır; süre sayacı başlar.`}
+      description={cutting ? `${meter.serial} abonesi için kesme iş emri açılır. Röle iş emri tamamlanınca açılır; kesme tek yoldan gider (Ödemeler ve Aboneler aynı kaydı görür).` : `${meter.serial} abonesi için bağlama iş emri açılır; süre sayacı başlar.`}
       footer={
         <>
           <Button variant="ghost" onClick={close}>Vazgeç</Button>
           {cutting ? (
             cannot ? (
-              <Button variant="primary" disabled>Politika Engeli Var</Button>
+              <Button variant="primary" disabled>Kural Engeli Var</Button>
             ) : (
               <HoldButton tone="danger" onConfirm={confirmCut} doneLabel="Emir verildi" hint="Onaylamak için basılı tut">
                 Basılı Tutarak Kesme Emri Ver
@@ -959,7 +959,7 @@ function RelayDialog({ open, onClose, cutting, meter, customerId, go }: { open: 
         <RadioGroup name="relay-reason" legend="Gerekçe" value={reason} onChange={setReason} options={REASONS} />
         {cutting && elig ? (
           elig.eligible ? (
-            <p className="rounded-lg bg-success-wash p-3 text-small text-strong ring-1 ring-success/20">Kesme politikası uygun: ihtar, bekleme süresi ve itiraz/plan denetimleri geçti.</p>
+            <p className="rounded-lg bg-success-wash p-3 text-small text-strong ring-1 ring-success/20">Kesme kuralları uygun: ihtar, bekleme süresi ve itiraz/plan denetimleri geçti.</p>
           ) : (
             <div role="alert" className="rounded-lg bg-warning-wash p-3 text-small text-strong ring-1 ring-warning/20">
               <p className="font-semibold">Kesme şu an verilemez:</p>

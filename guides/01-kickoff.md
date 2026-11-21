@@ -30,7 +30,7 @@ var" sorusu için `/roadmap`.
 
 ## 0. Ürün Sorusu — Kod Yazmadan Önce
 
-Üç cümle yaz, `docs/PRODUCT.md`nin başına koy:
+Dört cümle yaz (kimin için, ne zaman, hangi yön, tek ölçü), `docs/PRODUCT.md`nin başına koy:
 
 1. **Kimin için?** "Yatırımcı" değil: "Türkiye'den ABD borsasını izleyen,
    akşam 16:30'da telefonuna bakan bireysel yatırımcı."
@@ -46,7 +46,13 @@ var" sorusu için `/roadmap`.
    **Neden:** "Koyu havalı durur" refleksiyle başlayan Mimio bir klinik aracı
    olduğu için Ağustos 2026'da açık temaya çevrildi; açık tema baştan
    tasarlanmadığı için her ekran yeniden ele alındı.
-3. **Tek bir ölçü:** Bu ürün işini yapıyorsa hangi sayı değişir? (günlük
+3. **Hangi tasarım yönü?** Palet ve hero "hep aynısı" olmaz: ürünün işine
+   göre `knowledge/design-directions.md` kataloğundan üç aday çıkar, biri
+   seçilir (`npm run direction`, `/kickoff`). Seçim `docs/DESIGN.md`
+   frontmatter'ına (`direction`, `hero`, `shell`, `card`, `popup`, `density`,
+   `motion`) ve `knowledge/direction-log.md`'ye yazılır; son beş projede
+   kullanılan yön tekrar önerilmez.
+4. **Tek bir ölçü:** Bu ürün işini yapıyorsa hangi sayı değişir? (günlük
    dönen kullanıcı, okunan analiz, kaydedilen seans)
 
 ✅ "Seans sonrası 2 dakikada not düşen terapist için, gündüz, açık tema."

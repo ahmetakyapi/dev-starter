@@ -4,7 +4,7 @@ import { createSlice } from "./_core";
 import { TAGS } from "./_data-musteri";
 
 /**
- * Müşteri listesinin kayıtlı görünümleri (kullanıcıya özel, oturumluk).
+ * Abone listesinin kayıtlı görünümleri (kullanıcıya özel, oturumluk).
  * Sabit görünümler listenin sorusudur ("kimden başlamalıyım?"): Tümü, Riskli,
  * Serbest tüketici, Enerjisi kesik, Hassas abone. Kullanıcı kendi süzgeç
  * birleşimini adla kaydeder; adres parametreleri olarak saklanır (derin bağlantıyla aynı dil).

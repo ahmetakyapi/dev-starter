@@ -40,6 +40,28 @@ import { cn } from "@/lib/utils";
  * diyalog bir daha açılmaz.
  */
 
+/**
+ * Kaydırma gövdesinin ortak stili: gövde kendi içinde kayar (başlık ve eylem
+ * çubuğu sabit), arka sayfaya zincirlenmez (`overscroll-contain`), çubuk ince
+ * ve token renkli, `scroll-smooth` yalnız programatik/odak sıçramalarında
+ * (tekerlek ve dokunuş zaten doğrudan; hareket azaltmada kapalı),
+ * `scroll-py` odaklanan alanı kenara yapıştırmaz. Taşan içeriğe üst/alt ince
+ * gölge: `background-attachment: local` örtüleri kaydırıldıkça gölgeyi
+ * kapatır, yani gölge yalnız o yönde içerik KALDIYSA görünür (JS, ölçüm ve
+ * `animation-timeline` desteği gerekmez; her tarayıcıda aynı).
+ */
+const SCROLL_BODY =
+  "min-h-0 overflow-y-auto overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary scroll-py-4 motion-reduce:scroll-auto [scrollbar-gutter:stable_both-edges] [scrollbar-width:thin] [scrollbar-color:var(--color-line-strong)_transparent]";
+
+const SCROLL_SHADOW = {
+  background: [
+    "linear-gradient(var(--color-overlay) 30%, transparent) top / 100% 1.5rem no-repeat local",
+    "linear-gradient(transparent, var(--color-overlay) 70%) bottom / 100% 1.5rem no-repeat local",
+    "radial-gradient(farthest-side at 50% 0, color-mix(in oklab, var(--color-strong) 16%, transparent), transparent) top / 100% 0.5rem no-repeat scroll",
+    "radial-gradient(farthest-side at 50% 100%, color-mix(in oklab, var(--color-strong) 16%, transparent), transparent) bottom / 100% 0.5rem no-repeat scroll",
+  ].join(", "),
+} as const;
+
 let lockCount = 0;
 
 function lockScroll() {
@@ -107,6 +129,15 @@ export function Dialog({
     [...dialog.querySelectorAll<HTMLElement>("[data-autofocus]")]
       .find((el) => el.closest("dialog") === dialog)
       ?.focus();
+    // Her açılışta gövde en üstten başlar (önceki açılıştan kalan konum yok).
+    const body = dialog.querySelector<HTMLElement>("[data-scroll-body]");
+    if (body) {
+      body.scrollTo({ top: 0, behavior: "instant" });
+      // Taşan gövdede odaklanabilir öğe yoksa klavye kullanıcısı kaydıramaz
+      // (axe `scrollable-region-focusable`); gövdenin kendisi Tab durağı olur.
+      const focusable = body.querySelector("a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex='-1'])");
+      if (body.scrollHeight > body.clientHeight && !focusable) body.tabIndex = 0;
+    }
     lockScroll();
     return () => {
       dialog.close();
@@ -177,7 +208,11 @@ export function Dialog({
             <X aria-hidden strokeWidth={1.75} />
           </button>
         </header>
-        {children ? <div className="min-h-0 overflow-y-auto px-5 py-4 sm:px-6">{children}</div> : null}
+        {children ? (
+          <div data-scroll-body className={cn(SCROLL_BODY, "px-5 py-4 sm:px-6")} style={SCROLL_SHADOW}>
+            {children}
+          </div>
+        ) : null}
         {footer ? (
           <footer className="flex flex-col-reverse gap-2 border-t border-line-soft bg-surface px-5 py-4 sm:flex-row sm:justify-end sm:px-6 max-sm:[&>*]:w-full">
             {footer}

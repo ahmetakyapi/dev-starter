@@ -1,13 +1,12 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
-import { AlertTriangle, ArrowLeft, CalendarClock, CheckCircle2, Clock, MessageSquareText, PhoneCall, ShieldAlert, Timer, Users, Wrench, Zap } from "lucide-react";
+import { AlertTriangle, ArrowLeft, CalendarClock, CheckCircle2, Clock, MessageSquareText, ShieldAlert, Timer, Users, Wrench, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
 import { FactorList } from "@/components/ui/factor-list";
-import { InsightCallout } from "@/components/ui/insight-callout";
 import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
 import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
@@ -38,10 +37,10 @@ import {
 import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
 import { getCutPolicy, scheduleSlot } from "./_cutpolicy";
 import { isBusinessDay, inWorkHours, keyOf } from "./_calendar";
-import { BarTarget, EmptyStateX, PageHero, RowAnchor, RowLink, StepCountChart, UnitLegend, fmtDec, fmtDur, fmtNum, useListKeys } from "./_kit";
+import { BarTarget, CandidateStrip, EmptyStateX, PageHero, RowAnchor, RowLink, StepCountChart, UnitLegend, fmtDec, fmtDur, fmtNum, useListKeys } from "./_kit";
 import { assignOutageCrew, cancelOutage, closeOutage, createOutage, effectiveOutages, getOutageState, sendOutageSms, setOutageEta } from "./_ops";
 import { faultCandidates } from "./_selectors";
-import { WORK_TYPE_LABEL, createOutageFromCalls, createWorkOrder, getCalls, getWorkOrders } from "./_store";
+import { WORK_STATUS_LABEL, WORK_TYPE_LABEL, createOutageFromCalls, createWorkOrder, getCalls, getWorkOrders } from "./_store";
 import { useCan } from "./_permissions";
 import { IconTile, OutageBadge, PageBody, PageHead, Panel, href, useApp, type PageProps } from "./_ui";
 
@@ -298,7 +297,7 @@ export function ArizaPage({ params, go }: PageProps) {
     <>
       <PageHead
         title="Arıza ve Kesintiler"
-        description="Plansız arızalar, planlı çalışmalar ve müşteri duyuruları."
+        description="Plansız arızalar · planlı çalışmalar · abone duyuruları"
         actions={
           canOps ? (
             <>
@@ -313,41 +312,33 @@ export function ArizaPage({ params, go }: PageProps) {
         }
       />
       <PageBody>
-        {candidates.length ? (
-          <section aria-label="Arıza Adayları" className="grid gap-2">
-            {candidates.map((c) => (
-              <InsightCallout
-                key={c.transformerId}
-                kind="warning"
-                icon={PhoneCall}
-                label="Arıza Adayı"
-                title={`${c.transformer.name}: ${c.count} Çağrı, Henüz Arızaya Bağlı Değil`}
-                actions={
-                  <>
-                    {canOps ? (
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        onClick={() => {
-                          const o = createOutageFromCalls(c.transformerId);
-                          if (o) {
-                            notify({ title: "Arıza Kaydı Açıldı", body: `${o.id} · ${c.count} çağrı bağlandı, onarım iş emri oluştu`, tone: "success" });
-                            go("outages", { id: o.id });
-                          }
-                        }}
-                      >
-                        Arızaya Çevir
-                      </Button>
-                    ) : null}
-                    <a href={href("calls")} className="text-small font-medium text-strong underline-offset-2 hover:underline">Çağrıları gör</a>
-                  </>
-                }
-              >
-                {c.transformer.name} ({substation(c.transformer.substationId).name}) için {c.count} çağrı geldi. Ortak arıza olma ihtimali yüksek; kayıt açınca çağrılar ona bağlanır ve onarım iş emri oluşur.
-              </InsightCallout>
-            ))}
-          </section>
-        ) : null}
+        <CandidateStrip
+          items={candidates.map((c) => ({
+            id: c.transformerId,
+            title: `Olası Ortak Arıza: ${c.transformer.name} Trafosunda ${c.count} Çağrı`,
+            detail: `${substation(c.transformer.substationId).name} bölgesinden gelen çağrıların hiçbiri bir arızaya bağlı değil.`,
+            action: (
+              <>
+                <a href={href("calls")} className="text-small font-medium text-strong underline-offset-2 hover:underline">Çağrıları Gör</a>
+                {canOps ? (
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    onClick={() => {
+                      const o = createOutageFromCalls(c.transformerId);
+                      if (o) {
+                        notify({ title: "Arıza Kaydı Açıldı", body: `${o.id} · ${c.count} çağrı bağlandı, onarım iş emri oluştu`, tone: "success" });
+                        go("outages", { id: o.id });
+                      }
+                    }}
+                  >
+                    Arızaya Çevir
+                  </Button>
+                ) : null}
+              </>
+            ),
+          }))}
+        />
 
         <PageHero
           primary={{ label: "Açık Arıza", value: fmtNum(open.length), foot: open.length ? `${fmtNum(openAffected)} abone şu an enerjisiz` : "Şebekede açık arıza yok", icon: <Zap />, to: { page: "outages", params: { tab: "acik" } } }}
@@ -476,6 +467,8 @@ function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; pat
   const calls = getCalls().filter((c) => c.outageId === o.id);
   const orders = getWorkOrders().filter((w) => w.linkedId === o.id);
   const minutes = outageMin(o);
+  const crewChanged = !!crewSel && crewSel !== crew;
+  const etaChanged = !!etaSel && Number(etaSel) !== etaMin;
 
   const seedSteps = outageTimeline(o);
   const events: TimelineEvent[] = [
@@ -514,75 +507,106 @@ function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; pat
             { label: "Hassas Abone", value: fmtNum(sensitive.length), foot: sensitive.length ? "Öncelikli bilgilendir" : "Hassas abone yok", icon: <ShieldAlert /> },
             { label: "Ekip", value: crew.replace(/ \(.*\)/, ""), foot: crew, icon: <Wrench /> },
             { label: "Tahmini Süre", value: fmtDur(etaMin), foot: patch?.etaMin ? "Güncellendi" : "İlk tahmin", icon: <Timer /> },
-            { label: "Müşteri Duyurusu", value: patch?.smsSent ? "Gönderildi" : "Bekliyor", foot: patch?.smsSent ? `${fmtNum(patch.smsSent)} SMS` : "SMS henüz gitmedi", icon: <MessageSquareText /> },
+            { label: "Abone Duyurusu", value: patch?.smsSent ? "Gönderildi" : "Bekliyor", foot: patch?.smsSent ? `${fmtNum(patch.smsSent)} SMS` : "SMS henüz gitmedi", icon: <MessageSquareText /> },
           ]}
         />
 
-        {isOpen ? (
-          <FactorList
-            title="Neden Öncelikli"
-            severity={sensitive.length || o.affected >= 1000 ? "high" : minutes >= 120 ? "medium" : "low"}
-            factors={[
-              { label: "Etkilenen Abone", value: fmtNum(o.affected), hint: "Şu an enerjisiz", tone: o.affected >= 1000 ? "danger" : "neutral" },
-              { label: "Hassas Abone", value: fmtNum(sensitive.length), hint: sensitive.length ? "Tıbbi cihaz vb.; önce bilgilendir" : "Yok", tone: sensitive.length ? "danger" : "neutral" },
-              { label: "Açık Kalma Süresi", value: fmtDur(minutes), hint: `Tahmin ${fmtDur(etaMin)}`, tone: minutes > etaMin ? "warning" : "neutral" },
-              { label: "Gelen Çağrı", value: fmtNum(calls.length), hint: calls.length > 1 ? "Aynı arızadan tekrar eden çağrı" : "Bağlı çağrı az", tone: "neutral" },
-            ]}
-          />
-        ) : null}
-
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-          <Panel id="ad-zaman" title="Zaman Çizelgesi" note="Bildirimden enerjinin verilmesine kadar her adım; işlemler buraya düşer." className="xl:col-span-3">
-            <div className="p-4 sm:p-5">
-              <Timeline events={events} />
-            </div>
-          </Panel>
-          <div className="grid gap-5 xl:col-span-2">
-            <Panel id="ad-islem" title={planned ? "Planlı Çalışma" : "İşlemler"} note={isOpen ? "Ekibi, tahmini süreyi ve müşteri duyurusunu buradan yönet." : planned ? "Duyuru ve iptal." : "Kayıt kapalı; değişiklik yapılamaz."}>
-              <div className="grid gap-4 p-4 sm:p-5">
-                {isOpen && canOps ? (
-                  <>
-                    <div className="grid gap-2">
-                      <Select label="Ekip" items={CREWS.map((c) => ({ value: c, label: c }))} value={crewSel} onValueChange={setCrewSel} />
-                      <Button size="sm" variant="secondary" className="w-fit" disabled={!crewSel || crewSel === crew} onClick={() => crewSel && (assignOutageCrew(o.id, crewSel), notify({ title: `${o.id}: Ekip Atandı`, body: crewSel, tone: "success" }))}>
-                        Ekibi Ata
-                      </Button>
-                    </div>
-                    <div className="grid gap-2">
-                      <Select label="Tahmini Süre" items={ETA_CHOICES.map((m) => ({ value: String(m), label: fmtDur(m) }))} value={etaSel} onValueChange={setEtaSel} />
-                      <Button size="sm" variant="secondary" className="w-fit" disabled={!etaSel || Number(etaSel) === etaMin} onClick={() => etaSel && (setOutageEta(o.id, Number(etaSel)), notify({ title: `${o.id}: Tahmini Süre ${fmtDur(Number(etaSel))}`, body: "Müşteri bilgilendirmesi için SMS gönderebilirsin", tone: "info" }))}>
-                        Süreyi Güncelle
-                      </Button>
-                    </div>
-                  </>
-                ) : null}
-                {(isOpen || planned) && canOps ? (
-                  <Button size="sm" variant={patch?.smsSent ? "ghost" : "primary"} className="w-fit" onClick={onSms}>
-                    <MessageSquareText aria-hidden /> Müşterilere SMS Gönder
-                  </Button>
-                ) : null}
-                {!isOpen && !planned ? (
-                  <p className="flex items-center gap-2 text-small text-success">
-                    <CheckCircle2 aria-hidden className="size-4" /> Giderildi, enerji verildi.
-                  </p>
-                ) : null}
-                {isOpen && canOps && !orders.length ? (
-                  <Button size="sm" variant="secondary" className="w-fit" onClick={() => (createWorkOrder({ type: "ariza", regionId: o.regionId, reason: `${o.id} onarımı`, linkedId: o.id, assignee: crew, slaHours: 4 }), notify({ title: "Onarım İş Emri Oluşturuldu", body: crew, tone: "success" }))}>
-                    <Wrench aria-hidden /> Onarım İş Emri Aç
-                  </Button>
-                ) : null}
-                {planned && canOps ? (
-                  <Button size="sm" variant="danger" className="w-fit" onClick={() => (cancelOutage(o.id), notify({ title: `${o.id} İptal Edildi`, body: "Planlı çalışma duyurusu geri çekilecek", tone: "info" }), go("outages", { tab: "planli" }))}>
-                    Çalışmayı İptal Et
-                  </Button>
-                ) : null}
+        <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-5">
+          <div className="grid gap-5 xl:col-span-3">
+            <Panel id="ad-zaman" title="Zaman Çizgisi" note="Bildirimden enerjinin verilmesine kadar her adım">
+              <div className="p-4 sm:p-5">
+                <Timeline events={events} />
               </div>
             </Panel>
             <Panel id="ad-harita" title="Bölge" note={`${region(o.regionId).name} · ${o.feederId ? FEEDERS.find((f) => f.id === o.feederId)?.name : substation(o.substationId).name}`}>
               <div className="p-4 sm:p-5">
-                <RegionMap title="Kesintinin Bölgesi" regions={regionMap} viewBox={MAP_VIEWBOX} format={(v) => (v ? "Bu kayıt" : "Etkilenmedi")} legend={["Etkilenmedi", "Bu kayıt"]} />
+                <div className="mx-auto max-w-md"><RegionMap title="Kesintinin Bölgesi" regions={regionMap} viewBox={MAP_VIEWBOX} format={(v) => (v ? "Bu kayıt" : "Etkilenmedi")} legend={["Etkilenmedi", "Bu kayıt"]} /></div>
               </div>
             </Panel>
+          </div>
+
+          <div className="grid gap-5 xl:col-span-2">
+            <Panel id="ad-islem" title={planned ? "Planlı Çalışma" : "İşlemler"} note={isOpen ? "Ekip ve süre · abone duyurusu · onarım" : planned ? "Duyuru ve iptal" : "Kayıt kapalı"}>
+              <div className="grid divide-y divide-line-soft">
+                {isOpen && canOps ? (
+                  <section aria-label="Ekip ve Süre" className="grid gap-3 p-4 sm:p-5">
+                    <h3 className="text-base font-semibold text-strong">Ekip ve Süre</h3>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Select label="Ekip" items={CREWS.map((c) => ({ value: c, label: c }))} value={crewSel} onValueChange={setCrewSel} />
+                      <Select label="Tahmini Süre" items={ETA_CHOICES.map((m) => ({ value: String(m), label: fmtDur(m) }))} value={etaSel} onValueChange={setEtaSel} />
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="w-fit"
+                      disabled={!crewChanged && !etaChanged}
+                      onClick={() => {
+                        if (crewChanged && crewSel) {
+                          assignOutageCrew(o.id, crewSel);
+                          notify({ title: `${o.id}: Ekip Atandı`, body: crewSel, tone: "success" });
+                        }
+                        if (etaChanged && etaSel) {
+                          setOutageEta(o.id, Number(etaSel));
+                          notify({ title: `${o.id}: Tahmini Süre ${fmtDur(Number(etaSel))}`, body: "Aboneleri bilgilendirmek için SMS gönderebilirsin", tone: "info" });
+                        }
+                      }}
+                    >
+                      Değişiklikleri Kaydet
+                    </Button>
+                  </section>
+                ) : null}
+                {(isOpen || planned) && canOps ? (
+                  <section aria-label="Duyuru ve Onarım" className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
+                    <div className="grid content-start gap-1.5">
+                      <h3 className="text-base font-semibold text-strong">Abone Duyurusu</h3>
+                      <p className="text-small text-muted">{patch?.smsSent ? `${fmtNum(patch.smsSent)} aboneye SMS gitti` : "SMS henüz gitmedi"}</p>
+                      <Button size="sm" variant={patch?.smsSent ? "ghost" : "primary"} className="mt-1 w-fit" onClick={onSms}>
+                        <MessageSquareText aria-hidden /> SMS Gönder
+                      </Button>
+                    </div>
+                    {isOpen ? (
+                      <div className="grid content-start gap-1.5">
+                        <h3 className="text-base font-semibold text-strong">Onarım</h3>
+                        <p className="text-small text-muted">{orders.length ? `${fmtNum(orders.length)} iş emri bağlı` : "Bağlı iş emri yok"}</p>
+                        {!orders.length ? (
+                          <Button size="sm" variant="secondary" className="mt-1 w-fit" onClick={() => (createWorkOrder({ type: "ariza", regionId: o.regionId, reason: `${o.id} onarımı`, linkedId: o.id, assignee: crew, slaHours: 4 }), notify({ title: "Onarım İş Emri Oluşturuldu", body: crew, tone: "success" }))}>
+                            <Wrench aria-hidden /> İş Emri Aç
+                          </Button>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </section>
+                ) : null}
+                {planned && canOps ? (
+                  <section aria-label="İptal" className="p-4 sm:p-5">
+                    <Button size="sm" variant="danger" className="w-fit" onClick={() => (cancelOutage(o.id), notify({ title: `${o.id} İptal Edildi`, body: "Planlı çalışma duyurusu geri çekilecek", tone: "info" }), go("outages", { tab: "planli" }))}>
+                      Çalışmayı İptal Et
+                    </Button>
+                  </section>
+                ) : null}
+                {!isOpen && !planned ? (
+                  <p className="flex items-center gap-2 p-4 text-small text-success sm:p-5">
+                    <CheckCircle2 aria-hidden className="size-4" /> Giderildi: enerji verildi
+                  </p>
+                ) : null}
+              </div>
+            </Panel>
+
+            {isOpen ? (
+              <section className="rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line sm:p-5">
+                <FactorList
+                  title="Öncelik Nedenleri"
+                  className="max-w-none"
+                  severity={sensitive.length || o.affected >= 1000 ? "high" : minutes >= 120 ? "medium" : "low"}
+                  factors={[
+                    { label: "Etkilenen Abone", value: fmtNum(o.affected), hint: "Şu an enerjisiz", tone: o.affected >= 1000 ? "danger" : "neutral" },
+                    { label: "Hassas Abone", value: fmtNum(sensitive.length), hint: sensitive.length ? "Tıbbi cihaz vb. önce bilgilendir" : "Yok", tone: sensitive.length ? "danger" : "neutral" },
+                    { label: "Açık Kalma Süresi", value: fmtDur(minutes), hint: `Tahmin ${fmtDur(etaMin)}`, tone: minutes > etaMin ? "warning" : "neutral" },
+                    { label: "Gelen Çağrı", value: fmtNum(calls.length), hint: calls.length > 1 ? "Aynı arızadan tekrar eden çağrı" : "Bağlı çağrı az", tone: "neutral" },
+                  ]}
+                />
+              </section>
+            ) : null}
           </div>
         </div>
 
@@ -596,14 +620,14 @@ function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; pat
             <>
               <div className="max-md:hidden">
                 <DataTable
-                  caption="Etkilenen aboneler"
+                  caption="Etkilenen Abone Listesi"
                   rows={customers.slice(0, 30)}
                   rowKey={(c) => c.id}
                   density="comfortable"
                   on="surface"
                   stickyFirst={false}
                   columns={[
-                    { key: "n", header: "Müşteri", render: (c) => (<span className="inline-flex flex-wrap items-center gap-2"><a href={href("customers", { id: c.id })} className="font-medium text-strong hover:underline">{c.name}</a>{isSensitive(c) ? <Badge tone="danger">Hassas</Badge> : null}</span>) },
+                    { key: "n", header: "Abone", render: (c) => (<span className="inline-flex flex-wrap items-center gap-2"><a href={href("customers", { id: c.id })} className="font-medium text-strong hover:underline">{c.name}</a>{isSensitive(c) ? <Badge tone="danger">Hassas</Badge> : null}</span>) },
                     { key: "i", header: "Tesisat No", render: (c) => <span className="kz-mono">{c.installation}</span> },
                     { key: "d", header: "Mahalle", render: (c) => c.district },
                     { key: "v", header: "Gerilim", render: (c) => c.voltage },
@@ -621,38 +645,38 @@ function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; pat
         </Panel>
 
         {calls.length || orders.length ? (
-          <div className="grid gap-5 lg:grid-cols-2">
-            <Panel id="ad-cagri" title="Bağlı Çağrılar" note={`${calls.length} çağrı bu kayda bağlı`}>
-              {calls.length ? (
-                <ul role="list" className="divide-y divide-line-soft">
-                  {calls.slice(0, 8).map((c) => (
-                    <li key={c.id} className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
-                      <a href={href("calls", { id: c.id })} className="kz-mono text-base font-medium text-strong hover:underline">{c.id}</a>
-                      <span className="min-w-0 flex-1 truncate text-small text-muted">{c.note}</span>
-                      <span className="text-small text-muted tabular-nums">{clock.format(c.at)}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="p-4 text-small text-muted">Bağlı çağrı yok.</p>
-              )}
-            </Panel>
-            <Panel id="ad-isemri" title="Onarım İş Emirleri" note={`${orders.length} iş emri`}>
-              {orders.length ? (
-                <ul role="list" className="divide-y divide-line-soft">
-                  {orders.map((w) => (
-                    <li key={w.id} className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
-                      <a href={href("workorders", { id: w.id })} className="kz-mono text-base font-medium text-strong hover:underline">{w.id}</a>
-                      <span className="min-w-0 flex-1 truncate text-small text-muted">{WORK_TYPE_LABEL[w.type]} · {w.assignee ?? "Atanmadı"}</span>
-                      <Badge tone={w.status === "tamamlandi" ? "success" : w.status === "iptal" ? "neutral" : "warning"} dot>{w.status}</Badge>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="p-4 text-small text-muted">Bağlı iş emri yok.</p>
-              )}
-            </Panel>
-          </div>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Panel id="ad-cagri" title="Bağlı Çağrılar" note={`${calls.length} çağrı bu kayda bağlı`}>
+            {calls.length ? (
+              <ul role="list" className="divide-y divide-line-soft">
+                {calls.slice(0, 8).map((c) => (
+                  <li key={c.id} className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
+                    <a href={href("calls", { id: c.id })} className="kz-mono text-base font-medium text-strong hover:underline">{c.id}</a>
+                    <span className="min-w-0 flex-1 truncate text-small text-muted">{c.note}</span>
+                    <span className="text-small text-muted tabular-nums">{clock.format(c.at)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="p-4 text-small text-muted sm:p-5">Bağlı çağrı yok.</p>
+            )}
+          </Panel>
+          <Panel id="ad-isemri" title="Onarım İş Emirleri" note={`${orders.length} iş emri`}>
+            {orders.length ? (
+              <ul role="list" className="divide-y divide-line-soft">
+                {orders.map((w) => (
+                  <li key={w.id} className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
+                    <a href={href("workorders", { id: w.id })} className="kz-mono text-base font-medium text-strong hover:underline">{w.id}</a>
+                    <span className="min-w-0 flex-1 truncate text-small text-muted">{WORK_TYPE_LABEL[w.type]} · {w.assignee ?? "Atanmadı"}</span>
+                    <Badge tone={w.status === "tamamlandi" ? "success" : w.status === "iptal" ? "neutral" : "warning"} dot>{WORK_STATUS_LABEL[w.status]}</Badge>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="p-4 text-small text-muted sm:p-5">Bağlı iş emri yok.</p>
+            )}
+          </Panel>
+        </div>
         ) : null}
       </PageBody>
     </>
@@ -670,7 +694,7 @@ function SmsDialog({ o, etaMin, onClose, onSend }: { o: Outage | null; etaMin: n
     <Dialog
       open={!!o}
       onOpenChange={(x) => !x && onClose()}
-      title="Müşterilere SMS Duyurusu"
+      title="Abonelere SMS Duyurusu"
       description={o ? `${region(o.regionId).name} · ${fmtNum(o.affected)} abone` : undefined}
       footer={
         <>

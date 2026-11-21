@@ -47,7 +47,7 @@ type SectionId = "kullanici" | "tarife" | "politika" | "okuma" | "entegrasyon" |
 const SECTIONS: readonly { id: SectionId; label: string; hint: string; icon: ReactNode }[] = [
   { id: "kullanici", label: "Kullanıcılar ve Roller", hint: "Kim neyi yapabilir", icon: <Users /> },
   { id: "tarife", label: "Tarifeler ve Bedeller", hint: "Dağıtım, YEKDEM, vergi", icon: <Receipt /> },
-  { id: "politika", label: "Politikalar ve Takvim", hint: "Kesme, zam, dilimler", icon: <CalendarClock /> },
+  { id: "politika", label: "Kurallar ve Takvim", hint: "Kesme, zam, dilimler", icon: <CalendarClock /> },
   { id: "okuma", label: "Okuma Tur Planı", hint: "Bölge, okuyucu, gün", icon: <Route /> },
   { id: "entegrasyon", label: "Entegrasyonlar", hint: "AMI, SMS, ödeme", icon: <Plug /> },
   { id: "sablon", label: "Bildirim Şablonları", hint: "SMS ve e-posta metinleri", icon: <MessageSquareText /> },
@@ -69,7 +69,7 @@ export function AyarlarPage({ params, go }: PageProps) {
   const section: SectionId = (SECTIONS.some((s) => s.id === params.tab) ? params.tab : "kullanici") as SectionId;
 
   /* Kayıtlı ayar tek depoda (`_data-ayar.ts`): sayfa değişince kaybolmaz. Taslak sayfada tutulur, Kaydet'e kadar uygulanmaz.
-     Yetki matrisi, tarife ve politika ise ANINDA uygulanır (depoya yazılır, denetim izine düşer). */
+     Yetki matrisi, tarife ve kural ise ANINDA uygulanır (depoya yazılır, denetim izine düşer). */
   const saved = useAyar();
   const perms = usePermissionMatrix();
   const settings = useSettings();
@@ -95,7 +95,7 @@ export function AyarlarPage({ params, go }: PageProps) {
     else document.documentElement.dataset.theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     saveAyar({ users, forceTwoFactor, routes, connected, templates, look });
     for (const id of dirty) audit("Ayarları kaydetti", SECTIONS.find((s) => s.id === id)?.label ?? id);
-    notify({ title: "Ayarlar kaydedildi", body: `${dirty.size} bölümde değişiklik uygulandı · denetim izine işlendi`, tone: "success" });
+    notify({ title: "Ayarlar Kaydedildi", body: `${dirty.size} bölümde değişiklik uygulandı · denetim izine işlendi`, tone: "success" });
     setDirty(new Set());
   };
   const discard = () => {
@@ -106,7 +106,7 @@ export function AyarlarPage({ params, go }: PageProps) {
     setTemplates(saved.templates);
     setLook(saved.look);
     setDirty(new Set());
-    notify({ title: "Değişiklikler geri alındı", body: "Ayarlar son kaydedilen hâline döndü", tone: "info" });
+    notify({ title: "Değişiklikler Geri Alındı", body: "Ayarlar son kaydedilen haline döndü", tone: "info" });
   };
   /** Yetki matrisi anında etkilidir: fark bulunur, her değişiklik depoya ve denetim izine yazılır. */
   const changePerms = (next: MatrixValue) => {
@@ -120,16 +120,16 @@ export function AyarlarPage({ params, go }: PageProps) {
         }
       }
     }
-    notify({ title: "Yetki güncellendi", body: "Anında etkili; rol simülasyonunda hemen görünür", tone: "success" });
+    notify({ title: "Yetki Güncellendi", body: "Anında etkili; rol simülasyonunda hemen görünür", tone: "success" });
   };
 
   const body = {
     kullanici: <UsersSection users={users} setUsers={(u) => { setUsers(u); mark("kullanici"); }} perms={perms as MatrixValue} setPerms={changePerms} force={forceTwoFactor} setForce={(v) => { setForceTwoFactor(v); mark("kullanici"); }} />,
     tarife: <TariffSection tariffs={settings.tariffs} applied={settings.history} pendingIds={approvals.filter((a) => a.kind === "tarife" && a.status === "bekliyor").map((a) => a.target)} onEdit={(t, value, effective) => {
       const r = updateTariff(t.id, value, effective);
-      if (r.status === "uygulandi") notify({ title: "Tarife uygulandı", body: `${t.label}: ${value.toLocaleString("tr-TR")} · yürürlük ${effective} · sonraki tahakkuk yeni değerle hesaplanır`, tone: "success" });
-      else if (r.status === "onay-bekliyor") notify({ title: "İkinci göz onayı bekleniyor", body: `${t.label} değişikliği Uyum Merkezi → İki Göz Onayları'nda`, tone: "info" });
-      else notify({ title: "Yetkiniz yok", body: "Tarife değiştirme yetkisi bu rolde kapalı; deneme denetim izine yazıldı", tone: "info" });
+      if (r.status === "uygulandi") notify({ title: "Tarife Uygulandı", body: `${t.label}: ${value.toLocaleString("tr-TR")} · yürürlük ${effective} · sonraki tahakkuk yeni değerle hesaplanır`, tone: "success" });
+      else if (r.status === "onay-bekliyor") notify({ title: "İkinci Göz Onayı Bekleniyor", body: `${t.label} değişikliği Uyum Merkezi → İki Göz Onayları'nda`, tone: "info" });
+      else notify({ title: "Yetkiniz Yok", body: "Tarife değiştirme yetkisi bu rolde kapalı; deneme denetim izine yazıldı", tone: "info" });
     }} />,
     politika: <PolicySection go={go} />,
     okuma: <RoutesSection routes={routes} setRoutes={(r) => { setRoutes(r); mark("okuma"); }} />,
@@ -224,7 +224,7 @@ function UsersSection({ users, setUsers, perms, setPerms, force, setForce }: { u
   const submit = () => {
     const name = email.split("@")[0].replace(/[._]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
     setUsers([...users, { id: `u-${users.length + 1}`, name, email, role: (role ?? "okuma") as RoleId, twoFactor: twoFactor || force, lastLogin: "", active: true }]);
-    notify({ title: "Davet gönderildi", body: `${email} · ${roleLabel((role ?? "okuma") as RoleId)}`, tone: "success" });
+    notify({ title: "Davet Gönderildi", body: `${email} · ${roleLabel((role ?? "okuma") as RoleId)}`, tone: "success" });
     setInvite(false);
     setEmail("");
   };
@@ -266,7 +266,7 @@ function UsersSection({ users, setUsers, perms, setPerms, force, setForce }: { u
         </div>
       </Panel>
 
-      <Panel id="ay-2fa" title="Güvenlik Politikası">
+      <Panel id="ay-2fa" title="Güvenlik Kuralları">
         <div className="grid gap-3 p-4 sm:p-5">
           <Switch label="Bütün Kullanıcılar İçin İkinci Doğrulama Zorunlu" hint="Açıkken ikinci doğrulaması kapalı kullanıcılar bir sonraki girişte kurulum yapmak zorunda kalır." checked={force} onChange={(e) => setForce(e.target.checked)} />
           <p className="flex items-center gap-2 text-small text-muted">
@@ -337,7 +337,7 @@ function TariffSection({ tariffs, applied, pendingIds, onEdit }: { tariffs: read
 
   return (
     <div className="grid gap-5">
-      <Panel id="ay-tarife" title="Tarifeler ve Bedeller" note="ÖRNEK PARAMETRELER (mevzuat sayısı değil, doğrulanmalı). Değişiklik depoya yazılır: sonraki tahakkuk yeni değerle hesaplanır, geçmiş faturalar değişmez. İkinci göz politikası açıksa onay bekler.">
+      <Panel id="ay-tarife" title="Tarifeler ve Bedeller" note="ÖRNEK PARAMETRELER (mevzuat sayısı değil, doğrulanmalı). Değişiklik depoya yazılır: sonraki tahakkuk yeni değerle hesaplanır, geçmiş faturalar değişmez. İkinci göz kuralı açıksa onay bekler.">
         <div className="max-md:hidden">
           <DataTable caption="Tarife ve bedel tablosu" columns={columns} rows={tariffs} rowKey={(t) => t.id} density="comfortable" on="surface" stickyFirst={false} />
         </div>
@@ -543,7 +543,7 @@ function LookSection({ look, setLook }: { look: { theme: "light" | "dark" | "sys
         <div className="grid gap-2">
           <p className="text-small font-medium text-strong">Tablo yoğunluğu</p>
           <SegmentedControl<"comfortable" | "compact"> aria-label="Tablo Yoğunluğu" value={look.density} onValueChange={(density) => setLook({ ...look, density })} options={[{ value: "comfortable", label: "Rahat" }, { value: "compact", label: "Sıkı" }]} />
-          <p className="text-micro text-muted">Sıkı yoğunluk, uzun müşteri ve sayaç listelerinde ekrana daha çok satır sığdırır.</p>
+          <p className="text-micro text-muted">Sıkı yoğunluk, uzun abone ve sayaç listelerinde ekrana daha çok satır sığdırır.</p>
         </div>
         <div className="max-w-sm">
           <Select label="Dil" items={[{ value: "tr", label: "Türkçe" }, { value: "en", label: "English", disabled: true }]} value={look.language} onValueChange={(language) => language && setLook({ ...look, language })} />
@@ -556,7 +556,7 @@ function LookSection({ look, setLook }: { look: { theme: "light" | "dark" | "sys
 
 
 /* ------------------------------------------------------------------------ */
-/* 8. Politikalar ve takvim                                                   */
+/* 8. Kurallar ve takvim                                                   */
 /* ------------------------------------------------------------------------ */
 
 const num0 = (s: string, min: number, max: number, fallback: number) => {
@@ -584,7 +584,7 @@ function PolicySection({ go }: { go: PageProps["go"] }) {
 
   const edit = (label: string, patch: Parameters<typeof setCutPolicy>[0], before: string, after: string) => {
     setCutPolicy(patch);
-    audit("Kesme politikasını değiştirdi", label, before, after);
+    audit("Kesme kurallarını değiştirdi", label, before, after);
   };
   const field = (label: string, key: "remindAfterDays" | "noticeAfterDays" | "waitBusinessDays" | "reconnectSlaHours" | "workStart" | "workEnd", hint: string, min: number, max: number) => (
     <NumField key={key} label={label} hint={hint} value={policy[key]} min={min} max={max} onCommit={(next) => edit(label, { [key]: next } as Parameters<typeof setCutPolicy>[0], String(policy[key]), String(next))} />
@@ -595,7 +595,7 @@ function PolicySection({ go }: { go: PageProps["go"] }) {
 
   return (
     <div className="grid gap-5">
-      <Panel id="ay-kesme" title="Kesme ve Bağlama Politikası" note="ÖRNEK süreler (yürürlükteki mevzuat doğrulanmalı). Değişiklik anında etkilidir; kesme emirleri iş gününe ve mesaiye oturur.">
+      <Panel id="ay-kesme" title="Kesme ve Bağlama Kuralları" note="ÖRNEK süreler (yürürlükteki mevzuat doğrulanmalı). Değişiklik anında etkilidir; kesme emirleri iş gününe ve mesaiye oturur.">
         <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5 xl:grid-cols-3">
           {field("Hatırlatma (gecikme günü)", "remindAfterDays", "Vadeden kaç gün sonra SMS", 0, 10)}
           {field("İhtar (gecikme günü)", "noticeAfterDays", "Yazılı bildirim kaçıncı günde", 1, 60)}
@@ -622,7 +622,7 @@ function PolicySection({ go }: { go: PageProps["go"] }) {
           </ul>
           <div className="flex flex-wrap items-end gap-2">
             <div className="w-48"><Input label="Tatil Ekle" type="date" value={holiday} onChange={(e) => setHoliday(e.target.value)} /></div>
-            <Button variant="secondary" disabled={!holidayOk} onClick={() => { setCutPolicy({ holidays: [...policy.holidays, holiday].sort() }); audit("Resmi tatil ekledi", holiday); notify({ title: "Tatil eklendi", body: fullDate.format(parseDay(holiday)), tone: "success" }); setHoliday(""); }}>Ekle</Button>
+            <Button variant="secondary" disabled={!holidayOk} onClick={() => { setCutPolicy({ holidays: [...policy.holidays, holiday].sort() }); audit("Resmi tatil ekledi", holiday); notify({ title: "Tatil Eklendi", body: fullDate.format(parseDay(holiday)), tone: "success" }); setHoliday(""); }}>Ekle</Button>
           </div>
         </div>
       </Panel>
@@ -639,7 +639,7 @@ function PolicySection({ go }: { go: PageProps["go"] }) {
         <div className="border-t border-line-soft p-3"><Button size="sm" variant="secondary" onClick={() => go("settings", { tab: "tarife" })}>Tarifeler'de Düzenle</Button></div>
       </Panel>
 
-      <Panel id="ay-dilim" title="Zaman Dilimleri, Reaktif Sınırlar, Serbest Tüketici" note="ÖRNEK parametreler: faturalama çekirdeği bunları okur. Düzenleme Tarifeler bölümünde.">
+      <Panel id="ay-dilim" title="Zaman Dilimleri ve Sınır Değerler" note="ÖRNEK parametreler: faturalama çekirdeği bunları okur. Düzenleme Tarifeler bölümünde.">
         <dl className="grid gap-px overflow-hidden bg-line-soft sm:grid-cols-2 xl:grid-cols-3">
           {[
             ["Gündüz (T1)", zone.t1],

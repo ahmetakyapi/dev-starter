@@ -67,8 +67,8 @@ export type PageProps = { params: Params; go: (page: Page, params?: Record<strin
 
 export const PAGES: readonly { id: Page; label: string; section: string }[] = [
   { id: "dashboard", label: "Pano", section: "Genel" },
-  { id: "customers", label: "Müşteriler", section: "Müşteriler" },
-  { id: "register", label: "Müşteri Kaydı", section: "Müşteriler" },
+  { id: "customers", label: "Aboneler", section: "Abonelik" },
+  { id: "register", label: "Abone Kaydı", section: "Abonelik" },
   { id: "meters", label: "Sayaçlar", section: "Ölçüm" },
   { id: "readings", label: "Okumalar", section: "Ölçüm" },
   { id: "rawdata", label: "Ham Veri", section: "Ölçüm" },
@@ -76,9 +76,9 @@ export const PAGES: readonly { id: Page; label: string; section: string }[] = [
   { id: "payments", label: "Ödemeler", section: "Finans" },
   { id: "suppliers", label: "Tedarikçiler", section: "Piyasa" },
   { id: "outages", label: "Arıza ve Kesintiler", section: "Operasyon" },
-  { id: "reports", label: "Raporlar", section: "Raporlar" },
+  { id: "reports", label: "Raporlar", section: "Analiz" },
   { id: "settings", label: "Ayarlar", section: "Sistem" },
-  { id: "applications", label: "Başvurular", section: "Müşteriler" },
+  { id: "applications", label: "Başvurular", section: "Abonelik" },
   { id: "stock", label: "Sayaç Stok", section: "Ölçüm" },
   { id: "field", label: "Saha Okuma", section: "Ölçüm" },
   { id: "producers", label: "Üreticiler", section: "Ölçüm" },
@@ -120,7 +120,7 @@ export function useApp(): AppState {
 
 /**
  * Genel arama: üst çubukta input görünümlü buton. Tıklanınca ya da `/` ve ⌘K ile
- * komut paleti açılır (müşteri, sayaç, fatura, arıza, iş emri, çağrı, başvuru, vaka).
+ * komut paleti açılır (abone, sayaç, fatura, arıza, iş emri, çağrı, başvuru, vaka).
  * Bilerek `role="search"` taşımaz: `/` kısayolu sayfadaki bir arama alanı varsa onu
  * kullanır, yoksa paleti açar; bu buton o denetimi kandırmasın.
  */
@@ -135,7 +135,7 @@ export function GlobalSearchField({ className }: { className?: string }) {
       )}
     >
       <Search aria-hidden strokeWidth={1.75} />
-      <span className="min-w-0 flex-1 truncate text-start">Müşteri, Sayaç, Fatura Ara</span>
+      <span className="min-w-0 flex-1 truncate text-start">Abone, Sayaç, Fatura Ara</span>
       <span aria-hidden className="hidden items-center gap-1 xl:flex">
         <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
@@ -148,8 +148,8 @@ export function GlobalSearchField({ className }: { className?: string }) {
  * Sayfa başlığı, iki katlı (Pusula/Ingot): üst çubukta ekmek kırıntısı (sol), genel
  * arama (orta) ve durum + zil (sağ); altında büyük ad, bir satır bağlam, sağda sayfanın
  * eylemleri. Kırıntının son halkası (ayrıntı) `crumb` verilmezse yönlendirmedeki
- * `id`'den depodan çözülür: "Müşteriler › Arslan Mobilya". Telefonda üst çubuk
- * kabuktadır; ayrıntı sayfasında yalnız "‹ Müşteriler" geri bağlantısı görünür.
+ * `id`'den depodan çözülür: "Aboneler › Arslan Mobilya". Telefonda üst çubuk
+ * kabuktadır; ayrıntı sayfasında yalnız "‹ Aboneler" geri bağlantısı görünür.
  */
 export function PageHead({ title, description, actions, crumb }: { title: string; description?: ReactNode; actions?: ReactNode; crumb?: string }) {
   const { page, params, notifications, markRead } = useApp();
@@ -166,7 +166,7 @@ export function PageHead({ title, description, actions, crumb }: { title: string
     <header className="border-b border-line-soft">
       {/* Telefonda tek başlık: üst çubuk (menü, marka, zil, arama) kabuğun kendisinde; bu satır yalnız masaüstünde. */}
       <div className="grid min-h-13 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 border-b border-line-soft px-4 max-lg:hidden sm:px-6">
-        <Breadcrumb items={items} className="min-w-0" />
+        <Breadcrumb items={items} className="min-w-0 overflow-hidden whitespace-nowrap [&_ol]:flex-nowrap" />
         <GlobalSearchField className="w-72 xl:w-[26rem]" />
         <div className="flex min-w-0 items-center justify-end gap-3">
           <DemoBadge />

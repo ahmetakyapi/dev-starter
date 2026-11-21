@@ -208,7 +208,7 @@ export const CATEGORIES: readonly { id: CategoryId; label: string; hint: string 
   { id: "kayip", label: "Kayıp ve Kaçak", hint: "Bölge ve trafo bazında" },
   { id: "okuma", label: "Okuma Performansı", hint: "Uzaktan okuma ve şüpheli kayıtlar" },
   { id: "kesinti", label: "Arıza ve Kesinti", hint: "SAIDI, SAIFI ve olay sayısı" },
-  { id: "musteri", label: "Müşteri", hint: "Abone yapısı ve segment" },
+  { id: "musteri", label: "Abone", hint: "Abone yapısı ve segment" },
   { id: "tedarikci", label: "Tedarikçi", hint: "Tedarikçi bazında hacim ve alacak" },
 ];
 
@@ -224,8 +224,8 @@ export const PRESETS: readonly Preset[] = [
   { id: "kayip-trend", category: "kayip", title: "Kayıp Oranı Eğilimi", description: "Şebeke geneli aylık kayıp ve kaçak oranı.", dim: "month", measure: "loss", period: "12", cadence: "Aylık", formats: "PDF" },
   { id: "okuma-uzaktan", category: "okuma", title: "Uzaktan Okuma Payı", description: "Bölgeye göre uzaktan okunan sayaç oranı.", dim: "region", measure: "remote", period: "3", cadence: "Aylık", formats: "PDF, Excel" },
   { id: "okuma-supheli", category: "okuma", title: "Şüpheli Okuma Dağılımı", description: "Trafo merkezine göre işaretli okumalar.", dim: "substation", measure: "flagged", period: "6", cadence: "Haftalık", formats: "Excel, CSV" },
-  { id: "kesinti-bolge", category: "kesinti", title: "Kesinti Göstergeleri (SAIDI, SAIFI)", description: "Plansız kesintilerde abone başına süre ve sıklık.", dim: "region", measure: "subs", period: "1", cadence: "Çeyreklik", formats: "PDF" },
-  { id: "musteri-segment", category: "musteri", title: "Müşteri Yapısı", description: "Gerilim seviyesine göre faturalanan abone sayısı.", dim: "voltage", measure: "subs", period: "1", cadence: "Aylık", formats: "PDF, Excel" },
+  { id: "kesinti-bolge", category: "kesinti", title: "Kesinti Göstergeleri (SAIDI ve SAIFI)", description: "Plansız kesintilerde abone başına süre ve sıklık.", dim: "region", measure: "subs", period: "1", cadence: "Çeyreklik", formats: "PDF" },
+  { id: "musteri-segment", category: "musteri", title: "Abone Yapısı", description: "Gerilim seviyesine göre faturalanan abone sayısı.", dim: "voltage", measure: "subs", period: "1", cadence: "Aylık", formats: "PDF, Excel" },
   { id: "musteri-tarife", category: "musteri", title: "Tarife Dağılımı", description: "Tek ve çok zamanlı abonelerin tüketim payı.", dim: "tariff", measure: "kwh", period: "3", cadence: "Aylık", formats: "Excel" },
   { id: "tedarikci-hacim", category: "tedarikci", title: "Tedarikçiye Göre Tüketim", description: "Her tedarikçinin portföy tüketimi.", dim: "supplier", measure: "kwh", period: "3", cadence: "Aylık", formats: "PDF, Excel" },
   { id: "tedarikci-alacak", category: "tedarikci", title: "Tedarikçiye Göre Geciken Alacak", description: "Tedarikçi portföyündeki açık bakiye.", dim: "supplier", measure: "overdue", period: "6", cadence: "Haftalık", formats: "Excel, CSV" },
@@ -313,7 +313,7 @@ export const SEED_FILINGS: readonly Filing[] = [
   },
   {
     id: "f-2",
-    title: "Kesinti Göstergeleri (SAIDI ve SAIFI), Çeyreklik",
+    title: "Çeyreklik Kesinti Göstergeleri (SAIDI ve SAIFI)",
     period: "2026 Üçüncü Çeyrek",
     deadline: "2026-11-30",
     status: "hazirlaniyor",
@@ -357,7 +357,7 @@ export const SEED_FILINGS: readonly Filing[] = [
     status: "hazirlaniyor",
     presetId: "musteri-segment",
     checks: [
-      { label: "Bağlantı ve müşteri talebi süreleri hesaplandı", ok: true },
+      { label: "Bağlantı ve abone talebi süreleri hesaplandı", ok: true },
       { label: "Aydınlatma ve enerji kalitesi şikayetleri eklendi", ok: false },
     ],
   },

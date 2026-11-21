@@ -31,6 +31,16 @@ import { cn } from "@/lib/utils";
  * öğeyi parmağın altına getiriyor ve kaydırmayla karışıyor.
  */
 
+/** Uzun listede üst/alt ince gölge (`dialog.tsx` ile aynı yöntem: `local` örtü). */
+const SCROLL_SHADOW = {
+  background: [
+    "linear-gradient(var(--color-overlay) 30%, transparent) top / 100% 1rem no-repeat local",
+    "linear-gradient(transparent, var(--color-overlay) 70%) bottom / 100% 1rem no-repeat local",
+    "radial-gradient(farthest-side at 50% 0, color-mix(in oklab, var(--color-strong) 14%, transparent), transparent) top / 100% 0.4rem no-repeat scroll",
+    "radial-gradient(farthest-side at 50% 100%, color-mix(in oklab, var(--color-strong) 14%, transparent), transparent) bottom / 100% 0.4rem no-repeat scroll",
+  ].join(", "),
+} as const;
+
 export type SelectItem = { value: string; label: string; disabled?: boolean };
 
 type SelectProps = {
@@ -89,7 +99,10 @@ export function Select({
       <Base.Portal container={host ?? undefined}>
         <Base.Positioner alignItemWithTrigger={false} sideOffset={6} collisionPadding={8} className="z-50 outline-none">
           <Base.Popup className="min-w-(--anchor-width) origin-(--transform-origin) rounded-xl border border-line bg-overlay p-1.5 text-body shadow-modal outline-none transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-[0.96] data-starting-style:opacity-0">
-            <Base.List className="max-h-[min(20rem,var(--available-height))] overflow-y-auto overscroll-contain">
+            <Base.List
+              className="max-h-[min(20rem,var(--available-height))] overflow-y-auto overscroll-contain scroll-py-1.5 [scrollbar-width:thin] [scrollbar-color:var(--color-line-strong)_transparent]"
+              style={SCROLL_SHADOW}
+            >
               {items.map((item) => (
                 <Base.Item
                   key={item.value}

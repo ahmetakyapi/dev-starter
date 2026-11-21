@@ -29,7 +29,7 @@ import { MetricStrip, PageBody, PageHead, Panel, href, useApp, type PageProps } 
  * Akış: tur → durak kartı → endeks formu (anlık doğrulama Okumalar ile aynı kural)
  * → zorunlu fotoğraf → kaydet. Erişilemeyen durak için neden seçilir. ÇEVRİMDIŞI
  * modda yazılanlar kuyruğa düşer ve yalnız "Senkronla" ile depoya (`enterReading`)
- * gider; sayfa değişince kuyruk kaybolmaz. Tur, kuyruk boşalmadan kapanmaz;
+ * gider; sayfa değişince bekleyen kayıtlar kaybolmaz. Tur, bekleyen kayıt varken kapanmaz;
  * kapanışta plan–gerçek fark özeti çıkar.
  */
 
@@ -78,28 +78,28 @@ export function SahaPage({ go }: PageProps) {
         n += 1;
       } else if (q.kind === "erisilemedi") {
         fieldState.set((s) => ({ ...s, skipped: { ...s.skipped, [q.meterId]: q.reason ?? "" } }));
-        audit("Erişilemedi kaydı senkronladı", q.meterId, undefined, q.reason);
+        audit("Erişilemedi kaydını gönderdi", q.meterId, undefined, q.reason);
       }
     }
     const count = field.queue.length;
     fieldState.set((s) => ({ ...s, queue: [], synced: s.synced + count }));
-    if (count) notify({ title: "Senkron Tamam", body: `${count} kayıt gönderildi${n ? `, ${n} okuma depoya yazıldı` : ""}.`, tone: "success" });
-    else notify({ title: "Kuyruk Boş", body: "Gönderilecek kayıt yok.", tone: "info" });
+    if (count) notify({ title: "Gönderim Tamam", body: `${count} kayıt gönderildi${n ? `, ${n} okuma depoya yazıldı` : ""}.`, tone: "success" });
+    else notify({ title: "Bekleyen Kayıt Yok", body: "Gönderilecek kayıt yok.", tone: "info" });
   };
 
   const setOffline = (offline: boolean) => {
     fieldState.set((s) => ({ ...s, offline }));
-    notify({ title: offline ? "Çevrimdışı mod" : "Bağlantı geri geldi", body: offline ? "Girdiğiniz okumalar kuyruğa alınır." : field.queue.length ? `${field.queue.length} kayıt senkron bekliyor.` : "Kuyruk boş.", tone: "info" });
+    notify({ title: offline ? "Çevrimdışı Mod" : "Bağlantı Geri Geldi", body: offline ? "Girdiğiniz okumalar cihazda saklanır." : field.queue.length ? `${field.queue.length} kayıt gönderilmeyi bekliyor.` : "Gönderilecek kayıt yok.", tone: "info" });
   };
 
   return (
     <>
       <PageHead
         title="Saha Okuma"
-        description="Okuyucunun cep ekranı: durak sırası, endeks girişi, zorunlu fotoğraf ve çevrimdışı kuyruk. Simülasyon: gerçek GPS ya da kamera kullanılmaz."
+        description="Okuyucunun cep ekranı: durak sırası, endeks girişi, zorunlu fotoğraf ve çevrimdışı çalışma. Simülasyon: gerçek GPS ya da kamera kullanılmaz."
         actions={
           <Button variant="secondary" size="sm" onClick={() => go("readings", { tab: "tur" })}>
-            <RouteIcon aria-hidden /> Tur planına dön
+            <RouteIcon aria-hidden /> Tur Planına Dön
           </Button>
         }
       />
@@ -117,7 +117,7 @@ export function SahaPage({ go }: PageProps) {
                 <Switch label="Çevrimdışı Mod" placement="end" checked={field.offline} onChange={(e) => setOffline(e.target.checked)} />
               </div>
               <Button variant={field.queue.length ? "primary" : "secondary"} size="sm" onClick={sync} disabled={field.offline || field.queue.length === 0}>
-                <CloudUpload aria-hidden /> Senkronla ({field.queue.length})
+                <CloudUpload aria-hidden /> Gönder ({field.queue.length})
               </Button>
             </div>
           </div>
@@ -140,7 +140,7 @@ export function SahaPage({ go }: PageProps) {
                         <p className="text-small text-muted">Durak {s.n}</p>
                         <p className="font-semibold text-strong"><Mono>{s.meter.serial}</Mono></p>
                       </div>
-                      {s.state === "okundu" ? <Badge tone="success" dot>Okundu</Badge> : s.state === "kuyrukta" ? <Badge tone="warning" dot>Kuyrukta</Badge> : s.state === "erisilemedi" ? <Badge tone="neutral" dot>Erişilemedi</Badge> : <Badge tone={s.meter.status === "iletisim-yok" ? "warning" : "neutral"} dot>{s.meter.status === "iletisim-yok" ? "İletişim yok" : "Bekliyor"}</Badge>}
+                      {s.state === "okundu" ? <Badge tone="success" dot>Okundu</Badge> : s.state === "kuyrukta" ? <Badge tone="warning" dot>Gönderilecek</Badge> : s.state === "erisilemedi" ? <Badge tone="neutral" dot>Erişilemedi</Badge> : <Badge tone={s.meter.status === "iletisim-yok" ? "warning" : "neutral"} dot>{s.meter.status === "iletisim-yok" ? "İletişim yok" : "Bekliyor"}</Badge>}
                     </div>
                     <p className="flex items-start gap-1.5 text-base text-body"><MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />{c.address}, {c.district}</p>
                     <p className="text-small text-muted">{c.name} · beklenen {exp ? `${fmtKwh(Math.round(exp * 0.7))} – ${fmtKwh(Math.round(exp * 1.3))}` : "bilinmiyor"}</p>
@@ -164,22 +164,22 @@ export function SahaPage({ go }: PageProps) {
           <MetricStrip>
             <Metric label="Toplam Durak" value={fmtNum(total)} foot={`${route.regionName} turu`} />
             <Metric label="Okundu" value={fmtNum(done)} foot={fmtPct(total ? (done / total) * 100 : 0)} />
-            <Metric label="Kuyrukta" value={fmtNum(queued)} foot={queued ? "Senkron bekler" : "Kuyruk boş"} />
+            <Metric label="Gönderilecek" value={fmtNum(queued)} foot={queued ? "Gönderim bekler" : "Bekleyen yok"} />
             <Metric label="Erişilemedi" value={fmtNum(skipped)} foot="Neden kayıtlı" />
           </MetricStrip>
-          <Panel title="Tur Kapanışı" note="Kuyruk boşalmadan tur kapanmaz" id="kapanis">
+          <Panel title="Tur Kapanışı" note="Gönderilmemiş kayıt varken tur kapanmaz" id="kapanis">
             <div className="grid gap-3 p-4 sm:p-5">
               <p className="text-base text-body">
-                Kalan {waiting.length} durak, {anomalies} anomali uyarısı, {queued} senkron bekleyen kayıt.
+                Kalan {waiting.length} durak, {anomalies} anomali uyarısı, {queued} gönderilmeyi bekleyen kayıt.
                 {waiting.length ? " Okunmayan duraklar bir sonraki tura aktarılır." : ""}
               </p>
               <div className="flex flex-wrap gap-2">
-                <Button variant="primary" size="sm" onClick={() => setClosing(true)} disabled={closed || queued > 0 || total === 0} title={queued ? "Önce Senkronlayın" : undefined}>
-                  <Flag aria-hidden /> Turu kapat
+                <Button variant="primary" size="sm" onClick={() => setClosing(true)} disabled={closed || queued > 0 || total === 0} title={queued ? "Önce Gönderin" : undefined}>
+                  <Flag aria-hidden /> Turu Kapat
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => go("readings", { tab: "supheli" })}>Şüpheli Okumalar</Button>
               </div>
-              {queued > 0 ? <p role="status" className="text-small text-warning">Önce {queued} kaydı senkronlayın.</p> : null}
+              {queued > 0 ? <p role="status" className="text-small text-warning">Önce {queued} kaydı gönderin.</p> : null}
             </div>
           </Panel>
           <Panel title="Kurallar" id="kurallar">
@@ -187,7 +187,7 @@ export function SahaPage({ go }: PageProps) {
               <li>Saha okumasında <strong className="text-strong">fotoğraf zorunlu</strong>; endeks ekranı net görünmeli.</li>
               <li>Geri sayım ya da ani sıçrama varsa yerinde tekrar okuma ve onay kutusu gerekir; kayıt “şüpheli”ye düşer.</li>
               <li>Erişilemeyen durakta neden seçilir; durak bir sonraki tura aktarılır.</li>
-              <li>Çevrimdışıyken girilenler cihazda kalır ve senkronla depoya yazılır.</li>
+              <li>Çevrimdışıyken girilenler cihazda kalır ve bağlantı gelince gönderilip depoya yazılır.</li>
             </ul>
           </Panel>
         </aside>
@@ -285,7 +285,7 @@ function StopSheet({ stop, onClose, offline }: { stop: Meter | null; onClose: ()
     if (offline) {
       const item: FieldQueueItem = { id: nextId("Q-"), kind: "okuma", meterId: stop.id, readingId: target.id, at: TODAY_KEY, input, photo: photo ?? undefined };
       fieldState.set((s) => ({ ...s, queue: [...s.queue, item] }));
-      notify({ title: "Kuyruğa Alındı", body: `${stop.serial}: çevrimiçi olunca senkronla gönderin.`, tone: "info" });
+      notify({ title: "Cihaza Kaydedildi", body: `${stop.serial}: bağlantı gelince gönderin.`, tone: "info" });
     } else {
       enterReading(target.id, input);
       readingUi.set((u) => ({ ...u, entries: [...u.entries, { meterId: stop.id, readingId: target.id, at: TODAY_KEY, source: "saha", total: result.total, flags }] }));
@@ -299,7 +299,7 @@ function StopSheet({ stop, onClose, offline }: { stop: Meter | null; onClose: ()
     if (offline) {
       const item: FieldQueueItem = { id: nextId("Q-"), kind: "erisilemedi", meterId: stop.id, readingId: target.id, at: TODAY_KEY, reason };
       fieldState.set((s) => ({ ...s, queue: [...s.queue, item] }));
-      notify({ title: "Kuyruğa Alındı", body: `${stop.serial}: erişilemedi kaydı senkron bekliyor.`, tone: "info" });
+      notify({ title: "Cihaza Kaydedildi", body: `${stop.serial}: erişilemedi kaydı gönderilmeyi bekliyor.`, tone: "info" });
     } else {
       fieldState.set((s) => ({ ...s, skipped: { ...s.skipped, [stop.id]: reason } }));
       audit("Durağa erişilemedi", stop.serial, undefined, SKIP_REASONS.find((r) => r.value === reason)?.label);
@@ -328,13 +328,13 @@ function StopSheet({ stop, onClose, offline }: { stop: Meter | null; onClose: ()
         skip ? (
           <Button variant="primary" onClick={saveSkip}>Erişilemedi Olarak Kaydet</Button>
         ) : (
-          <Button variant="primary" onClick={save} disabled={!canSave}>{offline ? "Kuyruğa al" : "Kaydet"}</Button>
+          <Button variant="primary" onClick={save} disabled={!canSave}>{offline ? "Cihaza Kaydet" : "Kaydet"}</Button>
         )
       }
     >
       {stop && prev ? (
         <div className="grid gap-4">
-          {offline ? <p role="status" className="rounded-lg bg-warning-wash p-3 text-small text-strong ring-1 ring-warning/20">Çevrimdışısınız: kayıt cihazda kuyruğa alınır.</p> : null}
+          {offline ? <p role="status" className="rounded-lg bg-warning-wash p-3 text-small text-strong ring-1 ring-warning/20">Çevrimdışısınız: kayıt cihazda saklanır, bağlantı gelince gönderilir.</p> : null}
           {skip ? (
             <div className="grid gap-3 rounded-xl bg-surface p-4">
               <RadioGroup name="skip-reason" legend="Neden Okunamadı?" value={reason} onChange={setReason} options={SKIP_REASONS.map((r) => ({ value: r.value, label: r.label }))} />

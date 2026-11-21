@@ -8,7 +8,7 @@ import { can } from "./_permissions";
 /**
  * Tedarikçiler sayfasının oturum durumu: geçiş (tedarikçi değişikliği) kuyruğu ve
  * dağıtım bedeli mutabakatı. Tek yayın kanalındaki dilimlerde durur: sayfa
- * değişince korunur, Müşteriler sayfasından başlatılan değişiklik de bu kuyruğa düşer.
+ * değişince korunur, Aboneler sayfasından başlatılan değişiklik de bu kuyruğa düşer.
  *
  * DOĞRU YÖN: dağıtım bedeli TOPLU FATURASINI dağıtım şirketi (Kuzeyova) keser ve
  * tedarikçiye gönderir; fark varsa TEDARİKÇİ itiraz eder. Burada portal kullanıcısı
@@ -22,7 +22,7 @@ export type TransferRow = Transfer & { source: "portal" | "musteri" };
 
 const stored = createSlice<readonly TransferRow[]>(TRANSFERS.map((t) => ({ ...t, source: "portal" as const })));
 
-/** Müşteri kartından başlatılan (henüz kuyrukta olmayan) değişiklikler: sanal "talep" kayıtları. */
+/** Abone kartından başlatılan (henüz kuyrukta olmayan) değişiklikler: sanal "talep" kayıtları. */
 function customerInitiated(): TransferRow[] {
   const have = new Set(stored.get().map((t) => t.customerId));
   return allCustomers()
@@ -82,7 +82,7 @@ export function giveTransferDate(id: string, effective: string): { ok: true } | 
   return { ok: true };
 }
 
-/** Tamamlanınca müşterinin tedarikçisi gerçekten değişir (Müşteriler, Faturalar aynı kaynağı görür). */
+/** Tamamlanınca abonenin tedarikçisi gerçekten değişir (Aboneler, Faturalar aynı kaynağı görür). */
 export function completeTransfer(id: string): boolean {
   if (!guard("Geçişi tamamladı", id)) return false;
   const t = stored.get().find((x) => x.id === id);

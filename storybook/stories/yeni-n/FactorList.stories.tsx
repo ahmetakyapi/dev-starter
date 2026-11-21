@@ -64,3 +64,18 @@ export const Levels: Story = {
     </Frame>
   ),
 };
+
+/** Geniş kapta bile satır uzunluğu sınırlı: etiket ile değer arası açılmaz, blok sola yaslı. */
+export const WideContainer: Story = {
+  name: "Geniş Kapta (Satır Sınırı)",
+  tags: ["!autodocs"],
+  render: (args) => (
+    <Frame width="lg">
+      <FactorList {...args} />
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    const section = canvasElement.querySelector("section")!;
+    await expect(section.getBoundingClientRect().width).toBeLessThanOrEqual(448 + 1);
+  },
+};

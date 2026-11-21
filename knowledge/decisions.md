@@ -1574,3 +1574,33 @@ marka adları ve logolar, fotoğraf ve illüstrasyon varlıkları (zemin
 
 **Kural notu:** `step-rail` form akışı için değil tanıtım içindir (`stepper`
 orada); `stat-strip` yalnız doğrulanabilir sayı için.
+
+## Tasarım Yönü Sistemi (2026-11-21)
+
+**Karar:** Her yeni proje kendi tasarım yönünü seçer. Katalog
+`knowledge/design-directions.md` (on yön: editoryal, kurumsal-guven,
+veri-yogun, sicak-butik, teknik-gelistirici, oyuncul-canli, luks-minimal,
+brutalist-net, doga-organik, fintek-keskin; her biri palet, yazı, biçim,
+hero, kabuk, kart, popup, grafik, boş durum, hareket ve yasak satırı taşır),
+seçim matrisi sekiz soru, kayıt `knowledge/direction-log.md`. Son beş
+projede kullanılan yön yenisinde önerilmez. `/kickoff` üç aday sunar,
+kullanıcı seçer; `/new-project` seçimi `docs/DESIGN.md` frontmatter'ına
+(`direction`, `palette`, `font`, `hero`, `shell`, `card`, `popup`,
+`density`, `motion`) ve log'a yazar. Araç: `npm run direction`
+(`scripts/pick-direction.mjs`), test: `npm run verify:direction`.
+
+**Gerekçe:** Ekosistem tek kimlik (`signature` mavi + aynı hero + sol menü)
+ile büyüdü; yeni projeler birbirine benzemeye başladı. Palet seçimi
+(`guides/00`) zaten vardı ama hero, kabuk, kart ve popup dili hiç seçim
+değildi. Yön, bu alanları ürünün işine bağlayan tek karar noktasıdır. Token
+disiplini (renk, `dark:`, punto) yönden bağımsız kalır; yön token değerlerini
+ve bileşen seçimini belirler, kuralları gevşetmez.
+
+**Alınmayan:** (1) Yönü şablona gömmek (iki şablon bayt bayt eşit kalmalı;
+seçim `docs/DESIGN.md`'de ve şablon `CLAUDE.md` tablolarında). (2) Yön
+karıştırmak (tek alan ödünç alınabilir, `overrides:` ile gerekçelenir).
+
+**Yazı kuralı (aynı tur):** başlıklarda ve hero metinlerinde virgül yok.
+`slop-scan.sh`: `<h1>/<h2>` içinde virgül YÜKSEK, `title/headline/heading`
+alanında UYARI; iki mevcut ihlal düzeltildi (Vitrin geri bildirim sayfası,
+HorizonScene hikayesi).
