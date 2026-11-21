@@ -148,6 +148,7 @@ import {
 } from "./_data";
 import { cn } from "@/lib/utils";
 import { FormEk, KatmanEk, SecimEk, VeriEk } from "./_ekler";
+import { GeriYeni, SecimYeni, VeriYeni } from "./_ekler-yeni";
 import { Cell, CellGrid, GroupHead } from "./_ui";
 
 const NOV = (d: number) => new Date(2026, 10, d);
@@ -599,6 +600,7 @@ function SecimGroup() {
         </div>
       </Cell>
       <SecimEk />
+      <SecimYeni />
     </CellGrid>
   );
 }
@@ -1145,6 +1147,7 @@ function VeriGroup() {
         </div>
       </Cell>
       <VeriEk />
+      <VeriYeni />
     </CellGrid>
   );
 }
@@ -1255,6 +1258,7 @@ function GeriGroup() {
           </Announcement>
         </div>
       </Cell>
+      <GeriYeni />
     </CellGrid>
   );
 }
