@@ -20,8 +20,8 @@ import { cn } from "@/lib/utils";
  * (CSS `animation-timeline: view()`, JS yok). Desteklemeyen tarayıcıda ve
  * hareketi azaltanda doğrudan dolu. `fill="static"`: hep dolu.
  *
- * `tone="dark"`: KOYU bir bölümün üstünde (bölüm zeminini çağıran verir);
- * metin `on-brand`, boş karolar açık. `tone="light"` sayfa zemininde.
+ * `tone="dark"`: TERS yüzeyin (`bg-strong`) üstünde; bölüm zeminini çağıran
+ * verir. Açık temada koyu, koyu temada açık bölüm olur; metin `text-page`. `tone="light"` sayfa zemininde.
  *
  *   <StepRail current={2} steps={[{ icon: <Pencil />, title: "Kaydol", description: "Hesabını dakikalar içinde aç." }, …]} />
  */
@@ -67,7 +67,7 @@ export function StepRail({
               {!last ? (
                 <span
                   aria-hidden
-                  className={cn("absolute top-11 -bottom-0 left-[1.375rem] w-1 -translate-x-1/2 overflow-hidden rounded-full", dark ? "bg-on-brand/25" : "bg-chart-track")}
+                  className={cn("absolute top-11 -bottom-0 left-[1.375rem] w-1 -translate-x-1/2 overflow-hidden rounded-full", dark ? "bg-page/25" : "bg-chart-track")}
                 >
                   {index < current ? (
                     <span className={cn("ui-rail-fill block size-full rounded-full bg-primary", fill === "scroll" && "ui-rail-scroll")} />
@@ -81,7 +81,7 @@ export function StepRail({
                   done || here
                     ? "bg-primary text-on-primary"
                     : dark
-                      ? "bg-on-brand text-primary"
+                      ? "bg-page text-primary"
                       : "bg-overlay text-muted shadow-raised ring-1 ring-line",
                   here && "ring-4 ring-primary-wash",
                 )}
@@ -89,12 +89,12 @@ export function StepRail({
                 {step.icon}
               </span>
               <div className="min-w-0 pt-1">
-                <h3 className={cn("text-read font-medium tracking-tight", dark ? "text-on-brand" : "text-strong")}>
+                <h3 className={cn("text-read font-medium tracking-tight", dark ? "text-page" : "text-strong")}>
                   {step.title}
                   {done ? <span className="sr-only"> ({doneLabel})</span> : null}
                 </h3>
                 {step.description ? (
-                  <p className={cn("mt-1 text-base", dark ? "text-on-brand/70" : "text-soft")}>{step.description}</p>
+                  <p className={cn("mt-1 text-base", dark ? "text-page/70" : "text-soft")}>{step.description}</p>
                 ) : null}
               </div>
             </li>

@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  * üstte), DOM sırası etiket-değer: ekran okuyucu "Aktif Kullanıcı, 50K+" der.
  *
  * Düzen: telefonda 2×2 (ayraçsız), `sm` üstünde tek satır ve `divided` ise
- * kıl çizgili ayraç. `tone="dark"` koyu bölüm üstü; renk `on-brand`.
+ * kıl çizgili ayraç. `tone="dark"` ters yüzey (`bg-strong`) üstü; renk `text-page`.
  * `numberClassName`: sayının fontu (varsayılan display; serif vurgu için
  * projenin vurgu font sınıfını ver).
  *
@@ -46,11 +46,11 @@ export function StatStrip({
           key={index}
           className={cn(
             "flex flex-col-reverse items-center gap-2 px-4 text-center",
-            divided && index > 0 && (dark ? "sm:border-l sm:border-on-brand/25" : "sm:border-l sm:border-line"),
+            divided && index > 0 && (dark ? "sm:border-l sm:border-page/25" : "sm:border-l sm:border-line"),
           )}
         >
-          <dt className={cn("text-base", dark ? "text-on-brand/70" : "text-soft")}>{item.label}</dt>
-          <dd className={cn("text-display tracking-tight tabular-nums", numberClassName, dark ? "text-on-brand" : "text-strong")}>
+          <dt className={cn("text-base", dark ? "text-page/70" : "text-soft")}>{item.label}</dt>
+          <dd className={cn("text-display tracking-tight tabular-nums", numberClassName, dark ? "text-page" : "text-strong")}>
             {item.value}
           </dd>
         </div>
