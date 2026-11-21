@@ -68,7 +68,7 @@ export const fmtNum = (n: number, digits = 0) => grouped(digits).format(n);
 /** Sabit ondalık: 25,4 (virgül). SAIDI/SAIFI dahil her ondalık sayı bunu kullanır. */
 export const fmtDec = (n: number, digits = 1) => fixed(digits).format(n);
 /** %94,4 */
-export const fmtPct = (n: number, digits = 1) => `%${fixed(digits).format(n)}`;
+export const fmtPct = (n: number, digits = 1) => `${n < 0 ? "-" : ""}%${fixed(digits).format(Math.abs(n))}`;
 /** 1.273 kWh · 12,4 MWh · 2,6 GWh */
 export const fmtKwh = (kwh: number) => (kwh >= 1_000_000 ? `${fixed(1).format(kwh / 1_000_000)} GWh` : kwh >= 10_000 ? `${fixed(1).format(kwh / 1_000)} MWh` : `${grouped(0).format(kwh)} kWh`);
 /** Kuruş tamsayıdan ₺6.202,37 */
@@ -362,7 +362,7 @@ export function StepCountChart({ data, title, unit = "", height = 150, className
         {ticks.map((t) => (
           <g key={t}>
             <line x1={pad.l} x2={W - pad.r} y1={y(t)} y2={y(t)} stroke="var(--line-soft)" strokeDasharray={t === 0 ? undefined : "3 3"} />
-            <text x={pad.l - 6} y={y(t) + 3} textAnchor="end" className="fill-muted text-[9px] tabular-nums">
+            <text x={pad.l - 6} y={y(t) + 3} textAnchor="end" className="fill-muted text-micro tabular-nums">
               {t}
             </text>
           </g>
@@ -370,7 +370,7 @@ export function StepCountChart({ data, title, unit = "", height = 150, className
         <path d={area} fill="var(--chart-1)" opacity={0.12} />
         <path d={step} fill="none" stroke="var(--chart-1)" strokeWidth={2} strokeLinejoin="round" />
         {data.map((d, i) => ((i % labelEvery === 0 && data.length - 1 - i >= labelEvery) || i === data.length - 1 ? (
-          <text key={d.label} x={x(i)} y={height - 5} textAnchor="middle" className="fill-muted text-[9px]">
+          <text key={d.label} x={x(i)} y={height - 5} textAnchor="middle" className="fill-muted text-micro">
             {d.label}
           </text>
         ) : null))}

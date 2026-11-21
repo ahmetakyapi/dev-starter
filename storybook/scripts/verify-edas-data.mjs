@@ -132,7 +132,7 @@ const hassas = D.CUSTOMERS.find((c) => (c.tags ?? []).some((t) => t.startsWith("
 if (hassas) { const r = S.requestCut(hassas.id, "test"); check("hassas abone kesilemez", !r.ok && r.status === "engelli", JSON.stringify(r.blockers ?? r.status)); }
 const slot = CUT.scheduleSlot(D.TODAY_KEY, 9);
 check("kesme emri iş günü ve mesaide planlanır", C.isBusinessDay(D.dayKey(slot)) && slot.getHours() >= 8 && slot.getHours() < 17, slot.toString());
-const debtor = SEL.overdueInvoices().find((i) => D.customer(i.customerId).status === "aktif" && i.status === "gecikti");
+const debtor = SEL.overdueInvoices().find((i) => D.customer(i.customerId).status === "aktif" && i.status === "gecikti" && !CUT.getNotices()[i.customerId]);
 if (debtor) {
   const cid = debtor.customerId;
   const noNotice = CUT.cutEligibility(cid);

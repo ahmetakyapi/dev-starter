@@ -47,7 +47,25 @@ export const getCutPolicy = () => policy.get();
 export const setCutPolicy = (patch: Partial<CutPolicyParams>) => policy.set((p) => ({ ...p, ...patch }));
 
 /** İhtar tebliğ tarihleri (müşteri kimliği → `YYYY-MM-DD`). */
-const notices = createSlice<Readonly<Record<string, string>>>({});
+/**
+ * Tohum: gecikmesi uzun, hassas olmayan ilk 14 abonenin ihtarı 14 gün önce
+ * tebliğ edilmiş sayılır; böylece demoda bekleme süresi dolmuş adaylar vardır.
+ */
+function seedNotices(): Record<string, string> {
+  const day = new Date(TODAY.getTime() - 14 * 86_400_000);
+  const key = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
+  const out: Record<string, string> = {};
+  for (const inv of allInvoices(getFinance())) {
+    if (Object.keys(out).length >= 14) break;
+    if (!isOverdue(inv) || out[inv.customerId]) continue;
+    if (daysBetween(parseDay(inv.due), TODAY) < 30) continue;
+    const c = findCustomer(inv.customerId);
+    if (!c || c.status !== "aktif" || (c.tags ?? []).some((tag) => tag.startsWith("Hassas"))) continue;
+    out[inv.customerId] = key;
+  }
+  return out;
+}
+const notices = createSlice<Readonly<Record<string, string>>>(seedNotices());
 export const useNotices = () => notices.use();
 export const getNotices = () => notices.get();
 export const markNotice = (customerId: string, key: string = TODAY_KEY) => notices.set((n) => ({ ...n, [customerId]: key }));

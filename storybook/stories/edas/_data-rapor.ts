@@ -8,12 +8,10 @@
 
 import {
   CUSTOMERS,
-  CUSTOMER_COUNT,
   INVOICES,
   KINDS,
   KIND_LABEL,
   METERS,
-  OUTAGES,
   PERIODS_12,
   READINGS,
   REGIONS,
@@ -23,12 +21,13 @@ import {
   TODAY_KEY,
   addDays,
   dayKey,
-  outageMinutes,
   periodLabel,
   regionLoss,
   windowPeriods,
   type Customer,
 } from "./_data";
+import { reliability as realReliability } from "./_data-operasyon";
+import { createSlice } from "./_core";
 
 /* --- Boyut, ölçü, dönem ----------------------------------------------------------- */
 
@@ -191,13 +190,13 @@ export const formatValue = (measure: MeasureKey, value: number) => {
 
 /* --- SAIDI / SAIFI --------------------------------------------------------------------- */
 
-/** Plansız kesintiler: SAIFI = etkilenen abone / toplam abone, SAIDI = abone·dakika / toplam abone. */
+/**
+ * SAIDI / SAIFI: tek hesap `_data-operasyon.ts` → `reliability` (yalnız UZUN kesintiler,
+ * payda aktif abone sayısı). Burası yalnız eski adı (`events`) korur.
+ */
 export function reliability(days: number) {
-  const from = addDays(TODAY, -days).getTime();
-  const rows = OUTAGES.filter((o) => o.kind === "plansiz" && o.start.getTime() >= from && o.start <= TODAY);
-  const saifi = rows.reduce((s, o) => s + o.affected, 0) / CUSTOMER_COUNT;
-  const saidi = rows.reduce((s, o) => s + o.affected * outageMinutes(o), 0) / CUSTOMER_COUNT;
-  return { events: rows.length, saifi: Math.round(saifi * 100) / 100, saidi: Math.round(saidi * 10) / 10 };
+  const r = realReliability(days);
+  return { ...r, events: r.count };
 }
 
 /* --- Rapor kataloğu ---------------------------------------------------------------------- */
@@ -363,3 +362,10 @@ export const SEED_FILINGS: readonly Filing[] = [
     ],
   },
 ];
+
+
+/* --- Kalıcı durum: kayıtlı raporlar ve gönderilen bildirimler (sayfa değişince kaybolmaz) --- */
+
+export const savedReportsSlice = createSlice<readonly SavedReport[]>(SEED_REPORTS);
+/** Gönderilen bildirimin kurum referansı: `{ filingId: referans }`. */
+export const filingRefsSlice = createSlice<Readonly<Record<string, string>>>({ "f-4": "BLD-2026-110482" });

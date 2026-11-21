@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { BarChart3, Building2, CalendarClock, CheckCircle2, CircleAlert, Download, FileText, Gauge, Pause, Play, Plus, Send, Trash2, TriangleAlert, Users, Wallet, Zap } from "lucide-react";
 import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { Select } from "@/components/ui/select";
-import { Stat, StatGrid } from "@/components/ui/stat";
 import { Tabs } from "@/components/ui/tabs";
 import { KIND_LABEL, KINDS, REGIONS, TODAY, daysBetween, num, parseDay, periodStats, type Period } from "./_data";
 import {
@@ -28,7 +27,6 @@ import {
   PERIOD_OPTIONS,
   PRESETS,
   SEED_FILINGS,
-  SEED_REPORTS,
   aggregate,
   formatValue,
   measureAllowed,
@@ -47,10 +45,18 @@ import {
   type PeriodKey,
   type SavedReport,
 } from "./_data-rapor";
-import { IconTile, PageBody, PageHead, Panel, SampleNote, href, useApp, type PageProps } from "./_ui";
+import { useDerived } from "./_core";
+import { audit } from "./_audit";
+import { filingRefsSlice, savedReportsSlice } from "./_data-rapor";
+import { filingStatus, liveChecks, qualityIndicators, reliabilityBreakdown } from "./_data-raporlive";
+import { COLLECTION_SCOPE, disputeSlaBreaches, openDisputes, pendingApprovals, useLiveStats, workOrderSlaBreaches } from "./_selectors";
+import { effectiveReadings } from "./_ops";
+import { CURRENT_PERIOD, READINGS } from "./_data";
+import { Metric, PageHero, fmtDec, fmtDur, fmtNum, fmtPct, fmtTlCompact } from "./_kit";
+import { MetricStrip, PageBody, PageHead, Panel, href, useApp, type PageProps } from "./_ui";
 
-type TabId = "hazir" | "olustur" | "kayitli" | "epdk";
-const TAB_IDS: readonly TabId[] = ["hazir", "olustur", "kayitli", "epdk"];
+type TabId = "ozet" | "hazir" | "olustur" | "kayitli" | "epdk";
+const TAB_IDS: readonly TabId[] = ["ozet", "hazir", "olustur", "kayitli", "epdk"];
 
 const CATEGORY_ICON: Record<CategoryId, ReactNode> = {
   tuketim: <Zap />,
@@ -63,38 +69,19 @@ const CATEGORY_ICON: Record<CategoryId, ReactNode> = {
 };
 const CATEGORY_TONE: Record<CategoryId, CategoryTone> = { tuketim: "primary", tahsilat: "success", kayip: "danger", okuma: "chart-2", kesinti: "warning", musteri: "chart-3", tedarikci: "neutral" };
 
-const trNum = (v: number) => v.toLocaleString("tr-TR");
 const MONTHS = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
 /** `2026-11-01 06:00` → `1 Kas, 06:00`. */
 const stamp = (value: string | null) => (value ? `${Number(value.slice(8, 10))} ${MONTHS[Number(value.slice(5, 7)) - 1]}, ${value.slice(11)}` : "—");
 const FILING_TONE: Record<FilingStatus, "neutral" | "success" | "danger" | "primary"> = { hazirlaniyor: "neutral", hazir: "primary", gonderildi: "success", gecikti: "danger" };
 const FORMAT_LABEL = { pdf: "PDF", xlsx: "Excel", csv: "CSV" } as const;
 
-/** Dört hücreli ölçü şeridi: `MetricStrip` altı hücreye göre kurulu, burada dört. */
+/** Ölçü şeridi: kit `MetricStrip` + `Metric` (altı eşit kutu değil: sütun sayısı çocuktan türer). */
 function Strip({ children }: { children: ReactNode }) {
-  return (
-    <div className="grid grid-cols-2 overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line md:grid-cols-4">
-      {Children.map(children, (child) => (
-        <div className="min-w-0 border-line-soft [&:nth-child(even)]:border-l [&:nth-child(n+3)]:border-t md:[&:nth-child(n+3)]:border-t-0 md:[&:not(:first-child)]:border-l">{child}</div>
-      ))}
-    </div>
-  );
+  return <MetricStrip>{children}</MetricStrip>;
 }
 
-function Cell({ icon, label, value, foot, tone = "neutral" }: { icon: ReactNode; label: string; value: string; foot: string; tone?: "neutral" | "danger" | "warning" | "success" }) {
-  return (
-    <div className="relative flex h-full flex-col gap-3 p-4 sm:p-5">
-      <IconTile tone={tone} className="absolute top-4 right-4 sm:top-5 sm:right-5">
-        {icon}
-      </IconTile>
-      <div className="pr-10">
-        <StatGrid className="grid-cols-1 sm:grid-cols-1">
-          <Stat label={label} value={value} />
-        </StatGrid>
-      </div>
-      <p className="mt-auto border-t border-dashed border-line pt-3 text-small text-muted">{foot}</p>
-    </div>
-  );
+function Cell({ icon, label, value, foot }: { icon: ReactNode; label: string; value: string; foot: string; tone?: "neutral" | "danger" | "warning" | "success" }) {
+  return <Metric icon={icon} label={label} value={value} foot={foot} />;
 }
 
 /** İndirmeyi tarayıcıda gerçekten başlatır (yalnız CSV). */
@@ -113,7 +100,7 @@ function download(name: string, text: string) {
 
 export function RaporlarPage({ params, go }: PageProps) {
   const { notify } = useApp();
-  const tab: TabId = TAB_IDS.includes(params.tab as TabId) ? (params.tab as TabId) : "hazir";
+  const tab: TabId = TAB_IDS.includes(params.tab as TabId) ? (params.tab as TabId) : "ozet";
   const setTab = (next: string) => go("reports", { tab: next });
 
   /* Oluşturucu durumu: hazır rapordan ya da kayıtlı rapordan derin bağlantıyla gelir. */
@@ -141,8 +128,11 @@ export function RaporlarPage({ params, go }: PageProps) {
   }, [params.preset, params.dim, params.measure, params.period]);
 
   const [category, setCategory] = useState<CategoryId>("tuketim");
-  const [saved, setSaved] = useState<readonly SavedReport[]>(SEED_REPORTS);
-  const [filings, setFilings] = useState<readonly Filing[]>(SEED_FILINGS);
+  const saved = savedReportsSlice.use();
+  const setSaved = savedReportsSlice.set;
+  const refs = filingRefsSlice.use();
+  /* Bildirim durumu ve doğrulama kutuları CANLI: depodan hesaplanır, elle "tamam" yok. */
+  const filings: readonly Filing[] = useDerived(() => SEED_FILINGS.map((f) => ({ ...f, status: filingStatus(f, refs), reference: refs[f.id] ?? f.reference, checks: liveChecks(f) })), [refs]);
 
   const [saveOpen, setSaveOpen] = useState(false);
   const [saveName, setSaveName] = useState("");
@@ -187,8 +177,23 @@ export function RaporlarPage({ params, go }: PageProps) {
       const body = result.rows.map((r) => `${r.label};${String(r.value).replace(".", ",")}`);
       download(`rapor_${dim}_${measure}.csv`, [head, ...body, `Toplam;${String(result.total).replace(".", ",")}`].join("\r\n"));
       notify({ title: "CSV indirildi", body: `${result.rows.length} satır`, tone: "success" });
+      audit("Raporu dışa aktardı", `${m.label} · ${dimLabel}`, undefined, "CSV");
+    } else if (kind === "pdf") {
+      /* PDF: tarayıcının yazdırma penceresi (PDF olarak kaydet). Yalnız önizleme paneli basılır. */
+      document.body.dataset.printing = "rapor";
+      const clear = () => {
+        delete document.body.dataset.printing;
+        window.removeEventListener("afterprint", clear);
+      };
+      window.addEventListener("afterprint", clear);
+      try {
+        window.print();
+      } catch {
+        clear();
+      }
+      audit("Raporu yazdırdı", `${m.label} · ${dimLabel}`, undefined, "PDF");
     } else {
-      notify({ title: `${FORMAT_LABEL[kind]} dosyası hazırlandı (örnek)`, body: "Örnek ortamda dosya üretilmez; CSV gerçekten iner", tone: "info" });
+      notify({ title: "Excel dosyası hazırlandı (örnek)", body: "Örnek ortamda Excel üretilmez; CSV gerçekten iner, PDF için yazdırma açılır", tone: "info" });
     }
   };
 
@@ -210,6 +215,7 @@ export function RaporlarPage({ params, go }: PageProps) {
       paused: false,
     };
     setSaved((list) => [report, ...list]);
+    audit("Rapor kaydetti", name, undefined, cadence === "yok" ? "Zamanlanmadı" : CADENCE_LABEL[cadence]);
     setSaveOpen(false);
     setSaveName("");
     notify({ title: cadence === "yok" ? "Rapor kaydedildi" : "Rapor zamanlandı", body: cadence === "yok" ? name : `${name} · ${CADENCE_LABEL[cadence]}`, tone: "success" });
@@ -218,18 +224,21 @@ export function RaporlarPage({ params, go }: PageProps) {
 
   const runNow = (id: string) => {
     setSaved((list) => list.map((r) => (r.id === id ? { ...r, lastRun: "2026-11-21 10:40", status: "basarili" } : r)));
+    audit("Raporu çalıştırdı", saved.find((r) => r.id === id)?.name ?? id);
     notify({ title: "Rapor çalıştırıldı", body: saved.find((r) => r.id === id)?.name, tone: "success" });
   };
   const removeReport = (r: SavedReport) => {
     setSaved((list) => list.filter((x) => x.id !== r.id));
+    audit("Raporu sildi", r.name);
     notify({ title: "Rapor silindi", body: r.name, tone: "info", undo: () => setSaved((list) => (list.some((x) => x.id === r.id) ? list : [r, ...list])) });
   };
   const togglePause = (id: string) => setSaved((list) => list.map((r) => (r.id === id ? { ...r, paused: !r.paused } : r)));
 
   const sendFiling = () => {
     if (!sending) return;
-    const ref = `BLD-2026-${110490 + filings.filter((f) => f.status === "gonderildi").length}`;
-    setFilings((list) => list.map((f) => (f.id === sending.id ? { ...f, status: "gonderildi", reference: ref } : f)));
+    const ref = `BLD-2026-${110490 + Object.keys(refs).length}`;
+    filingRefsSlice.set((r) => ({ ...r, [sending.id]: ref }));
+    audit("Düzenleyici bildirimi gönderdi", sending.title, undefined, ref);
     notify({ title: "Bildirim gönderildi", body: `${sending.title} · ${ref}`, tone: "success" });
     setSending(null);
   };
@@ -246,6 +255,7 @@ export function RaporlarPage({ params, go }: PageProps) {
   const rel30 = reliability(30);
   const rel90 = reliability(90);
   const presets = PRESETS.filter((p) => p.category === category);
+  const previews = useMemo(() => Object.fromEntries(PRESETS.map((p) => [p.id, formatValue(p.measure, aggregate(p.dim, p.measure, periodsFor(p.period), NO_FILTER).total)])), []);
   const cat = CATEGORIES.find((c) => c.id === category)!;
 
   const ready = (
@@ -281,10 +291,10 @@ export function RaporlarPage({ params, go }: PageProps) {
         </div>
         {category === "kesinti" ? (
           <Strip>
-            <Cell icon={<Zap />} label="SAIFI · 30 Gün" value={trNum(rel30.saifi)} foot={`Abone başına kesinti sayısı · ${rel30.events} olay`} />
-            <Cell icon={<Zap />} label="SAIDI · 30 Gün" value={`${trNum(rel30.saidi)} dk`} foot="Abone başına kesinti süresi" />
-            <Cell icon={<Zap />} label="SAIFI · 90 Gün" value={trNum(rel90.saifi)} foot={`${rel90.events} plansız olay`} />
-            <Cell icon={<Zap />} label="SAIDI · 90 Gün" value={`${trNum(rel90.saidi)} dk`} foot="Planlı kesintiler hariç" />
+            <Cell icon={<Zap />} label="SAIFI · 30 Gün" value={fmtDec(rel30.saifi, 2)} foot={`Abone başına kesinti sayısı · ${rel30.count} olay`} />
+            <Cell icon={<Zap />} label="SAIDI · 30 Gün" value={`${fmtDec(rel30.saidi, 1)} dk`} foot="Abone başına kesinti süresi" />
+            <Cell icon={<Zap />} label="SAIFI · 90 Gün" value={fmtDec(rel90.saifi, 2)} foot={`${rel90.count} uzun kesinti`} />
+            <Cell icon={<Zap />} label="SAIDI · 90 Gün" value={`${fmtDec(rel90.saidi, 1)} dk`} foot="Planlı kesintiler hariç" />
           </Strip>
         ) : null}
         <CategoryGrid className="lg:grid-cols-2 2xl:grid-cols-3">
@@ -294,7 +304,7 @@ export function RaporlarPage({ params, go }: PageProps) {
               href={p.category === "kesinti" ? href("reports", { tab: "epdk" }) : href("reports", { tab: "olustur", preset: p.id })}
               title={p.title}
               description={p.description}
-              meta={`${p.cadence} · ${p.formats}`}
+              meta={`Önizleme ${previews[p.id]} · ${p.cadence} · ${p.formats}`}
               icon={CATEGORY_ICON[p.category]}
               tone={CATEGORY_TONE[p.category]}
               headingLevel={3}
@@ -384,9 +394,10 @@ export function RaporlarPage({ params, go }: PageProps) {
       >
         <div className="grid gap-5 p-4 sm:p-5">
           <div className="flex flex-wrap items-end gap-x-6 gap-y-2">
-            <StatGrid className="grid-cols-1 sm:grid-cols-1">
-              <Stat label={m.kind === "ratio" ? "Genel Oran" : "Toplam"} value={formatValue(measure, result.total)} />
-            </StatGrid>
+            <div>
+              <p className="text-small font-medium text-muted">{m.kind === "ratio" ? "Genel oran" : "Toplam"}</p>
+              <p className="text-heading font-semibold tracking-tight text-strong tabular-nums">{formatValue(measure, result.total)}</p>
+            </div>
             {dashboardTotal !== null ? (
               <Badge tone={matchesDashboard ? "success" : "warning"} dot>
                 {matchesDashboard ? "Pano toplamıyla aynı" : "Pano toplamından farklı"}
@@ -536,9 +547,9 @@ export function RaporlarPage({ params, go }: PageProps) {
     <div className="grid gap-5">
       <Strip>
         <Cell icon={<Send />} label="Bekleyen Bildirim" value={num.format(pendingFilings.length)} foot="Gönderilmeyi bekleyen" tone={pendingFilings.length ? "warning" : "success"} />
-        <Cell icon={<CircleAlert />} label="Süresi Geçen" value={num.format(late)} foot="Tahsilat mutabakatı eksik" tone={late ? "danger" : "success"} />
-        <Cell icon={<Zap />} label="SAIFI (30 Gün)" value={trNum(rel30.saifi)} foot="Abone başına kesinti sayısı" />
-        <Cell icon={<Zap />} label="SAIDI (30 Gün)" value={`${trNum(rel30.saidi)} dk`} foot={`${rel30.events} plansız olay`} />
+        <Cell icon={<CircleAlert />} label="Süresi Geçen" value={num.format(late)} foot={filings.find((f) => f.status === "gecikti")?.checks.find((c) => !c.ok)?.label ?? "Süreler içinde"} tone={late ? "danger" : "success"} />
+        <Cell icon={<Zap />} label="SAIFI (30 Gün)" value={fmtDec(rel30.saifi, 2)} foot="Abone başına kesinti sayısı" />
+        <Cell icon={<Zap />} label="SAIDI (30 Gün)" value={`${fmtDec(rel30.saidi, 1)} dk`} foot={`${rel30.count} uzun kesinti`} />
       </Strip>
 
       <section aria-labelledby="epdk-baslik" className="rounded-xl bg-overlay shadow-raised ring-1 ring-line">
@@ -600,11 +611,113 @@ export function RaporlarPage({ params, go }: PageProps) {
     </div>
   );
 
+  /* --- Yönetici özeti ------------------------------------------------------------------------- */
+  const live = useLiveStats("1");
+  const nowReadings = useDerived(() => effectiveReadings().filter((r) => r.period === CURRENT_PERIOD), []);
+  const readRate = nowReadings.length ? (nowReadings.filter((r) => r.status !== "bekliyor").length / nowReadings.length) * 100 : 0;
+  const brk = useMemo(() => reliabilityBreakdown(30), []);
+  const quality = useDerived(qualityIndicators);
+  const openDisp = useDerived(() => openDisputes().length);
+  const lateDisp = useDerived(() => disputeSlaBreaches().length);
+  const slaOver = useDerived(() => workOrderSlaBreaches().length);
+  const approvalsOpen = useDerived(() => pendingApprovals().length);
+  const dueSoon = filings.filter((f) => f.status !== "gonderildi").sort((a, b) => a.deadline.localeCompare(b.deadline));
+  const pct1 = (now: number, before: number) => (before ? Math.round(((now - before) / before) * 1000) / 10 : undefined);
+  void READINGS;
+
+  const summary = (
+    <div className="grid gap-5">
+      <PageHero
+        primary={{ label: "Kayıp / kaçak · bu ay", value: fmtPct(live.lossPct), delta: Math.round((live.lossPct - live.lossBefore) * 10) / 10, goodWhen: "down", deltaLabel: "önceki aya göre", foot: "Giriş enerjisine oranla · bölge dökümü Pano'da", to: { page: "dashboard", params: { focus: "kayip" } }, icon: <TriangleAlert /> }}
+        secondary={[
+          { label: "Tahakkuk", value: fmtTlCompact(live.billed), delta: pct1(live.billed, live.billedBefore), goodWhen: "up", deltaLabel: "önceki aya göre", foot: "Kesilen faturalar" },
+          { label: "Tahsilat oranı", value: fmtPct(live.collectionRate), delta: Math.round((live.collectionRate - live.collectionBefore) * 10) / 10, goodWhen: "up", deltaLabel: "önceki aya göre", foot: COLLECTION_SCOPE },
+          { label: "SAIDI · 30 gün", value: `${fmtDec(rel30.saidi, 1)} dk`, foot: `SAIFI ${fmtDec(rel30.saifi, 2)} · ${rel30.count} uzun kesinti` },
+          { label: "Okuma oranı", value: fmtPct(readRate), foot: `${fmtNum(nowReadings.filter((r) => r.status === "bekliyor").length)} sayaç bekliyor` },
+          { label: "Açık itiraz", value: fmtNum(openDisp), foot: lateDisp ? `${lateDisp} tanesinin süresi aştı` : "Süreler içinde", to: { page: "disputes" } },
+          { label: "İş emri / onay", value: `${fmtNum(slaOver)} / ${fmtNum(approvalsOpen)}`, foot: "SLA aşan iş emri / bekleyen onay", to: { page: "workorders" } },
+        ]}
+      />
+
+      <Panel id="ozet-epdk" title="Düzenleyici Bildirim Takvimi" note="Süre ve doğrulama durumu depodan canlı hesaplanır; gönderim için bütün kutular yeşil olmalı." actions={<Button size="sm" variant="secondary" onClick={() => setTab("epdk")}>Bildirimlere Git</Button>}>
+        <ul role="list" aria-label="Yaklaşan bildirimler" className="divide-y divide-line-soft">
+          {dueSoon.map((f) => {
+            const left = daysBetween(TODAY, parseDay(f.deadline));
+            const missing = f.checks.filter((c) => !c.ok);
+            return (
+              <li key={f.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5">
+                <span className="min-w-0">
+                  <span className="block truncate text-base font-medium text-strong">{f.title}</span>
+                  <span className="block text-small text-muted">{f.period} · son tarih {f.deadline} · {left < 0 ? `${-left} gün geçti` : `${left} gün kaldı`}{missing.length ? ` · ${missing.length} doğrulama eksik` : ""}</span>
+                </span>
+                <span className="flex items-center gap-2">
+                  <Badge tone={FILING_TONE[f.status]} dot>{FILING_LABEL[f.status]}</Badge>
+                  <Button size="sm" variant="secondary" onClick={() => { setOpen(f.id); setTab("epdk"); }}>Doğrulama</Button>
+                </span>
+              </li>
+            );
+          })}
+          {dueSoon.length === 0 ? <li className="p-6 text-center text-base text-muted">Bekleyen bildirim yok.</li> : null}
+        </ul>
+      </Panel>
+
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        <Panel id="ozet-saidi" title="SAIDI / SAIFI Hesap Dökümü · Son 30 Gün" note="Yalnız plansız ve 3 dakikayı aşan (uzun) kesintiler sayılır; payda aktif abone sayısıdır. ÖRNEK kural: yürürlükteki tanım doğrulanmalı.">
+          <dl className="grid gap-px bg-line-soft sm:grid-cols-2">
+            {[
+              ["Payda: aktif abone", fmtNum(brk.denominator)],
+              ["Uzun kesinti (sayılan)", fmtNum(brk.longCount)],
+              ["Kısa kesinti (sayılmayan)", fmtNum(brk.shortCount)],
+              ["Etkilenen abone (toplam)", fmtNum(brk.interruptions)],
+              ["Abone × dakika", fmtNum(brk.customerMinutes)],
+              ["SAIFI = etkilenen ÷ payda", fmtDec(rel30.saifi, 2)],
+              ["SAIDI = abone·dk ÷ payda", `${fmtDec(rel30.saidi, 1)} dk`],
+              ["Ortalama onarım (MTTR)", fmtDur(rel30.mttr)],
+            ].map(([k, v]) => (
+              <div key={k} className="bg-overlay p-3.5">
+                <dt className="text-small text-muted">{k}</dt>
+                <dd className="mt-0.5 text-base font-semibold text-strong tabular-nums">{v}</dd>
+              </div>
+            ))}
+          </dl>
+          <ul role="list" aria-label="En çok etkileyen kesintiler" className="divide-y divide-line-soft border-t border-line-soft">
+            {brk.top.map((o) => (
+              <li key={o.id} className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
+                <span className="min-w-0 truncate text-base text-body"><span className="edas-mono text-strong">{o.id}</span> · {o.cause}</span>
+                <span className="shrink-0 text-small text-muted tabular-nums">{fmtNum(o.affected)} abone · {fmtDur(Math.round((o.end ? o.end.getTime() : TODAY.getTime()) / 60000 - o.start.getTime() / 60000))}</span>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+
+        <Panel id="ozet-kalite" title="Ticari Kalite Göstergeleri" note="Süreler depodaki başvuru, çağrı ve itiraz kayıtlarından hesaplanır; hedefler ÖRNEK.">
+          <dl className="grid gap-px bg-line-soft sm:grid-cols-2">
+            {[
+              ["Başvurudan enerjilendirmeye", quality.appFinished ? `${fmtDec(quality.appDays, 1)} gün` : "Veri yok", `${quality.appFinished} tamamlanan başvuru`],
+              ["Açık başvuru yaşı (ort.)", quality.openApps ? `${fmtDec(quality.openAppAge, 1)} gün` : "—", `${quality.openApps} açık başvuru`],
+              ["Açık çağrı bekleme (ort.)", quality.callOpen ? fmtDur(Math.round(quality.callWait)) : "—", `${quality.callOpen} açık çağrı`],
+              ["SLA aşan çağrı", fmtNum(quality.callSlaOver), "Çözüm hedefini geçen açık çağrı"],
+              ["Açık itiraz", fmtNum(quality.disputeOpen), "Yanıt süresi 15 gün (ÖRNEK)"],
+              ["Süresi aşan itiraz", fmtNum(quality.disputeLate), quality.disputeLate ? "Öncelikle yanıtlanmalı" : "Gecikme yok"],
+            ].map(([k, v, f]) => (
+              <div key={k} className="bg-overlay p-3.5">
+                <dt className="text-small text-muted">{k}</dt>
+                <dd className="mt-0.5 text-base font-semibold text-strong tabular-nums">{v}</dd>
+                <p className="text-small text-muted">{f}</p>
+              </div>
+            ))}
+          </dl>
+          <div className="border-t border-line-soft p-3 text-small text-muted">Ayrıntı için Başvurular, Çağrı Merkezi ve İtirazlar sayfaları.</div>
+        </Panel>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <PageHead
         title="Raporlar"
-        description="Hazır raporlar, kendi raporunu kur, zamanla ve düzenleyici kuruma gönder."
+        description="Bu ayın özeti, hazır raporlar, rapor oluşturucu ve düzenleyici bildirimler."
         actions={
           <>
             <Button variant="secondary" size="sm" onClick={() => setTab("epdk")}>
@@ -616,26 +729,20 @@ export function RaporlarPage({ params, go }: PageProps) {
           </>
         }
       />
+      <style href="edas-rapor-print" precedence="default">{`@media print { body[data-printing="rapor"] * { visibility: hidden !important; } body[data-printing="rapor"] #olustur-onizleme, body[data-printing="rapor"] #olustur-onizleme * { visibility: visible !important; } body[data-printing="rapor"] #olustur-onizleme { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; } }`}</style>
       <PageBody>
-        <Strip>
-          <Cell icon={<FileText />} label="Hazır Rapor" value={num.format(PRESETS.length)} foot={`${CATEGORIES.length} kategoride`} />
-          <Cell icon={<CalendarClock />} label="Kayıtlı Rapor" value={num.format(saved.length)} foot={`${saved.filter((r) => r.status === "hata").length} son çalışması hatalı`} tone={saved.some((r) => r.status === "hata") ? "warning" : "neutral"} />
-          <Cell icon={<CalendarClock />} label="Zamanlanmış" value={num.format(scheduled.length)} foot={`${saved.filter((r) => r.paused).length} duraklatıldı`} />
-          <Cell icon={<Send />} label="Bekleyen Bildirim" value={num.format(pendingFilings.length)} foot={late ? `${late} süresi geçti` : "Süreler içinde"} tone={late ? "danger" : "neutral"} />
-        </Strip>
-
         <Tabs
           aria-label="Rapor bölümleri"
           value={tab}
           onValueChange={setTab}
           items={[
-            { value: "hazir", label: "Hazır Raporlar", panel: ready },
+            { value: "ozet", label: "Yönetici Özeti", panel: summary },
+            { value: "hazir", label: `Hazır Raporlar (${PRESETS.length})`, panel: ready },
             { value: "olustur", label: "Rapor Oluşturucu", panel: builder },
             { value: "kayitli", label: `Kayıtlı ve Zamanlanmış (${saved.length})`, panel: savedTab },
             { value: "epdk", label: `EPDK Bildirimleri (${pendingFilings.length})`, panel: epdk },
           ]}
         />
-        <SampleNote />
       </PageBody>
 
       <Dialog

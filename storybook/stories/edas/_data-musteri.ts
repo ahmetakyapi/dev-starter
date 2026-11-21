@@ -199,6 +199,22 @@ export function isRisky(c: Customer): boolean {
   return metersFor(c.id).some((m) => m.status === "mudahale" || m.status === "arizali");
 }
 
+/** Risk puanı: geciken fatura sayısı ve açık bakiye öne çıkarır; sayaç şüphesi de ekler (liste "riskli önce" sıralaması). */
+export function riskScore(c: Customer): number {
+  const a = accountOf(c.id);
+  const meterProblem = metersFor(c.id).some((m) => m.status === "mudahale" || m.status === "arizali") ? 5_000_000_000 : 0;
+  return meterProblem + a.overdue * 1_000_000_000 + a.balance;
+}
+
+/** Riskin nedeni (liste satırında renk yanında METİN olarak yazılır). */
+export function riskReason(c: Customer): string | null {
+  if (!isRisky(c)) return null;
+  const a = accountOf(c.id);
+  const bad = metersFor(c.id).find((m) => m.status === "mudahale" || m.status === "arizali");
+  if (bad) return bad.status === "mudahale" ? "Sayaçta müdahale şüphesi" : "Sayaç arızalı";
+  return `${a.overdue} geciken fatura`;
+}
+
 /* --- Süzme, sıralama ------------------------------------------------------- */
 
 export type ListQuery = {
@@ -208,6 +224,8 @@ export type ListQuery = {
   volt: string;
   region: string;
   supplier: string;
+  /** Etiket süzgeci (örn. hassas abone). */
+  tag?: string;
   sort: string;
   dir: "asc" | "desc";
 };
@@ -228,6 +246,7 @@ export function filterCustomers(rows: readonly Customer[], query: ListQuery): Cu
     if (query.volt && c.voltage !== query.volt) return false;
     if (query.region && c.regionId !== query.region) return false;
     if (query.supplier && c.supplierId !== query.supplier) return false;
+    if (query.tag && !(c.tags ?? []).includes(query.tag)) return false;
     if (query.status === "serbest" && !c.free) return false;
     if (query.status === "gorevli" && c.free) return false;
     if (query.status === "riskli" && !isRisky(c)) return false;
@@ -240,6 +259,7 @@ export function filterCustomers(rows: readonly Customer[], query: ListQuery): Cu
     id: (c: Customer) => c.id,
     usage: (c: Customer) => c.baseKwh,
     balance: (c: Customer) => accountOf(c.id).balance,
+    risk: (c: Customer) => riskScore(c),
     region: (c: Customer) => c.regionId,
     since: (c: Customer) => c.since,
   }[query.sort] ?? ((c: Customer) => c.id);

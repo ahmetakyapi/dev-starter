@@ -7,7 +7,6 @@ import {
   CUSTOMERS,
   CURRENT_PERIOD,
   INVOICES,
-  LATE_RATE_MONTHLY,
   PAYMENTS,
   PAYMENT_PLANS,
   PERIODS_12,
@@ -21,7 +20,6 @@ import {
   daysBetween,
   parseDay,
   supplier,
-  type CustomerKind,
   type Invoice,
   type InvoiceStatus,
   type Payment,
@@ -200,19 +198,20 @@ function addEvent(id: string, event: Omit<InvoiceEvent, "id" | "at" | "when"> & 
 
 /* --- Fatura işlemleri ---------------------------------------------------- */
 
-export function recordPayment(invoiceId: string, input: { channel: PaymentChannel; amount: number; reference: string }) {
+export function recordPayment(invoiceId: string, input: { channel: PaymentChannel; amount: number; reference: string; /** Ödeme tarihi (`YYYY-MM-DD`); verilmezse bugün. Gelecek olamaz. */ date?: string }) {
   const inv = invoiceOf(invoiceId, live());
   if (!inv) return;
   /* Gecikme zammı: vadeden bugüne kalan ANAPARA üzerinden TEK fonksiyonla; ödemeyle
      birlikte tahsil edilir (ödeme = anapara + zam). Zam tahsil edilmeden fatura "Ödendi" olmaz. */
-  const dueFee = inv.due < TODAY_KEY ? lateInterest(Math.max(0, inv.total - inv.paid), inv.due, TODAY_KEY, getLateRates()) : 0;
+  const payDate = input.date && input.date <= TODAY_KEY ? input.date : TODAY_KEY;
+  const dueFee = inv.due < payDate ? lateInterest(Math.max(0, inv.total - inv.paid), inv.due, payDate, getLateRates()) : 0;
   const feeToCollect = Math.max(0, Math.max(inv.lateFee, dueFee) - inv.lateFeePaid);
   const principal = Math.min(input.amount, Math.max(0, inv.total - inv.paid));
   const payment: Payment = {
     id: nextId("P-M"),
     invoiceId,
     customerId: inv.customerId,
-    date: TODAY_KEY,
+    date: payDate,
     channel: input.channel,
     amount: principal,
     lateFee: feeToCollect,
@@ -236,6 +235,35 @@ export function extendDue(invoiceId: string, days: number) {
   const status: InvoiceStatus = deriveStatus({ total: inv.total, paid: inv.paid, due, disputed: inv.status === "itirazli" }, TODAY_KEY);
   set({ patches: { ...live().patches, [invoiceId]: { ...addEvent(invoiceId, { key: "due", title: "Vade uzatıldı", detail: `Yeni son ödeme tarihi ${when(due)}`, tone: "primary" }), due, status } } });
   audit("Vade uzattı", invoiceId, `Vade ${when(inv.due)}`, `Vade ${when(due)}`);
+}
+
+/** Vadeyi doğrudan bir tarihe çeker (uzatmayı geri almak için). */
+export function setDue(invoiceId: string, due: string, note = "Vade geri alındı") {
+  const inv = invoiceOf(invoiceId, live());
+  if (!inv) return;
+  const status: InvoiceStatus = deriveStatus({ total: inv.total, paid: inv.paid, due, disputed: inv.status === "itirazli" }, TODAY_KEY);
+  set({ patches: { ...live().patches, [invoiceId]: { ...addEvent(invoiceId, { key: "due", title: note, detail: `Son ödeme tarihi ${when(due)}`, tone: "neutral" }), due, status } } });
+  audit(note, invoiceId, `Vade ${when(inv.due)}`, `Vade ${when(due)}`);
+}
+
+/**
+ * Düzeltme faturası: iptal edilen faturanın okumasından, güncel parametrelerle
+ * yeniden hesaplanır (`corrects` bağı); tutar kalemlerden tutar, borç/ödeme sıfırdan başlar.
+ */
+export function issueCorrection(invoiceId: string): Invoice | null {
+  const inv = invoiceOf(invoiceId, live());
+  if (!inv) return null;
+  const reading = effectiveReadings().find((r) => r.customerId === inv.customerId && r.period === inv.period);
+  if (!reading) return null;
+  const draft = buildDraft(reading);
+  const { readingId, warnings, ...rest } = draft;
+  void readingId;
+  void warnings;
+  const id = `${inv.id.split("-D")[0]}-D${String((live().extraInvoices.filter((x) => x.corrects === inv.id).length || 0) + 1)}`;
+  const correction: Invoice = { ...rest, id, corrects: inv.id, issued: TODAY_KEY, due: addDaysKey(TODAY_KEY, 14), status: "kesildi", paid: 0, lateFee: 0, lateFeePaid: 0 };
+  set({ extraInvoices: [correction, ...live().extraInvoices] });
+  audit("Düzeltme faturası kesti", id, inv.id, `${money(correction.total)}`);
+  return correction;
 }
 
 export function fileDispute(invoiceId: string, reason: string, note: string) {
@@ -342,6 +370,20 @@ export function runAccrual(period: string): { count: number; total: number } {
   return { count: created.length, total: created.reduce((s, i) => s + i.total, 0) };
 }
 
+/** Tahakkuku geri al: o dönem için bu oturumda kesilen (ödemesi olmayan) faturalar silinir. */
+export function undoAccrual(period: string): number {
+  const keep: Invoice[] = [];
+  let removed = 0;
+  for (const i of live().extraInvoices) {
+    const accrued = i.period === period && !i.corrects && i.paid === 0 && !live().patches[i.id];
+    if (accrued) removed++;
+    else keep.push(i);
+  }
+  set({ extraInvoices: keep, accrued: live().accrued.filter((p) => p !== period) });
+  audit("Tahakkuku geri aldı", period, undefined, `${removed} fatura`);
+  return removed;
+}
+
 /* --- Ödemeler: etkin liste ve mutabakat ----------------------------------- */
 
 export type EffectivePayment = Payment & { manual: boolean };
@@ -382,6 +424,21 @@ export const olderDiffs = (s: Store) => allPayments(s).filter((p) => p.recon ===
 export function resolveLine(line: BankLine, how: "faturaya" | "avans" | "iade") {
   const label = how === "faturaya" ? "Faturaya atandı" : how === "avans" ? "Avansa alındı" : "İade talimatı verildi";
   set({ reconOverrides: { ...live().reconOverrides, [line.paymentId]: "mutabik" }, reconNotes: { ...live().reconNotes, [line.paymentId]: label } });
+}
+
+/** Banka dosyasıyla eşleşen (satır olmayan) bekleyen ödemeleri mutabık yapar; eşleşmeyenler elle çözülür. */
+export function approveMatched(excludePaymentIds: readonly string[], dayKeys: readonly string[]): number {
+  const overrides = { ...live().reconOverrides };
+  let n = 0;
+  for (const p of allPayments(live())) {
+    if (p.recon === "bekliyor" && dayKeys.includes(p.date) && !excludePaymentIds.includes(p.id)) {
+      overrides[p.id] = "mutabik";
+      n++;
+    }
+  }
+  set({ reconOverrides: overrides });
+  audit("Eşleşen ödemeleri onayladı", dayKeys.join(", "), undefined, `${n} ödeme`);
+  return n;
 }
 
 /** Günü kapat: bekleyen ödemeleri mutabık yap (eşleşmeyen satır kalmamışsa). */

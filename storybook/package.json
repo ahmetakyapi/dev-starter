@@ -10,7 +10,8 @@
     "check:ids": "node scripts/check-story-ids.mjs",
     "check:align": "node scripts/check-alignment.mjs",
     "verify:edas": "node scripts/verify-edas-data.mjs",
-    "og": "node scripts/build-og.mjs"
+    "og": "node scripts/build-og.mjs",
+    "verify:edas-finans": "node scripts/verify-edas-finans.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",

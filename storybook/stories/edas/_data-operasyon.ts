@@ -305,6 +305,7 @@ export const ROLES: readonly { id: RoleId; label: string; hint: string }[] = [
 export type SettingsUser = { id: string; name: string; email: string; role: RoleId; twoFactor: boolean; lastLogin: string; active: boolean };
 export const USERS: readonly SettingsUser[] = [
   { id: "u-1", name: "Aylin Yıldırım", email: "aylin.yildirim@kuzeyova-dagitim.example", role: "yonetici", twoFactor: true, lastLogin: "2026-11-21T08:42", active: true },
+  { id: "u-8", name: "Mert Aksoy", email: "mert.aksoy@kuzeyova-dagitim.example", role: "yonetici", twoFactor: true, lastLogin: "2026-11-20T17:15", active: true },
   { id: "u-2", name: "Kerem Şahin", email: "kerem.sahin@kuzeyova-dagitim.example", role: "okuma", twoFactor: true, lastLogin: "2026-11-21T07:58", active: true },
   { id: "u-3", name: "Selin Akgül", email: "selin.akgul@kuzeyova-dagitim.example", role: "tahsilat", twoFactor: true, lastLogin: "2026-11-20T17:31", active: true },
   { id: "u-4", name: "Burak Tunç", email: "burak.tunc@kuzeyova-dagitim.example", role: "musteri", twoFactor: false, lastLogin: "2026-11-20T16:05", active: true },
