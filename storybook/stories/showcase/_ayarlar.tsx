@@ -29,6 +29,7 @@ import { TagInput } from "@/components/ui/tag-input";
 import { Terminal } from "@/components/ui/terminal";
 import { Textarea } from "@/components/ui/textarea";
 import { ME, TAG_COLORS, TAG_SUGGESTIONS, TICKETS, WORKSPACE } from "./_data";
+import { HelpWell, IntegrationsWell } from "./_ayarlar-ek";
 import { PageBar, Well, WellTitle, useApp } from "./_ui";
 
 const LANGS = [
@@ -134,7 +135,9 @@ const SECTIONS = [
   { id: "ayar-ozet", label: "Özet" },
   { id: "ayar-imza", label: "İmza" },
   { id: "ayar-alan", label: "Dosya Alanı" },
+  { id: "ayar-entegrasyon", label: "Entegrasyonlar" },
   { id: "ayar-webhook", label: "Webhook" },
+  { id: "ayar-yardim", label: "Yardım" },
 ] as const;
 
 export function AyarlarPage() {
@@ -418,6 +421,8 @@ export function AyarlarPage() {
           </div>
         </Well>
 
+        <IntegrationsWell />
+
         <Well labelledBy="ayar-webhook" className="lg:col-span-2">
           <WellTitle id="ayar-webhook" hint="Yeni talep açılınca Pusula bu adrese POST atar; imza başlıkta.">
             Webhook ile Bağla
@@ -425,6 +430,8 @@ export function AyarlarPage() {
           <CodeBlock tabs={WEBHOOK_TABS} persist="pusula-webhook" aria-label="Webhook örneği" />
           <Terminal title="Bağlantı Testi" lines={WEBHOOK_TEST} copyable={false} />
         </Well>
+
+        <HelpWell />
       </div>
     </div>
   );

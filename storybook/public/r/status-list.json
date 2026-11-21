@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "status-list",
+  "type": "registry:ui",
+  "title": "Sistem Durumu",
+  "description": "Sistem durumu: bileşen listesi, türetilmiş genel durum, son olay satırı",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/badge.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/status-list.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { Badge } from \"@/components/ui/badge\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Sistem durumu listesi: ürünün bileşenleri (gönderim, API, ödemeler) ve\n * her birinin şu anki hali; başlıkta genel durum, dipte son olay. MailPulse\n * yardım merkezinin \"Sistem durumu\" bloğundan alındı (yapı).\n *\n * DÖRT DURUM, renk + METİN: `operational` \"Çalışıyor\" (yeşil),\n * `degraded` \"Yavaş\" (uyarı), `outage` \"Kesinti\" (tehlike), `maintenance`\n * \"Bakımda\" (nötr). Renk tek işaret değil: hapın metni durumu söyler.\n *\n * GENEL DURUM bileşenlerden TÜRER, elle yazılmaz: hepsi çalışıyorsa\n * `allOkText`, aksi halde en kötü durumun adı + sayısı (\"1 bileşende\n * kesinti\"). Böylece başlık listeyle çelişemez.\n *\n * Statik metin: `role=\"status\"`/canlı bölge YOK. Durum sayfası okunmak için\n * açılır; sayfa açıkken yenilenen bir değer ekran okuyucuyu bölmez (sürekli\n * canlı güncelleme gerekiyorsa üst sayfa kendi canlı bölgesini kurar).\n * `ul`; son olay satırı (`incident`) hazır metin: tarih biçimi çağıranın.\n *\n *   <StatusList title=\"Sistem durumu\" items={[{ id: \"g\", label: \"Gönderim\", status: \"operational\" }]} incident=\"Son olay 3 Ara · 18 dakikada çözüldü\" />\n */\n\nexport type SystemStatus = \"operational\" | \"degraded\" | \"outage\" | \"maintenance\";\n\nconst STATUS = {\n  operational: { label: \"Çalışıyor\", tone: \"success\", rank: 0, phrase: \"\" },\n  maintenance: { label: \"Bakımda\", tone: \"neutral\", rank: 1, phrase: \"bileşende bakım\" },\n  degraded: { label: \"Yavaş\", tone: \"warning\", rank: 2, phrase: \"bileşende yavaşlık\" },\n  outage: { label: \"Kesinti\", tone: \"danger\", rank: 3, phrase: \"bileşende kesinti\" },\n} as const;\n\nconst DOT = { success: \"bg-success\", neutral: \"bg-muted\", warning: \"bg-warning\", danger: \"bg-danger\" } as const;\n\nexport type StatusItem = { id: string; label: ReactNode; status: SystemStatus };\n\nexport function StatusList({\n  title,\n  items,\n  incident,\n  allOkText = \"Tüm sistemler çalışıyor\",\n  className,\n}: {\n  title: ReactNode;\n  items: readonly StatusItem[];\n  /** Dipteki son olay özeti. */\n  incident?: ReactNode;\n  allOkText?: string;\n  className?: string;\n}) {\n  const worst = items.reduce<SystemStatus>((w, i) => (STATUS[i.status].rank > STATUS[w].rank ? i.status : w), \"operational\");\n  const count = items.filter((i) => i.status === worst).length;\n  const summary = worst === \"operational\" ? allOkText : `${count} ${STATUS[worst].phrase}`;\n  const dot = DOT[STATUS[worst].tone];\n  return (\n    <section className={cn(\"min-w-0\", className)}>\n      <div className=\"flex flex-wrap items-center justify-between gap-x-3 gap-y-1\">\n        <h3 className=\"text-read font-semibold text-strong\">{title}</h3>\n        <p className=\"flex items-center gap-1.5 text-small text-body\">\n          <span aria-hidden className={cn(\"size-2 rounded-full\", dot)} />\n          {summary}\n        </p>\n      </div>\n      <ul className=\"mt-2 divide-y divide-line-soft\">\n        {items.map((item) => {\n          const s = STATUS[item.status];\n          return (\n            <li key={item.id} className=\"flex items-center justify-between gap-3 py-2 text-small text-body\">\n              <span className=\"min-w-0 truncate\">{item.label}</span>\n              <Badge tone={s.tone} dot>\n                {s.label}\n              </Badge>\n            </li>\n          );\n        })}\n      </ul>\n      {incident ? <p className=\"mt-2 text-micro text-muted\">{incident}</p> : null}\n    </section>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Geri Bildirim"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "status-list",
+    "palettes": false
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Bell, Check, FileText, Pause, Play, Search } from "lucide-react";
+import { ArrowRight, Bell, Check, FileText, Pause, Play, Search, Truck } from "lucide-react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { AvatarGroup } from "@/components/ui/avatar";
@@ -8,19 +8,29 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FilterChip } from "@/components/ui/chip";
+import { CopyButton } from "@/components/ui/copy-button";
+import { CornerLabel } from "@/components/ui/corner-label";
+import { IntegrationCard } from "@/components/ui/integration-card";
 import { Kbd } from "@/components/ui/kbd";
 import { Progress } from "@/components/ui/progress";
 import { Rating } from "@/components/ui/rating";
+import { ScheduleList } from "@/components/ui/schedule-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Sparkline } from "@/components/ui/sparkline";
 import { Spinner } from "@/components/ui/spinner";
+import { StackedBarChart } from "@/components/ui/stacked-bar-chart";
 import { Stat } from "@/components/ui/stat";
+import { StatStrip } from "@/components/ui/stat-strip";
+import { StatusList } from "@/components/ui/status-list";
 import { Switch } from "@/components/ui/switch";
+import { TickMeter } from "@/components/ui/tick-meter";
+import { ToneText } from "@/components/ui/tone-text";
 import { DUR, EASE, STAGGER } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { palettes } from "../../../packages/@ahmet/theme/tokens";
 import uiPackage from "../../../packages/@ahmet/ui/package.json";
 import { PALETTES } from "../../.storybook/palettes";
+import { KIT_COUNT, STORY_COUNT, TOTAL } from "../amiral/_kapsam";
 
 /**
  * Tanıtım kahramanı: FENER. Sahnenin iki yanında katalogdaki GERÇEK
@@ -135,6 +145,24 @@ const COLUMNS: ReactNode[][] = [
     <Tile key="c"><Switch label="Bildirimler" hint="Acil talepler anında" defaultChecked /></Tile>,
     <Tile key="d" w="w-auto"><Rating value={4} showValue count={128} /></Tile>,
     <Tile key="e"><Progress value={68} label="Yükleniyor" valueText="%68" /></Tile>,
+    <Tile key="f" w="w-64">
+      <span className="grid gap-2 text-left">
+        <span className="text-small text-muted">Gün ve kanala göre talep</span>
+        <StackedBarChart
+          title="Gün ve kanala göre talep"
+          showLegend={false}
+          height="h-24"
+          series={[{ name: "E-posta", color: 1 }, { name: "Form", color: 2 }]}
+          data={[
+            { label: "Pzt", values: [14, 8] },
+            { label: "Sal", values: [18, 11] },
+            { label: "Çar", values: [12, 9] },
+            { label: "Per", values: [21, 12] },
+            { label: "Cum", values: [16, 7] },
+          ]}
+        />
+      </span>
+    </Tile>,
   ],
   [
     <Tile key="a" w="w-auto"><SegmentedControl aria-label="Dönem" size="sm" value="hafta" onValueChange={noop} options={[{ value: "gun", label: "Gün" }, { value: "hafta", label: "Hafta" }, { value: "ay", label: "Ay" }]} /></Tile>,
@@ -142,6 +170,15 @@ const COLUMNS: ReactNode[][] = [
     <Tile key="c"><span className="grid gap-1 text-left"><span className="text-small text-muted">Son 7 gün</span><Sparkline values={[12, 18, 14, 22, 19, 28, 31]} title="Son 7 gün" width={200} height={40} /></span></Tile>,
     <Tile key="d" w="w-auto"><span className="flex gap-1.5"><Badge tone="success">Yayında</Badge><Badge tone="primary">Yeni</Badge><Badge tone="warning">Taslak</Badge></span></Tile>,
     <Tile key="e"><Checkbox label="Haftalık özeti e-postayla al" defaultChecked /></Tile>,
+    <Tile key="f" w="w-64">
+      <ScheduleList
+        label="Sıradakiler"
+        items={[
+          { id: "1", at: "2026-11-21T09:00", time: "09:00", day: "Bugün", title: "Haftalık özet", detail: "Ekibe gönderilir", color: 1 },
+          { id: "2", at: "2026-11-21T14:30", time: "14:30", day: "Bugün", title: "Kargo eşitleme", detail: "Her saat başı", color: 2 },
+        ]}
+      />
+    </Tile>,
   ],
   [
     <Tile key="a" w="w-auto"><span className="flex flex-wrap gap-1.5"><FilterChip selected count={12}>Kargo</FilterChip><FilterChip selected={false} count={4}>Fatura</FilterChip></span></Tile>,
@@ -149,6 +186,12 @@ const COLUMNS: ReactNode[][] = [
     <Tile key="c" w="w-auto"><span className="flex items-center gap-2 text-small text-muted"><Search className="size-4" />Bileşen ara<Kbd>⌘</Kbd><Kbd>K</Kbd></span></Tile>,
     <Tile key="d" w="w-auto"><span className="flex items-center gap-3 text-small"><Spinner size="sm" label={null} /><span className="text-strong">Eşitleniyor</span></span></Tile>,
     <Tile key="e" w="w-auto"><span className="flex items-center gap-2 text-small"><FileText className="size-4 text-primary-ink" /><span className="text-strong">rapor.pdf</span><span className="text-muted">2,4 MB</span></span></Tile>,
+    <Tile key="f" w="w-64">
+      <span className="grid gap-2 text-left">
+        <span className="text-small text-muted">Çıkışa kalan iş</span>
+        <TickMeter label="Biten görev" value={31} max={50} ticks={25} text="%62" valueText="50 görevin 31'i bitti, yüzde 62" />
+      </span>
+    </Tile>,
   ],
   [
     <Tile key="a"><Switch label="Koyu Tema" hint="Sistemi izler" /></Tile>,
@@ -156,6 +199,19 @@ const COLUMNS: ReactNode[][] = [
     <Tile key="c"><Progress value={42} label="Depolama" valueText="4,2 / 10 GB" /></Tile>,
     <Tile key="d" w="w-auto"><span className="flex items-center gap-2 text-small font-medium text-strong"><span className="grid size-6 place-items-center rounded-full bg-success-wash text-success"><Check className="size-3.5" strokeWidth={3} /></span>Değişiklik kaydedildi</span></Tile>,
     <Tile key="e" w="w-auto"><span className="flex items-center gap-2 text-small"><span className="relative grid size-7 place-items-center rounded-full bg-primary-wash text-primary-ink"><Bell className="size-3.5" /><span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-danger" /></span><span className="text-strong">2 yeni talep</span></span></Tile>,
+    <div key="f" className="w-64 text-left">
+      <IntegrationCard name="Kargo Takip" category="Lojistik" description="Sevkiyat durumu talebe düşer." icon={<Truck />} connected lastSync="4 dk önce" />
+    </div>,
+    <Tile key="g" w="w-64">
+      <StatusList
+        title="Sistem Durumu"
+        items={[
+          { id: "api", label: "API", status: "operational" },
+          { id: "mail", label: "E-posta", status: "operational" },
+          { id: "pay", label: "Ödeme", status: "degraded" },
+        ]}
+      />
+    </Tile>,
   ],
 ];
 
@@ -245,7 +301,7 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
   const enter = (step: number, y = 16) =>
     still ? {} : { initial: { opacity: 0, y }, animate: { opacity: 1, y: 0 }, transition: { duration: DUR.slow, ease: EASE, delay: step * STAGGER } };
   const R = 300;
-    const ogCounts = `141 bileşen · 781 hikaye · ${PALETTES.length} palet · 2 tema`;
+  const ogCounts = `${TOTAL} bileşen · ${STORY_COUNT} hikaye · ${PALETTES.length} palet · 2 tema`;
   return (
     <section
       ref={t.ref}
@@ -260,7 +316,7 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
         ref={stage}
         onPointerMove={onMove}
         onPointerDown={onMove}
-        className="kf-stage relative isolate grid w-full justify-items-center overflow-hidden rounded-[2.5rem] bg-surface px-4 py-28 ring-1 ring-inset ring-line-soft sm:py-36"
+        className="kf-stage relative isolate grid w-full grid-cols-[minmax(0,1fr)] justify-items-center overflow-hidden rounded-[2.5rem] bg-surface px-4 py-28 ring-1 ring-inset ring-line-soft sm:py-36"
         style={{ "--fx": "22%", "--fy": "40%" } as CSSProperties}
       >
         {/* Sahne: iki yanda birer sütun gerçek bileşen, karşılıklı yönlerde kayar; üst ve alt kenarda
@@ -275,23 +331,20 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
         {/* 4 · Başlığın arkası: zeminin kendisiyle sakinleşir (fener başlığın altından geçerken okunurluk korunur). */}
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(ellipse 30% 40% at 50% 50%, var(--surface) 35%, transparent 100%)" }} />
 
-        <div className="grid justify-items-center text-center">
-          <m.p
-            {...enter(1)}
-            data-og-counts={ogCounts}
-            className="inline-flex items-center gap-2 rounded-full bg-overlay/85 py-1 pr-3.5 pl-1.5 text-small text-body shadow-raised ring-1 ring-inset ring-line-soft backdrop-blur"
-          >
-            <span className="rounded-full bg-primary-wash px-2 py-0.5 font-semibold text-primary-ink">v{uiPackage.version}</span>
-            Next 16 · React 19 · Tailwind v4
+        <div className="grid w-full min-w-0 justify-items-center text-center">
+          <m.p {...enter(1)} data-og-counts={ogCounts}>
+            <CornerLabel className="max-w-full px-3.5 py-2 text-micro tracking-[0.08em] whitespace-normal sm:px-5 sm:py-3 sm:text-small sm:tracking-[0.12em] sm:whitespace-nowrap">
+              v{uiPackage.version} · Next 16 · React 19 · Tailwind v4
+            </CornerLabel>
           </m.p>
-          <h1 id="kapak-baslik" className="mt-7 font-display text-[clamp(3.25rem,8vw,7.5rem)] leading-[0.9] font-bold tracking-[-0.06em] text-strong">
-            <m.span className="block" initial={still ? false : { opacity: 0, y: 28, filter: "blur(12px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}>
-              Tek Kimlik,
+          <ToneText as="h1" id="kapak-baslik" className="mt-8 font-display text-[clamp(3.25rem,8vw,7.5rem)] leading-[0.9] font-bold tracking-[-0.06em]">
+            <m.span className="block" initial={still ? false : { y: 28, filter: "blur(12px)" }} animate={{ y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}>
+              <ToneText.Soft>Tek Kimlik,</ToneText.Soft>
             </m.span>{" "}
-            <m.span className="display-ink block pb-[0.08em]" initial={still ? false : { opacity: 0, y: 28, filter: "blur(12px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.22 }}>
+            <m.span className="display-ink block pb-[0.08em]" initial={still ? false : { y: 28, filter: "blur(12px)" }} animate={{ y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.22 }}>
               On Palet
             </m.span>
-          </h1>
+          </ToneText>
           <m.p {...enter(4)} className="mt-7 max-w-[44ch] text-lead text-pretty text-body">
             Next 16 projeleri için kopyalanabilir bileşenler, desenler ve ekranlar. Her parça token&apos;dan çizilir; paleti değiştir, hepsi birlikte döner.
           </m.p>
@@ -309,8 +362,15 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
               Pusula&apos;yı Aç
             </a>
           </m.div>
+          {/* Nasıl kopyalanır: beş saniyede üçüncü cevap (ne var, ne kadar, nasıl alınır). */}
+          <m.div {...enter(6)} className="mt-6 flex w-full max-w-md min-w-0 items-center gap-1 rounded-full bg-overlay/85 py-1 pr-1 pl-4 shadow-raised ring-1 ring-inset ring-line-soft backdrop-blur">
+            <code className="min-w-0 truncate font-mono text-small text-body">
+              <span aria-hidden className="mr-2 text-muted">$</span>node ~/dev-starter/scripts/add-ui.mjs . dial terminal
+            </code>
+            <CopyButton value="node ~/dev-starter/scripts/add-ui.mjs . dial terminal" label="Kurulum komutunu kopyala" />
+          </m.div>
           {/* Palet şeridi: turun göstergesi ve kumandası. */}
-          <m.div {...enter(6)} className="mt-8 grid justify-items-center gap-3">
+          <m.div {...enter(7)} className="mt-6 grid justify-items-center gap-3">
             <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-overlay/85 p-1.5 shadow-raised ring-1 ring-inset ring-line-soft backdrop-blur [scrollbar-width:none]" onPointerLeave={() => t.preview(null)}>
               {TOUR.map((p) => (
                 <button
@@ -350,6 +410,18 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
           </m.div>
         </div>
       </div>
+      {/* Gerçek sayılar: bileşen ve hikaye dosyalardan sayılır, palet sayısı palettes.ts'ten. */}
+      <m.div {...enter(8)} className="col-span-full -mt-4 w-full border-y border-line py-10">
+        <StatStrip
+          numberClassName="font-semibold"
+          items={[
+            { value: TOTAL.toLocaleString("tr-TR"), label: "kopyalanabilir bileşen" },
+            { value: KIT_COUNT.toLocaleString("tr-TR"), label: "bileşen paket kitinde" },
+            { value: STORY_COUNT.toLocaleString("tr-TR"), label: "çalışan hikaye" },
+            { value: `${PALETTES.length} × 2`, label: "palet ve tema" },
+          ]}
+        />
+      </m.div>
       {/* build-og.mjs bu sarmalayıcıyı (`> div.mt-14`) yakalar: sınıfı ve yeri sabit. */}
       <div className="col-span-full mt-14 w-full">{showcase}</div>
     </section>

@@ -1542,3 +1542,35 @@ Sahibi Fener'i seçti: "mantık bu, çok daha iyi hali". Kesinleşen hal:
   Spinner. Işık maskesi yerine her parça kendi odağını taşır (`--f`, fenere
   uzaklıktan): bütün kart birlikte renklenir, yarım kesik görünmez. İmleç
   sahnedeyken kayma durur. Sütunlar `inert` (odaklanmaz, okunmaz).
+
+## Kasım 21 Turu — Tanıtım Sahneleri ve Panel Parçaları (2026-11-21)
+
+Kaynak: kullanıcının paylaştığı 25 ekran görüntüsü (tanıtım siteleri, iş ve
+entegrasyon panoları). Yöntem `/harvest`; sınıflama tablosu aşağıda.
+
+**Alınanlar (dil ve davranış, kod ve varlık değil), 19 yeni bileşen:**
+- Tanıtım: `tone-text` (iki tonlu / solan başlık), `corner-label`,
+  `float-cards`, `focus-stack`, `feature-tile` (+ `GlassFrame`, `BentoGrid`),
+  `story-card` (+ `StoryGrid`), `step-rail`, `stat-strip`, `horizon-scene`.
+- Panel: `stacked-bar-chart`, `schedule-list`, `path-graph` (kritik yol),
+  `tick-meter`, `integration-card`, `permission-list`, `requirement-list`,
+  `category-card`, `status-list`.
+- Örnek sayfalar (Storybook → Ekranlar/Örnek Sayfalar): kahraman sahneleri,
+  tanıtım bölümleri, otomasyonlar, ajan harcamaları, proje görünümü,
+  şablon galerisi, entegrasyonlar, yardım merkezi. Landing şablonuna 4 hero
+  eklendi (atmosphere, floating, horizon, corner; bileşenler şablona kopyalandı,
+  şablon kendi içinde tam kalır; focus-stack hero'su LCP ve ilk ekran kuralı
+  yüzünden yok).
+
+**Zaten vardı, dokunulmadı:** `segmented-meter` (karar dağılımı), `stepper`,
+`mesh-gradient`, `app-window`, `timeline`, `announcement`, landing
+`TestimonialPicker`.
+
+**Alınmayanlar:** sahte aciliyet ve doğrulanamayan sayılar (kaynaklardaki
+"%99", "$20B+" gibi rakamlar örneklerde kurgusal ve "ÖRNEK" künyeli), gerçek
+marka adları ve logolar, fotoğraf ve illüstrasyon varlıkları (zemin
+`wallpaper`/`mesh-gradient` ile token'dan), bayrak/kart gibi dekoratif
+çizimler.
+
+**Kural notu:** `step-rail` form akışı için değil tanıtım içindir (`stepper`
+orada); `stat-strip` yalnız doğrulanabilir sayı için.

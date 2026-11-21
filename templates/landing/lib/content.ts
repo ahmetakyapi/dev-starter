@@ -41,7 +41,7 @@ export const nav = {
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
 /**
- * Sekiz hero düzeni (`components/heroes/`). Seçim tek satır: `hero.variant`.
+ * On iki hero düzeni (`components/heroes/`). Seçim tek satır: `hero.variant`.
  * Hangisinin ne zaman kullanılacağı `components/heroes/index.tsx` başında.
  */
 export const HERO_VARIANTS = [
@@ -53,6 +53,10 @@ export const HERO_VARIANTS = [
   "bento",
   "minimal",
   "scroll-stage",
+  "atmosphere",
+  "floating",
+  "horizon",
+  "corner",
 ] as const;
 export type HeroVariant = (typeof HERO_VARIANTS)[number];
 

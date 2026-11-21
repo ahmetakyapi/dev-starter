@@ -46,6 +46,7 @@ import {
 import { ProductTour, type TourStep } from "@/components/ui/product-tour";
 import { Button } from "@/components/ui/Button";
 import { DelayCard } from "./_gecikme";
+import { GoalTicksCard, TicketStackCard, UpcomingCard } from "./_pano-ek";
 import { CARD, IconTile, PageBar, SectionTitle, href, useApp } from "./_ui";
 import { cn } from "@/lib/utils";
 
@@ -399,6 +400,10 @@ export function PanoPage() {
             >
               <TrackBarChart title="Haftanın Gününe Göre Talep" data={byWeekday} series={1} height="h-44" />
             </ChartCard>
+
+            <TicketStackCard s={s} className="lg:col-span-2" />
+            <UpcomingCard />
+            <GoalTicksCard s={s} period={period} className="lg:col-span-3" />
 
             <ChartCard
               id="pano-asama"

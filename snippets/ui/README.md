@@ -106,6 +106,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `digit-roll.tsx` | Değer DEĞİŞİNCE yalnız değişen rakam yuvarlanır (vurgulanan bölüm, cetvel, canlı sayaç); ara sayı yok | motion | Evet | Tam değer `sr-only` tek metin, şeritler `aria-hidden`; kendiliğinden konuşmaz (gerekirse kap `aria-live`); reduced-motion'da yerinde değişir |
 | `sparkline.tsx` | Eksensiz mini eğri | yok | Hayır | `role="img"` + `title` |
 | `record-list.tsx` | Tablonun telefondaki hali: üç katlı kart (ne · ne zaman/durum · kim); `data-table` ile `max-md:hidden` / `md:hidden` çifti | yok | Hayır | `ul` + ad; ana eylem başlık, kart ona genişletilmiş tıklama alanı (satır başına tek eylem); kişiler "Atanan: Ad" okunur |
+| `schedule-list.tsx` | Sıradakiler: saat + gün, renkli çubuk, başlık ve tek satır açıklama, sağda uygulama ikonları | `chart-card` (seri rengi) | Hayır | `ul`, her saat `<time dateTime>`, ikonlar `aria-hidden`; `href`'li satır tam bağlantı |
 
 ### Form ve Gezinme
 
@@ -132,6 +133,10 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `carousel.tsx` | Yan yana kaydırılan kartlar | lucide, motion | Evet | `aria-roledescription` carousel/slide; ←/→ Home/End; canlı bölge konumu söyler; otomatik oynatma yok |
 | `toc-nav.tsx` | Uzun sayfada yapışkan içindekiler + okuma ilerlemesi | yok | Evet | `nav` + `aria-current="location"`; tık başlığa kaydırır ve odak verir; ilerleme kaydırmaya bağlı CSS |
 | `marquee.tsx` | Kayan şerit: logolar, entegrasyonlar (sayfada tek) | lucide | Evet | WCAG 2.2.2: görünür durdurma butonu (`aria-pressed`), üzerine gelince/odakta bekler; kopya `aria-hidden` + `inert`; reduced-motion'da durağan |
+| `requirement-list.tsx` | Şablonun gerektirdiği uygulamalar: Bağlı hapı ya da Bağla butonu, eksik sayısı özette | lucide | Evet | Özet satırı metinle ("1 bağlantı eksik"), canlı bölge değil; durum yazı + onay işareti; buton adı uygulamayı söyler |
+| `integration-card.tsx` | Entegrasyon ızgarası kartı: bağlıysa "Bağlı" hapı + eşitleme zamanı + anahtar, değilse "Bağla" butonu + kurulum maliyeti; `menu` yuvası; `IntegrationGrid` | `badge`, `switch`, lucide | Evet | `article` + `h3`; anahtar "Ad: eşitleme", buton "Ad uygulamasını bağla"; kartın tamamı tıklanmaz (iç içe etkileşim yok) |
+| `permission-list.tsx` | Bağlantı penceresinde "Uygulama şunları yapabilecek" dökümü; Okur/Yazar rozeti, güvence satırı | lucide | Hayır | `ul`; erişim türü renkle değil metinle; ikon `aria-hidden` |
+| `category-card.tsx` | Yardım merkezi ve kaynak kütüphanesi konu karosu; renkli ikon karosu, "12 makale →"; `CategoryGrid` | lucide | Hayır | Gerilmiş tek bağlantı; ad başlık, açıklama `aria-describedby` ile "12 makale"; `focus-within` halkası |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -145,6 +150,7 @@ JavaScript'siz de çalışır.
 | `banner-alert.tsx` | Sayfa içi durum satırı, 4 ton | lucide, `close-button` | Hayır | Wash zemin + ikon + gizli "Hata:" öneki; yalnız `announce` ile `alert`/`status`; tek kenar şeridi yok |
 | `divider.tsx` | Yatay / dikey / etiketli ("ya da") ayırıcı | yok | Hayır | `<hr>`; dikeyde `aria-orientation`; etiketlide kap `separator` değil |
 | `toast.tsx` | Eylem sonucu bildirimi: `<Toaster />` + `toast.success/error/warning/info/undo/promise` | Base UI, `spinner`, lucide | Evet | Bölge polite, hata `role="alert"` ve kendiliğinden kapanmaz; fare üstünde ya da odakta süre durur; F6 ile bölgeye geçilir; hareket azaltmada yalnız solar |
+| `status-list.tsx` | Sistem durumu: bileşen listesi, türetilmiş genel durum, son olay satırı | `badge` | Hayır | `ul`; durum renk + metin; canlı bölge yok (statik) |
 
 ### Grafik
 
@@ -170,6 +176,9 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 | `combo-chart.tsx` | Birimi farklı iki ölçü: sütun hacmi (sol eksen) ve çizgi oranı (sağ eksen) | `chart-card`, `area-chart`, motion | Evet | Veri `sr-only` tabloda; eksen anahtarı biçimle de ayırt eder (kare / noktalı çizgi); ←→ Home End |
 | `scatter-chart.tsx` | İki ölçünün ilişkisi; nokta boyu üçüncü ölçü (√ alan), renk kategori | `chart-card`, `line-chart`, motion | Evet | Veri `sr-only` tabloda; klavyede X sırasıyla gezilir; kategori filtresi `aria-pressed` |
 | `activity-rings.tsx` | Her ölçü kendi hedefine göre tam tur; %100 aşılırsa ikinci tur | `chart-card`, motion | Evet | Çizim `aria-hidden`, aynı bilgi `ul` listede; liste kapalıysa çizim `role="img"` ve özet adı taşır |
+| `stacked-bar-chart.tsx` | Bir toplamın neyden oluştuğu: günün/ayın sütunu serilerin yığılı hali; vurgulu sütun doygun, balon "44/gün" | `chart-card`, `@/lib/utils` | Evet | Sütunlar odaklanabilir butonlar (gezici tabindex, ← → Home End), adı seri değerlerini ve toplamı söyler; ayrı tablo yok; hareket azaltmada geçişler anında |
+| `path-graph.tsx` | Bağımlılığı olan 6-15 işin aşama sütunlarında kritik yolu: teslimi belirleyen zincir kalın `danger`, boşluklu bağlantı ince; solda Bugün, sağda hedef | yok | Hayır | Çizim `aria-hidden`; `sr-only` liste her işi "kritik yolda, engelli, şunlardan sonra" diye okur; tuval yatay kayar, odaklanabilir bölge; sabit düzen (hidrasyon farkı yok) |
+| `tick-meter.tsx` | Birimi sayılabilen işin gidişatı (tahmin / harcanan, biten görev): dolu, aşan (`danger`) ve planlanan (çizgili) çentikler, isteğe eşik işaretçisi | yok | Hayır | `role="meter"` + `aria-valuetext`; aşım rengin yanında görünen metin ve okunan cümleyle söylenir |
 
 ### Form Girişleri
 
@@ -229,7 +238,7 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 
 ### Tanıtım
 
-Ribbon, Offscreen ve Scrolltide turları (meetribbon.app, offscreen.wtf, scrolltide.co; 2026-11-07/11). Görsel zeminli kahraman, sayfada
+Ribbon, Offscreen, Scrolltide ve Kasım 21 turları (meetribbon.app, offscreen.wtf, scrolltide.co; 2026-11-07/11; tanıtım sitesi ve panel görselleri, 2026-11-21). Görsel zeminli kahraman, sayfada
 denenen ürün maketi, kişiliği olan küçük dokunuşlar. Hepsi tanıtım sayfası
 içindir; uygulama ekranına ve forma taşıma. Canlı örnek: Pusula → Tanıtım
 Sayfası hikayesi.
@@ -252,6 +261,15 @@ Sayfası hikayesi.
 | `dissolve.tsx` | Onaylanmış kaldırmada öğe tanecik tanecik dağılır (sessize alınan bildirim, arşivlenen satır); `dissolveOut(el)` / `useDissolve()` | yok | Evet | Görsel eşlik; sonucu çağıran canlı bölgede söyler; hareket azaltmada 150 ms solma; filtre desteklenmezse solma |
 | `morph-nav.tsx` | Zengin alt menülü tanıtım sitesi menüsü: tek kabuk paneller arasında esner, içerik buğulanarak geçer, vurgu karosu kayar; `MorphNavGrid` hazır panel (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | Menü rolü yok: `nav` + `aria-expanded`/`aria-controls`; ↓ panele, Esc kapatır ve odak başlığa; kapalı panel `inert`; telefonda gruplar alt alta |
 | `arc-carousel.tsx` | Portfolyo, ekip, koleksiyon: kartlar çember yayına dizilir, ortadaki öne çıkar; altında ad, künye, bağlantı (scrolltide.co) | lucide, motion (`useReducedMotion`) | Evet | `region` + `aria-roledescription`; ←/→, Home/End, sürükleme, oklar; değişim "3 / 9: Ad" diye okunur; tekerlek dinlenmez, kendiliğinden dönmez |
+| `tone-text.tsx` | İki tonlu başlık: güçlü + soluk bölüm (`ToneText.Soft`), soldan sağa solan `fade`, tek serif italik `<em>`; hero ve manifesto | yok | Hayır | Metin bölünmez, tek cümle okunur; solma `currentColor`'dan, kırpma yoksa düz renk; soluk bölüm yalnız ≥ 24 px |
+| `corner-label.tsx` | Köşe ayraçlı mono eyebrow ("BİRLEŞİK ZEKÂ KATMANI"); görsel zeminli tanıtımda, sayfada en çok iki | yok | Hayır | Ayraçlar `aria-hidden`; büyük harf CSS `uppercase`, `lang="tr"` ile İ/I doğru; `tone="media"` görsel üstü |
+| `float-cards.tsx` | Kahraman başlığı çevresinde döndürülmüş, kenara taşan süzülen kartlar: `FloatCards` + `FloatCard` | yok | Hayır | Kartlar `aria-hidden`, `pointer-events: none`, `md` altında gizli; süzülme hareket azaltmada durur; bilgi başka yerde de olmalı |
+| `focus-stack.tsx` | Dikey odak yığını: ortadaki net, uzaktakiler küçülür, solar, bulanıklaşır; kendiliğinden döner | motion (`useReducedMotion`) | Evet | `region` + ad; ↑↓ Home End, tıkla odağa al; hover/odak/tuş dönüşü durdurur, hareket azaltmada dönmez; dönüş duyurulmaz, görünmeyenler `aria-hidden` |
+| `feature-tile.tsx` | Bento özellik bölümü: başlık + tek cümle + altta kırpılan sahne; `light`/`dark`/`brand`/`sky`; `GlassFrame` cam çerçeveli sahne kartı, `BentoGrid` 2/3 + 3/2 | lucide | Hayır | `href` varsa karo tek bağlantı (başlık karoyu kaplar); sahne süs, `aria-hidden`; koyu/marka tonunda `text-on-brand` AA |
+| `story-card.tsx` | Müşteri hikayesi bölümü: logo + alıntı + kişi ya da büyük sonuç rakamı; `photo`/`plain`/`stat`; `StoryGrid` 3/2 + 2/3; uydurma söz ve rakam yok, `sample` ile "ÖRNEK" künyesi | lucide | Hayır | `article` > `figure`/`blockquote`/`figcaption`; tek bağlantı (hap ya da ok butonu karoyu kaplar); fotoğraf üstünde koyu örtü ile AA |
+| `step-rail.tsx` | Tanıtımda "nasıl çalışır": ikonlu yuvarlak karolar, kalın hap çizgi, tamamlanan kısım vurgu renginde dolu; kaydırdıkça çizgi dolar. Form akışı için `stepper` | yok | Hayır | `ol` + `aria-current="step"`; tamam adım görünmez "Tamamlandı"; dolum CSS `animation-timeline`, hareket azaltmada ve desteksiz tarayıcıda doğrudan dolu; `tone="dark"` ters yüzeyde |
+| `stat-strip.tsx` | 3-4 büyük sayı + etiket + ince ayraç, telefonda 2×2; doğrulanamayan sayı yazılmaz, örnek veri künyeli | yok | Hayır | `dl`: DOM sırası etiket-değer, görsel sıra ters; sayı düz metin |
+| `horizon-scene.tsx` | Kahramanda ürün çerçevesi arkada kısmen görünür, önüne manzara biner ve sayfa zeminine solar; `peek`, `fade` | yok | Hayır | Çerçeve ve manzara `aria-hidden` süs; solma `mask-image`, sabit renk yok; telefonda sahne alçalır |
 
 ### Yapay Zeka
 

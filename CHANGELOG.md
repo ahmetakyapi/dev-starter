@@ -7,6 +7,21 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Landing: varsayılan hero yeniden tasarlandı — 2026-11-21
+
+- `showcase` "tezgâh": iki tonlu başlık (problem soluk, çözüm net), tepeden ışıma
+  + kıl çizgi ızgarası, alta solan canlı pano, panodaki talepten iki kenar notu;
+  hero artık ilk ekranı aşmaz (önce 1100 px, şimdi ~870 px)
+
+### Kasım 21 turu: 19 yeni bileşen ve örnek sayfalar — 2026-11-21
+
+- Tanıtım: iki tonlu başlık, köşe etiketi, süzülen kartlar, odak yığını,
+  özellik ve hikaye karoları, süreç rayı, istatistik şeridi, ufuk sahnesi
+- Panel: yığılı sütun, sıradakiler, kritik yol grafiği, çentikli çubuk,
+  entegrasyon kartı, izin ve gereken listeleri, kategori kartı, sistem durumu
+- Storybook: Ekranlar → Örnek Sayfalar (sekiz sayfa); Pusula ve Amiral'a yerleşti
+- Landing: 4 yeni hero (`atmosphere`, `floating`, `horizon`, `corner`); toplam on iki. Bileşenler şablona kopyalandı
+
 ### Tanıtım kahramanı: Fener — 2026-11-18
 
 - On yedi yön denendi; seçilen Fener. Sahnede on altı farklı gerçek

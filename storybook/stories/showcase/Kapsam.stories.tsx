@@ -25,16 +25,20 @@ const PAGE_OF: Record<string, string> = {
   _app: "Kabuk",
   _ui: "Kabuk",
   _pano: "Pano",
+  "_pano-ek": "Pano",
   _gecikme: "Pano",
   _gelen: "Gelen Kutusu",
   _gorevler: "Görevler",
+  "_gorevler-ek": "Görevler",
   _takvim: "Takvim",
   _asistan: "Asistan",
   _raporlar: "Raporlar",
   _bildirim: "Bildirimler",
   _ayarlar: "Ayarlar",
+  "_ayarlar-ek": "Ayarlar",
   _giris: "Oturum Kapalı",
   _tanitim: "Tanıtım",
+  "_tanitim-ek": "Tanıtım",
 };
 
 const USED = new Map<string, Set<string>>();

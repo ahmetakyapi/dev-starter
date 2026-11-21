@@ -15,6 +15,8 @@ import { RadarChart } from "@/components/ui/radar-chart";
 import { RingChart } from "@/components/ui/ring-chart";
 import { SankeyChart } from "@/components/ui/sankey-chart";
 import { ScatterChart } from "@/components/ui/scatter-chart";
+import { PathGraph } from "@/components/ui/path-graph";
+import { StackedBarChart } from "@/components/ui/stacked-bar-chart";
 import { StageBars } from "@/components/ui/stage-bars";
 import { TrackBarChart } from "@/components/ui/track-bar-chart";
 import { cn } from "@/lib/utils";
@@ -262,6 +264,40 @@ export function Dashboard() {
             size={{ label: "Satılan Paket", unit: "paket" }}
             zero={false}
             height="h-56"
+          />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="stacked-bar-chart" className="md:col-span-2 lg:col-span-6">
+        <ChartCard
+          id="g-kanal-ay"
+          label="Kanala Göre Ciro · Son 6 Ay"
+          value={fromK(sum(CHANNEL_MONTHLY.map((m) => sum(m.slice(-6)))))}
+          action={<FileTag file="stacked-bar-chart" />}
+        >
+          <StackedBarChart
+            title="Aylık Ciro, Kanallara Yığılı"
+            data={MONTHS.slice(-6).map((label, i) => ({ label, values: CHANNEL_MONTHLY.map((m) => m.slice(-6)[i]) }))}
+            series={CHANNELS.map((c) => ({ name: c.label, color: c.series }))}
+            highlight={5}
+            unit=" bin ₺"
+            height="h-48"
+          />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="path-graph" className="md:col-span-2 lg:col-span-6">
+        <ChartCard id="g-cikis-yolu" label="Kasım Harmanı Çıkış Yolu" value="9 Kasım" action={<FileTag file="path-graph" />}>
+          <PathGraph
+            label="Kasım Harmanı Çıkış Yolu"
+            hideLegend
+            start={{ title: "Bugün", meta: "2 Kas" }}
+            columns={[
+              { id: "hazirlik", label: "Hazırlık", nodes: [{ id: "giris", title: "Çuval girişi", meta: "2g · 4 Kas", critical: true, after: [] }, { id: "etiket", title: "Etiket baskısı", meta: "1g · 4 Kas", after: [] }] },
+              { id: "kavrum", label: "Kavrum", nodes: [{ id: "lot", title: "Lot 45 kavrumu", meta: "1g · 5 Kas", critical: true, after: ["giris"] }, { id: "tadim", title: "Tadım testi", meta: "1g · 6 Kas", after: ["giris"] }] },
+              { id: "paket", label: "Paket", nodes: [{ id: "paketleme", title: "Paketleme", meta: "2g · 7 Kas", critical: true, after: ["lot", "etiket", "tadim"] }] },
+            ]}
+            goal={{ title: "Satışta", meta: "9 Kas", after: ["paketleme"] }}
           />
         </ChartCard>
       </Tile>

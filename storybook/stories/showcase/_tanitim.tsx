@@ -21,6 +21,7 @@ import { NoticeDeck } from "@/components/ui/notice-deck";
 import { TrustLine } from "@/components/ui/trust-line";
 import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
 import { EVENTS, OPEN_TICKETS, PRODUCT } from "./_data";
+import { FeaturesSection, FocusSection, HeroFloatCards, HorizonSection, ProcessSection, StoriesSection } from "./_tanitim-ek";
 
 /**
  * Pusula'nın tanıtım sayfası (oturum açmamış ziyaretçi). Ribbon turunun
@@ -94,6 +95,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             <div className="absolute -top-32 left-[6%] size-[28rem] rounded-full bg-primary-soft opacity-20 blur-3xl" />
             <div className="absolute top-40 right-[2%] size-[24rem] rounded-full bg-primary opacity-20 blur-3xl" />
           </div>
+          <HeroFloatCards />
           {/* Duyuru hapı: renkli zeminde cam, BASILIR (demoya iner). Eski plan
               hapı buton gibi görünüp hiçbir şey yapmıyordu. */}
           <LiquidGlassLink tone="media" href="#tanitim-demo" className="mb-8 min-h-11 gap-2 px-4 text-small pointer-fine:min-h-9">
@@ -202,6 +204,9 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           </Reveal>
         </section>
 
+        <FeaturesSection />
+        <StoriesSection />
+
         <section aria-labelledby="tanitim-duvar-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-28 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
           <Reveal>
             <p className="font-mono text-small text-primary-ink">Duvar Kağıtları</p>
@@ -281,6 +286,9 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           />
         </section>
 
+        <ProcessSection />
+        <FocusSection />
+
         <section aria-labelledby="tanitim-rehber-baslik" className="mx-auto grid max-w-6xl gap-10 px-4 pb-28 sm:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center">
           <Reveal>
             <p className="font-mono text-small text-primary-ink">Rehberler</p>
@@ -296,6 +304,8 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
             <BookCover tone="ink" title="Destek El Kitabı" subtitle="Yanıt dili ve öncelikler" author={PRODUCT.name} mark="02" width={128} />
           </Reveal>
         </section>
+
+        <HorizonSection onSignIn={onSignIn} />
 
         {/* Kapanış: sayfa kitaplarla bitip boşlukta kalıyordu. Tek eylem, altında aynı güven satırı. */}
         <section aria-labelledby="tanitim-kapanis-baslik" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">

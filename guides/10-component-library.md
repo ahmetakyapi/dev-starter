@@ -324,6 +324,25 @@ punto CSS değişkeniyle anında.
 
 ---
 
+### Kasım 21 turu — ne zaman hangisi
+
+| İhtiyaç | Bileşen | Ne zaman DEĞİL |
+|---|---|---|
+| Kahraman başlığında iki ton, solan metin | `tone-text` | Gövde metni; soluk kısım yalnız ≥ 24 px |
+| Görsel zeminde mono etiket | `corner-label` | Sayfada ikiden fazla; uygulama içi |
+| Başlık çevresinde süzülen kartlar | `float-cards` | Bilgiyi yalnız kartlarda taşıma (süs, telefonda gizli) |
+| Dönen ajan/akış listesi | `focus-stack` | 4'ten az öğe; okunması gereken tablo |
+| Bento özellik bölümü, hikaye bölümü | `feature-tile`, `story-card` | Uydurma alıntı ve rakam; sayfada ikinci bento |
+| "Nasıl çalışır" rayı, sayı şeridi | `step-rail`, `stat-strip` | Form akışı (`stepper`); doğrulanamayan sayı |
+| Ürün çerçevesi + manzara | `horizon-scene` | Fotoğrafı olmayan sayfa |
+| Toplamın bileşenleri, sıradakiler | `stacked-bar-chart`, `schedule-list` | Tek seri (`track-bar-chart`) |
+| Bağımlı işlerde teslimi belirleyen zincir | `path-graph` | 6'dan az iş; zaman çizelgesi (Gantt) değil |
+| Sayılabilir işin gidişatı | `tick-meter` | Yüzde tek başına yeterliyse `progress` |
+| Entegrasyon ızgarası ve bağlantı penceresi | `integration-card`, `permission-list`, `requirement-list` | Ödeme/kimlik doğrulama akışının kendisi |
+| Yardım merkezi, sistem durumu | `category-card`, `status-list` | Canlı olay akışı (statik özet) |
+
+Canlı örnek: Storybook → Ekranlar → Örnek Sayfalar.
+
 ## 5. Klavye Haritaları
 
 ### TreeView (`role="tree"`)

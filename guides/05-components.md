@@ -141,12 +141,14 @@ alınır, paket olarak kurulmaz:
 - **Agentic UI** — `agent-tool.tsx`, `action-card.tsx`, `agent-approval.tsx`;
   proaktif akış (agent hazırlar, kullanıcı onaylar) için `agent-feed.tsx`;
   karar için `/agentic`.
-- **Tanıtım sayfası kahramanı** — `landing` şablonunda sekiz düzen
+- **Tanıtım sayfası kahramanı** — `landing` şablonunda on iki düzen
   (`components/heroes/`: **showcase** (varsayılan, 2026-11), editorial-split,
-  statement, product-frame, live-data, bento, minimal, scroll-stage),
-  `lib/content.ts` → `hero.variant` ile seçilir. `showcase`: büyük sıkı başlık
-  (-0.035em, anlam öbekleriyle maskeli satır girişi; opaklık değişmez, LCP ilk
-  karede) + altında CANLI ürün panosu (`HeroBoard`), ekran görüntüsü değil.
+  statement, product-frame, live-data, bento, minimal, scroll-stage, atmosphere, floating, horizon, corner),
+  `lib/content.ts` → `hero.variant` ile seçilir. `showcase` ("tezgâh", 2026-11-21):
+  iki tonlu başlık (ink'siz satır soluk, ink'li satır net; -0.04em, anlam
+  öbekleriyle maskeli satır girişi; opaklık değişmez, LCP ilk karede) + altında
+  CANLI ürün panosu (`HeroBoard`), ekran görüntüsü değil; pano ilk ekranda
+  alta doğru solar, iki not kenarına asılı (`xl` üstü).
 - **Özelliği gösteren demo, ikon karesi değil** — landing `components/demos/`:
   her özellik kartında o özelliği oynayan küçük sahne, tek saat
   (`hooks/useStory.ts`), `tick 0` = tasarım karesi (hareket azaltmada orada
