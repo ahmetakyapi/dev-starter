@@ -73,7 +73,7 @@ export function QuickPoll({ question, meta, options, counts, value, onValueChang
               <button
                 type="button"
                 aria-pressed={mine}
-                aria-label={voted ? `${o.label}, yüzde ${share}, ${number.format(n)} oy${mine ? ", senin oyun" : ""}` : o.label}
+                aria-label={voted ? `${o.label}, %${share}, ${number.format(n)} oy${mine ? ", senin oyun" : ""}` : o.label}
                 onClick={() => onValueChange(mine ? null : o.id)}
                 className={cn(
                   "relative flex min-h-12 w-full items-center gap-3 overflow-hidden rounded-xl px-4 text-start ring-1 ring-inset transition-[box-shadow,scale] duration-150 active:scale-[0.98] motion-reduce:active:scale-100",

@@ -15,7 +15,7 @@ import { Marquee } from "@/components/ui/marquee";
 import { MeshGradient } from "@/components/ui/mesh-gradient";
 import { PatternBackground } from "@/components/ui/pattern-bg";
 import { Sparkline } from "@/components/ui/sparkline";
-import { Stat } from "@/components/ui/stat";
+import { Stat, StatGrid } from "@/components/ui/stat";
 import { StatStrip } from "@/components/ui/stat-strip";
 import { ToneText } from "@/components/ui/tone-text";
 import { Wallpaper } from "@/components/ui/wallpaper";
@@ -350,11 +350,15 @@ export function BeigeFinanceHero() {
         <AppWindow title="Raporlar" icon={<BarChart3 />} focused className="mx-auto mt-14 max-w-4xl">
           <div className="grid gap-4 p-4 sm:grid-cols-2">
             <div className="rounded-xl border border-line p-4">
-              <Stat label="Toplam Gider" value="678,23" unit="₺" change={10.5} changeLabel="Geçen Aya Göre" positiveIsGood={false} />
+              <StatGrid>
+                <Stat label="Toplam Gider" value="678,23" unit="₺" change={10.5} changeLabel="Geçen Aya Göre" positiveIsGood={false} />
+              </StatGrid>
               <Sparkline values={[8, 6, 9, 7, 12, 10, 14]} title="Gider eğrisi, örnek veri" width={240} height={40} className="mt-3" />
             </div>
             <div className="rounded-xl border border-line p-4">
-              <Stat label="Toplam Gelir" value="15.000" unit="₺" change={9.5} changeLabel="Geçen Aya Göre" />
+              <StatGrid>
+                <Stat label="Toplam Gelir" value="15.000" unit="₺" change={9.5} changeLabel="Geçen Aya Göre" />
+              </StatGrid>
               <Sparkline values={[10, 11, 11, 13, 12, 15, 16]} title="Gelir eğrisi, örnek veri" width={240} height={40} className="mt-3" />
             </div>
           </div>

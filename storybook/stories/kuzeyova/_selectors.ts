@@ -25,7 +25,7 @@ import { getApplications, getCalls, getCredits, getDataRequests, getDisputes, ge
 import { reconnectSla } from "./_cutpolicy";
 
 /**
- * Kuzeyova Portalı'nda GÖRÜNEN her türetilmiş sayı buradan okunur: kenar çubuğu
+ * Portal'ında GÖRÜNEN her türetilmiş sayı buradan okunur: kenar çubuğu
  * rozetleri, komut paleti ipuçları, pano karoları, müşteri bakiyesi, rapor
  * toplamları. Sayfalar kendi `.filter(...)` sayımını YAZMAZ; böylece bir faturaya
  * ödeme girilince bütün ekranlar aynı anda tutarlı güncellenir.

@@ -1,5 +1,5 @@
 /**
- * Kuzeyova Portalı: bütün sahte veri tek yerde.
+ * Portal: bütün sahte veri tek yerde.
  *
  * Kurgu: "Kuzeyova Elektrik Dağıtım A.Ş." (kurgusal; gerçek bir dağıtım ya da
  * perakende şirketi değildir) pilot bölgesindeki 360 abonenin sayaç, okuma,

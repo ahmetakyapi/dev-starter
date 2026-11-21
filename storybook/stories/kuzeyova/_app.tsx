@@ -274,7 +274,7 @@ const NOTICE_ICONS: Record<string, typeof Zap> = { n1: Zap, n2: Gauge, n3: Radio
  * Storybook iframe'inin KENDİ adresi kullanılır (`window.parent` değil). Storybook
  * zaten `id` ve `viewMode` kullandığı için bizim parametreler `e_` önekiyle yazılır;
  * `e_story` hangi hikayeye ait olduğunu söyler (hikaye değişince eski adres yok sayılır):
- * `?id=kuzeyova-portal--overview&viewMode=story&e_story=kuzeyova-portal--overview&e_view=customers&e_id=C-10001`. */
+ * `?id=portal--overview&viewMode=story&e_story=portal--overview&e_view=customers&e_id=C-10001`. */
 const PREFIX = "e_";
 
 function readRoute(): { page: Page; params: Params } | null {

@@ -86,7 +86,7 @@ export function Select({
           </Base.Icon>
         </Base.Trigger>
       </div>
-      <Base.Portal container={host}>
+      <Base.Portal container={host ?? undefined}>
         <Base.Positioner alignItemWithTrigger={false} sideOffset={6} collisionPadding={8} className="z-50 outline-none">
           <Base.Popup className="min-w-(--anchor-width) origin-(--transform-origin) rounded-xl border border-line bg-overlay p-1.5 text-body shadow-modal outline-none transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-[0.96] data-starting-style:opacity-0">
             <Base.List className="max-h-[min(20rem,var(--available-height))] overflow-y-auto overscroll-contain">

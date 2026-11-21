@@ -1,5 +1,5 @@
 /**
- * Kuzeyova Portalı: Tedarikçiler, Arıza ve Kesintiler, Ayarlar sayfalarının
+ * Portal: Tedarikçiler, Arıza ve Kesintiler, Ayarlar sayfalarının
  * türetilmiş verisi. `_data.ts` TEK kaynak kalır; burada yalnız o veriden
  * HESAPLANAN toplamlar ve bu üç sayfaya özgü ek kayıtlar (geçiş talepleri,
  * kullanıcılar, tarife geçmişi, denetim günlüğü) durur. `Date.now()` ve

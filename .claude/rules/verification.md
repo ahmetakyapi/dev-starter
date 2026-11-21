@@ -20,6 +20,7 @@ paths:
 ```bash
 npm run ci:local              # Quality Checks + Ecosystem Health + Storybook tip/adres
 npm run ci:local -- --build   # + Storybook derlemesi
+npm run ci:local -- --tests   # + hikaye testleri (play + a11y, gerçek Chromium, ~3 dk)
 ```
 
 `scripts/ci-local.sh`, `.github/workflows/ci.yml`deki yerelde koşabilen
@@ -27,6 +28,14 @@ adımları AYNI komut ve sırayla çalıştırır; kırılan adımın kaydını 
 Ağ isteyen `verify:agentic` ve `verify:anatomy` dışarıda. CI'a adım eklenince
 buraya da eklenir. Gerekçe: `mistakes.md #123` (seçilmiş kontroller geçti,
 CI'da slop taraması ve health-check kırıldı).
+
+## Hikaye Testleri (play + a11y)
+
+`cd storybook && npm run test:stories`: bütün hikayelerin `play` fonksiyonları ve axe
+denetimi gerçek Chromium'da (`@storybook/addon-vitest`). CI'da **Storybook Tests** işi
+(build'den bağımsız, paralel). Dışlananlar, kapalı kurallar ve a11y TODO listesi:
+`storybook/A11Y-DURUM.md`. Hikaye `useArgs` kullanıyorsa Vitest'te `useLocalArgs`
+(`stories/_lib/`) gerekir. Yeni hikaye `play` yazarken: hareket azaltma açık koşar.
 
 ## Ecosystem Health Check
 

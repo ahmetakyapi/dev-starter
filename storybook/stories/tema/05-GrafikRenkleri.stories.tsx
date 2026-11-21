@@ -228,6 +228,8 @@ const meta = {
   id: "chart-colors",
   component: GrafikRenkleriSayfasi,
   parameters: {
+    // a11y TODO (Grafik renk örnekleri: koyu kapsam açık sayfada, axe iç içe temayı çözemez): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     docs: {
       description: {

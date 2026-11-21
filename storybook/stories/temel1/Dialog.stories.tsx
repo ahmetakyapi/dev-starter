@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import { useArgs } from "storybook/preview-api";
+import { useLocalArgs } from "../_lib/useLocalArgs";
 import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test";
 import { Button } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
@@ -31,7 +31,7 @@ const meta = {
     dismissible: true,
   },
   render: function Render(args) {
-    const [, updateArgs] = useArgs();
+    const [live, updateArgs] = useLocalArgs(args);
     const setOpen = (open: boolean) => {
       updateArgs({ open });
       args.onOpenChange(open);
@@ -44,7 +44,7 @@ const meta = {
           </Button>
         </div>
         <Dialog
-          {...args}
+          {...live}
           onOpenChange={setOpen}
           footer={
             <>

@@ -755,17 +755,15 @@ export function KayitPage({ params, go }: PageProps) {
 
 function Live({ label, value, done }: { label: string; value: string; done: boolean }) {
   return (
-    <div className="flex items-start gap-2.5">
-      <span aria-hidden className={`mt-1 grid size-4 shrink-0 place-items-center rounded-full text-on-primary ${done ? "bg-success" : "bg-surface-raised"}`}>
+    <div className="grid grid-cols-[1rem_minmax(0,1fr)] gap-x-2.5">
+      <span aria-hidden className={`col-start-1 row-span-2 mt-1 grid size-4 place-items-center rounded-full text-on-primary ${done ? "bg-success" : "bg-surface-raised"}`}>
         {done ? <Check className="size-3" strokeWidth={3} /> : null}
       </span>
-      <div className="min-w-0">
-        <dt className="text-small text-muted">
-          {label}
-          <span className="sr-only">{done ? ", tamam" : ", eksik"}</span>
-        </dt>
-        <dd className="break-words font-medium text-strong">{value}</dd>
-      </div>
+      <dt className="col-start-2 min-w-0 text-small text-muted">
+        {label}
+        <span className="sr-only">{done ? ", tamam" : ", eksik"}</span>
+      </dt>
+      <dd className="col-start-2 min-w-0 break-words font-medium text-strong">{value}</dd>
     </div>
   );
 }

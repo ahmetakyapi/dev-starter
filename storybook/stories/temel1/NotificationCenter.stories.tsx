@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { CalendarClock, CreditCard, Download } from "lucide-react";
-import { useArgs } from "storybook/preview-api";
+import { useLocalArgs } from "../_lib/useLocalArgs";
 import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test";
 import { NotificationCenter, type NotificationItem } from "@/components/ui/notification-center";
 import { settle } from "./_settle";
@@ -41,13 +41,14 @@ const meta = {
   argTypes: { items: { control: "object" } },
   args: { items: ITEMS, onMarkRead: fn(), onOpen: fn() },
   render: function Render(args) {
-    const [{ items }, updateArgs] = useArgs<{ items: NotificationItem[] }>();
+    const [live, updateArgs] = useLocalArgs(args);
+    const items = live.items;
     return (
       <Frame width="lg" className="min-h-[36rem]">
         <div className="flex items-center justify-between rounded-xl bg-overlay py-2 pr-2 pl-4 shadow-raised">
           <span className="text-base font-semibold text-strong">Pusula</span>
           <NotificationCenter
-            {...args}
+            {...live}
             items={items}
             onMarkRead={(ids) => {
               updateArgs({ items: items.map((item) => (ids.includes(item.id) ? { ...item, read: true } : item)) });

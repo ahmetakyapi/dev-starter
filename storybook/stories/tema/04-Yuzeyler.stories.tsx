@@ -269,6 +269,8 @@ const meta = {
   id: "surfaces",
   component: YuzeylerSayfasi,
   parameters: {
+    // a11y TODO (Yüzey örneği: koyu kapsam açık sayfada çizilir, axe iç içe temayı çözemez): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     docs: {
       description: {

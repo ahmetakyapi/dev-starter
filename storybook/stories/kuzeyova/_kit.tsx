@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertTriangle, ArrowRight, Check, Lock, SlidersHorizontal, TrendingDown, TrendingUp } from "lucide-react";
-import { useContext, useEffect, useId, useState, type ReactNode, type RefObject } from "react";
+import { useContext, useEffect, useId, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { ActiveFilters, type ActiveFilter } from "@/components/ui/active-filters";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterSheet, type FilterGroup, type FilterValue } from "@/components/ui/filter-sheet";
@@ -141,20 +141,14 @@ export type MetricProps = {
   className?: string;
 };
 
+/** Değişim: yalnız metin ve ok, renk yalnız anlam (pastel hap yok). */
 function Delta({ value, goodWhen = "neutral", label }: { value: number; goodWhen?: "up" | "down" | "neutral"; label?: string }) {
   const up = value > 0;
   const flat = value === 0;
   const good = goodWhen === "neutral" || flat ? null : goodWhen === "up" ? up : !up;
   const Icon = up ? TrendingUp : TrendingDown;
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-small font-medium tabular-nums",
-        good === null && "bg-surface text-body",
-        good === true && "bg-success-wash text-success",
-        good === false && "bg-danger-wash text-danger",
-      )}
-    >
+    <span className={cn("inline-flex shrink-0 items-center gap-1 font-medium tabular-nums", good === null && "text-body", good === true && "text-success", good === false && "text-danger")}>
       {flat ? null : <Icon aria-hidden className="size-3.5" />}
       <span className="sr-only">{flat ? "Değişmedi" : up ? "Arttı" : "Azaldı"} </span>
       {value > 0 ? "+" : ""}
@@ -164,73 +158,42 @@ function Delta({ value, goodWhen = "neutral", label }: { value: number; goodWhen
   );
 }
 
-export function Metric({ label, value, unit, delta, deltaLabel, goodWhen, spark, foot, icon, visual, to, size = "md", dense = false, className }: MetricProps) {
-  if (dense) {
-    return (
-      <div className={cn("relative flex min-w-0 flex-col justify-between gap-1 px-4 py-3", to && "transition-colors hover:bg-surface focus-within:bg-surface", className)}>
-        <div className="flex items-center justify-between gap-2">
-          <p className="min-w-0 truncate text-small font-medium text-muted" title={label}>
-            {to ? (
-              <NavLink to={to} className="outline-none after:absolute after:inset-0 focus-visible:after:rounded-[inherit] focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
-                {label}
-              </NavLink>
-            ) : (
-              label
-            )}
-          </p>
-          {delta !== undefined ? <Delta value={delta} goodWhen={goodWhen} label={deltaLabel} /> : null}
-        </div>
-        <div className="flex items-end justify-between gap-3">
-          <p className="flex flex-wrap items-baseline gap-x-1.5 text-heading leading-tight font-semibold tracking-tight text-strong tabular-nums">
-            <span>{value}</span>
-            {unit ? <span className="text-base font-medium text-muted">{unit}</span> : null}
-          </p>
-          {spark ? <Sparkline values={spark} title={`${label} eğilimi`} width={72} height={24} className="shrink-0" /> : null}
-        </div>
-        {foot ? (
-          <p className="truncate text-small text-muted" title={foot}>
-            {foot}
-          </p>
-        ) : null}
-      </div>
-    );
-  }
+/**
+ * Ölçü hücresi: etiket (küçük, sönük) · değer (orta boy, tabular) · tek satır bağlam.
+ * Sayı DEV değil: sayfanın ölçü şeridi tek bir okuma satırıdır, her hücre aynı dilde.
+ * `size="lg"` şeridin ilk hücresi: yalnız biraz büyük değer ve gri kuyu zemini (ayrı dev
+ * kart değil). Değişim metin olarak bağlam satırının başında; eğilim çizgisi değerin yanında.
+ * Etiket HER ZAMAN büyük harfle başlar (Title Case).
+ */
+export function Metric({ label, value, unit, delta, deltaLabel, goodWhen, spark, foot, icon, visual, to, size = "md", className }: MetricProps) {
+  const lg = size === "lg";
+  const context = foot ?? deltaLabel;
   return (
-    <div className={cn("relative flex min-w-0 flex-col gap-1.5 p-4 sm:p-5", to && "transition-colors hover:bg-surface focus-within:bg-surface", className)}>
-      {size === "lg" && icon && !visual ? (
-        <span aria-hidden className="grid size-9 place-items-center rounded-lg bg-surface text-strong ring-1 ring-line-soft [&_svg]:size-[1.125rem]">
-          {icon}
-        </span>
-      ) : null}
-      <div className="flex items-center justify-between gap-2">
-        <p className="min-w-0 truncate text-small font-medium text-muted" title={label}>
-          {to ? (
-            <NavLink to={to} className="outline-none after:absolute after:inset-0 focus-visible:after:rounded-[inherit] focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
-              {label}
-            </NavLink>
-          ) : (
-            label
-          )}
-        </p>
-        {icon && !(size === "lg" && !visual) ? <span aria-hidden className="shrink-0 text-muted [&_svg]:size-4">{icon}</span> : null}
-      </div>
-      <p className={cn("flex flex-wrap items-baseline gap-x-1.5 font-semibold tracking-tight text-strong tabular-nums", size === "lg" ? "text-display" : "text-heading")}>
-        <span>{value}</span>
-        {unit ? <span className="text-base font-medium text-muted">{unit}</span> : null}
+    <div className={cn("relative flex min-w-0 flex-col justify-center gap-0.5", lg ? "gap-1 bg-surface p-4" : "px-4 py-2.5", to && "transition-colors hover:bg-surface-raised focus-within:bg-surface-raised", className)}>
+      <p className="flex min-w-0 items-center gap-1.5 text-small font-medium text-muted" title={label}>
+        {icon ? <span aria-hidden className="shrink-0 [&_svg]:size-3.5">{icon}</span> : null}
+        {to ? (
+          <NavLink to={to} className="truncate outline-none after:absolute after:inset-0 focus-visible:after:rounded-[inherit] focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
+            {label}
+          </NavLink>
+        ) : (
+          <span className="truncate">{label}</span>
+        )}
       </p>
-      {delta !== undefined || deltaLabel ? (
-        <div className="flex min-h-6 flex-wrap items-center gap-x-2 gap-y-1">
+      <div className="flex items-end justify-between gap-3">
+        <p className={cn("flex flex-wrap items-baseline gap-x-1.5 leading-tight font-semibold tracking-tight text-strong tabular-nums", lg ? "text-heading" : "text-title")}>
+          <span>{value}</span>
+          {unit ? <span className="text-base font-medium text-muted">{unit}</span> : null}
+        </p>
+        {spark ? <Sparkline values={spark} title={`${label} eğilimi`} width={lg ? 88 : 64} height={lg ? 28 : 22} className="shrink-0" /> : null}
+      </div>
+      {delta !== undefined || context ? (
+        <p className="flex min-w-0 items-center gap-1.5 text-small text-muted" title={[deltaLabel, foot].filter(Boolean).join(" · ")}>
           {delta !== undefined ? <Delta value={delta} goodWhen={goodWhen} label={deltaLabel} /> : null}
-          {deltaLabel ? <span aria-hidden className="text-small text-muted">{deltaLabel}</span> : null}
-        </div>
-      ) : null}
-      {spark ? <Sparkline values={spark} title={`${label} eğilimi`} width={size === "lg" ? 220 : 120} height={size === "lg" ? 44 : 28} className="mt-auto max-w-full" /> : null}
-      {foot ? (
-        <p className={cn("text-small text-muted", size === "lg" ? "text-balance" : "truncate", size !== "lg" && !spark && !visual && "mt-auto pt-1")} title={foot}>
-          {foot}
+          {context ? <span className="truncate">{context}</span> : null}
         </p>
       ) : null}
-      {visual ? <div className="relative mt-auto pt-3">{visual}</div> : null}
+      {visual ? <div className="relative pt-2">{visual}</div> : null}
     </div>
   );
 }
@@ -242,20 +205,20 @@ export function AgingBars({ buckets, format, className }: { buckets: readonly Ag
   const tones = ["bg-warning/45", "bg-warning", "bg-danger/70", "bg-danger"];
   const summary = buckets.map((b) => `${b.label}: ${format(b.value)}, ${b.count} fatura`).join("; ");
   return (
-    <div className={cn("grid gap-3", className)}>
-      <div role="img" aria-label={`Yaş dağılımı. ${summary}`} className="flex h-2.5 w-full gap-0.5 overflow-hidden rounded-full bg-chart-track">
+    <div className={cn("grid gap-2", className)}>
+      <div role="img" aria-label={`Yaş dağılımı. ${summary}`} className="flex h-2 w-full gap-0.5 overflow-hidden rounded-full bg-chart-track">
         {buckets.map((b, i) => (
           <span key={b.id} className={cn("h-full min-w-1 first:rounded-s-full last:rounded-e-full", tones[i] ?? "bg-muted")} style={{ width: `${Math.max((b.value / total) * 100, b.value > 0 ? 3 : 0)}%` }} />
         ))}
       </div>
-      <dl aria-hidden className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-small">
+      <dl aria-hidden className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-small">
         {buckets.map((b, i) => (
-          <div key={b.id} className="min-w-0" title={`${b.label}: ${format(b.value)} · ${b.count} fatura`}>
-            <dt className="flex items-center gap-1.5 truncate text-muted">
-              <span className={cn("size-2 shrink-0 rounded-full", tones[i] ?? "bg-muted")} />
-              <span className="truncate">{b.label}</span>
+          <div key={b.id} className="flex min-w-0 items-center justify-between gap-1.5" title={`${b.label}: ${format(b.value)} · ${b.count} fatura`}>
+            <dt className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
+              <span className={cn("size-1.5 shrink-0 rounded-full", tones[i] ?? "bg-muted")} />
+              <span>{b.label.replace(" gün", " g").replace("Daha eski", "90+ g")}</span>
             </dt>
-            <dd className="truncate ps-3.5 font-semibold text-strong tabular-nums">{format(b.value)}</dd>
+            <dd className="shrink-0 font-medium text-strong tabular-nums">{format(b.value)}</dd>
           </div>
         ))}
       </dl>
@@ -264,18 +227,29 @@ export function AgingBars({ buckets, format, className }: { buckets: readonly Ag
 }
 
 /**
- * Sayfa kahramanı: TEK büyük sayı (sayfanın sorusu) + yanında ikincil ölçüler.
- * Altı eşit kutu şablonu yerine hiyerarşi: önce bu, sonra gerisi. Telefonda
- * kahraman üstte, ikincil ölçüler 2 sütun.
+ * Sayfa ölçü şeridi: ilk hücre (`primary`) sayfanın sorusu, hafif vurgulu (gri kuyu,
+ * biraz büyük değer, isteğe dağılım çubuğu); yanında ikincil ölçüler kıl çizgiyle bölünmüş
+ * tek bir yüzeyde. Ayrı dev kart, ikon karosu ve pastel hap yok. Dar ekranda birincil üstte,
+ * ikincil ölçüler 2 sütun. Etiketler Title Case.
  */
 export function PageHero({ primary, secondary, className }: { primary: MetricProps; secondary: readonly MetricProps[]; className?: string }) {
+  const items = secondary.slice(0, 6);
+  const cols = items.length <= 4 ? Math.max(items.length, 1) : 3;
+  const fill = (cols - (items.length % cols)) % cols;
   return (
-    <section aria-label="Öne çıkan ölçüler" className={cn("grid overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]", className)}>
-      <Metric {...primary} size="lg" className={cn("border-b border-line-soft p-4 sm:p-5 lg:border-r lg:border-b-0", !primary.visual && !primary.spark && "lg:justify-center")} />
-      <div className="grid grid-cols-2 sm:grid-cols-3 [&>*]:border-line-soft [&>*:nth-child(n+3)]:border-t sm:[&>*:nth-child(n+4)]:border-t sm:[&>*:nth-child(3)]:border-t-0 [&>*:not(:nth-child(2n+1))]:border-l sm:[&>*:not(:nth-child(2n+1))]:border-l-0 sm:[&>*:not(:nth-child(3n+1))]:border-l">
-        {secondary.slice(0, 6).map((m) => (
-          <Metric key={m.label} {...m} dense />
+    <section aria-label="Öne Çıkan Ölçüler" className={cn("grid overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]", className)}>
+      <Metric {...primary} size="lg" className="border-b border-line-soft lg:border-r lg:border-b-0" />
+      <div
+        className="grid grid-cols-2 gap-px bg-line-soft lg:grid-cols-(--hero-cols)"
+        style={{ "--hero-cols": `repeat(${cols}, minmax(0, 1fr))` } as CSSProperties}
+      >
+        {items.map((m) => (
+          <Metric key={m.label} {...m} className="bg-overlay" />
         ))}
+        {Array.from({ length: fill }, (_, i) => (
+          <div key={`fill-${i}`} aria-hidden className="hidden bg-overlay lg:block" />
+        ))}
+        {items.length % 2 === 1 ? <div aria-hidden className="bg-overlay lg:hidden" /> : null}
       </div>
     </section>
   );
@@ -297,41 +271,49 @@ function todayItems(role: string): TodayItem[] {
   switch (role) {
     case "okuma":
       return [
-        { id: "supheli", count: flaggedReadings(month).length, label: "şüpheli okuma onay bekliyor", tone: "danger", to: { page: "readings", params: { status: "supheli" } }, cta: "İncele" },
-        { id: "bekleyen", count: pendingReadings(month).length, label: "sayaç henüz okunmadı", hint: "Tur planında", tone: "warning", to: { page: "readings", params: { tab: "tur" } }, cta: "Turu Aç" },
-        { id: "iletisim", count: commsLostMeters().length, label: "sayaçta haberleşme yok", tone: "warning", to: { page: "meters", params: { tab: "kesik" } }, cta: "Sayaçlara Bak" },
-        { id: "kacak", count: openLeaks().length, label: "açık kaçak vakası", tone: "neutral", to: { page: "leaks" }, cta: "Vakalar" },
+        { id: "supheli", count: flaggedReadings(month).length, label: "Şüpheli Okuma Onay Bekliyor", tone: "danger", to: { page: "readings", params: { status: "supheli" } }, cta: "İncele" },
+        { id: "bekleyen", count: pendingReadings(month).length, label: "Sayaç Henüz Okunmadı", hint: "Tur planında", tone: "warning", to: { page: "readings", params: { tab: "tur" } }, cta: "Turu Aç" },
+        { id: "iletisim", count: commsLostMeters().length, label: "Sayaçta Haberleşme Yok", tone: "warning", to: { page: "meters", params: { tab: "kesik" } }, cta: "Sayaçlara Bak" },
+        { id: "kacak", count: openLeaks().length, label: "Açık Kaçak Vakası", tone: "neutral", to: { page: "leaks" }, cta: "Vakalar" },
       ];
     case "tahsilat":
       return [
-        { id: "geciken", count: overdue.length, label: `vadesi geçmiş fatura · ${fmtTlCompact(overdueTotal())}`, hint: oldestHint, tone: "danger", to: { page: "invoices", params: { status: "gecikti" } }, cta: "Kuyruğu Aç" },
-        { id: "itiraz", count: disputeSlaBreaches().length, label: "itiraz süresi aşıldı", tone: "warning", to: { page: "disputes" }, cta: "İtirazlar" },
-        { id: "baglama", count: reconnectBreaches().length, label: "bağlama süresi aşıldı", tone: "danger", to: { page: "workorders" }, cta: "İş Emirleri" },
+        { id: "geciken", count: overdue.length, label: `Vadesi Geçmiş Fatura · ${fmtTlCompact(overdueTotal())}`, hint: oldestHint, tone: "danger", to: { page: "invoices", params: { status: "gecikti" } }, cta: "Kuyruğu Aç" },
+        { id: "itiraz", count: disputeSlaBreaches().length, label: "İtiraz Süresi Aşıldı", tone: "warning", to: { page: "disputes" }, cta: "İtirazlar" },
+        { id: "baglama", count: reconnectBreaches().length, label: "Bağlama Süresi Aşıldı", tone: "danger", to: { page: "workorders" }, cta: "İş Emirleri" },
       ];
     case "musteri":
       return [
-        { id: "ariza", count: openOutages().length, label: `açık arıza · ${fmtNum(affected)} abone etkilendi`, tone: "danger", to: { page: "outages", params: { status: "acik" } }, cta: "Arızalar" },
-        { id: "aday", count: faultCandidates().length, label: "arıza adayı trafo (3+ çağrı)", tone: "warning", to: { page: "calls", params: { tab: "aday" } }, cta: "Çağrıları Gör" },
-        { id: "cagri", count: openCalls().length, label: "açık çağrı", tone: "neutral", to: { page: "calls" }, cta: "Çağrı Merkezi" },
+        { id: "ariza", count: openOutages().length, label: `Açık Arıza · ${fmtNum(affected)} Abone Etkilendi`, tone: "danger", to: { page: "outages", params: { status: "acik" } }, cta: "Arızalar" },
+        { id: "aday", count: faultCandidates().length, label: "Arıza Adayı Trafo (3+ Çağrı)", tone: "warning", to: { page: "calls", params: { tab: "aday" } }, cta: "Çağrıları Gör" },
+        { id: "cagri", count: openCalls().length, label: "Açık Çağrı", tone: "neutral", to: { page: "calls" }, cta: "Çağrı Merkezi" },
       ];
     case "denetci":
       return [
-        { id: "red", count: denied, label: "reddedilen deneme", tone: "warning", to: { page: "compliance", params: { tab: "denetim" } }, cta: "Günlüğü Aç" },
-        { id: "kvkk", count: dataRequestsDue().length, label: "KVKK talebinin süresi yaklaşıyor", tone: "warning", to: { page: "compliance", params: { tab: "kvkk" } }, cta: "Talepler" },
-        { id: "onay", count: approvals, label: "iki göz onayı bekliyor", tone: "neutral", to: { page: "compliance", params: { tab: "onaylar" } }, cta: "Onaylar" },
+        { id: "red", count: denied, label: "Reddedilen Deneme", tone: "warning", to: { page: "compliance", params: { tab: "denetim" } }, cta: "Günlüğü Aç" },
+        { id: "kvkk", count: dataRequestsDue().length, label: "KVKK Talebinin Süresi Yaklaşıyor", tone: "warning", to: { page: "compliance", params: { tab: "kvkk" } }, cta: "Talepler" },
+        { id: "onay", count: approvals, label: "İki Göz Onayı Bekliyor", tone: "neutral", to: { page: "compliance", params: { tab: "onaylar" } }, cta: "Onaylar" },
       ];
     default:
       return [
-        { id: "onay", count: approvals, label: "iki göz onayı bekliyor", tone: "warning", to: { page: "compliance", params: { tab: "onaylar" } }, cta: "Onayla" },
-        { id: "sla", count: workOrderSlaBreaches().length, label: "iş emrinde süre aşıldı", tone: "danger", to: { page: "workorders" }, cta: "İş Emirleri" },
-        { id: "kayip", count: lossOver, label: "bölgede kayıp/kaçak hedefi aşıldı", tone: "danger", to: { page: "dashboard", params: { focus: "kayip" } }, cta: "Haritayı Aç" },
-        { id: "kvkk", count: dataRequestsDue().length, label: "KVKK talebinin süresi yaklaşıyor", tone: "warning", to: { page: "compliance", params: { tab: "kvkk" } }, cta: "Talepler" },
+        { id: "onay", count: approvals, label: "İki Göz Onayı Bekliyor", tone: "warning", to: { page: "compliance", params: { tab: "onaylar" } }, cta: "Onayla" },
+        { id: "sla", count: workOrderSlaBreaches().length, label: "İş Emrinde Süre Aşıldı", tone: "danger", to: { page: "workorders" }, cta: "İş Emirleri" },
+        { id: "kayip", count: lossOver, label: "Bölgede Kayıp/Kaçak Hedefi Aşıldı", tone: "danger", to: { page: "dashboard", params: { focus: "kayip" } }, cta: "Haritayı Aç" },
+        { id: "kvkk", count: dataRequestsDue().length, label: "KVKK Talebinin Süresi Yaklaşıyor", tone: "warning", to: { page: "compliance", params: { tab: "kvkk" } }, cta: "Talepler" },
       ];
   }
 }
 
 const TONE_TEXT = { danger: "Kritik", warning: "Bekliyor", neutral: "Takipte" } as const;
+const TONE_DOT = { danger: "bg-danger", warning: "bg-warning", neutral: "bg-muted" } as const;
+const TONE_INK = { danger: "text-danger", warning: "text-warning", neutral: "text-muted" } as const;
 
+/**
+ * Bugün Senin İşin: rolün günlük iş kuyruğu. Nötr yüzeyde satır satır liste (renkli dolgulu
+ * kart, dev sayı yok): solda anlam noktası, küçük sayı rozeti, Title Case başlık, sönük tek satır
+ * ipucu (anlam sözcüğü görünür: renk tek işaret değil), sağda ikincil eylem. Satırın tamamı
+ * bağlantı. Boş başlıklar alta tek cümleye toplanır; hepsi boşsa tek cümle.
+ */
 export function TodayBand({ className }: { className?: string }) {
   const role = useRole();
   const items = useDerived(() => todayItems(role), [role]);
@@ -339,59 +321,50 @@ export function TodayBand({ className }: { className?: string }) {
   const labelId = useId();
   const open = items.filter((i) => i.count > 0);
   const clear = items.filter((i) => i.count === 0);
-  const cols = ["", "", "sm:grid-cols-2", "sm:grid-cols-2 xl:grid-cols-3", "sm:grid-cols-2 xl:grid-cols-4"][Math.min(open.length, 4)] ?? "";
   return (
-    <section aria-labelledby={labelId} className={cn("rounded-xl bg-overlay p-1.5 shadow-raised ring-1 ring-line", className)}>
-      <div className="flex flex-wrap items-center justify-between gap-2 px-3 pt-2 pb-2">
+    <section aria-labelledby={labelId} className={cn("overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line", className)}>
+      <header className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-line-soft px-4 py-2.5 sm:px-5">
         <h2 id={labelId} className="text-read font-semibold text-strong">
           Bugün Senin İşin
         </h2>
-        <span className="text-small text-muted">
-          {label} · {open.length === 0 ? "bekleyen iş yok" : `${open.length} başlık`}
-        </span>
-      </div>
+        <p className="text-small text-muted">
+          {label} · {open.length === 0 ? "Bekleyen iş yok" : `${open.length} başlık`}
+        </p>
+      </header>
       {open.length > 0 ? (
-        <ul role="list" className={cn("grid grid-cols-1 gap-1.5", cols)}>
+        <ul role="list" className="divide-y divide-line-soft">
           {open.map((i) => (
-            <li
-              key={i.id}
-              className={cn(
-                "relative grid min-w-0 grid-cols-[auto_1fr] items-center gap-x-3.5 rounded-lg px-3.5 py-3 transition-colors focus-within:ring-2 focus-within:ring-line-focus hover:brightness-[0.98]",
-                i.tone === "danger" && "bg-danger-wash",
-                i.tone === "warning" && "bg-warning-wash",
-                i.tone === "neutral" && "bg-surface",
-              )}
-            >
-              <span className={cn("min-w-9 text-center text-display leading-none font-semibold tabular-nums", i.tone === "danger" && "text-danger", i.tone === "warning" && "text-warning", i.tone === "neutral" && "text-strong")}>{fmtNum(i.count)}</span>
-              <span className="grid min-w-0 content-center gap-0.5">
-                <span className="block text-base leading-snug font-medium text-strong">{i.label}</span>
-                <span className="block truncate text-small text-muted" title={i.hint}>
-                  <span className="font-medium">{TONE_TEXT[i.tone]}</span>
+            <li key={i.id} className="relative flex min-w-0 items-center gap-3 px-4 py-2.5 transition-colors focus-within:bg-surface hover:bg-surface sm:px-5">
+              <span aria-hidden className={cn("size-2 shrink-0 rounded-full", TONE_DOT[i.tone])} />
+              <span className="min-w-8 shrink-0 rounded-md bg-surface px-1.5 py-0.5 text-center text-base font-semibold text-strong tabular-nums ring-1 ring-line-soft">{fmtNum(i.count)}</span>
+              <span className="grid min-w-0 flex-1 content-center">
+                <span className="truncate text-base font-medium text-strong" title={i.label}>
+                  {i.label}
+                </span>
+                <span className="truncate text-small text-muted" title={i.hint}>
+                  <span className={cn("font-medium", TONE_INK[i.tone])}>{TONE_TEXT[i.tone]}</span>
                   {i.hint ? ` · ${i.hint}` : ""}
                 </span>
-                <NavLink to={i.to} className="mt-1 inline-flex items-center gap-1 text-small font-semibold text-strong outline-none after:absolute after:inset-0">
-                  <span className="sr-only">{`${i.cta}: ${fmtNum(i.count)} ${i.label}`}</span>
-                  <span aria-hidden>{i.cta}</span>
-                  <ArrowRight aria-hidden className="size-3.5" />
-                </NavLink>
               </span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {clear.length > 0 ? (
-        <ul role="list" aria-label="Bekleyen işi olmayan başlıklar" className={cn("flex flex-wrap gap-1.5", open.length > 0 && "mt-1.5")}>
-          {clear.map((i) => (
-            <li key={i.id} className="relative inline-flex min-h-9 items-center gap-2 rounded-full bg-surface px-3 text-small text-muted transition-colors focus-within:ring-2 focus-within:ring-line-focus hover:bg-surface-raised">
-              <Check aria-hidden className="size-4 shrink-0 text-success" />
-              <span className="font-medium text-body">{i.label}</span>
-              <span>· Şu an yok</span>
-              <NavLink to={i.to} className="outline-none after:absolute after:inset-0 after:rounded-full">
-                <span className="sr-only">{`${i.cta}: ${i.label}`}</span>
+              <NavLink to={i.to} className="inline-flex shrink-0 items-center gap-1 text-small font-medium text-body outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
+                <span className="sr-only">{`${i.cta}: ${fmtNum(i.count)} ${i.label}`}</span>
+                <span aria-hidden className="max-sm:hidden">
+                  {i.cta}
+                </span>
+                <ArrowRight aria-hidden className="size-3.5" />
               </NavLink>
             </li>
           ))}
         </ul>
+      ) : (
+        <p className="px-4 py-4 text-base text-muted sm:px-5">Bugün için bekleyen iş yok.</p>
+      )}
+      {open.length > 0 && clear.length > 0 ? (
+        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 border-t border-line-soft px-4 py-2 text-small text-muted sm:px-5">
+          <Check aria-hidden className="size-3.5 shrink-0 text-success" />
+          <span className="font-medium text-body">Temiz:</span>
+          <span>{clear.map((i) => i.label).join(" · ")}</span>
+        </p>
       ) : null}
     </section>
   );

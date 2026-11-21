@@ -45,7 +45,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole("listitem")).toHaveLength(5);
     await expect(canvas.getByRole("heading", { name: "İncele" }).closest("li")).toHaveAttribute("aria-current", "step");
-    await expect(canvas.getByText("(Tamamlandı)", { exact: false, selector: ".sr-only" })).toBeInTheDocument();
+    await expect(canvas.getAllByText("(Tamamlandı)", { exact: false, selector: ".sr-only" }).length).toBeGreaterThan(0);
   },
 };
 

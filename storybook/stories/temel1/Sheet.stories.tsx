@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { useArgs } from "storybook/preview-api";
+import { useLocalArgs } from "../_lib/useLocalArgs";
 import { expect, fn, screen, userEvent, within } from "storybook/test";
 import { Truck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -50,7 +50,7 @@ const meta = {
     side: "bottom",
   },
   render: function Render(args) {
-    const [, updateArgs] = useArgs();
+    const [live, updateArgs] = useLocalArgs(args);
     const setOpen = (open: boolean) => {
       updateArgs({ open });
       args.onOpenChange(open);
@@ -63,7 +63,7 @@ const meta = {
           </Button>
         </div>
         <Sheet
-          {...args}
+          {...live}
           onOpenChange={setOpen}
           footer={
             <>
@@ -128,10 +128,10 @@ export const DetailPanel: Story = {
     description: "Lidya Tekstil ekibi · Ahmet Akyapı bağladı, 12 Eyl",
   },
   render: (args) => {
-    const [, update] = useArgs();
+    const [live, update] = useLocalArgs(args);
     return (
       <Sheet
-        {...args}
+        {...live}
         onOpenChange={(open) => update({ open })}
         icon={<Truck />}
         status={

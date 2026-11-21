@@ -62,7 +62,7 @@ export function DriftColumns({ children, columns = 3, duration = 70, gap = 16, c
         {CSS}
       </style>
       {cols.map((col, c) => (
-        <div key={c} className="ui-drift-col h-full overflow-hidden" data-dir={c % 2 ? "down" : "up"}>
+        <div key={c} className="ui-drift-col h-full overflow-clip" data-dir={c % 2 ? "down" : "up"}>
           {/* Komşu sütunlar farklı hızda: eşit hız duvar gibi görünür. */}
           <div className="ui-drift-track flex flex-col" style={{ gap, animationDuration: `${duration * (1 + c * 0.12)}s` }}>
             <div className="flex flex-col" style={{ gap }}>

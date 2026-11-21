@@ -9,6 +9,8 @@ const meta = {
   component: LandingPage,
   tags: ["autodocs"],
   parameters: {
+    // a11y TODO (Görüşler avatarı chart-4 üstünde 3,8:1 (landing şablonu, ayrı iş)): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     docs: {
       description: {

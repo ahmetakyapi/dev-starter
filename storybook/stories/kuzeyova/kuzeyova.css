@@ -1,5 +1,5 @@
 /*
- * Kuzeyova Portalı'nın ürün kimliği. Kataloğun genel token'ları değişmez; yalnız
+ * Portal'ının ürün kimliği. Kataloğun genel token'ları değişmez; yalnız
  * portalın kökü (`[data-product="kuzeyova"]`) altında. Pusula'nın `pusula.css`ı
  * ile aynı yöntem, ama HİÇ sabit renk yok: her şey paletin token'ından
  * türer, palet değişince (Verdant, Ember…) portal de onunla döner.

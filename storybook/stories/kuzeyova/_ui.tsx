@@ -25,7 +25,7 @@ import {
 import { detailCrumb } from "./_crumb";
 
 /**
- * Kuzeyova Portalı'nın sayfaları arasında paylaşılan durum ve küçük kalıplar.
+ * Portal'ının sayfaları arasında paylaşılan durum ve küçük kalıplar.
  *
  * SAYFA SÖZLEŞMESİ: her sayfa `({ params, go }: PageProps)` alır.
  *   - `go(page, params?)` iç gezinme; `params` derin bağlantı:
@@ -129,7 +129,6 @@ export function GlobalSearchField({ className }: { className?: string }) {
     <button
       type="button"
       onClick={openCommandPalette}
-      aria-label="Genel Arama"
       className={cn(
         "flex h-9 min-w-0 items-center gap-2 rounded-md border border-line bg-surface px-3 text-base text-muted transition-colors hover:border-line-strong hover:text-strong focus-visible:border-primary [&_svg]:size-4 [&_svg]:shrink-0",
         className,

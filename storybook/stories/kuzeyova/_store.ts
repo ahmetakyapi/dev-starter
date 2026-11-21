@@ -40,7 +40,7 @@ import {
 import { NOTICES, SUBSTATIONS, SUPPLIERS, TODAY, TODAY_KEY, TRANSFORMERS, WORK_ORDERS, addDays, dayKey, type Customer, type Meter, type WorkOrderType } from "./_data";
 
 /**
- * Kuzeyova Portalı'nın TEK deposu: ortak bayrak, yeni varlıklar ve bütün sayfa
+ * Portal'ının TEK deposu: ortak bayrak, yeni varlıklar ve bütün sayfa
  * eylemleri burada. Kaynak dilimler:
  *   - `_data-finans.ts`  faturalar, ödemeler, planlar, mutabakat, kesme aşamaları
  *   - `_data-musteri.ts` müşteri yamaları, notlar, geçmiş, yeni müşteri/sayaç

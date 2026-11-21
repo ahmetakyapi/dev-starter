@@ -66,7 +66,7 @@ const preview: Preview = {
           "Bloklar",
           "Desenler",
           "Pusula",
-          "Kuzeyova Portalı",
+          "Portal",
           "Ekranlar",
           ["Uygulama", "Açılış Sayfası"],
           "Arşiv",

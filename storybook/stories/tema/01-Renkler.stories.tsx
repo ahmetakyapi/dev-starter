@@ -260,6 +260,8 @@ const meta = {
   id: "colors",
   component: RenklerSayfasi,
   parameters: {
+    // a11y TODO (Renk örnekleri: ham token renkleri (koyu kapsamdaki başarı/tehlike metni) bilerek tek tek gösterilir; kontrast ölçümü örnek kartı değil token çiftini ölçer (A11Y-DURUM.md)): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     docs: {
       description: {

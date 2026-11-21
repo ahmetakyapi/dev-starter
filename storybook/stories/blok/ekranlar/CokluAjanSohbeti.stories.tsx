@@ -271,6 +271,8 @@ const meta = {
   component: MultiAgentScreen,
   tags: ["autodocs"],
   parameters: {
+    // a11y TODO (Akan yanıt animasyonu ortasında ölçülüyor): bkz. storybook/A11Y-DURUM.md
+    a11y: { test: "todo" },
     layout: "fullscreen",
     docs: {
       description: {

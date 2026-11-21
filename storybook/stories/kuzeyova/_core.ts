@@ -1,7 +1,7 @@
 import { useMemo, useSyncExternalStore } from "react";
 
 /**
- * Kuzeyova Portalı depo çekirdeği: TEK yayın kanalı, TEK sürüm sayacı.
+ * Portal depo çekirdeği: TEK yayın kanalı, TEK sürüm sayacı.
  *
  * Her "dilim" (finans, müşteri, iş emri, denetim...) kendi değerini taşır ama
  * hepsi aynı `bump()` ile haber verir. Böylece:

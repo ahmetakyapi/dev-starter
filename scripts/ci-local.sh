@@ -6,6 +6,7 @@
 #
 #   npm run ci:local            # Quality Checks + Ecosystem Health + Storybook tip/adres
 #   npm run ci:local -- --build # + Storybook derlemesi (yavas)
+#   npm run ci:local -- --tests # + hikaye testleri: play + a11y, gercek Chromium (yavas, ~3 dk)
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
@@ -39,6 +40,12 @@ step "storybook typecheck" bash -c 'cd storybook && npm run -s typecheck'
 step "storybook check:ids" bash -c 'cd storybook && npm run -s check:ids'
 if [[ " $* " == *" --build "* ]]; then
   step "storybook build"   bash -c 'cd storybook && npm run -s build >/dev/null'
+fi
+
+if [[ " $* " == *" --tests "* ]]; then
+  # Onceden kurulu Chromium varsa (bulut oturumu) yolunu ver; yoksa Playwright kendi tarayicisini kullanir.
+  [ -z "${SB_CHROMIUM:-}" ] && [ -x /opt/pw-browsers/chromium ] && export SB_CHROMIUM=/opt/pw-browsers/chromium
+  step "storybook tests"   bash -c 'cd storybook && npm run -s test:stories'
 fi
 
 printf '\n'

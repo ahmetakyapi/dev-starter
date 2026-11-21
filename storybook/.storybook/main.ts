@@ -1,3 +1,4 @@
+import { readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/nextjs-vite";
@@ -39,14 +40,30 @@ function serverShims(repoRoot: string): Plugin {
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "../..");
 
+/**
+ * Vitest koşusunda (`SB_VITEST=1`) hikaye klasörleri tek tek sayılır; dışlananlar
+ * `storybook/TEST-DURUMU.md`de gerekçesiyle yazılıdır. Klasör adı eklemek yeterli.
+ */
+const TEST_EXCLUDED_DIRS: string[] = [];
+function vitestStories(): string[] {
+  const root = path.resolve(here, "../stories");
+  const dirs = readdirSync(root, { withFileTypes: true }).filter((e) => e.isDirectory() && !TEST_EXCLUDED_DIRS.includes(e.name));
+  return [
+    ...dirs.map((d) => `../stories/${d.name}/**/*.stories.@(ts|tsx)`),
+    "../stories/*.stories.@(ts|tsx)",
+  ];
+}
+
 const config: StorybookConfig = {
   framework: { name: "@storybook/nextjs-vite", options: {} },
   // SB_STORIES: yalnızca bir klasörü derlemek için (paralel çalışırken başkasının
   // yarım dosyası derlemeyi kırmasın). Örn. SB_STORIES=Grafikler
-  stories: process.env.SB_STORIES
-    ? [`../stories/${process.env.SB_STORIES}/**/*.mdx`, `../stories/${process.env.SB_STORIES}/**/*.stories.@(ts|tsx)`]
-    : ["../stories/**/*.mdx", "../stories/**/*.stories.@(ts|tsx)"],
-  addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],
+  stories: process.env.SB_VITEST
+    ? vitestStories()
+    : process.env.SB_STORIES
+      ? [`../stories/${process.env.SB_STORIES}/**/*.mdx`, `../stories/${process.env.SB_STORIES}/**/*.stories.@(ts|tsx)`]
+      : ["../stories/**/*.mdx", "../stories/**/*.stories.@(ts|tsx)"],
+  addons: ["@storybook/addon-docs", "@storybook/addon-a11y", "@storybook/addon-vitest"],
   // public/r: shadcn kaydı (scripts/build-ui-registry.mjs üretir) → /r/<ad>.json
   staticDirs: ["../public"],
   // Katalog kendi kapağıyla açılır: Storybook'un tanıtım kartları ve
