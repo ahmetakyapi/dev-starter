@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Yardım merkezi ve kaynak kütüphanesi konu karosu: yumuşak renkli ikon karosu, başlık, açıklama, \"12 makale →\". Kartın tamamı tek bağlantıdır (gerilmiş bağlantı); ekran okuyucu \"Başlangıç, 12 makale\" duyar. MailPulse yardım merkezinden (yapı).",
+          "Yardım merkezi ve kaynak kütüphanesi konu karosu: yumuşak renkli ikon karosu, başlık, açıklama, \"12 makale →\". Kartın tamamı tek bağlantıdır (gerilmiş bağlantı); ekran okuyucu bağlantı adını \"Başlangıç\", açıklamasını \"12 makale\" diye okur. MailPulse yardım merkezinden (yapı).",
       },
     },
   },
@@ -38,8 +38,9 @@ export const Default: Story = {
   name: "Yardım Kategorileri",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByRole("link", { name: "Başlangıç, 12 makale" });
+    const link = canvas.getByRole("link", { name: "Başlangıç" });
     await expect(link).toHaveAttribute("href", "#baslangic");
+    await expect(link).toHaveAccessibleDescription("12 makale");
     await expect(canvas.getAllByRole("link")).toHaveLength(6);
   },
 };

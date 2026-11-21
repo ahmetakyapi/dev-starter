@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  *
  * TEK BAĞLANTI: bağlantı başlığın üstünde, `after:absolute after:inset-0`
  * ile kartın tamamına gerilir; kart tıklanır, ekran okuyucu tek bağlantı
- * duyar ("Başlangıç, 12 makale"). Kartın içine ikinci bir bağlantı koyma.
+ * duyar (ad "Başlangıç", açıklama "12 makale"; `aria-describedby`). Kartın içine ikinci bir bağlantı koyma.
  * Odak halkası kartın tamamında (`focus-within`).
  *
  * `tone`: ikon karosunun yumuşak zemini; DURUM tonları (primary, success,
@@ -56,6 +56,7 @@ export function CategoryCard({
   tone?: CategoryTone;
   className?: string;
 }) {
+  const metaId = useId();
   return (
     <article
       className={cn(
@@ -69,13 +70,12 @@ export function CategoryCard({
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <h3 className="text-read font-semibold text-strong">
-          <a href={href} className="outline-none after:absolute after:inset-0 after:rounded-xl">
+          <a href={href} aria-describedby={metaId} className="outline-none after:absolute after:inset-0 after:rounded-xl">
             {title}
-            <span className="sr-only">, {meta}</span>
           </a>
         </h3>
         <p className="text-small leading-relaxed text-muted">{description}</p>
-        <p aria-hidden className="mt-auto flex items-center gap-1 pt-2 text-small text-body">
+        <p id={metaId} className="mt-auto flex items-center gap-1 pt-2 text-small text-body">
           {meta}
           <ArrowRight className="size-3.5 transition-transform group-hover/cat:translate-x-0.5 motion-reduce:transition-none" />
         </p>
