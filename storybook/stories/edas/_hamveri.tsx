@@ -22,6 +22,7 @@ import { Select } from "@/components/ui/select";
 import { Stat, StatGrid } from "@/components/ui/stat";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { COMM_LABEL, METERS, customer, dayLabel, meterById, num, num1 } from "./_data";
+import { nextId } from "./_core";
 import {
   DEFAULT_METER_ID,
   EXPORT_FIELDS,
@@ -29,7 +30,6 @@ import {
   QUALITY_LABEL,
   RANGES,
   RESOLUTIONS,
-  SEED_QUERIES,
   WEEKDAYS,
   ZONE_LABEL,
   apiExamples,
@@ -56,6 +56,7 @@ import {
   type RawRow,
   type Resolution,
   type SavedQuery,
+  savedQueries,
   type Zone,
 } from "./_data-ham";
 import { IconTile, MeterBadge, MetricStrip, PageBody, PageHead, Panel, SampleNote, href, useApp, type PageProps } from "./_ui";
@@ -137,7 +138,8 @@ export function HamVeriPage({ params, go }: PageProps) {
   const [packetQuery, setPacketQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const [saved, setSaved] = useState<readonly SavedQuery[]>(SEED_QUERIES);
+  const saved = savedQueries.use();
+  const setSaved = savedQueries.set;
   const [saveOpen, setSaveOpen] = useState(false);
   const [saveName, setSaveName] = useState("");
 
@@ -237,7 +239,7 @@ export function HamVeriPage({ params, go }: PageProps) {
   };
   const saveQuery = () => {
     const name = saveName.trim() || `Sorgu ${saved.length + 1}`;
-    setSaved((list) => [...list, { id: `q-${Date.now()}`, name, meterId: meter.id, range, res, measure: measureId, compare }]);
+    setSaved((list) => [...list, { id: nextId("q-", 10), name, meterId: meter.id, range, res, measure: measureId, compare }]);
     setSaveOpen(false);
     setSaveName("");
     notify({ title: "Sorgu kaydedildi", body: name, tone: "success" });
@@ -291,7 +293,8 @@ export function HamVeriPage({ params, go }: PageProps) {
 
   const multiLine = measure.chart === "line";
   const chartTitle = `${measure.label}, ${meter.serial}`;
-  const valueFormat: Intl.NumberFormatOptions = { maximumFractionDigits: measure.digits };
+  // Eksen ve ipucu aynı biçimi paylaşır: en az 2 hane, yoksa 0,75 → "0,8" yuvarlanır.
+  const valueFormat: Intl.NumberFormatOptions = { minimumFractionDigits: 0, maximumFractionDigits: Math.min(3, Math.max(measure.digits, 2)) };
 
   return (
     <>
@@ -311,6 +314,28 @@ export function HamVeriPage({ params, go }: PageProps) {
         }
       />
       <PageBody>
+        {/* Sayaç künyesi */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl bg-surface px-4 py-3 text-small ring-1 ring-line sm:px-5">
+          <a href={href("customers", { id: owner.id })} className="inline-flex items-center gap-1.5 font-semibold text-strong underline-offset-2 hover:underline">
+            {owner.name} <ArrowRight className="size-3.5" aria-hidden />
+          </a>
+          <span className="text-muted">Tesisat {owner.installation}</span>
+          <span className="text-muted">
+            {meter.model} · {COMM_LABEL[meter.comm]}
+          </span>
+          <span className="text-muted">Çarpan ×{meter.multiplier}</span>
+          <span className="text-muted">{meter.multiZone ? "Çok zamanlı (T1/T2/T3)" : "Tek zamanlı"}</span>
+          <MeterBadge status={meter.status} />
+          <span className="ml-auto flex gap-3">
+            <a href={href("meters", { id: meter.id })} className="font-medium text-primary-ink underline-offset-2 hover:underline">
+              Sayaç ayrıntısı
+            </a>
+            <a href={href("readings", { meter: meter.id })} className="font-medium text-primary-ink underline-offset-2 hover:underline">
+              Okumalar
+            </a>
+          </span>
+        </div>
+
         {/* Sorgu çubuğu */}
         <section aria-label="Sorgu" className="rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line sm:p-5">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -348,28 +373,6 @@ export function HamVeriPage({ params, go }: PageProps) {
             ) : null}
           </div>
         </section>
-
-        {/* Sayaç künyesi */}
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl bg-surface px-4 py-3 text-small ring-1 ring-line sm:px-5">
-          <a href={href("customers", { id: owner.id })} className="inline-flex items-center gap-1.5 font-semibold text-strong underline-offset-2 hover:underline">
-            {owner.name} <ArrowRight className="size-3.5" aria-hidden />
-          </a>
-          <span className="text-muted">Tesisat {owner.installation}</span>
-          <span className="text-muted">
-            {meter.model} · {COMM_LABEL[meter.comm]}
-          </span>
-          <span className="text-muted">Çarpan ×{meter.multiplier}</span>
-          <span className="text-muted">{meter.multiZone ? "Çok zamanlı (T1/T2/T3)" : "Tek zamanlı"}</span>
-          <MeterBadge status={meter.status} />
-          <span className="ml-auto flex gap-3">
-            <a href={href("meters", { id: meter.id })} className="font-medium text-primary-ink underline-offset-2 hover:underline">
-              Sayaç ayrıntısı
-            </a>
-            <a href={href("readings", { meter: meter.id })} className="font-medium text-primary-ink underline-offset-2 hover:underline">
-              Okumalar
-            </a>
-          </span>
-        </div>
 
         {/* Kalite özeti */}
         <MetricStrip>
@@ -546,13 +549,16 @@ export function HamVeriPage({ params, go }: PageProps) {
                   </tbody>
                 </table>
               </div>
-              <p className="mt-3 flex items-center gap-2 text-micro text-muted">
-                Az
-                {HEAT.map((c) => (
-                  <span key={c} aria-hidden className={`size-3 rounded-[3px] ${c}`} />
-                ))}
-                Çok · en yüksek {fmt(heat.max)} kW
-              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-muted" aria-label="Isı haritası ölçeği">
+                <span>{fmt(heat.min)} kW</span>
+                <span aria-hidden className="flex items-center gap-1">
+                  {HEAT.map((c) => (
+                    <span key={c} className={`h-3.5 w-7 rounded-[3px] ${c}`} />
+                  ))}
+                </span>
+                <span>{fmt(heat.max)} kW</span>
+                <span className="text-micro">· ortalama saatlik talep, gün × saat</span>
+              </div>
             </div>
           </Panel>
 

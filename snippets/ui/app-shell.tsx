@@ -54,6 +54,15 @@ type AppShellProps = {
   defaultCollapsed?: boolean;
   /** İçerik öğesi. Kabuk sayfanın kökü değilse (vitrin, gömülü önizleme) `div`: sayfada tek `main` olur. */
   contentAs?: "main" | "div";
+  /** Telefon üst çubuğunun sağı (arama butonunden önce): bildirim zili gibi. */
+  mobileActions?: ReactNode;
+  /**
+   * Telefonda alt sekme çubuğu (< lg). `openMenu` gezinme çekmecesini açar
+   * ("Menü" sekmesi). Çubuğu sen `fixed inset-x-0 bottom-0 lg:hidden` ile
+   * konumlarsın; kabuk içerik karosuna alttan 5 rem boşluk bırakır, son satır
+   * çubuğun altında kalmaz.
+   */
+  bottomBar?: (api: { openMenu: () => void }) => ReactNode;
   /** Kabuğun yüksekliği; varsayılan tam ekran. */
   className?: string;
   children: ReactNode;
@@ -69,6 +78,8 @@ export function AppShell({
   searchLabel = "Ara",
   defaultCollapsed = false,
   contentAs: Content = "main",
+  mobileActions,
+  bottomBar,
   className,
   children,
 }: AppShellProps) {
@@ -115,14 +126,17 @@ export function AppShell({
           </span>
           {brand.name}
         </Link>
-        <button
-          type="button"
-          onClick={onSearch}
-          aria-label={searchLabel}
-          className="ml-auto inline-grid size-11 place-items-center rounded-md text-body transition-colors hover:bg-surface-raised hover:text-strong [&_svg]:size-5"
-        >
-          <Search aria-hidden strokeWidth={1.75} />
-        </button>
+        <div className="ml-auto flex items-center gap-1">
+          {mobileActions}
+          <button
+            type="button"
+            onClick={onSearch}
+            aria-label={searchLabel}
+            className="inline-grid size-11 place-items-center rounded-md text-body transition-colors hover:bg-surface-raised hover:text-strong [&_svg]:size-5"
+          >
+            <Search aria-hidden strokeWidth={1.75} />
+          </button>
+        </div>
       </header>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen} title={brand.name}>
@@ -189,7 +203,7 @@ export function AppShell({
       </aside>
 
       {/* İçerik: kuyunun içinde beyaz karo */}
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col px-2 pb-2 lg:py-2 lg:pr-2 lg:pl-0">
+      <div className={cn("flex min-h-0 min-w-0 flex-1 flex-col px-2 pb-2 lg:py-2 lg:pr-2 lg:pl-0", bottomBar && "max-lg:pb-20")}>
         <Content
           id={Content === "main" ? "icerik" : undefined}
           className="min-h-0 flex-1 rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:overflow-y-auto lg:overscroll-contain"
@@ -197,6 +211,8 @@ export function AppShell({
           {children}
         </Content>
       </div>
+
+      {bottomBar ? bottomBar({ openMenu: () => setSheetOpen(true) }) : null}
     </div>
   );
 }

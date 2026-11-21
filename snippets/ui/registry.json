@@ -28,6 +28,27 @@
       "palettes": false
     },
     {
+      "name": "active-filters",
+      "title": "Etkin Süzgeçler",
+      "category": "Form ve Gezinme",
+      "description": "Listenin üstünde etkin süzgeç çipleri + \"Temizle\" (3+ süzgeçli liste): neden kısaldığı gözün önünde; süzgeç yoksa hiçbir şey çizmez",
+      "file": "snippets/ui/active-filters.tsx",
+      "client": false,
+      "storyId": "active-filters",
+      "registryDependencies": [
+        "chip"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "activity-rings",
       "title": "Aktivite Halkaları",
       "category": "Grafik",
@@ -110,7 +131,7 @@
       "name": "app-shell",
       "title": "Uygulama Kabuğu",
       "category": "Bloklar",
-      "description": "Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik",
+      "description": "Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik; telefonda `mobileActions` (üst çubuk sağı) ve `bottomBar` (alt sekme çubuğu, `openMenu` ile)",
       "file": "snippets/ui/app-shell.tsx",
       "client": true,
       "storyId": "app-shell",
@@ -207,6 +228,25 @@
       ],
       "npm": {
         "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "audit-log",
+      "title": "Denetim Kaydı",
+      "category": "Veri",
+      "description": "Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA; reddedilen deneme \"Reddedildi\" metniyle; süzgeç yuvası",
+      "file": "snippets/ui/audit-log.tsx",
+      "client": false,
+      "storyId": "audit-log",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
@@ -2058,6 +2098,24 @@
       "palettes": false
     },
     {
+      "name": "region-map",
+      "title": "Bölge Haritası",
+      "category": "Grafik",
+      "description": "Bölgeye göre dağılım (kayıp, arıza yoğunluğu, şube cirosu) şematik SVG haritada: değer ölçeği ya da açık durum tonu, balon, seçilebilir bölge; gerçek coğrafya değil, çağıran poligonları verir",
+      "file": "snippets/ui/region-map.tsx",
+      "client": true,
+      "storyId": "region-map",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "requirement-list",
       "title": "Gerekenler Listesi",
       "category": "Form ve Gezinme",
@@ -2129,6 +2187,27 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "saved-views",
+      "title": "Kayıtlı Görünümler",
+      "category": "Form ve Gezinme",
+      "description": "Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, \"Görünümü Kaydet\" satır içi ad alanı",
+      "file": "snippets/ui/saved-views.tsx",
+      "client": true,
+      "storyId": "saved-views",
+      "registryDependencies": [
+        "chip"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

@@ -1,3 +1,4 @@
+import { createSlice } from "./_core";
 import {
   CURRENT_PERIOD,
   METERS,
@@ -12,6 +13,8 @@ import {
   shortDate,
   type Meter,
   type Reading,
+  type ReadingFlag,
+  type ReadingSource,
 } from "./_data";
 
 /**
@@ -52,10 +55,16 @@ export function sealNo(m: Meter) {
   return `MH-${int(rand, 100000, 999999)}`;
 }
 
-/** Muayene (kalibrasyon) tarihi: kurulumdan sekiz yıl sonra; geçmişse süresi dolmuş. */
-export function inspection(m: Meter) {
+/**
+ * Muayene (kalibrasyon) süresi, YIL. ÖRNEK PARAMETRE: gerçek süre sayaç tipine
+ * ve mevzuata göre değişir, doğrulanmadan kullanma; Ayarlar'a taşınabilir.
+ */
+export const INSPECTION_YEARS = 8;
+
+/** Muayene (kalibrasyon) tarihi: kurulumdan `INSPECTION_YEARS` yıl sonra; geçmişse süresi dolmuş. */
+export function inspection(m: Meter, years = INSPECTION_YEARS) {
   const [y, mo, d] = m.installed.split("-").map(Number);
-  const due = new Date(y + 8, mo - 1, d);
+  const due = new Date(y + years, mo - 1, d);
   return { due, overdue: due < TODAY, text: `${shortDate.format(due)} ${due.getFullYear()}` };
 }
 
@@ -156,7 +165,7 @@ export type Route = {
   regionId: string;
   regionName: string;
   /** Okumaya çıkacak sayaçlar: elle okunanlar ve iletişimi kesik olanlar. */
-  meters: { meter: Meter; customerName: string; district: string; done: boolean }[];
+  meters: { meter: Meter; customerName: string; district: string; done: boolean; added?: boolean }[];
   reader: string;
 };
 
@@ -213,4 +222,59 @@ export function buildImportRows(): ImportRow[] {
   bad(22, { kind: "geri", message: "T1 endeksi önceki okumadan küçük; geri sayım olabilir." }, { t1: Math.max(0, rows[22].t1 - 4000) });
   bad(31, { kind: "eslesmeyen", message: "Bu seri numarasıyla kayıtlı sayaç yok." }, { serial: "KZA-23-998120" });
   return rows;
+}
+
+
+/* --- Ortak yardımcılar: dışa aktarma, sorun puanı, liste durumu -------------- */
+
+/** Gerçek CSV indirir (BOM'lu: Excel Türkçe karakterleri doğru açar). Tarayıcı dışında sessizce geçer. */
+export function downloadCsv(name: string, rows: readonly (readonly (string | number)[])[]) {
+  if (typeof document === "undefined") return;
+  const esc = (v: string | number) => {
+    const s = String(v);
+    return /[";\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const blob = new Blob(["\uFEFF" + rows.map((r) => r.map(esc).join(";")).join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+/** Sayaç liste durumu: sayfa değişince korunur (modül düzeyinde dilim). */
+export type MeterFilters = Readonly<Record<string, readonly string[]>>;
+export type MeterSort = "sorun" | "serial" | "seen" | "name";
+export type MeterListUi = { view: string; query: string; filters: MeterFilters; sort: MeterSort; shown: number; custom: readonly { id: string; label: string; filters: MeterFilters; query: string }[] };
+export const meterListUi = createSlice<MeterListUi>({ view: "bugun", query: "", filters: {}, sort: "sorun", shown: 20, custom: [] });
+
+
+/* --- Okumalar: oturum durumu (depoda) ------------------------------------------ */
+
+export type EntryLogItem = { meterId: string; readingId: string; at: string; source: ReadingSource; total: number; flags: readonly ReadingFlag[] };
+export type ReadingUi = { readers: Readonly<Record<string, string>>; sent: readonly string[]; entries: readonly EntryLogItem[]; imported: number };
+/** Okuma sayfası durumu: okuyucu atamaları, gönderilen turlar, girilen okumalar. Sayfa değişince korunur. */
+export const readingUi = createSlice<ReadingUi>({ readers: {}, sent: [], entries: [], imported: 0 });
+
+/**
+ * Canlı saha tur planı: elle okunan + iletişimi kesik sayaçlar ve Sayaçlar
+ * sayfasından "tur planına eklenen" sayaçlar. `done`, DEPODAKİ okumadan türer
+ * (girilen/onaylanan okuma turu ilerletir).
+ */
+export function buildRoutesLive(readings: readonly Reading[], inRoute: ReadonlySet<string>): Route[] {
+  const current = new Map(readings.filter((r) => r.period === CURRENT_PERIOD).map((r) => [r.meterId, r]));
+  return REGIONS.map((r, i) => {
+    const meters = METERS.filter((m) => {
+      const c = customer(m.customerId);
+      return c.regionId === r.id && (m.comm === "elle" || m.status === "iletisim-yok" || inRoute.has(m.id));
+    })
+      .map((meter) => {
+        const c = customer(meter.customerId);
+        const reading = current.get(meter.id);
+        return { meter, customerName: c.name, district: c.district, done: !!reading && reading.status !== "bekliyor", added: inRoute.has(meter.id) && meter.comm !== "elle" && meter.status !== "iletisim-yok" };
+      })
+      .sort((a, b) => Number(!!b.added) - Number(!!a.added) || a.district.localeCompare(b.district, "tr") || a.meter.readDay - b.meter.readDay);
+    return { regionId: r.id, regionName: r.name, meters, reader: READERS[i % READERS.length] };
+  });
 }

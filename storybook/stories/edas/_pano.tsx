@@ -1,66 +1,58 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BookOpenCheck, Gauge, Receipt, Users, WifiOff, Zap } from "lucide-react";
 import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
-import { BarList } from "@/components/ui/bar-list";
 import { Button } from "@/components/ui/Button";
 import { ChartCard } from "@/components/ui/chart-card";
 import { ComboChart } from "@/components/ui/combo-chart";
 import { DataTable, type Column } from "@/components/ui/data-table";
-import { DigitRoll } from "@/components/ui/digit-roll";
+import { RegionMap, type MapRegion } from "@/components/ui/region-map";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { Sparkline } from "@/components/ui/sparkline";
-import { Stat, StatGrid } from "@/components/ui/stat";
 import { StatusList } from "@/components/ui/status-list";
 import {
-  CUSTOMERS,
   CURRENT_PERIOD,
   FLAGGED_READINGS,
   FLAG_LABEL,
   INVOICES,
   KINDS,
   KIND_LABEL,
-  METERS,
-  OPEN_OUTAGES,
-  OVERDUE_INVOICES,
   PERIODS,
   PERIODS_12,
   READINGS,
   SYSTEMS,
   TODAY,
-  UPCOMING_WORK,
-  WORK_TYPE_LABEL,
   balanceOf,
   clock,
-  collectionOf,
+  collectionIn,
+  type Invoice,
   customer,
   daysBetween,
   loadCurve,
   meterById,
   monthShort,
   num,
-  num1,
   outageDaily,
   parseDay,
   pct,
   periodLabel,
-  periodStats,
   regionLoss,
   tl,
   windowPeriods,
   type Period,
-  type WorkOrderType,
 } from "./_data";
-import { CARD, IconTile, MetricStrip, PageBody, PageHead, SampleNote, href, useApp, type PageProps } from "./_ui";
-
-/** Enerji miktarı, okunur birimle: ≥ 1 milyon kWh → GWh, değilse MWh. */
-const energy = (kwh: number) => (kwh >= 1_000_000 ? `${num1.format(kwh / 1_000_000)} GWh` : `${num1.format(kwh / 1000)} MWh`);
-const energyNumber = (kwh: number) => (kwh >= 1_000_000 ? num1.format(kwh / 1_000_000) : num1.format(kwh / 1000));
-const energyUnit = (kwh: number) => (kwh >= 1_000_000 ? "GWh" : "MWh");
+import { useDerived } from "./_core";
+import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, useLiveStats, activeCustomers } from "./_selectors";
+import { effectiveMeters } from "./_ops";
+import { WORK_TYPE_LABEL as WORK_LABEL_X, type WorkType } from "./_store";
+import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
+import { useRole } from "./_permissions";
+import { COLLECTION_SCOPE, flaggedReadings as flagged, overdueTotal, useBadges } from "./_selectors";
+import { BarTarget, PageHero, TodayBand, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
+import { CARD, IconTile, PageBody, PageHead, href, useApp, type PageProps } from "./_ui";
 
 /** Dönem seçici: panonun bütün ölçülerini ve grafiklerini birlikte değiştirir. */
 export function PeriodControl({ size = "md" }: { size?: "sm" | "md" }) {
@@ -73,50 +65,6 @@ export function PeriodControl({ size = "md" }: { size?: "sm" | "md" }) {
       onValueChange={setPeriod}
       options={PERIODS.map((p) => ({ value: p.value, label: p.label }))}
     />
-  );
-}
-
-/** Ölçü şeridi hücresi: sayı + değişim + dönem eğilimi (kıl çizgili tek kart içinde). */
-function StatCell({
-  icon,
-  label,
-  value,
-  unit,
-  change,
-  changeLabel,
-  series,
-  positiveIsGood,
-  trend,
-  foot,
-  tone = "neutral",
-}: {
-  icon: ReactNode;
-  label: string;
-  value: ReactNode;
-  unit?: string;
-  change: number | null;
-  changeLabel: string;
-  series?: readonly number[];
-  positiveIsGood?: boolean;
-  trend?: string;
-  foot: string;
-  tone?: "neutral" | "danger" | "warning";
-}) {
-  return (
-    <div className="relative flex h-full flex-col gap-4 p-4 sm:p-5">
-      <IconTile tone={tone} className="absolute top-4 right-4 sm:top-5 sm:right-5">
-        {icon}
-      </IconTile>
-      <div className="pr-10">
-        <StatGrid className="grid-cols-1 sm:grid-cols-1">
-          <Stat label={label} value={value} unit={unit} change={change} changeLabel={changeLabel} positiveIsGood={positiveIsGood} />
-        </StatGrid>
-      </div>
-      <div className="mt-auto border-t border-dashed border-line pt-3">
-        {series && trend ? <Sparkline title={trend} values={series} width={240} height={32} className="w-full" /> : null}
-        <p className={series ? "mt-1.5 text-small text-muted" : "text-small text-muted"}>{foot}</p>
-      </div>
-    </div>
   );
 }
 
@@ -136,7 +84,7 @@ type Attention = {
 /** Dikkat gerektirenler: aynı listelerden süzülen dört kaynak, tek tabloda. */
 function buildAttention(): Attention[] {
   const rows: Attention[] = [];
-  FLAGGED_READINGS.filter((r) => r.period === CURRENT_PERIOD)
+  flaggedReadings(CURRENT_PERIOD)
     .slice(0, 4)
     .forEach((r) =>
       rows.push({
@@ -149,7 +97,7 @@ function buildAttention(): Attention[] {
         sort: 3,
       }),
     );
-  [...OVERDUE_INVOICES]
+  overdueInvoices()
     .sort((a, b) => balanceOf(b) - balanceOf(a))
     .slice(0, 4)
     .forEach((i) =>
@@ -163,7 +111,7 @@ function buildAttention(): Attention[] {
         sort: 2,
       }),
     );
-  METERS.filter((m) => m.status === "iletisim-yok")
+  commsLostMeters()
     .sort((a, b) => a.lastSeen.getTime() - b.lastSeen.getTime())
     .slice(0, 3)
     .forEach((m) =>
@@ -177,7 +125,7 @@ function buildAttention(): Attention[] {
         sort: 1,
       }),
     );
-  OPEN_OUTAGES.slice(0, 2).forEach((o) =>
+  openOutages().slice(0, 2).forEach((o) =>
     rows.push({
       id: o.id,
       kind: "ariza",
@@ -198,7 +146,7 @@ const KIND = {
   ariza: { label: "Arıza", icon: <Zap />, tone: "danger" as const },
 };
 
-const WORK_COLOR: Record<WorkOrderType, 1 | 2 | 3 | 4 | 5 | 6> = { kesme: 6, baglama: 5, "sayac-degisim": 3, "okuma-turu": 1, kontrol: 4 };
+const WORK_COLOR: Record<WorkType, 1 | 2 | 3 | 4 | 5 | 6> = { kesme: 6, baglama: 5, "sayac-degisim": 3, "okuma-turu": 1, kontrol: 4, sokum: 3, kesif: 2, montaj: 2, ariza: 6 };
 
 function ModeLink({ attention, go }: { attention: Attention; go: PageProps["go"] }) {
   return (
@@ -215,17 +163,32 @@ function ModeLink({ attention, go }: { attention: Attention; go: PageProps["go"]
   );
 }
 
-export function PanoPage({ go }: PageProps) {
+const ROLE_HERO: Record<string, string> = { okuma: "supheli", tahsilat: "tahsilat", musteri: "ariza", denetci: "tahsilat", yonetici: "tahsilat" };
+
+export function PanoPage({ go, params }: PageProps) {
   const { period } = useApp();
-  const stats = useMemo(() => periodStats(period), [period]);
+  const role = useRole();
+  const stats = useLiveStats(period);
+  const badges = useBadges();
+  const activeNow = useDerived(activeCustomers);
+  const meters = useDerived(effectiveMeters);
+  const outagesNow = useDerived(openOutages);
+  const owed = useDerived(overdueTotal);
+  const flaggedNow = useDerived(() => flagged(CURRENT_PERIOD).length);
+  const upcoming = useDerived(() =>
+    openWorkOrders()
+      .filter((w) => w.status !== "tamamlandi" && w.scheduled >= new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate()))
+      .sort((a, b) => a.scheduled.getTime() - b.scheduled.getTime()),
+  );
   const label = PERIODS.find((p) => p.value === period)!.label;
   const prevLabel = period === "1" ? "önceki aya göre" : `önceki ${period} aya göre`;
+  const [selected, setSelected] = useState<string | null>(null);
 
   /* Eğilim çizgileri: tamamlanan on bir dönemin her biri (aynı listelerden). */
   const done = PERIODS_12.slice(0, 11);
   const usageTrend = done.map((p) => READINGS.filter((r) => r.period === p && r.status !== "bekliyor").reduce((s, r) => s + r.usage.total, 0));
-  const billedTrend = done.map((p) => INVOICES.filter((i) => i.period === p).reduce((s, i) => s + i.total, 0));
-  const rateTrend = done.map(collectionOf);
+  const liveInv = useDerived(activeInvoices);
+  const rateTrend = done.map((p) => collectionIn(p, liveInv as Invoice[]));
   const lossTrend = done.map((p) => {
     const rows = regionLoss(p);
     return pct(rows.reduce((s, x) => s + x.lossKwh, 0), rows.reduce((s, x) => s + x.input, 0));
@@ -240,7 +203,7 @@ export function PanoPage({ go }: PageProps) {
   }, [period]);
   const monthLabels = chartPeriods.map((p) => monthShort.format(parseDay(p)).replace(".", ""));
   const billedBars = chartPeriods.map((p) => Math.round(INVOICES.filter((i) => i.period === p).reduce((s, i) => s + i.total, 0) / 100));
-  const rateLine = chartPeriods.map((p) => collectionOf(p) / 100);
+  const rateLine = chartPeriods.map((p) => collectionIn(p, liveInv as Invoice[]) / 100);
 
   /* Bölge kayıp/kaçak: pencere ortalaması, giriş enerjisi ağırlıklı. */
   const losses = useMemo(() => {
@@ -252,12 +215,23 @@ export function PanoPage({ go }: PageProps) {
       return { region: mine[0].region, lossPct: pct(lossKwh, input), target: mine[0].region.lossTarget, lossKwh };
     });
   }, [stats.periods]);
+  const overRegions = losses.filter((l) => l.lossPct > l.target);
+  const mapRegions: MapRegion[] = MAP_SHAPES.map((s) => {
+    const l = losses.find((x) => x.region.id === s.id)!;
+    return { id: s.id, label: l.region.name.split(" ")[0], path: s.path, at: s.at, value: l.lossPct, tone: l.lossPct > l.target ? ("danger" as const) : ("success" as const), note: `hedef %${l.target}` };
+  });
+  const picked = losses.find((l) => l.region.id === selected);
+
+  /* "Haritayı aç" (Bugün bandı) bu bölüme kaydırır. */
+  useEffect(() => {
+    if (params.focus === "kayip") document.getElementById("pano-kayip")?.scrollIntoView({ block: "start" });
+  }, [params.focus]);
 
   const peak = (curve: number[]) => Math.max(...curve);
   const yesterday = loadCurve(1);
   const lastWeek = loadCurve(7);
 
-  const attention = useMemo(buildAttention, []);
+  const attention = useDerived(buildAttention);
   const attentionColumns: readonly Column<Attention>[] = [
     {
       key: "kind",
@@ -285,31 +259,49 @@ export function PanoPage({ go }: PageProps) {
     href: href(r.to.page, r.to.params),
   }));
 
-  const schedule: ScheduleItem[] = UPCOMING_WORK.slice(0, 7).map((w) => {
+  const schedule: ScheduleItem[] = upcoming.slice(0, 7).map((w) => {
     const days = daysBetween(TODAY, w.scheduled);
     return {
       id: w.id,
       at: `${w.scheduled.getFullYear()}-${String(w.scheduled.getMonth() + 1).padStart(2, "0")}-${String(w.scheduled.getDate()).padStart(2, "0")}T${clock.format(w.scheduled)}`,
       time: clock.format(w.scheduled),
       day: days === 0 ? "Bugün" : days === 1 ? "Yarın" : new Intl.DateTimeFormat("tr-TR", { weekday: "short", day: "numeric" }).format(w.scheduled),
-      title: WORK_TYPE_LABEL[w.type],
+      title: WORK_LABEL_X[w.type],
       detail: w.customerId ? `${customer(w.customerId).name} · ${w.reason}` : w.reason,
       color: WORK_COLOR[w.type],
     };
   });
 
-  const openOutageSub = OPEN_OUTAGES.reduce((s, o) => s + o.affected, 0);
+  const openOutageSub = outagesNow.reduce((s, o) => s + o.affected, 0);
+  const commsLost = meters.filter((m) => m.status === "iletisim-yok").length;
+  const faulty = meters.filter((m) => m.status === "arizali").length;
+  const pctChange = (now: number, before: number) => (before ? Math.round(((now - before) / before) * 1000) / 10 : undefined);
+
+  /* Kahraman: rolün bugünkü en önemli sayısı; ikincil ölçüler her rolde aynı beş-altı ölçü, kahraman olan hariç. */
+  const metrics: Record<string, MetricProps> = {
+    supheli: { label: "Onay bekleyen şüpheli okuma", value: fmtNum(flaggedNow), foot: `${fmtNum(badges.readings)} bu dönemde · önce bunları onayla ya da düzelt`, spark: flaggedTrend, to: { page: "readings", params: { status: "supheli" } }, icon: <BookOpenCheck /> },
+    tahsilat: { label: "Vadesi geçmiş alacak", value: fmtTlCompact(owed), foot: `${fmtNum(badges.invoices)} fatura · tahsilat kuyruğunu aç`, to: { page: "invoices", params: { status: "gecikti" } }, icon: <Receipt /> },
+    ariza: { label: "Açık arızada etkilenen abone", value: fmtNum(openOutageSub), foot: `${fmtNum(stats.openOutages)} açık arıza · arıza listesini aç`, spark: outageTrend, to: { page: "outages", params: { status: "acik" } }, icon: <Zap /> },
+    abone: { label: "Aktif abone", value: fmtNum(stats.active), foot: KINDS.map((k) => `${KIND_LABEL[k]} ${fmtNum(activeNow.filter((c) => c.kind === k).length)}`).join(" · "), to: { page: "customers" }, icon: <Users /> },
+    tuketim: { label: `Tüketim · ${label}`, value: fmtKwh(stats.usage), delta: pctChange(stats.usage, stats.usageBefore), goodWhen: "neutral", deltaLabel: prevLabel, spark: usageTrend, foot: "Okunan sayaçların toplamı", icon: <Zap /> },
+    oran: { label: "Tahsilat oranı", value: fmtPct(stats.collectionRate), delta: Math.round((stats.collectionRate - stats.collectionBefore) * 10) / 10, goodWhen: "up", deltaLabel: prevLabel, spark: rateTrend, foot: COLLECTION_SCOPE, to: { page: "payments" }, icon: <Receipt /> },
+    kayip: { label: "Kayıp / kaçak", value: fmtPct(stats.lossPct), delta: Math.round((stats.lossPct - stats.lossBefore) * 10) / 10, goodWhen: "down", deltaLabel: prevLabel, spark: lossTrend, foot: `${overRegions.length} bölge hedefin üstünde`, to: { page: "dashboard", params: { focus: "kayip" } }, icon: <Gauge /> },
+    ariza2: { label: "Açık arıza", value: fmtNum(stats.openOutages), foot: `${fmtNum(openOutageSub)} abone etkileniyor`, spark: outageTrend, to: { page: "outages", params: { status: "acik" } }, icon: <Zap /> },
+    okunamayan: { label: "Okunamayan sayaç", value: fmtNum(stats.unreadable), foot: `${commsLost} iletişim yok · ${faulty} arızalı`, spark: flaggedTrend, to: { page: "meters", params: { tab: "kesik" } }, icon: <WifiOff /> },
+  };
+  const heroKey = ROLE_HERO[role] ?? "tahsilat";
+  const order = ["abone", "tuketim", "oran", "kayip", "ariza2", "okunamayan"].filter((k) => !(heroKey === "ariza" && k === "ariza2") && !(heroKey === "tahsilat" && k === "oran" && false));
 
   return (
     <>
       <PageHead
         title="Pano"
-        description={`Pilot bölge · ${num.format(stats.active)} aktif abone, ${num.format(METERS.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
+        description={`Pilot bölge · ${fmtNum(stats.active)} aktif abone, ${fmtNum(meters.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
         actions={
           <>
             <PeriodControl />
             <Button variant="secondary" size="sm" onClick={() => go("reports")}>
-              Rapor Al
+              Raporlar
             </Button>
             <Button variant="primary" size="sm" onClick={() => go("register")}>
               Yeni Müşteri
@@ -318,151 +310,18 @@ export function PanoPage({ go }: PageProps) {
         }
       />
       <PageBody>
-        <MetricStrip>
-          <StatCell
-            icon={<Users />}
-            label="Aktif Abone"
-            value={<DigitRoll value={num.format(stats.active)} />}
-            change={null}
-            changeLabel=""
-            foot={KINDS.map((k) => `${KIND_LABEL[k]} ${num.format(CUSTOMERS.filter((c) => c.status === "aktif" && c.kind === k).length)}`).join(" · ")}
-          />
-          <StatCell
-            icon={<Zap />}
-            label={`Tüketim · ${label}`}
-            value={<DigitRoll value={energyNumber(stats.usage)} />}
-            unit={energyUnit(stats.usage)}
-            change={stats.usageBefore ? Math.round(((stats.usage - stats.usageBefore) / stats.usageBefore) * 1000) / 10 : null}
-            changeLabel={prevLabel}
-            series={usageTrend}
-            trend="Aylık tüketim eğilimi"
-            foot="Okunan sayaçların toplamı"
-          />
-          <StatCell
-            icon={<Receipt />}
-            label="Tahsilat Oranı"
-            value={<DigitRoll value={`%${num1.format(stats.collectionRate)}`} />}
-            change={Math.round((stats.collectionRate - stats.collectionBefore) * 10) / 10}
-            changeLabel={prevLabel}
-            series={rateTrend}
-            trend="Tahsilat oranı eğilimi"
-            foot="Vadesi gelen faturalarda"
-          />
-          <StatCell
-            icon={<Gauge />}
-            label="Kayıp / Kaçak"
-            value={<DigitRoll value={`%${num1.format(stats.lossPct)}`} />}
-            change={Math.round((stats.lossPct - stats.lossBefore) * 10) / 10}
-            changeLabel={prevLabel}
-            positiveIsGood={false}
-            series={lossTrend}
-            trend="Kayıp kaçak eğilimi"
-            foot="Giriş enerjisine oranla"
-          />
-          <StatCell
-            icon={<Zap />}
-            label="Açık Arıza"
-            value={<DigitRoll value={num.format(stats.openOutages)} />}
-            change={null}
-            changeLabel=""
-            series={outageTrend}
-            trend="Son on günün günlük arıza sayısı"
-            tone={stats.openOutages ? "danger" : "neutral"}
-            foot={`${num.format(openOutageSub)} abone etkileniyor`}
-          />
-          <StatCell
-            icon={<WifiOff />}
-            label="Okunamayan"
-            value={<DigitRoll value={num.format(stats.unreadable)} />}
-            change={null}
-            changeLabel=""
-            series={flaggedTrend}
-            trend="Aylık şüpheli okuma sayısı"
-            tone="warning"
-            foot={`${METERS.filter((m) => m.status === "iletisim-yok").length} iletişim yok, ${METERS.filter((m) => m.status === "arizali").length} arızalı sayaç`}
-          />
-        </MetricStrip>
+        <TodayBand />
 
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-          <ChartCard
-            id="pano-yuk"
-            className={`${CARD} xl:col-span-3`}
-            label="Günlük Yük Eğrisi"
-            value={`${num1.format(peak(yesterday))} MW`}
-            change={Math.round(((peak(yesterday) - peak(lastWeek)) / peak(lastWeek)) * 1000) / 10}
-            changeLabel="geçen haftaya göre (dünün tepe yükü)"
-            action={<Badge tone="neutral">Saatlik, MW</Badge>}
-          >
-            <AreaChart
-              title="Günlük Yük Eğrisi, Dün ve Geçen Hafta Aynı Gün"
-              labels={yesterday.map((_, h) => String(h).padStart(2, "0"))}
-              series={[
-                { label: "Dün", values: yesterday, series: 1 },
-                { label: "Geçen hafta", values: lastWeek, series: 3 },
-              ]}
-              unit="MW"
-              valueFormat={{ maximumFractionDigits: 2 }}
-            />
-          </ChartCard>
+        <PageHero primary={metrics[heroKey]} secondary={order.slice(0, 6).map((k) => metrics[k])} />
 
-          <ChartCard
-            id="pano-tahsilat"
-            className={`${CARD} xl:col-span-2`}
-            label="Tahakkuk ve Tahsilat"
-            value={tl(stats.billed)}
-            change={stats.billedBefore ? Math.round(((stats.billed - stats.billedBefore) / stats.billedBefore) * 1000) / 10 : null}
-            changeLabel={prevLabel}
-          >
-            <ComboChart
-              title="Aylık Tahakkuk ve Tahsilat Oranı"
-              labels={monthLabels}
-              bars={{ label: "Tahakkuk", values: billedBars, series: 1, unit: "₺", format: { notation: "compact", maximumFractionDigits: 1 } }}
-              line={{ label: "Tahsilat", values: rateLine, series: 5, format: { style: "percent", maximumFractionDigits: 1 } }}
-            />
-          </ChartCard>
-        </div>
-
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-          <div className="grid grid-cols-1 content-start gap-5 xl:col-span-2">
-            <ChartCard id="pano-kayip" className={CARD} label="Bölgeye Göre Kayıp / Kaçak" value={`%${num1.format(stats.lossPct)}`} change={null} action={<Badge tone="neutral">{label}</Badge>}>
-              <BarList
-                title="Bölgeye Göre Kayıp ve Kaçak Oranı"
-                columns={["Bölge", "Oran"]}
-                items={losses.map((l) => ({ label: `${l.region.name} · hedef %${l.target}`, value: l.lossPct }))}
-                valueFormat={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }}
-                series={1}
-              />
-            </ChartCard>
-            <div className={CARD}>
-              <div className="rounded-lg bg-surface p-3">
-                <StatusList title="Sistem Durumu" items={SYSTEMS.map((s) => ({ id: s.id, label: s.label, status: s.status }))} incident="Son olay: 20 Kas, GSM ağ geçidi yavaşlığı" headingLevel={2} />
-              </div>
-            </div>
-          </div>
-
-          <section aria-labelledby="pano-sirada" className={`${CARD} xl:col-span-3`}>
-            <div className="flex h-full flex-col rounded-lg bg-surface p-2">
-              <header className="px-3 pt-3 pb-2">
-                <h2 id="pano-sirada" className="text-small font-medium text-muted">
-                  Sıradaki İşler
-                </h2>
-                <p className="mt-1 text-heading font-semibold tracking-tight text-strong">{num.format(UPCOMING_WORK.length)} planlı iş</p>
-              </header>
-              <div className="px-3 pb-3">
-                <ScheduleList label="Planlı iş emirleri" items={schedule} />
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <section aria-labelledby="pano-dikkat" className={`${CARD}`}>
+        <section aria-labelledby="pano-dikkat" className={CARD}>
           <div className="rounded-lg bg-overlay">
             <header className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-5">
               <div>
                 <h2 id="pano-dikkat" className="text-read font-semibold text-strong">
                   Dikkat Gerektirenler
                 </h2>
-                <p className="text-small text-muted">Şüpheli okuma, geciken fatura, iletişimi kopan sayaç ve açık arıza: önce en acil olan.</p>
+                <p className="text-small text-muted">Şüpheli okuma, geciken fatura, iletişimi kopan sayaç ve açık arıza: en acil olan üstte.</p>
               </div>
               <Badge tone="danger" dot>
                 {attention.length} kayıt
@@ -477,7 +336,94 @@ export function PanoPage({ go }: PageProps) {
           </div>
         </section>
 
-        <SampleNote />
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
+          <ChartCard
+            id="pano-yuk"
+            className={`${CARD} xl:col-span-3`}
+            label="Günlük Yük Eğrisi"
+            value={`${fmtDec(peak(yesterday), 2)} MW`}
+            change={Math.round(((peak(yesterday) - peak(lastWeek)) / peak(lastWeek)) * 1000) / 10}
+            changeLabel="geçen haftaya göre (dünün tepe yükü)"
+            action={<Badge tone="neutral">Saatlik, MW</Badge>}
+          >
+            <AreaChart
+              title="Günlük Yük Eğrisi, Dün ve Geçen Hafta Aynı Gün"
+              labels={yesterday.map((_, h) => String(h).padStart(2, "0"))}
+              series={[
+                { label: "Dün", values: yesterday, series: 1 },
+                { label: "Geçen hafta aynı gün", values: lastWeek, series: 3 },
+              ]}
+              unit="MW"
+              valueFormat={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }}
+            />
+          </ChartCard>
+
+          <ChartCard
+            id="pano-tahsilat"
+            className={`${CARD} xl:col-span-2`}
+            label="Tahakkuk ve Tahsilat"
+            value={fmtTl(stats.billed, 0)}
+            change={pctChange(stats.billed, stats.billedBefore) ?? null}
+            changeLabel={prevLabel}
+          >
+            <ComboChart
+              title="Aylık Tahakkuk (sütun, TL) ve Tahsilat Oranı (çizgi, %)"
+              labels={monthLabels}
+              bars={{ label: "Tahakkuk", values: billedBars, series: 1, unit: "₺", format: { notation: "compact", maximumFractionDigits: 1 } }}
+              line={{ label: "Tahsilat oranı", values: rateLine, series: 2, format: { style: "percent", maximumFractionDigits: 1 } }}
+            />
+            <p className="px-2 pt-2 text-small text-muted">{COLLECTION_SCOPE}.</p>
+          </ChartCard>
+        </div>
+
+        <div id="pano-kayip" className="grid scroll-mt-4 grid-cols-1 gap-5 xl:grid-cols-5">
+          <ChartCard id="pano-harita" className={`${CARD} xl:col-span-3`} label="Bölge Haritası · Kayıp / Kaçak" value={fmtPct(stats.lossPct)} change={null} action={<Badge tone={overRegions.length ? "danger" : "success"} dot>{overRegions.length ? `${overRegions.length} bölge hedefin üstünde` : "Bütün bölgeler hedefte"}</Badge>}>
+            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_14rem] md:items-center">
+              <RegionMap title="Bölgeye Göre Kayıp ve Kaçak Oranı" regions={mapRegions} viewBox={MAP_VIEWBOX} format={(v) => fmtPct(v)} selectedId={selected} onSelect={(id) => setSelected((cur) => (cur === id ? null : id))} legend={["Hedefte", "Hedef üstü"]} />
+              <div className="rounded-lg bg-surface p-3 text-base">
+                {picked ? (
+                  <>
+                    <p className="font-semibold text-strong">{picked.region.name}</p>
+                    <p className="mt-1 text-body">Kayıp / kaçak {fmtPct(picked.lossPct)} · hedef {fmtPct(picked.target, 0)}</p>
+                    <p className="text-small text-muted">{fmtKwh(picked.lossKwh)} kayıp enerji ({label.toLocaleLowerCase("tr-TR")})</p>
+                    <Button className="mt-2" size="sm" variant="secondary" onClick={() => go("reports")}>Bölge raporu</Button>
+                  </>
+                ) : (
+                  <p className="text-small text-muted">Bir bölgeye dokun: kayıp oranı, hedef ve kayıp enerji burada açılır. Kırmızı bölgeler hedefi aşıyor.</p>
+                )}
+              </div>
+            </div>
+          </ChartCard>
+
+          <ChartCard id="pano-kayip-liste" className={`${CARD} xl:col-span-2`} label="Hedefe Göre Sıralama" value={`${overRegions.length} / ${losses.length} bölge hedef üstünde`} change={null} action={<Badge tone="neutral">{label}</Badge>}>
+            <BarTarget
+              aria-label="Bölgeye göre kayıp ve kaçak oranı"
+              rows={[...losses].sort((a, b) => b.lossPct - b.target - (a.lossPct - a.target)).map((l) => ({ id: l.region.id, label: l.region.name, value: l.lossPct, target: l.target }))}
+              format={(v) => fmtPct(v)}
+            />
+          </ChartCard>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
+          <section aria-labelledby="pano-sirada" className={`${CARD} xl:col-span-3`}>
+            <div className="flex h-full flex-col rounded-lg bg-surface p-2">
+              <header className="px-3 pt-3 pb-2">
+                <h2 id="pano-sirada" className="text-small font-medium text-muted">
+                  Sıradaki İşler
+                </h2>
+                <p className="mt-1 text-heading font-semibold tracking-tight text-strong">{fmtNum(upcoming.length)} planlı iş</p>
+              </header>
+              <div className="px-3 pb-3">
+                <ScheduleList label="Planlı iş emirleri" items={schedule} />
+              </div>
+            </div>
+          </section>
+          <div className={`${CARD} xl:col-span-2`}>
+            <div className="rounded-lg bg-surface p-3">
+              <StatusList title="Sistem Durumu" items={SYSTEMS.map((s) => ({ id: s.id, label: s.label, status: s.status }))} incident="Son olay: 20 Kas, GSM ağ geçidi yavaşlığı" headingLevel={2} />
+            </div>
+          </div>
+        </div>
       </PageBody>
     </>
   );

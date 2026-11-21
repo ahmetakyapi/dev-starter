@@ -1,9 +1,12 @@
-import { useSyncExternalStore } from "react";
+import { createSlice } from "./_core";
+import { computeInvoice, deriveStatus, lateInterest } from "./_billing";
+import { getBillingParams, getLateRates } from "./_settings";
+import { effectiveReadings } from "./_ops";
+import { audit } from "./_audit";
 import {
   CUSTOMERS,
   CURRENT_PERIOD,
   INVOICES,
-  LATE_RATE_MONTHLY,
   PAYMENTS,
   PAYMENT_PLANS,
   PERIODS_12,
@@ -17,7 +20,6 @@ import {
   daysBetween,
   parseDay,
   supplier,
-  type CustomerKind,
   type Invoice,
   type InvoiceStatus,
   type Payment,
@@ -45,6 +47,8 @@ export type InvoiceEvent = { id: string; at: string; when: string; title: string
 type InvoicePatch = {
   status?: InvoiceStatus;
   paid?: number;
+  lateFee?: number;
+  lateFeePaid?: number;
   due?: string;
   dispute?: string | null;
   cancelled?: boolean;
@@ -93,25 +97,22 @@ const initial: Store = {
   counter: 1,
 };
 
-let state: Store = initial;
-const listeners = new Set<() => void>();
-const emit = () => listeners.forEach((l) => l());
-const subscribe = (l: () => void) => {
-  listeners.add(l);
-  return () => listeners.delete(l);
-};
-const snapshot = () => state;
+/** Finans dilimi: tek depoya (`_core.ts`) bağlı; başka sayfalar da aynı kaynağı görür. */
+const slice = createSlice<Store>(initial);
+const live = () => slice.get();
+
+export const getFinance = (): Store => slice.get();
 
 export function useFinance(): Store {
-  return useSyncExternalStore(subscribe, snapshot, snapshot);
+  return slice.use();
 }
 function set(next: Partial<Store>) {
-  state = { ...state, ...next };
-  emit();
+  slice.set((s) => ({ ...s, ...next }));
 }
 const nextId = (prefix: string) => {
-  const id = `${prefix}${String(state.counter).padStart(4, "0")}`;
-  state = { ...state, counter: state.counter + 1 };
+  const s = live();
+  const id = `${prefix}${String(s.counter).padStart(4, "0")}`;
+  slice.set({ ...s, counter: s.counter + 1 });
   return id;
 };
 
@@ -126,6 +127,8 @@ export function effectiveInvoice(inv: Invoice, s: Store): EffectiveInvoice {
     ...inv,
     status: p.status ?? inv.status,
     paid: p.paid ?? inv.paid,
+    lateFee: p.lateFee ?? inv.lateFee,
+    lateFeePaid: p.lateFeePaid ?? inv.lateFeePaid,
     due: p.due ?? inv.due,
     dispute: p.dispute === null ? undefined : (p.dispute ?? inv.dispute),
     cancelled: p.cancelled ?? false,
@@ -188,55 +191,94 @@ export const CHANNEL_SHORT: Record<PaymentChannel, string> = { banka: "Banka", p
 const money = (kurus: number) => new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(kurus / 100);
 
 function addEvent(id: string, event: Omit<InvoiceEvent, "id" | "at" | "when"> & { key: string }) {
-  const prev = state.patches[id] ?? { events: [] };
+  const prev = live().patches[id] ?? { events: [] };
   const entry: InvoiceEvent = { id: nextId(`e-${event.key}-`), at: TODAY_KEY, when: when(TODAY_KEY), title: event.title, detail: event.detail, tone: event.tone };
   return { ...prev, events: [...prev.events, entry] } as InvoicePatch;
 }
 
 /* --- Fatura işlemleri ---------------------------------------------------- */
 
-export function recordPayment(invoiceId: string, input: { channel: PaymentChannel; amount: number; reference: string }) {
-  const inv = invoiceOf(invoiceId, state);
+export function recordPayment(invoiceId: string, input: { channel: PaymentChannel; amount: number; reference: string; /** Ödeme tarihi (`YYYY-MM-DD`); verilmezse bugün. Gelecek olamaz. */ date?: string }) {
+  const inv = invoiceOf(invoiceId, live());
   if (!inv) return;
-  const late = daysBetween(parseDay(inv.due), TODAY);
-  const lateFee = late > 0 ? Math.round(input.amount * LATE_RATE_MONTHLY * (late / 30)) : 0;
+  /* Gecikme zammı: vadeden bugüne kalan ANAPARA üzerinden TEK fonksiyonla; ödemeyle
+     birlikte tahsil edilir (ödeme = anapara + zam). Zam tahsil edilmeden fatura "Ödendi" olmaz. */
+  const payDate = input.date && input.date <= TODAY_KEY ? input.date : TODAY_KEY;
+  const dueFee = inv.due < payDate ? lateInterest(Math.max(0, inv.total - inv.paid), inv.due, payDate, getLateRates()) : 0;
+  const feeToCollect = Math.max(0, Math.max(inv.lateFee, dueFee) - inv.lateFeePaid);
+  const principal = Math.min(input.amount, Math.max(0, inv.total - inv.paid));
   const payment: Payment = {
     id: nextId("P-M"),
     invoiceId,
     customerId: inv.customerId,
-    date: TODAY_KEY,
+    date: payDate,
     channel: input.channel,
-    amount: input.amount,
-    lateFee,
+    amount: principal,
+    lateFee: feeToCollect,
     recon: "bekliyor",
-    reference: input.reference || `${input.channel === "banka" ? "BNK" : input.channel === "ptt" ? "PTT" : input.channel === "online" ? "WEB" : "OTO"}${String(40_000_000 + state.counter * 137)}`,
+    reference: input.reference || `${input.channel === "banka" ? "BNK" : input.channel === "ptt" ? "PTT" : input.channel === "online" ? "WEB" : "OTO"}${String(40_000_000 + live().counter * 137)}`,
   };
-  const paid = inv.paid + input.amount;
-  const status: InvoiceStatus = paid >= inv.total ? "odendi" : "kismi";
-  const patch = { ...addEvent(invoiceId, { key: "pay", title: "Elle tahsilat girildi", detail: `${money(input.amount)} · ${CHANNEL_SHORT[input.channel]}`, tone: "success" }), paid, status, dispute: null as null };
-  set({ extraPayments: [payment, ...state.extraPayments], patches: { ...state.patches, [invoiceId]: patch } });
+  const paid = inv.paid + principal;
+  const lateFeePaid = inv.lateFeePaid + feeToCollect;
+  const lateFee = Math.max(inv.lateFee, dueFee);
+  const status: InvoiceStatus = deriveStatus({ total: inv.total, paid, due: inv.due, disputed: false }, TODAY_KEY);
+  const detail = `${money(principal)}${feeToCollect ? ` + gecikme zammı ${money(feeToCollect)}` : ""} · ${CHANNEL_SHORT[input.channel]}`;
+  const patch = { ...addEvent(invoiceId, { key: "pay", title: "Elle tahsilat girildi", detail, tone: "success" }), paid, lateFee, lateFeePaid, status, dispute: null as null };
+  set({ extraPayments: [payment, ...live().extraPayments], patches: { ...live().patches, [invoiceId]: patch } });
+  audit("Ödeme girdi", `${invoiceId} · ${inv.customerId}`, `Bakiye ${money(inv.total - inv.paid)}`, `Bakiye ${money(inv.total - paid)}`);
 }
 
 export function extendDue(invoiceId: string, days: number) {
-  const inv = invoiceOf(invoiceId, state);
+  const inv = invoiceOf(invoiceId, live());
   if (!inv) return;
   const due = addDaysKey(inv.due < TODAY_KEY ? TODAY_KEY : inv.due, days);
-  const status: InvoiceStatus = inv.status === "gecikti" ? "kesildi" : inv.status;
-  set({ patches: { ...state.patches, [invoiceId]: { ...addEvent(invoiceId, { key: "due", title: "Vade uzatıldı", detail: `Yeni son ödeme tarihi ${when(due)}`, tone: "primary" }), due, status } } });
+  const status: InvoiceStatus = deriveStatus({ total: inv.total, paid: inv.paid, due, disputed: inv.status === "itirazli" }, TODAY_KEY);
+  set({ patches: { ...live().patches, [invoiceId]: { ...addEvent(invoiceId, { key: "due", title: "Vade uzatıldı", detail: `Yeni son ödeme tarihi ${when(due)}`, tone: "primary" }), due, status } } });
+  audit("Vade uzattı", invoiceId, `Vade ${when(inv.due)}`, `Vade ${when(due)}`);
+}
+
+/** Vadeyi doğrudan bir tarihe çeker (uzatmayı geri almak için). */
+export function setDue(invoiceId: string, due: string, note = "Vade geri alındı") {
+  const inv = invoiceOf(invoiceId, live());
+  if (!inv) return;
+  const status: InvoiceStatus = deriveStatus({ total: inv.total, paid: inv.paid, due, disputed: inv.status === "itirazli" }, TODAY_KEY);
+  set({ patches: { ...live().patches, [invoiceId]: { ...addEvent(invoiceId, { key: "due", title: note, detail: `Son ödeme tarihi ${when(due)}`, tone: "neutral" }), due, status } } });
+  audit(note, invoiceId, `Vade ${when(inv.due)}`, `Vade ${when(due)}`);
+}
+
+/**
+ * Düzeltme faturası: iptal edilen faturanın okumasından, güncel parametrelerle
+ * yeniden hesaplanır (`corrects` bağı); tutar kalemlerden tutar, borç/ödeme sıfırdan başlar.
+ */
+export function issueCorrection(invoiceId: string): Invoice | null {
+  const inv = invoiceOf(invoiceId, live());
+  if (!inv) return null;
+  const reading = effectiveReadings().find((r) => r.customerId === inv.customerId && r.period === inv.period);
+  if (!reading) return null;
+  const draft = buildDraft(reading);
+  const { readingId, warnings, ...rest } = draft;
+  void readingId;
+  void warnings;
+  const id = `${inv.id.split("-D")[0]}-D${String((live().extraInvoices.filter((x) => x.corrects === inv.id).length || 0) + 1)}`;
+  const correction: Invoice = { ...rest, id, corrects: inv.id, issued: TODAY_KEY, due: addDaysKey(TODAY_KEY, 14), status: "kesildi", paid: 0, lateFee: 0, lateFeePaid: 0 };
+  set({ extraInvoices: [correction, ...live().extraInvoices] });
+  audit("Düzeltme faturası kesti", id, inv.id, `${money(correction.total)}`);
+  return correction;
 }
 
 export function fileDispute(invoiceId: string, reason: string, note: string) {
   const text = note.trim() ? `${reason}: ${note.trim()}` : reason;
-  set({ patches: { ...state.patches, [invoiceId]: { ...addEvent(invoiceId, { key: "dispute", title: "İtiraz kaydı açıldı", detail: text, tone: "warning" }), status: "itirazli", dispute: reason } } });
+  set({ patches: { ...live().patches, [invoiceId]: { ...addEvent(invoiceId, { key: "dispute", title: "İtiraz kaydı açıldı", detail: text, tone: "warning" }), status: "itirazli", dispute: reason } } });
+  audit("Fatura itirazı açtı", invoiceId, undefined, reason);
 }
 
 export function resolveDispute(invoiceId: string, outcome: "kabul" | "red") {
-  const inv = invoiceOf(invoiceId, state);
+  const inv = invoiceOf(invoiceId, live());
   if (!inv) return;
-  const status: InvoiceStatus = inv.due < TODAY_KEY ? "gecikti" : "kesildi";
+  const status: InvoiceStatus = deriveStatus({ total: inv.total, paid: inv.paid, due: inv.due, disputed: false }, TODAY_KEY);
   set({
     patches: {
-      ...state.patches,
+      ...live().patches,
       [invoiceId]: {
         ...addEvent(invoiceId, { key: "dispute", title: outcome === "kabul" ? "İtiraz kabul edildi" : "İtiraz reddedildi", detail: outcome === "kabul" ? "Düzeltme faturası kesilecek" : "Fatura geçerli, tahsilat sürüyor", tone: outcome === "kabul" ? "success" : "neutral" }),
         status,
@@ -244,48 +286,39 @@ export function resolveDispute(invoiceId: string, outcome: "kabul" | "red") {
       },
     },
   });
+  audit(outcome === "kabul" ? "Fatura itirazını kabul etti" : "Fatura itirazını reddetti", invoiceId, "İtirazlı", status);
 }
 
 export function cancelInvoice(invoiceId: string, rebill: boolean) {
   set({
     patches: {
-      ...state.patches,
+      ...live().patches,
       [invoiceId]: { ...addEvent(invoiceId, { key: "cancel", title: rebill ? "İptal edildi, düzeltme faturası kesilecek" : "Fatura iptal edildi", detail: "İptal faturası sisteme işlendi", tone: "danger" }), cancelled: true },
     },
   });
+  audit("Fatura iptal etti", invoiceId, "Geçerli", rebill ? "İptal, düzeltme bekliyor" : "İptal");
 }
 
 /* --- Gönderim (e-posta, SMS) ---------------------------------------------- */
 
 export function logSend(invoiceId: string, via: "e-posta" | "sms" | "pdf") {
   const title = via === "pdf" ? "PDF indirildi" : via === "sms" ? "Hatırlatma SMS'i gönderildi" : "Fatura e-postası gönderildi";
-  set({ patches: { ...state.patches, [invoiceId]: addEvent(invoiceId, { key: "send", title, tone: "neutral" }) } });
+  set({ patches: { ...live().patches, [invoiceId]: addEvent(invoiceId, { key: "send", title, tone: "neutral" }) } });
 }
 
 /* --- Tahakkuk (taslak fatura) --------------------------------------------- */
 
-/** `_data.ts` ile aynı oranlar: taslak, gerçek faturalarla aynı hesabı kullanır. */
-const DIST_RATE: Record<CustomerKind, number> = { bireysel: 0.79, ticari: 0.66, sanayi: 0.31, tarim: 0.4 };
-const YEKDEM_RATE = 0.06;
-
 export type Draft = Invoice & { readingId: string; warnings: string[] };
 
+/** Taslak, gerçek faturalarla AYNI çekirdeği (`_billing.ts`) ve Ayarlar'daki güncel parametreleri kullanır. */
 export function buildDraft(r: Reading): Draft {
   const c = customer(r.customerId);
   const sup = supplier(c.supplierId);
-  const kwhUse = Math.max(0, r.usage.total);
-  const energy = Math.round(kwhUse * sup.unitPrice * 100);
-  const distribution = Math.round(kwhUse * DIST_RATE[c.kind] * 100);
-  const yekdem = Math.round(kwhUse * YEKDEM_RATE * 100);
-  const funds = Math.round(energy * (c.kind === "bireysel" ? 0.03 : 0.01));
-  const btv = c.kind === "tarim" ? 0 : Math.round((energy + distribution) * (c.kind === "sanayi" ? 0.01 : 0.05));
-  const vatRate = c.kind === "tarim" ? 0.1 : 0.2;
-  const vat = Math.round((energy + distribution + yekdem + funds + btv) * vatRate);
-  const total = energy + distribution + yekdem + funds + btv + vat;
+  const bill = computeInvoice({ kind: c.kind, voltage: c.voltage, usage: r.usage, reactive: r.reactive, demandKw: r.demandKw, contractKw: c.contractKw, prices: sup.prices }, getBillingParams());
   const issued = TODAY_KEY;
   const warnings: string[] = [];
-  if (r.status === "supheli") warnings.push("Şüpheli okuma: doğrulanmadan faturalandı");
-  if (r.source === "tahmini") warnings.push("Tahmini endeks");
+  if (r.status === "supheli") warnings.push("Şüpheli okuma: onaylanmadan faturalanamaz");
+  if (r.source === "tahmini") warnings.push("Tahmini endeks: gerçek okumada mahsup edilecek");
   return {
     id: `F-${r.period.replace("-", "")}-${r.id.slice(2, 6)}${r.id.slice(6, 8)}`,
     customerId: c.id,
@@ -293,16 +326,21 @@ export function buildDraft(r: Reading): Draft {
     period: r.period,
     issued,
     due: addDaysKey(issued, 14),
-    usageKwh: kwhUse,
-    energy,
-    distribution,
-    yekdem,
-    funds,
-    btv,
-    vat,
-    total,
+    usageKwh: Math.max(0, r.usage.total),
+    energy: bill.energy,
+    distribution: bill.distribution,
+    yekdem: bill.yekdem,
+    funds: bill.funds,
+    btv: bill.btv,
+    vat: bill.vat,
+    reactive: bill.reactive,
+    power: bill.power,
+    total: bill.total,
     paid: 0,
+    lateFee: 0,
+    lateFeePaid: 0,
     status: "kesildi",
+    issuer: "tedarikci",
     readingId: r.id,
     warnings,
   };
@@ -311,22 +349,39 @@ export function buildDraft(r: Reading): Draft {
 /** Faturası henüz kesilmemiş, okuması hazır olanlar: taslak tahakkuk. */
 export function draftsFor(period: string, s: Store): Draft[] {
   const have = new Set([...INVOICES, ...s.extraInvoices].map((i) => i.id));
-  return READINGS.filter((r) => r.period === period && r.status !== "bekliyor")
+  /* Şüpheli okuma onaylanmadan faturalanmaz (Okumalar'da onay serbest bırakır). */
+  return effectiveReadings()
+    .filter((r) => r.period === period && r.status !== "bekliyor" && r.status !== "supheli")
     .map(buildDraft)
     .filter((d) => !have.has(d.id));
 }
-export const pendingReadings = (period: string) => READINGS.filter((r) => r.period === period && r.status === "bekliyor").length;
+export const pendingReadings = (period: string) => effectiveReadings().filter((r) => r.period === period && r.status === "bekliyor").length;
 
 export function runAccrual(period: string): { count: number; total: number } {
-  const drafts = draftsFor(period, state);
+  const drafts = draftsFor(period, live());
   const created: Invoice[] = drafts.map((d) => {
     const { readingId, warnings, ...invoice } = d;
     void readingId;
     void warnings;
     return invoice;
   });
-  set({ extraInvoices: [...created, ...state.extraInvoices], accrued: [...state.accrued, period] });
+  set({ extraInvoices: [...created, ...live().extraInvoices], accrued: [...live().accrued, period] });
+  audit("Tahakkuk çalıştırdı", period, undefined, `${created.length} fatura`);
   return { count: created.length, total: created.reduce((s, i) => s + i.total, 0) };
+}
+
+/** Tahakkuku geri al: o dönem için bu oturumda kesilen (ödemesi olmayan) faturalar silinir. */
+export function undoAccrual(period: string): number {
+  const keep: Invoice[] = [];
+  let removed = 0;
+  for (const i of live().extraInvoices) {
+    const accrued = i.period === period && !i.corrects && i.paid === 0 && !live().patches[i.id];
+    if (accrued) removed++;
+    else keep.push(i);
+  }
+  set({ extraInvoices: keep, accrued: live().accrued.filter((p) => p !== period) });
+  audit("Tahakkuku geri aldı", period, undefined, `${removed} fatura`);
+  return removed;
 }
 
 /* --- Ödemeler: etkin liste ve mutabakat ----------------------------------- */
@@ -368,20 +423,35 @@ export const olderDiffs = (s: Store) => allPayments(s).filter((p) => p.recon ===
 
 export function resolveLine(line: BankLine, how: "faturaya" | "avans" | "iade") {
   const label = how === "faturaya" ? "Faturaya atandı" : how === "avans" ? "Avansa alındı" : "İade talimatı verildi";
-  set({ reconOverrides: { ...state.reconOverrides, [line.paymentId]: "mutabik" }, reconNotes: { ...state.reconNotes, [line.paymentId]: label } });
+  set({ reconOverrides: { ...live().reconOverrides, [line.paymentId]: "mutabik" }, reconNotes: { ...live().reconNotes, [line.paymentId]: label } });
+}
+
+/** Banka dosyasıyla eşleşen (satır olmayan) bekleyen ödemeleri mutabık yapar; eşleşmeyenler elle çözülür. */
+export function approveMatched(excludePaymentIds: readonly string[], dayKeys: readonly string[]): number {
+  const overrides = { ...live().reconOverrides };
+  let n = 0;
+  for (const p of allPayments(live())) {
+    if (p.recon === "bekliyor" && dayKeys.includes(p.date) && !excludePaymentIds.includes(p.id)) {
+      overrides[p.id] = "mutabik";
+      n++;
+    }
+  }
+  set({ reconOverrides: overrides });
+  audit("Eşleşen ödemeleri onayladı", dayKeys.join(", "), undefined, `${n} ödeme`);
+  return n;
 }
 
 /** Günü kapat: bekleyen ödemeleri mutabık yap (eşleşmeyen satır kalmamışsa). */
 export function closeReconciliation(dayKeys: string[]) {
-  const overrides = { ...state.reconOverrides };
+  const overrides = { ...live().reconOverrides };
   let n = 0;
-  for (const p of allPayments(state)) {
+  for (const p of allPayments(live())) {
     if (p.recon === "bekliyor" && dayKeys.includes(p.date)) {
       overrides[p.id] = "mutabik";
       n++;
     }
   }
-  set({ reconOverrides: overrides, closedDays: [...state.closedDays, ...dayKeys] });
+  set({ reconOverrides: overrides, closedDays: [...live().closedDays, ...dayKeys] });
   return n;
 }
 
@@ -394,10 +464,10 @@ export function debtOf(customerId: string, s: Store) {
 }
 
 export function createPlan(customerId: string, installments: number, monthlyRatePct: number) {
-  const principal = debtOf(customerId, state);
+  const principal = debtOf(customerId, live());
   const total = Math.round(principal * (1 + (monthlyRatePct / 100) * installments * 0.5));
   const plan: PaymentPlan = {
-    id: `PL-2026${String(100 + state.plans.length)}`,
+    id: `PL-2026${String(100 + live().plans.length)}`,
     customerId,
     total,
     installments,
@@ -405,19 +475,19 @@ export function createPlan(customerId: string, installments: number, monthlyRate
     next: dayKey(addDays(TODAY, 30)),
     status: "devam",
   };
-  const patches = { ...state.patches };
-  for (const i of allInvoices(state).filter((x) => x.customerId === customerId && isOverdue(x))) {
+  const patches = { ...live().patches };
+  for (const i of allInvoices(live()).filter((x) => x.customerId === customerId && isOverdue(x))) {
     patches[i.id] = { ...(patches[i.id] ?? { events: [] }), events: [...(patches[i.id]?.events ?? []), { id: nextId("e-plan-"), at: TODAY_KEY, when: when(TODAY_KEY), title: "Ödeme planına bağlandı", detail: `${plan.id} · ${installments} taksit`, tone: "primary" }] };
   }
-  set({ plans: [plan, ...state.plans], patches });
+  set({ plans: [plan, ...live().plans], patches });
   return plan;
 }
 export function cancelPlan(id: string) {
-  set({ plans: state.plans.map((p) => (p.id === id ? { ...p, status: "bozuldu" as const } : p)) });
+  set({ plans: live().plans.map((p) => (p.id === id ? { ...p, status: "bozuldu" as const } : p)) });
 }
 export function payInstallment(id: string) {
   set({
-    plans: state.plans.map((p) => {
+    plans: live().plans.map((p) => {
       if (p.id !== id || p.status !== "devam") return p;
       const paid = p.paid + 1;
       return { ...p, paid, status: paid >= p.installments ? ("tamamlandi" as const) : p.status, next: dayKey(addDays(parseDay(p.next), 30)) };
@@ -456,7 +526,7 @@ export function autoPayRows(s: Store): AutoPayRow[] {
   });
 }
 export function retryAutoPay(customerId: string) {
-  set({ autoPay: { ...state.autoPay, [customerId]: "aktif" } });
+  set({ autoPay: { ...live().autoPay, [customerId]: "aktif" } });
 }
 
 /* --- Kesme ve bağlama ------------------------------------------------------- */
@@ -464,8 +534,14 @@ export function retryAutoPay(customerId: string) {
 export function cutStageOf(customerId: string, days: number, s: Store): CutStage {
   return s.cutStages[customerId] ?? (days >= 31 ? "kesme-emri" : days >= 15 ? "ihtar" : "hatirlatma");
 }
+/** Bağlama sonrası: elle verilen aşama kalkar, aşama yeniden gecikme gününden türer. */
+export function clearCutStage(customerId: string) {
+  const next = { ...live().cutStages };
+  delete next[customerId];
+  set({ cutStages: next });
+}
 export function advanceCut(ids: string[], stage: CutStage) {
-  const next = { ...state.cutStages };
+  const next = { ...live().cutStages };
   ids.forEach((id) => (next[id] = stage));
   set({ cutStages: next });
 }

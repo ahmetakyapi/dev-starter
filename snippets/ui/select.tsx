@@ -2,7 +2,7 @@
 
 import { Select as Base } from "@base-ui/react/select";
 import { Check, ChevronsUpDown } from "lucide-react";
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -60,8 +60,15 @@ export function Select({
   required,
   className,
 }: SelectProps) {
+  // Yerel <dialog> üst katmanda (top layer) açılır; gövdeye taşınan liste onun
+  // ARKASINDA kalırdı. Diyalog içindeysek liste diyaloğun kendisine taşınır.
+  const anchor = useRef<HTMLDivElement>(null);
+  const [host, setHost] = useState<HTMLElement | null>(null);
   return (
     <Base.Root
+      onOpenChange={(open) => {
+        if (open) setHost(anchor.current?.closest("dialog") ?? null);
+      }}
       items={items}
       name={name}
       value={value}
@@ -70,7 +77,7 @@ export function Select({
       disabled={disabled}
       required={required}
     >
-      <div className={cn("grid content-start gap-1.5", className)}>
+      <div ref={anchor} className={cn("grid content-start gap-1.5", className)}>
         <Base.Label className={hideLabel ? "sr-only" : "text-small font-semibold text-strong"}>{label}</Base.Label>
         <Base.Trigger className="flex min-h-11 w-full min-w-40 items-center justify-between gap-3 rounded-md border border-line bg-overlay px-3 text-start text-base text-strong shadow-raised transition-[border-color,box-shadow] select-none hover:border-line-strong data-disabled:opacity-50 data-popup-open:border-primary data-popup-open:ring-[3px] data-popup-open:ring-primary-wash pointer-fine:min-h-10">
           <Base.Value placeholder={placeholder} className="min-w-0 truncate data-placeholder:text-muted" />
@@ -79,7 +86,7 @@ export function Select({
           </Base.Icon>
         </Base.Trigger>
       </div>
-      <Base.Portal>
+      <Base.Portal container={host}>
         <Base.Positioner alignItemWithTrigger={false} sideOffset={6} collisionPadding={8} className="z-50 outline-none">
           <Base.Popup className="min-w-(--anchor-width) origin-(--transform-origin) rounded-xl border border-line bg-overlay p-1.5 text-body shadow-modal outline-none transition-[opacity,scale] duration-200 ease-[var(--ease-brand)] data-ending-style:scale-[0.96] data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-[0.96] data-starting-style:opacity-0">
             <Base.List className="max-h-[min(20rem,var(--available-height))] overflow-y-auto overscroll-contain">

@@ -46,6 +46,30 @@
       ]
     },
     {
+      "name": "active-filters",
+      "type": "registry:ui",
+      "title": "Etkin Süzgeçler",
+      "description": "Listenin üstünde etkin süzgeç çipleri + \"Temizle\" (3+ süzgeçli liste): neden kısaldığı gözün önünde; süzgeç yoksa hiçbir şey çizmez",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/chip.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "active-filters",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/active-filters.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "activity-rings",
       "type": "registry:ui",
       "title": "Aktivite Halkaları",
@@ -152,7 +176,7 @@
       "name": "app-shell",
       "type": "registry:ui",
       "title": "Uygulama Kabuğu",
-      "description": "Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik",
+      "description": "Oturum açılmış uygulamanın iskeleti: kenar çubuğu + içerik; telefonda `mobileActions` (üst çubuk sağı) ve `bottomBar` (alt sekme çubuğu, `openMenu` ile)",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
@@ -279,6 +303,32 @@
       "files": [
         {
           "path": "snippets/ui/assignee-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "audit-log",
+      "type": "registry:ui",
+      "title": "Denetim Kaydı",
+      "description": "Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA; reddedilen deneme \"Reddedildi\" metniyle; süzgeç yuvası",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "audit-log",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/audit-log.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2750,6 +2800,29 @@
       ]
     },
     {
+      "name": "region-map",
+      "type": "registry:ui",
+      "title": "Bölge Haritası",
+      "description": "Bölgeye göre dağılım (kayıp, arıza yoğunluğu, şube cirosu) şematik SVG haritada: değer ölçeği ya da açık durum tonu, balon, seçilebilir bölge; gerçek coğrafya değil, çağıran poligonları verir",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "region-map",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/region-map.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "requirement-list",
       "type": "registry:ui",
       "title": "Gerekenler Listesi",
@@ -2844,6 +2917,33 @@
       "files": [
         {
           "path": "snippets/ui/sankey-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "saved-views",
+      "type": "registry:ui",
+      "title": "Kayıtlı Görünümler",
+      "description": "Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, \"Görünümü Kaydet\" satır içi ad alanı",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/chip.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "saved-views",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/saved-views.tsx",
           "type": "registry:ui"
         }
       ]

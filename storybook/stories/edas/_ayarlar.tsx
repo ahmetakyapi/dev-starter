@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { CalendarClock, Download, Mail, MessageSquareText, Palette, Plug, Plus, Radio, Receipt, Route, ScrollText, ShieldCheck, Users, Wallet } from "lucide-react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { CalendarClock, Mail, MessageSquareText, Palette, Plug, Plus, Radio, Receipt, Route, ScrollText, ShieldCheck, Users, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { ChannelMatrix, type MatrixValue } from "@/components/ui/channel-matrix";
@@ -15,24 +15,23 @@ import { Select } from "@/components/ui/select";
 import { StatusList } from "@/components/ui/status-list";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useAyar, saveAyar } from "./_data-ayar";
+import { audit } from "./_audit";
+import { setCutPolicy, useCutPolicy } from "./_cutpolicy";
+import { setPermission, useApprovals, usePermissionMatrix } from "./_permissions";
+import { useSettings } from "./_settings";
+import { updateTariff } from "./_store";
+import { AuditTab } from "./_uyum";
 import { Timeline } from "@/components/ui/timeline";
 import { REGIONS, SYSTEMS, TODAY, TODAY_KEY, addDays, dateTime, dayKey, fullDate, num, parseDay } from "./_data";
 import {
-  AUDIT_ACTIONS,
-  AUDIT_LOG,
   INTEGRATIONS,
   PERMISSIONS,
-  PERMISSION_START,
   READERS,
   READ_ROUTES_START,
   ROLES,
-  TARIFFS_START,
-  TARIFF_HISTORY,
-  TEMPLATES_START,
   TEMPLATE_SAMPLE,
   TEMPLATE_VARS,
-  USERS,
-  type AuditEntry,
   type RoleId,
   type SettingsUser,
   type Tariff,
@@ -44,10 +43,11 @@ import { IconTile, PageBody, PageHead, Panel, SampleNote, useApp, type PageProps
 /* Bölümler                                                                  */
 /* ------------------------------------------------------------------------ */
 
-type SectionId = "kullanici" | "tarife" | "okuma" | "entegrasyon" | "sablon" | "denetim" | "gorunum";
+type SectionId = "kullanici" | "tarife" | "politika" | "okuma" | "entegrasyon" | "sablon" | "denetim" | "gorunum";
 const SECTIONS: readonly { id: SectionId; label: string; hint: string; icon: ReactNode }[] = [
   { id: "kullanici", label: "Kullanıcılar ve Roller", hint: "Kim neyi yapabilir", icon: <Users /> },
   { id: "tarife", label: "Tarifeler ve Bedeller", hint: "Dağıtım, YEKDEM, vergi", icon: <Receipt /> },
+  { id: "politika", label: "Politikalar ve Takvim", hint: "Kesme, zam, dilimler", icon: <CalendarClock /> },
   { id: "okuma", label: "Okuma Tur Planı", hint: "Bölge, okuyucu, gün", icon: <Route /> },
   { id: "entegrasyon", label: "Entegrasyonlar", hint: "AMI, SMS, ödeme", icon: <Plug /> },
   { id: "sablon", label: "Bildirim Şablonları", hint: "SMS ve e-posta metinleri", icon: <MessageSquareText /> },
@@ -68,16 +68,18 @@ export function AyarlarPage({ params, go }: PageProps) {
   const { notify } = useApp();
   const section: SectionId = (SECTIONS.some((s) => s.id === params.tab) ? params.tab : "kullanici") as SectionId;
 
-  /* Her bölümün durumu sayfada tutulur: bölüm değişince kaybolmaz. */
-  const [users, setUsers] = useState<readonly SettingsUser[]>(USERS);
-  const [perms, setPerms] = useState<MatrixValue>(PERMISSION_START);
-  const [forceTwoFactor, setForceTwoFactor] = useState(false);
-  const [tariffs, setTariffs] = useState<readonly (Tariff & { draft?: boolean })[]>(TARIFFS_START);
-  const [pendingHistory, setPendingHistory] = useState<readonly { id: string; label: string; from: number; to: number; effective: string }[]>([]);
-  const [routes, setRoutes] = useState(READ_ROUTES_START);
-  const [connected, setConnected] = useState<Readonly<Record<string, boolean>>>(() => Object.fromEntries(INTEGRATIONS.map((i) => [i.id, i.connected])));
-  const [templates, setTemplates] = useState<readonly Template[]>(TEMPLATES_START);
-  const [look, setLook] = useState<{ theme: "light" | "dark" | "system"; density: "comfortable" | "compact"; language: string }>({ theme: "system", density: "comfortable", language: "tr" });
+  /* Kayıtlı ayar tek depoda (`_data-ayar.ts`): sayfa değişince kaybolmaz. Taslak sayfada tutulur, Kaydet'e kadar uygulanmaz.
+     Yetki matrisi, tarife ve politika ise ANINDA uygulanır (depoya yazılır, denetim izine düşer). */
+  const saved = useAyar();
+  const perms = usePermissionMatrix();
+  const settings = useSettings();
+  const approvals = useApprovals();
+  const [users, setUsers] = useState<readonly SettingsUser[]>(saved.users);
+  const [forceTwoFactor, setForceTwoFactor] = useState(saved.forceTwoFactor);
+  const [routes, setRoutes] = useState(saved.routes);
+  const [connected, setConnected] = useState<Readonly<Record<string, boolean>>>(saved.connected);
+  const [templates, setTemplates] = useState<readonly Template[]>(saved.templates);
+  const [look, setLook] = useState<{ theme: "light" | "dark" | "system"; density: "comfortable" | "compact"; language: string }>(saved.look);
 
   const [dirty, setDirty] = useState<ReadonlySet<SectionId>>(new Set());
   const [leaveTo, setLeaveTo] = useState<SectionId | null>(null);
@@ -91,35 +93,49 @@ export function AyarlarPage({ params, go }: PageProps) {
   const save = () => {
     if (look.theme !== "system") document.documentElement.dataset.theme = look.theme;
     else document.documentElement.dataset.theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    setTariffs((all) => all.map(({ draft: _draft, ...t }) => t));
-    notify({ title: "Ayarlar kaydedildi", body: `${dirty.size} bölümde değişiklik uygulandı · denetim günlüğüne işlendi`, tone: "success" });
+    saveAyar({ users, forceTwoFactor, routes, connected, templates, look });
+    for (const id of dirty) audit("Ayarları kaydetti", SECTIONS.find((s) => s.id === id)?.label ?? id);
+    notify({ title: "Ayarlar kaydedildi", body: `${dirty.size} bölümde değişiklik uygulandı · denetim izine işlendi`, tone: "success" });
     setDirty(new Set());
   };
   const discard = () => {
-    setUsers(USERS);
-    setPerms(PERMISSION_START);
-    setForceTwoFactor(false);
-    setTariffs(TARIFFS_START);
-    setPendingHistory([]);
-    setRoutes(READ_ROUTES_START);
-    setConnected(Object.fromEntries(INTEGRATIONS.map((i) => [i.id, i.connected])));
-    setTemplates(TEMPLATES_START);
-    setLook({ theme: "system", density: "comfortable", language: "tr" });
+    setUsers(saved.users);
+    setForceTwoFactor(saved.forceTwoFactor);
+    setRoutes(saved.routes);
+    setConnected(saved.connected);
+    setTemplates(saved.templates);
+    setLook(saved.look);
     setDirty(new Set());
     notify({ title: "Değişiklikler geri alındı", body: "Ayarlar son kaydedilen hâline döndü", tone: "info" });
   };
+  /** Yetki matrisi anında etkilidir: fark bulunur, her değişiklik depoya ve denetim izine yazılır. */
+  const changePerms = (next: MatrixValue) => {
+    for (const p of PERMISSIONS) {
+      const before = new Set<string>(perms[p.id] ?? []);
+      const after = new Set<string>(next[p.id] ?? []);
+      for (const r of ROLES) {
+        if (before.has(r.id) !== after.has(r.id)) {
+          setPermission(p.id, r.id, after.has(r.id));
+          audit("Yetkiyi değiştirdi", `${p.label} · ${roleLabel(r.id)}`, before.has(r.id) ? "Var" : "Yok", after.has(r.id) ? "Var" : "Yok");
+        }
+      }
+    }
+    notify({ title: "Yetki güncellendi", body: "Anında etkili; rol simülasyonunda hemen görünür", tone: "success" });
+  };
 
   const body = {
-    kullanici: <UsersSection users={users} setUsers={(u) => { setUsers(u); mark("kullanici"); }} perms={perms} setPerms={(p) => { setPerms(p); mark("kullanici"); }} force={forceTwoFactor} setForce={(v) => { setForceTwoFactor(v); mark("kullanici"); }} />,
-    tarife: <TariffSection tariffs={tariffs} history={pendingHistory} onEdit={(t, value, effective) => {
-      setPendingHistory((h) => [{ id: `p-${t.id}`, label: t.label, from: t.value, to: value, effective }, ...h.filter((x) => x.id !== `p-${t.id}`)]);
-      setTariffs((all) => all.map((x) => (x.id === t.id ? { ...x, value, effective, draft: true } : x)));
-      mark("tarife");
+    kullanici: <UsersSection users={users} setUsers={(u) => { setUsers(u); mark("kullanici"); }} perms={perms as MatrixValue} setPerms={changePerms} force={forceTwoFactor} setForce={(v) => { setForceTwoFactor(v); mark("kullanici"); }} />,
+    tarife: <TariffSection tariffs={settings.tariffs} applied={settings.history} pendingIds={approvals.filter((a) => a.kind === "tarife" && a.status === "bekliyor").map((a) => a.target)} onEdit={(t, value, effective) => {
+      const r = updateTariff(t.id, value, effective);
+      if (r.status === "uygulandi") notify({ title: "Tarife uygulandı", body: `${t.label}: ${value.toLocaleString("tr-TR")} · yürürlük ${effective} · sonraki tahakkuk yeni değerle hesaplanır`, tone: "success" });
+      else if (r.status === "onay-bekliyor") notify({ title: "İkinci göz onayı bekleniyor", body: `${t.label} değişikliği Uyum Merkezi → İki Göz Onayları'nda`, tone: "info" });
+      else notify({ title: "Yetkiniz yok", body: "Tarife değiştirme yetkisi bu rolde kapalı; deneme denetim izine yazıldı", tone: "info" });
     }} />,
+    politika: <PolicySection go={go} />,
     okuma: <RoutesSection routes={routes} setRoutes={(r) => { setRoutes(r); mark("okuma"); }} />,
     entegrasyon: <IntegrationsSection connected={connected} setConnected={(c) => { setConnected(c); mark("entegrasyon"); }} />,
     sablon: <TemplatesSection templates={templates} setTemplates={(t) => { setTemplates(t); mark("sablon"); }} />,
-    denetim: <AuditSection />,
+    denetim: <AuditTab />,
     gorunum: <LookSection look={look} setLook={(l) => { setLook(l); mark("gorunum"); }} />,
   }[section];
 
@@ -241,7 +257,7 @@ function UsersSection({ users, setUsers, perms, setPerms, force, setForce }: { u
 
   return (
     <div className="grid gap-5">
-      <Panel id="ay-kullanici" title="Kullanıcılar" note={`${users.filter((u) => u.active).length} etkin kullanıcı`} actions={<Button size="sm" variant="primary" onClick={() => setInvite(true)}><Plus aria-hidden /> Kullanıcı Davet Et</Button>}>
+      <Panel id="ay-kullanici" title="Kullanıcılar" note={`${users.filter((u) => u.active).length} etkin, ${users.filter((u) => !u.active).length} pasif hesap · toplam ${users.length}`} actions={<Button size="sm" variant="primary" onClick={() => setInvite(true)}><Plus aria-hidden /> Kullanıcı Davet Et</Button>}>
         <div className="max-md:hidden">
           <DataTable<SettingsUser> caption="Kullanıcılar" columns={columns} rows={users} rowKey={(u) => u.id} density="comfortable" on="surface" stickyFirst={false} />
         </div>
@@ -292,7 +308,7 @@ function UsersSection({ users, setUsers, perms, setPerms, force, setForce }: { u
 /* 2. Tarifeler ve bedeller                                                   */
 /* ------------------------------------------------------------------------ */
 
-function TariffSection({ tariffs, history, onEdit }: { tariffs: readonly (Tariff & { draft?: boolean })[]; history: readonly { id: string; label: string; from: number; to: number; effective: string }[]; onEdit: (t: Tariff, value: number, effective: string) => void }) {
+function TariffSection({ tariffs, applied, pendingIds, onEdit }: { tariffs: readonly Tariff[]; applied: readonly { id: string; label: string; from: number; to: number; effective: string; by: string }[]; pendingIds: readonly string[]; onEdit: (t: Tariff, value: number, effective: string) => void }) {
   const [editing, setEditing] = useState<Tariff | null>(null);
   const [value, setValue] = useState("");
   const [effective, setEffective] = useState("");
@@ -311,20 +327,17 @@ function TariffSection({ tariffs, history, onEdit }: { tariffs: readonly (Tariff
   };
 
   const columns: Column<(typeof tariffs)[number]>[] = [
-    { key: "l", header: "Kalem", render: (t) => <span className="font-medium text-strong">{t.label}{t.draft ? <Badge tone="warning" className="ml-2">Taslak</Badge> : null}</span> },
+    { key: "l", header: "Kalem", render: (t) => <span className="font-medium text-strong">{t.label}{pendingIds.includes(t.id) ? <Badge tone="warning" className="ml-2">Onay bekliyor</Badge> : null}</span> },
     { key: "v", header: "Değer", numeric: true, render: (t) => <span className="edas-mono">{unitText(t)}</span> },
     { key: "e", header: "Yürürlük", render: (t) => fullDate.format(parseDay(t.effective)) },
     { key: "n", header: "Not", render: (t) => <span className="text-muted">{t.note}</span> },
     { key: "a", header: <span className="sr-only">Düzenle</span>, render: (t) => <Button size="sm" variant="secondary" onClick={() => open(t)}>Düzenle</Button> },
   ];
-  const events = [
-    ...history.map((h) => ({ id: h.id, at: h.effective, when: `${fullDate.format(parseDay(h.effective))} · taslak`, title: `${h.label}: ${h.from.toLocaleString("tr-TR")} → ${h.to.toLocaleString("tr-TR")}`, description: "Kaydedilince yürürlük tarihinde uygulanır", tone: "warning" as const })),
-    ...TARIFF_HISTORY.map((h) => ({ id: h.id, at: h.effective, when: fullDate.format(parseDay(h.effective)), title: `${h.label}: ${h.from.toLocaleString("tr-TR")} → ${h.to.toLocaleString("tr-TR")}`, description: `Düzenleyen: ${h.by}`, tone: "neutral" as const })),
-  ];
+  const events = applied.map((h) => ({ id: h.id, at: h.effective, when: fullDate.format(parseDay(h.effective)), title: `${h.label}: ${h.from.toLocaleString("tr-TR")} → ${h.to.toLocaleString("tr-TR")}`, description: `Düzenleyen: ${h.by}`, tone: "neutral" as const }));
 
   return (
     <div className="grid gap-5">
-      <Panel id="ay-tarife" title="Tarifeler ve Bedeller" note="Değişiklik yürürlük tarihinde uygulanır; geçmiş dönem faturaları değişmez.">
+      <Panel id="ay-tarife" title="Tarifeler ve Bedeller" note="ÖRNEK PARAMETRELER (mevzuat sayısı değil, doğrulanmalı). Değişiklik depoya yazılır: sonraki tahakkuk yeni değerle hesaplanır, geçmiş faturalar değişmez. İkinci göz politikası açıksa onay bekler.">
         <div className="max-md:hidden">
           <DataTable caption="Tarife ve bedel tablosu" columns={columns} rows={tariffs} rowKey={(t) => t.id} density="comfortable" on="surface" stickyFirst={false} />
         </div>
@@ -332,7 +345,7 @@ function TariffSection({ tariffs, history, onEdit }: { tariffs: readonly (Tariff
           {tariffs.map((t) => (
             <li key={t.id} className="flex items-center justify-between gap-3 rounded-lg bg-surface p-3">
               <div className="min-w-0">
-                <p className="font-medium text-strong">{t.label}{t.draft ? <Badge tone="warning" className="ml-2">Taslak</Badge> : null}</p>
+                <p className="font-medium text-strong">{t.label}{pendingIds.includes(t.id) ? <Badge tone="warning" className="ml-2">Onay bekliyor</Badge> : null}</p>
                 <p className="edas-mono text-small text-muted">{unitText(t)} · {fullDate.format(parseDay(t.effective))}</p>
               </div>
               <Button size="sm" variant="secondary" onClick={() => open(t)}>Düzenle</Button>
@@ -355,7 +368,7 @@ function TariffSection({ tariffs, history, onEdit }: { tariffs: readonly (Tariff
         footer={
           <>
             <Button variant="ghost" onClick={() => setEditing(null)}>Vazgeç</Button>
-            <Button variant="primary" disabled={!valid} onClick={confirm}>Taslak Olarak Ekle</Button>
+            <Button variant="primary" disabled={!valid} onClick={confirm}>Uygula</Button>
           </>
         }
       >
@@ -514,56 +527,6 @@ function TemplatesSection({ templates, setTemplates }: { templates: readonly Tem
 /* 6. Denetim günlüğü                                                         */
 /* ------------------------------------------------------------------------ */
 
-function AuditSection() {
-  const { notify } = useApp();
-  const [user, setUser] = useState<string | null>("hepsi");
-  const [action, setAction] = useState<string | null>("hepsi");
-  const [query, setQuery] = useState("");
-
-  const userOptions = [{ value: "hepsi", label: "Bütün kullanıcılar" }, ...USERS.filter((u) => u.active).map((u) => ({ value: u.name, label: u.name }))];
-  const actionOptions = [{ value: "hepsi", label: "Bütün işlemler" }, ...AUDIT_ACTIONS.map((a) => ({ value: a, label: a }))];
-  const rows = AUDIT_LOG.filter((r) => (user === "hepsi" || r.user === user) && (action === "hepsi" || r.action === action) && (!query || `${r.target} ${r.user} ${r.action}`.toLocaleLowerCase("tr-TR").includes(query.toLocaleLowerCase("tr-TR"))));
-
-  const exportCsv = () => {
-    const header = "Zaman;Kullanıcı;İşlem;Nesne;IP;Sonuç";
-    const lines = rows.map((r) => [dateTime(r.at), r.user, r.action, r.target, r.ip, r.ok ? "Başarılı" : "Reddedildi"].join(";"));
-    const blob = new Blob(["﻿" + [header, ...lines].join("\n")], { type: "text/csv;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "denetim-gunlugu.csv";
-    a.click();
-    URL.revokeObjectURL(a.href);
-    notify({ title: "Denetim günlüğü dışa aktarıldı", body: `${rows.length} kayıt · CSV`, tone: "success" });
-  };
-
-  const columns: Column<AuditEntry>[] = [
-    { key: "t", header: "Zaman", render: (r) => <span className="edas-mono">{dateTime(r.at)}</span> },
-    { key: "u", header: "Kullanıcı", render: (r) => r.user },
-    { key: "a", header: "İşlem", render: (r) => <span className="font-medium text-strong">{r.action}</span> },
-    { key: "o", header: "Nesne", render: (r) => r.target },
-    { key: "i", header: "IP", render: (r) => <span className="edas-mono text-muted">{r.ip}</span> },
-    { key: "s", header: "Sonuç", render: (r) => (r.ok ? <Badge tone="success" dot>Başarılı</Badge> : <Badge tone="danger" dot>Reddedildi</Badge>) },
-  ];
-  const items: RecordItem[] = rows.map((r) => ({ id: r.id, title: r.action, subtitle: `${r.user} · ${r.target}`, meta: dateTime(r.at), status: r.ok ? <Badge tone="success" dot>Başarılı</Badge> : <Badge tone="danger" dot>Reddedildi</Badge> }));
-
-  return (
-    <Panel id="ay-denetim" title="Denetim Günlüğü" note="Silinemeyen kayıt: kim, ne zaman, hangi nesne üzerinde ne yaptı." actions={<Button size="sm" variant="secondary" onClick={exportCsv}><Download aria-hidden /> Dışa Aktar (CSV)</Button>}>
-      <div className="grid gap-3 border-b border-line-soft p-3 sm:grid-cols-3 sm:p-4">
-        <Select label="Kullanıcı" items={userOptions} value={user} onValueChange={setUser} />
-        <Select label="İşlem" items={actionOptions} value={action} onValueChange={setAction} />
-        <Input label="Ara" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Müşteri, nesne ya da kullanıcı" />
-      </div>
-      <div className="max-md:hidden">
-        <DataTable<AuditEntry> caption="Denetim günlüğü" columns={columns} rows={rows.slice(0, 40)} rowKey={(r) => r.id} density="comfortable" on="surface" stickyFirst={false} empty="Süzgece uyan kayıt yok" />
-      </div>
-      <div className="p-3 md:hidden">
-        <RecordList label="Denetim günlüğü" items={items.slice(0, 40)} />
-      </div>
-      <p className="border-t border-line-soft px-4 py-3 text-micro text-muted">{rows.length} kayıt bulundu; en yeni 40'ı gösteriliyor. Dışa aktarma süzgeci uygular.</p>
-    </Panel>
-  );
-}
-
 /* ------------------------------------------------------------------------ */
 /* 7. Görünüm                                                                 */
 /* ------------------------------------------------------------------------ */
@@ -588,5 +551,112 @@ function LookSection({ look, setLook }: { look: { theme: "light" | "dark" | "sys
         </div>
       </div>
     </Panel>
+  );
+}
+
+
+/* ------------------------------------------------------------------------ */
+/* 8. Politikalar ve takvim                                                   */
+/* ------------------------------------------------------------------------ */
+
+const num0 = (s: string, min: number, max: number, fallback: number) => {
+  const n = Math.round(Number(s.replace(",", ".")));
+  return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
+};
+
+/** Sayı alanı: yazarken yerel taslak, odak çıkınca ya da Enter'da depoya yazılır (her tuşta denetim kaydı düşmesin). */
+function NumField({ label, hint, value, min, max, onCommit }: { label: string; hint: string; value: number; min: number; max: number; onCommit: (next: number) => void }) {
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value]);
+  const commit = () => {
+    const next = num0(draft, min, max, value);
+    setDraft(String(next));
+    if (next !== value) onCommit(next);
+  };
+  return <Input label={label} inputMode="numeric" hint={`${hint} (${min}–${max})`} value={draft} onChange={(e) => setDraft(e.target.value)} onBlur={commit} onKeyDown={(e) => e.key === "Enter" && commit()} />;
+}
+
+function PolicySection({ go }: { go: PageProps["go"] }) {
+  const { notify } = useApp();
+  const policy = useCutPolicy();
+  const settings = useSettings();
+  const [holiday, setHoliday] = useState("");
+
+  const edit = (label: string, patch: Parameters<typeof setCutPolicy>[0], before: string, after: string) => {
+    setCutPolicy(patch);
+    audit("Kesme politikasını değiştirdi", label, before, after);
+  };
+  const field = (label: string, key: "remindAfterDays" | "noticeAfterDays" | "waitBusinessDays" | "reconnectSlaHours" | "workStart" | "workEnd", hint: string, min: number, max: number) => (
+    <NumField key={key} label={label} hint={hint} value={policy[key]} min={min} max={max} onCommit={(next) => edit(label, { [key]: next } as Parameters<typeof setCutPolicy>[0], String(policy[key]), String(next))} />
+  );
+  const holidayOk = /^\d{4}-\d{2}-\d{2}$/.test(holiday) && !policy.holidays.includes(holiday);
+  const zone = settings.params.zoneHours;
+  const late = [...settings.lateRates].sort((a, b) => (a.from < b.from ? 1 : -1));
+
+  return (
+    <div className="grid gap-5">
+      <Panel id="ay-kesme" title="Kesme ve Bağlama Politikası" note="ÖRNEK süreler (yürürlükteki mevzuat doğrulanmalı). Değişiklik anında etkilidir; kesme emirleri iş gününe ve mesaiye oturur.">
+        <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5 xl:grid-cols-3">
+          {field("Hatırlatma (gecikme günü)", "remindAfterDays", "Vadeden kaç gün sonra SMS", 0, 10)}
+          {field("İhtar (gecikme günü)", "noticeAfterDays", "Yazılı bildirim kaçıncı günde", 1, 60)}
+          {field("İhtar sonrası bekleme (iş günü)", "waitBusinessDays", "Kesme emrinden önce en az", 1, 30)}
+          {field("Bağlama hedef süresi (saat)", "reconnectSlaHours", "Ödeme bildiriminden enerjilendirmeye", 1, 168)}
+          {field("Mesai başı (saat)", "workStart", "Kesme ve bağlama yalnız mesaide", 0, 12)}
+          {field("Mesai sonu (saat)", "workEnd", "24 saatlik gösterim", 12, 23)}
+        </div>
+        <p className="border-t border-line-soft px-5 py-3 text-small text-muted">Muaf etiketler: {policy.exemptTags.join(", ")}. Muaf aboneler kesme listesine girmez, açık itirazı ya da aktif ödeme planı olan abone de.</p>
+      </Panel>
+
+      <Panel id="ay-tatil" title="Resmi Tatil Takvimi" note="Tatil ve hafta sonu iş günü sayılmaz; kesme ve planlı iş emri bir sonraki iş gününe kayar.">
+        <div className="grid gap-4 p-4 sm:p-5">
+          <ul role="list" className="flex flex-wrap gap-2">
+            {policy.holidays.map((h) => (
+              <li key={h} className="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-base ring-1 ring-line">
+                <span className="edas-mono">{fullDate.format(parseDay(h))}</span>
+                <button type="button" aria-label={`${h} tatilini kaldır`} className="grid size-6 place-items-center rounded-full text-muted hover:bg-surface-raised hover:text-strong" onClick={() => { setCutPolicy({ holidays: policy.holidays.filter((x) => x !== h) }); audit("Resmi tatil kaldırdı", h); }}>
+                  ×
+                </button>
+              </li>
+            ))}
+            {policy.holidays.length === 0 ? <li className="text-base text-muted">Tanımlı tatil yok.</li> : null}
+          </ul>
+          <div className="flex flex-wrap items-end gap-2">
+            <div className="w-48"><Input label="Tatil ekle" type="date" value={holiday} onChange={(e) => setHoliday(e.target.value)} /></div>
+            <Button variant="secondary" disabled={!holidayOk} onClick={() => { setCutPolicy({ holidays: [...policy.holidays, holiday].sort() }); audit("Resmi tatil ekledi", holiday); notify({ title: "Tatil eklendi", body: fullDate.format(parseDay(holiday)), tone: "success" }); setHoliday(""); }}>Ekle</Button>
+          </div>
+        </div>
+      </Panel>
+
+      <Panel id="ay-zam" title="Gecikme Zammı Oran Tablosu" note="Tarih aralıklı ÖRNEK oranlar: gecikmiş anapara × gün sayısı. Yeni oran, Tarifeler'deki 'Gecikme Zammı' satırından yürürlük tarihiyle eklenir.">
+        <ul role="list" className="divide-y divide-line-soft">
+          {late.map((r) => (
+            <li key={r.from} className="flex items-center justify-between gap-3 px-4 py-3 sm:px-5">
+              <span className="text-base text-body">{fullDate.format(parseDay(r.from))} ve sonrası</span>
+              <span className="edas-mono font-medium text-strong">%{r.monthlyPct.toLocaleString("tr-TR")} aylık</span>
+            </li>
+          ))}
+        </ul>
+        <div className="border-t border-line-soft p-3"><Button size="sm" variant="secondary" onClick={() => go("settings", { tab: "tarife" })}>Tarifeler'de Düzenle</Button></div>
+      </Panel>
+
+      <Panel id="ay-dilim" title="Zaman Dilimleri, Reaktif Sınırlar, Serbest Tüketici" note="ÖRNEK parametreler: faturalama çekirdeği bunları okur. Düzenleme Tarifeler bölümünde.">
+        <dl className="grid gap-px overflow-hidden bg-line-soft sm:grid-cols-2 xl:grid-cols-3">
+          {[
+            ["Gündüz (T1)", zone.t1],
+            ["Puant (T2)", zone.t2],
+            ["Gece (T3)", zone.t3],
+            ["Endüktif reaktif sınırı", `%${(settings.params.reactiveInductiveLimit * 100).toLocaleString("tr-TR")} (aktife oran)`],
+            ["Kapasitif reaktif sınırı", `%${(settings.params.reactiveCapacitiveLimit * 100).toLocaleString("tr-TR")} (aktife oran)`],
+            ["Serbest tüketici yıllık sınırı", `${settings.freeLimitKwh.toLocaleString("tr-TR")} kWh/yıl`],
+          ].map(([k, v]) => (
+            <div key={k} className="bg-overlay p-4">
+              <dt className="text-small text-muted">{k}</dt>
+              <dd className="mt-0.5 text-base font-medium text-strong">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="border-t border-line-soft p-3"><Button size="sm" variant="secondary" onClick={() => go("settings", { tab: "tarife" })}>Tarifeler'de Düzenle</Button></div>
+      </Panel>
+    </div>
   );
 }

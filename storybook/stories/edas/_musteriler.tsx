@@ -1,15 +1,13 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ArrowLeft,
-  Building2,
   CalendarClock,
   Download,
   Eye,
   EyeOff,
   Gauge,
-  History,
   Mail,
   MapPin,
   MessageSquare,
@@ -19,6 +17,7 @@ import {
   PowerOff,
   Receipt,
   Repeat,
+  ShieldCheck,
   StickyNote,
   Tag,
   TriangleAlert,
@@ -35,19 +34,22 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
+import type { FilterGroup, FilterValue } from "@/components/ui/filter-sheet";
 import { HoldButton } from "@/components/ui/hold-button";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
-import { SearchField } from "@/components/ui/search-field";
+import type { SavedView } from "@/components/ui/saved-views";
 import { Select } from "@/components/ui/select";
 import { SelectionAction, SelectionBar } from "@/components/ui/selection-bar";
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
-import { TabLinks } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { TickMeter } from "@/components/ui/tick-meter";
 import { Timeline, type TimelineEvent } from "@/components/ui/timeline";
+import { useDerived } from "./_core";
+import { audit, useAuditLog } from "./_audit";
+import { cutEligibility } from "./_cutpolicy";
 import {
   COMM_LABEL,
   FLAG_LABEL,
@@ -58,8 +60,7 @@ import {
   REGIONS,
   SOURCE_LABEL,
   SUPPLIERS,
-  TODAY_KEY,
-  balanceOf,
+  dayKey,
   dayLabel,
   fullDate,
   invoicesOf,
@@ -75,6 +76,7 @@ import {
   CHANNEL_LABEL,
   type Customer,
 } from "./_data";
+import { CONSENT_LABEL, DATA_REQUEST_LABEL, type ConsentKind } from "./_data-yeni";
 import {
   TAGS,
   accountOf,
@@ -85,28 +87,41 @@ import {
   filterCustomers,
   historyOf,
   isAdded,
-  isRisky,
   findCustomer,
   metersFor,
   notesOf,
   patchCustomer,
   patchOf,
+  riskReason,
   validEmail,
   validPhone,
   useCustomerStore,
   type ListQuery,
 } from "./_data-musteri";
-import { InvoiceBadge, CustomerBadge, MeterBadge, PageBody, PageHead, Panel, ReadingBadge, SampleNote, href, useApp, type PageProps, type Params } from "./_ui";
+import { BUILTIN_VIEWS, FILTER_KEYS, activeViewId, deleteCustomerView, saveCustomerView, useSavedCustomerViews } from "./_data-musteri2";
+import { EmptyStateX, FilterBar, Metric, PageHero, fmtNum, fmtPct, fmtTl, useListKeys } from "./_kit";
+import { useCan } from "./_permissions";
+import { riskyCustomers } from "./_selectors";
+import {
+  advanceWorkOrder,
+  cancelWorkOrder,
+  createDataRequest,
+  createWorkOrder,
+  requestCut,
+  requestReconnect,
+  revealMasked,
+  sendNotice,
+  setConsent,
+  useConsents,
+  useDataRequests,
+  useWorkOrders,
+  WORK_FLOW,
+  WORK_STATUS_LABEL,
+  type WorkOrderX,
+} from "./_store";
+import { InvoiceBadge, CustomerBadge, MeterBadge, MetricStrip, PageBody, PageHead, Panel, ReadingBadge, href, useApp, type PageProps, type Params } from "./_ui";
 
 const PAGE_SIZE = 20;
-
-const TABS = [
-  { id: "", label: "Hepsi" },
-  { id: "serbest", label: "Serbest Tüketici" },
-  { id: "gorevli", label: "Görevli Tedarik" },
-  { id: "riskli", label: "Riskli" },
-  { id: "kesik", label: "Enerjisi Kesik" },
-] as const;
 
 /** Liste adresi: mevcut süzgeçleri korur, verilenleri değiştirir, boşları atar. */
 const listHref = (params: Params, patch: Record<string, string | undefined>) => href("customers", { ...params, id: undefined, ...patch });
@@ -145,54 +160,113 @@ function Bulunamadi({ id }: { id: string }) {
  *  LİSTE
  * ====================================================================== */
 
-function Cell({ icon, label, value, foot }: { icon: ReactNode; label: string; value: ReactNode; foot?: ReactNode }) {
+/** Satırın tamamı tıklanır: tablo hücresi içindeki adı bağlantısını (`data-row`) tetikler; asıl bağlantı klavye için durur. */
+function RowClickable({ children }: { children: ReactNode }) {
+  const root = useRef<HTMLDivElement>(null);
+  useListKeys(root);
   return (
-    <div className="flex min-w-0 flex-col gap-1.5 p-4">
-      <div className="flex items-center gap-2 text-small font-medium text-muted">
-        <span aria-hidden className="text-muted [&_svg]:size-4">
-          {icon}
-        </span>
-        {label}
-      </div>
-      <div className="text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</div>
-      {foot ? <div className="text-small text-muted">{foot}</div> : null}
+    <div
+      ref={root}
+      className="[&_tbody_tr]:cursor-pointer"
+      onClick={(event) => {
+        const el = event.target as HTMLElement;
+        if (el.closest("a,button,input,label,[role=checkbox]")) return;
+        el.closest("tr")?.querySelector<HTMLAnchorElement>("a[data-row]")?.click();
+      }}
+    >
+      {children}
     </div>
   );
 }
 
+const STATUS_LABEL: Record<string, string> = { riskli: "Riskli", serbest: "Serbest tüketici", gorevli: "Görevli tedarik", kesik: "Enerjisi kesik" };
+const VOLT_LABEL: Record<string, string> = { AG: "Alçak gerilim", OG: "Orta gerilim" };
+
 function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] }) {
   const { notify } = useApp();
+  const canEdit = useCan("musteri");
+  const savedViews = useSavedCustomerViews();
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [dialog, setDialog] = useState<"sms" | "tag" | null>(null);
-  const [reset, setReset] = useState(0);
+  const [q, setQ] = useState(params.q ?? "");
+
+  // Arama yazıldıkça listeyi hemen süzer; adrese kısa bir gecikmeyle yazılır (geri tuşu şişmesin).
+  useEffect(() => {
+    if ((params.q ?? "") === q.trim()) return;
+    const t = window.setTimeout(() => go("customers", { ...params, id: undefined, page: undefined, q: q.trim() || undefined }), 350);
+    return () => window.clearTimeout(t);
+  }, [q, params, go]);
 
   const all = allCustomers();
+  const hasSort = Boolean(params.sort);
   const query: ListQuery = {
-    q: params.q ?? "",
+    q,
     status: params.status ?? "",
     kind: params.kind ?? "",
     volt: params.volt ?? "",
     region: params.region ?? "",
     supplier: params.supplier ?? "",
-    sort: params.sort ?? "id",
-    dir: params.dir === "desc" ? "desc" : "asc",
+    tag: params.tag ?? "",
+    sort: params.sort ?? "risk",
+    dir: hasSort ? (params.dir === "desc" ? "desc" : "asc") : "desc",
   };
-  const rows = useMemo(() => filterCustomers(all, query), [all, query.q, query.status, query.kind, query.volt, query.region, query.supplier, query.sort, query.dir]); // eslint-disable-line react-hooks/exhaustive-deps
+  const rows = useMemo(() => filterCustomers(all, query), [all, query.q, query.status, query.kind, query.volt, query.region, query.supplier, query.tag, query.sort, query.dir]); // eslint-disable-line react-hooks/exhaustive-deps
   const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
   const page = Math.min(Math.max(1, Number(params.page) || 1), pageCount);
   const pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const counts = {
-    "": all.length,
-    serbest: all.filter((c) => c.free).length,
-    gorevli: all.filter((c) => !c.free).length,
-    riskli: all.filter(isRisky).length,
-    kesik: all.filter((c) => c.status === "kesik").length,
-  } as Record<string, number>;
-  const autoPay = all.filter((c) => c.autoPay).length;
-  const filtered = Boolean(query.q || query.kind || query.volt || query.region || query.supplier || query.status);
+  const stats = useDerived(() => {
+    const cs = allCustomers();
+    const sensitive = cs.filter((c) => (c.tags ?? []).some((t) => t.startsWith("Hassas"))).length;
+    return {
+      total: cs.length,
+      free: cs.filter((c) => c.free).length,
+      risky: riskyCustomers().length,
+      cut: cs.filter((c) => c.status === "kesik").length,
+      autoPay: cs.filter((c) => c.autoPay).length,
+      healthy: cs.filter((c) => metersFor(c.id).every((m) => m.status === "okunuyor")).length,
+      sensitive,
+      kinds: KINDS.map((k) => `${KIND_LABEL[k]} ${fmtNum(cs.filter((c) => c.kind === k).length)}`).join(" · "),
+    };
+  });
 
+  const filterParams = Object.fromEntries(FILTER_KEYS.flatMap((k) => (params[k] ? [[k, params[k]]] : []))) as Record<string, string>;
   const set = (patch: Record<string, string | undefined>) => go("customers", { ...params, id: undefined, page: undefined, ...patch });
+
+  // Görünümler: sabit olanlar + kullanıcının kaydettikleri
+  const allViews = [...BUILTIN_VIEWS, ...savedViews];
+  const viewId = activeViewId({ ...params, q: q.trim() }, allViews);
+  const viewItems: SavedView[] = allViews.map((v) => ({
+    id: v.id,
+    label: v.label,
+    builtin: v.builtin,
+    count: filterCustomers(all, { q: "", status: "", kind: "", volt: "", region: "", supplier: "", tag: "", sort: "id", dir: "asc", ...v.params }).length,
+  }));
+
+  const chips = [
+    ...(params.status ? [{ id: "status", label: "Grup", value: STATUS_LABEL[params.status] ?? params.status }] : []),
+    ...(params.kind ? [{ id: "kind", label: "Tür", value: KIND_LABEL[params.kind as keyof typeof KIND_LABEL] ?? params.kind }] : []),
+    ...(params.volt ? [{ id: "volt", label: "Gerilim", value: VOLT_LABEL[params.volt] ?? params.volt }] : []),
+    ...(params.region ? [{ id: "region", label: "Bölge", value: REGIONS.find((r) => r.id === params.region)?.name ?? params.region }] : []),
+    ...(params.supplier ? [{ id: "supplier", label: "Tedarikçi", value: SUPPLIERS.find((s) => s.id === params.supplier)?.name ?? params.supplier }] : []),
+    ...(params.tag ? [{ id: "tag", label: "Etiket", value: params.tag }] : []),
+    ...(q.trim() ? [{ id: "q", label: "Arama", value: q.trim() }] : []),
+  ];
+
+  const groups: FilterGroup[] = [
+    { id: "kind", label: "Tür", options: KINDS.map((k) => ({ value: k, label: KIND_LABEL[k] })) },
+    { id: "volt", label: "Gerilim", options: [{ value: "AG", label: "Alçak gerilim (AG)" }, { value: "OG", label: "Orta gerilim (OG)" }] },
+    { id: "region", label: "Bölge", options: REGIONS.map((r) => ({ value: r.id, label: r.name })) },
+    { id: "supplier", label: "Tedarikçi", options: SUPPLIERS.map((s) => ({ value: s.id, label: s.name })) },
+    { id: "tag", label: "Etiket", options: TAGS.map((t) => ({ value: t, label: t })) },
+  ];
+  const drawerValue: FilterValue = { kind: params.kind ? [params.kind] : [], volt: params.volt ? [params.volt] : [], region: params.region ? [params.region] : [], supplier: params.supplier ? [params.supplier] : [], tag: params.tag ? [params.tag] : [] };
+
+  const clearFilters = () => {
+    setQ("");
+    go("customers", { sort: params.sort, dir: params.dir });
+  };
+
   const toggle = (id: string, on: boolean) =>
     setSelected((prev) => {
       const next = new Set(prev);
@@ -215,10 +289,20 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
     a.download = "musteri-listesi.csv";
     a.click();
     URL.revokeObjectURL(url);
+    audit("Müşteri listesini dışa aktardı", `${chosen.length} abone`, undefined, "CSV (kimlik ve iletişim alanları olmadan)");
     notify({ title: "Liste indirildi", body: `${chosen.length} abone, KVKK gereği kimlik ve iletişim alanları olmadan.`, tone: "success" });
   }
 
   const columns: Column<Customer>[] = [
+    {
+      key: "risk",
+      header: <span className="sr-only">Risk</span>,
+      width: "1rem",
+      render: (c) => {
+        const reason = riskReason(c);
+        return <span aria-hidden className={`block h-10 w-1 rounded-full ${reason ? (reason.startsWith("Sayaç") ? "bg-warning" : "bg-danger") : "bg-line"}`} />;
+      },
+    },
     {
       key: "select",
       width: "3rem",
@@ -226,11 +310,13 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
         <Checkbox
           aria-label="Bu sayfadaki bütün aboneleri seç"
           checked={pageAllSelected}
-          onChange={(e) => setSelected((prev) => {
-            const next = new Set(prev);
-            for (const c of pageRows) (e.target.checked ? next.add(c.id) : next.delete(c.id));
-            return next;
-          })}
+          onChange={(e) =>
+            setSelected((prev) => {
+              const next = new Set(prev);
+              for (const c of pageRows) (e.target.checked ? next.add(c.id) : next.delete(c.id));
+              return next;
+            })
+          }
         />
       ),
       render: (c) => <Checkbox aria-label={`${c.name} aboneliğini seç`} checked={selected.has(c.id)} onChange={(e) => toggle(c.id, e.target.checked)} />,
@@ -243,7 +329,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
       width: "17rem",
       render: (c) => (
         <div className="min-w-0">
-          <a href={href("customers", { id: c.id })} className="block truncate font-medium text-strong hover:underline">
+          <a data-row href={href("customers", { id: c.id })} className="block truncate font-medium text-strong hover:underline">
             {c.name}
           </a>
           <span className="edas-mono text-small text-muted">
@@ -288,144 +374,160 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
     {
       key: "status",
       header: "Durum",
-      render: (c) => (
-        <div className="flex flex-wrap gap-1">
-          <CustomerBadge status={c.status} />
-          {isRisky(c) && c.status === "aktif" ? <Badge tone="warning">Riskli</Badge> : null}
-        </div>
-      ),
+      render: (c) => {
+        const reason = riskReason(c);
+        return (
+          <div className="flex flex-col items-start gap-1">
+            <div className="flex flex-wrap gap-1">
+              <CustomerBadge status={c.status} />
+              {reason && c.status === "aktif" ? <Badge tone={reason.startsWith("Sayaç") ? "warning" : "danger"}>Riskli</Badge> : null}
+            </div>
+            {reason ? <span className="text-small text-muted">{reason}</span> : null}
+          </div>
+        );
+      },
     },
   ];
 
-  const items: RecordItem[] = pageRows.map((c) => ({
-    id: c.id,
-    title: c.name,
-    subtitle: `${c.id} · ${KIND_LABEL[c.kind]} · ${c.voltage}`,
-    leading: <Avatar name={c.name} size="sm" />,
-    value: accountOf(c.id).balance > 0 ? tl(accountOf(c.id).balance) : kwh(c.baseKwh),
-    meta: `${region(c.regionId).name} · ${c.district}`,
-    status: <CustomerBadge status={c.status} />,
-    href: href("customers", { id: c.id }),
-    actions: <Checkbox aria-label={`${c.name} aboneliğini seç`} checked={selected.has(c.id)} onChange={(e) => toggle(c.id, e.target.checked)} />,
-  }));
+  const items: RecordItem[] = pageRows.map((c) => {
+    const reason = riskReason(c);
+    return {
+      id: c.id,
+      title: c.name,
+      subtitle: `${c.id} · ${KIND_LABEL[c.kind]} · ${c.voltage}`,
+      leading: <Avatar name={c.name} size="sm" />,
+      value: accountOf(c.id).balance > 0 ? tl(accountOf(c.id).balance) : kwh(c.baseKwh),
+      meta: reason ? `${reason} · ${region(c.regionId).name}` : `${region(c.regionId).name} · ${c.district}`,
+      status: (
+        <span className="flex flex-wrap gap-1">
+          <CustomerBadge status={c.status} />
+          {reason ? <Badge tone={reason.startsWith("Sayaç") ? "warning" : "danger"}>Riskli</Badge> : null}
+        </span>
+      ),
+      href: href("customers", { id: c.id }),
+      actions: <Checkbox aria-label={`${c.name} aboneliğini seç`} checked={selected.has(c.id)} onChange={(e) => toggle(c.id, e.target.checked)} />,
+    };
+  });
 
   return (
     <>
       <PageHead
         title="Müşteriler"
-        description={`${num.format(all.length)} abone kaydı. Tesisat, sayaç, fatura ve sözleşme tek yerden.`}
+        description={`${fmtNum(stats.total)} abone kaydı. Risk öne alınır: önce ilgilenilmesi gerekenler.`}
         actions={
           <>
-            <Button variant="secondary" onClick={() => notify({ title: "Rapor hazırlanıyor", body: "Müşteri envanteri raporu Raporlar sayfasında hazır olacak.", tone: "info" })}>
-              <Download /> Envanter Raporu
+            <Button
+              variant="secondary"
+              onClick={() => {
+                const everyone = rows;
+                const head = ["Abone No", "Ad", "Tür", "Bölge", "Tedarikçi", "Açık Bakiye (TL)", "Durum", "Risk"];
+                const lines = everyone.map((c) => [c.id, `"${c.name}"`, KIND_LABEL[c.kind], region(c.regionId).name, `"${supplier(c.supplierId).name}"`, (accountOf(c.id).balance / 100).toFixed(2), c.status, riskReason(c) ?? ""].join(";"));
+                const blob = new Blob(["﻿", [head.join(";"), ...lines].join("\n")], { type: "text/csv;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "musteri-envanteri.csv";
+                a.click();
+                URL.revokeObjectURL(url);
+                audit("Müşteri envanterini dışa aktardı", `${everyone.length} abone`, undefined, "CSV");
+                notify({ title: "Envanter indirildi", body: `${fmtNum(everyone.length)} abone, mevcut süzgeçle.`, tone: "success" });
+              }}
+            >
+              <Download /> Envanter CSV
             </Button>
-            <a className={buttonClass({ variant: "primary" })} href={href("register")}>
-              <UserPlus /> Yeni Müşteri
-            </a>
+            {canEdit ? (
+              <a className={buttonClass({ variant: "primary" })} href={href("register")}>
+                <UserPlus /> Yeni Müşteri
+              </a>
+            ) : null}
           </>
         }
       />
       <PageBody>
-        <div className="edas-strip overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line [&>*]:min-w-0">
-          <Cell icon={<Users />} label="Toplam Abone" value={num.format(all.length)} foot={KINDS.map((k) => `${KIND_LABEL[k]} ${all.filter((c) => c.kind === k).length}`).join(" · ")} />
-          <Cell icon={<Building2 />} label="Serbest Tüketici" value={num.format(counts.serbest)} foot={`${Math.round((counts.serbest / all.length) * 100)}% tedarikçisini seçmiş`} />
-          <Cell icon={<Wallet />} label="Otomatik Ödeme" value={`%${Math.round((autoPay / all.length) * 100)}`} foot={`${num.format(autoPay)} talimat`} />
-          <Cell icon={<TriangleAlert />} label="Riskli Abone" value={num.format(counts.riskli)} foot="Geciken fatura ya da sayaç şüphesi" />
-          <Cell icon={<PowerOff />} label="Enerjisi Kesik" value={num.format(counts.kesik)} foot="Yeniden bağlama bekleyenler dahil" />
-          <Cell icon={<Gauge />} label="Okunan Sayaç" value={`%${Math.round((all.filter((c) => metersFor(c.id).every((m) => m.status === "okunuyor")).length / all.length) * 100)}`} foot="Tüm sayaçları sağlıklı aboneler" />
-        </div>
+        <PageHero
+          primary={{ label: "Riskli abone", value: fmtNum(stats.risky), foot: "İki ya da daha çok geciken fatura, ya da sayaç şüphesi", icon: <TriangleAlert />, goodWhen: "down", to: { page: "customers", params: { status: "riskli" } } }}
+          secondary={[
+            { label: "Toplam abone", value: fmtNum(stats.total), foot: stats.kinds },
+            { label: "Serbest tüketici", value: fmtNum(stats.free), foot: `${fmtPct((stats.free / stats.total) * 100, 0)} tedarikçisini seçmiş`, to: { page: "customers", params: { status: "serbest" } } },
+            { label: "Enerjisi kesik", value: fmtNum(stats.cut), foot: "Yeniden bağlama bekleyenler dahil", to: { page: "customers", params: { status: "kesik" } } },
+            { label: "Hassas abone", value: fmtNum(stats.sensitive), foot: "Kesme listesine alınmaz", to: { page: "customers", params: { tag: "Hassas Abone (Tıbbi Cihaz)" } } },
+            { label: "Otomatik ödeme", value: fmtPct((stats.autoPay / stats.total) * 100, 0), foot: `${fmtNum(stats.autoPay)} talimat` },
+            { label: "Sağlıklı sayaç", value: fmtPct((stats.healthy / stats.total) * 100, 0), foot: "Tüm sayaçları okunan aboneler" },
+          ]}
+        />
 
-        <Panel
-          title="Abone Listesi"
-          note={filtered ? `${num.format(rows.length)} sonuç, ${num.format(all.length)} abone içinde` : "Arama, süzgeç ve sıralama adresle birlikte durur."}
-          id="musteri-liste"
-        >
+        <Panel title="Abone Listesi" note={chips.length ? `${fmtNum(rows.length)} sonuç, ${fmtNum(stats.total)} abone içinde` : "Varsayılan sıra: riskli önce. Süzgeç ve sıralama adresle birlikte durur."} id="musteri-liste">
           <div className="space-y-3 border-b border-line-soft px-4 py-3 sm:px-5">
-            <TabLinks
-              aria-label="Abone grupları"
-              current={listHref(params, { status: query.status || undefined, page: undefined })}
-              items={TABS.map((t) => ({ href: listHref(params, { status: t.id || undefined, page: undefined }), label: `${t.label} ${num.format(counts[t.id])}` }))}
-              className="max-w-full"
+            <FilterBar
+              search={{ value: q, onChange: setQ, placeholder: "Ad, abone no, tesisat no, sayaç seri no, kimlik/VKN", label: "Abone ara" }}
+              filters={chips}
+              onRemoveFilter={(id) => {
+                if (id === "q") setQ("");
+                else set({ [id]: undefined });
+              }}
+              onClearFilters={clearFilters}
+              summary={chips.length ? `${fmtNum(rows.length)} abone` : undefined}
+              views={{
+                items: viewItems,
+                value: viewId,
+                onChange: (id) => {
+                  const view = allViews.find((v) => v.id === id);
+                  if (!view) return;
+                  setQ("");
+                  go("customers", { ...view.params, sort: params.sort, dir: params.dir });
+                },
+                onSave: (name) => {
+                  saveCustomerView(name, { ...filterParams, ...(q.trim() ? { q: q.trim() } : {}) });
+                  notify({ title: "Görünüm kaydedildi", body: name, tone: "success" });
+                },
+                onDelete: (id) => {
+                  deleteCustomerView(id);
+                  notify({ title: "Görünüm silindi", tone: "info" });
+                },
+              }}
+              drawer={{
+                groups,
+                value: drawerValue,
+                onChange: (value) => set({ kind: value.kind?.[0], volt: value.volt?.[0], region: value.region?.[0], supplier: value.supplier?.[0], tag: value.tag?.[0] }),
+                resultCount: rows.length,
+                resultLabel: (n) => `${fmtNum(n)} Aboneyi Göster`,
+              }}
             />
-            <SearchField
-              key={`q-${reset}`}
-              label="Abone ara"
-              placeholder="Ad, abone no, tesisat no, sayaç seri no, kimlik/VKN"
-              defaultValue={query.q}
-              resultCount={filtered ? rows.length : undefined}
-              onSearch={(value) => set({ q: value || undefined })}
-            />
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-              <Select
-                label="Tür"
-                value={query.kind || "all"}
-                onValueChange={(v) => set({ kind: v && v !== "all" ? v : undefined })}
-                items={[{ value: "all", label: "Hepsi" }, ...KINDS.map((k) => ({ value: k, label: KIND_LABEL[k] }))]}
-              />
-              <Select
-                label="Gerilim"
-                value={query.volt || "all"}
-                onValueChange={(v) => set({ volt: v && v !== "all" ? v : undefined })}
-                items={[{ value: "all", label: "Hepsi" }, { value: "AG", label: "Alçak (AG)" }, { value: "OG", label: "Orta (OG)" }]}
-              />
-              <Select
-                label="Bölge"
-                value={query.region || "all"}
-                onValueChange={(v) => set({ region: v && v !== "all" ? v : undefined })}
-                items={[{ value: "all", label: "Hepsi" }, ...REGIONS.map((r) => ({ value: r.id, label: r.name }))]}
-              />
-              <Select
-                label="Tedarikçi"
-                value={query.supplier || "all"}
-                onValueChange={(v) => set({ supplier: v && v !== "all" ? v : undefined })}
-                items={[{ value: "all", label: "Hepsi" }, ...SUPPLIERS.map((s) => ({ value: s.id, label: s.name }))]}
-              />
-            </div>
-            {filtered ? (
-              <div className="flex flex-wrap items-center gap-2 text-small text-muted">
-                <span>{num.format(rows.length)} abone listeleniyor.</span>
-                <button
-                  type="button"
-                  className="inline-flex min-h-9 items-center gap-1 rounded-md px-2 font-medium text-primary-ink hover:underline"
-                  onClick={() => {
-                    setReset((n) => n + 1);
-                    go("customers", {});
-                  }}
-                >
-                  <X className="size-3.5" /> Süzgeçleri temizle
-                </button>
-              </div>
-            ) : null}
           </div>
 
           <div className="max-md:hidden">
-            <DataTable<Customer>
-              caption="Abone listesi"
-              columns={columns}
-              rows={pageRows}
-              rowKey={(c) => c.id}
-              sort={{ key: query.sort, dir: query.dir }}
-              sortHref={(key, dir) => listHref(params, { sort: key, dir, page: undefined })}
-              density="comfortable"
-              on="surface"
-              stickyFirst={false}
-              minWidth="64rem"
-              empty={
-                <EmptyState
-                  variant="inline"
-                  title="Bu süzgece uyan abone yok."
-                  hint="Aramayı kısaltın ya da süzgeçleri temizleyin."
-                  action={
-                    <a className={buttonClass({ variant: "secondary", size: "sm" })} href={href("customers")}>
-                      Süzgeçleri temizle
-                    </a>
-                  }
-                />
-              }
-            />
+            <RowClickable>
+              <DataTable<Customer>
+                caption="Abone listesi"
+                columns={columns}
+                rows={pageRows}
+                rowKey={(c) => c.id}
+                sort={{ key: query.sort, dir: query.dir }}
+                sortHref={(key, dir) => listHref(params, { sort: key, dir, page: undefined })}
+                density="comfortable"
+                on="surface"
+                stickyFirst={false}
+                minWidth="64rem"
+                empty={
+                  <EmptyStateX
+                    title="Bu süzgece uyan abone yok."
+                    hint="Aramayı kısaltın, bir süzgeci kaldırın ya da görünümü değiştirin."
+                    action={
+                      <Button variant="secondary" size="sm" onClick={clearFilters}>
+                        Süzgeçleri temizle
+                      </Button>
+                    }
+                  />
+                }
+              />
+            </RowClickable>
           </div>
           <div className="md:hidden">
-            {items.length ? <RecordList label="Abone listesi" items={items} /> : <EmptyState variant="inline" title="Bu süzgece uyan abone yok." hint="Süzgeçleri temizleyin." className="px-4" />}
+            {items.length ? (
+              <RecordList label="Abone listesi" items={items} />
+            ) : (
+              <EmptyStateX title="Bu süzgece uyan abone yok." hint="Süzgeçleri temizleyin." action={<Button variant="secondary" size="sm" onClick={clearFilters}>Süzgeçleri temizle</Button>} />
+            )}
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line-soft px-4 py-3 sm:px-5">
@@ -436,17 +538,20 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
             <Pagination page={page} pageCount={pageCount} hrefFor={(n) => listHref(params, { page: n > 1 ? String(n) : undefined })} scroll={false} />
           </div>
         </Panel>
-        <SampleNote />
       </PageBody>
 
       {selected.size > 0 ? (
         <SelectionBar count={selected.size} noun="abone" onClear={() => setSelected(new Set())}>
-          <SelectionAction icon={<MessageSquare />} onClick={() => setDialog("sms")}>
-            SMS Gönder
-          </SelectionAction>
-          <SelectionAction icon={<Tag />} onClick={() => setDialog("tag")}>
-            Etiketle
-          </SelectionAction>
+          {canEdit ? (
+            <>
+              <SelectionAction icon={<MessageSquare />} onClick={() => setDialog("sms")}>
+                SMS Gönder
+              </SelectionAction>
+              <SelectionAction icon={<Tag />} onClick={() => setDialog("tag")}>
+                Etiketle
+              </SelectionAction>
+            </>
+          ) : null}
           <SelectionAction icon={<Download />} onClick={exportCsv}>
             CSV
           </SelectionAction>
@@ -486,7 +591,8 @@ function SmsDialog({ open, onClose, customers, onSent }: { open: boolean; onClos
             variant="primary"
             disabled={empty || over}
             onClick={() => {
-              for (const c of customers.slice(0, 40)) addHistory(c.id, { title: "SMS gönderildi", description: text.length > 60 ? `${text.slice(0, 60)}…` : text, tone: "neutral" });
+              for (const c of customers) addHistory(c.id, { title: "SMS gönderildi", description: text.length > 60 ? `${text.slice(0, 60)}…` : text, tone: "neutral" });
+              audit("Toplu SMS gönderdi", `${customers.length} abone`, undefined, SMS_TEMPLATES.find((t) => t.value === template)?.label);
               notify({ title: `${customers.length} aboneye SMS kuyruğa alındı`, body: "Gönderim durumu Raporlar sayfasında izlenir.", tone: "success" });
               onSent();
               onClose();
@@ -542,7 +648,7 @@ function TagDialog({ open, onClose, customers, onDone }: { open: boolean; onClos
             variant="primary"
             disabled={picked.length === 0}
             onClick={() => {
-              for (const c of customers.slice(0, 40)) addHistory(c.id, { title: "Etiket eklendi", description: picked.join(", "), tone: "primary" });
+              for (const c of customers) patchCustomer(c.id, { tags: [...new Set([...(c.tags ?? []), ...picked])] }, { title: "Etiket eklendi", description: picked.join(", "), tone: "primary" });
               notify({ title: "Etiketler eklendi", body: `${customers.length} aboneye ${picked.length} etiket uygulandı.`, tone: "success" });
               setPicked([]);
               onDone();
@@ -583,14 +689,19 @@ function unmasked(c: Customer) {
   };
 }
 
-type DetailDialog = "contact" | "supplier" | "work" | "tariff" | "close" | "merge" | null;
+type DetailDialog = "contact" | "supplier" | "work" | "tariff" | "close" | "merge" | "reveal" | null;
 
 function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["go"] }) {
   const { notify } = useApp();
+  const canEdit = useCan("musteri");
+  const canCut = useCan("kesme");
   const [tab, setTab] = useState("overview");
   const [dialog, setDialog] = useState<DetailDialog>(null);
   const [revealed, setRevealed] = useState(false);
   const [note, setNote] = useState("");
+  const workOrders = useWorkOrders();
+  const auditLog = useAuditLog();
+  const activeWork = workOrders.filter((w) => w.customerId === c.id && (w.type === "kesme" || w.type === "baglama") && w.status !== "tamamlandi" && w.status !== "iptal");
 
   const meters = metersFor(c.id);
   const invoices = invoicesOf(c.id);
@@ -604,8 +715,13 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
   const closed = c.status === "kapali";
   const fresh = isAdded(c.id);
 
+  const demandRows = PERIODS_12.slice(-6).flatMap((p) => {
+    const rs = readings.filter((r) => r.period === p);
+    return rs.length ? [{ period: p, label: `${monthShort.format(parseDay(`${p}-01`))} ${p.slice(0, 4)}`, demand: Math.max(...rs.map((r) => r.demandKw)) }] : [];
+  });
   const usageByPeriod = PERIODS_12.map((p) => readings.filter((r) => r.period === p).reduce((sum, r) => sum + r.usage.total, 0));
   const hasUsage = usageByPeriod.some((v) => v > 0);
+  const anomaly = usageAnomaly(usageByPeriod, readings, c.kind);
   const lastUsage = usageByPeriod[usageByPeriod.length - 1] || usageByPeriod[usageByPeriod.length - 2] || 0;
   const avg12 = hasUsage ? Math.round(usageByPeriod.reduce((a, b) => a + b, 0) / usageByPeriod.filter((v) => v > 0).length) : 0;
   const lastInvoice = invoices.at(-1);
@@ -615,20 +731,25 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
   );
 
   const shown = revealed ? unmasked(c) : { phone: c.phone, email: c.email };
+  const auditEvents = auditLog
+    .filter((a) => a.origin === "portal" && a.target.startsWith(c.id))
+    .map((a) => ({ id: `a-${a.id}`, at: dayKey(a.at), when: `Bugün, ${hhmm(a.at)}`, title: a.action, description: [a.before, a.after].filter(Boolean).join(" → ") || `${a.user}${a.ok ? "" : " · reddedildi"}`, tone: (a.ok ? "primary" : "danger") as TimelineEvent["tone"] }));
+  const audited = new Set(auditEvents.map((e) => e.title));
   const events: TimelineEvent[] = [
-    ...historyOf(c.id).map((h) => ({ id: h.id, at: h.at, when: h.when, title: h.title, description: h.description, tone: h.tone })),
+    ...auditEvents,
+    ...historyOf(c.id).filter((h) => !audited.has(h.title)).map((h) => ({ id: h.id, at: h.at, when: h.when, title: h.title, description: h.description, tone: h.tone })),
     ...invoices.slice(-3).reverse().map((i) => ({ id: `i-${i.id}`, at: i.issued, when: dayLabel(i.issued), title: `${i.id} numaralı fatura kesildi`, description: `${tl(i.total)} · vade ${dayLabel(i.due)}`, tone: (i.status === "gecikti" ? "danger" : "neutral") as TimelineEvent["tone"] })),
     ...payments.slice(-2).reverse().map((p) => ({ id: `p-${p.id}`, at: p.date, when: dayLabel(p.date), title: "Ödeme alındı", description: `${tl(p.amount)} · ${CHANNEL_LABEL[p.channel]}`, tone: "success" as const })),
     { id: "since", at: c.since, when: fullDate.format(parseDay(c.since)), title: "Abonelik açıldı", description: `${region(c.regionId).name}, ${c.district}`, tone: "primary" as const },
   ].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
 
   const actions: { id: Exclude<DetailDialog, null>; icon: ReactNode; title: string; hint: string; disabled?: boolean }[] = [
-    { id: "contact", icon: <Pencil />, title: "İletişim bilgilerini güncelle", hint: "Telefon ve e-posta; doğrulama koduyla teyit edilir." },
-    { id: "tariff", icon: <Receipt />, title: "Tarife ve adres değişikliği", hint: "Zaman dilimi tarifesi ve fatura adresi." },
-    { id: "supplier", icon: <Repeat />, title: "Tedarikçi değişikliği başlat", hint: c.free ? "Serbest tüketici: perakende satış şirketi seçilebilir." : "Serbest tüketici değil: görevli tedarik şirketi.", disabled: !c.free || closed },
-    { id: "work", icon: c.status === "kesik" ? <Power /> : <PowerOff />, title: c.status === "kesik" ? "Yeniden bağlama talebi" : "Enerji kesme talebi", hint: "İş emri oluşturur; onay gerektirir.", disabled: closed },
+    { id: "contact", icon: <Pencil />, title: "İletişim bilgilerini güncelle", hint: canEdit ? "Telefon ve e-posta; doğrulama koduyla teyit edilir." : "Bu işlem için müşteri düzenleme yetkisi gerekir.", disabled: !canEdit || closed },
+    { id: "tariff", icon: <Receipt />, title: "Tarife ve adres değişikliği", hint: canEdit ? "Zaman dilimi tarifesi ve fatura adresi." : "Bu işlem için müşteri düzenleme yetkisi gerekir.", disabled: !canEdit || closed },
+    { id: "supplier", icon: <Repeat />, title: "Tedarikçi değişikliği başlat", hint: c.free ? "Serbest tüketici: perakende satış şirketi seçilebilir." : "Serbest tüketici değil: görevli tedarik şirketi.", disabled: !c.free || closed || !canEdit },
+    { id: "work", icon: c.status === "kesik" ? <Power /> : <PowerOff />, title: c.status === "kesik" ? "Yeniden bağlama talebi" : "Enerji kesme talebi", hint: canCut ? "Politika denetlenir; iş emri oluşturur, iki göz onayı ister." : "Bu işlem için kesme ve bağlama yetkisi gerekir.", disabled: closed || !canCut },
     { id: "merge", icon: <Users />, title: "Yinelenen kayıt kontrolü", hint: dup ? `Aynı adla başka kayıt var: ${dup.id}.` : "Olası yinelenen kayıt bulunmadı." },
-    { id: "close", icon: <X />, title: "Aboneliği kapat", hint: "Geri alınamaz; bakiye ve sayaç durumu kontrol edilir.", disabled: closed },
+    { id: "close", icon: <X />, title: "Aboneliği kapat", hint: canEdit ? "Geri alınamaz; bakiye ve sayaç durumu kontrol edilir." : "Bu işlem için müşteri düzenleme yetkisi gerekir.", disabled: closed || !canEdit },
   ];
 
   return (
@@ -642,13 +763,16 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
             <a className={buttonClass({ variant: "ghost" })} href={href("customers")}>
               <ArrowLeft /> Listeye Dön
             </a>
-            <Button variant="secondary" onClick={() => setDialog("contact")}>
-              <Pencil /> Bilgileri Güncelle
-            </Button>
+            {canEdit ? (
+              <Button variant="secondary" onClick={() => setDialog("contact")}>
+                <Pencil /> Bilgileri Güncelle
+              </Button>
+            ) : null}
             <Button
               variant="primary"
               onClick={() => {
                 addHistory(c.id, { title: "SMS gönderildi", description: "Fatura bilgilendirme mesajı", tone: "neutral" });
+                audit("SMS gönderdi", c.id, undefined, "Fatura bilgilendirme");
                 notify({ title: "SMS gönderildi", body: "Kayıtlı telefona fatura bilgilendirmesi iletildi.", tone: "success" });
               }}
             >
@@ -658,28 +782,9 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
         }
       />
       <PageBody>
-        {patch?.pendingWork ? (
-          <div role="status" className="flex flex-wrap items-center gap-3 rounded-xl bg-warning-wash px-4 py-3 text-base text-body ring-1 ring-warning/20">
-            <CalendarClock aria-hidden className="size-5 shrink-0 text-warning" />
-            <p className="min-w-0 flex-1">
-              <strong className="font-semibold text-strong">{patch.pendingWork.kind === "kesme" ? "Enerji kesme" : "Yeniden bağlama"} talebi açık.</strong> Planlanan tarih {dayLabel(patch.pendingWork.date)}. Neden: {patch.pendingWork.reason}.
-            </p>
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => {
-                const w = patch.pendingWork!;
-                patchCustomer(c.id, { pendingWork: null, status: w.kind === "kesme" ? "kesik" : "aktif" }, { title: w.kind === "kesme" ? "Enerji kesildi" : "Enerji yeniden bağlandı", description: "Saha ekibi iş emrini tamamladı (demo).", tone: w.kind === "kesme" ? "danger" : "success" });
-                notify({ title: w.kind === "kesme" ? "Enerji kesildi" : "Enerji bağlandı", body: "İş emri tamamlandı olarak işaretlendi.", tone: "success" });
-              }}
-            >
-              İş Emrini Tamamla (demo)
-            </Button>
-            <Button size="sm" variant="ghost" onClick={() => patchCustomer(c.id, { pendingWork: null }, { title: "Talep iptal edildi", tone: "neutral" })}>
-              Talebi İptal Et
-            </Button>
-          </div>
-        ) : null}
+        {activeWork.map((w) => (
+          <WorkOrderBanner key={w.id} work={w} canAct={canCut} />
+        ))}
         {patch?.supplierChange ? (
           <div role="status" className="flex flex-wrap items-center gap-3 rounded-xl bg-primary-wash px-4 py-3 text-base text-body ring-1 ring-primary/20">
             <Repeat aria-hidden className="size-5 shrink-0 text-primary-ink" />
@@ -695,7 +800,7 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
                 notify({ title: "Tedarikçi değişikliği tamamlandı", body: supplier(s.supplierId).name, tone: "success" });
               }}
             >
-              Yürürlüğe Al (demo)
+              Yürürlüğe Al
             </Button>
             <Button size="sm" variant="ghost" onClick={() => patchCustomer(c.id, { supplierChange: null }, { title: "Tedarikçi değişikliği iptal edildi", tone: "neutral" })}>
               İptal Et
@@ -756,9 +861,10 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
                 size="sm"
                 variant="secondary"
                 aria-pressed={revealed}
+                disabled={!canEdit && !revealed}
                 onClick={() => {
-                  if (!revealed) addHistory(c.id, { title: "İletişim bilgisi görüntülendi", description: "Aylin Yıldırım, KVKK erişim kaydı", tone: "warning" });
-                  setRevealed((v) => !v);
+                  if (revealed) setRevealed(false);
+                  else setDialog("reveal");
                 }}
               >
                 {revealed ? <EyeOff /> : <Eye />} {revealed ? "Maskele" : "Göster"}
@@ -777,11 +883,11 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
           </section>
 
           <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 xl:col-span-2">
-            <div className="grid grid-cols-1 divide-y divide-line-soft overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line sm:grid-cols-3 sm:divide-x sm:divide-y-0 [&>*]:min-w-0">
-              <Cell icon={<Wallet />} label="Açık Bakiye" value={account.balance > 0 ? tl(account.balance) : "Yok"} foot={account.overdue ? `${account.overdue} geciken fatura` : "Gecikme yok"} />
-              <Cell icon={<Receipt />} label="Son Fatura" value={lastInvoice ? tl(lastInvoice.total) : "—"} foot={lastInvoice ? `${lastInvoice.id} · vade ${dayLabel(lastInvoice.due)}` : "Henüz fatura yok"} />
-              <Cell icon={<Gauge />} label="Son Dönem Tüketim" value={hasUsage ? kwh(lastUsage) : "—"} foot={hasUsage ? `12 ay ortalama ${kwh(avg12)}` : "Henüz okuma yok"} />
-            </div>
+            <MetricStrip>
+              <Metric icon={<Wallet />} label="Açık Bakiye" value={account.balance > 0 ? fmtTl(account.balance) : "Yok"} foot={account.overdue ? `${account.overdue} geciken fatura` : "Gecikme yok"} to={account.balance > 0 ? { page: "invoices", params: { customer: c.id } } : undefined} />
+              <Metric icon={<Receipt />} label="Son Fatura" value={lastInvoice ? fmtTl(lastInvoice.total) : "—"} foot={lastInvoice ? `${lastInvoice.id} · vade ${dayLabel(lastInvoice.due)}` : "Henüz fatura yok"} />
+              <Metric icon={<Gauge />} label="Son Dönem Tüketim" value={hasUsage ? kwh(lastUsage) : "—"} foot={hasUsage ? `12 ay ortalama ${kwh(avg12)}` : "Henüz okuma yok"} />
+            </MetricStrip>
 
             <Tabs
               aria-label="Müşteri ayrıntıları"
@@ -804,7 +910,12 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
                         </Alert>
                       ) : null}
                       <Panel title="Aylık Tüketim" note="Son 12 dönem, kWh (çarpan dahil)" id="detay-tuketim">
-                        <div className="p-4 sm:p-5">
+                        <div className="grid gap-3 p-4 sm:p-5">
+                          {anomaly ? (
+                            <Alert tone="warning" title={`${anomaly.label}: tüketim ortalamanın ${fmtPct(anomaly.dropPct, 0)} altında`}>
+                              {anomaly.explanation}
+                            </Alert>
+                          ) : null}
                           {hasUsage ? (
                             <AreaChart
                               title={`${c.name} aylık tüketim`}
@@ -981,8 +1092,39 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
                           <Fact label="Tedarikçi İletişim" value={sup.phone} />
                         </dl>
                       </Panel>
+                      <Panel title="Talep Geçmişi ve Güç Aşımı" note={`Sözleşme gücü ${contract.power} kW; aşım olursa güç aşım bedeli faturaya yazılır`} id="detay-talep" className="mt-5">
+                        <div className="overflow-x-auto">
+                          <table className="w-full min-w-[30rem] text-left text-base">
+                            <caption className="sr-only">Son altı dönemin talep gücü</caption>
+                            <thead>
+                              <tr className="border-b border-line-soft text-small text-muted">
+                                <th scope="col" className="px-4 py-2 font-medium sm:px-5">Dönem</th>
+                                <th scope="col" className="px-2 py-2 text-right font-medium">En yüksek talep</th>
+                                <th scope="col" className="px-2 py-2 font-medium">Sözleşme gücü kullanımı</th>
+                                <th scope="col" className="px-4 py-2 font-medium sm:px-5">Durum</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-line-soft">
+                              {demandRows.map((r) => (
+                                <tr key={r.period}>
+                                  <th scope="row" className="px-4 py-2.5 font-medium text-strong sm:px-5">{r.label}</th>
+                                  <td className="edas-mono px-2 py-2.5 text-right text-body">{num.format(r.demand)} kW</td>
+                                  <td className="px-2 py-2.5"><TickMeter label={`${r.label} talep kullanımı`} value={Math.min(r.demand, contract.power)} max={contract.power} ticks={12} text={fmtPct((r.demand / contract.power) * 100, 0)} size="sm" /></td>
+                                  <td className="px-4 py-2.5 sm:px-5">{r.demand > contract.power ? <Badge tone="danger">Aşım {num.format(r.demand - contract.power)} kW</Badge> : <Badge tone="success">Sınır içinde</Badge>}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          {demandRows.length === 0 ? <p className="px-4 py-4 text-small text-muted sm:px-5">Henüz talep kaydı yok.</p> : null}
+                        </div>
+                      </Panel>
                     </div>
                   ),
+                },
+                {
+                  value: "kvkk",
+                  label: "KVKK ve Rıza",
+                  panel: <KvkkPanel customer={c} canEdit={canEdit} />,
                 },
                 {
                   value: "history",
@@ -1057,11 +1199,6 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
             ))}
           </ul>
         </Panel>
-        <p className="flex items-center gap-2 text-small text-muted">
-          <History aria-hidden className="size-4" />
-          Bu ekrandaki değişiklikler yalnız demo oturumunda tutulur.
-        </p>
-        <SampleNote />
       </PageBody>
 
       <ContactDialog open={dialog === "contact"} onClose={() => setDialog(null)} customer={c} />
@@ -1069,6 +1206,7 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
       <SupplierDialog open={dialog === "supplier"} onClose={() => setDialog(null)} customer={c} />
       <WorkDialog open={dialog === "work"} onClose={() => setDialog(null)} customer={c} balance={account.balance} />
       <MergeDialog open={dialog === "merge"} onClose={() => setDialog(null)} customer={c} other={dup} go={go} />
+      <RevealDialog open={dialog === "reveal"} onClose={() => setDialog(null)} customer={c} onReveal={() => setRevealed(true)} />
       <CloseDialog open={dialog === "close"} onClose={() => setDialog(null)} customer={c} balance={account.balance} metersCount={meters.length} />
     </>
   );
@@ -1243,16 +1381,16 @@ function WorkDialog({ open, onClose, customer: c, balance }: { open: boolean; on
   const { notify } = useApp();
   const kind = c.status === "kesik" ? "baglama" : "kesme";
   const [reason, setReason] = useState<string>(WORK_REASONS[kind][0]);
-  const [date, setDate] = useState("2026-11-23");
   const [ack, setAck] = useState(false);
-  const dateError = date < TODAY_KEY ? "Tarih bugünden önce olamaz." : undefined;
-  const risky = kind === "kesme" && reason === "Ödenmemiş fatura" && balance === 0;
+  const [denied, setDenied] = useState<readonly string[]>([]);
+  const policy = kind === "kesme" ? cutEligibility(c.id) : null;
+  const canHold = ack && (kind === "baglama" || Boolean(policy?.eligible));
   return (
     <Dialog
       open={open}
       onOpenChange={(o) => !o && onClose()}
       title={kind === "kesme" ? "Enerji Kesme Talebi" : "Yeniden Bağlama Talebi"}
-      description="Talep bir saha iş emri oluşturur. Basılı tutarak onaylayın."
+      description={kind === "kesme" ? "Politika denetlenir; uygunsa iş emri oluşur ve ikinci göz onayına düşer." : "Bağlama emri 24 saatlik hedef süreyle açılır."}
       dismissible={false}
       footer={
         <>
@@ -1261,30 +1399,241 @@ function WorkDialog({ open, onClose, customer: c, balance }: { open: boolean; on
           </Button>
           <HoldButton
             tone={kind === "kesme" ? "danger" : "neutral"}
-            disabled={!ack || Boolean(dateError)}
+            disabled={!canHold}
             hint="Onaylamak için basılı tut"
-            doneLabel="Talep açıldı"
+            doneLabel="Talep işlendi"
             onConfirm={() => {
-              patchCustomer(c.id, { pendingWork: { id: `W-${Date.now() % 100000}`, kind, reason, date } }, { title: kind === "kesme" ? "Enerji kesme talebi açıldı" : "Yeniden bağlama talebi açıldı", description: `${reason} · ${dayLabel(date)}`, tone: kind === "kesme" ? "warning" : "primary" });
-              notify({ title: "İş emri oluşturuldu", body: `${kind === "kesme" ? "Kesme" : "Bağlama"} · ${dayLabel(date)}`, tone: "success" });
+              if (kind === "baglama") {
+                const wo = requestReconnect(c.id, reason);
+                if (!wo) {
+                  setDenied(["Bağlama emri yetkiniz yok"]);
+                  return;
+                }
+                notify({ title: "Bağlama iş emri açıldı", body: `${wo.id} · 24 saat hedef süre`, tone: "success" });
+              } else {
+                const r = requestCut(c.id, reason);
+                if (!r.ok) {
+                  setDenied(r.blockers);
+                  return;
+                }
+                notify(
+                  r.status === "onay-bekliyor"
+                    ? { title: "İkinci göz onayı bekleniyor", body: `${r.approval.id} · kesme emri onaylanınca iş emri açılır`, tone: "info" }
+                    : { title: "Kesme iş emri açıldı", body: r.workOrder.id, tone: "success" },
+                );
+              }
               setAck(false);
+              setDenied([]);
               onClose();
             }}
           >
-            {kind === "kesme" ? "Basılı Tutarak Kes" : "Basılı Tutarak Bağla"}
+            {kind === "kesme" ? "Basılı Tutarak Talep Et" : "Basılı Tutarak Bağla"}
           </HoldButton>
         </>
       }
     >
       <div className="grid gap-4">
         <Select label="Neden" value={reason} onValueChange={(v) => v && setReason(v)} items={WORK_REASONS[kind].map((r) => ({ value: r, label: r }))} />
-        <Input label="Planlanan tarih" type="date" value={date} min={TODAY_KEY} onChange={(e) => setDate(e.target.value)} error={dateError} />
-        {risky ? <Alert tone="warning" title="Açık borç görünmüyor">Bu abonenin açık bakiyesi yok; kesme nedeni ile kayıt çelişiyor olabilir.</Alert> : null}
-        {kind === "kesme" && c.kind === "bireysel" ? <Alert tone="warning" title="Hassas abone kontrolü">Kesmeden önce tıbbi cihaz bağımlılığı ve tebligat sürelerinin tamamlandığı doğrulanmalıdır (örnek kural).</Alert> : null}
+        {policy ? (
+          <div className="grid gap-3 rounded-xl bg-surface p-4 text-base">
+            <p className="font-semibold text-strong">{policy.eligible ? "Kesme politikasına uygun" : "Kesme politikası: şimdilik kesilemez"}</p>
+            {policy.blockers.length ? (
+              <ul className="grid gap-1.5">
+                {policy.blockers.map((b) => (
+                  <li key={b} className="flex items-start gap-2 text-body">
+                    <X aria-hidden className="mt-0.5 size-4 shrink-0 text-danger" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-body">Yazılı ihtar tamam, bekleme süresi doldu, engel yok.</p>
+            )}
+            {policy.warnings.map((w) => (
+              <p key={w} className="text-small text-muted">{w}</p>
+            ))}
+            {policy.noticeAt ? (
+              <p className="text-small text-muted">İhtar {dayLabel(policy.noticeAt)}{policy.earliest ? ` · en erken kesme ${dayLabel(policy.earliest)}` : ""}. Gecikme {policy.overdueDays} gün.</p>
+            ) : balance > 0 ? (
+              <div>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => {
+                    if (sendNotice(c.id)) notify({ title: "Yazılı ihtar gönderildi", body: "Bekleme süresi başladı; süre dolunca kesme emri verilebilir.", tone: "success" });
+                    else notify({ title: "İhtar gönderilemedi", body: "Kesme ve bağlama yetkisi gerekir.", tone: "info" });
+                  }}
+                >
+                  <Mail /> Yazılı İhtar Gönder
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        ) : balance > 0 ? (
+          <Alert tone="warning" title={`${tl(balance)} açık bakiye var`}>Borç kapanmadan bağlama için ödeme planı ya da ödeme kaydı beklenir.</Alert>
+        ) : null}
+        {denied.length ? <Alert tone="danger" title="Emir verilemedi">{denied.join("; ")}.</Alert> : null}
         <Checkbox label={kind === "kesme" ? "Tebligat süresi doldu ve borç hâlâ açık." : "Bağlama nedeni doğrulandı."} checked={ack} onChange={(e) => setAck(e.target.checked)} />
       </div>
     </Dialog>
   );
+}
+
+const REVEAL_REASONS = ["Müşteri telefonla aradı", "Fatura ya da borç görüşmesi", "Saha ekibine yönlendirme", "Şikayet incelemesi"] as const;
+
+function RevealDialog({ open, onClose, customer: c, onReveal }: { open: boolean; onClose: () => void; customer: Customer; onReveal: () => void }) {
+  const { notify } = useApp();
+  const [reason, setReason] = useState<string>(REVEAL_REASONS[0]);
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(o) => !o && onClose()}
+      title="Maskeli Bilgiyi Görüntüle"
+      description="KVKK: gerekçe yazılır, erişim denetim kaydına düşer."
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose}>
+            Vazgeç
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              revealMasked(c.id, "telefon, e-posta", reason);
+              addHistory(c.id, { title: "İletişim bilgisi görüntülendi", description: reason, tone: "warning" });
+              onReveal();
+              notify({ title: "Bilgi gösteriliyor", body: "Erişim kaydedildi.", tone: "info" });
+              onClose();
+            }}
+          >
+            Göster ve Kaydet
+          </Button>
+        </>
+      }
+    >
+      <Select label="Gerekçe" value={reason} onValueChange={(v) => v && setReason(v)} items={REVEAL_REASONS.map((r) => ({ value: r, label: r }))} />
+    </Dialog>
+  );
+}
+
+function WorkOrderBanner({ work: w, canAct }: { work: WorkOrderX; canAct: boolean }) {
+  const { notify } = useApp();
+  const label = w.type === "kesme" ? "Enerji kesme" : "Yeniden bağlama";
+  const next = WORK_FLOW[Math.min(WORK_FLOW.indexOf(w.status) + 1, WORK_FLOW.length - 1)];
+  return (
+    <div role="status" className="flex flex-wrap items-center gap-3 rounded-xl bg-warning-wash px-4 py-3 text-base text-body ring-1 ring-warning/20">
+      <CalendarClock aria-hidden className="size-5 shrink-0 text-warning" />
+      <p className="min-w-0 flex-1">
+        <strong className="font-semibold text-strong">{label} iş emri {w.id}: {WORK_STATUS_LABEL[w.status]}.</strong> Planlanan {dayLabel(dayKey(w.scheduled))}. Neden: {w.reason}.{" "}
+        <a href={href("workorders", { id: w.id })} className="font-medium text-primary-ink hover:underline">İş emrini aç</a>
+      </p>
+      {canAct ? (
+        <>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              advanceWorkOrder(w.id);
+              notify({ title: `İş emri ${WORK_STATUS_LABEL[next].toLocaleLowerCase("tr-TR")} durumuna geçti`, body: w.id, tone: "success" });
+            }}
+          >
+            Sonraki Adım: {WORK_STATUS_LABEL[next]}
+          </Button>
+          <Button size="sm" variant="ghost" onClick={() => { cancelWorkOrder(w.id, "Müşteri kartından iptal"); notify({ title: "İş emri iptal edildi", body: w.id, tone: "info" }); }}>
+            İptal Et
+          </Button>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+/** KVKK sekmesi: açık rıza tercihleri (aç/kapa) ve 30 günlük veri talepleri. */
+function KvkkPanel({ customer: c, canEdit }: { customer: Customer; canEdit: boolean }) {
+  const { notify } = useApp();
+  const consents = useConsents();
+  const requests = useDataRequests().filter((r) => r.customerId === c.id);
+  const [kind, setKind] = useState<keyof typeof DATA_REQUEST_LABEL>("erisim");
+  const kinds = Object.keys(CONSENT_LABEL) as ConsentKind[];
+  const give = (k: ConsentKind) => consents.find((x) => x.customerId === c.id && x.kind === k);
+  return (
+    <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-2">
+      <Panel title="Açık Rıza ve Bilgilendirme" note="Her değişiklik denetim kaydına yazılır" id="detay-riza">
+        <div className="grid gap-1 p-4 sm:p-5">
+          {kinds.map((k) => {
+            const row = give(k);
+            return (
+              <Switch
+                key={k}
+                label={CONSENT_LABEL[k]}
+                hint={row ? `${row.given ? "Verildi" : "Geri alındı"} · ${dayLabel(row.at)} · ${row.channel === "sube" ? "şube" : row.channel === "web" ? "web" : row.channel === "cagri" ? "çağrı merkezi" : "mobil"}` : "Kayıt yok"}
+                checked={row?.given ?? false}
+                disabled={!canEdit}
+                onChange={(e) => {
+                  setConsent(c.id, k, e.target.checked);
+                  notify({ title: e.target.checked ? "Rıza kaydedildi" : "Rıza geri alındı", body: CONSENT_LABEL[k], tone: "success" });
+                }}
+              />
+            );
+          })}
+        </div>
+      </Panel>
+      <Panel title="Veri Talepleri" note="Yanıt süresi 30 gün (örnek parametre)" id="detay-veri-talebi">
+        <div className="grid gap-4 p-4 sm:p-5">
+          {requests.length === 0 ? (
+            <p className="text-small text-muted">Bu abone için açık ya da kapanmış veri talebi yok.</p>
+          ) : (
+            <ul className="grid gap-2">
+              {requests.map((r) => (
+                <li key={r.id} className="flex flex-wrap items-center gap-2 rounded-lg bg-surface px-3 py-2 text-base">
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-medium text-strong">{DATA_REQUEST_LABEL[r.kind]}</span>
+                    <span className="edas-mono text-small text-muted">{r.id} · son yanıt {dayLabel(r.dueAt)}</span>
+                  </span>
+                  <Badge tone={r.status === "tamam" ? "success" : r.status === "isleniyor" ? "primary" : "warning"}>{r.status === "tamam" ? "Tamam" : r.status === "isleniyor" ? "İşleniyor" : "Açık"}</Badge>
+                </li>
+              ))}
+            </ul>
+          )}
+          {canEdit ? (
+            <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <Select label="Yeni veri talebi" value={kind} onValueChange={(v) => v && setKind(v as keyof typeof DATA_REQUEST_LABEL)} items={Object.entries(DATA_REQUEST_LABEL).map(([value, label]) => ({ value, label }))} />
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  const r = createDataRequest(c.id, kind);
+                  notify({ title: "Veri talebi açıldı", body: `${r.id} · ${DATA_REQUEST_LABEL[kind]}`, tone: "success" });
+                }}
+              >
+                <ShieldCheck /> Talebi Aç
+              </Button>
+            </div>
+          ) : null}
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+const hhmm = (d: Date) => `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+
+/** 12 dönemlik tüketimde belirgin çöküş (medyanın %40 altı): nedeni okuma kaynağından ve bayraklardan açıklar. */
+function usageAnomaly(usage: readonly number[], readings: readonly { period: string; source: keyof typeof SOURCE_LABEL; flags: readonly (keyof typeof FLAG_LABEL)[] }[], kind: Customer["kind"]) {
+  const values = usage.filter((v) => v > 0).sort((a, b) => a - b);
+  if (values.length < 6) return null;
+  const median = values[Math.floor(values.length / 2)];
+  const idx = usage.findIndex((v) => v > 0 && v < median * 0.4);
+  if (idx < 0) return null;
+  const period = PERIODS_12[idx];
+  const label = `${monthShort.format(parseDay(`${period}-01`))} ${period.slice(0, 4)}`;
+  const r = readings.find((x) => x.period === period);
+  const explanation = r?.source === "tahmini"
+    ? "Bu dönem tahmini okumayla faturalandı; sonraki gerçek okuma farkı düzeltme faturasıyla mahsup eder."
+    : r?.flags.length
+      ? `Okumada bayrak var: ${r.flags.map((f) => FLAG_LABEL[f]).join(", ")}. Saha kontrolü önerilir.`
+      : kind === "tarim"
+        ? "Sulama sezonu dışı bir dönem olabilir; mevsimsel düşüş beklenir."
+        : "Okumada bayrak yok. Konut boşalmış, sayaç hatası ya da kaçak olasılığı için saha kontrolü açılabilir.";
+  return { label, dropPct: ((median - usage[idx]) / median) * 100, explanation };
 }
 
 function MergeDialog({ open, onClose, customer: c, other, go }: { open: boolean; onClose: () => void; customer: Customer; other?: Customer; go: PageProps["go"] }) {
@@ -1366,8 +1715,9 @@ function CloseDialog({ open, onClose, customer: c, balance, metersCount }: { ope
             doneLabel="Abonelik kapatıldı"
             hint="Kapatmak için basılı tut"
             onConfirm={() => {
-              patchCustomer(c.id, { closed: true, pendingWork: null, supplierChange: null }, { title: "Abonelik kapatıldı", description: "Sayaç söküm iş emri oluşturuldu.", tone: "danger" });
-              notify({ title: "Abonelik kapatıldı", body: `${c.id} · sayaç söküm iş emri açıldı.`, tone: "success" });
+              const orders = metersFor(c.id).map((m) => createWorkOrder({ type: "sokum", customerId: c.id, meterId: m.id, reason: `Abonelik kapanışı: ${m.serial} söküm ve son endeks`, scheduled: undefined }));
+              patchCustomer(c.id, { closed: true, pendingWork: null, supplierChange: null }, { title: "Abonelik kapatıldı", description: orders.length ? `Söküm iş emri: ${orders.map((o) => o.id).join(", ")}` : "Sayaç yok", tone: "danger" });
+              notify({ title: "Abonelik kapatıldı", body: `${c.id} · ${orders.length} sayaç için söküm iş emri açıldı.`, tone: "success" });
               onClose();
             }}
           >

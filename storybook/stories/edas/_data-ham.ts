@@ -7,6 +7,7 @@
  * örnekleri. Her şey KURGUSAL: sayaç, endeks ve telegram değeri gerçek değildir.
  */
 
+import { createSlice } from "./_core";
 import {
   METERS,
   TODAY_KEY,
@@ -239,7 +240,8 @@ export function bucketize(rows: readonly RawRow[], res: Resolution, measure: Mea
     if (res === "gun") return monthShort.format(parseDay(r.day));
     const dd = r.day.slice(8, 10);
     const hh = res === "15" ? r.time : `${pad(Math.floor(r.slot / 4))}:00`;
-    return multiDay ? `${dd} ${hh.slice(0, 2)}` : hh;
+    void dd;
+    return multiDay ? `${monthShort.format(parseDay(r.day))} ${hh}` : hh;
   };
   const groups = new Map<string, RawRow[]>();
   for (const r of rows) {
@@ -377,7 +379,7 @@ export function apiExamples(meter: Meter, days: readonly string[], res: Resoluti
   const interval = res === "15" ? "15m" : res === "60" ? "1h" : "1d";
   const url = `${API_BASE}/meters/${meter.serial}/profile?from=${from}&to=${to}&interval=${interval}`;
   return {
-    curl: `curl -H "Authorization: Bearer $KUZEYOVA_API_KEY" \\\n  "${url}"`,
+    curl: `curl -G "${API_BASE}/meters/${meter.serial}/profile" \\\n  -H "Authorization: Bearer $KUZEYOVA_API_KEY" \\\n  --data-urlencode "from=${from}" \\\n  --data-urlencode "to=${to}" \\\n  --data-urlencode "interval=${interval}"`,
     js: `const res = await fetch(\n  "${url}",\n  { headers: { Authorization: \`Bearer \${process.env.KUZEYOVA_API_KEY}\` } },\n);\nconst { points } = await res.json();`,
     response: JSON.stringify(
       {
@@ -471,3 +473,6 @@ export const SEED_QUERIES: readonly SavedQuery[] = [
 export const DEFAULT_METER_ID = (METERS.find((m) => m.comm === "ami" && m.status === "okunuyor" && customer(m.customerId).kind === "bireysel") ?? METERS[0]).id;
 
 export const dayShort = (day: string) => monthShort.format(parseDay(day));
+
+/** Kayıtlı sorgular: sayfa değişince korunur (modül düzeyinde dilim). */
+export const savedQueries = createSlice<readonly SavedQuery[]>(SEED_QUERIES);

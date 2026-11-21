@@ -1,35 +1,43 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, Check, CircleCheck, Download, FileText, Gauge, MessageSquare, Save, UserPlus, Wallet } from "lucide-react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { ArrowLeft, ArrowRight, Check, CircleCheck, FileText, Gauge, MessageSquare, Printer, Save, Sparkles, TriangleAlert, UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
 import { Stepper } from "@/components/ui/stepper";
 import { Switch } from "@/components/ui/switch";
 import { TickMeter } from "@/components/ui/tick-meter";
-import { SUBSTATIONS, SUPPLIERS, TODAY, TODAY_KEY, region, supplier, tl, KIND_LABEL, type Customer, type Meter } from "./_data";
+import { SUBSTATIONS, SUPPLIERS, TODAY, TODAY_KEY, TRANSFORMERS, dayLabel, region, supplier, KIND_LABEL, type Customer, type Meter } from "./_data";
+import type { StockMeter } from "./_data-yeni";
+import { fmtNum, fmtTl } from "./_kit";
+import { useCan } from "./_permissions";
+import { getSettings } from "./_settings";
+import { advanceApplication, allocateStock, useApplications, useStock } from "./_store";
+import { audit } from "./_audit";
 import {
   CITY_DISTRICTS,
   DEMO_IDS,
   KIND_BY_TARIFF,
   KNOWN_IDS,
   METER_MODELS,
-  METER_POOL,
   TARIFFS,
   addCustomer,
   allCustomers,
   findCustomer,
+  metersFor,
+  patchCustomer,
   validEmail,
   validIban,
   validPhone,
   validTckn,
   validVkn,
 } from "./_data-musteri";
-import { PageBody, PageHead, Panel, SampleNote, href, useApp, type PageProps } from "./_ui";
+import { PageBody, PageHead, Panel, href, useApp, type PageProps } from "./_ui";
 
 /* --- Form modeli ------------------------------------------------------------ */
 
@@ -38,6 +46,7 @@ type Form = {
   name: string;
   idNo: string;
   addOnTenancy: boolean;
+  addressAck: boolean;
   phone: string;
   email: string;
   sms: boolean;
@@ -55,7 +64,6 @@ type Form = {
   poolId: string;
   serial: string;
   model: string;
-  multiplier: string;
   ct: string;
   vt: string;
   idx1: string;
@@ -73,6 +81,7 @@ const INITIAL: Form = {
   name: "",
   idNo: "",
   addOnTenancy: false,
+  addressAck: false,
   phone: "",
   email: "",
   sms: true,
@@ -87,10 +96,9 @@ const INITIAL: Form = {
   free: false,
   supplierId: SUPPLIERS[0].id,
   meterMode: "pool",
-  poolId: METER_POOL[0].id,
+  poolId: "",
   serial: "",
   model: METER_MODELS[0],
-  multiplier: "1",
   ct: "",
   vt: "",
   idx1: "0",
@@ -119,7 +127,35 @@ type Errors = Partial<Record<string, string>>;
 
 /** Teminat (örnek hesap): sözleşme gücü × tarifeye göre kW başı bedel. */
 const guarantee = (f: Form) => Math.round((Number(f.power) || 0) * (TARIFFS.find((t) => t.value === f.tariff)?.perKw ?? 0) * 100);
-const freeEligible = (f: Form) => f.voltage === "OG" || Number(f.power) >= 100;
+/** Tahmini yıllık tüketim (kWh): sözleşme gücünden; aboneliğin serbest tüketici sayılması bununla yıllık sınırın (Ayarlar, ÖRNEK parametre) karşılaştırılmasıdır. */
+const estAnnual = (f: Form) => Math.round((Number(f.power) || 0) * 38 * 12);
+const freeEligible = (f: Form) => estAnnual(f) >= getSettings().freeLimitKwh;
+
+/** Trafo oranından çarpan: "200/5" → 40; "15.8 kV/100 V" → 158. Geçersizse null. */
+const ctRatio = (v: string) => {
+  const m = /^(\d+)\s*\/\s*(\d+)$/.exec(v.trim());
+  return m && Number(m[2]) > 0 ? Number(m[1]) / Number(m[2]) : null;
+};
+const vtRatio = (v: string) => {
+  const m = /^([\d.,]+)\s*kV\s*\/\s*(\d+)\s*V$/i.exec(v.trim());
+  return m && Number(m[2]) > 0 ? (Number(m[1].replace(",", ".")) * 1000) / Number(m[2]) : null;
+};
+const multiplierOf = (f: Form) => (f.voltage === "OG" && f.meterMode === "new" ? Math.round((ctRatio(f.ct) ?? 0) * (vtRatio(f.vt) ?? 0)) : 1);
+
+const fold = (s: string) => s.toLocaleLowerCase("tr-TR").replace(/ı/g, "i").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
+/** Aynı kimlik (tam ya da ad + son üç hane) ve aynı adres için yinelenen kayıt. */
+const duplicateByIdentity = (f: Form): Customer | undefined => {
+  const known = KNOWN_IDS[f.idNo] ? findCustomer(KNOWN_IDS[f.idNo]) : undefined;
+  if (known) return known;
+  if (f.idNo.length < 10 || f.name.trim().length < 3) return undefined;
+  return allCustomers().find((c) => c.status !== "kapali" && c.taxMasked.endsWith(f.idNo.slice(-3)) && fold(c.name) === fold(f.name));
+};
+const duplicateByAddress = (f: Form): Customer | undefined => {
+  const street = fold(f.street);
+  if (street.length < 6) return undefined;
+  const district = f.area.split("|")[1];
+  return allCustomers().find((c) => c.status !== "kapali" && c.district === district && fold(c.address).startsWith(street));
+};
 const idLabel = (f: Form) => (f.kind === "bireysel" ? "T.C. kimlik no" : "Vergi kimlik no");
 
 function validate(step: number, f: Form): Errors {
@@ -127,7 +163,7 @@ function validate(step: number, f: Form): Errors {
   if (step === 0) {
     if (f.name.trim().length < 3) e.name = f.kind === "bireysel" ? "Ad soyad en az 3 karakter olmalı." : "Unvan en az 3 karakter olmalı.";
     if (f.kind === "bireysel" ? !validTckn(f.idNo) : !validVkn(f.idNo)) e.idNo = f.kind === "bireysel" ? "T.C. kimlik numarası geçersiz (11 hane, sağlama hanesi tutmuyor)." : "Vergi kimlik numarası geçersiz (10 hane, sağlama hanesi tutmuyor).";
-    else if (KNOWN_IDS[f.idNo] && !f.addOnTenancy) e.idNo = "Bu kimlikle kayıtlı bir abone var. Ek tesisat olarak açacaksanız aşağıdaki kutuyu işaretleyin.";
+    else if (duplicateByIdentity(f) && !f.addOnTenancy) e.idNo = "Bu kimlikle kayıtlı bir abone var. Ek tesisat olarak açacaksanız aşağıdaki kutuyu işaretleyin.";
   }
   if (step === 1) {
     if (!validPhone(f.phone)) e.phone = "Telefon 05XX XXX XX XX biçiminde 11 hane olmalı.";
@@ -136,17 +172,18 @@ function validate(step: number, f: Form): Errors {
   }
   if (step === 2) {
     if (f.street.trim().length < 6) e.street = "Cadde, sokak ve kapı numarasını yazın.";
+    else if (duplicateByAddress(f) && !f.addressAck) e.street = "Bu adreste kayıtlı bir tesisat var. Farklı bir bağımsız bölümse aşağıdaki kutuyu işaretleyin.";
     const kw = Number(f.power);
     if (!Number.isFinite(kw) || kw <= 0) e.power = "Sözleşme gücü sıfırdan büyük olmalı.";
     else if (f.voltage === "AG" && kw > 55) e.power = "Alçak gerilimde 55 kW üstü güç için orta gerilim tesisat gerekir.";
     else if (f.voltage === "OG" && kw < 100) e.power = "Orta gerilimde sözleşme gücü en az 100 kW olmalı.";
   }
   if (step === 3) {
+    if (f.meterMode === "pool" && !f.poolId) e.poolId = "Depodan bir sayaç seçin ya da yeni sayaç tanımlayın.";
     if (f.meterMode === "new") {
       if (!/^[A-Z]{3}-\d{2}-\d{6}$/.test(f.serial.trim().toUpperCase())) e.serial = "Seri no KZA-26-123456 biçiminde olmalı.";
-      if (!(Number(f.multiplier) >= 1)) e.multiplier = "Çarpan 1 ya da daha büyük olmalı.";
-      if (f.voltage === "OG" && !f.ct.trim()) e.ct = "Orta gerilimde akım trafosu oranı gerekli (örn. 200/5).";
-      if (f.voltage === "OG" && !f.vt.trim()) e.vt = "Orta gerilimde gerilim trafosu oranı gerekli.";
+      if (f.voltage === "OG" && !ctRatio(f.ct)) e.ct = "Akım trafosu oranı 200/5 biçiminde olmalı.";
+      if (f.voltage === "OG" && !vtRatio(f.vt)) e.vt = "Gerilim trafosu oranı 15.8 kV/100 V biçiminde olmalı.";
     }
     for (const k of ["idx1", "idx2", "idx3"] as const) {
       if (!(Number(f[k]) >= 0) || f[k].trim() === "") e[k] = "Endeks sıfır ya da daha büyük bir sayı olmalı.";
@@ -169,18 +206,19 @@ const fmtPhone = (v: string) => {
 /** Alan düzeyinde tek geçerli sayı. */
 const n = (v: string) => Number(v) || 0;
 
-function buildRecords(f: Form): { customer: Customer; meter: Meter } {
+function buildRecords(f: Form, stockList: readonly StockMeter[]): { customer: Customer; meter: Meter } {
   const [regionId, district] = f.area.split("|");
   const idNum = allCustomers().length + 90001;
-  const pool = METER_POOL.find((m) => m.id === f.poolId);
+  const pool = f.meterMode === "pool" ? stockList.find((m) => m.id === f.poolId) : undefined;
   const kind = KIND_BY_TARIFF(f.tariff);
-  const supplierId = f.free && freeEligible(f) ? f.supplierId : SUPPLIERS[0].id;
+  const eligible = freeEligible(f);
+  const supplierId = eligible && f.free ? f.supplierId : SUPPLIERS[0].id;
   const customer: Customer = {
     id: `C-${idNum}`,
     name: f.name.trim(),
     kind,
     voltage: f.voltage,
-    free: f.free && freeEligible(f),
+    free: eligible,
     supplierId,
     regionId,
     district,
@@ -194,20 +232,28 @@ function buildRecords(f: Form): { customer: Customer; meter: Meter } {
     baseKwh: Math.round(n(f.power) * 38),
     tariff: f.zone,
     autoPay: f.autoPay,
+    annualKwh: estAnnual(f),
+    contractKw: n(f.power),
   };
   const sub = SUBSTATIONS.find((s) => s.regionId === regionId) ?? SUBSTATIONS[0];
+  const tr = TRANSFORMERS.find((x) => x.regionId === regionId) ?? TRANSFORMERS[0];
   const multi = f.zone === "cok-zamanli";
+  const ct = f.voltage === "OG" ? (f.meterMode === "new" ? ctRatio(f.ct) ?? 1 : 40) : 1;
+  const vt = f.voltage === "OG" ? (f.meterMode === "new" ? vtRatio(f.vt) ?? 1 : 1) : 1;
   const meter: Meter = {
     id: `M-N${String(idNum).slice(-4)}`,
-    serial: f.meterMode === "pool" ? (pool?.serial ?? "KZA-26-000000") : f.serial.trim().toUpperCase(),
-    model: f.meterMode === "pool" ? (pool?.model ?? METER_MODELS[0]) : f.model,
+    serial: pool ? pool.serial : f.serial.trim().toUpperCase(),
+    model: pool ? pool.model : f.model,
     customerId: customer.id,
     substationId: sub.id,
-    comm: pool && f.meterMode === "pool" ? pool.comm : f.voltage === "OG" ? "gsm" : "ami",
+    comm: pool ? pool.comm : f.voltage === "OG" ? "gsm" : "ami",
     status: "okunuyor",
-    multiplier: f.meterMode === "new" ? n(f.multiplier) || 1 : f.voltage === "OG" ? 40 : 1,
-    ct: f.voltage === "OG" ? f.ct || "—" : "—",
-    vt: f.voltage === "OG" ? f.vt || "—" : "—",
+    multiplier: Math.round(ct * vt) || 1,
+    ct: f.voltage === "OG" ? (f.meterMode === "new" ? f.ct : "200/5") : "—",
+    vt: f.voltage === "OG" ? (f.meterMode === "new" ? f.vt : "—") : "—",
+    ctRatio: ct,
+    vtRatio: vt,
+    transformerId: tr.id,
     multiZone: multi,
     installed: TODAY_KEY,
     lastSeen: TODAY,
@@ -220,12 +266,62 @@ function buildRecords(f: Form): { customer: Customer; meter: Meter } {
 
 /* --- Sayfa ------------------------------------------------------------------- */
 
-export function KayitPage({ go }: PageProps) {
+/** T.C. kimlik: ilk dokuz haneden iki sağlama hanesini üretir. */
+function makeTckn(base9: string): string {
+  const d = [...base9].map(Number);
+  const d10 = ((((d[0] + d[2] + d[4] + d[6] + d[8]) * 7 - (d[1] + d[3] + d[5] + d[7])) % 10) + 10) % 10;
+  const d11 = (d.reduce((a, b) => a + b, 0) + d10) % 10;
+  return `${base9}${d10}${d11}`;
+}
+/** Vergi kimlik: dokuz haneye tek geçerli sağlama hanesini bulur. */
+function makeVkn(base9: string): string {
+  for (let k = 0; k < 10; k++) if (validVkn(`${base9}${k}`)) return `${base9}${k}`;
+  return `${base9}0`;
+}
+/** Geçerli ve kayıtlı olmayan örnek kimlik (formu denemek için "Örnek doldur"). */
+function sampleId(kind: Form["kind"]): string {
+  for (let i = 0; i < 500; i++) {
+    const id = kind === "bireysel" ? makeTckn(String(214365870 + i * 7)) : makeVkn(String(481516230 + i * 13));
+    if (!KNOWN_IDS[id] && (kind === "bireysel" ? validTckn(id) : validVkn(id))) return id;
+  }
+  return kind === "bireysel" ? DEMO_IDS.tckn : DEMO_IDS.vkn;
+}
+
+const SAMPLE_FORM = (kind: Form["kind"]): Partial<Form> => ({
+  kind,
+  name: kind === "bireysel" ? "Deniz Aksoy" : "Aksoy Mühendislik Ltd. Şti.",
+  idNo: sampleId(kind),
+  phone: "05321234567",
+  email: "deniz@ornek.com",
+  kvkk: true,
+  street: "Çınar Sk. No: 41",
+});
+
+export function KayitPage({ params, go }: PageProps) {
   const { notify } = useApp();
-  const [form, setForm] = useState<Form>(DRAFT?.form ?? INITIAL);
+  const canEdit = useCan("musteri");
+  const stock = useStock();
+  const applications = useApplications();
+  const application = params.application ? applications.find((a) => a.id === params.application) : undefined;
+  const freeStock = useMemo(() => stock.filter((s) => s.status === "stokta"), [stock]);
+  const [form, setForm] = useState<Form>(() => {
+    if (DRAFT) return DRAFT.form;
+    if (application) {
+      const area = CITY_DISTRICTS.find((c) => c.regionId === application.regionId && c.district === application.district)?.value ?? INITIAL.area;
+      return { ...INITIAL, name: application.applicant, area, street: application.address.split(",")[0] ?? "", voltage: application.voltage, power: String(application.powerKw), tariff: application.voltage === "OG" ? "sanayi" : INITIAL.tariff };
+    }
+    return INITIAL;
+  });
   const [step, setStep] = useState(DRAFT?.step ?? 0);
   const [errors, setErrors] = useState<Errors>({});
   const [done, setDone] = useState<{ customer: Customer; meter: Meter } | null>(null);
+
+  // Havuz sayacı seçili değilse (ya da seçilen tahsis edildiyse) ilk boş sayaç seçilir.
+  useEffect(() => {
+    if (form.meterMode !== "pool") return;
+    if (freeStock.some((s) => s.id === form.poolId)) return;
+    setForm((prev) => ({ ...prev, poolId: freeStock[0]?.id ?? "" }));
+  }, [freeStock, form.meterMode, form.poolId]);
 
   const set = <K extends keyof Form>(key: K, value: Form[K]) => {
     setForm((prev) => {
@@ -236,7 +332,39 @@ export function KayitPage({ go }: PageProps) {
     setErrors((prev) => (prev[key as string] ? { ...prev, [key as string]: undefined } : prev));
   };
 
-  const dup = KNOWN_IDS[form.idNo] ? findCustomer(KNOWN_IDS[form.idNo]) : undefined;
+  const dup = duplicateByIdentity(form);
+  const addrDup = form.street.trim().length >= 6 ? duplicateByAddress(form) : undefined;
+  const appReady = !application || application.stage === "enerji";
+
+  function finish() {
+    if (application) {
+      const gate = advanceApplication(application.id);
+      if (!gate.ok) {
+        notify({ title: "Başvuru ilerletilemedi", body: gate.reason, tone: "info" });
+        return;
+      }
+      const created = allCustomers().find((c) => c.name === application.applicant && c.since === TODAY_KEY && c.status === "aktif");
+      if (!created) return;
+      const phone = form.phone.replace(/\s/g, "");
+      patchCustomer(
+        created.id,
+        { phone: `${phone.slice(0, 4)} ••• ${phone.slice(-4, -2)} ${phone.slice(-2)}`, email: `${form.email.split("@")[0].slice(0, 3)}•••@${form.email.split("@")[1]}`, autoPay: form.autoPay, tariff: form.zone },
+        { title: "Kayıt bilgileri tamamlandı", description: `Başvuru ${application.id}`, tone: "primary" },
+      );
+      DRAFT = null;
+      const rec = { customer: findCustomer(created.id) ?? created, meter: metersFor(created.id)[0] };
+      setDone(rec);
+      notify({ title: "Abonelik açıldı", body: `${created.id} · ${application.id} başvurusu tamamlandı`, tone: "success" });
+      return;
+    }
+    const rec = buildRecords(form, stock);
+    addCustomer(rec.customer, rec.meter);
+    if (form.meterMode === "pool" && form.poolId) allocateStock(form.poolId, { customerId: rec.customer.id });
+    audit("Müşteri kaydı tamamladı", rec.customer.id, undefined, `${rec.customer.name} · ${rec.meter.serial}`);
+    DRAFT = null;
+    setDone(rec);
+    notify({ title: "Abonelik açıldı", body: `${rec.customer.id} · ${rec.customer.name}`, tone: "success" });
+  }
 
   function next() {
     const found = validate(step, form);
@@ -247,11 +375,7 @@ export function KayitPage({ go }: PageProps) {
       return;
     }
     if (step === STEPS.length - 1) {
-      const rec = buildRecords(form);
-      addCustomer(rec.customer, rec.meter);
-      DRAFT = null;
-      setDone(rec);
-      notify({ title: "Abonelik açıldı", body: `${rec.customer.id} · ${rec.customer.name}`, tone: "success" });
+      finish();
       return;
     }
     setStep(step + 1);
@@ -269,8 +393,19 @@ export function KayitPage({ go }: PageProps) {
     setErrors({});
     setDone(null);
   }
+  function fillSample() {
+    const sample = SAMPLE_FORM(form.kind);
+    setForm((prev) => {
+      const nextForm = { ...prev, ...sample };
+      DRAFT = { form: nextForm, step };
+      return nextForm;
+    });
+    setErrors({});
+    notify({ title: "Örnek bilgiler dolduruldu", body: "Alanları değiştirebilirsiniz; doğrulamalar çalışmaya devam eder.", tone: "info" });
+  }
 
   if (done) return <Basari record={done} onNew={reset} go={go} />;
+  if (!canEdit) return <><PageHead title="Müşteri Kaydı" /><PageBody><p className="text-base text-muted">Müşteri kaydı için düzenleme yetkisi gerekir.</p></PageBody></>;
 
   const kind = KIND_BY_TARIFF(form.tariff);
   const [regionId, district] = form.area.split("|");
@@ -281,19 +416,42 @@ export function KayitPage({ go }: PageProps) {
         title="Müşteri Kaydı"
         description="Yeni abone, tesisat, sayaç ve ödeme talimatı tek akışta. Her adım doğrulanır."
         actions={
-          <Button
-            variant="secondary"
-            onClick={() => {
-              DRAFT = { form, step };
-              notify({ title: "Taslak kaydedildi", body: "Bu sayfaya dönünce kaldığınız yerden devam edersiniz.", tone: "success" });
-            }}
-          >
-            <Save /> Taslağı Kaydet
-          </Button>
+          <>
+            <Button variant="ghost" onClick={fillSample}>
+              <Sparkles /> Örnek Doldur
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                DRAFT = { form, step };
+                notify({ title: "Taslak kaydedildi", body: "Bu sayfaya dönünce kaldığınız yerden devam edersiniz.", tone: "success" });
+              }}
+            >
+              <Save /> Taslağı Kaydet
+            </Button>
+          </>
         }
       />
       <PageBody>
-        <Stepper steps={STEPS} current={step} aria-label="Kayıt adımları" />
+        {application ? (
+          <div role="note" className={`flex flex-wrap items-center gap-3 rounded-xl px-4 py-3 text-base ring-1 ${appReady ? "bg-primary-wash ring-primary/20" : "bg-warning-wash ring-warning/20"}`}>
+            <TriangleAlert aria-hidden className={`size-5 shrink-0 ${appReady ? "text-primary-ink" : "text-warning"}`} />
+            <p className="min-w-0 flex-1 text-body">
+              <strong className="font-semibold text-strong">{application.id} başvurusundan geliyorsunuz.</strong>{" "}
+              {appReady ? "Kaydı tamamlayınca başvuru enerjilendirilir, abonelik ve sayaç açılır." : "Başvuru henüz enerjilendirme aşamasında değil; bilgileri doldurabilirsiniz ama kaydı tamamlamak için başvuruyu önce ilerletin."}
+            </p>
+            <a className={buttonClass({ variant: "secondary", size: "sm" })} href={href("applications", { id: application.id })}>
+              Başvuruyu Aç
+            </a>
+          </div>
+        ) : null}
+        <div className="max-sm:hidden">
+          <Stepper steps={STEPS} current={step} aria-label="Kayıt adımları" />
+        </div>
+        <div className="sm:hidden">
+          <p className="text-small font-medium text-muted" aria-live="polite">Adım {step + 1} / {STEPS.length} · {STEPS[step].label}</p>
+          <TickMeter label="Kayıt ilerlemesi" value={step + 1} max={STEPS.length} text={`${step + 1} / ${STEPS.length}`} className="mt-1.5" />
+        </div>
         <div className="grid grid-cols-[minmax(0,1fr)] gap-5 xl:grid-cols-3">
           <form
             noValidate
@@ -331,12 +489,12 @@ export function KayitPage({ go }: PageProps) {
                       value={form.idNo}
                       onChange={(e) => set("idNo", e.target.value.replace(/\D/g, ""))}
                       error={errors.idNo}
-                      hint={`Denemek için geçerli: ${form.kind === "bireysel" ? DEMO_IDS.tckn : DEMO_IDS.vkn} (zaten kayıtlı). Başka bir geçerli numara yeni kayıt açar.`}
+                      hint={form.kind === "bireysel" ? "11 hane; sağlama haneleri denetlenir." : "10 hane; sağlama hanesi denetlenir."}
                       autoComplete="off"
                     />
                     {dup ? (
                       <div role="note" className="rounded-xl bg-warning-wash p-4 text-base ring-1 ring-warning/20">
-                        <p className="font-semibold text-strong">Bu kimlikle kayıtlı abone var: {dup.name}</p>
+                        <p className="font-semibold text-strong">Bu kimlikle kayıtlı abone olabilir: {dup.name}</p>
                         <p className="mt-1 text-body">
                           {dup.id} · Tesisat {dup.installation}.{" "}
                           <a className="font-medium text-primary-ink underline" href={href("customers", { id: dup.id })}>
@@ -378,6 +536,20 @@ export function KayitPage({ go }: PageProps) {
                       <Select label="İlçe / mahalle" value={form.area} onValueChange={(v) => v && set("area", v)} items={CITY_DISTRICTS.map((c) => ({ value: c.value, label: c.label }))} />
                       <Input label="Cadde, sokak ve kapı no" name="street" value={form.street} onChange={(e) => set("street", e.target.value)} error={errors.street} placeholder="Atatürk Cd. No: 12" />
                     </div>
+                    {addrDup ? (
+                      <div role="note" className="rounded-xl bg-warning-wash p-4 text-base ring-1 ring-warning/20">
+                        <p className="font-semibold text-strong">Bu adreste kayıtlı tesisat var: {addrDup.name}</p>
+                        <p className="mt-1 text-body">
+                          {addrDup.id} · Tesisat {addrDup.installation}.{" "}
+                          <a className="font-medium text-primary-ink underline" href={href("customers", { id: addrDup.id })}>
+                            Kaydı aç
+                          </a>
+                        </p>
+                        <div className="mt-2">
+                          <Checkbox label="Farklı bir bağımsız bölüm, yeni tesisat açılacak" checked={form.addressAck} onChange={(e) => set("addressAck", e.target.checked)} />
+                        </div>
+                      </div>
+                    ) : null}
                     <RadioGroup
                       name="voltage"
                       legend="Bağlantı gerilimi"
@@ -405,8 +577,8 @@ export function KayitPage({ go }: PageProps) {
                     </div>
                     <div className="rounded-xl bg-surface p-3">
                       <Switch
-                        label="Serbest tüketici"
-                        hint={freeEligible(form) ? "Uygun: tedarikçi seçilebilir (orta gerilim ya da yüksek güç, örnek eşik)." : "Uygun değil: görevli tedarik şirketi atanır (örnek eşik: OG ya da 100 kW üstü)."}
+                        label="Tedarikçimi kendim seçeceğim"
+                        hint={freeEligible(form) ? `Serbest tüketici: tahmini yıllık tüketim ${fmtNum(estAnnual(form))} kWh, yıllık sınır ${fmtNum(getSettings().freeLimitKwh)} kWh (Ayarlar, örnek parametre).` : `Serbest tüketici sayılmaz (tahmini ${fmtNum(estAnnual(form))} kWh < ${fmtNum(getSettings().freeLimitKwh)} kWh): görevli tedarik şirketi atanır.`}
                         checked={form.free && freeEligible(form)}
                         disabled={!freeEligible(form)}
                         onChange={(e) => set("free", e.target.checked)}
@@ -439,23 +611,31 @@ export function KayitPage({ go }: PageProps) {
                       ]}
                     />
                     {form.meterMode === "pool" ? (
-                      <Select
-                        label="Depodaki sayaç"
-                        value={form.poolId}
-                        onValueChange={(v) => v && set("poolId", v)}
-                        items={METER_POOL.map((m) => ({ value: m.id, label: `${m.serial} · ${m.model}` }))}
-                      />
+                      freeStock.length ? (
+                        <>
+                          <Select
+                            label="Depodaki sayaç"
+                            value={form.poolId}
+                            onValueChange={(v) => v && set("poolId", v)}
+                            items={freeStock.slice(0, 40).map((m) => ({ value: m.id, label: `${m.serial} · ${m.model}` }))}
+                          />
+                          {errors.poolId ? <p role="alert" className="text-small text-danger">{errors.poolId}</p> : null}
+                          <p className="text-small text-muted">{fmtNum(freeStock.length)} sayaç stokta. Kayıt tamamlanınca seçilen sayaç stoktan düşer ve aboneye tahsis edilir.</p>
+                        </>
+                      ) : (
+                        <p role="note" className="rounded-xl bg-warning-wash p-4 text-base text-body ring-1 ring-warning/20">Stokta sayaç kalmadı. Yeni sayaç tanımlayın ya da Sayaç Stok sayfasından sayaç alın.</p>
+                      )
                     ) : (
                       <div className="grid gap-4 sm:grid-cols-2">
                         <Input label="Seri no" name="serial" value={form.serial} onChange={(e) => set("serial", e.target.value)} error={errors.serial} placeholder="KZA-26-123456" />
                         <Select label="Model" value={form.model} onValueChange={(v) => v && set("model", v)} items={METER_MODELS.map((m) => ({ value: m, label: m }))} />
-                        <Input label="Çarpan" name="multiplier" inputMode="numeric" value={form.multiplier} onChange={(e) => set("multiplier", e.target.value)} error={errors.multiplier} hint="Akım ve gerilim trafosu oranlarının çarpımı." />
                         {form.voltage === "OG" ? (
                           <>
                             <Input label="Akım trafosu" name="ct" placeholder="200/5" value={form.ct} onChange={(e) => set("ct", e.target.value)} error={errors.ct} />
                             <Input label="Gerilim trafosu" name="vt" placeholder="15.8 kV/100 V" value={form.vt} onChange={(e) => set("vt", e.target.value)} error={errors.vt} />
                           </>
                         ) : null}
+                        <Input label="Çarpan" readOnly value={fmtNum(multiplierOf(form))} hint={form.voltage === "OG" ? "Akım trafosu oranı × gerilim trafosu oranı; kendiliğinden hesaplanır." : "Alçak gerilimde doğrudan bağlantı: çarpan 1."} />
                       </div>
                     )}
                     <fieldset className="grid gap-3">
@@ -480,7 +660,7 @@ export function KayitPage({ go }: PageProps) {
                       <Switch label="Otomatik ödeme talimatı" hint="Fatura vadesinde hesaptan tahsil edilir." checked={form.autoPay} onChange={(e) => set("autoPay", e.target.checked)} />
                       {form.autoPay ? (
                         <div className="mt-2 pb-1">
-                          <Input label="IBAN" name="iban" value={form.iban} onChange={(e) => set("iban", e.target.value)} error={errors.iban} hint={`Denemek için geçerli IBAN: ${DEMO_IDS.iban}`} placeholder="TR00 0000 0000 0000 0000 0000 00" />
+                          <Input label="IBAN" name="iban" value={form.iban} onChange={(e) => set("iban", e.target.value)} error={errors.iban} hint="TR ile başlayan 26 hane; sağlama denetlenir." placeholder="TR00 0000 0000 0000 0000 0000 00" />
                         </div>
                       ) : null}
                     </div>
@@ -498,7 +678,7 @@ export function KayitPage({ go }: PageProps) {
                     />
                     <div className="rounded-xl bg-primary-wash p-4 ring-1 ring-primary/15">
                       <p className="text-small font-medium text-primary-ink">Teminat bedeli (örnek hesap)</p>
-                      <p className="mt-1 text-heading font-semibold tabular-nums text-strong">{tl(guarantee(form))}</p>
+                      <p className="mt-1 text-heading font-semibold tabular-nums text-strong">{fmtTl(guarantee(form))}</p>
                       <p className="mt-1 text-small text-body">
                         {form.power || 0} kW × {TARIFFS.find((t) => t.value === form.tariff)?.perKw} TL/kW. Tutarlar örnektir; gerçek bedel düzenleyici kararla belirlenir.
                       </p>
@@ -512,8 +692,8 @@ export function KayitPage({ go }: PageProps) {
                       <Summary title="Müşteri" onEdit={() => setStep(0)} rows={[[form.kind === "bireysel" ? "Ad soyad" : "Unvan", form.name], [idLabel(form), `${"•".repeat(Math.max(0, form.idNo.length - 3))}${form.idNo.slice(-3)}`], ["Ek tesisat", form.addOnTenancy ? "Evet, mevcut müşteriye" : "Hayır"]]} />
                       <Summary title="İletişim" onEdit={() => setStep(1)} rows={[["Telefon", fmtPhone(form.phone)], ["E-posta", form.email], ["Bilgilendirme", [form.sms && "SMS", form.eInvoice && "E-fatura"].filter(Boolean).join(", ") || "Yok"]]} />
                       <Summary title="Tesisat" onEdit={() => setStep(2)} rows={[["Adres", `${form.street}, ${district}`], ["Bölge", region(regionId).name], ["Gerilim ve güç", `${form.voltage} · ${form.power} kW`], ["Tarife", `${TARIFFS.find((t) => t.value === form.tariff)?.label} · ${form.zone === "tek-zamanli" ? "tek zamanlı" : "çok zamanlı"}`], ["Tedarikçi", form.free && freeEligible(form) ? supplier(form.supplierId).name : `${SUPPLIERS[0].name} (görevli)`]]} />
-                      <Summary title="Sayaç" onEdit={() => setStep(3)} rows={[["Sayaç", form.meterMode === "pool" ? (METER_POOL.find((m) => m.id === form.poolId)?.serial ?? "—") : form.serial.toUpperCase()], ["İlk endeks", form.zone === "cok-zamanli" ? `${form.idx1} / ${form.idx2} / ${form.idx3} kWh` : `${form.idx1} kWh`], ["Mühür", form.seal]]} />
-                      <Summary title="Ödeme" onEdit={() => setStep(4)} rows={[["Otomatik ödeme", form.autoPay ? `Açık · ${form.iban.replace(/\s/g, "").slice(0, 4)} •••• ${form.iban.replace(/\s/g, "").slice(-4)}` : "Kapalı"], ["Tebliğ", { sms: "SMS", email: "E-posta", basili: "Basılı" }[form.notifyVia]], ["Teminat", tl(guarantee(form))]]} />
+                      <Summary title="Sayaç" onEdit={() => setStep(3)} rows={[["Sayaç", form.meterMode === "pool" ? (stock.find((m) => m.id === form.poolId)?.serial ?? "—") : form.serial.toUpperCase()], ["Çarpan", fmtNum(multiplierOf(form))], ["İlk endeks", form.zone === "cok-zamanli" ? `${form.idx1} / ${form.idx2} / ${form.idx3} kWh` : `${form.idx1} kWh`], ["Mühür", form.seal]]} />
+                      <Summary title="Ödeme" onEdit={() => setStep(4)} rows={[["Otomatik ödeme", form.autoPay ? `Açık · ${form.iban.replace(/\s/g, "").slice(0, 4)} •••• ${form.iban.replace(/\s/g, "").slice(-4)}` : "Kapalı"], ["Tebliğ", { sms: "SMS", email: "E-posta", basili: "Basılı" }[form.notifyVia]], ["Teminat", fmtTl(guarantee(form))]]} />
                     </div>
                     <div>
                       <Checkbox label="Girdiğim bilgilerin doğru olduğunu ve kaydın oluşturulmasını onaylıyorum." name="confirm" checked={form.confirm} onChange={(e) => set("confirm", e.target.checked)} />
@@ -556,19 +736,18 @@ export function KayitPage({ go }: PageProps) {
                 <Live label={idLabel(form)} value={form.idNo ? `${"•".repeat(Math.max(0, form.idNo.length - 3))}${form.idNo.slice(-3)}` : "—"} done={form.kind === "bireysel" ? validTckn(form.idNo) : validVkn(form.idNo)} />
                 <Live label="Telefon" value={form.phone ? fmtPhone(form.phone) : "—"} done={validPhone(form.phone)} />
                 <Live label="Adres" value={form.street ? `${form.street}, ${district}` : "—"} done={form.street.length >= 6} />
-                <Live label="Tesisat" value={`${form.voltage} · ${form.power || 0} kW · ${KIND_LABEL[kind]}`} done />
-                <Live label="Sayaç" value={form.meterMode === "pool" ? (METER_POOL.find((m) => m.id === form.poolId)?.serial ?? "—") : form.serial || "—"} done={form.meterMode === "pool" || /^[A-Z]{3}-\d{2}-\d{6}$/.test(form.serial.toUpperCase())} />
+                <Live label="Tesisat" value={step > 2 ? `${form.voltage} · ${form.power || 0} kW · ${KIND_LABEL[kind]}` : "—"} done={step > 2} />
+                <Live label="Sayaç" value={step > 3 ? (form.meterMode === "pool" ? (stock.find((m) => m.id === form.poolId)?.serial ?? "—") : form.serial.toUpperCase() || "—") : "—"} done={step > 3} />
               </dl>
               <div className="border-t border-line-soft px-4 py-3 sm:px-5">
                 <TickMeter label="Tamamlanan adım" value={step} max={STEPS.length} text={`${step} / ${STEPS.length}`} />
               </div>
             </Panel>
             <p className="text-small text-muted">
-              Teminat tutarı örnek hesaptır. Kayıt tamamlanınca abone listesinde ve sayaç envanterinde görünür.
+              Teminat tutarı örnek hesaptır. Kayıt tamamlanınca abone listesinde, sayaç envanterinde ve stok kayıtlarında görünür.
             </p>
           </aside>
         </div>
-        <SampleNote />
       </PageBody>
     </>
   );
@@ -616,27 +795,8 @@ function Summary({ title, rows, onEdit }: { title: string; rows: readonly (reado
 
 function Basari({ record, onNew, go }: { record: { customer: Customer; meter: Meter }; onNew: () => void; go: PageProps["go"] }) {
   const { notify } = useApp();
+  const [contract, setContract] = useState(false);
   const { customer: c, meter: m } = record;
-  function downloadContract() {
-    const text = [
-      "ELEKTRİK DAĞITIM ŞEBEKE KULLANIM SÖZLEŞMESİ (ÖRNEK)",
-      `Abone no: ${c.id}`,
-      `Müşteri: ${c.name}`,
-      `Tesisat no: ${c.installation}`,
-      `Adres: ${c.address}`,
-      `Sayaç: ${m.serial}`,
-      `Başlangıç: ${TODAY_KEY}`,
-      "",
-      "Bu belge demo amaçlıdır; hukuki hüküm içermez.",
-    ].join("\n");
-    const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${c.id}-sozlesme.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-    notify({ title: "Sözleşme indirildi", body: `${c.id}-sozlesme.txt`, tone: "success" });
-  }
   return (
     <>
       <PageHead title="Müşteri Kaydı" description="Kayıt tamamlandı." />
@@ -680,10 +840,16 @@ function Basari({ record, onNew, go }: { record: { customer: Customer; meter: Me
             </div>
           </dl>
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <Button variant="secondary" onClick={downloadContract}>
-              <Download /> Sözleşmeyi İndir
+            <Button variant="secondary" onClick={() => setContract(true)}>
+              <Printer /> Sözleşmeyi Yazdır / PDF
             </Button>
-            <Button variant="secondary" onClick={() => notify({ title: "SMS gönderildi", body: "Abone numarası ve karşılama mesajı kayıtlı telefona iletildi.", tone: "success" })}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                audit("Karşılama SMS'i gönderdi", c.id);
+                notify({ title: "SMS gönderildi", body: "Abone numarası ve karşılama mesajı kayıtlı telefona iletildi.", tone: "success" });
+              }}
+            >
               <MessageSquare /> Müşteriye SMS Gönder
             </Button>
           </div>
@@ -698,11 +864,70 @@ function Basari({ record, onNew, go }: { record: { customer: Customer; meter: Me
               <FileText /> Yeni Kayıt Başlat
             </Button>
           </div>
-          <p className="flex items-center justify-center gap-1.5 text-small text-muted">
-            <Wallet aria-hidden className="size-3.5" /> Bu kayıt yalnız demo oturumunda tutulur.
-          </p>
         </section>
       </PageBody>
+      <ContractDialog open={contract} onClose={() => setContract(false)} customer={c} meter={m} />
     </>
+  );
+}
+
+/** Yazdırılabilir sözleşme: yalnız belge yazdırılır (`@media print`), PDF olarak kaydetme tarayıcının yazdırma penceresindendir. */
+function ContractDialog({ open, onClose, customer: c, meter: m }: { open: boolean; onClose: () => void; customer: Customer; meter: Meter }) {
+  const sup = supplier(c.supplierId);
+  const rows: readonly (readonly [string, string])[] = [
+    ["Abone no", c.id],
+    ["Müşteri", c.name],
+    ["Tesisat no", c.installation],
+    ["Adres", c.address],
+    ["Gerilim ve sözleşme gücü", `${c.voltage === "OG" ? "Orta gerilim" : "Alçak gerilim"} · ${fmtNum(c.contractKw ?? 0)} kW`],
+    ["Sayaç", `${m.serial} · ${m.model} · çarpan ${fmtNum(m.multiplier)}`],
+    ["Tedarikçi", sup.name],
+    ["Başlangıç", dayLabel(TODAY_KEY)],
+  ];
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(o) => !o && onClose()}
+      size="lg"
+      title="Şebeke Kullanım Sözleşmesi"
+      description="Örnek belge: yazdırma penceresinden PDF olarak kaydedebilirsiniz."
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose}>
+            Kapat
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              audit("Sözleşme yazdırdı", c.id);
+              window.print();
+            }}
+          >
+            <Printer /> Yazdır
+          </Button>
+        </>
+      }
+    >
+      <style href="edas-contract-print" precedence="default">{`@media print { body * { visibility: hidden !important; } #edas-sozlesme, #edas-sozlesme * { visibility: visible !important; } #edas-sozlesme { position: absolute; inset: 0; padding: 24mm; background: white; color: black; } }`}</style>
+      <article id="edas-sozlesme" className="grid gap-4 rounded-xl bg-surface p-5 text-base text-body">
+        <header>
+          <p className="text-small font-medium text-muted">Kuzeyova Elektrik Dağıtım A.Ş.</p>
+          <h3 className="text-read font-semibold text-strong">Elektrik Şebeke Kullanım Sözleşmesi (Örnek)</h3>
+        </header>
+        <dl className="grid gap-2">
+          {rows.map(([k, v]) => (
+            <div key={k} className="flex flex-wrap justify-between gap-x-4 gap-y-0.5 border-b border-line-soft pb-2 last:border-0">
+              <dt className="text-small text-muted">{k}</dt>
+              <dd className="text-right font-medium text-strong">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="text-small text-muted">Bu belge demo amaçlıdır; hukuki hüküm içermez. Bedel ve yükümlülükler yürürlükteki tarife ve mevzuata göre belirlenir.</p>
+        <div className="grid grid-cols-2 gap-6 pt-6 text-center text-small text-muted">
+          <p className="border-t border-line pt-2">Dağıtım şirketi</p>
+          <p className="border-t border-line pt-2">Abone</p>
+        </div>
+      </article>
+    </Dialog>
   );
 }

@@ -2,7 +2,9 @@
 
 import { Calculator, CalendarDays, Coffee, Inbox, Package, Sparkles, Store, Truck } from "lucide-react";
 import { useState } from "react";
+import { ActiveFilters } from "@/components/ui/active-filters";
 import { AppWindow } from "@/components/ui/app-window";
+import { AuditLog } from "@/components/ui/audit-log";
 import { CategoryCard, CategoryGrid } from "@/components/ui/category-card";
 import { CornerLabel } from "@/components/ui/corner-label";
 import { BentoGrid, FeatureTile, GlassFrame } from "@/components/ui/feature-tile";
@@ -12,6 +14,7 @@ import { HorizonScene } from "@/components/ui/horizon-scene";
 import { IntegrationCard, IntegrationGrid } from "@/components/ui/integration-card";
 import { PermissionList } from "@/components/ui/permission-list";
 import { RequirementList } from "@/components/ui/requirement-list";
+import { SavedViews } from "@/components/ui/saved-views";
 import { ScheduleList } from "@/components/ui/schedule-list";
 import { StatStrip } from "@/components/ui/stat-strip";
 import { StatusList } from "@/components/ui/status-list";
@@ -31,6 +34,25 @@ import { Cell } from "./_ui";
  */
 
 /* ── Seçim ──────────────────────────────────────────────────────────────── */
+function SavedViewsDemo() {
+  const [views, setViews] = useState([
+    { id: "hepsi", label: "Hepsi", builtin: true, count: 56 },
+    { id: "kafe", label: "Kafeler", count: 21 },
+  ]);
+  const [value, setValue] = useState("hepsi");
+  return (
+    <SavedViews
+      views={views}
+      value={value}
+      onValueChange={setValue}
+      onSave={(name) => {
+        setViews((list) => [...list, { id: `v${list.length}`, label: name } as (typeof views)[number]]);
+      }}
+      onDelete={(id) => setViews((list) => list.filter((v) => v.id !== id))}
+    />
+  );
+}
+
 export function SecimYeni() {
   const [linked, setLinked] = useState<ReadonlySet<string>>(new Set(["takvim"]));
   const connect = (id: string) => setLinked((p) => new Set(p).add(id));
@@ -70,6 +92,20 @@ export function SecimYeni() {
           ))}
         </IntegrationGrid>
       </Cell>
+      <Cell file="active-filters" name="Etkin Süzgeçler" note="Listenin üstünde neye baktığını söyleyen kaldırılabilir çipler; süzgeç yoksa hiçbir şey çizmez." span={3} align="stretch">
+        <ActiveFilters
+          filters={[
+            { id: "durum", label: "Kavrum", value: "Orta" },
+            { id: "kanal", label: "Kanal", value: "Web Mağaza" },
+          ]}
+          onRemove={() => {}}
+          onClear={() => {}}
+          summary="38 sipariş"
+        />
+      </Cell>
+      <Cell file="saved-views" name="Kayıtlı Görünümler" note="Sık kullanılan süzgeç birleşimi tek tıkla; kendi görünümünü kaydeder ve silersin." span={3} align="stretch">
+        <SavedViewsDemo />
+      </Cell>
     </>
   );
 }
@@ -105,6 +141,15 @@ export function VeriYeni() {
           <CategoryCard href="#b-category-card" tone="chart-2" icon={<Package />} title="Sipariş ve Kargo" description="Teslim süresi, iade ve adres değişikliği." meta="9 makale" />
           <CategoryCard href="#b-category-card" tone="chart-6" icon={<Store />} title="Toptan" description="Kafeler için fiyat listesi ve sipariş akışı." meta="6 makale" />
         </CategoryGrid>
+      </Cell>
+      <Cell file="audit-log" name="Denetim Kaydı" note="Kim, ne zaman, neyi, önce → sonra; reddedilen deneme metinle işaretli." span={6} align="stretch">
+        <AuditLog
+          label="Atölye etkinliği"
+          entries={[
+            { id: "1", at: "2026-11-02T10:12:00+03:00", when: "2 Kas, 10:12", actor: "Ahmet", actorDetail: "Yönetici", action: "toptan fiyatı güncelledi", target: "kolombiya-lot", before: "₺640 / kg", after: "₺668 / kg" },
+            { id: "2", at: "2026-11-02T09:20:00+03:00", when: "2 Kas, 09:20", actor: "Can", actorDetail: "Kavrum", action: "fiyat listesini değiştirmeyi denedi", target: "fiyat-listesi", after: "Yalnızca yönetici fiyat değiştirebilir", denied: true },
+          ]}
+        />
       </Cell>
     </>
   );

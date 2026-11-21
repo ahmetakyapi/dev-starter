@@ -12,6 +12,7 @@ import { GaugeChart } from "@/components/ui/gauge-chart";
 import { Heatmap } from "@/components/ui/heatmap";
 import { LineChart } from "@/components/ui/line-chart";
 import { RadarChart } from "@/components/ui/radar-chart";
+import { RegionMap } from "@/components/ui/region-map";
 import { RingChart } from "@/components/ui/ring-chart";
 import { SankeyChart } from "@/components/ui/sankey-chart";
 import { ScatterChart } from "@/components/ui/scatter-chart";
@@ -20,6 +21,7 @@ import { StackedBarChart } from "@/components/ui/stacked-bar-chart";
 import { StageBars } from "@/components/ui/stage-bars";
 import { TrackBarChart } from "@/components/ui/track-bar-chart";
 import { cn } from "@/lib/utils";
+import { MAP_SHAPES, MAP_VIEWBOX } from "../edas/_harita";
 import {
   CATEGORIES,
   CHANNELS,
@@ -298,6 +300,24 @@ export function Dashboard() {
               { id: "paket", label: "Paket", nodes: [{ id: "paketleme", title: "Paketleme", meta: "2g · 7 Kas", critical: true, after: ["lot", "etiket", "tadim"] }] },
             ]}
             goal={{ title: "Satışta", meta: "9 Kas", after: ["paketleme"] }}
+          />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="region-map" className="md:col-span-2 lg:col-span-3">
+        <ChartCard id="g-bolge-haritasi" label="Teslimat Bölgesine Göre Sipariş" value="Marmara önde" action={<FileTag file="region-map" />}>
+          <RegionMap
+            title="Teslimat bölgesine göre sipariş"
+            viewBox={MAP_VIEWBOX}
+            legend={["Az sipariş", "Çok sipariş"]}
+            format={(v) => `${v} sipariş`}
+            regions={[
+              { id: "marmara", label: "Marmara", value: 118, shape: "yayla" },
+              { id: "ege", label: "Ege", value: 74, shape: "vadi" },
+              { id: "akdeniz", label: "Akdeniz", value: 41, shape: "kiyi" },
+              { id: "ic", label: "İç Anadolu", value: 52, shape: "merkez" },
+              { id: "karadeniz", label: "Karadeniz", value: 23, shape: "ova" },
+            ].map(({ shape, ...r }) => ({ ...r, path: MAP_SHAPES.find((m) => m.id === shape)!.path, at: MAP_SHAPES.find((m) => m.id === shape)!.at }))}
           />
         </ChartCard>
       </Tile>

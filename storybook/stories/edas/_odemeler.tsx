@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
-import { Banknote, CalendarClock, CheckCircle2, CircleDollarSign, FileSpreadsheet, Landmark, Plus, Repeat, Scissors, ShieldCheck, TriangleAlert, Wallet, Zap } from "lucide-react";
+import { BellRing, CheckCircle2, FileSpreadsheet, Plus, Scissors, ShieldCheck, TriangleAlert, Wallet, XCircle, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BarList } from "@/components/ui/bar-list";
 import { Button } from "@/components/ui/Button";
@@ -24,8 +24,7 @@ import { TickMeter } from "@/components/ui/tick-meter";
 import {
   CHANNELS,
   CHANNEL_LABEL,
-  CUSTOMERS,
-  PERIODS,
+  PERIODS_12,
   RECON_LABEL,
   TODAY,
   TODAY_KEY,
@@ -37,39 +36,41 @@ import {
   num,
   num1,
   parseDay,
-  periodStats,
   tl,
   tlShort,
   type Reconciliation,
 } from "./_data";
 import {
-  CUT_STAGE_LABEL,
-  advanceCut,
   aging,
   allInvoices,
   allPayments,
   autoPayRows,
   cancelPlan,
+  approveMatched,
   closeReconciliation,
   createPlan,
-  cutStageOf,
   debtOf,
   isOverdue,
   olderDiffs,
   overdueDays,
   payInstallment,
   planInstallment,
-  resolveLine,
   retryAutoPay,
   schedule,
   unmatchedLines,
   useFinance,
   type AutoPayRow,
   type BankLine,
-  type CutStage,
   type EffectivePayment,
 } from "./_data-finans";
-import { CARD, IconTile, MetricStrip, PageBody, PageHead, Panel, ReconBadge, SampleNote, href, useApp, type PageProps } from "./_ui";
+import { cutEligibility, reconnectSla, scheduleSlot, useNotices } from "./_cutpolicy";
+import { allCustomers } from "./_data-musteri";
+import { resolveBankLine, dueNow } from "./_data-fatura";
+import { PageHero, fmtNum, fmtPct, fmtTlCompact } from "./_kit";
+import { can, useCan } from "./_permissions";
+import { COLLECTION_SCOPE, collectionRate } from "./_selectors";
+import { cancelWorkOrder, getWorkOrders, requestCut, requestReconnect, sendNotice, useStoreVersion, useWorkOrders } from "./_store";
+import { CARD, IconTile, PageBody, PageHead, Panel, ReconBadge, href, useApp, type PageProps } from "./_ui";
 
 const PAGE_SIZE = 10;
 
@@ -83,19 +84,6 @@ const RANGES: readonly RangePreset[] = [
   { id: "90", label: "Son 90 Gün", days: 90 },
   { id: "tum", label: "Tümü", days: null },
 ];
-
-function Cell({ icon, tone = "neutral", label, value, foot }: { icon: ReactNode; tone?: "primary" | "success" | "warning" | "danger" | "neutral"; label: string; value: ReactNode; foot: ReactNode }) {
-  return (
-    <div className="flex h-full flex-col gap-1 p-4 sm:p-5">
-      <div className="flex items-center gap-2 text-small text-muted">
-        <IconTile tone={tone}>{icon}</IconTile>
-        <span>{label}</span>
-      </div>
-      <p className="edas-mono mt-1 text-heading font-semibold tracking-tight text-strong">{value}</p>
-      <p className="text-small text-muted">{foot}</p>
-    </div>
-  );
-}
 
 const link = (go: PageProps["go"], page: Parameters<PageProps["go"]>[0], params: Record<string, string | undefined>) => ({
   href: href(page, params),
@@ -191,7 +179,7 @@ function Collections({ params, go }: PageProps) {
           <StackedBarChart
             title="Günlere ve Kanallara Göre Tahsilat (bin ₺)"
             data={stacked}
-            series={CHANNELS.map((ch, i) => ({ name: CHANNEL_LABEL[ch], color: (i + 1) as 1 | 2 | 3 | 4 }))}
+            series={CHANNELS.map((ch, i) => ({ name: CHANNEL_LABEL[ch], color: ([1, 3, 2, 5] as const)[i] }))}
             highlight={stacked.length - 1}
             unit=" bin ₺"
           />
@@ -252,6 +240,9 @@ function Reconcile() {
   const waitingDays = recentDays.filter((d) => all.some((p) => p.date === d && p.recon === "bekliyor"));
   const pending = all.filter((p) => p.recon === "bekliyor" && recentDays.includes(p.date));
   const matched = file ? all.filter((p) => recentDays.includes(p.date)).length - lines.length : 0;
+  const canPay = useCan("odeme");
+  const lineIds = lines.map((l) => l.paymentId);
+  const autoMatchable = file ? all.filter((p) => p.recon === "bekliyor" && recentDays.includes(p.date) && !lineIds.includes(p.id)).length : 0;
 
   const byChannel = CHANNELS.map((ch) => {
     const mine = all.filter((p) => p.channel === ch && recentDays.includes(p.date));
@@ -320,6 +311,19 @@ function Reconcile() {
             ) : (
               <p className="text-small text-muted">Dosya yüklenmeden mutabakat kapatılamaz.</p>
             )}
+            {file ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={autoMatchable === 0 || !canPay}
+                onClick={() => {
+                  const n = approveMatched(lineIds, recentDays);
+                  notify({ title: `${num.format(n)} eşleşen ödeme onaylandı`, body: lines.length ? `${num.format(lines.length)} satır elle çözülmeyi bekliyor.` : "Mutabakatı kapatabilirsiniz.", tone: "success" });
+                }}
+              >
+                <CheckCircle2 aria-hidden /> Eşleşenleri Onayla ({num.format(autoMatchable)})
+              </Button>
+            ) : null}
           </div>
         </Panel>
 
@@ -360,7 +364,7 @@ function Reconcile() {
         actions={
           <HoldButton
             tone="neutral"
-            disabled={!file || lines.length > 0 || waitingDays.length === 0}
+            disabled={!file || lines.length > 0 || waitingDays.length === 0 || !canPay}
             hint={!file ? "Önce dosya yükleyin" : lines.length ? "Önce eşleşmeyenleri çözün" : waitingDays.length === 0 ? "Kapatılacak gün yok" : "Kapatmak için basılı tutun"}
             doneLabel="Mutabakat Kapandı"
             onConfirm={() => {
@@ -403,8 +407,8 @@ function Reconcile() {
               variant="primary"
               onClick={() => {
                 if (!lineDialog) return;
-                resolveLine(lineDialog, how);
-                notify({ title: how === "faturaya" ? "Faturaya atandı" : how === "avans" ? "Avansa alındı" : "İade talimatı verildi", body: `${lineDialog.reference} mutabık duruma geçti.`, tone: "success" });
+                const r = resolveBankLine(lineDialog, how);
+                notify({ title: how === "faturaya" ? "Faturaya atandı" : how === "avans" ? "Avansa alındı" : "İade talimatı verildi", body: r.note, tone: "success" });
                 setLineDialog(null);
               }}
             >
@@ -713,66 +717,120 @@ function AutoPay({ params, go }: PageProps) {
 
 /* ============================ GECİKME VE KESME ================================ */
 
-type Candidate = { customerId: string; debt: number; days: number; invoices: number; stage: CutStage };
+type Candidate = { customerId: string; debt: number; days: number; invoices: number };
 
-function Cuts() {
+const slotText = (d: Date) => new Intl.DateTimeFormat("tr-TR", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(d);
+
+function Cuts({ go }: { go: PageProps["go"] }) {
   const { notify } = useApp();
+  useStoreVersion();
   const fin = useFinance();
+  const canCut = useCan("kesme");
+  const notices = useNotices();
+  const workOrders = useWorkOrders();
   const buckets = useMemo(() => aging(fin), [fin]);
   const [picked, setPicked] = useState<readonly string[]>([]);
   const [confirm, setConfirm] = useState(false);
 
-  const candidates: Candidate[] = useMemo(() => {
-    const planned = new Set(fin.plans.filter((p) => p.status === "devam").map((p) => p.customerId));
+  /* Aday: vadesi geçmiş borcu olan; ihtar, bekleme, hassas abone, plan ve itiraz kuralları `cutEligibility`den. */
+  const candidates: (Candidate & { e: ReturnType<typeof cutEligibility> })[] = useMemo(() => {
     const map = new Map<string, Candidate>();
     for (const i of allInvoices(fin).filter(isOverdue)) {
-      if (planned.has(i.customerId)) continue;
       const days = overdueDays(i);
       const cur = map.get(i.customerId);
-      const debt = (cur?.debt ?? 0) + (i.total - i.paid);
-      map.set(i.customerId, { customerId: i.customerId, debt, days: Math.max(cur?.days ?? 0, days), invoices: (cur?.invoices ?? 0) + 1, stage: "hatirlatma" });
+      map.set(i.customerId, { customerId: i.customerId, debt: (cur?.debt ?? 0) + dueNow(i).total, days: Math.max(cur?.days ?? 0, days), invoices: (cur?.invoices ?? 0) + 1 });
     }
     return [...map.values()]
-      .map((c) => ({ ...c, stage: cutStageOf(c.customerId, c.days, fin) }))
-      .sort((a, b) => b.days - a.days || b.debt - a.debt)
-      .slice(0, 15);
-  }, [fin]);
+      .map((c) => ({ ...c, e: cutEligibility(c.customerId) }))
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      .sort((a, b) => Number(b.e.eligible) - Number(a.e.eligible) || Number(!!b.e.noticeAt) - Number(!!a.e.noticeAt) || b.days - a.days || b.debt - a.debt)
+      .slice(0, 20);
+    // notices değişince ihtar durumu yeniden hesaplanır
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fin, notices]);
+
+  const activeCuts = workOrders.filter((w) => w.type === "kesme" && w.status !== "tamamlandi" && w.status !== "iptal");
 
   const reconnect = useMemo(
     () =>
-      CUSTOMERS.filter((c) => c.status === "kesik")
-        .map((c) => ({ id: c.id, debt: debtOf(c.id, fin), plan: fin.plans.some((p) => p.customerId === c.id && p.status === "devam"), stage: fin.cutStages[c.id] }))
-        .slice(0, 12),
-    [fin],
+      allCustomers()
+        .filter((c) => c.status === "kesik")
+        .map((c) => ({
+          id: c.id,
+          debt: debtOf(c.id, fin),
+          plan: fin.plans.some((p) => p.customerId === c.id && p.status === "devam"),
+          order: getWorkOrders().find((w) => w.type === "baglama" && w.customerId === c.id && w.status !== "tamamlandi" && w.status !== "iptal"),
+        }))
+        .slice(0, 14),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [fin, workOrders],
   );
 
-  const stageTone = (s: CutStage) => (s === "kesme-emri" || s === "kesildi" ? "danger" : s === "ihtar" ? "warning" : s === "baglama-emri" ? "success" : "neutral");
-  const all = candidates.length > 0 && candidates.every((c) => picked.includes(c.customerId));
-  const nextStage = (s: CutStage): CutStage => (s === "hatirlatma" ? "ihtar" : "kesme-emri");
+  const slot = scheduleSlot();
+  const eligible = candidates.filter((c) => c.e.eligible);
+  const selected = candidates.filter((c) => picked.includes(c.customerId));
+  const selectedEligible = selected.filter((c) => c.e.eligible);
+  const needNotice = selected.filter((c) => !c.e.noticeAt && c.e.overdueDays >= 15);
 
-  const columns: readonly Column<Candidate>[] = [
+  const state = (c: (typeof candidates)[number]) => {
+    if (c.e.eligible) return <Badge tone="danger" dot>Kesilebilir</Badge>;
+    if (!c.e.noticeAt) return <Badge tone={c.e.overdueDays >= 15 ? "warning" : "neutral"} dot>{c.e.overdueDays >= 15 ? "İhtar gerekli" : "Hatırlatma"}</Badge>;
+    return <Badge tone="warning" dot>İhtar bekleme</Badge>;
+  };
+  const reason = (c: (typeof candidates)[number]) => (c.e.eligible ? `Emir: ${slotText(slot)}` : c.e.blockers[0] ?? "");
+
+  const allPicked = candidates.length > 0 && candidates.every((c) => picked.includes(c.customerId));
+  const columns: readonly Column<(typeof candidates)[number]>[] = [
     {
       key: "pick",
-      header: <Checkbox aria-label="Bütün adayları seç" checked={all} onChange={(e) => setPicked(e.target.checked ? candidates.map((c) => c.customerId) : [])} />,
+      header: <Checkbox aria-label="Bütün adayları seç" checked={allPicked} onChange={(e) => setPicked(e.target.checked ? candidates.map((c) => c.customerId) : [])} />,
       width: "3rem",
       render: (c) => <Checkbox aria-label={`${customer(c.customerId).name} seç`} checked={picked.includes(c.customerId)} onChange={(e) => setPicked(e.target.checked ? [...picked, c.customerId] : picked.filter((x) => x !== c.customerId))} />,
     },
-    { key: "c", header: "Abone", render: (c) => <span className="block min-w-0"><span className="block truncate font-medium text-strong">{customer(c.customerId).name}</span><span className="text-micro text-muted">{c.invoices} fatura</span></span> },
-    { key: "d", header: "En Eski Gecikme", numeric: true, render: (c) => <span className="edas-mono">{c.days} gün</span> },
-    { key: "b", header: "Borç", numeric: true, render: (c) => <span className="edas-mono font-medium text-strong">{tl(c.debt)}</span> },
-    { key: "s", header: "Aşama", render: (c) => <Badge tone={stageTone(c.stage)} dot>{CUT_STAGE_LABEL[c.stage]}</Badge> },
+    {
+      key: "c",
+      header: "Abone",
+      render: (c) => (
+        <span className="block min-w-0">
+          <a {...{ href: href("customers", { id: c.customerId }), onClick: (e: { preventDefault: () => void }) => { e.preventDefault(); go("customers", { id: c.customerId }); } }} className="block truncate font-medium text-primary-ink hover:underline">{customer(c.customerId).name}</a>
+          <span className="text-micro text-muted">{c.invoices} fatura</span>
+        </span>
+      ),
+    },
+    { key: "d", header: "Gecikme", numeric: true, render: (c) => <span className="edas-mono">{c.days} gün</span> },
+    { key: "b", header: "Borç (zam dahil)", numeric: true, render: (c) => <span className="edas-mono font-medium text-strong">{tl(c.debt)}</span> },
+    { key: "s", header: "Durum", render: (c) => <span className="grid gap-0.5">{state(c)}<span className="text-micro text-muted">{reason(c)}</span></span> },
   ];
   const items: RecordItem[] = candidates.map((c) => ({
     id: c.customerId,
     title: customer(c.customerId).name,
     subtitle: `${c.invoices} fatura · ${c.days} gün gecikme`,
     value: tl(c.debt),
-    status: <Badge tone={stageTone(c.stage)} dot>{CUT_STAGE_LABEL[c.stage]}</Badge>,
+    meta: reason(c),
+    status: state(c),
     actions: <Checkbox aria-label={`${customer(c.customerId).name} seç`} checked={picked.includes(c.customerId)} onChange={(e) => setPicked(e.target.checked ? [...picked, c.customerId] : picked.filter((x) => x !== c.customerId))} />,
   }));
 
   const totalDebt = buckets.reduce((s, b) => s + b.balance, 0);
-  const selected = candidates.filter((c) => picked.includes(c.customerId));
+
+  const runCuts = () => {
+    let created = 0;
+    let pending = 0;
+    const blocked: string[] = [];
+    for (const c of selectedEligible) {
+      const r = requestCut(c.customerId, "Vadesi geçmiş borç");
+      if (r.ok && r.status === "olusturuldu") created++;
+      else if (r.ok) pending++;
+      else blocked.push(`${customer(c.customerId).name}: ${r.blockers[0]}`);
+    }
+    notify({
+      title: created ? `${created} kesme emri oluşturuldu` : pending ? `${pending} kesme emri ikinci göz onayında` : "Kesme emri verilemedi",
+      body: [created ? `Planlı zaman: ${slotText(slot)}.` : "", pending ? `${pending} emir ikinci yetkilinin onayını bekliyor (Ayarlar → Uyum Merkezi).` : "", blocked.length ? `${blocked.length} abone politika nedeniyle atlandı.` : ""].filter(Boolean).join(" "),
+      tone: created ? "success" : "info",
+    });
+    setPicked([]);
+    setConfirm(false);
+  };
 
   return (
     <div className="grid grid-cols-1 gap-5">
@@ -786,29 +844,43 @@ function Cuts() {
             items={buckets.map((b) => ({ label: `${b.label} · ${num.format(b.count)} fatura`, value: Math.round(b.balance / 100_000) }))}
             valueFormat={{ maximumFractionDigits: 0 }}
           />
+          <p className="mt-3 rounded-lg bg-surface p-3 text-small text-body">
+            Kesme emri iş günü ve mesai içine planlanır: şu an en erken <strong className="font-semibold text-strong">{slotText(slot)}</strong>. Hafta sonu ve resmî tatilde emir verilmez.
+          </p>
         </ChartCard>
-        <Panel title="Kesme Aday Listesi" note="Ödeme planı olan ve itirazlı aboneler listeye girmez. En eski gecikme üstte." className="self-start xl:col-span-3" actions={
-          <>
-            <Button variant="secondary" size="sm" disabled={selected.length === 0 || selected.every((c) => c.stage === "kesme-emri")} onClick={() => {
-              selected.forEach((c) => advanceCut([c.customerId], nextStage(c.stage)));
-              notify({ title: `${selected.length} abonenin aşaması ilerletildi`, body: "Hatırlatma ya da ihtar bildirimi gönderildi.", tone: "success" });
-              setPicked([]);
-            }}>
-              <CalendarClock aria-hidden /> Aşamayı İlerlet
-            </Button>
-            <Button variant="danger" size="sm" disabled={selected.length === 0} onClick={() => setConfirm(true)}>
-              <Scissors aria-hidden /> Kesme Emri Oluştur
-            </Button>
-          </>
-        }>
+        <Panel
+          title="Kesme Aday Listesi"
+          note={`${num.format(eligible.length)} abone kesilebilir. Yazılı ihtar, bekleme süresi, hassas abone, itiraz ve ödeme planı kuralları uygulanır (ÖRNEK parametre).`}
+          className="self-start xl:col-span-3"
+          actions={
+            <>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={!canCut || needNotice.length === 0}
+                onClick={() => {
+                  needNotice.forEach((c) => sendNotice(c.customerId));
+                  notify({ title: `${needNotice.length} aboneye yazılı ihtar gönderildi`, body: "Bekleme süresi başladı; süre dolunca kesme emri verilebilir.", tone: "success" });
+                  setPicked([]);
+                }}
+              >
+                <BellRing aria-hidden /> İhtar Gönder
+              </Button>
+              <Button variant="danger" size="sm" disabled={!canCut || selectedEligible.length === 0} onClick={() => setConfirm(true)}>
+                <Scissors aria-hidden /> Kesme Emri Oluştur
+              </Button>
+            </>
+          }
+        >
+          {!canCut ? <p className="border-b border-line-soft bg-warning-wash px-4 py-2 text-small text-warning sm:px-5">Kesme ve bağlama emri yetkiniz yok: liste yalnız izleme amaçlı.</p> : null}
           {candidates.length === 0 ? (
             <div className="p-4">
-              <EmptyState icon={<CheckCircle2 />} title="Kesme Adayı Yok" hint="Vadesi geçen bakiyesi olan, planı bulunmayan abone kalmadı." />
+              <EmptyState icon={<CheckCircle2 />} title="Kesme Adayı Yok" hint="Vadesi geçen bakiyesi olan abone kalmadı." />
             </div>
           ) : (
             <>
               <div className="max-md:hidden">
-                <DataTable<Candidate> caption="Kesme adayları" columns={columns} rows={candidates} rowKey={(c) => c.customerId} density="comfortable" on="surface" minWidth="34rem" />
+                <DataTable<(typeof candidates)[number]> caption="Kesme adayları" columns={columns} rows={candidates} rowKey={(c) => c.customerId} density="comfortable" on="surface" minWidth="36rem" />
               </div>
               <div className="px-3 pb-3 md:hidden">
                 <RecordList label="Kesme adayları" items={items} />
@@ -818,7 +890,26 @@ function Cuts() {
         </Panel>
       </div>
 
-      <Panel title="Yeniden Bağlama Bekleyenler" note="Enerjisi kesik aboneler. Borç kapanınca ya da plan kurulunca bağlama emri açılır.">
+      {activeCuts.length > 0 ? (
+        <Panel title="Açık Kesme Emirleri" note="Ödeme gelirse emir iptal edilir; iptal denetim izine yazılır.">
+          <ul className="grid divide-y divide-line-soft">
+            {activeCuts.map((w) => (
+              <li key={w.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5">
+                <IconTile tone="danger"><Scissors /></IconTile>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium text-strong">{w.customerId ? customer(w.customerId).name : w.id}</p>
+                  <p className="text-small text-muted">{w.id} · {slotText(w.scheduled)}</p>
+                </div>
+                <Button variant="ghost" size="sm" disabled={!canCut} onClick={() => { cancelWorkOrder(w.id, "Ödeme alındı"); notify({ title: `${w.id} iptal edildi`, tone: "info" }); }}>
+                  <XCircle aria-hidden /> İptal
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      ) : null}
+
+      <Panel title="Yeniden Bağlama Bekleyenler" note="Enerjisi kesik aboneler. Borç kapanınca ya da plan kurulunca bağlama emri açılır; hedef süre sayaçla izlenir.">
         {reconnect.length === 0 ? (
           <div className="p-4">
             <EmptyState icon={<Zap />} title="Bağlama Bekleyen Yok" hint="Enerjisi kesik abone bulunmuyor." />
@@ -827,30 +918,32 @@ function Cuts() {
           <ul className="grid divide-y divide-line-soft">
             {reconnect.map((r) => {
               const ok = r.debt === 0 || r.plan;
-              const done = r.stage === "baglama-emri";
+              const sla = r.order ? reconnectSla(r.order.createdAt) : null;
               return (
                 <li key={r.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5">
-                  <IconTile tone={done ? "success" : "danger"}><Zap /></IconTile>
+                  <IconTile tone={r.order ? "success" : "danger"}><Zap /></IconTile>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-strong">{customer(r.id).name}</p>
                     <p className="text-small text-muted">{r.debt > 0 ? `${tl(r.debt)} borç${r.plan ? " · ödeme planı var" : ""}` : "Borç yok"}</p>
                   </div>
-                  {done ? (
-                    <Badge tone="success" dot>Bağlama Emri Açıldı</Badge>
+                  {r.order && sla ? (
+                    <Badge tone={sla.breached ? "danger" : "success"} dot>
+                      Bağlama emri · {num1.format(sla.hours)} sa / {sla.targetHours} sa{sla.breached ? " (süre aşıldı)" : ""}
+                    </Badge>
                   ) : (
                     <Button
                       variant="secondary"
                       size="sm"
-                      disabled={!ok}
+                      disabled={!ok || !canCut}
                       onClick={() => {
-                        advanceCut([r.id], "baglama-emri");
-                        notify({ title: "Bağlama emri oluşturuldu", body: `${customer(r.id).name} · saha ekibi bugün gidecek.`, tone: "success" });
+                        const wo = requestReconnect(r.id, r.debt === 0 ? "Borç kapandı" : "Ödeme planı kuruldu");
+                        notify(wo ? { title: "Bağlama emri oluşturuldu", body: `${customer(r.id).name} · ${slotText(wo.scheduled)}; hedef 24 saat.`, tone: "success" } : { title: "Bağlama yetkiniz yok", tone: "info" });
                       }}
                     >
                       Bağlama Emri
                     </Button>
                   )}
-                  {!ok && !done ? <p className="basis-full text-micro text-muted">Borç kapanmadan ya da ödeme planı kurulmadan bağlanamaz.</p> : null}
+                  {!ok && !r.order ? <p className="basis-full text-micro text-muted">Borç kapanmadan ya da ödeme planı kurulmadan bağlanamaz.</p> : null}
                 </li>
               );
             })}
@@ -862,32 +955,24 @@ function Cuts() {
         open={confirm}
         onOpenChange={setConfirm}
         title="Kesme Emri Oluştur"
-        description={`${selected.length} abone için enerji kesme iş emri açılır. Saha ekibi yarın bu aboneleri keser; ödeme gelirse emir iptal edilir.`}
+        description={`${selectedEligible.length} abone için enerji kesme iş emri açılır. İlk uygun zaman: ${slotText(slot)}.`}
         footer={
           <>
-            <Button variant="ghost" onClick={() => setConfirm(false)}>
-              Vazgeç
-            </Button>
-            <HoldButton
-              tone="danger"
-              hint="Onaylamak için basılı tutun"
-              doneLabel="Emir Verildi"
-              onConfirm={() => {
-                advanceCut(selected.map((c) => c.customerId), "kesme-emri");
-                notify({ title: `${selected.length} kesme emri oluşturuldu`, body: `Toplam borç ${tl(selected.reduce((s, c) => s + c.debt, 0))}.`, tone: "info" });
-                setPicked([]);
-                setConfirm(false);
-              }}
-            >
+            <Button variant="ghost" onClick={() => setConfirm(false)}>Vazgeç</Button>
+            <HoldButton tone="danger" hint="Onaylamak için basılı tutun" doneLabel="Emir Verildi" onConfirm={runCuts}>
               Kesme Emrini Ver
             </HoldButton>
           </>
         }
       >
-        <p className="flex items-start gap-2 rounded-lg bg-warning-wash p-3 text-small text-warning">
-          <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-          <span>Hastane, okul ve yaşamsal cihaz kullanan aboneler otomatik olarak listeden çıkarılır. Yine de listeyi gözden geçirin.</span>
-        </p>
+        <div className="grid gap-3">
+          <p className="flex items-start gap-2 rounded-lg bg-warning-wash p-3 text-small text-warning">
+            <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
+            <span>Hassas aboneler ve ödeme planı ya da itirazı olanlar otomatik atlanır. Kesme emri ikinci göz onayı isteyebilir; bu durumda emir, onaylanınca açılır.</span>
+          </p>
+          {selected.length !== selectedEligible.length ? <p className="text-small text-muted">Seçilenlerden {selected.length - selectedEligible.length} aboneye henüz kesme emri verilemez (ihtar ya da bekleme sürüyor); onlar atlanır.</p> : null}
+          {!can("kesme") ? <p className="text-small text-danger">Yetkiniz yok.</p> : null}
+        </div>
       </Dialog>
     </div>
   );
@@ -896,6 +981,7 @@ function Cuts() {
 /* ================================ SAYFA ====================================== */
 
 export function OdemelerPage({ params, go }: PageProps) {
+  useStoreVersion();
   const fin = useFinance();
   const all = useMemo(() => allPayments(fin), [fin]);
   const tab: TabId = (TAB_IDS as readonly string[]).includes(params.tab ?? "") ? (params.tab as TabId) : "tahsilat";
@@ -903,9 +989,11 @@ export function OdemelerPage({ params, go }: PageProps) {
   const monthKey = TODAY_KEY.slice(0, 7);
   const today = all.filter((p) => p.date === TODAY_KEY);
   const month = all.filter((p) => p.date.startsWith(monthKey));
-  const stats = periodStats(PERIODS[0].value);
+  const rate = collectionRate(PERIODS_12[10]);
   const waiting = all.filter((p) => p.recon !== "mutabik").length;
-  const fees = month.reduce((s, p) => s + p.lateFee, 0);
+  /* Gecikme zammı: DOĞAN (ödenmemiş, hesaplanan) ile TAHSİL EDİLEN (bu ay ödemeyle gelen) ayrı. */
+  const collectedFees = month.reduce((s, p) => s + p.lateFee, 0);
+  const accruedFees = allInvoices(fin).filter(isOverdue).reduce((s, i) => s + dueNow(i).fee, 0);
   const activePlans = fin.plans.filter((p) => p.status === "devam");
 
   const counts: Record<TabId, number | null> = { tahsilat: null, mutabakat: waiting, planlar: activePlans.length, otomatik: autoPayRows(fin).filter((r) => r.state !== "aktif").length, kesme: null };
@@ -914,7 +1002,7 @@ export function OdemelerPage({ params, go }: PageProps) {
     mutabakat: <Reconcile />,
     planlar: <Plans />,
     otomatik: <AutoPay params={params} go={go} />,
-    kesme: <Cuts />,
+    kesme: <Cuts go={go} />,
   };
 
   return (
@@ -923,20 +1011,22 @@ export function OdemelerPage({ params, go }: PageProps) {
         title="Ödemeler"
         description={`${num.format(all.length)} tahsilat kaydı · ${num.format(waiting)} mutabakat bekliyor`}
         actions={
-          <Button variant="secondary" size="sm" onClick={() => go("invoices", { status: "geciken" })}>
-            Geciken Faturalar
+          <Button variant="secondary" size="sm" onClick={() => go("invoices", { status: "kuyruk" })}>
+            Tahsilat Kuyruğu
           </Button>
         }
       />
       <PageBody>
-        <MetricStrip>
-          <Cell icon={<Banknote />} tone="success" label="Bugünkü Tahsilat" value={tlShort(today.reduce((s, p) => s + p.amount, 0))} foot={`${num.format(today.length)} ödeme`} />
-          <Cell icon={<CircleDollarSign />} tone="primary" label="Bu Ay Tahsilat" value={tlShort(month.reduce((s, p) => s + p.amount, 0))} foot={`${num.format(month.length)} ödeme`} />
-          <Cell icon={<Landmark />} label="Tahsilat Oranı" value={`%${num1.format(stats.collectionRate)}`} foot="Vadesi gelen faturalarda" />
-          <Cell icon={<Repeat />} tone="warning" label="Mutabakat Bekleyen" value={num.format(waiting)} foot="Kapatılmayı bekleyen ödeme" />
-          <Cell icon={<TriangleAlert />} tone="danger" label="Gecikme Zammı" value={tlShort(fees)} foot="Bu ay tahsil edilen" />
-          <Cell icon={<CalendarClock />} tone="primary" label="Ödeme Planlı Abone" value={num.format(activePlans.length)} foot={`${tlShort(activePlans.reduce((s, p) => s + p.total, 0))} plan toplamı`} />
-        </MetricStrip>
+        <PageHero
+          primary={{ label: "Bu Ay Tahsilat", value: fmtTlCompact(month.reduce((s, p) => s + p.amount + p.lateFee, 0)), foot: `${fmtNum(month.length)} ödeme · bugün ${fmtTlCompact(today.reduce((s, p) => s + p.amount + p.lateFee, 0))}`, goodWhen: "up" }}
+          secondary={[
+            { label: "Tahsilat Oranı", value: fmtPct(rate), foot: COLLECTION_SCOPE, goodWhen: "up" },
+            { label: "Mutabakat Bekleyen", value: fmtNum(waiting), foot: "Kapatılmayı bekleyen ödeme", to: { page: "payments", params: { tab: "mutabakat" } } },
+            { label: "Zam (Tahsil Edilen)", value: fmtTlCompact(collectedFees), foot: "Bu ay ödemeyle gelen" },
+            { label: "Zam (Doğan, Ödenmemiş)", value: fmtTlCompact(accruedFees), foot: "Vadesi geçmiş faturalarda işliyor", goodWhen: "down", to: { page: "payments", params: { tab: "kesme" } } },
+            { label: "Ödeme Planlı Abone", value: fmtNum(activePlans.length), foot: `${fmtTlCompact(activePlans.reduce((s, p) => s + p.total, 0))} plan toplamı`, to: { page: "payments", params: { tab: "planlar" } } },
+          ]}
+        />
 
         <Tabs
           aria-label="Ödeme bölümleri"
@@ -954,7 +1044,6 @@ export function OdemelerPage({ params, go }: PageProps) {
             panel: id === tab ? content[id] : null,
           }))}
         />
-        <SampleNote />
       </PageBody>
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import { Children, createContext, useContext, type CSSProperties, type ReactNode } from "react";
 import { Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
@@ -47,7 +47,17 @@ export type Page =
   | "suppliers"
   | "outages"
   | "reports"
-  | "settings";
+  | "settings"
+  | "applications"
+  | "stock"
+  | "field"
+  | "producers"
+  | "disputes"
+  | "calls"
+  | "leaks"
+  | "workorders"
+  | "grid"
+  | "compliance";
 
 export type Params = Readonly<Record<string, string>>;
 export type PageProps = { params: Params; go: (page: Page, params?: Record<string, string | undefined>) => void };
@@ -63,8 +73,18 @@ export const PAGES: readonly { id: Page; label: string; section: string }[] = [
   { id: "payments", label: "Ödemeler", section: "Finans" },
   { id: "suppliers", label: "Tedarikçiler", section: "Piyasa" },
   { id: "outages", label: "Arıza ve Kesintiler", section: "Operasyon" },
-  { id: "reports", label: "Raporlar", section: "Operasyon" },
+  { id: "reports", label: "Raporlar", section: "Raporlar" },
   { id: "settings", label: "Ayarlar", section: "Sistem" },
+  { id: "applications", label: "Başvurular", section: "Müşteriler" },
+  { id: "stock", label: "Sayaç Stok", section: "Ölçüm" },
+  { id: "field", label: "Saha Okuma", section: "Ölçüm" },
+  { id: "producers", label: "Üreticiler", section: "Ölçüm" },
+  { id: "disputes", label: "İtirazlar ve Mahsup", section: "Finans" },
+  { id: "calls", label: "Çağrı Merkezi", section: "Operasyon" },
+  { id: "leaks", label: "Kaçak Vakaları", section: "Operasyon" },
+  { id: "workorders", label: "İş Emirleri", section: "Operasyon" },
+  { id: "grid", label: "Şebeke ve Trafo", section: "Operasyon" },
+  { id: "compliance", label: "Uyum Merkezi", section: "Sistem" },
 ];
 export const pageInfo = (page: Page) => PAGES.find((p) => p.id === page)!;
 
@@ -111,8 +131,10 @@ export function PageHead({ title, description, actions, crumb }: { title: string
   ];
   return (
     <header className="border-b border-line-soft">
-      <div className="flex min-h-13 items-center gap-3 border-b border-line-soft px-4 sm:px-6">
+      {/* Telefonda tek başlık: üst çubuk (menü, marka, zil, arama) kabuğun kendisinde; bu satır yalnız masaüstünde. */}
+      <div className="flex min-h-13 items-center gap-3 border-b border-line-soft px-4 max-lg:hidden sm:px-6">
         <Breadcrumb items={items} className="min-w-0 flex-1" />
+        <DemoBadge />
         <span className="hidden items-center gap-1.5 text-small text-muted md:inline-flex">
           <span aria-hidden className="size-1.5 rounded-full bg-success" />
           Güncellendi · 21 Kas, 10:40
@@ -171,9 +193,23 @@ export function IconTile({ children, tone = "primary", className }: { children: 
   );
 }
 
-/** Ölçü şeridi: TEK kartta kıl çizgiyle bölünmüş hücreler (Ingot). */
+/**
+ * Ölçü şeridi: TEK kartta kıl çizgiyle bölünmüş hücreler (Ingot). Sütun sayısı
+ * çocuk sayısından türer (en çok 6; dar ekranda 2): üç hücre altı sütunluk bir
+ * şeridin yarısına yığılmaz. Çizgiler hücrelerin iç sağ/alt kenarıdır, iç kap
+ * 1 piksel taşırılıp kırpılır: eksik satır ya da son sütunda artık çizgi kalmaz.
+ * Hücreler `Metric` (`_kit.tsx`) ya da kendi dolgulu öğeleridir.
+ */
 export function MetricStrip({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("edas-strip overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line", className)}>{children}</div>;
+  const n = Math.max(1, Children.count(children));
+  const style = { "--c-lg": n <= 3 ? n : n === 4 ? 2 : 3, "--c-xl": Math.min(n, 6) } as CSSProperties;
+  return (
+    <div className={cn("overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line", className)}>
+      <div className="edas-strip" style={style}>
+        {children}
+      </div>
+    </div>
+  );
 }
 
 /** Sayfa gövdesi: kenar boşluğu ve dikey ritim. */
@@ -181,12 +217,22 @@ export function PageBody({ children, className }: { children: ReactNode; classNa
   return <div className={cn("grid grid-cols-1 gap-5 p-4 sm:p-6", className)}>{children}</div>;
 }
 
-/** Her ekranda "ÖRNEK VERİ" künyesi: gerçek abone, şirket ya da tutar değil. */
-export function SampleNote({ className }: { className?: string }) {
+/**
+ * Eski "ÖRNEK VERİ" alt bilgisi: artık HİÇBİR ŞEY çizmez. Demo olduğu bir kez,
+ * gezinti çubuğundaki `DemoBadge`de söylenir; her sayfanın altında tekrarlamak
+ * demo kokusunu artırıyordu (UX denetimi). Sayfalar derlenmeye devam etsin diye
+ * bileşen duruyor.
+ */
+export function SampleNote(_props: { className?: string }) {
+  return null;
+}
+
+/** Demo olduğunu bir kez, gezinti çubuğunda söyler. */
+export function DemoBadge() {
   return (
-    <p className={cn("text-micro text-muted", className)}>
-      ÖRNEK VERİ: kurgusal şirket ve aboneler; hiçbir kişi, tesisat ya da tutar gerçek değildir. KVKK gereği kimlik ve iletişim alanları maskelidir.
-    </p>
+    <Badge tone="neutral" title="Bütün şirket, abone ve tutarlar kurgusaldır; KVKK gereği kimlik alanları maskelidir.">
+      Demo · kurgusal veri
+    </Badge>
   );
 }
 

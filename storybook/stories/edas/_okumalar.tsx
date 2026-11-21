@@ -33,6 +33,7 @@ import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
 import { TabLinks } from "@/components/ui/tabs";
 import { TickMeter } from "@/components/ui/tick-meter";
+import { useDerived } from "./_core";
 import {
   CURRENT_PERIOD,
   FLAG_LABEL,
@@ -43,27 +44,34 @@ import {
   TODAY_KEY,
   customer,
   dayLabel,
-  kwh,
   meterById,
-  num,
-  num1,
   periodLabel,
-  readingsOf,
   region,
   type Meter,
   type Reading,
   type ReadingFlag,
   type ReadingSource,
 } from "./_data";
-import { READER_NAMES, buildImportRows, buildRoutes, readingDelay, type ImportRow, type Route } from "./_data-sayac";
-import { IconTile, MetricStrip, PageBody, PageHead, Panel, ReadingBadge, SampleNote, href, useApp, type PageProps } from "./_ui";
+import { READER_NAMES, buildImportRows, buildRoutesLive, downloadCsv, readingDelay, readingUi, type EntryLogItem, type ImportRow, type Route } from "./_data-sayac";
+import { effectiveReadings, enterReading, resolveReading, useMeterOps, type ReadingDecision } from "./_ops";
+import { audit } from "./_audit";
+import { useCan } from "./_permissions";
+import { Metric, fmtDec, fmtKwh, fmtNum, fmtPct } from "./_kit";
+import { IconTile, MetricStrip, PageBody, PageHead, Panel, ReadingBadge, href, useApp, type PageProps } from "./_ui";
 
 /**
  * Okumalar: dönem okumaları. Dört sekme, hepsi adresten okunur (`tab`):
  *   tur (saha tur planı) · giris (elle okuma girişi) · supheli (anomali inceleme) · aktar (toplu içe aktarma).
  * `?id=R-…` bir okumanın ayrıntı çekmecesini açar; `?status=supheli` şüpheli sekmesine gider.
- * Girilen okuma, çözülen şüpheli ve içe aktarma sayfanın iç durumudur: veri değişmez,
- * ama tur planı ilerlemesi, KPI'lar ve listeler bu durumla birlikte güncellenir.
+ *
+ * VARSAYILAN SEKME: şüpheli okuma varsa "Şüpheli okumalar" (rozetli; sayfanın asıl işi);
+ * yoksa "Tur planı".
+ *
+ * Her işlem DEPOYA yazılır (`_ops.ts`): girilen okuma, onay/düzeltme/tahmini ve
+ * toplu içe aktarma okumanın kendisini değiştirir; rozet, Pano ve faturalama
+ * kapısı aynı kaynaktan okur. Okuyucu atamaları, gönderilen turlar ve oturum
+ * girişleri modül düzeyinde bir dilimde durur: başka sayfaya gidip dönünce
+ * kaybolmaz. Onaylanmamış (şüpheli) okuma tahakkuka girmez; onay faturaya serbest bırakır.
  */
 
 type Tab = "tur" | "giris" | "supheli" | "aktar";
@@ -73,19 +81,27 @@ const TABS: readonly { id: Tab; label: string }[] = [
   { id: "supheli", label: "Şüpheli okumalar" },
   { id: "aktar", label: "Toplu içe aktarma" },
 ];
-const tabOf = (params: PageProps["params"]): Tab => {
+const tabOf = (params: PageProps["params"], suspectOpen: number): Tab => {
   if (TABS.some((t) => t.id === params.tab)) return params.tab as Tab;
   if (params.status === "supheli") return "supheli";
-  return "tur";
+  return suspectOpen > 0 ? "supheli" : "tur";
 };
 
 type Resolution = "dogrulandi" | "duzeltildi" | "yeniden" | "tahmini";
 const RESOLUTION_LABEL: Record<Resolution, string> = { dogrulandi: "Onaylandı", duzeltildi: "Düzeltildi", yeniden: "Yeniden okuma istendi", tahmini: "Tahmini yazıldı" };
+const DECISION: Record<Resolution, ReadingDecision> = { dogrulandi: "onayla", duzeltildi: "duzelt", yeniden: "yeniden", tahmini: "tahmini" };
 
-type Entry = { meterId: string; at: string; source: ReadingSource; total: number; flags: readonly ReadingFlag[] };
+/** Okumanın son çözüm durumu (depodan): yamalı okumada `duzeltildi`/`dogrulandi`. */
+const resolutionOf = (r: Reading, base: Reading | undefined): Resolution | undefined => {
+  if (!base || base.status !== "supheli") return undefined;
+  if (r.status === "duzeltildi") return "duzeltildi";
+  if (r.status === "bekliyor") return "yeniden";
+  if (r.status === "dogrulandi") return r.source === "tahmini" ? "tahmini" : "dogrulandi";
+  return undefined;
+};
 
 const FLAG_HINT: Record<ReadingFlag, string> = {
-  "geri-sayim": "Endeks önceki dönemden küçük. Sayaç değişmiş, sıfırlanmış ya da yanlış okunmuş olabilir.",
+  "geri-sayim": "Endeks önceki dönemden küçük. Sayaç değişmiş, sıfırlanmış, taşmış ya da yanlış okunmuş olabilir.",
   "ani-sicrama": "Tüketim beklenenin çok üstünde. Kaçak kullanım, yanlış çarpan ya da okuma hatası olabilir.",
   "dusuk-tuketim": "Tüketim beklenenin çok altında. Sayaç durmuş, bypass ya da boş konut olabilir.",
   "kapak-acma": "Klemens kapağı açma kaydı var. Mühür ve bağlantı yerinde kontrol edilmeli.",
@@ -96,42 +112,36 @@ const FLAG_TONE: Record<ReadingFlag, "danger" | "warning"> = { "geri-sayim": "da
 
 /** Aynı sayacın o dönemden önceki üç doğrulanmış okumasının ortalaması (kWh). */
 function expectedUsage(meterId: string, before?: string) {
-  const prior = readingsOf(meterId).filter((r) => r.status !== "bekliyor" && !r.flags.length && (!before || r.period < before)).slice(-3);
+  const prior = effectiveReadings().filter((r) => r.meterId === meterId && r.status !== "bekliyor" && !r.flags.length && (!before || r.period < before)).slice(-3);
   return prior.length ? Math.round(prior.reduce((s, r) => s + r.usage.total, 0) / prior.length) : 0;
 }
+const readingsOf = (meterId: string) => effectiveReadings().filter((r) => r.meterId === meterId);
+const currentReadingOf = (meterId: string) => effectiveReadings().find((r) => r.meterId === meterId && r.period === CURRENT_PERIOD);
 
 const Mono = ({ children }: { children: ReactNode }) => <span className="edas-mono">{children}</span>;
+const num = { format: (n: number) => fmtNum(n) };
+const num1 = { format: (n: number) => fmtDec(n) };
+const kwh = fmtKwh;
 
-/** Kaynak dağılımı: pay HER ZAMAN toplama göre (ilk satıra göre değil); sayı ve yüzde metinde. */
+/** Kaynak dağılımı: pay HER ZAMAN toplama göre; sıfır olan kaynaklar gizlenir (neden altta yazılı). */
 function SourceBars({ sources }: { sources: readonly { label: string; value: number }[] }) {
   const total = sources.reduce((s, x) => s + x.value, 0) || 1;
+  const shown = sources.filter((s) => s.value > 0);
   return (
     <ul aria-label="Okuma kaynağı dağılımı" className="grid gap-3">
-      {sources.map((s) => (
+      {shown.map((s) => (
         <li key={s.label} className="grid grid-cols-[7.5rem_1fr_5.5rem] items-center gap-3 text-base">
           <span className="text-body">{s.label}</span>
           <span aria-hidden className="h-2.5 overflow-hidden rounded-full bg-chart-track">
             <span className="block h-full rounded-full bg-chart-1" style={{ width: `${(s.value / total) * 100}%` }} />
           </span>
           <span className="text-right tabular-nums text-strong">
-            {num.format(s.value)} <span className="text-small text-muted">%{Math.round((s.value / total) * 100)}</span>
+            {fmtNum(s.value)} <span className="text-small text-muted">{s.value / total < 0.01 ? "<%1" : `%${Math.round((s.value / total) * 100)}`}</span>
           </span>
         </li>
       ))}
+      {shown.length < sources.length ? <li className="text-small text-muted">Kullanılmayan kaynaklar gizlendi: {sources.filter((s) => s.value === 0).map((s) => s.label).join(", ")}.</li> : null}
     </ul>
-  );
-}
-
-function Cell({ icon, label, value, foot, tone = "neutral" }: { icon: ReactNode; label: string; value: ReactNode; foot: ReactNode; tone?: "neutral" | "danger" | "warning" | "success" | "primary" }) {
-  return (
-    <div className="relative flex h-full flex-col gap-3 p-4 sm:p-5">
-      <IconTile tone={tone} className="absolute top-4 right-4 sm:top-5 sm:right-5">
-        {icon}
-      </IconTile>
-      <p className="min-h-10 pr-10 text-small font-medium text-muted">{label}</p>
-      <p className="text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</p>
-      <p className="mt-auto text-small text-muted">{foot}</p>
-    </div>
   );
 }
 
@@ -139,36 +149,46 @@ function Cell({ icon, label, value, foot, tone = "neutral" }: { icon: ReactNode;
 
 export function OkumalarPage({ params, go }: PageProps) {
   const { notify } = useApp();
-  const tab = tabOf(params);
+  const canApprove = useCan("okuma");
+  const ui = readingUi.use();
+  const all = useDerived(effectiveReadings);
   const [period, setPeriod] = useState<string>(params.status === "supheli" ? "all" : CURRENT_PERIOD);
-  const [readers, setReaders] = useState<Record<string, string>>({});
-  const [entries, setEntries] = useState<Record<string, Entry>>({});
-  const [resolved, setResolved] = useState<Record<string, Resolution>>({});
   const [prefill, setPrefill] = useState<string | null>(params.meter ?? null);
 
-  const inPeriod = useMemo(() => (period === "all" ? READINGS : READINGS.filter((r) => r.period === period)), [period]);
-  const doneCount = inPeriod.filter((r) => r.status !== "bekliyor" || entries[r.meterId]).length;
+  const inPeriod = useMemo(() => (period === "all" ? all : all.filter((r) => r.period === period)), [all, period]);
+  const doneCount = inPeriod.filter((r) => r.status !== "bekliyor").length;
   const pending = inPeriod.length - doneCount;
-  const suspect = inPeriod.filter((r) => r.status === "supheli" && !resolved[r.id]).length;
+  const suspect = inPeriod.filter((r) => r.status === "supheli").length;
+  const suspectCurrent = all.filter((r) => r.status === "supheli" && r.period === CURRENT_PERIOD).length;
   const estimated = inPeriod.filter((r) => r.source === "tahmini").length;
   const read = inPeriod.filter((r) => r.status !== "bekliyor");
   const avgDelay = read.length ? read.reduce((s, r) => s + readingDelay(r), 0) / read.length : 0;
+  const resolvedCount = useMemo(() => READINGS.filter((b) => b.status === "supheli" && (period === "all" || b.period === period) && all.find((r) => r.id === b.id)?.status !== "supheli").length, [all, period]);
 
+  const tab = tabOf(params, suspectCurrent);
   const sources = (["uzaktan", "saha", "beyan", "tahmini"] as const).map((s) => ({ label: SOURCE_LABEL[s], value: inPeriod.filter((r) => r.source === s).length }));
 
-  const open = params.id ? READINGS.find((r) => r.id === params.id) : undefined;
-  const closeSheet = () => go("readings", { tab: tab === "tur" && !params.tab ? undefined : tab, status: params.status });
-  const resolve = (id: string, how: Resolution) => {
-    setResolved((p) => ({ ...p, [id]: how }));
-    const r = READINGS.find((x) => x.id === id);
-    notify({ title: RESOLUTION_LABEL[how], body: r ? `${meterById(r.meterId)?.serial ?? r.meterId} · ${periodLabel(r.period)}` : id, tone: "success" });
+  const open = params.id ? all.find((r) => r.id === params.id) : undefined;
+  const closeSheet = () => go("readings", { tab: params.tab, status: params.status });
+  const resolve = (id: string, how: Resolution, note?: string) => {
+    if (!canApprove) {
+      notify({ title: "Yetki yok", body: "Okuma onayı ve düzeltme yetkiniz yok.", tone: "info" });
+      return;
+    }
+    resolveReading(id, DECISION[how], note);
+    const r = all.find((x) => x.id === id);
+    notify({
+      title: RESOLUTION_LABEL[how],
+      body: `${r ? `${meterById(r.meterId)?.serial ?? r.meterId} · ${periodLabel(r.period)}` : id}${how === "dogrulandi" || how === "duzeltildi" ? " · faturalamaya serbest bırakıldı" : how === "tahmini" ? " · bir sonraki gerçek okumada mahsup edilecek" : " · saha turuna eklendi"}`,
+      tone: "success",
+    });
   };
 
   return (
     <>
       <PageHead
         title="Okumalar"
-        description="Dönem okumaları, saha turları, endeks girişi ve anomali incelemesi."
+        description="Dönem okumaları, saha turları, endeks girişi ve anomali incelemesi. Onaylanmamış okuma faturalanmaz."
         actions={
           <>
             <Select label="Dönem" hideLabel placeholder="Dönem" value={period} onValueChange={(v) => setPeriod(v ?? CURRENT_PERIOD)} items={[{ value: "all", label: "Bütün dönemler" }, ...[...PERIODS_12].reverse().map((p) => ({ value: p, label: periodLabel(p) }))]} className="min-w-44" />
@@ -180,12 +200,12 @@ export function OkumalarPage({ params, go }: PageProps) {
       />
       <PageBody>
         <MetricStrip>
-          <Cell icon={<BookOpenCheck />} label="Okunma oranı" value={`%${num1.format(inPeriod.length ? (doneCount / inPeriod.length) * 100 : 0)}`} foot={`${num.format(doneCount)} / ${num.format(inPeriod.length)} sayaç okundu`} tone="success" />
-          <Cell icon={<Clock3 />} label="Okuma bekleyen" value={num.format(pending)} foot={period === CURRENT_PERIOD ? "Dönem sonuna kadar planlı" : "Seçili dönemde"} tone={pending ? "warning" : "neutral"} />
-          <Cell icon={<ShieldAlert />} label="Şüpheli okuma" value={num.format(suspect)} foot={`${num.format(Object.keys(resolved).length)} okuma bu oturumda çözüldü`} tone={suspect ? "danger" : "neutral"} />
-          <Cell icon={<AlertTriangle />} label="Tahmini okuma" value={num.format(estimated)} foot={`%${num1.format(inPeriod.length ? (estimated / inPeriod.length) * 100 : 0)} · saha turuna kaldı`} tone={estimated ? "warning" : "neutral"} />
-          <Cell icon={<CalendarClock />} label="Ortalama gecikme" value={`${num1.format(avgDelay)} gün`} foot="Planlanan okuma gününe göre" />
-          <Cell icon={<Gauge />} label="Bu oturumda girilen" value={num.format(Object.keys(entries).length)} foot="Okuma girişi sekmesinden" tone="primary" />
+          <Metric icon={<BookOpenCheck />} label="Okunma oranı" value={fmtPct(inPeriod.length ? (doneCount / inPeriod.length) * 100 : 0)} foot={`${fmtNum(doneCount)} / ${fmtNum(inPeriod.length)} sayaç okundu`} />
+          <Metric icon={<Clock3 />} label="Okuma bekleyen" value={fmtNum(pending)} foot={period === CURRENT_PERIOD ? "Dönem sonuna dek" : "Seçili dönemde"} to={{ page: "readings", params: { tab: "tur" } }} />
+          <Metric icon={<ShieldAlert />} label="Şüpheli okuma" value={fmtNum(suspect)} foot={`${fmtNum(resolvedCount)} okuma çözüldü`} to={{ page: "readings", params: { tab: "supheli" } }} />
+          <Metric icon={<AlertTriangle />} label="Tahmini okuma" value={fmtNum(estimated)} foot={`${fmtPct(inPeriod.length ? (estimated / inPeriod.length) * 100 : 0)} · mahsup`} />
+          <Metric icon={<CalendarClock />} label="Ortalama gecikme" value={fmtDec(avgDelay)} unit="gün" foot="Plan gününe göre" />
+          <Metric icon={<Gauge />} label="Girilen okuma" value={fmtNum(ui.entries.length)} foot="Giriş sekmesinden" to={{ page: "readings", params: { tab: "giris" } }} />
         </MetricStrip>
 
         <Panel title="Okuma kaynakları" note={`${period === "all" ? "Son 12 dönem" : periodLabel(period)}: kayıt başına okuma yolu`} id="kaynaklar">
@@ -197,37 +217,32 @@ export function OkumalarPage({ params, go }: PageProps) {
             </p>
           </div>
         </Panel>
-
         <div className="min-w-0">
-          <TabLinks aria-label="Okuma sayfaları" current={href("readings", { tab })} items={TABS.map((t) => ({ href: href("readings", { tab: t.id }), label: t.id === "supheli" && suspect ? `${t.label} ${num.format(suspect)}` : t.label }))} />
+          <TabLinks aria-label="Okuma sayfaları" current={href("readings", { tab })} items={TABS.map((t) => ({ href: href("readings", { tab: t.id }), label: t.id === "supheli" && suspectCurrent ? `${t.label} ${fmtNum(suspectCurrent)}` : t.label }))} />
         </div>
 
-        {tab === "tur" ? <RoutesTab readers={readers} setReaders={setReaders} entries={entries} go={go} /> : null}
-        {tab === "giris" ? <EntryTab entries={entries} setEntries={setEntries} prefill={prefill} setPrefill={setPrefill} go={go} /> : null}
-        {tab === "supheli" ? <SuspectTab period={period} resolved={resolved} resolve={resolve} go={go} tab={tab} /> : null}
+        {tab === "tur" ? <RoutesTab go={go} /> : null}
+        {tab === "giris" ? <EntryTab prefill={prefill} setPrefill={setPrefill} /> : null}
+        {tab === "supheli" ? <SuspectTab period={period} go={go} tab={tab} /> : null}
         {tab === "aktar" ? <ImportTab /> : null}
-        <SampleNote />
       </PageBody>
 
-      <ReadingSheet reading={open} resolved={open ? resolved[open.id] : undefined} onResolve={resolve} onClose={closeSheet} go={go} />
+      <ReadingSheet reading={open} onResolve={resolve} onClose={closeSheet} go={go} />
     </>
   );
 }
 
 /* ═══════════════════════════ TUR PLANI ═══════════════════════════ */
 
-function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<string, string>; setReaders: (fn: (p: Record<string, string>) => Record<string, string>) => void; entries: Record<string, Entry>; go: PageProps["go"] }) {
+function RoutesTab({ go }: { go: PageProps["go"] }) {
   const { notify } = useApp();
-  const routes = useMemo(() => buildRoutes(), []);
+  const ui = readingUi.use();
+  const ops = useMeterOps();
+  const routes = useDerived(() => buildRoutesLive(effectiveReadings(), new Set(Object.entries(ops).filter(([, o]) => o.inRoute).map(([id]) => id))), [ops]);
   const [openId, setOpenId] = useState<string>(routes[0].regionId);
-  const [sent, setSent] = useState<ReadonlySet<string>>(new Set());
   const route = routes.find((r) => r.regionId === openId) ?? routes[0];
 
-  const stats = (r: Route) => {
-    const total = r.meters.length;
-    const done = r.meters.filter((x) => x.done || entries[x.meter.id]).length;
-    return { total, done };
-  };
+  const stats = (r: Route) => ({ total: r.meters.length, done: r.meters.filter((x) => x.done).length });
 
   type RouteRow = Route["meters"][number] & { n: number };
   const rows: RouteRow[] = route.meters.map((x, i) => ({ ...x, n: i + 1 }));
@@ -241,10 +256,12 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
       key: "state",
       header: "Durum",
       render: (r) =>
-        r.done || entries[r.meter.id] ? (
+        r.done ? (
           <Badge tone="success" dot>Okundu</Badge>
         ) : r.meter.status === "iletisim-yok" ? (
           <Badge tone="warning" dot>İletişim yok, saha</Badge>
+        ) : r.added ? (
+          <Badge tone="primary" dot>Elle eklendi</Badge>
         ) : (
           <Badge tone="neutral" dot>Bekliyor</Badge>
         ),
@@ -253,7 +270,7 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
       key: "act",
       header: <span className="sr-only">İşlem</span>,
       render: (r) =>
-        r.done || entries[r.meter.id] ? null : (
+        r.done ? null : (
           <Button variant="soft" size="sm" onClick={() => go("readings", { tab: "giris", meter: r.meter.id })}>
             Okuma gir
           </Button>
@@ -265,7 +282,7 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
     title: <Mono>{`${r.n}. ${r.meter.serial}`}</Mono>,
     subtitle: `${r.customerName} · ${r.district}`,
     meta: `Plan: ayın ${r.meter.readDay}. günü`,
-    status: r.done || entries[r.meter.id] ? <Badge tone="success" dot>Okundu</Badge> : <Badge tone="neutral" dot>Bekliyor</Badge>,
+    status: r.done ? <Badge tone="success" dot>Okundu</Badge> : <Badge tone="neutral" dot>Bekliyor</Badge>,
     href: href("readings", { tab: "giris", meter: r.meter.id }),
   }));
 
@@ -274,9 +291,9 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
       <section aria-label="Bölge turları" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {routes.map((r) => {
           const s = stats(r);
-          const reader = readers[r.regionId] ?? r.reader;
+          const reader = ui.readers[r.regionId] ?? r.reader;
           const isOpen = r.regionId === openId;
-          const isSent = sent.has(r.regionId);
+          const isSent = ui.sent.includes(r.regionId);
           return (
             <article key={r.regionId} className={`flex flex-col gap-4 rounded-xl bg-overlay p-4 shadow-raised ring-1 ${isOpen ? "ring-primary" : "ring-line"}`}>
               <header className="flex items-start justify-between gap-3">
@@ -287,7 +304,16 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
                 <Badge tone={s.done === s.total ? "success" : "neutral"} variant="outline">{s.done} / {s.total}</Badge>
               </header>
               <TickMeter label={`${r.regionName} turu ilerlemesi`} value={s.done} max={Math.max(s.total, 1)} ticks={Math.min(Math.max(s.total, 1), 36)} text={`%${Math.round((s.done / Math.max(s.total, 1)) * 100)}`} />
-              <Select label="Okuyucu" value={reader} onValueChange={(v) => setReaders((p) => ({ ...p, [r.regionId]: v ?? reader }))} items={READER_NAMES.map((n) => ({ value: n, label: n }))} />
+              <Select
+                label="Okuyucu"
+                value={reader}
+                onValueChange={(v) => {
+                  const next = v ?? reader;
+                  readingUi.set((u) => ({ ...u, readers: { ...u.readers, [r.regionId]: next } }));
+                  audit("Okuyucu atadı", `${r.regionName} turu`, reader, next);
+                }}
+                items={READER_NAMES.map((n) => ({ value: n, label: n }))}
+              />
               <div className="mt-auto flex flex-wrap gap-2">
                 <Button variant={isOpen ? "primary" : "secondary"} size="sm" onClick={() => setOpenId(r.regionId)} aria-pressed={isOpen}>
                   <ClipboardList aria-hidden /> Rotayı göster
@@ -297,8 +323,9 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
                   size="sm"
                   disabled={isSent}
                   onClick={() => {
-                    setSent((p) => new Set(p).add(r.regionId));
-                    notify({ title: "Tur okuyucuya gönderildi", body: `${r.regionName}: ${reader}, ${s.total - s.done} sayaç.`, tone: "success" });
+                    readingUi.set((u) => ({ ...u, sent: [...u.sent, r.regionId] }));
+                    audit("Turu okuyucuya gönderdi", `${r.regionName} turu`, undefined, `${reader} · ${s.total - s.done} sayaç`);
+                    notify({ title: "Tur okuyucuya gönderildi", body: `${r.regionName}: ${reader}, ${s.total - s.done} sayaç.`, tone: "success", undo: () => readingUi.set((u) => ({ ...u, sent: u.sent.filter((x) => x !== r.regionId) })) });
                   }}
                 >
                   {isSent ? <CheckCircle2 aria-hidden /> : <Send aria-hidden />} {isSent ? "Gönderildi" : "Okuyucuya gönder"}
@@ -309,7 +336,7 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
         })}
       </section>
 
-      <Panel title={`${route.regionName} rotası`} note={`${readers[route.regionId] ?? route.reader} · ${route.meters.length} sayaç, mahalleye göre sıralı`} id="rota">
+      <Panel title={`${route.regionName} rotası`} note={`${ui.readers[route.regionId] ?? route.reader} · ${route.meters.length} sayaç, mahalleye göre sıralı`} id="rota" actions={<Button variant="secondary" size="sm" onClick={() => go("field")}>Saha okuma ekranı</Button>}>
         {rows.length === 0 ? (
           <div className="p-6">
             <EmptyState icon={<ClipboardList />} title="Bu bölgede saha okuması gereken sayaç yok" hint="Bütün sayaçlar uzaktan okunuyor." />
@@ -333,11 +360,15 @@ function RoutesTab({ readers, setReaders, entries, go }: { readers: Record<strin
 /* ═══════════════════════════ OKUMA GİRİŞİ ═══════════════════════════ */
 
 const METER_ITEMS: readonly ComboboxItem[] = METERS.map((m) => ({ value: m.id, label: `${m.serial} · ${customer(m.customerId).name}` }));
+const DIGITS = [{ value: "6", label: "6 haneli (999.999)" }, { value: "7", label: "7 haneli" }, { value: "9", label: "9 haneli" }];
 
 type Check = { tone: "success" | "warning" | "danger"; text: string };
 
-function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: Record<string, Entry>; setEntries: (fn: (p: Record<string, Entry>) => Record<string, Entry>) => void; prefill: string | null; setPrefill: (id: string | null) => void; go: PageProps["go"] }) {
-  const { notify } = useApp();
+function EntryTab({ prefill, setPrefill }: { prefill: string | null; setPrefill: (id: string | null) => void }) {
+  const { notify, navigate: go } = useApp();
+  const canApprove = useCan("okuma");
+  const ui = readingUi.use();
+  const entries = ui.entries;
   const [picked, setPicked] = useState<ComboboxItem | null>(() => (prefill ? (METER_ITEMS.find((i) => i.value === prefill) ?? null) : null));
   const meter = picked ? meterById(picked.value) : undefined;
   const [idx, setIdx] = useState<{ t1: number | null; t2: number | null; t3: number | null }>({ t1: null, t2: null, t3: null });
@@ -348,6 +379,8 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
   const [date, setDate] = useState(TODAY_KEY);
   const [photo, setPhoto] = useState<string | null>(null);
   const [override, setOverride] = useState(false);
+  const [rollover, setRollover] = useState(false);
+  const [digits, setDigits] = useState("6");
 
   const choose = (item: ComboboxItem | null) => {
     setPicked(item);
@@ -358,6 +391,7 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
     setDemand(null);
     setPhoto(null);
     setOverride(false);
+    setRollover(false);
   };
 
   const prev = useMemo(() => {
@@ -379,7 +413,8 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
   // Anlık doğrulama: girilen endeksten dönem tüketimi, beklenenle karşılaştırma.
   const calc = useMemo(() => {
     if (!meter || !prev || idx.t1 === null) return null;
-    const t = (cur: number | null, old: number) => (cur === null ? null : Math.round((cur - old) * meter.multiplier));
+    const cap = 10 ** Number(digits);
+    const t = (cur: number | null, old: number) => (cur === null ? null : Math.round((rollover && cur < old ? cur + cap - old : cur - old) * meter.multiplier));
     const u1 = t(idx.t1, prev.index.t1);
     const u2 = meter.multiZone ? t(idx.t2, prev.index.t2) : 0;
     const u3 = meter.multiZone ? t(idx.t3, prev.index.t3) : 0;
@@ -387,6 +422,7 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
     const total = u1 + u2 + u3;
     const checks: Check[] = [];
     const reverse = [u1, u2, u3].some((u) => u < 0);
+    if (rollover && idx.t1 !== null && idx.t1 < prev.index.t1) checks.push({ tone: "warning", text: `Sayaç taşması (${digits} haneli) olarak işlendi: tüketim ${digits === "6" ? "999.999" : digits === "7" ? "9.999.999" : "999.999.999"} sınırını aşıp sıfırdan devam etti. Mühür ve sayaç tipi kontrol edilmeli.` });
     if (reverse) checks.push({ tone: "danger", text: "Endeks önceki okumadan küçük (geri sayım). Sayaç değişimi ya da yanlış okuma olabilir." });
     if (!reverse && expected > 0 && total > expected * 2.5) checks.push({ tone: "warning", text: `Tüketim beklenenin ${num1.format(total / expected)} katı: ani sıçrama. Okumayı yeniden doğrulayın.` });
     if (!reverse && expected > 0 && total < expected * 0.25) checks.push({ tone: "warning", text: "Tüketim beklenenin çeyreğinin altında: sayaç durmuş ya da boş konut olabilir." });
@@ -396,24 +432,41 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
     if (source === "tahmini") checks.push({ tone: "warning", text: "Tahmini okuma: bir sonraki turda gerçek okumayla değiştirilmeli." });
     if (!photo && source === "saha") checks.push({ tone: "warning", text: "Saha okumasında sayaç fotoğrafı yok; denetim için eklenmesi önerilir." });
     return { u1, u2, u3, total, checks, reverse };
-  }, [meter, prev, idx, expected, source, photo]);
+  }, [meter, prev, idx, expected, source, photo, rollover, digits]);
 
   const blocked = !!calc?.reverse && !override;
   const canSave = !!meter && !!calc && !blocked;
 
   const save = () => {
-    if (!meter || !calc) return;
+    if (!meter || !calc || !prev) return;
+    if (!canApprove) {
+      notify({ title: "Yetki yok", body: "Okuma girme yetkiniz yok.", tone: "info" });
+      return;
+    }
+    const target = currentReadingOf(meter.id);
+    if (!target) {
+      notify({ title: "Okuma kaydı yok", body: "Bu sayaç için bu dönem planlanmış okuma bulunamadı.", tone: "info" });
+      return;
+    }
     const flags: ReadingFlag[] = [];
     if (calc.reverse) flags.push("geri-sayim");
     else if (expected > 0 && calc.total > expected * 2.5) flags.push("ani-sicrama");
     else if (expected > 0 && calc.total < expected * 0.25) flags.push("dusuk-tuketim");
-    setEntries((p) => ({ ...p, [meter.id]: { meterId: meter.id, at: date, source, total: calc.total, flags } }));
-    notify({ title: flags.length ? "Okuma kaydedildi, şüpheli listesine düştü" : "Okuma kaydedildi", body: `${meter.serial}: ${kwh(calc.total)} · ${SOURCE_LABEL[source]}`, tone: "success" });
+    enterReading(target.id, {
+      source,
+      index: { t1: idx.t1 ?? 0, t2: meter.multiZone ? (idx.t2 ?? 0) : 0, t3: meter.multiZone ? (idx.t3 ?? 0) : 0 },
+      usage: { t1: calc.u1, t2: calc.u2, t3: calc.u3, total: calc.total },
+      reactive: { inductive: react ?? 0, capacitive: capacitive ?? 0 },
+      demandKw: demand ?? 0,
+      flags,
+    });
+    readingUi.set((u) => ({ ...u, entries: [...u.entries, { meterId: meter.id, readingId: target.id, at: date, source, total: calc.total, flags }] }));
+    notify({ title: flags.length ? "Okuma kaydedildi, şüpheli listesine düştü" : "Okuma kaydedildi, faturalamaya serbest", body: `${meter.serial}: ${kwh(calc.total)} · ${SOURCE_LABEL[source]}`, tone: "success" });
     choose(null);
   };
 
-  const entryList = Object.values(entries).reverse();
-  const entryColumns: readonly Column<Entry>[] = [
+  const entryList = [...entries].reverse();
+  const entryColumns: readonly Column<EntryLogItem>[] = [
     { key: "m", header: "Sayaç", render: (e) => <a href={href("meters", { id: e.meterId })} className="font-semibold text-strong hover:underline"><Mono>{meterById(e.meterId)?.serial}</Mono></a> },
     { key: "c", header: "Abone", render: (e) => customer(meterById(e.meterId)!.customerId).name },
     { key: "u", header: "Tüketim", numeric: true, render: (e) => <Mono>{kwh(e.total)}</Mono> },
@@ -468,7 +521,15 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
         <Panel title="Anlık doğrulama" id="dogrulama">
           <div className="grid gap-4 p-4 sm:p-5">
             {!calc ? (
-              <p className="text-base text-muted">Endeksi yazınca dönem tüketimi ve kontroller burada görünür.</p>
+              <div className="grid gap-3">
+                <p className="text-base text-muted">Endeksi yazınca dönem tüketimi ve kontroller burada görünür. Uygulanan kurallar:</p>
+                <ul className="grid gap-2 text-small text-body">
+                  <li className="flex gap-2"><span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-full bg-danger" />Endeks öncekinden küçükse geri sayım (taşma seçeneğiyle meşru döngü işlenir).</li>
+                  <li className="flex gap-2"><span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-full bg-warning" />Tüketim beklenenin 2,5 katını aşarsa ani sıçrama, çeyreğinin altındaysa düşük tüketim.</li>
+                  <li className="flex gap-2"><span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-full bg-warning" />Saha okumasında fotoğraf yoksa, tahmini okumada mahsup uyarısı.</li>
+                  <li className="flex gap-2"><span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-full bg-success" />Beklenen: sayacın son üç doğrulanmış okumasının ortalaması (±%30 uygun).</li>
+                </ul>
+              </div>
             ) : (
               <>
                 <dl className="grid grid-cols-2 gap-3">
@@ -486,7 +547,19 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
                     </li>
                   ))}
                 </ul>
-                {calc.reverse ? <Checkbox label="Yine de kaydet (şüpheli olarak işaretlenir)" checked={override} onChange={(e) => setOverride(e.target.checked)} /> : null}
+                {calc.reverse ? (
+                  <div className="grid gap-3 rounded-lg bg-surface p-3">
+                    <label className="flex cursor-pointer items-start gap-3 text-base text-body">
+                      <Checkbox aria-label="Sayaç taştı (döngü)" checked={rollover} onChange={() => setRollover((v) => !v)} />
+                      <span><span className="font-medium text-strong">Sayaç taştı (döngü)</span><span className="block text-small text-muted">Endeks üst sınıra ulaşıp sıfırdan başladıysa meşru bir durumdur; tüketim sınır üzerinden hesaplanır.</span></span>
+                    </label>
+                    {rollover ? <Select label="Sayaç hanesi" value={digits} onValueChange={(v) => setDigits(v ?? "6")} items={DIGITS} /> : null}
+                    <label className="flex cursor-pointer items-start gap-3 text-base text-body">
+                      <Checkbox aria-label="Yine de kaydet" checked={override} onChange={() => setOverride((v) => !v)} />
+                      <span>Yine de kaydet (şüpheli olarak işaretlenir)</span>
+                    </label>
+                  </div>
+                ) : null}
               </>
             )}
             <Button variant="primary" onClick={save} disabled={!canSave}>
@@ -499,7 +572,7 @@ function EntryTab({ entries, setEntries, prefill, setPrefill, go }: { entries: R
           {entryList.length === 0 ? (
             <p className="p-4 text-base text-muted sm:p-5">Henüz okuma girilmedi.</p>
           ) : (
-            <DataTable<Entry> caption="Bu oturumda girilen okumalar" columns={entryColumns} rows={entryList} rowKey={(e) => e.meterId} density="compact" on="surface" stickyFirst={false} minWidth="30rem" />
+            <DataTable<EntryLogItem> caption="Bu oturumda girilen okumalar" columns={entryColumns} rows={entryList} rowKey={(e) => e.readingId} density="compact" on="surface" stickyFirst={false} minWidth="30rem" />
           )}
         </Panel>
       </aside>
@@ -530,11 +603,16 @@ function MeterBrief({ meter, prev, expected, go }: { meter: Meter; prev: { index
 
 /* ═══════════════════════════ ŞÜPHELİ OKUMALAR ═══════════════════════════ */
 
-function SuspectTab({ period, resolved, resolve, go, tab }: { period: string; resolved: Record<string, Resolution>; resolve: (id: string, how: Resolution) => void; go: PageProps["go"]; tab: Tab }) {
+function SuspectTab({ period, go, tab }: { period: string; go: PageProps["go"]; tab: Tab }) {
   const { notify } = useApp();
+  const canApprove = useCan("okuma");
   const [showResolved, setShowResolved] = useState(false);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
-  const base = useMemo(() => READINGS.filter((r) => r.status === "supheli" && (period === "all" || r.period === period)), [period]);
+  const all = useDerived(effectiveReadings);
+  const baseList = useMemo(() => READINGS.filter((r) => r.status === "supheli" && (period === "all" || r.period === period)), [period]);
+  const eff = useMemo(() => new Map(all.map((r) => [r.id, r])), [all]);
+  const base = useMemo(() => baseList.map((b) => eff.get(b.id) ?? b), [baseList, eff]);
+  const resolved = useMemo(() => Object.fromEntries(baseList.flatMap((b) => { const how = resolutionOf(eff.get(b.id) ?? b, b); return how ? [[b.id, how] as const] : []; })) as Record<string, Resolution>, [baseList, eff]);
   const rows = base.filter((r) => showResolved || !resolved[r.id]);
   const open = rows.filter((r) => !resolved[r.id]);
   const allSelected = open.length > 0 && open.every((r) => selected.has(r.id));
@@ -616,8 +694,9 @@ function SuspectTab({ period, resolved, resolve, go, tab }: { period: string; re
         <SelectionAction
           icon={<CheckCircle2 />}
           onClick={() => {
-            selected.forEach((id) => resolve(id, "dogrulandi"));
-            notify({ title: `${selected.size} okuma onaylandı`, body: "Faturalama için serbest bırakıldı.", tone: "success" });
+            if (!canApprove) return notify({ title: "Yetki yok", body: "Okuma onayı yetkiniz yok.", tone: "info" });
+            selected.forEach((id) => resolveReading(id, "onayla"));
+            notify({ title: `${selected.size} okuma onaylandı`, body: "Faturalamaya serbest bırakıldı.", tone: "success" });
             setSelected(new Set());
           }}
         >
@@ -626,7 +705,9 @@ function SuspectTab({ period, resolved, resolve, go, tab }: { period: string; re
         <SelectionAction
           icon={<RadioTower />}
           onClick={() => {
-            selected.forEach((id) => resolve(id, "yeniden"));
+            if (!canApprove) return notify({ title: "Yetki yok", body: "Okuma onayı yetkiniz yok.", tone: "info" });
+            selected.forEach((id) => resolveReading(id, "yeniden"));
+            notify({ title: `${selected.size} sayaç için yeniden okuma istendi`, body: "Saha turuna eklendi.", tone: "success" });
             setSelected(new Set());
           }}
         >
@@ -639,17 +720,24 @@ function SuspectTab({ period, resolved, resolve, go, tab }: { period: string; re
 
 /* ═══════════════════════════ OKUMA AYRINTISI ═══════════════════════════ */
 
-function ReadingSheet({ reading, resolved, onResolve, onClose, go }: { reading: Reading | undefined; resolved: Resolution | undefined; onResolve: (id: string, how: Resolution) => void; onClose: () => void; go: PageProps["go"] }) {
+function ReadingSheet({ reading, onResolve, onClose, go }: { reading: Reading | undefined; onResolve: (id: string, how: Resolution, note?: string) => void; onClose: () => void; go: PageProps["go"] }) {
   const [fixing, setFixing] = useState(false);
   const [fixed, setFixed] = useState<number | null>(null);
   const meter = reading ? meterById(reading.meterId) : undefined;
   const c = reading ? customer(reading.customerId) : undefined;
   const history = reading ? readingsOf(reading.meterId).filter((r) => r.status !== "bekliyor" && r.period <= reading.period).slice(-7) : [];
   const exp = reading ? expectedUsage(reading.meterId, reading.period) : 0;
-  const isSuspect = !!reading && reading.status === "supheli" && !resolved;
+  const baseReading = reading ? READINGS.find((r) => r.id === reading.id) : undefined;
+  const resolved = reading ? resolutionOf(reading, baseReading) : undefined;
+  const isSuspect = !!reading && reading.status === "supheli";
   /** Karar verilince çekmece kapanır: liste güncellenmiş haliyle görünür. */
   const decide = (id: string, how: Resolution) => {
-    onResolve(id, how);
+    if (how === "duzeltildi" && reading && meter && fixed !== null) {
+      const prevIdx = readingsOf(reading.meterId).filter((r) => r.status !== "bekliyor" && r.period < reading.period).at(-1)?.index ?? meter.base;
+      const u1 = Math.round((fixed - prevIdx.t1) * meter.multiplier);
+      enterReading(id, { source: reading.source, index: { ...reading.index, t1: fixed }, usage: { ...reading.usage, t1: u1, total: u1 + reading.usage.t2 + reading.usage.t3 }, reactive: reading.reactive, demandKw: reading.demandKw, flags: [] });
+    }
+    onResolve(id, how, how === "duzeltildi" && fixed !== null ? `T1 endeks ${fixed}` : undefined);
     setFixing(false);
     setFixed(null);
     onClose();
@@ -799,9 +887,38 @@ const PROBLEM_LABEL: Record<NonNullable<ImportRow["problem"]>["kind"], string> =
 
 function ImportTab() {
   const { notify } = useApp();
+  const canApprove = useCan("okuma");
   const [file, setFile] = useState<{ name: string; size: string } | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [imported, setImported] = useState<number | null>(null);
+
+  /** Geçerli satırları DEPOYA yazar: her satır sayacın bu dönemki okumasını doldurur. */
+  const importGood = (list: readonly ImportRow[]) => {
+    let n = 0;
+    for (const r of list) {
+      const m = METERS.find((x) => x.serial === r.serial);
+      const cur = m ? currentReadingOf(m.id) : undefined;
+      if (!m || !cur) continue;
+      const prev = readingsOf(m.id).filter((x) => x.status !== "bekliyor" && x.period < CURRENT_PERIOD).at(-1);
+      const pi = prev?.index ?? m.base;
+      const u1 = Math.round((r.t1 - pi.t1) * m.multiplier);
+      const u2 = m.multiZone ? Math.round((r.t2 - pi.t2) * m.multiplier) : 0;
+      const u3 = m.multiZone ? Math.round((r.t3 - pi.t3) * m.multiplier) : 0;
+      const total = u1 + u2 + u3;
+      enterReading(cur.id, {
+        source: "saha",
+        index: { t1: r.t1, t2: m.multiZone ? r.t2 : 0, t3: m.multiZone ? r.t3 : 0 },
+        usage: { t1: u1, t2: u2, t3: u3, total },
+        reactive: prev?.reactive ?? { inductive: 0, capacitive: 0 },
+        demandKw: prev?.demandKw ?? 0,
+        flags: total < 0 ? ["geri-sayim"] : [],
+      });
+      n += 1;
+    }
+    readingUi.set((u) => ({ ...u, imported: u.imported + n }));
+    audit("Toplu okuma içe aktardı", file?.name ?? "CSV", undefined, `${n} okuma`);
+    return n;
+  };
   const rows = useMemo(() => (file ? buildImportRows() : []), [file]);
   const bad = rows.filter((r) => r.problem);
   const good = rows.filter((r) => !r.problem);
@@ -829,7 +946,7 @@ function ImportTab() {
           <EmptyState
             icon={<CheckCircle2 />}
             title={`${num.format(imported)} okuma içe aktarıldı`}
-            hint={`${bad.length} hatalı satır aktarılmadı; hata raporu indirilebilir. Aktarılan okumalar doğrulama kuyruğuna düştü.`}
+            hint={`${bad.length} hatalı satır aktarılmadı; hata raporu indirilebilir. Aktarılan okumalar sayaçların bu dönemki okuması oldu.`}
             action={<Button variant="secondary" size="sm" onClick={() => { setImported(null); setFile(null); }}>Yeni dosya yükle</Button>}
           />
         </div>
@@ -884,7 +1001,7 @@ function ImportTab() {
             title="Hata raporu"
             note={`${bad.length} satır aktarılmaz`}
             id="hatalar"
-            actions={<Button variant="secondary" size="sm" onClick={() => notify({ title: "Hata raporu hazırlandı", body: "hata-raporu-2026-11-21.csv", tone: "success" })}><Upload aria-hidden className="rotate-180" /> Raporu indir</Button>}
+            actions={<Button variant="secondary" size="sm" onClick={() => { downloadCsv("hata-raporu-2026-11-21.csv", [["Satır", "Seri no", "Sorun", "Açıklama"], ...bad.map((r) => [r.line, r.serial, PROBLEM_LABEL[r.problem!.kind], r.problem!.message])]); notify({ title: "Hata raporu indirildi", body: `${bad.length} satır, hata-raporu-2026-11-21.csv`, tone: "success" }); }}><Upload aria-hidden className="rotate-180" /> Raporu indir</Button>}
           >
             <div className="max-md:hidden">
               <DataTable<ImportRow> caption="İçe aktarma hata raporu" columns={badColumns} rows={bad} rowKey={(r) => String(r.line)} density="compact" on="surface" stickyFirst={false} minWidth="40rem" />
@@ -921,8 +1038,10 @@ function ImportTab() {
               variant="primary"
               onClick={() => {
                 setConfirm(false);
-                setImported(good.length);
-                notify({ title: `${good.length} okuma içe aktarıldı`, body: `${bad.length} hatalı satır atlandı.`, tone: "success" });
+                if (!canApprove) return notify({ title: "Yetki yok", body: "Okuma girme yetkiniz yok.", tone: "info" });
+                const n = importGood(good);
+                setImported(n);
+                notify({ title: `${n} okuma içe aktarıldı`, body: `${bad.length} hatalı satır atlandı; okumalar faturalamaya serbest.`, tone: "success" });
               }}
             >
               Aktar
@@ -930,7 +1049,7 @@ function ImportTab() {
           </>
         }
       >
-        <p className="text-base text-body">Bu işlem geri alınabilir: içe aktarılan okumalar doğrulanana kadar faturalamaya girmez.</p>
+        <p className="text-base text-body">Aktarılan okumalar sayacın bu dönemki okuması olarak kaydedilir. Doğrulamadan geçen satırlar faturalamaya serbest kalır; endeksi geriye giden satır “Şüpheli okumalar”a düşer.</p>
       </Dialog>
     </>
   );

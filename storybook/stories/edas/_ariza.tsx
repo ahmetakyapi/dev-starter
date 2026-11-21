@@ -1,94 +1,68 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { AlertTriangle, ArrowLeft, CheckCircle2, ClipboardList, Clock, MessageSquareText, Timer, Users, Wrench, Zap } from "lucide-react";
-import { AreaChart } from "@/components/ui/area-chart";
+import { useRef, useState, type ReactNode } from "react";
+import { AlertTriangle, ArrowLeft, CalendarClock, CheckCircle2, Clock, MessageSquareText, PhoneCall, ShieldAlert, Timer, Users, Wrench, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { BarList } from "@/components/ui/bar-list";
 import { Button } from "@/components/ui/Button";
-import { ChartCard } from "@/components/ui/chart-card";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { KanbanBoard, type KanbanCard, type KanbanColumn } from "@/components/ui/kanban-board";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
+import { RegionMap, type MapRegion } from "@/components/ui/region-map";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { Select } from "@/components/ui/select";
-import { Sheet } from "@/components/ui/sheet";
-import { Stat, StatGrid } from "@/components/ui/stat";
 import { Tabs } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Timeline, type TimelineEvent } from "@/components/ui/timeline";
+import { useDerived } from "./_core";
+import { FEEDERS, REGIONS, SUBSTATIONS, TODAY, addDays, clock, dateTime, dayKey, fullDate, region, substation, type Outage } from "./_data";
+import { CREWS, OUTAGE_SMS, outageTimeline } from "./_data-operasyon";
 import {
-  CUSTOMERS,
-  REGIONS,
-  SUBSTATIONS,
-  TODAY,
-  TODAY_KEY,
-  WORK_ORDERS,
-  WORK_TYPE_LABEL,
-  addDays,
-  clock,
-  customer,
-  dateTime,
-  dayKey,
-  fullDate,
-  num,
-  outageDaily,
-  parseDay,
-  region,
-  shortDate,
-  substation,
-  type Outage,
-  type WorkOrder,
-} from "./_data";
-import { CREWS, OUTAGE_LIST, OUTAGE_SMS, affectedSample, minutesOf, outageByRegion, outageTimeline, reliability } from "./_data-operasyon";
-import { CARD, IconTile, MetricStrip, OutageBadge, PageBody, PageHead, Panel, SampleNote, href, useApp, type PageProps } from "./_ui";
+  ETA_CHOICES,
+  OUTAGE_CAUSES,
+  PLAN_CAUSES,
+  affectedCustomers,
+  affectedSensitive,
+  dailyOpen,
+  feederTransformers,
+  impactOf,
+  outageCountByRegion,
+  outageMin,
+  reliabilityOf,
+  fixOutage,
+  isSensitive,
+} from "./_data-ops-sayfa";
+import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
+import { getCutPolicy, scheduleSlot } from "./_cutpolicy";
+import { isBusinessDay, inWorkHours, keyOf } from "./_calendar";
+import { BarTarget, EmptyStateX, PageHero, RowAnchor, RowLink, StepCountChart, UnitLegend, fmtDec, fmtDur, fmtNum, useListKeys } from "./_kit";
+import { assignOutageCrew, cancelOutage, closeOutage, createOutage, effectiveOutages, getOutageState, sendOutageSms, setOutageEta } from "./_ops";
+import { faultCandidates } from "./_selectors";
+import { WORK_TYPE_LABEL, createOutageFromCalls, createWorkOrder, getCalls, getWorkOrders } from "./_store";
+import { useCan } from "./_permissions";
+import { IconTile, OutageBadge, PageBody, PageHead, Panel, href, useApp, type PageProps } from "./_ui";
 
 /* ------------------------------------------------------------------------ */
-/* Yardımcılar                                                               */
+/* Ortak                                                                     */
 /* ------------------------------------------------------------------------ */
 
-const duration = (minutes: number) => {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return h ? (m ? `${h} sa ${m} dk` : `${h} sa`) : `${m} dk`;
-};
+const TABS = ["acik", "planli", "gecmis", "guvenilirlik"] as const;
+type TabId = (typeof TABS)[number];
+const crewOf = (regionId: string) => CREWS[Math.max(0, REGIONS.findIndex((r) => r.id === regionId))];
+const REGION_ITEMS = REGIONS.map((r) => ({ value: r.id, label: r.name }));
 
-const KINDS = ["acik", "planli", "is-emri", "gecmis"] as const;
-type TabId = (typeof KINDS)[number];
-
-/** Sayfa içinde değişen kayıt: ekip, tahmini süre, kapatma ve günlük satırları. */
-type Override = { crew?: string; eta?: number; closed?: boolean; smsSent?: boolean; log: readonly { at: Date; title: string; body?: string }[] };
-
-function Cell({ icon, label, value, foot, tone }: { icon: ReactNode; label: string; value: string; foot: string; tone?: "warning" | "danger" | "neutral" }) {
-  return (
-    <div className="relative flex h-full flex-col gap-3 p-4 sm:p-5">
-      <IconTile tone={tone ?? "neutral"} className="absolute top-4 right-4 sm:top-5 sm:right-5">
-        {icon}
-      </IconTile>
-      <div className="pr-10">
-        <StatGrid className="grid-cols-1 sm:grid-cols-1">
-          <Stat label={label} value={value} />
-        </StatGrid>
-      </div>
-      <p className="mt-auto border-t border-dashed border-line pt-3 text-small text-muted">{foot}</p>
-    </div>
-  );
+/** Depo durumu: üreteç tabanı + yamalar + sayfada açılan kayıtlar; canlı. */
+function useOutageData() {
+  return useDerived(() => {
+    const list = effectiveOutages().map(fixOutage);
+    const patches = getOutageState().patches;
+    return { list, patches };
+  });
 }
 
-const REGION_OPTIONS = REGIONS.map((r) => ({ value: r.id, label: r.name }));
-const CREW_OPTIONS = CREWS.map((c) => ({ value: c, label: c }));
-const PLAN_CAUSES = ["Hat bakımı", "Trafo değişimi", "Yeni şebeke bağlantısı", "Direk değişimi"].map((c) => ({ value: c, label: c }));
-const ETA_OPTIONS = [30, 60, 90, 120, 180, 240].map((m) => ({ value: String(m), label: duration(m) }));
-
-const WORK_TONE: Record<WorkOrder["type"], "neutral" | "primary" | "chart-1" | "chart-4" | "chart-6"> = {
-  kesme: "chart-6",
-  baglama: "chart-1",
-  "sayac-degisim": "chart-4",
-  "okuma-turu": "neutral",
-  kontrol: "primary",
-};
+function messageOf(o: Outage, etaMin: number) {
+  return OUTAGE_SMS.replace("{bolge}", region(o.regionId).name).replace("{sure}", fmtDur(etaMin));
+}
 
 /* ------------------------------------------------------------------------ */
 /* Sayfa                                                                     */
@@ -96,157 +70,83 @@ const WORK_TONE: Record<WorkOrder["type"], "neutral" | "primary" | "chart-1" | "
 
 export function ArizaPage({ params, go }: PageProps) {
   const { notify } = useApp();
-  const tab: TabId = (KINDS as readonly string[]).includes(params.tab ?? "") ? (params.tab as TabId) : "acik";
+  const canOps = useCan("sayac") || useCan("musteri");
+  const { list, patches } = useOutageData();
+  const tab: TabId = (TABS as readonly string[]).includes(params.tab ?? "") ? (params.tab as TabId) : params.status === "gecmis" ? "gecmis" : "acik";
 
-  /* Yerel durum (bu oturumda): ekip/süre/kapatma, planlanan çalışmalar, SMS penceresi. */
-  const [ov, setOv] = useState<Readonly<Record<string, Override>>>({});
-  const [extraPlanned, setExtraPlanned] = useState<readonly Outage[]>([]);
-  const [planOpen, setPlanOpen] = useState(false);
-  const [smsFor, setSmsFor] = useState<Outage | null>(null);
-  const [closeFor, setCloseFor] = useState<Outage | null>(null);
-  const [orderOpen, setOrderOpen] = useState<WorkOrder | null>(null);
-  const [cancelled, setCancelled] = useState<ReadonlySet<string>>(new Set());
+  const [createOpen, setCreateOpen] = useState(false);
+  const [planOpen, setPlanOpen] = useState(!!params.plan);
+  const [smsFor, setSmsFor] = useState<string | null>(null);
+  const [closeFor, setCloseFor] = useState<string | null>(null);
 
-  const all = useMemo(() => [...extraPlanned, ...OUTAGE_LIST], [extraPlanned]);
-  const effective = (o: Outage): Outage => {
-    const x = ov[o.id];
-    if (!x?.closed) return o;
-    return { ...o, status: "cozuldu", end: TODAY };
-  };
-  const list = all.map(effective).filter((o) => !cancelled.has(o.id));
   const open = list.filter((o) => o.status === "acik");
   const planned = list.filter((o) => o.status === "planlandi").sort((a, b) => a.start.getTime() - b.start.getTime());
-  const history = list.filter((o) => o.status === "cozuldu");
-
-  const patch = (id: string, change: Partial<Override>, log?: Override["log"][number]) =>
-    setOv((m) => ({ ...m, [id]: { ...m[id], ...change, log: [...(m[id]?.log ?? []), ...(log ? [log] : [])] } }));
-
-  const regionAffected = (o: Outage) => num.format(o.affected);
-
+  const history = list.filter((o) => o.status === "cozuldu").sort((a, b) => b.start.getTime() - a.start.getTime());
   const detail = params.id ? list.find((o) => o.id === params.id) : undefined;
-  const reliab = reliability(30);
+  const reliab = useDerived(() => reliabilityOf(list, 30), [list]);
+  const candidates = useDerived(() => faultCandidates());
+  const smsOutage = smsFor ? list.find((o) => o.id === smsFor) ?? null : null;
+  const closeOutageFor = closeFor ? list.find((o) => o.id === closeFor) ?? null : null;
 
-  /* ---------------- İşlemler ---------------- */
-  const assignCrew = (o: Outage, crew: string) => {
-    patch(o.id, { crew }, { at: TODAY, title: `Ekip değişti: ${crew}` });
-    notify({ title: `${o.id}: ekip atandı`, body: crew, tone: "success" });
-  };
-  const updateEta = (o: Outage, minutes: number) => {
-    patch(o.id, { eta: minutes }, { at: TODAY, title: `Tahmini süre güncellendi: ${duration(minutes)}` });
-    notify({ title: `${o.id}: tahmini süre ${duration(minutes)}`, body: "Müşteri bilgilendirmesi için SMS gönderebilirsiniz", tone: "info" });
-  };
-  const sendSms = (o: Outage) => {
-    patch(o.id, { smsSent: true }, { at: TODAY, title: `${num.format(o.affected)} aboneye SMS gönderildi` });
-    notify({ title: "SMS duyurusu gönderildi", body: `${region(o.regionId).name} · ${num.format(o.affected)} abone`, tone: "success" });
+  const doSms = (o: Outage) => {
+    sendOutageSms(o.id, o.affected);
+    notify({ title: "SMS duyurusu gönderildi", body: `${region(o.regionId).name} · ${fmtNum(o.affected)} abone`, tone: "success" });
     setSmsFor(null);
   };
-  const closeOutage = (o: Outage) => {
-    patch(o.id, { closed: true }, { at: TODAY, title: "Enerji verildi, kayıt kapatıldı" });
-    notify({ title: `${o.id} kapatıldı`, body: `${num.format(o.affected)} abonenin enerjisi verildi · toplam ${duration(minutesOf({ ...o, end: TODAY }))}`, tone: "success" });
+  const doClose = (o: Outage) => {
+    closeOutage(o.id);
+    notify({ title: `${o.id} kapatıldı`, body: `${fmtNum(o.affected)} abonenin enerjisi verildi · ${fmtDur(outageMin(o))}`, tone: "success" });
     setCloseFor(null);
   };
 
-  /* ---------------- Ayrıntı ---------------- */
+  const dialogs = (
+    <>
+      <SmsDialog o={smsOutage} etaMin={smsOutage ? patches[smsOutage.id]?.etaMin ?? 120 : 120} onClose={() => setSmsFor(null)} onSend={doSms} />
+      <CloseDialog o={closeOutageFor} onClose={() => setCloseFor(null)} onConfirm={doClose} />
+      <CreateDialog
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreate={(o) => {
+          setCreateOpen(false);
+          notify({ title: "Arıza kaydı açıldı", body: `${o.id} · ${substation(o.substationId).name} · ${fmtNum(o.affected)} abone`, tone: "success" });
+          go("outages", { id: o.id });
+        }}
+      />
+      <PlanDialog
+        open={planOpen}
+        planFor={params.plan}
+        onClose={() => {
+          setPlanOpen(false);
+          if (params.plan) go("outages", { tab: "planli" });
+        }}
+        onPlan={(o, shifted) => {
+          setPlanOpen(false);
+          notify({ title: "Planlı çalışma oluşturuldu", body: `${o.id} · ${fullDate.format(o.start)}, ${clock.format(o.start)}${shifted ? " (iş gününe oturtuldu)" : ""}`, tone: "success" });
+          go("outages", { tab: "planli" });
+        }}
+      />
+    </>
+  );
+
   if (params.id && detail) {
     return (
       <>
-        <OutageDetail
-          o={detail}
-          ov={ov[detail.id]}
-          go={go}
-          onCrew={(c) => assignCrew(detail, c)}
-          onEta={(m) => updateEta(detail, m)}
-          onSms={() => setSmsFor(detail)}
-          onClose={() => setCloseFor(detail)}
-          onCancel={() => {
-            setCancelled((s) => new Set(s).add(detail.id));
-            notify({ title: `${detail.id} iptal edildi`, body: "Planlı çalışma duyurusu geri çekilecek", tone: "info" });
-            go("outages", { tab: "planli" });
-          }}
-        />
-        <SmsDialog o={smsFor} onClose={() => setSmsFor(null)} onSend={sendSms} />
-        <CloseDialog o={closeFor} onClose={() => setCloseFor(null)} onConfirm={closeOutage} />
+        <OutageDetail o={detail} patch={patches[detail.id]} go={go} canOps={canOps} onSms={() => setSmsFor(detail.id)} onClose={() => setCloseFor(detail.id)} />
+        {dialogs}
       </>
     );
   }
 
-  /* ---------------- Liste ---------------- */
-  const openColumns: Column<Outage>[] = [
-    {
-      key: "id",
-      header: "Kayıt",
-      sortable: true,
-      sortValue: (o) => o.id,
-      render: (o) => (
-        <a href={href("outages", { id: o.id })} className="block">
-          <span className="edas-mono block font-medium text-strong hover:underline">{o.id}</span>
-          <span className="block text-small text-muted">{o.cause}</span>
-        </a>
-      ),
-    },
-    { key: "tm", header: "Trafo Merkezi", render: (o) => `${substation(o.substationId).name} · ${region(o.regionId).name}` },
-    { key: "af", header: "Etkilenen Abone", numeric: true, sortable: true, sortValue: (o) => o.affected, render: (o) => regionAffected(o) },
-    { key: "st", header: "Başlangıç", sortable: true, sortValue: (o) => o.start.getTime(), render: (o) => dateTime(o.start) },
-    { key: "du", header: "Süre", numeric: true, render: (o) => duration(minutesOf(o)) },
-    { key: "cr", header: "Ekip", render: (o) => ov[o.id]?.crew ?? o.crew },
-    { key: "s", header: "Durum", render: (o) => <OutageBadge status={o.status} kind={o.kind} /> },
-  ];
-  const itemOf = (o: Outage): RecordItem => ({
-    id: o.id,
-    title: `${o.id} · ${substation(o.substationId).name}`,
-    subtitle: `${o.cause} · ${region(o.regionId).name}`,
-    leading: (
-      <IconTile tone={o.status === "acik" ? "danger" : "neutral"}>
-        <Zap />
-      </IconTile>
-    ),
-    value: `${regionAffected(o)} abone`,
-    meta: `${dateTime(o.start)} · ${duration(minutesOf(o))}`,
-    status: <OutageBadge status={o.status} kind={o.kind} />,
-    href: href("outages", { id: o.id }),
-    onSelect: () => go("outages", { id: o.id }),
+  const regionId = params.region && REGIONS.some((r) => r.id === params.region) ? params.region : null;
+  const shown = regionId ? open.filter((o) => o.regionId === regionId) : open;
+  const openAffected = open.reduce((s, o) => s + o.affected, 0);
+  const openSensitive = open.reduce((s, o) => s + affectedSensitive(o), 0);
+
+  const mapRegions: MapRegion[] = MAP_SHAPES.map((s) => {
+    const mine = open.filter((o) => o.regionId === s.id);
+    const n = mine.length;
+    return { id: s.id, label: region(s.id).name, path: s.path, at: s.at, value: n, tone: n ? "danger" : "neutral", note: n ? `${n} açık arıza · ${fmtNum(mine.reduce((x, o) => x + o.affected, 0))} abone` : "Kesinti yok" };
   });
-  const table = (rows: Outage[], caption: string) => (
-    <>
-      <div className="max-md:hidden">
-        <DataTable<Outage> caption={caption} columns={openColumns} rows={rows} rowKey={(o) => o.id} density="comfortable" on="surface" stickyFirst={false} empty="Bu listede kayıt yok" />
-      </div>
-      <div className="p-3 md:hidden">
-        <RecordList label={caption} items={rows.map(itemOf)} />
-      </div>
-    </>
-  );
-
-  const byRegion = outageByRegion();
-  const daily = outageDaily(30);
-  const dailyLabels = Array.from({ length: 30 }, (_, i) => shortDate.format(addDays(TODAY, i - 29)));
-
-  const scheduleItems: ScheduleItem[] = planned.slice(0, 8).map((o) => ({
-    id: o.id,
-    at: `${dayKey(o.start)}T${clock.format(o.start)}`,
-    time: `${clock.format(o.start)}-${o.end ? clock.format(o.end) : ""}`,
-    day: new Intl.DateTimeFormat("tr-TR", { weekday: "short", day: "numeric" }).format(o.start),
-    title: `${substation(o.substationId).name} · ${o.cause}`,
-    detail: `${region(o.regionId).name} · ${num.format(o.affected)} abone`,
-    color: 4,
-    href: href("outages", { id: o.id }),
-  }));
-
-  const orderCols = useMemo<KanbanColumn[]>(() => {
-    const card = (w: WorkOrder): KanbanCard => ({
-      id: w.id,
-      title: `${WORK_TYPE_LABEL[w.type]} · ${w.customerId ? customer(w.customerId).name : region(w.regionId).name}`,
-      tags: [{ label: region(w.regionId).name, tone: WORK_TONE[w.type] }],
-      due: dayKey(w.scheduled),
-    });
-    const todayKey = TODAY_KEY;
-    return [
-      { id: "plan", title: "Planlandı", cards: WORK_ORDERS.filter((w) => w.status === "planlandi" && dayKey(w.scheduled) > todayKey).map(card) },
-      { id: "bugun", title: "Bugün Sahada", limit: 8, cards: WORK_ORDERS.filter((w) => w.status === "planlandi" && dayKey(w.scheduled) <= todayKey).map(card) },
-      { id: "tamam", title: "Tamamlandı", done: true, cards: WORK_ORDERS.filter((w) => w.status === "tamamlandi").map(card) },
-    ];
-  }, []);
-  const orderOf = (id: string) => WORK_ORDERS.find((w) => w.id === id) ?? null;
 
   const panels: { value: TabId; label: string; panel: ReactNode }[] = [
     {
@@ -254,17 +154,28 @@ export function ArizaPage({ params, go }: PageProps) {
       label: `Açık Arızalar (${open.length})`,
       panel: (
         <div className="grid gap-5 pt-5">
-          <Panel id="ariza-acik" title="Açık Arızalar" note="Ekipler sahada; süre canlı hesaplanır. Satıra basınca ekip, süre ve müşteri duyurusu yönetilir." actions={<Badge tone={open.length ? "danger" : "success"} dot>{open.length} açık</Badge>}>
-            {table(open, "Açık arızalar")}
-          </Panel>
-          <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-            <ChartCard id="ariza-gunluk" className={`${CARD} xl:col-span-3`} label="Günlük Açık Arıza" value={`${daily[daily.length - 1]} bugün`} change={null} action={<Badge tone="neutral">Son 30 gün</Badge>}>
-              <AreaChart title="Son 30 günün günlük açık arıza sayısı" labels={dailyLabels} series={[{ label: "Açık arıza", values: daily, series: 6 }]} unit="arıza" />
-            </ChartCard>
-            <ChartCard id="ariza-bolge" className={`${CARD} xl:col-span-2`} label="Bölgeye Göre Kesinti" value={`${num.format(byRegion.reduce((s, r) => s + r.count, 0))} kayıt`} change={null} action={<Badge tone="neutral">Plansız</Badge>}>
-              <BarList title="Bölgeye göre plansız kesinti sayısı" columns={["Bölge", "Kayıt"]} items={byRegion.map((r) => ({ label: `${r.region.name} · ${duration(r.minutes)}`, value: r.count }))} series={6} />
-            </ChartCard>
+          <div className="grid gap-5 xl:grid-cols-5">
+            <Panel id="ariza-harita" title="Şebeke Durumu" note="Bölgeye basınca liste süzülür; kırmızı bölgede açık arıza var." className="xl:col-span-2">
+              <div className="p-4 sm:p-5">
+                <RegionMap title="Bölgeye göre açık arıza" regions={mapRegions} viewBox={MAP_VIEWBOX} format={(v) => `${fmtNum(v)} arıza`} legend={["Kesinti yok", "Açık arıza"]} selectedId={regionId} onSelect={(id) => go("outages", { tab: "acik", region: regionId === id ? undefined : id })} />
+              </div>
+            </Panel>
+            <Panel
+              id="ariza-acik"
+              title="Açık Arızalar"
+              note={regionId ? `${region(regionId).name} bölgesi · ${shown.length} kayıt` : "Süre canlı hesaplanır; satırın tamamı ayrıntıyı açar."}
+              actions={regionId ? <Button size="sm" variant="ghost" onClick={() => go("outages", { tab: "acik" })}>Süzgeci Kaldır</Button> : <Badge tone={open.length ? "danger" : "success"} dot>{open.length} açık</Badge>}
+              className="xl:col-span-3"
+            >
+              {shown.length ? <OpenList rows={shown} patches={patches} /> : <EmptyStateX title="Bu bölgede açık arıza yok" hint="Harita süzgecini kaldırarak bütün şebekeyi görebilirsin." />}
+            </Panel>
           </div>
+          <Panel id="ariza-gunluk" title="Günlük Açık Arıza" note="Her günün sonunda süren plansız kayıt sayısı; ayrık sayım basamaklı çizilir.">
+            <div className="grid gap-3 p-4 sm:p-5">
+              <StepCountChart data={dailyOpen(list, 30).map((v, i) => ({ label: new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short" }).format(addDays(TODAY, i - 29)), value: v }))} title="Son 30 günün günlük açık arıza sayısı" unit=" arıza" />
+              <UnitLegend items={[{ label: "Açık arıza", series: 1, value: `${open.length} bugün` }]} />
+            </div>
+          </Panel>
         </div>
       ),
     },
@@ -273,34 +184,28 @@ export function ArizaPage({ params, go }: PageProps) {
       label: `Planlı Kesintiler (${planned.length})`,
       panel: (
         <div className="grid gap-5 pt-5">
-          <Panel
-            id="ariza-planli"
-            title="Planlı Çalışmalar"
-            note="Duyuru, çalışmadan en az 48 saat önce abonelere gider."
-            actions={
-              <Button size="sm" variant="primary" onClick={() => setPlanOpen(true)}>
-                Çalışma Planla
-              </Button>
-            }
-          >
-            {table(planned, "Planlı çalışmalar")}
+          <Panel id="ariza-planli" title="Planlı Çalışmalar" note="İş günü ve mesai içine oturur; duyuru çalışmadan en az 48 saat önce gider." actions={canOps ? <Button size="sm" variant="primary" onClick={() => setPlanOpen(true)}>Çalışma Planla</Button> : null}>
+            {planned.length ? <PlannedList rows={planned} go={go} /> : <EmptyStateX title="Planlı çalışma yok" hint="Çalışma Planla ile bir bakım ya da trafo değişimi ekleyebilirsin." />}
           </Panel>
           <Panel id="ariza-takvim" title="Takvim" note="Önümüzdeki planlı çalışmalar, tarih sırasıyla.">
             <div className="p-4 sm:p-5">
-              {scheduleItems.length ? <ScheduleList label="Planlı çalışma takvimi" items={scheduleItems} /> : <p className="text-small text-muted">Planlı çalışma yok.</p>}
-            </div>
-          </Panel>
-        </div>
-      ),
-    },
-    {
-      value: "is-emri",
-      label: "İş Emirleri",
-      panel: (
-        <div className="pt-5">
-          <Panel id="ariza-isemri" title="İş Emri Panosu" note="Kartı sürükleyin ya da klavyeyle (Boşluk, ok tuşları) taşıyın; Enter ayrıntıyı açar.">
-            <div className="p-3 sm:p-4">
-              <KanbanBoard label="İş emirleri" defaultColumns={orderCols} today={TODAY_KEY} onCardOpen={(c) => setOrderOpen(orderOf(c.id))} onChange={() => notify({ title: "İş emri taşındı", body: "Durum güncellendi", tone: "success" })} />
+              {planned.length ? (
+                <ScheduleList
+                  label="Planlı çalışma takvimi"
+                  items={planned.slice(0, 8).map<ScheduleItem>((o) => ({
+                    id: o.id,
+                    at: `${dayKey(o.start)}T${clock.format(o.start)}`,
+                    time: `${clock.format(o.start)}-${o.end ? clock.format(o.end) : ""}`,
+                    day: new Intl.DateTimeFormat("tr-TR", { weekday: "short", day: "numeric" }).format(o.start),
+                    title: `${substation(o.substationId).name} · ${o.cause}`,
+                    detail: `${region(o.regionId).name} · ${fmtNum(o.affected)} abone`,
+                    color: 4,
+                    href: href("outages", { id: o.id }),
+                  }))}
+                />
+              ) : (
+                <p className="text-small text-muted">Planlı çalışma yok.</p>
+              )}
             </div>
           </Panel>
         </div>
@@ -311,8 +216,58 @@ export function ArizaPage({ params, go }: PageProps) {
       label: "Geçmiş",
       panel: (
         <div className="pt-5">
-          <Panel id="ariza-gecmis" title="Giderilen Kesintiler" note={`Son 60 gün · ${num.format(history.length)} kayıt`}>
-            {table(history.slice(0, 40), "Giderilen kesintiler")}
+          <Panel id="ariza-gecmis" title="Giderilen Kesintiler" note={`Son 60 gün · ${fmtNum(history.length)} kayıt`}>
+            <HistoryTable rows={history.slice(0, 40)} go={go} />
+          </Panel>
+        </div>
+      ),
+    },
+    {
+      value: "guvenilirlik",
+      label: "Güvenilirlik",
+      panel: (
+        <div className="grid gap-5 pt-5">
+          <Panel id="ariza-hesap" title="SAIDI ve SAIFI Hesabı" note="Son 30 gün; yalnız 3 dakikadan uzun plansız kesintiler (ÖRNEK eşik). Payda: aktif abone sayısı.">
+            <div className="grid gap-4 p-4 sm:p-5">
+              <dl className="grid gap-3 sm:grid-cols-4">
+                {[
+                  ["SAIDI", `${fmtDec(reliab.saidi)} dk`, "abone başına süre"],
+                  ["SAIFI", fmtDec(reliab.saifi, 2), "abone başına kesinti"],
+                  ["Abone dakika", fmtNum(reliab.minutes), `${fmtNum(reliab.events)} etkilenme`],
+                  ["Aktif abone", fmtNum(reliab.total), "payda"],
+                ].map(([k, v, f]) => (
+                  <div key={k} className="rounded-lg bg-surface p-3">
+                    <dt className="text-small text-muted">{k}</dt>
+                    <dd className="mt-0.5 text-read font-semibold text-strong tabular-nums">{v}</dd>
+                    <dd className="text-small text-muted">{f}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="rounded-lg bg-surface p-3 text-small text-body">
+                SAIDI = Σ(etkilenen abone × süre) ÷ aktif abone = {fmtNum(reliab.minutes)} ÷ {fmtNum(reliab.total)} = <strong className="text-strong">{fmtDec(reliab.saidi)} dk</strong>. SAIFI = Σ etkilenen abone ÷ aktif abone = {fmtNum(reliab.events)} ÷ {fmtNum(reliab.total)} = <strong className="text-strong">{fmtDec(reliab.saifi, 2)}</strong>. Eşik ve istisnalar örnek parametredir; resmî bildirimde mevzuat tanımı esas alınır.
+              </p>
+              <DataTable<(typeof reliab.rows)[number]>
+                caption="Hesaba giren kesintiler"
+                rows={reliab.rows}
+                rowKey={(r) => r.o.id}
+                density="comfortable"
+                on="surface"
+                stickyFirst={false}
+                columns={[
+                  { key: "id", header: "Kayıt", render: (r) => <a href={href("outages", { id: r.o.id })} className="edas-mono font-medium text-strong hover:underline">{r.o.id}</a> },
+                  { key: "tm", header: "Trafo Merkezi", render: (r) => substation(r.o.substationId).name },
+                  { key: "af", header: "Etkilenen", numeric: true, sortable: true, sortValue: (r) => r.o.affected, render: (r) => fmtNum(r.o.affected) },
+                  { key: "du", header: "Süre", numeric: true, sortable: true, sortValue: (r) => r.minutes, render: (r) => fmtDur(r.minutes) },
+                  { key: "cm", header: "Abone dakika", numeric: true, sortable: true, sortValue: (r) => r.customerMinutes, render: (r) => fmtNum(r.customerMinutes) },
+                ]}
+                empty="Son 30 günde hesaba giren kesinti yok"
+              />
+            </div>
+          </Panel>
+          <Panel id="ariza-bolge" title="Bölgeye Göre Plansız Kesinti" note="Tek ölçü: kayıt sayısı.">
+            <div className="p-4 sm:p-5">
+              <BarTarget aria-label="Bölgeye göre plansız kesinti sayısı" format={(v) => `${fmtNum(v)} kayıt`} rows={outageCountByRegion(list).map((r) => ({ id: r.region.id, label: r.region.name, value: r.count }))} />
+            </div>
           </Panel>
         </div>
       ),
@@ -323,109 +278,190 @@ export function ArizaPage({ params, go }: PageProps) {
     <>
       <PageHead
         title="Arıza ve Kesintiler"
-        description="Plansız arızalar, planlı çalışmalar ve iş emirleri."
+        description="Plansız arızalar, planlı çalışmalar ve müşteri duyuruları."
         actions={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => setPlanOpen(true)}>
-              Çalışma Planla
-            </Button>
-            <Button variant="primary" size="sm" onClick={() => notify({ title: "Arıza kaydı açıldı", body: "Çağrı merkezinden gelen bildirim kayda alındı", tone: "info" })}>
-              Arıza Kaydı Aç
-            </Button>
-          </>
+          canOps ? (
+            <>
+              <Button variant="secondary" size="sm" onClick={() => setPlanOpen(true)}>
+                <CalendarClock aria-hidden /> Çalışma Planla
+              </Button>
+              <Button variant="primary" size="sm" onClick={() => setCreateOpen(true)}>
+                <Zap aria-hidden /> Arıza Kaydı Aç
+              </Button>
+            </>
+          ) : null
         }
       />
       <PageBody>
-        <MetricStrip>
-          <Cell icon={<Zap />} label="Açık Arıza" value={num.format(open.length)} foot={open.length ? "Ekipler sahada" : "Açık kayıt yok"} tone={open.length ? "danger" : "neutral"} />
-          <Cell icon={<Users />} label="Etkilenen Abone" value={num.format(open.reduce((s, o) => s + o.affected, 0))} foot="Şu anda enerjisi olmayan" tone={open.length ? "danger" : "neutral"} />
-          <Cell icon={<Timer />} label="SAIDI · 30 Gün" value={`${reliab.saidi} dk`} foot="Abone başına kesinti süresi" />
-          <Cell icon={<AlertTriangle />} label="SAIFI · 30 Gün" value={reliab.saifi.toLocaleString("tr-TR")} foot="Abone başına kesinti sayısı" />
-          <Cell icon={<Clock />} label="Ortalama Onarım" value={duration(reliab.mttr)} foot={`${reliab.count} plansız kayıt üzerinden`} />
-          <Cell icon={<ClipboardList />} label="Planlı Çalışma" value={num.format(planned.length)} foot={`${WORK_ORDERS.filter((w) => w.status === "planlandi").length} iş emri açık`} tone={planned.length ? "warning" : "neutral"} />
-        </MetricStrip>
-
-        <Tabs aria-label="Arıza ve kesinti görünümleri" variant="underline" value={tab} onValueChange={(v) => go("outages", { tab: v })} items={panels.map((p) => ({ value: p.value, label: p.label, panel: p.value === tab ? p.panel : null }))} />
-
-        <SampleNote />
-      </PageBody>
-
-      <PlanDialog
-        open={planOpen}
-        onClose={() => setPlanOpen(false)}
-        onPlan={(o) => {
-          setExtraPlanned((l) => [o, ...l]);
-          setPlanOpen(false);
-          notify({ title: "Planlı çalışma oluşturuldu", body: `${o.id} · ${substation(o.substationId).name} · ${fullDate.format(o.start)}`, tone: "success" });
-          go("outages", { tab: "planli" });
-        }}
-        nextId={`K-2026${1300 + extraPlanned.length}`}
-      />
-
-      <Sheet
-        open={!!orderOpen}
-        onOpenChange={(o) => !o && setOrderOpen(null)}
-        title={orderOpen ? WORK_TYPE_LABEL[orderOpen.type] : ""}
-        description={orderOpen ? `${orderOpen.id} · ${fullDate.format(orderOpen.scheduled)}, ${clock.format(orderOpen.scheduled)}` : undefined}
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setOrderOpen(null)}>Kapat</Button>
-            {orderOpen?.customerId ? (
-              <Button variant="primary" onClick={() => { const id = orderOpen.customerId!; setOrderOpen(null); go("customers", { id }); }}>
-                Müşteriyi Aç
-              </Button>
-            ) : null}
-          </>
-        }
-      >
-        {orderOpen ? (
-          <dl className="grid gap-3 text-small">
-            {[
-              ["Bölge", region(orderOpen.regionId).name],
-              ["Müşteri", orderOpen.customerId ? `${customer(orderOpen.customerId).name} · ${orderOpen.customerId}` : "Bölge geneli"],
-              ["Neden", orderOpen.reason],
-              ["Durum", orderOpen.status === "tamamlandi" ? "Tamamlandı" : "Planlandı"],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="text-muted">{k}</dt>
-                <dd className="mt-0.5 font-medium text-strong">{v}</dd>
+        {candidates.length ? (
+          <section aria-label="Arıza adayları" className="grid gap-2">
+            {candidates.map((c) => (
+              <div key={c.transformerId} role="group" aria-label={`Arıza adayı ${c.transformer.name}`} className="flex flex-wrap items-center gap-3 rounded-xl bg-warning-wash px-4 py-3 ring-1 ring-warning/30">
+                <IconTile tone="warning">
+                  <PhoneCall />
+                </IconTile>
+                <p className="min-w-[min(100%,16rem)] flex-1 text-base text-strong">
+                  <span className="font-semibold">{c.transformer.name}</span> ({substation(c.transformer.substationId).name}) için {c.count} çağrı geldi ve henüz bir arızaya bağlı değil.
+                  <span className="block text-small text-muted">Ortak arıza olma ihtimali yüksek; kayıt açınca çağrılar ona bağlanır ve onarım iş emri oluşur.</span>
+                </p>
+                {canOps ? (
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    onClick={() => {
+                      const o = createOutageFromCalls(c.transformerId);
+                      if (o) {
+                        notify({ title: "Arıza kaydı açıldı", body: `${o.id} · ${c.count} çağrı bağlandı, onarım iş emri oluştu`, tone: "success" });
+                        go("outages", { id: o.id });
+                      }
+                    }}
+                  >
+                    Arızaya Çevir
+                  </Button>
+                ) : null}
+                <a href={href("calls")} className="text-small font-medium text-strong underline-offset-2 hover:underline">Çağrıları gör</a>
               </div>
             ))}
-          </dl>
+          </section>
         ) : null}
-      </Sheet>
+
+        <PageHero
+          primary={{ label: "Açık Arıza", value: fmtNum(open.length), foot: open.length ? `${fmtNum(openAffected)} abone şu an enerjisiz` : "Şebekede açık arıza yok", icon: <Zap />, to: { page: "outages", params: { tab: "acik" } } }}
+          secondary={[
+            { label: "Etkilenen Abone", value: fmtNum(openAffected), foot: open.length ? "Şu an enerjisiz" : "Enerjisiz abone yok", icon: <Users /> },
+            { label: "Hassas Abone", value: fmtNum(openSensitive), foot: "Tıbbi cihaz vb. öncelikli", icon: <ShieldAlert /> },
+            { label: "SAIDI · 30 Gün", value: fmtDec(reliab.saidi), unit: "dk", foot: "Abone başına süre", icon: <Timer />, to: { page: "outages", params: { tab: "guvenilirlik" } } },
+            { label: "SAIFI · 30 Gün", value: fmtDec(reliab.saifi, 2), foot: "Abone başına kesinti", icon: <AlertTriangle />, to: { page: "outages", params: { tab: "guvenilirlik" } } },
+            { label: "Ortalama Onarım", value: fmtDur(reliab.mttr), foot: "Giderilen plansız kayıtlar", icon: <Clock /> },
+            { label: "Planlı Çalışma", value: fmtNum(planned.length), foot: `${fmtNum(getWorkOrders().filter((w) => w.type === "ariza" && w.status !== "tamamlandi" && w.status !== "iptal").length)} onarım iş emri açık`, icon: <CalendarClock />, to: { page: "outages", params: { tab: "planli" } } },
+          ]}
+        />
+
+        <Tabs aria-label="Arıza ve kesinti görünümleri" variant="underline" value={tab} onValueChange={(v) => go("outages", { tab: v })} items={panels.map((p) => ({ value: p.value, label: p.label, panel: p.value === tab ? p.panel : null }))} />
+      </PageBody>
+      {dialogs}
     </>
   );
 }
 
 /* ------------------------------------------------------------------------ */
-/* Arıza ayrıntısı                                                           */
+/* Listeler                                                                  */
 /* ------------------------------------------------------------------------ */
 
-function OutageDetail({ o, ov, go, onCrew, onEta, onSms, onClose, onCancel }: { o: Outage; ov?: Override; go: PageProps["go"]; onCrew: (c: string) => void; onEta: (m: number) => void; onSms: () => void; onClose: () => void; onCancel: () => void }) {
-  const [crew, setCrew] = useState<string | null>(ov?.crew ?? o.crew);
-  const [eta, setEta] = useState<string | null>(String(ov?.eta ?? 120));
+function OpenList({ rows, patches }: { rows: readonly Outage[]; patches: ReturnType<typeof getOutageState>["patches"] }) {
+  const list = useRef<HTMLUListElement>(null);
+  useListKeys(list);
+  return (
+    <ul ref={list} role="list" aria-label="Açık arızalar" className="divide-y divide-line-soft">
+      {rows.map((o) => {
+        const p = patches[o.id];
+        const sensitive = affectedSensitive(o);
+        return (
+          <li key={o.id}>
+            <RowLink className="grid gap-1 px-4 py-3 sm:px-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <RowAnchor to={{ page: "outages", params: { id: o.id } }} className="edas-mono">
+                  {o.id}
+                </RowAnchor>
+                <OutageBadge status={o.status} kind={o.kind} />
+                {sensitive ? (
+                  <Badge tone="danger" dot>
+                    {sensitive} hassas abone
+                  </Badge>
+                ) : null}
+                {p?.smsSent ? <Badge tone="neutral">SMS gitti</Badge> : null}
+              </div>
+              <p className="text-base text-body">
+                {o.cause} · {substation(o.substationId).name}
+                {o.feederId ? ` · ${FEEDERS.find((f) => f.id === o.feederId)?.name.split(" · ")[1] ?? ""}` : ""}
+              </p>
+              <p className="text-small text-muted tabular-nums">
+                {fmtNum(o.affected)} abone · {fmtDur(outageMin(o))} sürüyor · {p?.crew ?? o.crew}
+                {p?.etaMin ? ` · tahmini ${fmtDur(p.etaMin)}` : ""}
+              </p>
+            </RowLink>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function PlannedList({ rows, go }: { rows: readonly Outage[]; go: PageProps["go"] }) {
+  const items: RecordItem[] = rows.map((o) => ({
+    id: o.id,
+    title: `${o.id} · ${substation(o.substationId).name}`,
+    subtitle: `${o.cause} · ${region(o.regionId).name}`,
+    leading: (
+      <IconTile tone="warning">
+        <Wrench />
+      </IconTile>
+    ),
+    value: `${fmtNum(o.affected)} abone`,
+    meta: `${fullDate.format(o.start)}, ${clock.format(o.start)}${o.end ? `-${clock.format(o.end)}` : ""}`,
+    status: <OutageBadge status={o.status} kind={o.kind} />,
+    href: href("outages", { id: o.id }),
+    onSelect: () => go("outages", { id: o.id }),
+  }));
+  return (
+    <div className="p-3 sm:p-4">
+      <RecordList label="Planlı çalışmalar" items={items} />
+    </div>
+  );
+}
+
+function HistoryTable({ rows, go }: { rows: readonly Outage[]; go: PageProps["go"] }) {
+  const columns: Column<Outage>[] = [
+    { key: "id", header: "Kayıt", sortable: true, sortValue: (o) => o.id, render: (o) => <a href={href("outages", { id: o.id })} className="edas-mono font-medium text-strong hover:underline">{o.id}</a> },
+    { key: "cause", header: "Neden", render: (o) => o.cause },
+    { key: "tm", header: "Trafo Merkezi", render: (o) => `${substation(o.substationId).name} · ${region(o.regionId).name}` },
+    { key: "af", header: "Etkilenen", numeric: true, sortable: true, sortValue: (o) => o.affected, render: (o) => fmtNum(o.affected) },
+    { key: "st", header: "Başlangıç", sortable: true, sortValue: (o) => o.start.getTime(), render: (o) => dateTime(o.start) },
+    { key: "du", header: "Süre", numeric: true, sortable: true, sortValue: (o) => outageMin(o), render: (o) => fmtDur(outageMin(o)) },
+    { key: "s", header: "Durum", render: (o) => <OutageBadge status={o.status} kind={o.kind} /> },
+  ];
+  return (
+    <>
+      <div className="max-md:hidden">
+        <DataTable<Outage> caption="Giderilen kesintiler" columns={columns} rows={rows} rowKey={(o) => o.id} density="comfortable" on="surface" stickyFirst={false} empty="Bu listede kayıt yok" />
+      </div>
+      <div className="p-3 md:hidden">
+        <RecordList
+          label="Giderilen kesintiler"
+          items={rows.map<RecordItem>((o) => ({ id: o.id, title: `${o.id} · ${substation(o.substationId).name}`, subtitle: o.cause, value: fmtDur(outageMin(o)), meta: dateTime(o.start), status: <OutageBadge status={o.status} kind={o.kind} />, href: href("outages", { id: o.id }), onSelect: () => go("outages", { id: o.id }) }))}
+        />
+      </div>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------------ */
+/* Ayrıntı                                                                   */
+/* ------------------------------------------------------------------------ */
+
+function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; patch?: ReturnType<typeof getOutageState>["patches"][string]; go: PageProps["go"]; canOps: boolean; onSms: () => void; onClose: () => void }) {
+  const { notify } = useApp();
   const isOpen = o.status === "acik";
   const planned = o.status === "planlandi";
+  const crew = patch?.crew ?? o.crew;
+  const etaMin = patch?.etaMin ?? 120;
+  const [crewSel, setCrewSel] = useState<string | null>(crew);
+  const [etaSel, setEtaSel] = useState<string | null>(String(etaMin));
+  const customers = affectedCustomers(o);
+  const sensitive = customers.filter(isSensitive);
+  const calls = getCalls().filter((c) => c.outageId === o.id);
+  const orders = getWorkOrders().filter((w) => w.linkedId === o.id);
+  const minutes = outageMin(o);
 
-  const steps = outageTimeline(o);
+  const seedSteps = outageTimeline(o);
   const events: TimelineEvent[] = [
-    ...steps.map((s) => ({ at: s.at, title: s.label, body: undefined as string | undefined })),
-    ...(ov?.log ?? []).map((l) => ({ at: l.at, title: l.title, body: l.body })),
+    ...seedSteps.map((s) => ({ at: s.at, title: s.label, detail: undefined as string | undefined, tone: (s.id === "enerji" ? "success" : s.id === "bildirim" ? "danger" : "neutral") as TimelineEvent["tone"] })),
+    ...(patch?.events ?? []).map((e) => ({ at: e.at, title: e.title, detail: e.detail, tone: e.tone as TimelineEvent["tone"] })),
   ]
     .sort((a, b) => a.at.getTime() - b.at.getTime())
-    .map((e, i) => ({
-      id: `${o.id}-${i}`,
-      at: e.at.toISOString(),
-      when: dateTime(e.at),
-      title: e.title,
-      description: e.body,
-      tone: e.title.startsWith("Enerji verildi") ? ("success" as const) : e.title.startsWith("Arıza bildirimi") ? ("danger" as const) : ("neutral" as const),
-    }));
+    .map((e, i) => ({ id: `${o.id}-${i}`, at: e.at.toISOString(), when: dateTime(e.at), title: e.title, description: e.detail, tone: e.tone }));
 
-  const sample = affectedSample(o, Math.min(6, o.affected));
-  const minutes = minutesOf(o);
-  const message = OUTAGE_SMS.replace("{bolge}", region(o.regionId).name).replace("{sure}", duration(ov?.eta ?? 120));
+  const regionMap: MapRegion[] = MAP_SHAPES.map((s) => ({ id: s.id, label: region(s.id).name, path: s.path, at: s.at, value: s.id === o.regionId ? 1 : 0, tone: s.id === o.regionId ? (isOpen ? "danger" : "warning") : "neutral", note: s.id === o.regionId ? `${o.id} · ${fmtNum(o.affected)} abone` : undefined }));
 
   return (
     <>
@@ -438,7 +474,7 @@ function OutageDetail({ o, ov, go, onCrew, onEta, onSms, onClose, onCancel }: { 
             <Button variant="secondary" size="sm" onClick={() => go("outages", { tab: planned ? "planli" : isOpen ? "acik" : "gecmis" })}>
               <ArrowLeft aria-hidden /> Listeye Dön
             </Button>
-            {isOpen ? (
+            {isOpen && canOps ? (
               <Button variant="primary" size="sm" onClick={onClose}>
                 Enerji Verildi
               </Button>
@@ -447,84 +483,141 @@ function OutageDetail({ o, ov, go, onCrew, onEta, onSms, onClose, onCancel }: { 
         }
       />
       <PageBody>
-        <MetricStrip>
-          <Cell icon={<Users />} label="Etkilenen Abone" value={num.format(o.affected)} foot={isOpen ? "Şu anda enerjisi yok" : "Etkilenen toplam abone"} tone={isOpen ? "danger" : "neutral"} />
-          <Cell icon={<Clock />} label={isOpen ? "Süre (Canlı)" : planned ? "Planlanan Süre" : "Toplam Süre"} value={planned && o.end ? duration(Math.round((o.end.getTime() - o.start.getTime()) / 60_000)) : duration(minutes)} foot={planned ? `${fullDate.format(o.start)}, ${clock.format(o.start)}` : `Başlangıç ${dateTime(o.start)}`} />
-          <Cell icon={<Zap />} label="Trafo Merkezi" value={substation(o.substationId).name} foot={`${substation(o.substationId).capacityMva} MVA`} />
-          <Cell icon={<Wrench />} label="Ekip" value={(ov?.crew ?? o.crew).replace(/ \(.*\)/, "")} foot={ov?.crew ?? o.crew} />
-          <Cell icon={<Timer />} label="Tahmini Süre" value={duration(ov?.eta ?? 120)} foot={ov?.eta ? "Güncellendi" : "İlk tahmin"} />
-          <Cell icon={<MessageSquareText />} label="Müşteri Bilgilendirme" value={ov?.smsSent ? "Gönderildi" : "Bekliyor"} foot={ov?.smsSent ? `${num.format(o.affected)} aboneye SMS` : "SMS henüz gönderilmedi"} tone={ov?.smsSent || !isOpen ? "neutral" : "warning"} />
-        </MetricStrip>
+        <PageHero
+          primary={{ label: planned ? "Planlanan Süre" : isOpen ? "Süre (Canlı)" : "Toplam Süre", value: planned && o.end ? fmtDur(Math.round((o.end.getTime() - o.start.getTime()) / 60_000)) : fmtDur(minutes), foot: planned ? `${fullDate.format(o.start)}, ${clock.format(o.start)}` : `Başlangıç ${dateTime(o.start)}`, icon: <Clock /> }}
+          secondary={[
+            { label: "Etkilenen Abone", value: fmtNum(o.affected), foot: isOpen ? "Şu an enerjisi yok" : "Etkilenen toplam", icon: <Users /> },
+            { label: "Hassas Abone", value: fmtNum(sensitive.length), foot: sensitive.length ? "Öncelikli bilgilendir" : "Hassas abone yok", icon: <ShieldAlert /> },
+            { label: "Ekip", value: crew.replace(/ \(.*\)/, ""), foot: crew, icon: <Wrench /> },
+            { label: "Tahmini Süre", value: fmtDur(etaMin), foot: patch?.etaMin ? "Güncellendi" : "İlk tahmin", icon: <Timer /> },
+            { label: "Müşteri Duyurusu", value: patch?.smsSent ? "Gönderildi" : "Bekliyor", foot: patch?.smsSent ? `${fmtNum(patch.smsSent)} SMS` : "SMS henüz gitmedi", icon: <MessageSquareText /> },
+          ]}
+        />
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-          <Panel id="ad-zaman" title="Zaman Çizelgesi" note="Bildirimden enerjinin verilmesine kadar her adım." className="xl:col-span-3">
+          <Panel id="ad-zaman" title="Zaman Çizelgesi" note="Bildirimden enerjinin verilmesine kadar her adım; işlemler buraya düşer." className="xl:col-span-3">
             <div className="p-4 sm:p-5">
               <Timeline events={events} />
             </div>
           </Panel>
-
-          <Panel id="ad-islem" title={planned ? "Planlı Çalışma" : "İşlemler"} note={isOpen ? "Ekibi, tahmini süreyi ve müşteri duyurusunu buradan yönetin." : planned ? "Duyuru ve iptal." : "Kayıt kapalı; değişiklik yapılamaz."} className="xl:col-span-2">
-            <div className="grid gap-4 p-4 sm:p-5">
-              {isOpen ? (
-                <>
-                  <div className="grid gap-2">
-                    <Select label="Ekip" items={CREW_OPTIONS} value={crew} onValueChange={setCrew} />
-                    <Button size="sm" variant="secondary" className="w-fit" onClick={() => crew && onCrew(crew)} disabled={!crew || crew === (ov?.crew ?? o.crew)}>
-                      Ekibi Ata
-                    </Button>
-                  </div>
-                  <div className="grid gap-2">
-                    <Select label="Tahmini Süre" items={ETA_OPTIONS} value={eta} onValueChange={setEta} />
-                    <Button size="sm" variant="secondary" className="w-fit" onClick={() => eta && onEta(Number(eta))}>
-                      Süreyi Güncelle
-                    </Button>
-                  </div>
-                </>
-              ) : null}
-              {isOpen || planned ? (
-                <Button size="sm" variant={ov?.smsSent ? "ghost" : "primary"} className="w-fit" onClick={onSms}>
-                  <MessageSquareText aria-hidden /> Müşterilere SMS Gönder
-                </Button>
-              ) : (
-                <p className="flex items-center gap-2 text-small text-success">
-                  <CheckCircle2 aria-hidden className="size-4" /> Giderildi, enerji verildi.
-                </p>
-              )}
-              {planned ? (
-                <Button size="sm" variant="danger" className="w-fit" onClick={onCancel}>
-                  Çalışmayı İptal Et
-                </Button>
-              ) : null}
-            </div>
-          </Panel>
+          <div className="grid gap-5 xl:col-span-2">
+            <Panel id="ad-islem" title={planned ? "Planlı Çalışma" : "İşlemler"} note={isOpen ? "Ekibi, tahmini süreyi ve müşteri duyurusunu buradan yönet." : planned ? "Duyuru ve iptal." : "Kayıt kapalı; değişiklik yapılamaz."}>
+              <div className="grid gap-4 p-4 sm:p-5">
+                {isOpen && canOps ? (
+                  <>
+                    <div className="grid gap-2">
+                      <Select label="Ekip" items={CREWS.map((c) => ({ value: c, label: c }))} value={crewSel} onValueChange={setCrewSel} />
+                      <Button size="sm" variant="secondary" className="w-fit" disabled={!crewSel || crewSel === crew} onClick={() => crewSel && (assignOutageCrew(o.id, crewSel), notify({ title: `${o.id}: ekip atandı`, body: crewSel, tone: "success" }))}>
+                        Ekibi Ata
+                      </Button>
+                    </div>
+                    <div className="grid gap-2">
+                      <Select label="Tahmini Süre" items={ETA_CHOICES.map((m) => ({ value: String(m), label: fmtDur(m) }))} value={etaSel} onValueChange={setEtaSel} />
+                      <Button size="sm" variant="secondary" className="w-fit" disabled={!etaSel || Number(etaSel) === etaMin} onClick={() => etaSel && (setOutageEta(o.id, Number(etaSel)), notify({ title: `${o.id}: tahmini süre ${fmtDur(Number(etaSel))}`, body: "Müşteri bilgilendirmesi için SMS gönderebilirsin", tone: "info" }))}>
+                        Süreyi Güncelle
+                      </Button>
+                    </div>
+                  </>
+                ) : null}
+                {(isOpen || planned) && canOps ? (
+                  <Button size="sm" variant={patch?.smsSent ? "ghost" : "primary"} className="w-fit" onClick={onSms}>
+                    <MessageSquareText aria-hidden /> Müşterilere SMS Gönder
+                  </Button>
+                ) : null}
+                {!isOpen && !planned ? (
+                  <p className="flex items-center gap-2 text-small text-success">
+                    <CheckCircle2 aria-hidden className="size-4" /> Giderildi, enerji verildi.
+                  </p>
+                ) : null}
+                {isOpen && canOps && !orders.length ? (
+                  <Button size="sm" variant="secondary" className="w-fit" onClick={() => (createWorkOrder({ type: "ariza", regionId: o.regionId, reason: `${o.id} onarımı`, linkedId: o.id, assignee: crew, slaHours: 4 }), notify({ title: "Onarım iş emri oluşturuldu", body: crew, tone: "success" }))}>
+                    <Wrench aria-hidden /> Onarım İş Emri Aç
+                  </Button>
+                ) : null}
+                {planned && canOps ? (
+                  <Button size="sm" variant="danger" className="w-fit" onClick={() => (cancelOutage(o.id), notify({ title: `${o.id} iptal edildi`, body: "Planlı çalışma duyurusu geri çekilecek", tone: "info" }), go("outages", { tab: "planli" }))}>
+                    Çalışmayı İptal Et
+                  </Button>
+                ) : null}
+              </div>
+            </Panel>
+            <Panel id="ad-harita" title="Bölge" note={`${region(o.regionId).name} · ${o.feederId ? FEEDERS.find((f) => f.id === o.feederId)?.name : substation(o.substationId).name}`}>
+              <div className="p-4 sm:p-5">
+                <RegionMap title="Kesintinin bölgesi" regions={regionMap} viewBox={MAP_VIEWBOX} format={(v) => (v ? "Bu kayıt" : "Etkilenmedi")} legend={["Etkilenmedi", "Bu kayıt"]} />
+              </div>
+            </Panel>
+          </div>
         </div>
 
-        <Panel id="ad-aboneler" title="Etkilenen Aboneler" note={sample.length < o.affected ? `${num.format(o.affected)} abonenin ilk ${sample.length}'ı; tam liste müşteri sayfasında bölge süzgeciyle.` : `${num.format(o.affected)} abonenin tamamı`}>
-          <div className="max-md:hidden">
-            <DataTable
-              caption="Etkilenen aboneler (örnek)"
-              rows={sample}
-              rowKey={(c) => c.id}
-              density="comfortable"
-              on="surface"
-              stickyFirst={false}
-              columns={[
-                { key: "n", header: "Müşteri", render: (c) => <a href={href("customers", { id: c.id })} className="font-medium text-strong hover:underline">{c.name}</a> },
-                { key: "i", header: "Tesisat No", render: (c) => <span className="edas-mono">{c.installation}</span> },
-                { key: "d", header: "Mahalle", render: (c) => c.district },
-                { key: "v", header: "Gerilim", render: (c) => c.voltage },
-                { key: "p", header: "Telefon", render: (c) => <span className="edas-mono">{c.phone}</span> },
-              ]}
-            />
-          </div>
-          <div className="p-3 md:hidden">
-            <RecordList label="Etkilenen aboneler" items={sample.map((c) => ({ id: c.id, title: c.name, subtitle: `${c.district} · ${c.voltage}`, value: c.phone, href: href("customers", { id: c.id }), onSelect: () => go("customers", { id: c.id }) }))} />
-          </div>
+        <Panel
+          id="ad-aboneler"
+          title="Etkilenen Aboneler"
+          note={`${fmtNum(customers.length)} abone · hassas aboneler başta${customers.length !== o.affected ? ` (kayıtta ${fmtNum(o.affected)}: modellenmeyen aboneler dahil)` : ""}`}
+          actions={sensitive.length ? <Badge tone="danger" dot>{sensitive.length} hassas</Badge> : null}
+        >
+          {customers.length ? (
+            <>
+              <div className="max-md:hidden">
+                <DataTable
+                  caption="Etkilenen aboneler"
+                  rows={customers.slice(0, 30)}
+                  rowKey={(c) => c.id}
+                  density="comfortable"
+                  on="surface"
+                  stickyFirst={false}
+                  columns={[
+                    { key: "n", header: "Müşteri", render: (c) => (<span className="inline-flex flex-wrap items-center gap-2"><a href={href("customers", { id: c.id })} className="font-medium text-strong hover:underline">{c.name}</a>{isSensitive(c) ? <Badge tone="danger">Hassas</Badge> : null}</span>) },
+                    { key: "i", header: "Tesisat No", render: (c) => <span className="edas-mono">{c.installation}</span> },
+                    { key: "d", header: "Mahalle", render: (c) => c.district },
+                    { key: "v", header: "Gerilim", render: (c) => c.voltage },
+                    { key: "p", header: "Telefon", render: (c) => <span className="edas-mono">{c.phone}</span> },
+                  ]}
+                />
+              </div>
+              <div className="p-3 md:hidden">
+                <RecordList label="Etkilenen aboneler" items={customers.slice(0, 20).map<RecordItem>((c) => ({ id: c.id, title: c.name, subtitle: `${c.district} · ${c.voltage}${isSensitive(c) ? " · Hassas" : ""}`, value: c.phone, href: href("customers", { id: c.id }), onSelect: () => go("customers", { id: c.id }) }))} />
+              </div>
+            </>
+          ) : (
+            <EmptyStateX title="Modellenen abone yok" hint="Bu kayıt, modellenmeyen abonelerin bağlı olduğu bir şebeke bölümünde." />
+          )}
         </Panel>
 
-        <SampleNote />
+        {calls.length || orders.length ? (
+          <div className="grid gap-5 lg:grid-cols-2">
+            <Panel id="ad-cagri" title="Bağlı Çağrılar" note={`${calls.length} çağrı bu kayda bağlı`}>
+              {calls.length ? (
+                <ul role="list" className="divide-y divide-line-soft">
+                  {calls.slice(0, 8).map((c) => (
+                    <li key={c.id} className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
+                      <a href={href("calls", { id: c.id })} className="edas-mono text-base font-medium text-strong hover:underline">{c.id}</a>
+                      <span className="min-w-0 flex-1 truncate text-small text-muted">{c.note}</span>
+                      <span className="text-small text-muted tabular-nums">{clock.format(c.at)}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="p-4 text-small text-muted">Bağlı çağrı yok.</p>
+              )}
+            </Panel>
+            <Panel id="ad-isemri" title="Onarım İş Emirleri" note={`${orders.length} iş emri`}>
+              {orders.length ? (
+                <ul role="list" className="divide-y divide-line-soft">
+                  {orders.map((w) => (
+                    <li key={w.id} className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
+                      <a href={href("workorders", { id: w.id })} className="edas-mono text-base font-medium text-strong hover:underline">{w.id}</a>
+                      <span className="min-w-0 flex-1 truncate text-small text-muted">{WORK_TYPE_LABEL[w.type]} · {w.assignee ?? "Atanmadı"}</span>
+                      <Badge tone={w.status === "tamamlandi" ? "success" : w.status === "iptal" ? "neutral" : "warning"} dot>{w.status}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="p-4 text-small text-muted">Bağlı iş emri yok.</p>
+              )}
+            </Panel>
+          </div>
+        ) : null}
       </PageBody>
-      <p className="sr-only">{message}</p>
     </>
   );
 }
@@ -533,25 +626,27 @@ function OutageDetail({ o, ov, go, onCrew, onEta, onSms, onClose, onCancel }: { 
 /* Diyaloglar                                                                */
 /* ------------------------------------------------------------------------ */
 
-function SmsDialog({ o, onClose, onSend }: { o: Outage | null; onClose: () => void; onSend: (o: Outage) => void }) {
-  const text = o ? OUTAGE_SMS.replace("{bolge}", region(o.regionId).name).replace("{sure}", o.end ? "kısa süre" : "2 saat") : "";
+function SmsDialog({ o, etaMin, onClose, onSend }: { o: Outage | null; etaMin: number; onClose: () => void; onSend: (o: Outage) => void }) {
+  const text = o ? messageOf(o, etaMin) : "";
+  const sensitive = o ? affectedSensitive(o) : 0;
   return (
     <Dialog
       open={!!o}
       onOpenChange={(x) => !x && onClose()}
       title="Müşterilere SMS Duyurusu"
-      description={o ? `${region(o.regionId).name} · ${num.format(o.affected)} abone` : undefined}
+      description={o ? `${region(o.regionId).name} · ${fmtNum(o.affected)} abone` : undefined}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>Vazgeç</Button>
-          <Button variant="primary" onClick={() => o && onSend(o)}>{o ? `${num.format(o.affected)} Aboneye Gönder` : "Gönder"}</Button>
+          <Button variant="primary" onClick={() => o && onSend(o)}>{o ? `${fmtNum(o.affected)} Aboneye Gönder` : "Gönder"}</Button>
         </>
       }
     >
       <div className="grid gap-3">
-        <p className="text-small text-muted">Önizleme (Türkçe karakter kullanılmaz; böylece tek SMS 160 karakter sığar):</p>
+        <p className="text-small text-muted">Önizleme (Türkçe karakter kullanılmaz; tek SMS 160 karakter sığar):</p>
         <p className="rounded-lg bg-surface p-3 text-small text-strong">{text}</p>
         <p className="text-micro text-muted">{text.length} karakter · {Math.ceil(text.length / 160)} SMS. Yalnız etkilenen aboneler ve bölge sakinleri alır.</p>
+        {sensitive ? <p className="rounded-lg bg-warning-wash p-3 text-small text-strong">{sensitive} hassas abone var: SMS'e ek olarak telefonla aranmaları önerilir.</p> : null}
       </div>
     </Dialog>
   );
@@ -563,7 +658,7 @@ function CloseDialog({ o, onClose, onConfirm }: { o: Outage | null; onClose: () 
       open={!!o}
       onOpenChange={(x) => !x && onClose()}
       title="Enerji Verildi mi?"
-      description={o ? `${o.id} · ${num.format(o.affected)} abone` : undefined}
+      description={o ? `${o.id} · ${fmtNum(o.affected)} abone` : undefined}
       footer={
         <>
           <Button variant="ghost" data-autofocus onClick={onClose}>Vazgeç</Button>
@@ -576,31 +671,94 @@ function CloseDialog({ o, onClose, onConfirm }: { o: Outage | null; onClose: () 
   );
 }
 
-function PlanDialog({ open, onClose, onPlan, nextId }: { open: boolean; onClose: () => void; onPlan: (o: Outage) => void; nextId: string }) {
-  const [date, setDate] = useState(dayKey(addDays(TODAY, 4)));
-  const [from, setFrom] = useState("09:00");
-  const [to, setTo] = useState("13:00");
-  const [reg, setReg] = useState<string | null>("merkez");
+/** Bölge → TM → fider seçicileri: arıza ve planlı çalışma diyaloglarının ortak kısmı. */
+function useTopology(initialRegion: string, initialFeeder?: string) {
+  const [reg, setReg] = useState<string>(initialRegion);
   const [sub, setSub] = useState<string | null>(null);
-  const [cause, setCause] = useState<string | null>("Hat bakımı");
-  const [note, setNote] = useState("");
+  const [fdr, setFdr] = useState<string | null>(initialFeeder ?? null);
+  const subs = SUBSTATIONS.filter((s) => s.regionId === reg);
+  const subId = (sub && subs.some((s) => s.id === sub) ? sub : initialFeeder && FEEDERS.find((f) => f.id === initialFeeder)?.substationId) || subs[0]?.id || null;
+  const fdrs = FEEDERS.filter((f) => f.substationId === subId);
+  const fdrId = fdr && fdrs.some((f) => f.id === fdr) ? fdr : fdrs[0]?.id ?? null;
+  const trs = fdrId ? feederTransformers(fdrId) : [];
+  const impact = impactOf(trs.map((t) => t.id));
+  return { reg, setReg: (v: string) => { setReg(v); setSub(null); setFdr(null); }, subId, setSub: (v: string | null) => { setSub(v); setFdr(null); }, fdrId, setFdr, subs, fdrs, trs, impact };
+}
 
-  const subs = SUBSTATIONS.filter((s) => s.regionId === reg).map((s) => ({ value: s.id, label: s.name }));
-  const subId = sub && subs.some((s) => s.value === sub) ? sub : subs[0]?.value ?? null;
-  const regionName = region(reg ?? "merkez").name;
-  const estimate = Math.max(8, Math.round(CUSTOMERS.filter((c) => c.regionId === reg).length * 0.2));
-  const lead = Math.round((parseDay(date).getTime() - parseDay(TODAY_KEY).getTime()) / 3_600_000);
-  const early = lead >= 48;
-  const msg = `Bakim calismasi nedeniyle ${date} tarihinde ${from}-${to} saatleri arasinda ${regionName} bolgesinde elektrik kesilecektir. Anlayisiniz icin tesekkur ederiz.`;
+function TopologyFields({ t }: { t: ReturnType<typeof useTopology> }) {
+  return (
+    <>
+      <Select label="Bölge" items={REGION_ITEMS} value={t.reg} onValueChange={(v) => v && t.setReg(v)} />
+      <Select label="Trafo Merkezi" items={t.subs.map((s) => ({ value: s.id, label: s.name }))} value={t.subId} onValueChange={t.setSub} />
+      <Select label="Fider" items={t.fdrs.map((f) => ({ value: f.id, label: f.name.split(" · ")[1] ?? f.name }))} value={t.fdrId} onValueChange={t.setFdr} />
+    </>
+  );
+}
+
+function CreateDialog({ open, onClose, onCreate }: { open: boolean; onClose: () => void; onCreate: (o: Outage) => void }) {
+  const t = useTopology("merkez");
+  const [cause, setCause] = useState<string | null>(OUTAGE_CAUSES[0]);
+  const [note, setNote] = useState("");
+  const submit = () => {
+    if (!t.subId || !t.fdrId) return;
+    const crew = crewOf(t.reg);
+    const o = createOutage({ kind: "plansiz", substationId: t.subId, regionId: t.reg, feederId: t.fdrId, transformerIds: t.trs.map((x) => x.id), start: TODAY, end: null, cause: cause ?? OUTAGE_CAUSES[0], crew, affected: t.impact.count || undefined });
+    createWorkOrder({ type: "ariza", regionId: t.reg, reason: `${o.id} onarımı${note ? `: ${note}` : ""}`, linkedId: o.id, assignee: crew, slaHours: 4 });
+    onCreate(o);
+  };
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(x) => !x && onClose()}
+      size="lg"
+      title="Arıza Kaydı Aç"
+      description="Fider seçilince etkilenen aboneler, bağlı dağıtım trafolarından hesaplanır."
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose}>Vazgeç</Button>
+          <Button variant="primary" onClick={submit} disabled={!t.fdrId}>Kaydı Aç ve Ekibi Gönder</Button>
+        </>
+      }
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        <TopologyFields t={t} />
+        <Select label="Neden" items={OUTAGE_CAUSES.map((c) => ({ value: c, label: c }))} value={cause} onValueChange={setCause} />
+        <div className="rounded-lg bg-surface p-3 text-small sm:col-span-2">
+          <p className="text-muted">Tahmini etkilenen</p>
+          <p className="mt-0.5 text-read font-semibold text-strong tabular-nums">{fmtNum(t.impact.count)} abone <span className="text-small font-normal text-muted">· {t.trs.length} dağıtım trafosu</span></p>
+          {t.impact.sensitive ? <p className="mt-1 text-small text-warning">{t.impact.sensitive} hassas abone: öncelikli bilgilendir.</p> : null}
+          <p className="mt-1 text-micro text-muted">Ekip: {crewOf(t.reg)}. Onarım iş emri (4 saat hedef) otomatik açılır.</p>
+        </div>
+        <div className="sm:col-span-2">
+          <Textarea label="Not (iç kullanım)" value={note} onChange={(e) => setNote(e.target.value)} minRows={2} />
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+function PlanDialog({ open, planFor, onClose, onPlan }: { open: boolean; planFor?: string; onClose: () => void; onPlan: (o: Outage, shifted: boolean) => void }) {
+  const preset = planFor ? feederOfTransformer(planFor) : undefined;
+  const t = useTopology(preset?.regionId ?? "merkez", preset?.feederId);
+  const [date, setDate] = useState(dayKey(addDays(TODAY, 3)));
+  const [hour, setHour] = useState("09");
+  const [duration, setDuration] = useState("4");
+  const [cause, setCause] = useState<string | null>(PLAN_CAUSES[0]);
+  const policy = getCutPolicy();
+
+  const wantedHour = Number(hour);
+  const business = isBusinessDay(date, policy.holidays);
+  const inHours = inWorkHours(wantedHour, policy.workStart, policy.workEnd);
+  const slot = scheduleSlot(date, wantedHour);
+  const shifted = keyOf(slot) !== date || slot.getHours() !== wantedHour;
+  const end = new Date(slot.getTime() + Number(duration) * 3_600_000);
+  const lead = Math.round((slot.getTime() - TODAY.getTime()) / 3_600_000);
+  const msg = `Bakim calismasi nedeniyle ${keyOf(slot)} tarihinde ${clock.format(slot)}-${clock.format(end)} saatleri arasinda ${region(t.reg).name} bolgesinde elektrik kesilecektir. Anlayisiniz icin tesekkur ederiz.`;
 
   const submit = () => {
-    if (!subId || !reg) return;
-    const [fh, fm] = from.split(":").map(Number);
-    const [th, tm] = to.split(":").map(Number);
-    const d = parseDay(date);
-    const start = new Date(d.getFullYear(), d.getMonth(), d.getDate(), fh, fm);
-    const end = new Date(d.getFullYear(), d.getMonth(), d.getDate(), th, tm);
-    onPlan({ id: nextId, kind: "planli", status: "planlandi", substationId: subId, regionId: reg, start, end, affected: estimate, cause: cause ?? "Hat bakımı", crew: CREWS[REGIONS.findIndex((r) => r.id === reg)] });
+    if (!t.subId || !t.fdrId) return;
+    const o = createOutage({ kind: "planli", substationId: t.subId, regionId: t.reg, feederId: t.fdrId, transformerIds: t.trs.map((x) => x.id), start: slot, end, cause: cause ?? PLAN_CAUSES[0], crew: crewOf(t.reg), affected: t.impact.count || undefined });
+    onPlan(o, shifted);
   };
 
   return (
@@ -609,30 +767,32 @@ function PlanDialog({ open, onClose, onPlan, nextId }: { open: boolean; onClose:
       onOpenChange={(x) => !x && onClose()}
       size="lg"
       title="Planlı Çalışma Planla"
-      description="Tarih ve saat aralığı, bölge ve neden. Duyuru önizlemesi altta."
+      description="Tarih ve saat iş gününe ve mesaiye oturur; etkilenen aboneler fiderden hesaplanır."
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>Vazgeç</Button>
-          <Button variant="primary" onClick={submit} disabled={!subId || to <= from}>Planla ve Duyur</Button>
+          <Button variant="primary" onClick={submit} disabled={!t.fdrId}>Planla ve Duyur</Button>
         </>
       }
     >
       <div className="grid gap-3 sm:grid-cols-2">
         <Input label="Tarih" type="date" value={date} min={dayKey(addDays(TODAY, 1))} onChange={(e) => setDate(e.target.value)} />
         <div className="grid grid-cols-2 gap-3">
-          <Input label="Başlangıç" type="time" value={from} onChange={(e) => setFrom(e.target.value)} />
-          <Input label="Bitiş" type="time" value={to} error={to <= from ? "Bitiş başlangıçtan sonra olmalı" : undefined} onChange={(e) => setTo(e.target.value)} />
+          <Select label="Başlangıç Saati" items={Array.from({ length: 10 }, (_, i) => String(i + 7).padStart(2, "0")).map((h) => ({ value: h, label: `${h}:00` }))} value={hour} onValueChange={(v) => v && setHour(v)} />
+          <Select label="Süre" items={[2, 3, 4, 6, 8].map((h) => ({ value: String(h), label: `${h} saat` }))} value={duration} onValueChange={(v) => v && setDuration(v)} />
         </div>
-        <Select label="Bölge" items={REGION_OPTIONS} value={reg} onValueChange={(v) => { setReg(v); setSub(null); }} />
-        <Select label="Trafo Merkezi" items={subs} value={subId} onValueChange={setSub} />
-        <Select label="Neden" items={PLAN_CAUSES} value={cause} onValueChange={setCause} />
-        <div className="rounded-lg bg-surface p-3 text-small">
-          <p className="text-muted">Tahmini etkilenen abone</p>
-          <p className="mt-0.5 text-read font-semibold text-strong">{num.format(estimate)}</p>
-          <p className={`mt-1 text-micro ${early ? "text-muted" : "text-warning"}`}>{early ? "Duyuru süresi yeterli (48 saatten fazla)." : "Duyuru süresi 48 saatten kısa: kurul bildirimi gerekir."}</p>
-        </div>
-        <div className="sm:col-span-2">
-          <Textarea label="Not (iç kullanım)" value={note} onChange={(e) => setNote(e.target.value)} minRows={2} />
+        <TopologyFields t={t} />
+        <Select label="Neden" items={PLAN_CAUSES.map((c) => ({ value: c, label: c }))} value={cause} onValueChange={setCause} />
+        <div className="rounded-lg bg-surface p-3 text-small sm:col-span-2">
+          <p className="text-muted">Etki simülasyonu</p>
+          <p className="mt-0.5 text-read font-semibold text-strong tabular-nums">{fmtNum(t.impact.count)} abone <span className="text-small font-normal text-muted">· {t.trs.length} dağıtım trafosu</span></p>
+          {t.impact.sensitive ? <p className="mt-1 text-small text-warning">{t.impact.sensitive} hassas abone etkilenir: alternatif besleme ya da jeneratör planı gerekir.</p> : <p className="mt-1 text-small text-muted">Hassas abone etkilenmiyor.</p>}
+          {!business || !inHours || shifted ? (
+            <p className="mt-1 text-small text-warning">
+              {!business ? "Seçilen gün iş günü değil." : !inHours ? "Seçilen saat mesai dışında." : "Bugün için geçen saat seçildi."} Çalışma <strong>{fullDate.format(slot)}, {clock.format(slot)}</strong> olarak planlanır.
+            </p>
+          ) : null}
+          <p className={`mt-1 text-micro ${lead >= 48 ? "text-muted" : "text-warning"}`}>{lead >= 48 ? "Duyuru süresi yeterli (48 saatten fazla)." : "Duyuru süresi 48 saatten kısa: kurul bildirimi gerekir."}</p>
         </div>
         <div className="sm:col-span-2">
           <p className="text-small text-muted">Abone duyurusu önizlemesi</p>
@@ -642,3 +802,12 @@ function PlanDialog({ open, onClose, onPlan, nextId }: { open: boolean; onClose:
     </Dialog>
   );
 }
+
+function feederOfTransformer(id: string) {
+  for (const f of FEEDERS) {
+    const tr = feederTransformers(f.id).find((x) => x.id === id);
+    if (tr) return { regionId: f.regionId, feederId: f.id };
+  }
+  return undefined;
+}
+
