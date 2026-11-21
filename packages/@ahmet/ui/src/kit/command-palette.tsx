@@ -97,6 +97,11 @@ type CommandPaletteProps = {
    * sınırsız.
    */
   maxResults?: number;
+  /**
+   * Arama kutusu BOŞKEN gösterilecek komutlar ("Son Aramalar", "Öneriler").
+   * Verilmezse boş sorguda bütün `commands` listelenir (varsayılan davranış).
+   */
+  emptyCommands?: readonly Command[];
 };
 
 export function CommandPalette({
@@ -105,6 +110,7 @@ export function CommandPalette({
   emptyText = "Eşleşen komut yok.",
   label = "Komut Paleti",
   maxResults,
+  emptyCommands,
 }: CommandPaletteProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -118,12 +124,12 @@ export function CommandPalette({
   const results = useMemo(() => {
     const q = fold(query.trim());
     const found = !q
-      ? commands
+      ? (emptyCommands ?? commands)
       : commands.filter((command) =>
           [command.label, command.hint ?? "", command.group, ...(command.keywords ?? [])].some((text) => fold(text).includes(q)),
         );
     return maxResults ? found.slice(0, maxResults) : found;
-  }, [commands, query, maxResults]);
+  }, [commands, emptyCommands, query, maxResults]);
 
   const groups = useMemo(() => {
     const map = new Map<string, Command[]>();

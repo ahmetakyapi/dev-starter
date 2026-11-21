@@ -9,9 +9,9 @@
     "typecheck": "tsc --noEmit",
     "check:ids": "node scripts/check-story-ids.mjs",
     "check:align": "node scripts/check-alignment.mjs",
-    "verify:edas": "node scripts/verify-edas-data.mjs",
+    "verify:kuzeyova": "node scripts/verify-kuzeyova-data.mjs",
     "og": "node scripts/build-og.mjs",
-    "verify:edas-finans": "node scripts/verify-edas-finans.mjs"
+    "verify:kuzeyova-finans": "node scripts/verify-kuzeyova-finans.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",

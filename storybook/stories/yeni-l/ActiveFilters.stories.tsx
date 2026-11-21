@@ -33,7 +33,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Listenin üstünde \"şu an neye bakıyorum\" satırı: her etkin süzgeç kaldırılabilir bir çip, sonda tek \"Temizle\". Süzgeç yığını (açılır listeler, sekmeler) tek satıra iner, liste neden kısaldığı gözün önünde kalır. Süzgeç yoksa hiçbir şey çizmez. Kaldırılan çipten sonra odağı çağıran taşır. Edaş portalı UX denetiminden (süzgeç yığını).",
+          "Listenin üstünde \"şu an neye bakıyorum\" satırı: her etkin süzgeç kaldırılabilir bir çip, sonda tek \"Temizle\". Süzgeç yığını (açılır listeler, sekmeler) tek satıra iner, liste neden kısaldığı gözün önünde kalır. Süzgeç yoksa hiçbir şey çizmez. Kaldırılan çipten sonra odağı çağıran taşır. Kuzeyova portalı UX denetiminden (süzgeç yığını).",
       },
     },
   },

@@ -48,7 +48,8 @@ const TINTS = [
 ] as const
 
 function initials(name: string) {
-  const parts = name.trim().split(/\s+/).filter(Boolean)
+  // Parantez ve işaretle başlayan parçalar ad değildir ("Ekip A (Merkez)" → EA, "E(" değil).
+  const parts = name.trim().split(/\s+/).filter((part) => /^\p{L}/u.test(part))
   const letters = parts.length > 1 ? [parts[0][0], parts.at(-1)![0]] : [parts[0]?.[0] ?? '?']
   return letters.join('').toLocaleUpperCase('tr-TR')
 }

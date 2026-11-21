@@ -706,7 +706,7 @@
       "name": "command-palette",
       "title": "Komut Paleti",
       "category": "Katmanlar",
-      "description": "⌘K / Ctrl+K komut paleti (`maxResults` ile yüzlerce kayıtta liste sınırı)",
+      "description": "⌘K / Ctrl+K komut paleti (`maxResults` ile yüzlerce kayıtta liste sınırı, `emptyCommands` ile boş sorguda öneriler)",
       "file": "snippets/ui/command-palette.tsx",
       "client": true,
       "storyId": "command-palette",
