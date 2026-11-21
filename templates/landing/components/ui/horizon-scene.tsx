@@ -17,7 +17,8 @@ import { cn } from "@/lib/utils";
  * sayfa zemini ne ise (açık, koyu, palet) o görünür; sabit renge solmaz.
  * Üst kenar da yumuşar, manzara dikdörtgen gibi durmaz.
  *
- * Süs katmanları `aria-hidden`; telefonda sahne alçalır. Sunucu bileşeni.
+ * Süs katmanları `aria-hidden` ve `inert` (içine bağlantı/buton koyma: odak
+ * ve tıklama girmez); telefonda sahne alçalır. Sunucu bileşeni.
  *
  *   <HorizonScene frame={<AppWindow …/>} scene={<Wallpaper scene="dunes" />}>
  *     <h1>Başlık</h1>
@@ -61,10 +62,10 @@ export function HorizonScene({
 `}</style>
       <div className="relative z-10 mx-auto max-w-3xl px-4 pt-12 text-center sm:px-6 sm:pt-16">{children}</div>
       <div className="relative mt-10 sm:mt-12" style={{ height: "var(--hz-stage)" }}>
-        <div aria-hidden className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div aria-hidden inert className="mx-auto max-w-5xl px-4 sm:px-6">
           {frame}
         </div>
-        <div aria-hidden className="ui-horizon-scene pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden">
+        <div aria-hidden inert className="ui-horizon-scene pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden">
           {scene}
         </div>
       </div>

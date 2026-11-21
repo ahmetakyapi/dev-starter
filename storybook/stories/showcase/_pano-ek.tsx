@@ -9,8 +9,6 @@ import { cn } from "@/lib/utils";
 import {
   EVENTS,
   FIRST_REPLY_GOAL,
-  MONTHLY_TARGET,
-  TARGET_SCALE,
   TICKET_CHANNELS,
   TODAY,
   clock,
@@ -18,7 +16,6 @@ import {
   member,
   num,
   pct,
-  tl,
   type CalendarEvent,
   type PeriodStats,
 } from "./_data";
@@ -77,28 +74,31 @@ export function UpcomingCard({ className }: { className?: string }) {
   );
 }
 
-/** Dönem hedefleri çentikle: ciro, çözülen talep, 30 dakikada yanıt. */
-export function GoalTicksCard({ s, period, className }: { s: PeriodStats; period: keyof typeof TARGET_SCALE; className?: string }) {
-  const target = Math.round(MONTHLY_TARGET * TARGET_SCALE[period]);
-  const fast = s.tickets.filter((t) => (t.firstResponseMin ?? 999) <= 30).length;
-  const fastGoal = Math.round(s.ticketCount * FIRST_REPLY_GOAL);
-  const rows = [
-    { label: "Ciro", value: Math.round(s.revenue / 1000), max: Math.round(target / 1000), detail: `${tl.format(s.revenue)} / ${tl.format(target)}`, mark: undefined },
-    { label: "Çözülen Talep", value: s.quality.resolved, max: s.ticketCount, detail: `${num.format(s.quality.resolved)} / ${num.format(s.ticketCount)}`, mark: undefined },
-    { label: "30 Dakikada Yanıt", value: fast, max: s.ticketCount, detail: `${num.format(fast)} / ${num.format(s.ticketCount)} (hedef ${num.format(fastGoal)})`, mark: FIRST_REPLY_GOAL },
-  ];
+/**
+ * Kanala göre "30 dakikada yanıt": panodaki "Dönem Hedefleri" halkasının
+ * kanal kırılımı (aynı ölçü, başka kesit; halka toplamı gösterir, çentik hangi
+ * kanalın hedefin altında kaldığını). Her kanal kendi talepleri içinde ölçülür,
+ * işaretçi hedef oranıdır.
+ */
+export function GoalTicksCard({ s, className }: { s: PeriodStats; className?: string }) {
+  const rows = TICKET_CHANNELS.map((channel) => {
+    const own = s.tickets.filter((t) => t.channel === channel);
+    const fast = own.filter((t) => (t.firstResponseMin ?? 999) <= 30).length;
+    return { label: channel, value: fast, max: Math.max(own.length, 1), detail: `${num.format(fast)} / ${num.format(own.length)}` };
+  });
+  const onTarget = rows.filter((r) => r.value >= r.max * FIRST_REPLY_GOAL).length;
   return (
-    <ChartCard className={cn(CARD, className)} id="pano-hedef-cenik" label="Hedeflere Yakınlık" value={`${rows.filter((r) => r.value >= (r.mark ? r.max * r.mark : r.max)).length} / ${rows.length} tuttu`}>
-      <ul className="grid gap-5 px-1 pb-2 md:grid-cols-3">
+    <ChartCard className={cn(CARD, className)} id="pano-hedef-cenik" label="Kanala Göre 30 Dakikada Yanıt" value={`${onTarget} / ${rows.length} kanal hedefte`}>
+      <ul className="grid gap-5 px-1 pb-2 sm:grid-cols-2 xl:grid-cols-4">
         {rows.map((r) => {
-          const ratio = pct(r.value, Math.max(r.max, 1), 0);
+          const ratio = pct(r.value, r.max, 0);
           return (
             <li key={r.label} className="grid gap-2">
               <p className="flex items-baseline justify-between gap-2 text-small">
                 <span className="font-medium text-strong">{r.label}</span>
                 <span className="text-muted tabular-nums">{r.detail}</span>
               </p>
-              <TickMeter label={r.label} value={r.value} max={Math.max(r.max, 1)} ticks={24} marker={r.mark} text={`%${ratio}`} valueText={`${r.label}: ${r.detail}, %${ratio}`} size="md" />
+              <TickMeter label={r.label} value={r.value} max={r.max} ticks={20} marker={FIRST_REPLY_GOAL} text={`%${ratio}`} valueText={`${r.label}: ${r.detail}, %${ratio}, hedef %${FIRST_REPLY_GOAL * 100}`} size="md" />
             </li>
           );
         })}

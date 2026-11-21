@@ -1,7 +1,7 @@
 "use client";
 
 import { useReducedMotion } from "motion/react";
-import { useEffect, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,7 +23,9 @@ import { cn } from "@/lib/utils";
  *
  * ERİŞİLEBİLİRLİK: `role="region"` + ad + `aria-roledescription`; öğeler
  * gerçek `ul`; odaktaki öğe `aria-current`. Görünmeyen (en çok iki uzakta
- * olmayan) öğeler `aria-hidden`. Değişim ekran okuyucuya BİLDİRİLMEZ
+ * olmayan) öğeler `aria-hidden` VE `inert` (içlerindeki bağlantı/buton
+ * odaklanmaz). `renderItem` içindeki alanlar (input) ok tuşlarını
+ * kendine alır. Fare ile odak birbirinden bağımsız durdurur. Değişim ekran okuyucuya BİLDİRİLMEZ
  * (kendiliğinden dönen içerik okuyucuyu sürekli bölerdi).
  *
  *   <FocusStack label="Ajanlar" items={[{ id: "satis", icon: <Sparkles />, title: "Satış Ajanı", subtitle: "Aday araştırma ve ilk mesaj" }, …]} />
@@ -61,31 +63,52 @@ function distance(i: number, active: number, n: number) {
 export function FocusStack({ items, label, renderItem, interval = 2800, itemHeight = 84, defaultIndex = 0, onIndexChange, className }: FocusStackProps) {
   const n = items.length;
   const reduce = useReducedMotion();
-  const [index, setIndex] = useState(defaultIndex % Math.max(n, 1));
+  // `prev`: bir önceki sıra. İşaret değiştiren (yığının öbür ucuna atlayan) öğe
+  // geçişsiz oturur; yoksa görünmezken yığının ortasından süzülerek geçerdi.
+  const [pos, setPos] = useState(() => {
+    const start = ((defaultIndex % Math.max(n, 1)) + Math.max(n, 1)) % Math.max(n, 1);
+    return { index: start, prev: start };
+  });
   const [stopped, setStopped] = useState(false);
-  const [hover, setHover] = useState(false);
+  // Fare ile odak AYRI: biri bitince öbürü dönüşü başlatmasın.
+  const [hovered, setHovered] = useState(false);
+  const [focusedWithin, setFocusedWithin] = useState(false);
   const radius = n >= 6 ? 2 : 1;
+  const index = Math.min(pos.index, Math.max(n - 1, 0));
+
+  // Geri çağrı ref'te: satır içi fonksiyon verilirse aralık her render'da sıfırlanmaz,
+  // state güncelleyicinin içinde çağrılmaz (üst bileşen render sırasında güncellenmez).
+  const notify = useRef(onIndexChange);
+  useEffect(() => {
+    notify.current = onIndexChange;
+  });
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    notify.current?.(index);
+  }, [index]);
 
   const go = (next: number, byUser = true) => {
     const clamped = ((next % n) + n) % n;
-    setIndex(clamped);
-    onIndexChange?.(clamped);
+    setPos((p) => ({ index: clamped, prev: Math.min(p.index, n - 1) }));
     if (byUser) setStopped(true);
   };
 
+  const paused = stopped || hovered || focusedWithin;
   useEffect(() => {
-    if (!interval || stopped || hover || reduce || n < 4) return;
+    if (!interval || paused || reduce || n < 4) return;
     const t = window.setInterval(() => {
-      setIndex((i) => {
-        const next = (i + 1) % n;
-        onIndexChange?.(next);
-        return next;
-      });
+      setPos((p) => ({ index: (Math.min(p.index, n - 1) + 1) % n, prev: Math.min(p.index, n - 1) }));
     }, interval);
     return () => window.clearInterval(t);
-  }, [interval, stopped, hover, reduce, n, onIndexChange]);
+  }, [interval, paused, reduce, n]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+    // renderItem içindeki alan/menü ok tuşlarını kendi kullanır.
+    if ((e.target as HTMLElement).closest("input, textarea, select, [contenteditable]")) return;
     const map: Record<string, number> = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: n - 1 };
     if (e.key in map) {
       e.preventDefault();
@@ -104,11 +127,11 @@ export function FocusStack({ items, label, renderItem, interval = 2800, itemHeig
       aria-roledescription="odak yığını"
       tabIndex={0}
       onKeyDown={onKeyDown}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setFocusedWithin(true)}
       onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) setHover(false);
+        if (!e.currentTarget.contains(e.relatedTarget)) setFocusedWithin(false);
       }}
       className={cn("relative w-full rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-line-focus", className)}
       style={{ height }}
@@ -123,10 +146,12 @@ export function FocusStack({ items, label, renderItem, interval = 2800, itemHeig
           const visible = a <= radius;
           const y = Math.sign(d) * (a === 0 ? 0 : step * (1 + (a - 1) * 0.78));
           const scale = 1 - a * 0.1;
+          const flipped = distance(i, pos.prev, n) * d < 0;
           return (
             <li
               key={item.id}
               aria-hidden={visible ? undefined : true}
+              inert={visible ? undefined : true}
               aria-current={d === 0 ? "true" : undefined}
               onClick={() => visible && d !== 0 && go(i)}
               className={cn("ui-focus-item absolute inset-x-0 top-1/2 origin-center", visible && d !== 0 && "cursor-pointer", !visible && "pointer-events-none")}
@@ -138,6 +163,7 @@ export function FocusStack({ items, label, renderItem, interval = 2800, itemHeig
                   opacity: visible ? 1 - a * 0.45 : 0,
                   filter: a ? `blur(${a * 1.5}px)` : undefined,
                   zIndex: 10 - a,
+                  transition: flipped ? "none" : undefined,
                 } as CSSProperties
               }
             >

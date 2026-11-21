@@ -25,8 +25,10 @@ import { cn } from "../utils";
  * HAREKET: her kart yavaş süzülür (6-9 sn, birkaç piksel, farklı gecikme);
  * dönüşü (`rotate`) bozmaz. Hareketi azaltanda durur.
  *
- * ERİŞİLEBİLİRLİK: her kart `aria-hidden` ve `pointer-events: none`. Kartın
- * içindeki bilgi sayfanın başka yerinde de olmalı; süs sahneye ulaşılamaz.
+ * ERİŞİLEBİLİRLİK: her kart `aria-hidden`, `inert` ve `pointer-events: none`.
+ * Kartın içindeki bilgi sayfanın başka yerinde de olmalı; süs sahneye
+ * ulaşılamaz: içine bağlantı ya da buton KOYMA (`inert` olduğundan odak ve
+ * tıklama kartın içine hiç girmez, gizli yere odak düşmez).
  *
  *   <FloatCards className="min-h-[34rem]">
  *     <FloatCard at={{ left: "-3%", top: "14%" }} rotate={-5} className="w-64">…</FloatCard>
@@ -75,6 +77,7 @@ export function FloatCard({ children, at, rotate = 0, depth = 1, lift = 8, durat
   return (
     <div
       aria-hidden
+      inert
       className={cn(
         "ui-float-card pointer-events-none absolute z-0 rounded-xl bg-overlay p-4 ring-1 ring-line max-md:hidden",
         DEPTH[depth],

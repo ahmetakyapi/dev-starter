@@ -13,6 +13,7 @@ import { HorizonScene } from "@/components/ui/horizon-scene";
 import { LiquidGlassLink } from "@/components/ui/liquid-glass";
 import { Marquee } from "@/components/ui/marquee";
 import { MeshGradient } from "@/components/ui/mesh-gradient";
+import { PatternBackground } from "@/components/ui/pattern-bg";
 import { Sparkline } from "@/components/ui/sparkline";
 import { Stat } from "@/components/ui/stat";
 import { StatStrip } from "@/components/ui/stat-strip";
@@ -80,8 +81,8 @@ const Brand = ({ children, tone = "default" }: { children: ReactNode; tone?: "de
 export function AtmosphereHero() {
   return (
     <section className="relative isolate flex min-h-dvh flex-col overflow-hidden bg-strong">
-      <Wallpaper scene="alpine" className="absolute inset-0 -z-20" />
-      <div aria-hidden className="absolute inset-0 -z-10 bg-scrim/50" />
+      <Wallpaper scene="mesh" className="absolute inset-0 -z-20" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-scrim/45" />
       <header className="flex items-center justify-between px-6 py-5 sm:px-10">
         <Brand tone="media">Kuzeyenerji</Brand>
         <a href="#fiyat" className="rounded-full bg-overlay px-4 py-2 text-small font-medium text-strong shadow-raised">
@@ -89,7 +90,7 @@ export function AtmosphereHero() {
         </a>
       </header>
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-        <ToneText as="h1" tone="media" fade="in" className="text-hero font-medium">
+        <ToneText as="h1" tone="media" className="text-hero font-medium">
           Modern işletmeler için <em className="font-display">enerji</em> zekâsı
         </ToneText>
         <p className="mt-5 max-w-xl text-lead text-on-brand/85">Tüketimi izle, maliyeti düşür, anlık veriyle daha akıllı sürdürülebilirlik kararları ver.</p>
@@ -97,7 +98,7 @@ export function AtmosphereHero() {
           <LiquidGlassLink tone="media" href="#ozellikler" className="h-11 px-5 text-base font-medium">
             Demo İste
           </LiquidGlassLink>
-          <a href="#fiyat" className="inline-flex h-11 items-center rounded-full bg-scrim/60 px-5 text-base font-medium text-on-brand">
+          <a href="#fiyat" className="inline-flex h-11 items-center rounded-full border border-on-brand/35 bg-scrim/50 px-5 text-base font-medium text-on-brand backdrop-blur-sm">
             Panoyu Gör
           </a>
         </div>
@@ -115,17 +116,18 @@ const CARD = "rounded-2xl border border-line bg-overlay p-4 shadow-floating";
 
 export function FloatCardsHero() {
   return (
-    <section className="bg-page">
+    <section className="relative isolate bg-page">
+      <PatternBackground pattern="dot-grid" fade="center" glow="spotlight" tone="primary" className="-z-10" />
       <div className="flex justify-center px-6 pt-8">
         <Announcement href="#ozellikler" tag="Yeni">
           Dört yeni rapor şablonu yayında
         </Announcement>
       </div>
-      <FloatCards className="min-h-[44rem]">
-        <FloatCard at={{ left: "2%", top: "8%" }} rotate={-5} depth={1} className={cn(CARD, "w-64")}>
+      <FloatCards className="md:min-h-[38rem]">
+        <FloatCard at={{ left: "7%", top: "12%" }} rotate={-5} depth={1} className={cn(CARD, "w-64")}>
           <Stat label="Aylık Gelir" value="1.240.000" unit="₺" change={2.4} changeLabel="Geçen Aya Göre" />
         </FloatCard>
-        <FloatCard at={{ right: "2%", top: "6%" }} rotate={4} depth={2} delay={1.2} className={cn(CARD, "w-60")}>
+        <FloatCard at={{ right: "6%", top: "9%" }} rotate={4} depth={2} delay={1.2} className={cn(CARD, "w-60")}>
           <p className="text-small text-muted">Kampanya Durumu</p>
           <div className="mt-2 flex items-center gap-2">
             <Badge tone="success" dot>
@@ -136,14 +138,14 @@ export function FloatCardsHero() {
             </Badge>
           </div>
         </FloatCard>
-        <FloatCard at={{ left: "6%", bottom: "6%" }} rotate={3} depth={2} delay={0.6} className={cn(CARD, "w-72")}>
+        <FloatCard at={{ left: "9%", bottom: "9%" }} rotate={3} depth={2} delay={0.6} className={cn(CARD, "w-72")}>
           <p className="text-small text-muted">Son 30 Gün</p>
           <Sparkline values={[12, 18, 14, 22, 20, 28, 26, 34, 31, 40]} title="Son 30 gün satış eğrisi, örnek veri" width={220} height={48} className="mt-2" />
         </FloatCard>
-        <FloatCard at={{ right: "4%", bottom: "10%" }} rotate={-3} depth={1} delay={1.8} className={cn(CARD, "w-64")}>
+        <FloatCard at={{ right: "8%", bottom: "11%" }} rotate={-3} depth={1} delay={1.8} className={cn(CARD, "w-64")}>
           <Stat label="Açık Talep" value="38" change={-6} changeLabel="Dünden" positiveIsGood={false} />
         </FloatCard>
-        <div className="relative z-10 mx-auto flex min-h-[44rem] max-w-2xl flex-col items-center justify-center px-6 text-center">
+        <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center justify-center px-6 pt-14 pb-8 text-center md:min-h-[38rem] md:py-16">
           <ToneText as="h1" className="text-hero font-medium">
             Satışın işletim sistemi, <em className="font-display">tek</em> panoda
           </ToneText>
@@ -158,6 +160,18 @@ export function FloatCardsHero() {
             </a>
           </div>
         </div>
+        <ul aria-label="Panodan örnekler" className="relative z-10 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-10 md:hidden [scrollbar-width:none]">
+          <li className={cn(CARD, "w-64 shrink-0 snap-center")}>
+            <Stat label="Aylık Gelir" value="1.240.000" unit="₺" change={2.4} changeLabel="Geçen Aya Göre" />
+          </li>
+          <li className={cn(CARD, "w-64 shrink-0 snap-center")}>
+            <Stat label="Açık Talep" value="38" change={-6} changeLabel="Dünden" positiveIsGood={false} />
+          </li>
+          <li className={cn(CARD, "w-64 shrink-0 snap-center")}>
+            <p className="text-small text-muted">Son 30 Gün</p>
+            <Sparkline values={[12, 18, 14, 22, 20, 28, 26, 34, 31, 40]} title="Son 30 gün satış eğrisi, örnek veri" width={200} height={48} className="mt-2" />
+          </li>
+        </ul>
       </FloatCards>
     </section>
   );
@@ -205,8 +219,8 @@ export function FocusStackHero() {
 export function CornerLabelHero() {
   return (
     <section className="relative isolate flex min-h-dvh flex-col justify-end overflow-hidden bg-strong">
-      <Wallpaper scene="aurora" className="absolute inset-0 -z-20" />
-      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-scrim/80 via-scrim/20 to-transparent" />
+      <Wallpaper scene="silk" className="absolute inset-0 -z-20" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-scrim/35" />
       <DockingNav
         brand={<Brand>Netiz</Brand>}
         links={[
@@ -219,13 +233,18 @@ export function CornerLabelHero() {
           </a>
         }
       />
-      <div className="px-6 pb-14 sm:px-10 sm:pb-20">
+      <div className="px-6 pb-14 sm:px-16 sm:pb-20">
         <CornerLabel tone="media">Birleşik karar katmanı</CornerLabel>
-        <ToneText as="h1" tone="media" className="mt-6 max-w-4xl text-hero font-medium">
+        <ToneText as="h1" tone="media" className="mt-8 max-w-4xl text-hero font-medium">
           Önemli olanı gör.
           <br />
           Kesinlikle karar ver.
         </ToneText>
+        <p className="mt-6 max-w-lg text-lead text-on-brand/85">Dağınık veriyi tek katmanda topla; ekip aynı sayıya bakıp aynı kararı versin.</p>
+        <a href="#fiyat" className={cn(PRIMARY_BTN, "mt-8")}>
+          Demo İste
+          <ArrowRight aria-hidden className="size-4" />
+        </a>
       </div>
     </section>
   );
@@ -249,7 +268,7 @@ export function HorizonHero() {
         </div>
       </header>
       <HorizonScene
-        peek="md"
+        peek="lg"
         fade="lg"
         frame={
           <AppWindow title="Onay Kuyruğu" icon={<Inbox />} focused>
@@ -272,7 +291,14 @@ export function HorizonHero() {
             </div>
           </AppWindow>
         }
-        scene={<Wallpaper scene="sunset" className="size-full" />}
+        scene={
+          <div
+            className="size-full [[data-theme=dark]_&]:brightness-50"
+            style={{ maskImage: "linear-gradient(to bottom, transparent 0%, transparent 38%, black 80%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, transparent 38%, black 80%)" }}
+          >
+            <Wallpaper scene="paper" className="size-full" />
+          </div>
+        }
       >
         <ToneText as="h1" className="text-hero font-medium">
           Harcamayla birlikte büyüyen <em className="font-display">kreatif</em> üretim
@@ -291,7 +317,13 @@ export function HorizonHero() {
 
 export function BeigeFinanceHero() {
   return (
-    <MeshGradient tone="neutral" intensity="soft" texture="grain" scrim as="section" className="min-h-dvh">
+    <section
+      className="relative isolate min-h-dvh overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(46rem 30rem at 100% -8%, color-mix(in srgb, var(--accent-warm) 34%, transparent), transparent 62%), radial-gradient(40rem 28rem at -6% 62%, color-mix(in srgb, var(--primary) 20%, transparent), transparent 60%), color-mix(in srgb, var(--accent-warm) 9%, var(--page-bg))",
+      }}
+    >
       <div className="mx-auto max-w-6xl px-6 pb-20">
         <header className="flex justify-center pt-6">
           <div className="flex w-full max-w-lg items-center justify-between rounded-full bg-overlay py-2 pr-2 pl-5 shadow-raised">
@@ -333,15 +365,15 @@ export function BeigeFinanceHero() {
         <div className="mx-auto mt-14 max-w-4xl">
           <StatStrip
             items={[
-              { value: "000+", label: "Örnek: şirket sayısı" },
-              { value: "00%", label: "Örnek: raporlama hızı" },
-              { value: "$0B+", label: "Örnek: işlenen veri" },
+              { value: "480+", label: "Şirket (ÖRNEK)" },
+              { value: "%72", label: "Daha hızlı raporlama (ÖRNEK)" },
+              { value: "2,4 mr", label: "İşlenen veri, ₺ (ÖRNEK)" },
             ]}
           />
-          <p className="mt-4 text-center text-small text-muted">Örnek veri: yayına çıkmadan önce kaynaklı gerçek sayılarla değiştir.</p>
+          <p className="mt-4 text-center text-small text-muted">Bu sayılar örnektir; yayına çıkmadan önce kaynaklı gerçek sayılarla değiştir.</p>
         </div>
       </div>
-    </MeshGradient>
+    </section>
   );
 }
 

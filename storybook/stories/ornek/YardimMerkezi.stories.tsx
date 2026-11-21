@@ -28,7 +28,7 @@ export const Home: Story = {
     const canvas = within(canvasElement);
     await expect(await canvas.findByRole("heading", { level: 1, name: "Yardım Merkezi" })).toBeInTheDocument();
     await expect(canvas.getByRole("link", { name: "Başlarken" })).toHaveAttribute("href", "#kategori-baslangic");
-    await expect(canvas.getByText("Tüm sistemler çalışıyor")).toBeInTheDocument();
+    await expect(canvas.getAllByText("Tüm sistemler çalışıyor").length).toBeGreaterThan(0);
   },
 };
 

@@ -16,12 +16,18 @@ import { cn } from "../utils";
  * DÜZEN SABİT: sütun ve satır ölçüleri sabit piksel (`COL`, `ROW`), bağlantı
  * yolları bu ölçülerden HESAPLANIR; ölçüm, `ResizeObserver` ya da istemci
  * kodu yok, sunucuda ve tarayıcıda aynı çizilir (hidrasyon uyuşmazlığı olmaz).
- * Telefonda tuval yatay kayar: kaydırma bölgesi klavyeyle odaklanır (oklar).
+ * Telefonda tuval yatay kayar: kaydırma bölgesi klavyeyle odaklanır (oklar,
+ * halka içeride) ve kaydırılabilecek yönde kenar solar (CSS kaydırma
+ * zaman çizelgesi; destek yoksa ipucu da yok, içerik yine kayar).
+ * İş kimlikleri BENZERSİZ olmalı (yineleneni ilki kazanır, öbürü çizilmez);
+ * bilinmeyen bir `after` kimliği sessizce atlanır.
  *
  * ERİŞİLEBİLİRLİK: çizim `aria-hidden`; aynı bilgi `sr-only` sıralı listede:
  * her iş "Ad, bilgi, kritik yolda, engelli, şunlardan sonra: …" diye okunur.
- * Kritik ve engelli durumu rengin yanında lejantta ve düğümde METİNLE de
- * yazılır (rozet: "Kritik", "Engelli"). Renk tek işaret değil.
+ * Kritik ve engelli durumu rengin yanında düğümde METİN rozetiyle de
+ * yazılır ("Kritik", "Engelli"). Renk tek işaret değil. `title`/`meta`
+ * düğüm olabilir (`ReactNode`); bu durumda ekran okuyucu metni için `sr`
+ * ver ("Ödeme servisi, 2 gün"), yoksa düğümün metni okunmaz.
  *
  * Veri örneği ÖRNEK'tir; kişi/marka yok. `start` ("Bugün") ve `goal`
  * (çıkış) isteğe bağlıdır; `after` boş olan iş `start`a, `goal.after`
@@ -40,6 +46,8 @@ export type PathNode = {
   title: ReactNode;
   /** Alt satır: "2g · 23 Kas". */
   meta?: ReactNode;
+  /** Ekran okuyucu için düz metin: "Ödeme servisi, 2 gün". `title`/`meta` düğümse şart. */
+  sr?: string;
   /** Düğümün solunda küçük slot (avatar, ikon). Süs ise `aria-hidden` çağıranda. */
   leading?: ReactNode;
   /** Teslim tarihini belirleyen zincirde. */
@@ -52,7 +60,12 @@ export type PathNode = {
 
 export type PathColumn = { id: string; label: ReactNode; nodes: readonly PathNode[] };
 
-export type PathEnd = { title: ReactNode; meta?: ReactNode; note?: ReactNode; after?: readonly string[] };
+export type PathEnd = { title: ReactNode; meta?: ReactNode; note?: ReactNode; sr?: string; after?: readonly string[] };
+
+/** Düz metne çevrilebilen (dizgi ya da sayı) içerik; düğüm ise boş döner. */
+const plain = (x: ReactNode): string => (typeof x === "string" || typeof x === "number" ? String(x) : "");
+/** "Ad, bilgi" biçimi: boş parçalar virgül bırakmaz. */
+const say = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(", ");
 
 type PathGraphProps = {
   /** Grafiğin adı (kaydırma bölgesi ve liste için). */
@@ -64,6 +77,24 @@ type PathGraphProps = {
   hideLegend?: boolean;
   className?: string;
 };
+
+/*
+ * Kenar solması: yalnız kaydırılabilecek yönde (CSS kaydırma zaman çizelgesi).
+ * Kaydırma yoksa zaman çizelgesi etkisiz, değişkenler 0, maske tam opak.
+ * Desteklemeyen tarayıcıda hiç uygulanmaz.
+ */
+const SCROLL_FADE_CSS = `
+@property --sf-l { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --sf-r { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@keyframes ui-sf { 0% { --sf-l: 0px; --sf-r: 2rem; } 6% { --sf-l: 2rem; } 94% { --sf-r: 2rem; } 100% { --sf-l: 2rem; --sf-r: 0px; } }
+@supports (animation-timeline: scroll()) {
+  .ui-scroll-fade {
+    -webkit-mask-image: linear-gradient(to right, transparent, black var(--sf-l), black calc(100% - var(--sf-r)), transparent);
+    mask-image: linear-gradient(to right, transparent, black var(--sf-l), black calc(100% - var(--sf-r)), transparent);
+    animation: ui-sf linear both;
+    animation-timeline: scroll(self inline);
+  }
+}`;
 
 const COL = 232; // sütun genişliği
 const NODE_W = 172;
@@ -87,6 +118,7 @@ export function PathGraph({ label, columns, start, goal, hideLegend = false, cla
 
   const placed = new Map<string, Placed>();
   const place = (p: Placed, colIndex: number, index: number, count: number) => {
+    if (placed.has(p.id)) return; // yinelenen kimlik: ilki kazanır
     const offset = (bodyH - count * ROW) / 2;
     p.x = colIndex * COL + (COL - NODE_W) / 2;
     p.y = HEAD + offset + index * ROW + (ROW - NODE_H) / 2;
@@ -127,8 +159,8 @@ export function PathGraph({ label, columns, start, goal, hideLegend = false, cla
 
   const nameOf = (id: string): string => {
     if (id === "__start") return "Başlangıç";
-    const n = placed.get(id);
-    return typeof n?.node?.title === "string" ? n.node.title : id;
+    const node = placed.get(id)?.node;
+    return node?.sr || plain(node?.title) || "bir iş";
   };
 
   return (
@@ -151,7 +183,7 @@ export function PathGraph({ label, columns, start, goal, hideLegend = false, cla
         role="region"
         aria-label={`${label}, yatay kaydırılır`}
         tabIndex={0}
-        className="overflow-x-auto rounded-lg focus-visible:outline-none"
+        className="ui-scroll-fade overflow-x-auto rounded-lg focus-visible:ring-2 focus-visible:ring-line-focus focus-visible:outline-none focus-visible:ring-inset"
       >
         <div aria-hidden className="relative" style={{ width, height, minWidth: width }}>
           {cols.map((c, i) => (
@@ -201,6 +233,16 @@ export function PathGraph({ label, columns, start, goal, hideLegend = false, cla
                 style={{ left: p.x, top: p.y, width: NODE_W, height: NODE_H }}
               >
                 {n?.leading ? <span className="shrink-0">{n.leading}</span> : null}
+                {n?.critical || n?.blocked ? (
+                  <span
+                    className={cn(
+                      "absolute -top-2 right-2 rounded-sm px-1 text-micro leading-4 font-medium",
+                      n.blocked ? "bg-warning-wash text-warning" : "bg-danger-wash text-danger",
+                    )}
+                  >
+                    {n.blocked ? "Engelli" : "Kritik"}
+                  </span>
+                ) : null}
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-small font-medium text-strong">{content ? content.title : n?.title}</span>
                   <span className="block truncate font-mono text-micro text-muted">{content ? content.meta : n?.meta}</span>
@@ -220,23 +262,17 @@ export function PathGraph({ label, columns, start, goal, hideLegend = false, cla
       </div>
 
       {/* Asıl içerik: sıralı liste. Kritik ve engelli durum metinle. */}
-      <ol className="sr-only" aria-label={label}>
+      <ol role="list" className="sr-only" aria-label={label}>
         {start ? (
-          <li>
-            Başlangıç: {start.title}, {start.meta}
-            {start.note ? `, ${start.note}` : ""}.
-          </li>
+          <li>Başlangıç: {start.sr ?? say(plain(start.title), plain(start.meta), plain(start.note))}.</li>
         ) : null}
         {columns.map((c) => (
           <li key={c.id}>
             {c.label}:
-            <ul>
+            <ul role="list">
               {c.nodes.map((n) => (
                 <li key={n.id}>
-                  {n.title}
-                  {n.meta ? `, ${n.meta}` : ""}
-                  {n.critical ? ", kritik yolda" : ", boşluğu var"}
-                  {n.blocked ? ", engelli" : ""}.{" "}
+                  {say(n.sr ?? say(plain(n.title), plain(n.meta)), n.critical ? "kritik yolda" : "boşluğu var", n.blocked ? "engelli" : undefined)}.{" "}
                   {n.after.length ? `Şunlardan sonra: ${n.after.map(nameOf).join(", ")}.` : "Başlangıçtan sonra."}
                 </li>
               ))}
@@ -245,12 +281,12 @@ export function PathGraph({ label, columns, start, goal, hideLegend = false, cla
         ))}
         {goal ? (
           <li>
-            Hedef: {goal.title}, {goal.meta}
-            {goal.note ? `, ${goal.note}` : ""}. Şunlardan sonra: {goal.after.map(nameOf).join(", ")}.
+            Hedef: {goal.sr ?? say(plain(goal.title), plain(goal.meta), plain(goal.note))}. Şunlardan sonra: {goal.after.map(nameOf).join(", ")}.
           </li>
         ) : null}
       </ol>
 
+      <style href="ui-scroll-fade" precedence="default">{SCROLL_FADE_CSS}</style>
       <style href="ui-path-graph" precedence="default">{`
         .path-graph-hatch{background-image:repeating-linear-gradient(135deg,var(--warning-wash) 0 4px,transparent 4px 8px)}
         .path-graph-hatch.border-warning{background-color:var(--overlay)}

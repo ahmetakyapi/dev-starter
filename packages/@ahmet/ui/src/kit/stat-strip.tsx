@@ -15,8 +15,9 @@ import { cn } from "../utils";
  * Yapı: `dl`; her öğe `dt` etiket + `dd` değer. Görsel sıra ters (değer
  * üstte), DOM sırası etiket-değer: ekran okuyucu "Aktif Kullanıcı, 50K+" der.
  *
- * Düzen: telefonda 2×2 (ayraçsız), `sm` üstünde tek satır ve `divided` ise
- * kıl çizgili ayraç. `tone="dark"` ters yüzey (`bg-strong`) üstü; renk `text-page`.
+ * Düzen: telefonda iki sütun (ayraçsız; 3 öğe 2+1 dizilir), `sm` üstünde tek
+ * satır ve `divided` ise kıl çizgili ayraç (yalnız satırın İLK öğesi hariç
+ * her öğenin soluna). Uzun değer satır sonunda kırılır (`text-balance`). `tone="dark"` ters yüzey (`bg-strong`) üstü; renk `text-page`.
  * `numberClassName`: sayının fontu (varsayılan display; serif vurgu için
  * projenin vurgu font sınıfını ver).
  *
@@ -39,19 +40,20 @@ export function StatStrip({
   className?: string;
 }) {
   const dark = tone === "dark";
-  const cols = items.length >= 4 ? "sm:grid-cols-4" : items.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2";
+  const perRow = items.length >= 4 ? 4 : items.length === 3 ? 3 : 2;
+  const cols = perRow === 4 ? "sm:grid-cols-4" : perRow === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2";
   return (
     <dl className={cn("grid grid-cols-2 gap-y-10", cols, className)}>
       {items.map((item, index) => (
         <div
           key={index}
           className={cn(
-            "flex flex-col-reverse items-center gap-2 px-4 text-center",
-            divided && index > 0 && (dark ? "sm:border-l sm:border-page/25" : "sm:border-l sm:border-line"),
+            "flex min-w-0 flex-col-reverse items-center gap-2 px-4 text-center",
+            divided && index % perRow !== 0 && (dark ? "sm:border-l sm:border-page/25" : "sm:border-l sm:border-line"),
           )}
         >
-          <dt className={cn("text-base", dark ? "text-page/70" : "text-soft")}>{item.label}</dt>
-          <dd className={cn("text-display tracking-tight tabular-nums", numberClassName, dark ? "text-page" : "text-strong")}>
+          <dt className={cn("text-base text-balance", dark ? "text-page/70" : "text-soft")}>{item.label}</dt>
+          <dd className={cn("max-w-full text-display tracking-tight tabular-nums [overflow-wrap:anywhere]", numberClassName, dark ? "text-page" : "text-strong")}>
             {item.value}
           </dd>
         </div>

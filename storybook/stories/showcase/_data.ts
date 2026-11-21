@@ -146,7 +146,7 @@ export const customer = (id: string) => CUSTOMERS.find((c) => c.id === id) ?? CU
 export const CHANNELS = ["Web Mağaza", "Telefon", "Bayi"] as const;
 export type Channel = (typeof CHANNELS)[number];
 /** Grafik seri sırası: kanal → `--chart-n`. Gösterge, sankey ve ölçer aynı rengi kullanır. */
-export const CHANNEL_SERIES = { "Web Mağaza": 2, Telefon: 3, Bayi: 1 } as const;
+export const CHANNEL_SERIES = { "Web Mağaza": 1, Telefon: 3, Bayi: 2 } as const;
 
 export type OrderStatus = "Hazırlanıyor" | "Yolda" | "Gecikti" | "Teslim Edildi" | "İade";
 export type Order = {

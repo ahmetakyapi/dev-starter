@@ -39,7 +39,8 @@ export type ScheduleItem = {
 
 export function ScheduleList({ items, label, className }: { items: readonly ScheduleItem[]; label?: string; className?: string }) {
   return (
-    <ul aria-label={label} className={cn("divide-y divide-line-soft", className)}>
+    // `role="list"`: Safari/VoiceOver `list-style: none` olan listeyi liste saymaz.
+    <ul role="list" aria-label={label} className={cn("divide-y divide-line-soft", className)}>
       {items.map((item) => {
         const body = (
           <>

@@ -210,7 +210,7 @@ export function Well({ children, className, labelledBy }: { children: ReactNode;
 export function WellTitle({ id, children, hint }: { id: string; children: ReactNode; hint?: ReactNode }) {
   return (
     <div className="-mx-4 mb-4 border-b border-line-soft px-4 pb-3 sm:-mx-5 sm:px-5">
-      <h2 id={id} className="scroll-mt-24 text-base font-semibold text-strong">
+      <h2 id={id} className="scroll-mt-24 text-read font-semibold text-strong">
         {children}
       </h2>
       {hint ? <p className="mt-0.5 text-small text-muted">{hint}</p> : null}

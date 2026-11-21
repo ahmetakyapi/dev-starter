@@ -50,7 +50,8 @@ import { GoalTicksCard, TicketStackCard, UpcomingCard } from "./_pano-ek";
 import { CARD, IconTile, PageBar, SectionTitle, href, useApp } from "./_ui";
 import { cn } from "@/lib/utils";
 
-const TL_COMPACT: Intl.NumberFormatOptions = { style: "currency", currency: "TRY", notation: "compact", maximumFractionDigits: 1 };
+/** `compactDisplay: "long"`: "₺100 B" yerine "₺100 bin" (B, milyar diye okunabiliyordu). */
+const TL_COMPACT: Intl.NumberFormatOptions = { style: "currency", currency: "TRY", notation: "compact", compactDisplay: "long", maximumFractionDigits: 1 };
 const WEEKDAYS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"] as const;
 
 /** Dönem seçici: panonun bütün karolarını ve grafiklerini birlikte değiştirir. */
@@ -129,10 +130,11 @@ export function PanoPage() {
   const days = useMemo(() => orderDays(heatWeeks), [heatWeeks]);
   const heatTotal = days.reduce((a, d) => a + d.value, 0);
   // Haftanın gününe göre talep: dönemdeki talepler Pazartesi'den Pazar'a.
-  const byWeekday = WEEKDAYS.map((label, i) => ({
-    label,
-    value: s.tickets.filter((t) => (t.date.getDay() + 6) % 7 === i).length,
-  }));
+  // Haftanın gününe göre ortalama ilk yanıt süresi (dakika): talep SAYISI yığılı kartta (`TicketStackCard`) zaten var, tekrar etme.
+  const byWeekday = WEEKDAYS.map((label, i) => {
+    const answered = s.tickets.filter((t) => (t.date.getDay() + 6) % 7 === i && t.firstResponseMin !== null);
+    return { label, value: answered.length ? Math.round(answered.reduce((a, t) => a + (t.firstResponseMin ?? 0), 0) / answered.length) : 0 };
+  });
   const target = Math.round(MONTHLY_TARGET * TARGET_SCALE[period]);
   const fastReplies = s.tickets.filter((t) => (t.firstResponseMin ?? 999) <= 30).length;
   const goals = [
@@ -395,15 +397,15 @@ export function PanoPage() {
             <ChartCard
               className={CARD}
               id="pano-gun"
-              label="Haftanın Gününe Göre Talep"
-              value={`${byWeekday.reduce((a, d) => (d.value > a.value ? d : a)).label} en yoğun`}
+              label="Haftanın Gününe Göre İlk Yanıt"
+              value={`${byWeekday.reduce((a, d) => (d.value > a.value ? d : a)).label} en yavaş`}
             >
-              <TrackBarChart title="Haftanın Gününe Göre Talep" data={byWeekday} series={1} height="h-44" />
+              <TrackBarChart title="Haftanın Gününe Göre Ortalama İlk Yanıt Süresi (dakika)" data={byWeekday} series={1} height="h-44" format={(v) => `${v} dk`} />
             </ChartCard>
 
             <TicketStackCard s={s} className="lg:col-span-2" />
             <UpcomingCard />
-            <GoalTicksCard s={s} period={period} className="lg:col-span-3" />
+            <GoalTicksCard s={s} className="lg:col-span-3" />
 
             <ChartCard
               id="pano-asama"

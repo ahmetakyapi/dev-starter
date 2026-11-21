@@ -97,9 +97,9 @@ const NAV = [
 
 function Kpi({ label, value, note, children }: { label: string; value: React.ReactNode; note: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className={cn(CARD, "flex min-w-0 flex-col gap-1.5 p-4")}>
+    <div className={cn(CARD, "flex min-w-0 flex-col gap-1.5 p-3 sm:p-4")}>
       <p className="text-small text-muted">{label}</p>
-      <p className="text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</p>
+      <p className="text-title sm:text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</p>
       <p className="text-small text-muted">{note}</p>
       <div className="mt-1">{children}</div>
     </div>
@@ -179,41 +179,48 @@ export function ProjeGorunumuPage() {
           }
         />
 
-        <TabLinks
-          aria-label="Proje görünümleri"
-          current="#gorunum"
-          items={[
-            { href: "#gorunum", label: "Görünüm" },
-            { href: "#pano", label: "Pano 19" },
-            { href: "#zaman", label: "Zaman çizelgesi" },
-            { href: "#liste", label: "Liste 50" },
-            { href: "#yuk", label: "İş yükü" },
-          ]}
-        />
+        {/* Telefonda sekmeler sığmaz: yatay kayar, sağ kenardaki solma "devamı var" der. */}
+        <div className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] max-sm:[mask-image:linear-gradient(to_right,black_calc(100%-2.5rem),transparent)] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+          <TabLinks
+            aria-label="Proje görünümleri"
+            current="#gorunum"
+            className="w-max"
+            items={[
+              { href: "#gorunum", label: "Görünüm" },
+              { href: "#pano", label: "Pano 19" },
+              { href: "#zaman", label: "Zaman çizelgesi" },
+              { href: "#liste", label: "Liste 50" },
+              { href: "#yuk", label: "İş yükü" },
+            ]}
+          />
+        </div>
 
-        <section aria-label="Proje ölçüleri" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section aria-label="Proje ölçüleri" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           <Kpi label="Biten görevler" value={<>31<span className="text-muted">/50</span></>} note="+7 bu hafta · 19 açık">
             <TickMeter label="Biten görevler" value={31} max={50} ticks={40} text="%62" valueText="31 / 50 görev, %62" />
           </Kpi>
           <Kpi label="Bu yolla çıkış" value="15 Ara" note={<span className="text-danger">Söze göre +2 gün</span>}>
             <TickMeter label="Çıkışa kalan süre" value={12} max={10} ticks={10} text="12 / 10g" valueText="12 iş günü, söz verilen 10, 2 gün fazla" />
           </Kpi>
-          <Kpi label="Başlangıçtan beri kapsam" value={<>+6 <span className="text-base font-normal text-muted">görev</span></>} note="Cüzdan ödemesi, tablet düzeni, 4 iş daha">
+          <Kpi label="Başlangıçtan beri kapsam" value={<>+6 <span className="text-base font-normal text-muted">görev</span></>} note="Cüzdan, tablet ve 4 iş daha">
             <TickMeter label="Kapsam artışı" value={50} max={44} ticks={44} text="44 → 50" valueText="Görev sayısı 44'ten 50'ye çıktı" />
           </Kpi>
-          <Kpi label="Bu hafta ekip yükü" value="%95" note="Mine 52 s / 40 s · Duru'nun 18 s boşu var">
-            <TickMeter label="Ekip yükü" value={95} max={100} ticks={25} marker={0.8} text="95 / 100" valueText="Ekip yükü %95, sağlıklı sınır %80'in üstünde" />
+          <Kpi label="Ekip yükü, bu hafta" value={<>%95 <span className="text-base font-normal text-muted">ortalama</span></>} note={<><span className="text-danger">Mine %130</span> (52 s / 40 s), Duru'nun 18 s boşu var</>}>
+            <TickMeter label="Ekip yükü" value={95} max={100} ticks={25} marker={0.8} text="ort. 95 / 100" valueText="Ekip ortalama yükü %95, sağlıklı sınır %80'in üstünde; Mine %130'da" />
           </Kpi>
         </section>
 
-        <Panel id="yol" title="Çıkışa giden yol" note="Her iş, öncekiler bitince başlar. Kırmızı çizgi çıkış tarihini belirleyen zincirdir.">
+        <Panel id="yol" title="Çıkışa giden yol" note="Her iş, öncekiler bitince başlar. Kırmızı çizgi çıkış tarihini belirleyen zincirdir." bodyClassName="px-2 sm:px-3">
           <PathGraph
             label="Çıkışa giden yol"
             columns={COLUMNS}
             start={{ title: "Bugün", meta: "23 Kas", note: "+2g geç" }}
             goal={{ title: "Çıkış", meta: "15 Ara", note: "Söz verilen 11 Ara", after: ["store"] }}
           />
-          <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+          <p aria-hidden className="mt-2 flex items-center justify-end gap-1 px-2 text-micro text-muted lg:hidden">
+            Yolun devamı için yana kaydır <ChevronRight className="size-3" />
+          </p>
+          <div className="mt-4 grid gap-4 px-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] sm:px-2">
             <div className="rounded-lg bg-surface p-4">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-micro font-medium tracking-wide text-muted">YOLU KIR · {step + 1} / {BREAKS.length}</p>

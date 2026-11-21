@@ -49,15 +49,24 @@ const row = (icon: ReactNode, title: string, sub: string) => (
   </div>
 );
 
+/** Karoların sahnesi: tek satır yerine küçük bir liste, alt boşluk dolsun. */
+const rows = (items: readonly [ReactNode, string, string][]) => (
+  <div className="grid gap-3">
+    {items.map(([icon, title, sub]) => (
+      <div key={title}>{row(icon, title, sub)}</div>
+    ))}
+  </div>
+);
+
 export function FeatureTiles() {
   return (
     <Section eyebrow="Çatı" title={<>Gerçekten dönüştüren <ToneText.Soft>yapıya göre</ToneText.Soft> kurulu</>} lead="Her çıktı performans verisine dayanır; eğilime ya da sezgiye değil.">
       <BentoGrid>
-        <FeatureTile tone="light" title="Brifing gönder" description="Yaratıcı istekleri doğrudan platformdan ilet; referans ekle, öncelik belirle." media={<GlassFrame>{row(<PenLine />, "Brifing Taslağı", "3 teslim edilecek iş")}</GlassFrame>} />
-        <FeatureTile tone="dark" title="İlerlemeyi izle" description="Her isteği brifingden teslimata kadar canlı izle." media={<GlassFrame>{row(<Workflow />, "Akış", "Kavram, revizyon, hazır")}</GlassFrame>} />
-        <FeatureTile tone="brand" title="Kavramları onayla" description="Gelen yönleri kendi takvimine göre onayla, değişiklik iste ya da reddet." media={<GlassFrame>{row(<GitBranch />, "Koşul", "Güven puanı yeterliyse onayla")}</GlassFrame>} />
+        <FeatureTile tone="light" title="Brifing gönder" description="Yaratıcı istekleri doğrudan platformdan ilet; referans ekle, öncelik belirle." media={<GlassFrame>{rows([[<PenLine key="a" />, "Brifing Taslağı", "3 teslim edilecek iş"], [<Search key="b" />, "Referanslar", "5 dosya eklendi"], [<CalendarClock key="c" />, "Teslim", "Cuma 17.00"]])}</GlassFrame>} />
+        <FeatureTile tone="dark" title="İlerlemeyi izle" description="Her isteği brifingden teslimata kadar canlı izle." media={<GlassFrame>{rows([[<Workflow key="a" />, "Kavram", "4 iş"], [<GitBranch key="b" />, "Revizyon", "2 iş"], [<ShieldCheck key="c" />, "Hazır", "6 iş"]])}</GlassFrame>} />
+        <FeatureTile tone="dark" title="Kavramları onayla" description="Gelen yönleri kendi takvimine göre onayla, değişiklik iste ya da reddet." media={<GlassFrame>{rows([[<GitBranch key="a" />, "Koşul", "Güven puanı yeterliyse onayla"], [<Mail key="b" />, "Bildirim", "Karar sonrası ekibe haber"]])}</GlassFrame>} />
         <FeatureTile
-          tone="sky"
+          tone="light"
           title="Çıktıları teslim al"
           description="Üretime hazır dosyalar bittiği anda iner, yığına ve kampanyaya göre düzenli."
           media={
@@ -86,14 +95,14 @@ export function Stories() {
           sample
           background={<Wallpaper scene="dunes" className="absolute inset-0 -z-10 size-full" />}
           logo={<span className="text-title font-bold tracking-tight">KUZEYMOTO</span>}
-          quote="Örnek alıntı: sosyal ticaret gündemimizin üst sırasında; keşiften satın almaya kesintisiz yol."
+          quote="Örnek alıntı: sosyal ticaret gündemimizin üst sırasında; keşiften satın almaya kesintisiz bir yol sunuyor ve ekip her adımı aynı yerden görüyor."
           href="https://example.com/hikayeler/kuzeymoto"
         />
         <StoryCard
           tone="plain"
           sample
           logo={<span className="text-title font-bold text-chart-4">SÜTAJANS</span>}
-          quote="Örnek alıntı: altyapı katmanı gibi çalışıyor; bütün müşterilerimizi daha verimli yönetiyoruz."
+          quote="Örnek alıntı: altyapı katmanı gibi çalışıyor; bütün müşterilerimizi daha verimli yönetiyoruz ve çıktımızı belirgin biçimde ölçekleyebiliyoruz."
           author={{ name: "Örnek Kişi", role: "Dijital Direktör, Süt Ajans", avatar: <Avatar name="Örnek Kişi" size="md" /> }}
           href="https://example.com/hikayeler/sutajans"
         />
@@ -101,7 +110,7 @@ export function Stories() {
           tone="plain"
           sample
           logo={<span className="text-title font-bold text-chart-2">TELEMARKA</span>}
-          quote="Örnek alıntı: TikTok'un genel stratejimize etkisini anlamamıza yardım etti."
+          quote="Örnek alıntı: TikTok'un genel stratejimize etkisini anlamamıza yardım etti; hangi içeriğin satışa döndüğünü artık görüyoruz."
           author={{ name: "Örnek Kişi", role: "E-Ticaret Direktörü", avatar: <Avatar name="Örnek Kişi" size="md" /> }}
           href="https://example.com/hikayeler/telemarka"
         />
@@ -111,7 +120,7 @@ export function Stories() {
           background={<Wallpaper scene="lagoon" className="absolute inset-0 -z-10 size-full" />}
           logo={<span className="text-title font-bold">Ampulbaş</span>}
           quote="Örnek alıntı: haftada birkaç videodan ayda binlerce içeriğe geçtik."
-          stat={{ value: "ÖRNEK", label: "Kaynaklı sonuç rakamı buraya" }}
+          stat={{ value: "12x", label: "İçerik çıktısı (ÖRNEK)" }}
           href="https://example.com/hikayeler/ampulbas"
         />
       </StoryGrid>
@@ -121,10 +130,13 @@ export function Stories() {
 
 /* 3 — Süreç --------------------------------------------------------------- */
 
+/* Bilinçli ters tema: bölüm `bg-strong` + `text-page` kullanır, yani açık temada
+   koyu, koyu temada açık bant olur (ritmi kıran tek ters bölüm; metin kontrastı
+   iki temada da token çiftinden gelir). */
 export function Process() {
   return (
     <section className="bg-strong text-page">
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-24 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
         <div>
           <Badge tone="neutral" className="bg-page text-strong">
             Akış
@@ -152,7 +164,7 @@ export function Process() {
 
 export function NumbersAndQuote() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-20">
+    <section className="mx-auto max-w-6xl px-6 py-14">
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
         <div>
           <Badge>Görüşler</Badge>
@@ -173,13 +185,13 @@ export function NumbersAndQuote() {
       <div className="mt-16">
         <StatStrip
           items={[
-            { value: "00%", label: "Örnek: işlem başarı oranı" },
-            { value: "0.000+", label: "Örnek: ortalama tasarruf" },
-            { value: "00%", label: "Örnek: gelişen finansal büyüme" },
-            { value: "00K+", label: "Örnek: dünya çapında kullanıcı" },
+            { value: "%98,6", label: "İşlem başarı oranı (ÖRNEK)" },
+            { value: "₺11.840", label: "Ortalama tasarruf (ÖRNEK)" },
+            { value: "%81", label: "Gelişen finansal büyüme (ÖRNEK)" },
+            { value: "47.320", label: "Dünya çapında kullanıcı (ÖRNEK)" },
           ]}
         />
-        <p className="mt-4 text-center text-small text-muted">Örnek veri: yayına çıkmadan önce kaynaklı gerçek sayılarla değiştir.</p>
+        <p className="mt-4 text-center text-small text-muted">Bu sayılar örnektir; yayına çıkmadan önce kaynaklı gerçek sayılarla değiştir.</p>
       </div>
     </section>
   );
@@ -201,7 +213,7 @@ export function SkyColumns() {
             <Mail aria-hidden className="size-3.5" /> Özellikler
           </p>
           <ToneText as="h2" className="max-w-lg text-display font-medium">
-            Satış ekiplerine sabahlarını geri ver
+            Satış ekiplerine <em>sabahlarını</em> geri ver
           </ToneText>
         </div>
         <div className="flex gap-2">
@@ -220,7 +232,7 @@ export function SkyColumns() {
             tone="sky"
             title={item.title}
             description={item.description}
-            media={<GlassFrame>{row(item.icon, item.sub, "Örnek kayıt")}</GlassFrame>}
+            media={<GlassFrame>{rows([[item.icon, item.sub, "Örnek kayıt"], [<Activity key="x" />, "Son güncelleme", "2 dakika önce"]])}</GlassFrame>}
           />
         ))}
       </div>

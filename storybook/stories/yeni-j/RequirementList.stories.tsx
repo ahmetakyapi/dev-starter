@@ -44,7 +44,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText("1 bağlantı eksik")).toBeInTheDocument();
-    await userEvent.click(canvas.getByRole("button", { name: "Ekip Sohbeti bağla" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Ekip Sohbeti uygulamasını bağla" }));
     await expect(canvas.getByText("Hepsi bağlı")).toBeInTheDocument();
   },
 };

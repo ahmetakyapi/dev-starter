@@ -69,18 +69,32 @@ const WEEK: readonly (readonly number[])[] = [
 ];
 const WEEK_LABELS = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Bugün"];
 
-function chartFor(period: Period): { data: StackedPoint[]; unit: string; scale: number } {
-  if (period === "7") return { data: WEEK.map((values, i) => ({ label: WEEK_LABELS[i], values })), unit: "/gün", scale: 1 };
-  const count = period === "30" ? 6 : 12;
-  const factor = period === "30" ? 5 : 7;
+/** Toplamı `total` olan tamsayıyı ağırlıklara göre paylaştırır (kalan en büyük paya eklenir). */
+function distribute(total: number, weights: readonly number[]): number[] {
+  const sum = weights.reduce((a, b) => a + b, 0);
+  const parts = weights.map((w) => Math.floor((total * w) / sum));
+  parts[weights.indexOf(Math.max(...weights))] += total - parts.reduce((a, b) => a + b, 0);
+  return parts;
+}
+
+/**
+ * Çizelgenin toplamı tabloyla AYNI olmalı: her otomasyonun sütunlarının toplamı
+ * tablodaki kredisine eşittir (7 günde `WEEK` zaten öyle; 30 ve 90 günde
+ * 7 günlük kredi gün sayısıyla ölçeklenir ve sütunlara paylaştırılır).
+ */
+function chartFor(period: Period): { data: StackedPoint[]; unit: string; title: string; scale: number } {
+  if (period === "7") return { data: WEEK.map((values, i) => ({ label: WEEK_LABELS[i], values })), unit: "/gün", title: "Gün başına kredi", scale: 1 };
+  const count = period === "30" ? 6 : 13;
+  const scale = Number(period) / 7;
+  const perSeries = SERIES.map((s, si) => {
+    const total = Math.round(AUTOMATIONS.find((a) => a.color === s.color)!.credits * scale);
+    return distribute(total, Array.from({ length: count }, (_, i) => 0.6 + ((((i + 1) * (si + 3) * 7) % 10) / 12)));
+  });
   const data = Array.from({ length: count }, (_, i) => ({
     label: period === "30" ? `${i * 5 + 1}-${i * 5 + 5}` : `H${i + 1}`,
-    values: SERIES.map((_, s) => {
-      const base = [26, 12, 6, 5, 4][s] * factor;
-      return Math.round(base * (0.55 + (((i + 1) * (s + 3) * 7) % 10) / 12));
-    }),
+    values: perSeries.map((s) => s[i]),
   }));
-  return { data, unit: period === "30" ? "/5 gün" : "/hafta", scale: period === "30" ? 4 : 12 };
+  return { data, unit: period === "30" ? "/5 gün" : "/hafta", title: period === "30" ? "5 günlük kredi" : "Haftalık kredi", scale };
 }
 
 const SPARK: Record<string, readonly number[]> = {
@@ -116,12 +130,10 @@ function Metric({ label, value, note, spark, title }: { label: string; value: st
     <div className="flex min-w-0 flex-col gap-1 p-4 sm:p-5">
       <span className="text-small text-muted">{label}</span>
       <div className="flex items-end justify-between gap-3">
-        <div className="min-w-0">
-          <span className="text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</span>
-          <span className="ml-2 text-small text-muted">{note}</span>
-        </div>
-        {spark ? <Sparkline values={spark} title={title ?? label} width={64} height={28} /> : null}
+        <span className="text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</span>
+        {spark ? <Sparkline values={spark} title={title ?? label} width={64} height={28} className="max-sm:hidden" /> : null}
       </div>
+      <span className="text-small text-muted">{note}</span>
     </div>
   );
 }
@@ -146,9 +158,11 @@ const NAV = [
   },
 ] as const;
 
-export function OtomasyonlarPage({ initialPeriod = "7" }: { initialPeriod?: Period }) {
+type StatusFilter = "all" | "active" | "paused";
+
+export function OtomasyonlarPage({ initialPeriod = "7", initialFilter = "all" }: { initialPeriod?: Period; initialFilter?: StatusFilter }) {
   const [period, setPeriod] = useState<Period>(initialPeriod);
-  const [filter, setFilter] = useState<"all" | "active" | "paused">("all");
+  const [filter, setFilter] = useState<StatusFilter>(initialFilter);
 
   const chart = useMemo(() => chartFor(period), [period]);
   const top = Math.max(20, Math.ceil(Math.max(...chart.data.map((p) => p.values.reduce((a, b) => a + b, 0))) / 20) * 20);
@@ -215,34 +229,32 @@ export function OtomasyonlarPage({ initialPeriod = "7" }: { initialPeriod?: Peri
         />
 
         <section aria-label="Özet ölçüler" className={cn(CARD, "grid grid-cols-2 lg:grid-cols-4 [&>*]:border-line-soft max-lg:[&>*:nth-child(n+3)]:border-t max-lg:[&>*:nth-child(2n)]:border-l lg:[&>*+*]:border-l")}>
-          <Metric label="Çalışma" value={nf.format(total("runs"))} note="1 başarısız, yeniden çalıştı" spark={SPARK.runs} />
-          <Metric label="Kullanılan kredi" value={nf.format(total("credits"))} note="bu ay 788 / 2.000" spark={SPARK.credits} />
-          <Metric label="Etiketlenen konuşma" value={nf.format(Math.round(294 * chart.scale))} note="Destek triyajı" spark={SPARK.tagged} />
+          <Metric label="Çalışma" value={nf.format(total("runs"))} note={`Son ${period} gün · 1 yeniden denendi`} spark={SPARK.runs} />
+          <Metric label="Kullanılan kredi" value={nf.format(total("credits"))} note={`Son ${period} gün`} spark={SPARK.credits} />
+          <Metric label="Etiketlenen konuşma" value={nf.format(Math.round(294 * chart.scale))} note="Destek triyajı tarafından" spark={SPARK.tagged} />
           <div className="flex min-w-0 flex-col gap-1 p-4 sm:p-5">
             <span className="text-small text-muted">Sana ihtiyaç var</span>
-            <p className="flex items-baseline gap-2">
-              <span className="text-heading font-semibold tracking-tight text-strong tabular-nums">1</span>
-              <span className="text-small text-muted">Sürüm notu, Cum 16:04'ten beri</span>
-            </p>
+            <span className="text-heading font-semibold tracking-tight text-strong tabular-nums">1</span>
+            <span className="text-small text-muted">Sürüm notu · Cum 16:04'ten beri</span>
           </div>
         </section>
 
         <div className="grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          <Panel id="kredi-gun" title="Gün başına kredi" note={`Son ${period} gün, otomasyona göre`}>
-            <StackedBarChart title="Gün başına kredi" series={SERIES} data={chart.data} ticks={[0, top / 2, top]} highlight={chart.data.length - 1} unit={chart.unit} />
+          <Panel id="kredi-gun" title={chart.title} note={`Son ${period} gün, otomasyona göre`}>
+            <StackedBarChart title={chart.title} series={SERIES} data={chart.data} ticks={[0, top / 2, top]} highlight={chart.data.length - 1} unit={chart.unit} height="h-64 lg:h-96" />
           </Panel>
           <div className="flex min-w-0 flex-col gap-5">
-            <Panel id="kredi-ay" title="Kredi" note="Bu ay, otomasyona göre">
+            <Panel id="kredi-ay" title="Aylık kredi kotası" note="Kasım, 21 Kas'a kadar: 788 / 2.000">
               <SegmentedMeter
                 label="Aylık kredi"
                 max={2000}
                 format={(n) => nf.format(n)}
                 segments={[
-                  { label: "Destek triyajı", value: 312, series: 4 },
-                  { label: "Kayıp riski", value: 214, series: 3 },
+                  { label: "Destek triyajı", value: 320, series: 4 },
+                  { label: "Kayıp riski", value: 240, series: 3 },
                   { label: "Geri bildirim", value: 108, series: 2 },
-                  { label: "Rakip izleme", value: 92, series: 6 },
-                  { label: "Sürüm notu", value: 62, series: 5 },
+                  { label: "Rakip izleme", value: 69, series: 6 },
+                  { label: "Sürüm notu", value: 51, series: 5 },
                 ]}
               />
             </Panel>
@@ -256,7 +268,7 @@ export function OtomasyonlarPage({ initialPeriod = "7" }: { initialPeriod?: Peri
           id="tum-otomasyonlar"
           title="Bütün otomasyonlar"
           actions={
-            <SegmentedControl<"all" | "active" | "paused">
+            <SegmentedControl<StatusFilter>
               aria-label="Duruma göre süz"
               size="sm"
               value={filter}

@@ -1,6 +1,6 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
 import { ArrowRight } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 import { Badge } from "./badge";
 import { Switch } from "./switch";
 import { cn } from "../utils";
@@ -27,7 +27,12 @@ import { cn } from "../utils";
  * göreli zaman sunucu ile istemcide farklı çıkar, biçimi çağıran verir.
  *
  * Erişilebilirlik: anahtarın adı "<uygulama>: eşitleme" (görünmez etiket);
- * bağla butonunun adı "<uygulama> uygulamasını bağla"; durum hapında metin.
+ * bağla butonunun adı varsayılan etiketle "<uygulama> uygulamasını bağla",
+ * özel `connectLabel` ile "<etiket>: <uygulama>" (görünen metin adın içinde
+ * kalır, WCAG 2.5.3); durum hapında metin. Anahtar `onToggle` verilirse
+ * KONTROLLÜ (`syncing` doğruluk kaynağı), verilmezse `syncing` yalnız
+ * başlangıç değeridir ve anahtar kendi durumunu tutar. `headingLevel`:
+ * kart başlığı düzeyi (varsayılan 3).
  *
  *   <IntegrationGrid>
  *     <IntegrationCard name="Kargo" category="Lojistik" description="…" icon={<Truck />} connected lastSync="4 dk önce eşitlendi" syncing onToggle={setSync} />
@@ -52,6 +57,8 @@ type IntegrationCardProps = {
   /** Sağ üstte durumun yanında: kebab menü. */
   menu?: ReactNode;
   connectLabel?: string;
+  /** Kart başlığı düzeyi, 2-4. Varsayılan 3. */
+  headingLevel?: 2 | 3 | 4;
   className?: string;
 };
 
@@ -68,8 +75,10 @@ export function IntegrationCard({
   onConnect,
   menu,
   connectLabel = "Bağla",
+  headingLevel = 3,
   className,
 }: IntegrationCardProps) {
+  const H = `h${headingLevel}` as ElementType;
   return (
     <article className={cn("flex min-w-0 flex-col gap-3 rounded-xl border border-line bg-overlay p-4 shadow-raised", className)}>
       <header className="flex items-start gap-3">
@@ -77,7 +86,7 @@ export function IntegrationCard({
           {icon}
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-read font-semibold text-strong">{name}</h3>
+          <H className="truncate text-read font-semibold text-strong">{name}</H>
           <p className="truncate text-small text-muted">{category}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
@@ -89,7 +98,7 @@ export function IntegrationCard({
             <button
               type="button"
               onClick={onConnect}
-              aria-label={`${name} uygulamasını bağla`}
+              aria-label={connectLabel === "Bağla" ? `${name} uygulamasını bağla` : `${connectLabel}: ${name}`}
               className="inline-flex h-11 items-center rounded-md border border-line-strong bg-overlay px-3 text-small font-semibold text-strong shadow-raised transition-colors hover:bg-surface sm:h-9"
             >
               {connectLabel}
@@ -111,7 +120,7 @@ export function IntegrationCard({
             <Switch
               placement="start"
               label={<span className="sr-only">{name}: eşitleme</span>}
-              checked={syncing}
+              {...(onToggle ? { checked: syncing } : { defaultChecked: syncing })}
               onChange={(event) => onToggle?.(event.currentTarget.checked)}
               className="min-h-11 shrink-0 py-0"
             />
