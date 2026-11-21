@@ -49,7 +49,7 @@ type Tone = "light" | "dark" | "brand" | "sky";
 const SURFACE: Record<Exclude<Tone, "sky">, string> = {
   light: "bg-surface edge-lit text-strong",
   // Düz renk yedeği önce, degrade üstüne: desteksiz yerde de koyu zemin.
-  dark: "bg-[color-mix(in_srgb,var(--primary)_10%,black)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--primary)_16%,black),color-mix(in_srgb,var(--primary)_6%,black))] text-on-brand",
+  "dark": "bg-[color-mix(in_srgb,var(--primary)_10%,black)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--primary)_16%,black),color-mix(in_srgb,var(--primary)_6%,black))] text-on-brand",
   brand: "bg-cta text-on-brand",
 };
 
