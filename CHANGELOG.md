@@ -14,6 +14,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - Panel: yığılı sütun, sıradakiler, kritik yol grafiği, çentikli çubuk,
   entegrasyon kartı, izin ve gereken listeleri, kategori kartı, sistem durumu
 - Storybook: Ekranlar → Örnek Sayfalar (sekiz sayfa); Pusula ve Amiral'a yerleşti
+- Landing: 4 yeni hero (`atmosphere`, `floating`, `horizon`, `corner`); toplam on iki. Bileşenler şablona kopyalandı
 
 ### Tanıtım kahramanı: Fener — 2026-11-18
 

@@ -1557,8 +1557,10 @@ entegrasyon panoları). Yöntem `/harvest`; sınıflama tablosu aşağıda.
   `category-card`, `status-list`.
 - Örnek sayfalar (Storybook → Ekranlar/Örnek Sayfalar): kahraman sahneleri,
   tanıtım bölümleri, otomasyonlar, ajan harcamaları, proje görünümü,
-  şablon galerisi, entegrasyonlar, yardım merkezi. Landing şablonuna yeni
-  hero EKLENMEDİ: şablon `snippets/ui`'ye bağımlı değil, kendi içinde tam kalır.
+  şablon galerisi, entegrasyonlar, yardım merkezi. Landing şablonuna 4 hero
+  eklendi (atmosphere, floating, horizon, corner; bileşenler şablona kopyalandı,
+  şablon kendi içinde tam kalır; focus-stack hero'su LCP ve ilk ekran kuralı
+  yüzünden yok).
 
 **Zaten vardı, dokunulmadı:** `segmented-meter` (karar dağılımı), `stepper`,
 `mesh-gradient`, `app-window`, `timeline`, `announcement`, landing

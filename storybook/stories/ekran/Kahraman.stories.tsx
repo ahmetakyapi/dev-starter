@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Sekiz kahraman düzeni (`components/heroes/`), seçim `lib/content.ts` → `hero.variant`. Ürün arayüzü gösterilebiliyorsa `showcase` (varsayılan), mesaj yeterince güçlüyse `statement`, içerik sayfasında `minimal`. Başlık LCP öğesidir: Reveal'e sarılmaz, maske + transform ile açılır; parçacık sahnesi yalnızca hassas işaretçi, 768 px ve serbest harekette iner.",
+          "On iki kahraman düzeni (`components/heroes/`), seçim `lib/content.ts` → `hero.variant`. Ürün arayüzü gösterilebiliyorsa `showcase` (varsayılan), mesaj yeterince güçlüyse `statement`, içerik sayfasında `minimal`. Yeni dört düzen (görsel zeminli): `atmosphere`, `floating`, `horizon`, `corner`. Başlık LCP öğesidir: Reveal'e sarılmaz, maske + transform ile açılır; parçacık sahnesi yalnızca hassas işaretçi, 768 px ve serbest harekette iner.",
       },
     },
   },
@@ -42,3 +42,7 @@ export const LiveData: Story = { name: "Canlı Veri", args: { variant: "live-dat
 export const Bento: Story = { name: "Bento Düzeni", args: { variant: "bento" } };
 export const Minimal: Story = { name: "Sade", args: { variant: "minimal" } };
 export const ScrollStage: Story = { name: "Kaydırmalı Sahne", args: { variant: "scroll-stage" } };
+export const Atmosphere: Story = { name: "Atmosfer", args: { variant: "atmosphere" } };
+export const Floating: Story = { name: "Süzülen Kartlar", args: { variant: "floating" } };
+export const Horizon: Story = { name: "Ufuk", args: { variant: "horizon" } };
+export const Corner: Story = { name: "Köşe Etiketi", args: { variant: "corner" } };
