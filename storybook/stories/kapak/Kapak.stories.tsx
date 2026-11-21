@@ -354,7 +354,7 @@ function Showcase() {
                 ))}
               </dl>
               <AreaChart
-                title="Aylık Ciro, Son 12 Ay ve Önceki 12 Ay"
+                title="Aylık Ciro: Son 12 Ay ve Önceki 12 Ay"
                 labels={MONTHS}
                 series={[
                   { label: "Son 12 Ay", values: THIS_YEAR.map((v) => v * 1000), series: 1 },
@@ -664,7 +664,7 @@ export const Overview: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const root = canvasElement.ownerDocument.documentElement;
-    await expect(canvas.getByRole("heading", { level: 1 })).toHaveTextContent("Tek Kimlik, On Palet");
+    await expect(canvas.getByRole("heading", { level: 1 })).toHaveTextContent("Tek Kimlik On Palet");
     // fireEvent: userEvent odağı karoya taşır ve sayfayı kaydırır; kapak açılışta
     // en üstte kalmalı. Sınama sonunda ziyaretçinin paleti (adresten gelen) geri yüklenir.
     // Palet global'i Storybook kanalından döner; Vitest'te (taşınabilir hikaye) kanal yok, bu adım atlanır.

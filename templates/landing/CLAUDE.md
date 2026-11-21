@@ -68,6 +68,28 @@ YOK; gerekiyorsa `nextjs-fullstack` şablonundan alınır.
 4. Görsel: `public/urun-ekrani.png` (editorial-split, product-frame). Dosya
    yoksa düzen düz bir yüzeye düşer, sayfa kırılmaz.
 5. Sayılar ÖRNEKTİR. Gerçek kaynağı olmayan rakam yayına çıkmaz.
+6. Tasarım yönü: hero, palet ve yazı "hep showcase" diye kalmaz;
+   `docs/DESIGN.md` → `direction:` hangisiyse aşağıdan seçilir
+   (`~/dev-starter/knowledge/design-directions.md`). Başlıkta virgül yok.
+
+### Yöne Göre Hero Seç
+
+| Yön | `hero.variant` | Palet (`PALETTE`) | Yazı presetı | Hero metni |
+|-----|----------------|-------------------|--------------|------------|
+| `editoryal` | `editorial-split` ya da `corner` | `signature` | `editorial` / `longform` | Kısa iddia, serif başlık |
+| `kurumsal-guven` | `editorial-split` ya da `product-frame` | `signature` ya da `verdant` | `signature` / `calm` | Doğrulanabilir sayı + güven şeridi |
+| `veri-yogun` | `live-data` ya da `horizon` | `signature` ya da `iris` | `dense` / `board` | Ölçü şeridi, abartısız metin |
+| `sicak-butik` | `floating` ya da `atmosphere` | `ember` | `friendly` / `studio` | İnsan sesi, kısa |
+| `teknik-gelistirici` | `product-frame`, `scroll-stage` ya da `bento` | `iris` | `technical` / `product` | Komut + çalışan örnek |
+| `oyuncul-canli` | `floating` ya da `showcase` | `ember` (koyu) | `playful` | Canlı, kısa cümle |
+| `luks-minimal` | `minimal`, `atmosphere` ya da `horizon` | `signature` (koyu) | `editorial` | Tek cümle |
+| `brutalist-net` | `statement` ya da `corner` | `signature` nötrleri | `technical` | Devasa, kısa başlık |
+| `doga-organik` | `atmosphere` ya da `horizon` | `verdant` | `calm` | Sakin, kısa |
+| `fintek-keskin` | `live-data` ya da `showcase` | `signature` | `product` | Kaynaklı sayı |
+
+Takas: `lib/content.ts` → `hero.variant` (tek satır) + `PALETTE`/`DEFAULT_THEME`
+(`lib/theme.ts`) + yazı presetı (`fontClass()`); sayfa dizilimini yön değiştirir
+(`docs/DESIGN.md` → `shell`, `card`).
 
 ## Sayfa düzeni
 

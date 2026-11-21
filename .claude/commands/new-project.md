@@ -95,7 +95,28 @@ grep -rn --exclude-dir=node_modules -e PROJECT_NAME -e PROJECT_DESCRIPTION . || 
 Açıklamada `/`, `&` gibi `sed` özel karakterleri varsa kaçır. (`sed -i.bak`
 hem macOS hem Linux'ta aynı çalışır; `sed -i ''` yalnız macOS'tur.)
 
-## 4. Palet ve tema
+## 4. Tasarım yönü, palet ve tema
+
+**Önce tasarım yönü (zorunlu).** KICKOFF.md → "Tasarım Yönü" doluysa seçilen
+yönü kullan, tekrar sorma. Yoksa `knowledge/design-directions.md` seçim
+matrisini işlet: `node ~/dev-starter/scripts/pick-direction.mjs --sector …
+--audience … --density … --tone … --theme … --kind …` ile üç aday çıkar,
+AskUserQuestion ile seçtir (son beş projenin yönü aday olmaz). Ardından:
+
+1. `docs/DESIGN.md` frontmatter'ına `direction`, `direction-reason`, `palette`,
+   `font`, `hero`, `shell`, `card`, `popup`, `density`, `motion` yaz (boş alan yok).
+2. `knowledge/direction-log.md` (dev-starter deposunda) EN ALTA satır ekle:
+   tarih, proje, yön, palet, hero, kabuk, tek cümle not.
+3. Yön değerlerini şablona uygula:
+   - `landing`: `lib/content.ts` → `hero.variant` = yönün hero'su
+     (`templates/landing/CLAUDE.md` → "Yöne Göre Hero Seç" tablosu);
+   - `nextjs-fullstack`: kabuk (`shell`), kart ve popup dili `docs/DESIGN.md`'den
+     okunur; `lib/theme.ts` → `PALETTE`, `DEFAULT_THEME`; yazı için `font` presetini `fontClass()`a ver;
+   - bileşenler `add-ui.mjs` ile yönün listesinden (`design-directions.md` → Kabuk/Kart/Popup).
+4. Yönün **Yasak** satırı projenin `docs/DESIGN.md` → Do's and Don'ts bölümüne kopyalanır.
+5. Başlıklarda ve hero metinlerinde virgül yok (`slop-scan.sh` denetler).
+
+Varsayılan yok: palet ve hero "çünkü hep böyle" diye seçilmez.
 
 Kimlik ortak, palet projeye göre (`~/dev-starter/guides/00-brand-identity.md`):
 

@@ -220,7 +220,7 @@ function ProducerDetail({ p, go }: { p: Producer; go: PageProps["go"] }) {
             </div>
             <div className="border-t border-line-soft p-4 sm:p-5">
               <PolicyChecks
-                title={p.status === "basvuru" ? "Kabul Kapısı" : "Devreye Alma Kapısı"}
+                title={p.status === "basvuru" ? "Kabul Kontrolü" : "Devreye Alma Kontrolü"}
                 headingLevel={3}
                 checks={[
                   { id: "abone", label: "Abonelik Durumu", detail: c.status === "aktif" ? "Aktif abone" : `Abonelik ${c.status}`, state: c.status === "aktif" ? "pass" : "fail" },
@@ -250,7 +250,7 @@ function ProducerDetail({ p, go }: { p: Producer; go: PageProps["go"] }) {
                 </div>
               ))}
               <div className="grid gap-3 sm:col-span-2 lg:col-span-4">
-                <ImpactBar label="Trafo Boş Gücü, Kurulu GES ile" current={Math.round(head.kva * 0.9 - head.headroomKw)} added={p.installedKw} limit={Math.round(head.kva * 0.9)} format={(n) => `${n.toLocaleString("tr-TR")} kW`} />
+                <ImpactBar label="Trafo Boş Gücü ve Kurulu GES" current={Math.round(head.kva * 0.9 - head.headroomKw)} added={p.installedKw} limit={Math.round(head.kva * 0.9)} format={(n) => `${n.toLocaleString("tr-TR")} kW`} />
                 {head.warn ? (
                   <InsightCallout kind="warning" title="Trafo Kapasite Çalışması Gerekebilir" headingLevel={3} label="Dikkat">
                     Trafo doluluğu yüksek ya da kurulu güç boş gücü aşıyor. Güç artırımı ya da yeni üretici için kapasite çalışması yapılmalı.

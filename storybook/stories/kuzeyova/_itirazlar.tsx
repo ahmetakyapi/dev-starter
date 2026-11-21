@@ -224,7 +224,7 @@ function DisputesTab({ params, go }: { params: PageProps["params"]; go: PageProp
   return (
     <>
       <Panel
-        title="İtiraz Kuyruğu"
+        title="İtiraz Listesi"
         note={viewId !== "all" || chips.length ? `${fmtNum(rows.length)} sonuç, ${fmtNum(disputes.length)} itiraz içinde` : "Yanıt süresi en kısa olan önce."}
         actions={canEdit ? <Button size="sm" variant="primary" onClick={() => setCreating(true)}><FilePlus2 /> Yeni İtiraz</Button> : undefined}
         id="itiraz-kuyruk"
@@ -243,7 +243,7 @@ function DisputesTab({ params, go }: { params: PageProps["params"]; go: PageProp
         <div className="max-md:hidden">
           <RowClickable>
             <DataTable<Dispute>
-              caption="İtiraz kuyruğu"
+              caption="İtiraz listesi"
               columns={columns}
               rows={rows}
               rowKey={(d) => d.id}
@@ -255,7 +255,7 @@ function DisputesTab({ params, go }: { params: PageProps["params"]; go: PageProp
             />
           </RowClickable>
         </div>
-        <div className="md:hidden">{items.length ? <RecordList label="İtiraz Kuyruğu" items={items} /> : <EmptyStateX title="Bu görünümde itiraz yok." />}</div>
+        <div className="md:hidden">{items.length ? <RecordList label="İtiraz Listesi" items={items} /> : <EmptyStateX title="Bu görünümde itiraz yok." />}</div>
       </Panel>
 
       <DisputeSheet dispute={selected} onClose={() => go("disputes", { ...params, id: undefined })} />
@@ -348,7 +348,7 @@ function DisputeSheet({ dispute: d, onClose }: { dispute: Dispute | undefined; o
           <Stepper steps={FLOW_STEPS} current={step} aria-label="İtiraz Süreci" />
           <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-xl bg-surface p-4">
             <Fact label="Konu" value={<a className="kz-mono text-primary-ink hover:underline" href={subjectLink(d)}>{d.subjectId}</a>} />
-            <Fact label="Müşteri" value={<a className="text-primary-ink hover:underline" href={href("customers", { id: d.customerId })}>{customerName(d.customerId)}</a>} />
+            <Fact label="Abone" value={<a className="text-primary-ink hover:underline" href={href("customers", { id: d.customerId })}>{customerName(d.customerId)}</a>} />
             <Fact label="Açılış" value={dayLabel(d.openedAt)} />
             <Fact label="Yanıt Süresi" value={closed ? "Kapandı" : slaOver(d) ? `${Math.abs(daysLeft(d))} gün gecikti` : `${dayLabel(d.dueAt)} (${daysLeft(d)} gün)`} />
             <Fact label="Atanan" value={d.assignedTo} />
@@ -521,7 +521,7 @@ function DecisionDialog({ open, onClose, dispute: d, onDone }: { open: boolean; 
         ) : null}
         <Select label="Gerekçe Şablonu" value={template} onValueChange={(v) => v && setTemplate(v)} items={DECISION_TEMPLATES[decision].map((t) => ({ value: t, label: t }))} />
         <Textarea label="Ek Not (İsteğe Bağlı)" value={note} onChange={(e) => setNote(e.target.value)} minRows={2} />
-        <Switch label="Müşteriyi Bilgilendir" hint="Karar ve gerekçe SMS ile abonenin kayıtlı telefonuna gönderilir." checked={inform} onChange={(e) => setInform(e.target.checked)} />
+        <Switch label="Aboneyi Bilgilendir" hint="Karar ve gerekçe SMS ile abonenin kayıtlı telefonuna gönderilir." checked={inform} onChange={(e) => setInform(e.target.checked)} />
       </div>
     </Dialog>
   );

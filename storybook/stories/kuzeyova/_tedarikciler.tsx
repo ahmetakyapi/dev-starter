@@ -71,7 +71,7 @@ const link = (go: PageProps["go"], page: Parameters<PageProps["go"]>[0], params:
 
 const TABS = ["genel", "gecis", "mutabakat", "piyasa"] as const;
 type TabId = (typeof TABS)[number];
-const TAB_LABEL: Record<TabId, string> = { genel: "Genel", gecis: "Geçiş Kuyruğu", mutabakat: "Dağıtım Bedeli Mutabakatı", piyasa: "Piyasa ve Seçenekler" };
+const TAB_LABEL: Record<TabId, string> = { genel: "Genel", gecis: "Geçiş Talepleri", mutabakat: "Dağıtım Bedeli Mutabakatı", piyasa: "Piyasa ve Seçenekler" };
 
 function ReconBadge({ diff, state }: { diff: number; state?: BatchInvoice["state"] }) {
   if (state?.status === "itirazli") return <Badge tone="warning" dot>Tedarikçi itirazı</Badge>;
@@ -84,7 +84,7 @@ const REJECT_REASONS = [
   { value: "Vadesi geçmiş fatura borcu", label: "Vadesi Geçmiş Fatura Borcu", hint: "Borç kapanana ya da ödeme planı kurulana dek geçiş yapılamaz." },
   { value: "Taahhüt süresi dolmadı", label: "Taahhüt Süresi Dolmadı", hint: "Mevcut tedarikçiyle sözleşme süresi sürüyor." },
   { value: "Sayaç bilgisi eşleşmiyor", label: "Sayaç Bilgisi Eşleşmiyor", hint: "Talepteki sayaç numarası kayıtla uyuşmuyor." },
-  { value: "Eksik ya da hatalı belge", label: "Eksik ya da Hatalı Belge", hint: "Müşteriden belge tamamlaması istenir." },
+  { value: "Eksik ya da hatalı belge", label: "Eksik ya da Hatalı Belge", hint: "Aboneden belge tamamlaması istenir." },
 ];
 
 /* ======================================================================== */
@@ -124,7 +124,7 @@ function SupplierList({ rows, params, go }: { rows: SupplierRow[]; params: PageP
       ),
     },
     { key: "kind", header: "Tür", render: (r) => (r.supplier.kind === "gorevli" ? <Badge tone="primary">Görevli Tedarik</Badge> : <Badge tone="neutral">Perakende Satış</Badge>) },
-    { key: "customers", header: "Müşteri", numeric: true, sortable: true, sortValue: (r) => r.customers, render: (r) => num.format(r.customers) },
+    { key: "customers", header: "Abone", numeric: true, sortable: true, sortValue: (r) => r.customers, render: (r) => num.format(r.customers) },
     { key: "share", header: "Pay", numeric: true, sortable: true, sortValue: (r) => r.share, render: (r) => `%${num1.format(r.share)}`, bar: { value: (r) => r.share, tone: "neutral" } },
     { key: "price", header: "Birim Fiyat", numeric: true, sortable: true, sortValue: (r) => r.supplier.unitPrice, render: (r) => unitPrice(r.supplier.unitPrice) },
     {
@@ -155,7 +155,7 @@ function SupplierList({ rows, params, go }: { rows: SupplierRow[]; params: PageP
       title: r.supplier.name,
       subtitle: `${r.supplier.kind === "gorevli" ? "Görevli tedarik" : "Perakende satış"} · ${unitPrice(r.supplier.unitPrice)}`,
       leading: <IconTile tone="neutral"><Building2 /></IconTile>,
-      value: `${num.format(r.customers)} müşteri · %${num1.format(r.share)}`,
+      value: `${num.format(r.customers)} abone · %${num1.format(r.share)}`,
       meta: `Sözleşme sonu ${day(r.supplier.contractEnd)}`,
       status: <ReconBadge diff={effectiveDiff(b)} state={b.state} />,
       href: href("suppliers", { id: r.supplier.id }),
@@ -166,7 +166,7 @@ function SupplierList({ rows, params, go }: { rows: SupplierRow[]; params: PageP
   const panels: Record<TabId, ReactNode> = {
     genel: (
       <div className="grid gap-5">
-        <Panel title="Tedarikçi Listesi" note="Tedarikçi adına basınca müşterileri, faturalaması ve teminat durumu açılır.">
+        <Panel title="Tedarikçi Listesi" note="Tedarikçi adına basınca aboneleri, faturalaması ve teminat durumu açılır.">
           <div className="max-md:hidden">
             <DataTable<SupplierRow> caption="Tedarikçiler" columns={columns} rows={rows} rowKey={(r) => r.supplier.id} density="comfortable" on="surface" stickyFirst={false} />
           </div>
@@ -174,8 +174,8 @@ function SupplierList({ rows, params, go }: { rows: SupplierRow[]; params: PageP
             <RecordList label="Tedarikçiler" items={items} />
           </div>
         </Panel>
-        <ChartCard id="ted-pay" className={CARD} label="Piyasa Payı" value={`${num.format(CUSTOMERS.length)} abone`} change={null} action={<Badge tone="neutral">Müşteri sayısı</Badge>}>
-          <BarList title="Tedarikçilere Göre Müşteri Sayısı" columns={["Tedarikçi", "Müşteri"]} items={rows.map((r) => ({ label: SUPPLIER_SHORT[r.supplier.id], value: r.customers, href: href("suppliers", { id: r.supplier.id }) }))} series={1} />
+        <ChartCard id="ted-pay" className={CARD} label="Piyasa Payı" value={`${num.format(CUSTOMERS.length)} abone`} change={null} action={<Badge tone="neutral">Abone sayısı</Badge>}>
+          <BarList title="Tedarikçilere Göre Abone Sayısı" columns={["Tedarikçi", "Abone"]} items={rows.map((r) => ({ label: SUPPLIER_SHORT[r.supplier.id], value: r.customers, href: href("suppliers", { id: r.supplier.id }) }))} series={1} />
         </ChartCard>
       </div>
     ),
@@ -256,7 +256,7 @@ function TransferDateChecks({ row, effective }: { row: TransferRow; effective: s
             ? { id: "sure", label: "Azami Geçiş Süresi", detail: `Talepten ${used + toDate} gün sonra; sınır ${TRANSFER_MAX_DAYS} gün (ÖRNEK)`, state: within ? "pass" : "fail" }
             : { id: "sure", label: "Azami Geçiş Süresi", detail: "Bir tarih seçin", state: "warn" },
           row.blocker ? { id: "engel", label: "Doğrulama", detail: row.blocker, state: "fail" } : { id: "engel", label: "Doğrulama", detail: "Engel yok", state: "pass" },
-          { id: "sms", label: "Müşteri Bildirimi", detail: "Tarih onaylanınca SMS gider", state: "pass" },
+          { id: "sms", label: "Abone Bildirimi", detail: "Tarih onaylanınca SMS gider", state: "pass" },
         ]}
       />
     </div>
@@ -282,16 +282,16 @@ function TransferBoard({ go }: { go: PageProps["go"] }) {
     if (!dateFor) return;
     const r = giveTransferDate(dateFor.id, effective);
     if (!r.ok) return setDateError(r.error);
-    notify({ title: `${dateFor.id}: Geçiş Tarihi Verildi`, body: `${day(effective)} · müşteriye SMS gönderildi`, tone: "success" });
+    notify({ title: `${dateFor.id}: Geçiş Tarihi Verildi`, body: `${day(effective)} · aboneye SMS gönderildi`, tone: "success" });
     setDateFor(null);
   };
   const complete = (t: TransferRow) => {
-    if (completeTransfer(t.id)) notify({ title: `${t.id} Tamamlandı`, body: `${customer(t.customerId).name} artık ${SUPPLIER_SHORT[t.to]} ile faturalanıyor (Müşteriler ve Faturalar güncellendi)`, tone: "success" });
+    if (completeTransfer(t.id)) notify({ title: `${t.id} Tamamlandı`, body: `${customer(t.customerId).name} artık ${SUPPLIER_SHORT[t.to]} ile faturalanıyor (Aboneler ve Faturalar güncellendi)`, tone: "success" });
   };
 
   return (
     <>
-      <Panel title="Tedarikçi Değişikliği (Geçiş) Kuyruğu" note={`Talep → doğrulama → geçiş tarihi → tamamlandı. Engeli olan talep doğrulamadan çıkamaz; azami süre ${TRANSFER_MAX_DAYS} gün (ÖRNEK parametre). Müşteri kartından başlatılanlar da burada.`} actions={<Badge tone="warning" dot>{pending} açık talep</Badge>}>
+      <Panel title="Tedarikçi Değişikliği (Geçiş) Kuyruğu" note={`Talep → doğrulama → geçiş tarihi → tamamlandı. Engeli olan talep doğrulamadan çıkamaz; azami süre ${TRANSFER_MAX_DAYS} gün (ÖRNEK parametre). Abone kartından başlatılanlar da burada.`} actions={<Badge tone="warning" dot>{pending} açık talep</Badge>}>
         <div className="grid grid-cols-1 gap-3 p-3 sm:p-4 md:grid-cols-2 xl:grid-cols-4">
           {TRANSFER_STAGES.map((stage) => {
             const list = transfers.filter((t) => t.stage === stage.id);
@@ -319,7 +319,7 @@ function TransferBoard({ go }: { go: PageProps["go"] }) {
                       <p className="mt-1 text-small text-muted">
                         {SUPPLIER_SHORT[t.from]} <span aria-hidden>→</span>
                         <span className="sr-only"> yeni tedarikçi </span> {SUPPLIER_SHORT[t.to]}
-                        {t.source === "musteri" ? <span className="ml-1 text-micro">(müşteri kartından)</span> : null}
+                        {t.source === "musteri" ? <span className="ml-1 text-micro">(abone kartından)</span> : null}
                       </p>
                       <p className="mt-1 text-micro text-muted">
                         Talep {day(t.requested)}
@@ -374,7 +374,7 @@ function TransferBoard({ go }: { go: PageProps["go"] }) {
         }
       >
         {dateFor ? <TransferDateChecks row={dateFor} effective={effective} /> : null}
-        <Input label="Geçiş Tarihi" type="date" value={effective} min={dayKey(addDays(TODAY, 1))} onChange={(e) => { setEffective(e.target.value); setDateError(""); }} error={dateError || undefined} hint={`Azami ${TRANSFER_MAX_DAYS} gün: talep tarihinden itibaren sayılır. Müşteriye SMS gider.`} />
+        <Input label="Geçiş Tarihi" type="date" value={effective} min={dayKey(addDays(TODAY, 1))} onChange={(e) => { setEffective(e.target.value); setDateError(""); }} error={dateError || undefined} hint={`Azami ${TRANSFER_MAX_DAYS} gün: talep tarihinden itibaren sayılır. Aboneye SMS gider.`} />
       </Dialog>
 
       <Dialog
@@ -389,7 +389,7 @@ function TransferBoard({ go }: { go: PageProps["go"] }) {
               variant="danger"
               onClick={() => {
                 if (!rejectFor) return;
-                if (rejectTransfer(rejectFor.id, reason ?? "Gerekçe", note)) notify({ title: `${rejectFor.id} Reddedildi`, body: `${reason} · müşteri ve yeni tedarikçi bilgilendirildi`, tone: "info" });
+                if (rejectTransfer(rejectFor.id, reason ?? "Gerekçe", note)) notify({ title: `${rejectFor.id} Reddedildi`, body: `${reason} · abone ve yeni tedarikçi bilgilendirildi`, tone: "info" });
                 setRejectFor(null);
                 setNote("");
               }}
@@ -406,7 +406,7 @@ function TransferBoard({ go }: { go: PageProps["go"] }) {
             onValueChange={setReason}
             options={REJECT_REASONS.map((r) => ({ value: r.value, title: r.label, description: r.hint }))}
           />
-          <Textarea label="Ek Not" hint="Müşteri ve yeni tedarikçi ile paylaşılır." value={note} onChange={(e) => setNote(e.target.value)} minRows={3} />
+          <Textarea label="Ek Not" hint="Abone ve yeni tedarikçi ile paylaşılır." value={note} onChange={(e) => setNote(e.target.value)} minRows={3} />
         </div>
       </Dialog>
     </>
@@ -584,7 +584,7 @@ function MarketTab({ go }: { go: PageProps["go"] }) {
   const start = (to: string) => {
     const t = startTransferFor(chosen, to);
     if (!t) return notify({ title: "Geçiş Başlatılamadı", body: "Bu abonenin açık bir geçiş talebi var ya da yetkiniz yok.", tone: "info" });
-    notify({ title: `${t.id} Oluşturuldu`, body: `${customer(chosen).name} → ${SUPPLIER_SHORT[to]} · Geçiş Kuyruğu'nda`, tone: "success" });
+    notify({ title: `${t.id} Oluşturuldu`, body: `${customer(chosen).name} → ${SUPPLIER_SHORT[to]} · Geçiş Talepleri'nda`, tone: "success" });
     go("suppliers", { tab: "gecis" });
   };
   const total = FLOW_LINKS.reduce((s, l) => s + l.value, 0);
@@ -593,9 +593,9 @@ function MarketTab({ go }: { go: PageProps["go"] }) {
     <div className="grid gap-5">
       <Panel
         id="musteri-secenekleri"
-        title="Müşteri Seçenekleri"
+        title="Abone Seçenekleri"
         note="Bir abonenin görevli tedarik ve serbest tüketici seçeneklerini aynı tabloda karşılaştırın."
-        actions={<div className="w-64 max-w-full"><Select label="Müşteri" hideLabel items={freeOptions} value={chosen} onValueChange={(v) => v && setChosen(v)} /></div>}
+        actions={<div className="w-64 max-w-full"><Select label="Abone" hideLabel items={freeOptions} value={chosen} onValueChange={(v) => v && setChosen(v)} /></div>}
       >
         {best ? (
           <div className="p-3 pb-0">
@@ -625,7 +625,7 @@ function MarketTab({ go }: { go: PageProps["go"] }) {
               { key: "m", header: "Tahmini Aylık Fatura", numeric: true, render: (o) => tlShort(o.monthly) },
               {
                 key: "d",
-                header: "Mevcuda Göre",
+                header: "Mevcut Tedarikçiye Göre",
                 numeric: true,
                 render: (o) => {
                   if (o.current) return <span className="text-muted">·</span>;
@@ -655,10 +655,10 @@ function MarketTab({ go }: { go: PageProps["go"] }) {
         </p>
       </Panel>
 
-      <ChartCard id="ted-akis" className={CARD} label="Son 12 Ayda Tedarikçi Değiştirenler" value={`${num.format(total)} müşteri`} change={null}>
+      <ChartCard id="ted-akis" className={CARD} label="Son 12 Ayda Tedarikçi Değiştirenler" value={`${num.format(total)} abone`} change={null}>
         <SankeyChart
           title="Tedarikçiler Arası Geçiş Akışı"
-          unit="müşteri"
+          unit="abone"
           sources={SUPPLIERS.map((s) => ({ id: s.id, label: SUPPLIER_SHORT[s.id], series: 1 }))}
           targets={SUPPLIERS.map((s) => ({ id: `to-${s.id}`, label: SUPPLIER_SHORT[s.id] }))}
           links={FLOW_LINKS}
@@ -688,7 +688,7 @@ function SupplierDetail({ row, go }: { row: SupplierRow; go: PageProps["go"] }) 
   const customerColumns: Column<(typeof mine)[number]>[] = [
     {
       key: "n",
-      header: "Müşteri",
+      header: "Abone",
       render: (c) => (
         <a {...link(go, "customers", { id: c.id })} className="block min-w-0">
           <span className="block truncate font-medium text-strong hover:underline">{c.name}</span>
@@ -716,7 +716,7 @@ function SupplierDetail({ row, go }: { row: SupplierRow; go: PageProps["go"] }) 
       />
       <PageBody>
         <PageHero
-          primary={{ label: "Müşteri", value: fmtNum(row.customers), foot: `%${num1.format(row.share)} pay · ${num.format(row.free)} serbest tüketici` }}
+          primary={{ label: "Abone", value: fmtNum(row.customers), foot: `%${num1.format(row.share)} pay · ${num.format(row.free)} serbest tüketici` }}
           secondary={[
             { label: "Teslim Edilen Enerji", value: fmtKwh(row.usage), foot: periodLabel(PERIODS_12[10]) },
             { label: "Birim Fiyat", value: unitPrice(s.unitPrice).replace(" ₺/kWh", ""), unit: "₺/kWh", foot: "Vergisiz enerji bedeli" },
@@ -727,8 +727,8 @@ function SupplierDetail({ row, go }: { row: SupplierRow; go: PageProps["go"] }) 
         />
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-          <ChartCard id="td-tuketim" className={`${CARD} xl:col-span-3`} label="Müşterilerinin Tüketimi" value={fmtKwh(row.usage)} change={trend[4] ? Math.round(((trend[5] - trend[4]) / trend[4]) * 1000) / 10 : null} changeLabel="önceki aya göre" action={<Badge tone="neutral">Aylık, MWh</Badge>}>
-            <AreaChart title={`${s.name} müşterilerinin aylık tüketimi`} labels={TREND_LABELS} series={[{ label: "Tüketim", values: trend, series: 1 }]} unit="MWh" valueFormat={{ maximumFractionDigits: 1 }} />
+          <ChartCard id="td-tuketim" className={`${CARD} xl:col-span-3`} label="Abonelerinin Tüketimi" value={fmtKwh(row.usage)} change={trend[4] ? Math.round(((trend[5] - trend[4]) / trend[4]) * 1000) / 10 : null} changeLabel="önceki aya göre" action={<Badge tone="neutral">Aylık, MWh</Badge>}>
+            <AreaChart title={`${s.name} abonelerinin aylık tüketimi`} labels={TREND_LABELS} series={[{ label: "Tüketim", values: trend, series: 1 }]} unit="MWh" valueFormat={{ maximumFractionDigits: 1 }} />
           </ChartCard>
 
           <Panel id="td-teminat" title="Teminat ve Borç Durumu" note="Dağıtım bedeli alacağının teminata oranı" className="xl:col-span-2">
@@ -813,13 +813,13 @@ function SupplierDetail({ row, go }: { row: SupplierRow; go: PageProps["go"] }) 
             </dl>
           </Panel>
 
-          <Panel id="td-musteriler" title="Müşterileri" note={`${num.format(mine.length)} abone; ilk 12'si gösteriliyor`} className="xl:col-span-3" actions={<Button size="sm" variant="secondary" onClick={() => go("customers")}>Tüm Müşteriler</Button>}>
+          <Panel id="td-musteriler" title="Aboneleri" note={`${num.format(mine.length)} abone; ilk 12'si gösteriliyor`} className="xl:col-span-3" actions={<Button size="sm" variant="secondary" onClick={() => go("customers")}>Tüm Aboneler</Button>}>
             <div className="max-md:hidden">
-              <DataTable<(typeof mine)[number]> caption={`${s.name} müşterileri`} columns={customerColumns} rows={mine.slice(0, 12)} rowKey={(c) => c.id} density="comfortable" on="surface" stickyFirst={false} />
+              <DataTable<(typeof mine)[number]> caption={`${s.name} aboneleri`} columns={customerColumns} rows={mine.slice(0, 12)} rowKey={(c) => c.id} density="comfortable" on="surface" stickyFirst={false} />
             </div>
             <div className="p-3 md:hidden">
               <RecordList
-                label={`${s.name} müşterileri`}
+                label={`${s.name} aboneleri`}
                 items={mine.slice(0, 12).map((c) => ({
                   id: c.id,
                   title: c.name,

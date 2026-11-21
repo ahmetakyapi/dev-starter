@@ -3,10 +3,10 @@ import type { Meter, Reading, ReadingFlag, ReadingSource } from "./_data";
 import type { enterReading } from "./_ops";
 
 /**
- * Saha okuma durumu (okuyucunun cep ekranı): çevrimdışı kuyruk, erişilemeyen
+ * Saha okuma durumu (okuyucunun cep ekranı): çevrimdışı kayıt listesi, erişilemeyen
  * duraklar, kapanan turlar. Modül düzeyinde dilim: sayfa değişince ve
  * "çevrimdışı" modunda kaybolmaz. Okuma yalnız SENKRONDA depoya (`enterReading`)
- * yazılır; kuyrukta bekleyen okuma Okumalar sayfasında hâlâ "bekliyor" görünür.
+ * yazılır; gönderilmeyi bekleyen okuma Okumalar sayfasında hala "bekliyor" görünür.
  */
 
 export type ReadingInput = Parameters<typeof enterReading>[1];
@@ -25,7 +25,7 @@ export type FieldState = {
   offline: boolean;
   regionId: string | null;
   queue: readonly FieldQueueItem[];
-  /** Erişilemeyen duraklar: sayaç → neden (senkronlanmış). */
+  /** Erişilemeyen duraklar: sayaç → neden ((gönderilmiş)). */
   skipped: Readonly<Record<string, string>>;
   closed: readonly string[];
   synced: number;
@@ -33,10 +33,10 @@ export type FieldState = {
 export const fieldState = createSlice<FieldState>({ offline: false, regionId: null, queue: [], skipped: {}, closed: [], synced: 0 });
 
 export const SKIP_REASONS = [
-  { value: "kapi", label: "Kapı Kilitli, Abone Yok" },
-  { value: "ic-mekan", label: "Sayaç İç Mekanda, Girilemedi" },
-  { value: "tehlike", label: "Güvenlik Riski (Köpek, Tehlikeli Ortam)" },
-  { value: "hasar", label: "Sayaç Hasarlı, Okunamıyor" },
+  { value: "kapi", label: "Abone Yok (Kapı Kilitli)" },
+  { value: "ic-mekan", label: "Sayaç İç Mekanda (Girilemedi)" },
+  { value: "tehlike", label: "Güvenlik Riski (Köpek ya da Tehlikeli Ortam)" },
+  { value: "hasar", label: "Sayaç Hasarlı (Okunamıyor)" },
   { value: "adres", label: "Adres Bulunamadı" },
 ] as const;
 

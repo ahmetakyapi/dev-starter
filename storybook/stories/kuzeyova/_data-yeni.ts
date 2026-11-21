@@ -1,7 +1,7 @@
 /**
  * Portal: yeni modüllerin tohumlu başlangıç verisi (başvurular, kaçak
  * vakaları, sayaç stoku, çağrılar, trafo yükü, üreticiler, itirazlar, alacaklar,
- * KVKK). Hepsi `_data.ts` ile AYNI müşteri, sayaç, okuma ve fatura listelerinden
+ * KVKK). Hepsi `_data.ts` ile AYNI abone, sayaç, okuma ve fatura listelerinden
  * türer (uydurma bağımsız sayı yok) ve `_store.ts` dilimlerinin başlangıç değeridir.
  * `Date.now()` ve `Math.random()` yok: sabit tohum, aynı sonuç.
  */
@@ -82,7 +82,7 @@ export type Application = {
   note?: string;
 };
 
-const DOC_LABELS = ["Kimlik ya da vergi levhası", "Tapu ya da kira sözleşmesi", "Mimari/elektrik projesi", "İskan ya da yapı ruhsatı", "Vekâletname (varsa)"];
+const DOC_LABELS = ["Kimlik ya da vergi levhası", "Tapu ya da kira sözleşmesi", "Mimari/elektrik projesi", "İskan ya da yapı ruhsatı", "Vekaletname (varsa)"];
 
 function buildApplications(): Application[] {
   const rand = seeded(61077);
@@ -253,7 +253,7 @@ export const LEAKS: readonly LeakCase[] = buildLeaks();
 /* ======================================================================== */
 
 export type CallKind = "ariza" | "fatura" | "sayac" | "bilgi" | "sikayet" | "kesme";
-export const CALL_KIND_LABEL: Record<CallKind, string> = { ariza: "Elektrik Yok", fatura: "Fatura", sayac: "Sayaç", bilgi: "Bilgi", sikayet: "Şikayet", kesme: "Kesme ve Bağlama" };
+export const CALL_KIND_LABEL: Record<CallKind, string> = { ariza: "Arıza", fatura: "Fatura", sayac: "Sayaç", bilgi: "Bilgi", sikayet: "Şikayet", kesme: "Kesme ve Bağlama" };
 export type CallChannel = "telefon" | "sms" | "web" | "mobil";
 export const CALL_CHANNEL_LABEL: Record<CallChannel, string> = { telefon: "Telefon", sms: "SMS", web: "Web", mobil: "Mobil Uygulama" };
 export type CallStatus = "acik" | "islemde" | "kapandi";
@@ -277,11 +277,11 @@ export type Call = {
 };
 
 const CALL_NOTES: Record<CallKind, string[]> = {
-  ariza: ["Mahallede elektrik yok", "Sadece benim evde elektrik kesik", "Elektrik gidip geliyor", "Sigorta atıyor, sayaç ekranı kapalı"],
-  fatura: ["Fatura tutarı yüksek geldi", "Son ödeme tarihini öğrenmek istiyor", "Çift fatura geldiğini söylüyor"],
-  sayac: ["Sayaç ekranında hata kodu var", "Sayaç değişimi istiyor", "Mühür kopmuş görünüyor"],
-  bilgi: ["Tarife bilgisi istiyor", "Yeni bağlantı başvuru süreci", "Tedarikçi değiştirmek istiyor"],
-  sikayet: ["Ekip geç geldi", "Kesinti bildirimi yapılmadı", "Okuma görevlisi gelmedi"],
+  ariza: ["Mahallede enerji yok", "Yalnızca abonenin tesisatında enerji yok", "Enerji sürekli gidip geliyor", "Sigorta atıyor, sayaç ekranı kapalı"],
+  fatura: ["Fatura tutarını yüksek buldu", "Son ödeme tarihini sordu", "Aynı döneme iki fatura geldiğini bildirdi"],
+  sayac: ["Sayaç ekranında hata kodu görünüyor", "Sayaç değişimi talep etti", "Sayaç mührünün koptuğunu bildirdi"],
+  bilgi: ["Tarife bilgisi istedi", "Yeni bağlantı başvuru sürecini sordu", "Tedarikçi değiştirmek istiyor"],
+  sikayet: ["Ekibin geç geldiğini bildirdi", "Kesinti bildirimi almadığını söyledi", "Okuma görevlisi uğramadı"],
   kesme: ["Ödeme yaptı, yeniden bağlama bekliyor", "Kesme ihtarı aldı, ödeme planı soruyor"],
 };
 
@@ -301,7 +301,7 @@ function buildCalls(): Call[] {
       transformerId: partial.transformerId ?? m?.transformerId ?? null,
       priority: partial.kind === "ariza" ? "yuksek" : "normal",
       status: "kapandi",
-      assignee: pick(rand, ["Burak Tunç", "Nilay Özer", "Okan Kaya", "Esra Koç"]),
+      assignee: pick(rand, ["Burak Tunç", "Nilay Özer"]),
       slaMinutes: partial.kind === "ariza" ? 120 : partial.kind === "kesme" ? 480 : 1440,
       outageId: null,
       note: pick(rand, CALL_NOTES[partial.kind]),
@@ -322,16 +322,16 @@ function buildCalls(): Call[] {
     const trs = o.transformerIds ?? [];
     const meters = METERS.filter((m) => m.transformerId && trs.includes(m.transformerId));
     meters.slice(0, 4).forEach((m, i) =>
-      rows.push(mk({ at: at(0, 7, 30 + i * 6), kind: "ariza", customerId: m.customerId, meterId: m.id, transformerId: m.transformerId ?? null, status: i === 0 ? "islemde" : "acik", outageId: o.id, note: "Mahallede elektrik yok" })),
+      rows.push(mk({ at: at(0, 7, 30 + i * 6), kind: "ariza", customerId: m.customerId, meterId: m.id, transformerId: m.transformerId ?? null, status: i < 2 ? "islemde" : "acik", outageId: o.id, note: "Mahallede enerji yok" })),
     );
   });
-  // Arıza adayı: bir DTR'ye 3+ çağrı, henüz arızaya bağlanmamış.
+  // Olası arıza: bir DTR'ye 3+ çağrı, henüz arızaya bağlanmamış.
   const loaded = new Map<string, Meter[]>();
   for (const m of METERS) if (m.transformerId) loaded.set(m.transformerId, [...(loaded.get(m.transformerId) ?? []), m]);
   const openTr = new Set(open.flatMap((o) => o.transformerIds ?? []));
   const cand = [...loaded.entries()].filter(([id, ms]) => ms.length >= 3 && !openTr.has(id)).slice(0, 2);
   cand.forEach(([trId, ms], ci) =>
-    ms.slice(0, 3).forEach((m, i) => rows.push(mk({ at: at(0, 9, 5 + ci * 9 + i * 4), kind: "ariza", customerId: m.customerId, meterId: m.id, transformerId: trId, status: "acik", note: "Elektrik gidip geliyor" }))),
+    ms.slice(0, 3).forEach((m, i) => rows.push(mk({ at: at(0, 9, 5 + ci * 9 + i * 4), kind: "ariza", customerId: m.customerId, meterId: m.id, transformerId: trId, status: "acik", note: "Enerji sürekli gidip geliyor" }))),
   );
   return rows.sort((a, b) => b.at.getTime() - a.at.getTime());
 }
@@ -431,14 +431,14 @@ function buildDisputes(): Dispute[] {
   const rows: Dispute[] = [];
   const add = (kind: DisputeKind, subjectId: string, customerId: string, reason: string, daysAgo: number, status: DisputeStatus, decision: Dispute["decision"] = null, meterTest = false) => {
     const opened = dayKey(addDays(TODAY, -daysAgo));
-    rows.push({ id: `IT-26${pad(rows.length + 1)}`, kind, subjectId, customerId, reason, openedAt: opened, dueAt: dayKey(addDays(addDays(TODAY, -daysAgo), 15)), status, decision, meterTest, assignedTo: pick(rand, ["Burak Tunç", "Nilay Özer", "Okan Kaya", "Esra Koç"]) });
+    rows.push({ id: `IT-26${pad(rows.length + 1)}`, kind, subjectId, customerId, reason, openedAt: opened, dueAt: dayKey(addDays(addDays(TODAY, -daysAgo), 15)), status, decision, meterTest, assignedTo: pick(rand, ["Burak Tunç", "Nilay Özer"]) });
   };
   INVOICES.filter((i) => i.status === "itirazli").slice(0, 6).forEach((i, k) => add("fatura", i.id, i.customerId, i.dispute ?? "Tüketim beklenenden yüksek", 2 + k * 2, k < 2 ? "acik" : k < 4 ? "inceleme" : "karar"));
   const faulty = METERS.filter((m) => m.status === "arizali" || m.status === "iletisim-yok").slice(0, 3);
   faulty.forEach((m, k) => add("sayac", m.id, m.customerId, "Sayaç fazla gösteriyor, doğruluk testi istiyorum", 3 + k * 4, k === 0 ? "inceleme" : "acik", null, true));
   LEAKS.filter((l) => l.stage === "itiraz" || l.stage === "kapandi").slice(0, 2).forEach((l, k) => add("kacak", l.id, l.customerId, "Tutanak hatalı, müdahale etmedim", 6 + k * 6, k === 0 ? "karar" : "kapandi", k === 0 ? null : "kismi"));
   const cut = CUSTOMERS.find((c) => c.status === "kesik");
-  if (cut) add("kesme", cut.id, cut.id, "Ödeme yaptım, hâlâ enerji verilmedi", 1, "acik");
+  if (cut) add("kesme", cut.id, cut.id, "Ödeme yaptım ama enerji verilmedi", 1, "acik");
   return rows;
 }
 export const DISPUTES: readonly Dispute[] = buildDisputes();
@@ -466,7 +466,7 @@ export type ConsentKind = "aydinlatma" | "ticari-ileti" | "sms" | "eposta";
 export const CONSENT_LABEL: Record<ConsentKind, string> = { aydinlatma: "Aydınlatma metni", "ticari-ileti": "Ticari elektronik ileti", sms: "SMS bilgilendirme", eposta: "E-posta bilgilendirme" };
 export type Consent = { id: string; customerId: string; kind: ConsentKind; given: boolean; at: string; channel: "sube" | "web" | "cagri" | "mobil" };
 export type DataRequestKind = "erisim" | "silme" | "duzeltme" | "itiraz";
-export const DATA_REQUEST_LABEL: Record<DataRequestKind, string> = { erisim: "Verime erişim", silme: "Verimin silinmesi", duzeltme: "Düzeltme", itiraz: "İşlemeye itiraz" };
+export const DATA_REQUEST_LABEL: Record<DataRequestKind, string> = { erisim: "Verime erişim", silme: "Verilerin silinmesi", duzeltme: "Düzeltme", itiraz: "İşlemeye itiraz" };
 export type DataRequest = { id: string; customerId: string; kind: DataRequestKind; openedAt: string; /** 30 gün (ÖRNEK parametre). */ dueAt: string; status: "acik" | "isleniyor" | "tamam" };
 
 function buildConsents(): Consent[] {

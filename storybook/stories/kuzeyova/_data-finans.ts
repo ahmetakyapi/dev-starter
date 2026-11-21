@@ -416,6 +416,15 @@ export function unmatchedLines(s: Store): BankLine[] {
       lines.push({ id: `B-D-${p.id}`, ...base, bankAmount: p.amount, kind: "mukerrer" });
     }
   });
+  /* Banka dosyasında her iki yönlü fark da bulunur: fazla satır yoksa en küçük anahtarlı eksik satır fazlaya çevrilir. */
+  if (lines.length && !lines.some((l) => l.kind === "fazla")) {
+    const at = lines.findIndex((l) => l.kind === "eksik");
+    if (at >= 0) {
+      const l = lines[at];
+      const diff = l.systemAmount - l.bankAmount;
+      lines[at] = { ...l, bankAmount: l.systemAmount + diff, kind: "fazla" };
+    }
+  }
   return lines;
 }
 /** Günlük dosyanın dışında kalan, eski dönemlerden bekleyen tutar farkı sayısı. */

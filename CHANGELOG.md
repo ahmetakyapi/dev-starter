@@ -7,6 +7,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Tasarım yönü sistemi — 2026-11-21
+
+- `knowledge/design-directions.md`: on tasarım yönü kataloğu + seçim matrisi;
+  `knowledge/direction-log.md`: proje kaydı, son beş yön yeniden önerilmez
+- `scripts/pick-direction.mjs` (`npm run direction`) + testi (`verify:direction`);
+  health-check Knowledge Base kategorisi katalog ↔ kayıt ↔ komutları denetler
+- `/kickoff` üç yön adayı sunar, `/new-project` seçimi `docs/DESIGN.md`
+  frontmatter'ına işler; `/theme` palet yön ailesinden; şablon `CLAUDE.md`'lerinde
+  "Yöne Göre Hero Seç" tablosu
+- Başlıkta virgül yok: `slop-scan.sh` yeni kural (h1/h2 YÜKSEK, title alanı UYARI),
+  `rules/design-tokens.md` Yazı Kuralları
+
 ### Landing: varsayılan hero yeniden tasarlandı — 2026-11-21
 
 - `showcase` "tezgâh": iki tonlu başlık (problem soluk, çözüm net), tepeden ışıma

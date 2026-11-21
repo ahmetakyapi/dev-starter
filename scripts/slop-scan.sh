@@ -200,6 +200,13 @@ report YUKSEK "Yapistirmayi engelleme (onPaste preventDefault)" \
   "Yapistirmaya izin ver; dogrulamayi degere yap (WCAG 3.3.8)" \
   "$(scan -nE 'onPaste=\{[^}]*preventDefault' "$SCRIPT")"
 
+# 7b. Baslikta virgul: h1/h2 ve hero basligi tek, kesintisiz bir cumle olarak
+#     okunur; virgul basligi ikiye boler ve "makale basligi" gibi durur.
+#     Cumle kurmak gerekiyorsa iki satira bol (iki tonlu baslik) ya da kisalt.
+report YUKSEK "Basliklarda virgul (h1/h2)" \
+  "Basliga virgul koyma; iki tonlu iki parca yaz ya da kisalt (rules/design-tokens.md → Yazi Kurallari)" \
+  "$(scan -nE '<h[12]([[:space:]][^>]*)?>[^<{}]*,[^<{}]*</h[12]>' "$CODE")"
+
 # ─── UYARI ───────────────────────────────────────────────────────────────────
 
 # 10. Kisitsiz kaydirma dinleyicisi: her karede calisir, mobilde kasar.
@@ -273,6 +280,12 @@ report UYARI "Kalici will-change" \
 report UYARI "Sahte kitlik / aciliyet (son N koltuk, N kaldi)" \
   "Gercek ve dogrulanabilir sinir yoksa kaldir; varsa kaynagini goster ve slop-ok ile gerekcele" \
   "$(scan -niE '(son [0-9]+ (koltuk|kisi|kişi|adet|yer|lisans)|[0-9]+ (koltuk|kisi|kişi|adet|yer|lisans|spots?|seats?) (kald[iı]|left)|only [0-9]+ left|teklif (bitiyor|sona eriyor))' "$SCRIPT" | nocomment)"
+
+# 26. Baslik alani metninde virgul (content dosyalari: title/headline/heading).
+#     h1/h2 kuralinin veri tarafi; ara baslik ve kart basliklari da ayni sesi tasir.
+report UYARI "Baslik alaninda virgul (title/headline/heading)" \
+  "Baslik tek cumle ve virgulsuz; aciklama gerekiyorsa description/body alanina tasi" \
+  "$(scan -nE '(^|[[:space:],{])(title|headline|heading):[[:space:]]*"[^"]*,[^"]*"' "$SCRIPT" | nocomment)"
 
 # ─── Sonuc ───────────────────────────────────────────────────────────────────
 echo "  ── SONUC: $HIGH yuksek, $WARNS uyari"

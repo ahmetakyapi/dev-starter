@@ -141,7 +141,7 @@ export function MusterilerPage({ params, go }: PageProps) {
 function Bulunamadi({ id }: { id: string }) {
   return (
     <>
-      <PageHead title="Müşteriler" description="Abone kayıtları, tesisat ve sözleşme bilgileri." />
+      <PageHead title="Aboneler" description="Abone kayıtları, tesisat ve sözleşme bilgileri." />
       <PageBody>
         <EmptyState
           icon={<Users />}
@@ -149,7 +149,7 @@ function Bulunamadi({ id }: { id: string }) {
           hint="Numara yanlış olabilir ya da kayıt arşive alınmıştır."
           action={
             <a className={buttonClass({ variant: "secondary" })} href={href("customers")}>
-              Müşteri Listesine Dön
+              Abone Listesine Dön
             </a>
           }
         />
@@ -291,7 +291,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
     a.download = "musteri-listesi.csv";
     a.click();
     URL.revokeObjectURL(url);
-    audit("Müşteri listesini dışa aktardı", `${chosen.length} abone`, undefined, "CSV (kimlik ve iletişim alanları olmadan)");
+    audit("Abone listesini dışa aktardı", `${chosen.length} abone`, undefined, "CSV (kimlik ve iletişim alanları olmadan)");
     notify({ title: "Liste İndirildi", body: `${chosen.length} abone, KVKK gereği kimlik ve iletişim alanları olmadan.`, tone: "success" });
   }
 
@@ -330,7 +330,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
     },
     {
       key: "name",
-      header: "Müşteri",
+      header: "Abone",
       sortable: true,
       sortValue: (c) => c.name,
       width: "17rem",
@@ -420,7 +420,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
   return (
     <>
       <PageHead
-        title="Müşteriler"
+        title="Aboneler"
         description={`${fmtNum(stats.total)} abone kaydı. Risk öne alınır: önce ilgilenilmesi gerekenler.`}
         actions={
           <>
@@ -437,7 +437,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
                 a.download = "musteri-envanteri.csv";
                 a.click();
                 URL.revokeObjectURL(url);
-                audit("Müşteri envanterini dışa aktardı", `${everyone.length} abone`, undefined, "CSV");
+                audit("Abone envanterini dışa aktardı", `${everyone.length} abone`, undefined, "CSV");
                 notify({ title: "Envanter İndirildi", body: `${fmtNum(everyone.length)} abone, mevcut süzgeçle.`, tone: "success" });
               }}
             >
@@ -445,7 +445,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
             </Button>
             {canEdit ? (
               <a className={buttonClass({ variant: "primary" })} href={href("register")}>
-                <UserPlus /> Yeni Müşteri
+                <UserPlus /> Yeni Abone
               </a>
             ) : null}
           </>
@@ -684,7 +684,7 @@ function TagDialog({ open, onClose, customers, onDone }: { open: boolean; onClos
 }
 
 /* ====================================================================== *
- *  MÜŞTERİ 360 AYRINTISI
+ *  ABONE 360 AYRINTISI
  * ====================================================================== */
 
 /** KVKK: maskeli alanın açılmış hali (demo; deterministik, gerçek değil). */
@@ -767,18 +767,18 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
   ].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
 
   const actions: { id: Exclude<DetailDialog, null>; icon: ReactNode; title: string; hint: string; disabled?: boolean }[] = [
-    { id: "contact", icon: <Pencil />, title: "İletişim Bilgilerini Güncelle", hint: canEdit ? "Telefon ve e-posta; doğrulama koduyla teyit edilir." : "Bu işlem için müşteri düzenleme yetkisi gerekir.", disabled: !canEdit || closed },
-    { id: "tariff", icon: <Receipt />, title: "Tarife ve Adres Değişikliği", hint: canEdit ? "Zaman dilimi tarifesi ve fatura adresi." : "Bu işlem için müşteri düzenleme yetkisi gerekir.", disabled: !canEdit || closed },
+    { id: "contact", icon: <Pencil />, title: "İletişim Bilgilerini Güncelle", hint: canEdit ? "Telefon ve e-posta; doğrulama koduyla teyit edilir." : "Bu işlem için abone düzenleme yetkisi gerekir.", disabled: !canEdit || closed },
+    { id: "tariff", icon: <Receipt />, title: "Tarife ve Adres Değişikliği", hint: canEdit ? "Zaman dilimi tarifesi ve fatura adresi." : "Bu işlem için abone düzenleme yetkisi gerekir.", disabled: !canEdit || closed },
     { id: "supplier", icon: <Repeat />, title: "Tedarikçi Değişikliği Başlat", hint: c.free ? "Serbest tüketici: perakende satış şirketi seçilebilir." : "Serbest tüketici değil: görevli tedarik şirketi.", disabled: !c.free || closed || !canEdit },
-    { id: "work", icon: c.status === "kesik" ? <Power /> : <PowerOff />, title: c.status === "kesik" ? "Yeniden bağlama talebi" : "Enerji kesme talebi", hint: canCut ? "Politika denetlenir; iş emri oluşturur, iki göz onayı ister." : "Bu işlem için kesme ve bağlama yetkisi gerekir.", disabled: closed || !canCut },
+    { id: "work", icon: c.status === "kesik" ? <Power /> : <PowerOff />, title: c.status === "kesik" ? "Yeniden bağlama talebi" : "Enerji kesme talebi", hint: canCut ? "Kural denetlenir; iş emri oluşturur, iki göz onayı ister." : "Bu işlem için kesme ve bağlama yetkisi gerekir.", disabled: closed || !canCut },
     { id: "merge", icon: <Users />, title: "Yinelenen Kayıt Kontrolü", hint: dup ? `Aynı adla başka kayıt var: ${dup.id}.` : "Olası yinelenen kayıt bulunmadı." },
-    { id: "close", icon: <X />, title: "Aboneliği Kapat", hint: canEdit ? "Geri alınamaz; bakiye ve sayaç durumu kontrol edilir." : "Bu işlem için müşteri düzenleme yetkisi gerekir.", disabled: closed || !canEdit },
+    { id: "close", icon: <X />, title: "Aboneliği Kapat", hint: canEdit ? "Geri alınamaz; bakiye ve sayaç durumu kontrol edilir." : "Bu işlem için abone düzenleme yetkisi gerekir.", disabled: closed || !canEdit },
   ];
 
   return (
     <>
       <PageHead
-        title="Müşteriler"
+        title="Aboneler"
         crumb={`${c.id} · ${c.name}`}
         description={`${KIND_LABEL[c.kind]} aboneliği · ${c.voltage === "OG" ? "Orta" : "Alçak"} gerilim · ${region(c.regionId).name}, ${c.district}`}
         actions={
@@ -905,7 +905,7 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
             </MetricStrip>
 
             <Tabs
-              aria-label="Müşteri Ayrıntıları"
+              aria-label="Abone Ayrıntıları"
               value={tab}
               onValueChange={setTab}
               items={[
@@ -1151,7 +1151,7 @@ function MusteriDetay({ customer: c, go }: { customer: Customer; go: PageProps["
                       </Panel>
                       <Panel title="Notlar" id="detay-not" note="Yalnız ekip içi görünür">
                         <div className="grid gap-4 p-4 sm:p-5">
-                          <Textarea label="Yeni Not" value={note} onChange={(e) => setNote(e.target.value)} minRows={3} hint="Müşteri görüşmesi, saha bilgisi, takip kararı." />
+                          <Textarea label="Yeni Not" value={note} onChange={(e) => setNote(e.target.value)} minRows={3} hint="Abone görüşmesi, saha bilgisi, takip kararı." />
                           <div>
                             <Button
                               variant="primary"
@@ -1331,7 +1331,7 @@ function TariffDialog({ open, onClose, customer: c }: { open: boolean; onClose: 
           label="Tarife Tipi"
           value={tariff}
           onValueChange={(v) => v && setTariff(v as Customer["tariff"])}
-          items={[{ value: "tek-zamanli", label: "Tek Zamanlı" }, { value: "cok-zamanli", label: "Çok Zamanlı (T1 Gündüz, T2 Puant, T3 Gece)" }]}
+          items={[{ value: "tek-zamanli", label: "Tek Zamanlı" }, { value: "cok-zamanli", label: "Çok Zamanlı (T1 Gündüz / T2 Puant / T3 Gece)" }]}
         />
         <Textarea label="Fatura Adresi" value={address} onChange={(e) => setAddress(e.target.value)} minRows={2} error={bad ? "Adres en az 8 karakter olmalı." : undefined} />
       </div>
@@ -1390,7 +1390,7 @@ const WORK_REASONS = {
   baglama: ["Borç ödendi", "Abone talebi", "Bakım tamamlandı", "Hatalı kesme düzeltmesi"],
 } as const;
 
-/** Kesme politikası sonucunu denetim satırlarına çevirir (motorun `blockers` metinlerinden). */
+/** Kesme kuralları sonucunu denetim satırlarına çevirir (motorun `blockers` metinlerinden). */
 function cutChecks(p: ReturnType<typeof cutEligibility>): PolicyCheck[] {
   const blocked = (prefix: string) => p.blockers.find((b) => b.startsWith(prefix));
   const row = (id: string, label: string, ok: string, bad: string | undefined): PolicyCheck => ({ id, label, state: bad ? "fail" : "pass", detail: bad ?? ok });
@@ -1423,7 +1423,7 @@ function WorkDialog({ open, onClose, customer: c, balance }: { open: boolean; on
       open={open}
       onOpenChange={(o) => !o && onClose()}
       title={kind === "kesme" ? "Enerji Kesme Talebi" : "Yeniden Bağlama Talebi"}
-      description={kind === "kesme" ? "Politika denetlenir; uygunsa iş emri oluşur ve ikinci göz onayına düşer." : "Bağlama emri 24 saatlik hedef süreyle açılır."}
+      description={kind === "kesme" ? "Kural denetlenir; uygunsa iş emri oluşur ve ikinci göz onayına düşer." : "Bağlama emri 24 saatlik hedef süreyle açılır."}
       dismissible={false}
       footer={
         <>
@@ -1470,7 +1470,7 @@ function WorkDialog({ open, onClose, customer: c, balance }: { open: boolean; on
         {policy ? (
           <div className="grid gap-3">
             <PolicyChecks
-              title={policy.eligible ? "Kesme Politikasına Uygun" : "Kesme Politikası: Şimdilik Kesilemez"}
+              title={policy.eligible ? "Kesme Kurallarına Uygun" : "Kesme Kuralları: Şimdilik Kesilemez"}
               headingLevel={3}
               checks={cutChecks(policy)}
             />
@@ -1495,13 +1495,13 @@ function WorkDialog({ open, onClose, customer: c, balance }: { open: boolean; on
           <Alert tone="warning" title={`${tl(balance)} açık bakiye var`}>Borç kapanmadan bağlama için ödeme planı ya da ödeme kaydı beklenir.</Alert>
         ) : null}
         {denied.length ? <Alert tone="danger" title="Emir Verilemedi">{denied.join("; ")}.</Alert> : null}
-        <Checkbox label={kind === "kesme" ? "Tebligat süresi doldu ve borç hâlâ açık." : "Bağlama nedeni doğrulandı."} checked={ack} onChange={(e) => setAck(e.target.checked)} />
+        <Checkbox label={kind === "kesme" ? "Tebligat süresi doldu ve borç hala açık." : "Bağlama nedeni doğrulandı."} checked={ack} onChange={(e) => setAck(e.target.checked)} />
       </div>
     </Dialog>
   );
 }
 
-const REVEAL_REASONS = ["Müşteri telefonla aradı", "Fatura ya da borç görüşmesi", "Saha ekibine yönlendirme", "Şikayet incelemesi"] as const;
+const REVEAL_REASONS = ["Abone telefonla aradı", "Fatura ya da borç görüşmesi", "Saha ekibine yönlendirme", "Şikayet incelemesi"] as const;
 
 function RevealDialog({ open, onClose, customer: c, onReveal }: { open: boolean; onClose: () => void; customer: Customer; onReveal: () => void }) {
   const { notify } = useApp();
@@ -1560,7 +1560,7 @@ function WorkOrderBanner({ work: w, canAct }: { work: WorkOrderX; canAct: boolea
           >
             Sonraki Adım: {WORK_STATUS_LABEL[next]}
           </Button>
-          <Button size="sm" variant="ghost" onClick={() => { cancelWorkOrder(w.id, "Müşteri kartından iptal"); notify({ title: "İş Emri İptal Edildi", body: w.id, tone: "info" }); }}>
+          <Button size="sm" variant="ghost" onClick={() => { cancelWorkOrder(w.id, "Abone kartından iptal"); notify({ title: "İş Emri İptal Edildi", body: w.id, tone: "info" }); }}>
             İptal Et
           </Button>
         </>

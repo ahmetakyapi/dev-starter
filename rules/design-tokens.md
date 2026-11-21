@@ -184,6 +184,17 @@ bırak — ama gerekçe "böyle daha güzel" değil, "şu sorunu şöyle çözü
 
 ---
 
+## Aynı Görünüm Yasağı ve Yazı Kuralları
+
+- **Aynı görünüm yasağı.** Her proje kendi tasarım yönünü taşır
+  (`knowledge/design-directions.md`): palet, hero, kabuk, kart ve popup dili
+  ürünün işine göre seçilir. Son beş projenin yönü yenisinde önerilmez
+  (`knowledge/direction-log.md`); "hep böyle yaptık" gerekçe değildir.
+- **Başlıkta virgül yok.** `h1`, `h2` ve hero başlığı virgülsüz, tek
+  ifadedir; iki fikir gerekiyorsa iki tonlu başlık ya da başlık + açıklama.
+  `slop-scan.sh`: `<h1>/<h2>` içinde virgül YÜKSEK, `title/headline/heading`
+  alanında virgül UYARI.
+
 ## Hizalama Kuralı — Alt Alta Tekrar Eden Satırlar
 
 Liste, tablo, kart yığını gibi **alt alta tekrar eden satırlarda aynı türden

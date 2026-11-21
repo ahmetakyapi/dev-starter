@@ -84,6 +84,26 @@ Sonra: **"Önerim: Yön B, çünkü …"**. Seçenekler gerçekten farklı olmal
 (farklı kitle ya da farklı çekirdek özellik). Aynı ürünün üç fiyat paketi
 seçenek sayılmaz.
 
+### 3b. Tasarım Yönü — üç aday, kullanıcı seçer
+
+Ürün yönü seçildikten sonra, kod ve palet kararından ÖNCE. Kaynak:
+`knowledge/design-directions.md` (on yön, seçim matrisi) ve
+`knowledge/direction-log.md` (son beş projenin yönü). Önce
+`node ~/dev-starter/scripts/pick-direction.mjs --sector … --audience …
+--density … --tone … --theme … --kind … --json` çalıştır; çıktı son beş
+projede kullanılan yönü zaten dışlar.
+
+- **Üç aday sun**, her biri: ad, bu ürüne neden uyar (kullanıcının anı ve
+  işi), hero deseni, kabuk, kart ve popup dili, **yasak satırı**. Üçü gerçekten
+  farklı görünmeli (üç ton farkı değil).
+- Marka rengi varsa palet ona göre; yön yalnız hero/kabuk/kart/popup seçer.
+- "Mavi palet + showcase hero + sol menü" gerekçesiz seçilmez; en yakın
+  eski projeyle aynı yön gelirse yazılı gerekçe iste.
+- Seçileni `KICKOFF.md` → "Tasarım Yönü" bölümüne yaz; `/new-project`
+  `docs/DESIGN.md` frontmatter'ına ve direction-log'a işler.
+- Başlıklarda ve hero metinlerinde virgül kullanma kuralı kickoff metninde
+  önerilen hero başlıkları için de geçerlidir.
+
 ### 4. Teknoloji — ihtiyaçtan seçime
 
 `knowledge/tech-radar.md` tablosundan, yalnızca bu projenin **ihtiyaç duyduğu**

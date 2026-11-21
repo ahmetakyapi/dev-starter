@@ -7,7 +7,7 @@ import { INTEGRATIONS, READ_ROUTES_START, TEMPLATES_START, USERS, type SettingsU
  * kadar); Kaydet bu dilime yazar. Böylece sayfa değişince kayıtlı ayar kaybolmaz
  * ve Uyum Merkezi aynı kullanıcı listesini okur.
  *
- * Tarifeler, yetki matrisi, onay politikası ve kesme politikası burada DEĞİL:
+ * Tarifeler, yetki matrisi, onay kuralı ve kesme kuralları burada DEĞİL:
  * onlar kendi dilimlerinde (`_settings.ts`, `_permissions.ts`, `_cutpolicy.ts`).
  */
 

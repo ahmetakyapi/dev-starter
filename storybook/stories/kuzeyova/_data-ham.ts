@@ -278,7 +278,7 @@ export function bucketize(rows: readonly RawRow[], res: Resolution, measure: Mea
   });
 }
 
-/** Boş (tamamen eksik) kovaların ardışık aralıkları, en uzundan başlayarak en çok `limit` tane (grafik bandı). */
+/** Boş (tamamen eksik) saatlerin ardışık aralıkları, en uzundan başlayarak en çok `limit` tane (grafik bandı). */
 export function emptyRuns(buckets: readonly Bucket[], limit = 2): { from: number; to: number }[] {
   const runs: { from: number; to: number }[] = [];
   let start = -1;
@@ -405,7 +405,7 @@ export const EXPORT_FIELDS: readonly { id: ExportField; label: string }[] = [
   { id: "index", label: "Endeks" },
   { id: "kwh", label: "Aktif Tüketim" },
   { id: "kw", label: "Talep Gücü" },
-  { id: "kvarh", label: "Reaktif (Endüktif, Kapasitif)" },
+  { id: "kvarh", label: "Reaktif (Endüktif ve Kapasitif)" },
   { id: "volt", label: "Gerilim" },
   { id: "amp", label: "Akım" },
   { id: "pf", label: "Güç Faktörü" },

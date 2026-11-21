@@ -26,7 +26,7 @@ import { reconnectSla } from "./_cutpolicy";
 
 /**
  * Portal'ında GÖRÜNEN her türetilmiş sayı buradan okunur: kenar çubuğu
- * rozetleri, komut paleti ipuçları, pano karoları, müşteri bakiyesi, rapor
+ * rozetleri, komut paleti ipuçları, pano karoları, abone bakiyesi, rapor
  * toplamları. Sayfalar kendi `.filter(...)` sayımını YAZMAZ; böylece bir faturaya
  * ödeme girilince bütün ekranlar aynı anda tutarlı güncellenir.
  *
@@ -54,7 +54,7 @@ export const openOutages = (): Outage[] => effectiveOutages().filter((o) => o.st
 export const unreadableMeters = () => effectiveMeters().filter((m) => m.status === "iletisim-yok" || m.status === "arizali");
 export const commsLostMeters = () => effectiveMeters().filter((m) => m.status === "iletisim-yok");
 
-/* --- Müşteriler ----------------------------------------------------------------- */
+/* --- Aboneler ----------------------------------------------------------------- */
 
 export const activeCustomers = (): Customer[] => allCustomers().filter((c) => c.status === "aktif");
 export const riskyCustomers = (): Customer[] => allCustomers().filter(isRisky);
@@ -75,7 +75,7 @@ const reconnectSlaFor = (createdAt: Date, slaHours: number) => (TODAY.getTime() 
 export const reconnectBreaches = () => getWorkOrders().filter((w) => w.type === "baglama" && w.status !== "tamamlandi" && w.status !== "iptal" && reconnectSla(w.createdAt).breached);
 
 export const openCalls = () => getCalls().filter((c) => c.status !== "kapandi");
-/** Aynı DTR'ye üç ya da daha çok açık arıza çağrısı gelmiş ve henüz arızaya bağlanmamış: arıza adayı. */
+/** Aynı DTR'ye üç ya da daha çok açık arıza çağrısı gelmiş ve henüz arızaya bağlanmamış: olası arıza. */
 export function faultCandidates() {
   const by = new Map<string, number>();
   for (const c of getCalls()) if (c.kind === "ariza" && c.status === "acik" && !c.outageId && c.transformerId) by.set(c.transformerId, (by.get(c.transformerId) ?? 0) + 1);

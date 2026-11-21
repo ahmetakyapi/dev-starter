@@ -50,7 +50,7 @@ export function transformerHeadroom(p: Producer) {
 /** Kredi kWh karşılığı (kuruş): tedarikçinin T1 fiyatı. */
 export const creditValue = (p: Producer, kwh: number) => Math.round(kwh * supplier(customer(p.customerId).supplierId).prices.t1 * 100);
 
-/** Mahsubun yansıyacağı fatura: müşterinin en eski açık faturası. */
+/** Mahsubun yansıyacağı fatura: abonenin en eski açık faturası. */
 export function settlementTarget(customerId: string) {
   return allInvoices(getFinance())
     .filter((i) => i.customerId === customerId && !i.cancelled && i.total - i.paid > 0)
@@ -60,8 +60,8 @@ export function settlementTarget(customerId: string) {
 export type SettleResult = { ok: true; applied: number; remainder: number; invoiceId: string | null; creditId: string } | { ok: false; error: string };
 
 /**
- * Dönem mahsubu: devreden alacağın seçilen kWh'si TL'ye çevrilir, müşterinin en
- * eski açık faturasına tahsilat gibi işlenir (fatura bakiyesi, müşteri kartı,
+ * Dönem mahsubu: devreden alacağın seçilen kWh'si TL'ye çevrilir, abonenin en
+ * eski açık faturasına tahsilat gibi işlenir (fatura bakiyesi, abone kartı,
  * Pano ve Ödemeler güncellenir); fatura bakiyesini aşan kısım açık alacak olarak kalır.
  */
 export function settleToInvoice(p: Producer, kwh: number): SettleResult {

@@ -2,7 +2,7 @@
 
 import { Menu, PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { openCommandPalette } from "@/components/ui/command-palette";
 import { KbdCombo } from "@/components/ui/kbd";
@@ -21,11 +21,18 @@ import { cn } from "@/lib/utils";
  * şeritle değil. Gezinme rengi vurgu ailesinden ALMAZ; palet değişince
  * kabuk sakin kalır, yalnız eylemler renklenir.
  *
- * Daraltma: masaüstünde kenar çubuğu ikon sütununa iner (⌘B / Ctrl+B ya da
- * buton). Genişlik ANİMASYONLA DEĞİŞMEZ: `width` geçişi her karede düzeni
- * yeniden hesaplatır; sütun anında değişir, etiketler kısa bir solmayla
- * gelir. Daralmışken etiket `sr-only` kalır (ekran okuyucu yine okur) ve
- * `title` ile görünür ipucu olur.
+ * Daraltma: masaüstünde kenar çubuğu ikon rayına iner. Üç yol: kenar
+ * çubuğunun altındaki "Daralt" satırı, ⌘B / Ctrl+B ve kenardaki ince tutamaç
+ * (tıkla). Genişlik YUMUŞAK değişir: yalnız dış kap animasyonlu `width`
+ * değiştirir; iç düzen sabittir (ikon her durumda aynı x'te, etiketler
+ * kırpılır ve solar), yani öğeler yeniden akmaz. `prefers-reduced-motion`ta
+ * geçiş yok. Daralmışken etiket DOM'da kalır (ekran okuyucu okur), `title`
+ * görünür ipucu olur. `peek` (varsayılan açık): daralmış rayın üzerine gelince
+ * (ince işaretçi) kenar çubuğu içeriği itmeden üstüne açılır, çıkınca kapanır.
+ *
+ * Durum `localStorage` + çerezde (`<storageKey>=collapsed|open`) saklanır.
+ * Sunucu bileşeninde çerezi okuyup `defaultCollapsed`e ver: ilk boyamada
+ * sıçrama olmaz (`cookies().get(SHELL_SIDEBAR_COOKIE)?.value === "collapsed"`).
  *
  * Telefonda (< lg) kenar çubuğu yok: üstte ince bir çubuk ve menü butonu;
  * gezinme alttan açılan `Sheet`te (başparmağın eriştiği yer). Bağlantıya
@@ -36,6 +43,20 @@ import { cn } from "@/lib/utils";
  * Etkin öğe `current` ile `href`in birebir eşitliği; alt sayfalar da etkin
  * sayılsın istiyorsan `current`i çağıran tarafta üst yola indir.
  */
+
+/** Varsayılan çerez/anahtar adı (`storageKey`). */
+export const SHELL_SIDEBAR_COOKIE = "shell-sidebar";
+const DEFAULT_STORAGE_KEY = "shell-sidebar";
+
+function persistCollapsed(collapsed: boolean, key: string) {
+  const value = collapsed ? "collapsed" : "open";
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Özel pencere / engelli depolama: tercih yalnız çerezde kalır.
+  }
+  document.cookie = `${key}=${value}; path=/; max-age=31536000; samesite=lax`;
+}
 
 export type ShellNavItem = { href: string; label: string; icon: ReactNode; badge?: ReactNode };
 export type ShellNavGroup = { label?: string; items: readonly ShellNavItem[] };
@@ -52,6 +73,10 @@ type AppShellProps = {
   onSearch?: () => void;
   searchLabel?: string;
   defaultCollapsed?: boolean;
+  /** Daralmış rayın üzerine gelince geçici açılma (ince işaretçi). Varsayılan: açık. */
+  peek?: boolean;
+  /** Tercihin saklandığı anahtar (localStorage ve çerez adı); `false`: saklama. */
+  storageKey?: string | false;
   /** İçerik öğesi. Kabuk sayfanın kökü değilse (vitrin, gömülü önizleme) `div`: sayfada tek `main` olur. */
   contentAs?: "main" | "div";
   /** Telefon üst çubuğunun sağı (arama butonunden önce): bildirim zili gibi. */
@@ -77,15 +102,46 @@ export function AppShell({
   onSearch = openCommandPalette,
   searchLabel = "Ara",
   defaultCollapsed = false,
+  peek = true,
+  storageKey = DEFAULT_STORAGE_KEY,
   contentAs: Content = "main",
   mobileActions,
   bottomBar,
   className,
   children,
 }: AppShellProps) {
-  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  const [collapsed, setCollapsedState] = useState(defaultCollapsed);
+  const [peeking, setPeeking] = useState(false);
+  const [ready, setReady] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const sidebarId = useId();
+  const peekTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const setCollapsed = useCallback((next: boolean | ((value: boolean) => boolean)) => {
+    setPeeking(false);
+    setCollapsedState((value) => {
+      const result = typeof next === "function" ? next(value) : next;
+      if (storageKey) persistCollapsed(result, storageKey);
+      return result;
+    });
+  }, [storageKey]);
+
+  // Kayıtlı tercihi uygula (çerezsiz kurulumlarda); sonra geçişleri aç: ilk boyamada animasyon olmasın.
+  useEffect(() => {
+    try {
+      const saved = storageKey ? window.localStorage.getItem(storageKey) : null;
+      if (saved === "collapsed" || saved === "open") setCollapsedState(saved === "collapsed");
+    } catch {
+      // depolama kapalı: varsayılan geçerli
+    }
+    const frame = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, [storageKey]);
+
+  // Rota değişince telefon çekmecesi kapanır.
+  useEffect(() => {
+    setSheetOpen(false);
+  }, [current]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -98,9 +154,23 @@ export function AppShell({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [setCollapsed]);
 
+  useEffect(() => () => clearTimeout(peekTimer.current), []);
+
+  const open = !collapsed || peeking;
   const toggleLabel = collapsed ? "Kenar Çubuğunu Genişlet" : "Kenar Çubuğunu Daralt";
+  const motion = ready ? "transition-[width] duration-200 ease-out motion-reduce:transition-none" : "";
+
+  const startPeek = (event: React.PointerEvent) => {
+    if (!peek || !collapsed || event.pointerType !== "mouse") return;
+    clearTimeout(peekTimer.current);
+    peekTimer.current = setTimeout(() => setPeeking(true), 140);
+  };
+  const endPeek = () => {
+    clearTimeout(peekTimer.current);
+    setPeeking(false);
+  };
 
   return (
     // KAYDIRMA: masaüstünde kabuk ekran boyunda (`lg:h-dvh`), kenar çubuğu yerinde
@@ -146,23 +216,51 @@ export function AppShell({
         </div>
       </Sheet>
 
-      {/* Masaüstü kenar çubuğu */}
-      <aside
-        id={sidebarId}
-        aria-label="Kenar Çubuğu"
-        className={cn("hidden shrink-0 flex-col gap-4 p-3 lg:flex", collapsed ? "w-[4.25rem]" : "w-64")}
-      >
-        <div className={cn("flex items-center gap-1", collapsed && "flex-col")}>
+      {/* Masaüstü kenar çubuğu: dış kap yer ayırır (animasyonlu genişlik), iç kap sabit düzenli */}
+      <div className={cn("relative hidden shrink-0 lg:block", motion, collapsed ? "w-[4.25rem]" : "w-64")}>
+        <aside
+          id={sidebarId}
+          aria-label="Kenar Çubuğu"
+          onPointerEnter={startPeek}
+          onPointerLeave={endPeek}
+          className={cn(
+            "absolute inset-y-0 left-0 z-20 flex flex-col gap-4 overflow-hidden bg-surface p-3",
+            motion,
+            open ? "w-64" : "w-[4.25rem]",
+            peeking && "rounded-r-xl bg-overlay shadow-floating ring-1 ring-line",
+          )}
+        >
           <Link
             href={brand.href}
-            title={collapsed ? brand.name : undefined}
-            className="flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded-md px-1.5 font-semibold text-strong"
+            title={open ? undefined : brand.name}
+            className="flex min-h-10 shrink-0 items-center gap-2.5 rounded-md px-2 font-semibold text-strong"
           >
             <span aria-hidden className="inline-grid size-7 shrink-0 place-items-center [&_svg]:size-full">
               {brand.logo}
             </span>
-            <span className={cn("truncate", collapsed && "sr-only")}>{brand.name}</span>
+            <Fade open={open} className="truncate">
+              {brand.name}
+            </Fade>
           </Link>
+
+          <button
+            type="button"
+            onClick={onSearch}
+            title={open ? undefined : searchLabel}
+            aria-label={open ? undefined : searchLabel}
+            className="flex h-10 shrink-0 items-center gap-2.5 overflow-hidden rounded-md border border-line bg-overlay px-[0.8125rem] text-base text-muted shadow-raised transition-colors hover:border-line-strong hover:text-strong [&_svg]:size-4 [&_svg]:shrink-0"
+          >
+            <Search aria-hidden strokeWidth={1.75} />
+            <Fade open={open} className="flex flex-1 items-center gap-2">
+              <span className="flex-1 text-start">{searchLabel}</span>
+              <span aria-hidden className="inline-flex"><KbdCombo keys={["⌘", "K"]} label="Komut K" /></span>
+            </Fade>
+          </button>
+
+          <div className="-mx-1 min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 [scrollbar-width:thin]">
+            <ShellNav groups={groups} current={current} collapsed={!open} />
+          </div>
+
           <button
             type="button"
             onClick={() => setCollapsed((value) => !value)}
@@ -170,37 +268,30 @@ export function AppShell({
             title={`${toggleLabel} (⌘B)`}
             aria-expanded={!collapsed}
             aria-controls={sidebarId}
-            className="inline-grid size-10 shrink-0 place-items-center rounded-md text-muted transition-colors hover:bg-surface-raised hover:text-strong [&_svg]:size-[1.125rem]"
+            className="flex min-h-10 shrink-0 items-center gap-2.5 overflow-hidden rounded-md px-[0.8125rem] text-base text-muted transition-colors hover:bg-surface-raised hover:text-strong [&_svg]:size-[1.125rem] [&_svg]:shrink-0"
           >
             {collapsed ? <PanelLeftOpen aria-hidden strokeWidth={1.75} /> : <PanelLeftClose aria-hidden strokeWidth={1.75} />}
+            <Fade open={open} className="flex-1 text-start">
+              {collapsed ? "Genişlet" : "Daralt"}
+            </Fade>
           </button>
-        </div>
 
+          <UserRow user={user} action={open ? userAction : null} collapsed={!open} />
+        </aside>
+
+        {/* Kenar tutamacı: tıkla, aç/kapa */}
         <button
           type="button"
-          onClick={onSearch}
-          aria-label={collapsed ? searchLabel : undefined}
-          title={collapsed ? searchLabel : undefined}
+          tabIndex={-1}
+          aria-hidden
+          onClick={() => setCollapsed((value) => !value)}
+          title={`${toggleLabel} (⌘B)`}
           className={cn(
-            "flex h-10 shrink-0 items-center gap-2.5 rounded-md border border-line bg-overlay text-base text-muted shadow-raised transition-colors hover:border-line-strong hover:text-strong [&_svg]:size-4 [&_svg]:shrink-0",
-            collapsed ? "justify-center" : "px-3",
+            "group/rail absolute inset-y-0 -right-1.5 z-30 w-3 cursor-col-resize",
+            "after:absolute after:inset-y-3 after:left-1/2 after:w-px after:-translate-x-1/2 after:rounded-full after:bg-transparent after:transition-colors hover:after:bg-line-strong",
           )}
-        >
-          <Search aria-hidden strokeWidth={1.75} />
-          {collapsed ? null : (
-            <>
-              <span className="flex-1 text-start">{searchLabel}</span>
-              <KbdCombo keys={["⌘", "K"]} label="Komut K" />
-            </>
-          )}
-        </button>
-
-        <div className="-mx-1 min-h-0 flex-1 overflow-y-auto px-1">
-          <ShellNav groups={groups} current={current} collapsed={collapsed} />
-        </div>
-
-        <UserRow user={user} action={collapsed ? null : userAction} collapsed={collapsed} />
-      </aside>
+        />
+      </div>
 
       {/* İçerik: kuyunun içinde beyaz karo */}
       <div className={cn("flex min-h-0 min-w-0 flex-1 flex-col px-2 pb-2 lg:py-2 lg:pr-2 lg:pl-0", bottomBar && "max-lg:pb-20")}>
@@ -214,6 +305,15 @@ export function AppShell({
 
       {bottomBar ? bottomBar({ openMenu: () => setSheetOpen(true) }) : null}
     </div>
+  );
+}
+
+/** Etiket: DOM'da kalır (ekran okuyucu), görsel olarak solar; kap genişliği kırpar. */
+function Fade({ open, className, children }: { open: boolean; className?: string; children: ReactNode }) {
+  return (
+    <span className={cn("min-w-0 whitespace-nowrap transition-opacity duration-150 motion-reduce:transition-none", open ? "opacity-100 delay-75" : "opacity-0", className)}>
+      {children}
+    </span>
   );
 }
 
@@ -244,7 +344,7 @@ function ShellNav({
                   {groupIndex > 0 ? <span aria-hidden className="mx-3 mb-1 h-px bg-line" /> : null}
                 </>
               ) : (
-                <span id={headingId} className="px-2.5 pb-0.5 text-micro font-semibold text-muted">
+                <span id={headingId} className="whitespace-nowrap px-2.5 pb-0.5 text-micro font-semibold text-muted">
                   {group.label}
                 </span>
               )
@@ -260,8 +360,7 @@ function ShellNav({
                       title={collapsed ? item.label : undefined}
                       onClick={onNavigate}
                       className={cn(
-                        "flex min-h-11 items-center gap-2.5 rounded-md text-base transition-[background-color,color,box-shadow] duration-150 pointer-fine:min-h-9 [&_svg]:size-[1.125rem] [&_svg]:shrink-0",
-                        collapsed ? "justify-center" : "px-2.5",
+                        "flex min-h-11 items-center gap-2.5 overflow-hidden rounded-md px-[0.8125rem] text-base transition-[background-color,color,box-shadow] duration-150 pointer-fine:min-h-9 [&_svg]:size-[1.125rem] [&_svg]:shrink-0",
                         active
                           ? "bg-overlay font-medium text-strong shadow-raised ring-1 ring-line"
                           : "text-body hover:bg-surface-raised hover:text-strong",
@@ -270,11 +369,15 @@ function ShellNav({
                       <span aria-hidden className={cn("inline-grid place-items-center", active ? "text-strong" : "text-muted")}>
                         {item.icon}
                       </span>
-                      <span className={cn("min-w-0 flex-1 truncate", collapsed && "sr-only")}>{item.label}</span>
-                      {item.badge !== undefined && !collapsed ? (
-                        <span className="rounded-full bg-surface-raised px-1.5 text-micro font-semibold text-body tabular-nums">
-                          {item.badge}
-                        </span>
+                      <Fade open={!collapsed} className="flex-1 truncate">
+                        {item.label}
+                      </Fade>
+                      {item.badge !== undefined ? (
+                        <Fade open={!collapsed}>
+                          <span className="rounded-full bg-surface-raised px-1.5 text-micro font-semibold text-body tabular-nums">
+                            {item.badge}
+                          </span>
+                        </Fade>
                       ) : null}
                     </Link>
                   </li>
@@ -298,9 +401,9 @@ function UserRow({
   collapsed: boolean;
 }) {
   return (
-    <div className={cn("flex min-h-12 items-center gap-2.5 rounded-md", collapsed ? "justify-center" : "px-1.5")}>
+    <div className="flex min-h-12 shrink-0 items-center gap-2.5 overflow-hidden rounded-md px-1.5">
       <Avatar name={user.name} src={user.avatarSrc} size="sm" />
-      <div className={cn("min-w-0 flex-1", collapsed && "sr-only")}>
+      <div className={cn("min-w-0 flex-1 whitespace-nowrap transition-opacity duration-150 motion-reduce:transition-none", collapsed && "opacity-0")}>
         <p className="truncate text-base font-medium text-strong">{user.name}</p>
         {user.detail ? <p className="truncate text-small text-muted">{user.detail}</p> : null}
       </div>

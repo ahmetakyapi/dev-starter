@@ -116,9 +116,9 @@ const ICONS: Record<Page, ReactNode> = {
 const BOTTOM: readonly Page[] = ["dashboard", "customers", "readings", "outages"];
 
 const SHORTCUTS: readonly (readonly [readonly string[], string])[] = [
-  [["⌘", "K"], "Komut Paleti: Müşteri, Sayaç, Sayfa Ara"],
+  [["⌘", "K"], "Komut Paleti: Abone, Sayaç, Sayfa Ara"],
   [["g", "p"], "Panoya Git"],
-  [["g", "m"], "Müşteriler"],
+  [["g", "m"], "Aboneler"],
   [["g", "s"], "Sayaçlar"],
   [["g", "o"], "Okumalar"],
   [["g", "f"], "Faturalar"],
@@ -131,7 +131,7 @@ const SHORTCUTS: readonly (readonly [readonly string[], string])[] = [
 
 const GROUPS: readonly { label: string; pages: readonly Page[] }[] = [
   { label: "Genel", pages: ["dashboard"] },
-  { label: "Müşteriler", pages: ["customers", "applications", "register"] },
+  { label: "Abonelik", pages: ["customers", "applications", "register"] },
   { label: "Ölçüm", pages: ["meters", "stock", "readings", "field", "rawdata", "producers"] },
   { label: "Finans", pages: ["invoices", "payments", "disputes"] },
   { label: "Operasyon", pages: ["outages", "calls", "leaks", "workorders", "grid"] },
@@ -178,7 +178,7 @@ function Guarded({ page, children }: { page: Page; children: ReactNode }) {
   const kullanici = useCan("kullanici");
   const role = useRole();
   if (page === "rawdata" && !hamveri) return <Forbidden what="Ham Veri" permission="Ham Veri Görüntüleme" />;
-  if (page === "register" && !musteri) return <Forbidden what="Müşteri Kaydı" permission="Müşteri Kaydı ve Düzenleme" />;
+  if (page === "register" && !musteri) return <Forbidden what="Abone Kaydı" permission="Abone Kaydı ve Düzenleme" />;
   if (page === "settings" && !kullanici && role !== "denetci") return <Forbidden what="Ayarlar" permission="Kullanıcı ve Rol Yönetimi" />;
   return <>{children}</>;
 }
@@ -439,7 +439,7 @@ export function KuzeyovaApp({ initialPage = "dashboard", initialParams = {}, ini
     [route, navigate, period, notices, markRead, notify],
   );
 
-  /* Genel arama: sayfalar + müşteri, sayaç, fatura, arıza, iş emri, çağrı, başvuru, vaka, itiraz (`_search.tsx`). */
+  /* Genel arama: sayfalar + abone, sayaç, fatura, arıza, iş emri, çağrı, başvuru, vaka, itiraz (`_search.tsx`). */
   const { commands, emptyCommands } = useSearchCommands({ navigate, setPeriod, badges: badgeCounts, pages: PAGES, icons: ICONS });
 
   if (!signedIn) {
@@ -520,7 +520,7 @@ export function KuzeyovaApp({ initialPage = "dashboard", initialParams = {}, ini
             <PageView key={`${route.page}:${route.params.id ?? ""}`} page={route.page} params={route.params} go={navigate} />
           )}
         </AppShell>
-        <CommandPalette commands={commands} emptyCommands={emptyCommands} maxResults={60} placeholder="Müşteri, sayaç, sayfa ya da komut ara" />
+        <CommandPalette commands={commands} emptyCommands={emptyCommands} maxResults={60} placeholder="Abone, sayaç, sayfa ya da komut ara" />
         <Dialog open={help} onOpenChange={setHelp} title="Klavye Kısayolları" description="Metin alanında yazarken kısayollar çalışmaz." size="sm">
           <dl className="grid gap-2.5 text-base text-body">
             {SHORTCUTS.map(([keys, what]) => (

@@ -67,7 +67,7 @@ check("belge düzenleyen: abone faturası tedarikçi adına", sample.filter((i) 
 
 /* 3. Vade uzatma: 30 gün altı doğrudan, üstü iki göz */
 const list = FIN.allInvoices(fin()).filter(FIN.isOverdue).slice(5, 7).map((i) => i.id);
-const direct = F.requestExtension(list, 14, "Müşteri talebi, belgeli");
+const direct = F.requestExtension(list, 14, "Abone talebi, belgeli");
 check("14 gün uzatma doğrudan uygulanır", direct.ok && direct.status === "uygulandi");
 const before = list.map((id) => inv(id).due);
 if (direct.ok && direct.status === "uygulandi") { direct.undo(); check("uzatma geri alınır", list.every((id, k) => inv(id).due !== before[k])); }
@@ -126,7 +126,7 @@ const t = T.getTransfers().find((x) => x.stage === "tarih");
 if (t) {
   const c0 = MUS.findCustomer(t.customerId).supplierId;
   T.completeTransfer(t.id);
-  check("geçiş tamamlanınca müşterinin tedarikçisi değişir", MUS.findCustomer(t.customerId).supplierId === t.to && c0 !== t.to);
+  check("geçiş tamamlanınca abonenin tedarikçisi değişir", MUS.findCustomer(t.customerId).supplierId === t.to && c0 !== t.to);
 }
 const verify = T.getTransfers().find((x) => x.stage === "talep");
 if (verify) {

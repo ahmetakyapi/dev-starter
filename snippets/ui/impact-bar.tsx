@@ -19,6 +19,9 @@ import { cn } from "@/lib/utils";
  * "Limit aşılıyor" yazar (renk tek işaret değil). `warnAt` (varsayılan %90)
  * aşılırsa yalnız metin `warning` tonuna döner, "Limite yakın" yazılır.
  *
+ * SATIR UZUNLUĞU: en çok 36rem (`max-w-xl`); etiket ile sağdaki sayı satırı
+ * geniş kapta birbirinden kopmasın. Geniş istersen `max-w-none`.
+ *
  * `format`: değer biçimi (sunucu bileşeni, fonksiyon prop'u serbest).
  * `role="meter"`; `aria-valuenow` ONAYDAN SONRAKİ değer, `aria-valuetext`
  * tam cümle ("Pazarlama: şu an 1.900, onayla 2.380, limit 6.000, yüzde 40").
@@ -62,7 +65,7 @@ export function ImpactBar({
   const valueText = `${label}: şu an ${format(cur)}, onaylanırsa ${format(after)}, limit ${format(cap)}, yüzde ${pct}${status ? `, ${status.toLocaleLowerCase("tr-TR")}` : ""}`;
 
   return (
-    <div className={cn("min-w-0", className)}>
+    <div className={cn("min-w-0 max-w-xl", className)}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
         <span className="text-base text-strong">{label}</span>
         <span aria-hidden className={cn("font-mono text-small tabular-nums", over ? "text-danger" : near ? "text-warning" : "text-muted")}>

@@ -69,6 +69,7 @@ const meta = {
     user: USER,
     userAction: <SignOutButton />,
     defaultCollapsed: false,
+    storageKey: false,
     searchLabel: "Ara",
     contentAs: "main",
     children: <PanoContent />,
@@ -109,7 +110,7 @@ export const Open: Story = {
 
 export const Collapsed: Story = {
   name: "Daraltılmış",
-  args: { defaultCollapsed: true },
+  args: { defaultCollapsed: true, storageKey: "shell-sidebar-test" },
   play: async ({ canvasElement }) => {
     const toggle = canvasElement.querySelector("aside button[aria-expanded]");
     if (!visible(toggle)) return;
@@ -119,6 +120,14 @@ export const Collapsed: Story = {
     await waitFor(() => expect(toggle).toHaveAttribute("aria-expanded", "true"));
     await userEvent.keyboard("{Control>}b{/Control}");
     await waitFor(() => expect(toggle).toHaveAttribute("aria-expanded", "false"));
+    // Buton da aynı işi görür; tercih kalıcıdır (çerez + localStorage).
+    await userEvent.click(toggle);
+    await waitFor(() => expect(toggle).toHaveAttribute("aria-expanded", "true"));
+    await expect(document.cookie).toContain("shell-sidebar-test=open");
+    await expect(window.localStorage.getItem("shell-sidebar-test")).toBe("open");
+    await userEvent.click(toggle);
+    await waitFor(() => expect(toggle).toHaveAttribute("aria-expanded", "false"));
+    await expect(window.localStorage.getItem("shell-sidebar-test")).toBe("collapsed");
   },
 };
 

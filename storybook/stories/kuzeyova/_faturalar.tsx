@@ -142,7 +142,7 @@ function StatusBadge({ inv }: { inv: EffectiveInvoice }) {
 
 type View = "kuyruk" | "hepsi" | "geciken" | "vadesi-gelmemis" | "odenen" | "itirazli" | "taslak";
 const VIEWS: readonly { id: View; label: string }[] = [
-  { id: "kuyruk", label: "Tahsilat Kuyruğu" },
+  { id: "kuyruk", label: "Tahsilat Listesi" },
   { id: "hepsi", label: "Tüm Faturalar" },
   { id: "geciken", label: "Geciken" },
   { id: "vadesi-gelmemis", label: "Vadesi Gelmemiş" },
@@ -679,7 +679,7 @@ function InvoiceList({ params, go }: PageProps) {
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
           <ChartCard id="fat-donem" className="xl:col-span-2" label="Dönem Tahakkuku" value={fmtTlCompact(all.filter((i) => !i.cancelled && chartPeriods.includes(i.period)).reduce((s, i) => s + i.total, 0))} change={null} changeLabel="son altı dönem">
             <StackedBarChart
-              title="Dönemlere Göre Ödenen, Vadesi Gelmemiş ve Geciken Tutar"
+              title="Dönemlere Göre Tutar Durumu"
               data={stacked}
               series={[{ name: "Ödenen", color: 3 }, { name: "Vadesi gelmemiş", color: 2 }, { name: "Geciken", color: 6 }]}
               highlight={stacked.length - 1}
@@ -759,10 +759,10 @@ function ExtendDialog({ open, onOpenChange, ids, onDone }: { open: boolean; onOp
   const [error, setError] = useState("");
   const needsApproval = Number(days) > EXTEND_DIRECT_MAX_DAYS;
   const extendChecks: PolicyCheck[] = [
-    { id: "adet", label: "Tek işlemde fatura sayısı", detail: `${ids.length} / 50`, state: ids.length > 0 && ids.length <= 50 ? "pass" : "fail" },
+    { id: "adet", label: "Tek İşlemde Fatura Sayısı", detail: `${ids.length} / 50`, state: ids.length > 0 && ids.length <= 50 ? "pass" : "fail" },
     needsApproval
-      ? { id: "sinir", label: "Doğrudan uygulama sınırı", detail: `${EXTEND_DIRECT_MAX_DAYS} günü aşıyor: ikinci yetkilinin onayı gerekir (ÖRNEK kural)`, state: "warn" }
-      : { id: "sinir", label: "Doğrudan uygulama sınırı", detail: `${EXTEND_DIRECT_MAX_DAYS} gün içinde, hemen uygulanır ve geri alınabilir`, state: "pass" },
+      ? { id: "sinir", label: "Doğrudan Uygulama Sınırı", detail: `${EXTEND_DIRECT_MAX_DAYS} günü aşıyor: ikinci yetkilinin onayı gerekir (ÖRNEK kural)`, state: "warn" }
+      : { id: "sinir", label: "Doğrudan Uygulama Sınırı", detail: `${EXTEND_DIRECT_MAX_DAYS} gün içinde, hemen uygulanır ve geri alınabilir`, state: "pass" },
     reason.trim().length >= 5
       ? { id: "gerekce", label: "Gerekçe", detail: "Denetim izine yazılacak", state: "pass" }
       : { id: "gerekce", label: "Gerekçe", detail: "En az 5 karakter yazın", state: "warn" },
@@ -847,7 +847,7 @@ function CallDialog({ invoice, onClose }: { invoice: EffectiveInvoice | null; on
             onClick={() => {
               const r = logFollowUp(invoice.customerId, state, { promiseDate: state === "soz-verdi" ? date : undefined, note });
               if (!r.ok) return setError(r.error);
-              notify({ title: `${c.name}: ${CALL_STATE_LABEL[state]}`, body: state === "soz-verdi" ? `Söz tarihi ${dayLabel(date)}; tutulmazsa kuyrukta yeniden görünür.` : "Görüşme kaydedildi.", tone: "success" });
+              notify({ title: `${c.name}: ${CALL_STATE_LABEL[state]}`, body: state === "soz-verdi" ? `Söz tarihi ${dayLabel(date)}; tutulmazsa listede yeniden görünür.` : "Görüşme kaydedildi.", tone: "success" });
               onClose();
             }}
           >
@@ -1032,15 +1032,15 @@ function AccrualDialog({ open, onOpenChange, go }: { open: boolean; onOpenChange
             headingLevel={3}
             checks={[
               preview.flaggedExcluded > 0
-                ? { id: "supheli", label: "Şüpheli okuma hariç", detail: `${num.format(preview.flaggedExcluded)} okuma Okumalar sayfasında onaylanınca sonraki tahakkukta kesilir`, state: "pass" }
-                : { id: "supheli", label: "Şüpheli okuma", detail: "Hariç tutulacak okuma yok", state: "pass" },
+                ? { id: "supheli", label: "Şüpheli Okuma Hariç", detail: `${num.format(preview.flaggedExcluded)} okuma Okumalar sayfasında onaylanınca sonraki tahakkukta kesilir`, state: "pass" }
+                : { id: "supheli", label: "Şüpheli Okuma", detail: "Hariç tutulacak okuma yok", state: "pass" },
               preview.pending > 0
-                ? { id: "bekleyen", label: "Bekleyen okuma", detail: `${num.format(preview.pending)} abone bu turda faturalanmaz`, state: "warn" }
-                : { id: "bekleyen", label: "Bekleyen okuma", detail: "Tüm okumalar alındı", state: "pass" },
+                ? { id: "bekleyen", label: "Bekleyen Okuma", detail: `${num.format(preview.pending)} abone bu turda faturalanmaz`, state: "warn" }
+                : { id: "bekleyen", label: "Bekleyen Okuma", detail: "Tüm okumalar alındı", state: "pass" },
               preview.estimated > 0
-                ? { id: "tahmini", label: "Tahmini endeks", detail: `${num.format(preview.estimated)} faturada: gerçek okuma gelince fark mahsup edilir`, state: "warn" }
-                : { id: "tahmini", label: "Tahmini endeks", detail: "Mahsup bekleyen yok", state: "pass" },
-              { id: "cift", label: "Çift tahakkuk", detail: already ? "Bu dönem zaten kesilmiş" : "Dönem için kesilmiş fatura yok, kapı açık", state: already ? "fail" : "pass" },
+                ? { id: "tahmini", label: "Tahmini Endeks", detail: `${num.format(preview.estimated)} faturada: gerçek okuma gelince fark mahsup edilir`, state: "warn" }
+                : { id: "tahmini", label: "Tahmini Endeks", detail: "Mahsup bekleyen yok", state: "pass" },
+              { id: "cift", label: "Çift Tahakkuk", detail: already ? "Bu dönem zaten kesilmiş" : "Dönem için kesilmiş fatura yok, kapı açık", state: already ? "fail" : "pass" },
             ]}
           />
         </div>
@@ -1053,7 +1053,7 @@ function AccrualDialog({ open, onOpenChange, go }: { open: boolean; onOpenChange
         <div className="grid gap-3 py-2">
           <p role="status" className="flex items-start gap-2 rounded-lg bg-success-wash p-3 text-small text-success">
             <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0" />
-            <span><strong className="font-semibold">{num.format(result?.count ?? 0)} fatura kesildi</strong>, toplam {tl(result?.total ?? 0)}. Müşterilere bildirim sıraya alındı.</span>
+            <span><strong className="font-semibold">{num.format(result?.count ?? 0)} fatura kesildi</strong>, toplam {tl(result?.total ?? 0)}. Abonelere bildirim sıraya alındı.</span>
           </p>
         </div>
       )}
@@ -1284,7 +1284,7 @@ function InvoiceDetail({ id, go }: { id: string; go: PageProps["go"] }) {
                 </InsightCallout>
               ) : null}
               {inv.status === "itirazli" ? (
-                <InsightCallout kind="warning" title="İtiraz Açık, Tahsilat Durdu" headingLevel={3} label="Dikkat">
+                <InsightCallout kind="warning" title="Tahsilat İtiraz Nedeniyle Durdu" headingLevel={3} label="Dikkat">
                   İtiraz karara bağlanana dek tahsilat ve kesme işlemi yapılmaz. Karar İtirazlar ve Mahsup sayfasında verilir.
                 </InsightCallout>
               ) : null}
@@ -1388,7 +1388,7 @@ function PaymentDialog({ open, onOpenChange, inv }: { open: boolean; onOpenChang
               if (!r.ok) return;
               notify({
                 title: `${tl(parsed)} Tahsilat Girildi`,
-                body: r.check.excess > 0 ? `${tl(r.check.excess)} fazla ödeme avans alacağına yazıldı.` : "Bakiye, müşteri kartı, Pano ve Ödemeler güncellendi.",
+                body: r.check.excess > 0 ? `${tl(r.check.excess)} fazla ödeme avans alacağına yazıldı.` : "Bakiye, abone kartı, Pano ve Ödemeler güncellendi.",
                 tone: "success",
               });
               onOpenChange(false);

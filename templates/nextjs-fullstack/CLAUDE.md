@@ -86,6 +86,16 @@ Kimlik, palet ve token kuralları `.claude/rules/tokens.md`de (bileşen/stil dos
   ThemeToggle istemcide yazar: server action içinde `cookies().set()` bütün
   sayfayı sunucuda yeniden çizer ve ön yükleme önbelleğini boşaltır.
 
+## Tasarım yönü
+
+Kabuk, kart, popup ve yoğunluk `docs/DESIGN.md` frontmatter'ından okunur
+(`direction`, `shell`, `card`, `popup`, `density`, `motion`); katalog
+`~/dev-starter/knowledge/design-directions.md`. Hep aynı sol menü + aynı kart
+yığını yapma: yön `veri-yogun` ise tablo ana yüzey ve sağdan sheet; `sicak-butik`
+ise alt dock ve yumuşak dolgu kart; `teknik-gelistirici` ise komut paleti ve
+dar ray. Yeni ekran bileşenlerini `node ~/dev-starter/scripts/add-ui.mjs`
+ile yönün listesinden ekle. Başlıkta ve hero metninde virgül yok.
+
 ## Bileşenler (`components/ui`)
 
 `Button` (brand · primary · secondary · ghost · danger; sm · md · lg · icon),

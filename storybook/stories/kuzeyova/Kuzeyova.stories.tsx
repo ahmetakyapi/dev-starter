@@ -37,7 +37,7 @@ const deepLinked = () => {
 
 async function command(root: HTMLElement, query: string) {
   await userEvent.keyboard("{Control>}k{/Control}");
-  const box = await within(root.ownerDocument.body).findByPlaceholderText("Müşteri, sayaç, sayfa ya da komut ara");
+  const box = await within(root.ownerDocument.body).findByPlaceholderText("Abone, sayaç, sayfa ya da komut ara");
   await userEvent.type(box, query);
   await userEvent.keyboard("{Enter}");
 }
@@ -52,7 +52,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Elektrik dağıtım şirketi operasyon portalı: tıklanabilir, tek kurgusal şirketin (Kuzeyova, 360 abone) tek sahte verisiyle çalışan bir demo. Sol menü: Pano; Müşteriler, Başvurular, Müşteri Kaydı; Sayaçlar, Sayaç Stok, Okumalar, Saha Okuma, Ham Veri, Üreticiler; Faturalar, Ödemeler, İtirazlar ve Mahsup; Arıza ve Kesintiler, Çağrı Merkezi, Kaçak Vakaları, İş Emirleri, Şebeke ve Trafo; Tedarikçiler; Raporlar; Uyum Merkezi, Ayarlar. Tek depo: bir sayfada yapılan işlem (ödeme, onay, ekip ataması) rozetleri, panoyu ve müşteri bakiyesini aynı anda günceller; adres çubuğu ve geri tuşu çalışır. Müşteri, sayaç, okuma, fatura ve ödeme listeleri tek kaynaktan türer: panodaki her toplam listelerin toplamıdır. ⌘K ile müşteri adı, tesisat no ya da sayaç seri no aranır; açık ve koyu temada aynı kalitede. Bütün veri ÖRNEKTİR.",
+          "Elektrik dağıtım şirketi operasyon portalı: tıklanabilir, tek kurgusal şirketin (Kuzeyova, 360 abone) tek sahte verisiyle çalışan bir demo. Sol menü: Pano; Aboneler, Başvurular, Abone Kaydı; Sayaçlar, Sayaç Stok, Okumalar, Saha Okuma, Ham Veri, Üreticiler; Faturalar, Ödemeler, İtirazlar ve Mahsup; Arıza ve Kesintiler, Çağrı Merkezi, Kaçak Vakaları, İş Emirleri, Şebeke ve Trafo; Tedarikçiler; Raporlar; Uyum Merkezi, Ayarlar. Tek depo: bir sayfada yapılan işlem (ödeme, onay, ekip ataması) rozetleri, panoyu ve abone bakiyesini aynı anda günceller; adres çubuğu ve geri tuşu çalışır. Abone, sayaç, okuma, fatura ve ödeme listeleri tek kaynaktan türer: panodaki her toplam listelerin toplamıdır. ⌘K ile abone adı, tesisat no ya da sayaç seri no aranır; açık ve koyu temada aynı kalitede. Bütün veri ÖRNEKTİR.",
       },
     },
   },
@@ -80,7 +80,7 @@ export const Overview: Story = {
     await go(canvasElement, "Faturalar");
     await go(canvasElement, "Sayaçlar");
     await command(canvasElement, CUSTOMERS[0].id);
-    await canvas.findByRole("heading", { level: 1, name: "Müşteriler" }, { timeout: 3000 });
+    await canvas.findByRole("heading", { level: 1, name: "Aboneler" }, { timeout: 3000 });
     await go(canvasElement, "Pano");
     await settle(globals);
   },
@@ -106,8 +106,8 @@ export const DashboardLastMonth: Story = {
   play: async ({ globals }) => settle(globals),
 };
 
-export const Customers: Story = { name: "Müşteriler", args: { initialPage: "customers" }, play: async ({ globals }) => settle(globals) };
-export const Register: Story = { name: "Müşteri Kaydı", args: { initialPage: "register" }, play: async ({ globals }) => settle(globals) };
+export const Customers: Story = { name: "Aboneler", args: { initialPage: "customers" }, play: async ({ globals }) => settle(globals) };
+export const Register: Story = { name: "Abone Kaydı", args: { initialPage: "register" }, play: async ({ globals }) => settle(globals) };
 export const Meters: Story = { name: "Sayaçlar", args: { initialPage: "meters" }, play: async ({ globals }) => settle(globals) };
 export const Readings: Story = { name: "Okumalar", args: { initialPage: "readings" }, play: async ({ globals }) => settle(globals) };
 export const RawData: Story = { name: "Ham Veri", args: { initialPage: "rawdata" }, play: async ({ globals }) => settle(globals) };

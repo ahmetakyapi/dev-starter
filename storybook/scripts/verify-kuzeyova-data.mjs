@@ -55,7 +55,7 @@ const dayCounts = new Map();
 for (const p of D.PAYMENTS) dayCounts.set(p.date, (dayCounts.get(p.date) ?? 0) + 1);
 check("ödemeler tek güne yığılmamış", Math.max(...dayCounts.values()) < D.PAYMENTS.length * 0.08, "en yoğun gün: " + Math.max(...dayCounts.values()));
 
-/* 2. Sayaç, trafo, müşteri */
+/* 2. Sayaç, trafo, abone */
 rule("çarpan = CT × VT", D.METERS.filter((m) => m.multiplier !== (m.ctRatio ?? 1) * (m.vtRatio ?? 1)), (m) => m.id);
 rule("OG sayaçta CT dolu, AG sayaçta çarpan 1", D.METERS.filter((m) => (D.customer(m.customerId).voltage === "OG" ? m.ct === "—" : m.multiplier !== 1)), (m) => m.id);
 rule("kurulum ≤ bugün ve ≥ abonelik", D.METERS.filter((m) => m.installed > D.TODAY_KEY || m.installed < D.customer(m.customerId).since), (m) => m.id + ":" + m.installed);
@@ -112,7 +112,7 @@ FIN.recordPayment(target.id, { channel: "online", amount: target.total, referenc
 const after = FIN.invoiceOf(target.id, FIN.getFinance());
 check("ödeme: fatura Ödendi olur", after.status === "odendi", after.status);
 check("ödeme: gecikme zammı ödemeyle tahsil edildi", after.lateFeePaid >= after.lateFee && after.lateFee > 0, String(after.lateFee));
-check("ödeme: müşteri bakiyesi aynı anda azalır", SEL.customerBalance(target.customerId) === balBefore - target.total, balBefore + " → " + SEL.customerBalance(target.customerId));
+check("ödeme: abone bakiyesi aynı anda azalır", SEL.customerBalance(target.customerId) === balBefore - target.total, balBefore + " → " + SEL.customerBalance(target.customerId));
 check("ödeme: geciken sayısı azalır (rozet)", SEL.badges().invoices === overdueBefore.length - 1, String(SEL.badges().invoices));
 check("ödeme: pano tahsilat oranı yükselir", SEL.liveStats("3").collectionRate >= statsBefore.collectionRate);
 check("ödeme: denetim izine yazıldı", A.getAuditLog().length === auditBefore + 1 && A.getAuditLog()[0].action === "Ödeme girdi");
@@ -169,6 +169,34 @@ check("çok zamanlı enerji bedeli dilim fiyatlarıyla", bill.energy === 1000 * 
 check("aşan reaktif bedel hesaplanır", bill.reactive > 0 && bill.reactiveExcessKvarh === 400, String(bill.reactiveExcessKvarh));
 check("güç aşım bedeli hesaplanır", bill.power > 0 && bill.powerOverKw === 50, String(bill.powerOverKw));
 check("faiz oranı tablosu tarih aralıklı", B.lateInterest(100000, "2025-12-01", "2026-01-01") > B.lateInterest(100000, "2020-06-01", "2020-07-02"));
+
+/* 12. Gerçekçilik ve kimlik tutarlılığı */
+rule("her abonenin tek sayacı", D.CUSTOMERS.filter((c) => D.METERS.filter((m) => m.customerId === c.id).length !== 1), (c) => c.id);
+rule("tesisat no 7-10 hane ve tek", D.CUSTOMERS.filter((c, i, a) => !/^\\d{7,10}$/.test(c.installation) || a.findIndex((x) => x.installation === c.installation) !== i), (c) => c.id + ":" + c.installation);
+rule("sayaç seri no biçimli, tek, yıl ≤ kurulum yılı", D.METERS.filter((m, i, a) => !/^KZ[AO]-\\d{2}-\\d{6}$/.test(m.serial) || Number(m.serial.slice(4, 6)) > Number(m.installed.slice(2, 4)) || a.findIndex((x) => x.serial === m.serial) !== i), (m) => m.id + ":" + m.serial);
+rule("abone adı tek", D.CUSTOMERS.filter((c, i, a) => a.findIndex((x) => x.name === c.name) !== i), (c) => c.name);
+rule("TM > fider > DTR hiyerarşisi tam", D.TRANSFORMERS.filter((t) => { const f = D.FEEDERS.find((x) => x.id === t.feederId); return !f || f.substationId !== t.substationId || f.regionId !== t.regionId || D.substation(t.substationId).regionId !== t.regionId; }), (t) => t.id);
+rule("sayaç, abone ve trafo aynı bölgede", D.METERS.filter((m) => { const t = D.transformer(m.transformerId); return t.regionId !== D.customer(m.customerId).regionId || t.substationId !== m.substationId; }), (m) => m.id);
+const konut = D.CUSTOMERS.filter((c) => c.kind === "bireysel");
+check("konut aylık ortalama 150-400 kWh", konut.every((c) => c.baseKwh >= 150 && c.baseKwh <= 400));
+const octInv = D.INVOICES.filter((i) => i.period === "2026-10");
+const kwhOf = (k) => octInv.filter((i) => D.customer(i.customerId).kind === k).reduce((s, i) => s + i.usageKwh, 0);
+const kwhAll = octInv.reduce((s, i) => s + i.usageKwh, 0);
+check("sanayi tüketim payı %35-50", kwhOf("sanayi") / kwhAll >= 0.35 && kwhOf("sanayi") / kwhAll <= 0.5, String(Math.round((kwhOf("sanayi") / kwhAll) * 100)));
+const konutInv = octInv.filter((i) => D.customer(i.customerId).kind === "bireysel");
+const konutAvgTl = konutInv.reduce((s, i) => s + i.total, 0) / konutInv.length / 100;
+check("konut ortalama fatura ₺600-₺1.800", konutAvgTl >= 600 && konutAvgTl <= 1800, String(Math.round(konutAvgTl)));
+check("tahsilat oranı %90-99", D.collectionOf("2026-10") >= 90 && D.collectionOf("2026-10") <= 99, String(D.collectionOf("2026-10")));
+const debtors = new Set(D.OVERDUE_INVOICES.map((i) => i.customerId)).size;
+check("borçlu abone oranı ≤ %20", debtors / D.CUSTOMERS.length <= 0.2, String(debtors));
+rule("bölge kayıp-kaçak %5-12", D.regionLoss("2026-10").filter((r) => r.lossPct < 5 || r.lossPct > 12), (r) => r.region.id + ":" + r.lossPct);
+check("okuma oranı ≥ %95", D.METERS.filter((m) => m.status === "okunuyor").length / D.METERS.length >= 0.95);
+const openCalls = Y.CALLS.filter((c) => c.status !== "kapandi");
+check("açık çağrı var, işlemdekiler açığın alt kümesi", openCalls.length >= 5 && openCalls.some((c) => c.status === "islemde") && openCalls.filter((c) => c.status === "islemde").length < openCalls.length);
+rule("aynı abonenin aynı türde iki açık çağrısı yok", openCalls.filter((c, i, a) => c.customerId && a.findIndex((x) => x.customerId === c.customerId && x.kind === c.kind) !== i), (c) => c.id);
+rule("çağrı sorumlusu kayıtlı kullanıcı", Y.CALLS.filter((c) => !OPS.USERS.some((u) => u.name === c.assignee)), (c) => c.id + ":" + c.assignee);
+const activeWo = S.getWorkOrders().filter((w) => w.customerId && w.status !== "tamamlandi" && w.status !== "iptal");
+rule("aynı abonede aynı türde iki açık iş emri yok", activeWo.filter((w, i, a) => a.findIndex((x) => x.customerId === w.customerId && x.type === w.type) !== i), (w) => w.id);
 
 /* Rapor */
 const failed = results.filter((r) => !r.ok);

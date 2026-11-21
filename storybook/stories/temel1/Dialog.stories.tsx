@@ -8,6 +8,8 @@ import { Dialog } from "@/components/ui/dialog";
 import { settle } from "./_settle";
 import { Cell, Frame, Gallery } from "../_lib/Frame";
 
+const LONG_ROWS = Array.from({ length: 24 }, (_, i) => `Satır ${i + 1}: Sayaç okuma kaydı, saha ekibi dönüşü bekliyor`);
+
 const meta = {
   title: "Bileşenler/Katmanlar/İletişim Penceresi",
   id: "dialog",
@@ -188,3 +190,34 @@ function SizedDialog({ size, title, body }: { size: "sm" | "md" | "lg"; title: s
     </>
   );
 }
+
+/** Uzun içerik: gövde kendi içinde kayar, başlık ve eylemler sabit, taşan yönde ince gölge, arka sayfa kilitli. */
+export const LongContent: Story = {
+  name: "Uzun İçerik (Gövde Kayar)",
+  tags: ["!autodocs"],
+  args: { open: true, size: "md", title: "Toplu Okuma Kaydı", description: "Kaydırırken başlık ve eylem çubuğu yerinde kalır." },
+  render: function Render(args) {
+    return (
+      <Frame width="sm" className="min-h-80">
+        <Dialog {...args} footer={<Button>Kaydet</Button>}>
+          <ul className="grid gap-3 text-base text-body">
+            {LONG_ROWS.map((row) => (
+              <li key={row}>{row}</li>
+            ))}
+          </ul>
+        </Dialog>
+      </Frame>
+    );
+  },
+  play: async ({ globals }) => {
+    const dialog = await screen.findByRole("dialog", { name: "Toplu Okuma Kaydı" });
+    const body = dialog.querySelector<HTMLElement>("[data-scroll-body]")!;
+    await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+    await expect(getComputedStyle(body).overscrollBehaviorY).toBe("contain");
+    await expect(getComputedStyle(body).overflowY).toBe("auto");
+    body.scrollTo({ top: 120, behavior: "instant" });
+    await settle(globals);
+    await waitFor(() => expect(within(dialog).getByRole("heading", { name: "Toplu Okuma Kaydı" })).toBeVisible());
+    await expect(within(dialog).getByRole("button", { name: "Kaydet" })).toBeVisible();
+  },
+};

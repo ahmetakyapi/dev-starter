@@ -5,7 +5,6 @@ import { Headset, MessageSquareWarning, PhoneCall, Smile, Star, TimerReset, Wren
 import { Badge } from "@/components/ui/badge";
 import { BarList } from "@/components/ui/bar-list";
 import { Button } from "@/components/ui/Button";
-import { Combobox, type ComboboxItem } from "@/components/ui/combobox";
 import { FactorList } from "@/components/ui/factor-list";
 import { InsightCallout } from "@/components/ui/insight-callout";
 import { Heatmap } from "@/components/ui/heatmap";
@@ -13,22 +12,21 @@ import { Rating } from "@/components/ui/rating";
 import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
 import { Tabs } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { Timeline, type TimelineEvent } from "@/components/ui/timeline";
 import type { ActiveFilter } from "@/components/ui/active-filters";
 import type { SavedView } from "@/components/ui/saved-views";
 import type { FilterGroup, FilterValue } from "@/components/ui/filter-sheet";
 import { useDerived } from "./_core";
 import { TODAY, TODAY_KEY, dateTime, dayKey, region } from "./_data";
-import { allCustomers } from "./_data-musteri";
 import { CALL_CHANNEL_LABEL, CALL_KIND_LABEL, type Call, type CallChannel, type CallKind } from "./_data-yeni";
 import { CALL_HOURS, callDays, callHourGrid, callRemaining, customerOf, isSensitive } from "./_data-ops-sayfa";
-import { BarTarget, EmptyStateX, FilterBar, PageHero, RowAnchor, RowLink, fmtDec, fmtDur, fmtNum, useListKeys } from "./_kit";
+import { BarTarget, CandidateStrip, EmptyStateX, FilterBar, PageHero, RowAnchor, RowLink, fmtDec, fmtDur, fmtNum, useListKeys } from "./_kit";
 import { useCan } from "./_permissions";
 import { customerBalance, faultCandidates, openOutages } from "./_selectors";
-import { WORK_TYPE_LABEL, createCall, createDispute, createOutageFromCalls, createWorkOrder, linkCallToOutage, setCallStatus, useCalls, type WorkType } from "./_store";
+import { WORK_TYPE_LABEL, createDispute, createOutageFromCalls, createWorkOrder, linkCallToOutage, setCallStatus, useCalls, type WorkType } from "./_store";
 import { liveInvoices } from "./_selectors";
-import { IconTile, PageBody, PageHead, Panel, href, useApp, type PageProps } from "./_ui";
+import { NewCallPage } from "./_cagri-yeni";
+import { PageBody, PageHead, Panel, href, useApp, type PageProps } from "./_ui";
 
 /* ------------------------------------------------------------------------ */
 /* Ortak                                                                     */
@@ -37,13 +35,13 @@ import { IconTile, PageBody, PageHead, Panel, href, useApp, type PageProps } fro
 const KIND_TONE: Record<CallKind, "danger" | "primary" | "warning" | "neutral"> = { ariza: "danger", fatura: "primary", sayac: "warning", bilgi: "neutral", sikayet: "warning", kesme: "primary" };
 const STATUS_LABEL = { acik: "Açık", islemde: "İşlemde", kapandi: "Kapandı" } as const;
 const PRIORITY_LABEL = { dusuk: "Düşük", normal: "Normal", yuksek: "Yüksek" } as const;
-const TABS = ["kuyruk", "yogunluk"] as const;
+const TABS = ["liste", "yogunluk"] as const;
 type TabId = (typeof TABS)[number];
 
 const VIEWS: SavedView[] = [
-  { id: "acik", label: "Açık Kuyruk", builtin: true },
-  { id: "sla", label: "SLA Aşanlar", builtin: true },
-  { id: "ariza", label: "Elektrik Yok", builtin: true },
+  { id: "acik", label: "Açık Çağrılar", builtin: true },
+  { id: "sla", label: "Süresi Aşanlar", builtin: true },
+  { id: "ariza", label: "Arıza Çağrıları", builtin: true },
   { id: "hepsi", label: "Hepsi", builtin: true },
 ];
 const GROUPS: FilterGroup[] = [
@@ -70,7 +68,7 @@ function SlaBadge({ c }: { c: Call }) {
   const left = callRemaining(c);
   return left < 0 ? (
     <Badge tone="danger" dot>
-      SLA {fmtDur(-left)} aşıldı
+      {fmtDur(-left)} geçti
     </Badge>
   ) : (
     <Badge tone={left < 60 ? "warning" : "neutral"} dot>
@@ -87,13 +85,13 @@ export function CagriPage({ params, go }: PageProps) {
   const { notify } = useApp();
   const canCall = useCan("musteri") || useCan("sayac");
   const calls = useCalls();
-  const tab: TabId = (TABS as readonly string[]).includes(params.tab ?? "") ? (params.tab as TabId) : "kuyruk";
+  const tab: TabId = (TABS as readonly string[]).includes(params.tab ?? "") ? (params.tab as TabId) : "liste";
 
   const [q, setQ] = useState("");
   const [view, setView] = useState("acik");
   const [value, setValue] = useState<FilterValue>(viewFilter("acik"));
   const [limit, setLimit] = useState(30);
-  const [newOpen, setNewOpen] = useState(!!params.new);
+  const newOpen = !!params.new;
   const listRef = useRef<HTMLUListElement>(null);
   useListKeys(listRef);
 
@@ -131,11 +129,11 @@ export function CagriPage({ params, go }: PageProps) {
   const channelRows = (Object.keys(CALL_CHANNEL_LABEL) as CallChannel[]).map((k) => ({ id: k, label: CALL_CHANNEL_LABEL[k], value: calls.filter((c) => c.channel === k).length }));
   const ratingRows = [5, 4, 3, 2, 1].map((n) => ({ id: String(n), label: `${n} Yıldız`, value: rated.filter((c) => c.rating === n).length }));
 
-  const queue = (
-    <Panel id="cagri-kuyruk" title="Çağrı Kuyruğu" note={`${fmtNum(filtered.length)} çağrı · SLA, çağrı tipine göre hedef süredir.`} actions={<Badge tone={slaBreached.length ? "danger" : "success"} dot>{slaBreached.length} SLA aşıldı</Badge>}>
+  const list = (
+    <Panel id="cagri-liste" title="Çağrı Listesi" note={`${fmtNum(filtered.length)} çağrı · Hedef süre çağrı türüne göre belirlenir`} actions={<Badge tone={slaBreached.length ? "danger" : "success"} dot>{slaBreached.length} çağrıda süre aşıldı</Badge>}>
       <div className="grid gap-3 p-4 sm:p-5">
         <FilterBar
-          search={{ value: q, onChange: setQ, placeholder: "Müşteri, tesisat, çağrı no ya da not ara", label: "Çağrı Ara" }}
+          search={{ value: q, onChange: setQ, placeholder: "Abone, tesisat, çağrı no ya da not ara", label: "Çağrı Ara" }}
           filters={filters}
           onRemoveFilter={removeFilter}
           onClearFilters={() => { setValue({}); setView("hepsi"); }}
@@ -156,10 +154,10 @@ export function CagriPage({ params, go }: PageProps) {
                       <div className="flex flex-wrap items-center gap-2">
                         <RowAnchor to={{ page: "calls", params: { id: c.id } }} className="kz-mono">{c.id}</RowAnchor>
                         <Badge tone={KIND_TONE[c.kind]} dot>{CALL_KIND_LABEL[c.kind]}</Badge>
-                        {c.priority === "yuksek" ? <Badge tone="danger">Yüksek öncelik</Badge> : null}
+                        {c.priority === "yuksek" ? <Badge tone="danger">Yüksek Öncelik</Badge> : null}
                         {c.outageId ? <Badge tone="primary">{c.outageId}</Badge> : null}
                       </div>
-                      <p className="text-base text-body">{cust ? `${cust.name} · ${cust.district}` : "Kimliksiz arayan"} — {c.note}</p>
+                      <p className="text-base text-body">{cust ? `${cust.name} · ${cust.district}` : "Kimliksiz arayan"} · {c.note}</p>
                     </div>
                     <div className="grid gap-1 sm:justify-items-end sm:text-right">
                       <SlaBadge c={c} />
@@ -217,46 +215,42 @@ export function CagriPage({ params, go }: PageProps) {
   );
 
   const panels: { value: TabId; label: string; panel: ReactNode }[] = [
-    { value: "kuyruk", label: `Kuyruk (${open.length})`, panel: <div className="pt-5">{queue}</div> },
+    { value: "liste", label: `Açık Çağrılar (${open.length})`, panel: <div className="pt-5">{list}</div> },
     { value: "yogunluk", label: "Yoğunluk ve Memnuniyet", panel: density },
   ];
+
+  if (newOpen) return <NewCallPage go={go} params={params} />;
 
   return (
     <>
       <PageHead
         title="Çağrı Merkezi"
-        description="Arayan müşteriyi bul, çağrıyı kaydet; arıza, iş emri ve itiraza tek tuşla çevir."
-        actions={canCall ? <Button variant="primary" size="sm" onClick={() => setNewOpen(true)}><PhoneCall aria-hidden /> Yeni Çağrı</Button> : null}
+        description="Arayan aboneyi bul · çağrıyı kaydet · arıza, iş emri ve itiraza tek tuşla çevir"
+        actions={canCall ? <Button variant="primary" size="sm" onClick={() => go("calls", { new: "1" })}><PhoneCall aria-hidden /> Yeni Çağrı</Button> : null}
       />
       <PageBody>
-        {candidates.length ? (
-          <section aria-label="Arıza Adayları" className="grid gap-2">
-            {candidates.map((c) => (
-              <div key={c.transformerId} role="group" aria-label={`Arıza adayı ${c.transformer.name}`} className="flex flex-wrap items-center gap-3 rounded-xl bg-warning-wash px-4 py-3 ring-1 ring-warning/30">
-                <IconTile tone="warning"><Zap /></IconTile>
-                <p className="min-w-[min(100%,16rem)] flex-1 text-base text-strong">
-                  <span className="font-semibold">{c.transformer.name}</span> için {c.count} elektrik yok çağrısı var; ortak arıza adayı.
-                  <span className="block text-small text-muted">Kayıt açılınca çağrılar arızaya bağlanır, ekip atanır ve onarım iş emri oluşur.</span>
-                </p>
-                {canCall ? (
-                  <Button size="sm" variant="primary" onClick={() => { const o = createOutageFromCalls(c.transformerId); if (o) { notify({ title: "Arıza Kaydı Açıldı", body: `${o.id} · ${c.count} çağrı bağlandı`, tone: "success" }); go("outages", { id: o.id }); } }}>
-                    Arızaya Çevir
-                  </Button>
-                ) : null}
-              </div>
-            ))}
-          </section>
-        ) : null}
+        <CandidateStrip
+          items={candidates.map((c) => ({
+            id: c.transformerId,
+            title: `Olası Ortak Arıza: ${c.transformer.name} Trafosunda ${c.count} Çağrı`,
+            detail: "Kayıt açılınca çağrılar arızaya bağlanır ve onarım iş emri oluşur.",
+            action: canCall ? (
+              <Button size="sm" variant="primary" onClick={() => { const o = createOutageFromCalls(c.transformerId); if (o) { notify({ title: "Arıza Kaydı Açıldı", body: `${o.id} · ${c.count} çağrı bağlandı`, tone: "success" }); go("outages", { id: o.id }); } }}>
+                Arızaya Çevir
+              </Button>
+            ) : undefined,
+          }))}
+        />
 
         <PageHero
-          primary={{ label: "Açık Çağrı", value: fmtNum(open.length), foot: `${fmtNum(open.filter((c) => c.kind === "ariza").length)} elektrik yok · ${fmtNum(open.filter((c) => c.status === "islemde").length)} işlemde`, icon: <Headset /> }}
+          primary={{ label: "Açık Çağrı", value: fmtNum(open.length), foot: `${fmtNum(open.filter((c) => c.kind === "ariza").length)} arıza çağrısı · ${fmtNum(open.filter((c) => c.status === "islemde").length)} işlemde`, icon: <Headset /> }}
           secondary={[
-            { label: "SLA Aşan", value: fmtNum(slaBreached.length), foot: slaBreached.length ? "Önce bunlara dön" : "Hedef sürede", icon: <TimerReset /> },
-            { label: "Arıza Adayı", value: fmtNum(candidates.length), foot: "Aynı trafoya 3+ çağrı", icon: <Zap /> },
+            { label: "Süresi Aşan", value: fmtNum(slaBreached.length), foot: slaBreached.length ? "Önce bunlara dön" : "Hedef sürede", icon: <TimerReset /> },
+            { label: "Olası Ortak Arıza", value: fmtNum(candidates.length), foot: "Aynı trafoda 3+ çağrı", icon: <Zap /> },
             { label: "Bugün Gelen", value: fmtNum(today.length), foot: `${fmtNum(today.filter((c) => c.status === "kapandi").length)} kapandı`, icon: <PhoneCall /> },
             { label: "Memnuniyet", value: fmtDec(avgRating), unit: "/ 5", foot: `${rated.length} değerlendirme`, icon: <Smile /> },
             { label: "Yüksek Öncelik", value: fmtNum(open.filter((c) => c.priority === "yuksek").length), foot: "Önce ele alınacak", icon: <Star /> },
-            { label: "Şikayet", value: fmtNum(calls.filter((c) => c.kind === "sikayet" && c.status !== "kapandi").length), foot: "Açık şikayet kaydı", icon: <MessageSquareWarning /> },
+            { label: "Açık Şikayet", value: fmtNum(calls.filter((c) => c.kind === "sikayet" && c.status !== "kapandi").length), foot: "Yönetici görür", icon: <MessageSquareWarning /> },
           ]}
         />
 
@@ -264,7 +258,6 @@ export function CagriPage({ params, go }: PageProps) {
       </PageBody>
 
       <CallSheet call={detail ?? null} canCall={canCall} onClose={() => go("calls", { tab })} go={go} />
-      <NewCallSheet open={newOpen} onClose={() => { setNewOpen(false); if (params.new) go("calls", { tab }); }} onCreated={(c) => { setNewOpen(false); notify({ title: "Çağrı Kaydedildi", body: `${c.id} · ${CALL_KIND_LABEL[c.kind]}`, tone: "success" }); go("calls", { id: c.id }); }} presetCustomer={params.new} />
     </>
   );
 }
@@ -339,20 +332,20 @@ function CallSheet({ call, canCall, onClose, go }: { call: Call | null; canCall:
 
           {call.status !== "kapandi" ? (
             <FactorList
-              title="Neden Bu Öncelikte"
+              title="Öncelik Nedenleri"
               headingLevel={3}
               severity={call.priority === "yuksek" || callRemaining(call) < 0 ? "high" : call.priority === "normal" ? "medium" : "low"}
               factors={[
-                { label: "Öncelik", value: PRIORITY_LABEL[call.priority], hint: call.kind === "ariza" ? "Elektrik yok çağrıları yüksek açılır" : "Çağrı türüne göre" , tone: call.priority === "yuksek" ? "danger" : "neutral" },
-                { label: "SLA", value: callRemaining(call) < 0 ? `${fmtDur(-callRemaining(call))} Aşıldı` : `${fmtDur(callRemaining(call))} Kaldı`, hint: "Çağrı türü süresine göre", tone: callRemaining(call) < 0 ? "danger" : callRemaining(call) < 60 ? "warning" : "neutral" },
-                { label: "Hassas Abone", value: cust && isSensitive(cust) ? "Evet" : "Hayır", hint: cust && isSensitive(cust) ? "Tıbbi cihaz vb.; öne al" : "Kimlik bilinmiyorsa belirsiz", tone: cust && isSensitive(cust) ? "danger" : "neutral" },
+                { label: "Öncelik", value: PRIORITY_LABEL[call.priority], hint: call.kind === "ariza" ? "Arıza çağrıları yüksek öncelikle açılır" : "Çağrı türüne göre" , tone: call.priority === "yuksek" ? "danger" : "neutral" },
+                { label: "Hedef Süre", value: callRemaining(call) < 0 ? `${fmtDur(-callRemaining(call))} Geçti` : `${fmtDur(callRemaining(call))} Kaldı`, hint: "Çağrı türüne göre", tone: callRemaining(call) < 0 ? "danger" : callRemaining(call) < 60 ? "warning" : "neutral" },
+                { label: "Hassas Abone", value: cust && isSensitive(cust) ? "Evet" : "Hayır", hint: cust && isSensitive(cust) ? "Tıbbi cihaz vb.; öne al" : "Kimlik bilinmiyorsa belli değil", tone: cust && isSensitive(cust) ? "danger" : "neutral" },
                 { label: "Önceki Çağrı", value: fmtNum(Math.max(0, history.length - 1)), hint: history.length > 2 ? "Tekrar eden başvuru" : "İlk ya da seyrek başvuru", tone: history.length > 2 ? "warning" : "neutral" },
               ]}
             />
           ) : null}
 
-          <section aria-label="Müşteri" className="grid gap-2">
-            <h3 className="text-read font-semibold text-strong">Müşteri</h3>
+          <section aria-label="Abone" className="grid gap-2">
+            <h3 className="text-read font-semibold text-strong">Abone</h3>
             {cust ? (
               <dl className="grid gap-x-4 gap-y-1 text-small sm:grid-cols-2">
                 <div><dt className="text-muted">Ad</dt><dd className="font-medium text-strong"><a href={href("customers", { id: cust.id })} className="hover:underline">{cust.name}</a>{isSensitive(cust) ? <Badge tone="danger" className="ml-2">Hassas abone</Badge> : null}</dd></div>
@@ -363,7 +356,7 @@ function CallSheet({ call, canCall, onClose, go }: { call: Call | null; canCall:
                 <div><dt className="text-muted">Açık Bakiye</dt><dd className="font-medium text-strong tabular-nums">{customerBalance(cust.id) ? `₺${(customerBalance(cust.id) / 100).toLocaleString("tr-TR", { minimumFractionDigits: 2 })}` : "Yok"}</dd></div>
               </dl>
             ) : (
-              <p className="text-small text-muted">Arayan kimliği bilinmiyor: tesisat numarasıyla müşteri bulunamadı.</p>
+              <p className="text-small text-muted">Arayan kimliği bilinmiyor: tesisat numarasıyla abone bulunamadı.</p>
             )}
           </section>
 
@@ -403,7 +396,7 @@ function CallSheet({ call, canCall, onClose, go }: { call: Call | null; canCall:
               ) : null}
               {call.outageId ? <p className="text-small text-muted">Bu çağrı <a href={href("outages", { id: call.outageId })} className="font-medium text-strong hover:underline">{call.outageId}</a> kaydına bağlı.</p> : null}
               <div className="grid gap-2 border-t border-line-soft pt-3 sm:grid-cols-[1fr_auto] sm:items-end">
-                <Select label="Müşteri Memnuniyeti" items={[5, 4, 3, 2, 1].map((n) => ({ value: String(n), label: `${n} Yıldız` }))} value={ratingSel} onValueChange={setRatingSel} />
+                <Select label="Abone Memnuniyeti" items={[5, 4, 3, 2, 1].map((n) => ({ value: String(n), label: `${n} Yıldız` }))} value={ratingSel} onValueChange={setRatingSel} />
                 <Button size="sm" variant="primary" onClick={() => (setCallStatus(call.id, "kapandi", Number(ratingSel)), notify({ title: `${call.id} Kapatıldı`, body: `${ratingSel} yıldız`, tone: "success" }))}>Çağrıyı Kapat</Button>
               </div>
             </section>
@@ -412,58 +405,13 @@ function CallSheet({ call, canCall, onClose, go }: { call: Call | null; canCall:
           ) : null}
 
           {events.length ? (
-            <section aria-label="Müşteri Geçmişi" className="grid gap-2">
+            <section aria-label="Abone Geçmişi" className="grid gap-2">
               <h3 className="text-read font-semibold text-strong">Önceki Çağrılar</h3>
               <Timeline events={events} />
             </section>
           ) : null}
         </div>
       ) : null}
-    </Sheet>
-  );
-}
-
-/* ------------------------------------------------------------------------ */
-/* Yeni çağrı                                                                */
-/* ------------------------------------------------------------------------ */
-
-function NewCallSheet({ open, onClose, onCreated, presetCustomer }: { open: boolean; onClose: () => void; onCreated: (c: Call) => void; presetCustomer?: string }) {
-  const items: ComboboxItem[] = useMemo(() => allCustomers().map((c) => ({ value: c.id, label: `${c.name} · Tesisat ${c.installation} · ${c.district}` })), []);
-  const [cust, setCust] = useState<ComboboxItem | null>(presetCustomer ? items.find((i) => i.value === presetCustomer) ?? null : null);
-  const [kind, setKind] = useState<string | null>("ariza");
-  const [priority, setPriority] = useState<string | null>("normal");
-  const [channel, setChannel] = useState<string | null>("telefon");
-  const [note, setNote] = useState("");
-  const priorityValue = kind === "ariza" && priority === "normal" ? "yuksek" : priority;
-  const submit = () => {
-    if (!kind) return;
-    const c = createCall({ kind: kind as CallKind, customerId: cust?.value ?? null, channel: (channel ?? "telefon") as CallChannel, note: note.trim() || CALL_KIND_LABEL[kind as CallKind], priority: (priorityValue ?? "normal") as Call["priority"] });
-    setNote("");
-    onCreated(c);
-  };
-  return (
-    <Sheet
-      open={open}
-      onOpenChange={(o) => !o && onClose()}
-      title="Yeni Çağrı"
-      description="Arayanı tesisat ya da adıyla bul; kayıt hemen kuyruğa düşer."
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>Vazgeç</Button>
-          <Button variant="primary" onClick={submit} disabled={!kind || (!cust && !note.trim())}>Çağrıyı Kaydet</Button>
-        </>
-      }
-    >
-      <div className="grid gap-3">
-        <Combobox label="Müşteri" items={items} value={cust} onValueChange={setCust} placeholder="Ad, tesisat no ya da mahalle" emptyText="Eşleşen müşteri yok. Kimliksiz çağrı olarak not girip kaydedebilirsin." />
-        <Select label="Çağrı Türü" items={Object.entries(CALL_KIND_LABEL).map(([value, label]) => ({ value, label }))} value={kind} onValueChange={setKind} />
-        <div className="grid grid-cols-2 gap-3">
-          <Select label="Öncelik" items={Object.entries(PRIORITY_LABEL).map(([value, label]) => ({ value, label }))} value={priorityValue} onValueChange={setPriority} />
-          <Select label="Kanal" items={Object.entries(CALL_CHANNEL_LABEL).map(([value, label]) => ({ value, label }))} value={channel} onValueChange={setChannel} />
-        </div>
-        <Textarea label="Not" value={note} onChange={(e) => setNote(e.target.value)} minRows={3} />
-        {kind === "ariza" ? <InsightCallout kind="insight" label="Bilgi" title="Elektrik Yok Çağrıları" headingLevel={3}>Yüksek öncelikle açılır; aynı trafoya üç çağrı gelirse arıza adayı olarak öne çıkar.</InsightCallout> : null}
-      </div>
     </Sheet>
   );
 }

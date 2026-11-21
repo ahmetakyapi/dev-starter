@@ -6,6 +6,7 @@ import { useMemo, useRef, useState } from "react";
 import type { ActiveFilter } from "@/components/ui/active-filters";
 import type { SavedView } from "@/components/ui/saved-views";
 import type { FilterValue } from "@/components/ui/filter-sheet";
+import { CUSTOMERS, METERS } from "./_data";
 import { setViewAs, useSession, ROLES } from "./_permissions";
 import {
   BarTarget,
@@ -42,7 +43,7 @@ const SPARK = [4, 5, 5, 7, 6, 8, 9, 8, 11, 10, 12, 13] as const;
 const DAILY = Array.from({ length: 14 }, (_, i) => ({ label: `${i + 8} Kas`, value: [0, 1, 1, 2, 2, 1, 0, 0, 1, 3, 2, 2, 4, 2][i] }));
 
 const VIEWS: SavedView[] = [
-  { id: "hepsi", label: "Hepsi", builtin: true, count: 360 },
+  { id: "hepsi", label: "Hepsi", builtin: true, count: CUSTOMERS.length },
   { id: "bugun", label: "Bugün Aranacaklar", count: 14 },
 ];
 const GROUPS = [
@@ -140,8 +141,8 @@ export function KitGallery() {
         />
         <MetricStrip>
           <Metric label="Faturalar" value="234" foot="Geciken, tüm dönemler" icon={<Receipt />} to={{ page: "invoices", params: { status: "gecikti" } }} />
-          <Metric label="Sayaçlar" value="360" foot="313 uzaktan okunuyor" icon={<Gauge />} to={{ page: "meters" }} />
-          <Metric label="Müşteriler" value="360" foot="57 serbest tüketici" icon={<Users />} to={{ page: "customers" }} />
+          <Metric label="Sayaçlar" value={fmtNum(METERS.length)} foot={`${fmtNum(METERS.filter((m) => m.comm !== "elle").length)} uzaktan okunuyor`} icon={<Gauge />} to={{ page: "meters" }} />
+          <Metric label="Aboneler" value={fmtNum(CUSTOMERS.length)} foot={`${fmtNum(CUSTOMERS.filter((c) => c.free).length)} serbest tüketici`} icon={<Users />} to={{ page: "customers" }} />
         </MetricStrip>
       </section>
 

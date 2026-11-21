@@ -155,12 +155,12 @@ export function StokPage({ go }: PageProps) {
     <span className="flex flex-wrap gap-1.5">
       {s.status === "stokta" ? (
         <Button variant="secondary" size="sm" disabled={!canManage} onClick={() => setAllocate(s)}>
-          <PackageCheck aria-hidden /> Tahsis et
+          <PackageCheck aria-hidden /> Tahsis Et
         </Button>
       ) : null}
       {s.status === "sokulmus" ? (
         <Button variant="secondary" size="sm" disabled={!canManage} onClick={() => setReceive(s)}>
-          <PackageMinus aria-hidden /> Depoya kabul
+          <PackageMinus aria-hidden /> Depoya Kabul
         </Button>
       ) : null}
       {s.status === "muayenede" ? (
@@ -173,7 +173,7 @@ export function StokPage({ go }: PageProps) {
             notify({ title: "Muayeneden Döndü", body: `${s.serial} stoğa alındı.`, tone: "success", undo: () => sendToInspection([s.id]) });
           }}
         >
-          <Undo2 aria-hidden /> Stoğa al
+          <Undo2 aria-hidden /> Stoğa Al
         </Button>
       ) : null}
     </span>
@@ -230,10 +230,10 @@ export function StokPage({ go }: PageProps) {
         actions={
           <>
             <Button variant="secondary" size="sm" onClick={() => exportRows(rows, "sayac-stok-2026-11.csv")}>
-              <Download aria-hidden /> CSV indir
+              <Download aria-hidden /> CSV İndir
             </Button>
             <Button variant="primary" size="sm" disabled={!canManage} onClick={() => setCounting(true)}>
-              <ClipboardCheck aria-hidden /> Stok sayımı
+              <ClipboardCheck aria-hidden /> Stok Sayımı
             </Button>
           </>
         }

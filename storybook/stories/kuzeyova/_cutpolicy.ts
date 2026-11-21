@@ -5,8 +5,8 @@ import { accountOf, findCustomer } from "./_data-musteri";
 import { allInvoices, getFinance, isOverdue } from "./_data-finans";
 
 /**
- * Kesme ve bağlama politikası. Bütün süreler ve takvim PARAMETREDİR (Ayarlar →
- * Kesme Politikası); değerler ÖRNEKTİR: gerçek mevzuattaki ihtar ve bekleme süreleri,
+ * Kesme ve bağlama kuralları. Bütün süreler ve takvim PARAMETREDİR (Ayarlar →
+ * Kesme Kuralları); değerler ÖRNEKTİR: gerçek mevzuattaki ihtar ve bekleme süreleri,
  * mesai saatleri ve hassas abone tanımı DOĞRULANMADI (bkz. `_billing.ts`).
  *
  * Akış: hatırlatma → ihtar (yazılı bildirim, tarihi kayıtlı) → bekleme süresi dolar
@@ -46,10 +46,10 @@ export const useCutPolicy = () => policy.use();
 export const getCutPolicy = () => policy.get();
 export const setCutPolicy = (patch: Partial<CutPolicyParams>) => policy.set((p) => ({ ...p, ...patch }));
 
-/** İhtar tebliğ tarihleri (müşteri kimliği → `YYYY-MM-DD`). */
+/** İhtar tebliğ tarihleri (abone kimliği → `YYYY-MM-DD`). */
 /**
  * Tohum: gecikmesi uzun, hassas olmayan ilk 14 abonenin ihtarı 14 gün önce
- * tebliğ edilmiş sayılır; böylece demoda bekleme süresi dolmuş adaylar vardır.
+ * tebliğ edilmiş sayılır; böylece demoda bekleme süresi dolmuş aboneler vardır.
  */
 function seedNotices(): Record<string, string> {
   const day = new Date(TODAY.getTime() - 14 * 86_400_000);
@@ -82,7 +82,7 @@ export type CutEligibility = {
   earliest: string | null;
 };
 
-/** Bir müşterinin kesme listesine girip giremeyeceği, nedenleriyle. */
+/** Bir abonenin kesme listesine girip giremeyeceği, nedenleriyle. */
 export function cutEligibility(customerId: string): CutEligibility {
   const p = policy.get();
   const c = findCustomer(customerId);
@@ -92,7 +92,7 @@ export function cutEligibility(customerId: string): CutEligibility {
   const overdue = c ? allInvoices(fin).filter((i) => i.customerId === customerId && isOverdue(i)) : [];
   const oldest = overdue.reduce<string | null>((min, i) => (min === null || i.due < min ? i.due : min), null);
   const overdueDays = oldest ? Math.max(0, daysBetween(parseDay(oldest), TODAY)) : 0;
-  if (!c) blockers.push("Müşteri bulunamadı");
+  if (!c) blockers.push("Abone bulunamadı");
   if (c) {
     if (c.status === "kesik") blockers.push("Enerjisi zaten kesik");
     if (c.status === "kapali") blockers.push("Abonelik kapalı");

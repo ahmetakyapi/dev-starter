@@ -3,10 +3,10 @@ import { useMemo, useSyncExternalStore } from "react";
 /**
  * Portal depo çekirdeği: TEK yayın kanalı, TEK sürüm sayacı.
  *
- * Her "dilim" (finans, müşteri, iş emri, denetim...) kendi değerini taşır ama
+ * Her "dilim" (finans, abone, iş emri, denetim...) kendi değerini taşır ama
  * hepsi aynı `bump()` ile haber verir. Böylece:
  *   - bir sayfada yapılan işlem (ödeme, kesme, onay) başka sayfadaki türetilmiş
- *     sayıları (rozet, pano, müşteri bakiyesi) AYNI ANDA günceller;
+ *     sayıları (rozet, pano, abone bakiyesi) AYNI ANDA günceller;
  *   - sayfa değişince durum kaybolmaz (dilimler modül düzeyinde yaşar);
  *   - `useDerived` ile her türetilmiş değer tek yerden (`_selectors.ts`) okunur.
  *

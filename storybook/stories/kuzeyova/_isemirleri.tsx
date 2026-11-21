@@ -196,7 +196,7 @@ export function IsEmirleriPage({ params, go }: PageProps) {
   const columnsTable: Column<WorkOrderX>[] = [
     { key: "id", header: "İş Emri", sortable: true, sortValue: (w) => w.id, render: (w) => <a href={href("workorders", { id: w.id })} className="kz-mono font-medium text-strong hover:underline">{w.id}</a> },
     { key: "t", header: "Tür", sortable: true, sortValue: (w) => WORK_TYPE_LABEL[w.type], render: (w) => WORK_TYPE_LABEL[w.type] },
-    { key: "c", header: "Müşteri / Bölge", render: (w) => (w.customerId ? customerOf(w.customerId).name : region(w.regionId).name) },
+    { key: "c", header: "Abone / Bölge", render: (w) => (w.customerId ? customerOf(w.customerId).name : region(w.regionId).name) },
     { key: "a", header: "Atanan", render: (w) => w.assignee ?? <span className="text-muted">Atanmadı</span> },
     { key: "p", header: "Planlı", sortable: true, sortValue: (w) => w.scheduled.getTime(), render: (w) => dateTime(w.scheduled) },
     { key: "sla", header: "SLA", render: (w) => <SlaBadge w={w} /> },
@@ -296,7 +296,7 @@ export function IsEmirleriPage({ params, go }: PageProps) {
 
         <div className="grid gap-3">
           <FilterBar
-            search={{ value: q, onChange: setQ, placeholder: "İş emri, müşteri, ekip ya da neden ara", label: "İş Emri Ara" }}
+            search={{ value: q, onChange: setQ, placeholder: "İş emri, abone, ekip ya da neden ara", label: "İş Emri Ara" }}
             filters={filters}
             onRemoveFilter={removeFilter}
             onClearFilters={() => { setValue({}); setQ(""); }}
@@ -378,7 +378,7 @@ function DetailSheet({ w, view, canEdit, onClose, go, onComplete }: { w: WorkOrd
               />
             ) : null}
             <dl className="grid gap-x-4 gap-y-2 text-small sm:grid-cols-2">
-              <div><dt className="text-muted">Müşteri</dt><dd className="font-medium text-strong">{cust ? <a href={href("customers", { id: cust.id })} className="hover:underline">{cust.name}</a> : "Bölge geneli"}</dd></div>
+              <div><dt className="text-muted">Abone</dt><dd className="font-medium text-strong">{cust ? <a href={href("customers", { id: cust.id })} className="hover:underline">{cust.name}</a> : "Bölge geneli"}</dd></div>
               <div><dt className="text-muted">Sayaç</dt><dd className="font-medium text-strong">{meter ? <a href={href("meters", { id: meter })} className="kz-mono hover:underline">{meter}</a> : "—"}</dd></div>
               <div><dt className="text-muted">Bağlı Kayıt</dt><dd className="font-medium text-strong">{link ? <a href={link.to} className="hover:underline">{link.label}</a> : "—"}</dd></div>
               <div><dt className="text-muted">Atanan</dt><dd className="font-medium text-strong">{w.assignee ?? "Atanmadı"}</dd></div>
@@ -420,7 +420,7 @@ function DetailSheet({ w, view, canEdit, onClose, go, onComplete }: { w: WorkOrd
         }
       >
         <Textarea label="İptal Gerekçesi" value={reason} onChange={(e) => setReason(e.target.value)} minRows={3} />
-        <p className="mt-2 text-small text-muted">Kesme ve bağlama emri iptal edilince müşterideki bekleyen işlem de kalkar. Bu işlem geri alınamaz.</p>
+        <p className="mt-2 text-small text-muted">Kesme ve bağlama emri iptal edilince abonedeki bekleyen işlem de kalkar. Bu işlem geri alınamaz.</p>
       </Dialog>
     </>
   );
@@ -442,7 +442,7 @@ function CompleteDialog({ w, onClose }: { w: WorkOrderX | null; onClose: () => v
     // Durum makinesi ileri akar: tamamlanmaya kadar kalan adımlar sırayla işlenir.
     const from = WORK_FLOW.indexOf(w.status);
     for (let i = from; i < WORK_FLOW.length - 1; i++) advanceWorkOrder(w.id, i === WORK_FLOW.length - 2 ? result : undefined);
-    notify({ title: `${w.id} Tamamlandı`, body: w.type === "kesme" ? "Enerji kesildi, müşteri durumu güncellendi" : w.type === "baglama" ? "Enerji yeniden bağlandı" : w.type === "sayac-degisim" ? "Sayaç değişimi işlendi, stok güncellendi" : "Saha sonucu kaydedildi", tone: "success" });
+    notify({ title: `${w.id} Tamamlandı`, body: w.type === "kesme" ? "Enerji kesildi, abone durumu güncellendi" : w.type === "baglama" ? "Enerji yeniden bağlandı" : w.type === "sayac-degisim" ? "Sayaç değişimi işlendi, stok güncellendi" : "Saha sonucu kaydedildi", tone: "success" });
     setF({ oldSerial: "", oldIndex: "", newSerial: "", newIndex: "", seal: "", note: "" });
     onClose();
   };
@@ -503,7 +503,7 @@ function CompleteDialog({ w, onClose }: { w: WorkOrderX | null; onClose: () => v
         ) : null}
         {w?.type === "kesme" ? (
           <div className="sm:col-span-2">
-            <InsightCallout kind="warning" label="Sonuç" title="Enerji Kesilecek" headingLevel={3}>Tamamlanınca müşteri enerjisi kesildi olarak işaretlenir ve sayaç rölesi açılır.</InsightCallout>
+            <InsightCallout kind="warning" label="Sonuç" title="Enerji Kesilecek" headingLevel={3}>Tamamlanınca abone enerjisi kesildi olarak işaretlenir ve sayaç rölesi açılır.</InsightCallout>
           </div>
         ) : null}
         {w?.type === "baglama" ? (
@@ -536,7 +536,7 @@ function CreateDialog({ open, onClose, onCreated }: { open: boolean; onClose: ()
       onOpenChange={(o) => !o && onClose()}
       size="lg"
       title="İş Emri Aç"
-      description="Planlı zaman iş gününe ve mesaiye oturur; müşteri seçilirse bölge ondan gelir."
+      description="Planlı zaman iş gününe ve mesaiye oturur; abone seçilirse bölge ondan gelir."
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>Vazgeç</Button>
@@ -547,7 +547,7 @@ function CreateDialog({ open, onClose, onCreated }: { open: boolean; onClose: ()
       <div className="grid gap-3 sm:grid-cols-2">
         <Select label="İş Türü" items={TYPE_ORDER.map((t) => ({ value: t, label: WORK_TYPE_LABEL[t] }))} value={type} onValueChange={setType} />
         <Select label="Ekip (İsteğe Bağlı)" items={CREWS.map((c) => ({ value: c, label: c }))} value={crew} onValueChange={setCrew} placeholder="Sonra ata" />
-        <Combobox label="Müşteri" items={items} value={cust} onValueChange={setCust} placeholder="Ad ya da tesisat no" emptyText="Eşleşen müşteri yok." />
+        <Combobox label="Abone" items={items} value={cust} onValueChange={setCust} placeholder="Ad ya da tesisat no" emptyText="Eşleşen abone yok." />
         <Select label="Bölge" items={REGIONS.map((r) => ({ value: r.id, label: r.name }))} value={cust ? customerOf(cust.value).regionId : reg} onValueChange={setReg} disabled={!!cust} />
         <div className="sm:col-span-2">
           <Textarea label="Neden" value={reason} onChange={(e) => setReason(e.target.value)} minRows={2} />

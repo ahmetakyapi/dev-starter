@@ -72,7 +72,7 @@ import { IconTile, MetricStrip, PageBody, PageHead, Panel, ReadingBadge, href, u
  *
  * Her işlem DEPOYA yazılır (`_ops.ts`): girilen okuma, onay/düzeltme/tahmini ve
  * toplu içe aktarma okumanın kendisini değiştirir; rozet, Pano ve faturalama
- * kapısı aynı kaynaktan okur. Okuyucu atamaları, gönderilen turlar ve oturum
+ * denetimi aynı kaynaktan okur. Okuyucu atamaları, gönderilen turlar ve oturum
  * girişleri modül düzeyinde bir dilimde durur: başka sayfaya gidip dönünce
  * kaybolmaz. Onaylanmamış (şüpheli) okuma tahakkuka girmez; onay faturaya serbest bırakır.
  */
@@ -319,7 +319,7 @@ function RoutesTab({ go }: { go: PageProps["go"] }) {
               />
               <div className="mt-auto flex flex-wrap gap-2">
                 <Button variant={isOpen ? "primary" : "secondary"} size="sm" onClick={() => setOpenId(r.regionId)} aria-pressed={isOpen}>
-                  <ClipboardList aria-hidden /> Rotayı göster
+                  <ClipboardList aria-hidden /> Rotayı Göster
                 </Button>
                 <Button
                   variant="secondary"
@@ -762,7 +762,7 @@ function ReadingSheet({ reading, onResolve, onClose, go }: { reading: Reading | 
       footerStart={
         isSuspect && reading ? (
           <Button variant="ghost" onClick={() => decide(reading.id, "yeniden")}>
-            <RadioTower aria-hidden /> Yeniden okuma iste
+            <RadioTower aria-hidden /> Yeniden Okuma İste
           </Button>
         ) : undefined
       }
@@ -999,7 +999,7 @@ function ImportTab() {
               />
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="secondary" size="sm" onClick={() => setFile({ name: "saha-okuma-2026-11-21.csv", size: "3,2 KB" })}>
-                  <FileSpreadsheet aria-hidden /> Örnek dosyayı kullan
+                  <FileSpreadsheet aria-hidden /> Örnek Dosyayı Kullan
                 </Button>
                 <span className="text-small text-muted">Demoda dosya içeriği okunmaz; örnek bir dosya gösterilir.</span>
               </div>
@@ -1032,7 +1032,7 @@ function ImportTab() {
             title="Hata Raporu"
             note={`${bad.length} satır aktarılmaz`}
             id="hatalar"
-            actions={<Button variant="secondary" size="sm" onClick={() => { downloadCsv("hata-raporu-2026-11-21.csv", [["Satır", "Seri no", "Sorun", "Açıklama"], ...bad.map((r) => [r.line, r.serial, PROBLEM_LABEL[r.problem!.kind], r.problem!.message])]); notify({ title: "Hata Raporu İndirildi", body: `${bad.length} satır, hata-raporu-2026-11-21.csv`, tone: "success" }); }}><Upload aria-hidden className="rotate-180" /> Raporu indir</Button>}
+            actions={<Button variant="secondary" size="sm" onClick={() => { downloadCsv("hata-raporu-2026-11-21.csv", [["Satır", "Seri no", "Sorun", "Açıklama"], ...bad.map((r) => [r.line, r.serial, PROBLEM_LABEL[r.problem!.kind], r.problem!.message])]); notify({ title: "Hata Raporu İndirildi", body: `${bad.length} satır, hata-raporu-2026-11-21.csv`, tone: "success" }); }}><Upload aria-hidden className="rotate-180" /> Raporu İndir</Button>}
           >
             <div className="max-md:hidden">
               <DataTable<ImportRow> caption="İçe aktarma hata raporu" columns={badColumns} rows={bad} rowKey={(r) => String(r.line)} density="compact" on="surface" stickyFirst={false} minWidth="40rem" />

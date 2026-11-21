@@ -28,6 +28,8 @@ function FilterBody() {
   );
 }
 
+const LONG_ROWS = Array.from({ length: 24 }, (_, i) => `Satır ${i + 1}: Sayaç okuma kaydı, saha ekibi dönüşü bekliyor`);
+
 const meta = {
   title: "Bileşenler/Katmanlar/Yan Panel",
   id: "sheet",
@@ -162,6 +164,35 @@ export const DetailPanel: Story = {
     const sheet = await screen.findByRole("dialog", { name: "Kargo Entegrasyonu" });
     await expect(within(sheet).getByText("Bağlı")).toBeVisible();
     await expect(within(sheet).getByRole("button", { name: "Bağlantıyı Kes" })).toBeVisible();
+    await settle(globals);
+  },
+};
+
+/** Uzun içerik: gövde kayar, başlık ve alt çubuk sabit; her açılışta en üstten başlar. */
+export const LongContent: Story = {
+  name: "Uzun İçerik (Gövde Kayar)",
+  tags: ["!autodocs"],
+  args: { open: true, side: "right", title: "Okuma Geçmişi", description: "Kaydırırken başlık ve eylem çubuğu yerinde kalır." },
+  render: function Render(args) {
+    return (
+      <Frame width="sm" className="min-h-80">
+        <Sheet {...args} footer={<Button>Dışa Aktar</Button>}>
+          <ul className="grid gap-3 text-base text-body">
+            {LONG_ROWS.map((row) => (
+              <li key={row}>{row}</li>
+            ))}
+          </ul>
+        </Sheet>
+      </Frame>
+    );
+  },
+  play: async ({ globals }) => {
+    const sheet = await screen.findByRole("dialog", { name: "Okuma Geçmişi" });
+    const body = sheet.querySelector<HTMLElement>("[data-scroll-body]")!;
+    await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+    await expect(getComputedStyle(body).overscrollBehaviorY).toBe("contain");
+    body.scrollTo({ top: 120, behavior: "instant" });
+    await expect(within(sheet).getByRole("button", { name: "Dışa Aktar" })).toBeVisible();
     await settle(globals);
   },
 };

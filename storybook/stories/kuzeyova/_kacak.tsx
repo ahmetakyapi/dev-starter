@@ -109,7 +109,7 @@ export function KacakPage({ params, go }: PageProps) {
 
   const columnsTable: Column<LeakCase>[] = [
     { key: "id", header: "Vaka", sortable: true, sortValue: (l) => l.id, render: (l) => <a href={href("leaks", { id: l.id })} className="kz-mono font-medium text-strong hover:underline">{l.id}</a> },
-    { key: "c", header: "Müşteri", render: (l) => customerOf(l.customerId).name },
+    { key: "c", header: "Abone", render: (l) => customerOf(l.customerId).name },
     { key: "f", header: "Bulgu", render: (l) => l.flag },
     { key: "s", header: "Aşama", sortable: true, sortValue: (l) => stageIndex(l), render: (l) => <StageBadge stage={l.stage} /> },
     { key: "k", header: "Tahmini kWh", numeric: true, sortable: true, sortValue: (l) => l.estimatedKwh, render: (l) => fmtNum(l.estimatedKwh) },
@@ -164,7 +164,7 @@ export function KacakPage({ params, go }: PageProps) {
                   stickyFirst={false}
                   columns={[
                     { key: "m", header: "Sayaç", render: (r) => <a href={href("meters", { id: r.meterId })} className="kz-mono font-medium text-strong hover:underline">{METERS.find((m) => m.id === r.meterId)?.serial ?? r.meterId}</a> },
-                    { key: "c", header: "Müşteri", render: (r) => customerOf(r.customerId).name },
+                    { key: "c", header: "Abone", render: (r) => customerOf(r.customerId).name },
                     { key: "f", header: "Bayraklar", render: (r) => (r.flags.length ? r.flags.map((f) => FLAG_LABEL[f as keyof typeof FLAG_LABEL] ?? f).join(", ") : r.status === "mudahale" ? "Müdahale şüphesi" : "—") },
                     { key: "d", header: "Düşüş", numeric: true, sortable: true, sortValue: (r) => r.drop, render: (r) => (r.drop ? `%${r.drop}` : "—") },
                     { key: "s", header: "Skor", numeric: true, sortable: true, sortValue: (r) => r.score, render: (r) => <Badge tone={r.score >= 60 ? "danger" : r.score >= 40 ? "warning" : "neutral"} dot>{r.score}</Badge> },
@@ -273,7 +273,7 @@ function NewLeakDialog({ open, preset, suspects, onClose, onStart }: { open: boo
       }
     >
       <div className="grid gap-3">
-        <Combobox label="Sayaç" items={items} value={meter} onValueChange={setMeter} placeholder="Seri no ya da müşteri adı" emptyText="Eşleşen sayaç yok." />
+        <Combobox label="Sayaç" items={items} value={meter} onValueChange={setMeter} placeholder="Seri no ya da abone adı" emptyText="Eşleşen sayaç yok." />
         <Select label="Kaynak" items={Object.entries(SOURCE_LABEL).map(([value, label]) => ({ value, label }))} value={source} onValueChange={setSource} />
         <Input label="Bulgu" value={flag} onChange={(e) => setFlag(e.target.value)} hint="Örn. kapak açma kaydı, manyetik müdahale, komşu ihbarı." />
       </div>
@@ -400,7 +400,7 @@ function LeakDetail({ l, go, can }: { l: LeakCase; go: PageProps["go"]; can: boo
             </div>
           </Panel>
 
-          <Panel id="kd-bedel" title="Bedel Hesabı" note="Katsayılar ÖRNEK parametredir; resmî hesap mevzuat tanımına göre yapılır.">
+          <Panel id="kd-bedel" title="Bedel Hesabı" note="Katsayılar ÖRNEK parametredir; resmi hesap mevzuat tanımına göre yapılır.">
             <div className="grid gap-3 p-4 sm:p-5">
               <div className="grid grid-cols-2 gap-3">
                 <Input label="Tahmini Kaçak Tüketim (kWh)" inputMode="numeric" value={kwh} onChange={(e) => setKwh(e.target.value.replace(/\D/g, ""))} disabled={!can || idx >= 4} />
@@ -425,7 +425,7 @@ function LeakDetail({ l, go, can }: { l: LeakCase; go: PageProps["go"]; can: boo
           </Panel>
         </div>
 
-        <Panel id="kd-islem" title="Müşteri ve İtiraz" note="Müşteri sayfası, itiraz kaydı ve vakayı kapatma.">
+        <Panel id="kd-islem" title="Abone ve İtiraz" note="Abone sayfası, itiraz kaydı ve vakayı kapatma.">
           <div className="grid gap-3 p-4 sm:p-5">
             <p className="text-base text-body"><a href={href("customers", { id: cust.id })} className="font-semibold text-strong hover:underline">{cust.name}</a> · Tesisat {cust.installation} · {region(cust.regionId).name}, {cust.district}</p>
             {disputes.length ? (

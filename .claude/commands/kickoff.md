@@ -21,18 +21,25 @@ cümlelik tarifini iste.
    `~/dev-starter/agents/strategist-agent.md`. Belgeleri **agent yazar**
    (şablon: `~/dev-starter/templates/docs/KICKOFF.template.md`); ana oturum
    yeniden yazmaz.
+   **Tasarım Yönü zorunludur:** agent `npm run direction` (ya da
+   `node ~/dev-starter/scripts/pick-direction.mjs`) ile `knowledge/design-directions.md`
+   kataloğundan ürünün işine göre **üç yön adayı** çıkarır; son beş projede
+   kullanılan yön (`knowledge/direction-log.md`) aday olmaz. Varsayılan "hep
+   aynı mavi palet ve aynı hero" yasaktır.
 3. **Agent `SORULAR` bloğu döndürürse** (dosya yazmadan durur): soruları
    kullanıcıya **tek seferde** sor (AskUserQuestion; cevabı fikirden çıkan
    soruyu atla), sonra agent'ı yanıtlar Görev Tanımı'na eklenmiş olarak
    **yeniden çağır**. Subagent tek turluktur; "cevabı ilet" yeni çağrıdır.
 4. Dönen dosyaları oku ve kullanıcıya özetle: önerilen yön ve nedeni,
    teknoloji kararlarından sapmalar, MVP'nin Must listesi, en büyük risk.
-   Ardından sor: **"Bu planla `/new-project`'e geçelim mi?"**
+   **Tasarım yönü üç adayı** (her biri: ad, neden bu ürüne uyar, hero, kabuk,
+   kart ve popup dili, yasak) kullanıcıya AskUserQuestion ile sun; seçileni
+   `docs/KICKOFF.md` → "Tasarım Yönü" bölümüne yazdır. Ardından sor: **"Bu planla `/new-project`'e geçelim mi?"**
 5. Onay gelirse `/new-project <ad>` akışına geç; şablon, palet ve varsayılan
    tema KICKOFF.md'den gelir, ayrıca sorma. Onay gelmezse belgeler yerinde
    kalır; düzeltme istenirse agent'ı o notla yeniden çağır.
 
-Çıktı: iki dosya yolu, önerilen yön (tek cümle), Must listesi, en büyük risk,
+Çıktı: iki dosya yolu, önerilen yön (tek cümle), seçilen tasarım yönü, Must listesi, en büyük risk,
 sıradaki adım.
 
 Kural: Pazar iddiası kaynaksız yazılmaz. Teknoloji önerisi

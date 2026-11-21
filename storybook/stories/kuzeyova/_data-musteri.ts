@@ -21,7 +21,7 @@ import {
 } from "./_data";
 
 /**
- * Müşteriler ve Müşteri Kaydı sayfalarının ortak çalışma verisi.
+ * Aboneler ve Abone Kaydı sayfalarının ortak çalışma verisi.
  *
  * `_data.ts` salt okunur; bu dosya onun ÜSTÜNE oturumluk değişiklik koyar:
  * kayıt sihirbazının eklediği yeni aboneler, ayrıntı ekranında yapılan
@@ -138,21 +138,21 @@ export function addNote(id: string, text: string) {
   const list = store.notes.get(id) ?? [];
   store.notes.set(id, [{ id: `n-${seq++}`, author: "Aylin Yıldırım", when: "Bugün, 10:40", text }, ...list]);
   addHistory(id, { title: "Not Eklendi", description: text.length > 70 ? `${text.slice(0, 70)}…` : text, tone: "neutral" }, false);
-  audit("Müşteri notu ekledi", id, undefined, text.length > 60 ? `${text.slice(0, 60)}…` : text);
+  audit("Abone notu ekledi", id, undefined, text.length > 60 ? `${text.slice(0, 60)}…` : text);
   emit();
 }
 
 export function addCustomer(customer: Customer, meter: Meter) {
   store.added = [customer, ...store.added];
   store.addedMeters = [meter, ...store.addedMeters];
-  addHistory(customer.id, { title: "Abonelik Açıldı", description: "Müşteri kaydı sihirbazıyla oluşturuldu.", tone: "success" }, false);
-  audit("Müşteri kaydetti", `${customer.id} · ${customer.name}`, undefined, `Sayaç ${meter.serial}`);
+  addHistory(customer.id, { title: "Abonelik Açıldı", description: "Abone kaydı sihirbazıyla oluşturuldu.", tone: "success" }, false);
+  audit("Abone kaydetti", `${customer.id} · ${customer.name}`, undefined, `Sayaç ${meter.serial}`);
   emit();
 }
 
 /* --- Okuma (ek veriyle birleşik) ------------------------------------------ */
 
-/** Oturumda eklenenler dahil bütün müşteriler (en yeni üstte). */
+/** Oturumda eklenenler dahil bütün aboneler (en yeni üstte). */
 export const allCustomers = (): Customer[] => [...store.added, ...CUSTOMERS].map(withPatch);
 
 export const withPatch = (c: Customer): Customer => {
@@ -172,7 +172,7 @@ export const notesOf = (id: string): Note[] => store.notes.get(id) ?? [];
 export const isAdded = (id: string) => store.added.some((c) => c.id === id);
 
 /**
- * Müşteri başına açık bakiye (kuruş) ve geciken fatura sayısı: CANLI finans
+ * Abone başına açık bakiye (kuruş) ve geciken fatura sayısı: CANLI finans
  * deposundan; bir ödeme girilince bakiye ve "riskli" rozeti anında değişir.
  * Finans durumu (nesne kimliği) değişene dek bir kez hesaplanır.
  */
@@ -272,7 +272,7 @@ export function filterCustomers(rows: readonly Customer[], query: ListQuery): Cu
 
 /* --- Etiketler, sözleşme ---------------------------------------------------- */
 
-export const TAGS = ["Öncelikli Müşteri", "Hassas Abone (Tıbbi Cihaz)", "Yakın Takip", "Ödeme Planlı", "Toplu Okuma Turu"] as const;
+export const TAGS = ["Öncelikli Abone", "Hassas Abone (Tıbbi Cihaz)", "Yakın Takip", "Ödeme Planlı", "Toplu Okuma Turu"] as const;
 
 /** Aboneye ait örnek sözleşme bilgisi (gerçek tutar ya da hüküm değildir). */
 export function contractOf(c: Customer) {

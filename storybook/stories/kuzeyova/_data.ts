@@ -6,7 +6,7 @@
  * fatura ve ödeme işlerini bu portaldan yürütür. Bugün 21 Kasım 2026, Cumartesi,
  * 10.40. Bölge, ilçe ve şirket adları uydurmadır.
  *
- * TUTARLILIK İLKESİ (Pusula ile aynı): hiçbir toplam elle yazılmaz. Müşteri,
+ * TUTARLILIK İLKESİ (Pusula ile aynı): hiçbir toplam elle yazılmaz. Abone,
  * sayaç, okuma, fatura, ödeme, arıza ve iş emri listeleri tohumlu bir
  * üreteçle (her derlemede aynı) BİR KEZ üretilir; panodaki her karo, grafik
  * ve rapor aynı listelerden süzülüp toplanır. `Date.now()` yok: "bugün"
@@ -98,8 +98,8 @@ export const REGIONS: readonly Region[] = [
   { id: "kiyi", name: "Kıyı", districts: ["Dalgakıran", "Tuzlaova", "Martıbaşı"], lossTarget: 8 },
   { id: "vadi", name: "Vadi", districts: ["Derebaşı", "Çınaraltı", "Kızılırmak Mah."], lossTarget: 9 },
   { id: "ova", name: "Ova", districts: ["Sulakova", "Buğdaylı", "Akçaağıl"], lossTarget: 10 },
-  { id: "yayla", name: "Yayla", districts: ["Karlıdere", "Pelitli", "Sarıyayla"], lossTarget: 12 },
-  { id: "sanayi", name: "Sanayi Havzası", districts: ["Organize Bölge 1", "Organize Bölge 2", "Demirkapı"], lossTarget: 5 },
+  { id: "yayla", name: "Yayla", districts: ["Karlıdere", "Pelitli", "Sarıyayla"], lossTarget: 11 },
+  { id: "sanayi", name: "Sanayi Havzası", districts: ["Organize Bölge 1", "Organize Bölge 2", "Demirkapı"], lossTarget: 6 },
 ];
 export const region = (id: string) => REGIONS.find((r) => r.id === id) ?? REGIONS[0];
 
@@ -170,7 +170,7 @@ const SUPPLIER_ROWS: readonly Omit<Supplier, "prices">[] = [
 export const SUPPLIERS: readonly Supplier[] = SUPPLIER_ROWS.map((s) => ({ ...s, prices: zonePrices(s.unitPrice, true) }));
 export const supplier = (id: string) => SUPPLIERS.find((s) => s.id === id) ?? SUPPLIERS[0];
 
-/* --- Müşteriler ----------------------------------------------------------- */
+/* --- Aboneler ----------------------------------------------------------- */
 
 export type CustomerKind = "bireysel" | "ticari" | "sanayi" | "tarim";
 export const KIND_LABEL: Record<CustomerKind, string> = { bireysel: "Konut", ticari: "Ticarethane", sanayi: "Sanayi", tarim: "Tarımsal Sulama" };
@@ -242,7 +242,7 @@ function buildCustomers(): Customer[] {
             ? `${pick(rand, LAST)} ${pick(rand, FACTORY)} San. Tic. A.Ş.`
             : `${district} ${pick(rand, FARM)}`;
     const baseKwh = Math.round(
-      kind === "bireysel" ? between(rand, 140, 420) : kind === "ticari" ? between(rand, 700, 4200) : kind === "sanayi" ? between(rand, 4_000, 22_000) : between(rand, 600, 6500),
+      kind === "bireysel" ? between(rand, 150, 400) : kind === "ticari" ? between(rand, 500, 2600) : kind === "sanayi" ? between(rand, 2_000, 7_000) : between(rand, 600, 4500),
     );
     const annualKwh = baseKwh * 12;
     const free = annualKwh >= FREE_LIMIT_KWH;
@@ -281,7 +281,29 @@ function buildCustomers(): Customer[] {
     };
   });
 }
-export const CUSTOMERS: readonly Customer[] = buildCustomers();
+/**
+ * Aynı unvan ya da ad soyad iki kez görünmesin: tekrar edenler kimlikten türeyen (rastgele akışı
+ * tüketmeyen) bir ek ile ayrılır; e-posta adı yeni ada uyar.
+ */
+function uniqueNames(list: Customer[]): Customer[] {
+  const seen = new Set<string>();
+  const MAP: Record<string, string> = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u" };
+  return list.map((c) => {
+    let name = c.name;
+    for (let n = 0; seen.has(name) && n < 40; n++) {
+      const h = hashSeed(`${c.id}:${n}`);
+      if (c.kind === "bireysel") name = `${FIRST[h % FIRST.length]} ${LAST[(h >>> 8) % LAST.length]}`;
+      else if (c.kind === "ticari") name = `${LAST[h % LAST.length]} ${SHOP[(h >>> 8) % SHOP.length]}`;
+      else if (c.kind === "sanayi") name = `${LAST[h % LAST.length]} ${FACTORY[(h >>> 8) % FACTORY.length]} San. Tic. A.Ş.`;
+      else name = `${c.district} ${FARM[h % FARM.length]} ${["Doğu", "Batı", "Merkez", "Yeni"][(h >>> 8) % 4]}`;
+    }
+    seen.add(name);
+    if (name === c.name) return c;
+    const email = `${name.split(" ")[0].toLocaleLowerCase("tr-TR").replace(/[çğıöşü]/g, (ch) => MAP[ch]!)}•••@example.com`;
+    return { ...c, name, email };
+  });
+}
+export const CUSTOMERS: readonly Customer[] = uniqueNames(buildCustomers());
 export const customerById = (id: string) => CUSTOMERS.find((c) => c.id === id);
 export const customer = (id: string) => customerById(id) ?? CUSTOMERS[0];
 
@@ -323,7 +345,7 @@ function buildMeters(): Meter[] {
   const rand = seeded(77421);
   return CUSTOMERS.map((c, i): Meter => {
     const og = c.voltage === "OG";
-    const status = weighted(rand, ["okunuyor", "iletisim-yok", "arizali", "mudahale"] as const, (s) => ({ okunuyor: 92, "iletisim-yok": 4.5, arizali: 1.8, mudahale: 1.7 })[s]);
+    const status = weighted(rand, ["okunuyor", "iletisim-yok", "arizali", "mudahale"] as const, (s) => ({ okunuyor: 96.2, "iletisim-yok": 1.6, arizali: 1.2, mudahale: 1 })[s]);
     const comm: MeterComm = og ? "gsm" : c.kind === "tarim" ? weighted(rand, ["gsm", "elle"] as const, (k) => (k === "gsm" ? 60 : 40)) : weighted(rand, ["ami", "gsm", "elle"] as const, (k) => ({ ami: 68, gsm: 20, elle: 12 })[k]);
     const last = status === "okunuyor" ? addDays(TODAY, 0) : addDays(TODAY, -int(rand, status === "iletisim-yok" ? 2 : 1, status === "iletisim-yok" ? 19 : 9));
     const tr = pick(rand, TRANSFORMERS.filter((x) => x.regionId === c.regionId));
@@ -336,11 +358,12 @@ function buildMeters(): Meter[] {
     let installed = `${int(rand, Math.max(2017, sinceYear), 2026)}-${pad(int(rand, 1, 12))}-${pad(int(rand, 1, 28))}`;
     if (installed > TODAY_KEY) installed = `2026-${pad(int(rand, 1, 10))}-${pad(int(rand, 1, 28))}`;
     if (installed < c.since) installed = c.since;
+    int(rand, 21, 25); // rastgele akışı korur (seri yılı artık kurulum yılından gelir)
     const multi = c.tariff === "cok-zamanli";
     const startKwh = int(rand, 4000, 60000) + c.baseKwh * 18;
     return {
       id: `M-${String(i + 1).padStart(4, "0")}`,
-      serial: `KZ${og ? "O" : "A"}-${int(rand, 21, 25)}-${String(int(rand, 100000, 999999))}`,
+      serial: `KZ${og ? "O" : "A"}-${installed.slice(2, 4)}-${String(int(rand, 100000, 999999)).padStart(6, "0")}`,
       model: og ? METER_MODELS[3] : pick(rand, METER_MODELS.slice(0, 3)),
       customerId: c.id,
       substationId: sub.id,
@@ -608,14 +631,16 @@ function buildInvoices(): Invoice[] {
     const issued = dayKey(addDays(parseDay(r.date), 3));
     const due = dayKey(addDays(parseDay(issued), 14));
     const age = PERIODS_12.indexOf(CURRENT_PERIOD) - PERIODS_12.indexOf(r.period);
-    const paidProb = age >= 2 ? 0.988 : age === 1 ? 0.95 : 0.2;
+    /* Borç birkaç sürekli geciken abonede toplanır (yaklaşık yüzde 12); çoğu abone zamanında öder. */
+    const chronic = hashSeed(`late:${c.id}`) % 100 < 12;
+    const paidProb = age >= 2 ? (chronic ? 0.9 : 0.997) : age === 1 ? (chronic ? 0.55 : 0.97) : 0.2;
     const roll = rand();
     let paid = 0;
     let disputed = false;
     if (c.status === "kapali" && age >= 2) {
       paid = total;
     } else if (roll < paidProb) {
-      paid = rand() < 0.04 ? Math.round(total * between(rand, 0.3, 0.8)) : total;
+      paid = rand() < (age >= 2 ? (chronic ? 0.06 : 0) : chronic ? 0.1 : 0.03) ? Math.round(total * between(rand, 0.3, 0.8)) : total;
     } else if (rand() < 0.07) {
       disputed = true;
     }
@@ -902,7 +927,7 @@ export function regionLoss(period: string) {
   return REGIONS.map((r) => {
     const rand = seeded(hashSeed(`loss:${r.id}:${period}`));
     const billed = READINGS.filter((x) => x.period === period && x.status !== "bekliyor" && customer(x.customerId).regionId === r.id).reduce((s, x) => s + x.usage.total, 0);
-    const lossPct = Math.round((r.lossTarget + between(rand, -1.6, 2.4)) * 10) / 10;
+    const lossPct = Math.round((r.lossTarget + between(rand, -1.2, 1.2)) * 10) / 10;
     const input = Math.round(billed / (1 - lossPct / 100));
     return { region: r, billed, input, lossKwh: input - billed, lossPct };
   });
@@ -925,7 +950,7 @@ export const windowPeriods = (period: Period, shift = 0) => {
 
 export type StatsContext = { invoices?: readonly Invoice[]; customers?: readonly Customer[]; openOutages?: number; unreadable?: number };
 
-/** `ctx`: canlı depodan gelen güncel faturalar/müşteriler (`_selectors.ts`); verilmezse üreteç tabanı. */
+/** `ctx`: canlı depodan gelen güncel faturalar/aboneler (`_selectors.ts`); verilmezse üreteç tabanı. */
 export function periodStats(period: Period, ctx: StatsContext = {}) {
   const invoices = ctx.invoices ?? INVOICES;
   const customers = ctx.customers ?? CUSTOMERS;

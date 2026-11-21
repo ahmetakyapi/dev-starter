@@ -66,7 +66,7 @@ export type ApprovalStatus = "bekliyor" | "onaylandi" | "reddedildi";
 export type Approval = {
   id: string;
   kind: ApprovalKind;
-  /** İlgili kayıt (müşteri/fatura/tarife kimliği). */
+  /** İlgili kayıt (abone/fatura/tarife kimliği). */
   target: string;
   summary: string;
   /** Eylemi çalıştırmak için gereken veri (`_store.ts` → `executeApproval`). */

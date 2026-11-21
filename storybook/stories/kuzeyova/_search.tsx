@@ -14,7 +14,7 @@ import { fmtTl } from "./_kit";
 import type { Page } from "./_ui";
 
 /**
- * Genel arama (komut paleti) verisi: sayfalar + müşteri, sayaç, fatura, arıza, iş emri,
+ * Genel arama (komut paleti) verisi: sayfalar + abone, sayaç, fatura, arıza, iş emri,
  * çağrı, başvuru, vaka, itiraz. Boş sorguda "Son Aramalar" ve "Öneriler"; yazınca
  * türe göre gruplu sonuç. Seçilen kayıt "son aramalar"a eklenir (oturum boyunca).
  */
@@ -55,14 +55,14 @@ export function useSearchCommands({
 
     const entries: Entry[] = [
       ...pages.map((p) => ({ id: `git-${p.id}`, label: p.label, hint: "Sayfa", group: "Sayfalar", icon: icons[p.id], to: () => navigate(p.id) })),
-      { id: "yeni-musteri", label: "Yeni Müşteri Kaydet", hint: "Müşteri Kaydı", group: "Eylemler", icon: icons.register, keywords: ["abone", "kayıt", "yeni"], to: () => navigate("register") },
+      { id: "yeni-musteri", label: "Yeni Abone Kaydet", hint: "Abone Kaydı", group: "Eylemler", icon: icons.register, keywords: ["abone", "kayıt", "yeni"], to: () => navigate("register") },
       { id: "geciken", label: "Geciken Faturaları Göster", hint: `${badges.invoices} fatura`, group: "Eylemler", icon: <Receipt />, keywords: ["borç", "vadesi geçen"], to: () => navigate("invoices", { status: "gecikti" }) },
       { id: "supheli", label: "Şüpheli Okumaları İncele", hint: `${badges.readings} okuma`, group: "Eylemler", icon: icons.readings, keywords: ["anomali", "endeks"], to: () => navigate("readings", { status: "supheli" }) },
       { id: "acik-ariza", label: "Açık Arızaları Göster", hint: `${badges.outages} kayıt`, group: "Eylemler", icon: <Zap />, keywords: ["kesinti", "elektrik"], to: () => navigate("outages", { status: "acik" }) },
       { id: "acik-cagri", label: "Açık Çağrıları Göster", hint: `${badges.calls} çağrı`, group: "Eylemler", icon: <Headset />, keywords: ["ihbar", "çağrı merkezi"], to: () => navigate("calls", { status: "acik" }) },
       { id: "bekleyen-onay", label: "Bekleyen Onayları Göster", hint: `${badges.compliance} kayıt`, group: "Eylemler", icon: icons.compliance, keywords: ["iki göz", "onay"], to: () => navigate("compliance", { tab: "onaylar" }) },
       ...PERIODS.map((p) => ({ id: `donem-${p.value}`, label: `Dönem: ${p.label}`, group: "Pano", icon: icons.dashboard, keywords: ["ay", "dönem"], to: () => { setPeriod(p.value); navigate("dashboard"); } })),
-      ...customers.map((c) => ({ id: c.id, label: `${c.id} · ${c.name}`, hint: `Tesisat ${c.installation} · ${c.district}`, group: "Müşteriler", icon: <Users />, keywords: [c.installation, c.district], to: () => navigate("customers", { id: c.id }) })),
+      ...customers.map((c) => ({ id: c.id, label: `${c.id} · ${c.name}`, hint: `Tesisat ${c.installation} · ${c.district}`, group: "Aboneler", icon: <Users />, keywords: [c.installation, c.district], to: () => navigate("customers", { id: c.id }) })),
       ...meters.map((m) => ({ id: m.id, label: m.serial, hint: `${customer(m.customerId).name} · ${m.id}`, group: "Sayaçlar", icon: <Gauge />, keywords: [m.id, customer(m.customerId).installation], to: () => navigate("meters", { id: m.id }) })),
       ...invoices.map((i) => ({ id: i.id, label: i.id, hint: `${customer(i.customerId).name} · ${fmtTl(i.total)}`, group: "Faturalar", icon: <Receipt />, keywords: [i.customerId], to: () => navigate("invoices", { id: i.id }) })),
       ...outages.map((o) => ({ id: o.id, label: o.id, hint: `${o.cause} · ${o.affected} abone`, group: "Arızalar", icon: <Zap />, keywords: [o.substationId], to: () => navigate("outages", { id: o.id }) })),
