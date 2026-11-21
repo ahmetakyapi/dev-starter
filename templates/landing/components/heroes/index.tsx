@@ -25,7 +25,7 @@ import { StatementHero } from "./Statement";
  *  - bento            Tek cümleye sığmayan, eşit ağırlıkta 3-5 güçlü yön varsa (sayfada ikinci bir bento açma).
  *  - minimal          İçerik ağırlıklı sayfalar (belge, blog, değişiklik günlüğü); hero geri çekilmeli.
  *  - scroll-stage     Hikaye üç adımda anlatılabiliyorsa ve okuyucunun yavaşlaması isteniyorsa.
- *  - atmosphere       Marka havası ürün ekranından önde: tam genişlik görsel zemin, solan başlık, güven şeridi.
+ *  - atmosphere       Marka havası ürün ekranından önde: tam genişlik görsel zemin, solan başlık (güven şeridi hemen altındaki Logos bölümünde).
  *  - floating         "Bu ürün çok şey yapıyor" duygusu: başlık çevresinde süzülen ürün kartları (telefonda yok).
  *  - horizon          Ürün panosu manzaradan doğar ve sayfa zeminine solar; ürün gösterilebiliyor ama ekran görüntüsü sıkıcıysa.
  *  - corner           Editoryal, koyu tam ekran sahne: köşe etiketi + sol altta dev başlık; mesaj kısa ve iddialıysa.
