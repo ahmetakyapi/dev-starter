@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import "../showcase/pusula.css";
-import { Archive, ArrowUpRight, Blocks, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
+import { Archive, Blocks, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, LayoutTemplate, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
 import { m, useReducedMotion } from "motion/react";
 import { useState, type ReactNode } from "react";
 import { useGlobals } from "storybook/preview-api";
@@ -8,6 +8,7 @@ import { expect, fireEvent, waitFor, within } from "storybook/test";
 import { Reveal, RevealItem } from "@/components/motion/Reveal";
 import { AppWindow } from "@/components/ui/app-window";
 import { AreaChart } from "@/components/ui/area-chart";
+import { CategoryCard, CategoryGrid, type CategoryTone } from "@/components/ui/category-card";
 import { AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Dial } from "@/components/ui/dial";
@@ -217,6 +218,7 @@ function mapSections(): { label: string; rows: MapRow[] }[] {
         { name: "Başlangıç", note: "Manifesto, token'lar, kimlik kuralları", icon: Rocket, id: "start--overview" },
         { name: "Her Şey Bir Arada", note: "Bütün kütüphane tek uzun sayfada", icon: PanelsTopLeft, id: "showcase--all-in-one", count: count(TOTAL, "bileşen") },
         { name: "Vitrin", note: "Gruplara göre seçilmiş örnekler", icon: LayoutGrid, id: "gallery--overview", count: count(under("Vitrin")[0]?.stories ?? 0, "sayfa") },
+        { name: "Desenler", note: "Önizle, kopyala: token'lı zeminler", icon: Grid3x3, id: "pattern-library--overview", count: count(PATTERN_PRESETS.length, "zemin") },
       ],
     },
     {
@@ -226,7 +228,6 @@ function mapSections(): { label: string; rows: MapRow[] }[] {
         { name: "Bileşenler", note: "Temelden yapay zekaya, raf raf", icon: Blocks, id: firstOf(["Bileşenler"], COMPONENT_GROUPS) ?? "start--overview", count: count(COMPONENT_GROUPS.length, "grup") },
         { name: "Grafikler", note: "Çizgi, alan, huni, ısı haritası, pano", icon: ChartColumn, id: firstOf(["Grafikler"]) ?? "start--overview", count: count(under("Grafikler").length, "grafik") },
         { name: "Bloklar", note: "Birden çok bileşenin hazır birleşimi", icon: Layers, id: firstOf(["Bloklar"]) ?? "start--overview", count: count(under("Bloklar").length, "blok") },
-        { name: "Desenler", note: "Önizle, kopyala: token'lı zeminler", icon: Grid3x3, id: "pattern-library--overview", count: count(PATTERN_PRESETS.length, "zemin") },
       ],
     },
     {
@@ -234,11 +235,14 @@ function mapSections(): { label: string; rows: MapRow[] }[] {
       rows: [
         { name: "Pusula", note: "Aynı parçalarla kurulmuş uygulama", icon: Compass, id: "demo-app--overview", count: count(pusula?.stories ?? 0, "ekran") },
         { name: "Ekranlar", note: "Uygulama ekranları ve açılış sayfası", icon: Monitor, id: firstOf(["Ekranlar"], SCREEN_ORDER) ?? "start--overview", count: count(under("Ekranlar").length, "şablon") },
+        { name: "Örnek Sayfalar", note: "Kahraman sahneleri, panolar, entegrasyonlar, yardım merkezi", icon: LayoutTemplate, id: "sample-heroes--atmosphere", count: count(under("Ekranlar", "Örnek Sayfalar").length, "sayfa") },
         { name: "Arşiv", note: "Bileşen kapsamı ve referanslar", icon: Archive, id: "coverage--table" },
       ],
     },
   ];
 }
+
+const SECTION_TONE: Record<string, CategoryTone> = { Başla: "primary", Kütüphane: "chart-2", Uygulamada: "chart-3" };
 
 function CatalogMap() {
   const reduce = useReducedMotion();
@@ -246,39 +250,28 @@ function CatalogMap() {
   return (
     <m.nav
       aria-label="Katalog Haritası"
-      {...(reduce ? {} : { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.2 }, transition: { duration: DUR.page, ease: EASE } })}
-      // Üç bölüm yan yana, eşit boy (kartlar `h-full`): yan yana duran şeyler aynı çizgide başlayıp biter.
-      className="grid items-stretch gap-2 rounded-[1.75rem] bg-surface p-2 edge-lit lg:grid-cols-3"
+      {...(reduce ? {} : { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.15 }, transition: { duration: DUR.page, ease: EASE } })}
+      className="grid gap-6"
     >
       {sections.map((section) => (
-        <section key={section.label} aria-labelledby={`harita-${section.label}`} className="h-full rounded-[1.25rem] bg-overlay p-2 shadow-raised">
-          <h2 id={`harita-${section.label}`} className="px-2.5 pt-1.5 pb-1 text-small font-medium text-muted">
+        <section key={section.label} aria-labelledby={`harita-${section.label}`} className="grid gap-3">
+          <h2 id={`harita-${section.label}`} className="flex items-center gap-2 text-small font-medium text-muted">
+            <span aria-hidden className={cn("size-2 rounded-full", section.label === "Başla" ? "bg-primary" : section.label === "Kütüphane" ? "bg-chart-2" : "bg-chart-3")} />
             {section.label}
           </h2>
-          <ul className="grid">
+          <CategoryGrid className="lg:grid-cols-4">
             {section.rows.map((row) => (
-              <li key={row.name}>
-                <a
-                  href={to(row.id)}
-                  target="_top"
-                  className={cn("group grid min-h-14 grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3 rounded-xl px-2.5 py-2 transition-colors duration-150 hover:bg-surface", FOCUS)}
-                >
-                  <span aria-hidden className="mt-0.5 grid size-8 place-items-center rounded-lg bg-primary-wash text-primary-ink [&_svg]:size-4">
-                    <row.icon strokeWidth={1.9} />
-                  </span>
-                  {/* Üç sütunda dar: ad ile sayı aynı satırda (sayı sağa yaslı, alt alta hizalı), açıklama altında iki satıra kadar. */}
-                  <span className="grid min-w-0 gap-0.5">
-                    <span className="flex items-baseline justify-between gap-3">
-                      <span className="truncate text-base font-semibold text-strong">{row.name}</span>
-                      {row.count ? <span className="shrink-0 text-small text-muted tabular-nums">{row.count}</span> : null}
-                    </span>
-                    <span className="line-clamp-2 text-small text-muted">{row.note}</span>
-                  </span>
-                  <ArrowUpRight aria-hidden className="mt-1 size-4 text-muted transition-[translate,color] duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-strong" />
-                </a>
-              </li>
+              <CategoryCard
+                key={row.name}
+                href={to(row.id)}
+                title={row.name}
+                description={row.note}
+                meta={row.count ?? "Aç"}
+                icon={<row.icon strokeWidth={1.9} />}
+                tone={SECTION_TONE[section.label] ?? "neutral"}
+              />
             ))}
-          </ul>
+          </CategoryGrid>
         </section>
       ))}
     </m.nav>
@@ -425,7 +418,7 @@ function MapSection() {
           <h2 id="kapak-harita" className="font-display text-display font-bold text-strong">
             Katalogda Ne Var
           </h2>
-          <p className="max-w-[58ch] text-read text-body">Kenar çubuğunun üç bölümü ve on bir kapısı; sayılar hikaye dosyalarından sayılır.</p>
+          <p className="max-w-[58ch] text-read text-body">Kenar çubuğunun üç bölümü ve on iki kapısı; sayılar hikaye dosyalarından sayılır.</p>
         </div>
       </Reveal>
       <CatalogMap />

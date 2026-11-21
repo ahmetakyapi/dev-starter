@@ -49,6 +49,8 @@ const CSS = `
 type ToneTextProps = {
   children: ReactNode;
   as?: ElementType;
+  /** Başlığa `aria-labelledby` ile bağlanacaksa. */
+  id?: string;
   /** `default`: yüzey üstü. `media`: koyu fotoğraf ya da degrade üstü (açık yazı). */
   tone?: "default" | "media";
   /** Başlığın tamamında soldan sağa solma. `in`: sol soluk, sağ net. `out`: tersi. */
@@ -60,10 +62,11 @@ function Soft({ children, className }: { children: ReactNode; className?: string
   return <span className={cn("ui-tone-soft", className)}>{children}</span>;
 }
 
-export function ToneText({ children, as: Tag = "h2", tone = "default", fade, className }: ToneTextProps) {
+export function ToneText({ children, as: Tag = "h2", id, tone = "default", fade, className }: ToneTextProps) {
   const media = tone === "media";
   return (
     <Tag
+      id={id}
       className={cn(
         "text-balance",
         media ? "text-on-brand [--tone-strong:var(--on-brand)]" : "text-strong [--tone-strong:var(--text-strong)]",
