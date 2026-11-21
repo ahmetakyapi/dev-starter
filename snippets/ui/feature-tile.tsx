@@ -64,7 +64,7 @@ export type FeatureTileProps = {
   mediaAlign?: "bottom-bleed" | "center";
   /** Sahnenin yüksekliği: Tailwind sınıfı. Varsayılan `h-56`. */
   mediaHeight?: string;
-  /** Sahne içinde bağlantı/düğme varsa `false`. */
+  /** Sahne içinde bağlantı/buton varsa `false`. */
   mediaHidden?: boolean;
   /** Karonun tamamını tek bağlantı yapar. */
   href?: string;

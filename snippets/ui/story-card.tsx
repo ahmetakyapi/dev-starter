@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  *  - `photo`  `background` yuvası (fotoğraf, video karesi, `Wallpaper`) tam
  *             kaplar, üstüne zeminden bağımsız koyu örtü biner: metin
  *             `text-on-brand`, AA örtü sayesinde, fotoğrafa bağlı değil.
- *  - `plain`  gri kuyu; logo solda üstte, ok düğmesi sağda üstte, alıntı
+ *  - `plain`  gri kuyu; logo solda üstte, ok butonu sağda üstte, alıntı
  *             ve kişi altta. En sakin karo, çoğunluk bu olmalı.
  *  - `stat`   `bg-cta` zemin (ya da `background`), büyük rakam + etiket;
  *             rakam alıntının sonucudur ve KAYNAKLI olmalı.
@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * `sample` ile "ÖRNEK" künyeli gösterilir ve yayına çıkmadan kalkar.
  *
  * BAĞLANTI: `href` varsa karonun tamamı TEK bağlantıdır (`photo`/`stat`
- * tonunda "Tam hikâyeyi oku" hapı, `plain`de ok düğmesi; ikisi de karoyu
+ * tonunda "Tam hikâyeyi oku" hapı, `plain`de ok butonu; ikisi de karoyu
  * kaplar). Karo içinde ikinci bir bağlantı üretilmez. `href` yoksa
  * eylem hiç çizilmez.
  *
