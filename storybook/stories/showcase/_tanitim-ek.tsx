@@ -186,10 +186,11 @@ export function ProcessSection() {
       <div className="rounded-2xl bg-strong px-6 py-12 text-page sm:px-12 sm:py-16">
         <div className="grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
           <Reveal>
-            <CornerLabel tone="media">Süreç</CornerLabel>
-            <ToneText as="h2" tone="media" className="mt-4 font-display text-heading font-bold sm:text-display">
-              <span id="tanitim-surec-baslik">Beş adımda ilk yanıta</span>
-            </ToneText>
+            {/* Ters yüzey: açık temada koyu, koyu temada açık. Metin `text-page`; `tone="media"` sabit beyaz olduğu için açık yüzeyde kaybolurdu. */}
+            <p className="font-mono text-small tracking-[0.12em] uppercase opacity-75">Süreç</p>
+            <h2 id="tanitim-surec-baslik" className="mt-4 font-display text-heading font-bold text-balance text-page sm:text-display">
+              Beş adımda ilk yanıta
+            </h2>
             <p className="mt-3 max-w-md text-read opacity-75">Kurulum bir öğleden sonra sürer; ekip ilk gün gelen kutusuna girer.</p>
           </Reveal>
           <StepRail
@@ -207,6 +208,7 @@ export function ProcessSection() {
         </div>
         <StatStrip
           tone="dark"
+          numberClassName="font-semibold"
           className="mt-12"
           items={[
             { value: num.format(TICKET_STUBS.length), label: "talep kaydı" },

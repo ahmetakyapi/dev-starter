@@ -200,7 +200,7 @@ export function TanitimYeni() {
         <StoryCard sample tone="photo" background={<Wallpaper scene="sunset" />} logo={CAFES[0].label} quote="Her sabah aynı tazelikte geliyor; müşterilerimiz farkı ilk fincanda anlıyor." author={{ name: "Kafe sahibi" }} href="#b-story-card" className="min-h-72 rounded-2xl" />
       </Cell>
       <Cell file="stat-strip" name="Sayı Şeridi" note="Üç dört büyük sayı, etiket, ince ayraç; rakamlar veriden türer." span={3}>
-        <StatStrip items={[{ value: num.format(SUBSCRIBERS), label: "abone" }, { value: num.format(CAFES.length), label: "kafe" }, { value: fromK(REVENUE_TOTAL), label: "son 12 ay ciro" }]} />
+        <StatStrip numberClassName="font-semibold" items={[{ value: num.format(SUBSCRIBERS), label: "abone" }, { value: num.format(CAFES.length), label: "kafe" }, { value: fromK(REVENUE_TOTAL), label: "son 12 ay ciro" }]} />
       </Cell>
       <Cell file="horizon-scene" name="Ufuk Sahnesi" note="Ürün penceresi manzaranın arkasından doğar ve sayfa zeminine solar." span={6} size="lg" align="stretch" className="p-0">
         <HorizonScene
