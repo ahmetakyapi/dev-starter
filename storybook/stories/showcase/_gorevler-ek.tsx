@@ -53,13 +53,16 @@ export function LaunchPath() {
   return (
     <section aria-labelledby="gorev-yol" className="grid grid-cols-1 gap-3">
       <SectionTitle id="gorev-yol" title="Çıkışa Giden Yol" note="Atlas'ın otel açılışı teslimatı kayarsa hangi iş kaydırır" />
-      <div className="rounded-xl bg-surface p-4 sm:p-5">
+      <div className="rounded-xl bg-surface p-2 sm:p-3">
         <PathGraph
           label="Açılış Teslimatına Giden Yol"
           start={{ title: "Bugün", meta: shortDate.format(new Date(2026, 10, 2)) }}
           columns={columns}
           goal={{ title: "Açılış Teslimatı", meta: shortDate.format(goalEvent.date), after: last ? last.nodes.map((n) => n.id) : [] }}
         />
+        <p aria-hidden className="mt-2 px-2 text-right text-micro text-muted lg:hidden">
+          Yolun devamı için yana kaydır →
+        </p>
       </div>
     </section>
   );

@@ -28,10 +28,16 @@ const PERIODS: readonly { value: Period; label: string }[] = [
 const TL = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
 const nf = new Intl.NumberFormat("tr-TR");
 
-const METRICS: Record<Period, { spend: number; change: number; pending: number; held: number; blocked: number; prevented: number; total: number; auto: number; human: number; stopped: number; greeting: string }> = {
-  gun: { spend: 3840, change: 4.1, pending: 7, held: 13240, blocked: 3, prevented: 5200, total: 892, auto: 696, human: 134, stopped: 62, greeting: "Bugün 18 ajan çalıştı. 6 cüzdanda ₺3.840 harcandı." },
-  hafta: { spend: 21300, change: 8.6, pending: 7, held: 13240, blocked: 9, prevented: 8100, total: 4120, auto: 3210, human: 640, stopped: 270, greeting: "Bu hafta 18 ajan çalıştı. 6 cüzdanda ₺21.300 harcandı." },
-  ay: { spend: 84420, change: 12.4, pending: 7, held: 13240, blocked: 23, prevented: 18600, total: 16900, auto: 13180, human: 2530, stopped: 1190, greeting: "18 ajan etkin. 6 cüzdanda bu ay ₺84.420 harcandı." },
+/*
+ * Tek kaynak: "Engellenen" ölçüsü = karar dağılımındaki "İlke ile engellendi"
+ * (`stopped`); "Bekleyen" = onay kuyruğu (7 iş, `held` toplamı, aşağıdaki
+ * `WAITING` iki işi bu toplamın içinde); tablodaki 8 satır günün işlemlerinden
+ * küçük bir kesit (otomatik onaylılarının toplamı günün harcamasını aşmaz).
+ */
+const METRICS: Record<Period, { spend: number; change: number; pending: number; held: number; prevented: number; total: number; auto: number; human: number; stopped: number; greeting: string }> = {
+  gun: { spend: 9840, change: 4.1, pending: 7, held: 13240, prevented: 9600, total: 892, auto: 696, human: 134, stopped: 62, greeting: "Bugün 18 ajan çalıştı. 6 cüzdanda ₺9.840 harcandı." },
+  hafta: { spend: 21300, change: 8.6, pending: 7, held: 13240, prevented: 24300, total: 4120, auto: 3210, human: 640, stopped: 270, greeting: "Bu hafta 18 ajan çalıştı. 6 cüzdanda ₺21.300 harcandı." },
+  ay: { spend: 84420, change: 12.4, pending: 7, held: 13240, prevented: 61800, total: 16900, auto: 13180, human: 2530, stopped: 1190, greeting: "18 ajan etkin. 6 cüzdanda bu ay ₺84.420 harcandı." },
 };
 
 type Decision = "auto" | "needs" | "blocked";
@@ -46,16 +52,16 @@ const ACTIVITY: readonly Activity[] = [
   { id: "a1", agent: "Araştırma Ajanı", policy: "Araştırma API'leri v1", icon: <Bot />, merchant: "Dil Servisi", amount: 600, decision: "auto", when: "1 dk" },
   { id: "a2", agent: "Pazarlama Ajanı", policy: "Reklam Harcaması v3", icon: <Bot />, merchant: "Reklam Paneli", amount: 4200, decision: "auto", when: "2 dk" },
   { id: "a3", agent: "Araştırma Ajanı", policy: "Araştırma API'leri v1", icon: <Bot />, merchant: "Dil Servisi", amount: 600, decision: "auto", when: "4 dk" },
-  { id: "a4", agent: "Tedarik Ajanı", policy: "Tedarik v2", icon: <Bot />, merchant: "Bulut Sunucu Hizmeti", amount: 18400, decision: "needs", when: "16 dk" },
-  { id: "a5", agent: "Satış Ajanı", policy: "Satış Araçları v2", icon: <Bot />, merchant: "Müşteri İlişkileri Aracı", amount: 24000, decision: "blocked", when: "22 dk" },
-  { id: "a6", agent: "Destek Ajanı", policy: "Destek Araçları v1", icon: <Bot />, merchant: "Destek Masası Aracı", amount: 2400, decision: "auto", when: "38 dk" },
-  { id: "a7", agent: "Pazarlama Ajanı", policy: "Reklam Harcaması v3", icon: <Bot />, merchant: "Tasarım Platformu", amount: 18000, decision: "needs", when: "42 dk" },
-  { id: "a8", agent: "Tedarik Ajanı", policy: "Tedarik v2", icon: <Bot />, merchant: "Not Uygulaması", amount: 48000, decision: "blocked", when: "46 dk" },
+  { id: "a4", agent: "Tedarik Ajanı", policy: "Tedarik v2", icon: <Bot />, merchant: "Bulut Sunucu Hizmeti", amount: 1840, decision: "needs", when: "16 dk" },
+  { id: "a5", agent: "Satış Ajanı", policy: "Satış Araçları v2", icon: <Bot />, merchant: "Müşteri İlişkileri Aracı", amount: 2400, decision: "blocked", when: "22 dk" },
+  { id: "a6", agent: "Destek Ajanı", policy: "Destek Araçları v1", icon: <Bot />, merchant: "Destek Masası Aracı", amount: 240, decision: "auto", when: "38 dk" },
+  { id: "a7", agent: "Pazarlama Ajanı", policy: "Reklam Harcaması v3", icon: <Bot />, merchant: "Tasarım Platformu", amount: 1800, decision: "needs", when: "42 dk" },
+  { id: "a8", agent: "Tedarik Ajanı", policy: "Tedarik v2", icon: <Bot />, merchant: "Not Uygulaması", amount: 4800, decision: "blocked", when: "46 dk" },
 ];
 
 const WAITING = [
-  { id: "w1", agent: "Pazarlama Ajanı", detail: "Tasarım Platformu · yeni satıcı", amount: 18000, risk: "Orta" as const },
-  { id: "w2", agent: "Tedarik Ajanı", detail: "Bulut Sunucu Hizmeti · yenileme", amount: 18400, risk: "Düşük" as const },
+  { id: "w1", agent: "Pazarlama Ajanı", detail: "Tasarım Platformu · yeni satıcı", amount: 1800, risk: "Orta" as const },
+  { id: "w2", agent: "Tedarik Ajanı", detail: "Bulut Sunucu Hizmeti · yenileme", amount: 1840, risk: "Düşük" as const },
 ];
 
 const SPLIT = (m: (typeof METRICS)[Period]) => [
@@ -100,14 +106,14 @@ const NAV = [
 
 function Kpi({ icon, label, children, note }: { icon: ReactNode; label: string; children: ReactNode; note: ReactNode }) {
   return (
-    <div className={cn(CARD, "flex min-w-0 flex-col gap-2 p-4")}>
+    <div className={cn(CARD, "flex min-w-0 flex-col gap-1.5 p-3 sm:gap-2 sm:p-4")}>
       <p className="flex items-center gap-2 text-small text-muted">
         <span aria-hidden className="inline-grid size-7 place-items-center rounded-md bg-surface text-body ring-1 ring-line ring-inset [&_svg]:size-4">
           {icon}
         </span>
         {label}
       </p>
-      <p className="text-display font-semibold tracking-tight text-strong tabular-nums">{children}</p>
+      <p className="text-title font-semibold tracking-tight text-strong tabular-nums sm:text-display">{children}</p>
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-small text-muted">{note}</p>
     </div>
   );
@@ -172,22 +178,22 @@ export function AjanHarcamalariPage({ initialPeriod = "ay" }: { initialPeriod?: 
           }
         />
 
-        <section aria-label="Özet ölçüler" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <Kpi icon={<Wallet />} label="Toplam ajan harcaması" note={<><span className="font-medium text-success">+%{String(m.change).replace(".", ",")}</span> önceki döneme göre</>}>
+        <section aria-label="Özet ölçüler" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+          <Kpi icon={<Wallet />} label="Toplam ajan harcaması" note={<><span className="font-medium text-success">+%{String(m.change).replace(".", ",")}</span> önceki dönem</>}>
             {TL.format(m.spend)}
           </Kpi>
-          <Kpi icon={<Bot />} label="Etkin ajan" note="6 duraklatıldı ya da taslak">
+          <Kpi icon={<Bot />} label="Etkin ajan" note="6 duraklatıldı">
             18 <span className="text-read font-normal text-muted">/ 24</span>
           </Kpi>
-          <Kpi icon={<ListChecks />} label="Bekleyen onay" note={<><Badge tone="warning" dot>Sana ihtiyaç var</Badge> {TL.format(m.held)} bekletiliyor</>}>
+          <Kpi icon={<ListChecks />} label="Bekleyen onay" note={<><Badge tone="warning" dot>Sana ihtiyaç var</Badge> <span>{TL.format(m.held)} bekliyor</span></>}>
             {m.pending}
           </Kpi>
           <Kpi icon={<ShieldCheck />} label="Engellenen" note={`${TL.format(m.prevented)} önlendi`}>
-            {m.blocked}
+            {nf.format(m.stopped)}
           </Kpi>
         </section>
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
           <Panel
             id="hareket"
             title="Ajan hareketi"
@@ -242,7 +248,7 @@ export function AjanHarcamalariPage({ initialPeriod = "ay" }: { initialPeriod?: 
               </dl>
             </Panel>
 
-            <Panel id="bekleyen" title="Sende bekleyenler" actions={<Badge tone="warning" dot>{m.pending} bekliyor</Badge>}>
+            <Panel id="bekleyen" title="Sende bekleyenler" note="7 işten ilk ikisi" actions={<Badge tone="warning" dot>{m.pending} bekliyor</Badge>}>
               <ul className="divide-y divide-line-soft">
                 {WAITING.map((w) => (
                   <li key={w.id} className="flex items-center gap-3 py-3 first:pt-0">

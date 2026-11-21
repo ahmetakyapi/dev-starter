@@ -22,8 +22,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Varsayılan hikaye hiçbir durumu değiştirmez: açılışta bildirim yok, "Bağlı 5" hep aynı. */
 export const Grid: Story = {
-  name: "Izgara ve Bağlama",
+  name: "Izgara",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByRole("heading", { level: 1, name: "Entegrasyonlar" })).toBeInTheDocument();
+    await expect(canvas.getByRole("tab", { name: "Bağlı 5" })).toBeInTheDocument();
+  },
+};
+
+export const Connect: Story = {
+  name: "Bağlama Akışı",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(await canvas.findByRole("heading", { level: 1, name: "Entegrasyonlar" })).toBeInTheDocument();

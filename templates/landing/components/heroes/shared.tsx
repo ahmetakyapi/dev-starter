@@ -78,7 +78,7 @@ export function HeroActions({
       {secondary ? (
         <a
           href={secondary.href}
-          className={buttonClass({ variant: "ghost", size: "lg", className: tone === "media" ? "text-on-brand hover:bg-on-brand/10 hover:text-on-brand" : undefined })}
+          className={buttonClass({ variant: "ghost", size: "lg", className: tone === "media" ? "border border-on-brand/35 bg-on-brand/10 text-on-brand backdrop-blur-sm hover:bg-on-brand/20 hover:text-on-brand" : undefined })}
         >
           {secondary.label}
         </a>

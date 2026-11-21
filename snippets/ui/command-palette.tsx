@@ -92,6 +92,12 @@ type CommandPaletteProps = {
   emptyText?: string;
   /** Diyaloğun ekran okuyucu adı. */
   label?: string;
+  /**
+   * Bir seferde listelenecek en çok komut. Yüzlerce kayıtlı (müşteri, sayaç)
+   * paletlerde DOM şişmesin diye; arama daralttıkça gerisi görünür. Varsayılan:
+   * sınırsız.
+   */
+  maxResults?: number;
 };
 
 export function CommandPalette({
@@ -99,6 +105,7 @@ export function CommandPalette({
   placeholder = "Komut ya da sayfa ara",
   emptyText = "Eşleşen komut yok.",
   label = "Komut Paleti",
+  maxResults,
 }: CommandPaletteProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -111,11 +118,13 @@ export function CommandPalette({
 
   const results = useMemo(() => {
     const q = fold(query.trim());
-    if (!q) return commands;
-    return commands.filter((command) =>
-      [command.label, command.hint ?? "", command.group, ...(command.keywords ?? [])].some((text) => fold(text).includes(q)),
-    );
-  }, [commands, query]);
+    const found = !q
+      ? commands
+      : commands.filter((command) =>
+          [command.label, command.hint ?? "", command.group, ...(command.keywords ?? [])].some((text) => fold(text).includes(q)),
+        );
+    return maxResults ? found.slice(0, maxResults) : found;
+  }, [commands, query, maxResults]);
 
   const groups = useMemo(() => {
     const map = new Map<string, Command[]>();

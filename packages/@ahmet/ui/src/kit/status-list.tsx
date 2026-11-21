@@ -1,5 +1,5 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 import { Badge } from "./badge";
 import { cn } from "../utils";
 
@@ -15,6 +15,12 @@ import { cn } from "../utils";
  * GENEL DURUM bileşenlerden TÜRER, elle yazılmaz: hepsi çalışıyorsa
  * `allOkText`, aksi halde en kötü durumun adı + sayısı ("1 bileşende
  * kesinti"). Böylece başlık listeyle çelişemez.
+ *
+ * BOŞ LİSTE ve BİLİNMEYEN DURUM: boş listede genel durum YAZILMAZ ("tüm
+ * sistemler çalışıyor" demek kanıtsız güvence olurdu); çalışma zamanında
+ * tanımsız bir `status` dizgisi (API'den gelen) "Bilinmiyor" sayılır ve genel
+ * özeti "yavaş" seviyesine çeker, sayfa çökmez. `headingLevel`: başlık
+ * düzeyi (varsayılan 3).
  *
  * Statik metin: `role="status"`/canlı bölge YOK. Durum sayfası okunmak için
  * açılır; sayfa açıkken yenilenen bir değer ekran okuyucuyu bölmez (sürekli
@@ -33,6 +39,9 @@ const STATUS = {
   outage: { label: "Kesinti", tone: "danger", rank: 3, phrase: "bileşende kesinti" },
 } as const;
 
+const UNKNOWN = { label: "Bilinmiyor", tone: "neutral", rank: 2, phrase: "bileşenin durumu bilinmiyor" } as const;
+const info = (status: string) => (status in STATUS ? STATUS[status as SystemStatus] : UNKNOWN);
+
 const DOT = { success: "bg-success", neutral: "bg-muted", warning: "bg-warning", danger: "bg-danger" } as const;
 
 export type StatusItem = { id: string; label: ReactNode; status: SystemStatus };
@@ -42,6 +51,7 @@ export function StatusList({
   items,
   incident,
   allOkText = "Tüm sistemler çalışıyor",
+  headingLevel = 3,
   className,
 }: {
   title: ReactNode;
@@ -49,24 +59,29 @@ export function StatusList({
   /** Dipteki son olay özeti. */
   incident?: ReactNode;
   allOkText?: string;
+  headingLevel?: 2 | 3 | 4;
   className?: string;
 }) {
-  const worst = items.reduce<SystemStatus>((w, i) => (STATUS[i.status].rank > STATUS[w].rank ? i.status : w), "operational");
-  const count = items.filter((i) => i.status === worst).length;
-  const summary = worst === "operational" ? allOkText : `${count} ${STATUS[worst].phrase}`;
-  const dot = DOT[STATUS[worst].tone];
+  const H = `h${headingLevel}` as ElementType;
+  // Her öğenin durum bilgisi; en kötüsü genel durumu belirler.
+  const worstInfo = items.map((i) => info(i.status)).reduce<(typeof STATUS)[SystemStatus] | typeof UNKNOWN>((w, s) => (s.rank > w.rank ? s : w), STATUS.operational);
+  const count = items.filter((i) => info(i.status) === worstInfo).length;
+  const summary = worstInfo.rank === 0 ? allOkText : `${count} ${worstInfo.phrase}`;
+  const dot = DOT[worstInfo.tone];
   return (
     <section className={cn("min-w-0", className)}>
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-        <h3 className="text-read font-semibold text-strong">{title}</h3>
-        <p className="flex items-center gap-1.5 text-small text-body">
-          <span aria-hidden className={cn("size-2 rounded-full", dot)} />
-          {summary}
-        </p>
+        <H className="text-read font-semibold text-strong">{title}</H>
+        {items.length > 0 ? (
+          <p className="flex items-center gap-1.5 text-small text-body">
+            <span aria-hidden className={cn("size-2 rounded-full", dot)} />
+            {summary}
+          </p>
+        ) : null}
       </div>
-      <ul className="mt-2 divide-y divide-line-soft">
+      <ul role="list" className="mt-2 divide-y divide-line-soft">
         {items.map((item) => {
-          const s = STATUS[item.status];
+          const s = info(item.status);
           return (
             <li key={item.id} className="flex items-center justify-between gap-3 py-2 text-small text-body">
               <span className="min-w-0 truncate">{item.label}</span>

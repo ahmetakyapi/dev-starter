@@ -279,7 +279,7 @@ const NAV: readonly ShellNavGroup[] = [
     items: [
       { href: "/genel", label: "Genel Bakış", icon: <LayoutDashboard /> },
       { href: "/akislar", label: "Akışlar", icon: <Workflow /> },
-      { href: "/sablonlar", label: "Şablonlar", icon: <LayoutTemplate />, badge: 180 },
+      { href: "/sablonlar", label: "Şablonlar", icon: <LayoutTemplate />, badge: TEMPLATES.length },
       { href: "/olusturucu", label: "Akış Oluşturucu", icon: <GitFork /> },
       { href: "/yapay-zeka", label: "Yapay Zeka Ayarı", icon: <Bot /> },
       { href: "/test", label: "Deneme Çalıştırması", icon: <FlaskConical /> },
@@ -350,7 +350,7 @@ function FeaturedCard({ t, onOpen }: { t: Template; onOpen: () => void }) {
           </button>
           {t.tags.includes("Yapay zeka") ? (
             <Badge tone="primary" className="shrink-0">
-              YZ
+              Yapay zekâ
             </Badge>
           ) : null}
         </h3>
@@ -447,11 +447,12 @@ function TemplateDialog({
       description={t?.summary}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose} className="max-sm:hidden">
             <Eye aria-hidden />
             Oluşturucuda önizle
           </Button>
-          <Button variant="secondary" onClick={onClose}>
+          {/* İlk odak footer'daki Kapat'a: tarayıcı varsayılanı gövdedeki ilk butona (Gerekenler → Bağla) gidip telefonda gövdeyi aşağı kaydırıyordu. */}
+          <Button variant="secondary" onClick={onClose} data-autofocus>
             Kapat
           </Button>
           <Button variant="brand" disabled={missing > 0} aria-describedby="sablon-eksik">
@@ -542,7 +543,7 @@ export function SablonGalerisiPage({ initialOpen }: { initialOpen?: string }) {
     >
       <PageHead
         title="Şablonlar"
-        subtitle="180 sınanmış şablon, 12.400 canlı akıştan derlendi"
+        subtitle={`${TEMPLATES.length} sınanmış şablon, kategoriye ve uygulamaya göre`}
         actions={
           <>
             <Button variant="secondary">
@@ -562,9 +563,9 @@ export function SablonGalerisiPage({ initialOpen }: { initialOpen?: string }) {
           <h2 id="sablon-one" className="text-read font-semibold text-strong">
             Bu hafta öne çıkanlar
           </h2>
-          <button type="button" className="text-small font-medium text-primary-ink underline-offset-4 hover:underline">
-            Hepsini gör (12)
-          </button>
+          <a href="#sablon-tum" className="text-small font-medium text-primary-ink underline-offset-4 hover:underline">
+            Hepsini gör ({TEMPLATES.length})
+          </a>
         </div>
         <div className="mt-3 grid gap-3 md:grid-cols-3">
           {featured.map((t) => (

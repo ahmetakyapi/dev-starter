@@ -1,0 +1,71 @@
+/*
+ * Edaş Portalı'nın ürün kimliği. Kataloğun genel token'ları değişmez; yalnız
+ * portalın kökü (`[data-product="edas"]`) altında. Pusula'nın `pusula.css`ı
+ * ile aynı yöntem, ama HİÇ sabit renk yok: her şey paletin token'ından
+ * türer, palet değişince (Verdant, Ember…) portal de onunla döner.
+ *
+ * 1. GRAFİK PALETİ: birinci seri paletin vurgusu (yük, tüketim), ikincisi onun
+ *    yıkanmışı (önceki dönem), üçüncüsü mürekkep (nötr); kalan üçü durum
+ *    tonları (başarı, uyarı, tehlike): kayıp, gecikme, arıza gibi anlamı olan
+ *    seriler zaten bu renklerle okunur.
+ *
+ * 2. KOYU KATMAN MERDİVENİ: koyu temada gölge görünmez, derinliği açılan gri
+ *    basamaklar kurar: kabuk (sayfa rengi) → içerik karosu → kart (`--overlay`)
+ *    → kart içi panel (`--surface`). Basamaklar sayfa rengi ile metin
+ *    renginin karışımı; açık tema değişmez.
+ */
+
+[data-product="edas"] {
+  --chart-1: var(--primary);
+  --chart-2: color-mix(in oklab, var(--primary) 38%, var(--page-bg));
+  --chart-3: color-mix(in oklab, var(--text-strong) 34%, var(--page-bg));
+  --chart-4: var(--warning);
+  --chart-5: var(--success);
+  --chart-6: var(--danger);
+  --chart-track: color-mix(in oklab, var(--text-strong) 6%, transparent);
+}
+
+:root[data-theme="dark"] [data-product="edas"] {
+  --edas-tile: color-mix(in oklab, var(--page-bg) 94%, var(--text-strong));
+  --overlay: color-mix(in oklab, var(--page-bg) 89%, var(--text-strong));
+  --surface: color-mix(in oklab, var(--text-strong) 6%, transparent);
+  --surface-raised: color-mix(in oklab, var(--text-strong) 10%, transparent);
+  --surface-solid: color-mix(in srgb, var(--overlay) 93%, var(--text-strong));
+  --line: color-mix(in oklab, var(--text-strong) 11%, transparent);
+  --line-soft: color-mix(in oklab, var(--text-strong) 7%, transparent);
+  --chart-2: color-mix(in oklab, var(--primary) 45%, var(--page-bg));
+  --chart-3: color-mix(in oklab, var(--text-strong) 42%, var(--page-bg));
+  --chart-track: color-mix(in oklab, var(--text-strong) 9%, transparent);
+}
+:root[data-theme="dark"] .edas-shell { background-color: var(--page-bg); }
+:root[data-theme="dark"] .edas-shell #icerik { background-color: var(--edas-tile); }
+
+/* Marka karosu: tipografik işaret, mürekkep zemin (yalnız token). */
+.edas-mark {
+  color: var(--page-bg);
+  background-color: var(--text-strong);
+  background-image: linear-gradient(180deg, color-mix(in oklab, var(--page-bg) 22%, transparent), transparent 55%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--page-bg) 25%, transparent),
+    0 1px 2px color-mix(in oklab, var(--text-strong) 30%, transparent);
+}
+
+/* Kıl çizgili ölçü şeridi: hücreler arasında dikey, telefonda yatay çizgi. Altı hücre. */
+.edas-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.edas-strip > * { min-width: 0; }
+.edas-strip > *:nth-child(even) { border-left: 1px solid var(--line-soft); }
+.edas-strip > *:nth-child(n + 3) { border-top: 1px solid var(--line-soft); }
+@media (min-width: 64rem) {
+  .edas-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .edas-strip > * { border-left: 0 !important; border-top: 0 !important; }
+  .edas-strip > *:not(:nth-child(3n + 1)) { border-left: 1px solid var(--line-soft) !important; }
+  .edas-strip > *:nth-child(n + 4) { border-top: 1px solid var(--line-soft) !important; }
+}
+@media (min-width: 90rem) {
+  .edas-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .edas-strip > * { border-top: 0 !important; }
+  .edas-strip > *:not(:first-child) { border-left: 1px solid var(--line-soft) !important; }
+}
+
+/* Mono rakamlar: sayaç, endeks ve tutar kolonları aynı hatta biter. */
+.edas-mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }

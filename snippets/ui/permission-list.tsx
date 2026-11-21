@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -16,7 +16,9 @@ import { cn } from "@/lib/utils";
  * kapsamı grupla. Alttaki `footnote` güvence satırıdır ("OAuth ile güvenli
  * bağlanır"), yalnız doğruysa.
  *
- * Sunucu bileşeni, `ul`: ekran okuyucu "3 öğeden 1" der. İkon süs.
+ * Sunucu bileşeni, `ul role="list"` (Safari/VoiceOver `list-style: none`
+ * listeyi liste saymaz): ekran okuyucu "3 öğeden 1" der. İkon süs.
+ * `headingLevel`: başlık düzeyi (varsayılan 3).
  *
  *   <PermissionList title="Kargo şunları yapabilecek" items={[{ id: "r", text: "Siparişleri okur", access: "read" }]} footnote="OAuth ile güvenli" />
  */
@@ -36,17 +38,20 @@ export function PermissionList({
   title,
   items,
   footnote,
+  headingLevel = 3,
   className,
 }: {
   title: ReactNode;
   items: readonly Permission[];
   footnote?: ReactNode;
+  headingLevel?: 2 | 3 | 4;
   className?: string;
 }) {
+  const H = `h${headingLevel}` as ElementType;
   return (
     <section className={cn("min-w-0", className)}>
-      <h3 className="text-micro font-semibold tracking-wide text-muted">{title}</h3>
-      <ul className="mt-2 divide-y divide-line-soft">
+      <H className="text-micro font-semibold tracking-wide text-muted">{title}</H>
+      <ul role="list" className="mt-2 divide-y divide-line-soft">
         {items.map((item) => {
           const access = item.access ? ACCESS[item.access] : null;
           return (

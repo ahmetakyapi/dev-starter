@@ -1,5 +1,5 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "../utils";
 
@@ -27,8 +27,12 @@ import { cn } from "../utils";
  * `mediaHidden={false}`).
  *
  * `href`: karonun tamamı tek bağlantı olur (başlık bağlantısı kartı
- * kaplar; iç içe ikinci bağlantı üretmez). Dahili geçişte `next/link`
- * isteyen proje `render` ile kendi bağlantısını verir.
+ * kaplar; iç içe ikinci bağlantı üretmez). Gerilme `article`a göre: `copy`
+ * ile aralarında `relative` bir ata YOKTUR (oku bu yüzden başlıkla aynı
+ * satıra koyduk). Düz `<a>`: `render` yok, kit `next/*`e bağlanmaz;
+ * `next/link` isteyen proje dosyayı kendi bağlantısıyla uyarlar.
+ *
+ * `headingLevel`: başlığın düzeyi (varsayılan 3; sayfada bölüm başlığı `h2`).
  *
  * `GlassFrame`: sahnenin içindeki cam çerçeveli kart. Dışta yarı saydam
  * halka, içte beyaz yüzey: "arayüz parçası bu zeminin üstünde duruyor".
@@ -37,6 +41,9 @@ import { cn } from "../utils";
  * Degrade kuralı (`rules/design-tokens.md`): zeminler birincil rengin
  * `color-mix` türevi, elle degrade yok; `sky` ve `dark` için düz renk
  * yedeği ilk bildirimdir, degrade desteklenmeyen yerde de metin okunur.
+ * `dark` birincil rengi `black` ile karıştırır: BİLİNÇLİ istisna, bu karo
+ * temadan bağımsız her zaman koyu kalmalı (ham siyah sınıfı değil, kuralın
+ * yasakladığı şey temayla dönmeyen yüzey; burada istenen tam bu).
  *
  *   <BentoGrid>
  *     <FeatureTile tone="brand" title="Otomatik İş Akışları" description="…" media={<GlassFrame>…</GlassFrame>} />
@@ -65,8 +72,10 @@ export type FeatureTileProps = {
   mediaAlign?: "bottom-bleed" | "center";
   /** Sahnenin yüksekliği: Tailwind sınıfı. Varsayılan `h-56`. */
   mediaHeight?: string;
-  /** Sahne içinde bağlantı/buton varsa `false`. */
+  /** Sahne içinde bağlantı/buton varsa `false` (`true` iken sahne `inert`: odak girmez). */
   mediaHidden?: boolean;
+  /** Başlık düzeyi, 2-4. Varsayılan 3. */
+  headingLevel?: 2 | 3 | 4;
   /** Karonun tamamını tek bağlantı yapar. */
   href?: string;
   /** Bağlantının ekran okuyucu eki: "Daha fazla bilgi". */
@@ -82,33 +91,36 @@ export function FeatureTile({
   mediaAlign = "bottom-bleed",
   mediaHeight = "h-56",
   mediaHidden = true,
+  headingLevel = 3,
   href,
   hrefLabel = "Ayrıntılar",
   className,
 }: FeatureTileProps) {
   const inverse = tone === "dark" || tone === "brand";
+  const H = `h${headingLevel}` as ElementType;
   const heading = href ? (
     <a href={href} className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-line-focus">
       {title}
       <span className="sr-only"> ({hrefLabel})</span>
+      <ArrowUpRight aria-hidden className={cn("ml-1.5 inline-block size-4 align-[-0.1em]", inverse ? "text-on-brand/70" : "text-muted")} />
     </a>
   ) : (
     title
   );
 
   const copy = (
-    <div className={cn("relative", tone === "sky" ? "pt-5" : "px-6 pt-6 sm:px-7 sm:pt-7")}>
-      <h3 className={cn("pr-8 text-title font-medium", inverse ? "text-on-brand" : "text-strong")}>{heading}</h3>
+    <div className={tone === "sky" ? "pt-5" : "px-6 pt-6 sm:px-7 sm:pt-7"}>
+      <H className={cn("text-title font-medium", inverse ? "text-on-brand" : "text-strong")}>{heading}</H>
       {description ? (
         <p className={cn("mt-2 max-w-md text-base", inverse ? "text-on-brand/75" : tone === "sky" ? "text-muted" : "text-body")}>{description}</p>
       ) : null}
-      {href ? <ArrowUpRight aria-hidden className={cn("absolute top-6 right-6 size-4 sm:top-7 sm:right-7", inverse ? "text-on-brand/70" : "text-muted")} /> : null}
     </div>
   );
 
   const stage = media ? (
     <div
       aria-hidden={mediaHidden || undefined}
+      inert={mediaHidden || undefined}
       className={cn(
         "relative min-h-0",
         tone === "sky" ? cn("order-first overflow-hidden rounded-2xl", SKY_STAGE) : "mt-auto pt-8",

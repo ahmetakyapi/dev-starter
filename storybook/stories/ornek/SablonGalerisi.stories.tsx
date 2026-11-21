@@ -22,11 +22,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Varsayılan hikaye hiçbir süzgeç bırakmaz: "Hepsi" açık ve bütün şablonlar ızgarada. */
 export const Gallery: Story = {
   name: "Galeri",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(await canvas.findByRole("heading", { level: 1, name: "Şablonlar" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { pressed: true, name: /^Hepsi/ })).toBeInTheDocument();
+  },
+};
+
+export const Filtered: Story = {
+  name: "Kategori Süzülü",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole("heading", { level: 1, name: "Şablonlar" });
     // Kategori süzgeci: Destek'te tek şablon.
     await userEvent.click(canvas.getByRole("button", { pressed: false, name: /^Destek/ }));
     await expect(canvas.getAllByRole("heading", { level: 3, name: /Destek talebini etiketle/ }).length).toBeGreaterThan(0);
@@ -45,7 +55,7 @@ export const Detail: Story = {
     await expect(within(dialog).getByText("Adımlar")).toBeInTheDocument();
     await expect(within(dialog).getByText(/hepsi bağlanınca şablon kullanılabilir/)).toBeInTheDocument();
     // Eksik bağlantı bağlanınca özet güncellenir, "Şablonu kullan" açılır.
-    await userEvent.click(within(dialog).getByRole("button", { name: "Sohbet bağla" }));
+    await userEvent.click(within(dialog).getByRole("button", { name: /^Sohbet uygulamasını bağla$/ }));
     await waitFor(() => expect(within(dialog).getByText("Bütün bağlantılar hazır.")).toBeInTheDocument());
     await expect(within(dialog).getByRole("button", { name: /Şablonu kullan/ })).toBeEnabled();
   },

@@ -16,8 +16,11 @@ const meta = {
       },
     },
   },
-  args: { initialPeriod: "7" },
-  argTypes: { initialPeriod: { control: "inline-radio", options: ["7", "30", "90"] } },
+  args: { initialPeriod: "7", initialFilter: "all" },
+  argTypes: {
+    initialPeriod: { control: "inline-radio", options: ["7", "30", "90"] },
+    initialFilter: { control: "inline-radio", options: ["all", "active", "paused"] },
+  },
 } satisfies Meta<typeof OtomasyonlarPage>;
 
 export default meta;
@@ -28,11 +31,18 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(await canvas.findByRole("heading", { level: 1, name: /Otomasyonlar/ })).toBeInTheDocument();
-    // Dönem değişince grafiğin alt notu ve birimi döner.
+    // Dönem değişince grafiğin alt notu döner; sonunda varsayılana dönülür (hikaye "Hepsi" ve 7 günle açık kalır).
     await userEvent.click(canvas.getByRole("radio", { name: "30 gün" }));
     await expect(canvas.getByText("Son 30 gün, otomasyona göre")).toBeInTheDocument();
-    // Duruma göre süzme: duraklatılmışlarda yalnız iki satır kalır.
-    await userEvent.click(canvas.getByRole("radio", { name: "Duraklatılmış" }));
+    await userEvent.click(canvas.getByRole("radio", { name: "7 gün" }));
+  },
+};
+
+export const Paused: Story = {
+  name: "Duraklatılmışlar Süzülü",
+  args: { initialFilter: "paused" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     // Masaüstünde tablo, telefonda kayıt listesi: hangisi görünüyorsa onda yalnız iki satır kalır.
     const table = canvas.queryByRole("table", { name: "Bütün otomasyonlar" });
     const list = canvas.queryByRole("list", { name: "Bütün otomasyonlar" });

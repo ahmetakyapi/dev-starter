@@ -313,6 +313,16 @@
     }
   }
 
+  /* Horizon manzarası: üst yarı panonun metnini yıkamasın (alfa maskesi,
+     renk değil), koyu temada parlaklık kısılır. */
+  .horizon-ground {
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 38%, #000 80%);
+  }
+
+  [data-theme="dark"] .horizon-ground {
+    filter: brightness(0.55) saturate(0.85);
+  }
+
   /* Bento hücresi deseni: düz yüzeyler arasında dokulu bir hücre. Renk
      degradesi değil, çizgi tonunda nokta ızgarası. */
   .dot-grid {

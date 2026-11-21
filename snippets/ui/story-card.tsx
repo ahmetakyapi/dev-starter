@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +27,11 @@ import { cn } from "@/lib/utils";
  * BAĞLANTI: `href` varsa karonun tamamı TEK bağlantıdır (`photo`/`stat`
  * tonunda "Tam hikâyeyi oku" hapı, `plain`de ok butonu; ikisi de karoyu
  * kaplar). Karo içinde ikinci bir bağlantı üretilmez. `href` yoksa
- * eylem hiç çizilmez.
+ * eylem hiç çizilmez. Gerilme için bağlantıda `backdrop-filter`/`transform`
+ * gibi kapsayıcı blok yaratan özellik OLMAZ (yaratırsa `after` yalnız hapı
+ * kaplar); hapın cam görünümü iç `span`dadır. Aynı "Tam hikâyeyi oku" adı
+ * her kartta tekrarlandığından bağlantı `aria-describedby` ile alıntıyı
+ * da söyler (bağlam).
  *
  * Anlamsal: `<article>` içinde `<figure>` + `<blockquote>` + `<figcaption>`; logo yuvası
  * çağıranda adlanır (görsel logoda `alt`, metin logoda yazının kendisi).
@@ -70,24 +74,25 @@ export function StoryCard({
   className,
 }: StoryCardProps) {
   const inverse = tone !== "plain";
+  const quoteId = useId();
   const stretch = "outline-none after:absolute after:inset-0 after:rounded-2xl after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-line-focus";
 
   const cta = href ? (
     tone === "plain" ? (
       <a
         href={href}
+        aria-describedby={quoteId}
         className={cn(stretch, "grid size-9 shrink-0 place-items-center rounded-full bg-overlay text-strong shadow-raised")}
       >
         <ArrowRight aria-hidden className="size-4" />
         <span className="sr-only">{ctaLabel}</span>
       </a>
     ) : (
-      <a
-        href={href}
-        className={cn(stretch, "inline-flex shrink-0 items-center gap-1.5 rounded-full bg-on-brand/15 px-4 py-2 text-small font-medium text-on-brand backdrop-blur-sm")}
-      >
-        {ctaLabel}
-        <ArrowUpRight aria-hidden className="size-3.5" />
+      <a href={href} aria-describedby={quoteId} className={cn(stretch, "inline-flex shrink-0 rounded-full text-small font-medium text-on-brand")}>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-on-brand/15 px-4 py-2 backdrop-blur-sm">
+          {ctaLabel}
+          <ArrowUpRight aria-hidden className="size-3.5" />
+        </span>
       </a>
     )
   ) : null;
@@ -108,7 +113,7 @@ export function StoryCard({
       {tone === "photo" || (tone === "stat" && background) ? (
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[color-mix(in_srgb,black_38%,transparent)] bg-[linear-gradient(180deg,color-mix(in_srgb,black_10%,transparent)_0%,color-mix(in_srgb,black_78%,transparent)_100%)]"
+          className="absolute inset-0 -z-10 bg-scrim bg-[linear-gradient(180deg,transparent,var(--scrim)),linear-gradient(180deg,transparent,var(--scrim))]"
         />
       ) : null}
 
@@ -130,7 +135,7 @@ export function StoryCard({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <figure className="flex min-w-0 flex-col gap-4">
             <blockquote>
-              <p className={cn("max-w-prose text-read", inverse ? "text-on-brand/90" : "text-body")}>“{quote}”</p>
+              <p id={quoteId} className={cn("max-w-prose text-read", inverse ? "text-on-brand/90" : "text-body")}>“{quote}”</p>
             </blockquote>
             {author ? (
               <figcaption className="flex min-w-0 items-center gap-3">

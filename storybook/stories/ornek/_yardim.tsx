@@ -143,6 +143,9 @@ export function YardimMerkeziPage({ initialQuery = "" }: { initialQuery?: string
     [query, searching],
   );
 
+  // Sonuçların ilk makalesinin kategorisi: "ilgili kategori" önerisi.
+  const related = searching && articles.length > 0 ? CATEGORIES.find((c) => c.title === articles[0].category) : undefined;
+
   return (
     <SampleShell
       brand="Bültenci"
@@ -256,6 +259,26 @@ export function YardimMerkeziPage({ initialQuery = "" }: { initialQuery?: string
               “{query}” için makale bulunamadı. Başka bir sözcük dene ya da destek ekibine yaz.
             </p>
           )}
+          {searching ? (
+            <div className="mt-6 grid gap-3 rounded-xl bg-surface p-4 sm:grid-cols-[1fr_auto] sm:items-center" aria-label="Aradığını bulamadın mı">
+              <div className="min-w-0">
+                <p className="text-base font-medium text-strong">Aradığını bulamadın mı?</p>
+                <p className="text-small text-muted">
+                  {related ? (
+                    <>
+                      İlgili kategori: <a href={`#kategori-${related.id}`} className="font-medium text-primary-ink underline-offset-4 hover:underline">{related.title}</a>. Ya da ekibe yaz, saatler içinde döner.
+                    </>
+                  ) : (
+                    "Ekibe yaz, saatler içinde döner."
+                  )}
+                </p>
+              </div>
+              <Button variant="brand">
+                <MessageCircle aria-hidden />
+                Destekle konuş
+              </Button>
+            </div>
+          ) : null}
         </section>
 
         <aside className="grid content-start gap-6" aria-label="İletişim ve durum">
@@ -269,7 +292,21 @@ export function YardimMerkeziPage({ initialQuery = "" }: { initialQuery?: string
               <ContactRow icon={CalendarClock} title="Görüşme planla" detail="Pro plan · 30 dk" />
             </ul>
           </section>
-          <StatusList title="Sistem durumu" items={STATUS} incident="Son olay 3 Ara · 18 dakikada çözüldü" />
+          {/* Hepsi çalışıyorsa tek satır; ayrıntı isteyen açar. Sorun varsa liste doğrudan görünür. */}
+          {STATUS.every((s) => s.status === "operational") ? (
+            <details className="group rounded-xl bg-surface px-3 py-2.5">
+              <summary className="flex cursor-pointer list-none items-center gap-2 text-base font-medium text-strong [&::-webkit-details-marker]:hidden">
+                <span aria-hidden className="size-2 rounded-full bg-success" />
+                <span className="flex-1">Tüm sistemler çalışıyor</span>
+                <ChevronRight aria-hidden className="size-4 text-muted transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="mt-3">
+                <StatusList title="Sistem durumu" items={STATUS} incident="Son olay 3 Ara · 18 dakikada çözüldü" />
+              </div>
+            </details>
+          ) : (
+            <StatusList title="Sistem durumu" items={STATUS} incident="Son olay 3 Ara · 18 dakikada çözüldü" />
+          )}
           <p className="flex items-center gap-1.5 text-micro text-muted">
             <ShieldCheck aria-hidden className="size-3.5" />
             Verilerin yalnız destek talebini çözmek için okunur.

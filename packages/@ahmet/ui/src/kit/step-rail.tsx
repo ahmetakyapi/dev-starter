@@ -1,5 +1,5 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
@@ -13,9 +13,17 @@ import { cn } from "../utils";
  * kaydırdıkça çizgi dolar. Çok adımlı kayıt formu için `stepper`, tanıtım
  * bölümü için burası. 3-6 adımdan fazlası okunmaz.
  *
- * `current`: kaçıncı adıma kadar dolu (sıfırdan; adım sayısından büyükse
- * hepsi tamam). Adımlar `<ol>`, bulunulan adım `aria-current="step"`; tamam
- * adımların durumu görünmez "Tamamlandı" metniyle de söylenir.
+ * `current`: kaçıncı adıma kadar dolu (sıfırdan; adım sayısı ya da büyüğü
+ * verilirse hepsi tamam, her başlığa görünmez "(Tamamlandı)" eklenir).
+ * Varsayılan `-1`: hiçbir adım "şu an" değil, hiçbiri dolu değil; süreç
+ * ANLATAN bölümde ilk adımı sahte biçimde "burada" göstermez. Adımlar
+ * `<ol role="list">`, bulunulan adım `aria-current="step"`; tamam adımların
+ * durumu görünmez "Tamamlandı" metniyle de söylenir. `headingLevel`: adım
+ * başlıklarının düzeyi (varsayılan 3).
+ *
+ * İZ KABI `overflow-clip`: `overflow-hidden` kabı kaydırma kabı yapar ve
+ * `animation-timeline: view()` sayfayı değil o kabı izlerdi (dolum hiç
+ * ilerlemezdi); `clip` kaydırma kabı yaratmaz.
  *
  * `fill="scroll"`: her çizgi parçası görünüme girerken yukarıdan aşağı dolar
  * (CSS `animation-timeline: view()`, JS yok). Desteklemeyen tarayıcıda ve
@@ -31,7 +39,8 @@ export type RailStep = { icon: ReactNode; title: ReactNode; description?: ReactN
 
 export function StepRail({
   steps,
-  current = 0,
+  current = -1,
+  headingLevel = 3,
   tone = "light",
   fill = "scroll",
   doneLabel = "Tamamlandı",
@@ -40,6 +49,7 @@ export function StepRail({
 }: {
   steps: readonly RailStep[];
   current?: number;
+  headingLevel?: 2 | 3 | 4;
   tone?: "light" | "dark";
   fill?: "scroll" | "static";
   doneLabel?: string;
@@ -47,6 +57,7 @@ export function StepRail({
   className?: string;
 }) {
   const dark = tone === "dark";
+  const H = `h${headingLevel}` as ElementType;
   return (
     <>
       <style href="ui-step-rail" precedence="default">{`
@@ -58,7 +69,7 @@ export function StepRail({
 }
 @keyframes ui-rail-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 `}</style>
-      <ol aria-label={props["aria-label"] ?? "Süreç"} className={cn("flex flex-col", className)}>
+      <ol role="list" aria-label={props["aria-label"] ?? "Süreç"} className={cn("flex flex-col", className)}>
         {steps.map((step, index) => {
           const done = index < current;
           const here = index === current;
@@ -68,7 +79,7 @@ export function StepRail({
               {!last ? (
                 <span
                   aria-hidden
-                  className={cn("absolute top-11 -bottom-0 left-[1.375rem] w-1 -translate-x-1/2 overflow-hidden rounded-full", dark ? "bg-page/25" : "bg-chart-track")}
+                  className={cn("absolute top-11 -bottom-0 left-[1.375rem] w-1 -translate-x-1/2 overflow-clip rounded-full", dark ? "bg-page/25" : "bg-chart-track")}
                 >
                   {index < current ? (
                     <span className={cn("ui-rail-fill block size-full rounded-full bg-primary", fill === "scroll" && "ui-rail-scroll")} />
@@ -90,10 +101,10 @@ export function StepRail({
                 {step.icon}
               </span>
               <div className="min-w-0 pt-1">
-                <h3 className={cn("text-read font-medium tracking-tight", dark ? "text-page" : "text-strong")}>
+                <H className={cn("text-read font-medium tracking-tight", dark ? "text-page" : "text-strong")}>
                   {step.title}
                   {done ? <span className="sr-only"> ({doneLabel})</span> : null}
-                </h3>
+                </H>
                 {step.description ? (
                   <p className={cn("mt-1 text-base", dark ? "text-page/70" : "text-soft")}>{step.description}</p>
                 ) : null}

@@ -124,7 +124,7 @@ export function HeroBoard({ board }: { board: HeroBoardData }) {
                     <span className="truncate text-small text-body sm:text-base">{stage.label}</span>
                     <span className="h-6 overflow-hidden rounded-md bg-chart-track sm:h-7">
                       <span
-                        className={cn("bar-fill block h-full rounded-md", ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4"][index % 4])}
+                        className={cn("bar-fill block h-full rounded-md", ["bg-primary", "bg-primary/80", "bg-primary/60", "bg-primary/45"][index % 4])}
                         style={{ width: `${(stage.value / base) * 100}%`, "--i": index } as CSSProperties}
                       />
                     </span>
@@ -152,7 +152,7 @@ export function HeroBoard({ board }: { board: HeroBoardData }) {
                   {closed.weekly.map((value, index) => (
                     <span key={closed.days[index]} className="flex h-full flex-col justify-end overflow-hidden rounded-sm bg-chart-track">
                       <span
-                        className="col-rise block rounded-sm bg-chart-2"
+                        className="col-rise block rounded-sm bg-primary"
                         style={{ height: `${(value / weeklyMax) * 100}%`, "--i": index } as CSSProperties}
                       />
                     </span>

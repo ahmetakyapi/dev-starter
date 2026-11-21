@@ -89,8 +89,8 @@ const CSS = `
 .kf-stage:hover .kf-up, .kf-stage:hover .kf-down { animation-play-state: paused; }
 /* Her parça kendi odağını taşır (--f, 0-1): dinlenirken renksiz ve soluk, fener yaklaştıkça
    netleşir, renklenir, hafifçe öne gelir. Yeniden çizim yok; değişken JS'ten. */
-.kf-cell { --f: 0; opacity: calc(.2 + .8 * var(--f)); filter: grayscale(calc(1 - var(--f))); transform: scale(calc(.96 + .04 * var(--f))); transition: opacity .35s, filter .35s, transform .35s cubic-bezier(.22,1,.36,1); }
-[data-theme="dark"] .kf-cell { opacity: calc(.16 + .84 * var(--f)); }
+.kf-cell { --f: 0; opacity: calc(.34 + .66 * var(--f)); filter: grayscale(calc(1 - var(--f))); transform: scale(calc(.96 + .04 * var(--f))); transition: opacity .35s, filter .35s, transform .35s cubic-bezier(.22,1,.36,1); }
+[data-theme="dark"] .kf-cell { opacity: calc(.28 + .72 * var(--f)); }
 @media (prefers-reduced-motion: reduce) { .kf-up, .kf-down { animation: none; } }`;
 
 function usePaletteTour(palette: PaletteName, onPalette: (p: PaletteName) => void, still: boolean) {
@@ -307,7 +307,7 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
       ref={t.ref}
       aria-labelledby="kapak-baslik"
       style={t.previewing ? paletteVars(t.shown, theme) : undefined}
-      className={cn("relative isolate grid grid-cols-[minmax(0,1fr)] gap-y-16", !still && "kf-tour")}
+      className={cn("relative isolate grid grid-cols-[minmax(0,1fr)] gap-y-12", !still && "kf-tour")}
     >
       <style href="kapak-fener" precedence="default">
         {CSS}
@@ -333,13 +333,13 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
 
         <div className="grid w-full min-w-0 justify-items-center text-center">
           <m.p {...enter(1)} data-og-counts={ogCounts}>
-            <CornerLabel className="max-w-full px-3.5 py-2 text-micro tracking-[0.08em] whitespace-normal sm:px-5 sm:py-3 sm:text-small sm:tracking-[0.12em] sm:whitespace-nowrap">
+            <CornerLabel className="max-w-full bg-transparent px-3.5 py-2 text-micro tracking-[0.08em] whitespace-normal sm:px-5 sm:py-3 sm:text-small sm:tracking-[0.12em] sm:whitespace-nowrap">
               v{uiPackage.version} · Next 16 · React 19 · Tailwind v4
             </CornerLabel>
           </m.p>
           <ToneText as="h1" id="kapak-baslik" className="mt-8 font-display text-[clamp(3.25rem,8vw,7.5rem)] leading-[0.9] font-bold tracking-[-0.06em]">
             <m.span className="block" initial={still ? false : { y: 28, filter: "blur(12px)" }} animate={{ y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}>
-              <ToneText.Soft>Tek Kimlik,</ToneText.Soft>
+              <span className="text-soft">Tek Kimlik,</span>
             </m.span>{" "}
             <m.span className="display-ink block pb-[0.08em]" initial={still ? false : { y: 28, filter: "blur(12px)" }} animate={{ y: 0, filter: "blur(0px)" }} transition={{ duration: 0.85, ease: EASE, delay: 0.22 }}>
               On Palet

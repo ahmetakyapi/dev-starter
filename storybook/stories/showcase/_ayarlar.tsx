@@ -132,8 +132,6 @@ const SECTIONS = [
   { id: "ayar-guvenlik", label: "Güvenlik" },
   { id: "ayar-kisayol", label: "Kısayollar" },
   { id: "ayar-etiket", label: "Etiketler" },
-  { id: "ayar-ozet", label: "Özet" },
-  { id: "ayar-imza", label: "İmza" },
   { id: "ayar-alan", label: "Dosya Alanı" },
   { id: "ayar-entegrasyon", label: "Entegrasyonlar" },
   { id: "ayar-webhook", label: "Webhook" },

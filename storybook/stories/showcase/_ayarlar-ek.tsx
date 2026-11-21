@@ -55,7 +55,7 @@ export function IntegrationsWell() {
       </IntegrationGrid>
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         <RequirementList
-          title="Teklif Akışı İçin Gerekenler"
+          title="Teklif Akışını Açmak İçin"
           items={[
             { id: "muhasebe", name: "Muhasebe", icon: <CreditCard />, status: connected.has("muhasebe") ? "connected" : "missing" },
             { id: "kargo", name: "Kargo Takip", icon: <Truck />, status: connected.has("kargo") ? "connected" : "missing" },
@@ -64,7 +64,7 @@ export function IntegrationsWell() {
           onConnect={(id) => connect(id as AppId)}
         />
         <PermissionList
-          title="Kargo Takip şunları yapabilecek"
+          title="Kargo Takip'e Verilen İzinler"
           items={[
             { id: "r1", text: "Siparişlerin teslimat adresini okur", access: "read" },
             { id: "r2", text: "Müşteri adı ve telefonunu okur", access: "read" },
@@ -96,7 +96,7 @@ export function HelpWell() {
           items={[
             { id: "gelen", label: "Gelen Kutusu", status: "operational" },
             { id: "api", label: "API ve Webhook", status: "operational" },
-            { id: "kargo", label: "Kargo Eşitleme", status: "degraded" },
+            { id: "bildirim", label: "Bildirim Gönderimi", status: "degraded" },
             { id: "asistan", label: "Asistan", status: "operational" },
           ]}
           incident="Son olay 28 Ekim · 18 dakikada çözüldü"

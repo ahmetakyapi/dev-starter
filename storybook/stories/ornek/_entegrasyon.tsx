@@ -294,6 +294,9 @@ const START: Record<string, State> = {
   webhook: { connected: true, syncing: true, lastSync: "Son olay 32 sn önce" },
 };
 
+/** Para birimi ve müşteri aktarımı yalnız ödeme uygulamalarında anlamlı. */
+const isPayment = (i: Integration) => i.category === "Ödemeler";
+
 const stateOf = (all: Record<string, State>, id: string): State => all[id] ?? { connected: false, syncing: true, lastSync: "" };
 
 export function EntegrasyonlarPage({ initialDetail }: { initialDetail?: AppId }) {
@@ -449,7 +452,7 @@ export function EntegrasyonlarPage({ initialDetail }: { initialDetail?: AppId })
               onClick={() => {
                 if (!connecting) return;
                 patch(connecting.id, { connected: true, syncing: true, lastSync: "Az önce eşitlendi" });
-                toast.success(`${connecting.name} bağlandı`, { description: importAll ? "Mevcut müşteriler e-postayla eşleniyor." : undefined });
+                toast.success(`${connecting.name} bağlandı`, { description: importAll ? (isPayment(connecting) ? "Mevcut müşteriler e-postayla eşleniyor." : "Son 30 günün kayıtları eşitleniyor.") : undefined });
                 setConnecting(null);
               }}
             >
@@ -472,12 +475,16 @@ export function EntegrasyonlarPage({ initialDetail }: { initialDetail?: AppId })
               items={connecting.scopes}
               footnote={`${connecting.name} sayfasında yetkilendirme (OAuth) ile güvenle bağlanır.`}
             />
-            <Select label="Para birimi" items={CURRENCIES} value={currency} onValueChange={(v) => setCurrency(v ?? "try")} />
-            <p className="-mt-2 text-micro text-muted">Fiyatlar, faturalar ve gelir raporları bu birimi kullanır.</p>
+            {isPayment(connecting) ? (
+              <>
+                <Select label="Para birimi" items={CURRENCIES} value={currency} onValueChange={(v) => setCurrency(v ?? "try")} />
+                <p className="-mt-2 text-micro text-muted">Fiyatlar, faturalar ve gelir raporları bu birimi kullanır.</p>
+              </>
+            ) : null}
             <div className="rounded-lg bg-surface px-3">
               <Switch
-                label="Mevcut müşterileri içe aktar"
-                hint="1.284 müşteri e-postayla eşlenir"
+                label={isPayment(connecting) ? "Mevcut müşterileri içe aktar" : "Geçmiş kayıtları da eşitle"}
+                hint={isPayment(connecting) ? "1.284 müşteri e-postayla eşlenir" : "Bağlandıktan sonra son 30 günün kayıtları alınır"}
                 checked={importAll}
                 onChange={(e) => setImportAll(e.currentTarget.checked)}
               />
@@ -500,7 +507,8 @@ export function EntegrasyonlarPage({ initialDetail }: { initialDetail?: AppId })
         status={<Badge tone="success" dot>Bağlı</Badge>}
         footerStart={
           <Button
-            variant="danger"
+            variant="ghost"
+            className="text-danger hover:bg-danger-wash"
             onClick={() => {
               if (!detailItem) return;
               patch(detailItem.id, { connected: false });

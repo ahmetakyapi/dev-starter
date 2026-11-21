@@ -14,7 +14,7 @@ import { HeroActions } from "./shared";
  * TASARIM GEREKÇESİ. Okur, bir ekip aracını değerlendiren kişi; beş saniyede
  * iki şeyi görmeli: ne çözdüğü (başlık) ve bunun gerçek olduğu (çalışan pano).
  * Tek güçlü fikir "problem soluk, çözüm net": başlığın ink'siz satırları
- * soluk (`ToneText.Soft`), ink'li satır güçlü ve degrade; cümlenin anlamı
+ * soluk (`text-soft`: AA, yine de ink'li satırdan belirgin biçimde geri), ink'li satır güçlü ve degrade; cümlenin anlamı
  * renk kontrastıyla okunur, ek süs yok. Pano tezgâh gibi durur: üst yarısı
  * görünür, alt kenarı sayfa zeminine solar; hero ilk ekranı aşmaz ve alttaki
  * bölüm sert bir çizgi olmadan devralır. Hareket tek dilde: başlık satırları
@@ -58,7 +58,7 @@ function ShowcaseTitle({ lines }: { lines: readonly HeroLine[] }) {
               </span>
             ) : (
               <span className="line-rise" style={style}>
-                {soft ? <ToneText.Soft>{lineText(line.text)}</ToneText.Soft> : lineText(line.text)}
+                {soft ? <span className="text-soft">{lineText(line.text)}</span> : lineText(line.text)}
               </span>
             )}
           </span>
