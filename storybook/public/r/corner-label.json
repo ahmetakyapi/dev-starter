@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "corner-label",
+  "type": "registry:ui",
+  "title": "Köşe Ayraçlı Etiket",
+  "description": "Köşe ayraçlı mono eyebrow (\"BİRLEŞİK ZEKÂ KATMANI\"); görsel zeminli tanıtımda, sayfada en çok iki",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/corner-label.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Köşe ayraçlı etiket: mono, büyük harfli kısa metin; dört köşesinde \"vizör\"\n * ayraçları (Sightline kahramanı: \"UNIFIED INTELLIGENCE LAYER\"). Başlığın\n * hemen üstünde eyebrow olarak: ürün kategorisi, sürüm, bölüm adı.\n * Hap şeklindeki rozetin teknik, ölçü aleti gibi karşılığı; yoğun uygulama\n * ekranında değil, görsel zeminli tanıtım sayfasında kullan.\n *\n * Kural: tek satır, en çok 4-5 sözcük, bir sayfada bir ya da iki tane\n * (her bölüme koyarsan etiket gürültü olur).\n *\n * BÜYÜK HARF: `uppercase` CSS'i `lang` özniteliğine bakar; `<html lang=\"tr\">`\n * ise \"ışık\" doğru olarak \"IŞIK\", \"iş\" \"İŞ\" olur. Sayfada dil doğru değilse\n * metni zaten büyük harfle yaz (i/İ hatası bu yüzden oluşur).\n *\n * Ayraçlar süstür (`aria-hidden`), yazı bölünmez; `tone=\"media\"` görsel\n * üstünde açık yazı ve yarı saydam zemin.\n *\n *   <CornerLabel>Birleşik Zekâ Katmanı</CornerLabel>\n */\n\ntype CornerLabelProps = {\n  children: ReactNode;\n  /** `default`: yüzey üstü. `media`: fotoğraf üstü, açık yazı. */\n  tone?: \"default\" | \"media\";\n  className?: string;\n};\n\nconst CORNERS = [\n  \"top-0 left-0 border-t border-l\",\n  \"top-0 right-0 border-t border-r\",\n  \"bottom-0 left-0 border-b border-l\",\n  \"bottom-0 right-0 border-r border-b\",\n] as const;\n\nexport function CornerLabel({ children, tone = \"default\", className }: CornerLabelProps) {\n  const media = tone === \"media\";\n  return (\n    <span\n      className={cn(\n        \"relative inline-flex items-center px-5 py-3 font-mono text-small font-medium tracking-[0.12em] uppercase\",\n        media ? \"bg-scrim text-on-brand\" : \"bg-surface text-body\",\n        className,\n      )}\n    >\n      {CORNERS.map((c) => (\n        <span key={c} aria-hidden className={cn(\"absolute size-2\", c, media ? \"border-on-brand\" : \"border-strong\")} />\n      ))}\n      {children}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "corner-label",
+    "palettes": false
+  }
+}

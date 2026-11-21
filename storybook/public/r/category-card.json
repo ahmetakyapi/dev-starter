@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "category-card",
+  "type": "registry:ui",
+  "title": "Kategori Kartı",
+  "description": "Yardım merkezi ve kaynak kütüphanesi konu karosu; renkli ikon karosu, \"12 makale →\"; `CategoryGrid`",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/category-card.tsx",
+      "content": "import { ArrowRight } from \"lucide-react\";\nimport { useId, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Kategori kartı: yardım merkezi, belge ya da kaynak kütüphanesinin\n * konu karoları. Renkli yumuşak ikon karosu, başlık, iki satır açıklama,\n * altta \"12 makale →\". MailPulse yardım merkezinden alındı (yapı).\n *\n * TEK BAĞLANTI: bağlantı başlığın üstünde, `after:absolute after:inset-0`\n * ile kartın tamamına gerilir; kart tıklanır, ekran okuyucu tek bağlantı\n * duyar (ad \"Başlangıç\", açıklama \"12 makale\"; `aria-describedby`). Kartın içine ikinci bir bağlantı koyma.\n * Odak halkası kartın tamamında (`focus-within`).\n *\n * `tone`: ikon karosunun yumuşak zemini; DURUM tonları (primary, success,\n * warning, danger, neutral) ve grafik ailesi (`chart-1…6`). Ton süs: konuyu\n * başlık söyler. Grafik rengi METİN olamaz, ikon `text-strong`.\n *\n * Sunucu bileşeni; `href` alan her bağlantı bileşeni için `render` yok,\n * düz `<a>`; Next projesinde `next/link`e sarmak çağıranın işi.\n *\n *   <CategoryGrid><CategoryCard href=\"/yardim/baslangic\" title=\"Başlangıç\" description=\"…\" meta=\"12 makale\" icon={<Rocket />} tone=\"chart-3\" /></CategoryGrid>\n */\n\nconst TONES = {\n  neutral: \"bg-surface-raised\",\n  primary: \"bg-primary-wash text-primary-ink\",\n  success: \"bg-success-wash text-success\",\n  warning: \"bg-warning-wash text-warning\",\n  danger: \"bg-danger-wash text-danger\",\n  \"chart-1\": \"bg-chart-1/22 text-strong\",\n  \"chart-2\": \"bg-chart-2/22 text-strong\",\n  \"chart-3\": \"bg-chart-3/22 text-strong\",\n  \"chart-4\": \"bg-chart-4/22 text-strong\",\n  \"chart-5\": \"bg-chart-5/22 text-strong\",\n  \"chart-6\": \"bg-chart-6/22 text-strong\",\n} as const;\n\nexport type CategoryTone = keyof typeof TONES;\n\nexport function CategoryCard({\n  href,\n  title,\n  description,\n  meta,\n  icon,\n  tone = \"neutral\",\n  className,\n}: {\n  href: string;\n  title: string;\n  description: ReactNode;\n  /** Altta okla birlikte: \"12 makale\". */\n  meta: ReactNode;\n  icon: ReactNode;\n  tone?: CategoryTone;\n  className?: string;\n}) {\n  const metaId = useId();\n  return (\n    <article\n      className={cn(\n        \"group/cat relative flex min-w-0 gap-3.5 rounded-xl border border-line bg-overlay p-4 shadow-raised transition-colors hover:bg-surface\",\n        \"focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-line-focus focus-within:outline-solid\",\n        className,\n      )}\n    >\n      <span aria-hidden className={cn(\"grid size-10 shrink-0 place-items-center rounded-md [&_svg]:size-5\", TONES[tone])}>\n        {icon}\n      </span>\n      <div className=\"flex min-w-0 flex-1 flex-col gap-1\">\n        <h3 className=\"text-read font-semibold text-strong\">\n          <a href={href} aria-describedby={metaId} className=\"outline-none after:absolute after:inset-0 after:rounded-xl\">\n            {title}\n          </a>\n        </h3>\n        <p className=\"text-small leading-relaxed text-muted\">{description}</p>\n        <p id={metaId} className=\"mt-auto flex items-center gap-1 pt-2 text-small text-body\">\n          {meta}\n          <ArrowRight className=\"size-3.5 transition-transform group-hover/cat:translate-x-0.5 motion-reduce:transition-none\" />\n        </p>\n      </div>\n    </article>\n  );\n}\n\n/** Üç sütun, tablette iki, telefonda bir. */\nexport function CategoryGrid({ children, className }: { children: ReactNode; className?: string }) {\n  return <div className={cn(\"grid gap-3 sm:grid-cols-2 lg:grid-cols-3\", className)}>{children}</div>;\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form ve Gezinme"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "category-card",
+    "palettes": false
+  }
+}

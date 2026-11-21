@@ -425,6 +425,25 @@
       "palettes": false
     },
     {
+      "name": "category-card",
+      "title": "Kategori Kartı",
+      "category": "Form ve Gezinme",
+      "description": "Yardım merkezi ve kaynak kütüphanesi konu karosu; renkli ikon karosu, \"12 makale →\"; `CategoryGrid`",
+      "file": "snippets/ui/category-card.tsx",
+      "client": false,
+      "storyId": "category-card",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "channel-matrix",
       "title": "Kanal Tablosu",
       "category": "Form ve Gezinme",
@@ -740,6 +759,24 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "corner-label",
+      "title": "Köşe Ayraçlı Etiket",
+      "category": "Tanıtım",
+      "description": "Köşe ayraçlı mono eyebrow (\"BİRLEŞİK ZEKÂ KATMANI\"); görsel zeminli tanıtımda, sayfada en çok iki",
+      "file": "snippets/ui/corner-label.tsx",
+      "client": false,
+      "storyId": "corner-label",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1063,6 +1100,25 @@
       "palettes": false
     },
     {
+      "name": "feature-tile",
+      "title": "Özellik Karosu",
+      "category": "Tanıtım",
+      "description": "Bento özellik bölümü: başlık + tek cümle + altta kırpılan sahne; `light`/`dark`/`brand`/`sky`; `GlassFrame` cam çerçeveli sahne kartı, `BentoGrid` 2/3 + 3/2",
+      "file": "snippets/ui/feature-tile.tsx",
+      "client": false,
+      "storyId": "feature-tile",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "file-dropzone",
       "title": "Dosya Bırakma Alanı",
       "category": "Form ve Gezinme",
@@ -1098,6 +1154,43 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "float-cards",
+      "title": "Süzülen Kartlar",
+      "category": "Tanıtım",
+      "description": "Kahraman başlığı çevresinde döndürülmüş, kenara taşan süzülen kartlar: `FloatCards` + `FloatCard`",
+      "file": "snippets/ui/float-cards.tsx",
+      "client": false,
+      "storyId": "float-cards",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "focus-stack",
+      "title": "Odak Yığını",
+      "category": "Tanıtım",
+      "description": "Dikey odak yığını: ortadaki net, uzaktakiler küçülür, solar, bulanıklaşır; kendiliğinden döner",
+      "file": "snippets/ui/focus-stack.tsx",
+      "client": true,
+      "storyId": "focus-stack",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1221,6 +1314,24 @@
       "palettes": false
     },
     {
+      "name": "horizon-scene",
+      "title": "Ufuk Sahnesi",
+      "category": "Tanıtım",
+      "description": "Kahramanda ürün çerçevesi arkada kısmen görünür, önüne manzara biner ve sayfa zeminine solar; `peek`, `fade`",
+      "file": "snippets/ui/horizon-scene.tsx",
+      "client": false,
+      "storyId": "horizon-scene",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "hover-card",
       "title": "Önizleme Kartı",
       "category": "Katmanlar",
@@ -1313,6 +1424,28 @@
       "npm": {
         "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "integration-card",
+      "title": "Entegrasyon Kartı",
+      "category": "Form ve Gezinme",
+      "description": "Entegrasyon ızgarası kartı: bağlıysa \"Bağlı\" hapı + eşitleme zamanı + anahtar, değilse \"Bağla\" butonu + kurulum maliyeti; `menu` yuvası; `IntegrationGrid`",
+      "file": "snippets/ui/integration-card.tsx",
+      "client": true,
+      "storyId": "integration-card",
+      "registryDependencies": [
+        "badge",
+        "switch"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1655,6 +1788,24 @@
       "palettes": false
     },
     {
+      "name": "path-graph",
+      "title": "Kritik Yol",
+      "category": "Grafik",
+      "description": "Bağımlılığı olan 6-15 işin aşama sütunlarında kritik yolu: teslimi belirleyen zincir kalın `danger`, boşluklu bağlantı ince; solda Bugün, sağda hedef",
+      "file": "snippets/ui/path-graph.tsx",
+      "client": false,
+      "storyId": "path-graph",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "pattern-bg",
       "title": "Desen Zemin",
       "category": "Hareket ve Doku",
@@ -1668,6 +1819,25 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "permission-list",
+      "title": "İzin Listesi",
+      "category": "Form ve Gezinme",
+      "description": "Bağlantı penceresinde \"Uygulama şunları yapabilecek\" dökümü; Okur/Yazar rozeti, güvence satırı",
+      "file": "snippets/ui/permission-list.tsx",
+      "client": false,
+      "storyId": "permission-list",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1888,6 +2058,25 @@
       "palettes": false
     },
     {
+      "name": "requirement-list",
+      "title": "Gerekenler Listesi",
+      "category": "Form ve Gezinme",
+      "description": "Şablonun gerektirdiği uygulamalar: Bağlı hapı ya da Bağla butonu, eksik sayısı özette",
+      "file": "snippets/ui/requirement-list.tsx",
+      "client": true,
+      "storyId": "requirement-list",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "ring-chart",
       "title": "Halka Grafiği",
       "category": "Grafik",
@@ -1962,6 +2151,26 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "schedule-list",
+      "title": "Sıradakiler Listesi",
+      "category": "Veri",
+      "description": "Sıradakiler: saat + gün, renkli çubuk, başlık ve tek satır açıklama, sağda uygulama ikonları",
+      "file": "snippets/ui/schedule-list.tsx",
+      "client": false,
+      "storyId": "schedule-list",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -2264,6 +2473,26 @@
       "palettes": false
     },
     {
+      "name": "stacked-bar-chart",
+      "title": "Yığılı Sütun Grafiği",
+      "category": "Grafik",
+      "description": "Bir toplamın neyden oluştuğu: günün/ayın sütunu serilerin yığılı hali; vurgulu sütun doygun, balon \"44/gün\"",
+      "file": "snippets/ui/stacked-bar-chart.tsx",
+      "client": true,
+      "storyId": "stacked-bar-chart",
+      "registryDependencies": [
+        "chart-card"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "stage-bars",
       "title": "Aşama Çubukları",
       "category": "Grafik",
@@ -2303,6 +2532,62 @@
       "palettes": false
     },
     {
+      "name": "stat-strip",
+      "title": "İstatistik Şeridi",
+      "category": "Tanıtım",
+      "description": "3-4 büyük sayı + etiket + ince ayraç, telefonda 2×2; doğrulanamayan sayı yazılmaz, örnek veri künyeli",
+      "file": "snippets/ui/stat-strip.tsx",
+      "client": false,
+      "storyId": "stat-strip",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "status-list",
+      "title": "Sistem Durumu",
+      "category": "Geri Bildirim",
+      "description": "Sistem durumu: bileşen listesi, türetilmiş genel durum, son olay satırı",
+      "file": "snippets/ui/status-list.tsx",
+      "client": false,
+      "storyId": "status-list",
+      "registryDependencies": [
+        "badge"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "step-rail",
+      "title": "Süreç Rayı",
+      "category": "Tanıtım",
+      "description": "Tanıtımda \"nasıl çalışır\": ikonlu yuvarlak karolar, kalın hap çizgi, tamamlanan kısım vurgu renginde dolu; kaydırdıkça çizgi dolar. Form akışı için `stepper`",
+      "file": "snippets/ui/step-rail.tsx",
+      "client": false,
+      "storyId": "step-rail",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "stepper",
       "title": "Adım Göstergesi",
       "category": "Form ve Gezinme",
@@ -2310,6 +2595,25 @@
       "file": "snippets/ui/stepper.tsx",
       "client": false,
       "storyId": "stepper",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "story-card",
+      "title": "Hikaye Karosu",
+      "category": "Tanıtım",
+      "description": "Müşteri hikayesi bölümü: logo + alıntı + kişi ya da büyük sonuç rakamı; `photo`/`plain`/`stat`; `StoryGrid` 3/2 + 2/3; uydurma söz ve rakam yok, `sample` ile \"ÖRNEK\" künyesi",
+      "file": "snippets/ui/story-card.tsx",
+      "client": false,
+      "storyId": "story-card",
       "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
@@ -2497,6 +2801,24 @@
       "palettes": false
     },
     {
+      "name": "tick-meter",
+      "title": "Çentikli Çubuk",
+      "category": "Grafik",
+      "description": "Birimi sayılabilen işin gidişatı (tahmin / harcanan, biten görev): dolu, aşan (`danger`) ve planlanan (çizgili) çentikler, isteğe eşik işaretçisi",
+      "file": "snippets/ui/tick-meter.tsx",
+      "client": false,
+      "storyId": "tick-meter",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "tick-ruler",
       "title": "Cetvel Seçici",
       "category": "Form Girişleri",
@@ -2632,6 +2954,24 @@
         "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tone-text",
+      "title": "İki Tonlu Başlık",
+      "category": "Tanıtım",
+      "description": "İki tonlu başlık: güçlü + soluk bölüm (`ToneText.Soft`), soldan sağa solan `fade`, tek serif italik `<em>`; hero ve manifesto",
+      "file": "snippets/ui/tone-text.tsx",
+      "client": false,
+      "storyId": "tone-text",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

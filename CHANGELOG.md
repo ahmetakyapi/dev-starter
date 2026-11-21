@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Kasım 21 turu: 19 yeni bileşen ve örnek sayfalar — 2026-11-21
+
+- Tanıtım: iki tonlu başlık, köşe etiketi, süzülen kartlar, odak yığını,
+  özellik ve hikaye karoları, süreç rayı, istatistik şeridi, ufuk sahnesi
+- Panel: yığılı sütun, sıradakiler, kritik yol grafiği, çentikli çubuk,
+  entegrasyon kartı, izin ve gereken listeleri, kategori kartı, sistem durumu
+- Storybook: Ekranlar → Örnek Sayfalar (sekiz sayfa); Pusula ve Amiral'a yerleşti
+
 ### Tanıtım kahramanı: Fener — 2026-11-18
 
 - On yedi yön denendi; seçilen Fener. Sahnede on altı farklı gerçek

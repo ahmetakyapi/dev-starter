@@ -559,6 +559,32 @@
       ]
     },
     {
+      "name": "category-card",
+      "type": "registry:ui",
+      "title": "Kategori Kartı",
+      "description": "Yardım merkezi ve kaynak kütüphanesi konu karosu; renkli ikon karosu, \"12 makale →\"; `CategoryGrid`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "category-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/category-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "channel-matrix",
       "type": "registry:ui",
       "title": "Kanal Tablosu",
@@ -985,6 +1011,29 @@
       ]
     },
     {
+      "name": "corner-label",
+      "type": "registry:ui",
+      "title": "Köşe Ayraçlı Etiket",
+      "description": "Köşe ayraçlı mono eyebrow (\"BİRLEŞİK ZEKÂ KATMANI\"); görsel zeminli tanıtımda, sayfada en çok iki",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "corner-label",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/corner-label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "corner-mascot",
       "type": "registry:ui",
       "title": "Köşe Maskotu",
@@ -1394,6 +1443,32 @@
       ]
     },
     {
+      "name": "feature-tile",
+      "type": "registry:ui",
+      "title": "Özellik Karosu",
+      "description": "Bento özellik bölümü: başlık + tek cümle + altta kırpılan sahne; `light`/`dark`/`brand`/`sky`; `GlassFrame` cam çerçeveli sahne kartı, `BentoGrid` 2/3 + 3/2",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "feature-tile",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/feature-tile.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "file-dropzone",
       "type": "registry:ui",
       "title": "Dosya Bırakma Alanı",
@@ -1442,6 +1517,55 @@
       "files": [
         {
           "path": "snippets/ui/filter-sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "float-cards",
+      "type": "registry:ui",
+      "title": "Süzülen Kartlar",
+      "description": "Kahraman başlığı çevresinde döndürülmüş, kenara taşan süzülen kartlar: `FloatCards` + `FloatCard`",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "float-cards",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/float-cards.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "focus-stack",
+      "type": "registry:ui",
+      "title": "Odak Yığını",
+      "description": "Dikey odak yığını: ortadaki net, uzaktakiler küçülür, solar, bulanıklaşır; kendiliğinden döner",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "focus-stack",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/focus-stack.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1605,6 +1729,29 @@
       ]
     },
     {
+      "name": "horizon-scene",
+      "type": "registry:ui",
+      "title": "Ufuk Sahnesi",
+      "description": "Kahramanda ürün çerçevesi arkada kısmen görünür, önüne manzara biner ve sayfa zeminine solar; `peek`, `fade`",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "horizon-scene",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/horizon-scene.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Önizleme Kartı",
@@ -1731,6 +1878,34 @@
       "files": [
         {
           "path": "snippets/ui/input-otp.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "integration-card",
+      "type": "registry:ui",
+      "title": "Entegrasyon Kartı",
+      "description": "Entegrasyon ızgarası kartı: bağlıysa \"Bağlı\" hapı + eşitleme zamanı + anahtar, değilse \"Bağla\" butonu + kurulum maliyeti; `menu` yuvası; `IntegrationGrid`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/badge.json",
+        "https://dev-starter-storybook.vercel.app/r/switch.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "integration-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/integration-card.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2221,6 +2396,29 @@
       ]
     },
     {
+      "name": "path-graph",
+      "type": "registry:ui",
+      "title": "Kritik Yol",
+      "description": "Bağımlılığı olan 6-15 işin aşama sütunlarında kritik yolu: teslimi belirleyen zincir kalın `danger`, boşluklu bağlantı ince; solda Bugün, sağda hedef",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "path-graph",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/path-graph.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "pattern-bg",
       "type": "registry:ui",
       "title": "Desen Zemin",
@@ -2239,6 +2437,32 @@
       "files": [
         {
           "path": "snippets/ui/pattern-bg.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "permission-list",
+      "type": "registry:ui",
+      "title": "İzin Listesi",
+      "description": "Bağlantı penceresinde \"Uygulama şunları yapabilecek\" dökümü; Okur/Yazar rozeti, güvence satırı",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "permission-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/permission-list.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2526,6 +2750,32 @@
       ]
     },
     {
+      "name": "requirement-list",
+      "type": "registry:ui",
+      "title": "Gerekenler Listesi",
+      "description": "Şablonun gerektirdiği uygulamalar: Bağlı hapı ya da Bağla butonu, eksik sayısı özette",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "requirement-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/requirement-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "ring-chart",
       "type": "registry:ui",
       "title": "Halka Grafiği",
@@ -2622,6 +2872,30 @@
       "files": [
         {
           "path": "snippets/ui/scatter-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "schedule-list",
+      "type": "registry:ui",
+      "title": "Sıradakiler Listesi",
+      "description": "Sıradakiler: saat + gün, renkli çubuk, başlık ve tek satır açıklama, sağda uygulama ikonları",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "schedule-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/schedule-list.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3018,6 +3292,30 @@
       ]
     },
     {
+      "name": "stacked-bar-chart",
+      "type": "registry:ui",
+      "title": "Yığılı Sütun Grafiği",
+      "description": "Bir toplamın neyden oluştuğu: günün/ayın sütunu serilerin yığılı hali; vurgulu sütun doygun, balon \"44/gün\"",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/chart-card.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "stacked-bar-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stacked-bar-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "stage-bars",
       "type": "registry:ui",
       "title": "Aşama Çubukları",
@@ -3068,6 +3366,76 @@
       ]
     },
     {
+      "name": "stat-strip",
+      "type": "registry:ui",
+      "title": "İstatistik Şeridi",
+      "description": "3-4 büyük sayı + etiket + ince ayraç, telefonda 2×2; doğrulanamayan sayı yazılmaz, örnek veri künyeli",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "stat-strip",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stat-strip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "status-list",
+      "type": "registry:ui",
+      "title": "Sistem Durumu",
+      "description": "Sistem durumu: bileşen listesi, türetilmiş genel durum, son olay satırı",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/badge.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "status-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/status-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "step-rail",
+      "type": "registry:ui",
+      "title": "Süreç Rayı",
+      "description": "Tanıtımda \"nasıl çalışır\": ikonlu yuvarlak karolar, kalın hap çizgi, tamamlanan kısım vurgu renginde dolu; kaydırdıkça çizgi dolar. Form akışı için `stepper`",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "step-rail",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/step-rail.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "stepper",
       "type": "registry:ui",
       "title": "Adım Göstergesi",
@@ -3089,6 +3457,32 @@
       "files": [
         {
           "path": "snippets/ui/stepper.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "story-card",
+      "type": "registry:ui",
+      "title": "Hikaye Karosu",
+      "description": "Müşteri hikayesi bölümü: logo + alıntı + kişi ya da büyük sonuç rakamı; `photo`/`plain`/`stat`; `StoryGrid` 3/2 + 2/3; uydurma söz ve rakam yok, `sample` ile \"ÖRNEK\" künyesi",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "story-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/story-card.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3320,6 +3714,29 @@
       ]
     },
     {
+      "name": "tick-meter",
+      "type": "registry:ui",
+      "title": "Çentikli Çubuk",
+      "description": "Birimi sayılabilen işin gidişatı (tahmin / harcanan, biten görev): dolu, aşan (`danger`) ve planlanan (çizgili) çentikler, isteğe eşik işaretçisi",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "tick-meter",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tick-meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "tick-ruler",
       "type": "registry:ui",
       "title": "Cetvel Seçici",
@@ -3494,6 +3911,29 @@
       "files": [
         {
           "path": "snippets/ui/toggle-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tone-text",
+      "type": "registry:ui",
+      "title": "İki Tonlu Başlık",
+      "description": "İki tonlu başlık: güçlü + soluk bölüm (`ToneText.Soft`), soldan sağa solan `fade`, tek serif italik `<em>`; hero ve manifesto",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "tone-text",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tone-text.tsx",
           "type": "registry:ui"
         }
       ]
