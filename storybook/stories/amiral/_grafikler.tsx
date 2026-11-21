@@ -19,6 +19,7 @@ import { ScatterChart } from "@/components/ui/scatter-chart";
 import { PathGraph } from "@/components/ui/path-graph";
 import { StackedBarChart } from "@/components/ui/stacked-bar-chart";
 import { StageBars } from "@/components/ui/stage-bars";
+import { ForecastChart } from "@/components/ui/forecast-chart";
 import { TrackBarChart } from "@/components/ui/track-bar-chart";
 import { cn } from "@/lib/utils";
 import { MAP_SHAPES, MAP_VIEWBOX } from "../kuzeyova/_harita";
@@ -198,7 +199,7 @@ export function Dashboard() {
 
       <Tile file="track-bar-chart" className="lg:col-span-3">
         <ChartCard id="g-kavrum" label="Haftalık Kavrulan Kahve" value={`${num.format(ROAST_TOTAL)} kg`} change={change(ROAST_TOTAL, ROAST_PREV)} changeLabel="önceki haftaya göre" action={<FileTag file="track-bar-chart" />}>
-          <TrackBarChart title="Geçen Hafta Kavrulan Kahve" data={ROAST_WEEK} series={3} format={(v) => `${num.format(v)} kg`} height="h-40" />
+          <TrackBarChart title="Geçen Hafta Kavrulan Kahve" data={ROAST_WEEK} series={3} threshold={{ value: 60, label: "Günlük Hedef" }} format={(v) => `${num.format(v)} kg`} height="h-40" />
         </ChartCard>
       </Tile>
 
@@ -300,6 +301,22 @@ export function Dashboard() {
               { id: "paket", label: "Paket", nodes: [{ id: "paketleme", title: "Paketleme", meta: "2g · 7 Kas", critical: true, after: ["lot", "etiket", "tadim"] }] },
             ]}
             goal={{ title: "Satışta", meta: "9 Kas", after: ["paketleme"] }}
+          />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="forecast-chart" className="md:col-span-2 lg:col-span-3">
+        <ChartCard id="g-tahmin" label="Ciro Tahmini" value="Son 3 Ay" action={<FileTag file="forecast-chart" />}>
+          <ForecastChart
+            title="Ciro tahmini"
+            labels={MONTHS}
+            actual={[...REVENUE_NOW.slice(0, 9), null, null, null]}
+            current={[null, null, null, null, null, null, null, null, REVENUE_NOW[8], 291, 298, 305]}
+            withChanges={[null, null, null, null, null, null, null, null, REVENUE_NOW[8], 302, 316, 331]}
+            range={{ low: [null, null, null, null, null, null, null, null, REVENUE_NOW[8], 276, 275, 276], high: [null, null, null, null, null, null, null, null, REVENUE_NOW[8], 306, 321, 334] }}
+            target={{ value: 350, label: "Hedef" }}
+            actualUntil={8}
+            format={(v) => `${num.format(v)} bin ₺`}
           />
         </ChartCard>
       </Tile>

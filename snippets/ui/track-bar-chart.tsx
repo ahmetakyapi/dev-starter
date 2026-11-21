@@ -18,6 +18,12 @@ import { SERIES_BG, type Series } from "@/components/ui/chart-card";
  * Etiketler kısa olmalı: 12 sütun telefonda sütun başına ~24 px bırakır;
  * "Oca", "Şub" sığar, "Ocak" sığmaz. Eksen değeri de kısa ("₺10 bin").
  *
+ * EŞİK (`threshold`): hedef ya da sınır değeri (ör. "yanıt süresi hedefi 4 sa").
+ * Eşiği AŞAN sütunlar `warning` tonuna döner ve her sütunun içinden kesikli bir
+ * çizgi geçer; altta "Kesikli çizgi: Hedef 4 sa" notu yazar. Renk tek işaret
+ * değil: `sr-only` tabloda aşan satırın değerine ", eşiği aştı" eklenir ve
+ * başlığa eşik yazılır. Eşik `series` renginin yerine geçmez, yalnız aşanı boyar.
+ *
  * `format`: değer biçimi (ör. `(v) => "₺" + v.toLocaleString("tr-TR")`).
  * Sunucu bileşeni olduğu için fonksiyon prop'u serbest.
  */
@@ -31,6 +37,7 @@ export function TrackBarChart({
   series = 1,
   format = (v) => v.toLocaleString("tr-TR"),
   height = "h-48",
+  threshold,
   className,
 }: {
   data: readonly Point[];
@@ -42,21 +49,28 @@ export function TrackBarChart({
   format?: (value: number) => string;
   /** Çizim alanı yüksekliği: Tailwind sınıfı. */
   height?: string;
+  /** Hedef/sınır: aşan sütun `warning` olur, kesikli çizgi çizilir. */
+  threshold?: { value: number; label?: string };
   className?: string;
 }) {
-  const max = Math.max(...data.map((d) => d.value), ...(ticks ?? []), 1);
+  const max = Math.max(...data.map((d) => d.value), ...(ticks ?? []), threshold?.value ?? 0, 1);
+  const thLabel = threshold ? `${threshold.label ?? "Hedef"} ${format(threshold.value)}` : "";
+  const exceeds = (value: number) => threshold !== undefined && value > threshold.value;
   const axis = ticks ?? [0, max];
   return (
     <figure className={cn("w-full", className)}>
       <div className="sr-only">
         {/* sr-only kap DIŞTA: <table> width: 1px'i yok sayar, uzun etiketle sayfayı yana taşırır. */}
         <table>
-        <caption>{title}</caption>
+        <caption>{threshold ? `${title}. ${thLabel}` : title}</caption>
         <tbody>
           {data.map((d) => (
             <tr key={d.label}>
               <th scope="row">{d.label}</th>
-              <td>{format(d.value)}</td>
+              <td>
+                {format(d.value)}
+                {exceeds(d.value) ? ", eşiği aştı" : ""}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -86,9 +100,16 @@ export function TrackBarChart({
                   )}
                 >
                   <div
-                    className={cn("bar absolute inset-x-0 bottom-0 rounded-md transition-[height] duration-500", SERIES_BG[series - 1])}
+                    className={cn("bar absolute inset-x-0 bottom-0 rounded-md transition-[height] duration-500", exceeds(d.value) ? "bg-warning-fill" : SERIES_BG[series - 1])}
                     style={{ height: `${pct}%` }}
                   />
+                  {threshold ? (
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-x-0 z-[1] border-t border-dashed border-strong/60"
+                      style={{ bottom: `${(threshold.value / max) * 100}%` }}
+                    />
+                  ) : null}
                   <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-sm bg-overlay px-1.5 py-0.5 text-micro font-semibold whitespace-nowrap text-strong tabular-nums opacity-0 shadow-floating transition-opacity group-has-[.bar:hover]/bar:opacity-100">
                     {format(d.value)}
                   </span>
@@ -99,6 +120,11 @@ export function TrackBarChart({
           })}
         </div>
       </div>
+      {threshold ? (
+        <p aria-hidden className="mt-2 ps-14 text-micro text-muted">
+          Kesikli çizgi: {thLabel}
+        </p>
+      ) : null}
     </figure>
   );
 }

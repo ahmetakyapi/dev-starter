@@ -14,6 +14,7 @@ import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconButton } from "@/components/ui/icon-button";
+import { InsightCallout } from "@/components/ui/insight-callout";
 import { Input } from "@/components/ui/input";
 import { LineChart } from "@/components/ui/line-chart";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
@@ -441,6 +442,19 @@ export function HamVeriPage({ params, go }: PageProps) {
                   <EmptyState variant="inline" title="Boşluk Yok" hint="Bütün 15 dakikalık paketler geldi." />
                 </div>
               ) : (
+                <>
+                {pending.length ? (
+                  <div className="px-4 pt-4 sm:px-5">
+                    <InsightCallout
+                      kind="warning"
+                      title="Eksik Paketleri Toplu İste"
+                      headingLevel={3}
+                      actions={<Button variant="secondary" size="sm" onClick={() => request(pending.map((g) => g.id))}>Tümünü İste</Button>}
+                    >
+                      {pending.length} aralıkta {num.format(pending.reduce((s, g) => s + g.packets, 0))} paket eksik. Tek seferde istemek, fatura dönemi kapanmadan faturalanabilir tüketimi korur.
+                    </InsightCallout>
+                  </div>
+                ) : null}
                 <ul role="list" aria-label="Kayıp Paket Aralıkları" className="max-h-72 divide-y divide-line-soft overflow-y-auto">
                   {gaps.map((g) => {
                     const state = gapState[g.id] ?? "bekliyor";
@@ -471,6 +485,7 @@ export function HamVeriPage({ params, go }: PageProps) {
                     );
                   })}
                 </ul>
+                </>
               )}
             </Panel>
 

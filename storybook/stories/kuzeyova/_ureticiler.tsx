@@ -8,6 +8,10 @@ import { ChartCard } from "@/components/ui/chart-card";
 import { ComboChart } from "@/components/ui/combo-chart";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { ImpactBar } from "@/components/ui/impact-bar";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { PolicyChecks } from "@/components/ui/policy-checks";
+import { ValueDiff } from "@/components/ui/value-diff";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
@@ -214,6 +218,20 @@ function ProducerDetail({ p, go }: { p: Producer; go: PageProps["go"] }) {
             <div className="p-4 sm:p-5">
               <StepRail steps={steps} current={current} fill="static" headingLevel={3} />
             </div>
+            <div className="border-t border-line-soft p-4 sm:p-5">
+              <PolicyChecks
+                title={p.status === "basvuru" ? "Kabul Kapısı" : "Devreye Alma Kapısı"}
+                headingLevel={3}
+                checks={[
+                  { id: "abone", label: "Abonelik Durumu", detail: c.status === "aktif" ? "Aktif abone" : `Abonelik ${c.status}`, state: c.status === "aktif" ? "pass" : "fail" },
+                  head
+                    ? { id: "trafo", label: "Trafo Kapasitesi", detail: `${head.id} boş güç ${head.headroomKw.toLocaleString("tr-TR")} kW, kurulu GES ${p.installedKw} kW`, state: head.warn ? "warn" : "pass" }
+                    : { id: "trafo", label: "Trafo Kapasitesi", detail: "Sayaç bir trafoya bağlı değil", state: "warn" },
+                  { id: "sayac", label: "Çift Yönlü Sayaç", detail: meter ? `${meter.serial} kayıtlı` : "Sayaç kaydı bulunamadı", state: meter ? "pass" : "fail" },
+                  { id: "yetki", label: "Yetkiniz", detail: canStep ? "Aşamayı ilerletebilirsiniz" : "Aşamayı ilerletme yetkiniz yok", state: canStep ? "pass" : "fail" },
+                ]}
+              />
+            </div>
           </Panel>
         ) : null}
 
@@ -231,17 +249,18 @@ function ProducerDetail({ p, go }: { p: Producer; go: PageProps["go"] }) {
                   <p className="kz-mono mt-0.5 text-read font-semibold text-strong">{v}</p>
                 </div>
               ))}
-              {head.warn ? (
-                <p className="flex items-start gap-2 rounded-lg bg-warning-wash p-3 text-small text-warning sm:col-span-2 lg:col-span-4">
-                  <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-                  <span>Bağlantı sınırı: trafo doluluğu yüksek ya da kurulu güç boş gücü aşıyor. Güç artırımı ya da yeni üretici için trafo kapasite çalışması gerekir.</span>
-                </p>
-              ) : (
-                <p className="flex items-start gap-2 rounded-lg bg-success-wash p-3 text-small text-success sm:col-span-2 lg:col-span-4">
-                  <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0" />
-                  <span>Trafo kapasitesi yeterli.</span>
-                </p>
-              )}
+              <div className="grid gap-3 sm:col-span-2 lg:col-span-4">
+                <ImpactBar label="Trafo Boş Gücü, Kurulu GES ile" current={Math.round(head.kva * 0.9 - head.headroomKw)} added={p.installedKw} limit={Math.round(head.kva * 0.9)} format={(n) => `${n.toLocaleString("tr-TR")} kW`} />
+                {head.warn ? (
+                  <InsightCallout kind="warning" title="Trafo Kapasite Çalışması Gerekebilir" headingLevel={3} label="Dikkat">
+                    Trafo doluluğu yüksek ya da kurulu güç boş gücü aşıyor. Güç artırımı ya da yeni üretici için kapasite çalışması yapılmalı.
+                  </InsightCallout>
+                ) : (
+                  <InsightCallout kind="success" title="Trafo Kapasitesi Yeterli" headingLevel={3} label="Sonuç">
+                    Kurulu güç trafonun boş gücü içinde kalıyor; bağlantı sınırı sorunu yok.
+                  </InsightCallout>
+                )}
+              </div>
             </div>
           </Panel>
         ) : null}
@@ -327,6 +346,23 @@ function ProducerDetail({ p, go }: { p: Producer; go: PageProps["go"] }) {
             <div><dt className="text-muted">TL Karşılığı</dt><dd className="kz-mono mt-0.5 font-semibold text-strong">{tl(creditValue(p, Number.isFinite(parsed) ? Math.max(0, parsed) : 0))}</dd></div>
             <div><dt className="text-muted">Yansıyacağı Fatura</dt><dd className="kz-mono mt-0.5 text-body">{target ? `${target.id} (kalan ${tl(target.total - target.paid)})` : "Açık fatura yok"}</dd></div>
           </dl>
+          {target ? (
+            <>
+              <ImpactBar
+                label="Faturanın Kapanan Payı"
+                current={target.paid}
+                added={Math.min(creditValue(p, Number.isFinite(parsed) ? Math.max(0, parsed) : 0), target.total - target.paid)}
+                limit={target.total}
+                format={(n) => tl(n)}
+              />
+              <ValueDiff
+                rows={[
+                  { label: "Mahsuptan Önce Kalan", groups: tl(target.total - target.paid).split("."), tone: "neutral" },
+                  { label: "Mahsuptan Sonra Kalan", groups: tl(Math.max(0, target.total - target.paid - creditValue(p, Number.isFinite(parsed) ? Math.max(0, parsed) : 0))).split("."), tone: "good" },
+                ]}
+              />
+            </>
+          ) : null}
           <p className="text-small text-muted">Birim bedel tedarikçinin T1 enerji fiyatıdır (ÖRNEK). Fatura bakiyesini aşan kısım avans alacağı olarak kalır; İtirazlar ve Mahsup sayfasında görünür.</p>
         </div>
       </Dialog>

@@ -6,6 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { FactorList } from "@/components/ui/factor-list";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
 import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
 import { RegionMap, type MapRegion } from "@/components/ui/region-map";
@@ -313,31 +316,35 @@ export function ArizaPage({ params, go }: PageProps) {
         {candidates.length ? (
           <section aria-label="Arıza Adayları" className="grid gap-2">
             {candidates.map((c) => (
-              <div key={c.transformerId} role="group" aria-label={`Arıza adayı ${c.transformer.name}`} className="flex flex-wrap items-center gap-3 rounded-xl bg-warning-wash px-4 py-3 ring-1 ring-warning/30">
-                <IconTile tone="warning">
-                  <PhoneCall />
-                </IconTile>
-                <p className="min-w-[min(100%,16rem)] flex-1 text-base text-strong">
-                  <span className="font-semibold">{c.transformer.name}</span> ({substation(c.transformer.substationId).name}) için {c.count} çağrı geldi ve henüz bir arızaya bağlı değil.
-                  <span className="block text-small text-muted">Ortak arıza olma ihtimali yüksek; kayıt açınca çağrılar ona bağlanır ve onarım iş emri oluşur.</span>
-                </p>
-                {canOps ? (
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    onClick={() => {
-                      const o = createOutageFromCalls(c.transformerId);
-                      if (o) {
-                        notify({ title: "Arıza Kaydı Açıldı", body: `${o.id} · ${c.count} çağrı bağlandı, onarım iş emri oluştu`, tone: "success" });
-                        go("outages", { id: o.id });
-                      }
-                    }}
-                  >
-                    Arızaya Çevir
-                  </Button>
-                ) : null}
-                <a href={href("calls")} className="text-small font-medium text-strong underline-offset-2 hover:underline">Çağrıları gör</a>
-              </div>
+              <InsightCallout
+                key={c.transformerId}
+                kind="warning"
+                icon={PhoneCall}
+                label="Arıza Adayı"
+                title={`${c.transformer.name}: ${c.count} Çağrı, Henüz Arızaya Bağlı Değil`}
+                actions={
+                  <>
+                    {canOps ? (
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => {
+                          const o = createOutageFromCalls(c.transformerId);
+                          if (o) {
+                            notify({ title: "Arıza Kaydı Açıldı", body: `${o.id} · ${c.count} çağrı bağlandı, onarım iş emri oluştu`, tone: "success" });
+                            go("outages", { id: o.id });
+                          }
+                        }}
+                      >
+                        Arızaya Çevir
+                      </Button>
+                    ) : null}
+                    <a href={href("calls")} className="text-small font-medium text-strong underline-offset-2 hover:underline">Çağrıları gör</a>
+                  </>
+                }
+              >
+                {c.transformer.name} ({substation(c.transformer.substationId).name}) için {c.count} çağrı geldi. Ortak arıza olma ihtimali yüksek; kayıt açınca çağrılar ona bağlanır ve onarım iş emri oluşur.
+              </InsightCallout>
             ))}
           </section>
         ) : null}
@@ -510,6 +517,19 @@ function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; pat
             { label: "Müşteri Duyurusu", value: patch?.smsSent ? "Gönderildi" : "Bekliyor", foot: patch?.smsSent ? `${fmtNum(patch.smsSent)} SMS` : "SMS henüz gitmedi", icon: <MessageSquareText /> },
           ]}
         />
+
+        {isOpen ? (
+          <FactorList
+            title="Neden Öncelikli"
+            severity={sensitive.length || o.affected >= 1000 ? "high" : minutes >= 120 ? "medium" : "low"}
+            factors={[
+              { label: "Etkilenen Abone", value: fmtNum(o.affected), hint: "Şu an enerjisiz", tone: o.affected >= 1000 ? "danger" : "neutral" },
+              { label: "Hassas Abone", value: fmtNum(sensitive.length), hint: sensitive.length ? "Tıbbi cihaz vb.; önce bilgilendir" : "Yok", tone: sensitive.length ? "danger" : "neutral" },
+              { label: "Açık Kalma Süresi", value: fmtDur(minutes), hint: `Tahmin ${fmtDur(etaMin)}`, tone: minutes > etaMin ? "warning" : "neutral" },
+              { label: "Gelen Çağrı", value: fmtNum(calls.length), hint: calls.length > 1 ? "Aynı arızadan tekrar eden çağrı" : "Bağlı çağrı az", tone: "neutral" },
+            ]}
+          />
+        ) : null}
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
           <Panel id="ad-zaman" title="Zaman Çizelgesi" note="Bildirimden enerjinin verilmesine kadar her adım; işlemler buraya düşer." className="xl:col-span-3">
@@ -772,6 +792,14 @@ function PlanDialog({ open, planFor, onClose, onPlan }: { open: boolean; planFor
   const lead = Math.round((slot.getTime() - TODAY.getTime()) / 3_600_000);
   const msg = `Bakim calismasi nedeniyle ${keyOf(slot)} tarihinde ${clock.format(slot)}-${clock.format(end)} saatleri arasinda ${region(t.reg).name} bolgesinde elektrik kesilecektir. Anlayisiniz icin tesekkur ederiz.`;
 
+  const planChecks: PolicyCheck[] = [
+    { id: "gun", label: "İş Günü", detail: business ? "Seçilen gün iş günü" : "Seçilen gün iş günü değil", state: business ? "pass" : "warn" },
+    { id: "mesai", label: "Mesai Saati", detail: inHours ? "Başlangıç mesai içinde" : "Seçilen saat mesai dışında", state: inHours ? "pass" : "warn" },
+    { id: "yer", label: "Planlanan Zaman", detail: shifted ? `${fullDate.format(slot)}, ${clock.format(slot)} olarak kaydırılır` : "İstenen zamanda planlanır", state: shifted ? "warn" : "pass" },
+    { id: "hassas", label: "Hassas Abone", detail: t.impact.sensitive ? `${t.impact.sensitive} hassas abone etkilenir: alternatif besleme ya da jeneratör planı gerekir` : "Hassas abone etkilenmiyor", state: t.impact.sensitive ? "warn" : "pass" },
+    { id: "duyuru", label: "Duyuru Süresi", detail: lead >= 48 ? "48 saatten fazla, yeterli" : "48 saatten kısa: kurul bildirimi gerekir", state: lead >= 48 ? "pass" : "warn" },
+  ];
+
   const submit = () => {
     if (!t.subId || !t.fdrId) return;
     const o = createOutage({ kind: "planli", substationId: t.subId, regionId: t.reg, feederId: t.fdrId, transformerIds: t.trs.map((x) => x.id), start: slot, end, cause: cause ?? PLAN_CAUSES[0], crew: crewOf(t.reg), affected: t.impact.count || undefined });
@@ -803,13 +831,7 @@ function PlanDialog({ open, planFor, onClose, onPlan }: { open: boolean; planFor
         <div className="rounded-lg bg-surface p-3 text-small sm:col-span-2">
           <p className="text-muted">Etki Simülasyonu</p>
           <p className="mt-0.5 text-read font-semibold text-strong tabular-nums">{fmtNum(t.impact.count)} abone <span className="text-small font-normal text-muted">· {t.trs.length} dağıtım trafosu</span></p>
-          {t.impact.sensitive ? <p className="mt-1 text-small text-warning">{t.impact.sensitive} hassas abone etkilenir: alternatif besleme ya da jeneratör planı gerekir.</p> : <p className="mt-1 text-small text-muted">Hassas abone etkilenmiyor.</p>}
-          {!business || !inHours || shifted ? (
-            <p className="mt-1 text-small text-warning">
-              {!business ? "Seçilen gün iş günü değil." : !inHours ? "Seçilen saat mesai dışında." : "Bugün için geçen saat seçildi."} Çalışma <strong>{fullDate.format(slot)}, {clock.format(slot)}</strong> olarak planlanır.
-            </p>
-          ) : null}
-          <p className={`mt-1 text-micro ${lead >= 48 ? "text-muted" : "text-warning"}`}>{lead >= 48 ? "Duyuru süresi yeterli (48 saatten fazla)." : "Duyuru süresi 48 saatten kısa: kurul bildirimi gerekir."}</p>
+          <PolicyChecks className="mt-3" title="Planlama Kontrolleri" checks={planChecks} />
         </div>
         <div className="sm:col-span-2">
           <p className="text-small text-muted">Abone Duyurusu Önizlemesi</p>

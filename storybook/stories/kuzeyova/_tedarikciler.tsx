@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/Button";
 import { ChartCard } from "@/components/ui/chart-card";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { ImpactBar } from "@/components/ui/impact-bar";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { OptionCards } from "@/components/ui/option-cards";
+import { PolicyChecks } from "@/components/ui/policy-checks";
+import { ValueDiff } from "@/components/ui/value-diff";
 import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
 import { SankeyChart } from "@/components/ui/sankey-chart";
@@ -76,10 +81,10 @@ function ReconBadge({ diff, state }: { diff: number; state?: BatchInvoice["state
 
 const STAGE_TONE: Record<TransferStage, "neutral" | "primary" | "warning" | "success"> = { talep: "neutral", dogrulama: "warning", tarih: "primary", tamam: "success" };
 const REJECT_REASONS = [
-  { value: "Vadesi geçmiş fatura borcu", label: "Vadesi Geçmiş Fatura Borcu" },
-  { value: "Taahhüt süresi dolmadı", label: "Taahhüt Süresi Dolmadı" },
-  { value: "Sayaç bilgisi eşleşmiyor", label: "Sayaç Bilgisi Eşleşmiyor" },
-  { value: "Eksik ya da hatalı belge", label: "Eksik ya da Hatalı Belge" },
+  { value: "Vadesi geçmiş fatura borcu", label: "Vadesi Geçmiş Fatura Borcu", hint: "Borç kapanana ya da ödeme planı kurulana dek geçiş yapılamaz." },
+  { value: "Taahhüt süresi dolmadı", label: "Taahhüt Süresi Dolmadı", hint: "Mevcut tedarikçiyle sözleşme süresi sürüyor." },
+  { value: "Sayaç bilgisi eşleşmiyor", label: "Sayaç Bilgisi Eşleşmiyor", hint: "Talepteki sayaç numarası kayıtla uyuşmuyor." },
+  { value: "Eksik ya da hatalı belge", label: "Eksik ya da Hatalı Belge", hint: "Müşteriden belge tamamlaması istenir." },
 ];
 
 /* ======================================================================== */
@@ -228,6 +233,36 @@ function SupplierList({ rows, params, go }: { rows: SupplierRow[]; params: PageP
 /* Geçiş kuyruğu                                                             */
 /* ======================================================================== */
 
+/** 123456 → ["123", "456"] (kuruşsuz TL, üç haneli gruplar): ValueDiff için. */
+function groupDigits(kurus: number): string[] {
+  const s = String(Math.round(Math.abs(kurus) / 100));
+  const out: string[] = [];
+  for (let i = s.length; i > 0; i -= 3) out.unshift(s.slice(Math.max(0, i - 3), i));
+  return out;
+}
+
+function TransferDateChecks({ row, effective }: { row: TransferRow; effective: string }) {
+  const used = Math.max(0, Math.round((TODAY.getTime() - parseDay(row.requested).getTime()) / 86_400_000));
+  const toDate = effective ? Math.round((parseDay(effective).getTime() - TODAY.getTime()) / 86_400_000) : 0;
+  const within = used + toDate <= TRANSFER_MAX_DAYS;
+  return (
+    <div className="mb-3 grid gap-3">
+      <ImpactBar label="Azami Süre Kullanımı (Gün)" current={used} added={Math.max(0, toDate)} limit={TRANSFER_MAX_DAYS} format={(n) => `${n} gün`} />
+      <PolicyChecks
+        title="Ön Kontroller"
+        headingLevel={3}
+        checks={[
+          effective
+            ? { id: "sure", label: "Azami Geçiş Süresi", detail: `Talepten ${used + toDate} gün sonra; sınır ${TRANSFER_MAX_DAYS} gün (ÖRNEK)`, state: within ? "pass" : "fail" }
+            : { id: "sure", label: "Azami Geçiş Süresi", detail: "Bir tarih seçin", state: "warn" },
+          row.blocker ? { id: "engel", label: "Doğrulama", detail: row.blocker, state: "fail" } : { id: "engel", label: "Doğrulama", detail: "Engel yok", state: "pass" },
+          { id: "sms", label: "Müşteri Bildirimi", detail: "Tarih onaylanınca SMS gider", state: "pass" },
+        ]}
+      />
+    </div>
+  );
+}
+
 function TransferBoard({ go }: { go: PageProps["go"] }) {
   const { notify } = useApp();
   const transfers = useTransfers();
@@ -338,6 +373,7 @@ function TransferBoard({ go }: { go: PageProps["go"] }) {
           </>
         }
       >
+        {dateFor ? <TransferDateChecks row={dateFor} effective={effective} /> : null}
         <Input label="Geçiş Tarihi" type="date" value={effective} min={dayKey(addDays(TODAY, 1))} onChange={(e) => { setEffective(e.target.value); setDateError(""); }} error={dateError || undefined} hint={`Azami ${TRANSFER_MAX_DAYS} gün: talep tarihinden itibaren sayılır. Müşteriye SMS gider.`} />
       </Dialog>
 
@@ -364,7 +400,12 @@ function TransferBoard({ go }: { go: PageProps["go"] }) {
         }
       >
         <div className="grid gap-3">
-          <Select label="Gerekçe" items={REJECT_REASONS} value={reason} onValueChange={setReason} />
+          <OptionCards
+            legend="Gerekçe"
+            value={reason ?? REJECT_REASONS[0].value}
+            onValueChange={setReason}
+            options={REJECT_REASONS.map((r) => ({ value: r.value, title: r.label, description: r.hint }))}
+          />
           <Textarea label="Ek Not" hint="Müşteri ve yeni tedarikçi ile paylaşılır." value={note} onChange={(e) => setNote(e.target.value)} minRows={3} />
         </div>
       </Dialog>
@@ -481,7 +522,24 @@ function ReconTab({ go }: { go: PageProps["go"] }) {
           </>
         }
       >
-        <Textarea label="İtiraz Gerekçesi" value={note} onChange={(e) => setNote(e.target.value)} minRows={3} hint="Tedarikçiden gelen yazıdaki gerekçeyi özetleyin." />
+        <div className="grid gap-3">
+          {objection ? (
+            <>
+              <ValueDiff
+                rows={[
+                  { label: "Dağıtım Şirketinin Toplu Faturası", groups: groupDigits(objection.batch), tone: objection.diff > 0 ? "bad" : "neutral", note: "Tedarikçiye kesilen dağıtım bedeli" },
+                  { label: "Abone Faturalarındaki Toplam", groups: groupDigits(objection.billed), tone: objection.diff > 0 ? "good" : "neutral", note: "Tedarikçinin abonelere yansıttığı" },
+                ]}
+              />
+              <InsightCallout kind="warning" title={`${fmtTl(Math.abs(objection.diff))} Fark Var`} headingLevel={3} label="Dikkat">
+                {objection.diff > 0
+                  ? "Toplu fatura abone faturalarındaki toplamdan yüksek: kalemleri karşılaştırıp fazla kesilen tutar için düzeltme isteyin."
+                  : "Toplu fatura abone faturalarındaki toplamdan düşük: eksik kesilen bedel sonraki dönemde mahsup edilir."}
+              </InsightCallout>
+            </>
+          ) : null}
+          <Textarea label="İtiraz Gerekçesi" value={note} onChange={(e) => setNote(e.target.value)} minRows={3} hint="Tedarikçiden gelen yazıdaki gerekçeyi özetleyin." />
+        </div>
       </Dialog>
       <Dialog
         open={!!rejectFor}
@@ -521,6 +579,7 @@ function MarketTab({ go }: { go: PageProps["go"] }) {
   const [chosen, setChosen] = useState(() => CUSTOMERS.filter((c) => c.free)[2].id);
   const offers = customerOffers(customer(chosen));
   const current = offers.find((o) => o.current)!;
+  const best = offers.filter((o) => !o.current && o.eligible && o.monthly < current.monthly).sort((a, b) => a.monthly - b.monthly)[0];
   const freeOptions = CUSTOMERS.filter((c) => c.free).slice(0, 40).map((c) => ({ value: c.id, label: `${c.name} · ${c.id}` }));
   const start = (to: string) => {
     const t = startTransferFor(chosen, to);
@@ -538,6 +597,18 @@ function MarketTab({ go }: { go: PageProps["go"] }) {
         note="Bir abonenin görevli tedarik ve serbest tüketici seçeneklerini aynı tabloda karşılaştırın."
         actions={<div className="w-64 max-w-full"><Select label="Müşteri" hideLabel items={freeOptions} value={chosen} onValueChange={(v) => v && setChosen(v)} /></div>}
       >
+        {best ? (
+          <div className="p-3 pb-0">
+            <InsightCallout
+              title={`${best.supplier.name} Aylık ${tlShort(current.monthly - best.monthly)} Daha Ucuz`}
+              headingLevel={3}
+              label="Öneri"
+              actions={canMove ? <Button size="sm" variant="secondary" onClick={() => start(best.supplier.id)}>Geçiş Başlat</Button> : undefined}
+            >
+              Tahmini aylık fatura {tlShort(best.monthly)}; {best.commit ? `${best.commit} ay taahhüt gerekir` : "taahhüt gerekmez"}. Karşılaştırma son üç aylık ortalama tüketime dayanır.
+            </InsightCallout>
+          </div>
+        ) : null}
         <div className="max-md:hidden">
           <DataTable
             caption={`${customer(chosen).name} için tedarikçi seçenekleri`}

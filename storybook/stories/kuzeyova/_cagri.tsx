@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { BarList } from "@/components/ui/bar-list";
 import { Button } from "@/components/ui/Button";
 import { Combobox, type ComboboxItem } from "@/components/ui/combobox";
+import { FactorList } from "@/components/ui/factor-list";
+import { InsightCallout } from "@/components/ui/insight-callout";
 import { Heatmap } from "@/components/ui/heatmap";
 import { Rating } from "@/components/ui/rating";
 import { Select } from "@/components/ui/select";
@@ -335,6 +337,20 @@ function CallSheet({ call, canCall, onClose, go }: { call: Call | null; canCall:
         <div className="grid gap-5">
           <p className="rounded-lg bg-surface p-3 text-base text-strong">{call.note}</p>
 
+          {call.status !== "kapandi" ? (
+            <FactorList
+              title="Neden Bu Öncelikte"
+              headingLevel={3}
+              severity={call.priority === "yuksek" || callRemaining(call) < 0 ? "high" : call.priority === "normal" ? "medium" : "low"}
+              factors={[
+                { label: "Öncelik", value: PRIORITY_LABEL[call.priority], hint: call.kind === "ariza" ? "Elektrik yok çağrıları yüksek açılır" : "Çağrı türüne göre" , tone: call.priority === "yuksek" ? "danger" : "neutral" },
+                { label: "SLA", value: callRemaining(call) < 0 ? `${fmtDur(-callRemaining(call))} Aşıldı` : `${fmtDur(callRemaining(call))} Kaldı`, hint: "Çağrı türü süresine göre", tone: callRemaining(call) < 0 ? "danger" : callRemaining(call) < 60 ? "warning" : "neutral" },
+                { label: "Hassas Abone", value: cust && isSensitive(cust) ? "Evet" : "Hayır", hint: cust && isSensitive(cust) ? "Tıbbi cihaz vb.; öne al" : "Kimlik bilinmiyorsa belirsiz", tone: cust && isSensitive(cust) ? "danger" : "neutral" },
+                { label: "Önceki Çağrı", value: fmtNum(Math.max(0, history.length - 1)), hint: history.length > 2 ? "Tekrar eden başvuru" : "İlk ya da seyrek başvuru", tone: history.length > 2 ? "warning" : "neutral" },
+              ]}
+            />
+          ) : null}
+
           <section aria-label="Müşteri" className="grid gap-2">
             <h3 className="text-read font-semibold text-strong">Müşteri</h3>
             {cust ? (
@@ -372,6 +388,13 @@ function CallSheet({ call, canCall, onClose, go }: { call: Call | null; canCall:
                   </Button>
                 ) : null}
               </div>
+              {call.kind === "ariza" && !call.outageId ? (
+                <InsightCallout kind="insight" label="Öneri" title={call.transformerId ? "Ortak Arıza Olabilir" : "Mevcut Arızayla Eşleştir"} headingLevel={4}>
+                  {call.transformerId
+                    ? `${call.transformerId} trafosundan gelen çağrıyı arıza kaydına çevirirsen onarım iş emri de açılır.`
+                    : outages.length ? "Aynı bölgede açık arıza varsa çağrıyı ona bağla; böylece abone tek duyuruyla bilgilenir." : "Açık arıza yok: çağrıyı işleme alıp ekip yönlendir."}
+                </InsightCallout>
+              ) : null}
               {call.kind === "ariza" && !call.outageId && outages.length ? (
                 <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
                   <Select label="Mevcut Arızaya Bağla" items={outages.map((o) => ({ value: o.id, label: `${o.id} · ${o.cause}` }))} value={outageSel} onValueChange={setOutageSel} placeholder="Açık arıza seç" />
@@ -439,7 +462,7 @@ function NewCallSheet({ open, onClose, onCreated, presetCustomer }: { open: bool
           <Select label="Kanal" items={Object.entries(CALL_CHANNEL_LABEL).map(([value, label]) => ({ value, label }))} value={channel} onValueChange={setChannel} />
         </div>
         <Textarea label="Not" value={note} onChange={(e) => setNote(e.target.value)} minRows={3} />
-        {kind === "ariza" ? <p className="rounded-lg bg-surface p-3 text-small text-muted">Elektrik yok çağrıları yüksek öncelikle açılır; aynı trafoya üç çağrı gelirse arıza adayı olarak öne çıkar.</p> : null}
+        {kind === "ariza" ? <InsightCallout kind="insight" label="Bilgi" title="Elektrik Yok Çağrıları" headingLevel={3}>Yüksek öncelikle açılır; aynı trafoya üç çağrı gelirse arıza adayı olarak öne çıkar.</InsightCallout> : null}
       </div>
     </Sheet>
   );

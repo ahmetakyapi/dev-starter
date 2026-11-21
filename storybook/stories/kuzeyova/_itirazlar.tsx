@@ -7,6 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/Button";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { OptionCards } from "@/components/ui/option-cards";
+import { Switch } from "@/components/ui/switch";
+import { ValueDiff } from "@/components/ui/value-diff";
 import type { FilterGroup, FilterValue } from "@/components/ui/filter-sheet";
 import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
@@ -19,7 +23,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { audit } from "./_audit";
 import { dayDiff, DEFAULT_LATE_RATES, lateInterest, owed } from "./_billing";
 import { TODAY, TODAY_KEY, addDays, daysBetween, dayKey, dayLabel, parseDay } from "./_data";
-import { allInvoices, getFinance, issueCorrection, cancelInvoice, fileDispute } from "./_data-finans";
+import { allInvoices, buildDraft, getFinance, issueCorrection, cancelInvoice, fileDispute } from "./_data-finans";
+import { effectiveReadings } from "./_ops";
 import { findCustomer, metersFor, validIban } from "./_data-musteri";
 import { CREDIT_SOURCE_LABEL, DISPUTE_KIND_LABEL, DISPUTE_STATUS_LABEL, type Credit, type CreditSource, type Dispute, type DisputeKind } from "./_data-yeni";
 import { EmptyStateX, FilterBar, PageHero, fmtNum, fmtTl, useListKeys } from "./_kit";
@@ -368,18 +373,17 @@ function DisputeSheet({ dispute: d, onClose }: { dispute: Dispute | undefined; o
             <Panel title="Sayaç Doğruluk Testi" note={meter ? meter.serial : d.subjectId} id="itiraz-test">
               <div className="grid gap-3 p-4 sm:p-5">
                 <Stepper steps={TEST_STEPS} current={d.meterTest ? Math.min(step + 1, 3) : 0} aria-label="Sayaç Doğruluk Testi" />
-                <p className="text-small text-muted">
-                  {d.meterTest ? "Test istendi: söküm, laboratuvar testi ve sonuç raporu sonrası karar verilir. Sayaç doğruysa test ücreti aboneye yansır (örnek kural)." : "Abone test istemedi; saha kontrolüyle karar verilebilir."}
-                </p>
+                <InsightCallout title={d.meterTest ? "Doğruluk Testi İstendi" : "Test İstenmedi"} label="Bilgi" headingLevel={4}>
+                  {d.meterTest ? "Söküm, laboratuvar testi ve sonuç raporu sonrası karar verilir. Sayaç doğruysa test ücreti aboneye yansır (örnek kural)." : "Abone test istemedi; saha kontrolüyle karar verilebilir."}
+                </InsightCallout>
               </div>
             </Panel>
           ) : null}
 
           {blocksCut ? (
-            <div role="note" className="flex items-start gap-3 rounded-xl bg-primary-wash px-4 py-3 text-base ring-1 ring-primary/20">
-              <ShieldAlert aria-hidden className="mt-0.5 size-5 shrink-0 text-primary-ink" />
-              <p className="text-body"><strong className="font-semibold text-strong">Kesme engeli aktif:</strong> açık fatura itirazı olan abonenin enerjisi kesilmez; karar verilince engel kalkar.</p>
-            </div>
+            <InsightCallout title="Kesme Engeli Aktif" kind="warning" label="Dikkat" icon={ShieldAlert} headingLevel={3}>
+              Açık fatura itirazı olan abonenin enerjisi kesilmez; karar verilince engel kalkar.
+            </InsightCallout>
           ) : null}
         </div>
       </Sheet>
@@ -394,21 +398,64 @@ const DECISION_TEMPLATES: Record<"kabul" | "red" | "kismi", readonly string[]> =
   kismi: ["Tüketim kısmen düzeltildi", "Gecikme zammı silindi, anapara geçerli", "Taksitlendirme ile birlikte kısmi kabul"],
 };
 
+type Decision = "kabul" | "red" | "kismi";
+
+/** Kararın sonuçları: seçenek kartının açıklaması olarak gösterilir. */
+function decisionEffect(kind: DisputeKind, decision: Decision): string {
+  if (kind === "fatura") {
+    return decision === "red"
+      ? "Fatura geçerli kalır, tahsilat sürer. Kesme engeli kalkar."
+      : decision === "kismi"
+        ? "Fatura iptal edilir, güncel okumayla düzeltme faturası kesilir. Gecikme zammı silinebilir."
+        : "Fatura iptal edilir, güncel okumayla düzeltme faturası kesilir. Kesme engeli kalkar.";
+  }
+  if (kind === "sayac") {
+    return decision === "red" ? "Sayaç doğru kabul edilir, test ücreti aboneye yansır (örnek kural)." : "Sayaç değişim iş emri önerilir, tüketim düzeltmesi için okuma yeniden değerlendirilir.";
+  }
+  return decision === "red" ? "Talep reddedilir, gerekçe aboneye bildirilir." : "Karar abone kartına ve denetim kaydına yazılır.";
+}
+
+/** Veriden türeyen öneri: fatura tüketimi aboneye özgü tipik tüketimle, sayaç durumu kayıtla karşılaştırılır. */
+function recommendDecision(d: Dispute): { decision: Decision; why: string } | null {
+  if (d.kind === "fatura") {
+    const inv = allInvoices(getFinance()).find((i) => i.id === d.subjectId);
+    const base = findCustomer(d.customerId)?.baseKwh;
+    if (!inv || !base) return null;
+    const ratio = inv.usageKwh / base;
+    return ratio >= 1.5
+      ? { decision: "kabul", why: `Faturadaki tüketim (${fmtNum(inv.usageKwh)} kWh), abonenin tipik aylık tüketiminin ${ratio.toFixed(1).replace(".", ",")} katı. Okumayı doğrulamadan geçerli saymak riskli.` }
+      : { decision: "red", why: `Faturadaki tüketim (${fmtNum(inv.usageKwh)} kWh), abonenin tipik aylık tüketimiyle uyumlu (${ratio.toFixed(1).replace(".", ",")} kat). İtirazı destekleyen bir sapma yok.` };
+  }
+  if (d.kind === "sayac") {
+    const m = metersFor(d.customerId).find((x) => x.id === d.subjectId);
+    if (!m) return null;
+    return m.status === "arizali" || m.status === "mudahale"
+      ? { decision: "kabul", why: `Sayaç kaydında "${m.status === "arizali" ? "arızalı" : "müdahale şüphesi"}" durumu var; itiraz bu kayıtla örtüşüyor.` }
+      : { decision: "red", why: "Sayaç kaydında arıza ya da müdahale işareti yok; itirazı destekleyen bir saha bulgusu görünmüyor." };
+  }
+  return null;
+}
+
 function DecisionDialog({ open, onClose, dispute: d, onDone }: { open: boolean; onClose: () => void; dispute: Dispute; onDone: () => void }) {
   const { notify } = useApp();
-  const [decision, setDecision] = useState<"kabul" | "red" | "kismi">("kabul");
-  const [template, setTemplate] = useState<string>(DECISION_TEMPLATES.kabul[0]);
+  const rec = useMemo(() => recommendDecision(d), [d]);
+  const [decision, setDecision] = useState<Decision>(rec?.decision ?? "kabul");
+  const [template, setTemplate] = useState<string>(DECISION_TEMPLATES[rec?.decision ?? "kabul"][0]);
   const [note, setNote] = useState("");
-  const effects =
-    d.kind === "fatura"
-      ? decision === "red"
-        ? ["Fatura geçerli kalır, tahsilat sürer", "Kesme engeli kalkar (borç hâlâ açıksa süreç devam eder)"]
-        : ["Fatura iptal edilir", "Güncel okumayla düzeltme faturası kesilir", "Kesme engeli kalkar"]
-      : d.kind === "sayac"
-        ? decision === "red"
-          ? ["Sayaç doğru kabul edilir", "Test ücreti aboneye yansır (örnek kural)"]
-          : ["Sayaç değişim iş emri önerilir", "Tüketim düzeltmesi için okuma yeniden değerlendirilir"]
-        : ["Karar abone kartına ve denetim kaydına yazılır"];
+  const [inform, setInform] = useState(true);
+
+  // Düzeltme önizlemesi: kabul ve kısmi kabulde kesilecek faturanın tutarı (motorun hesabıyla aynı).
+  const preview = useMemo(() => {
+    if (d.kind !== "fatura" || decision === "red") return null;
+    const inv = allInvoices(getFinance()).find((i) => i.id === d.subjectId);
+    const reading = inv ? effectiveReadings().find((r) => r.customerId === inv.customerId && r.period === inv.period) : undefined;
+    if (!inv || !reading) return null;
+    const next = buildDraft(reading).total;
+    const split = (kurus: number) => fmtTl(kurus).split(/[.,]/);
+    return { oldTotal: split(inv.total), newTotal: split(next), same: inv.total === next };
+  }, [d, decision]);
+
+  const label: Record<Decision, string> = { kabul: "Kabul", kismi: "Kısmi Kabul", red: "Red" };
   return (
     <Dialog
       open={open}
@@ -429,8 +476,8 @@ function DecisionDialog({ open, onClose, dispute: d, onDone }: { open: boolean; 
                 const correction = issueCorrection(d.subjectId);
                 if (correction) notify({ title: "Düzeltme Faturası Kesildi", body: `${correction.id} · ${fmtTl(correction.total)}`, tone: "success" });
               }
-              audit("İtiraz gerekçesini kaydetti", d.id, undefined, `${template}${note.trim() ? `. ${note.trim()}` : ""}`);
-              notify({ title: decision === "kabul" ? "İtiraz kabul edildi" : decision === "red" ? "İtiraz reddedildi" : "İtiraz kısmen kabul edildi", body: d.id, tone: "success" });
+              audit("İtiraz gerekçesini kaydetti", d.id, undefined, `${template}${note.trim() ? `. ${note.trim()}` : ""}${inform ? " · Abone bilgilendirilecek" : ""}`);
+              notify({ title: decision === "kabul" ? "İtiraz Kabul Edildi" : decision === "red" ? "İtiraz Reddedildi" : "İtiraz Kısmen Kabul Edildi", body: inform ? `${d.id} · abone bilgilendirilecek` : d.id, tone: "success" });
               onDone();
             }}
           >
@@ -440,27 +487,41 @@ function DecisionDialog({ open, onClose, dispute: d, onDone }: { open: boolean; 
       }
     >
       <div className="grid gap-4">
-        <Select
-          label="Karar"
+        {rec ? (
+          <InsightCallout title={`Önerilen Karar: ${label[rec.decision]}`} label="Öneri" headingLevel={3}>
+            {rec.why}
+          </InsightCallout>
+        ) : null}
+        <OptionCards
+          legend="Karar"
           value={decision}
           onValueChange={(v) => {
-            if (!v) return;
-            const next = v as typeof decision;
+            const next = v as Decision;
             setDecision(next);
             setTemplate(DECISION_TEMPLATES[next][0]);
           }}
-          items={[{ value: "kabul", label: "Kabul" }, { value: "kismi", label: "Kısmi Kabul" }, { value: "red", label: "Red" }]}
+          options={(["kabul", "kismi", "red"] as const).map((v) => ({
+            value: v,
+            title: label[v],
+            description: decisionEffect(d.kind, v),
+            badge: rec?.decision === v ? "Önerilen" : undefined,
+          }))}
         />
+        {preview ? (
+          preview.same ? (
+            <p className="rounded-xl bg-surface px-4 py-3 text-base text-body">Güncel okumayla hesaplanan düzeltme faturası, mevcut tutarla aynı çıkıyor.</p>
+          ) : (
+            <ValueDiff
+              rows={[
+                { label: "Eski Fatura Toplamı", groups: preview.oldTotal, tone: "bad", note: `${d.subjectId} iptal edilir` },
+                { label: "Düzeltilmiş Toplam", groups: preview.newTotal, tone: "good", note: "Güncel okumayla yeniden hesaplanır" },
+              ]}
+            />
+          )
+        ) : null}
         <Select label="Gerekçe Şablonu" value={template} onValueChange={(v) => v && setTemplate(v)} items={DECISION_TEMPLATES[decision].map((t) => ({ value: t, label: t }))} />
         <Textarea label="Ek Not (İsteğe Bağlı)" value={note} onChange={(e) => setNote(e.target.value)} minRows={2} />
-        <div className="rounded-xl bg-surface p-4">
-          <p className="text-small font-medium text-muted">Bu kararın sonuçları</p>
-          <ul className="mt-1.5 grid gap-1 text-base text-body">
-            {effects.map((e) => (
-              <li key={e}>{e}</li>
-            ))}
-          </ul>
-        </div>
+        <Switch label="Müşteriyi Bilgilendir" hint="Karar ve gerekçe SMS ile abonenin kayıtlı telefonuna gönderilir." checked={inform} onChange={(e) => setInform(e.target.checked)} />
       </div>
     </Dialog>
   );

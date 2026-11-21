@@ -108,6 +108,8 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `record-list.tsx` | Tablonun telefondaki hali: üç katlı kart (ne · ne zaman/durum · kim); `data-table` ile `max-md:hidden` / `md:hidden` çifti | yok | Hayır | `ul` + ad; ana eylem başlık, kart ona genişletilmiş tıklama alanı (satır başına tek eylem); kişiler "Atanan: Ad" okunur |
 | `schedule-list.tsx` | Sıradakiler: saat + gün, renkli çubuk, başlık ve tek satır açıklama, sağda uygulama ikonları | `chart-card` (seri rengi) | Hayır | `ul`, her saat `<time dateTime>`, ikonlar `aria-hidden`; `href`'li satır tam bağlantı |
 | `audit-log.tsx` | Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA; reddedilen deneme "Reddedildi" metniyle; süzgeç yuvası | lucide | Hayır | `ol` + ad, her zaman `<time dateTime>`, fark satırında görünmez "Önce/Sonra" etiketi, eski değer üstü çizili ama okunur; zaman çağıranda (hidrasyon) |
+| `value-diff.tsx` | Aynı kimliğin iki kaynaktaki yazılışı alt alta, FARKLI grup vurgulu (fatura vergi no ↔ doğrulanmış kayıt, IBAN, seri no); grup sayısı satırlardan türer | yok | Hayır | `dl > div > dt + dd`; farklı grup kalın altı çizgi + "(farklı)"; blok başında `sr-only` özet cümlesi ("Farklı grup 3: …"); renk tek işaret değil |
+| `factor-list.tsx` | Bir kaydın NEDEN öne alındığı: başlıkta genel önem (Düşük–Kritik, dört çubuklu sinyal), altında etiket solda değer sağda satırları; ikon karosu yok | yok | Hayır | Önem metinle ("Önem: Kritik"), çubuklar `aria-hidden`; `dl > div > dt + dd`; `headingLevel` |
 
 ### Form ve Gezinme
 
@@ -139,7 +141,8 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `permission-list.tsx` | Bağlantı penceresinde "Uygulama şunları yapabilecek" dökümü; Okur/Yazar rozeti, güvence satırı | lucide | Hayır | `ul`; erişim türü renkle değil metinle; ikon `aria-hidden` |
 | `category-card.tsx` | Yardım merkezi ve kaynak kütüphanesi konu karosu; renkli ikon karosu, "12 makale →"; `CategoryGrid` | lucide | Hayır | Gerilmiş tek bağlantı; ad başlık, açıklama `aria-describedby` ile "12 makale"; `focus-within` halkası |
 | `active-filters.tsx` | Listenin üstünde etkin süzgeç çipleri + "Temizle" (3+ süzgeçli liste): neden kısaldığı gözün önünde; süzgeç yoksa hiçbir şey çizmez | `chip` | Hayır | `role="group"` + ad; her çipin × butonu "Kaldır: Durum, Geciken"; odağı kaldırınca çağıran taşır; sonuç özeti canlı bölge değil |
-| `saved-views.tsx` | Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, "Görünümü Kaydet" satır içi ad alanı | `chip`, lucide | Evet | Grup + ad; görünüm `aria-pressed` + ✓; kayıt adı boş/uzun/yinelenen olamaz (`role="alert"`, `aria-invalid`); Enter kaydeder, Esc vazgeçer; odak düğmeye döner |
+| `saved-views.tsx` | Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, "Görünümü Kaydet" satır içi ad alanı | `chip`, lucide | Evet | Grup + ad; görünüm `aria-pressed` + ✓; kayıt adı boş/uzun/yinelenen olamaz (`role="alert"`, `aria-invalid`); Enter kaydeder, Esc vazgeçer; odak butonye döner |
+| `setup-card.tsx` | Kenar çubuğu dibinde kurulum çağrısı: başlık, tek cümle, ilerleme halkası (3 / 4), Atla ve Sonraki | lucide | Evet | Halka `role="progressbar"` + "Adım 3, toplam 4", sayı da yazılı; butonlar 44/32 px; `headingLevel`; hareket azaltmada halka geçişsiz |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -154,6 +157,9 @@ JavaScript'siz de çalışır.
 | `divider.tsx` | Yatay / dikey / etiketli ("ya da") ayırıcı | yok | Hayır | `<hr>`; dikeyde `aria-orientation`; etiketlide kap `separator` değil |
 | `toast.tsx` | Eylem sonucu bildirimi: `<Toaster />` + `toast.success/error/warning/info/undo/promise` | Base UI, `spinner`, lucide | Evet | Bölge polite, hata `role="alert"` ve kendiliğinden kapanmaz; fare üstünde ya da odakta süre durur; F6 ile bölgeye geçilir; hareket azaltmada yalnız solar |
 | `status-list.tsx` | Sistem durumu: bileşen listesi, türetilmiş genel durum, son olay satırı | `badge` | Hayır | `ul`; durum renk + metin; canlı bölge yok (statik) |
+| `insight-callout.tsx` | Bir kaydın yanında kısa öneri/içgörü: tür etiketi, başlık, 2-3 cümle, en çok iki eylem; `insight`/`warning`/`success`. `banner-alert` bölümü, bu kutu kaydı anlatır | lucide | Hayır | `aside` + başlıkla ad (`headingLevel`); tür etiketi metin (renk tek işaret değil); tek kenar şeridi yok; model iddiası taşımaz |
+| `policy-checks.tsx` | Talebin onaydan önce geçtiği otomatik denetimler: satır başına geçti/uyarı/başarısız + sağda kısa gerekçe; özet satırı kontrollerden türer | lucide | Hayır | `ul` + `role="list"`; durum ikon şekli + "Geçti:/Uyarı:/Başarısız:" `sr-only` öneki, renk tek işaret değil; `headingLevel` |
+| `impact-bar.tsx` | Bir işlemin bütçeye/kotaya EKLEDİĞİ: harcanan + çizgili eklenen dilim + kalan iz, "önce → sonra / limit · yüzde"; limit aşılırsa `danger` + işaretçi (durum için `meter`, gidişat için `tick-meter`) | yok | Hayır | `role="meter"` + `aria-valuetext` tam cümle; aşım ve "limite yakın" metinle de yazılır |
 
 ### Grafik
 
@@ -166,7 +172,7 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 |-------|----------|------------|---------|-----------------|
 | `chart-card.tsx` | Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları | yok | Hayır | `section` + başlık; lejant `dl`; değişim "artış/düşüş" diye okunur |
 | `stage-bars.tsx` | Huni aşamaları, iz üstünde tek renkli hap çubuk | `chart-card` | Hayır | `ol`; değer ve pay metinde, çubuk `aria-hidden` |
-| `track-bar-chart.tsx` | Sıralı tek seri (ay, gün), iz üstünde sütun | `chart-card` | Hayır | Görsel `aria-hidden`, veri `sr-only` tabloda |
+| `track-bar-chart.tsx` | Sıralı tek seri (ay, gün), iz üstünde sütun; `threshold` ile hedef çizgisi, aşan sütun `warning` | `chart-card` | Hayır | Görsel `aria-hidden`, veri `sr-only` tabloda; aşan satıra ", eşiği aştı" eklenir |
 | `ring-chart.tsx` | 2-5 kategorinin iç içe halkası, ortada değer | yok | Hayır | `role="img"` + `title`; her yayın kendi `title`ı |
 | `area-chart.tsx` | Sıralı eksende 1-2 seri, iki dönemi üst üste koymak; dikey imleç + balon; `bands` ile kalıcı işaretli dönemler (en iyi/zayıf ay) | `chart-card`, motion | Evet | Veri `sr-only` tabloda; çizim `aria-hidden`; odaklan + ←→ Home End, seçilen nokta canlı bölgede; bantlar tablo altı cümlede ve banda girince canlı bölgede |
 | `gauge-chart.tsx` | Bütünün 2-4 parçası ya da tek doluluk (`max`); yarım daire, ortada büyük yüzde | `chart-card`, motion | Evet | `role="img"` + bütün parçaları sayan ad; her yayın `title`ı |
@@ -183,6 +189,7 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 | `path-graph.tsx` | Bağımlılığı olan 6-15 işin aşama sütunlarında kritik yolu: teslimi belirleyen zincir kalın `danger`, boşluklu bağlantı ince; solda Bugün, sağda hedef | yok | Hayır | Çizim `aria-hidden`; `sr-only` liste her işi "kritik yolda, engelli, şunlardan sonra" diye okur; tuval yatay kayar, odaklanabilir bölge; sabit düzen (hidrasyon farkı yok) |
 | `tick-meter.tsx` | Birimi sayılabilen işin gidişatı (tahmin / harcanan, biten görev): dolu, aşan (`danger`) ve planlanan (çizgili) çentikler, isteğe eşik işaretçisi | yok | Hayır | `role="meter"` + `aria-valuetext`; aşım rengin yanında görünen metin ve okunan cümleyle söylenir |
 | `region-map.tsx` | Bölgeye göre dağılım (kayıp, arıza yoğunluğu, şube cirosu) şematik SVG haritada: değer ölçeği ya da açık durum tonu, balon, seçilebilir bölge; gerçek coğrafya değil, çağıran poligonları verir | yok | Evet | Bölge `role="button"` (`onSelect` varsa) ya da `img` + ad, Enter/Boşluk seçer, odak halkası; asıl veri `sr-only` tabloda; renk tek işaret değil (balon, tablo, eşik aşan bölgeye çizgili kenar) |
+| `forecast-chart.tsx` | Tek ölçünün geçmişi ve iki geleceği (marj, ciro, kapasite): gerçekleşen çizgi bugünden sonra "mevcut yol" ve "değişikliklerle yol"a ayrılır; olası aralık bandı, hedef çizgisi; Y ekseni sıfırdan başlamaz | `area-chart`, motion | Evet | Fare, dokunma, klavye (← → Home End), seçilen ay canlı bölgede; asıl veri `sr-only` tabloda; yollar renk ve nokta biçimiyle ayrışır (dolu, içi boş, yeşil); hareket azaltmada çizim anında |
 
 ### Form Girişleri
 
@@ -209,6 +216,9 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `search-field.tsx` | Liste filtreleme, site araması: gecikmeli `onSearch`, yükleniyor, "/" ya da ⌘K; `normalizeTr`/`matchesTr`/`HighlightMatch` | `kbd`, `spinner`, lucide | Evet | `type="search"`, `aria-keyshortcuts`; "Aranıyor" ve "N sonuç" sabit canlı bölgede; Escape önce temizler, sonra odağı bırakır |
 | `rating.tsx` | `Rating` gösterim (yarım yıldız) · `RatingInput` giriş (isteğe bağlı yarım adım) | lucide | Evet | Gösterim tek `role="img"`; giriş `radiogroup` + görünmez yerel radyolar (oklar, `required`, JS'siz gönderim) |
 | `password-field.tsx` | Yeni şifre (kayıt, sıfırlama, ayarlar): yazdıkça kural listesi ve dilimli güç çubuğu; `rules` ile özelleşir (scrolltide.co) | `input`, lucide | Evet | Liste alanın `aria-describedby`ında, maddede gizli "karşılandı"; güç sözcükle de yazılır; canlı bölge yalnız sayı değişince; yapıştırma serbest |
+| `option-cards.tsx` | Birbirini dışlayan 2-5 yoldan biri, her yolun sonucu kartta yazılı; Önerilen rozeti, kilitli seçenek gerekçesiyle (çözüm yolu, ret nedeni, plan) | lucide | Evet | Gerçek radyo grubu: `fieldset` + `legend`, ok tuşları tarayıcıdan; kilitli radyo `disabled`, neden `aria-describedby` ile okunur; seçili kart koyu çerçeve + dolu nokta |
+| `choice-chips.tsx` | Listeden birden çok etiket (bina sistemleri, ilgi alanı): seçili çip koyu + ✓, isteğe `max`; `FilterChip` süzer, bu alan formdur | lucide | Evet | `role="group"` + başlık; `aria-pressed` butonlar; "4 seçildi" canlı; sınır dolunca nedeni yazılı, kalanlar `disabled`; 44/36 px |
+| `lever-card.tsx` | Senaryo kaldıracı: anahtar, büyük etki değeri ("+1,5 puan"), hedef açığının kapanan payı; `LeverGrid` dört karolu satır; `ForecastChart` ile birlikte | `switch` | Evet | Anahtarın adı başlık, açıklaması etki değeri; çubuk `role="meter"` + `aria-valuetext`; kapalı/açık hem renk hem çizgili/dolu çubuk; `headingLevel` |
 
 ### Verimlilik
 

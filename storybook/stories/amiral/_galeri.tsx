@@ -149,6 +149,7 @@ import {
 import { cn } from "@/lib/utils";
 import { FormEk, KatmanEk, SecimEk, VeriEk } from "./_ekler";
 import { GeriYeni, SecimYeni, VeriYeni } from "./_ekler-yeni";
+import { GeriN, GezinmeN, SecimN, VeriN } from "./_ekler-n";
 import { Cell, CellGrid, GroupHead } from "./_ui";
 
 const NOV = (d: number) => new Date(2026, 10, d);
@@ -601,6 +602,7 @@ function SecimGroup() {
       </Cell>
       <SecimEk />
       <SecimYeni />
+      <SecimN />
     </CellGrid>
   );
 }
@@ -1148,6 +1150,7 @@ function VeriGroup() {
       </Cell>
       <VeriEk />
       <VeriYeni />
+      <VeriN />
     </CellGrid>
   );
 }
@@ -1259,6 +1262,7 @@ function GeriGroup() {
         </div>
       </Cell>
       <GeriYeni />
+      <GeriN />
     </CellGrid>
   );
 }
@@ -1364,6 +1368,7 @@ function GezinmeGroup() {
       <Cell file="pagination" name="Sayfalama" note="Geçerli sayfa beyaz karo; telefonda “3 / 12”." span={3} size="sm">
         <Pagination page={3} pageCount={12} hrefFor={(n) => `?sayfa=${n}`} scroll={false} />
       </Cell>
+      <GezinmeN />
     </CellGrid>
   );
 }

@@ -10,6 +10,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { DateRangePresets, rangeOf, type DateRangeValue, type RangePreset } from "@/components/ui/date-range-presets";
 import { Dialog } from "@/components/ui/dialog";
+import { ImpactBar } from "@/components/ui/impact-bar";
+import { InsightCallout } from "@/components/ui/insight-callout";
+import { OptionCards } from "@/components/ui/option-cards";
+import { PolicyChecks } from "@/components/ui/policy-checks";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FileDropzone } from "@/components/ui/file-dropzone";
 import { HoldButton } from "@/components/ui/hold-button";
@@ -437,15 +441,26 @@ function Reconcile() {
                 <dd className="kz-mono mt-0.5 font-semibold text-danger">{tl(Math.abs(lineDialog.bankAmount - lineDialog.systemAmount))}</dd>
               </div>
             </dl>
-            <Select
-              label="Nasıl Kapansın"
-              items={[
-                { value: "faturaya", label: `Faturaya Ata (${lineDialog.invoiceId})` },
-                { value: "avans", label: "Avans olarak al, sonraki faturaya say" },
-                { value: "iade", label: "Aboneye İade Et" },
-              ]}
+            <InsightCallout
+              title={lineDialog.kind === "mukerrer" ? "Aynı Tutar İki Kez Gelmiş" : lineDialog.kind === "fazla" ? "Banka Sistemden Fazla Tahsil Etmiş" : "Banka Sistemden Az Tahsil Etmiş"}
+              headingLevel={3}
+              label="Öneri"
+            >
+              {lineDialog.kind === "mukerrer"
+                ? "Mükerrer satırı aboneye iade etmek ya da avans yazmak doğrudur; faturaya atamak borcu iki kez düşürür."
+                : lineDialog.kind === "fazla"
+                  ? "Fazla tutarı sonraki faturaya sayılacak avans olarak almak en az sürtünmeyle kapanır."
+                  : "Eksik tutarı faturaya atayın; fatura kısmi ödenmiş kalır ve kalan bakiye tahsilat kuyruğunda görünür."}
+            </InsightCallout>
+            <OptionCards
+              legend="Nasıl Kapansın"
               value={how}
-              onValueChange={(v) => setHow((v as typeof how) ?? "faturaya")}
+              onValueChange={(v) => setHow(v as typeof how)}
+              options={[
+                { value: "faturaya", title: `Faturaya Ata`, description: `${lineDialog.invoiceId} faturasının bakiyesinden düşer.`, badge: lineDialog.kind === "eksik" ? "Önerilen" : undefined },
+                { value: "avans", title: "Avans Olarak Al", description: "Tutar sonraki faturaya sayılmak üzere alacak yazılır.", badge: lineDialog.kind === "fazla" ? "Önerilen" : undefined },
+                { value: "iade", title: "Aboneye İade Et", description: "IBAN'a iade talimatı verilir.", badge: lineDialog.kind === "mukerrer" ? "Önerilen" : undefined },
+              ]}
             />
           </div>
         ) : null}
@@ -592,6 +607,21 @@ function Plans() {
               <dd className="text-micro text-muted">Anapara {tl(principal)}</dd>
             </dl>
           </div>
+          {chosen && preview.length > 0 ? (
+            <div className="grid gap-3 rounded-lg bg-surface p-3">
+              <ImpactBar label="İlk Taksit, Plan Toplamının" current={0} added={preview[0].amount} limit={total} format={(v) => tl(v)} />
+              <PolicyChecks
+                title="Ön Kontroller"
+                headingLevel={3}
+                checks={[
+                  { id: "borc", label: "Vadesi Geçmiş Borç", detail: `${tl(principal)} anapara, plan toplamı ${tl(total)}`, state: "pass" },
+                  { id: "plan", label: "Mevcut Ödeme Planı", detail: "Abonenin devam eden planı yok", state: "pass" },
+                  { id: "faiz", label: "Aylık Faiz", detail: `%${(rate ?? 0).toLocaleString("tr-TR")}; en çok %5 (ÖRNEK sınır)`, state: (rate ?? 0) > 5 ? "fail" : (rate ?? 0) > 3 ? "warn" : "pass" },
+                  { id: "kesme", label: "Kesme Emri", detail: "Plan boyunca verilmez, taksit bozulursa borç yeniden muaccel olur", state: "pass" },
+                ]}
+              />
+            </div>
+          ) : null}
           <div className="max-h-56 overflow-auto rounded-lg border border-line-soft" tabIndex={0} role="region" aria-label="Taksit Takvimi Önizlemesi">
             <table className="kz-mono w-full text-small">
               <caption className="sr-only">Taksit takvimi</caption>
@@ -970,12 +1000,19 @@ function Cuts({ go }: { go: PageProps["go"] }) {
         }
       >
         <div className="grid gap-3">
-          <p className="flex items-start gap-2 rounded-lg bg-warning-wash p-3 text-small text-warning">
-            <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-            <span>Hassas aboneler ve ödeme planı ya da itirazı olanlar otomatik atlanır. Kesme emri ikinci göz onayı isteyebilir; bu durumda emir, onaylanınca açılır.</span>
-          </p>
-          {selected.length !== selectedEligible.length ? <p className="text-small text-muted">Seçilenlerden {selected.length - selectedEligible.length} aboneye henüz kesme emri verilemez (ihtar ya da bekleme sürüyor); onlar atlanır.</p> : null}
-          {!can("kesme") ? <p className="text-small text-danger">Yetkiniz yok.</p> : null}
+          <PolicyChecks
+            title="Ön Kontroller"
+            headingLevel={3}
+            checks={[
+              selected.length === selectedEligible.length
+                ? { id: "ihtar", label: "İhtar ve Bekleme Süresi", detail: `${selectedEligible.length} abonenin tamamı uygun`, state: "pass" }
+                : { id: "ihtar", label: "İhtar ve Bekleme Süresi", detail: `${selected.length - selectedEligible.length} abone atlanır: ihtar ya da bekleme sürüyor`, state: "warn" },
+              { id: "muaf", label: "Muafiyetler", detail: "Hassas abone, açık itiraz ve ödeme planı olanlar otomatik atlanır", state: "pass" },
+              { id: "zaman", label: "İş Günü ve Mesai", detail: `İlk uygun zaman: ${slotText(slot)}`, state: "pass" },
+              { id: "onay", label: "İkinci Göz Onayı", detail: "İstenirse emir onaylanınca açılır", state: "warn" },
+              can("kesme") ? { id: "yetki", label: "Yetkiniz", detail: "Kesme emri verebilirsiniz", state: "pass" } : { id: "yetki", label: "Yetkiniz", detail: "Kesme emri verme yetkiniz yok", state: "fail" },
+            ]}
+          />
         </div>
       </Dialog>
     </div>

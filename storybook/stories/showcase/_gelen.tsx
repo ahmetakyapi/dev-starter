@@ -66,6 +66,7 @@ import { DateRangePresets, rangeOf, type DateRangeValue, type RangePreset } from
 import { FilterSheet, type FilterGroup, type FilterValue } from "@/components/ui/filter-sheet";
 import { RecordList } from "@/components/ui/record-list";
 import { Sheet } from "@/components/ui/sheet";
+import { CloseTicketDialog, TicketPriorityFactors } from "./_ek-n";
 import { Timeline } from "@/components/ui/timeline";
 import { Tabs } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
@@ -230,6 +231,7 @@ export function GelenPage() {
     if (params.ticket === t.id) navigate("inbox", { ...params, ticket: undefined });
   };
   const open = (t: Ticket) => navigate("inbox", { ...params, ticket: t.id });
+  const [closing, setClosing] = useState(false);
 
   /* Toplu işlemler: seçim çubuğundan. Tek bildirim, tek geri alma. */
   const bulkAssign = () => {
@@ -854,14 +856,8 @@ export function GelenPage() {
                 <Icon icon={UserRoundCheck} />
                 Bana Ata
               </Button>
-              <Button
-                disabled={current.status === "Çözüldü"}
-                onClick={() => {
-                  setStatus(current, "Çözüldü");
-                  navigate("inbox", { ...params, ticket: undefined });
-                }}
-              >
-                Çözüldü Olarak Kapat
+              <Button disabled={current.status === "Çözüldü"} aria-haspopup="dialog" onClick={() => setClosing(true)}>
+                Talebi Sonuçlandır
               </Button>
             </>
           ) : null
@@ -878,6 +874,25 @@ export function GelenPage() {
           />
         ) : null}
       </Sheet>
+      {current ? (
+        <CloseTicketDialog
+          key={current.id}
+          t={current}
+          open={closing}
+          onOpenChange={setClosing}
+          mine={current.assignee === ME.id}
+          onConfirm={(outcome) => {
+            if (outcome === "cozuldu") {
+              setStatus(current, "Çözüldü");
+              navigate("inbox", { ...params, ticket: undefined });
+            } else if (outcome === "beklemede") {
+              setStatus(current, "Beklemede");
+            } else {
+              assignToMe(current);
+            }
+          }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -963,6 +978,8 @@ function TicketDetail({ t, onAssign }: { t: Ticket; onAssign: (id: string) => vo
         <blockquote className="mt-3 text-base text-body">{t.preview}</blockquote>
         <Reactions label="Ekip tepkileri" defaultValue={teamReactions(t)} className="mt-3" />
       </figure>
+
+      <TicketPriorityFactors t={t} />
 
       <section aria-labelledby="talep-bilgi">
         <PanelLabel id="talep-bilgi">Talep Bilgileri</PanelLabel>

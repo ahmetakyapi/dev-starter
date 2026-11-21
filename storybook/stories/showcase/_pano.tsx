@@ -48,6 +48,7 @@ import { Button } from "@/components/ui/Button";
 import { DelayCard } from "./_gecikme";
 import { GoalTicksCard, TicketStackCard, UpcomingCard } from "./_pano-ek";
 import { RegionCard } from "./_ek-l";
+import { OrderImpactCard, PanoOneriCard } from "./_ek-n";
 import { CARD, IconTile, PageBar, SectionTitle, href, useApp } from "./_ui";
 import { cn } from "@/lib/utils";
 
@@ -401,13 +402,15 @@ export function PanoPage() {
               label="Haftanın Gününe Göre İlk Yanıt"
               value={`${byWeekday.reduce((a, d) => (d.value > a.value ? d : a)).label} en yavaş`}
             >
-              <TrackBarChart title="Haftanın Gününe Göre Ortalama İlk Yanıt Süresi (dakika)" data={byWeekday} series={1} height="h-44" format={(v) => `${v} dk`} />
+              <TrackBarChart title="Haftanın Gününe Göre Ortalama İlk Yanıt Süresi (dakika)" data={byWeekday} series={1} height="h-44" format={(v) => `${v} dk`} threshold={{ value: 30, label: "Hedef 30 dk" }} />
             </ChartCard>
 
             <TicketStackCard s={s} className="lg:col-span-2" />
             <UpcomingCard />
             <GoalTicksCard s={s} className="lg:col-span-3" />
             <RegionCard s={s} className="lg:col-span-3" />
+            <PanoOneriCard s={s} className="lg:col-span-3" />
+            <OrderImpactCard s={s} className="lg:col-span-3" />
 
             <ChartCard
               id="pano-asama"

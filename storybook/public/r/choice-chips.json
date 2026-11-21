@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "choice-chips",
+  "type": "registry:ui",
+  "title": "Çoklu Seçim Çipleri",
+  "description": "Listeden birden çok etiket (bina sistemleri, ilgi alanı): seçili çip koyu + ✓, isteğe `max`; `FilterChip` süzer, bu alan formdur",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/choice-chips.tsx",
+      "content": "\"use client\";\n\nimport { Check } from \"lucide-react\";\nimport { useId, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Çoklu seçim çipleri: bir listeden BİRDEN ÇOK etiket seçmek (bina\n * sistemleri, ilgi alanları, bildirim konuları, günler). Seçili çip koyu\n * dolgulu ve solda ✓; seçilmeyen kontur: durum renkle değil işaretle de\n * söylenir.\n *\n * FARKI: `FilterChip` (`chip.tsx`) bir LİSTEYİ SÜZEN aç/kapa anahtarıdır\n * (hafif primary-wash, sayaçlı, satırın üstünde); bu bileşen bir FORM\n * ALANIDIR: ters yüzeyle (`bg-strong`) belirgin, gruplu, `legend`li, isteğe\n * `max` sınırlı ve seçimi `value` dizisi olarak taşır. Tek seçim gerekiyorsa\n * çip değil `option-cards.tsx` ya da `segmented-control.tsx`; seçenek 12'den\n * fazlaysa `tag-input.tsx` / `combobox.tsx`.\n *\n * SEMANTİK: `role=\"group\"` + görünür başlıkla adlı; her çip `aria-pressed`\n * butonu (\"Gazlı Isıtma, açma/kapama butonu, basılı\"). Çoklu seçimde\n * onay kutusu da doğru olurdu; çip dili için buton kalıbı seçildi ve\n * klavyede Tab/Boşluk/Enter ile işler (ok tuşu gerekmez). Seçili sayı\n * görünür ve okunur: \"4 seçildi\".\n *\n * `max` dolunca seçili olmayan çipler `disabled` olur ve nedeni görünür\n * (\"En fazla 4 seçim\"): sessiz yok sayma yok. Dokunmatikte 44 piksel,\n * farede 36.\n *\n *   <ChoiceChips legend=\"Bina Sistemleri\" options={[{ value: \"gaz\", label: \"Gazlı Isıtma\" }, …]}\n *     value={sistemler} onValueChange={setSistemler} max={6} />\n */\n\nexport type Choice = { value: string; label: ReactNode };\n\ntype ChoiceChipsProps = {\n  options: readonly Choice[];\n  value: readonly string[];\n  onValueChange: (next: string[]) => void;\n  legend: ReactNode;\n  /** En çok seçilebilir sayı; dolunca kalanlar kapanır. */\n  max?: number;\n  /** Seçili sayısını başlığın yanında göster: \"4 seçildi\". */\n  showCount?: boolean;\n  hideLegend?: boolean;\n  className?: string;\n};\n\nexport function ChoiceChips({ options, value, onValueChange, legend, max, showCount = true, hideLegend = false, className }: ChoiceChipsProps) {\n  const id = useId();\n  const full = max !== undefined && value.length >= max;\n\n  function toggle(next: string) {\n    onValueChange(value.includes(next) ? value.filter((v) => v !== next) : [...value, next]);\n  }\n\n  return (\n    <div role=\"group\" aria-labelledby={`${id}-l`} aria-describedby={max !== undefined ? `${id}-m` : undefined} className={cn(\"grid gap-2.5\", className)}>\n      <div className={cn(\"flex flex-wrap items-baseline gap-x-2\", hideLegend && \"sr-only\")}>\n        <p id={`${id}-l`} className=\"text-small font-semibold text-strong\">\n          {legend}\n        </p>\n        {showCount ? (\n          <span className=\"text-small text-muted\" aria-live=\"polite\">\n            {value.length} seçildi\n          </span>\n        ) : null}\n      </div>\n      <div className=\"flex flex-wrap gap-2\">\n        {options.map((option) => {\n          const selected = value.includes(option.value);\n          const blocked = full && !selected;\n          return (\n            <button\n              key={option.value}\n              type=\"button\"\n              aria-pressed={selected}\n              disabled={blocked}\n              onClick={() => toggle(option.value)}\n              className={cn(\n                \"inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 text-base font-medium whitespace-nowrap transition-[background-color,border-color,color,transform] duration-150 select-none active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 pointer-fine:min-h-9 motion-reduce:transition-none\",\n                selected ? \"border-strong bg-strong text-page\" : \"border-line bg-overlay text-body shadow-raised hover:border-line-strong hover:text-strong\",\n              )}\n            >\n              {selected ? <Check aria-hidden className=\"-ml-0.5 size-3.5 shrink-0\" strokeWidth={2.5} /> : null}\n              {option.label}\n            </button>\n          );\n        })}\n      </div>\n      {max !== undefined ? (\n        <p id={`${id}-m`} className=\"text-small text-muted\">\n          {full ? `En fazla ${max} seçim yapılabilir; yenisini seçmek için birini kaldır.` : `En fazla ${max} seçim.`}\n        </p>\n      ) : null}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Form Girişleri"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "choice-chips",
+    "palettes": false
+  }
+}

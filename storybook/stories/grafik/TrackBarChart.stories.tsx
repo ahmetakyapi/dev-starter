@@ -94,6 +94,36 @@ export const FourteenDays: Story = {
   argTypes: { sutunSayisi: { control: { type: "range", min: 1, max: 14, step: 1 } } },
 };
 
+export const Threshold: Story = {
+  name: "Eşik Aşımı (Hedef Çizgisi)",
+  args: {
+    title: "Son 8 Hafta Ortalama Yanıt Süresi",
+    data: [3.1, 3.4, 3.0, 3.9, 3.6, 5.2, 6.1, 5.4].map((value, i) => ({ label: `H${i + 1}`, value })),
+    ticks: [0, 4, 8],
+    series: 2,
+    threshold: { value: 4, label: "Hedef" },
+    sutunSayisi: 8,
+    paraBirimi: false,
+    height: "h-40",
+  },
+  render: ({ sutunSayisi: _sutun, paraBirimi: _para, data, ...args }) => (
+    <Sahne width="lg">
+      <ChartCard id="esik-kart" label="Ortalama Yanıt, Son 8 Hafta" value="4,6 sa">
+        <TrackBarChart {...args} data={data} format={(v) => `${v.toLocaleString("tr-TR")} sa`} />
+      </ChartCard>
+    </Sahne>
+  ),
+  parameters: {
+    docs: { description: { story: "Hedefi (4 sa) aşan son üç hafta `warning` tonunda; her sütundan kesikli hedef çizgisi geçer. Aşım yalnız renkle değil, `sr-only` tabloda \"eşiği aştı\" ile de söylenir. Fixora satıcı ekranından (yalnız yapı)." } },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table", { name: /Hedef 4/ });
+    await expect(within(table).getByRole("row", { name: /H6/ })).toHaveTextContent("eşiği aştı");
+    await expect(within(table).getByRole("row", { name: /H1/ })).not.toHaveTextContent("eşiği aştı");
+  },
+};
+
 export const FewData: Story = {
   name: "Az Veri (Üç Ay)",
   args: { sutunSayisi: 3 },

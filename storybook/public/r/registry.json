@@ -802,6 +802,32 @@
       ]
     },
     {
+      "name": "choice-chips",
+      "type": "registry:ui",
+      "title": "Çoklu Seçim Çipleri",
+      "description": "Listeden birden çok etiket (bina sistemleri, ilgi alanı): seçili çip koyu + ✓, isteğe `max`; `FilterChip` süzer, bu alan formdur",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "choice-chips",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/choice-chips.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "close-button",
       "type": "registry:ui",
       "title": "Kapat Butonu",
@@ -1493,6 +1519,29 @@
       ]
     },
     {
+      "name": "factor-list",
+      "type": "registry:ui",
+      "title": "Etken Listesi",
+      "description": "Bir kaydın NEDEN öne alındığı: başlıkta genel önem (Düşük–Kritik, dört çubuklu sinyal), altında etiket solda değer sağda satırları; ikon karosu yok",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "factor-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/factor-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "feature-tile",
       "type": "registry:ui",
       "title": "Özellik Karosu",
@@ -1616,6 +1665,33 @@
       "files": [
         {
           "path": "snippets/ui/focus-stack.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "forecast-chart",
+      "type": "registry:ui",
+      "title": "Tahmin Grafiği",
+      "description": "Tek ölçünün geçmişi ve iki geleceği (marj, ciro, kapasite): gerçekleşen çizgi bugünden sonra \"mevcut yol\" ve \"değişikliklerle yol\"a ayrılır; olası aralık bandı, hedef çizgisi; Y ekseni sıfırdan başlamaz",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
+        "https://dev-starter-storybook.vercel.app/r/area-chart.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "forecast-chart",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/forecast-chart.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1881,6 +1957,29 @@
       ]
     },
     {
+      "name": "impact-bar",
+      "type": "registry:ui",
+      "title": "Etki Çubuğu",
+      "description": "Bir işlemin bütçeye/kotaya EKLEDİĞİ: harcanan + çizgili eklenen dilim + kalan iz, \"önce → sonra / limit · yüzde\"; limit aşılırsa `danger` + işaretçi (durum için `meter`, gidişat için `tick-meter`)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "impact-bar",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/impact-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "input",
       "type": "registry:ui",
       "title": "Metin Girişi",
@@ -1928,6 +2027,32 @@
       "files": [
         {
           "path": "snippets/ui/input-otp.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "insight-callout",
+      "type": "registry:ui",
+      "title": "Öneri Kutusu",
+      "description": "Bir kaydın yanında kısa öneri/içgörü: tür etiketi, başlık, 2-3 cümle, en çok iki eylem; `insight`/`warning`/`success`. `banner-alert` bölümü, bu kutu kaydı anlatır",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "insight-callout",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/insight-callout.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2008,6 +2133,30 @@
       "files": [
         {
           "path": "snippets/ui/kbd.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "lever-card",
+      "type": "registry:ui",
+      "title": "Kaldıraç Kartı",
+      "description": "Senaryo kaldıracı: anahtar, büyük etki değeri (\"+1,5 puan\"), hedef açığının kapanan payı; `LeverGrid` dört karolu satır; `ForecastChart` ile birlikte",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/switch.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "lever-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/lever-card.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2323,6 +2472,32 @@
       ]
     },
     {
+      "name": "option-cards",
+      "type": "registry:ui",
+      "title": "Seçenek Kartları",
+      "description": "Birbirini dışlayan 2-5 yoldan biri, her yolun sonucu kartta yazılı; Önerilen rozeti, kilitli seçenek gerekçesiyle (çözüm yolu, ret nedeni, plan)",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form Girişleri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "option-cards",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/option-cards.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "pagination",
       "type": "registry:ui",
       "title": "Sayfalama",
@@ -2536,6 +2711,32 @@
       "files": [
         {
           "path": "snippets/ui/pixel-loader.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "policy-checks",
+      "type": "registry:ui",
+      "title": "Politika Kontrolleri",
+      "description": "Talebin onaydan önce geçtiği otomatik denetimler: satır başına geçti/uyarı/başarısız + sağda kısa gerekçe; özet satırı kontrollerden türer",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "policy-checks",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/policy-checks.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3158,6 +3359,32 @@
       "files": [
         {
           "path": "snippets/ui/settings-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "setup-card",
+      "type": "registry:ui",
+      "title": "Kurulum Kartı",
+      "description": "Kenar çubuğu dibinde kurulum çağrısı: başlık, tek cümle, ilerleme halkası (3 / 4), Atla ve Sonraki",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "setup-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/setup-card.tsx",
           "type": "registry:ui"
         }
       ]
@@ -4097,7 +4324,7 @@
       "name": "track-bar-chart",
       "type": "registry:ui",
       "title": "Sütun Grafiği",
-      "description": "Sıralı tek seri (ay, gün), iz üstünde sütun",
+      "description": "Sıralı tek seri (ay, gün), iz üstünde sütun; `threshold` ile hedef çizgisi, aşan sütun `warning`",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json",
         "https://dev-starter-storybook.vercel.app/r/chart-card.json"
@@ -4191,6 +4418,29 @@
       "files": [
         {
           "path": "snippets/ui/trust-line.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "value-diff",
+      "type": "registry:ui",
+      "title": "Değer Farkı",
+      "description": "Aynı kimliğin iki kaynaktaki yazılışı alt alta, FARKLI grup vurgulu (fatura vergi no ↔ doğrulanmış kayıt, IBAN, seri no); grup sayısı satırlardan türer",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "value-diff",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/value-diff.tsx",
           "type": "registry:ui"
         }
       ]

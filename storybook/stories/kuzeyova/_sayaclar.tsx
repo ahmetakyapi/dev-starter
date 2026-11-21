@@ -27,6 +27,7 @@ import { ChartCard } from "@/components/ui/chart-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
+import { ValueDiff } from "@/components/ui/value-diff";
 import type { ActiveFilter } from "@/components/ui/active-filters";
 import type { FilterGroup, FilterValue } from "@/components/ui/filter-sheet";
 import { HoldButton } from "@/components/ui/hold-button";
@@ -1000,6 +1001,8 @@ function ReplaceDialog({ open, onClose, meter, customerId, lastIndex, go }: { op
   const [finish, setFinish] = useState(false);
   const [touched, setTouched] = useState(false);
   const error = touched && !stockId ? "Stoktan yeni sayacı seçin." : undefined;
+  const pickedStock = free.find((s) => s.id === stockId);
+  const grouped = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ").split(" ");
   const REASONS = [
     { value: "muayene", label: "Muayene Süresi Doldu" },
     { value: "ariza", label: "Sayaç Arızası" },
@@ -1059,6 +1062,22 @@ function ReplaceDialog({ open, onClose, meter, customerId, lastIndex, go }: { op
         <NumberField label="Yeni Sayaç Başlangıç Endeksi (kWh)" value={0} onValueChange={() => undefined} min={0} hint="Yeni sayaç sıfırdan başlar" />
         {meter.multiZone ? <NumberField label="Son Endeks T2 (kWh)" value={t2} onValueChange={setT2} min={0} /> : null}
         {meter.multiZone ? <NumberField label="Son Endeks T3 (kWh)" value={t3} onValueChange={setT3} min={0} /> : null}
+        {pickedStock ? (
+          <div className="grid gap-3 sm:col-span-2">
+            <ValueDiff
+              rows={[
+                { label: "Eski Sayaç", groups: meter.serial.split("-"), tone: "bad", note: "Söküldü, depoya döner" },
+                { label: "Yeni Sayaç", groups: pickedStock.serial.split("-"), tone: "good", note: `${pickedStock.model} · ${pickedStock.depot}` },
+              ]}
+            />
+            <ValueDiff
+              rows={[
+                { label: meter.multiZone ? "Eski Son Endeks (T1)" : "Eski Son Endeks", groups: grouped(t1 ?? lastIndex.t1), tone: "bad", note: "Ara dönem faturası bu endeksle kesilir" },
+                { label: "Yeni Başlangıç Endeksi", groups: ["0"], tone: "good", note: "Yeni sayaç sıfırdan başlar" },
+              ]}
+            />
+          </div>
+        ) : null}
         <div className="sm:col-span-2">
           <RadioGroup name="replace-reason" legend="Değişim Nedeni" orientation="horizontal" value={reason} onChange={setReason} options={REASONS} />
         </div>
