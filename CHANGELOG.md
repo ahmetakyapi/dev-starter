@@ -7,6 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Landing: varsayılan hero yeniden tasarlandı — 2026-11-21
+
+- `showcase` "tezgâh": iki tonlu başlık (problem soluk, çözüm net), tepeden ışıma
+  + kıl çizgi ızgarası, alta solan canlı pano, panodaki talepten iki kenar notu;
+  hero artık ilk ekranı aşmaz (önce 1100 px, şimdi ~870 px)
+
 ### Kasım 21 turu: 19 yeni bileşen ve örnek sayfalar — 2026-11-21
 
 - Tanıtım: iki tonlu başlık, köşe etiketi, süzülen kartlar, odak yığını,

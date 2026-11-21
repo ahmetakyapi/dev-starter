@@ -276,6 +276,43 @@
     mask-image: linear-gradient(to bottom, #000 65%, transparent);
   }
 
+  /* ── Showcase: tezgâh ──────────────────────────────────────────────────
+     Başlık ölçeği `hero-display`ten bir basamak sakin (premium okur başlığı
+     bağırmaz, tartar). Zemin: tepeden inen ışıma + kıl çizgi ızgarası; ikisi
+     de ilk ekran boyunda maskeyle söner (renk değil alfa okunur). Pano
+     "tezgâh": üst kısmı görünür, alt kenarı sayfa zeminine solar; hero ilk
+     ekranı aşmaz, altındaki bölüm solmadan devralır. */
+  .showcase-title {
+    font-size: clamp(2.5rem, 7.4vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .showcase-backdrop {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: -1;
+    height: min(46rem, 100svh);
+    pointer-events: none;
+    background:
+      radial-gradient(52rem 24rem at 50% 0%, var(--glow), transparent 70%),
+      linear-gradient(to right, var(--line-soft) 1px, transparent 1px) 0 0 / 4rem 4rem,
+      linear-gradient(to bottom, var(--line-soft) 1px, transparent 1px) 0 0 / 4rem 4rem;
+    mask-image: radial-gradient(ellipse 75% 100% at 50% 0%, #000 30%, transparent 85%);
+  }
+
+  .showcase-stage {
+    max-height: 14rem;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, #000 58%, transparent);
+  }
+
+  @media (width >= 48rem) {
+    .showcase-stage {
+      max-height: 17rem;
+    }
+  }
+
   /* Bento hücresi deseni: düz yüzeyler arasında dokulu bir hücre. Renk
      degradesi değil, çizgi tonunda nokta ızgarası. */
   .dot-grid {

@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "On iki kahraman düzeni (`components/heroes/`), seçim `lib/content.ts` → `hero.variant`. Ürün arayüzü gösterilebiliyorsa `showcase` (varsayılan), mesaj yeterince güçlüyse `statement`, içerik sayfasında `minimal`. Yeni dört düzen (görsel zeminli): `atmosphere`, `floating`, `horizon`, `corner`. Başlık LCP öğesidir: Reveal'e sarılmaz, maske + transform ile açılır; parçacık sahnesi yalnızca hassas işaretçi, 768 px ve serbest harekette iner.",
+          "On iki kahraman düzeni (`components/heroes/`), seçim `lib/content.ts` → `hero.variant`. Ürün arayüzü gösterilebiliyorsa `showcase` (varsayılan: iki tonlu başlık, alta solan canlı pano ve iki kenar notu), mesaj yeterince güçlüyse `statement`, içerik sayfasında `minimal`. Yeni dört düzen (görsel zeminli): `atmosphere`, `floating`, `horizon`, `corner`. Başlık LCP öğesidir: Reveal'e sarılmaz, maske + transform ile açılır; parçacık sahnesi yalnızca hassas işaretçi, 768 px ve serbest harekette iner.",
       },
     },
   },

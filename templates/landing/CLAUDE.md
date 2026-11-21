@@ -60,7 +60,8 @@ YOK; gerekiyorsa `nextjs-fullstack` şablonundan alınır.
 1. `lib/site.ts` (ad, açıklama) ve `lib/content.ts` (bütün metin). Bileşene
    dokunmak gerekmez; `tests/content.test.ts` yazım ve yapı kurallarını denetler.
 2. Hero düzeni: `lib/content.ts` → `hero.variant` (on iki düzen, varsayılan
-   `showcase`: büyük sıkı başlık + altında canlı ürün panosu,
+   `showcase`: iki tonlu sakin başlık (problem soluk, çözüm net) + altında
+   tezgâh gibi alta solan canlı ürün panosu,
    `components/heroes/index.tsx` başında hangisinin ne zaman seçileceği).
    Geliştirmede `/?hero=statement` ile denenir; üretimde parametre okunmaz.
 3. Palet: `app/globals.css`teki iki `signature` bloğu (aşağıda).
