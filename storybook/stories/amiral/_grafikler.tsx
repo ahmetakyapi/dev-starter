@@ -21,7 +21,7 @@ import { StackedBarChart } from "@/components/ui/stacked-bar-chart";
 import { StageBars } from "@/components/ui/stage-bars";
 import { TrackBarChart } from "@/components/ui/track-bar-chart";
 import { cn } from "@/lib/utils";
-import { MAP_SHAPES, MAP_VIEWBOX } from "../edas/_harita";
+import { MAP_SHAPES, MAP_VIEWBOX } from "../kuzeyova/_harita";
 import {
   CATEGORIES,
   CHANNELS,

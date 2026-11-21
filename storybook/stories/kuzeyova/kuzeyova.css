@@ -1,0 +1,79 @@
+/*
+ * Kuzeyova Portalı'nın ürün kimliği. Kataloğun genel token'ları değişmez; yalnız
+ * portalın kökü (`[data-product="kuzeyova"]`) altında. Pusula'nın `pusula.css`ı
+ * ile aynı yöntem, ama HİÇ sabit renk yok: her şey paletin token'ından
+ * türer, palet değişince (Verdant, Ember…) portal de onunla döner.
+ *
+ * 1. GRAFİK PALETİ: birinci seri paletin vurgusu (yük, tüketim), ikincisi onun
+ *    yıkanmışı (önceki dönem), üçüncüsü mürekkep (nötr); kalan üçü durum
+ *    tonları (başarı, uyarı, tehlike): kayıp, gecikme, arıza gibi anlamı olan
+ *    seriler zaten bu renklerle okunur.
+ *
+ * 2. KOYU KATMAN MERDİVENİ: koyu temada gölge görünmez, derinliği açılan gri
+ *    basamaklar kurar: kabuk (sayfa rengi) → içerik karosu → kart (`--overlay`)
+ *    → kart içi panel (`--surface`). Basamaklar sayfa rengi ile metin
+ *    renginin karışımı; açık tema değişmez.
+ */
+
+[data-product="kuzeyova"] {
+  --chart-1: var(--primary);
+  --chart-2: color-mix(in oklab, var(--primary) 38%, var(--page-bg));
+  --chart-3: color-mix(in oklab, var(--text-strong) 34%, var(--page-bg));
+  --chart-4: var(--warning);
+  --chart-5: var(--success);
+  --chart-6: var(--danger);
+  --chart-track: color-mix(in oklab, var(--text-strong) 6%, transparent);
+}
+
+:root[data-theme="dark"] [data-product="kuzeyova"] {
+  --kz-tile: color-mix(in oklab, var(--page-bg) 94%, var(--text-strong));
+  --overlay: color-mix(in oklab, var(--page-bg) 89%, var(--text-strong));
+  --surface: color-mix(in oklab, var(--text-strong) 6%, transparent);
+  --surface-raised: color-mix(in oklab, var(--text-strong) 10%, transparent);
+  --surface-solid: color-mix(in srgb, var(--overlay) 93%, var(--text-strong));
+  --line: color-mix(in oklab, var(--text-strong) 11%, transparent);
+  --line-soft: color-mix(in oklab, var(--text-strong) 7%, transparent);
+  /* İkinci seri paletin AÇILMIŞ hali (yıkanmış koyu "çelik" değil): koyu zeminde
+     okunur pastel; üçüncü seri açık mürekkep. Alan dolguları bunlardan %18. */
+  --chart-2: color-mix(in oklab, var(--primary) 52%, var(--text-strong));
+  --chart-3: color-mix(in oklab, var(--text-strong) 62%, var(--page-bg));
+  --chart-track: color-mix(in oklab, var(--text-strong) 9%, transparent);
+  /* Kart yüksekliği: üst kenarda ince ışık çizgisi + yumuşak alt gölge (düz siyah üstünde düz gri olmasın). */
+  --shadow-raised:
+    inset 0 1px 0 color-mix(in oklab, var(--text-strong) 8%, transparent),
+    0 1px 2px color-mix(in oklab, var(--page-bg) 80%, transparent);
+}
+:root[data-theme="dark"] .kz-shell { background-color: var(--page-bg); }
+:root[data-theme="dark"] .kz-shell #icerik { background-color: var(--kz-tile); }
+
+/* Marka karosu: tipografik işaret, mürekkep zemin (yalnız token). */
+.kz-mark {
+  color: var(--page-bg);
+  background-color: var(--text-strong);
+  background-image: linear-gradient(180deg, color-mix(in oklab, var(--page-bg) 22%, transparent), transparent 55%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--page-bg) 25%, transparent),
+    0 1px 2px color-mix(in oklab, var(--text-strong) 30%, transparent);
+}
+
+/* Kıl çizgili ölçü şeridi: hücrenin iç sağ/alt kenarı çizgi; kap 1 piksel taşar ve dıştaki
+   `overflow-hidden` kırpar (artık çizgi kalmaz). Sütun sayısı `MetricStrip`ten: 2 → `--c-lg` → `--c-xl`. */
+.kz-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 -1px -1px 0; }
+.kz-strip > * { min-width: 0; box-shadow: inset -1px 0 0 var(--line-soft), inset 0 -1px 0 var(--line-soft); }
+@media (min-width: 64rem) { .kz-strip { grid-template-columns: repeat(var(--c-lg, 3), minmax(0, 1fr)); } }
+@media (min-width: 80rem) { .kz-strip { grid-template-columns: repeat(var(--c-xl, 6), minmax(0, 1fr)); } }
+
+/* Mono rakamlar: sayaç, endeks ve tutar kolonları aynı hatta biter. */
+.kz-mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* TAM EKRAN: uygulama kenarsız. Kabuğun "gri çerçeve içinde yuvarlak karo" düzeni
+   kalkar; kenar çubuğu viewport'un soluna, içerik sağ kenara yaslanır, aralarında tek
+   kıl çizgi. Sayfa kabı da yuvarlak köşe ve gölge taşımaz. */
+.kz-shell > div:has(> #icerik) { padding: 0; }
+@media (max-width: 63.99rem) { .kz-shell > div:has(> #icerik) { padding-bottom: 5rem; } }
+.kz-shell #icerik {
+  border-radius: 0;
+  box-shadow: none;
+  border-inline-start: 1px solid var(--line);
+}
+@media (max-width: 63.99rem) { .kz-shell #icerik { border-inline-start: 0; } }

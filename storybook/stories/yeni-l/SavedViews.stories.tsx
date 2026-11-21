@@ -42,7 +42,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip. Sabit görünüm kaldırılamaz; kullanıcının kaydettiği × ile silinir; \"Görünümü Kaydet\" satır içinde ad alanı açar (Enter kaydeder, Esc vazgeçer). Ad boş, çok uzun ya da mevcut bir görünümle aynı olamaz (Türkçe büyük/küçük harf farkı yok sayılır). Neyi içerdiğini bilmez: süzgeçleri görünüme çevirmek çağıranın işi. Edaş portalı UX denetiminden.",
+          "Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip. Sabit görünüm kaldırılamaz; kullanıcının kaydettiği × ile silinir; \"Görünümü Kaydet\" satır içinde ad alanı açar (Enter kaydeder, Esc vazgeçer). Ad boş, çok uzun ya da mevcut bir görünümle aynı olamaz (Türkçe büyük/küçük harf farkı yok sayılır). Neyi içerdiğini bilmez: süzgeçleri görünüme çevirmek çağıranın işi. Kuzeyova portalı UX denetiminden.",
       },
     },
   },

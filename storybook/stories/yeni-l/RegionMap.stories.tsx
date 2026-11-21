@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { RegionMap, type MapRegion } from "@/components/ui/region-map";
-import { MAP_SHAPES, MAP_VIEWBOX } from "../edas/_harita";
+import { MAP_SHAPES, MAP_VIEWBOX } from "../kuzeyova/_harita";
 
 const NAMES: Record<string, string> = { yayla: "Yayla", ova: "Ova", vadi: "Vadi", merkez: "Merkez", sanayi: "Sanayi", kiyi: "Kıyı" };
 /** Kayıp-kaçak yüzdesi ve hedef (ÖRNEK veri). */
@@ -34,7 +34,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Bölgeye göre dağılım şematik SVG haritada: renk değer ölçeğinden ya da açık durum tonundan (hedefi aşan bölge kırmızı + çizgili kenar). Gerçek coğrafya değil, çağıran stilize poligonlarını verir (sınır dosyası ya da harita sağlayıcısı yok). Balon yalnız ince işaretçide; bölge seçilebilir buton; asıl veri `sr-only` tabloda. Edaş portalının kayıp/kaçak haritası (Kuzeyova, ÖRNEK veri).",
+          "Bölgeye göre dağılım şematik SVG haritada: renk değer ölçeğinden ya da açık durum tonundan (hedefi aşan bölge kırmızı + çizgili kenar). Gerçek coğrafya değil, çağıran stilize poligonlarını verir (sınır dosyası ya da harita sağlayıcısı yok). Balon yalnız ince işaretçide; bölge seçilebilir buton; asıl veri `sr-only` tabloda. Kuzeyova portalının kayıp/kaçak haritası (Kuzeyova, ÖRNEK veri).",
       },
     },
   },

@@ -88,7 +88,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `product-tour.tsx` | Ekranın önemli parçalarını sırayla gösteren tanıtım turu (4-5 adım) | `react-dom` (portal), lucide | Evet | Kart diyalog: odak, Tab döngüsü, ← → adım, Escape kapatır ve odak açana döner; bulunamayan hedef atlanır |
 | `tooltip.tsx` | `Tooltip`: görsel etiket · `InfoTip`: açıklama | Base UI | Evet | Tooltip dokunmatikte açılmaz (bilinçli); InfoTip tıklamayla açılır |
 | `dropdown-menu.tsx` | Eylem menüsü | Base UI | Evet | Menü butonu kalıbı tam: oklar, Home/End, harf, Escape |
-| `command-palette.tsx` | ⌘K / Ctrl+K komut paleti (`maxResults` ile yüzlerce kayıtta liste sınırı) | yerel `<dialog>` | Evet | Combobox + listbox, `aria-activedescendant`, Türkçe arama |
+| `command-palette.tsx` | ⌘K / Ctrl+K komut paleti (`maxResults` ile yüzlerce kayıtta liste sınırı, `emptyCommands` ile boş sorguda öneriler) | yerel `<dialog>` | Evet | Combobox + listbox, `aria-activedescendant`, Türkçe arama |
 | `context-menu.tsx` | Nesne üstünde sağ tık / uzun basma eylemleri | Base UI, `kbd` | Evet | Menü klavye haritası tam, alt menü sağ/sol okla; yıkıcı öğe ayrı grupta; kısayol `aria-hidden` |
 | `notification-center.tsx` | Üst çubukta zil + bildirim listesi | Base UI, lucide | Evet | Zil adı sayıyı söyler ("Bildirimler, 3 okunmamış"); gruplar başlıklı `ul`; `<time dateTime>` |
 | `hover-card.tsx` | Bağlantının önizlemesi (@ad, atanan kişi): `HoverCard` + `ProfilePreview` | Base UI, `avatar` | Evet | 500 ms fare beklemesi ya da klavye odağıyla açılır, Escape kapatır; dokunmatikte ilk dokunuş açar; kart yalnız ek bilgi |

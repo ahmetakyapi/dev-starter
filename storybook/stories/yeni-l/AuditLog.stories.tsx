@@ -18,7 +18,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA. Reddedilen deneme renkle değil \"Reddedildi\" metni ve ikonla işaretlenir. Günlük değişmezdir: bileşen yalnız okur; süzgeç ve dışa aktarma `toolbar` yuvasında. Zaman çağıranda (`at` ISO + `when` metin; hidrasyon uyuşmazlığı olmasın). Bir kaydın kendi geçmişi için `timeline`. Edaş portalı Denetim Günlüğü.",
+          "Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA. Reddedilen deneme renkle değil \"Reddedildi\" metni ve ikonla işaretlenir. Günlük değişmezdir: bileşen yalnız okur; süzgeç ve dışa aktarma `toolbar` yuvasında. Zaman çağıranda (`at` ISO + `when` metin; hidrasyon uyuşmazlığı olmasın). Bir kaydın kendi geçmişi için `timeline`. Kuzeyova portalı Denetim Günlüğü.",
       },
     },
   },

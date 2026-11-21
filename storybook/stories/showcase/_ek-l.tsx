@@ -6,13 +6,13 @@ import { AuditLog, type AuditEntry } from "@/components/ui/audit-log";
 import { ChartCard } from "@/components/ui/chart-card";
 import { RegionMap, type MapRegion } from "@/components/ui/region-map";
 import { SavedViews, type SavedView } from "@/components/ui/saved-views";
-import { MAP_SHAPES, MAP_VIEWBOX } from "../edas/_harita";
+import { MAP_SHAPES, MAP_VIEWBOX } from "../kuzeyova/_harita";
 import { ME, TEAM, customer, tl, type PeriodStats } from "./_data";
 import { CARD, Well, WellTitle, useApp } from "./_ui";
 import { cn } from "@/lib/utils";
 
 /**
- * Üçüncü ek (Edaş turu parçaları Pusula'da): bölge haritası (Pano), kayıtlı
+ * Üçüncü ek (Kuzeyova portalı turu parçaları Pusula'da): bölge haritası (Pano), kayıtlı
  * görünüm + etkin süzgeç çipleri (Görevler), denetim kaydı (Ayarlar).
  * Harita ŞEMATİKTİR: satış bölgeleri gerçek coğrafya değil, beş stilize alan.
  */
