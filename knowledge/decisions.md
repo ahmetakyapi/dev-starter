@@ -1604,3 +1604,35 @@ karıştırmak (tek alan ödünç alınabilir, `overrides:` ile gerekçelenir).
 `slop-scan.sh`: `<h1>/<h2>` içinde virgül YÜKSEK, `title/headline/heading`
 alanında UYARI; iki mevcut ihlal düzeltildi (Vitrin geri bildirim sayfası,
 HorizonScene hikayesi).
+
+## Yönetim Panosu Turu — Yedi Bileşen, İki İyileştirme (2026-11-22)
+
+**Karar:** Sekiz kurgusal ürün ekranından (mülk yönetimi, uyum raporları,
+fatura istisnası, marj tahmini, inşaat müşteri/zaman çizelgesi, ödeme
+analitiği, pazar yeri ayarları) ortak desenler çıkarıldı; kütüphanede
+karşılığı OLMAYANLAR token'larla sıfırdan yazıldı, olanlar yeniden yazılmadı.
+
+**Zaten vardı (yeniden yazılmadı):** `value-diff`, `factor-list`,
+`option-cards`, `setup-card`, `lever-card`, `forecast-chart`, `insight-callout`,
+`avatar` (addan pastel renk), `data-table` satır içi çubuk, `settings-dialog`
+(`SettingsRow`), `toast`, `tree-table`.
+
+**Eklendi:** `money` (ondalık sönük), `key-value-list` (nötr alan listesi,
+eylem yuvası), `contact-list` (tür etiketi + kopyala), `stamp` (karar damgası),
+`attention-list` (işlem odaklı satırlar), `workspace-switcher`, `detail-panel`.
+**İyileşti:** `tabs` sayaç, `bar-list` sıra/logo/pay/değişim.
+
+**Alınmayan:** gün sütunlu kaynak şeridi (timeline lanes) ve onay tablosunun
+iç içe satırları: `week-calendar`, `schedule-list`, `tree-table` bir arada
+kuruyor; ayrı bileşen iki kez bakım demekti. Koyu kenar çubuğu: `app-shell`
+token'ları zaten tersine çevirir, yeni değişken gerekmedi. Degrade çizgi
+ve noktalı ızgara grafik arka planı: yalnız süs, `line-chart`ın `dashed`
+karşılaştırması ve `pattern-bg` yetiyor.
+
+**Dersler (a11y testi yakaladı):** (1) Saydam grafik dolgusunun üstüne
+yıkamalı rozet koyma: `bg-success-wash` dolguyla karışınca kontrast 3,45:1;
+bar-list değişim rozeti opak `bg-overlay`. (2) Görünen metin erişilebilir adın
+parçası olmalı (WCAG 2.5.3): `workspace-switcher` açıkken adı içerikten alır,
+`aria-label` yalnız daraltılmışta. (3) Sayaç ile etiket arasına gerçek boşluk
+metni koy; yalnız `margin` erişilebilir adı "Riskli3" yapar.
+

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "attention-list",
+  "type": "registry:ui",
+  "title": "Dikkat Listesi",
+  "description": "\"Şimdi bakman gerekenler\": kim/ne + ikonlu durum cümlesi + tek tıkla çözüm (`action` yuvası); sayaç satırlardan türer",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/attention-list.tsx",
+      "content": "import { AlertTriangle, Clock, OctagonAlert } from \"lucide-react\";\nimport type { ElementType, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Dikkat listesi: \"Şimdi bakman gerekenler\" ve \"Bugün başlayanlar\" gibi\n * kısa, işlem odaklı satırlar. Her satırda KİM/NE (başlık + konu), NE\n * SORUN (ikonlu durum metni: \"Gecikti · vade 27 Eki · %75 tamam\") ve\n * mümkünse TEK TIKLA ÇÖZÜM (\"Tarihleri düzelt\"). Proje panosu, onay\n * kuyruğu, saha takvimi, sipariş panosunun üst şeridi. Brick zaman\n * çizelgesinin \"Needs attention / Starts today\" bloklarından alındı\n * (yapı; kod, ad, veri alınmadı).\n *\n * `status-list.tsx` ile farkı: o ürünün sistem bileşenlerini listeler\n * (çalışıyor/kesinti). Bu ise iş KAYITLARI için ve her satır bir eylem\n * önerir; durum cümlesi satır başına serbest metin.\n *\n * RENK TEK İŞARET DEĞİL: durum metni ve ikon aynı şeyi söyler\n * (`tone`: danger → ikon + \"Gecikti\", warning → \"Geçersiz tarih\",\n * neutral → saat). İkon süs (`aria-hidden`), durum cümlesi görünür metin.\n * Başlıkta SAYAÇ (\"Dikkat Gerekenler 4\") listedeki satır sayısından\n * TÜRER, elle yazılmaz: başlıkla liste çelişemez.\n *\n * EYLEM yuvası (`action`): bağlantı ya da buton ver (`<a href>`,\n * `<button>`); bileşen yalnız görünümünü (altı çizili, vurgu rengi)\n * verir, davranış çağıranın. Sunucu bileşeni; olay işleyicisi almaz.\n *\n * BOŞ LİSTE: `emptyText` (\"Şu an dikkat gerektiren bir şey yok.\") yazılır;\n * bu tek yer \"her şey yolunda\" demenin güvenli olduğu yer DEĞİL: yalnız\n * VERİ GELDİ ve boşsa ver. Yükleniyorsa `skeleton.tsx`, hata varsa\n * `banner-alert.tsx`. `emptyText` verilmezse boş liste hiçbir şey çizmez.\n *\n *   <AttentionList\n *     title=\"Dikkat Gerekenler\"\n *     items={[\n *       { id: \"1\", title: \"Boya\", subject: \"Ada Yılmaz\", tone: \"danger\", detail: \"Gecikti · vade 27 Eki · %75 tamam\" },\n *       { id: \"2\", title: \"Kapı Montajı\", tone: \"warning\", detail: \"Geçersiz tarih · 5 Kas – 12 Eki\",\n *         action: <a href=\"/projeler/2/tarih\">Tarihleri düzelt</a> },\n *     ]}\n *   />\n */\n\nconst TONE = {\n  danger: { ink: \"text-danger\", icon: OctagonAlert },\n  warning: { ink: \"text-warning\", icon: AlertTriangle },\n  neutral: { ink: \"text-body\", icon: Clock },\n} as const;\n\nexport type AttentionItem = {\n  id: string;\n  title: ReactNode;\n  /** Başlığın yanında sönük: müşteri, proje, atanan kişi. */\n  subject?: ReactNode;\n  /** Satırın başında: avatar ya da küçük görsel. */\n  leading?: ReactNode;\n  tone?: keyof typeof TONE;\n  /** Özel ikon; verilmezse tona göre. nedene özel ikon için (takvim, kilit). */\n  icon?: ReactNode;\n  /** Durum cümlesi: görünür metin, renk tek işaret değil. */\n  detail: ReactNode;\n  action?: ReactNode;\n};\n\nexport function AttentionList({\n  title,\n  items,\n  emptyText,\n  headingLevel = 3,\n  className,\n}: {\n  title: ReactNode;\n  items: readonly AttentionItem[];\n  emptyText?: ReactNode;\n  headingLevel?: 2 | 3 | 4;\n  className?: string;\n}) {\n  if (items.length === 0 && !emptyText) return null;\n  const H = `h${headingLevel}` as ElementType;\n  return (\n    <section className={cn(\"min-w-0\", className)}>\n      <H className=\"flex items-center gap-2 text-read font-semibold text-strong\">\n        {title}\n        {items.length > 0 ? (\n          <span className=\"rounded-full bg-surface-raised px-2 py-0.5 text-small font-semibold text-body tabular-nums\">\n            {items.length}\n            <span className=\"sr-only\"> kayıt</span>\n          </span>\n        ) : null}\n      </H>\n      {items.length === 0 ? (\n        <p className=\"mt-2 text-base text-body\">{emptyText}</p>\n      ) : (\n        <ul className=\"mt-1 divide-y divide-line-soft\">\n          {items.map((item) => {\n            const tone = TONE[item.tone ?? \"neutral\"];\n            const Glyph = tone.icon;\n            return (\n              <li key={item.id} className=\"flex flex-wrap items-center gap-x-3 gap-y-1 py-2.5\">\n                {item.leading}\n                <p className=\"min-w-0 flex-1 basis-40 text-base text-strong\">\n                  <span className=\"font-medium\">{item.title}</span>\n                  {item.subject ? <span className=\"ms-2 text-body\">{item.subject}</span> : null}\n                </p>\n                <p className={cn(\"flex min-w-0 items-center gap-1.5 text-small\", tone.ink)}>\n                  {item.icon ?? <Glyph aria-hidden strokeWidth={1.75} className=\"size-4 shrink-0\" />}\n                  <span className=\"min-w-0\">{item.detail}</span>\n                </p>\n                {item.action ? (\n                  <span className=\"shrink-0 text-small font-medium text-primary-ink [&_a]:underline [&_a]:underline-offset-4 [&_button]:underline [&_button]:underline-offset-4\">\n                    {item.action}\n                  </span>\n                ) : null}\n              </li>\n            );\n          })}\n        </ul>\n      )}\n    </section>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "attention-list",
+    "palettes": false
+  }
+}

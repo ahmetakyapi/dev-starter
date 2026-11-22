@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "key-value-list",
+  "type": "registry:ui",
+  "title": "Anahtar Değer Listesi",
+  "description": "Bir kaydın nötr alan listesi (kaynak, oluşturan, bakiye): etiket solda değer sağda, satır sonu eylem yuvası (kopyala, düzenle), değer tonu, `stacked` düzen dar yan panel için",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/key-value-list.tsx",
+      "content": "import type { ElementType, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Anahtar–değer listesi: bir kaydın alanları (\"Kaynak: Facebook Reklamı\",\n * \"Oluşturan: Evan Howard · 14 Mart\"), bir raporun satırları (\"Çeyrekte\n * Kapanan: 3\"), bir dışa aktarım paketinin içeriği. Etiket solda, değer\n * sağda, saç çizgisiyle ayrılmış satırlar. Sunucu bileşeni.\n *\n * `factor-list.tsx` ile farkı: o bir kaydın NEDEN öne alındığını söyler\n * (önem sinyali başlıkta); bu NÖTR bir alan listesi. Ayrıca satırın\n * sonuna eylem yuvası (`action`: kopyala butonu, \"Düzenle\" bağlantısı) ve\n * değer tonları (başarı, uyarı, tehlike) var. Noticeline ve Brick\n * ekranlarından alındı (yapı).\n *\n * ETİKET UZUNSA değer alta iner (`stacked`): dar yan panelde (\"Teslimat\n * Adresi\" + üç satırlık adres) iki sütun değeri sıkıştırırdı. `layout`:\n * `split` (etiket solda, değer sağda; varsayılan) ya da `stacked` (etiket\n * üstte küçük, değer altta; telefon ve yan panel).\n *\n * `mono`: değer sabit genişlikli (sipariş no, IBAN, kimlik). `tone`\n * yalnız DEĞERİN rengini değiştirir; renk tek işaret değil, değer metni\n * durumu zaten söyler (\"Gecikmiş\", \"3 gün kaldı\").\n *\n * Yapı: `dl > div > dt + dd`; başlık verilirse `section` ve başlığıyla\n * adlanır (`headingLevel`). Satır sonu eylemi `dd` içinde, değerle\n * birlikte okunur. Boş liste hiçbir şey çizmez (boş `dl` ekran okuyucuya\n * anlamsız bir \"liste\" olurdu).\n *\n *   <KeyValueList\n *     title=\"Hesap\"\n *     items={[\n *       { label: \"Kaynak\", value: \"Facebook Reklamı\" },\n *       { label: \"Sipariş No\", value: \"INV-3105\", mono: true, action: <CopyButton value=\"INV-3105\" /> },\n *       { label: \"Bakiye\", value: \"6.432,00 ₺\", tone: \"danger\" },\n *     ]}\n *   />\n */\n\nconst TONE = { neutral: \"text-strong\", success: \"text-success\", warning: \"text-warning\", danger: \"text-danger\" } as const;\n\nexport type KeyValueItem = {\n  label: ReactNode;\n  value: ReactNode;\n  /** Etiketin altında sönük kısa açıklama (split düzende). */\n  hint?: ReactNode;\n  tone?: keyof typeof TONE;\n  mono?: boolean;\n  /** Satır sonu eylemi: kopyala, düzenle. Değerle birlikte okunur. */\n  action?: ReactNode;\n};\n\nexport function KeyValueList({\n  items,\n  title,\n  headingLevel = 3,\n  titleAction,\n  layout = \"split\",\n  className,\n}: {\n  items: readonly KeyValueItem[];\n  title?: ReactNode;\n  headingLevel?: 2 | 3 | 4;\n  /** Başlığın sağında: \"Not Ekle\" bağlantısı gibi. */\n  titleAction?: ReactNode;\n  layout?: \"split\" | \"stacked\";\n  className?: string;\n}) {\n  if (items.length === 0) return null;\n  const H = `h${headingLevel}` as ElementType;\n  const list = (\n    <dl className=\"divide-y divide-line-soft\">\n      {items.map((item, i) => (\n        <div\n          key={i}\n          className={cn(\n            \"py-2.5\",\n            layout === \"split\" ? \"grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-5\" : \"flex flex-col gap-0.5\",\n          )}\n        >\n          <dt className={cn(layout === \"split\" ? \"text-base text-body\" : \"text-small font-medium text-muted\")}>\n            {item.label}\n            {item.hint && layout === \"split\" ? <span className=\"block text-small text-muted\">{item.hint}</span> : null}\n          </dt>\n          <dd\n            className={cn(\n              \"flex min-w-0 items-center gap-2 text-base font-semibold tabular-nums\",\n              layout === \"split\" && \"justify-end text-end\",\n              item.mono && \"font-mono text-small font-medium\",\n              TONE[item.tone ?? \"neutral\"],\n            )}\n          >\n            <span className=\"min-w-0 break-words\">{item.value}</span>\n            {item.action ? <span className=\"shrink-0 font-normal\">{item.action}</span> : null}\n          </dd>\n        </div>\n      ))}\n    </dl>\n  );\n\n  if (!title) return <div className={cn(\"min-w-0\", className)}>{list}</div>;\n  return (\n    <section className={cn(\"min-w-0\", className)}>\n      <div className=\"flex items-center justify-between gap-3\">\n        <H className=\"text-read font-semibold text-strong\">{title}</H>\n        {titleAction ? <div className=\"shrink-0 text-small\">{titleAction}</div> : null}\n      </div>\n      <div className=\"mt-1\">{list}</div>\n    </section>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "key-value-list",
+    "palettes": false
+  }
+}

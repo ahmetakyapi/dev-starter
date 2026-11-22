@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stamp",
+  "type": "registry:ui",
+  "title": "Damga",
+  "description": "Kararın damgası: \"Onaylandı\", \"Ödendi\", \"İptal\" hafif eğik çift çerçeveli; tek kaydın ayrıntı ekranında",
+  "dependencies": [
+    "motion@^13.5.1"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/stamp.tsx",
+      "content": "\"use client\";\n\nimport { m, useReducedMotion } from \"motion/react\";\nimport type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Damga: bir kaydın KARAR anını (Onaylandı, Reddedildi, Ödendi, İptal) kâğıt\n * damgası gibi, hafif eğik ve çift çerçeveli gösterir. Teklif onayı,\n * fatura ödemesi, başvuru sonucu: \"bu iş bitti, kim ne zaman karar verdi\"\n * bir bakışta okunur. Brick proje kartındaki \"Teklif Onaylandı · 27 Eylül\"\n * damgasından alındı (yapı; kod, ad, tarih alınmadı).\n *\n * BİLGİ DAMGANIN METNİNDE: renk ve eğim süs. `label` (\"Onaylandı\") ve\n * `date` düz metindir, ekran okuyucu \"Onaylandı, 27 Eylül 2026\" okur;\n * eğim (`rotate`) ve çift çerçeve `aria-hidden` katmanlarda. Renk tek\n * işaret değil (`tone` metinle çelişirse metin kazanır). Damga bir\n * DURUM ROZETİ yerine geçmez: listede yüzlerce satır için `badge.tsx`;\n * damga tek bir kaydın ayrıntı ekranında, kararın kendisi öne çıkacaksa.\n *\n * HAREKET: açılışta damga \"vurur\": 1,35 ölçekten oturur, az titreyerek\n * sönük başlar (`slam`, varsayılan açık). Hareketi azaltan kullanıcıda\n * hiç animasyon yok, damga yerinde çizilir. Süre 260 ms, tek seferlik;\n * yeniden çizimde tekrarlanmaz (`key` değişmedikçe).\n *\n * Mürekkep gibi: çerçeve ve yazı aynı ton, zemin saydam. Koyu temada\n * ton açılır (token'lar iki temada AA ölçülü). Yazı mono ve büyük harf:\n * Türkçe için CSS `uppercase` yerine `toLocaleUpperCase(\"tr-TR\")` (\"ödendi\"\n * → \"ÖDENDİ\", \"iptal\" → \"İPTAL\"); metin düğümü değilse (ReactNode) olduğu gibi.\n *\n *   <Stamp tone=\"success\" label=\"Teklif Onaylandı\" date=\"27 Eylül 2026\" />\n */\n\nconst TONE = {\n  success: \"border-success text-success\",\n  danger: \"border-danger text-danger\",\n  warning: \"border-warning text-warning\",\n  primary: \"border-primary-ink text-primary-ink\",\n  neutral: \"border-line-strong text-body\",\n} as const;\n\nexport function Stamp({\n  label,\n  date,\n  tone = \"success\",\n  rotate = -4,\n  size = \"md\",\n  slam = true,\n  className,\n}: {\n  label: ReactNode;\n  /** İkinci satır: karar tarihi. Biçimi çağıran verir. */\n  date?: ReactNode;\n  tone?: keyof typeof TONE;\n  /** Derece: -4 hafif sola eğik. Okunurluk için ±8'i aşma. */\n  rotate?: number;\n  size?: \"sm\" | \"md\";\n  slam?: boolean;\n  className?: string;\n}) {\n  const reduce = useReducedMotion();\n  const tilt = Math.max(-8, Math.min(8, Number.isFinite(rotate) ? rotate : 0));\n  const text = typeof label === \"string\" ? label.toLocaleUpperCase(\"tr-TR\") : label;\n  const animate = slam && !reduce;\n\n  return (\n    <m.span\n      initial={animate ? { opacity: 0, scale: 1.35, rotate: tilt - 6 } : false}\n      animate={{ opacity: 1, scale: 1, rotate: tilt }}\n      transition={{ duration: animate ? 0.26 : 0, ease: [0.22, 1, 0.36, 1] }}\n      className={cn(\n        \"relative inline-flex flex-col items-center justify-center rounded-md border-2 bg-transparent font-mono font-semibold tracking-[0.12em] select-none\",\n        size === \"sm\" ? \"px-2.5 py-1 text-micro\" : \"px-4 py-2 text-small\",\n        TONE[tone],\n        className,\n      )}\n    >\n      {/* İç çerçeve: damga kalıbının çift çizgisi; süs. */}\n      <span aria-hidden className=\"pointer-events-none absolute inset-[3px] rounded-[3px] border border-current opacity-60\" />\n      <span className=\"relative\">{text}</span>\n      {date ? <span className=\"relative mt-0.5 font-normal tracking-[0.08em]\">{date}</span> : null}\n    </m.span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Geri Bildirim"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "stamp",
+    "palettes": false
+  }
+}

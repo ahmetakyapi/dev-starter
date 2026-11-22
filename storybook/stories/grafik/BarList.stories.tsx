@@ -171,3 +171,32 @@ export const AllVariants: Story = {
     </Gallery>
   ),
 };
+
+const SATICILAR = [
+  { label: "Kuzey Kahve Ltd.", value: 9847, meta: "%13,2", delta: 12, leading: <span aria-hidden className="grid size-7 place-items-center rounded-md bg-chart-1/30 text-micro font-semibold text-strong">KK</span> },
+  { label: "Lumen Optik", value: 7460, meta: "%10,0", delta: 4, leading: <span aria-hidden className="grid size-7 place-items-center rounded-md bg-chart-2/30 text-micro font-semibold text-strong">LO</span> },
+  { label: "Atlas Spor Salonu", value: 6117, meta: "%8,2", delta: -3, leading: <span aria-hidden className="grid size-7 place-items-center rounded-md bg-chart-3/30 text-micro font-semibold text-strong">AS</span> },
+  { label: "Velo Yedek Parça", value: 3357, meta: "%4,5", delta: -9, leading: <span aria-hidden className="grid size-7 place-items-center rounded-md bg-chart-4/30 text-micro font-semibold text-strong">VY</span> },
+];
+
+/** Sıra, ikinci ölçü (pay), logo ve değişim: "En İyi Satıcılar" tablosu. */
+export const Ranked: Story = {
+  name: "Sıralı ve Değişimli",
+  args: { title: "En İyi Satıcılar", items: SATICILAR, columns: undefined, rank: true, valueFormat: { style: "currency", currency: "TRY", maximumFractionDigits: 0 } },
+  render: (args) => (
+    <Sahne>
+      <ChartCard id="satici-kart" label="En İyi Satıcılar" value="26.781 ₺">
+        <BarList {...args} />
+      </ChartCard>
+    </Sahne>
+  ),
+  play: async ({ canvasElement }) => {
+    const list = within(canvasElement).getByRole("list", { name: "En İyi Satıcılar" });
+    const rows = within(list).getAllByRole("listitem");
+    await expect(rows).toHaveLength(4);
+    // Değişim işaretle de söylenir: renk tek işaret değil.
+    await expect(within(rows[0]).getByText(/\+%12/)).toBeInTheDocument();
+    await expect(within(rows[2]).getByText(/−%3/)).toBeInTheDocument();
+    await expect(within(rows[2]).getByText(/düşüş/)).toBeInTheDocument();
+  },
+};

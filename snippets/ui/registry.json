@@ -235,6 +235,25 @@
       "palettes": false
     },
     {
+      "name": "attention-list",
+      "title": "Dikkat Listesi",
+      "category": "Veri",
+      "description": "\"Şimdi bakman gerekenler\": kim/ne + ikonlu durum cümlesi + tek tıkla çözüm (`action` yuvası); sayaç satırlardan türer",
+      "file": "snippets/ui/attention-list.tsx",
+      "client": false,
+      "storyId": "attention-list",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "audit-log",
       "title": "Denetim Kaydı",
       "category": "Veri",
@@ -336,7 +355,7 @@
       "name": "bar-list",
       "title": "Çubuk Listesi",
       "category": "Grafik",
-      "description": "Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu",
+      "description": "Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu; isteğe bağlı sıra no, logo, ikinci ölçü (pay) ve işaretli değişim (ok + \"artış/düşüş\")",
       "file": "snippets/ui/bar-list.tsx",
       "client": true,
       "storyId": "bar-list",
@@ -348,6 +367,7 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
@@ -782,6 +802,27 @@
       "palettes": false
     },
     {
+      "name": "contact-list",
+      "title": "İletişim Listesi",
+      "category": "Veri",
+      "description": "Telefon, e-posta, adres, web: tür etiketi (\"İş\", \"Kişisel\") + kopyala; müşteri kartı, tedarikçi profili",
+      "file": "snippets/ui/contact-list.tsx",
+      "client": true,
+      "storyId": "contact-list",
+      "registryDependencies": [
+        "copy-button"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "context-menu",
       "title": "Bağlam Menüsü",
       "category": "Katmanlar",
@@ -946,6 +987,24 @@
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "detail-panel",
+      "title": "Ayrıntı Paneli",
+      "category": "Veri",
+      "description": "Listenin yanında ana-ayrıntı yüzeyi: başlık (ikon, ad, alt satır, eylem) + başlıklı bölümler (`DetailSection`: sayaç, \"Tümünü Gör\"); içerik serbest",
+      "file": "snippets/ui/detail-panel.tsx",
+      "client": false,
+      "storyId": "detail-panel",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1628,6 +1687,24 @@
       "palettes": false
     },
     {
+      "name": "key-value-list",
+      "title": "Anahtar Değer Listesi",
+      "category": "Veri",
+      "description": "Bir kaydın nötr alan listesi (kaynak, oluşturan, bakiye): etiket solda değer sağda, satır sonu eylem yuvası (kopyala, düzenle), değer tonu, `stacked` düzen dar yan panel için",
+      "file": "snippets/ui/key-value-list.tsx",
+      "client": false,
+      "storyId": "key-value-list",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "lever-card",
       "title": "Kaldıraç Kartı",
       "category": "Form Girişleri",
@@ -1775,6 +1852,24 @@
       ],
       "npm": {
         "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "money",
+      "title": "Para Değeri",
+      "category": "Veri",
+      "description": "Parasal tutar: tam kısım güçlü, ondalık ayracı + kesir sönük (\"54.590**,00**\"); fatura, bakiye, tahmin kartı",
+      "file": "snippets/ui/money.tsx",
+      "client": false,
+      "storyId": "money",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
         "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
@@ -2764,6 +2859,25 @@
       "palettes": false
     },
     {
+      "name": "stamp",
+      "title": "Damga",
+      "category": "Geri Bildirim",
+      "description": "Kararın damgası: \"Onaylandı\", \"Ödendi\", \"İptal\" hafif eğik çift çerçeveli; tek kaydın ayrıntı ekranında",
+      "file": "snippets/ui/stamp.tsx",
+      "client": true,
+      "storyId": "stamp",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "stat",
       "title": "İstatistik",
       "category": "Veri",
@@ -2916,7 +3030,7 @@
       "name": "tabs",
       "title": "Sekmeler",
       "category": "Form ve Gezinme",
-      "description": "`Tabs`: sayfa içi · `TabLinks`: ayrı adresler",
+      "description": "`Tabs`: sayfa içi · `TabLinks`: ayrı adresler; etiket yanında isteğe bağlı sayaç (\"Tümü 48\")",
       "file": "snippets/ui/tabs.tsx",
       "client": true,
       "storyId": "tabs",
@@ -3395,6 +3509,28 @@
         "lib/utils.ts"
       ],
       "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "workspace-switcher",
+      "title": "Çalışma Alanı Değiştirici",
+      "category": "Form ve Gezinme",
+      "description": "Kenar çubuğu tepesinde hesap/şirket/çalışma alanı değiştirici: logo karosu + ad + alt satır + çift ok; menü radyo listesi + `footer`",
+      "file": "snippets/ui/workspace-switcher.tsx",
+      "client": true,
+      "storyId": "workspace-switcher",
+      "registryDependencies": [
+        "dropdown-menu"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"

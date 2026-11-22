@@ -308,6 +308,32 @@
       ]
     },
     {
+      "name": "attention-list",
+      "type": "registry:ui",
+      "title": "Dikkat Listesi",
+      "description": "\"Şimdi bakman gerekenler\": kim/ne + ikonlu durum cümlesi + tek tıkla çözüm (`action` yuvası); sayaç satırlardan türer",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "attention-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/attention-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "audit-log",
       "type": "registry:ui",
       "title": "Denetim Kaydı",
@@ -440,8 +466,9 @@
       "name": "bar-list",
       "type": "registry:ui",
       "title": "Çubuk Listesi",
-      "description": "Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu",
+      "description": "Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu; isteğe bağlı sıra no, logo, ikinci ölçü (pay) ve işaretli değişim (ok + \"artış/düşüş\")",
       "dependencies": [
+        "lucide-react@^1.51.0",
         "motion@^13.5.1"
       ],
       "registryDependencies": [
@@ -1033,6 +1060,33 @@
       ]
     },
     {
+      "name": "contact-list",
+      "type": "registry:ui",
+      "title": "İletişim Listesi",
+      "description": "Telefon, e-posta, adres, web: tür etiketi (\"İş\", \"Kişisel\") + kopyala; müşteri kartı, tedarikçi profili",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/copy-button.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "contact-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/contact-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "context-menu",
       "type": "registry:ui",
       "title": "Bağlam Menüsü",
@@ -1242,6 +1296,29 @@
       "files": [
         {
           "path": "snippets/ui/date-range-presets.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "detail-panel",
+      "type": "registry:ui",
+      "title": "Ayrıntı Paneli",
+      "description": "Listenin yanında ana-ayrıntı yüzeyi: başlık (ikon, ad, alt satır, eylem) + başlıklı bölümler (`DetailSection`: sayaç, \"Tümünü Gör\"); içerik serbest",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "detail-panel",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/detail-panel.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2138,6 +2215,29 @@
       ]
     },
     {
+      "name": "key-value-list",
+      "type": "registry:ui",
+      "title": "Anahtar Değer Listesi",
+      "description": "Bir kaydın nötr alan listesi (kaynak, oluşturan, bakiye): etiket solda değer sağda, satır sonu eylem yuvası (kopyala, düzenle), değer tonu, `stacked` düzen dar yan panel için",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "key-value-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/key-value-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "lever-card",
       "type": "registry:ui",
       "title": "Kaldıraç Kartı",
@@ -2332,6 +2432,29 @@
       "files": [
         {
           "path": "snippets/ui/meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "money",
+      "type": "registry:ui",
+      "title": "Para Değeri",
+      "description": "Parasal tutar: tam kısım güçlü, ondalık ayracı + kesir sönük (\"54.590**,00**\"); fatura, bakiye, tahmin kartı",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "money",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/money.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3667,6 +3790,32 @@
       ]
     },
     {
+      "name": "stamp",
+      "type": "registry:ui",
+      "title": "Damga",
+      "description": "Kararın damgası: \"Onaylandı\", \"Ödendi\", \"İptal\" hafif eğik çift çerçeveli; tek kaydın ayrıntı ekranında",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Geri Bildirim"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "stamp",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stamp.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "stat",
       "type": "registry:ui",
       "title": "İstatistik",
@@ -3864,7 +4013,7 @@
       "name": "tabs",
       "type": "registry:ui",
       "title": "Sekmeler",
-      "description": "`Tabs`: sayfa içi · `TabLinks`: ayrı adresler",
+      "description": "`Tabs`: sayfa içi · `TabLinks`: ayrı adresler; etiket yanında isteğe bağlı sayaç (\"Tümü 48\")",
       "dependencies": [
         "motion@^13.5.1"
       ],
@@ -4490,6 +4639,33 @@
       "files": [
         {
           "path": "snippets/ui/week-calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "workspace-switcher",
+      "type": "registry:ui",
+      "title": "Çalışma Alanı Değiştirici",
+      "description": "Kenar çubuğu tepesinde hesap/şirket/çalışma alanı değiştirici: logo karosu + ad + alt satır + çift ok; menü radyo listesi + `footer`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/dropdown-menu.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "workspace-switcher",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/workspace-switcher.tsx",
           "type": "registry:ui"
         }
       ]

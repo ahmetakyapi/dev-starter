@@ -7,6 +7,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Yönetim panosu turu: yedi yeni bileşen — 2026-11-22
+
+- Yeni: `money` (ondalık sönük tutar), `key-value-list`, `contact-list`
+  (tür etiketi + kopyala, güvenli `tel:`/`mailto:`/`https:` üretimi), `stamp`
+  (karar damgası), `attention-list`, `workspace-switcher`, `detail-panel`
+  (+ `DetailSection`)
+- İyileştirme: `tabs` etiket yanında sayaç (`count`), `bar-list` sıra no,
+  logo, ikinci ölçü ve işaretli değişim (`rank`, `leading`, `meta`, `delta`)
+- Kayıt, shadcn öğeleri, paket kiti ve README görselleri yeniden üretildi;
+  hikayeler `yeni-p/` altında (play + a11y)
+
 ### Tasarım yönü sistemi — 2026-11-21
 
 - `knowledge/design-directions.md`: on tasarım yönü kataloğu + seçim matrisi;

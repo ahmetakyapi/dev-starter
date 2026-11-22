@@ -33,7 +33,9 @@ import { cn } from '@/lib/utils'
  * Hareketi azaltan kullanıcıda karo kaymaz (`MotionConfig reducedMotion`).
  */
 
-export type TabItem = { value: string; label: ReactNode; panel: ReactNode; disabled?: boolean }
+/** `count`: etiketin yanında sönük sayaç ("Tümü 48", "Riskli 3"). Etiketle aynı
+ *  punto ve renkte (AA etikete bağlı), ekran okuyucu "Tümü 48" diye okur. */
+export type TabItem = { value: string; label: ReactNode; panel: ReactNode; disabled?: boolean; count?: ReactNode }
 
 type TabsVariant = 'well' | 'underline'
 
@@ -67,6 +69,18 @@ function Thumb({ layoutId }: { layoutId: string }) {
       aria-hidden
       className="absolute inset-0 rounded-sm bg-overlay shadow-raised"
     />
+  )
+}
+
+/** Sekme sayacı: boşlukla ayrılmış düz metin, `font-normal` ile etiketten ayrışır. */
+function Count({ value }: { value: ReactNode }) {
+  if (value === undefined || value === null || value === false) return null
+  // Gerçek boşluk metni: erişilebilir ad "Riskli 3" olur ("Riskli3" değil).
+  return (
+    <>
+      {" "}
+      <span className="ms-0.5 font-normal tabular-nums">{value}</span>
+    </>
   )
 }
 
@@ -138,7 +152,10 @@ export function Tabs({
                 className={cn(TAB[variant], selected && TAB_ACTIVE[variant])}
               >
                 {selected && variant === 'well' ? <Thumb layoutId={`${id}-thumb`} /> : null}
-                <span className="relative">{item.label}</span>
+                <span className="relative">
+                  {item.label}
+                  <Count value={item.count} />
+                </span>
               </button>
             )
           })}
@@ -162,7 +179,7 @@ export function Tabs({
   )
 }
 
-export type TabLink = { href: string; label: ReactNode }
+export type TabLink = { href: string; label: ReactNode; count?: ReactNode }
 
 type TabLinksProps = {
   items: readonly TabLink[]
@@ -189,7 +206,10 @@ export function TabLinks({ items, current, variant = 'well', className, ...props
               className={cn(TAB[variant], selected && TAB_ACTIVE[variant])}
             >
               {selected && variant === 'well' ? <Thumb layoutId={`${id}-thumb`} /> : null}
-              <span className="relative">{item.label}</span>
+              <span className="relative">
+                {item.label}
+                <Count value={item.count} />
+              </span>
             </Link>
           )
         })}

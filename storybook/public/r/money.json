@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "money",
+  "type": "registry:ui",
+  "title": "Para Değeri",
+  "description": "Parasal tutar: tam kısım güçlü, ondalık ayracı + kesir sönük (\"54.590**,00**\"); fatura, bakiye, tahmin kartı",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/money.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\n/**\n * Parasal değer: tam kısım güçlü, ondalık kısım SÖNÜK (\"₺54.590,00\" → \",00\"\n * gri). Fatura, bakiye, tahmin kartı gibi büyük ve çok sayıda tutarın yan\n * yana durduğu ekranlarda göz önce kuruşa değil liraya takılır; ondalık\n * sessiz kalınca sütun hızlı taranır. Brick ve Paymie müşteri/analiz\n * ekranlarından alındı (yapı; kod, ad, tutar alınmadı).\n *\n * Biçimleme `Intl.NumberFormat.formatToParts` ile: ondalık ayracı ve\n * kesir hanesi dilin kendisinden gelir (tr-TR \"54.590,00\", en-US \"54,590.00\"),\n * elle bölünmez. Para simgesi ve binlik ayraç güçlü kalır; yalnız\n * ondalık ayracı + kesir sönük.\n *\n * ERİŞİLEBİLİRLİK: sönüklük süs. Görünen parçalar `aria-hidden`, ekran\n * okuyucuya tam biçimli tutar tek metin gider (\"54.590,00 ₺\"); parçalar\n * ayrı okunmaz. Kesir sönüğü `text-muted` değil `text-body` tonunda\n * (küçük puntoda muted AA altı kalıyor): fark kalınlıkla (`font-normal`)\n * ve tonla verilir.\n *\n * `tone`: tutarın RENGİ (\"danger\" gecikmiş bakiye). Renk tek işaret değil:\n * yanına \"Gecikmiş\" gibi bir etiket koymak çağıranın işi. Sayı yoksa ya da\n * sonsuzsa \"—\" (uydurma \"0,00\" yazılmaz). `fractionless`: tam sayıya\n * yuvarlanmış kartlarda kesri hiç yazma.\n *\n *   <Money value={54590} currency=\"TRY\" className=\"text-heading\" />\n *   <Money value={8352} currency=\"USD\" tone=\"danger\" locale=\"en-US\" />\n */\n\nconst TONE = { neutral: \"text-strong\", danger: \"text-danger\", success: \"text-success\" } as const;\n\nexport function Money({\n  value,\n  currency = \"TRY\",\n  locale = \"tr-TR\",\n  fractionless = false,\n  tone = \"neutral\",\n  className,\n}: {\n  value: number | null | undefined;\n  /** ISO 4217 kodu: \"TRY\", \"USD\", \"EUR\". */\n  currency?: string;\n  locale?: string;\n  fractionless?: boolean;\n  tone?: keyof typeof TONE;\n  className?: string;\n}) {\n  if (typeof value !== \"number\" || !Number.isFinite(value)) {\n    return (\n      <span className={cn(\"tabular-nums text-body\", className)}>\n        <span aria-hidden>—</span>\n        <span className=\"sr-only\">Tutar yok</span>\n      </span>\n    );\n  }\n\n  const formatter = new Intl.NumberFormat(locale, {\n    style: \"currency\",\n    currency,\n    minimumFractionDigits: fractionless ? 0 : 2,\n    maximumFractionDigits: fractionless ? 0 : 2,\n  });\n  const parts = formatter.formatToParts(value);\n  // Ondalık ayracı + kesir tek sönük öbek; aralarına başka parça girmez.\n  const muted = new Set([\"decimal\", \"fraction\"]);\n\n  return (\n    <span className={cn(\"font-semibold tracking-tight tabular-nums\", TONE[tone], className)}>\n      <span className=\"sr-only\">{formatter.format(value)}</span>\n      <span aria-hidden>\n        {parts.map((part, i) =>\n          muted.has(part.type) ? (\n            <span key={i} className=\"font-normal text-body\">\n              {part.value}\n            </span>\n          ) : (\n            part.value\n          ),\n        )}\n      </span>\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Veri"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "money",
+    "palettes": false
+  }
+}

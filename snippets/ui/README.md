@@ -110,6 +110,11 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `audit-log.tsx` | Hesabın/sistemin değişiklik geçmişi: kim, ne zaman, neyi, ÖNCE → SONRA; reddedilen deneme "Reddedildi" metniyle; süzgeç yuvası | lucide | Hayır | `ol` + ad, her zaman `<time dateTime>`, fark satırında görünmez "Önce/Sonra" etiketi, eski değer üstü çizili ama okunur; zaman çağıranda (hidrasyon) |
 | `value-diff.tsx` | Aynı kimliğin iki kaynaktaki yazılışı alt alta, FARKLI grup vurgulu (fatura vergi no ↔ doğrulanmış kayıt, IBAN, seri no); grup sayısı satırlardan türer | yok | Hayır | `dl > div > dt + dd`; farklı grup kalın altı çizgi + "(farklı)"; blok başında `sr-only` özet cümlesi ("Farklı grup 3: …"); renk tek işaret değil |
 | `factor-list.tsx` | Bir kaydın NEDEN öne alındığı: başlıkta genel önem (Düşük–Kritik, dört çubuklu sinyal), altında etiket solda değer sağda satırları; ikon karosu yok | yok | Hayır | Önem metinle ("Önem: Kritik"), çubuklar `aria-hidden`; `dl > div > dt + dd`; `headingLevel` |
+| `key-value-list.tsx` | Bir kaydın nötr alan listesi (kaynak, oluşturan, bakiye): etiket solda değer sağda, satır sonu eylem yuvası (kopyala, düzenle), değer tonu, `stacked` düzen dar yan panel için | yok | Hayır | `dl > div > dt + dd`; ton yalnız değerin rengi, durum metinde; boş liste hiçbir şey çizmez |
+| `money.tsx` | Parasal tutar: tam kısım güçlü, ondalık ayracı + kesir sönük ("54.590**,00**"); fatura, bakiye, tahmin kartı | yok | Hayır | Tam biçimli tutar tek `sr-only` metin, görünen parçalar `aria-hidden`; sayı yoksa "—" ve "Tutar yok" |
+| `contact-list.tsx` | Telefon, e-posta, adres, web: tür etiketi ("İş", "Kişisel") + kopyala; müşteri kartı, tedarikçi profili | lucide, `copy-button` | Evet | Bağlantı türden üretilir (`tel:`, `mailto:`, `https:`), güvensiz şema düz metin kalır; "Telefon, İş: …" okunur |
+| `attention-list.tsx` | "Şimdi bakman gerekenler": kim/ne + ikonlu durum cümlesi + tek tıkla çözüm (`action` yuvası); sayaç satırlardan türer | lucide | Hayır | Renk tek işaret değil: ikon + durum metni; `emptyText` yalnız veri geldiyse; boş liste hiçbir şey çizmez |
+| `detail-panel.tsx` | Listenin yanında ana-ayrıntı yüzeyi: başlık (ikon, ad, alt satır, eylem) + başlıklı bölümler (`DetailSection`: sayaç, "Tümünü Gör"); içerik serbest | yok | Hayır | `aside` + başlığıyla adlı, her bölge `section`; seçilmemişse `emptyText` |
 
 ### Form ve Gezinme
 
@@ -122,7 +127,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `radio-group.tsx` | 2-6 görünür seçenek | yerel giriş | Hayır | `fieldset` + `legend`, tarayıcı ok gezinmesi; iç nokta 0.4'ten büyür, 0'dan değil |
 | `select.tsx` | 5-15 seçenek, dar yer | Base UI | Evet | Listbox, gizli yerel giriş, etiket bağı |
 | `combobox.tsx` | Çok seçenek, aranır | Base UI | Evet | `locale="tr-TR"` filtre, `aria-activedescendant` |
-| `tabs.tsx` | `Tabs`: sayfa içi · `TabLinks`: ayrı adresler | `next/link` | Evet | WAI-ARIA tabs; bağlantı sekmesi `aria-current`; kayan karo hareket azaltmada yerinde |
+| `tabs.tsx` | `Tabs`: sayfa içi · `TabLinks`: ayrı adresler; etiket yanında isteğe bağlı sayaç ("Tümü 48") | `next/link` | Evet | WAI-ARIA tabs; bağlantı sekmesi `aria-current`; kayan karo hareket azaltmada yerinde |
 | `accordion.tsx` | SSS, katlanır bölüm | yerel `<details>` | Evet* | Ctrl+F kapalı içeriği bulur; açılınca bastığın yerde kalır |
 | `breadcrumb.tsx` | Konum çubuğu | `next/link` | Hayır | Son öğe `aria-current`; ikonlar `aria-hidden`; `iconOnly`de ad gizli metin |
 | `badge.tsx` | Durum/kategori etiketi | yok | Hayır | Metin asıl işaret, renk hızlandırır |
@@ -143,6 +148,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `active-filters.tsx` | Listenin üstünde etkin süzgeç çipleri + "Temizle" (3+ süzgeçli liste): neden kısaldığı gözün önünde; süzgeç yoksa hiçbir şey çizmez | `chip` | Hayır | `role="group"` + ad; her çipin × butonu "Kaldır: Durum, Geciken"; odağı kaldırınca çağıran taşır; sonuç özeti canlı bölge değil |
 | `saved-views.tsx` | Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, "Görünümü Kaydet" satır içi ad alanı | `chip`, lucide | Evet | Grup + ad; görünüm `aria-pressed` + ✓; kayıt adı boş/uzun/yinelenen olamaz (`role="alert"`, `aria-invalid`); Enter kaydeder, Esc vazgeçer; odak butonye döner |
 | `setup-card.tsx` | Kenar çubuğu dibinde kurulum çağrısı: başlık, tek cümle, ilerleme halkası (3 / 4), Atla ve Sonraki | lucide | Evet | Halka `role="progressbar"` + "Adım 3, toplam 4", sayı da yazılı; butonlar 44/32 px; `headingLevel`; hareket azaltmada halka geçişsiz |
+| `workspace-switcher.tsx` | Kenar çubuğu tepesinde hesap/şirket/çalışma alanı değiştirici: logo karosu + ad + alt satır + çift ok; menü radyo listesi + `footer` | `dropdown-menu`, lucide | Evet | Base UI Menu: ok tuşları, Escape tetikleyiciye döner; tek alan varsa tıklanamaz düz kart; `collapsed` yalnız logo |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -156,6 +162,7 @@ JavaScript'siz de çalışır.
 | `banner-alert.tsx` | Sayfa içi durum satırı, 4 ton | lucide, `close-button` | Hayır | Wash zemin + ikon + gizli "Hata:" öneki; yalnız `announce` ile `alert`/`status`; tek kenar şeridi yok |
 | `divider.tsx` | Yatay / dikey / etiketli ("ya da") ayırıcı | yok | Hayır | `<hr>`; dikeyde `aria-orientation`; etiketlide kap `separator` değil |
 | `toast.tsx` | Eylem sonucu bildirimi: `<Toaster />` + `toast.success/error/warning/info/undo/promise` | Base UI, `spinner`, lucide | Evet | Bölge polite, hata `role="alert"` ve kendiliğinden kapanmaz; fare üstünde ya da odakta süre durur; F6 ile bölgeye geçilir; hareket azaltmada yalnız solar |
+| `stamp.tsx` | Kararın damgası: "Onaylandı", "Ödendi", "İptal" hafif eğik çift çerçeveli; tek kaydın ayrıntı ekranında | motion | Evet | Bilgi metinde, eğim ve renk süs; Türkçe büyük harf (`tr-TR`); vurma animasyonu hareket azaltmada yok |
 | `status-list.tsx` | Sistem durumu: bileşen listesi, türetilmiş genel durum, son olay satırı | `badge` | Hayır | `ul`; durum renk + metin; canlı bölge yok (statik) |
 | `insight-callout.tsx` | Bir kaydın yanında kısa öneri/içgörü: tür etiketi, başlık, 2-3 cümle, en çok iki eylem; `insight`/`warning`/`success`. `banner-alert` bölümü, bu kutu kaydı anlatır | lucide | Hayır | `aside` + başlıkla ad (`headingLevel`); tür etiketi metin (renk tek işaret değil); tek kenar şeridi yok; model iddiası taşımaz |
 | `policy-checks.tsx` | Talebin onaydan önce geçtiği otomatik denetimler: satır başına geçti/uyarı/başarısız + sağda kısa gerekçe; özet satırı kontrollerden türer | lucide | Hayır | `ul` + `role="list"`; durum ikon şekli + "Geçti:/Uyarı:/Başarısız:" `sr-only` öneki, renk tek işaret değil; `headingLevel` |
@@ -180,7 +187,7 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 | `heatmap.tsx` | Günlük bir sayının haftalar × günler ritmi, 5 basamak, Az ↔ Çok | motion | Evet | Aylık toplamlar `sr-only` tabloda; ızgara odaklanır, oklarla gün gün, canlı bölge |
 | `radar-chart.tsx` | 5-8 ölçütte 1-2 profil | `chart-card`, motion | Evet | `sr-only` tablo (ölçüt × seri); noktaların `title`ı |
 | `sankey-chart.tsx` | İki katmanlı akış (kaynak → hedef), sağda "Ad · %22", düğüm/akış yalıtma | `chart-card`, motion | Evet | Akışlar `sr-only` tabloda; etiketler `aria-pressed` buton; seçili akış canlı bölgede |
-| `bar-list.tsx` | Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu | `chart-card`, motion, `next/link` | Evet | `ol` + ad; dolgu `aria-hidden`; bağlantılı satır 44/36 px |
+| `bar-list.tsx` | Uzun adlı 3-10 kalem sıralaması, satır arkasında dolgu; isteğe bağlı sıra no, logo, ikinci ölçü (pay) ve işaretli değişim (ok + "artış/düşüş") | `chart-card`, motion, lucide, `next/link` | Evet | `ol` + ad; dolgu `aria-hidden`; bağlantılı satır 44/36 px |
 | `line-chart.tsx` | Sıralı eksende 2-5 seriyi kıyaslamak; kesik tahmin, hedef çizgisi, lejant filtre | `chart-card`, `area-chart`, motion | Evet | Veri `sr-only` tabloda; lejant `aria-pressed` butonlar, son seri gizlenemez; ←→ Home End ile gezilir, seçim canlı bölgede |
 | `combo-chart.tsx` | Birimi farklı iki ölçü: sütun hacmi (sol eksen) ve çizgi oranı (sağ eksen) | `chart-card`, `area-chart`, motion | Evet | Veri `sr-only` tabloda; eksen anahtarı biçimle de ayırt eder (kare / noktalı çizgi); ←→ Home End |
 | `scatter-chart.tsx` | İki ölçünün ilişkisi; nokta boyu üçüncü ölçü (√ alan), renk kategori | `chart-card`, `line-chart`, motion | Evet | Veri `sr-only` tabloda; klavyede X sırasıyla gezilir; kategori filtresi `aria-pressed` |

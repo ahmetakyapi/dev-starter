@@ -67,6 +67,7 @@ import { FilterSheet, type FilterGroup, type FilterValue } from "@/components/ui
 import { RecordList } from "@/components/ui/record-list";
 import { Sheet } from "@/components/ui/sheet";
 import { CloseTicketDialog, TicketPriorityFactors } from "./_ek-n";
+import { TicketCustomerPanel } from "./_ek-p";
 import { Timeline } from "@/components/ui/timeline";
 import { Tabs } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
@@ -980,6 +981,8 @@ function TicketDetail({ t, onAssign }: { t: Ticket; onAssign: (id: string) => vo
       </figure>
 
       <TicketPriorityFactors t={t} />
+
+      <TicketCustomerPanel t={t} />
 
       <section aria-labelledby="talep-bilgi">
         <PanelLabel id="talep-bilgi">Talep Bilgileri</PanelLabel>

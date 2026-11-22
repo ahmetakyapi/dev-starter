@@ -135,3 +135,25 @@ export const AllVariants: Story = {
     </Gallery>
   ),
 };
+
+/** Sayaçlı sekmeler: "Tümü 48", "Riskli 3" (Fixora, Brick). */
+export const WithCounts: Story = {
+  name: "Sayaçlı",
+  args: {
+    "aria-label": "Mülk Durumu",
+    variant: "well",
+    items: [
+      { value: "tumu", label: "Tümü", count: 48, panel: panel("48 mülk.") },
+      { value: "riskli", label: "Riskli", count: 3, panel: panel("3 mülkte arıza riski var.") },
+      { value: "izle", label: "İzlemede", count: 7, panel: panel("7 mülk izleniyor.") },
+    ],
+    defaultValue: "tumu",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Sayaç etiketin yanında düz metin: "Riskli 3" diye okunur.
+    await expect(canvas.getByRole("tab", { name: "Riskli 3" })).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("tab", { name: "Riskli 3" }));
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("arıza riski");
+  },
+};

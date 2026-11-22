@@ -49,6 +49,7 @@ import { DelayCard } from "./_gecikme";
 import { GoalTicksCard, TicketStackCard, UpcomingCard } from "./_pano-ek";
 import { RegionCard } from "./_ek-l";
 import { OrderImpactCard, PanoOneriCard } from "./_ek-n";
+import { DelayedAttentionCard } from "./_ek-p";
 import { CARD, IconTile, PageBar, SectionTitle, href, useApp } from "./_ui";
 import { cn } from "@/lib/utils";
 
@@ -411,6 +412,7 @@ export function PanoPage() {
             <RegionCard s={s} className="lg:col-span-3" />
             <PanoOneriCard s={s} className="lg:col-span-3" />
             <OrderImpactCard s={s} className="lg:col-span-3" />
+            <DelayedAttentionCard className="lg:col-span-6" />
 
             <ChartCard
               id="pano-asama"
