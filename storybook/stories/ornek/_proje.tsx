@@ -2,6 +2,7 @@
 
 import { BarChart3, ChevronLeft, ChevronRight, Flag, Home, Inbox, ListTodo, Plus, Settings, Share2, Target, Users } from "lucide-react";
 import { useState } from "react";
+import { AttentionList } from "@/components/ui/attention-list";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
@@ -187,9 +188,9 @@ export function ProjeGorunumuPage() {
             className="w-max"
             items={[
               { href: "#gorunum", label: "Görünüm" },
-              { href: "#pano", label: "Pano 19" },
+              { href: "#pano", label: "Pano", count: 19 },
               { href: "#zaman", label: "Zaman çizelgesi" },
-              { href: "#liste", label: "Liste 50" },
+              { href: "#liste", label: "Liste", count: 50 },
               { href: "#yuk", label: "İş yükü" },
             ]}
           />
@@ -249,6 +250,22 @@ export function ProjeGorunumuPage() {
             </div>
           </div>
         </Panel>
+
+        <section aria-label="Dikkat gerekenler" className={cn(CARD, "px-4 py-4 sm:px-5")}>
+          <AttentionList
+            title="Dikkat gerekenler"
+            headingLevel={2}
+            emptyText="Tahmini aşan ya da engelli iş yok."
+            items={TASKS.filter((t) => t.spent > t.est || t.status.startsWith("Engelli")).map((t) => ({
+              id: t.id,
+              title: t.name,
+              subject: t.key,
+              leading: person(t.owner),
+              tone: t.tone === "danger" ? ("danger" as const) : ("warning" as const),
+              detail: `${t.status} · ${t.why}`,
+            }))}
+          />
+        </section>
 
         <Panel id="isler" title="Yoldaki açık işler" note="Önce kritik olanlar. Tahmine karşı harcanan, her çentik bir iş günü." bodyClassName="px-0 sm:px-0 pt-2 pb-0">
           <DataTable caption="Yoldaki açık işler" columns={columns} rows={TASKS} rowKey={(t) => t.id} on="page" stickyFirst={false} minWidth="60rem" className="max-md:hidden" />

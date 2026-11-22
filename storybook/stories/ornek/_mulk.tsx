@@ -7,6 +7,9 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { ChoiceChips } from "@/components/ui/choice-chips";
+import { ContactList } from "@/components/ui/contact-list";
+import { DetailSection } from "@/components/ui/detail-panel";
+import { KeyValueList } from "@/components/ui/key-value-list";
 import { Dialog } from "@/components/ui/dialog";
 import { InsightCallout } from "@/components/ui/insight-callout";
 import { Input } from "@/components/ui/input";
@@ -364,46 +367,36 @@ function PropertyDetail({ p }: { p: Property }) {
           )}
         </>
       )}
-      <section aria-labelledby="mulk-isemri">
-        <h3 id="mulk-isemri" className="flex items-baseline justify-between text-base font-semibold text-strong">
-          <span>
-            Açık İş Emirleri <span className="font-normal text-muted tabular-nums">{p.orders}</span>
-          </span>
-        </h3>
+      <DetailSection title="Açık İş Emirleri" count={p.orders}>
         {p.orders === 0 ? (
           <p className="mt-2 text-small text-muted">Açık iş emri yok.</p>
         ) : (
-          <ul role="list" className="mt-1.5 divide-y divide-line-soft">
-            {ORDER_POOL.slice(0, Math.min(3, p.orders)).map((o, i) => (
-              <li key={o} className="flex items-center justify-between gap-3 py-2 text-base">
-                <span className="min-w-0 truncate text-strong">{o}</span>
-                <span className="shrink-0 text-small text-muted">{ORDER_STATE[(i + idx) % 3]}</span>
-              </li>
-            ))}
-          </ul>
+          <KeyValueList
+            items={ORDER_POOL.slice(0, Math.min(3, p.orders)).map((o, i) => ({
+              label: o,
+              value: <span className="text-small font-normal text-body">{ORDER_STATE[(i + idx) % 3]}</span>,
+            }))}
+          />
         )}
-      </section>
+      </DetailSection>
       {p.health !== null ? (
-        <section aria-labelledby="mulk-varlik">
-          <h3 id="mulk-varlik" className="text-base font-semibold text-strong">
-            Kilit Varlıklar
-          </h3>
-          <ul role="list" className="mt-1.5 divide-y divide-line-soft">
-            {ASSET_POOL.map((a, i) => {
+        <DetailSection title="Kilit Varlıklar">
+          <KeyValueList
+            items={ASSET_POOL.map((a, i) => {
               const age = a.age + Math.round((100 - p.health!) / 12) - 3 + (i === 1 ? -3 : 0);
               const worn = age > 12;
-              return (
-                <li key={a.name} className="flex items-center justify-between gap-3 py-2 text-base">
-                  <span className="min-w-0 truncate text-strong">{a.name}</span>
-                  <span className="flex shrink-0 items-center gap-2">
-                    <span className="text-small text-muted tabular-nums">{Math.max(1, age)} yıl</span>
+              return {
+                label: a.name,
+                value: (
+                  <span className="flex items-center gap-2">
+                    <span className="text-small font-normal text-body tabular-nums">{Math.max(1, age)} yıl</span>
                     <Badge tone={age > 18 ? "danger" : worn ? "warning" : "success"}>{age > 18 ? "Yakında Değiştir" : worn ? "İncele" : "İyi"}</Badge>
                   </span>
-                </li>
-              );
+                ),
+              };
             })}
-          </ul>
-        </section>
+          />
+        </DetailSection>
       ) : null}
     </Panel>
   );
@@ -619,23 +612,23 @@ function VendorDetail({ v }: { v: Vendor }) {
         <h3 className="text-base font-semibold text-strong">Son 8 Hafta Ort. Yanıt</h3>
         <TrackBarChart title="Haftalık Ortalama Yanıt" data={weeks} threshold={{ value: 4, label: "Hedef" }} format={(n) => `${n.toLocaleString("tr-TR")} sa`} height="h-32" className="mt-3" />
       </div>
-      <section aria-labelledby="satici-isler">
-        <h3 id="satici-isler" className="text-base font-semibold text-strong">
-          Son İşler
-        </h3>
-        <ul role="list" className="mt-1.5 divide-y divide-line-soft">
-          {[
+      <DetailSection title="İletişim">
+        <ContactList
+          items={[
+            { kind: "phone", label: "Ofis", value: `0 212 555 01 ${String(10 + (parseInt(v.id.slice(1), 10) || 0) * 7).padStart(2, "0")}` },
+            { kind: "email", value: `destek@${v.id}.example` },
+          ]}
+        />
+      </DetailSection>
+      <DetailSection title="Son İşler">
+        <KeyValueList
+          items={[
             ["Kompresör Gürültüsü, Limanlı Loftlar", "Sürüyor"],
             ["Filtre Değişimi, Rıhtım Hanı", "Planlandı"],
             ["Termostat Arızası, Dokuma Sıraevleri", "Tamamlandı"],
-          ].map(([t, s]) => (
-            <li key={t} className="flex items-center justify-between gap-3 py-2 text-base">
-              <span className="min-w-0 truncate text-strong">{t}</span>
-              <span className="shrink-0 text-small text-muted">{s}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
+          ].map(([t, st]) => ({ label: t, value: <span className="text-small font-normal text-body">{st}</span> }))}
+        />
+      </DetailSection>
     </Panel>
   );
 }

@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { FactorList } from "@/components/ui/factor-list";
 import { InsightCallout } from "@/components/ui/insight-callout";
+import { KeyValueList } from "@/components/ui/key-value-list";
 import { OptionCards } from "@/components/ui/option-cards";
+import { Stamp } from "@/components/ui/stamp";
 import { toast } from "@/components/ui/toast";
 import { ValueDiff } from "@/components/ui/value-diff";
 import { cn } from "@/lib/utils";
@@ -135,6 +137,7 @@ export function IstisnaCozumu({ initialPhase = "acik" }: { initialPhase?: Phase 
             </h1>
             <p className="mt-1 text-base text-muted">Fatura F-2026-0481 · Mavi Liman Ticaret · ₺48.250</p>
           </div>
+          {phase === "kabul" ? <Stamp tone="success" label="Kabul Edildi" size="sm" /> : null}
         </header>
 
         <dl className={cn(CARD, "grid grid-cols-2 divide-line-soft max-lg:[&>*:nth-child(n+3)]:border-t max-lg:[&>*:nth-child(2n)]:border-s lg:grid-cols-4 lg:[&>*+*]:border-s [&>*]:border-line-soft")}>
@@ -227,20 +230,14 @@ export function IstisnaCozumu({ initialPhase = "acik" }: { initialPhase?: Phase 
               </h2>
               <p className="mt-2 text-base font-semibold text-strong">Mavi Liman Ticaret</p>
               <p className="text-small text-muted">Lojistik · 2022'den beri tedarikçi</p>
-              <dl className="mt-3 grid gap-2 text-small">
-                <div className="flex justify-between gap-3">
-                  <dt className="text-muted">Toplam Fatura</dt>
-                  <dd className="font-medium text-strong tabular-nums">14</dd>
-                </div>
-                <div className="flex justify-between gap-3">
-                  <dt className="text-muted">Açık İstisna</dt>
-                  <dd className="font-medium text-strong tabular-nums">{phase === "kabul" ? 0 : 1}</dd>
-                </div>
-                <div className="flex justify-between gap-3">
-                  <dt className="text-muted">Ort. Yanıt Süresi</dt>
-                  <dd className="font-medium text-strong">1,8 gün</dd>
-                </div>
-              </dl>
+              <KeyValueList
+                className="mt-2"
+                items={[
+                  { label: "Toplam Fatura", value: "14" },
+                  { label: "Açık İstisna", value: phase === "kabul" ? "0" : "1" },
+                  { label: "Ort. Yanıt Süresi", value: "1,8 gün" },
+                ]}
+              />
             </section>
           </aside>
         </div>
