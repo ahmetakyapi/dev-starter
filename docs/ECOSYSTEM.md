@@ -33,8 +33,9 @@ dev-starter/
 │   ├── bootstrap.sh           → Komut/agent/kural/skill symlink'leri + Read(~/dev-starter/**) izni + taste-skill
 │   └── skills/                → Depoda taşınan skill'ler
 │       ├── motion-design/     → UI hareketi: zamanlama, easing, koreografi (LottieFiles, MIT)
-│       └── motion-film/       → Kodla hareket filmi: yönetmenlik, kamera, mürekkep, ses, MP4
+│       ├── motion-film/       → Kodla hareket filmi: yönetmenlik, kamera, mürekkep, ses, MP4
 │                                (MP4 filmler: cinecode, bootstrap sabit commit'le kurar)
+│       └── reference-to-game/ → Referanstan oynanabilir oyun: stil kilidi, sözleşmeler, r2g CLI (gokayfem, MIT)
 │
 ├── packages/@ahmet/
 │   ├── theme/      → Tailwind v4 theme.css (sistem + palet + @theme inline köprüsü) + tokens.ts aynası

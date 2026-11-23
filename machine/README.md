@@ -10,7 +10,7 @@ yarım saatte aynı çalışma düzenine dönmek ve iki makine arasında kuralla
 | `CLAUDE.md` | Global kurallar; `~/.claude/CLAUDE.md` buna symlink'lenir. **Tek kaynak burası**. Her projede, her oturumda yüklenir: ~200 satır tavanı, yalnız her projede gereken kural |
 | `rules/` | Yol kapsamlı global kurallar (`paths:` frontmatter'ı); `~/.claude/rules/dev-starter/` buna symlink'lenir. Eşleşen dosya okununca yüklenir (React/Next, veri/env, görsel dil, tasarım skill'leri, canlı önizleme) |
 | `bootstrap.sh` | Kurulum script'i; tekrar çalıştırmak güvenli |
-| `skills/` | Depoda taşınan skill'ler (bugün: `motion-design`, `motion-film`) |
+| `skills/` | Depoda taşınan skill'ler (bugün: `motion-design`, `motion-film`, `reference-to-game`) |
 
 > Global `CLAUDE.md`yi düzenlerken `~/.claude/CLAUDE.md`yi değil bu dosyayı
 > düzenle (symlink zaten buraya gider) ve depoya commit'le. Diğer makine

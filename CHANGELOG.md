@@ -7,6 +7,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### reference-to-game skill'i — 2026-11-23
+
+- `machine/skills/reference-to-game/`: referanstan (görsel, video, çizim, fikir) oynanabilir oyun;
+  gokayfem/reference-to-game'den yalnız skill (MIT, sabit SHA `UPSTREAM.md`te), örnekler alınmadı
+
 ### Yönetim panosu turu: yedi yeni bileşen — 2026-11-22
 
 - Yeni: `money` (ondalık sönük tutar), `key-value-list`, `contact-list`

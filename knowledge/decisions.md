@@ -1636,3 +1636,16 @@ parçası olmalı (WCAG 2.5.3): `workspace-switcher` açıkken adı içerikten a
 `aria-label` yalnız daraltılmışta. (3) Sayaç ile etiket arasına gerçek boşluk
 metni koy; yalnız `margin` erişilebilir adı "Riskli3" yapar.
 
+## reference-to-game Skill'i (2026-11-23)
+
+**Karar:** gokayfem/reference-to-game'in yalnız `skills/reference-to-game/` klasörü `machine/skills/` altına
+olduğu gibi alındı; `bootstrap.sh` döngüsü onu `~/.claude/skills/`e bağlar. Değiştirilmedi, SHA `UPSTREAM.md`te.
+
+**Neden:** ekosistemde görselden WEB ARAYÜZÜ yapan yollar var (`/reference`, `/clone-website`), görselden
+OYNANABİLİR oyun yapan yok. Skill kendi içinde tam (kılavuzlar, `r2g` CLI, Three.js çalışma zamanı yardımcıları)
+ve 128 KB.
+
+**Alınmayan:** örnek oyunlar (~190 MB) ve galeri: depoyu şişirir, sanat varlıkları MIT dışı. Betikler gözden
+geçirildi: ağa yalnız `FAL_KEY` ile fal kuyruğuna çıkar, `ffprobe`/`ffmpeg` liste argümanıyla çağrılır.
+Ayrı komut (`/game`) eklenmedi: skill kendi tetikleyicisiyle çağrılır.
+

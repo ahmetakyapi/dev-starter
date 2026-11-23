@@ -31,7 +31,7 @@ gerekçe: `knowledge/decisions.md` → "Bağlam Dosyaları".
 
 ```text
 guides/      12 rehber, sırayla okunur (00 kimlik → 08 yayına çıkış → 11 VPS/e-posta/push)
-machine/     global CLAUDE.md + rules/ + bootstrap.sh + depoda taşınan skill'ler (motion-design, motion-film)
+machine/     global CLAUDE.md + rules/ + bootstrap.sh + depoda taşınan skill'ler (motion-design, motion-film, reference-to-game)
 packages/    @ahmet/theme (Tailwind v4 theme.css + tokens.ts) · @ahmet/ui (snippets/ui'dan üretilen kit)
 knowledge/   themes/ · decisions · mistakes (indeksli) · patterns · tech-radar · design-references · references · live-projects-audit · design-directions + direction-log (proje başına yön seçimi)
 agents/      12 rol tanımı + AGENT_PROTOCOL.md (haberleşme, orkestrasyon, Görev Tanımı)
