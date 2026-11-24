@@ -1649,3 +1649,18 @@ ve 128 KB.
 geçirildi: ağa yalnız `FAL_KEY` ile fal kuyruğuna çıkar, `ffprobe`/`ffmpeg` liste argümanıyla çağrılır.
 Ayrı komut (`/game`) eklenmedi: skill kendi tetikleyicisiyle çağrılır.
 
+## Alt Bilgide Kelime İşareti Yok (2026-11-24)
+
+**Karar:** Alt bilginin en altında kabı dolduran dev site adı (kelime
+işareti) ve üstünde büyük veda cümlesi ("Yolun Açık Olsun" tarzı kapanış)
+kullanılmaz. `landing` şablonundan kaldırıldı (`SiteFooter.tsx`,
+`landing.css` → `.wordmark*`); AI-slop tablosuna satır eklendi
+(`rules/design-tokens.md`).
+
+**Neden:** Ehliyet Kampı projesinde kullanıcı ikisini de açıkça reddetti.
+Ad zaten alt bilginin başında marka satırında okunuyor; ekran boyu tekrar
+bilgi taşımıyor, "şablondan çıkmış" görünüyor.
+
+**Yerine:** marka + kısa not, gruplanmış bağlantılar, telif satırı ve
+(varsa) imza kartı.
+

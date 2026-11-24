@@ -98,7 +98,7 @@ bentosu, her kartın üstünde o özelliği oynayan canlı demo) → Nasıl Çal
 (gri bant, kaydırmaya bağlı yapışkan ürün sahnesi) → Görüşler (tek büyük
 alıntı + kişi sekmeleri) → Fiyatlar (aylık/yıllık seçici, 2 plan + kurumsal
 satır) → SSS (tek kuyuda `<details>`) → Kapanış → alt bilgi (sütunlar +
-büyük kelime işareti). Her bölüm ayrı bir düzen ailesi; aynı aileyi ikinci
+telif satırı; dev kelime işareti yok). Her bölüm ayrı bir düzen ailesi; aynı aileyi ikinci
 kez kullanma. Ritim yoğun / ferah sırayla, vurgu koyu zemin değil TON farkı.
 
 - **Board dili:** kart gri kuyu (`bg-surface rounded-2xl`), içindeki parça

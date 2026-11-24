@@ -244,19 +244,6 @@
     }
   }
 
-  /* ── Alt bilgi kelime işareti ───────────────────────────────────────────
-     Site adı kabın genişliğini doldurur: punto ad uzunluğundan hesaplanır
-     (`--chars`, kap sorgusu birimi). Ad değişince kendiliğinden sığar. */
-  .wordmark-box {
-    container-type: inline-size;
-  }
-
-  .wordmark {
-    font-size: calc(100cqi / (var(--chars, 8) * 0.6));
-    line-height: 0.8;
-    letter-spacing: -0.055em;
-  }
-
   /* ── Hero zemini: R3F sahnesinin CSS karşılığı ──────────────────────────
      Her zaman çizilir. Sahne yalnızca masaüstünde, hareket serbestken bunun
      ÜSTÜNE biner; telefonda ve hareketi azaltanda tek görünen budur. */

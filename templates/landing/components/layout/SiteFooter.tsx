@@ -1,16 +1,14 @@
 import { Layers } from "lucide-react";
-import type { CSSProperties } from "react";
 import { footer } from "@/lib/content";
 import { SITE_NAME } from "@/lib/site";
 
 /*
  * Alt bilgi: düzenli sütunlar (marka + açıklama, sonra başlıklı bağlantı
- * grupları) ve en altta kabı dolduran büyük KELİME İŞARETİ.
+ * grupları) ve telif satırı.
  *
- * Kelime işareti süs: `aria-hidden`, ad zaten yukarıda okunuyor. Punto ad
- * uzunluğundan hesaplanır (`.wordmark`, app/landing.css), her ad sığar.
- * Renk kıl çizgisi tonu: imza gibi durur, metinle yarışmaz. Alt kenarından
- * hafifçe kırpılır; sayfa "bitti" der.
+ * Kabı dolduran dev KELİME İŞARETİ ve büyük veda cümlesi bilerek YOK
+ * (knowledge/decisions.md → "Alt Bilgide Kelime İşareti Yok", Kasım 2026):
+ * ad zaten yukarıda okunuyor; tekrar ekran boyu süs, şablon kokusu verir.
  */
 export function SiteFooter() {
   // Sayfa statik (`○`): yıl DERLEMEDE basılır, yılbaşından sonraki ilk
@@ -52,14 +50,6 @@ export function SiteFooter() {
       <p className="mx-auto mt-12 max-w-6xl px-4 text-small text-muted sm:px-6">
         © {year} {SITE_NAME}
       </p>
-      <div aria-hidden className="wordmark-box mx-auto mt-6 max-w-6xl overflow-clip px-4 sm:px-6">
-        <p
-          className="wordmark -mb-[0.12em] font-semibold whitespace-nowrap text-line-strong select-none"
-          style={{ "--chars": SITE_NAME.length } as CSSProperties}
-        >
-          {SITE_NAME}
-        </p>
-      </div>
     </footer>
   );
 }

@@ -172,6 +172,7 @@ VERİSİ olan dosya (renk seçici, onun vitrini) başında
 | `font-black` (900) | Slop başlığının imzası; tek ailede kontrastı ağırlık değil punto kurar | Üst sınır 800 ve sıkı tracking (Açılış Zili böyle kullanır); çoğu başlıkta `font-bold` yeter |
 | Kahraman başlığının üstünde yanıp sönen noktalı rozet | Her yapay zeka açılış sayfasında aynı | En fazla bir kısa künye, noktasız (`hero.eyebrow`) |
 | Ölü bağlantı (`href="#"`) | Hiçbir yere gitmez, klavyede başa zıplar | Gerçek adres, ya da `disabled` buton; menüde etkin sayfa `aria-current="page"` |
+| Alt bilgide kabı dolduran dev kelime işareti ya da büyük veda cümlesi ("Yolun Açık Olsun") | Ad zaten yukarıda okunuyor; ekran boyu tekrar şablon kokusu verir (Kasım 2026, Ehliyet Kampı geri bildirimi) | Marka + kısa not, gruplanmış bağlantılar, telif ve imza satırı |
 | `alert()` / `confirm()` | Tasarım dışı, mobilde kaba | Satır içi hata, `snippets/confirm.tsx`, `snippets/toast.tsx` |
 | Gökkuşağı degrade (`from-purple via-pink to-orange`) | Kimlik kuralı 5'i bozar | Tek aile, token'dan |
 | Lorem, "John Doe", "Acme", pazarlama dolgusu ("bir üst seviyeye", "seamless") | Ürün ne yaptığını söylemiyor | Gerçek taslak metin, `guides/05-components.md` § 7 |
