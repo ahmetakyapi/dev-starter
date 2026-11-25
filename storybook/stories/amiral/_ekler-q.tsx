@@ -47,7 +47,7 @@ export function TanitimQ() {
         </div>
       </Cell>
       <Cell file="section-heading" name="Bölüm Başlığı" note="Kesik çizgili mono künye, güçlü iddia + soluk bağlam, yanda açıklama." span={3} align="start">
-        <SectionHeading eyebrow="Nasıl Çalışır" title="Çekirdekten fincana" soft="tek bir akışta." description="Kavrum, stok ve sipariş aynı panoda; şube değişikliği hepsine yansır." layout="split" />
+        <SectionHeading eyebrow="Nasıl Çalışır" title="Çekirdekten Fincana" soft="Tek Bir Akışta" description="Kavrum, stok ve sipariş aynı panoda; şube değişikliği hepsine yansır." layout="split" />
       </Cell>
       <Cell file="step-tabs" name="Adım Sekmeleri" note="Yatay adım şeridi; seçili adım tam renk, sahne altında. Ok tuşlarıyla gezilir." span={4} size="lg" align="stretch">
         <StepTabs
@@ -62,7 +62,7 @@ export function TanitimQ() {
       </Cell>
       <Cell file="head-mark" name="Başlık İşareti" note="Başlığın içinde tek işaret: ikon karesi, kalem şeridi ya da noktalı alt çizgi." span={2} align="start">
         <p className="font-display text-display leading-none font-semibold tracking-[-0.04em] text-balance text-strong">
-          Her <HeadMark variant="highlight" icon={<Coffee />}>fincan</HeadMark> aynı tatta
+          Her <HeadMark variant="highlight" icon={<Coffee />}>Fincan</HeadMark> Aynı Tatta
         </p>
       </Cell>
       <Cell file="feature-list" name="Özellik Listesi" note="Renkli çizgi ikon, başlık, soluk açıklama; kıl çizgiyle ayrılır, kart yok." span={3} align="start">

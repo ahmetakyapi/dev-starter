@@ -206,7 +206,7 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end">
           <div className="grid gap-7">
             <m.div {...enter(4)} className="grid max-w-[52ch] gap-2">
-              <p className="text-title font-medium text-strong">Next 16 projeleri için görsel katalog</p>
+              <p className="text-title font-medium text-strong">Next 16 Projeleri için Görsel Katalog</p>
               <p className="text-lead text-pretty text-body">
                 Kopyalanabilir bileşenler, desenler ve ekranlar. Her parça token&apos;dan çizilir; paleti değiştir, hepsi birlikte döner.
               </p>

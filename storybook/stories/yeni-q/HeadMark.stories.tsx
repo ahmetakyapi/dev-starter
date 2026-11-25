@@ -17,12 +17,12 @@ const meta = {
       },
     },
   },
-  args: { variant: "highlight", children: "alandan" },
+  args: { variant: "highlight", children: "Alandan" },
   argTypes: { variant: { control: "inline-radio", options: ["tile", "highlight", "dotted"] } },
   render: (args) => (
     <Frame width="xl">
       <h2 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[0.98] font-semibold tracking-[-0.05em] text-balance text-strong">
-        <HeadMark {...args} icon={<MapPinned />} /> sunuma hazır projeye
+        <HeadMark {...args} icon={<MapPinned />} /> Sunuma Hazır Projeye
       </h2>
     </Frame>
   ),
@@ -35,7 +35,7 @@ export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     // İkon süs: başlığın erişilebilir adı yalnız metin.
-    await expect(within(canvasElement).getByRole("heading", { level: 2 })).toHaveTextContent("alandan sunuma hazır projeye");
+    await expect(within(canvasElement).getByRole("heading", { level: 2 })).toHaveTextContent("Alandan Sunuma Hazır Projeye");
   },
 };
 
@@ -44,7 +44,7 @@ export const Tile: Story = {
   render: () => (
     <Frame width="xl">
       <h2 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[0.98] font-semibold tracking-[-0.05em] text-balance text-strong">
-        Müşterinin <HeadMark icon={<CreditCard />}>ödeme</HeadMark> deneyimini yönet
+        Müşterinin <HeadMark icon={<CreditCard />}>Ödeme</HeadMark> Deneyimini Yönet
       </h2>
     </Frame>
   ),
@@ -55,7 +55,7 @@ export const Dotted: Story = {
   render: () => (
     <Frame width="xl">
       <p className="text-center font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.04em] text-balance text-strong">
-        Birazdan <HeadMark variant="dotted">Tasarım Eşleme</HeadMark> toplantın var: Ece, Kaan ve Defne
+        Birazdan <HeadMark variant="dotted">Tasarım Eşleme</HeadMark> Toplantın Var
       </p>
     </Frame>
   ),

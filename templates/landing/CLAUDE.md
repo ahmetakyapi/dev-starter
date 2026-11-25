@@ -86,6 +86,7 @@ YOK; gerekiyorsa `nextjs-fullstack` şablonundan alınır.
 | `brutalist-net` | `statement` ya da `corner` | `signature` nötrleri | `technical` | Devasa, kısa başlık |
 | `doga-organik` | `atmosphere` ya da `horizon` | `verdant` | `calm` | Sakin, kısa |
 | `fintek-keskin` | `live-data` ya da `showcase` | `signature` | `product` | Kaynaklı sayı |
+| `sergi` | `product-frame` ya da `horizon` (+ `art-mat` paspartu, `snippets/ui`) | `signature` | `signature` / `product` | İki tonlu başlık, tek `head-mark`, mürekkep hap eylem |
 
 Takas: `lib/content.ts` → `hero.variant` (tek satır) + `PALETTE`/`DEFAULT_THEME`
 (`lib/theme.ts`) + yazı presetı (`fontClass()`); sayfa dizilimini yön değiştirir

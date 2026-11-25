@@ -7,7 +7,7 @@
 name: [PROJE_ADI]
 description: [tek satırlık tanım]
 # ─── Tasarım yönü (knowledge/design-directions.md; boş alan yok) ───────────
-direction: [kimlik: editoryal | kurumsal-guven | veri-yogun | sicak-butik | teknik-gelistirici | oyuncul-canli | luks-minimal | brutalist-net | doga-organik | fintek-keskin]
+direction: [kimlik: editoryal | kurumsal-guven | veri-yogun | sicak-butik | teknik-gelistirici | oyuncul-canli | luks-minimal | brutalist-net | doga-organik | fintek-keskin | sergi]
 direction-reason: '[tek cümle, ürüne bağlı]'
 palette: [signature | verdant | ember | iris | marka]
 font: [snippets/fonts FONT_PRESETS adı]

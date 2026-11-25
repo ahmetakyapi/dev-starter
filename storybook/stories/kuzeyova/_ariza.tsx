@@ -10,7 +10,7 @@ import { FactorList } from "@/components/ui/factor-list";
 import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
 import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
-import { RegionMap, type MapRegion } from "@/components/ui/region-map";
+import { RegionMap, type MapMarker, type MapRegion } from "@/components/ui/region-map";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { Select } from "@/components/ui/select";
 import { Tabs } from "@/components/ui/tabs";
@@ -151,6 +151,20 @@ export function ArizaPage({ params, go }: PageProps) {
     return { id: s.id, label: region(s.id).name, path: s.path, at: s.at, value: n, tone: n ? "danger" : "neutral", note: n ? `${n} açık arıza · ${fmtNum(mine.reduce((x, o) => x + o.affected, 0))} abone` : "Kesinti yok" };
   });
 
+  /* Trafo merkezleri: bölge etiketinin altında yan yana; açık arızası olan kırmızı (nabız), planlı çalışması olan sarı. */
+  const plannedWork = list.filter((o) => o.kind === "planli" && o.status === "planlandi");
+  const mapMarkers: MapMarker[] = MAP_SHAPES.flatMap((shape) => {
+    const subs = SUBSTATIONS.filter((x) => x.regionId === shape.id);
+    return subs.map((x, k) => {
+      const down = open.some((o) => o.substationId === x.id);
+      const work = plannedWork.some((o) => o.substationId === x.id);
+      // Etiketin altında yer yoksa (haritanın alt kenarı) işaretler etiketin sağına dizilir.
+      const below = shape.at[1] + 28 < 288;
+      const at: [number, number] = below ? [shape.at[0] + (k - (subs.length - 1) / 2) * 16, shape.at[1] + 28] : [shape.at[0] + 46 + k * 16, shape.at[1] + 2];
+      return { id: x.id, at, label: `${x.name}: ${down ? "açık arıza" : work ? "planlı çalışma" : "çalışıyor"}`, tone: down ? ("danger" as const) : work ? ("warning" as const) : ("success" as const) };
+    });
+  });
+
   const panels: { value: TabId; label: string; panel: ReactNode }[] = [
     {
       value: "acik",
@@ -160,7 +174,26 @@ export function ArizaPage({ params, go }: PageProps) {
           <div className="grid gap-5 xl:grid-cols-5">
             <Panel id="ariza-harita" title="Şebeke Durumu" note="Bölgeye basınca liste süzülür; kırmızı bölgede açık arıza var." className="xl:col-span-2">
               <div className="p-4 sm:p-5">
-                <RegionMap title="Bölgeye Göre Açık Arıza" regions={mapRegions} viewBox={MAP_VIEWBOX} format={(v) => `${fmtNum(v)} arıza`} legend={["Kesinti yok", "Açık arıza"]} selectedId={regionId} onSelect={(id) => go("outages", { tab: "acik", region: regionId === id ? undefined : id })} />
+                <RegionMap
+                  title="Bölgeye Göre Açık Arıza"
+                  regions={mapRegions}
+                  viewBox={MAP_VIEWBOX}
+                  format={(v) => (v ? `${fmtNum(v)} arıza` : "Kesinti yok")}
+                  showValues
+                  markers={mapMarkers}
+                  markerLabel="Trafo merkezleri"
+                  markerLegend={[
+                    { tone: "success", label: "Çalışıyor" },
+                    { tone: "warning", label: "Planlı Çalışma" },
+                    { tone: "danger", label: "Arızalı" },
+                  ]}
+                  legendTones={[
+                    { tone: "neutral", label: "Kesinti Yok" },
+                    { tone: "danger", label: "Açık Arıza" },
+                  ]}
+                  selectedId={regionId}
+                  onSelect={(id) => go("outages", { tab: "acik", region: regionId === id ? undefined : id })}
+                />
               </div>
             </Panel>
             <Panel

@@ -77,3 +77,28 @@
   border-inline-start: 1px solid var(--line);
 }
 @media (max-width: 63.99rem) { .kz-shell #icerik { border-inline-start: 0; } }
+
+/* TEK SATIRLI TABLO (25 Kasım 2026): hücrede alt alta duran iki parça (ad + numara, tür +
+   gerilim, tedarikçi + tür, rozet + gerekçe) aynı satıra dizilir; ikinci parça sönük ve
+   yer kalmayınca KIRPILIR (satır iki kata çıkmaz). Satır ~100 px'ten ~44 px'e iner, liste
+   taranır. Kapsam yalnız portalın tablo gövdesi; telefonda tablo yerine kart listesi var. */
+[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) {
+  display: flex;
+  align-items: baseline;
+  gap: 0 0.5rem;
+  min-width: 0;
+}
+[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) > * {
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* İkinci (sönük) parça sütun genişliğine KATILMAZ (`width: 0`): sütun ana parçaya göre
+   ölçülür, ikinci parça yalnız artan yerde görünür ve sığmazsa kırpılır. Tablo dar ekranda
+   yatay kaymaya düşmez; geniş ekranda ikinci parça kendiliğinden tam okunur. */
+[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) > :last-child:not(:first-child) { flex: 1 1 0; width: 0; max-width: 12rem; }
+[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) > :is(svg, input, button, [role="checkbox"], [class*="rounded-full"]) { flex: none; overflow: visible; }
+/* Rozet + gerekçe hücresi: rozet ortalanır, gerekçe ona hizalanır. */
+[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *):has(> [class*="rounded-full"]:first-child) { align-items: center; }

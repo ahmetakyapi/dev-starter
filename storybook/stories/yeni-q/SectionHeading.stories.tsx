@@ -18,8 +18,8 @@ const meta = {
   },
   args: {
     eyebrow: "Nasıl Çalışır",
-    title: "Elindekiyle başla",
-    soft: "gerisini sistem kursun.",
+    title: "Elindekiyle Başla",
+    soft: "Gerisini Sistem Kursun",
     description: "Bir taslak, bir çizim ya da tek cümlelik bir istek yeter. Düzenlenebilir ilk sürüm dakikalar içinde hazır.",
     layout: "stack",
     size: "section",
@@ -42,7 +42,7 @@ export const Default: Story = {
   name: "Varsayılan",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("heading", { level: 2 })).toHaveTextContent("Elindekiyle başla");
+    await expect(canvas.getByRole("heading", { level: 2 })).toHaveTextContent("Elindekiyle Başla");
     // Türkçe büyük harf: i → İ.
     await expect(canvas.getByText("NASIL ÇALIŞIR")).toBeInTheDocument();
   },
@@ -50,17 +50,17 @@ export const Default: Story = {
 
 export const Split: Story = {
   name: "Yanda Açıklama",
-  args: { layout: "split", eyebrow: "Neden Biz", title: "Neden bizi", soft: "seçmelisin", description: "Kurulum yok, eğitim yok. Ekibin bugün kullandığı araçlara bağlanır, ilk haftada iş yükünü hafifletir." },
+  args: { layout: "split", eyebrow: "Neden Biz", title: "Neden Bizi", soft: "Seçmelisin", description: "Kurulum yok, eğitim yok. Ekibin bugün kullandığı araçlara bağlanır, ilk haftada iş yükünü hafifletir." },
 };
 
 export const Center: Story = {
   name: "Ortalı",
-  args: { layout: "center", eyebrow: "Özellikler", title: "Güçlü özellikler", soft: "sade bir arayüzde", description: undefined },
+  args: { layout: "center", eyebrow: "Özellikler", title: "Güçlü Özellikler", soft: "Sade Bir Arayüzde", description: undefined },
 };
 
 export const Hero: Story = {
   name: "Kahraman Boyu",
-  args: { size: "hero", as: "h1", eyebrow: undefined, title: "Tasarım ve çizim", soft: "tek bir yerde", description: "Taslaktan sunuma hazır projeye. Bir kez değiştir, bütün görünümler izlesin." },
+  args: { size: "hero", as: "h1", eyebrow: undefined, title: "Tasarım ve Çizim", soft: "Tek Bir Yerde", description: "Taslaktan sunuma hazır projeye. Bir kez değiştir, bütün görünümler izlesin." },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole("heading", { level: 1 })).toBeInTheDocument();
   },

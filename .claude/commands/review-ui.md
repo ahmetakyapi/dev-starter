@@ -41,6 +41,8 @@ Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini ön
    - Örnek içerik gerçekçi mi (ad, marka, sayı, tarih); sistem mesajı sakin ve
      somut mu; `href="#"` yok, etkin sayfa `aria-current` (`guides/05` § 7)
    - Izgara hücreleri `minmax(0,1fr)`; sığmayan tablo kaydırılıyor, ezilmiyor
+   - Liste satırında tek durum rozeti (istisna olan), gerekçe tek satır; üst üste
+     rozet yığını satırı şişiriyor mu
 
 5. **Duyarlı tasarım**
    - 390 ve 1280'de yatay taşma yok; dokunmatikte input ≥ 16 px
@@ -74,5 +76,8 @@ Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini ön
    - Sabit konumlu öğeler (menü, maskot, sohbet balonu, çerez bandı) 390'da
      metni ya da birincil eylemi örtmüyor mu; sayfada en çok bir oyunbaz öğe
    - Hikaye: ürün denenebiliyorsa deneme yerine sayfada canlı demo var mı
+   - Sahne dili (`machine/rules/design-skills.md` → Sahne Dili): başlık iki
+     tonlu ve tek işaretli mi; künye en çok iki bölümde mi; paspartu
+     (`art-mat`) en çok iki ve veri ekranının arkasında değil mi
 
 Sonucu Gate raporu formatında sun: her madde ✅ / ⚠️ / ❌, bulgu başına dosya:satır ve önerilen düzeltme.

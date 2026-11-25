@@ -151,7 +151,7 @@ export function GlobalSearchField({ className }: { className?: string }) {
  * `id`'den depodan çözülür: "Aboneler › Arslan Mobilya". Telefonda üst çubuk
  * kabuktadır; ayrıntı sayfasında yalnız "‹ Aboneler" geri bağlantısı görünür.
  */
-export function PageHead({ title, description, actions, crumb }: { title: string; description?: ReactNode; actions?: ReactNode; crumb?: string }) {
+export function PageHead({ title, description, actions, crumb, greeting }: { title: string; description?: ReactNode; actions?: ReactNode; crumb?: string; greeting?: ReactNode }) {
   const { page, params, notifications, markRead } = useApp();
   const info = pageInfo(page);
   const detail = crumb ?? detailCrumb(page, params);
@@ -180,6 +180,8 @@ export function PageHead({ title, description, actions, crumb }: { title: string
       {detail ? <Breadcrumb items={items} className="px-4 pt-2 sm:px-6 lg:hidden" /> : null}
       <div className="flex flex-wrap items-end gap-x-6 gap-y-3 px-4 pt-6 pb-5 sm:px-6">
         <div className="min-w-[min(100%,18rem)] flex-1">
+          {/* Karşılama (yalnız Pano): kişiye ve güne seslenen tek satır, başlığın üstünde sakin. */}
+          {greeting ? <p className="mb-1 text-base text-muted">{greeting}</p> : null}
           <h1 className="text-heading font-semibold tracking-tight text-strong">{title}</h1>
           {description ? <p className="mt-1 text-base text-muted">{description}</p> : null}
         </div>

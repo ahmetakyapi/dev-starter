@@ -7,6 +7,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Sergi turu: sahne dili, altı bileşen, Tanıtım kahramanı, Portal — 2026-11-25
+
+- Yeni: `art-mat` (ürünü boyalı/kareli/sulu boya zeminde sergileme; yırtık
+  kenar, `crop`, kaydırınca daralan `scrollInset`), `section-heading`
+  (+ `Eyebrow`), `step-tabs`, `feature-list`, `head-mark`, `signal-hub`
+- Tanıtım kahramanı Fener → Sergi (iki tonlu dev başlık, kalem şeridi,
+  mono sayılar, palet numunesi kartı, kareli kağıt paspartusunda vitrin)
+- Örnek Sayfalar/Kahraman Sahneleri: Sergi, Boya Katmanı, Daralan Bant
+- Portal: bütün tablolarda tek satırlı hücreler (ikinci parça yalnız artan
+  yerde, kırpılır; yatay kayma yok), abone listesinde tek durum rozeti, Pano
+  başlığında karşılama satırı; Şebeke Durumu haritasında trafo işaretleri,
+  bölge değerleri ve ton açıklaması (`region-map`: `markers`, `showValues`,
+  `legendTones`, `markerLegend`)
+- Yeni kahraman ve hikaye metinlerinde Title Case
+- Tasarım yönü `sergi`; `machine/rules/design-skills.md` → Sahne Dili (yedi
+  karar); `/review-ui` sahne ve satır yoğunluğu maddeleri
+
 ### reference-to-game skill'i — 2026-11-23
 
 - `machine/skills/reference-to-game/`: referanstan (görsel, video, çizim, fikir) oynanabilir oyun;

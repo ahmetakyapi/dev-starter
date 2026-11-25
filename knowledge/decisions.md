@@ -1543,6 +1543,11 @@ Sahibi Fener'i seçti: "mantık bu, çok daha iyi hali". Kesinleşen hal:
   uzaklıktan): bütün kart birlikte renklenir, yarım kesik görünmez. İmleç
   sahnedeyken kayma durur. Sütunlar `inert` (odaklanmaz, okunmaz).
 
+- **Değişti (2026-11-25):** Fener'in yerine Sergi geçti (aşağıda "Sergi
+  Turu"). Sahibi yeni referanslarla "ilk girişteki heroyu buradan ilham
+  alarak tasarlayalım" dedi. Fener'in palet turu ve şeridi korundu; kayan
+  şeritler ve fener ışığı kalktı.
+
 ## Kasım 21 Turu — Tanıtım Sahneleri ve Panel Parçaları (2026-11-21)
 
 Kaynak: kullanıcının paylaştığı 25 ekran görüntüsü (tanıtım siteleri, iş ve
@@ -1664,3 +1669,53 @@ bilgi taşımıyor, "şablondan çıkmış" görünüyor.
 **Yerine:** marka + kısa not, gruplanmış bağlantılar, telif satırı ve
 (varsa) imza kartı.
 
+
+## Sergi Turu — Sahne Dili, Tanıtım Kahramanı, Portal (2026-11-25)
+
+Kaynak: kullanıcının paylaştığı 17 görsel ve bir video (`references.md` →
+Sergi turu satırı). Yöntem `/harvest`; yalnız yapı ve davranış.
+
+- **Sahne dili:** referansların ortak paydası yedi karara indi ve
+  `machine/rules/design-skills.md` → "Sahne Dili"ne yazıldı (her `.tsx`/`.css`
+  işinde yüklenir): iki tonlu başlık + tek işaret, ürünü sergile (ekran
+  görüntüsü değil), künye seyrek, görsel + liste ikilisi, süreci seçtir,
+  uygulamada yoğunluk önce (tek rozet), hareket bir kez.
+- **Yeni yön `sergi`:** on birinci yön. Birincil eylem mürekkep hap
+  (`bg-strong text-page`); degradeli buton bu yönde yok. Bu, "birincil eylem
+  `bg-cta`" kimlik kuralına YÖN düzeyinde istisnadır; kontrast 19:1.
+- **`art-mat` dokusu token'dan:** SVG `feTurbulence` + `feDisplacementMap`,
+  renkler `color-mix` ile palet rollerinden; fotoğraf yok. `mesh-gradient`
+  gibi ZEMİN sayılır, degrade kuralının "üç yer"i içerik içindir. Koyu temada
+  doku %75. Sayfada en çok iki, veri ekranının arkasında yok.
+- **Tanıtım kahramanı Sergi:** sola yaslı iki tonlu dev başlık, "Kimlik"te
+  kalem şeridi + parmak izi, sağda dosyalardan sayılan mono sayılar, kareli
+  kağıt paspartusunda vitrin (bant daralarak oturur), kesik kılavuz
+  çizgileri. **Değişti (2026-11-25, aynı gün):** sağ üstteki bej yırtık
+  kağıt parçası anlamsız bulundu ("anlamadım"); yerine masaya bantlı palet
+  numunesi kartı geldi: seçili paletin dört rol rengi + adı, turla döner.
+  Ders: süs, bir şey göstermiyorsa çıkar; aynı yere anlam taşıyan öğe koy.
+- **Portal:** abone listesinde "Aktif" + "Riskli" + gerekçe üç satır üst
+  üste biniyordu (satır ~100 px); artık tek rozet (istisna olan) + tek
+  satır gerekçe (~50 px). Pano başlığına karşılama satırı ("Günaydın Aylin ·
+  Cuma 21 Kasım"; Lindy). Pano büyük bir kahraman almadı: `veri-yogun`
+  uygulamada büyük başlık yasak, karşılama tek satırla sınırlı.
+- **Değişti (2026-11-25, aynı gün): tek satırlı tablolar.** Sahibi
+  "tablolar iki satırlı gibi olmasın" dedi. Portalın bütün tablolarında iki
+  parçalı hücre (ad + numara, tür + gerilim, rozet + gerekçe) tek satıra
+  dizilir (`kuzeyova.css` → TEK SATIRLI TABLO). İkinci parça `width: 0` ile
+  sütun genişliğine KATILMAZ: sütun ana parçaya göre ölçülür, ikinci parça
+  yalnız artan yerde görünür ve kırpılır; böylece tablo yatay kaymaya
+  düşmez. Abone listesinde düşük değerli ikinci bilgiler kısaltıldı (tesisat
+  no ayrıntıya, "Alçak gerilim" → AG, "Serbest tüketici" → Serbest).
+- **Şebeke Durumu haritası:** "eksik hissettiriyor". `region-map`e trafo
+  merkezi işaretleri (çalışıyor / planlı çalışma / arızalı; arızalı nabız
+  atar), bölge adının altında değer, tonlu haritada ölçek şeridi yerine ton
+  numuneleri (eskiden gri/kırmızı haritanın altında yanlış bir mavi ölçek
+  vardı) ve hafif nokta ızgarası zemini eklendi.
+- **Title Case:** yeni kahramanlarda, örneklerde ve hikayelerde başlık, alt
+  başlık ve butonlar Title Case'e çekildi ("Arsadan Sunuma Hazır Projeye");
+  iki tonlu başlığın soluk satırı da başlıktır, nokta almaz.
+- **Alınmayanlar:** fotoğraflar (kaya, dağ, uçak, el), gerçek marka ve
+  logolar, doğrulanamayan sayılar, Nexora'nın dev kelime işaretli alt bilgisi
+  (2026-11-24 kararıyla çelişir), Brainbase'in çizgili poster kahramanı
+  (tek seferlik kampanya dili, ürün sergilemiyor).

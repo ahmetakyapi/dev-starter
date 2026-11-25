@@ -196,6 +196,22 @@ Biçim, Hero, Kabuk, Kart, Popup, Grafik, Boş Durum, Hareket, Yasak) eksiksiz y
 - **Hareket:** `rolling-number`, `animated-number` ölçülü; yanıp sönen sayı yok.
 - **Yasak:** oyuncul mikro metin, sahte kıtlık, doğrulanamayan getiri sayısı, mor-pembe degrade.
 
+### `sergi` — Sergi ve Çizim Masası
+
+- **Etiket:** sektor=yazilim,yapay-zeka,mimari,odeme,fintek,planlama,b2b-saas,veri · kitle=kurumsal,uzman,genel · yogunluk=orta · ton=sakin,zarif,ciddi · tema=acik · tur=landing,uygulama
+- **Ne zaman:** Ürünün kendisi en iyi argümansa ve onu "ekran görüntüsü" değil sergilenen bir nesne gibi göstermek istiyorsan: yapay zeka araçları, tasarım/çizim yazılımı, ödeme ve finans altyapısı, B2B SaaS. Sakin, emin, abartısız; arayüz keskin, zemin elle yapılmış ve sıcak.
+- **Palet:** `signature` ya da sıcak nötr; sayfa beyaz/krem, vurgu SEYREK (yalnız kalem şeridi, odak, tek veri vurgusu). Birincil eylem mürekkep hap (`bg-strong text-page`), ikincil gri kuyu hap; degradeli buton yok.
+- **Yazı:** `signature` ya da `product` grotesk, başlık sıkı (−0.05em ve altı) ve büyük; mono yalnız künye ve sayı sütunlarında (büyük harf, geniş aralık). İsteğe bağlı TEK serif italik kelime (`editorial`).
+- **Biçim:** yarıçap 0.75-1.75rem kart, hap butonlar; derinlik ton farkı + tek yumuşak gölge; kıl ve KESİK çizgiler (kılavuz, künye). Yoğunluk orta.
+- **Hero:** iki tonlu başlık (güçlü iddia / soluk bağlam), içinde en çok bir `head-mark`; solda tanım + iki eylem, sağda mono sayılar; altta `art-mat` paspartusunda gerçek ürün penceresi (yırtık kenar, alttan kırpılmış ya da kaydırınca daralan bant). Landing şablonunda en yakın `horizon` / `product-frame`.
+- **Kabuk:** sol menü + ekmek kırıntılı üst çubuk + ⌘K; Pano başlığında kişiye seslenen tek satır ("Günaydın Aylin · Cuma 21 Kasım").
+- **Kart:** kıl halkalı beyaz kart, içinde gri kuyu; özellik anlatımında kartsız `feature-list` (renkli çizgi ikon, kıl çizgi).
+- **Popup:** ayrıntı `sheet`; onay `dialog`; arama `command-palette`.
+- **Grafik:** sakin, palet ailesinden; tek vurgu serisi, değer etiketleri mono.
+- **Boş Durum:** tek cümle + tek eylem; illüstrasyon yerine `art-mat` küçük doku.
+- **Hareket:** yavaş ve az: başlık satır satır bulanıktan netleşir, kalem şeridi bir kez çekilir, paspartu kaydırınca daralır (yalnız `transform`), `step-tabs` kendiliğinden ilerler (durdurulabilir).
+- **Yasak:** her bölüme künye (sayfada en çok iki), aynı sayfada ikiden çok paspartu, veri ekranının arkasında doku, neon/mor-pembe degrade, sahte ekran görüntüsü (pencere gerçek bileşenlerle çizilir), doğrulanamayan yuvarlak sayı ("10.000+").
+
 ---
 
 ## Seçim Matrisi

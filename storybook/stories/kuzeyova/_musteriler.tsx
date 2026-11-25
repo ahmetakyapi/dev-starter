@@ -340,7 +340,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
             {c.name}
           </a>
           <span className="kz-mono text-small text-muted">
-            {c.id} · Tesisat {c.installation}
+            {c.id}
           </span>
         </div>
       ),
@@ -350,20 +350,25 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
       header: "Tür",
       render: (c) => (
         <div>
-          <span className="text-body">{KIND_LABEL[c.kind]}</span>
-          <span className="block text-small text-muted">{c.voltage === "OG" ? "Orta gerilim" : "Alçak gerilim"}</span>
+          <span className="block whitespace-nowrap text-body">{KIND_LABEL[c.kind]}</span>
+          <span className="text-small text-muted" title={c.voltage === "OG" ? "Orta gerilim" : "Alçak gerilim"}>{c.voltage}</span>
         </div>
       ),
     },
-    { key: "region", width: "11.5rem", header: "Bölge", sortable: true, sortValue: (c) => c.regionId, render: (c) => `${region(c.regionId).name} · ${c.district}` },
+    { key: "region", width: "11.5rem", header: "Bölge", sortable: true, sortValue: (c) => c.regionId, render: (c) => (
+        <div>
+          <span className="text-body">{region(c.regionId).name}</span>
+          <span className="text-small text-muted">{c.district}</span>
+        </div>
+      ) },
     {
       key: "supplier",
       width: "13rem",
       header: "Tedarikçi",
       render: (c) => (
         <div className="min-w-0">
-          <span className="block truncate text-body">{supplier(c.supplierId).name}</span>
-          <span className="text-small text-muted">{c.free ? "Serbest tüketici" : "Görevli tedarik"}</span>
+          <span className="text-body">{supplier(c.supplierId).name}</span>
+          <span className="text-small text-muted">{c.free ? "Serbest" : "Görevli"}</span>
         </div>
       ),
     },
@@ -385,12 +390,11 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
       render: (c) => {
         const reason = riskReason(c);
         return (
-          <div className="flex flex-col items-start gap-1">
-            <div className="flex flex-wrap gap-1">
-              <CustomerBadge status={c.status} />
-              {reason && c.status === "aktif" ? <Badge tone={reason.startsWith("Sayaç") ? "warning" : "danger"}>Riskli</Badge> : null}
-            </div>
-            {reason ? <span className="text-small text-muted">{reason}</span> : null}
+          // Tek rozet: aktif ama riskliyse "Riskli" (aktif olduğu zaten içinde), değilse kendi durumu.
+          // Eskiden "Aktif" + "Riskli" + gerekçe üç satır üst üste biniyor, satır ~100 px oluyordu.
+          <div className="grid max-w-[13rem] justify-items-start gap-1">
+            {reason && c.status === "aktif" ? <Badge tone={reason.startsWith("Sayaç") ? "warning" : "danger"}>Riskli</Badge> : <CustomerBadge status={c.status} />}
+            {reason ? <span className="w-full truncate text-small text-muted" title={reason}>{reason}</span> : null}
           </div>
         );
       },
@@ -512,7 +516,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
                 rowKey={(c) => c.id}
                 sort={{ key: query.sort, dir: query.dir }}
                 sortHref={(key, dir) => listHref(params, { sort: key, dir, page: undefined })}
-                density="comfortable"
+                density="compact"
                 on="surface"
                 stickyFirst={false}
                 minWidth="64rem"

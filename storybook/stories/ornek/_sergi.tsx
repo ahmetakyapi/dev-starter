@@ -103,12 +103,12 @@ export function ExhibitHero() {
             <HeadMark variant="highlight" icon={<MapPinned />}>
               Arsadan
             </HeadMark>{" "}
-            <span className="text-[color-mix(in_srgb,currentColor_52%,transparent)]">sunuma hazır projeye</span>
+            <span className="text-[color-mix(in_srgb,currentColor_52%,transparent)]">Sunuma Hazır Projeye</span>
           </h1>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end">
             <div className="grid gap-6">
               <div className="grid max-w-[52ch] gap-2">
-                <p className="text-title font-medium text-strong">Mimarlar için tasarım ve çizim yazılımı</p>
+                <p className="text-title font-medium text-strong">Mimarlar için Tasarım ve Çizim Yazılımı</p>
                 <p className="text-lead text-pretty text-body">Bir plan, bir arsa ya da kısa bir tarifle başla. Düzenlenebilir bir yapı kurulur; bir kez değiştir, bütün plan, kesit ve görünüşler izler.</p>
               </div>
               <div className="flex flex-wrap gap-3">
@@ -176,7 +176,7 @@ export function StrataHero() {
         <Nav brand="Kement" links={["Platform", "Ödemeler", "Yönlendirme", "Fiyat"]} cta="Başla" center />
         <div className="mx-auto grid max-w-4xl justify-items-center gap-5 pt-16 pb-14 text-center">
           <h1 className="font-display text-[clamp(2.75rem,7vw,6rem)] leading-[0.95] font-medium tracking-[-0.045em] text-balance text-strong">
-            Dijital ticaretin <HeadMark icon={<CreditCard />}>yeni</HeadMark> <em className="font-normal italic">sınırı</em>
+            Dijital Ticaretin <HeadMark icon={<CreditCard />}>Yeni</HeadMark> <em className="font-normal italic">Sınırı</em>
           </h1>
           <p className="text-lead text-body">Tek ödeme ekranı, her kanal.</p>
           <a href="#fiyat" className="inline-flex h-11 items-center rounded-full bg-cta px-6 text-base font-medium text-on-brand shadow-cta outline-none focus-visible:ring-2 focus-visible:ring-line-focus focus-visible:ring-offset-2">
@@ -245,8 +245,8 @@ export function BandHero() {
         <div className="grid gap-8 pt-16 pb-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <div className="grid gap-4">
             <h1 className="font-display text-[clamp(2.25rem,5vw,3.75rem)] leading-[1.02] font-medium tracking-[-0.04em] text-strong">
-              <span className="block">Modern ödemeler için</span>
-              <span className="block text-[color-mix(in_srgb,currentColor_55%,transparent)]">kurulmuş altyapı</span>
+              <span className="block">Modern Ödemeler için</span>
+              <span className="block text-[color-mix(in_srgb,currentColor_55%,transparent)]">Kurulmuş Altyapı</span>
             </h1>
             <p className="max-w-[46ch] text-read text-body">Hız ve sadelik için tasarlandı; küresel ticaretin yeni kuşağı için.</p>
           </div>
@@ -267,7 +267,7 @@ export function BandHero() {
         <div className="rounded-xl bg-overlay p-5 shadow-modal sm:-my-6">
           <p className="text-small text-muted">Ödeme Gönder</p>
           <p className="mt-1 font-display text-display font-medium tracking-[-0.03em] text-strong tabular-nums">13.550,14</p>
-          <p className="mt-3 text-small text-muted">Alıcı alır</p>
+          <p className="mt-3 text-small text-muted">Alıcı Alır</p>
           <p className="text-title font-medium text-strong tabular-nums">250.000,00 ₺</p>
           <a href="#fiyat" className="mt-4 flex h-10 items-center justify-center rounded-lg bg-strong text-base font-medium text-page outline-none focus-visible:ring-2 focus-visible:ring-line-focus">
             Onayla ve Gönder
@@ -292,8 +292,8 @@ export function BandHero() {
       <div className="mx-auto mt-24 grid max-w-6xl gap-10 px-6">
         <Eyebrow>Neden Başak</Eyebrow>
         <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.05] font-medium tracking-[-0.035em] text-strong">
-          <span className="block">İşin küresel</span>
-          <span className="block text-[color-mix(in_srgb,currentColor_55%,transparent)]">ödemen de öyle olsun</span>
+          <span className="block">İşin Küresel</span>
+          <span className="block text-[color-mix(in_srgb,currentColor_55%,transparent)]">Ödemen de Öyle Olsun</span>
         </h2>
       </div>
     </section>

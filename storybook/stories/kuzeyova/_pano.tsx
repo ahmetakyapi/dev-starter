@@ -259,6 +259,7 @@ export function PanoPage({ go, params }: PageProps) {
     <>
       <PageHead
         title="Pano"
+        greeting={`Günaydın Aylin · ${new Intl.DateTimeFormat("tr-TR", { weekday: "long", day: "numeric", month: "long" }).format(TODAY)}`}
         description={`Pilot Bölge · ${fmtNum(stats.active)} aktif abone · ${fmtNum(meters.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
         actions={
           <>

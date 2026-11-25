@@ -54,7 +54,7 @@ export const WithArtMat: Story = {
     <div className="min-h-dvh bg-page px-5 py-16 sm:px-10">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="grid gap-10">
-          <SectionHeading title="Büyümenin sınırı" soft="ödeme ekranında başlar." />
+          <SectionHeading title="Büyümenin Sınırı" soft="Ödeme Ekranında Başlar" />
           <FeatureList
             items={[
               { id: "a", title: "Tek Panelden Yönetim", description: "Bütün ödeme hesapların tek panoda, tek raporda.", icon: <ShoppingBag />, color: 4 },

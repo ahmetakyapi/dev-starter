@@ -74,3 +74,29 @@ korunur; dial'lar sitenin kendi okumasından çıkarılır. Skill'i greenfield g
   Mevcut projede zaten kuruluysa skill'in kendi istisnası geçerli, lucide kalır.
 - Skill em dash'i tümüyle yasaklar. Bu kural **kullanıcıya görünen arayüz
   metni** için geçerlidir; kod yorumları ve dokümanlar kapsam dışı.
+
+## Sahne Dili — Ekran Tasarlamadan Önce (Sergi Turu, 25 Kasım 2026)
+
+Referans turu (Synaps, Lasso, Grain, Veridical, Finance, Lindy, Nexora;
+`knowledge/references.md`) bütün yönlerde işe yarayan yedi kompozisyon
+kararına indi. Yeni bir ekran ya da bölüm tasarlarken, kod yazmadan önce
+her birine evet/hayır ver; ayrıntı ve yasaklar `knowledge/design-directions.md`
+→ `sergi`.
+
+1. **Başlık iki ton:** güçlü iddia + soluk bağlam, iki satır, virgülsüz
+   (`section-heading`, `tone-text`). Başlıkta en çok BİR işaret (`head-mark`).
+2. **Ürünü sergile, ekran görüntüsü koyma:** gerçek bileşenlerle çizilmiş
+   pencere (`app-window`), gerekiyorsa dokulu zeminde (`art-mat`: boya,
+   kareli kağıt, sulu boya; yırtık kenar, alttan kırpma). Sayfada en çok iki.
+3. **Künye seyrek:** kesik çizgili mono künye (`Eyebrow`) sayfada en çok iki
+   bölümde; her bölümde künye hepsini sıradanlaştırır.
+4. **Görsel + liste ikilisi:** bir yanda sergilenen ürün, öbür yanda kartsız
+   `feature-list` (renkli çizgi ikon, kıl çizgi). Kart yığını değil.
+5. **Süreci seçtir:** "nasıl çalışır" yatay `step-tabs` (seçili adım net,
+   diğerleri soluk, altında adımın sahnesi); dikey anlatı için `step-rail`.
+6. **Uygulama ekranında yoğunluk önce:** satırda TEK durum rozeti (istisna
+   olanı göster: "Riskli" varsa "Aktif" yazma), gerekçe tek satır ve
+   kırpılır; satır 48-56 px. Pano başlığında kişiye seslenen tek satır.
+7. **Hareket bir kez:** başlık satır satır netleşir, kalem şeridi bir kez
+   çekilir, paspartu kaydırınca daralır; hepsi `transform`, hareket
+   azaltmada durağan. Sürekli dönen şey yalnız durdurulabilir olandır.
