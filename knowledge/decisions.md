@@ -1719,3 +1719,25 @@ Sergi turu satırı). Yöntem `/harvest`; yalnız yapı ve davranış.
   logolar, doğrulanamayan sayılar, Nexora'nın dev kelime işaretli alt bilgisi
   (2026-11-24 kararıyla çelişir), Brainbase'in çizgili poster kahramanı
   (tek seferlik kampanya dili, ürün sergilemiyor).
+
+### Tanıtım Kahramanı: Hareketli Sergi + Telefon Etiketi (2026-11-25)
+
+- **Kahraman:** sahibi "animasyonlu, geçişli, sınırlarını zorla" dedi. Açılış
+  zinciri (toplam ~2 sn, hepsi `transform`/`opacity`/kesik ofset): harfler
+  maskelerinden sırayla yükselir; parmak izi kendi çizgilerini çizer
+  (`pathLength=1` + `stroke-dashoffset`); "Kimlik"in arkasına kalem şeridi
+  çekilir (`head-mark` → `delay`); mono satır karışık harflerden çözülür;
+  sayılar 0'dan sayar; kesik kılavuzlar yukarıdan aşağı çizilir. "Palet"
+  kelimesi o anki paletin display degradesini taşır, tur döndükçe bulanıklaşıp
+  yeni renkte netleşir. Numune kartı kartela destesine döndü: üstte seçili
+  palet, arkada sıradaki ikisi; palet değişince üstteki kart kayıp düşer.
+- **Tuzak:** `background-clip: text` DÖNÜŞTÜRÜLEN alt öğeleri kırpmaz; degradeli
+  kelime harf harf değil kelime maskesinde bütün olarak yükselir.
+- **Erişilebilirlik:** h1 adı `aria-label` ("Tek Kimlik On Palet"), harf
+  parçaları `aria-hidden`; hareket azaltmada ve otomasyonda (OG, play
+  testleri) zincir kapalı, metin ilk karede tam.
+- **Telefon alt çubuğu:** Storybook bütün ata yolunu birleştiriyordu
+  ("Tanıtım/Tanıtım", "Tema/Renkler/Renkler"). `manager.ts` →
+  `dev-starter/mobile-crumb`: tek hikayeli sayfada yalnız sayfa adı, çok
+  hikayelide "Sayfa/Hikaye" (tek eğik çizgi). Not: yönetici dosyası dev
+  sunucusunda sıcak yenilenmez, değişiklik sonrası sunucu yeniden başlatılır.

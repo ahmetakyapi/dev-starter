@@ -1,5 +1,5 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
@@ -26,7 +26,7 @@ import { cn } from "../utils";
 
 const CSS = `
 @keyframes ui-headmark-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.ui-headmark-hl::before { content: ""; position: absolute; inset: 0.08em -0.06em 0.02em; z-index: -1; border-radius: 0.08em; background: color-mix(in srgb, var(--primary-soft) 26%, transparent); transform-origin: left; animation: ui-headmark-draw .9s cubic-bezier(.22,1,.36,1) .35s both; }
+.ui-headmark-hl::before { content: ""; position: absolute; inset: 0.08em -0.06em 0.02em; z-index: -1; border-radius: 0.08em; background: color-mix(in srgb, var(--primary-soft) 26%, transparent); transform-origin: left; animation: ui-headmark-draw .9s cubic-bezier(.22,1,.36,1) var(--hm-delay, .35s) both; }
 @media (prefers-reduced-motion: reduce) { .ui-headmark-hl::before { animation: none; } }`;
 
 export interface HeadMarkProps {
@@ -34,10 +34,12 @@ export interface HeadMarkProps {
   /** `tile` için ikon (lucide); `highlight` ile birlikte de verilebilir. */
   icon?: ReactNode;
   children?: ReactNode;
+  /** Kalem şeridinin çekilmeye başlama gecikmesi (sn); başlık harf harf açılıyorsa onun bitişine. */
+  delay?: number;
   className?: string;
 }
 
-export function HeadMark({ variant = "tile", icon, children, className }: HeadMarkProps) {
+export function HeadMark({ variant = "tile", icon, children, delay, className }: HeadMarkProps) {
   // Kalem şeridinin içinde ikon çerçevesiz (şerit zaten bir zemin); düz başlıkta kare çerçeveli.
   const framed = variant === "tile";
   const tile = icon ? (
@@ -64,7 +66,7 @@ export function HeadMark({ variant = "tile", icon, children, className }: HeadMa
         <style href="ui-head-mark" precedence="default">
           {CSS}
         </style>
-        <span className={cn("ui-headmark-hl relative isolate inline-block whitespace-nowrap px-[0.04em]", className)}>
+        <span className={cn("ui-headmark-hl relative isolate inline-block whitespace-nowrap px-[0.04em]", className)} style={delay !== undefined ? ({ "--hm-delay": `${delay}s` } as CSSProperties) : undefined}>
           {tile}
           {children}
         </span>

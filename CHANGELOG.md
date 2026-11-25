@@ -21,6 +21,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
   bölge değerleri ve ton açıklaması (`region-map`: `markers`, `showValues`,
   `legendTones`, `markerLegend`)
 - Yeni kahraman ve hikaye metinlerinde Title Case
+- Tanıtım kahramanı hareketli: harf harf açılış, kendini çizen parmak izi, sayan sayılar, palet degradeli "Palet", kartela destesi; telefon alt çubuğunda tekrar eden yol yok
+- `head-mark`: `delay`
 - Tasarım yönü `sergi`; `machine/rules/design-skills.md` → Sahne Dili (yedi
   karar); `/review-ui` sahne ve satır yoğunluğu maddeleri
 

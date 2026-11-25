@@ -94,3 +94,35 @@ addons.register("dev-starter/search-placeholder", () => {
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
   apply();
 });
+
+/* Telefondaki alt çubuk etiketi: Storybook bütün ata yolunu "/" ile birleştiriyor
+   ("Tanıtım/Tanıtım", "Bileşenler/Tanıtım/Bölüm Başlığı/Varsayılan"). Kural:
+   tek hikayeli sayfada (bileşenin tek ekranı) yalnız sayfa adı; birden çok
+   hikayeli sayfada "Sayfa/Hikaye", tek eğik çizgi. Adres ve ekran okuyucu metni
+   aynı kalır; yalnız görünen ad ve `aria-current` metni yazılır. */
+type IndexEntry = { name: string; type?: string; parent?: string; children?: string[] };
+addons.register("dev-starter/mobile-crumb", (api: API) => {
+  const label = () => {
+    const story = api.getCurrentStoryData() as unknown as IndexEntry | undefined;
+    if (!story) return null;
+    // `getData` yalnız hikaye/belge döndürür; bileşen kaydı `resolveStory` ile gelir.
+    const parent = story.parent ? (api.resolveStory(story.parent) as unknown as IndexEntry | undefined) : undefined;
+    if (!parent || parent.type !== "component") return story.name;
+    const docs = (parent.children ?? []).filter((id) => id.endsWith("--docs")).length;
+    const pages = (parent.children?.length ?? 0) - docs;
+    return pages <= 1 ? parent.name : `${parent.name}/${story.name}`;
+  };
+  const apply = () => {
+    const bar = document.querySelector(".sb-bar");
+    if (!bar) return;
+    const text = label();
+    if (!text) return;
+    const btn = bar.querySelector<HTMLElement>('button[aria-label="Open navigation menu"]');
+    const shown = btn?.querySelector("p, span:last-child");
+    if (shown && shown.textContent !== text) shown.textContent = text;
+    const current = bar.querySelector('[aria-current="page"]');
+    if (current && current.textContent !== text) current.textContent = text;
+  };
+  new MutationObserver(apply).observe(document.body, { childList: true, subtree: true, characterData: true });
+  api.on(STORY_PREPARED, () => requestAnimationFrame(apply));
+});
