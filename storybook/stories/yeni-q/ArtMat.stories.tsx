@@ -19,7 +19,7 @@ const meta = {
   },
   args: { variant: "strata", tone: "primary", edge: "torn", crop: false, pad: "md", scrollInset: false },
   argTypes: {
-    variant: { control: "inline-radio", options: ["strata", "grid", "wash"] },
+    variant: { control: "inline-radio", options: ["strata", "grid", "wash", "smear"] },
     tone: { control: "inline-radio", options: ["primary", "earth"] },
     edge: { control: "inline-radio", options: ["torn", "clean"] },
     pad: { control: "inline-radio", options: ["sm", "md", "lg"] },
@@ -49,7 +49,12 @@ export const Default: Story = {
 export const Variants: Story = {
   name: "Dokular",
   render: () => (
-    <Gallery cols={3}>
+    <Gallery cols={2}>
+      <Cell label="smear · temiz kenar" className="p-3">
+        <ArtMat variant="smear" pad="sm" className="w-full">
+          <DemoWindow compact />
+        </ArtMat>
+      </Cell>
       <Cell label="strata · earth · torn" className="p-3">
         <ArtMat variant="strata" tone="earth" edge="torn" pad="sm" className="w-full">
           <DemoWindow compact />

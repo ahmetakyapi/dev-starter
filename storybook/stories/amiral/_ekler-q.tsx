@@ -5,6 +5,7 @@ import { AppWindow } from "@/components/ui/app-window";
 import { ArtMat } from "@/components/ui/art-mat";
 import { FeatureList } from "@/components/ui/feature-list";
 import { HeadMark } from "@/components/ui/head-mark";
+import { Orb } from "@/components/ui/orb";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SignalHub } from "@/components/ui/signal-hub";
 import { StepTabs } from "@/components/ui/step-tabs";
@@ -64,6 +65,12 @@ export function TanitimQ() {
         <p className="font-display text-display leading-none font-semibold tracking-[-0.04em] text-balance text-strong">
           Her <HeadMark variant="highlight" icon={<Coffee />}>Fincan</HeadMark> Aynı Tatta
         </p>
+      </Cell>
+      <Cell file="orb" name="Küre" note="Renkleri dönen parlak küre ya da meridyenleri dönen noktalı dünya; şeritte ortadaki net." span={3} align="center">
+        <div className="flex items-end justify-center gap-8">
+          <Orb size={96} shadow colors={["var(--accent-warm)", "var(--primary-soft)", "var(--primary)"]} />
+          <Orb variant="globe" size={112} />
+        </div>
       </Cell>
       <Cell file="feature-list" name="Özellik Listesi" note="Renkli çizgi ikon, başlık, soluk açıklama; kıl çizgiyle ayrılır, kart yok." span={3} align="start">
         <FeatureList

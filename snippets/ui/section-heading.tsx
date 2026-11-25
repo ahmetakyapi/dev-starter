@@ -47,12 +47,15 @@ const SIZE = {
   hero: "text-[clamp(2.75rem,7vw,6rem)] leading-[0.95] tracking-[-0.055em]",
 } as const;
 
-export function Eyebrow({ children, line = "end", className }: { children: string; line?: "end" | "both" | "none"; className?: string }) {
+/** Künye. `index`: başında mono numara çipi ("01", "COD1"): bölümler sıralı bir anlatıysa.
+ *  `upper={false}`: kart künyesinde düz yazı (numara çipi zaten işaret). */
+export function Eyebrow({ children, line = "end", index, upper = true, className }: { children: string; line?: "end" | "both" | "none"; index?: string; upper?: boolean; className?: string }) {
   const rule = <span aria-hidden className="h-px min-w-8 flex-1 border-t border-dashed border-line-strong" />;
   return (
     <p className={cn("flex items-center gap-4 font-mono text-small tracking-[0.14em] text-muted", className)}>
       {line === "both" ? rule : null}
-      <span className="shrink-0">{children.toLocaleUpperCase("tr-TR")}</span>
+      {index ? <span className="shrink-0 rounded-md bg-surface-raised px-1.5 py-0.5 text-micro tracking-normal text-strong tabular-nums">{index}</span> : null}
+      <span className="shrink-0">{upper ? children.toLocaleUpperCase("tr-TR") : children}</span>
       {line !== "none" ? rule : null}
     </p>
   );

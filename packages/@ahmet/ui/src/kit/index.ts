@@ -84,6 +84,7 @@ export * from "./morph-icon";
 export * from "./morph-nav";
 export * from "./notice-deck";
 export * from "./option-cards";
+export * from "./orb";
 export * from "./password-field";
 export * from "./path-graph";
 export * from "./pattern-bg";

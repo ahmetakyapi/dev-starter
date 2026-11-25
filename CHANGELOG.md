@@ -23,6 +23,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - Yeni kahraman ve hikaye metinlerinde Title Case
 - Tanıtım kahramanı hareketli: harf harf açılış, kendini çizen parmak izi, sayan sayılar, palet degradeli "Palet", kartela destesi; telefon alt çubuğunda tekrar eden yol yok
 - `head-mark`: `delay`
+- Yeni `orb` (+ `OrbCarousel`); `art-mat` → `smear`; `Eyebrow` → `index`, `upper`; Örnek Sayfalar → Kart Vitrini (yedi kart); kahramanda palet küreleri
 - Tasarım yönü `sergi`; `machine/rules/design-skills.md` → Sahne Dili (yedi
   karar); `/review-ui` sahne ve satır yoğunluğu maddeleri
 

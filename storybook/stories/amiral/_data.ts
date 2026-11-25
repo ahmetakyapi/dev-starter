@@ -466,6 +466,7 @@ export const GROUP_OF: Record<string, GroupId> = {
   "feature-list": "tanitim",
   "head-mark": "tanitim",
   "signal-hub": "ajan",
+  orb: "tanitim",
   money: "veri",
   "key-value-list": "veri",
   "contact-list": "veri",

@@ -1,11 +1,12 @@
 "use client";
 
-import { Bot, CalendarDays, Compass, Inbox, ListChecks, PackageCheck, Reply, Truck } from "lucide-react";
+import { CalendarDays, Compass, Inbox, ListChecks, PackageCheck, Reply, Truck } from "lucide-react";
 import { AppWindow } from "@/components/ui/app-window";
 import { ArtMat } from "@/components/ui/art-mat";
 import { Badge } from "@/components/ui/badge";
 import { FeatureList } from "@/components/ui/feature-list";
 import { HeadMark } from "@/components/ui/head-mark";
+import { Orb } from "@/components/ui/orb";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SignalHub } from "@/components/ui/signal-hub";
 import { StepTabs, type StepTab } from "@/components/ui/step-tabs";
@@ -106,7 +107,7 @@ export function AgentHubPanel() {
     <div className="mx-auto w-full max-w-4xl px-4 pt-8">
       <SignalHub
         label="Arka planda çalışan ajanlar (örnek)"
-        mark={<Bot />}
+        mark={<Orb size={56} />}
         nodes={[
           { id: "a", name: "Gelen Kutusu", status: "Etkin", progress: 0.5, detail: "48 e-postanın 24'ü sınıflandı", icon: <Inbox /> },
           { id: "b", name: "Takvim", status: "Etkin", progress: 0.75, detail: "3 toplantı önerisi hazır", icon: <CalendarDays /> },

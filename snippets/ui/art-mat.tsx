@@ -22,6 +22,8 @@ import { cn } from "@/lib/utils";
  *     `feTurbulence` + `feDisplacementMap`. Kahraman ve özellik bölümü.
  *   - `grid`: kareli çizim kağıdı. Teknik, mimari, planlama ürünü.
  *   - `wash`: sulu boya gök ve bulut. Sakin, ferah; yapay zeka asistanı.
+ *   - `smear`: piksel süzülmüş dikey renk akışı (sıcak + birincil), canlı
+ *     ve dijital; yapay zeka araştırma kartı, kapak görseli.
  * `tone`: `primary` paletin birincil ailesi; `earth` sıcak nötr (kehribar
  *   + metin rengi karışımı), her palette toprak tonunda kalır.
  * `edge="torn"`: zeminin kenarı yırtık kağıt; içerik kenardan içeride durur.
@@ -45,7 +47,7 @@ import { cn } from "@/lib/utils";
  *   </ArtMat>
  */
 
-export type ArtMatVariant = "strata" | "grid" | "wash";
+export type ArtMatVariant = "strata" | "grid" | "wash" | "smear";
 export type ArtMatTone = "primary" | "earth";
 
 export interface ArtMatProps {
@@ -141,6 +143,20 @@ function Texture({ variant, tone, torn, uid }: { variant: ArtMatVariant; tone: A
           <stop offset="0.55" style={{ stopColor: c[1] }} />
           <stop offset="1" style={{ stopColor: c[0] }} />
         </linearGradient>
+        {/* Süzme: yatayda sık, dikeyde çok seyrek gürültü → dikey şeritler halinde kayan renk. */}
+        <filter id={id("smear")} x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.0025" numOctaves={3} seed={19} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="90" xChannelSelector="R" yChannelSelector="G" />
+          <feGaussianBlur stdDeviation="2.2" />
+        </filter>
+        <linearGradient id={id("smearg")} x1="0" y1="0" x2="1" y2="0.2">
+          <stop offset="0" style={{ stopColor: mix("var(--accent-warm)", 40) }} />
+          <stop offset="0.28" style={{ stopColor: "var(--primary-soft)" }} />
+          <stop offset="0.45" style={{ stopColor: mix("var(--danger)", 70) }} />
+          <stop offset="0.62" style={{ stopColor: "var(--accent-warm)" }} />
+          <stop offset="0.8" style={{ stopColor: "var(--primary)" }} />
+          <stop offset="1" style={{ stopColor: mix("var(--accent-warm)", 55) }} />
+        </linearGradient>
         <pattern id={id("grid")} width="28" height="28" patternUnits="userSpaceOnUse">
           <path d="M28 0H0V28" fill="none" style={{ stroke: mix("var(--text-strong)", 14, "transparent") }} strokeWidth="1" />
         </pattern>
@@ -160,6 +176,12 @@ function Texture({ variant, tone, torn, uid }: { variant: ArtMatVariant; tone: A
             <svg width="38%" height="42%" viewBox="0 0 100 100" preserveAspectRatio="none" overflow="visible">
               <path d="M0 0H100L86 18 94 36 74 54 64 74 40 82 0 96Z" style={{ fill: c[3], opacity: 0.85 }} filter={`url(#${id("torn")})`} />
             </svg>
+          </>
+        ) : null}
+        {variant === "smear" ? (
+          <>
+            <rect width="100%" height="100%" style={{ fill: mix("var(--accent-warm)", 30) }} />
+            <rect x="-6%" y="-6%" width="112%" height="112%" fill={`url(#${id("smearg")})`} filter={`url(#${id("smear")})`} />
           </>
         ) : null}
         {variant === "wash" ? (

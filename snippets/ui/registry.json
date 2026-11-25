@@ -215,7 +215,7 @@
       "name": "art-mat",
       "title": "Sergi Paspartusu",
       "category": "Tanıtım",
-      "description": "Sergi paspartusu: ürün penceresi boyalı katman (`strata`), kareli kağıt (`grid`) ya da sulu boya gök (`wash`) zeminde; yırtık kenar, `crop` alttan kırpar, `scrollInset` bant → kart daralır",
+      "description": "Sergi paspartusu: ürün penceresi boyalı katman (`strata`), kareli kağıt (`grid`), sulu boya gök (`wash`) ya da piksel süzülmüş renk akışı (`smear`) zeminde; yırtık kenar, `crop` alttan kırpar, `scrollInset` bant → kart daralır",
       "file": "snippets/ui/art-mat.tsx",
       "client": true,
       "storyId": "art-mat",
@@ -2045,6 +2045,25 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "orb",
+      "title": "Küre",
+      "category": "Tanıtım",
+      "description": "Küre: renkleri dönen parlak cam küre (`swirl`, yer gölgeli) ya da meridyenleri dönen noktalı dünya (`globe`); `OrbCarousel` ortadaki net, yandakiler bulanık ve kesik",
+      "file": "snippets/ui/orb.tsx",
+      "client": true,
+      "storyId": "orb",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

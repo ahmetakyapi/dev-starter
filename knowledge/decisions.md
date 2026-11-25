@@ -1741,3 +1741,22 @@ Sergi turu satırı). Yöntem `/harvest`; yalnız yapı ve davranış.
   `dev-starter/mobile-crumb`: tek hikayeli sayfada yalnız sayfa adı, çok
   hikayelide "Sayfa/Hikaye" (tek eğik çizgi). Not: yönetici dosyası dev
   sunucusunda sıcak yenilenmez, değişiklik sonrası sunucu yeniden başlatılır.
+
+### Kart ve Küre Turu (2026-11-25)
+
+Kaynak: kullanıcının paylaştığı iki kart seti ("Bigger Picture / Frontier
+meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
+→ Sergi turu satırı (yalnız yapı).
+- **Yeni `orb`:** `swirl` (renkleri dönen parlak cam küre, yer gölgesi) ve
+  `globe` (meridyenleri dönen noktalı dünya, nabız atan şehirler);
+  `OrbCarousel` ortadaki net, yandakiler küçük, bulanık ve kenarda kesik.
+  3D varlık yok, CSS degrade + SVG; beyaz parlama `--on-brand`.
+- **`art-mat` → `smear`:** piksel süzülmüş dikey renk akışı (fotoğraf
+  yerine). **`Eyebrow` → `index`, `upper`:** numaralı kart künyesi ("01").
+- **Kart Vitrini** (Örnek Sayfalar): yedi kart; oyuk ızgarada köşe
+  yarıçapları dama gibi değişir. "Düşünüyor" kartının başlığı degrade değil
+  düz koyu ton (degrade kuralı).
+- **Kahraman:** kartela destesi yerine palet küreleri. Önce başlığın sağına
+  kondu, "Kimlik"in kalem şeridine bindi; sağ sütunda sayıların üstüne
+  taşındı (orası zaten boştu), telefonda başlığın altında akışta.
+- **Pusula:** Asistan'ın boş ekranındaki sinyal göbeğinin işareti küre.

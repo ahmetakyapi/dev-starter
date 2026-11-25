@@ -283,7 +283,7 @@
       "name": "art-mat",
       "type": "registry:ui",
       "title": "Sergi Paspartusu",
-      "description": "Sergi paspartusu: ürün penceresi boyalı katman (`strata`), kareli kağıt (`grid`) ya da sulu boya gök (`wash`) zeminde; yırtık kenar, `crop` alttan kırpar, `scrollInset` bant → kart daralır",
+      "description": "Sergi paspartusu: ürün penceresi boyalı katman (`strata`), kareli kağıt (`grid`), sulu boya gök (`wash`) ya da piksel süzülmüş renk akışı (`smear`) zeminde; yırtık kenar, `crop` alttan kırpar, `scrollInset` bant → kart daralır",
       "dependencies": [
         "motion@^13.5.1"
       ],
@@ -2688,6 +2688,32 @@
       "files": [
         {
           "path": "snippets/ui/option-cards.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "orb",
+      "type": "registry:ui",
+      "title": "Küre",
+      "description": "Küre: renkleri dönen parlak cam küre (`swirl`, yer gölgeli) ya da meridyenleri dönen noktalı dünya (`globe`); `OrbCarousel` ortadaki net, yandakiler bulanık ve kesik",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "orb",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/orb.tsx",
           "type": "registry:ui"
         }
       ]

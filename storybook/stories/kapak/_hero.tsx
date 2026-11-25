@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { ArtMat } from "@/components/ui/art-mat";
 import { CopyButton } from "@/components/ui/copy-button";
 import { HeadMark } from "@/components/ui/head-mark";
+import { OrbCarousel } from "@/components/ui/orb";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { DUR, EASE, STAGGER } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -24,8 +25,11 @@ import { STORY_COUNT, TOTAL } from "../amiral/_kapsam";
  * harf sayılar (dosyalardan sayılır). En altta kareli kağıt paspartusunun
  * (`art-mat`, yırtık kenar) üstünde katalogdaki GERÇEK bileşenlerden kurulan
  * vitrin kolajı; bant görünüme girerken kenarlara taşan halinden karta
- * daralır. Kenarlarda kesik kılavuz çizgileri ve sağ üstte yırtık bir kağıt
- * parçası: çizim masası hissi.
+ * daralır. Kenarlarda yukarıdan aşağı çizilen kesik kılavuz çizgileri.
+ * Sağ sütunda palet küreleri (`orb` → `OrbCarousel`): seçili palet ortada
+ * net, komşuları bulanık ve kesik; tur döndükçe şerit kayar. (Önce bej
+ * kağıt parçası, sonra numune kartı ve kartela destesi denendi; küreler
+ * referans turunun "Frontier meets reality" şeridinden.)
  *
  * Referans turu: Synaps (sola yaslı başlık, vurgulu kelime + ikon karosu,
  * mono sayılar, kareli mavi kağıt, yırtık kenar, kesik kılavuzlar), Grain
@@ -182,63 +186,31 @@ function useCountUp(target: number, still: boolean) {
   return value;
 }
 
-/** Renk numunesi kartı (boya kartelası gibi): dört rol rengi şerit, palet adı, birincil değer.
- *  Süs değil gösterge: başlıktaki "On Palet"in o anki hali. Geniş ekranda; şeritteki duyuru
- *  ekran okuyucuya aynı bilgiyi verdiği için kart `aria-hidden`. */
-function SwatchFace({ palette, theme }: { palette: PaletteName; theme: ThemeName }) {
+/** Palet küreleri: her palet kendi renkleriyle dönen bir küre; ortadaki seçili (net, büyük),
+ *  yandakiler küçülüp bulanıklaşır ve kenarda kesilir. Tur döndükçe şerit kayar; yandakine
+ *  basınca o palet bütün kataloğa uygulanır. Altında paletin adı ve birincil değeri. */
+function PaletteOrbs({ palette, theme, onPick, size }: { palette: PaletteName; theme: ThemeName; onPick: (p: PaletteName) => void; size: number }) {
   const v = palettes[palette][theme];
-  const chips = [
-    ["primary", v.primary],
-    ["hover", v.primaryHover],
-    ["soft", v.primarySoft],
-    ["ink", v.primaryInk],
-  ] as const;
   return (
-    <div className="rounded-sm bg-overlay p-2.5 shadow-floating ring-1 ring-inset ring-line-soft">
-      <div className="grid gap-1">
-        {chips.map(([role, value]) => (
-          <span key={role} className="flex h-9 items-end justify-between rounded-[2px] px-2 pb-1 font-mono text-micro" style={{ backgroundColor: value, color: v.onPrimary }}>
-            <span>{role}</span>
-            <span className="tabular-nums">{value}</span>
-          </span>
-        ))}
-      </div>
-      <div className="mt-2.5 flex items-baseline justify-between px-0.5">
-        <span className="font-display text-title font-semibold tracking-tight text-strong">{TITLE[palette]}</span>
-        <span className="font-mono text-micro tracking-[0.12em] text-muted">{theme === "dark" ? "KOYU" : "AÇIK"}</span>
-      </div>
-    </div>
-  );
-}
-
-/** Kartela destesi: üstte seçili paletin kartı, arkasında sıradaki ikisi yelpaze gibi. Palet
- *  değişince üstteki kart sağa kayıp düşer, arkadaki öne gelir (kartela çevrilir). Süs değil
- *  gösterge; şeritteki duyuru aynı bilgiyi verdiği için `aria-hidden`. Geniş ekranda. */
-function SwatchDeck({ palette, theme, still }: { palette: PaletteName; theme: ThemeName; still: boolean }) {
-  const i = TOUR.indexOf(palette);
-  const next = (k: number) => TOUR[(i + k) % TOUR.length];
-  const spring = { type: "spring" as const, stiffness: 170, damping: 22 };
-  return (
-    <div aria-hidden className="pointer-events-none absolute top-32 right-4 hidden w-56 xl:block" style={{ perspective: 900 }}>
-      {[2, 1].map((k) => (
-        <m.div key={`back-${k}`} className="absolute inset-x-0 top-0" initial={false} animate={{ rotate: 4 + k * 5, x: k * 14, y: k * 6, opacity: 1 - k * 0.22 }} transition={spring}>
-          <SwatchFace palette={next(k)} theme={theme} />
-        </m.div>
-      ))}
-      <AnimatePresence initial={false} mode="popLayout">
-        <m.div
-          key={palette}
-          className="relative"
-          initial={still ? false : { rotate: 9, x: 14, y: 6, opacity: 0.8 }}
-          animate={{ rotate: 4, x: 0, y: 0, opacity: 1 }}
-          exit={still ? undefined : { rotate: -18, x: -120, y: 60, opacity: 0, transition: { duration: 0.55, ease: [0.55, 0, 0.75, 0.2] } }}
-          transition={spring}
-        >
-          {/* Bant: kartı masaya tutturan yarı saydam şerit. */}
-          <span className="absolute -top-3 left-1/2 z-10 h-6 w-20 -translate-x-1/2 -rotate-3 bg-surface-raised ring-1 ring-inset ring-line-soft backdrop-blur-sm" />
-          <SwatchFace palette={palette} theme={theme} />
-        </m.div>
-      </AnimatePresence>
+    <div className="grid justify-items-center gap-2">
+      <OrbCarousel
+        label="Paletler"
+        size={size}
+        value={palette}
+        onSelect={(id) => onPick(id as PaletteName)}
+        items={TOUR.map((p) => {
+          const c = palettes[p][theme];
+          return { id: p, label: `${TITLE[p]} paletini uygula`, colors: [c.primary, c.primarySoft, c.primaryHover, c.primaryInk] };
+        })}
+      />
+      <p aria-hidden className="relative grid h-6 place-items-center">
+        <AnimatePresence initial={false} mode="popLayout">
+          <m.span key={palette} className="flex items-baseline gap-2 whitespace-nowrap" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: EASE }}>
+            <span className="font-display text-title font-semibold tracking-tight text-strong">{TITLE[palette]}</span>
+            <span className="font-mono text-small text-muted tabular-nums">{v.primary}</span>
+          </m.span>
+        </AnimatePresence>
+      </p>
     </div>
   );
 }
@@ -263,12 +235,9 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
       <style href="kapak-sergi" precedence="default">
         {CSS}
       </style>
-      {/* Çizim masası: iki yanda kesik kılavuz çizgileri, sağ üstte yırtık kağıt parçası. */}
+      {/* Çizim masası: iki yanda yukarıdan aşağı çizilen kesik kılavuz çizgileri. */}
       <span aria-hidden className="ks-guide pointer-events-none absolute inset-y-0 -left-3 hidden border-l border-dashed border-line-strong lg:block" />
       <span aria-hidden className="ks-guide pointer-events-none absolute inset-y-0 -right-3 hidden border-r border-dashed border-line-strong lg:block" />
-      {/* Renk numunesi: masaya bantla tutturulmuş kart, başlığın "On Palet" iddiasını gösterir.
-          Değerler seçili (ya da turda gösterilen) paletten; tur döndükçe kart da döner. */}
-      <SwatchDeck palette={t.shown} theme={theme} still={still} />
 
       <div className="grid gap-12 pt-6 sm:pt-10 lg:gap-16 lg:pt-16">
         <m.p {...enter(0)} className="flex items-center gap-3 font-mono text-small tracking-[0.12em] text-muted">
@@ -316,6 +285,10 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
             </span>
           </span>
         </h1>
+        {/* Telefonda ve dar ekranda küreler başlığın altında, akışın içinde (genişte sağ sütunda, sayıların üstünde). */}
+        <div className="-mt-6 lg:hidden">
+          <PaletteOrbs palette={t.shown} theme={theme} onPick={t.apply} size={96} />
+        </div>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end">
           <div className="grid gap-7">
@@ -348,6 +321,9 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
           </div>
 
           <m.div {...enter(7)} className="grid gap-8 lg:justify-items-end">
+            <div className="hidden w-full max-w-md lg:block">
+              <PaletteOrbs palette={t.shown} theme={theme} onPick={t.apply} size={124} />
+            </div>
             {/* Gerçek sayılar: bileşen ve hikaye dosyalardan, palet palettes.ts'ten. */}
             <dl className="grid w-full max-w-md grid-cols-3 gap-6">
               <Figure icon={<Blocks />} value={total.toLocaleString("tr-TR")} label="Bileşen" />
