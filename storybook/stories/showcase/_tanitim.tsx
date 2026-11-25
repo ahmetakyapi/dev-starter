@@ -22,6 +22,7 @@ import { TrustLine } from "@/components/ui/trust-line";
 import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wallpaper";
 import { EVENTS, OPEN_TICKETS, PRODUCT } from "./_data";
 import { FeaturesSection, FocusSection, HeroFloatCards, HorizonSection, ProcessSection, StoriesSection } from "./_tanitim-ek";
+import { SergiSection } from "./_ek-q";
 
 /**
  * Pusula'nın tanıtım sayfası (oturum açmamış ziyaretçi). Ribbon turunun
@@ -286,6 +287,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
           />
         </section>
 
+        <SergiSection />
         <ProcessSection />
         <FocusSection />
 

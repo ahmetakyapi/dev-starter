@@ -10,7 +10,7 @@ import { HeadMark } from "@/components/ui/head-mark";
 import { Eyebrow } from "@/components/ui/section-heading";
 import { Sparkline } from "@/components/ui/sparkline";
 import { StackedBarChart } from "@/components/ui/stacked-bar-chart";
-import { Stat } from "@/components/ui/stat";
+import { Stat, StatGrid } from "@/components/ui/stat";
 import { cn } from "@/lib/utils";
 
 /**
@@ -261,7 +261,7 @@ export function BandHero() {
       </div>
       <ArtMat variant="strata" tone="earth" pad="lg" scrollInset bleed={0.07} className="mx-auto max-w-6xl" contentClassName="grid gap-4 py-6 sm:grid-cols-3 sm:items-center">
         <div className="rounded-xl bg-overlay/90 p-4 shadow-floating backdrop-blur">
-          <Stat label="Gelen Bakiye" value="₺18.400" change={4.2} changeLabel="bu hafta" />
+          <StatGrid className="block"><Stat label="Gelen Bakiye" value="₺18.400" change={4.2} changeLabel="bu hafta" /></StatGrid>
           <Sparkline values={[6, 9, 8, 11, 10, 14, 16]} title="Bakiye eğrisi, örnek" width={220} height={36} className="mt-3" />
         </div>
         <div className="rounded-xl bg-overlay p-5 shadow-modal sm:-my-6">

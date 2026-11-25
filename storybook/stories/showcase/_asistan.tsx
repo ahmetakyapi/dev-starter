@@ -31,6 +31,7 @@ import {
   TODAY,
 } from "./_data";
 import { PageBar, href } from "./_ui";
+import { AgentHubPanel } from "./_ek-q";
 
 const PLAN_LABELS = PLAN_STEPS.map((s) => s.title);
 const STEP_MS = 2400;
@@ -278,6 +279,7 @@ export function AsistanPage() {
           </>
         }
       />
+      {fresh && extra.length === 0 ? <AgentHubPanel /> : null}
       <div className="flex min-h-[40rem] flex-1 flex-col">
         <div className="flex-1">
           <ChatThread

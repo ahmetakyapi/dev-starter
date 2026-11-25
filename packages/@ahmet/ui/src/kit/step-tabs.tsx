@@ -145,7 +145,7 @@ export function StepTabs({ steps, label, value, defaultValue, onValueChange, aut
                 ) : null}
                 <span className={cn("font-display text-heading font-semibold tracking-[-0.03em] transition-colors duration-300", on ? "text-strong" : "text-muted group-hover:text-body")}>{s.title}</span>
                 {s.description ? (
-                  <span className={cn("max-w-[34ch] text-read transition-colors duration-300", on ? "text-body" : "text-[color-mix(in_srgb,var(--text-muted)_70%,transparent)]")}>{s.description}</span>
+                  <span className={cn("max-w-[34ch] text-read transition-colors duration-300", on ? "text-body" : "text-muted")}>{s.description}</span>
                 ) : null}
               </button>
             );

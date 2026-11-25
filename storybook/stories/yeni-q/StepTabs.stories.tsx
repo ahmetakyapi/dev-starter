@@ -61,7 +61,10 @@ export const AutoPlay: Story = {
   name: "Kendiliğinden İlerleyen",
   args: { autoPlay: 4500, defaultValue: "ciz" },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByRole("button", { name: "Adımları durdur" })).toBeInTheDocument();
+    // Hareket azaltma açıkken (testler öyle koşar) kendiliğinden ilerleme ve Durdur butonu yok; şerit yine seçilebilir.
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tab", { name: /Çiz ya da Anlat/ })).toHaveAttribute("aria-selected", "true");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) await expect(canvas.getByRole("button", { name: "Adımları durdur" })).toBeInTheDocument();
   },
 };
 

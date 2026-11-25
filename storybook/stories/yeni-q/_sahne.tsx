@@ -3,7 +3,7 @@ import { AppWindow } from "@/components/ui/app-window";
 import { Badge } from "@/components/ui/badge";
 import { BarList } from "@/components/ui/bar-list";
 import { Sparkline } from "@/components/ui/sparkline";
-import { Stat } from "@/components/ui/stat";
+import { Stat, StatGrid } from "@/components/ui/stat";
 
 /**
  * Sergi turunun ortak ürün sahnesi: paspartunun üstüne konan gerçek bir
@@ -16,10 +16,10 @@ export function DemoWindow({ compact = false }: { compact?: boolean }) {
       <div className="grid gap-4 p-4 sm:p-5">
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-lg bg-surface p-3">
-            <Stat label="Haftalık Ciro" value="₺84.120" change={6.4} changeLabel="geçen hafta" />
+            <StatGrid className="block"><Stat label="Haftalık Ciro" value="₺84.120" change={6.4} changeLabel="geçen hafta" /></StatGrid>
           </div>
           <div className="rounded-lg bg-surface p-3">
-            <Stat label="Sipariş" value="412" change={3.1} changeLabel="geçen hafta" />
+            <StatGrid className="block"><Stat label="Sipariş" value="412" change={3.1} changeLabel="geçen hafta" /></StatGrid>
           </div>
           <div className="grid content-between rounded-lg bg-surface p-3">
             <span className="flex items-center justify-between text-small text-muted">
