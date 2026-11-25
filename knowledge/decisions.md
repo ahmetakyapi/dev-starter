@@ -1760,3 +1760,13 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   kondu, "Kimlik"in kalem şeridine bindi; sağ sütunda sayıların üstüne
   taşındı (orası zaten boştu), telefonda başlığın altında akışta.
 - **Pusula:** Asistan'ın boş ekranındaki sinyal göbeğinin işareti küre.
+- **Değişti (2026-11-25, aynı gün): Spektrum.** Sahibi sağdaki küreleri
+  beğenmedi, başlık ve parmak izini "yavan" buldu. Yeni kurgu başlığın
+  iddiasını GÖSTERİR: "Kimlik"in arkasında on paletin birincil renginden on
+  şerit (seçili olanın şeridi genişler; parmak izi ve kalem şeridi kalktı),
+  "Palet"in harfleri sıradaki paletlerin düz rengini taşır ve tur ilerledikçe
+  renk harften harfe dalga gibi kayar (düz renk: harfler dönüştürülse de
+  görünür), sağda aynı kartın on paletteki kopyası yelpaze (Button, Switch,
+  Badge, Sparkline; her kopyanın rol değişkenleri kendi paletinden). Ders:
+  süs nesnesi (küre, ikon) değil, iddianın kanıtı. Kartın içinde buton
+  olduğundan tıklama ayrı bir örtü butonunda (iç içe buton yok).

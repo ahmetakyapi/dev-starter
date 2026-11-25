@@ -1,12 +1,14 @@
 "use client";
 
-import { ArrowRight, Blocks, Fingerprint, Pause, Play, SwatchBook } from "lucide-react";
+import { ArrowRight, Blocks, Check, Pause, Play, SwatchBook, Layers } from "lucide-react";
 import { AnimatePresence, animate, m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { ArtMat } from "@/components/ui/art-mat";
 import { CopyButton } from "@/components/ui/copy-button";
-import { HeadMark } from "@/components/ui/head-mark";
-import { OrbCarousel } from "@/components/ui/orb";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/Button";
+import { Sparkline } from "@/components/ui/sparkline";
+import { Switch } from "@/components/ui/switch";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { DUR, EASE, STAGGER } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -19,17 +21,17 @@ import { STORY_COUNT, TOTAL } from "../amiral/_kapsam";
  * Tanıtım kahramanı: SERGİ (25 Kasım 2026, Fener'in yerine).
  *
  * Kompozisyon bir çizim masası gibi: sola yaslı dev, iki tonlu başlık
- * (güçlü "Tek Kimlik", soluk "On Palet"); "Kimlik" kelimesinin arkasında
- * paletin rengiyle çekilen kalem şeridi ve satır boyunda parmak izi karosu.
+ * (güçlü "Tek Kimlik", "On" soluk, "Palet" renk dalgalı).
  * Altında solda kısa tanım + iki eylem + kurulum komutu, sağda mono büyük
  * harf sayılar (dosyalardan sayılır). En altta kareli kağıt paspartusunun
  * (`art-mat`, yırtık kenar) üstünde katalogdaki GERÇEK bileşenlerden kurulan
  * vitrin kolajı; bant görünüme girerken kenarlara taşan halinden karta
  * daralır. Kenarlarda yukarıdan aşağı çizilen kesik kılavuz çizgileri.
- * Sağ sütunda palet küreleri (`orb` → `OrbCarousel`): seçili palet ortada
- * net, komşuları bulanık ve kesik; tur döndükçe şerit kayar. (Önce bej
- * kağıt parçası, sonra numune kartı ve kartela destesi denendi; küreler
- * referans turunun "Frontier meets reality" şeridinden.)
+ * Başlık iddiasını GÖSTERİR: "Kimlik"in arkasında on paletin şeritleri,
+ * "Palet"in harflerinde dalga gibi kayan palet renkleri, sağda aynı kartın
+ * on paletteki kopyaları yelpaze halinde (gerçek bileşenler). Denenip
+ * bırakılanlar: bej kağıt parçası, numune kartı, kartela destesi, palet
+ * küreleri, parmak izi ikonu ("yavan"); karar kaydında.
  *
  * Referans turu: Synaps (sola yaslı başlık, vurgulu kelime + ikon karosu,
  * mono sayılar, kareli mavi kağıt, yırtık kenar, kesik kılavuzlar), Grain
@@ -38,7 +40,7 @@ import { STORY_COUNT, TOTAL } from "../amiral/_kapsam";
  * Karar: knowledge/decisions.md → "Tanıtım Kahramanı: Sergi".
  *
  * Palet turu (Fener'den kaldı): on palet 3,6 sn'de bir bölümü yeniden boyar;
- * kalem şeridi, paspartu ve vitrin birlikte döner (hepsi token). Şeritte
+ * spektrum, harf dalgası, yelpaze, paspartu ve vitrin birlikte döner (hepsi token). Şeritte
  * üstüne gelince önizler, tıklayınca bütün kataloğa geçer; tur her an durur
  * (WCAG 2.2.2). Hareket azaltmada ve otomasyonda (OG görseli, play testleri)
  * tur ve daralma kapalı.
@@ -79,13 +81,15 @@ const CSS = `
 @keyframes ks-rise { from { transform: translate3d(0, 105%, 0) rotate(6deg); } to { transform: none; } }
 .ks-word { display: inline-block; overflow: clip; overflow-clip-margin: 0.12em; padding-bottom: 0.06em; margin-bottom: -0.06em; vertical-align: bottom; }
 .ks-char { display: inline-block; transform-origin: 0 100%; animation: ks-rise .9s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--i) * 34ms + var(--d, 0ms)); }
-/* Parmak izi kendini çizer: yol uzunluğu 1'e normalize, kesik ofset 1 → 0. */
-@keyframes ks-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-.ks-draw path { stroke-dasharray: 1; animation: ks-draw 1.4s cubic-bezier(.65,0,.35,1) both; animation-delay: calc(0.55s + var(--p, 0) * 90ms); }
+/* Spektrum: "Kimlik"in arkasında on paletin şeritleri alttan sırayla dolar; seçili paletin şeridi genişler. */
+@keyframes ks-band { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.ks-band { transform-origin: bottom; animation: ks-band .7s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(0.6s + var(--i) * 55ms); transition: flex-grow .6s cubic-bezier(.22,1,.36,1), opacity .6s; }
+/* Renk dalgası: "Palet"in harfleri sırayla bir sonraki paletin rengine geçer. */
+.ks-wave { transition: color .6s cubic-bezier(.22,1,.36,1); transition-delay: calc(var(--i) * 70ms); }
 /* Kılavuz çizgileri yukarıdan aşağı çizilir. */
 @keyframes ks-guide { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 .ks-guide { transform-origin: top; animation: ks-guide 1.6s cubic-bezier(.22,1,.36,1) .2s both; }
-@media (prefers-reduced-motion: reduce) { .ks-char, .ks-draw path, .ks-guide { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .ks-char, .ks-band, .ks-guide { animation: none; } .ks-band, .ks-wave { transition: none; } }
 @layer base {
   .ks-tour, .ks-tour * { transition-property: color, background-color, border-color, fill, stroke, stop-color, box-shadow; transition-duration: 600ms; transition-timing-function: cubic-bezier(.22,1,.36,1); }
 }`;
@@ -156,22 +160,6 @@ function Rise({ text, from = 0, delay = 0, still }: { text: string; from?: numbe
   );
 }
 
-/** Çizerek beliren ikon: lucide yollarının uzunluğu 1'e normalize edilir, CSS kesik ofseti çeker. */
-function DrawIcon({ children, still }: { children: ReactNode; still: boolean }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    ref.current?.querySelectorAll("path").forEach((p, i) => {
-      p.setAttribute("pathLength", "1");
-      p.style.setProperty("--p", String(i));
-    });
-  }, []);
-  return (
-    <span ref={ref} className={cn("contents", !still && "ks-draw")}>
-      {children}
-    </span>
-  );
-}
-
 /** Sayı sayarak gelir (görünüme girince bir kez); hareket azaltmada doğrudan son değer. */
 function useCountUp(target: number, still: boolean) {
   const [value, setValue] = useState(still ? target : 0);
@@ -186,31 +174,106 @@ function useCountUp(target: number, still: boolean) {
   return value;
 }
 
-/** Palet küreleri: her palet kendi renkleriyle dönen bir küre; ortadaki seçili (net, büyük),
- *  yandakiler küçülüp bulanıklaşır ve kenarda kesilir. Tur döndükçe şerit kayar; yandakine
- *  basınca o palet bütün kataloğa uygulanır. Altında paletin adı ve birincil değeri. */
-function PaletteOrbs({ palette, theme, onPick, size }: { palette: PaletteName; theme: ThemeName; onPick: (p: PaletteName) => void; size: number }) {
-  const v = palettes[palette][theme];
+/** Spektrum vurgusu: kelimenin arkasında on paletin birincil renginden on dikey şerit (kalem
+ *  şeridi yerine). Seçili paletin şeridi genişler; "tek kimlik"in arkasında "on palet". */
+function Spectrum({ shown, theme, still, children }: { shown: PaletteName; theme: ThemeName; still: boolean; children: ReactNode }) {
   return (
-    <div className="grid justify-items-center gap-2">
-      <OrbCarousel
-        label="Paletler"
-        size={size}
-        value={palette}
-        onSelect={(id) => onPick(id as PaletteName)}
-        items={TOUR.map((p) => {
-          const c = palettes[p][theme];
-          return { id: p, label: `${TITLE[p]} paletini uygula`, colors: [c.primary, c.primarySoft, c.primaryHover, c.primaryInk] };
-        })}
-      />
-      <p aria-hidden className="relative grid h-6 place-items-center">
-        <AnimatePresence initial={false} mode="popLayout">
-          <m.span key={palette} className="flex items-baseline gap-2 whitespace-nowrap" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: EASE }}>
-            <span className="font-display text-title font-semibold tracking-tight text-strong">{TITLE[palette]}</span>
-            <span className="font-mono text-small text-muted tabular-nums">{v.primary}</span>
-          </m.span>
-        </AnimatePresence>
-      </p>
+    <span className="relative isolate inline-block whitespace-nowrap px-[0.06em]">
+      <span aria-hidden className="absolute inset-x-0 top-[0.1em] bottom-[0.02em] -z-10 flex gap-[0.025em] overflow-hidden rounded-[0.1em]">
+        {TOUR.map((p, i) => (
+          <span
+            key={p}
+            className={cn("ks-band h-full", still && "[animation:none]")}
+            style={{
+              "--i": i,
+              flexGrow: p === shown ? 4 : 1,
+              flexBasis: 0,
+              opacity: p === shown ? 0.5 : 0.28,
+              backgroundColor: palettes[p][theme].primary,
+            } as CSSProperties}
+          />
+        ))}
+      </span>
+      {children}
+    </span>
+  );
+}
+
+/** Renk dalgası: harf i, turdaki (seçili + i). paletin birincil rengini alır; tur ilerleyince
+ *  her harf bir sonraki palete geçer, gecikme harften harfe kayar (dalga). Düz renk (degrade
+ *  değil): harfler dönüştürülse de görünür kalır. Büyük punto, birincil renk ≥ 3:1. */
+function Wave({ text, shown, theme, from, still }: { text: string; shown: PaletteName; theme: ThemeName; from: number; still: boolean }) {
+  const base = TOUR.indexOf(shown);
+  return (
+    <span className="ks-word">
+      {[...text].map((ch, i) => (
+        <span
+          key={i}
+          className={cn("ks-wave", !still && "ks-char")}
+          style={{ "--i": from + i, "--d": "120ms", color: palettes[TOUR[(base + i) % TOUR.length]][theme].primary } as CSSProperties}
+        >
+          {ch}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** Aynı kart, on palet: başlığın iddiasının kanıtı. Kart katalogdaki GERÇEK bileşenlerle çizilir
+ *  (Button, Switch, Badge, Sparkline); her kopyanın rol değişkenleri kendi paletinden. Yelpaze:
+ *  önde seçili palet, arkasında sıradakiler açılarak dizilir; tur ilerleyince öndeki arkaya geçer.
+ *  Arkadaki karta basınca o palet bütün kataloğa uygulanır. Kart içi bileşenler `inert` (örnek). */
+function SkinDeck({ shown, theme, onPick, still }: { shown: PaletteName; theme: ThemeName; onPick: (p: PaletteName) => void; still: boolean }) {
+  const base = TOUR.indexOf(shown);
+  const spring = still ? { duration: 0 } : { type: "spring" as const, stiffness: 120, damping: 18 };
+  return (
+    <div className="relative h-[17rem] w-full max-w-md" style={{ perspective: 1200 }}>
+      {TOUR.map((p, i) => {
+        const d = (i - base + TOUR.length) % TOUR.length;
+        const visible = d < 5;
+        const v = palettes[p][theme];
+        return (
+          <m.div
+            key={p}
+            className="absolute top-2 right-6 w-64 origin-bottom rounded-2xl text-left"
+            style={{ ...paletteVars(p, theme), zIndex: 20 - d, pointerEvents: visible ? "auto" : "none" }}
+            initial={false}
+            animate={{ rotate: -d * 7, x: -d * 34, y: d * 6, scale: 1 - d * 0.04, opacity: visible ? 1 - d * 0.12 : 0 }}
+            transition={spring}
+          >
+            <span inert className="block rounded-2xl bg-overlay p-4 shadow-floating ring-1 ring-inset ring-line-soft">
+              <span className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <span className="size-3.5 rounded-full" style={{ backgroundImage: v.brandGradient }} />
+                  <span className="text-base font-semibold text-strong">{TITLE[p]}</span>
+                </span>
+                <span className="font-mono text-micro text-muted tabular-nums">{v.primary}</span>
+              </span>
+              <span className="mt-4 flex items-center justify-between gap-3">
+                <Button size="sm">
+                  <Check aria-hidden />
+                  Kaydet
+                </Button>
+                <Badge tone="primary">Yeni</Badge>
+              </span>
+              <span className="mt-3 block rounded-lg bg-surface px-3 py-1">
+                <Switch label="Bildirimler" defaultChecked />
+              </span>
+              <span className="mt-3 block">
+                <Sparkline values={[8, 12, 10, 15, 13, 19, 22]} title={`${TITLE[p]} örnek eğri`} width={220} height={34} />
+              </span>
+            </span>
+            {/* Tıklama ayrı bir örtü butonunda: kartın içindeki örnek bileşenler de buton (iç içe buton olmaz). */}
+            <button
+              type="button"
+              onClick={() => onPick(p)}
+              aria-label={`${TITLE[p]} paletini kataloğa uygula`}
+              tabIndex={visible ? 0 : -1}
+              className="absolute inset-0 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-line-focus focus-visible:ring-offset-2"
+            />
+          </m.div>
+        );
+      })}
     </div>
   );
 }
@@ -245,10 +308,10 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
           {still ? "NEXT 16 · REACT 19 · TAILWIND V4" : <ScrambleText text="NEXT 16 · REACT 19 · TAILWIND V4" trigger="mount" duration={1100} />}
         </m.p>
 
-        {/* Başlık: harfler maskelerinden sırayla yükselir, ardından "Kimlik"in arkasına paletin kalem
-            şeridi çekilir ve parmak izi kendini çizer. "Palet" o anki paletin display degradesini taşır;
-            tur döndükçe kelime bulanıklaşıp yeni renkte netleşir (yalnız kısa display metni: kimlik
-            kuralının izinli degrade yeri). Ad `aria-label`den; harf parçaları ekran okuyucuya tek ad. */}
+        {/* Başlık: harfler maskelerinden sırayla yükselir. "Kimlik"in arkasında on paletin şeritleri
+            dolar, seçili paletin şeridi genişler (tek kimlik, on palet). "Palet"in harfleri sıradaki
+            paletlerin rengini taşır; tur ilerledikçe renk harften harfe dalga gibi kayar. Ad
+            `aria-label`den; harf parçaları ekran okuyucuya tek ad. */}
         <h1
           id="kapak-baslik"
           aria-label="Tek Kimlik On Palet"
@@ -256,40 +319,17 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
         >
           <span aria-hidden className="block">
             <Rise text="Tek" still={still} />{" "}
-            <HeadMark variant="highlight" delay={still ? 0 : 0.75} icon={<DrawIcon still={still}><Fingerprint /></DrawIcon>}>
+            <Spectrum shown={t.shown} theme={theme} still={still}>
               <Rise text="Kimlik" from={4} still={still} />
-            </HeadMark>
+            </Spectrum>
           </span>{" "}
           <span aria-hidden className="block pb-[0.06em]">
             <span className="text-[color-mix(in_srgb,currentColor_52%,transparent)]">
               <Rise text="On" from={10} delay={120} still={still} />
             </span>{" "}
-            {/* Degradeli kelime BÜTÜN olarak yükselir: `background-clip: text` dönüştürülen alt öğeleri
-                kırpmaz (harfler görünmez olur), bu yüzden harf harf değil kelime maskesinde. */}
-            <span className="ks-word">
-              <m.span className="inline-grid" initial={still ? false : { y: "105%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.5 }}>
-                <AnimatePresence initial={false} mode="popLayout">
-                  <m.span
-                    key={t.shown}
-                    className="col-start-1 row-start-1 bg-clip-text text-transparent [-webkit-background-clip:text]"
-                    style={{ backgroundImage: palettes[t.shown][theme].displayGradient }}
-                    initial={still ? false : { opacity: 0, filter: "blur(10px)", y: "0.18em" }}
-                    animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                    exit={still ? undefined : { opacity: 0, filter: "blur(10px)", y: "-0.18em" }}
-                    transition={{ duration: 0.6, ease: EASE }}
-                  >
-                    Palet
-                  </m.span>
-                </AnimatePresence>
-              </m.span>
-            </span>
+            <Wave text="Palet" shown={t.shown} theme={theme} from={13} still={still} />
           </span>
         </h1>
-        {/* Telefonda ve dar ekranda küreler başlığın altında, akışın içinde (genişte sağ sütunda, sayıların üstünde). */}
-        <div className="-mt-6 lg:hidden">
-          <PaletteOrbs palette={t.shown} theme={theme} onPick={t.apply} size={96} />
-        </div>
-
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end">
           <div className="grid gap-7">
             <m.div {...enter(4)} className="grid max-w-[52ch] gap-2">
@@ -321,14 +361,15 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
           </div>
 
           <m.div {...enter(7)} className="grid gap-8 lg:justify-items-end">
-            <div className="hidden w-full max-w-md lg:block">
-              <PaletteOrbs palette={t.shown} theme={theme} onPick={t.apply} size={124} />
+            {/* Geniş ekranda yelpaze başlığın ikinci satırının yanına yükselir (o satır kısa, sağı boş). */}
+            <div className="hidden w-full max-w-md lg:block xl:-mt-28">
+              <SkinDeck shown={t.shown} theme={theme} onPick={t.apply} still={still} />
             </div>
             {/* Gerçek sayılar: bileşen ve hikaye dosyalardan, palet palettes.ts'ten. */}
             <dl className="grid w-full max-w-md grid-cols-3 gap-6">
               <Figure icon={<Blocks />} value={total.toLocaleString("tr-TR")} label="Bileşen" />
               <Figure icon={<SwatchBook />} value={stories.toLocaleString("tr-TR")} label="Hikaye" />
-              <Figure icon={<Fingerprint />} value={`${PALETTES.length} × 2`} label="Palet ve tema" />
+              <Figure icon={<Layers />} value={`${PALETTES.length} × 2`} label="Palet ve tema" />
             </dl>
             {/* Palet şeridi: turun göstergesi ve kumandası. */}
             <div className="flex w-full max-w-md items-center gap-1 overflow-x-auto rounded-full bg-surface p-1.5 ring-1 ring-inset ring-line-soft [scrollbar-width:none]" onPointerLeave={() => t.preview(null)}>
