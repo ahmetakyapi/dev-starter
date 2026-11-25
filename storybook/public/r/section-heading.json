@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "section-heading",
+  "type": "registry:ui",
+  "title": "Bölüm Başlığı",
+  "description": "Bölüm başlığı: kesik çizgili mono künye (`Eyebrow`) + güçlü iddia / soluk bağlam iki satır + yanda açıklama (`stack`, `split`, `center`)",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/section-heading.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Bölüm başlığı: mono büyük harf künye + uzayan kesik çizgi, altında iki\n * tonlu başlık (ilk satır güçlü, ikinci satır soluk), isteğe bağlı yanda\n * kısa açıklama. Tanıtım sayfasının \"nasıl çalışır\", \"neden biz\",\n * \"özellikler\" bölümlerini aynı sesle açar.\n *\n * Referans turu 25 Kasım 2026: Synaps (\"HOW IT WORKS ------\", iki tonlu\n * \"Start with / what you already have.\"), Finance ve Veridical (\"Why you\n * should / choose us\", sağda açıklama), Grain (iki satırlı sakin başlık).\n * Yalnız yapı; metin ve renk alınmadı.\n *\n * NEDEN İKİ SATIR: güçlü satır iddia, soluk satır bağlam. Okur önce güçlü\n * satırı okur; soluk satır cümleyi tamamlar ama göz çekmez. Başlıkta virgül\n * yok (design-directions temel kural 5); iki fikir iki satırdır.\n *\n * `eyebrow`: kesik çizgili künye. Sayfada en çok iki bölümde; her bölüme\n *   künye koymak hepsini sıradanlaştırır (taste-skill eyebrow tavanı).\n *   Türkçe büyük harf `toLocaleUpperCase(\"tr-TR\")` ile (i → İ).\n * `layout`:\n *   - `stack` (varsayılan): künye, başlık, açıklama alt alta, sola yaslı.\n *   - `split`: başlık solda, açıklama sağda alta yaslı (geniş ekranda).\n *   - `center`: ortalı; künyenin kesik çizgisi iki yana uzar.\n * `size`: `section` (bölüm) ya da `hero` (sayfanın tek h1'i).\n *\n * Soluk satır metnin %55'i: yalnız büyük puntoda (≥ 24 px) okunur kalır.\n * Sunucu bileşeni; hareket yok (çağıran `Reveal` ile sarabilir).\n */\n\nexport interface SectionHeadingProps {\n  title: ReactNode;\n  /** İkinci, soluk satır. */\n  soft?: ReactNode;\n  eyebrow?: string;\n  description?: ReactNode;\n  layout?: \"stack\" | \"split\" | \"center\";\n  size?: \"section\" | \"hero\";\n  as?: \"h1\" | \"h2\" | \"h3\";\n  id?: string;\n  className?: string;\n}\n\nconst SIZE = {\n  section: \"text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.02] tracking-[-0.045em]\",\n  hero: \"text-[clamp(2.75rem,7vw,6rem)] leading-[0.95] tracking-[-0.055em]\",\n} as const;\n\nexport function Eyebrow({ children, line = \"end\", className }: { children: string; line?: \"end\" | \"both\" | \"none\"; className?: string }) {\n  const rule = <span aria-hidden className=\"h-px min-w-8 flex-1 border-t border-dashed border-line-strong\" />;\n  return (\n    <p className={cn(\"flex items-center gap-4 font-mono text-small tracking-[0.14em] text-muted\", className)}>\n      {line === \"both\" ? rule : null}\n      <span className=\"shrink-0\">{children.toLocaleUpperCase(\"tr-TR\")}</span>\n      {line !== \"none\" ? rule : null}\n    </p>\n  );\n}\n\nexport function SectionHeading({ title, soft, eyebrow, description, layout = \"stack\", size = \"section\", as: Tag = \"h2\", id, className }: SectionHeadingProps) {\n  const center = layout === \"center\";\n  const heading = (\n    <Tag id={id} className={cn(\"font-display font-semibold text-balance text-strong\", SIZE[size])}>\n      <span className=\"block\">{title}</span>\n      {soft ? <span className=\"block text-[color-mix(in_srgb,currentColor_55%,transparent)]\">{soft}</span> : null}\n    </Tag>\n  );\n  const desc = description ? (\n    <p className={cn(\"max-w-[44ch] text-lead text-pretty text-body\", center && \"mx-auto\", layout === \"split\" && \"lg:justify-self-end lg:text-right\")}>{description}</p>\n  ) : null;\n  return (\n    <header className={cn(\"grid gap-6\", center && \"justify-items-center text-center\", className)}>\n      {eyebrow ? <Eyebrow line={center ? \"both\" : \"end\"} className=\"w-full\">{eyebrow}</Eyebrow> : null}\n      {layout === \"split\" ? (\n        <div className=\"grid items-end gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]\">\n          {heading}\n          {desc}\n        </div>\n      ) : (\n        <>\n          {heading}\n          {desc}\n        </>\n      )}\n    </header>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "section-heading",
+    "palettes": false
+  }
+}

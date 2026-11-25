@@ -280,6 +280,32 @@
       ]
     },
     {
+      "name": "art-mat",
+      "type": "registry:ui",
+      "title": "Sergi Paspartusu",
+      "description": "Sergi paspartusu: ürün penceresi boyalı katman (`strata`), kareli kağıt (`grid`) ya da sulu boya gök (`wash`) zeminde; yırtık kenar, `crop` alttan kırpar, `scrollInset` bant → kart daralır",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "art-mat",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/art-mat.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "assignee-picker",
       "type": "registry:ui",
       "title": "Kişi Seçici",
@@ -1619,6 +1645,29 @@
       ]
     },
     {
+      "name": "feature-list",
+      "type": "registry:ui",
+      "title": "Özellik Listesi",
+      "description": "Özellik listesi: renkli çizgi ikon + başlık + soluk açıklama, kıl çizgili satırlar; sergilenen görselin yanında",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "feature-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/feature-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "feature-tile",
       "type": "registry:ui",
       "title": "Özellik Karosu",
@@ -1875,6 +1924,29 @@
       "files": [
         {
           "path": "snippets/ui/hand-callout.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "head-mark",
+      "type": "registry:ui",
+      "title": "Başlık İşareti",
+      "description": "Başlık içinde tek işaret: `tile` (satır boyu ikon karesi), `highlight` (açılışta çekilen kalem şeridi), `dotted` (varlık adının noktalı alt çizgisi)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "head-mark",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/head-mark.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3379,6 +3451,29 @@
       ]
     },
     {
+      "name": "section-heading",
+      "type": "registry:ui",
+      "title": "Bölüm Başlığı",
+      "description": "Bölüm başlığı: kesik çizgili mono künye (`Eyebrow`) + güçlü iddia / soluk bağlam iki satır + yanda açıklama (`stack`, `split`, `center`)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "section-heading",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/section-heading.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "segmented-control",
       "type": "registry:ui",
       "title": "Bölmeli Seçici",
@@ -3562,6 +3657,33 @@
       "files": [
         {
           "path": "snippets/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "signal-hub",
+      "type": "registry:ui",
+      "title": "Sinyal Göbeği",
+      "description": "Ortada ürün işareti, dirsekli çizgilerle 2-3 çalışma kartı (ad, durum, parçalı ilerleme), çevrede \"yapıldı\" çipleri: yapay zekanın arka planda ne yaptığı",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zeka"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "signal-hub",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/signal-hub.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3907,6 +4029,33 @@
       "files": [
         {
           "path": "snippets/ui/step-rail.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "step-tabs",
+      "type": "registry:ui",
+      "title": "Adım Sekmeleri",
+      "description": "\"Nasıl çalışır\" yatay adım şeridi: seçili adım tam renk, diğerleri soluk, altında adımın sahnesi; isteğe bağlı kendiliğinden ilerler",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "step-tabs",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/step-tabs.tsx",
           "type": "registry:ui"
         }
       ]

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "feature-list",
+  "type": "registry:ui",
+  "title": "Özellik Listesi",
+  "description": "Özellik listesi: renkli çizgi ikon + başlık + soluk açıklama, kıl çizgili satırlar; sergilenen görselin yanında",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/feature-list.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Özellik listesi: ince çizgili ikon + başlık + iki satır soluk açıklama,\n * satırlar kıl çizgiyle ayrılır. Sergilenen ürün görselinin (`art-mat`)\n * YANINDA durur: görsel \"ne\", liste \"neden\" der. Kart yok, ikon karesi yok;\n * ikon rengi grafik dizisinden (1-6) gelir ve satırları gözle ayırır.\n *\n * Referans turu 25 Kasım 2026: Lasso (\"Optimizers / Localization /\n * Personalization\", renkli çizgi ikon, satır arası kıl çizgi). Yalnız yapı.\n *\n * KURAL: 3-5 satır. Her başlık bir yetenek adı (Title Case), açıklama\n * neyi mümkün kıldığını tek cümleyle söyler; sıfat yığını değil olgu.\n * `color` yalnız ikonu boyar (süs); anlam metinde. `headingLevel`\n * sayfanın başlık düzenine göre (varsayılan 3).\n * Sunucu bileşeni.\n */\n\nexport interface FeatureItem {\n  id: string;\n  title: string;\n  description: ReactNode;\n  icon?: ReactNode;\n  /** Grafik dizisi rengi (1-6); verilmezse metin rengi. */\n  color?: 1 | 2 | 3 | 4 | 5 | 6;\n}\n\nconst COLOR = {\n  1: \"text-chart-1\",\n  2: \"text-chart-2\",\n  3: \"text-chart-3\",\n  4: \"text-chart-4\",\n  5: \"text-chart-5\",\n  6: \"text-chart-6\",\n} as const;\n\nexport function FeatureList({ items, headingLevel = 3, dense = false, className }: { items: FeatureItem[]; headingLevel?: 2 | 3 | 4; dense?: boolean; className?: string }) {\n  const H = `h${headingLevel}` as \"h2\" | \"h3\" | \"h4\";\n  return (\n    <ul role=\"list\" className={cn(\"divide-y divide-line\", className)}>\n      {items.map((it) => (\n        <li key={it.id} className={cn(\"grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-4\", dense ? \"py-4\" : \"py-6 first:pt-0 last:pb-0\")}>\n          <span aria-hidden className={cn(\"pt-0.5 [&_svg]:size-6 [&_svg]:stroke-[1.6]\", it.color ? COLOR[it.color] : \"text-strong\")}>\n            {it.icon}\n          </span>\n          <div className=\"grid gap-1.5\">\n            <H className=\"text-title font-medium text-strong\">{it.title}</H>\n            <p className=\"max-w-[52ch] text-read text-pretty text-muted\">{it.description}</p>\n          </div>\n        </li>\n      ))}\n    </ul>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "feature-list",
+    "palettes": false
+  }
+}

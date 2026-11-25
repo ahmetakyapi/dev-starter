@@ -9,6 +9,7 @@ import {
   HorizonHero,
   Scene,
 } from "./_kahramanlar";
+import { BandHero, ExhibitHero, StrataHero } from "./_sergi";
 
 const meta = {
   title: "Ekranlar/Örnek Sayfalar/Kahraman Sahneleri",
@@ -23,7 +24,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Altı tam sayfa kahraman düzeni. Referans görsellerden yalnız yapı ve davranış alındı; metin, logo ve görsel alınmadı. Markalar kurgusal, logolar düz kelime işareti, sayılar \"ÖRNEK\". Zemin yalnız `wallpaper`, `mesh-gradient` ve token; menü bağlantıları sayfanın altındaki gerçek duraklara gider.",
+          "Dokuz tam sayfa kahraman düzeni (üçü Sergi turundan: ürün dokulu zeminde, `art-mat`). Referans görsellerden yalnız yapı ve davranış alındı; metin, logo ve görsel alınmadı. Markalar kurgusal, logolar düz kelime işareti, sayılar \"ÖRNEK\". Zemin yalnız `wallpaper`, `mesh-gradient` ve token; menü bağlantıları sayfanın altındaki gerçek duraklara gider.",
       },
     },
   },
@@ -103,5 +104,38 @@ export const BeigeFinance: Story = {
     </Scene>
   ),
   parameters: { docs: { description: { story: "Köşelerde renk lekeleri, hap menü, iki tonlu başlık, pano penceresi, logo şeridi ve sayı şeridi (Synais). `MeshGradient`, `ToneText.Soft`, `AppWindow`, `StatStrip`; sayılar \"ÖRNEK\" künyeli." } } },
+  play: h1Once,
+};
+
+export const Exhibit: Story = {
+  name: "Sergi",
+  render: () => (
+    <Scene>
+      <ExhibitHero />
+    </Scene>
+  ),
+  parameters: { docs: { description: { story: "Sola yaslı dev başlık, ilk kelimede kalem şeridi ve ikon, soluk devam; solda tanım ve iki eylem, sağda mono sayılar; altta kareli kağıt paspartusunda alttan kırpılan plan penceresi, iki yanda kesik kılavuzlar (Synaps). `HeadMark`, `ArtMat grid`, `AppWindow`." } } },
+  play: h1Once,
+};
+
+export const Strata: Story = {
+  name: "Boya Katmanı",
+  render: () => (
+    <Scene>
+      <StrataHero />
+    </Scene>
+  ),
+  parameters: { docs: { description: { story: "Ortalı serif başlık, içinde ikon karesi ve italik vurgu; boya katmanlı, yırtık kenarlı zeminde grafik penceresi; altında ödeme yöntemi satırı (Lasso). `HeadMark tile`, `ArtMat strata earth`, `StackedBarChart`, `BarList`." } } },
+  play: h1Once,
+};
+
+export const Band: Story = {
+  name: "Daralan Bant",
+  render: () => (
+    <Scene>
+      <BandHero />
+    </Scene>
+  ),
+  parameters: { docs: { description: { story: "Solda iki satırlı sakin başlık, sağda e-posta + buton tek satırda; altında boya katmanlı bant, kaydırınca kenarlara taşan halinden karta daralır, üstünde üç ürün kartı (ortadaki öne çıkar) (Grain videosu). `ArtMat scrollInset`, `Stat`, `Badge`, `Eyebrow`." } } },
   play: h1Once,
 };

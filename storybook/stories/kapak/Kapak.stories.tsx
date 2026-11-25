@@ -332,7 +332,7 @@ function Showcase() {
       ? {}
       : { initial: { opacity: 0, y: 28 }, animate: { opacity: 1, y: 0 }, transition: { duration: DUR.page, ease: EASE, delay: 0.35 + step * 0.1 } };
   return (
-    <div className="relative isolate w-full rounded-[2rem] bg-surface p-2 text-left edge-lit sm:p-3">
+    <div className="relative isolate w-full rounded-[1.75rem] bg-page/85 p-2 text-left shadow-floating ring-1 ring-inset ring-line-soft backdrop-blur-sm sm:p-3">
       <div className="grid gap-2 sm:gap-3 lg:grid-cols-12 lg:grid-rows-[auto_auto]">
         <m.div {...tile(0)} className="min-w-0 lg:col-span-7 lg:row-span-2">
           {/* Pusula'nın kendi grafik paleti (paletin birincil renginden türer): pencere Pusula'yı gösteriyor. */}

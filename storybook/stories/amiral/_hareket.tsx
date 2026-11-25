@@ -22,6 +22,7 @@ import { TextShimmer } from "@/components/ui/text-shimmer";
 import { ThinkingOrb } from "@/components/ui/thinking-orb";
 import { ToolCall } from "@/components/ui/tool-call";
 import { HareketEk } from "./_ekler";
+import { AjanQ } from "./_ekler-q";
 import { Cell, CellGrid } from "./_ui";
 
 /* Hareket ve Doku + Yapay Zeka grupları (secki.dev turu, 2026-11-06). Her
@@ -217,6 +218,7 @@ export function AjanGroup() {
       <Cell file="stream-text" name="Akan Metin" note="Yalnız yeni gelen sözcük belirir; önceki metin kıpırdamaz." span={3} align="stretch">
         <StreamText text="Kavurucu takvimini 10 Kasım'a çekmeyi öneririm: 214 yenilemenin çoğu 12'sinde, paketler iki gün dinlenmiş gider." className="text-base text-strong" />
       </Cell>
+      <AjanQ />
     </CellGrid>
   );
 }

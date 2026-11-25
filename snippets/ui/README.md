@@ -291,6 +291,11 @@ Sayfası hikayesi.
 | `step-rail.tsx` | Tanıtımda "nasıl çalışır": ikonlu yuvarlak karolar, kalın hap çizgi, tamamlanan kısım vurgu renginde dolu; kaydırdıkça çizgi dolar. Form akışı için `stepper` | yok | Hayır | `ol` + `aria-current="step"`; tamam adım görünmez "Tamamlandı"; dolum CSS `animation-timeline`, hareket azaltmada ve desteksiz tarayıcıda doğrudan dolu; `tone="dark"` ters yüzeyde |
 | `stat-strip.tsx` | 3-4 büyük sayı + etiket + ince ayraç, telefonda 2×2; doğrulanamayan sayı yazılmaz, örnek veri künyeli | yok | Hayır | `dl`: DOM sırası etiket-değer, görsel sıra ters; sayı düz metin |
 | `horizon-scene.tsx` | Kahramanda ürün çerçevesi arkada kısmen görünür, önüne manzara biner ve sayfa zeminine solar; `peek`, `fade` | yok | Hayır | Çerçeve ve manzara `aria-hidden` süs; solma `mask-image`, sabit renk yok; telefonda sahne alçalır |
+| `art-mat.tsx` | Sergi paspartusu: ürün penceresi boyalı katman (`strata`), kareli kağıt (`grid`) ya da sulu boya gök (`wash`) zeminde; yırtık kenar, `crop` alttan kırpar, `scrollInset` bant → kart daralır | motion | Evet | Doku SVG `aria-hidden`, içerik normal akışta; renkler token `color-mix`; daralma yalnız `transform`, hareket azaltmada durağan |
+| `section-heading.tsx` | Bölüm başlığı: kesik çizgili mono künye (`Eyebrow`) + güçlü iddia / soluk bağlam iki satır + yanda açıklama (`stack`, `split`, `center`) | yok | Hayır | Tek başlık öğesi, iki satır tek cümle okunur; künye `tr-TR` büyük harf; soluk satır yalnız büyük puntoda |
+| `step-tabs.tsx` | "Nasıl çalışır" yatay adım şeridi: seçili adım tam renk, diğerleri soluk, altında adımın sahnesi; isteğe bağlı kendiliğinden ilerler | motion, lucide | Evet | WAI-ARIA tabs (←→ Home End); Durdur butonu (WCAG 2.2.2), üstüne gelince/odakta/görünüm dışında durur; hareket azaltmada ilerleme yok |
+| `feature-list.tsx` | Özellik listesi: renkli çizgi ikon + başlık + soluk açıklama, kıl çizgili satırlar; sergilenen görselin yanında | yok | Hayır | `ul` + başlık düzeyi (`headingLevel`); renk yalnız ikonda, anlam metinde |
+| `head-mark.tsx` | Başlık içinde tek işaret: `tile` (satır boyu ikon karesi), `highlight` (açılışta çekilen kalem şeridi), `dotted` (varlık adının noktalı alt çizgisi) | yok | Hayır | İkon `aria-hidden`, başlık işaretsiz tam okunur; kalem şeridi hareket azaltmada baştan çizili |
 
 ### Yapay Zeka
 
@@ -300,6 +305,7 @@ Sayfası hikayesi.
 | `tool-call.tsx` | Asistanın araç çağrısının kaydı: durum, süre, girdi, çıktı; onay yuvası | `border-beam`, `text-shimmer`, lucide | Hayır | `<details>`: JS'siz açılır; durum metinle yazılır, renk tek işaret değil; `pre` odaklanır |
 | `reasoning.tsx` | Modelin düşüncesi: akarken açık ve sayan, bitince "6 sn düşündü" satırına iner | `text-shimmer`, lucide | Evet | Başlık `aria-expanded`; bitiş canlı bölgede bir kez; kullanıcının açıp kapatması korunur |
 | `stream-text.tsx` | Parça parça gelen yanıt: yalnız yeni sözcük belirir, önceki metin kıpırdamaz | yok | Evet | Sözcükler gerçek metin; akarken `aria-busy`, okutma mesaj listesinde; hareket azaltmada doğrudan |
+| `signal-hub.tsx` | Ortada ürün işareti, dirsekli çizgilerle 2-3 çalışma kartı (ad, durum, parçalı ilerleme), çevrede "yapıldı" çipleri: yapay zekanın arka planda ne yaptığı | motion, lucide | Evet | Çizgi ve göbek `aria-hidden`; kartlar `ul`, ilerleme `sr-only` metinle; bitmiş işler ayrı liste; telefonda çipler kartların altında |
 
 ### Bloklar
 

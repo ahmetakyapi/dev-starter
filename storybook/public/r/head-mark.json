@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "head-mark",
+  "type": "registry:ui",
+  "title": "Başlık İşareti",
+  "description": "Başlık içinde tek işaret: `tile` (satır boyu ikon karesi), `highlight` (açılışta çekilen kalem şeridi), `dotted` (varlık adının noktalı alt çizgisi)",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/head-mark.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Başlık işareti: büyük başlığın İÇİNDE, bir kelimeye eşlik eden küçük\n * işaret. Üç biçim:\n *   - `tile`: kelimenin önünde, satır yüksekliğinde çizgi ikonlu kare\n *     (\"From [▣] site to\"). Ürünün nesnesini gösterir: site, ödeme, rapor.\n *   - `highlight`: kelimenin arkasında fosforlu kalem şeridi; açılışta\n *     soldan sağa çekilir (yalnız `transform`, CSS).\n *   - `dotted`: noktalı alt çizgi; kelime bir varlık adı (toplantı, kişi,\n *     proje), üstüne gelinince ayrıntı açılacağını ima eder.\n *\n * Referans turu 25 Kasım 2026: Synaps (yeşil vurgulu \"site\" + ikon karesi),\n * Lasso (başlık içinde çizim ve kart ikonu), Lindy (noktalı alt çizgili\n * \"Design Sync\"). Yalnız yapı; renkler paletten.\n *\n * KURAL: başlık başına EN ÇOK BİR işaret; iki işaret başlığı süs yığınına\n * çevirir. İkon `aria-hidden`: başlığın metni işaretsiz de tam okunur\n * (ekran okuyucu ve arama motoru aynı cümleyi görür). Vurgu rengi\n * `primary-soft` karışımı: metin rengi değişmez, kontrast korunur.\n * Hareketi azaltan kullanıcıda kalem şeridi baştan çizili.\n * Sunucu bileşeni.\n */\n\nconst CSS = `\n@keyframes ui-headmark-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }\n.ui-headmark-hl::before { content: \"\"; position: absolute; inset: 0.08em -0.06em 0.02em; z-index: -1; border-radius: 0.08em; background: color-mix(in srgb, var(--primary-soft) 26%, transparent); transform-origin: left; animation: ui-headmark-draw .9s cubic-bezier(.22,1,.36,1) .35s both; }\n@media (prefers-reduced-motion: reduce) { .ui-headmark-hl::before { animation: none; } }`;\n\nexport interface HeadMarkProps {\n  variant?: \"tile\" | \"highlight\" | \"dotted\";\n  /** `tile` için ikon (lucide); `highlight` ile birlikte de verilebilir. */\n  icon?: ReactNode;\n  children?: ReactNode;\n  className?: string;\n}\n\nexport function HeadMark({ variant = \"tile\", icon, children, className }: HeadMarkProps) {\n  // Kalem şeridinin içinde ikon çerçevesiz (şerit zaten bir zemin); düz başlıkta kare çerçeveli.\n  const framed = variant === \"tile\";\n  const tile = icon ? (\n    <span\n      aria-hidden\n      className={cn(\n        \"mr-[0.1em] inline-grid translate-y-[0.04em] place-items-center text-primary-ink\",\n        framed ? \"size-[0.78em] rounded-[0.18em] ring-[0.03em] ring-current ring-inset [&_svg]:size-[0.52em] [&_svg]:stroke-[2]\" : \"size-[0.7em] [&_svg]:size-[0.7em] [&_svg]:stroke-[1.75]\",\n      )}\n    >\n      {icon}\n    </span>\n  ) : null;\n  if (variant === \"dotted\") {\n    return (\n      <span className={cn(\"underline decoration-dotted decoration-[0.08em] underline-offset-[0.14em] [text-decoration-color:color-mix(in_srgb,currentColor_55%,transparent)]\", className)}>\n        {children}\n      </span>\n    );\n  }\n  if (variant === \"highlight\") {\n    return (\n      <>\n        <style href=\"ui-head-mark\" precedence=\"default\">\n          {CSS}\n        </style>\n        <span className={cn(\"ui-headmark-hl relative isolate inline-block whitespace-nowrap px-[0.04em]\", className)}>\n          {tile}\n          {children}\n        </span>\n      </>\n    );\n  }\n  return (\n    <span className={cn(\"whitespace-nowrap\", className)}>\n      {tile}\n      {children}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "head-mark",
+    "palettes": false
+  }
+}

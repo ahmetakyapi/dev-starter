@@ -212,6 +212,25 @@
       "palettes": false
     },
     {
+      "name": "art-mat",
+      "title": "Sergi Paspartusu",
+      "category": "Tanıtım",
+      "description": "Sergi paspartusu: ürün penceresi boyalı katman (`strata`), kareli kağıt (`grid`) ya da sulu boya gök (`wash`) zeminde; yırtık kenar, `crop` alttan kırpar, `scrollInset` bant → kart daralır",
+      "file": "snippets/ui/art-mat.tsx",
+      "client": true,
+      "storyId": "art-mat",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "assignee-picker",
       "title": "Kişi Seçici",
       "category": "Buton ve İkon",
@@ -1236,6 +1255,24 @@
       "palettes": false
     },
     {
+      "name": "feature-list",
+      "title": "Özellik Listesi",
+      "category": "Tanıtım",
+      "description": "Özellik listesi: renkli çizgi ikon + başlık + soluk açıklama, kıl çizgili satırlar; sergilenen görselin yanında",
+      "file": "snippets/ui/feature-list.tsx",
+      "client": false,
+      "storyId": "feature-list",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "feature-tile",
       "title": "Özellik Karosu",
       "category": "Tanıtım",
@@ -1428,6 +1465,24 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "head-mark",
+      "title": "Başlık İşareti",
+      "category": "Tanıtım",
+      "description": "Başlık içinde tek işaret: `tile` (satır boyu ikon karesi), `highlight` (açılışta çekilen kalem şeridi), `dotted` (varlık adının noktalı alt çizgisi)",
+      "file": "snippets/ui/head-mark.tsx",
+      "client": false,
+      "storyId": "head-mark",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -2544,6 +2599,24 @@
       "palettes": false
     },
     {
+      "name": "section-heading",
+      "title": "Bölüm Başlığı",
+      "category": "Tanıtım",
+      "description": "Bölüm başlığı: kesik çizgili mono künye (`Eyebrow`) + güçlü iddia / soluk bağlam iki satır + yanda açıklama (`stack`, `split`, `center`)",
+      "file": "snippets/ui/section-heading.tsx",
+      "client": false,
+      "storyId": "section-heading",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "segmented-control",
       "title": "Bölmeli Seçici",
       "category": "Buton ve İkon",
@@ -2680,6 +2753,26 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "signal-hub",
+      "title": "Sinyal Göbeği",
+      "category": "Yapay Zeka",
+      "description": "Ortada ürün işareti, dirsekli çizgilerle 2-3 çalışma kartı (ad, durum, parçalı ilerleme), çevrede \"yapıldı\" çipleri: yapay zekanın arka planda ne yaptığı",
+      "file": "snippets/ui/signal-hub.tsx",
+      "client": true,
+      "storyId": "signal-hub",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -2948,6 +3041,26 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "step-tabs",
+      "title": "Adım Sekmeleri",
+      "category": "Tanıtım",
+      "description": "\"Nasıl çalışır\" yatay adım şeridi: seçili adım tam renk, diğerleri soluk, altında adımın sahnesi; isteğe bağlı kendiliğinden ilerler",
+      "file": "snippets/ui/step-tabs.tsx",
+      "client": true,
+      "storyId": "step-tabs",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

@@ -16,6 +16,7 @@ import { WALLPAPER_NAMES, WALLPAPER_SCENES, Wallpaper } from "@/components/ui/wa
 import { BRAND, CAFES, ORDERS, SUBSCRIBERS, num } from "./_data";
 import { TanitimEk } from "./_ekler";
 import { TanitimYeni } from "./_ekler-yeni";
+import { TanitimQ } from "./_ekler-q";
 import { Cell, CellGrid } from "./_ui";
 
 /* Tanıtım grubu (Ribbon ve offscreen.wtf turları, 2026-11-07): ziyaretçiye
@@ -199,6 +200,7 @@ export function TanitimGroup() {
       </Cell>
       <TanitimEk />
       <TanitimYeni />
+      <TanitimQ />
     </CellGrid>
   );
 }
