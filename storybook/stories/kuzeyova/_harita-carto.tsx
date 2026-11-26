@@ -402,3 +402,21 @@ export function CartoMap({
     </figure>
   );
 }
+
+/** Harita açıklaması: bölge dolgusu (kare) ve trafo simgesi (yuvarlatılmış kare) aynı satırda. */
+export function CartoLegend({ items, className }: { items: readonly { tone: CartoTone; label: string; kind: "area" | "station" }[]; className?: string }) {
+  return (
+    <p className={cn("flex flex-wrap items-center gap-x-4 gap-y-1.5 text-small text-muted", className)}>
+      {items.map((it) => (
+        <span key={it.label} className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden
+            className={cn(it.kind === "area" ? "size-3 rounded-[3px]" : "size-2.5 rounded-[2px]")}
+            style={{ background: it.kind === "area" ? (it.tone === "neutral" ? "var(--line-strong)" : `color-mix(in oklab, ${TONE[it.tone]} ${it.tone === "success" ? 30 : 45}%, transparent)`) : TONE[it.tone] }}
+          />
+          {it.label}
+        </span>
+      ))}
+    </p>
+  );
+}

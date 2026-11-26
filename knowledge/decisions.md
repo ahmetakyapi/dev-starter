@@ -1810,3 +1810,7 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   (`_harita-carto.tsx`): tohumlu kıvrımlı sınırlar (komşular aynı kenarı paylaşır), kıyı ve
   deniz, arazi kabartması, nehir, yollar, ilçeler, trafo simgeleri, ölçek ve kuzey oku; üç
   görünüm (topo, gece, kroki) Portal → Harita Seçenekleri'nde, seçim sahibinde.
+  **Seçim (2026-11-26): A · Topoğrafik.** Pano bölge kayıp haritası, Arıza ve Kesintiler →
+  Şebeke Durumu ve arıza ayrıntısındaki "Kesintinin Bölgesi" bu haritaya geçti (eski
+  `region-map` poligonları portalda kullanılmıyor; snippet başka kullanımlar için duruyor).
+  Haritanın altında `CartoLegend`: bölge dolgusu ve trafo simgesi aynı satırda.

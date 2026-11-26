@@ -12,7 +12,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 - Portal tablolarında bütün sütunlar soldan başlar; ilk sütun dahil iki parçalı hücreler tek satır
 - Yeni `stage-flow` (aşamalar yan yana, aradaki kayıp, en çok takılan aşama); Başvurular'da huni yerine; Pusula Raporlar → Talep Akışı
 - Pano: tek brifing kartı (başlık + günün işleri + kısayollar) ve Vadesi Geçmiş Alacak spot kartı (dört sütunlu yaşlandırma); ölçü şeridi altı ölçü
-- Portal → Harita Seçenekleri: kartografik bölge haritası, üç görünüm (topo, gece, kroki)
+- Portal → Harita Seçenekleri: kartografik bölge haritası, üç görünüm (topo, gece, kroki); seçilen topoğrafik görünüm Pano, Şebeke Durumu ve arıza ayrıntısında
 - Tanıtım kahramanı: palet ışığı çapraz geçişi, harf dalgasında zıplama, harf dalgası gecikme hatası düzeltildi
 
 ### Sergi turu: sahne dili, altı bileşen, Tanıtım kahramanı, Portal — 2026-11-25

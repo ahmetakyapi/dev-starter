@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { ChartCard } from "@/components/ui/chart-card";
 import { ComboChart } from "@/components/ui/combo-chart";
-import { RegionMap, type MapRegion } from "@/components/ui/region-map";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
@@ -18,6 +17,7 @@ import {
   PERIODS,
   PERIODS_12,
   SYSTEMS,
+  SUBSTATIONS,
   TODAY,
   balanceOf,
   clock,
@@ -41,7 +41,7 @@ import { useDerived } from "./_core";
 import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, useLiveStats } from "./_selectors";
 import { effectiveMeters } from "./_ops";
 import { WORK_TYPE_LABEL as WORK_LABEL_X, type WorkType } from "./_store";
-import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
+import { CartoLegend, CartoMap, type CartoMarker, type CartoRegion } from "./_harita-carto";
 import { useRole } from "./_permissions";
 import { COLLECTION_SCOPE, flaggedReadings as flagged, overdueTotal, useBadges } from "./_selectors";
 import { useAging } from "./_data-pano";
@@ -332,11 +332,16 @@ export function PanoPage({ go, params }: PageProps) {
     });
   }, [stats.periods]);
   const overRegions = losses.filter((l) => l.lossPct > l.target);
-  const mapRegions: MapRegion[] = MAP_SHAPES.map((s) => {
-    const l = losses.find((x) => x.region.id === s.id)!;
-    return { id: s.id, label: l.region.name.split(" ")[0], path: s.path, at: s.at, value: l.lossPct, tone: l.lossPct > l.target ? ("danger" as const) : ("success" as const), note: `hedef %${l.target}` };
-  });
+  const mapRegions: CartoRegion[] = losses.map((l) => ({
+    id: l.region.id,
+    label: l.region.name,
+    value: `Kayıp ${fmtPct(l.lossPct)}`,
+    note: `hedef %${l.target}`,
+    tone: l.lossPct > l.target ? "danger" : "success",
+  }));
   const picked = losses.find((l) => l.region.id === selected);
+  const downSubs = new Set(outagesNow.map((o) => o.substationId));
+  const mapMarkers: CartoMarker[] = SUBSTATIONS.map((x) => ({ id: x.id, regionId: x.regionId, label: `${x.name}: ${downSubs.has(x.id) ? "arızalı" : "çalışıyor"}`, tone: downSubs.has(x.id) ? "danger" : "success" }));
 
   /* "Haritayı aç" (Bugün bandı) bu bölüme kaydırır. */
   useEffect(() => {
@@ -511,7 +516,17 @@ export function PanoPage({ go, params }: PageProps) {
         <div id="pano-kayip" className="grid scroll-mt-4 grid-cols-1 gap-5 xl:grid-cols-5">
           <ChartCard id="pano-harita" className={`${FLAT} xl:col-span-3`} label="Bölge Haritası · Kayıp / Kaçak" value={fmtPct(stats.lossPct)} change={null} action={<Badge tone={overRegions.length ? "danger" : "success"} dot>{overRegions.length ? `${overRegions.length} bölge hedefin üstünde` : "Bütün bölgeler hedefte"}</Badge>}>
             <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_14rem] md:items-center">
-              <RegionMap title="Bölgeye Göre Kayıp ve Kaçak Oranı" regions={mapRegions} viewBox={MAP_VIEWBOX} format={(v) => fmtPct(v)} selectedId={selected} onSelect={(id) => setSelected((cur) => (cur === id ? null : id))} legend={["Hedefte", "Hedef üstü"]} />
+              <div className="grid gap-3">
+                <CartoMap title="Bölgeye Göre Kayıp ve Kaçak Oranı" regions={mapRegions} markers={mapMarkers} selectedId={selected} onSelect={(id) => setSelected((cur) => (cur === id ? null : id))} />
+                <CartoLegend
+                  items={[
+                    { tone: "success", label: "Hedefte", kind: "area" },
+                    { tone: "danger", label: "Hedef Üstü", kind: "area" },
+                    { tone: "success", label: "Trafo Çalışıyor", kind: "station" },
+                    { tone: "danger", label: "Trafoda Arıza", kind: "station" },
+                  ]}
+                />
+              </div>
               <div className="border-line-soft text-base md:border-l md:pl-4">
                 {picked ? (
                   <>

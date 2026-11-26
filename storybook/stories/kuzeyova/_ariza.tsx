@@ -10,7 +10,7 @@ import { FactorList } from "@/components/ui/factor-list";
 import { PolicyChecks, type PolicyCheck } from "@/components/ui/policy-checks";
 import { Input } from "@/components/ui/input";
 import { RecordList, type RecordItem } from "@/components/ui/record-list";
-import { RegionMap, type MapMarker, type MapRegion } from "@/components/ui/region-map";
+import { CartoLegend, CartoMap, type CartoMarker, type CartoRegion } from "./_harita-carto";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { Select } from "@/components/ui/select";
 import { Tabs } from "@/components/ui/tabs";
@@ -34,7 +34,6 @@ import {
   fixOutage,
   isSensitive,
 } from "./_data-ops-sayfa";
-import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
 import { getCutPolicy, scheduleSlot } from "./_cutpolicy";
 import { isBusinessDay, inWorkHours, keyOf } from "./_calendar";
 import { BarTarget, CandidateStrip, EmptyStateX, PageHero, RowAnchor, RowLink, StepCountChart, UnitLegend, fmtDec, fmtDur, fmtNum, useListKeys } from "./_kit";
@@ -145,24 +144,18 @@ export function ArizaPage({ params, go }: PageProps) {
   const openAffected = open.reduce((s, o) => s + o.affected, 0);
   const openSensitive = open.reduce((s, o) => s + affectedSensitive(o), 0);
 
-  const mapRegions: MapRegion[] = MAP_SHAPES.map((s) => {
-    const mine = open.filter((o) => o.regionId === s.id);
+  const mapRegions: CartoRegion[] = REGIONS.map((r) => {
+    const mine = open.filter((o) => o.regionId === r.id);
     const n = mine.length;
-    return { id: s.id, label: region(s.id).name, path: s.path, at: s.at, value: n, tone: n ? "danger" : "neutral", note: n ? `${n} açık arıza · ${fmtNum(mine.reduce((x, o) => x + o.affected, 0))} abone` : "Kesinti yok" };
+    return { id: r.id, label: r.name, value: n ? `${fmtNum(n)} arıza` : "Kesinti yok", note: n ? `${fmtNum(mine.reduce((x, o) => x + o.affected, 0))} abone etkileniyor` : undefined, tone: n ? "danger" : "neutral" };
   });
 
-  /* Trafo merkezleri: bölge etiketinin altında yan yana; açık arızası olan kırmızı (nabız), planlı çalışması olan sarı. */
+  /* Trafo merkezleri: açık arızası olan kırmızı (nabız), planlı çalışması olan sarı, kalanı yeşil. */
   const plannedWork = list.filter((o) => o.kind === "planli" && o.status === "planlandi");
-  const mapMarkers: MapMarker[] = MAP_SHAPES.flatMap((shape) => {
-    const subs = SUBSTATIONS.filter((x) => x.regionId === shape.id);
-    return subs.map((x, k) => {
-      const down = open.some((o) => o.substationId === x.id);
-      const work = plannedWork.some((o) => o.substationId === x.id);
-      // Etiketin altında yer yoksa (haritanın alt kenarı) işaretler etiketin sağına dizilir.
-      const below = shape.at[1] + 28 < 288;
-      const at: [number, number] = below ? [shape.at[0] + (k - (subs.length - 1) / 2) * 16, shape.at[1] + 28] : [shape.at[0] + 46 + k * 16, shape.at[1] + 2];
-      return { id: x.id, at, label: `${x.name}: ${down ? "açık arıza" : work ? "planlı çalışma" : "çalışıyor"}`, tone: down ? ("danger" as const) : work ? ("warning" as const) : ("success" as const) };
-    });
+  const mapMarkers: CartoMarker[] = SUBSTATIONS.map((x) => {
+    const down = open.some((o) => o.substationId === x.id);
+    const work = plannedWork.some((o) => o.substationId === x.id);
+    return { id: x.id, regionId: x.regionId, label: `${x.name}: ${down ? "açık arıza" : work ? "planlı çalışma" : "çalışıyor"}`, tone: down ? "danger" : work ? "warning" : "success" };
   });
 
   const panels: { value: TabId; label: string; panel: ReactNode }[] = [
@@ -174,26 +167,23 @@ export function ArizaPage({ params, go }: PageProps) {
           <div className="grid gap-5 xl:grid-cols-5">
             <Panel id="ariza-harita" title="Şebeke Durumu" note="Bölgeye basınca liste süzülür; kırmızı bölgede açık arıza var." className="xl:col-span-2">
               <div className="p-4 sm:p-5">
-                <RegionMap
-                  title="Bölgeye Göre Açık Arıza"
-                  regions={mapRegions}
-                  viewBox={MAP_VIEWBOX}
-                  format={(v) => (v ? `${fmtNum(v)} arıza` : "Kesinti yok")}
-                  showValues
-                  markers={mapMarkers}
-                  markerLabel="Trafo merkezleri"
-                  markerLegend={[
-                    { tone: "success", label: "Çalışıyor" },
-                    { tone: "warning", label: "Planlı Çalışma" },
-                    { tone: "danger", label: "Arızalı" },
-                  ]}
-                  legendTones={[
-                    { tone: "neutral", label: "Kesinti Yok" },
-                    { tone: "danger", label: "Açık Arıza" },
-                  ]}
-                  selectedId={regionId}
-                  onSelect={(id) => go("outages", { tab: "acik", region: regionId === id ? undefined : id })}
-                />
+<div className="grid gap-3">
+                  <CartoMap
+                    title="Bölgeye Göre Açık Arıza"
+                    regions={mapRegions}
+                    markers={mapMarkers}
+                    selectedId={regionId}
+                    onSelect={(id) => go("outages", { tab: "acik", region: regionId === id ? undefined : id })}
+                  />
+                  <CartoLegend
+                    items={[
+                      { tone: "danger", label: "Açık Arıza", kind: "area" },
+                      { tone: "success", label: "Trafo Çalışıyor", kind: "station" },
+                      { tone: "warning", label: "Planlı Çalışma", kind: "station" },
+                      { tone: "danger", label: "Trafoda Arıza", kind: "station" },
+                    ]}
+                  />
+                </div>
               </div>
             </Panel>
             <Panel
@@ -511,7 +501,8 @@ function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; pat
     .sort((a, b) => a.at.getTime() - b.at.getTime())
     .map((e, i) => ({ id: `${o.id}-${i}`, at: e.at.toISOString(), when: dateTime(e.at), title: e.title, description: e.detail, tone: e.tone }));
 
-  const regionMap: MapRegion[] = MAP_SHAPES.map((s) => ({ id: s.id, label: region(s.id).name, path: s.path, at: s.at, value: s.id === o.regionId ? 1 : 0, tone: s.id === o.regionId ? (isOpen ? "danger" : "warning") : "neutral", note: s.id === o.regionId ? `${o.id} · ${fmtNum(o.affected)} abone` : undefined }));
+  const regionMap: CartoRegion[] = REGIONS.map((r) => ({ id: r.id, label: r.name, value: r.id === o.regionId ? o.id : "Etkilenmedi", note: r.id === o.regionId ? `${fmtNum(o.affected)} abone` : undefined, tone: r.id === o.regionId ? (isOpen ? "danger" : "warning") : "neutral" }));
+  const regionMarkers: CartoMarker[] = SUBSTATIONS.filter((x) => x.regionId === o.regionId).map((x) => ({ id: x.id, regionId: x.regionId, label: `${x.name}${x.id === o.substationId ? ": bu kayıt" : ""}`, tone: x.id === o.substationId ? (isOpen ? "danger" : "warning") : "success" }));
 
   return (
     <>
@@ -553,7 +544,7 @@ function OutageDetail({ o, patch, go, canOps, onSms, onClose }: { o: Outage; pat
             </Panel>
             <Panel id="ad-harita" title="Bölge" note={`${region(o.regionId).name} · ${o.feederId ? FEEDERS.find((f) => f.id === o.feederId)?.name : substation(o.substationId).name}`}>
               <div className="p-4 sm:p-5">
-                <div className="mx-auto max-w-md"><RegionMap title="Kesintinin Bölgesi" regions={regionMap} viewBox={MAP_VIEWBOX} format={(v) => (v ? "Bu kayıt" : "Etkilenmedi")} legend={["Etkilenmedi", "Bu kayıt"]} /></div>
+                <div className="mx-auto max-w-md"><CartoMap title="Kesintinin Bölgesi" regions={regionMap} markers={regionMarkers} selectedId={o.regionId} /></div>
               </div>
             </Panel>
           </div>
