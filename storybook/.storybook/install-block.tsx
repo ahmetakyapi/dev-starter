@@ -139,7 +139,9 @@ export function DocsPageWithInstall() {
       <Description />
       <Primary />
       <Controls />
-      <Stories />
+      {/* Ana hikaye yukarıda (Primary) zaten var; "Stories" listesinde ikinci kez basılmasın.
+          Tek hikayeli sayfada liste hiç çıkmaz (26 Kasım 2026: Vitrin'de "Genel Bakış" iki kez). */}
+      <Stories includePrimary={false} />
     </>
   );
 }

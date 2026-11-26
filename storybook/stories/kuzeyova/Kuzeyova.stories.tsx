@@ -54,7 +54,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Elektrik dağıtım şirketi operasyon portalı: tıklanabilir, tek kurgusal şirketin (Kuzeyova, 360 abone) tek sahte verisiyle çalışan bir demo. Sol menü: Pano; Aboneler, Başvurular, Abone Kaydı; Sayaçlar, Sayaç Stok, Okumalar, Saha Okuma, Ham Veri, Üreticiler; Faturalar, Ödemeler, İtirazlar ve Mahsup; Arıza ve Kesintiler, Çağrı Merkezi, Kaçak Vakaları, İş Emirleri, Şebeke ve Trafo; Tedarikçiler; Raporlar; Uyum Merkezi, Ayarlar. Tek depo: bir sayfada yapılan işlem (ödeme, onay, ekip ataması) rozetleri, panoyu ve abone bakiyesini aynı anda günceller; adres çubuğu ve geri tuşu çalışır. Abone, sayaç, okuma, fatura ve ödeme listeleri tek kaynaktan türer: panodaki her toplam listelerin toplamıdır. ⌘K ile abone adı, tesisat no ya da sayaç seri no aranır; açık ve koyu temada aynı kalitede. Bütün veri ÖRNEKTİR.",
+          "Elektrik dağıtım şirketi operasyon portalı: tıklanabilir, tek kurgusal şirketin (Kuzeyova, 360 abone) tek sahte verisiyle çalışan bir demo. Sol menü: Pano; Aboneler, Başvurular, Abone Kaydı; Sayaçlar, Envanter, Okumalar, Saha Okuma, Ham Veri, Üreticiler; Faturalar, Ödemeler, İtirazlar ve Mahsup; Arıza ve Kesintiler, Çağrı Merkezi, Kaçak Vakaları, İş Emirleri, Şebeke ve Trafo; Tedarikçiler; Raporlar; Uyum Merkezi, Ayarlar. Tek depo: bir sayfada yapılan işlem (ödeme, onay, ekip ataması) rozetleri, panoyu ve abone bakiyesini aynı anda günceller; adres çubuğu ve geri tuşu çalışır. Abone, sayaç, okuma, fatura ve ödeme listeleri tek kaynaktan türer: panodaki her toplam listelerin toplamıdır. ⌘K ile abone adı, tesisat no ya da sayaç seri no aranır; açık ve koyu temada aynı kalitede. Bütün veri ÖRNEKTİR.",
       },
     },
   },

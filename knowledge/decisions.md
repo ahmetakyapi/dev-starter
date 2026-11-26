@@ -1877,3 +1877,18 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   ekranından sonra doğrudan bitmiş ekran.
 - **Kenar çubuğu şeridi**: "Tümünü Daralt" (seçili grubu da kapatır; `api.collapseAll` 10.6'da
   atıyor, açık grupların butonuna basılır) ve "Kapat" (telefonda çekmece, masaüstünde kenar çubuğu).
+
+### Belge Sayfaları, Kenar Çubuğu Gecikmesi, Envanter, Bölge Sıralaması (2026-11-26)
+
+- **Belge sayfası tekrar etmez**: `Stories includePrimary={false}` (install-block.tsx); ana hikaye
+  yalnız üstte. Belgedeki önizlemede `min-h-dvh`/`min-h-screen` geçersiz (preview.css): sayfa
+  hikayelerinin altında bir ekran boyu boşluk kalıyordu. Vitrin'de autodocs kaldırıldı (beş grup
+  sayfası alt alta ~17.000 px basılıyordu); "Vitrin" doğrudan giriş sayfasını açar.
+- **Kenar çubuğu gözatma kapanışı** (`app-shell`): 350 ms gecikme, geri gelinirse açık kalır.
+  Açılış 140 ms'de kaldı. Sahibi: "gittiği gibi kapanmasın".
+- **Sayaç Stok → Envanter** (menü, sayfa başlığı, liste adı). Kimlik `stock` aynı (adres değişmez).
+- **Hedefe Göre Sıralama** (Pano): ince `BarTarget` yerine `RegionRanking`: üç hücreli özet
+  (kayıp enerji, en büyük sapma, önlenebilir kayıp) + satır başına sıra, durum yazısı, kalın
+  çubuk ve hedef çentiği, oran ve puan farkı, son 6 dönem eğilimi; satırlar kartın yüksekliğini
+  paylaşır. Telefonda çubuk ikinci satırda tam genişlik. Kayıp oranında eğilim çizgisi `auto`
+  tonla boyanmaz (artış iyi sayılıyordu); hedef üstü bölge birincil, diğerleri sönük.

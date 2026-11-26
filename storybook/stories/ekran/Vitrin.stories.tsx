@@ -14,7 +14,8 @@ const meta = {
   title: "Vitrin",
   id: "gallery",
   component: VitrinIndex,
-  tags: ["autodocs"],
+  // autodocs YOK (26 Kasım 2026): belge sayfası giriş sayfasını iki kez ve beş grubu alt alta
+  // tam boy basıyordu (~17.000 px). "Vitrin"e tıklayınca doğrudan giriş sayfası açılır; kartlar gruplara götürür.
   parameters: {
     layout: "fullscreen",
     docs: {

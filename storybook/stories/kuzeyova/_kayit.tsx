@@ -625,7 +625,7 @@ export function KayitPage({ params, go }: PageProps) {
                           <p className="text-small text-muted">{fmtNum(freeStock.length)} sayaç stokta. Kayıt tamamlanınca seçilen sayaç stoktan düşer ve aboneye tahsis edilir.</p>
                         </>
                       ) : (
-                        <p role="note" className="rounded-xl bg-warning-wash p-4 text-base text-body ring-1 ring-warning/20">Stokta sayaç kalmadı. Yeni sayaç tanımlayın ya da Sayaç Stok sayfasından sayaç alın.</p>
+                        <p role="note" className="rounded-xl bg-warning-wash p-4 text-base text-body ring-1 ring-warning/20">Stokta sayaç kalmadı. Yeni sayaç tanımlayın ya da Envanter sayfasından sayaç alın.</p>
                       )
                     ) : (
                       <div className="grid gap-4 sm:grid-cols-2">

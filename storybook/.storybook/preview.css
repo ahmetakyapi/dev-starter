@@ -48,3 +48,8 @@
 }
 .sbdocs-content h3:not(.sb-anchor, .sb-unstyled, .sb-unstyled *) { font-family: var(--font-display); font-weight: 650; }
 .sbdocs-preview, .docs-story { border-radius: 14px; box-shadow: none; }
+
+/* Belge sayfasındaki önizlemede tam ekran alt sınırı yok (26 Kasım 2026, Vitrin): sayfa
+   hikayeleri `min-h-dvh` ile sarılı; belgede "ekran" önizleme çerçevesi olduğu için içerik
+   bittikten sonra bir ekran boyu boşluk kalıyordu. Hikayenin kendi sayfasında kural geçerli. */
+.docs-story :is(.min-h-dvh, .min-h-screen, .min-h-svh) { min-height: auto; }

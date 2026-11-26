@@ -165,11 +165,16 @@ export function AppShell({
   const startPeek = (event: React.PointerEvent) => {
     if (!peek || !collapsed || event.pointerType !== "mouse") return;
     clearTimeout(peekTimer.current);
+    // Kapanmak üzereyken geri gelindiyse açık kalır; değilse kısa gecikmeyle açılır.
+    if (peeking) return;
     peekTimer.current = setTimeout(() => setPeeking(true), 140);
   };
+  // Kapanış gecikmeli (26 Kasım 2026, sahibinin geri bildirimi: "gittiği gibi kapanmasın"):
+  // imleç rayın kenarından birkaç piksel taşınca ya da menüye doğru çapraz giderken panel
+  // anında kapanıyordu. 350 ms içinde geri gelinirse açık kalır.
   const endPeek = () => {
     clearTimeout(peekTimer.current);
-    setPeeking(false);
+    peekTimer.current = setTimeout(() => setPeeking(false), 350);
   };
 
   return (

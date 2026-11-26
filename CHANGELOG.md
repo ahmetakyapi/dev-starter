@@ -7,6 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Belge sayfaları, kenar çubuğu gecikmesi, bölge sıralaması — 2026-11-26
+
+- Belge sayfası ana hikayeyi ikinci kez basmaz; önizlemede tam ekran boşluğu yok. Vitrin doğrudan açılır.
+- `app-shell`: gözatma paneli 350 ms gecikmeyle kapanır.
+- Portal: "Sayaç Stok" → "Envanter"; Pano'da zengin "Hedefe Göre Sıralama" kartı.
+
 ### Storybook: okunur adresler, sessiz açılış, kenar çubuğu şeridi — 2026-11-26
 
 - Adresler `/portal/customers`, `/area-chart` biçiminde; eski `?path=` bağlantıları da çalışır.

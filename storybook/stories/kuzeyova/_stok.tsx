@@ -225,7 +225,7 @@ export function StokPage({ go }: PageProps) {
   return (
     <>
       <PageHead
-        title="Sayaç Stok"
+        title="Envanter"
         description="Depo envanteri, tahsis, muayene ve söküm: sayaçların yaşam döngüsü. Tahsis edilen sayaç stoktan düşer, söküm bitince buraya döner."
         actions={
           <>
@@ -280,7 +280,7 @@ export function StokPage({ go }: PageProps) {
                   <DataTable<StockMeter> caption="Sayaç stoku" columns={columns} rows={visible} rowKey={(s) => s.id} density="comfortable" on="surface" stickyFirst={false} minWidth="58rem" />
                 </div>
                 <div className="px-3 pb-3 md:hidden">
-                  <RecordList label="Sayaç Stoku" items={items} />
+                  <RecordList label="Sayaç Envanteri" items={items} />
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line-soft px-4 py-3">
                   <p className="text-small text-muted" aria-live="polite">{fmtNum(visible.length)} / {fmtNum(rows.length)} sayaç gösteriliyor</p>

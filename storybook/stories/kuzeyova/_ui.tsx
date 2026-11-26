@@ -79,7 +79,7 @@ export const PAGES: readonly { id: Page; label: string; section: string }[] = [
   { id: "reports", label: "Raporlar", section: "Analiz" },
   { id: "settings", label: "Ayarlar", section: "Sistem" },
   { id: "applications", label: "Başvurular", section: "Abonelik" },
-  { id: "stock", label: "Sayaç Stok", section: "Ölçüm" },
+  { id: "stock", label: "Envanter", section: "Ölçüm" },
   { id: "field", label: "Saha Okuma", section: "Ölçüm" },
   { id: "producers", label: "Üreticiler", section: "Ölçüm" },
   { id: "disputes", label: "İtirazlar ve Mahsup", section: "Finans" },

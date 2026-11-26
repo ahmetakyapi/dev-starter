@@ -10,6 +10,7 @@ import { ChartCard } from "@/components/ui/chart-card";
 import { ComboChart } from "@/components/ui/combo-chart";
 import { ScheduleList, type ScheduleItem } from "@/components/ui/schedule-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { Sparkline } from "@/components/ui/sparkline";
 import {
   CURRENT_PERIOD,
   FLAG_LABEL,
@@ -45,7 +46,7 @@ import { CartoLegend, CartoMap, type CartoMarker, type CartoRegion } from "./_ha
 import { useRole } from "./_permissions";
 import { COLLECTION_SCOPE, flaggedReadings as flagged, overdueTotal, useBadges } from "./_selectors";
 import { useAging } from "./_data-pano";
-import { AgingBars, BarTarget, Metric, NavLink, RowAnchor, RowLink, todayItems, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
+import { AgingBars, Metric, NavLink, RowAnchor, RowLink, todayItems, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
 import { PageBody, PageHead, Panel, useApp, type PageProps } from "./_ui";
 
 /** Dönem seçici: panonun bütün ölçülerini ve grafiklerini birlikte değiştirir. */
@@ -388,6 +389,11 @@ export function PanoPage({ go, params }: PageProps) {
     });
   }, [stats.periods]);
   const overRegions = losses.filter((l) => l.lossPct > l.target);
+  // Sıralama kartındaki eğilim: seçili pencerenin son döneminde biten 6 dönem.
+  const trendPeriods = useMemo(() => {
+    const end = PERIODS_12.indexOf(stats.periods[stats.periods.length - 1]);
+    return PERIODS_12.slice(Math.max(0, end - 5), end + 1);
+  }, [stats.periods]);
   const mapRegions: CartoRegion[] = losses.map((l) => ({
     id: l.region.id,
     label: l.region.name,
@@ -599,11 +605,7 @@ export function PanoPage({ go, params }: PageProps) {
           </ChartCard>
 
           <ChartCard id="pano-kayip-liste" className={FLAT} label="Hedefe Göre Sıralama" value={`${overRegions.length} / ${losses.length} bölge hedef üstünde`} change={null} action={<Badge tone="neutral">{label}</Badge>}>
-            <BarTarget
-              aria-label="Bölgeye Göre Kayıp ve Kaçak Oranı"
-              rows={[...losses].sort((a, b) => b.lossPct - b.target - (a.lossPct - a.target)).map((l) => ({ id: l.region.id, label: l.region.name, value: l.lossPct, target: l.target }))}
-              format={(v) => fmtPct(v)}
-            />
+            <RegionRanking rows={losses} trendPeriods={trendPeriods} />
           </ChartCard>
         </div>
 
@@ -624,5 +626,88 @@ export function PanoPage({ go, params }: PageProps) {
         </section>
       </PageBody>
     </>
+  );
+}
+
+/* ------------------------------------------------------------------------ */
+/* Hedefe Göre Sıralama                                                      */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * Bölge kayıp sıralaması (26 Kasım 2026, sahibinin geri bildirimi: harita kartının yanında
+ * altı ince çubuk "alana göre çok küçük kalmış"). Üstte üç hücreli özet (kayıp enerji, en büyük
+ * sapma, hedef üstü fazla enerji); altında her bölge kartın yüksekliğini paylaşan bir satır:
+ * ad + durum, büyük oran ve hedeften fark (puan), kalın çubuk + hedef çentiği, kayıp enerji,
+ * son 6 dönem eğilimi. Hedefi aşan satır tehlike tonunda; renk tek işaret değil ("Hedef Üstü").
+ */
+type LossRow = { region: { id: string; name: string }; lossPct: number; target: number; lossKwh: number };
+
+function RegionRanking({ rows, trendPeriods }: { rows: readonly LossRow[]; trendPeriods: readonly string[] }) {
+  const sorted = [...rows].sort((a, b) => b.lossPct - b.target - (a.lossPct - a.target));
+  const scale = Math.max(...rows.map((r) => Math.max(r.lossPct, r.target))) * 1.12;
+  const totalKwh = rows.reduce((sum, r) => sum + r.lossKwh, 0);
+  const worst = sorted[0];
+  // Hedef üstü fazla kayıp: hedef oranda kalsaydı kaybedilmeyecek enerji.
+  const excessKwh = rows.reduce((sum, r) => (r.lossPct > r.target ? sum + r.lossKwh * (1 - r.target / r.lossPct) : sum), 0);
+  const trend = (id: string) =>
+    trendPeriods.map((p) => {
+      const row = regionLoss(p).find((x) => x.region.id === id);
+      return row ? Math.round((row.lossKwh / Math.max(1, row.input)) * 1000) / 10 : 0;
+    });
+  const gap = (r: LossRow) => Math.round((r.lossPct - r.target) * 10) / 10;
+
+  return (
+    <div className="flex h-full flex-col gap-4 px-4 pb-4">
+      <dl className="grid divide-y divide-line-soft rounded-lg bg-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {[
+          { k: "Kayıp Enerji", v: fmtKwh(totalKwh), f: "seçili dönem, 6 bölge" },
+          { k: "En Büyük Sapma", v: worst ? `${worst.region.name} ${gap(worst) > 0 ? "+" : ""}${fmtDec(gap(worst))} puan` : "—", f: "hedefe göre" },
+          { k: "Önlenebilir Kayıp", v: fmtKwh(excessKwh), f: "hedefin üstündeki pay" },
+        ].map((c) => (
+          <div key={c.k} className="grid min-w-0 gap-0.5 px-3 py-2.5">
+            <dt className="truncate text-micro text-muted">{c.k}</dt>
+            <dd className="truncate text-base font-semibold text-strong tabular-nums">{c.v}</dd>
+            <dd className="truncate text-micro text-muted">{c.f}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <ol aria-label="Bölgeye Göre Kayıp ve Kaçak Oranı" className="grid flex-1 auto-rows-fr divide-y divide-line-soft">
+        {sorted.map((r, i) => {
+          const over = r.lossPct > r.target;
+          const g = gap(r);
+          return (
+            <li key={r.region.id} className="grid grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-x-3.5 gap-y-1.5 py-2 sm:grid-cols-[1.5rem_minmax(0,6.75rem)_minmax(0,1fr)_4.25rem_5.25rem]">
+              <span aria-hidden className={cn("grid size-6 place-items-center rounded-full text-micro font-semibold tabular-nums", over ? "bg-danger-wash text-danger" : "bg-surface text-muted")}>{i + 1}</span>
+              <div className="grid min-w-0 gap-0.5">
+                <span className="truncate text-base font-medium text-strong">{r.region.name}</span>
+                <span className={cn("text-micro font-medium", over ? "text-danger" : "text-success")}>{over ? "Hedef Üstü" : "Hedefte"}</span>
+              </div>
+              {/* Telefonda çubuk ikinci satırda, ad ve oranın altında tam genişlik. */}
+              <div className="grid min-w-0 gap-1.5 max-sm:col-span-2 max-sm:col-start-2 max-sm:row-start-2">
+                <div aria-hidden className="relative h-2.5 rounded-full bg-surface">
+                  <span className={cn("absolute inset-y-0 left-0 rounded-full", over ? "bg-danger" : "bg-primary")} style={{ width: `${(r.lossPct / scale) * 100}%` }} />
+                  <span className="absolute -inset-y-1 w-0.5 rounded-full bg-strong" style={{ left: `${(r.target / scale) * 100}%` }} />
+                </div>
+                <span className="truncate text-micro text-muted tabular-nums">
+                  hedef {fmtPct(r.target)} · {fmtKwh(r.lossKwh)}
+                </span>
+              </div>
+              <div className="grid justify-items-end gap-0.5 text-end">
+                <span className={cn("text-title font-semibold tracking-tight tabular-nums", over ? "text-danger" : "text-strong")}>{fmtPct(r.lossPct)}</span>
+                <span className={cn("text-micro tabular-nums", g > 0 ? "text-danger" : "text-muted")}>
+                  {g > 0 ? "+" : ""}
+                  {fmtDec(g)} puan
+                </span>
+              </div>
+              <div className="hidden sm:block">
+                <Sparkline values={trend(r.region.id)} title={`${r.region.name}, son ${trendPeriods.length} dönem kayıp oranı`} width={84} height={32} tone={over ? "primary" : "muted"} />
+              </div>
+              <span className="sr-only">{`${r.region.name}: kayıp ${fmtPct(r.lossPct)}, hedef ${fmtPct(r.target)}, ${over ? "hedefin üstünde" : "hedefte"}.`}</span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
