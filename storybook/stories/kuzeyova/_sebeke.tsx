@@ -8,14 +8,13 @@ import { Button } from "@/components/ui/Button";
 import { GaugeChart } from "@/components/ui/gauge-chart";
 import { ImpactBar } from "@/components/ui/impact-bar";
 import { InsightCallout } from "@/components/ui/insight-callout";
-import { RegionMap, type MapRegion } from "@/components/ui/region-map";
 import { StatusList } from "@/components/ui/status-list";
 import { TreeTable, type TreeTableRow } from "@/components/ui/tree-table";
 import { useDerived } from "./_core";
-import { FEEDERS, METERS, SYSTEMS, TRANSFORMERS, region, substation, transformer } from "./_data";
+import { FEEDERS, METERS, REGIONS, SUBSTATIONS, SYSTEMS, TRANSFORMERS, substation, transformer } from "./_data";
 import { TRANSFORMER_LOADS } from "./_data-yeni";
 import { buildGrid, customerOf, impactOf, isSensitive, loadOf, loadTone, transformerCurve, type GridNode } from "./_data-ops-sayfa";
-import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
+import { CartoLegend, CartoMap, type CartoMarker, type CartoRegion } from "./_harita-carto";
 import { EmptyStateX, PageHero, RowAnchor, RowLink, fmtDec, fmtNum, fmtPct, useListKeys } from "./_kit";
 import { openOutages, overloadedTransformers } from "./_selectors";
 import { useProducers } from "./_store";
@@ -88,12 +87,17 @@ export function SebekePage({ params, go }: PageProps) {
   const scada = SYSTEMS.find((s) => s.id === "scada");
   const alarm = [...TRANSFORMER_LOADS].filter((l) => l.loadPct >= 80).sort((a, b) => b.loadPct - a.loadPct).slice(0, 8);
 
-  const regionMap: MapRegion[] = MAP_SHAPES.map((s) => {
-    const ids = new Set(TRANSFORMERS.filter((t) => t.regionId === s.id).map((t) => t.id));
+  const regionMap: CartoRegion[] = REGIONS.map((r) => {
+    const ids = new Set(TRANSFORMERS.filter((t) => t.regionId === r.id).map((t) => t.id));
     const loads = TRANSFORMER_LOADS.filter((l) => ids.has(l.id));
     const pct = loads.length ? loads.reduce((x, l) => x + l.loadPct, 0) / loads.length : 0;
     const hot = loads.filter((l) => l.loadPct >= LIMIT).length;
-    return { id: s.id, label: region(s.id).name, path: s.path, at: s.at, value: Math.round(pct * 10) / 10, tone: hot ? "danger" : undefined, note: `${loads.length} DTR${hot ? ` · ${hot} aşırı yüklü` : ""}` };
+    return { id: r.id, label: r.name, value: `Doluluk ${fmtPct(Math.round(pct * 10) / 10)}`, note: `${loads.length} DTR${hot ? ` · ${hot} aşırı yüklü` : ""}`, tone: hot ? "danger" : pct >= 60 ? "warning" : "success" };
+  });
+  /* Trafo merkezi simgesi: kendisine bağlı en yüklü dağıtım trafosuna göre renk. */
+  const stationMarkers: CartoMarker[] = SUBSTATIONS.map((x) => {
+    const peak = Math.max(0, ...TRANSFORMER_LOADS.filter((l) => transformer(l.id).substationId === x.id).map((l) => l.loadPct));
+    return { id: x.id, regionId: x.regionId, label: `${x.name}: en yüklü DTR ${fmtPct(peak)}`, tone: peak >= LIMIT ? "danger" : peak >= 75 ? "warning" : "success" };
   });
 
   const expanded = useMemo(() => {
@@ -141,7 +145,26 @@ export function SebekePage({ params, go }: PageProps) {
           <div className="grid content-start gap-5 xl:sticky xl:top-4 xl:col-span-2 xl:self-start">
             <Panel id="sebeke-harita" title="Bölgeye Göre Doluluk" note="Bölgedeki dağıtım trafolarının ortalama doluluğu.">
               <div className="p-4 sm:p-5">
-                <RegionMap title="Bölgeye Göre Ortalama Trafo Doluluğu" regions={regionMap} viewBox={MAP_VIEWBOX} format={(v) => fmtPct(v)} scale={{ min: 30, max: 80 }} legend={["Düşük yük", "Yüksek yük"]} onSelect={(id) => { const worst = [...TRANSFORMER_LOADS].filter((l) => transformer(l.id).regionId === id).sort((a, b) => b.loadPct - a.loadPct)[0]; if (worst) go("grid", { id: worst.id }); }} />
+<div className="grid gap-3">
+                  <CartoMap
+                    zoom={30}
+                    title="Bölgeye Göre Ortalama Trafo Doluluğu"
+                    regions={regionMap}
+                    markers={stationMarkers}
+                    onSelect={(id) => {
+                      const worst = [...TRANSFORMER_LOADS].filter((l) => transformer(l.id).regionId === id).sort((a, b) => b.loadPct - a.loadPct)[0];
+                      if (worst) go("grid", { id: worst.id });
+                    }}
+                  />
+                  <CartoLegend
+                    items={[
+                      { tone: "success", label: "Rahat", kind: "area" },
+                      { tone: "warning", label: "Yoğun (%60+)", kind: "area" },
+                      { tone: "danger", label: "Aşırı Yüklü DTR", kind: "area" },
+                      { tone: "danger", label: "TM: DTR %90+", kind: "station" },
+                    ]}
+                  />
+                </div>
               </div>
             </Panel>
             <Panel id="sebeke-alarm" title="Yük Alarmları" note={`%80 üstü; en yüksek ${alarm.length} trafo.`} actions={<Badge tone={over.length ? "danger" : "success"} dot>{over.length} aşırı yük</Badge>}>

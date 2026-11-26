@@ -1814,3 +1814,23 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   Şebeke Durumu ve arıza ayrıntısındaki "Kesintinin Bölgesi" bu haritaya geçti (eski
   `region-map` poligonları portalda kullanılmıyor; snippet başka kullanımlar için duruyor).
   Haritanın altında `CartoLegend`: bölge dolgusu ve trafo simgesi aynı satırda.
+
+### Portal: Sağdan Açılan Paneller, Para Kartı, Saha Okuma Sırası (2026-11-26)
+
+- **Alttan açılan panel kaldırıldı.** Portalda bütün `Sheet`ler `side="right"`; geniş
+  form isteyenler (İş Emri, Saha Okuma) yeni `size="xl"` (≈ 46rem). Gerekçe: sahibinin
+  geri bildirimi ("alttan açılma yerine sağdan açılsın"); masaüstünde alttan panel
+  listeyi örter, sağdan panel listeyi bağlam olarak görünür bırakır.
+- **Vadesi Geçmiş Alacak kartı**: tek büyük tutar + "90 günü aşan" tehlike satırı + en
+  eski borçlu + yığılı yaş çubuğu + dört hücre; iki eylem ("Listeyi Aç", "Bugün
+  Aranacaklar"). Halka ve küre denemeleri reddedildi.
+- **Aynı sayfa içi bağlantı** (Pano "Haritayı Aç"): adres parametresi aynı kalınca
+  effect tetiklenmiyordu; artık `jumpTo(id)`: yumuşak kaydırma + odak + `kz-flash`.
+- **Saha Okuma**: sıradaki durak vurgulu (halka + birincil buton), panelde durak özeti
+  (son okuma, çarpan, beklenen tüketim, son 6 dönem), her alanda "Önceki" ipucu, büyük
+  fotoğraf bölgesi.
+- **Şebeke ve Trafo**: `CartoMap` (zoom 30), bölge dolgusu ortalama yük, trafo simgesi
+  tepe yük. Tedarikçi ayrıntısının sol sütununa `SupplierProfile` (sözleşme süresi,
+  seçim ve gerilim dağılımı, abone türü) sağ-sol dengesi için.
+- **`record-list`**: meta ile durum iki sütunlu ızgarada; uzun meta durumu alt satırda
+  sola itmiyor (check:align bulgusu). `policy-checks` satırı ızgara: etiket ezilmiyor.

@@ -971,7 +971,7 @@ function AccrualDialog({ open, onOpenChange, go }: { open: boolean; onOpenChange
       dismissible={step !== "calisiyor"}
       title="Tahakkuk Çalıştır"
       description="Önce kuru çalıştırma: neyin kesileceğini görün. Kesildikten sonra bu oturumda “Geri Al” ile döndürebilirsiniz."
-      size="md"
+      size="lg"
       footer={
         step === "onizleme" ? (
           <>

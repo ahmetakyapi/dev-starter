@@ -23,6 +23,10 @@ export function MapOptions() {
   ];
   return (
     <div className="grid gap-6 bg-page p-6 lg:grid-cols-3">
+      <header className="grid gap-1 lg:col-span-3">
+        <h1 className="text-title font-semibold tracking-tight text-strong">Harita Seçenekleri</h1>
+        <p className="text-small text-muted">Aynı veri üç görünümde; Portal A · Topoğrafik ile ilerliyor.</p>
+      </header>
       {looks.map((l) => (
         <figure key={l.look} className="grid content-start gap-3">
           <CartoMap title={`Bölge haritası, ${l.name}`} look={l.look} regions={regions} markers={markers} selectedId={selected} onSelect={(id) => setSelected((c) => (c === id ? null : id))} className="ring-1 ring-line" />

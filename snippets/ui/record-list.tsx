@@ -94,9 +94,11 @@ export function RecordList({ items, label, className }: RecordListProps) {
                 {item.value ? <div className="shrink-0 text-base font-semibold text-strong tabular-nums">{item.value}</div> : null}
               </div>
               {item.meta || item.status ? (
-                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
-                  {item.meta ? <p className="text-small text-muted tabular-nums">{item.meta}</p> : <span />}
-                  {item.status ? <div className="flex flex-wrap items-center gap-1.5">{item.status}</div> : null}
+                // İki sütun: durum HER satırda sağda aynı sütunda kalır; uzun meta
+                // alta kaydırıp rozeti sola itmesin (check:align, 26 Kasım 2026).
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3">
+                  {item.meta ? <p className="truncate text-small text-muted tabular-nums">{item.meta}</p> : <span />}
+                  {item.status ? <div className="flex items-center justify-end gap-1.5">{item.status}</div> : null}
                 </div>
               ) : null}
               {item.people?.length ? (

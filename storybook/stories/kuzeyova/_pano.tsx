@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowRight, BookOpenCheck, ClipboardList, Gauge, Lightbulb, Receipt, Route, UserPlus, Users, WifiOff, Zap } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpenCheck, ClipboardList, Gauge, Lightbulb, Receipt, Route, UserPlus, Users, WifiOff, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
@@ -149,6 +149,18 @@ const SYSTEM_TEXT = { operational: "Çalışıyor", degraded: "Yavaş", outage: 
 
 const ROLE_HERO: Record<string, string> = { okuma: "supheli", tahsilat: "tahsilat", musteri: "ariza", denetci: "tahsilat", yonetici: "tahsilat" };
 
+/** Sayfa içi bölüme yumuşak kayar, odağı oraya taşır ve bölümü 1,6 sn halka ile işaretler. */
+function jumpTo(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  el.setAttribute("tabindex", "-1");
+  el.focus({ preventScroll: true });
+  el.classList.add("kz-flash");
+  window.setTimeout(() => el.classList.remove("kz-flash"), 1600);
+}
+
 const TONE_DOT = { danger: "bg-danger", warning: "bg-warning", neutral: "bg-muted" } as const;
 const TONE_INK = { danger: "text-danger", warning: "text-warning", neutral: "text-muted" } as const;
 const TONE_WORD = { danger: "Kritik", warning: "Bekliyor", neutral: "Takipte" } as const;
@@ -204,11 +216,21 @@ function Brief({ go, tip }: { go: PageProps["go"]; tip: ReactNode }) {
                   {i.hint ? ` · ${i.hint}` : ""}
                 </span>
               </span>
-              <NavLink to={i.to} className="inline-flex shrink-0 items-center gap-1 text-small font-medium text-body outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
-                <span className="sr-only">{`${i.cta}: ${fmtNum(i.count)} ${i.label}`}</span>
-                <span aria-hidden className="max-sm:hidden">{i.cta}</span>
-                <ArrowRight aria-hidden className="size-3.5" />
-              </NavLink>
+              {i.to.page === "dashboard" && i.to.params?.focus ? (
+                // Aynı sayfadaki bölüme gider: adres değişmediği için her tıklamada elle kaydırılır ve
+                // bölüm kısa bir halkayla işaretlenir (eskiden ikinci tıklamada hiçbir şey olmuyordu).
+                <button type="button" onClick={() => jumpTo(`pano-${i.to.params!.focus}`)} className="inline-flex shrink-0 items-center gap-1 text-small font-medium text-body outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
+                  <span className="sr-only">{`${i.cta}: ${fmtNum(i.count)} ${i.label}`}</span>
+                  <span aria-hidden className="max-sm:hidden">{i.cta}</span>
+                  <ArrowDown aria-hidden className="size-3.5" />
+                </button>
+              ) : (
+                <NavLink to={i.to} className="inline-flex shrink-0 items-center gap-1 text-small font-medium text-body outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
+                  <span className="sr-only">{`${i.cta}: ${fmtNum(i.count)} ${i.label}`}</span>
+                  <span aria-hidden className="max-sm:hidden">{i.cta}</span>
+                  <ArrowRight aria-hidden className="size-3.5" />
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>
@@ -243,48 +265,70 @@ function Spotlight({ metric, go }: { metric: MetricProps; go: PageProps["go"] })
   const overdue = useDerived(overdueInvoices);
   const isDebt = metric.label === "Vadesi Geçmiş Alacak";
   const oldest = overdue.reduce<(typeof overdue)[number] | null>((o, i) => (!o || i.due < o.due ? i : o), null);
-  const max = Math.max(1, ...aging.map((b) => b.value));
-  // Tek tırmanış: taze borç sakin gri, yaşlandıkça uyarıdan kırmızıya (renk yaş anlamı taşır, kategori değil).
-  const tones = ["bg-line-strong", "bg-warning/70", "bg-danger/55", "bg-danger"];
-  const bucketLabel = (l: string) => l.replace(" gün", " gün").replace("Daha eski", "90 gün +");
+  const total = Math.max(1, aging.reduce((a, b) => a + b.value, 0));
+  const risky = aging.at(-1);
+  // Tek tırmanış: taze borç sakin, yaşlandıkça uyarıdan kırmızıya (renk yaş anlamı taşır, kategori değil).
+  const tones = ["bg-chart-3", "bg-warning", "bg-danger/60", "bg-danger"];
+  const bucketLabel = (l: string) => l.replace("Daha eski", "90+ gün");
   return (
     <section aria-labelledby="pano-spot" className="grid content-between gap-5 rounded-xl bg-overlay p-5 shadow-raised ring-1 ring-line sm:p-6">
-      <div className="grid gap-1">
-        <h2 id="pano-spot" className="flex items-center gap-2 text-base font-medium text-body">
-          <span aria-hidden className="text-muted [&_svg]:size-4">{metric.icon}</span>
-          {metric.label}
-        </h2>
-        <p className="font-display text-[clamp(2.25rem,3.4vw,3rem)] leading-none font-semibold tracking-[-0.04em] text-strong tabular-nums">{metric.value}</p>
+      <div className="grid gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <h2 id="pano-spot" className="flex items-center gap-2 text-base font-medium text-body">
+            <span aria-hidden className="text-muted [&_svg]:size-4">{metric.icon}</span>
+            {metric.label}
+          </h2>
+          {isDebt ? <Badge tone="neutral">{fmtNum(overdue.length)} fatura</Badge> : null}
+        </div>
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+          <p className="font-display text-[clamp(2.25rem,3.2vw,2.875rem)] leading-none font-semibold tracking-[-0.04em] text-strong tabular-nums">{metric.value}</p>
+          {isDebt && risky ? (
+            <p className="rounded-lg bg-danger-wash px-3 py-1.5 text-small text-danger">
+              <span className="font-semibold tabular-nums">{fmtTlCompact(risky.value)}</span> 90 günü aştı · %{Math.round((risky.value / total) * 100)}
+            </p>
+          ) : null}
+        </div>
         {isDebt && oldest ? (
-          <p className="text-small text-muted">
-            {fmtNum(overdue.length)} fatura · en eskisi {customer(oldest.customerId).name}, {fmtNum(daysBetween(parseDay(oldest.due), TODAY))} gün
+          <p className="truncate text-small text-muted" title={customer(oldest.customerId).name}>
+            En eskisi {customer(oldest.customerId).name}, {fmtNum(daysBetween(parseDay(oldest.due), TODAY))} gün
           </p>
         ) : metric.foot ? (
           <p className="text-small text-muted">{metric.foot}</p>
         ) : null}
       </div>
       {isDebt ? (
-        <ul role="list" aria-label="Alacak yaşlandırması" className="grid grid-cols-4 gap-3">
-          {aging.map((b, i) => (
-            <li key={b.id} className="grid gap-2">
-              <span aria-hidden className="relative block h-20 overflow-hidden rounded-md bg-surface">
-                <span className={cn("absolute inset-x-0 bottom-0 rounded-md", tones[i] ?? "bg-muted")} style={{ height: `${Math.max(6, (b.value / max) * 100)}%` }} />
-              </span>
-              <span className="grid">
-                <span className="text-base font-semibold text-strong tabular-nums">{fmtTlCompact(b.value)}</span>
+        <div className="grid gap-3">
+          {/* Yaşlandırma: tek çubukta pay, altında dört hücre. */}
+          <span aria-hidden className="flex h-2.5 gap-0.5 overflow-hidden rounded-full">
+            {aging.map((b, i) => (
+              <span key={b.id} className={cn("h-full first:rounded-s-full last:rounded-e-full", tones[i])} style={{ width: `${Math.max(2, (b.value / total) * 100)}%` }} />
+            ))}
+          </span>
+          <ul role="list" aria-label="Alacak yaşlandırması" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {aging.map((b, i) => (
+              <li key={b.id} className={cn("grid gap-0.5 rounded-lg px-3 py-2.5", i === 3 ? "bg-danger-wash" : "bg-surface")}>
+                <span className="flex items-center gap-1.5 text-small text-muted">
+                  <span aria-hidden className={cn("size-2 rounded-full", tones[i])} />
+                  {bucketLabel(b.label)}
+                </span>
+                <span className={cn("text-read font-semibold tabular-nums", i === 3 ? "text-danger" : "text-strong")}>{fmtTlCompact(b.value)}</span>
                 <span className="text-small text-muted tabular-nums">{fmtNum(b.count)} fatura</span>
-                <span className={cn("font-mono text-micro", i === 3 ? "text-danger" : "text-muted")}>{bucketLabel(b.label)}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
       {metric.to ? (
-        <div>
+        <div className="flex flex-wrap gap-2">
           <Button variant="secondary" size="sm" onClick={() => go(metric.to!.page, metric.to!.params)}>
             Listeyi Aç
             <ArrowRight aria-hidden />
           </Button>
+          {isDebt ? (
+            <Button variant="ghost" size="sm" onClick={() => go("invoices")}>
+              Bugün Aranacaklar
+            </Button>
+          ) : null}
         </div>
       ) : null}
     </section>
@@ -513,11 +557,11 @@ export function PanoPage({ go, params }: PageProps) {
           </ChartCard>
         </div>
 
-        <div id="pano-kayip" className="grid scroll-mt-4 grid-cols-1 gap-5 xl:grid-cols-5">
-          <ChartCard id="pano-harita" className={`${FLAT} xl:col-span-3`} label="Bölge Haritası · Kayıp / Kaçak" value={fmtPct(stats.lossPct)} change={null} action={<Badge tone={overRegions.length ? "danger" : "success"} dot>{overRegions.length ? `${overRegions.length} bölge hedefin üstünde` : "Bütün bölgeler hedefte"}</Badge>}>
-            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_14rem] md:items-center">
+        <div id="pano-kayip" className="grid scroll-mt-4 grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <ChartCard id="pano-harita" className={FLAT} label="Bölge Haritası · Kayıp / Kaçak" value={fmtPct(stats.lossPct)} change={null} action={<Badge tone={overRegions.length ? "danger" : "success"} dot>{overRegions.length ? `${overRegions.length} bölge hedefin üstünde` : "Bütün bölgeler hedefte"}</Badge>}>
+            <div className="grid gap-4">
               <div className="grid gap-3">
-                <CartoMap title="Bölgeye Göre Kayıp ve Kaçak Oranı" regions={mapRegions} markers={mapMarkers} selectedId={selected} onSelect={(id) => setSelected((cur) => (cur === id ? null : id))} />
+                <CartoMap zoom={44} title="Bölgeye Göre Kayıp ve Kaçak Oranı" regions={mapRegions} markers={mapMarkers} selectedId={selected} onSelect={(id) => setSelected((cur) => (cur === id ? null : id))} />
                 <CartoLegend
                   items={[
                     { tone: "success", label: "Hedefte", kind: "area" },
@@ -527,7 +571,7 @@ export function PanoPage({ go, params }: PageProps) {
                   ]}
                 />
               </div>
-              <div className="border-line-soft text-base md:border-l md:pl-4">
+              <div className="rounded-lg bg-surface px-4 py-3 text-base">
                 {picked ? (
                   <>
                     <p className="font-semibold text-strong">{picked.region.name}</p>
@@ -542,7 +586,7 @@ export function PanoPage({ go, params }: PageProps) {
             </div>
           </ChartCard>
 
-          <ChartCard id="pano-kayip-liste" className={`${FLAT} xl:col-span-2`} label="Hedefe Göre Sıralama" value={`${overRegions.length} / ${losses.length} bölge hedef üstünde`} change={null} action={<Badge tone="neutral">{label}</Badge>}>
+          <ChartCard id="pano-kayip-liste" className={FLAT} label="Hedefe Göre Sıralama" value={`${overRegions.length} / ${losses.length} bölge hedef üstünde`} change={null} action={<Badge tone="neutral">{label}</Badge>}>
             <BarTarget
               aria-label="Bölgeye Göre Kayıp ve Kaçak Oranı"
               rows={[...losses].sort((a, b) => b.lossPct - b.target - (a.lossPct - a.target)).map((l) => ({ id: l.region.id, label: l.region.name, value: l.lossPct, target: l.target }))}

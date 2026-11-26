@@ -320,6 +320,7 @@ function CallSheet({ call, canCall, onClose, go }: { call: Call | null; canCall:
     <Sheet
       open={!!call}
       onOpenChange={(o) => !o && onClose()}
+      side="right"
       size="lg"
       title={call ? `${call.id} · ${CALL_KIND_LABEL[call.kind]}` : ""}
       description={call ? `${dateTime(call.at)} · ${CALL_CHANNEL_LABEL[call.channel]} · ${call.assignee}` : undefined}

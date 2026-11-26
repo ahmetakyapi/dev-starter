@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
-import { Camera, CheckCircle2, CloudOff, CloudUpload, Flag, MapPin, PlayCircle, Route as RouteIcon, TriangleAlert, Wifi } from "lucide-react";
+import { Camera, Check, CheckCircle2, CloudOff, ImageIcon, CloudUpload, Flag, MapPin, PlayCircle, Route as RouteIcon, TriangleAlert, Wifi } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,10 +11,11 @@ import { RadioGroup } from "@/components/ui/radio-group";
 import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
+import { Sparkline } from "@/components/ui/sparkline";
 import { TickMeter } from "@/components/ui/tick-meter";
 import { audit } from "./_audit";
 import { nextId, useDerived } from "./_core";
-import { CURRENT_PERIOD, TODAY_KEY, customer, dayLabel, type Meter, type ReadingFlag } from "./_data";
+import { CURRENT_PERIOD, KIND_LABEL, TODAY_KEY, customer, dayLabel, type Meter, type ReadingFlag } from "./_data";
 import { READER_NAMES, buildRoutesLive, readingUi } from "./_data-sayac";
 import { SKIP_REASONS, checkReading, fieldState, type FieldQueueItem, type ReadingInput } from "./_data-saha";
 import { effectiveReadings, enterReading, useMeterOps } from "./_ops";
@@ -133,11 +134,13 @@ export function SahaPage({ go }: PageProps) {
               {stops.slice(0, 14).map((s) => {
                 const c = customer(s.meter.customerId);
                 const exp = expectedOf(s.meter.id);
+                // Sıradaki durak tek: ilk bekleyen. Yalnız o birincil butonla öne çıkar, kalanlar sakin.
+                const next = s.meter.id === stops.find((x) => x.state === "bekliyor")?.meter.id;
                 return (
-                  <li key={s.meter.id} className="grid gap-2 rounded-2xl bg-overlay p-4 shadow-raised ring-1 ring-line">
+                  <li key={s.meter.id} className={`grid gap-2 rounded-2xl bg-overlay p-4 ring-1 ${next ? "shadow-floating ring-2 ring-primary/40" : s.state === "bekliyor" ? "shadow-raised ring-line" : "ring-line-soft opacity-80"}`}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-small text-muted">Durak {s.n}</p>
+                        <p className="text-small text-muted">Durak {s.n}{next ? <span className="ml-1.5 font-medium text-primary-ink">· Sıradaki Durak</span> : null}</p>
                         <p className="font-semibold text-strong"><Mono>{s.meter.serial}</Mono></p>
                       </div>
                       {s.state === "okundu" ? <Badge tone="success" dot>Okundu</Badge> : s.state === "kuyrukta" ? <Badge tone="warning" dot>Gönderilecek</Badge> : s.state === "erisilemedi" ? <Badge tone="neutral" dot>Erişilemedi</Badge> : <Badge tone={s.meter.status === "iletisim-yok" ? "warning" : "neutral"} dot>{s.meter.status === "iletisim-yok" ? "İletişim yok" : "Bekliyor"}</Badge>}
@@ -145,7 +148,7 @@ export function SahaPage({ go }: PageProps) {
                     <p className="flex items-start gap-1.5 text-base text-body"><MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />{c.address}, {c.district}</p>
                     <p className="text-small text-muted">{c.name} · beklenen {exp ? `${fmtKwh(Math.round(exp * 0.7))} – ${fmtKwh(Math.round(exp * 1.3))}` : "bilinmiyor"}</p>
                     {s.state === "bekliyor" ? (
-                      <Button variant="primary" size="sm" className="mt-1 w-full justify-center" onClick={() => setActive(s.meter.id)} disabled={!canRead}>
+                      <Button variant={next ? "primary" : "secondary"} size="sm" className="mt-1 w-full justify-center" onClick={() => setActive(s.meter.id)} disabled={!canRead}>
                         <PlayCircle aria-hidden /> Oku
                       </Button>
                     ) : s.state === "erisilemedi" ? (
@@ -250,6 +253,8 @@ function StopSheet({ stop, onClose, offline }: { stop: Meter | null; onClose: ()
     return last ? { index: last.index, reactive: last.reactive, demand: last.demandKw } : { index: stop.base, reactive: { inductive: 0, capacitive: 0 }, demand: 0 };
   }, [stop]);
   const expected = stop ? expectedOf(stop.id) : 0;
+  const history = useMemo(() => (stop ? effectiveReadings().filter((r) => r.meterId === stop.id && r.status !== "bekliyor").slice(-6) : []), [stop]);
+  const lastRead = history.at(-1);
   const result = stop && prev ? checkReading({ meter: stop, prev: prev.index, idx, expected, source: "saha", hasPhoto: !!photo }) : null;
   const needsConfirm = !!result?.anomaly;
   const canSave = !!result && !!photo && (!needsConfirm || confirmAnomaly);
@@ -315,7 +320,7 @@ function StopSheet({ stop, onClose, offline }: { stop: Meter | null; onClose: ()
       open={!!stop}
       onOpenChange={(o) => !o && close()}
       side="right"
-      size="lg"
+      size="xl"
       title={stop ? `Durak · ${stop.serial}` : "Durak"}
       description={stop && c ? `${c.name} · ${c.address}, ${c.district}` : undefined}
       icon={<Camera />}
@@ -342,26 +347,84 @@ function StopSheet({ stop, onClose, offline }: { stop: Meter | null; onClose: ()
             </div>
           ) : (
             <>
-              <p className="text-small text-muted">Önceki endeks: T1 {fmtNum(prev.index.t1)}{stop.multiZone ? ` · T2 ${fmtNum(prev.index.t2)} · T3 ${fmtNum(prev.index.t3)}` : ""} · çarpan ×{stop.multiplier}</p>
+              {/* Durak özeti: kim, ne kadar bekleniyor, son okuma, son altı dönemin tüketimi. */}
+              <div className="grid gap-3 rounded-xl bg-surface p-4 sm:grid-cols-[minmax(0,1fr)_auto]">
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-2.5 text-small sm:grid-cols-3">
+                  <div>
+                    <dt className="text-muted">Abone</dt>
+                    <dd className="font-medium text-strong">{c ? KIND_LABEL[c.kind] : "—"}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Son Okuma</dt>
+                    <dd className="font-medium text-strong">{lastRead ? dayLabel(lastRead.date) : "Yok"}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Çarpan</dt>
+                    <dd className="font-medium text-strong tabular-nums">×{stop.multiplier}{stop.multiZone ? " · 3 zamanlı" : " · tek zamanlı"}</dd>
+                  </div>
+                  <div className="col-span-2 sm:col-span-3">
+                    <dt className="text-muted">Beklenen Tüketim</dt>
+                    <dd className="font-medium text-strong tabular-nums">{expected ? `${fmtKwh(Math.round(expected * 0.7))} – ${fmtKwh(Math.round(expected * 1.3))}` : "Bilinmiyor"}</dd>
+                  </div>
+                </dl>
+                {history.length > 1 ? (
+                  <div className="grid content-end gap-1">
+                    <span className="text-small text-muted">Son {history.length} Dönem</span>
+                    <Sparkline values={history.map((r) => r.usage.total)} title={`${stop.serial} son ${history.length} dönem tüketimi`} width={150} height={40} />
+                  </div>
+                ) : null}
+              </div>
+
               <div className="grid gap-3 sm:grid-cols-3">
-                <NumberField label="T1 Endeks" value={idx.t1} onValueChange={(v) => setIdx((p) => ({ ...p, t1: v }))} min={0} />
-                {stop.multiZone ? <NumberField label="T2 Endeks" value={idx.t2} onValueChange={(v) => setIdx((p) => ({ ...p, t2: v }))} min={0} /> : null}
-                {stop.multiZone ? <NumberField label="T3 Endeks" value={idx.t3} onValueChange={(v) => setIdx((p) => ({ ...p, t3: v }))} min={0} /> : null}
+                <NumberField label="T1 Endeks" hint={`Önceki ${fmtNum(prev.index.t1)}`} value={idx.t1} onValueChange={(v) => setIdx((p) => ({ ...p, t1: v }))} min={0} />
+                {stop.multiZone ? <NumberField label="T2 Endeks" hint={`Önceki ${fmtNum(prev.index.t2)}`} value={idx.t2} onValueChange={(v) => setIdx((p) => ({ ...p, t2: v }))} min={0} /> : null}
+                {stop.multiZone ? <NumberField label="T3 Endeks" hint={`Önceki ${fmtNum(prev.index.t3)}`} value={idx.t3} onValueChange={(v) => setIdx((p) => ({ ...p, t3: v }))} min={0} /> : null}
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
-                <NumberField label="Endüktif (kVArh)" value={react} onValueChange={setReact} min={0} />
-                <NumberField label="Kapasitif (kVArh)" value={cap} onValueChange={setCap} min={0} />
-                <NumberField label="Talep (kW)" value={demand} onValueChange={setDemand} min={0} step={0.1} format={{ maximumFractionDigits: 1 }} />
+                <NumberField label="Endüktif (kVArh)" hint={`Önceki ${fmtNum(prev.reactive.inductive)}`} value={react} onValueChange={setReact} min={0} />
+                <NumberField label="Kapasitif (kVArh)" hint={`Önceki ${fmtNum(prev.reactive.capacitive)}`} value={cap} onValueChange={setCap} min={0} />
+                <NumberField label="Talep (kW)" hint={`Önceki ${fmtNum(prev.demand)}`} value={demand} onValueChange={setDemand} min={0} step={0.1} format={{ maximumFractionDigits: 1 }} />
               </div>
-              <div className="flex flex-wrap items-center gap-3 rounded-xl bg-surface p-3">
-                <Button variant={photo ? "secondary" : "soft"} size="sm" onClick={() => setPhoto(`IMG_${stop.serial.slice(-4)}.jpg`)}>
-                  <Camera aria-hidden /> {photo ? "Fotoğrafı değiştir" : "Fotoğraf çek"}
-                </Button>
-                <span className="text-small text-muted">{photo ? `Eklendi: ${photo}` : "Zorunlu: endeks ekranı net görünmeli (simülasyon)."}</span>
-              </div>
+
+              {/* Fotoğraf: zorunlu adım büyük, belirgin bir alan; eklenince küçük önizleme kartı. */}
+              <button
+                type="button"
+                onClick={() => setPhoto(`IMG_${stop.serial.slice(-4)}.jpg`)}
+                className={`flex items-center gap-4 rounded-xl p-4 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-line-focus ${photo ? "bg-success-wash ring-1 ring-success/25" : "border-2 border-dashed border-line-strong hover:bg-surface"}`}
+              >
+                <span aria-hidden className={`grid size-12 shrink-0 place-items-center rounded-lg ${photo ? "bg-overlay text-success" : "bg-surface text-muted"}`}>
+                  {photo ? <ImageIcon className="size-5" /> : <Camera className="size-5" />}
+                </span>
+                <span className="grid gap-0.5">
+                  <span className="text-base font-medium text-strong">{photo ? "Fotoğraf Eklendi" : "Sayaç Ekranının Fotoğrafını Çek"}</span>
+                  <span className="text-small text-muted">{photo ? `${photo} · değiştirmek için dokun` : "Zorunlu: endeks ekranı net görünmeli (simülasyon)."}</span>
+                </span>
+                {photo ? <Check aria-hidden className="ml-auto size-5 text-success" /> : null}
+              </button>
+
+              {/* Beklenen aralık: girilen tüketim aralığın neresinde (yazdıkça hareket eder). */}
+              {result && expected ? (
+                <div className="grid gap-2 rounded-xl bg-surface p-4">
+                  <p className="flex items-baseline justify-between text-small">
+                    <span className="text-muted">Dönem Tüketimi</span>
+                    <span className="text-read font-semibold text-strong tabular-nums">{fmtKwh(result.total)}</span>
+                  </p>
+                  <span aria-hidden className="relative block h-2 rounded-full bg-chart-track">
+                    <span className="absolute inset-y-0 rounded-full bg-success/35" style={{ left: "25%", width: "50%" }} />
+                    <span
+                      className={`absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-overlay ${result.anomaly ? "bg-danger" : "bg-success"}`}
+                      style={{ left: `${Math.max(2, Math.min(98, (result.total / (expected * 2)) * 100))}%` }}
+                    />
+                  </span>
+                  <p className="flex justify-between font-mono text-micro text-muted tabular-nums">
+                    <span>0</span>
+                    <span>Beklenen {fmtKwh(Math.round(expected * 0.7))} – {fmtKwh(Math.round(expected * 1.3))}</span>
+                    <span>{fmtKwh(expected * 2)}</span>
+                  </p>
+                </div>
+              ) : null}
               {result ? (
                 <ul aria-label="Doğrulama" className="grid gap-2">
-                  <li className="text-base text-strong">Dönem tüketimi: <strong className="tabular-nums">{fmtKwh(result.total)}</strong>{expected ? <span className="text-muted"> · beklenen {fmtKwh(expected)}</span> : null}</li>
                   {result.checks.map((c, i) => (
                     <li key={i} className={`flex items-start gap-2 rounded-lg p-3 text-base ${c.tone === "success" ? "bg-success-wash" : c.tone === "danger" ? "bg-danger-wash" : "bg-warning-wash"}`}>
                       {c.tone === "success" ? <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0 text-success" /> : <TriangleAlert aria-hidden className={`mt-0.5 size-4 shrink-0 ${c.tone === "danger" ? "text-danger" : "text-warning"}`} />}
@@ -370,7 +433,7 @@ function StopSheet({ stop, onClose, offline }: { stop: Meter | null; onClose: ()
                   ))}
                 </ul>
               ) : (
-                <p className="text-small text-muted">T1 endeksini yazınca doğrulama burada görünür.</p>
+                <p className="rounded-xl border border-dashed border-line px-4 py-3 text-small text-muted">T1 endeksini yazınca tüketim, beklenen aralık ve doğrulama burada görünür.</p>
               )}
               {needsConfirm ? (
                 <label className="flex cursor-pointer items-start gap-3 text-base text-body">

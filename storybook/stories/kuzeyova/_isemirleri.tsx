@@ -348,7 +348,8 @@ function DetailSheet({ w, view, canEdit, onClose, go, onComplete }: { w: WorkOrd
       <Sheet
         open={!!w}
         onOpenChange={(o) => !o && onClose()}
-        size="lg"
+        side="right"
+        size="xl"
         title={w ? `${w.id} · ${WORK_TYPE_LABEL[w.type]}` : ""}
         description={w ? `${fullDate.format(w.scheduled)}, ${clock.format(w.scheduled)} · ${region(w.regionId).name}` : undefined}
         status={w ? <Badge tone={STATUS_TONE[w.status]} dot>{WORK_STATUS_LABEL[w.status]}</Badge> : undefined}

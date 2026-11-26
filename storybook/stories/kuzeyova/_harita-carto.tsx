@@ -107,13 +107,15 @@ const COAST: P[] = KIYI_PTS.flatMap((a, i) => {
   const b = KIYI_PTS[(i + 1) % KIYI_PTS.length];
   return isCoast("kiyi", a, b) ? wiggle(a, b, 8, 22) : [];
 }).sort((p, q) => p[0] - q[0]);
-const SEA = `M0 ${fmt(COAST[0][1])}L${COAST.map((p) => `${fmt(p[0])} ${fmt(p[1])}`).join("L")}L${W} ${fmt(COAST.at(-1)![1])}L${W} ${H}L0 ${H}Z`;
-const COAST_LINE = `M0 ${fmt(COAST[0][1])}L${COAST.map((p) => `${fmt(p[0])} ${fmt(p[1])}`).join("L")}L${W} ${fmt(COAST.at(-1)![1])}`;
+const COAST_PTS = COAST.map((p) => `${fmt(p[0])} ${fmt(p[1])}`).join("L");
+/** Deniz: kıyıdan aşağısı; uzaklaştırınca (pad) yanlara ve aşağı taşar. */
+const seaPath = (pad: number) => `M${-pad - 2} ${fmt(COAST[0][1])}L0 ${fmt(COAST[0][1])}L${COAST_PTS}L${W} ${fmt(COAST.at(-1)![1])}L${W + pad + 2} ${fmt(COAST.at(-1)![1])}L${W + pad + 2} ${H + pad * 1.2 + 2}L${-pad - 2} ${H + pad * 1.2 + 2}Z`;
+const coastLine = (pad: number) => `M${-pad - 2} ${fmt(COAST[0][1])}L0 ${fmt(COAST[0][1])}L${COAST_PTS}L${W} ${fmt(COAST.at(-1)![1])}L${W + pad + 2} ${fmt(COAST.at(-1)![1])}`;
 
-const RIVER = smooth([[150, -4], [168, 40], [176, 92], [158, 140], [166, 190], [150, 236], [132, 286], [128, 312]]);
-const HIGHWAY = smooth([[-6, 196], [60, 182], [130, 170], [212, 176], [300, 150], [360, 118], [430, 104]]);
-const NORTH_ROAD = smooth([[92, -6], [96, 60], [140, 120], [212, 176], [236, 228], [226, 300]]);
-const COAST_ROAD = smooth([[-6, 250], [70, 262], [150, 272], [230, 278], [320, 270], [430, 246]]);
+const RIVER = smooth([[140, -60], [150, -4], [168, 40], [176, 92], [158, 140], [166, 190], [150, 236], [132, 286], [128, 312], [124, 400]]);
+const HIGHWAY = smooth([[-70, 206], [-6, 196], [60, 182], [130, 170], [212, 176], [300, 150], [360, 118], [430, 104], [490, 96]]);
+const NORTH_ROAD = smooth([[88, -70], [92, -6], [96, 60], [140, 120], [212, 176], [236, 228], [226, 300]]);
+const COAST_ROAD = smooth([[-70, 236], [-6, 250], [70, 262], [150, 272], [230, 278], [320, 270], [430, 246], [490, 232]]);
 
 /* İlçeler: her bölgenin ilk iki ilçesi, etiketin iki yanında. */
 const TOWNS = MAP_SHAPES.flatMap((s) => {
@@ -188,8 +190,11 @@ export function CartoMap({
   look = "topo",
   selectedId = null,
   onSelect,
+  zoom = 0,
   className,
 }: {
+  /** Uzaklaştırma (viewBox birimi): çevredeki komşu arazi ve deniz görünür, harita küçülür. */
+  zoom?: number;
   title: string;
   regions: readonly CartoRegion[];
   markers?: readonly CartoMarker[];
@@ -222,12 +227,18 @@ export function CartoMap({
     }
   };
   const night = look === "gece";
+  const SEA = seaPath(zoom);
+  const COAST_LINE = coastLine(zoom);
+  const vx = -zoom;
+  const vy = -zoom * 0.6;
+  const vw = W + zoom * 2;
+  const vh = H + zoom * 1.2;
   return (
     <figure className={cn("kz-carto relative overflow-hidden rounded-lg", className)} style={{ background: L.land } as CSSProperties}>
       <style href="kz-carto" precedence="default">
         {CSS}
       </style>
-      <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={title} className="block h-auto w-full select-none">
+      <svg viewBox={`${vx} ${vy} ${vw} ${vh}`} role="group" aria-label={title} className="block h-auto w-full select-none">
         <defs>
           {/* Arazi kabartması: fraktal gürültüden ışıklı yüzey, kuzeybatıdan ışık. */}
           <filter id={id("relief")} x="0" y="0" width="100%" height="100%">
@@ -241,7 +252,7 @@ export function CartoMap({
             <rect width={W} height={H} />
           </clipPath>
           <mask id={id("landmask")}>
-            <rect width={W} height={H} fill="white" />
+            <rect x={vx} y={vy} width={vw} height={vh} fill="white" />
             <path d={SEA} fill="black" />
           </mask>
           <pattern id={id("hatch")} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -257,7 +268,7 @@ export function CartoMap({
         <path d={COAST_LINE} fill="none" style={{ stroke: L.border }} strokeWidth="1.2" aria-hidden />
 
         {/* Kabartma yalnız karada */}
-        {L.relief ? <rect width={W} height={H} filter={`url(#${id("relief")})`} mask={`url(#${id("landmask")})`} style={{ mixBlendMode: night ? "screen" : "multiply", opacity: L.relief * (night ? 0.35 : 1) }} aria-hidden /> : null}
+        {L.relief ? <rect x={vx} y={vy} width={vw} height={vh} filter={`url(#${id("relief")})`} mask={`url(#${id("landmask")})`} style={{ mixBlendMode: night ? "screen" : "multiply", opacity: L.relief * (night ? 0.35 : 1) }} aria-hidden /> : null}
 
         {/* Bölgeler: durum dolgusu, seçili olan koyu, eşik aşan çizgili */}
         {SHAPES.map((s) => {
@@ -344,13 +355,13 @@ export function CartoMap({
         </g>
 
         {/* Ölçek ve kuzey oku */}
-        <g aria-hidden transform={`translate(14 ${H - 18})`} style={{ fill: L.town } as CSSProperties}>
+        <g aria-hidden transform={`translate(${vx + 14} ${vy + vh - 18})`} style={{ fill: L.town } as CSSProperties}>
           <rect width="40" height="3" style={{ fill: L.label }} />
           <rect x="20" width="20" height="3" style={{ fill: L.halo === "transparent" ? "var(--page-bg)" : L.halo, stroke: L.label }} strokeWidth="0.6" />
           <text y="-3" fontSize={7}>0</text>
           <text x="36" y="-3" fontSize={7}>5 km</text>
         </g>
-        <g aria-hidden transform={`translate(${W - 22} 22)`}>
+        <g aria-hidden transform={`translate(${vx + vw - 22} ${vy + 22})`}>
           <circle r="11" style={{ fill: L.halo === "transparent" ? "var(--page-bg)" : L.halo, stroke: L.border }} strokeWidth="0.8" />
           <path d="M0 -8 L4 4 L0 1.5 L-4 4 Z" style={{ fill: L.label }} />
           <text y="-13.5" textAnchor="middle" fontSize={7} className="font-semibold" style={{ fill: L.label }}>
@@ -363,7 +374,7 @@ export function CartoMap({
         <div
           aria-hidden
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md bg-strong px-2.5 py-1.5 text-small whitespace-nowrap text-page shadow-floating"
-          style={{ left: `${(activeAt[0] / W) * 100}%`, top: `${(activeAt[1] / H) * 100 - 4}%` }}
+          style={{ left: `${((activeAt[0] - vx) / vw) * 100}%`, top: `${((activeAt[1] - vy) / vh) * 100 - 4}%` }}
         >
           <span className="font-semibold">{active.label}</span> · <span className="tabular-nums">{active.value}</span>
           {active.note ? <span className="block text-micro opacity-80">{active.note}</span> : null}

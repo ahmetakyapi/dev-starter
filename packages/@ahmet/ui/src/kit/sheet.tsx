@@ -32,6 +32,7 @@ import { cn } from "../utils";
  * yıkıcı ya da ayrı türden eylem ("Bağlantıyı Kes", "Arşivle") onaylama
  * butonlarının yanına değil karşı kenara düşer, kazara basılmaz.
  * `size="lg"`: içinde liste ve ayar satırları olan ayrıntı paneli (36rem).
+ * `size="xl"`: iki sütunlu form ya da kayıt dosyası (46rem); masaüstü iş ekranı.
  * İlk odak ve yerel kapanış `dialog.tsx` ile aynı: başka bir öğe için
  * `data-autofocus` (`autoFocus` istemcide işlemez), `<form method="dialog">`
  * gibi React'i atlayan kapanış da duruma yansır.
@@ -98,7 +99,7 @@ type SheetProps = {
   /** `right`: masaüstünde yan panel; telefonda da sağdan açılır. */
   side?: "bottom" | "right";
   /** Yan panel genişliği: `md` 26rem, `lg` 36rem (liste + ayar içeren ayrıntı). */
-  size?: "md" | "lg";
+  size?: "md" | "lg" | "xl";
   closeLabel?: string;
   className?: string;
 };
@@ -201,7 +202,7 @@ export function Sheet({
         "backdrop:bg-scrim backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:transition-discrete backdrop:duration-300 open:backdrop:opacity-100 starting:open:backdrop:opacity-0",
         bottom
           ? "inset-x-0 top-auto bottom-0 max-h-[85dvh] w-full rounded-t-2xl border-t translate-y-full open:translate-y-0 starting:open:translate-y-full"
-          : cn("inset-y-0 right-0 left-auto h-dvh max-h-none rounded-l-2xl border-l", size === "lg" ? "w-[min(36rem,calc(100%-1rem))]" : "w-[min(26rem,calc(100%-2rem))]", " translate-x-full open:translate-x-0 starting:open:translate-x-full"),
+          : cn("inset-y-0 right-0 left-auto h-dvh max-h-none rounded-l-2xl border-l", size === "xl" ? "w-[min(46rem,calc(100%-1rem))]" : size === "lg" ? "w-[min(36rem,calc(100%-1rem))]" : "w-[min(26rem,calc(100%-2rem))]", " translate-x-full open:translate-x-0 starting:open:translate-x-full"),
         className,
       )}
     >

@@ -21,7 +21,7 @@ import { Select } from "@/components/ui/select";
 import { Tabs } from "@/components/ui/tabs";
 import { TickMeter } from "@/components/ui/tick-meter";
 import { Textarea } from "@/components/ui/textarea";
-import { CUSTOMERS, PERIODS_12, SUPPLIERS, TODAY, addDays, customer, dayKey, fullDate, num, num1, parseDay, periodLabel, tl, tlShort, type Supplier } from "./_data";
+import { CUSTOMERS, KIND_LABEL, PERIODS_12, SUPPLIERS, TODAY, addDays, customer, dayKey, fullDate, num, num1, parseDay, periodLabel, tl, tlShort, type Supplier } from "./_data";
 import {
   FLOW_LINKS,
   SUPPLIER_SHORT,
@@ -134,7 +134,8 @@ function SupplierList({ rows, params, go }: { rows: SupplierRow[]; params: PageP
       sortValue: (r) => r.supplier.contractEnd,
       render: (r) => (
         <span className="inline-flex items-center gap-2">
-          {day(r.supplier.contractEnd)}
+          {/* Sabit genişlik: "40 gün" rozetleri tarih uzunluğundan bağımsız aynı sütunda (check:align). */}
+          <span className="w-26 shrink-0 tabular-nums">{day(r.supplier.contractEnd)}</span>
           {r.daysToEnd <= 60 ? <Badge tone="warning">{r.daysToEnd} gün</Badge> : null}
         </span>
       ),
@@ -791,27 +792,31 @@ function SupplierDetail({ row, go }: { row: SupplierRow; go: PageProps["go"] }) 
         </Panel>
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
-          <Panel id="td-sozlesme" title="Sözleşme ve İletişim" className="xl:col-span-2">
-            <dl className="grid grid-cols-1 gap-x-6 gap-y-3 p-4 text-small sm:grid-cols-2 sm:p-5 xl:grid-cols-1">
-              {[
-                ["Lisans no", s.license],
-                ["Tür", s.kind === "gorevli" ? "Görevli tedarik şirketi" : "Perakende satış şirketi"],
-                ["Sözleşme bitişi", day(s.contractEnd)],
-                ["Birim enerji bedeli", unitPrice(s.unitPrice)],
-                ["Dilim fiyatları", `T1 ${s.prices.t1.toFixed(2)} · T2 ${s.prices.t2.toFixed(2)} · T3 ${s.prices.t3.toFixed(2)} ₺/kWh`],
-                ["Fatura düzenleyen", "Tedarikçi (dağıtım bedeli kalemiyle)"],
-              ].map(([k, v]) => (
-                <div key={k}><dt className="text-muted">{k}</dt><dd className="mt-0.5 font-medium text-strong">{v}</dd></div>
-              ))}
-              <div>
-                <dt className="text-muted">Çağrı Merkezi</dt>
-                <dd className="mt-0.5 inline-flex items-center gap-2 font-medium text-strong">
-                  <Phone aria-hidden className="size-4 text-muted" />
-                  <a className="kz-mono hover:underline" href={`tel:${s.phone.replace(/\s/g, "")}`}>{s.phone}</a>
-                </dd>
-              </div>
-            </dl>
-          </Panel>
+          {/* Sol sütun: sözleşme + abone profili (sağdaki uzun abone tablosuyla denge; sahibinin isteği). */}
+          <div className="grid content-start gap-5 xl:col-span-2">
+            <Panel id="td-sozlesme" title="Sözleşme ve İletişim">
+              <dl className="grid grid-cols-1 gap-x-6 gap-y-3 p-4 text-small sm:grid-cols-2 sm:p-5">
+                {[
+                  ["Lisans no", s.license],
+                  ["Tür", s.kind === "gorevli" ? "Görevli tedarik şirketi" : "Perakende satış şirketi"],
+                  ["Sözleşme bitişi", day(s.contractEnd)],
+                  ["Birim enerji bedeli", unitPrice(s.unitPrice)],
+                  ["Dilim fiyatları", `T1 ${s.prices.t1.toFixed(2)} · T2 ${s.prices.t2.toFixed(2)} · T3 ${s.prices.t3.toFixed(2)} ₺/kWh`],
+                  ["Fatura düzenleyen", "Tedarikçi (dağıtım bedeli kalemiyle)"],
+                ].map(([k, v]) => (
+                  <div key={k}><dt className="text-muted">{k}</dt><dd className="mt-0.5 font-medium text-strong">{v}</dd></div>
+                ))}
+                <div>
+                  <dt className="text-muted">Çağrı Merkezi</dt>
+                  <dd className="mt-0.5 inline-flex items-center gap-2 font-medium text-strong">
+                    <Phone aria-hidden className="size-4 text-muted" />
+                    <a className="kz-mono hover:underline" href={`tel:${s.phone.replace(/\s/g, "")}`}>{s.phone}</a>
+                  </dd>
+                </div>
+              </dl>
+            </Panel>
+            <SupplierProfile s={s} mine={mine} />
+          </div>
 
           <Panel id="td-musteriler" title="Aboneleri" note={`${num.format(mine.length)} abone; ilk 12'si gösteriliyor`} className="xl:col-span-3" actions={<Button size="sm" variant="secondary" onClick={() => go("customers")}>Tüm Aboneler</Button>}>
             <div className="max-md:hidden">
@@ -835,5 +840,60 @@ function SupplierDetail({ row, go }: { row: SupplierRow; go: PageProps["go"] }) 
         </div>
       </PageBody>
     </>
+  );
+}
+
+/** Tedarikçinin abone profili: sözleşme süresi, serbest/görevli ve AG/OG payı, abone türleri,
+ *  toplam aylık tüketim. Hepsi abone kayıtlarından türer (ÖRNEK veri). */
+function SupplierProfile({ s, mine }: { s: Supplier; mine: readonly (typeof CUSTOMERS)[number][] }) {
+  const total = Math.max(1, mine.length);
+  const free = mine.filter((c) => c.free).length;
+  const og = mine.filter((c) => c.voltage === "OG").length;
+  const kwh = mine.reduce((a, c) => a + c.baseKwh, 0);
+  const daysLeft = Math.max(0, Math.round((parseDay(s.contractEnd).getTime() - TODAY.getTime()) / 86_400_000));
+  const monthsLeft = Math.round(daysLeft / 30.4);
+  const byKind = [...mine.reduce((m, c) => m.set(c.kind, (m.get(c.kind) ?? 0) + 1), new Map<string, number>())].sort((a, b) => b[1] - a[1]);
+  const split = (label: string, a: number, aLabel: string, bLabel: string) => (
+    <div className="grid gap-1.5">
+      <p className="flex items-baseline justify-between text-small">
+        <span className="font-medium text-strong">{label}</span>
+        <span className="text-muted tabular-nums">
+          {aLabel} {fmtNum(a)} · {bLabel} {fmtNum(mine.length - a)}
+        </span>
+      </p>
+      <span aria-hidden className="flex h-2 overflow-hidden rounded-full bg-chart-track">
+        <span className="bg-primary" style={{ width: `${(a / total) * 100}%` }} />
+        <span className="bg-primary/35" style={{ width: `${((mine.length - a) / total) * 100}%` }} />
+      </span>
+    </div>
+  );
+  return (
+    <Panel id="td-profil" title="Abone Profili" note={`${fmtNum(mine.length)} abone · aylık ${fmtKwh(kwh)}`}>
+      <div className="grid gap-5 p-4 sm:p-5">
+        <div className="grid gap-1.5">
+          <p className="flex items-baseline justify-between text-small">
+            <span className="font-medium text-strong">Sözleşmenin Bitişine</span>
+            <span className={daysLeft < 180 ? "font-medium text-warning" : "text-muted"}>{monthsLeft} ay · {day(s.contractEnd)}</span>
+          </p>
+          <TickMeter label="Sözleşmenin kalan süresi" value={Math.min(36, monthsLeft)} max={36} ticks={36} text={`${monthsLeft} ay`} valueText={`Sözleşmenin bitişine ${monthsLeft} ay`} />
+        </div>
+        {split("Seçim", free, "Serbest", "Görevli")}
+        {split("Gerilim", og, "OG", "AG")}
+        <div className="grid gap-2">
+          <p className="text-small font-medium text-strong">Abone Türü</p>
+          <ul role="list" className="grid gap-1.5">
+            {byKind.map(([k, n]) => (
+              <li key={k} className="grid grid-cols-[7.5rem_minmax(0,1fr)_2.5rem] items-center gap-3 text-small">
+                <span className="truncate text-body">{KIND_LABEL[k as keyof typeof KIND_LABEL] ?? k}</span>
+                <span aria-hidden className="h-1.5 overflow-hidden rounded-full bg-chart-track">
+                  <span className="block h-full rounded-full bg-chart-2" style={{ width: `${(n / total) * 100}%` }} />
+                </span>
+                <span className="text-end font-medium text-strong tabular-nums">{fmtNum(n)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Panel>
   );
 }

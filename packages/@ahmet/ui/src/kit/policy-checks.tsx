@@ -80,13 +80,17 @@ export function PolicyChecks({
         {checks.map((c) => {
           const s = STATE[c.state];
           return (
-            <li key={c.id} className="flex items-center gap-2.5 py-2.5 text-base">
-              <s.Icon aria-hidden strokeWidth={2.25} className={cn("size-4 shrink-0", s.ink)} />
-              <span className="min-w-0 flex-1 text-strong">
-                <span className="sr-only">{s.label}: </span>
-                {c.label}
+            // Etiket ezilmez: açıklama sığmazsa alt satıra iner (eskiden açıklama hiç küçülmüyor,
+            // uzun etiketi üç satıra bölüp üstüne biniyordu).
+            <li key={c.id} className="grid grid-cols-[1rem_minmax(0,1fr)] items-baseline gap-x-2.5 py-2.5 text-base">
+              <s.Icon aria-hidden strokeWidth={2.25} className={cn("size-4 translate-y-0.5 self-start", s.ink)} />
+              <span className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
+                <span className="text-strong">
+                  <span className="sr-only">{s.label}: </span>
+                  {c.label}
+                </span>
+                {c.detail ? <span className="text-small text-pretty text-muted tabular-nums sm:text-end">{c.detail}</span> : null}
               </span>
-              {c.detail ? <span className="shrink-0 text-end text-small text-muted tabular-nums">{c.detail}</span> : null}
             </li>
           );
         })}

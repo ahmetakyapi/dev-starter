@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Portal: sağdan paneller, para kartı, Saha Okuma, Şebeke haritası — 2026-11-26
+
+- `sheet`: yeni `size="xl"`; Portal panelleri sağdan açılır (alttan panel kaldırıldı).
+- Pano: Vadesi Geçmiş Alacak kartı yeniden; harita kartı daraltıldı (`zoom`); "Haritayı Aç" çalışıyor.
+- Saha Okuma: sıradaki durak, durak özeti, "Önceki" ipuçları, fotoğraf bölgesi.
+- Şebeke ve Trafo topoğrafik haritaya geçti; tedarikçi ayrıntısına profil sütunu.
+- `record-list` durum sütunu hizası, `policy-checks` satır ızgarası; Tahakkuk penceresi genişledi.
+
 ### Portal tek hiza, Aşama Akışı, Pano brifingi — 2026-11-26
 
 - Portal tablolarında bütün sütunlar soldan başlar; ilk sütun dahil iki parçalı hücreler tek satır

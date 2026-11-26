@@ -78,11 +78,12 @@
 }
 @media (max-width: 63.99rem) { .kz-shell #icerik { border-inline-start: 0; } }
 
-/* TEK SATIRLI TABLO (25 Kasım 2026): hücrede alt alta duran iki parça (ad + numara, tür +
+/* TEK SATIRLI TABLO (25 Kasım 2026; ağaç tablo hariç: düğüm hücresi ok + girinti + ad taşır,
+   kırpma adı yerdi): hücrede alt alta duran iki parça (ad + numara, tür +
    gerilim, tedarikçi + tür, rozet + gerekçe) aynı satıra dizilir; ikinci parça sönük ve
    yer kalmayınca KIRPILIR (satır iki kata çıkmaz). Satır ~100 px'ten ~44 px'e iner, liste
    taranır. Kapsam yalnız portalın tablo gövdesi; telefonda tablo yerine kart listesi var. */
-[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) {
+[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -90,7 +91,7 @@
   gap: 0 0.5rem;
   min-width: 0;
 }
-[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > * {
+[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > * {
   flex: 0 1 auto;
   min-width: 0;
   white-space: nowrap;
@@ -100,10 +101,10 @@
 /* İkinci (sönük) parça sütun genişliğine KATILMAZ (`width: 0`): sütun ana parçaya göre
    ölçülür, ikinci parça yalnız artan yerde görünür ve sığmazsa kırpılır. Tablo dar ekranda
    yatay kaymaya düşmez; geniş ekranda ikinci parça kendiliğinden tam okunur. */
-[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > * + * { flex: 1 1 0; width: 0; max-width: 12rem; }
-[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > :is(svg, input, button, a[class*="rounded"], [role="checkbox"], [class*="rounded"]) { flex: none; width: auto; max-width: none; overflow: visible; }
+[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > * + * { flex: 1 1 0; width: 0; max-width: 12rem; }
+[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > :is(svg, input, button, a[class*="rounded"], [role="checkbox"], [class*="rounded"]) { flex: none; width: auto; max-width: none; overflow: visible; }
 /* Rozet + gerekçe hücresi: rozet ortalanır, gerekçe ona hizalanır. */
-[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *):has(> [class*="rounded-full"]:first-child) { align-items: center; }
+[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *):has(> [class*="rounded-full"]:first-child) { align-items: center; }
 
 /* TEK HİZA (26 Kasım 2026): bütün sütunlar SOLDAN başlar; sayı sütunu da. Sahibi "bazıları
    ortalanmış, bazıları soldan başlıyor" dedi: sağa yaslı sayı + sola yaslı metin + rozet aynı
@@ -119,4 +120,9 @@
 [data-product="kuzeyova"] table tbody :is(td, th) > :is(.justify-end, .justify-center) { justify-content: flex-start; }
 [data-product="kuzeyova"] table tbody :is(td, th) > .ml-auto { margin-left: 0; }
 /* Tek satıra dizilen hücrede dikey ortalama bozulmasın (rozet + metin): taban çizgisi yerine orta. */
-[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *):has(> [class*="rounded"]) { align-items: center; }
+[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *):has(> [class*="rounded"]) { align-items: center; }
+
+/* Sayfa içi atlama işareti (Pano → "Haritayı Aç"): hedef bölüm kısa bir halkayla belirir. */
+@keyframes kz-flash { 0%, 60% { box-shadow: 0 0 0 3px var(--line-focus); } 100% { box-shadow: 0 0 0 3px transparent; } }
+.kz-flash { border-radius: 0.75rem; outline: none; animation: kz-flash 1.6s cubic-bezier(.22,1,.36,1); }
+@media (prefers-reduced-motion: reduce) { .kz-flash { animation: none; box-shadow: 0 0 0 3px var(--line-focus); } }
