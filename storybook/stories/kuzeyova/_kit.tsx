@@ -90,14 +90,14 @@ export const fmtDur = (minutes: number) => {
 
 /* ── Yönlendirme yardımcısı: bağlam yoksa (Kit hikayesi) sessiz ──────────── */
 
-type To = { page: Page; params?: Record<string, string | undefined> };
+export type To = { page: Page; params?: Record<string, string | undefined> };
 
 function useNav() {
   const ctx = useContext(AppContext);
   return (to: To) => ctx?.navigate(to.page, to.params);
 }
 
-function NavLink({ to, className, children, ...rest }: { to: To; className?: string; children: ReactNode } & Omit<React.ComponentProps<"a">, "href">) {
+export function NavLink({ to, className, children, ...rest }: { to: To; className?: string; children: ReactNode } & Omit<React.ComponentProps<"a">, "href">) {
   const go = useNav();
   return (
     <a
@@ -256,7 +256,7 @@ export function PageHero({ primary, secondary, className }: { primary: MetricPro
 
 /* ── TodayBand: role göre "Bugün benim işim" ─────────────────────────────── */
 
-type TodayItem = { id: string; count: number; label: string; hint?: string; tone: "danger" | "warning" | "neutral"; to: To; cta: string };
+export type TodayItem = { id: string; count: number; label: string; hint?: string; tone: "danger" | "warning" | "neutral"; to: To; cta: string };
 
 export function todayItems(role: string): TodayItem[] {
   const month = CURRENT_PERIOD;

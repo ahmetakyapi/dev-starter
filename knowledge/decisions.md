@@ -1798,3 +1798,15 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   zıplar (dalga izlenir); spektrum şeridi daha uzun, yumuşak eğriyle kayar.
   Hata düzeltmesi: harf dalgasının gecikmesi başlıktaki sıra numarasından
   (13'ten) hesaplanıyordu, renk ~1 sn geç başlıyordu; artık kelime içi sıra.
+- **Değişti (2026-11-26, aynı gün): Pano üstü.** Sahibi ilk brifingi "hiç olmamış" buldu:
+  dünya küresi ("kabul edilemez"), nabız halkaları (metin halkaya biniyordu) ve ayrı "Bugün
+  Senin İşin" kutusu (başlıktaki "2 başlığı" tekrar ediyordu) kalktı; kartlar arası boşluk
+  daraldı. Şimdi TEK brifing kartı (başlık + işlerin kendisi + öneri + kısayollar) ve yanında
+  spot kartı: rolün kahraman sayısı; yöneticide Vadesi Geçmiş Alacak büyük tutar + dört sütunlu
+  yaşlandırma (tek tırmanış: gri → uyarı → kırmızı) + en eski borçlu + "Listeyi Aç". Ölçü
+  şeridi kalan altı ölçüyü tek kartta taşır. Ders: süs nesnesi değil, gerçek veri görseli.
+- **Harita:** "gerçek bir harita gibi; güzel yapmayacaksan koyma". Pano üstüne harita
+  KONMADI (aşağıda zaten bölge haritası var, tekrar olurdu). Kartografik harita
+  (`_harita-carto.tsx`): tohumlu kıvrımlı sınırlar (komşular aynı kenarı paylaşır), kıyı ve
+  deniz, arazi kabartması, nehir, yollar, ilçeler, trafo simgeleri, ölçek ve kuzey oku; üç
+  görünüm (topo, gece, kroki) Portal → Harita Seçenekleri'nde, seçim sahibinde.

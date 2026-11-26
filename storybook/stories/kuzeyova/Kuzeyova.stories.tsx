@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { CUSTOMERS } from "./_data";
+import { MapOptions } from "./_harita-secenek";
 import { KuzeyovaApp } from "./_app";
 import { KitGallery } from "./_kit-demo";
 import { settle } from "./_settle";
@@ -132,4 +133,10 @@ export const Kit: Story = {
     await userEvent.click(canvas.getByRole("radio", { name: "Yönetici" }));
     await settle(globals);
   },
+};
+
+export const MapLooks: Story = {
+  name: "Harita Seçenekleri",
+  render: () => <MapOptions />,
+  play: async ({ globals }) => settle(globals),
 };

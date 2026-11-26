@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowRight, BookOpenCheck, ClipboardList, Gauge, Lightbulb, Receipt, Route, UserPlus, Users, WifiOff, Zap } from "lucide-react";
-import { ActivityRings } from "@/components/ui/activity-rings";
 import { cn } from "@/lib/utils";
-import { ArtMat } from "@/components/ui/art-mat";
-import { Orb } from "@/components/ui/orb";
 import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
@@ -41,14 +38,14 @@ import {
   type Period,
 } from "./_data";
 import { useDerived } from "./_core";
-import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, pendingReadings, useLiveStats } from "./_selectors";
+import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, useLiveStats } from "./_selectors";
 import { effectiveMeters } from "./_ops";
 import { WORK_TYPE_LABEL as WORK_LABEL_X, type WorkType } from "./_store";
 import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
 import { useRole } from "./_permissions";
 import { COLLECTION_SCOPE, flaggedReadings as flagged, overdueTotal, useBadges } from "./_selectors";
 import { useAging } from "./_data-pano";
-import { AgingBars, BarTarget, PageHero, RowAnchor, RowLink, TodayBand, todayItems, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
+import { AgingBars, BarTarget, Metric, NavLink, RowAnchor, RowLink, todayItems, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
 import { PageBody, PageHead, Panel, useApp, type PageProps } from "./_ui";
 
 /** Dönem seçici: panonun bütün ölçülerini ve grafiklerini birlikte değiştirir. */
@@ -152,32 +149,22 @@ const SYSTEM_TEXT = { operational: "Çalışıyor", degraded: "Yavaş", outage: 
 
 const ROLE_HERO: Record<string, string> = { okuma: "supheli", tahsilat: "tahsilat", musteri: "ariza", denetci: "tahsilat", yonetici: "tahsilat" };
 
-const DOT = { 1: "bg-chart-1", 2: "bg-chart-2", 3: "bg-chart-3", 4: "bg-chart-4", 5: "bg-chart-5", 6: "bg-chart-6" } as const;
+const TONE_DOT = { danger: "bg-danger", warning: "bg-warning", neutral: "bg-muted" } as const;
+const TONE_INK = { danger: "text-danger", warning: "text-warning", neutral: "text-muted" } as const;
+const TONE_WORD = { danger: "Kritik", warning: "Bekliyor", neutral: "Takipte" } as const;
 
-/* ── Brifing bandı: Pano'nun ilk ekranı ──────────────────────────────────
-   Sahibinin isteği (26 Kasım 2026): "kullanıcı ilk buraya gireceği için zengin
-   içerik ve güzel görseller görmeli; özet bilgiler de buradan yönetilmeli".
-   Solda kişiye seslenen iki tonlu başlık (bugün kaç başlık bekliyor), tek cümle
-   durum ve sık işlerin kısayolları; sağ kenarında sulu boya zeminde dönen dünya
-   (şebeke). Sağda "Bugünün Nabzı": tahsilat, okuma ilerlemesi ve kayıp hedefi
-   üç halka; her sayı listede metin olarak da yazılı. Sayılar canlı depodan. */
-function BriefBand({ go }: { go: PageProps["go"] }) {
+/* ── Brifing: Pano'nun ilk ekranı ─────────────────────────────────────────
+   Sahibinin geri bildirimi (26 Kasım 2026): ilk sürümde karşılama kartı, dünya küresi, nabız
+   halkaları ve ayrı "Bugün Senin İşin" kutusu üst üste binmiş katmanlar gibiydi ("hiç olmamış",
+   "dünyayı kaldır", "aradaki mesafe çok fazla"). Şimdi TEK kart: kişiye seslenen iki tonlu başlık,
+   başlığın sözünü ettiği işlerin KENDİSİ (aynı kartta, ayrı kutu değil), öneri ve kısayollar.
+   Süs nesnesi yok; görsel ağırlığı yanındaki spot kartının gerçek verisi taşır. */
+function Brief({ go, tip }: { go: PageProps["go"]; tip: ReactNode }) {
   const role = useRole();
-  const stats = useLiveStats("1");
-  const waiting = useDerived(() => todayItems(role).filter((i) => i.count > 0).length, [role]);
-  const meters = useDerived(effectiveMeters);
-  const pending = useDerived(() => pendingReadings(CURRENT_PERIOD).length);
-  const outages = useDerived(openOutages);
-  const read = Math.max(0, meters.length - pending);
-  const lossTarget = 7.5;
+  const items = useDerived(() => todayItems(role), [role]);
+  const open = items.filter((i) => i.count > 0);
+  const clear = items.filter((i) => i.count === 0);
   const day = new Intl.DateTimeFormat("tr-TR", { weekday: "long", day: "numeric", month: "long" }).format(TODAY);
-  const collection = Math.round(stats.collectionRate * 10) / 10;
-  const loss = Math.round(stats.lossPct * 10) / 10;
-  const rings = [
-    { label: "Tahsilat · Son Ay", value: collection, goal: 100, series: 1 as const, text: fmtPct(collection), note: "Kesilen faturaların tahsil edilen payı" },
-    { label: "Okuma", value: read, goal: Math.max(1, meters.length), series: 2 as const, text: `${fmtNum(read)} / ${fmtNum(meters.length)}`, note: `${fmtNum(pending)} sayaç turda bekliyor` },
-    { label: "Kayıp Hedefi", value: lossTarget, goal: Math.max(lossTarget, loss), series: 4 as const, text: fmtPct(loss), note: `Hedef %${String(lossTarget).replace(".", ",")}; halka doluysa hedefte` },
-  ];
   const actions = [
     { label: "Okuma Turu", icon: <Route />, page: "field" as const },
     { label: "Arıza Kaydı", icon: <Zap />, page: "outages" as const },
@@ -185,50 +172,121 @@ function BriefBand({ go }: { go: PageProps["go"] }) {
     { label: "Yeni Abone", icon: <UserPlus />, page: "register" as const },
   ];
   return (
-    <section aria-label="Günün özeti" className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-      <div className="relative grid overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line sm:grid-cols-[minmax(0,1fr)_14rem]">
-        <div className="grid content-between gap-6 p-5 sm:p-6">
-          <div className="grid gap-2">
-            <p className="text-base text-muted">Günaydın Aylin · {day}</p>
-            <p className="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-strong">
-              <span className="block">{waiting ? `Bugün ${fmtNum(waiting)} Başlık` : "Bugün Her Şey"}</span>
-              <span className="block text-[color-mix(in_srgb,currentColor_50%,transparent)]">{waiting ? "Seni Bekliyor" : "Yolunda Görünüyor"}</span>
-            </p>
-            <p className="max-w-[52ch] text-read text-body">
-              {fmtNum(stats.active)} aktif abone, {fmtNum(outages.length)} açık arıza; Kasım okumalarının {fmtNum(read)} / {fmtNum(meters.length)} tanesi geldi.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {actions.map((a) => (
-              <Button key={a.label} variant="secondary" size="sm" onClick={() => go(a.page)}>
-                <span aria-hidden className="[&_svg]:size-4">{a.icon}</span>
-                {a.label}
-              </Button>
-            ))}
-          </div>
-        </div>
-        <ArtMat variant="wash" pad="sm" className="hidden rounded-none sm:grid sm:rounded-none" contentClassName="grid h-full place-items-center">
-          <Orb variant="globe" size={150} />
-        </ArtMat>
+    <section aria-labelledby="pano-brief" className="grid content-start overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line">
+      <div className="grid gap-1.5 px-5 pt-5 pb-4 sm:px-6">
+        <p className="text-base text-muted">Günaydın Aylin · {day}</p>
+        <h2 id="pano-brief" className="font-display text-[clamp(1.625rem,2.4vw,2.125rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-strong">
+          {open.length ? (
+            <>
+              Bugün {fmtNum(open.length)} Başlık <span className="text-[color-mix(in_srgb,currentColor_48%,transparent)]">Seni Bekliyor</span>
+            </>
+          ) : (
+            <>
+              Bugün Her Şey <span className="text-[color-mix(in_srgb,currentColor_48%,transparent)]">Yolunda</span>
+            </>
+          )}
+        </h2>
       </div>
-      <div className="grid content-center rounded-xl bg-overlay p-5 shadow-raised ring-1 ring-line sm:p-6">
-        <p className="mb-4 text-read font-semibold text-strong">Bugünün Nabzı</p>
-        <div className="grid items-center gap-5 sm:grid-cols-[9.5rem_minmax(0,1fr)]">
-          {/* Halkalar süs; aynı bilgi yandaki listede metin (halkanın kendi listesi bu dar kartta taşıyordu). */}
-          <ActivityRings title="Bugünün nabzı" showList={false} cut="stroke-overlay" thickness={18} rings={rings} className="w-[9.5rem]" />
-          <ul role="list" aria-label="Bugünün nabzı" className="grid gap-3">
-            {rings.map((r) => (
-              <li key={r.label} className="grid grid-cols-[0.625rem_minmax(0,1fr)_auto] items-baseline gap-x-2.5">
-                <span aria-hidden className={cn("size-2.5 rounded-full", DOT[r.series])} />
-                <span className="truncate text-base text-body">{r.label}</span>
-                <span className="text-base font-semibold text-strong tabular-nums">{r.text}</span>
-                <span />
-                <span className="col-span-2 text-small text-muted">{r.note}</span>
-              </li>
-            ))}
-          </ul>
+      {open.length ? (
+        <ul role="list" aria-label="Bugün senin işin" className="divide-y divide-line-soft border-y border-line-soft">
+          {open.map((i) => (
+            <li key={i.id} className="relative flex min-w-0 items-center gap-3 px-5 py-3 transition-colors focus-within:bg-surface hover:bg-surface sm:px-6">
+              <span className={cn("grid size-9 shrink-0 place-items-center rounded-lg text-read font-semibold tabular-nums", i.tone === "danger" ? "bg-danger-wash text-danger" : i.tone === "warning" ? "bg-warning-wash text-warning" : "bg-surface text-strong")}>
+                {fmtNum(i.count)}
+              </span>
+              <span className="grid min-w-0 flex-1">
+                <span className="truncate text-base font-medium text-strong">{i.label}</span>
+                <span className="truncate text-small text-muted">
+                  <span className={cn("font-medium", TONE_INK[i.tone])}>
+                    <span aria-hidden className={cn("mr-1.5 inline-block size-1.5 -translate-y-px rounded-full", TONE_DOT[i.tone])} />
+                    {TONE_WORD[i.tone]}
+                  </span>
+                  {i.hint ? ` · ${i.hint}` : ""}
+                </span>
+              </span>
+              <NavLink to={i.to} className="inline-flex shrink-0 items-center gap-1 text-small font-medium text-body outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
+                <span className="sr-only">{`${i.cta}: ${fmtNum(i.count)} ${i.label}`}</span>
+                <span aria-hidden className="max-sm:hidden">{i.cta}</span>
+                <ArrowRight aria-hidden className="size-3.5" />
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <div className="grid gap-3 px-5 py-4 sm:px-6">
+        {tip ? <div className="text-small text-body">{tip}</div> : null}
+        {clear.length ? (
+          <p className="text-small text-muted">
+            <span className="font-medium text-body">Temiz:</span> {clear.map((i) => i.label).join(" · ")}
+          </p>
+        ) : null}
+        <div className="flex flex-wrap gap-2 pt-1">
+          {actions.map((a) => (
+            <Button key={a.label} variant="secondary" size="sm" onClick={() => go(a.page)}>
+              <span aria-hidden className="[&_svg]:size-4">{a.icon}</span>
+              {a.label}
+            </Button>
+          ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+/* ── Spot kartı: rolün bugünkü en önemli sayısı ──────────────────────────
+   Yönetici ve tahsilat rolünde Vadesi Geçmiş Alacak: büyük tutar, yaşlandırma DÖRT SÜTUN (tutara
+   göre yükseklik; 90 gün üstü kırmızı), her sütunda tutar ve fatura sayısı, en eski borçlu ve
+   listeye giden eylem. Eskiden 17rem'lik hücrede ince bir şerit + 2×2 küçük açıklamaydı. Diğer
+   rollerde aynı kart o rolün sayısını büyük gösterir. */
+function Spotlight({ metric, go }: { metric: MetricProps; go: PageProps["go"] }) {
+  const aging = useAging();
+  const overdue = useDerived(overdueInvoices);
+  const isDebt = metric.label === "Vadesi Geçmiş Alacak";
+  const oldest = overdue.reduce<(typeof overdue)[number] | null>((o, i) => (!o || i.due < o.due ? i : o), null);
+  const max = Math.max(1, ...aging.map((b) => b.value));
+  // Tek tırmanış: taze borç sakin gri, yaşlandıkça uyarıdan kırmızıya (renk yaş anlamı taşır, kategori değil).
+  const tones = ["bg-line-strong", "bg-warning/70", "bg-danger/55", "bg-danger"];
+  const bucketLabel = (l: string) => l.replace(" gün", " gün").replace("Daha eski", "90 gün +");
+  return (
+    <section aria-labelledby="pano-spot" className="grid content-between gap-5 rounded-xl bg-overlay p-5 shadow-raised ring-1 ring-line sm:p-6">
+      <div className="grid gap-1">
+        <h2 id="pano-spot" className="flex items-center gap-2 text-base font-medium text-body">
+          <span aria-hidden className="text-muted [&_svg]:size-4">{metric.icon}</span>
+          {metric.label}
+        </h2>
+        <p className="font-display text-[clamp(2.25rem,3.4vw,3rem)] leading-none font-semibold tracking-[-0.04em] text-strong tabular-nums">{metric.value}</p>
+        {isDebt && oldest ? (
+          <p className="text-small text-muted">
+            {fmtNum(overdue.length)} fatura · en eskisi {customer(oldest.customerId).name}, {fmtNum(daysBetween(parseDay(oldest.due), TODAY))} gün
+          </p>
+        ) : metric.foot ? (
+          <p className="text-small text-muted">{metric.foot}</p>
+        ) : null}
+      </div>
+      {isDebt ? (
+        <ul role="list" aria-label="Alacak yaşlandırması" className="grid grid-cols-4 gap-3">
+          {aging.map((b, i) => (
+            <li key={b.id} className="grid gap-2">
+              <span aria-hidden className="relative block h-20 overflow-hidden rounded-md bg-surface">
+                <span className={cn("absolute inset-x-0 bottom-0 rounded-md", tones[i] ?? "bg-muted")} style={{ height: `${Math.max(6, (b.value / max) * 100)}%` }} />
+              </span>
+              <span className="grid">
+                <span className="text-base font-semibold text-strong tabular-nums">{fmtTlCompact(b.value)}</span>
+                <span className="text-small text-muted tabular-nums">{fmtNum(b.count)} fatura</span>
+                <span className={cn("font-mono text-micro", i === 3 ? "text-danger" : "text-muted")}>{bucketLabel(b.label)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {metric.to ? (
+        <div>
+          <Button variant="secondary" size="sm" onClick={() => go(metric.to!.page, metric.to!.params)}>
+            Listeyi Aç
+            <ArrowRight aria-hidden />
+          </Button>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -358,10 +416,17 @@ export function PanoPage({ go, params }: PageProps) {
         }
       />
       <PageBody>
-        <BriefBand go={go} />
-        <TodayBand tip={tip} />
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+          <Brief go={go} tip={tip} />
+          <Spotlight metric={metrics[heroKey]} go={go} />
+        </div>
 
-        <PageHero primary={metrics[heroKey]} secondary={secondary} />
+        {/* Ölçü şeridi: kahraman sayı yukarıdaki spot kartında; burada kalan altı ölçü tek kartta. */}
+        <section aria-label="Öne Çıkan Ölçüler" className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-line-soft shadow-raised ring-1 ring-line md:grid-cols-3 2xl:grid-cols-6">
+          {secondary.map((m) => (
+            <Metric key={m.label} {...m} className="bg-overlay" />
+          ))}
+        </section>
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
           <Panel
