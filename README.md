@@ -97,8 +97,8 @@ görsel değişiklikten sonra koşar.
 </table>
 
 Kısa adresler: [`/demo`](https://dev-starter-storybook.vercel.app/demo) (Pusula) · [`/showcase`](https://dev-starter-storybook.vercel.app/showcase) ·
-[`/start`](https://dev-starter-storybook.vercel.app/start) · [`/theme`](https://dev-starter-storybook.vercel.app/theme) · [`/palettes`](https://dev-starter-storybook.vercel.app/palettes) ·
-[`/references`](https://dev-starter-storybook.vercel.app/references) · bileşen belgesi `/c/<ad>` (ör. [`/c/date-picker`](https://dev-starter-storybook.vercel.app/c/date-picker)).
+[`/start`](https://dev-starter-storybook.vercel.app/start) · [`/colors`](https://dev-starter-storybook.vercel.app/colors) · [`/palettes`](https://dev-starter-storybook.vercel.app/palettes) ·
+[`/references`](https://dev-starter-storybook.vercel.app/references) · [`/portal`](https://dev-starter-storybook.vercel.app/portal) · bileşen sayfası `/<ad>` (ör. [`/date-picker`](https://dev-starter-storybook.vercel.app/date-picker)), içindeki bir örnek `/<ad>/<örnek>` (ör. [`/portal/customers`](https://dev-starter-storybook.vercel.app/portal/customers)). Eski `?path=` bağlantıları da açılır, okunur adrese döner.
 
 ---
 

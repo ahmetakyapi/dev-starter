@@ -1856,3 +1856,24 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
 - **Yükleme ekranı**: Storybook'un tek noktalık çemberi yerine ekran iskeleti + ışık + dolan
   çizgi (`preview-head.html`, saf CSS, sistem renkleri, hareket azaltmaya uyar). Yavaş
   bağlantıda boş tuval "bozuk" gibi okunuyordu.
+
+### Storybook: Okunur Adresler, Testler Yalnız Test Koşusunda, Kenar Çubuğu Şeridi (2026-11-26)
+
+- **Okunur adresler.** `/?path=/story/cover--overview` yerine `/`, `/portal/customers`,
+  `/area-chart` (bileşen sayfası), `/area-chart/stacked` (ev/oda). Storybook yönlendiricisi
+  yalnız `?path=` anladığı için çeviri tarayıcıda: `.storybook/pretty-url.js` derlemede
+  (`scripts/seo-head.mjs`) `<head>`in başına gömülür, açılışta okunur → `?path=`, her gezinmeden
+  sonra `?path=` → okunur, geri/ileri tuşunda yakalama evresinde çevirir. `<base href="/">` ve
+  `window.PREVIEW_URL` iç adreste dosya ve önizleme çerçevesi kökten yüklensin diye (yoksa
+  `/portal/customers/iframe.html` → 404). Vercel: noktasız her yol `index.html`e (rewrite);
+  `/showcase`, `/references` gibi eski yönlendirmeler artık doğal adres olduğu için kaldırıldı,
+  takma adlar (`/demo`, `/theme`, `/c/<id>`, `/s/<id>/<hikaye>`) yeni adrese yönlenir. Eski
+  `?path=` bağlantıları çalışır. Ölçüm: 9 senaryo (kök, derin bağlantı, tıklama, geri, ileri,
+  eski bağlantı, bileşen sayfası, sorgu korunur, bilinmeyen yol → `/`).
+  Değişti: Storybook yükseltmesinde `scope.PREVIEW_URL` ve `?path=` okuma zamanı yeniden doğrulanmalı.
+- **Oynatma betikleri yalnız Vitest'te** (`stories/_lib/testOnly.ts`). Portal ve Pusula'nın
+  gezinme testleri arayüzde de oynuyor, ziyaretçi açılışta sayfaların kendi kendine geçtiğini,
+  arama kutusunun açılıp yazıldığını görüyordu. Kapsam aynı (945 test); arayüzde yükleme
+  ekranından sonra doğrudan bitmiş ekran.
+- **Kenar çubuğu şeridi**: "Tümünü Daralt" (seçili grubu da kapatır; `api.collapseAll` 10.6'da
+  atıyor, açık grupların butonuna basılır) ve "Kapat" (telefonda çekmece, masaüstünde kenar çubuğu).

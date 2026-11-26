@@ -7,6 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Storybook: okunur adresler, sessiz açılış, kenar çubuğu şeridi — 2026-11-26
+
+- Adresler `/portal/customers`, `/area-chart` biçiminde; eski `?path=` bağlantıları da çalışır.
+- Portal ve Pusula'nın oynatma testleri yalnız test koşusunda (`testOnly`): açılışta ekran kendi kendine gezinmez.
+- Kenar çubuğunda "Tümünü Daralt" ve "Kapat".
+
 ### Portal gezintisi: tablo kırpmaları, grafik etiketleri, ₺, yükleme ekranı — 2026-11-26
 
 - Tek satırlı tablolarda tek harfe inen ikinci parçalar elendi (140 → 0); `kz-keep` sınıfı.

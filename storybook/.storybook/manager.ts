@@ -126,3 +126,69 @@ addons.register("dev-starter/mobile-crumb", (api: API) => {
   new MutationObserver(apply).observe(document.body, { childList: true, subtree: true, characterData: true });
   api.on(STORY_PREPARED, () => requestAnimationFrame(apply));
 });
+
+/* Kenar çubuğu araç şeridi (26 Kasım 2026, sahibinin isteği: "daralt ve direkt kapat gibi
+   seçenekler ekleyelim, basınca kapansın"). Listenin üstünde yapışık iki buton:
+   "Tümünü Daralt" açık grupları kapatır (uzun Portal/Bileşenler listesinden tek dokunuşla
+   çıkış); "Kapat" telefonda alt çekmeceyi kapatır (Storybook'un kendi "Close menu" butonu
+   liste aşağı kaydırılınca görünmüyor), masaüstünde kenar çubuğunu gizler (araç çubuğundaki
+   gezinme butonu geri açar). Storybook kenar çubuğuna buton ekleme API'si vermiyor: şerit
+   `#storybook-explorer-menu`nün başına yerleştirilir, yeniden çizimde MutationObserver geri koyar. */
+addons.register("dev-starter/nav-tools", (api: API) => {
+  const make = (label: string, icon: string, onClick: () => void) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "ds-navtool";
+    b.innerHTML = `<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icon}</svg><span></span>`;
+    (b.lastChild as HTMLElement).textContent = label;
+    b.addEventListener("click", onClick);
+    return b;
+  };
+  const close = () => {
+    const mobile = document.getElementById("storybook-mobile-menu");
+    const closeBtn = mobile?.querySelector<HTMLButtonElement>('button[aria-label="Close menu"]');
+    if (closeBtn) closeBtn.click();
+    else api.toggleNav(false);
+  };
+  // `collapseAll` seçili hikayenin grubunu açık bırakıyor; "Tümünü Daralt" onu da kapatsın.
+  const collapse = () => {
+    // Sürüme göre yok olabilir (SB 10.6'da atıyor): asıl iş açık grupların butonuna basmak.
+    try {
+      (api as unknown as { collapseAll?: () => void }).collapseAll?.();
+    } catch {
+      /* yok say */
+    }
+    requestAnimationFrame(() => {
+      document
+        .querySelectorAll<HTMLElement>('#storybook-explorer-tree [aria-expanded="true"]')
+        .forEach((toggle) => toggle.click());
+    });
+  };
+  const place = () => {
+    const menu = document.getElementById("storybook-explorer-menu");
+    if (!menu || menu.querySelector(".ds-navtools")) return;
+    const bar = document.createElement("div");
+    bar.className = "ds-navtools";
+    bar.setAttribute("role", "toolbar");
+    bar.setAttribute("aria-label", "Kenar Çubuğu");
+    bar.append(
+      make("Tümünü Daralt", '<path d="m7 20 5-5 5 5"/><path d="m7 4 5 5 5-5"/>', collapse),
+      make("Kapat", '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', close),
+    );
+    menu.prepend(bar);
+    paint();
+  };
+  // Yapışık şeridin zemini: kenar çubuğunun gerçek rengi (tema/palet değişince yeniden okunur).
+  const paint = () => {
+    const bar = document.querySelector<HTMLElement>(".ds-navtools");
+    let n: HTMLElement | null = bar?.parentElement ?? null;
+    while (n) {
+      const bg = getComputedStyle(n).backgroundColor;
+      if (bg && bg !== "transparent" && !bg.endsWith(", 0)")) { bar!.style.setProperty("--ds-nav-bg", bg); return; }
+      n = n.parentElement;
+    }
+  };
+  api.on(GLOBALS_UPDATED, () => requestAnimationFrame(paint));
+  new MutationObserver(place).observe(document.body, { childList: true, subtree: true });
+  place();
+});

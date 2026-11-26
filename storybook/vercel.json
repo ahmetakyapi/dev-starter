@@ -1,60 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
-    {
-      "source": "/showcase",
-      "destination": "/?path=/story/showcase--all-in-one",
-      "permanent": false
-    },
-    {
-      "source": "/demo",
-      "destination": "/?path=/story/demo-app--overview",
-      "permanent": false
-    },
-    {
-      "source": "/demo/:story",
-      "destination": "/?path=/story/demo-app--:story",
-      "permanent": false
-    },
-    {
-      "source": "/references",
-      "destination": "/?path=/story/references--overview",
-      "permanent": false
-    },
-    {
-      "source": "/pusula",
-      "destination": "/demo",
-      "permanent": true
-    },
-    {
-      "source": "/gallery",
-      "destination": "/?path=/story/gallery--overview",
-      "permanent": false
-    },
-    {
-      "source": "/start",
-      "destination": "/?path=/story/start--overview",
-      "permanent": false
-    },
-    {
-      "source": "/theme",
-      "destination": "/?path=/story/colors--overview",
-      "permanent": false
-    },
-    {
-      "source": "/palettes",
-      "destination": "/?path=/story/palettes--all",
-      "permanent": false
-    },
-    {
-      "source": "/c/:id",
-      "destination": "/?path=/docs/:id--docs",
-      "permanent": false
-    },
-    {
-      "source": "/s/:id/:story",
-      "destination": "/?path=/story/:id--:story",
-      "permanent": false
-    }
+    { "source": "/demo", "destination": "/demo-app/overview", "permanent": false },
+    { "source": "/demo/:story", "destination": "/demo-app/:story", "permanent": false },
+    { "source": "/pusula", "destination": "/demo-app/overview", "permanent": true },
+    { "source": "/theme", "destination": "/colors", "permanent": false },
+    { "source": "/c/:id", "destination": "/:id", "permanent": true },
+    { "source": "/s/:id/:story", "destination": "/:id/:story", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
   ]
 }

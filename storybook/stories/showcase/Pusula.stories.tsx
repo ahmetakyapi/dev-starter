@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { testOnly } from "../_lib/testOnly";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { BOARD, DELAYED, OPEN_TICKETS, TICKETS, periodStats, tl } from "./_data";
 import { PusulaApp } from "./_app";
@@ -72,7 +73,7 @@ export const Overview: Story = {
   parameters: {
     docs: { description: { story: "Bütün uygulama: kenar çubuğundan, ⌘K komut paletinden ve sayfa içi bağlantılardan gezilir; geçişte üstte gezinme çubuğu ve iskelet." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Pano" });
     // 1. Kenar çubuğu
@@ -90,7 +91,7 @@ export const Overview: Story = {
     // 4. Kenar çubuğundan panoya dönüş
     await go(canvasElement, "Pano");
     await settle(globals);
-  },
+  }),
 };
 
 export const Dashboard: Story = {
@@ -98,7 +99,7 @@ export const Dashboard: Story = {
   parameters: {
     docs: { description: { story: "İnce çizgiyle bölünmüş dört hücreli ölçü şeridi ve on iki grafik; dönem seçimi hepsini birlikte değiştirir. Sipariş ve dönüşüm birleşik grafikte, dönem hedefleri aktivite halkalarında. Yan yana kartlar eşit boyda, lejantlar dipte hizalı." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     const yil = periodStats("yil");
     await userEvent.click(await canvas.findByRole("radio", { name: "Hafta" }));
@@ -108,7 +109,7 @@ export const Dashboard: Story = {
     await userEvent.click(canvas.getByRole("radio", { name: "Ay" }));
     await waitFor(() => expect(canvas.getByRole("radio", { name: "Ay" })).toHaveAttribute("aria-checked", "true"));
     await settle(globals);
-  },
+  }),
 };
 
 export const DashboardLast7Days: Story = {
@@ -123,7 +124,7 @@ export const Inbox: Story = {
   parameters: {
     docs: { description: { story: "Talep tablosu: arama alanı (“/” kısayolu, Türkçe harf düzleme), öncelik çipleri, müşteri seçimi, sıralama ve sayfalama; atanan kişinin üstüne gelince önizleme kartı, satıra sağ tıklayınca bağlam menüsü, ada basınca yan çekmecede ayrıntı. Arşivleme bildirimi Geri Al butonlu. Filtre boş kalınca boş durum." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     const atlas = TICKETS.filter((t) => t.customerId === "atlas");
     // Öncelik filtresi
@@ -144,7 +145,7 @@ export const Inbox: Story = {
     await userEvent.click(canvas.getByRole("link", { name: /Öncelik/ }));
     await waitFor(() => expect(canvas.getByRole("columnheader", { name: /Öncelik/ })).toHaveAttribute("aria-sort"));
     await settle(globals);
-  },
+  }),
 };
 
 export const TicketDetail: Story = {
@@ -153,12 +154,12 @@ export const TicketDetail: Story = {
   parameters: {
     docs: { description: { story: `Yan çekmecede ${TICKETS[0].id}: geciken ${DELAYED[0]?.id ?? "sipariş"} siparişine bağlı acil talep, olay akışı ve izleyenler.` } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const sheet = await within(canvasElement).findByRole("dialog", { name: TICKETS[0].subject });
     await userEvent.click(within(sheet).getByRole("tab", { name: /Olay Akışı/ }));
     await expect(within(sheet).getByRole("heading", { name: "Olay Akışı" })).toBeInTheDocument();
     await settle(globals);
-  },
+  }),
 };
 
 export const Tasks: Story = {
@@ -167,7 +168,7 @@ export const Tasks: Story = {
   parameters: {
     docs: { description: { story: "Ekip panosu (kanban: fare, dokunma tutamağı ya da klavyeyle taşınır, Sürüyor kolonunda iş sınırı), kişinin bugünkü görev listesi ve yaklaşan son tarihler. Karta basınca (ya da Enter) ayrıntı paneli açılır: sorumlu, son tarih, etiketler; oradan sonraki kolona taşınır ya da tamamlanır. Kart kolon değiştirince sonuç bildirim olarak gelir." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Görevler" });
     // Klavyeyle taşıma: Yapılacak'ın ilk kartı Sürüyor'a.
@@ -197,7 +198,7 @@ export const Tasks: Story = {
     await userEvent.click(opt);
     await expect(opt).toHaveAttribute("aria-pressed", "false");
     await settle(globals);
-  },
+  }),
 };
 
 export const Calendar: Story = {
@@ -206,7 +207,7 @@ export const Calendar: Story = {
   parameters: {
     docs: { description: { story: "Solda Bugün paneli (aralık seçen ay takvimi; Yapılacaklar son tarihe göre gruplu, gruba + ile iş eklenir; Etkinlikler ajandası), sağda kart görünümlü iş haftası: ikonlu kartlar, görüntülü görüşmede Katıl butonu, Son Tarih satırında ekip panosunun son tarihleri. Altta üç adımlı randevu akışı, onay diyaloğu, kısa bildirim ve bildirim merkezine kayıt." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     // Bugün paneli: Planlanmamış grubuna "+" ile iş ekle, Enter'la kaydet.
     await userEvent.click(await canvas.findByRole("button", { name: "Planlanmamış grubuna iş ekle" }));
@@ -222,7 +223,7 @@ export const Calendar: Story = {
     await within(document.body).findByText("Randevu Oluşturuldu");
     await expect(canvas.getByRole("button", { name: /Bildirimler, \d+ okunmamış/ })).toBeInTheDocument();
     await settle(globals);
-  },
+  }),
 };
 
 export const Assistant: Story = {
@@ -231,13 +232,13 @@ export const Assistant: Story = {
   parameters: {
     docs: { description: { story: "Ajan planı canlı ilerler, bitince geciken siparişler için taslaklar gelir. Soru yazınca yanıt panodaki sayılarla verilir." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     const box = await canvas.findByRole("textbox");
     await userEvent.type(box, "Bu haftanın satış özetini çıkar{Enter}");
     await canvas.findByText(/Son 7 günde/, undefined, { timeout: 4000 });
     await settle(globals);
-  },
+  }),
 };
 
 export const Reports: Story = {
@@ -246,7 +247,7 @@ export const Reports: Story = {
   parameters: {
     docs: { description: { story: "Hazır rapor kartları, sekmeler; satış tablosunun toplamı panodaki ciroyla aynı, birikimli ciro çizgileri tablonun ilk dört satırında biter, müşteri haritası tablonun sütunlarını saçılım olarak gösterir. Destek sekmesinde kapanış anketi puanı; dışa aktarma sekmesinde dosya hazırlanırken yükleme durumu." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole("tab", { name: "Dışa ve İçe Aktar" }));
     await userEvent.click(await canvas.findByRole("button", { name: "CSV Oluştur" }));
@@ -255,7 +256,7 @@ export const Reports: Story = {
     await userEvent.click(canvas.getByRole("tab", { name: "Satış" }));
     await expect(canvas.getByRole("table", { name: "Müşteri Bazında Ciro" })).toBeInTheDocument();
     await settle(globals);
-  },
+  }),
 };
 
 export const ReportsLoading: Story = {
@@ -276,7 +277,7 @@ export const Notifications: Story = {
       },
     },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Bildirimler" });
     await userEvent.click(canvas.getByRole("button", { name: "Onayla" }));
@@ -304,7 +305,7 @@ export const Notifications: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Tümünü Okundu Say" }));
     await waitFor(() => expect(canvas.getByRole("button", { name: "Bildirimler" })).toBeInTheDocument());
     await settle(globals);
-  },
+  }),
 };
 
 export const Settings: Story = {
@@ -313,14 +314,14 @@ export const Settings: Story = {
   parameters: {
     docs: { description: { story: "Form girişlerinin hepsi bir ayar sayfasında; iki adımlı doğrulamada kod yazılınca onay; Hızlı Ayarlar penceresi." } },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     const group = await canvas.findByRole("group", { name: "Doğrulama Kodu" });
     await userEvent.click(within(group).getAllByRole("textbox")[0]);
     await userEvent.keyboard("482913");
     await canvas.findByText("İki Adımlı Doğrulama Açık");
     await settle(globals);
-  },
+  }),
 };
 
 export const SignedOut: Story = {
@@ -334,7 +335,7 @@ export const SignedOut: Story = {
       },
     },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     // Şifre alanı yok: tarayıcının şifre yöneticisi devreye girmez.
     await expect(canvasElement.querySelector('input[type="password"]')).toBeNull();
@@ -348,7 +349,7 @@ export const SignedOut: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
     await canvas.findByRole("heading", { name: "Bağlantıyı Gönderdik" }, { timeout: 3000 });
     await settle(globals);
-  },
+  }),
 };
 
 export const SampleAccount: Story = {
@@ -361,19 +362,19 @@ export const SampleAccount: Story = {
       },
     },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole("button", { name: /Ahmet Akyapı.*olarak devam et/ }));
     await canvas.findByRole("heading", { name: "Pano" }, { timeout: 3000 });
     await settle(globals);
-  },
+  }),
 };
 
 export const MagicLink: Story = {
   name: "Bağlantıyla Giriş",
   args: { signedOut: true },
   parameters: { docs: { description: { story: "E-postaya giriş bağlantısı: gönderilince form “Bağlantıyı Gönderdik” paneline döner, bağlantı panoyu açar; “Başka Adres Kullan” forma geri getirir." } } },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await userEvent.type(await canvas.findByLabelText("E-Posta"), "ahmet@lidyatekstil.com.tr");
     await userEvent.click(canvas.getByRole("button", { name: "Giriş Bağlantısı Gönder" }));
@@ -385,7 +386,7 @@ export const MagicLink: Story = {
     await userEvent.click(await canvas.findByRole("button", { name: /Bağlantıyı Aç/ }, { timeout: 3000 }));
     await canvas.findByRole("heading", { name: "Pano" }, { timeout: 3000 });
     await settle(globals);
-  },
+  }),
 };
 
 export const Landing: Story = {
@@ -401,7 +402,7 @@ export const Landing: Story = {
       },
     },
   },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Talepleri Kaybetmeden Yanıtla" });
     // Renkli zemindeki iki eylem: biri giriş, öteki demoya iner (basılmayan hap kalmadı).
@@ -413,5 +414,5 @@ export const Landing: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Maskota merhaba de" }));
     await canvas.findByText("Merhaba!");
     await settle(globals);
-  },
+  }),
 };

@@ -214,4 +214,10 @@
 
   @media (prefers-reduced-motion: reduce) { #storybook-explorer-menu .sidebar-item { transition: none; } }
   @media (forced-colors: active) { #storybook-explorer-menu .sidebar-item[data-selected="true"]::before { background: Highlight; } }
+
+  /* Kenar çubuğu araç şeridi (manager.ts → nav-tools): listenin üstünde yapışık. */
+  .ds-navtools { position: sticky; top: 0; z-index: 2; display: flex; gap: 6px; padding: 6px 2px 10px; background: var(--ds-nav-bg, inherit); }
+  .ds-navtool { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid color-mix(in oklab, currentColor 14%, transparent); background: transparent; color: inherit; opacity: .78; font-family: inherit; font-size: 12px; font-weight: 500; line-height: 1; cursor: pointer; transition: opacity .15s, background-color .15s; }
+  .ds-navtool:hover { opacity: 1; background: color-mix(in oklab, currentColor 7%, transparent); }
+  .ds-navtool:focus-visible { outline: 2px solid var(--ds-accent, currentColor); outline-offset: 2px; opacity: 1; }
 </style>

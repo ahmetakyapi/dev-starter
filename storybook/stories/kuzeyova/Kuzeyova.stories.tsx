@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { testOnly } from "../_lib/testOnly";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { CUSTOMERS } from "./_data";
 import { MapOptions } from "./_harita-secenek";
@@ -74,7 +75,7 @@ type Story = StoryObj<typeof meta>;
 export const Overview: Story = {
   name: "Uygulama (Gezinmeli)",
   parameters: { docs: { description: { story: "Bütün portal: kenar çubuğundan, ⌘K komut paletinden ve sayfa içi bağlantılardan gezilir; geçişte üstte gezinme çubuğu ve iskelet." } } },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     if (deepLinked()) return;
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Pano" });
@@ -84,13 +85,13 @@ export const Overview: Story = {
     await canvas.findByRole("heading", { level: 1, name: "Aboneler" }, { timeout: 3000 });
     await go(canvasElement, "Pano");
     await settle(globals);
-  },
+  }),
 };
 
 export const Dashboard: Story = {
   name: "Pano",
   parameters: { docs: { description: { story: "Altı hücreli ölçü şeridi (aktif abone, tüketim, tahsilat oranı, kayıp/kaçak, açık arıza, okunamayan sayaç), günlük yük eğrisi, tahakkuk ve tahsilat, bölgeye göre kayıp/kaçak, sıradaki işler, sistem durumu ve dikkat gerektirenler. Dönem seçimi hepsini birlikte değiştirir." } } },
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     if (deepLinked()) return;
     const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole("radio", { name: "6 Ay" }));
@@ -98,7 +99,7 @@ export const Dashboard: Story = {
     await userEvent.click(canvas.getByRole("radio", { name: "3 Ay" }));
     await expect(canvas.getByRole("heading", { name: "Dikkat Gerektirenler" })).toBeInTheDocument();
     await settle(globals);
-  },
+  }),
 };
 
 export const DashboardLastMonth: Story = {
@@ -125,14 +126,14 @@ export const Kit: Story = {
     docs: { description: { story: "Sayfaların ortak dili: sayı biçimi, PageHero ve Metric, role göre TodayBand, BarTarget, StepCountChart, RowLink ve j/k, FilterBar, boş/hata/yetkisiz durumlar. Rolü değiştirince Bugün Senin İşin bandı değişir." } },
   },
   render: () => <KitGallery />,
-  play: async ({ canvasElement, globals }) => {
+  play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole("radio", { name: "Tahsilat" }));
     await waitFor(() => expect(canvas.getByRole("radio", { name: "Tahsilat" })).toHaveAttribute("aria-checked", "true"));
     await expect(canvas.getByRole("heading", { name: "Bugün Senin İşin" })).toBeInTheDocument();
     await userEvent.click(canvas.getByRole("radio", { name: "Yönetici" }));
     await settle(globals);
-  },
+  }),
 };
 
 export const MapLooks: Story = {
