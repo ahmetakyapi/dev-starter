@@ -176,11 +176,14 @@ export function AreaChart({
   const pct = (i: number) => (n < 2 ? 50 : (i / (n - 1)) * 100);
 
   // Etiket seyreltme: telefonda en çok ~5, geniş ekranda ~10 etiket.
-  const stepSm = Math.max(1, Math.ceil(n / 5));
+  const stepSm = Math.max(1, Math.ceil(n / 4));
+  const stepMd = Math.max(1, Math.ceil(n / 6));
   const stepLg = Math.max(1, Math.ceil(n / 10));
   // Son etiket hep görünür; ona bir tam adımdan yakın düşen etiket gizlenir. Son etiket sağa
   // yaslı (ortalı değil), yani yarım etiket kadar sola taşar: 0,8 adımda telefonda "28 Eki2 Kas" diye bitişiyordu.
-  const showTick = (i: number, step: number) => i === n - 1 || (i % step === 0 && n - 1 - i >= step);
+  // Uçtaki etiketler kenara yaslı (ortalı değil), yani bir tam etiket enini kaplar: komşusu
+  // en az 1,5 adım uzakta olmalı, yoksa "15 Kas 00:0016 Kas 02:00" diye bitişir (26 Kasım 2026).
+  const showTick = (i: number, step: number) => i === 0 || i === n - 1 || (i % step === 0 && i >= step * 1.5 && n - 1 - i >= step * 1.5);
 
   // Bantlar: sıralar sınırlanır, değer aralığın toplamı. Sütun bir noktanın yarım adım iki yanına uzanır.
   const half = n < 2 ? 50 : 50 / (n - 1);
@@ -397,15 +400,19 @@ export function AreaChart({
           </div>
 
           {/* X ekseni */}
-          <div aria-hidden className="relative mt-2 h-4 text-micro text-muted">
+          {/* Etiket sayısı GRAFİĞİN genişliğine göre (container query), pencereye göre değil:
+              yan sütunlu 600 px'lik kartta on "16 Kas 08:00" etiketi üst üste biniyordu. */}
+          <div aria-hidden className="@container mt-2">
+          <div className="relative h-4 text-micro text-muted">
             {labels.map((label, i) => (
               <span
                 key={label + i}
                 className={cn(
                   "absolute top-0 whitespace-nowrap",
                   i === 0 ? "left-0" : i === n - 1 ? "right-0" : "-translate-x-1/2",
-                  !showTick(i, stepSm) && "max-sm:hidden",
-                  !showTick(i, stepLg) && "sm:hidden",
+                  !showTick(i, stepSm) && "@max-lg:hidden",
+                  !showTick(i, stepMd) && "@lg:@max-4xl:hidden",
+                  !showTick(i, stepLg) && "@4xl:hidden",
                   bandAt(i) && cn("font-semibold", BAND_TEXT[bandAt(i)!.tone]),
                 )}
                 style={i === 0 || i === n - 1 ? undefined : { left: `${pct(i)}%` }}
@@ -413,6 +420,7 @@ export function AreaChart({
                 {label}
               </span>
             ))}
+          </div>
           </div>
         </div>
       </div>

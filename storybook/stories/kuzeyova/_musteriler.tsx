@@ -339,9 +339,8 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
           <a data-row href={href("customers", { id: c.id })} className="block truncate font-medium text-strong hover:underline">
             {c.name}
           </a>
-          <span className="kz-mono text-small text-muted">
-            {c.id}
-          </span>
+          {/* Abone no kırpılıp "C-1…" kalıyordu; ayrıntıda ve aramada var. */}
+          <span className="sr-only">{c.id}</span>
         </div>
       ),
     },
@@ -368,7 +367,7 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
       render: (c) => (
         <div className="min-w-0">
           <span className="text-body">{supplier(c.supplierId).name}</span>
-          <span className="text-small text-muted">{c.free ? "Serbest" : "Görevli"}</span>
+          <span className="sr-only">{c.free ? ", serbest tüketici" : ", görevli tedarik"}</span>
         </div>
       ),
     },
@@ -389,13 +388,17 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
       header: "Durum",
       render: (c) => {
         const reason = riskReason(c);
+        if (!reason || c.status !== "aktif") return <CustomerBadge status={c.status} />;
+        // Gerekçe rozetin İÇİNDE: "Riskli" + kesilen gerekçe metni yerine tek, okunur rozet
+        // ("6 Gecikme", "Sayaç Arızalı"). Tam cümle title ve ekran okuyucuda.
+        const short = reason.startsWith("Sayaçta") ? "Müdahale Şüphesi" : reason.startsWith("Sayaç") ? "Sayaç Arızalı" : `${reason.split(" ")[0]} Gecikme`;
         return (
-          // Tek rozet: aktif ama riskliyse "Riskli" (aktif olduğu zaten içinde), değilse kendi durumu.
-          // Eskiden "Aktif" + "Riskli" + gerekçe üç satır üst üste biniyor, satır ~100 px oluyordu.
-          <div className="grid max-w-[13rem] justify-items-start gap-1">
-            {reason && c.status === "aktif" ? <Badge tone={reason.startsWith("Sayaç") ? "warning" : "danger"}>Riskli</Badge> : <CustomerBadge status={c.status} />}
-            {reason ? <span className="w-full truncate text-small text-muted" title={reason}>{reason}</span> : null}
-          </div>
+          <span title={reason}>
+            <Badge tone={reason.startsWith("Sayaç") ? "warning" : "danger"} dot>
+              {short}
+              <span className="sr-only">, riskli: {reason}</span>
+            </Badge>
+          </span>
         );
       },
     },

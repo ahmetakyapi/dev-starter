@@ -234,7 +234,9 @@ function UsersSection({ users, setUsers, perms, setPerms, force, setForce }: { u
       key: "n",
       header: "Kullanıcı",
       render: (u) => (
-        <span className="block min-w-0">
+        // Kişi hücresi iki katlı kalır (kz-stack): tek satırda e-posta "aylin.yil…" diye kesiliyordu;
+        // 8 satırlık kullanıcı listesinde okunabilirlik yoğunluktan önemli.
+        <span className="kz-stack block min-w-0">
           <span className="block truncate font-medium text-strong">{u.name}</span>
           <span className="block truncate text-small text-muted">{u.email}</span>
         </span>

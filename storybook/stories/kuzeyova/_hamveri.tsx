@@ -410,6 +410,7 @@ export function HamVeriPage({ params, go }: PageProps) {
             {buckets.length === 0 ? (
               <EmptyState variant="inline" title="Bu Aralıkta Kayıt Yok" hint="Dönemi ya da sayacı değiştir." />
             ) : multiLine ? (
+              // Yan sütun (Kayıp Paketler + Kayıtlı Sorgular) ~740 px; grafik kartı onu boşlukla değil grafikle doldursun.
               <LineChart
                 title={chartTitle}
                 labels={labels}
@@ -418,9 +419,10 @@ export function HamVeriPage({ params, go }: PageProps) {
                 unit={measure.unit}
                 target={measure.id === "pf" ? { value: 0.98, label: "Reaktif Sınır ≈ 0,98" } : undefined}
                 showToggles={false}
+                height="h-64 xl:h-104"
               />
             ) : (
-              <AreaChart title={chartTitle} labels={labels} series={series} valueFormat={valueFormat} unit={measure.unit} bands={bands} height="h-64" />
+              <AreaChart title={chartTitle} labels={labels} series={series} valueFormat={valueFormat} unit={measure.unit} bands={bands} height="h-64 xl:h-104" />
             )}
           </ChartCard>
 

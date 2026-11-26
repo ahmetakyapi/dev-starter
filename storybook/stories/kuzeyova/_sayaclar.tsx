@@ -160,11 +160,15 @@ const SORTS: readonly { value: MeterSort; label: string }[] = [
 const PAGE_SIZE = 20;
 const Mono = ({ children }: { children: ReactNode }) => <span className="kz-mono">{children}</span>;
 
+const COMM_SHORT: Record<MeterComm, string> = { ami: "AMI", gsm: "GSM", elle: "Elle" };
+
 function CommBadge({ comm }: { comm: MeterComm }) {
   return (
     <Badge tone={comm === "elle" ? "neutral" : "primary"} variant="outline">
       {comm === "ami" ? <RadioTower aria-hidden className="size-3" /> : comm === "gsm" ? <Signal aria-hidden className="size-3" /> : <ClipboardList aria-hidden className="size-3" />}
-      {COMM_LABEL[comm]}
+      {/* Tabloda kısa ad ("GSM"); tam ad ("GSM / GPRS") ekran okuyucuda ve ayrıntıda. */}
+      <span aria-hidden>{COMM_SHORT[comm]}</span>
+      <span className="sr-only">{COMM_LABEL[comm]}</span>
     </Badge>
   );
 }
@@ -345,10 +349,8 @@ function MeterList({ params, go }: PageProps) {
           <a href={href("customers", { id: c.id })} className="font-medium text-body hover:text-strong hover:underline">
             {c.name}
           </a>
-          <span className="text-small text-muted">
-            Tesisat <Mono>{c.installation}</Mono> · {c.district}
-          </span>
-          <span className="sr-only">{m.id}</span>
+          <span className="text-small text-muted">{c.district}</span>
+          <span className="sr-only">{m.id}, tesisat {c.installation}</span>
         </span>
       ),
     },
@@ -376,11 +378,11 @@ function MeterList({ params, go }: PageProps) {
       header: "Tip",
       render: ({ m }) => (
         <span className="grid">
+          {/* Tek satırlı tabloda ikinci parça hep kırpılıyordu ("Ç…"); zaman dilimi ayrıntıda.
+              Yalnız AYKIRI bilgi kalır: çarpan. */}
           <span className="text-body">{m.model}</span>
-          <span className="text-small text-muted">
-            {m.multiZone ? "Çok zamanlı" : "Tek zamanlı"}
-            {m.multiplier > 1 ? ` · ×${m.multiplier}` : ""}
-          </span>
+          {m.multiplier > 1 ? <span className="text-small text-muted">×{m.multiplier}</span> : null}
+          <span className="sr-only">{m.multiZone ? ", çok zamanlı" : ", tek zamanlı"}</span>
         </span>
       ),
     },

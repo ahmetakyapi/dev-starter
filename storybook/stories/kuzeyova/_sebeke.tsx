@@ -52,7 +52,7 @@ function rowOf(n: GridNode, feedersWithOutage: ReadonlySet<string>, selected: st
             {n.label}
           </a>
         ) : (
-          <span className="inline-flex flex-wrap items-center gap-2 font-medium text-strong">
+          <span className="inline-flex items-center gap-2 font-medium whitespace-nowrap text-strong">
             {n.kind === "fider" ? n.label.split(" · ")[1] : n.label}
             {n.extra ? <span className="text-small font-normal text-muted">{n.extra}</span> : null}
             {outage ? <Badge tone="danger" dot>Kesinti</Badge> : null}

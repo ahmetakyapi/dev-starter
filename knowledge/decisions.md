@@ -1834,3 +1834,25 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   seçim ve gerilim dağılımı, abone türü) sağ-sol dengesi için.
 - **`record-list`**: meta ile durum iki sütunlu ızgarada; uzun meta durumu alt satırda
   sola itmiyor (check:align bulgusu). `policy-checks` satırı ızgara: etiket ezilmiyor.
+
+### Portal Gezintisi: Kırpılan İkinci Parçalar, Grafik Etiketleri, ₺ Glifi, Yükleme Ekranı (2026-11-26)
+
+- **Tek satırlı tabloda ikinci parça**: ölçüm (1440 px) 140 parçanın 40 px'in altına
+  kırpıldığını gösterdi ("B", "Ev…", "C-1…"). Kural genişletilmedi (tam genişlik tabloyu
+  180-370 px taşırıyordu); onun yerine sayfa sayfa **eleme**: ana metnin zaten taşıdığı ya da
+  ayrıntıda duran ikinci parça kalkar (abone/başvuru no, adres, "Evrak 5/5", "Tahsil edildi",
+  zaman dilimi), ekran okuyucuda kalır. Kısa ve vazgeçilmez parça `kz-keep` ile kırpılmaz.
+  Sonuç 140 → 0 (Aboneler'de 5 ilçe adı kalıyor). Abone durumu tek rozet: "6 Gecikme",
+  "Sayaç Arızalı", "Müdahale Şüphesi". Kişi listesinde (Ayarlar) ad + e-posta iki katlı (`kz-stack`).
+- **Grafik x etiketleri** (`line-chart`, `area-chart`): etiket sayısı pencereye değil
+  grafiğin genişliğine göre (container query: 4 / 6 / 10); uçtaki etikete komşu 1,5 adım
+  uzakta. Ham Veri'de on "16 Kas 08:00" üst üste biniyordu.
+- **₺ glifi**: görüntü yazı tipinde ₺ yok, tarayıcı "€/£" gibi çiziyordu. Büyük tutarda simge
+  gövde yazı tipinde, rakamla aynı taban çizgisinde (~0,86 em). Kural: görüntü yazı tipiyle
+  basılan tutarda para simgesi ayrı span'de.
+- **Pano/kanban**: `kanban-board` sütun alt sınırı 13rem (beş sütun 1440'ta sığar); kart
+  başlığında ayraç önceki kelimeye yapışık. Kaçak kartı etiketi kısa ad ("Düşük Tüketim").
+  Sayaç Stok yan sütunu yalnız 2xl'de.
+- **Yükleme ekranı**: Storybook'un tek noktalık çemberi yerine ekran iskeleti + ışık + dolan
+  çizgi (`preview-head.html`, saf CSS, sistem renkleri, hareket azaltmaya uyar). Yavaş
+  bağlantıda boş tuval "bozuk" gibi okunuyordu.

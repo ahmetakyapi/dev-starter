@@ -167,10 +167,13 @@ export function LineChart({
   const pct = (i: number) => (n < 2 ? 50 : (i / (n - 1)) * 100);
   const hPct = (v: number) => (v / top) * 100;
 
-  const stepSm = Math.max(1, Math.ceil(n / 5));
+  const stepSm = Math.max(1, Math.ceil(n / 4));
+  const stepMd = Math.max(1, Math.ceil(n / 6));
   const stepLg = Math.max(1, Math.ceil(n / 10));
   // Son etiket sağa yaslı: ona bir tam adımdan yakın düşen etiket gizlenir (area-chart ile aynı).
-  const showTick = (i: number, step: number) => i === n - 1 || (i % step === 0 && n - 1 - i >= step);
+  // Uçtaki etiketler kenara yaslı (ortalı değil), yani bir tam etiket enini kaplar: komşusu
+  // en az 1,5 adım uzakta olmalı, yoksa "15 Kas 00:0016 Kas 02:00" diye bitişir (26 Kasım 2026).
+  const showTick = (i: number, step: number) => i === 0 || i === n - 1 || (i % step === 0 && i >= step * 1.5 && n - 1 - i >= step * 1.5);
 
   const nearest = (event: PointerEvent<HTMLDivElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
@@ -414,21 +417,26 @@ export function LineChart({
             ) : null}
           </div>
 
-          <div aria-hidden className="relative mt-2 h-4 text-micro text-muted">
+          {/* Etiket sayısı GRAFİĞİN genişliğine göre (container query), pencereye göre değil:
+              yan sütunlu 600 px'lik kartta on "16 Kas 08:00" etiketi üst üste biniyordu. */}
+          <div aria-hidden className="@container mt-2">
+          <div className="relative h-4 text-micro text-muted">
             {labels.map((label, i) => (
               <span
                 key={label + i}
                 className={cn(
                   "absolute top-0 whitespace-nowrap",
                   i === 0 ? "left-0" : i === n - 1 ? "right-0" : "-translate-x-1/2",
-                  !showTick(i, stepSm) && "max-sm:hidden",
-                  !showTick(i, stepLg) && "sm:hidden",
+                  !showTick(i, stepSm) && "@max-lg:hidden",
+                  !showTick(i, stepMd) && "@lg:@max-4xl:hidden",
+                  !showTick(i, stepLg) && "@4xl:hidden",
                 )}
                 style={i === 0 || i === n - 1 ? undefined : { left: `${pct(i)}%` }}
               >
                 {label}
               </span>
             ))}
+          </div>
           </div>
         </div>
       </div>

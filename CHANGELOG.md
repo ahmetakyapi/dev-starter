@@ -7,6 +7,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Portal gezintisi: tablo kırpmaları, grafik etiketleri, ₺, yükleme ekranı — 2026-11-26
+
+- Tek satırlı tablolarda tek harfe inen ikinci parçalar elendi (140 → 0); `kz-keep` sınıfı.
+- `line-chart`, `area-chart`: x etiketleri container query ile grafiğin genişliğine göre.
+- `kanban-board`: sütun alt sınırı 13rem; Pano'da ₺ simgesi gövde yazı tipinde.
+- Storybook yükleme ekranı: ekran iskeleti, ışık süpürmesi, dolan çizgi.
+
 ### Portal: sağdan paneller, para kartı, Saha Okuma, Şebeke haritası — 2026-11-26
 
 - `sheet`: yeni `size="xl"`; Portal panelleri sağdan açılır (alttan panel kaldırıldı).

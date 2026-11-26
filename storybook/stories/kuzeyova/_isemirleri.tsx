@@ -146,7 +146,8 @@ export function IsEmirleriPage({ params, go }: PageProps) {
           .filter((w) => w.status === s)
           .map<KanbanCard>((w) => ({
             id: w.id,
-            title: `${WORK_TYPE_LABEL[w.type]} · ${w.customerId ? customerOf(w.customerId).name : region(w.regionId).name}`,
+            // "\u00a0·": ayraç önceki kelimeye yapışık; satır "· Merkez" diye başlamaz.
+            title: `${WORK_TYPE_LABEL[w.type]}\u00a0· ${w.customerId ? customerOf(w.customerId).name : region(w.regionId).name}`,
             tags: [{ label: region(w.regionId).name, tone: TYPE_TONE(w.type) }, ...(isOpen(w) && slaLeft(w) < 0 ? [{ label: "SLA Aşıldı", tone: "chart-6" as const }] : [])],
             assignee: w.assignee ? { name: w.assignee } : undefined,
             due: dayKey(w.scheduled),

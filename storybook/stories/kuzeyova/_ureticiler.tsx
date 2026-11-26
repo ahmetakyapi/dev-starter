@@ -86,19 +86,21 @@ function ProducerList({ producers, go }: { producers: readonly Producer[]; go: P
       sortable: true,
       sortValue: (r) => customer(r.p.customerId).name,
       render: (r) => (
-        <a {...link(go, "producers", { id: r.p.id })} className="block min-w-0">
-          <span className="block truncate font-medium text-strong hover:underline">{customer(r.p.customerId).name}</span>
-          <span className="kz-mono text-micro text-muted">{r.p.id} · {meterById(r.p.meterId)?.serial}</span>
+        // Tek satır (portal tablo kuralı): ad + kısa üretici no; sayaç seri no ayrıntıda.
+        <a {...link(go, "producers", { id: r.p.id })} className="flex min-w-0 items-center gap-2">
+          <span className="truncate font-medium text-strong hover:underline">{customer(r.p.customerId).name}</span>
+          <span className="kz-keep kz-mono text-small text-muted">{r.p.id}</span>
+          <span className="sr-only">, sayaç {meterById(r.p.meterId)?.serial}</span>
         </a>
       ),
     },
     { key: "k", header: "Tür", render: (r) => `GES · ${KIND_LABEL[customer(r.p.customerId).kind]}` },
     { key: "kw", header: "Kurulu Güç", numeric: true, sortable: true, sortValue: (r) => r.p.installedKw, render: (r) => <span className="kz-mono">{num.format(r.p.installedKw)} kW</span> },
     { key: "s", header: "Durum", render: (r) => <Badge tone={STATUS_TONE[r.p.status]} dot>{PRODUCER_STATUS_LABEL[r.p.status]}</Badge> },
-    { key: "c", header: "Son Dönem Çekiş", numeric: true, render: (r) => <span className="kz-mono">{r.p.status === "devrede" ? `${num.format(r.last.consumed)} kWh` : "-"}</span> },
-    { key: "e", header: "Son Dönem Veriş", numeric: true, render: (r) => <span className="kz-mono">{r.p.status === "devrede" ? `${num.format(r.last.exported)} kWh` : "-"}</span> },
-    { key: "cr", header: "Devreden Alacak", numeric: true, sortable: true, sortValue: (r) => r.p.creditKwh, render: (r) => <span className={r.p.creditKwh ? "kz-mono font-medium text-strong" : "kz-mono text-muted"}>{r.p.creditKwh ? `${num.format(r.p.creditKwh)} kWh` : "-"}</span> },
-    { key: "w", header: "Trafo", render: (r) => (r.warn ? <Badge tone="warning" dot>Kapasite uyarısı</Badge> : <span className="text-muted">·</span>) },
+    { key: "c", header: "Son Dönem Çekiş", numeric: true, render: (r) => <span className="kz-mono">{r.p.status === "devrede" ? `${num.format(r.last.consumed)} kWh` : "—"}</span> },
+    { key: "e", header: "Son Dönem Veriş", numeric: true, render: (r) => <span className="kz-mono">{r.p.status === "devrede" ? `${num.format(r.last.exported)} kWh` : "—"}</span> },
+    { key: "cr", header: "Devreden Alacak", numeric: true, sortable: true, sortValue: (r) => r.p.creditKwh, render: (r) => <span className={r.p.creditKwh ? "kz-mono font-medium text-strong" : "kz-mono text-muted"}>{r.p.creditKwh ? `${num.format(r.p.creditKwh)} kWh` : "—"}</span> },
+    { key: "w", header: "Trafo", render: (r) => (r.warn ? <Badge tone="warning" dot>Kapasite uyarısı</Badge> : <span className="text-muted">—</span>) },
   ];
   const items: RecordItem[] = rows.map((r) => ({
     id: r.p.id,

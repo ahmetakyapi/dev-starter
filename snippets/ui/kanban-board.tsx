@@ -456,7 +456,7 @@ export function KanbanBoard({
                 data-column={col.id}
                 aria-labelledby={titleId}
                 className={cn(
-                  "flex w-[min(82vw,18rem)] shrink-0 snap-start flex-col rounded-xl bg-surface p-2 transition-[box-shadow] duration-150 lg:w-auto lg:min-w-60 lg:flex-1",
+                  "flex w-[min(82vw,18rem)] shrink-0 snap-start flex-col rounded-xl bg-surface p-2 transition-[box-shadow] duration-150 lg:w-auto lg:min-w-52 lg:flex-1",
                   isTarget && !rejected && "ring-2 ring-primary/40",
                   rejected && "ring-2 ring-danger/60",
                 )}

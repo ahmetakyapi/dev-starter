@@ -281,7 +281,19 @@ function Spotlight({ metric, go }: { metric: MetricProps; go: PageProps["go"] })
           {isDebt ? <Badge tone="neutral">{fmtNum(overdue.length)} fatura</Badge> : null}
         </div>
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-          <p className="font-display text-[clamp(2.25rem,3.2vw,2.875rem)] leading-none font-semibold tracking-[-0.04em] text-strong tabular-nums">{metric.value}</p>
+          {/* Görüntü yazı tipinde ₺ glifi yok: tarayıcı başka yazı tipinden çizip "€/£" gibi gösteriyordu.
+              Simge gövde yazı tipinde, rakamın üst hizasında ayrı basılır (26 Kasım 2026, sahibinin geri bildirimi). */}
+          <p className="flex items-baseline gap-1.5 font-display text-[clamp(2.25rem,3.2vw,2.875rem)] leading-none font-semibold tracking-[-0.04em] text-strong tabular-nums">
+            {typeof metric.value === "string" && metric.value.startsWith("₺") ? (
+              <>
+                <span aria-hidden className="font-sans text-[0.86em] font-semibold tracking-normal text-strong">₺</span>
+                <span className="sr-only">₺</span>
+                {metric.value.slice(1)}
+              </>
+            ) : (
+              metric.value
+            )}
+          </p>
           {isDebt && risky ? (
             <p className="rounded-lg bg-danger-wash px-3 py-1.5 text-small text-danger">
               <span className="font-semibold tabular-nums">{fmtTlCompact(risky.value)}</span> 90 günü aştı · %{Math.round((risky.value / total) * 100)}

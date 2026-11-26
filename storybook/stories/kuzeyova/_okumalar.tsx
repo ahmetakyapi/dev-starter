@@ -631,15 +631,14 @@ function SuspectTab({ period, go, tab }: { period: string; go: PageProps["go"]; 
       width: "3rem",
       render: (r) => (resolved[r.id] ? null : <Checkbox aria-label={`${r.id} okumasını seç`} checked={selected.has(r.id)} onChange={() => toggle(r.id)} />),
     },
-    { key: "r", header: "Okuma", render: (r) => <a href={href("readings", { tab, id: r.id })} className="font-semibold text-strong hover:underline"><Mono>{r.id}</Mono></a> },
-    { key: "p", header: "Dönem", render: (r) => periodLabel(r.period) },
+    { key: "r", header: "Okuma", render: (r) => <a href={href("readings", { tab, id: r.id })} className="font-semibold text-strong hover:underline"><Mono>{r.id}</Mono><span className="sr-only">, {periodLabel(r.period)}</span></a> },
     {
       key: "m",
       header: "Sayaç ve Abone",
       render: (r) => (
         <span className="grid">
-          <a href={href("meters", { id: r.meterId })} className="text-body hover:text-strong hover:underline"><Mono>{meterById(r.meterId)?.serial}</Mono></a>
-          <span className="text-small text-muted">{customer(r.customerId).name}</span>
+          <span className="text-body">{customer(r.customerId).name}</span>
+          <a href={href("meters", { id: r.meterId })} className="text-small text-muted hover:text-strong hover:underline"><Mono>{meterById(r.meterId)?.serial}</Mono></a>
         </span>
       ),
     },

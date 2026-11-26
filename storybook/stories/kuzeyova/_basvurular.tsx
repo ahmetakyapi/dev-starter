@@ -182,13 +182,13 @@ export function BasvurularPage({ params, go }: PageProps) {
       header: "Başvuru",
       sortable: true,
       sortValue: (a) => a.id,
-      width: "15rem",
+      width: "12rem",
       render: (a) => (
         <div className="min-w-0">
           <a data-row href={href("applications", { ...params, id: a.id })} className="block truncate font-medium text-strong hover:underline">
             {a.applicant}
           </a>
-          <span className="kz-mono text-small text-muted">{a.id}</span>
+          <span className="sr-only">{a.id}</span>
         </div>
       ),
     },
@@ -198,8 +198,8 @@ export function BasvurularPage({ params, go }: PageProps) {
       header: "Konum",
       render: (a) => (
         <div className="min-w-0">
-          <span className="block truncate text-body">{region(a.regionId).name} · {a.district}</span>
-          <span className="block truncate text-small text-muted">{a.address.split(",")[0]}</span>
+          <span className="block max-w-48 truncate text-body" title={`${region(a.regionId).name} · ${a.district}`}>{region(a.regionId).name} · {a.district}</span>
+          <span className="sr-only">{a.address.split(",")[0]}</span>
         </div>
       ),
     },
@@ -210,7 +210,8 @@ export function BasvurularPage({ params, go }: PageProps) {
       render: (a) => (
         <div className="flex flex-col items-start gap-1">
           <Badge tone={STAGE_TONE(a.stage)}>{stageLabel(a.stage)}</Badge>
-          {isOpen(a) ? <span className="text-small text-muted">Evrak {docsDone(a)}/{a.docs.length}</span> : null}
+          {/* Yalnız EKSİK evrak yazılır; "Evrak 5/5" her satırda gürültüydü. */}
+          {isOpen(a) && docsDone(a) < a.docs.length ? <span className="kz-keep text-small font-medium text-warning">Evrak {docsDone(a)}/{a.docs.length}</span> : null}
         </div>
       ),
     },
@@ -230,7 +231,16 @@ export function BasvurularPage({ params, go }: PageProps) {
           <span className="text-muted">{a.stage === "tamam" ? `${totalDays(a)} günde tamam` : "—"}</span>
         ),
     },
-    { key: "assigned", header: "Atanan", render: (a) => a.assignedTo },
+    {
+      key: "assigned",
+      header: "Atanan",
+      // "V. Tosun": sütun daralır, tablo 1440'ta yatay kaymaya düşmez; tam ad title ve ekran okuyucuda.
+      render: (a) => {
+        const parts = a.assignedTo.split(" ");
+        const short = parts.length > 1 ? `${parts[0][0]}. ${parts.slice(1).join(" ")}` : a.assignedTo;
+        return <span title={a.assignedTo}><span aria-hidden>{short}</span><span className="sr-only">{a.assignedTo}</span></span>;
+      },
+    },
     {
       key: "fee",
       header: "Bağlantı Bedeli",
@@ -240,7 +250,7 @@ export function BasvurularPage({ params, go }: PageProps) {
       render: (a) => (
         <div className="flex flex-col items-end gap-1">
           <span>{fmtTl(a.connectionFee, 0)}</span>
-          <span className={`text-small ${a.feePaid ? "text-success" : "text-muted"}`}>{a.feePaid ? "Tahsil edildi" : "Bekliyor"}</span>
+          {a.feePaid ? <span className="sr-only">tahsil edildi</span> : <span className="kz-keep text-small text-muted">Bekliyor</span>}
         </div>
       ),
     },

@@ -36,6 +36,19 @@ import { advanceLeak, createDispute, createLeak, getDisputes, setLeakAmount, use
 import { PageBody, PageHead, Panel, href, useApp, type PageProps } from "./_ui";
 import { useDerived } from "./_core";
 
+/** Kart etiketi: kısa ad. Eskiden 28 harfte kesiliyordu ("…altında tüket"). Tam cümle ayrıntıda. */
+const FLAG_SHORT: Record<string, string> = {
+  "Beklenenin çok altında tüketim": "Düşük Tüketim",
+  "Manyetik müdahale kaydı": "Manyetik Müdahale",
+  "Kapak açma kaydı": "Kapak Açma",
+};
+function shortFlag(flag: string): string {
+  const base = flag.split(" (")[0];
+  if (FLAG_SHORT[base]) return FLAG_SHORT[base];
+  if (base.length <= 24) return base;
+  return `${base.slice(0, base.lastIndexOf(" ", 24))}…`;
+}
+
 /* ------------------------------------------------------------------------ */
 /* Ortak                                                                     */
 /* ------------------------------------------------------------------------ */
@@ -88,7 +101,7 @@ export function KacakPage({ params, go }: PageProps) {
     done: s.id === "kapandi",
     cards: leaks
       .filter((l) => l.stage === s.id)
-      .map<KanbanCard>((l) => ({ id: l.id, title: `${l.id} · ${customerOf(l.customerId).name}`, tags: [{ label: l.flag.split(" (")[0].slice(0, 28), tone: STAGE_TONE[l.stage] === "danger" ? "chart-6" : "primary" }], assignee: { name: l.assignedTo } })),
+      .map<KanbanCard>((l) => ({ id: l.id, title: `${l.id}\u00a0· ${customerOf(l.customerId).name}`, tags: [{ label: shortFlag(l.flag), tone: STAGE_TONE[l.stage] === "danger" ? "chart-6" : "primary" }], assignee: { name: l.assignedTo } })),
   }));
   const signature = leaks.map((l) => `${l.id}:${l.stage}`).join("|");
 

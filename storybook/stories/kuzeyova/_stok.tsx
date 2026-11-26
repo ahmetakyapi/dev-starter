@@ -182,7 +182,7 @@ export function StokPage({ go }: PageProps) {
   const columns: readonly Column<StockMeter>[] = [
     { key: "select", header: <Checkbox aria-label="Görünen Bütün Sayaçları Seç" checked={allVisible} onChange={toggleAll} />, width: "3rem", render: (s) => <Checkbox aria-label={`${s.serial} sayacını seç`} checked={picked.has(s.id)} onChange={() => toggle(s.id)} /> },
     { key: "serial", width: "9.5rem", header: "Seri No", render: (s) => <span data-row tabIndex={0} className="font-semibold text-strong outline-none focus-visible:ring-2 focus-visible:ring-line-focus"><Mono>{s.serial}</Mono></span> },
-    { key: "model", width: "13rem", header: "Tip", render: (s) => <span className="grid"><span>{s.model}</span><span className="text-small text-muted">{s.multiZone ? "Çok zamanlı" : "Tek zamanlı"} · {s.comm === "ami" ? "AMI" : s.comm === "gsm" ? "GSM" : "Elle"}</span></span> },
+    { key: "model", width: "13rem", header: "Tip", render: (s) => <span className="grid"><span>{s.model}</span><span className="kz-keep text-small text-muted">{s.comm === "ami" ? "AMI" : s.comm === "gsm" ? "GSM" : "Elle"}</span><span className="sr-only">{s.multiZone ? ", çok zamanlı" : ", tek zamanlı"}</span></span> },
     { key: "depot", width: "7rem", header: "Depo", render: (s) => s.depot },
     { key: "status", width: "8.5rem", header: "Durum", render: (s) => <Badge tone={STATUS_TONE[s.status]} dot>{STOCK_STATUS_LABEL[s.status]}</Badge> },
     { key: "due", width: "8rem", header: "Muayene", render: dueText },
@@ -248,7 +248,9 @@ export function StokPage({ go }: PageProps) {
           <Metric icon={<Search />} label="Hurda" value={fmtNum(counts.hurda)} foot="Kayıttan düşecek" />
         </MetricStrip>
 
-        <div className="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_21rem]">
+        {/* Yan sütun yalnız 2xl'de: tablo 58rem ister, 1440'ta 21rem'lik sütunla ~780 px kalıyor,
+            son sütun (Mühür) kesiliyordu. Daha darda takvim ve sayımlar tablonun altında yan yana. */}
+        <div className="grid min-w-0 gap-5 2xl:grid-cols-[minmax(0,1fr)_21rem]">
           <Panel title="Sayaç Envanteri" note={`${fmtNum(rows.length)} sayaç · ilgi bekleyenler üstte, hurda sonda`} id="stok-liste">
             <div ref={list} className="grid gap-3 border-b border-line-soft p-3 sm:p-4">
               <FilterBar
@@ -292,7 +294,7 @@ export function StokPage({ go }: PageProps) {
             )}
           </Panel>
 
-          <div className="grid min-w-0 content-start gap-5">
+          <div className="grid min-w-0 content-start gap-5 lg:max-2xl:grid-cols-2">
             <Panel title="Muayene Takvimi" note="Geciken ve en yakın 6 muayene" id="muayene-takvim">
               {calendar.length ? <div className="px-4 py-2"><ScheduleList items={calendar} label="Yaklaşan Muayeneler" /></div> : <p className="p-5 text-base text-muted">Yaklaşan muayene yok.</p>}
               <p className="border-t border-line-soft px-4 py-3 text-small text-muted">Muayene süreleri örnek parametredir; gerçek süre sayaç tipine ve mevzuata göre değişir.</p>

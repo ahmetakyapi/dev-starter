@@ -102,7 +102,9 @@
    ölçülür, ikinci parça yalnız artan yerde görünür ve sığmazsa kırpılır. Tablo dar ekranda
    yatay kaymaya düşmez; geniş ekranda ikinci parça kendiliğinden tam okunur. */
 [data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > * + * { flex: 1 1 0; width: 0; max-width: 12rem; }
-[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > :is(svg, input, button, a[class*="rounded"], [role="checkbox"], [class*="rounded"]) { flex: none; width: auto; max-width: none; overflow: visible; }
+[data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > :is(svg, input, button, a[class*="rounded"], [role="checkbox"], [class*="rounded"], .kz-keep) { flex: none; width: auto; max-width: none; overflow: visible; }
+/* `.kz-keep`: kısa ve vazgeçilmez ikinci parça ("Evrak 1/5", "Bekliyor", "GSM") kırpılmaz;
+   kırpılınca tek harf kalıyordu (26 Kasım 2026 ölçümü: 140 parça 40 px'in altındaydı). */
 /* Rozet + gerekçe hücresi: rozet ortalanır, gerekçe ona hizalanır. */
 [data-product="kuzeyova"] table:not([role="treegrid"]) tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *):has(> [class*="rounded-full"]:first-child) { align-items: center; }
 
