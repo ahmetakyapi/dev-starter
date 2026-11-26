@@ -7,6 +7,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Portal tek hiza, Aşama Akışı, Pano brifingi — 2026-11-26
+
+- Portal tablolarında bütün sütunlar soldan başlar; ilk sütun dahil iki parçalı hücreler tek satır
+- Yeni `stage-flow` (aşamalar yan yana, aradaki kayıp, en çok takılan aşama); Başvurular'da huni yerine; Pusula Raporlar → Talep Akışı
+- Pano: karşılama kartı (iki tonlu başlık, kısayollar, dönen dünya) + Bugünün Nabzı halkaları
+- Tanıtım kahramanı: palet ışığı çapraz geçişi, harf dalgasında zıplama, harf dalgası gecikme hatası düzeltildi
+
 ### Sergi turu: sahne dili, altı bileşen, Tanıtım kahramanı, Portal — 2026-11-25
 
 - Yeni: `art-mat` (ürünü boyalı/kareli/sulu boya zeminde sergileme; yırtık

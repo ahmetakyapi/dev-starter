@@ -48,6 +48,7 @@ import {
   type PeriodStats,
 } from "./_data";
 import { RevenueScenarioWell } from "./_ek-n";
+import { TicketFlowWell } from "./_ek-q";
 import { CARD, PageBar, SectionTitle, Well, WellTitle, useApp } from "./_ui";
 
 type Row = { customer: Customer; orders: number; revenue: number };
@@ -336,6 +337,7 @@ export function RaporlarPage() {
         </ChartCard>
       </div>
       <RevenueScenarioWell className="lg:col-span-3" />
+      <TicketFlowWell className="lg:col-span-3" />
     </div>
   );
 

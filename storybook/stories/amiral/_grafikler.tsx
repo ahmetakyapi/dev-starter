@@ -19,6 +19,7 @@ import { ScatterChart } from "@/components/ui/scatter-chart";
 import { PathGraph } from "@/components/ui/path-graph";
 import { StackedBarChart } from "@/components/ui/stacked-bar-chart";
 import { StageBars } from "@/components/ui/stage-bars";
+import { StageFlow } from "@/components/ui/stage-flow";
 import { ForecastChart } from "@/components/ui/forecast-chart";
 import { TrackBarChart } from "@/components/ui/track-bar-chart";
 import { cn } from "@/lib/utils";
@@ -151,6 +152,21 @@ export function Dashboard() {
       <Tile file="stage-bars" className="lg:col-span-4">
         <ChartCard id="g-abone" label="Abonelik Hunisi" value={`${num.format(SUBSCRIBERS)} abone`} change={SUB_GROWTH} changeLabel="Eylül'e göre" action={<FileTag file="stage-bars" />}>
           <StageBars title="Abonelik Hunisi" stages={SUB_FUNNEL.map((s, i) => ({ label: s.label, value: s.value, icon: SUB_ICONS[i] }))} />
+        </ChartCard>
+      </Tile>
+
+      <Tile file="stage-flow" className="lg:col-span-12">
+        <ChartCard id="g-akis" label="Kavrum Hattı · Bu Hafta" value="340 teslim" action={<FileTag file="stage-flow" />}>
+          <StageFlow
+            title="Kavrum hattı"
+            stages={[
+              { label: "Sipariş", value: 412 },
+              { label: "Kavrum", value: 398 },
+              { label: "Paketleme", value: 361 },
+              { label: "Kargo", value: 352 },
+              { label: "Teslim", value: 340 },
+            ]}
+          />
         </ChartCard>
       </Tile>
 

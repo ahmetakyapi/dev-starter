@@ -9,6 +9,7 @@ import { HeadMark } from "@/components/ui/head-mark";
 import { Orb } from "@/components/ui/orb";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SignalHub } from "@/components/ui/signal-hub";
+import { StageFlow } from "@/components/ui/stage-flow";
 import { StepTabs, type StepTab } from "@/components/ui/step-tabs";
 import type { ReactNode } from "react";
 
@@ -116,5 +117,29 @@ export function AgentHubPanel() {
         done={["Sabah özeti hazırlandı", "2 yanıt taslağı yazıldı"]}
       />
     </div>
+  );
+}
+
+/** Raporlar: talebin aşamalardan akışı; nerede takıldığı (Pusula kurgusu, ÖRNEK). */
+export function TicketFlowWell({ className }: { className?: string }) {
+  return (
+    <section aria-labelledby="rapor-akis" className={`flex h-full flex-col rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line sm:p-5 ${className ?? ""}`}>
+      <div className="-mx-4 mb-4 border-b border-line-soft px-4 pb-3 sm:-mx-5 sm:px-5">
+        <h2 id="rapor-akis" className="text-read font-semibold text-strong">
+          Talep Akışı
+        </h2>
+        <p className="mt-0.5 text-small text-muted">Bu ay açılan talepler; aradaki sayı bir sonraki aşamaya geçemeyen</p>
+      </div>
+      <StageFlow
+        title="Talep akışı"
+        stages={[
+          { label: "Açıldı", value: 186 },
+          { label: "Atandı", value: 171 },
+          { label: "İlk Yanıt", value: 158 },
+          { label: "Çözüldü", value: 131 },
+          { label: "Onaylandı", value: 124 },
+        ]}
+      />
+    </section>
   );
 }

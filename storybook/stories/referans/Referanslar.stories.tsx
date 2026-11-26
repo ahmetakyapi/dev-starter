@@ -478,5 +478,15 @@ export const Overview: Story = {
     // Süzülen kartlar kısa bir solmayla girer: görünür olana dek bekle (anlık bakış yarı geçişi okuyordu).
     const gallery = await canvas.findByRole("link", { name: /navbar\.gallery/ });
     await waitFor(() => expect(gallery).toBeVisible(), { timeout: 3000 });
+    // Bölüm geçişi (solma) bitmeden erişilebilirlik denetimi koşarsa sayaç yarı saydam ölçülür
+    // (kontrast 4,05 gibi yanlış bir değer, yük altında ara sıra). Bütün atalar tam opak olana dek bekle.
+    await waitFor(
+      () => {
+        for (let el: HTMLElement | null = canvas.getByText(/^01 \/ \d{2}$/); el; el = el.parentElement) {
+          if (getComputedStyle(el).opacity !== "1") throw new Error("Bölüm geçişi sürüyor");
+        }
+      },
+      { timeout: 3000 },
+    );
   },
 };

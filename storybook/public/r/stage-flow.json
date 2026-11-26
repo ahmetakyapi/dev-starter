@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stage-flow",
+  "type": "registry:ui",
+  "title": "Aşama Akışı",
+  "description": "Sürecin aşamaları yan yana sütunlar (kısa dolan çubuk, sayı, ad, pay) + aralarında kayıp; en büyük kayıp \"En çok burada takılıyor\". `stage-bars` satırları yerine kompakt",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/stage-flow.tsx",
+      "content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Aşama akışı: bir sürecin aşamaları (başvuru → evrak → keşif → … → tamam)\n * YAN YANA sütunlar halinde. Her sütunda alttan dolan kısa çubuk, büyük\n * sayı, aşama adı ve ilk aşamaya göre pay; iki sütun arasında bir sonraki\n * aşamaya GEÇEMEYEN sayı (\"−5\"). En büyük kayıp uyarı tonunda ve \"En çok\n * burada takılıyor\" notuyla işaretlenir.\n *\n * `stage-bars` ile FARKI: o, satır satır tam genişlik çubuklar; hunide\n * kesin uzunluk karşılaştırması için. Bu, aynı veriyi ~180 px yüksekliğe\n * sığdırır ve asıl soruyu cevaplar: \"nerede takılıyor?\". Sayfanın üstünde\n * özet, listenin yanında bağlam olarak; satır başına göz yormaz.\n * Sahibinin geri bildirimi (26 Kasım 2026): tam genişlik huni \"göz yoruyor,\n * gereksiz\" (Portal → Başvurular).\n *\n * Erişilebilirlik: bir `ol`; her adım \"Keşif: 16, ilk aşamanın yüzde 67'si,\n * önceki aşamadan 5 eksik\" diye okunur. Çubuklar `aria-hidden`. Renk tek\n * işaret değil: en büyük kayıp ayrıca yazıyla (\"En çok burada takılıyor\").\n * Sunucu bileşeni, JavaScript inmez. 3-8 aşama; fazlası okunmaz.\n */\n\nexport type FlowStage = { label: ReactNode; value: number; note?: ReactNode };\n\nconst num = new Intl.NumberFormat(\"tr-TR\");\nconst pctFmt = new Intl.NumberFormat(\"tr-TR\", { style: \"percent\", maximumFractionDigits: 0 });\n\nexport function StageFlow({ stages, title, className }: { stages: readonly FlowStage[]; title: string; className?: string }) {\n  const first = Math.max(1, stages[0]?.value ?? 1);\n  const drops = stages.map((s, i) => (i === 0 ? 0 : Math.max(0, stages[i - 1].value - s.value)));\n  const worst = drops.reduce((best, d, i) => (d > drops[best] ? i : best), 0);\n  return (\n    <ol aria-label={title} className={cn(\"grid grid-flow-col auto-cols-[minmax(6.5rem,1fr)] overflow-x-auto [scrollbar-width:thin]\", className)}>\n      {stages.map((s, i) => {\n        const share = s.value / first;\n        const hot = i === worst && drops[i] > 0;\n        return (\n          <li key={i} className=\"relative grid min-w-0 content-start gap-3 px-3 first:pl-0 last:pr-0\">\n            {/* Aşamalar arası kayıp: sütunların arasındaki ince çizginin üstünde. */}\n            {i > 0 ? (\n              <span aria-hidden className=\"absolute top-0 bottom-0 -left-px w-px bg-line-soft\">\n                {drops[i] > 0 ? (\n                  <span className={cn(\"absolute top-3 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-0.5 font-mono text-micro tabular-nums whitespace-nowrap\", hot ? \"bg-warning-wash text-warning\" : \"bg-page text-muted ring-1 ring-line-soft\")}>\n                    −{num.format(drops[i])}\n                  </span>\n                ) : null}\n              </span>\n            ) : null}\n            <span aria-hidden className=\"relative mt-10 block h-20 overflow-hidden rounded-lg bg-surface\">\n              <span className={cn(\"absolute inset-x-0 bottom-0 rounded-lg\", hot ? \"bg-warning\" : \"bg-primary\")} style={{ height: `${Math.max(4, share * 100)}%`, opacity: hot ? 0.8 : 0.35 + share * 0.65 }} />\n            </span>\n            <span className=\"grid gap-0.5\">\n              <span className=\"text-title font-semibold tracking-tight text-strong tabular-nums\">{num.format(s.value)}</span>\n              <span className=\"truncate text-small font-medium text-body\">{s.label}</span>\n              <span className=\"text-micro text-muted tabular-nums\">\n                {pctFmt.format(share)}\n                {hot ? <span className=\"font-medium text-warning\"> · En çok burada takılıyor</span> : null}\n              </span>\n              <span className=\"sr-only\">\n                {`, ilk aşamanın yüzde ${Math.round(share * 100)}'i${i > 0 ? `, önceki aşamadan ${drops[i]} eksik` : \"\"}`}\n              </span>\n            </span>\n          </li>\n        );\n      })}\n    </ol>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Grafik"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "stage-flow",
+    "palettes": false
+  }
+}

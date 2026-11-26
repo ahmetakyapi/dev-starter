@@ -2971,6 +2971,24 @@
       "palettes": false
     },
     {
+      "name": "stage-flow",
+      "title": "Aşama Akışı",
+      "category": "Grafik",
+      "description": "Sürecin aşamaları yan yana sütunlar (kısa dolan çubuk, sayı, ad, pay) + aralarında kayıp; en büyük kayıp \"En çok burada takılıyor\". `stage-bars` satırları yerine kompakt",
+      "file": "snippets/ui/stage-flow.tsx",
+      "client": false,
+      "storyId": "stage-flow",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "stamp",
       "title": "Damga",
       "category": "Geri Bildirim",

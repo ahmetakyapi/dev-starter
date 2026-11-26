@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BookOpenCheck, Gauge, Lightbulb, Receipt, Users, WifiOff, Zap } from "lucide-react";
+import { ArrowRight, BookOpenCheck, ClipboardList, Gauge, Lightbulb, Receipt, Route, UserPlus, Users, WifiOff, Zap } from "lucide-react";
+import { ActivityRings } from "@/components/ui/activity-rings";
+import { cn } from "@/lib/utils";
+import { ArtMat } from "@/components/ui/art-mat";
+import { Orb } from "@/components/ui/orb";
 import { AreaChart } from "@/components/ui/area-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
@@ -37,14 +41,14 @@ import {
   type Period,
 } from "./_data";
 import { useDerived } from "./_core";
-import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, useLiveStats } from "./_selectors";
+import { activeInvoices, commsLostMeters, flaggedReadings, openOutages, overdueInvoices, openWorkOrders, pendingReadings, useLiveStats } from "./_selectors";
 import { effectiveMeters } from "./_ops";
 import { WORK_TYPE_LABEL as WORK_LABEL_X, type WorkType } from "./_store";
 import { MAP_SHAPES, MAP_VIEWBOX } from "./_harita";
 import { useRole } from "./_permissions";
 import { COLLECTION_SCOPE, flaggedReadings as flagged, overdueTotal, useBadges } from "./_selectors";
 import { useAging } from "./_data-pano";
-import { AgingBars, BarTarget, PageHero, RowAnchor, RowLink, TodayBand, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
+import { AgingBars, BarTarget, PageHero, RowAnchor, RowLink, TodayBand, todayItems, fmtDec, fmtKwh, fmtNum, fmtPct, fmtTl, fmtTlCompact, type MetricProps } from "./_kit";
 import { PageBody, PageHead, Panel, useApp, type PageProps } from "./_ui";
 
 /** Dönem seçici: panonun bütün ölçülerini ve grafiklerini birlikte değiştirir. */
@@ -147,6 +151,87 @@ const SYSTEM_DOT = { operational: "bg-success", degraded: "bg-warning", outage: 
 const SYSTEM_TEXT = { operational: "Çalışıyor", degraded: "Yavaş", outage: "Kesinti", maintenance: "Bakımda" } as const;
 
 const ROLE_HERO: Record<string, string> = { okuma: "supheli", tahsilat: "tahsilat", musteri: "ariza", denetci: "tahsilat", yonetici: "tahsilat" };
+
+const DOT = { 1: "bg-chart-1", 2: "bg-chart-2", 3: "bg-chart-3", 4: "bg-chart-4", 5: "bg-chart-5", 6: "bg-chart-6" } as const;
+
+/* ── Brifing bandı: Pano'nun ilk ekranı ──────────────────────────────────
+   Sahibinin isteği (26 Kasım 2026): "kullanıcı ilk buraya gireceği için zengin
+   içerik ve güzel görseller görmeli; özet bilgiler de buradan yönetilmeli".
+   Solda kişiye seslenen iki tonlu başlık (bugün kaç başlık bekliyor), tek cümle
+   durum ve sık işlerin kısayolları; sağ kenarında sulu boya zeminde dönen dünya
+   (şebeke). Sağda "Bugünün Nabzı": tahsilat, okuma ilerlemesi ve kayıp hedefi
+   üç halka; her sayı listede metin olarak da yazılı. Sayılar canlı depodan. */
+function BriefBand({ go }: { go: PageProps["go"] }) {
+  const role = useRole();
+  const stats = useLiveStats("1");
+  const waiting = useDerived(() => todayItems(role).filter((i) => i.count > 0).length, [role]);
+  const meters = useDerived(effectiveMeters);
+  const pending = useDerived(() => pendingReadings(CURRENT_PERIOD).length);
+  const outages = useDerived(openOutages);
+  const read = Math.max(0, meters.length - pending);
+  const lossTarget = 7.5;
+  const day = new Intl.DateTimeFormat("tr-TR", { weekday: "long", day: "numeric", month: "long" }).format(TODAY);
+  const collection = Math.round(stats.collectionRate * 10) / 10;
+  const loss = Math.round(stats.lossPct * 10) / 10;
+  const rings = [
+    { label: "Tahsilat · Son Ay", value: collection, goal: 100, series: 1 as const, text: fmtPct(collection), note: "Kesilen faturaların tahsil edilen payı" },
+    { label: "Okuma", value: read, goal: Math.max(1, meters.length), series: 2 as const, text: `${fmtNum(read)} / ${fmtNum(meters.length)}`, note: `${fmtNum(pending)} sayaç turda bekliyor` },
+    { label: "Kayıp Hedefi", value: lossTarget, goal: Math.max(lossTarget, loss), series: 4 as const, text: fmtPct(loss), note: `Hedef %${String(lossTarget).replace(".", ",")}; halka doluysa hedefte` },
+  ];
+  const actions = [
+    { label: "Okuma Turu", icon: <Route />, page: "field" as const },
+    { label: "Arıza Kaydı", icon: <Zap />, page: "outages" as const },
+    { label: "Tahakkuk", icon: <ClipboardList />, page: "invoices" as const },
+    { label: "Yeni Abone", icon: <UserPlus />, page: "register" as const },
+  ];
+  return (
+    <section aria-label="Günün özeti" className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <div className="relative grid overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line sm:grid-cols-[minmax(0,1fr)_14rem]">
+        <div className="grid content-between gap-6 p-5 sm:p-6">
+          <div className="grid gap-2">
+            <p className="text-base text-muted">Günaydın Aylin · {day}</p>
+            <p className="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-strong">
+              <span className="block">{waiting ? `Bugün ${fmtNum(waiting)} Başlık` : "Bugün Her Şey"}</span>
+              <span className="block text-[color-mix(in_srgb,currentColor_50%,transparent)]">{waiting ? "Seni Bekliyor" : "Yolunda Görünüyor"}</span>
+            </p>
+            <p className="max-w-[52ch] text-read text-body">
+              {fmtNum(stats.active)} aktif abone, {fmtNum(outages.length)} açık arıza; Kasım okumalarının {fmtNum(read)} / {fmtNum(meters.length)} tanesi geldi.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {actions.map((a) => (
+              <Button key={a.label} variant="secondary" size="sm" onClick={() => go(a.page)}>
+                <span aria-hidden className="[&_svg]:size-4">{a.icon}</span>
+                {a.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+        <ArtMat variant="wash" pad="sm" className="hidden rounded-none sm:grid sm:rounded-none" contentClassName="grid h-full place-items-center">
+          <Orb variant="globe" size={150} />
+        </ArtMat>
+      </div>
+      <div className="grid content-center rounded-xl bg-overlay p-5 shadow-raised ring-1 ring-line sm:p-6">
+        <p className="mb-4 text-read font-semibold text-strong">Bugünün Nabzı</p>
+        <div className="grid items-center gap-5 sm:grid-cols-[9.5rem_minmax(0,1fr)]">
+          {/* Halkalar süs; aynı bilgi yandaki listede metin (halkanın kendi listesi bu dar kartta taşıyordu). */}
+          <ActivityRings title="Bugünün nabzı" showList={false} cut="stroke-overlay" thickness={18} rings={rings} className="w-[9.5rem]" />
+          <ul role="list" aria-label="Bugünün nabzı" className="grid gap-3">
+            {rings.map((r) => (
+              <li key={r.label} className="grid grid-cols-[0.625rem_minmax(0,1fr)_auto] items-baseline gap-x-2.5">
+                <span aria-hidden className={cn("size-2.5 rounded-full", DOT[r.series])} />
+                <span className="truncate text-base text-body">{r.label}</span>
+                <span className="text-base font-semibold text-strong tabular-nums">{r.text}</span>
+                <span />
+                <span className="col-span-2 text-small text-muted">{r.note}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export function PanoPage({ go, params }: PageProps) {
   const { period } = useApp();
@@ -259,7 +344,6 @@ export function PanoPage({ go, params }: PageProps) {
     <>
       <PageHead
         title="Pano"
-        greeting={`Günaydın Aylin · ${new Intl.DateTimeFormat("tr-TR", { weekday: "long", day: "numeric", month: "long" }).format(TODAY)}`}
         description={`Pilot Bölge · ${fmtNum(stats.active)} aktif abone · ${fmtNum(meters.length)} sayaç · ${periodLabel(CURRENT_PERIOD)} okumaları sürüyor`}
         actions={
           <>
@@ -274,6 +358,7 @@ export function PanoPage({ go, params }: PageProps) {
         }
       />
       <PageBody>
+        <BriefBand go={go} />
         <TodayBand tip={tip} />
 
         <PageHero primary={metrics[heroKey]} secondary={secondary} />

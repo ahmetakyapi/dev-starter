@@ -14,7 +14,7 @@ import { RecordList, type RecordItem } from "@/components/ui/record-list";
 import type { SavedView } from "@/components/ui/saved-views";
 import { Select } from "@/components/ui/select";
 import { Sheet } from "@/components/ui/sheet";
-import { StageBars } from "@/components/ui/stage-bars";
+import { StageFlow } from "@/components/ui/stage-flow";
 import { TickMeter } from "@/components/ui/tick-meter";
 import { Textarea } from "@/components/ui/textarea";
 import { Timeline, type TimelineEvent } from "@/components/ui/timeline";
@@ -272,9 +272,9 @@ export function BasvurularPage({ params, go }: PageProps) {
           ]}
         />
 
-        <Panel title="Aşama Dağılımı" note="Her aşamaya ulaşan başvuru sayısı (reddedilenler hariç)" id="basvuru-huni">
-          <div className="p-4 sm:p-5">
-            <StageBars title="Başvuru Aşama Dağılımı" stages={funnel} />
+        <Panel title="Aşama Akışı" note="Her aşamaya ulaşan başvuru; aradaki sayı bir sonrakine geçemeyen (reddedilenler hariç)" id="basvuru-huni">
+          <div className="px-4 pt-1 pb-4 sm:px-5 sm:pb-5">
+            <StageFlow title="Başvuru aşama akışı" stages={funnel} />
           </div>
         </Panel>
 

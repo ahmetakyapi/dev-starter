@@ -3938,6 +3938,29 @@
       ]
     },
     {
+      "name": "stage-flow",
+      "type": "registry:ui",
+      "title": "Aşama Akışı",
+      "description": "Sürecin aşamaları yan yana sütunlar (kısa dolan çubuk, sayı, ad, pay) + aralarında kayıp; en büyük kayıp \"En çok burada takılıyor\". `stage-bars` satırları yerine kompakt",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Grafik"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "stage-flow",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/stage-flow.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "stamp",
       "type": "registry:ui",
       "title": "Damga",

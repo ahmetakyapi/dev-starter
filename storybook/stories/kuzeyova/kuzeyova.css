@@ -82,13 +82,15 @@
    gerilim, tedarikçi + tür, rozet + gerekçe) aynı satıra dizilir; ikinci parça sönük ve
    yer kalmayınca KIRPILIR (satır iki kata çıkmaz). Satır ~100 px'ten ~44 px'e iner, liste
    taranır. Kapsam yalnız portalın tablo gövdesi; telefonda tablo yerine kart listesi var. */
-[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) {
+[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) {
   display: flex;
-  align-items: baseline;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 0 0.5rem;
   min-width: 0;
 }
-[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) > * {
+[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > * {
   flex: 0 1 auto;
   min-width: 0;
   white-space: nowrap;
@@ -98,7 +100,23 @@
 /* İkinci (sönük) parça sütun genişliğine KATILMAZ (`width: 0`): sütun ana parçaya göre
    ölçülür, ikinci parça yalnız artan yerde görünür ve sığmazsa kırpılır. Tablo dar ekranda
    yatay kaymaya düşmez; geniş ekranda ikinci parça kendiliğinden tam okunur. */
-[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) > :last-child:not(:first-child) { flex: 1 1 0; width: 0; max-width: 12rem; }
-[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *) > :is(svg, input, button, [role="checkbox"], [class*="rounded-full"]) { flex: none; overflow: visible; }
+[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > * + * { flex: 1 1 0; width: 0; max-width: 12rem; }
+[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *) > :is(svg, input, button, a[class*="rounded"], [role="checkbox"], [class*="rounded"]) { flex: none; width: auto; max-width: none; overflow: visible; }
 /* Rozet + gerekçe hücresi: rozet ortalanır, gerekçe ona hizalanır. */
-[data-product="kuzeyova"] table tbody td > :is(div, span):not(.kz-stack):has(> * + *):has(> [class*="rounded-full"]:first-child) { align-items: center; }
+[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *):has(> [class*="rounded-full"]:first-child) { align-items: center; }
+
+/* TEK HİZA (26 Kasım 2026): bütün sütunlar SOLDAN başlar; sayı sütunu da. Sahibi "bazıları
+   ortalanmış, bazıları soldan başlıyor" dedi: sağa yaslı sayı + sola yaslı metin + rozet aynı
+   satırda göz için dağınıktı. Sayılar `tabular-nums` ile hizalı kalır (rakam eni sabit).
+   Başlıktaki sıralama oku metnin SAĞINDA (sayı sütununda tersine dönmez); hücre içindeki
+   sağa/ortaya dizimler sola çekilir. Katmansız kural: Tailwind katmanlarını ezer. */
+[data-product="kuzeyova"] table :is(th, td) { text-align: start; padding-inline: 0.625rem; }
+/* Düz metin hücresi (tür, atanan) iki satıra kırılmaz; uzun metin taşıyan hücre kendi kırpmasını yapar. */
+[data-product="kuzeyova"] table tbody :is(td, th) { white-space: nowrap; }
+[data-product="kuzeyova"] table thead th > a { flex-direction: row; }
+/* Yalnız hücrenin DOĞRUDAN sarmalayıcısı: rozet ve butonun kendi iç ortalamasına dokunulmaz. */
+[data-product="kuzeyova"] table tbody :is(td, th) > .flex-col:is(.items-end, .items-center) { align-items: flex-start; }
+[data-product="kuzeyova"] table tbody :is(td, th) > :is(.justify-end, .justify-center) { justify-content: flex-start; }
+[data-product="kuzeyova"] table tbody :is(td, th) > .ml-auto { margin-left: 0; }
+/* Tek satıra dizilen hücrede dikey ortalama bozulmasın (rozet + metin): taban çizgisi yerine orta. */
+[data-product="kuzeyova"] table tbody :is(td, th) > :is(div, span):not(.kz-stack, [class*="rounded"]):has(> * + *):has(> [class*="rounded"]) { align-items: center; }

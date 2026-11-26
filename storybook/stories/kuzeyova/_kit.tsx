@@ -258,7 +258,7 @@ export function PageHero({ primary, secondary, className }: { primary: MetricPro
 
 type TodayItem = { id: string; count: number; label: string; hint?: string; tone: "danger" | "warning" | "neutral"; to: To; cta: string };
 
-function todayItems(role: string): TodayItem[] {
+export function todayItems(role: string): TodayItem[] {
   const month = CURRENT_PERIOD;
   const overdue = overdueInvoices();
   const oldest = overdue.reduce<(typeof overdue)[number] | null>((o, i) => (!o || i.due < o.due ? i : o), null);

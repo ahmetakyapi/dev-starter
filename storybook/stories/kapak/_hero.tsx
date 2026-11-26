@@ -83,13 +83,18 @@ const CSS = `
 .ks-char { display: inline-block; transform-origin: 0 100%; animation: ks-rise .9s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--i) * 34ms + var(--d, 0ms)); }
 /* Spektrum: "Kimlik"in arkasında on paletin şeritleri alttan sırayla dolar; seçili paletin şeridi genişler. */
 @keyframes ks-band { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-.ks-band { transform-origin: bottom; animation: ks-band .7s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(0.6s + var(--i) * 55ms); transition: flex-grow .6s cubic-bezier(.22,1,.36,1), opacity .6s; }
+.ks-band { transform-origin: bottom; animation: ks-band .7s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(0.6s + var(--i) * 55ms); transition: flex-grow 1.1s cubic-bezier(.65,0,.35,1), opacity 1.1s cubic-bezier(.65,0,.35,1); }
 /* Renk dalgası: "Palet"in harfleri sırayla bir sonraki paletin rengine geçer. */
-.ks-wave { transition: color .6s cubic-bezier(.22,1,.36,1); transition-delay: calc(var(--i) * 70ms); }
+.ks-wave { transition: color .9s cubic-bezier(.22,1,.36,1); transition-delay: calc(var(--w) * 80ms); }
+/* Renk değişirken harf hafifçe zıplar: dalga gözle izlenir (yalnız transform, palet anahtarıyla yeniden tetiklenir). */
+@keyframes ks-bump { 0%, 100% { transform: none; } 40% { transform: translate3d(0, -0.07em, 0); } }
+.ks-bump { display: inline-block; animation: ks-bump .8s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--w) * 80ms); }
+/* Zemin ışığı: seçili paletin yıkamasından iki geniş leke; palet değişince eskisi söner, yenisi yanar. */
+.ks-glow { position: absolute; inset: -10% -20% auto; height: 46rem; z-index: -20; pointer-events: none; }
 /* Kılavuz çizgileri yukarıdan aşağı çizilir. */
 @keyframes ks-guide { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 .ks-guide { transform-origin: top; animation: ks-guide 1.6s cubic-bezier(.22,1,.36,1) .2s both; }
-@media (prefers-reduced-motion: reduce) { .ks-char, .ks-band, .ks-guide { animation: none; } .ks-band, .ks-wave { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ks-char, .ks-band, .ks-guide, .ks-bump { animation: none; } .ks-band, .ks-wave { transition: none; } }
 @layer base {
   .ks-tour, .ks-tour * { transition-property: color, background-color, border-color, fill, stroke, stop-color, box-shadow; transition-duration: 600ms; transition-timing-function: cubic-bezier(.22,1,.36,1); }
 }`;
@@ -210,9 +215,12 @@ function Wave({ text, shown, theme, from, still }: { text: string; shown: Palett
         <span
           key={i}
           className={cn("ks-wave", !still && "ks-char")}
-          style={{ "--i": from + i, "--d": "120ms", color: palettes[TOUR[(base + i) % TOUR.length]][theme].primary } as CSSProperties}
+          style={{ "--i": from + i, "--w": i, "--d": "120ms", color: palettes[TOUR[(base + i) % TOUR.length]][theme].primary } as CSSProperties}
         >
-          {ch}
+          {/* İç kopya palet anahtarıyla yeniden bağlanır: her geçişte zıplama baştan oynar. */}
+          <span key={still ? "s" : shown} className={still ? undefined : "ks-bump"} style={{ "--w": i } as CSSProperties}>
+            {ch}
+          </span>
         </span>
       ))}
     </span>
@@ -298,6 +306,22 @@ export function Hero({ palette, theme, onPalette, showcase }: { palette: Palette
       <style href="kapak-sergi" precedence="default">
         {CSS}
       </style>
+      {/* Zemin ışığı: seçili paletin iki yumuşak lekesi; palet değişince çapraz solarak devredilir. */}
+      <div aria-hidden className="ks-glow">
+        <AnimatePresence initial={false}>
+          <m.div
+            key={`${t.shown}-${theme}`}
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(38rem 24rem at 78% 30%, color-mix(in srgb, ${palettes[t.shown][theme].primary} 16%, transparent), transparent 70%), radial-gradient(30rem 20rem at 12% 8%, color-mix(in srgb, ${palettes[t.shown][theme].primary} 10%, transparent), transparent 70%)`,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: still ? 0 : 1.4, ease: [0.65, 0, 0.35, 1] }}
+          />
+        </AnimatePresence>
+      </div>
       {/* Çizim masası: iki yanda yukarıdan aşağı çizilen kesik kılavuz çizgileri. */}
       <span aria-hidden className="ks-guide pointer-events-none absolute inset-y-0 -left-3 hidden border-l border-dashed border-line-strong lg:block" />
       <span aria-hidden className="ks-guide pointer-events-none absolute inset-y-0 -right-3 hidden border-r border-dashed border-line-strong lg:block" />

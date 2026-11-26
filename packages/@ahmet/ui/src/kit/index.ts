@@ -122,6 +122,7 @@ export * from "./sparkline";
 export * from "./spinner";
 export * from "./stacked-bar-chart";
 export * from "./stage-bars";
+export * from "./stage-flow";
 export * from "./stamp";
 export * from "./stat";
 export * from "./stat-strip";

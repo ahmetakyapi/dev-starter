@@ -1770,3 +1770,31 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   Badge, Sparkline; her kopyanın rol değişkenleri kendi paletinden). Ders:
   süs nesnesi (küre, ikon) değil, iddianın kanıtı. Kartın içinde buton
   olduğundan tıklama ayrı bir örtü butonunda (iç içe buton yok).
+
+### Portal: Tek Hiza, Aşama Akışı, Pano Brifingi; Kahraman Renk Geçişi (2026-11-26)
+
+- **Tek hiza:** sahibi "bazıları ortalanmış bazıları soldan başlıyor; her
+  yerde soldan başlasın" dedi. Portal tablolarında bütün sütunlar (sayı
+  dahil) soldan başlar, sıralama oku metnin sağında; sayılar `tabular-nums`
+  ile hizalı kalır. Kural `kuzeyova.css` → TEK HİZA (yalnız portal; snippet
+  `data-table` varsayılanı sayıyı sağa yaslamaya devam eder, başka projede
+  muhasebe tablosu için doğru varsayılan). İlk sütun `th` olduğundan tek satır
+  kuralı ona da genişletildi; rozet ve butonların kendi iç ortalamasına
+  dokunulmaz (kural yalnız hücrenin doğrudan sarmalayıcısında). Düz metin
+  hücresi kırılmaz; ilkinden sonraki bütün parçalar sütun genişliğine katılmaz.
+- **Aşama Akışı (`stage-flow`):** Başvurular'daki tam genişlik huni "göz
+  yoruyor, gereksiz". Yerine aşamalar yan yana kısa sütunlar + aralarında
+  kayıp + "En çok burada takılıyor". `stage-bars` kalır (kesin uzunluk
+  karşılaştırması için), ama özet ekranda `stage-flow`.
+- **Pano brifingi:** "kullanıcı ilk buraya girecek, zengin içerik ve güzel
+  görsel görmeli, özet buradan yönetilmeli". Üstte karşılama kartı (iki tonlu
+  "Bugün 2 Başlık / Seni Bekliyor", durum cümlesi, dört kısayol, sulu boya
+  zeminde dönen dünya) + "Bugünün Nabzı" (tahsilat, okuma, kayıp hedefi
+  halkaları; değerler yanında metin). `veri-yogun` yönünün "dev hero yok"
+  kuralı burada bilinçli gevşetildi: band tek satır yüksekliğinde, veri değil
+  özet taşır; tablolar ve listeler olduğu gibi altta.
+- **Kahraman renk geçişi:** palet değişince arkadaki palet ışığı çapraz
+  solarak devredilir; "Palet" harfleri yeni renge geçerken sırayla hafifçe
+  zıplar (dalga izlenir); spektrum şeridi daha uzun, yumuşak eğriyle kayar.
+  Hata düzeltmesi: harf dalgasının gecikmesi başlıktaki sıra numarasından
+  (13'ten) hesaplanıyordu, renk ~1 sn geç başlıyordu; artık kelime içi sıra.
