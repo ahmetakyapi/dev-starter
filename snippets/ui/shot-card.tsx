@@ -27,8 +27,9 @@ import { cn } from "@/lib/utils";
  *
  * ÖLÇEK (`fit`): ürün ekranı sahnesi sabit tasarım genişliğinde (ör. 880 px)
  * çizilir ve kuyuya sığacak kadar küçültülür; küçültülmüş ekran görüntüsü
- * gibi okunur, 390 px telefonda da aynı kompozisyon. Ayrıntılı sahne için
- * kuyu oranı ~1.41 (`ratio={1.41}`) ve `tone="page"` (beyaz ekran) iyi durur.
+ * gibi okunur, 390 px telefonda da aynı kompozisyon. `ratio` verilmezse kuyu
+ * sahnenin kendi boyunu alır (gri boşluk kalmaz; dar sahne en çok %125 büyür); oran
+ * verilirse sahne o kuyuya sığdırılır (masonry). Beyaz ekran için `tone="page"`.
  *
  * TIKLAMA: `onOpen` verilirse sahne bir butondur (adı başlıktan:
  * "Aç: Rezervasyon Bağlantıları"); büyütülmüş görünüm çağıranın
@@ -72,7 +73,7 @@ type ShotCardProps = {
   media?: ShotMedia;
   /** Medya yerine çizilecek sahne (gerçek bileşenler). */
   children?: ReactNode;
-  /** Sahnenin en-boy oranı; masonry'de kartın kendi oranı. Varsayılan 16 / 10. */
+  /** Sahnenin en-boy oranı; masonry'de kartın kendi oranı. Varsayılan 16 / 10; `fit` ile verilmezse kuyu sahnenin boyunu alır. */
   ratio?: number;
   /** Sahneye tıklayınca (büyüt). Verilirse sahne buton olur. */
   onOpen?: () => void;
@@ -236,13 +237,51 @@ function FitStage({ width, inset, children }: { width: number; inset: number; ch
   );
 }
 
+/* Kendi boyunda ölçekli sahne (`fit` + oran yok): kuyu yüksekliği = sahne × ölçek + pay.
+   Dar sahne kuyuyu doldursun diye en çok %125 büyür (yazı da büyür, okunur kalır);
+   üst ve alt pay eşit, yan pay kalan genişlik. */
+const MAX_GROW = 1.25;
+function FitAuto({ width, inset, children }: { width: number; inset: number; children: ReactNode }) {
+  const box = useRef<HTMLDivElement>(null);
+  const inner = useRef<HTMLDivElement>(null);
+  const [m, setM] = useState({ scale: 0, height: 0 });
+  useEffect(() => {
+    const b = box.current;
+    const i = inner.current;
+    if (!b || !i) return;
+    const measure = () => {
+      const pad = b.clientWidth * inset;
+      const scale = Math.min(MAX_GROW, (b.clientWidth - pad * 2) / width);
+      setM({ scale, height: i.offsetHeight * scale });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(b);
+    ro.observe(i);
+    return () => ro.disconnect();
+  }, [width, inset]);
+  return (
+    <div ref={box} className="relative" style={{ padding: `${inset * 100}%` }}>
+      <div className="relative" style={{ height: m.height || undefined }}>
+        <div
+          ref={inner}
+          className="absolute top-0 left-1/2 origin-top transition-opacity duration-300"
+          style={{ width, transform: `translateX(-50%) scale(${m.scale || 0.001})`, opacity: m.scale ? 1 : 0 }}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ShotCard({
   title,
   description,
   meta,
   media,
   children,
-  ratio = 16 / 10,
+  ratio: ratioProp,
   onOpen,
   actions,
   titleAs: Title = "h2",
@@ -251,9 +290,15 @@ export function ShotCard({
   tone = "surface",
   className,
 }: ShotCardProps) {
+  const auto = !!children && !!fit && ratioProp === undefined;
+  const ratio = ratioProp ?? 16 / 10;
   const stage = (
     <>
-      {children && fit ? (
+      {auto ? (
+        <FitAuto width={fit!} inset={inset ?? 0.05}>
+          {children}
+        </FitAuto>
+      ) : children && fit ? (
         <FitStage width={fit} inset={inset ?? 0.07}>
           {children}
         </FitStage>
@@ -287,7 +332,7 @@ export function ShotCard({
             onClick={onOpen}
             aria-label={`Aç: ${title}`}
             className={cn(stageClass, "cursor-zoom-in text-left hover:shadow-raised")}
-            style={{ aspectRatio: ratio }}
+            style={auto ? undefined : { aspectRatio: ratio }}
           >
             {children ? <div className="pointer-events-none">{stage}</div> : media?.type === "video" ? null : stage}
           </button>
@@ -297,7 +342,7 @@ export function ShotCard({
           )}
         </div>
       ) : (
-        <div className={stageClass} style={{ aspectRatio: ratio }}>
+        <div className={stageClass} style={auto ? undefined : { aspectRatio: ratio }}>
           {stage}
         </div>
       )}

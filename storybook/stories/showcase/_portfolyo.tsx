@@ -107,7 +107,7 @@ const WORKS: readonly Work[] = [
     title: sc.title,
     description: sc.description,
     meta: ["2026", sc.meta[1]],
-    ratio: sc.ratio,
+    ratio: sc.ratio ?? 1.41,
     likes: [48, 22, 15, 31][i],
     tags: { project: "pusula", kind: ["urun", "ai", "urun", "pano"][i] },
     scene: sc.render,
@@ -164,7 +164,7 @@ function Feed() {
                 title={w.title}
                 description={w.description}
                 meta={w.meta}
-                ratio={view === "masonry" ? w.ratio : w.fit ? 1.41 : 16 / 10}
+                ratio={view === "masonry" ? (w.ratio ?? 1.41) : w.fit ? undefined : 16 / 10}
                 fit={w.fit}
                 tone={w.tone}
                 titleAs="h3"
@@ -299,7 +299,7 @@ function Lab() {
   const bars = { gun: [3, 5, 4, 7, 6, 8, 5], hafta: [6, 4, 7, 5, 8, 6, 9], ay: [8, 7, 9, 6, 7, 5, 6] }[range];
   return (
     <div className="grid gap-12">
-      <DemoFrame title="Yumuşak durum değişimi." description="Sekme, anahtar ve menü yeni durumuna atlamaz, kayar." href="#lab">
+      <DemoFrame title="Yumuşak Durum Değişimi." description="Sekme, anahtar ve menü yeni durumuna atlamaz, kayar." href="#lab">
         <div className="grid w-56 justify-items-center gap-4 rounded-2xl bg-overlay p-4 shadow-raised ring-1 ring-line">
           <SegmentedControl
             aria-label="Dönem"
@@ -319,18 +319,18 @@ function Lab() {
           </div>
         </div>
       </DemoFrame>
-      <DemoFrame title="Sırayla açılan işler." description="Biten iş sıradakini açar, aşama bitince katlanır; tanıtımda kendiliğinden ilerler." size="lg">
+      <DemoFrame title="Sırayla Açılan İşler." description="Biten iş sıradakini açar, aşama bitince katlanır; tanıtımda kendiliğinden ilerler." size="lg">
         <div className="w-full max-w-md rounded-2xl bg-overlay p-3 shadow-raised ring-1 ring-line">
           <PhaseChecklist label="Ece Doğan işe başlıyor" groups={ONBOARDING} autoplay />
         </div>
       </DemoFrame>
-      <DemoFrame title="Şekliyle durum." description="Renk ikinci işaret; ikon şekli durumu söyler." size="sm">
+      <DemoFrame title="Şekliyle Durum." description="Renk ikinci işaret; ikon şekli durumu söyler." size="sm">
         <StatusLab />
       </DemoFrame>
-      <DemoFrame title="Kararı insana bırak." description="Ajan etkili eylemden önce durur; araç başına izin politikası." size="lg">
+      <DemoFrame title="Kararı İnsana Bırak." description="Ajan etkili eylemden önce durur; araç başına izin politikası." size="lg">
         <AgentLab />
       </DemoFrame>
-      <DemoFrame title="Hemen etki eden ayar." description="Kaydet butonu yok; anahtar değişince sonuç orada." size="sm">
+      <DemoFrame title="Hemen Etki Eden Ayar." description="Kaydet butonu yok; anahtar değişince sonuç orada." size="sm">
         <SettingsScene />
       </DemoFrame>
     </div>

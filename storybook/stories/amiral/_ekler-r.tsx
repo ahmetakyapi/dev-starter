@@ -177,7 +177,7 @@ export function TanitimR() {
         </NoteCard>
       </Cell>
       <Cell file="demo-frame" name="Lab Çerçevesi" note="Noktalı sahnede canlı bileşen, altında kalın + soluk künye." span={3} align="stretch">
-        <DemoFrame title="Yumuşak geçiş." description="Seçim kayarak yer değiştirir." size="sm">
+        <DemoFrame title="Yumuşak Geçiş." description="Seçim kayarak yer değiştirir." size="sm">
           <LikeButton count={8} />
         </DemoFrame>
       </Cell>

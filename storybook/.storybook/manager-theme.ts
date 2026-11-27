@@ -29,7 +29,7 @@ const font = {
 
 /** Marka: logo karosu + iki satır. Karonun degradesi marka karosu (degradenin üç yerinden biri). */
 const brand = {
-  brandTitle: `<span class="ds-mark"><span class="ds-mark__tile" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="ds-mark__name">dev-starter</span><span class="ds-mark__meta">Görsel Katalog</span></span></span>`,
+  brandTitle: `<span class="ds-mark"><span class="ds-mark__tile" aria-hidden="true"><svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path d="M16 6.5 26 11.6 16 16.7 6 11.6Z" fill="#fff"/><path d="M6 16.2 16 21.3 26 16.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity=".78"/><path d="M6 20.8 16 25.9 26 20.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/></svg></span><span><span class="ds-mark__name">dev-starter</span><span class="ds-mark__meta">Görsel Katalog</span></span></span>`,
   brandUrl: "./?path=/story/cover--overview",
   brandTarget: "_self",
 };

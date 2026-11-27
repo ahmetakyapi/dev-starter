@@ -91,7 +91,7 @@ function Ring({ status, className }: { status: Status; className?: string }) {
 /** "12 / 12" sayacı: ilk sayı koyu, bölü ve toplam soluk. */
 function Count({ value, total }: { value: number; total: number }) {
   return (
-    <span className="rounded-md bg-surface px-1.5 py-0.5 text-[11px] tabular-nums">
+    <span className="rounded-md bg-surface px-1.5 py-0.5 text-[12px] tabular-nums">
       <span className="text-strong">
         <DigitRoll value={value} />
       </span>
@@ -143,12 +143,12 @@ const NAV: [typeof Home, string, number?][] = [
 ];
 
 const TASKS = [
-  { id: "PS-3981", title: "Bordro ve vergi kaydını tamamla", who: "Selin Başaran" },
-  { id: "PS-3982", title: "Yan haklar ve sigortaya kaydet", who: "Kerem Arıkan" },
-  { id: "PS-3983", title: "Masraf iadesi profilini aç", who: "Onur Tekin" },
-  { id: "PS-3984", title: "Dizüstü bilgisayarı sipariş et", who: "Ece Doğan" },
-  { id: "PS-3985", title: "E-posta ve takvim hesabını aç", who: "Selin Başaran" },
-  { id: "PS-3986", title: "İlk gün kurulum oturumunu planla", who: "Kerem Arıkan" },
+  { id: "PS-3981", title: "Bordro ve Vergi Kaydını Tamamla", who: "Selin Başaran" },
+  { id: "PS-3982", title: "Yan Haklar ve Sigortaya Kaydet", who: "Kerem Arıkan" },
+  { id: "PS-3983", title: "Masraf İadesi Profilini Aç", who: "Onur Tekin" },
+  { id: "PS-3984", title: "Dizüstü Bilgisayarı Sipariş Et", who: "Ece Doğan" },
+  { id: "PS-3985", title: "E-posta ve Takvim Hesabını Aç", who: "Selin Başaran" },
+  { id: "PS-3986", title: "İlk Gün Kurulum Oturumunu Planla", who: "Kerem Arıkan" },
 ];
 
 export function ProcessScene() {
@@ -156,7 +156,7 @@ export function ProcessScene() {
   const { ref, step } = useSceneLoop(9, 1100, 6);
   const done = Math.min(step, 6);
   return (
-    <div ref={ref} aria-hidden className="grid h-[560px] grid-cols-[164px_minmax(0,1fr)_260px] overflow-hidden rounded-[14px] bg-page text-[12px] leading-[18px] text-body ring-1 ring-line">
+    <div ref={ref} aria-hidden className="grid w-[1040px] grid-cols-[184px_minmax(0,1fr)_300px] overflow-hidden rounded-[14px] bg-page text-[13px] leading-5 text-body ring-1 ring-line">
       <SceneStyle />
       {/* Kenar çubuğu */}
       <aside className="flex flex-col gap-0.5 bg-surface p-2">
@@ -171,42 +171,42 @@ export function ProcessScene() {
           <Search className="ml-auto size-3" />
         </div>
         <span className="mb-1 flex items-center gap-1.5 rounded-md bg-overlay px-2 py-1 text-strong ring-1 ring-line-soft">
-          <MessageSquarePlus className="size-3" /> Yeni sohbet
+          <MessageSquarePlus className="size-3" /> Yeni Sohbet
         </span>
         {NAV.map(([Icon, label, n]) => (
           <span key={label} className={cn("flex items-center gap-1.5 rounded-md px-2 py-[3px]", label === "Süreçler" ? "bg-overlay text-strong shadow-raised" : "text-muted")}>
             <Icon className="size-3" /> {label}
-            {n && <span className="ml-auto rounded bg-primary-wash px-1 text-[10px] text-primary-ink">{n}</span>}
+            {n && <span className="ml-auto rounded bg-primary-wash px-1 text-[11px] text-primary-ink">{n}</span>}
           </span>
         ))}
         <div className="mt-auto grid gap-1 rounded-lg bg-overlay p-2 ring-1 ring-line-soft">
-          <span className="w-fit rounded bg-primary-wash px-1 text-[10px] text-primary-ink">Yeni</span>
-          <span className="text-[11px] leading-4 text-strong">Gezinme kolaylaştı; yeniliklere göz at.</span>
+          <span className="w-fit rounded bg-primary-wash px-1 text-[11px] text-primary-ink">Yeni</span>
+          <span className="text-[12px] leading-4 text-strong">Gezinme Kolaylaştı</span>
         </div>
       </aside>
 
       {/* Ana alan */}
       <section className="flex min-w-0 flex-col gap-3 border-x border-line-soft px-4 py-3">
         <div className="flex items-center gap-1.5 border-b border-line-soft pb-2 text-muted">
-          <ArrowLeft className="size-3" /> / <Workflow className="size-3" /> Süreçler <span className="rounded bg-surface px-1 text-[10px]">6</span> /
-          <span className="truncate text-strong">İşe alım: Ece Doğan</span>
+          <ArrowLeft className="size-3" /> / <Workflow className="size-3" /> Süreçler <span className="rounded bg-surface px-1 text-[11px]">6</span> /
+          <span className="truncate text-strong">İşe Alım: Ece Doğan</span>
           <span className="ml-auto flex items-center gap-1 rounded-md px-1.5 ring-1 ring-line">
-            <Download className="size-3" /> Dışa aktar
+            <Download className="size-3" /> Dışa Aktar
           </span>
         </div>
         <div className="flex items-center gap-2.5">
           <Avatar name="Ece Doğan" size="md" />
           <div className="grid">
             <span className="flex items-center gap-1.5 text-[14px] text-strong">
-              Ece Doğan <span className="rounded bg-primary-wash px-1 text-[10px] text-primary-ink">Etkin</span>
+              Ece Doğan <span className="rounded bg-primary-wash px-1 text-[11px] text-primary-ink">Etkin</span>
             </span>
             <span className="text-muted">Kıdemli Yazılım Mühendisi</span>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-          <span className="rounded-md px-1.5 py-0.5 text-danger ring-1 ring-line">5 gün gecikti</span>
+        <div className="flex flex-wrap items-center gap-1.5 text-[12px]">
+          <span className="rounded-md px-1.5 py-0.5 text-danger ring-1 ring-line">5 Gün Gecikti</span>
           <span className="rounded-md px-1.5 py-0.5 ring-1 ring-line">
-            <span className="text-muted">Süreç</span> <span className="text-strong">Mühendislik işe alımı</span>
+            <span className="text-muted">Süreç</span> <span className="text-strong">Mühendislik İşe Alımı</span>
           </span>
           <span className="rounded-md px-1.5 py-0.5 ring-1 ring-line">
             <span className="text-muted">Bitiş</span> <span className="text-strong">23 Nis 2026</span>
@@ -223,12 +223,12 @@ export function ProcessScene() {
         </div>
         <dl className="grid grid-cols-3 divide-x divide-line-soft rounded-xl ring-1 ring-line">
           {[
-            ["Etkin görev", 16 - done],
+            ["Etkin Görev", 16 - done],
             ["Tamamlanan", 10 + done],
-            ["Dikkat bekleyen", 2],
+            ["Dikkat Bekleyen", 2],
           ].map(([label, value]) => (
             <div key={label} className="grid gap-0.5 px-3 py-2">
-              <dt className="text-[11px] text-muted">{label}</dt>
+              <dt className="text-[12px] text-muted">{label}</dt>
               <dd className="text-[18px] leading-6 text-strong tabular-nums">
                 <DigitRoll value={value as number} />
               </dd>
@@ -240,7 +240,7 @@ export function ProcessScene() {
             <Filter className="size-3" /> Filtre
           </span>
           <span className="ml-auto flex w-36 items-center gap-1 rounded-md px-1.5 py-0.5 ring-1 ring-line">
-            <Search className="size-3" /> Talep ara
+            <Search className="size-3" /> Talep Ara
           </span>
           <span className="flex items-center gap-1">
             <SlidersHorizontal className="size-3" /> Görünüm
@@ -250,23 +250,23 @@ export function ProcessScene() {
         <ol className="relative grid gap-1.5 pl-6">
           <span aria-hidden className="absolute top-2 bottom-2 left-[7px] w-px bg-line" />
           {[
-            { name: "2 hafta önce", v: 12, t: 12, state: "done" as const },
-            { name: "1 hafta önce", v: 2, t: 2, state: "done" as const },
+            { name: "2 Hafta Önce", v: 12, t: 12, state: "done" as const },
+            { name: "1 Hafta Önce", v: 2, t: 2, state: "done" as const },
           ].map((g) => (
             <li key={g.name} className="relative flex items-center gap-2 rounded-lg px-2 py-1 ring-1 ring-line">
               <Ring status="done" className="absolute -left-[22px] size-[15px] bg-page" />
               <ChevronRight className="size-3 text-soft" /> {g.name} <Count value={g.v} total={g.t} />
               <span className="ml-auto flex items-center gap-0.5 text-soft">
-                <Plus className="size-3" /> Görev ekle
+                <Plus className="size-3" /> Görev Ekle
               </span>
             </li>
           ))}
           <li className="relative grid gap-1 rounded-lg p-1 ring-1 ring-line">
             <Ring status={done === 6 ? "done" : "progress"} className="absolute top-1.5 -left-[22px] size-[15px] bg-page" />
             <div className="flex items-center gap-2 px-1">
-              <ChevronDown className="size-3 text-soft" /> 5 gün önce <Count value={done} total={6} />
+              <ChevronDown className="size-3 text-soft" /> 5 Gün Önce <Count value={done} total={6} />
               <span className="ml-auto flex items-center gap-0.5 text-soft">
-                <Plus className="size-3" /> Görev ekle
+                <Plus className="size-3" /> Görev Ekle
               </span>
             </div>
             <ul className="grid">
@@ -283,7 +283,7 @@ export function ProcessScene() {
                       )}
                     </span>
                     <Bars />
-                    <span className="text-[11px] text-soft tabular-nums">{task.id}</span>
+                    <span className="text-[12px] text-soft tabular-nums">{task.id}</span>
                     <Ring status={isDone ? "done" : active ? "progress" : "todo"} />
                     <Avatar name={task.who} size="sm" className="size-4 text-[7px]" />
                     <span className={cn("truncate", isDone ? "text-muted line-through decoration-line-strong" : "text-strong")}>{task.title}</span>
@@ -294,7 +294,7 @@ export function ProcessScene() {
           </li>
           <li className="relative flex items-center gap-2 rounded-lg px-2 py-1 ring-1 ring-line">
             <Ring status="todo" className="absolute -left-[22px] size-[15px] bg-page text-soft" />
-            <ChevronRight className="size-3 text-soft" /> İzin günü <Count value={0} total={3} />
+            <ChevronRight className="size-3 text-soft" /> İzin Günü <Count value={0} total={3} />
           </li>
         </ol>
       </section>
@@ -302,20 +302,20 @@ export function ProcessScene() {
       {/* Ayrıntı paneli */}
       <aside className="flex flex-col gap-2.5 bg-surface/50 p-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-strong">Yan haklara kayıt</span>
-          <span className={cn("rounded-full px-2 py-0.5 text-[11px] transition-colors duration-300", done >= 2 ? "bg-success-wash text-success" : "bg-strong text-page")}>
-            {done >= 2 ? "Bitti" : "Bitti olarak işaretle"}
+          <span className="truncate text-strong">Yan Haklara Kayıt</span>
+          <span className={cn("rounded-full px-2 py-0.5 text-[12px] transition-colors duration-300", done >= 2 ? "bg-success-wash text-success" : "bg-strong text-page")}>
+            {done >= 2 ? "Bitti" : "Bitti Olarak İşaretle"}
           </span>
         </div>
         <dl className="grid grid-cols-[84px_minmax(0,1fr)] gap-y-1.5 rounded-xl bg-page p-2.5 ring-1 ring-line-soft">
           {[
-            ["Durum", <span key="d" className={done >= 2 ? "text-success" : "text-danger"}>{done >= 2 ? "Tamamlandı" : "5 gün gecikti"}</span>],
+            ["Durum", <span key="d" className={done >= 2 ? "text-success" : "text-danger"}>{done >= 2 ? "Tamamlandı" : "5 Gün Gecikti"}</span>],
             ["Tür", <span key="t" className="flex items-center gap-1 text-strong"><ListTodo className="size-3" /> Talep</span>],
             ["Sahip", <span key="s" className="text-strong">BT Ekibi</span>],
             ["Açılış", <span key="a" className="flex items-center gap-1 text-strong"><Calendar className="size-3" /> 11 Eki 2026</span>],
             ["Talep", <span key="k" className="flex items-center gap-1 text-strong"><Hash className="size-3" /> PS-100</span>],
-            ["Bekleyen", <span key="b" className="flex items-center gap-1 text-strong"><Ring status={done >= 4 ? "done" : "todo"} /> Dizüstü siparişi</span>],
-            ["Açtığı", <span key="u" className="flex items-center gap-1 truncate text-strong">İlk gün kurulumu <span className="rounded bg-surface px-1 text-[10px] text-muted">Engelli</span></span>],
+            ["Bekleyen", <span key="b" className="flex items-center gap-1 text-strong"><Ring status={done >= 4 ? "done" : "todo"} /> Dizüstü Siparişi</span>],
+            ["Açtığı", <span key="u" className="flex items-center gap-1 truncate text-strong">İlk Gün Kurulumu <span className="rounded bg-surface px-1 text-[11px] text-muted">Engelli</span></span>],
           ].map(([k, v]) => (
             <div key={k as string} className="contents">
               <dt className="text-muted">{k}</dt>
@@ -325,18 +325,36 @@ export function ProcessScene() {
         </dl>
         <div className="grid gap-1 rounded-xl bg-page p-2.5 ring-1 ring-line-soft">
           <span className="flex items-center gap-1 text-strong">
-            <ListTodo className="size-3" /> Alt görevler <ChevronDown className="size-3 text-soft" />
+            <ListTodo className="size-3" /> Alt Görevler <ChevronDown className="size-3 text-soft" />
           </span>
-          {["Haftalık toplantılara katıl", "Tanıtım yazısını hazırla", "Geri bildirimleri gözden geçir", "Ölçüm raporunu incele"].map((t, i) => (
+          {["Haftalık Toplantılara Katıl", "Tanıtım Yazısını Hazırla", "Geri Bildirimleri Gözden Geçir", "Ölçüm Raporunu İncele"].map((t, i) => (
             <span key={t} className="flex items-center gap-1.5">
               <span className={cn("size-3 rounded-[3px] ring-1", i < Math.max(0, done - 2) ? "bg-strong ring-strong" : "ring-line-strong")} />
               <span className="min-w-0 flex-1 truncate">{t}</span>
-              <span className="text-[10px] text-soft">{["23 Şub", "1 Mar", "5 Mar", "10 Mar"][i]}</span>
+              <span className="text-[11px] text-soft">{["23 Şub", "1 Mar", "5 Mar", "10 Mar"][i]}</span>
             </span>
           ))}
           <span className="flex items-center gap-1 text-soft">
-            <Plus className="size-3" /> Görev ekle
+            <Plus className="size-3" /> Görev Ekle
           </span>
+        </div>
+        {/* Son Hareketler: panelin altı boş kalmasın; satırlar sahnenin adımıyla birlikte akar. */}
+        <div className="grid gap-2 rounded-xl bg-page p-2.5 ring-1 ring-line-soft">
+          <span className="text-strong">Son Hareketler</span>
+          {[
+            { who: "Selin Başaran", text: "Bordro Kaydını Tamamladı", at: "2 dk", from: 1 },
+            { who: "Kerem Arıkan", text: "Sigorta Formunu Onayladı", at: "8 dk", from: 2 },
+            { who: "Ece Doğan", text: "Dizüstü Siparişini Aldı", at: "1 sa", from: 4 },
+          ]
+            .filter((row) => done >= row.from)
+            .map((row) => (
+              <span key={row.text} className="scene-in flex items-center gap-2">
+                <Avatar name={row.who} size="sm" className="size-5 text-[8px]" />
+                <span className="min-w-0 flex-1 truncate">{row.text}</span>
+                <span className="text-[11px] text-soft">{row.at}</span>
+              </span>
+            ))}
+          {done < 1 && <span className="text-soft">Henüz Hareket Yok</span>}
         </div>
       </aside>
     </div>
@@ -346,19 +364,19 @@ export function ProcessScene() {
 /* ── 2. Yanıt şablonları + asistana sor ───────────────────────────────── */
 
 const PRESETS = [
-  { min: 5, name: "Kısa yanıt", bar: "bg-chart-4", note: "Sık sorulanlar" },
-  { min: 15, name: "İade süreci", bar: "bg-chart-2", note: "Fatura ve ödeme" },
-  { min: 30, name: "Kargo gecikmesi", bar: "bg-chart-1", note: "Lojistik ekibi" },
+  { min: 5, name: "Kısa Yanıt", bar: "bg-chart-4", note: "Sık Sorulanlar" },
+  { min: 15, name: "İade Süreci", bar: "bg-chart-2", note: "Fatura ve Ödeme" },
+  { min: 30, name: "Kargo Gecikmesi", bar: "bg-chart-1", note: "Lojistik Ekibi" },
 ];
-const PROMPTS = ["Bugünkü iadeleri tek yanıtta topla", "Yalnız acil talepleri göster", "Müşteri yanıtlayınca haber ver"];
+const PROMPTS = ["Bugünkü İadeleri Tek Yanıtta Topla", "Yalnız Acil Talepleri Göster", "Müşteri Yanıtlayınca Haber Ver"];
 
 export function RepliesScene() {
   // 0-2: çipler tek tek gelir; 3: anahtar açılır; 4-5: bekleme.
   const { ref, step } = useSceneLoop(6, 1000, 5);
   return (
-    <div ref={ref} aria-hidden className="grid w-[520px] gap-2 rounded-[20px] bg-surface p-2.5 text-[13px] leading-5 ring-1 ring-line-soft">
+    <div ref={ref} aria-hidden className="grid w-[620px] gap-2 rounded-[20px] bg-surface p-2.5 text-[13px] leading-5 ring-1 ring-line-soft">
       <SceneStyle />
-      <span className="px-1.5 pt-0.5 text-muted">Yanıt şablonları</span>
+      <span className="px-1.5 pt-0.5 text-muted">Yanıt Şablonları</span>
       <div className="grid gap-2 rounded-[14px] bg-overlay p-2 shadow-raised ring-1 ring-line-soft">
         <div className="grid grid-cols-3 gap-2">
           {PRESETS.map((p, i) => (
@@ -372,7 +390,7 @@ export function RepliesScene() {
               <span className="text-[12px] leading-4 text-muted">
                 {p.note}
                 <br />
-                Hafta içi · 09-18
+                Hafta İçi · 09-18
               </span>
               {i === 1 && (
                 <span className="mt-1 flex items-center gap-2 text-muted">
@@ -386,10 +404,10 @@ export function RepliesScene() {
           ))}
         </div>
         <span className="flex items-center justify-center gap-1.5 py-1 text-muted">
-          <Plus className="size-3.5" /> Özel şablon oluştur
+          <Plus className="size-3.5" /> Özel Şablon Oluştur
         </span>
       </div>
-      <span className="px-1.5 text-muted">ya da asistana sor</span>
+      <span className="px-1.5 text-muted">Ya da Asistana Sor</span>
       <div className="flex min-h-[60px] flex-wrap content-start gap-1.5 px-1 pb-1">
         {PROMPTS.map((t, i) =>
           i <= step ? (
@@ -420,19 +438,19 @@ export function BroadcastScene() {
     <div ref={ref} aria-hidden className="grid w-[640px] gap-4 rounded-[14px] bg-page px-10 pt-4 pb-6 text-[13px] leading-[22px] text-body ring-1 ring-line-soft">
       <SceneStyle />
       <div className="-mx-6 flex items-center gap-1.5 border-b border-line-soft pb-2.5 text-muted">
-        <ArrowLeft className="size-3.5" /> / <Megaphone className="size-3.5" /> Duyurular <span className="rounded bg-surface px-1 text-[11px]">6</span> /
-        <span className="text-strong">Planlı bakım: ödeme altyapısı</span> <ChevronDown className="size-3" />
+        <ArrowLeft className="size-3.5" /> / <Megaphone className="size-3.5" /> Duyurular <span className="rounded bg-surface px-1 text-[12px]">6</span> /
+        <span className="text-strong">Planlı Bakım: Ödeme Altyapısı</span> <ChevronDown className="size-3" />
         <MoreHorizontal className="ml-auto size-3.5" />
       </div>
       <div className="grid gap-0.5">
         <span className="text-[17px] leading-6 font-medium text-strong">Planlı Bakım: Ödeme Altyapısı</span>
-        <span className="text-[11px] text-primary-ink italic">*E-posta alanlar bunu bildirim satırında görür</span>
+        <span className="text-[12px] text-primary-ink italic">*E-posta alanlar bunu bildirim satırında görür</span>
       </div>
       <div className="flex items-center gap-2.5">
         <span className="grid size-8 place-items-center rounded-lg bg-strong text-[12px] font-medium text-page">P</span>
         <span className="grid leading-4">
           <span className="text-strong">Pusula</span>
-          <span className="text-[11px] text-muted">Duyuru gönderen</span>
+          <span className="text-[12px] text-muted">Duyuru Gönderen</span>
         </span>
       </div>
       <div className="grid min-h-[230px] content-start gap-3 pl-[42px]">
@@ -451,7 +469,7 @@ export function BroadcastScene() {
           <Paperclip className="size-3.5" />
         </span>
         <Link2 className="size-3.5" />
-        {step >= 6 && <span className="scene-in absolute -top-8 left-6 rounded-md bg-strong px-2 py-1 text-[11px] text-page shadow-floating">Ek ekle</span>}
+        {step >= 6 && <span className="scene-in absolute -top-8 left-6 rounded-md bg-strong px-2 py-1 text-[12px] text-page shadow-floating">Ek Ekle</span>}
       </div>
     </div>
   );
@@ -461,10 +479,10 @@ export function BroadcastScene() {
 
 const MONTHS = ["Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas"];
 const METRICS = [
-  { label: "Çözüm süresi", value: "3,4 sa", goal: "Hedef 4 sa", series: [6.1, 5.4, 5.8, 4.9, 4.1, 3.4], verdict: "hedefin altında", tone: "text-success", bar: "bg-chart-1" },
-  { label: "İlk yanıt", value: "12 dk", goal: "Hedef 15 dk", series: [22, 19, 18, 16, 14, 12], verdict: "her ay hızlanıyor", tone: "text-success", bar: "bg-chart-2" },
+  { label: "Çözüm Süresi", value: "3,4 sa", goal: "Hedef 4 sa", series: [6.1, 5.4, 5.8, 4.9, 4.1, 3.4], verdict: "hedefin altında", tone: "text-success", bar: "bg-chart-1" },
+  { label: "İlk Yanıt", value: "12 dk", goal: "Hedef 15 dk", series: [22, 19, 18, 16, 14, 12], verdict: "her ay hızlanıyor", tone: "text-success", bar: "bg-chart-2" },
   { label: "Memnuniyet", value: "%91", goal: "Hedef %90", series: [84, 86, 85, 88, 90, 91], verdict: "hedefi geçti", tone: "text-success", bar: "bg-chart-3" },
-  { label: "Açık talep", value: "48", goal: "Hedef 40", series: [62, 58, 55, 57, 51, 48], verdict: "hedefin üstünde", tone: "text-warning", bar: "bg-chart-4" },
+  { label: "Açık Talep", value: "48", goal: "Hedef 40", series: [62, 58, 55, 57, 51, 48], verdict: "hedefin üstünde", tone: "text-warning", bar: "bg-chart-4" },
 ];
 
 export function MetricsScene() {
@@ -483,7 +501,7 @@ export function MetricsScene() {
               <span className="text-[18px] leading-6 text-strong tabular-nums">{x.value}</span>
               <Sparkline values={x.series} title={x.label} width={56} height={20} />
             </span>
-            <span className="text-[11px] text-soft">{x.goal}</span>
+            <span className="text-[12px] text-soft">{x.goal}</span>
           </div>
         ))}
       </div>
@@ -491,7 +509,7 @@ export function MetricsScene() {
         <p className="text-[15px] leading-6 text-strong">
           {m.label} şu an <span className="tabular-nums">{m.value}</span>; <span className={cn("underline decoration-dotted underline-offset-4", m.tone)}>{m.verdict}</span>.
         </p>
-        <p className="text-[11px] text-muted">Saatlik toplanır · son güncelleme 5 dk önce</p>
+        <p className="text-[12px] text-muted">Saatlik toplanır · son güncelleme 5 dk önce</p>
         <AreaChart title={`${m.label}: son altı ay`} labels={MONTHS} series={[{ label: m.label, values: m.series, series: 1 }]} height="h-40" />
       </div>
     </div>
@@ -499,9 +517,9 @@ export function MetricsScene() {
 }
 
 /* Kart künyeleri: sahne + kartın başlığı ve açıklaması tek yerde. */
-export const SCENES: { id: string; title: string; description: string; meta: string[]; fit: number; ratio: number; tone: "surface" | "page"; render: () => ReactNode }[] = [
-  { id: "surec", title: "İşe Alım Süreci", description: "Aşamalar sırayla kapanır; sayaçlar, ilerleme ve ayrıntı paneli birlikte güncellenir.", meta: ["Pusula", "Ürün"], fit: 900, ratio: 1.41, tone: "page", render: () => <ProcessScene /> },
-  { id: "sablon", title: "Yanıt Şablonları", description: "Önce hazır seçenek, sonra doğal dil: asistan önerileri aynı kuyuda.", meta: ["Pusula", "Yapay Zeka"], fit: 520, ratio: 1.41, tone: "surface", render: () => <RepliesScene /> },
-  { id: "duyuru", title: "Müşteri Duyurusu", description: "Kanal ipucu, gönderen satırı ve sakin gövde; metin yazıldıkça akar.", meta: ["Pusula", "İçerik"], fit: 640, ratio: 1.41, tone: "page", render: () => <BroadcastScene /> },
-  { id: "metrik", title: "Metrik Sekmeleri", description: "Başlık bir yargı cümlesi; sekme değişince grafik ve hüküm birlikte döner.", meta: ["Pusula", "Pano"], fit: 760, ratio: 1.41, tone: "surface", render: () => <MetricsScene /> },
+export const SCENES: { id: string; title: string; description: string; meta: string[]; fit: number; ratio?: number; tone: "surface" | "page"; render: () => ReactNode }[] = [
+  { id: "surec", title: "İşe Alım Süreci", description: "Aşamalar sırayla kapanır; sayaçlar, ilerleme ve ayrıntı paneli birlikte güncellenir.", meta: ["Pusula", "Ürün"], fit: 1040, tone: "page", render: () => <ProcessScene /> },
+  { id: "sablon", title: "Yanıt Şablonları", description: "Önce hazır seçenek, sonra doğal dil: asistan önerileri aynı kuyuda.", meta: ["Pusula", "Yapay Zeka"], fit: 620, tone: "surface", render: () => <RepliesScene /> },
+  { id: "duyuru", title: "Müşteri Duyurusu", description: "Kanal ipucu, gönderen satırı ve sakin gövde; metin yazıldıkça akar.", meta: ["Pusula", "İçerik"], fit: 640, tone: "page", render: () => <BroadcastScene /> },
+  { id: "metrik", title: "Metrik Sekmeleri", description: "Başlık bir yargı cümlesi; sekme değişince grafik ve hüküm birlikte döner.", meta: ["Pusula", "Pano"], fit: 760, tone: "surface", render: () => <MetricsScene /> },
 ];

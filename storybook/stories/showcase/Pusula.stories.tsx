@@ -439,7 +439,7 @@ export const Portfolio: Story = {
     await expect(await within(canvasElement.ownerDocument.body).findByRole("dialog")).toBeVisible();
     await userEvent.keyboard("{Escape}");
     await userEvent.click(canvas.getByRole("tab", { name: "Lab" }));
-    await canvas.findByText("Yumuşak durum değişimi.");
+    await canvas.findByText("Yumuşak Durum Değişimi.");
     await settle(globals);
   }),
 };

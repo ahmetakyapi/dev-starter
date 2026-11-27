@@ -248,3 +248,26 @@ addons.register("dev-starter/nav-tools", (api: API) => {
   new MutationObserver(place).observe(document.body, { childList: true, subtree: true });
   place();
 });
+
+/* Sekme başlığı (27 Kasım 2026, sahibinin isteği: "Tanıtım - Tanıtım · Storybook" yerine
+   "Dev Starter - Tanıtım"). Storybook başlığı her gezinmede kendisi yazar ("<hikaye> - <bileşen>
+   ⋅ Storybook"); <title> değişince bizimki yeniden basılır. Biçim: bileşenin son adı; hikaye adı
+   ondan farklı ve "Varsayılan"/"Belge" değilse "· <hikaye>" eklenir. */
+addons.register("dev-starter/tab-title", (api: API) => {
+  const compose = () => {
+    const data = api.getCurrentStoryData() as { title?: string; name?: string; type?: string } | undefined;
+    if (!data?.title) return "Dev Starter - Görsel Katalog";
+    const page = data.title.split("/").pop() ?? data.title;
+    const name = data.type === "docs" || data.name === "Docs" ? "" : (data.name ?? "");
+    const extra = name && name !== page && name !== "Varsayılan" ? ` · ${name}` : "";
+    return `Dev Starter - ${page}${extra}`;
+  };
+  const apply = () => {
+    const next = compose();
+    if (document.title !== next) document.title = next;
+  };
+  const head = document.querySelector("head");
+  if (head) new MutationObserver(apply).observe(head, { childList: true, subtree: true, characterData: true });
+  api.on(STORY_PREPARED, () => requestAnimationFrame(apply));
+  window.setTimeout(apply, 500);
+});

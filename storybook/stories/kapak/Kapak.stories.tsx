@@ -92,12 +92,23 @@ function useEnter() {
         };
 }
 
+/**
+ * Marka işareti (27 Kasım 2026, "premium logo"): üç katmanlı izometrik yığın =
+ * token → tema → bileşen. Karo paletin marka rengi; üstten ışık, alttan derinlik
+ * degradesi, iç kıl çerçeve ve yumuşak gölge. Yalnız token (on-brand, brand, strong):
+ * palet değişince işaret de döner. Sekme simgesi (favicon.svg) ve Storybook
+ * markası (manager-theme.ts) aynı çizimi taşır.
+ */
 function BrandMark({ className }: { className?: string }) {
   return (
-    <span aria-hidden className={cn("relative inline-block shrink-0 rounded-[26%] bg-brand shadow-raised", className)}>
-      <span className="absolute top-[28%] left-1/4 h-[11%] w-1/2 rounded-full bg-on-brand/95" />
-      <span className="absolute top-[44.5%] left-1/4 h-[11%] w-[37.5%] rounded-full bg-on-brand/75" />
-      <span className="absolute top-[61%] left-1/4 h-[11%] w-1/4 rounded-full bg-on-brand/55" />
+    <span aria-hidden className={cn("relative inline-grid shrink-0 place-items-center overflow-hidden rounded-[27%] bg-brand shadow-floating", className)}>
+      <span className="absolute inset-0 bg-linear-to-b from-on-brand/30 via-on-brand/0 to-strong/30" />
+      <span className="absolute inset-0 rounded-[inherit] ring-1 ring-on-brand/25 ring-inset" />
+      <svg viewBox="0 0 32 32" className="relative size-[70%] text-on-brand drop-shadow-sm">
+        <path d="M16 6.5 26 11.6 16 16.7 6 11.6Z" fill="currentColor" />
+        <path d="M6 16.2 16 21.3 26 16.2" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" opacity=".78" />
+        <path d="M6 20.8 16 25.9 26 20.8" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" opacity=".5" />
+      </svg>
     </span>
   );
 }
@@ -668,10 +679,11 @@ const REPO = "https://github.com/ahmetakyapi/dev-starter";
 
 function CalmShots() {
   // Sahneler kendi kendine oynayan ürün ekranları (stories/_lib/sahneler.tsx): kuyuya ölçeklenir, kaydırdıkça buğudan netleşir.
-  const likes = [64, 31, 18, 22];
+  // İşe alım ekranı kahramanın vitrininde: akış onu tekrar etmez.
+  const likes = [31, 18, 22];
   return (
     <div className="grid gap-12">
-      {SCENES.map((s, i) => (
+      {SCENES.filter((s) => s.id !== "surec").map((s, i) => (
         <ScrollFocus key={s.id}>
           <ShotCard title={s.title} description={s.description} meta={s.meta} titleAs="h3" fit={s.fit} ratio={s.ratio} tone={s.tone} actions={<LikeButton count={likes[i] ?? 9} />}>
             {s.render()}
@@ -721,7 +733,7 @@ function CalmPalettes({ palette, theme, onPick, onTheme }: { palette: PaletteNam
   const values = palettes[palette][theme];
   return (
     <div className="grid gap-12">
-      <DemoFrame title="On palet, iki tema." description="Numuneye bas: tuval, kenar çubuğu ve belge aynı anda o paletle çizilir.">
+      <DemoFrame title="On Palet ve İki Tema." description="Numuneye bas: tuval, kenar çubuğu ve belge aynı anda o paletle çizilir.">
         <div className="grid w-full max-w-sm justify-items-center gap-5 rounded-2xl bg-overlay p-5 shadow-raised ring-1 ring-line">
           <fieldset className="grid justify-items-center gap-3">
             <legend className="sr-only">Palet</legend>
@@ -747,7 +759,7 @@ function CalmPalettes({ palette, theme, onPick, onTheme }: { palette: PaletteNam
           </div>
         </div>
       </DemoFrame>
-      <DemoFrame title="Rol renkleri." description="Birincil, üstü ve yıkanmış ton paletle birlikte döner; değerler token dosyasından." size="sm">
+      <DemoFrame title="Rol Renkleri." description="Birincil, üstü ve yıkanmış ton paletle birlikte döner; değerler token dosyasından." size="sm">
         <div className="flex flex-wrap justify-center gap-2">
           <span className="rounded-full bg-primary px-3 py-1 text-small text-on-primary">Birincil</span>
           <span className="rounded-full bg-primary-wash px-3 py-1 text-small text-primary-ink">Yıkanmış</span>
@@ -761,7 +773,7 @@ function CalmPalettes({ palette, theme, onPick, onTheme }: { palette: PaletteNam
 /* Kurulum: terminal Lab çerçevesinde, künye iki yolu tek cümlede söyler. */
 function CalmInstall() {
   return (
-    <DemoFrame title="İki yoldan projeye al." description={`Kaynak olarak bağımlılıklarıyla ya da ${KIT_COUNT} bileşenlik paket olarak.`} size="lg">
+    <DemoFrame title="İki Yoldan Projeye Al." description={`Kaynak olarak bağımlılıklarıyla ya da ${KIT_COUNT} bileşenlik paket olarak.`} size="lg">
       <div className="w-full max-w-lg min-h-56">
         <Terminal
           title="~/yeni-proje"
@@ -822,11 +834,11 @@ function CalmHero() {
     [2, "tema"],
   ];
   return (
-    <section id="kapak-giris" aria-labelledby="kapak-baslik" className="grid gap-14 sm:gap-20">
+    <section id="kapak-giris" aria-labelledby="kapak-baslik" className="grid gap-16 pt-4 sm:gap-24 sm:pt-8">
       <style href="kapak-hero-sakin" precedence="default">
         {HERO_CSS}
       </style>
-      <div className="mx-auto grid max-w-4xl justify-items-center gap-7 text-center">
+      <div className="mx-auto grid max-w-4xl justify-items-center gap-8 text-center sm:gap-9">
         <BrandMark className="kh-in size-20 sm:size-24" />
         <p className="kh-in flex flex-wrap items-center justify-center gap-x-2 text-base text-muted" style={step(1)}>
           <span className="font-medium text-strong">dev-starter</span>
@@ -876,14 +888,17 @@ function CalmHero() {
 
       {/* Geniş vitrin: ürün ekranı neredeyse gerçek boyutunda; yüzen parçalar süs (kartın adı ne olduğunu söyler). */}
       <div className="relative mx-auto w-full max-w-6xl">
-        <ShotCard title="İşe Alım Süreci" description="Aşamalar sırayla kapanır; sayaçlar, ilerleme ve ayrıntı paneli birlikte güncellenir. Kütüphanenin parçalarıyla kurulmuş gerçek ekran." meta={["Pusula", "Ürün ekranı"]} titleAs="h2" fit={900} inset={0.05} ratio={1.55} tone="surface">
+        <ShotCard title="İşe Alım Süreci" description="Aşamalar sırayla kapanır; sayaçlar, ilerleme ve ayrıntı paneli birlikte güncellenir." meta={["Pusula", "Ürün Ekranı"]} titleAs="h2" fit={1040} inset={0.04} tone="surface">
           <ProcessScene />
         </ShotCard>
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 hidden aspect-[1.55] sm:block">
-          <div className="kh-float absolute top-[9%] -right-3 flex items-center gap-2 rounded-2xl bg-overlay px-4 py-3 text-base text-strong shadow-floating ring-1 ring-line lg:-right-8">
-            <StatusIcon status="done" /> PS-3986 tamamlandı
+        {/* Yüzen parçalar sayfa genişliğini AŞMAZ: bildirim kuyunun üst kenarına oturur, onay şeridi
+            alt payda ortalı (sahnenin satırlarını örtmez).
+            Alt kenar künye satırının üstünden ölçülür; dar ekranda gizli (sahne zaten küçük). */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 bottom-[4.75rem] hidden lg:block">
+          <div className="kh-float absolute -top-6 right-10 flex items-center gap-2 rounded-2xl bg-overlay px-4 py-3 text-base text-strong shadow-floating ring-1 ring-line">
+            <StatusIcon status="done" /> PS-3986 Tamamlandı
           </div>
-          <div className="kh-float kh-float-b absolute bottom-[10%] -left-3 w-[27rem] rounded-2xl bg-overlay p-1.5 shadow-floating ring-1 ring-line lg:-left-10">
+          <div className="kh-float kh-float-b absolute bottom-2 left-1/2 w-[26rem] max-w-[calc(100%-3rem)] -translate-x-1/2 rounded-2xl bg-overlay p-1.5 shadow-floating ring-1 ring-line">
             <ApprovalStrip person={{ name: "Selin Başaran" }} />
           </div>
         </div>
