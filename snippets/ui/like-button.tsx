@@ -92,10 +92,12 @@ export function LikeButton({
       <style href="ui-like-button" precedence="default">
         {CSS}
       </style>
+      {/* Ad İÇERİKTEN kurulur ("Beğen, 6 beğeni"), aria-label yok: görünen sayı yuvarlanırken
+          ara rakamlar görünür metne karışıp ad uyuşmazlığı (WCAG 2.5.3) üretiyordu; CI'da
+          zamanlamaya bağlı düşen test (mistakes.md #127). Sayı görsel; ad gizli metinden. */}
       <button
         type="button"
         aria-pressed={liked}
-        aria-label={`${label}, ${new Intl.NumberFormat("tr-TR").format(value)} ${unit}`}
         onClick={toggle}
         className={cn(
           "group relative -my-2 inline-flex min-h-11 items-center gap-1.5 rounded-full px-2 text-small transition-colors duration-200",
@@ -106,6 +108,7 @@ export function LikeButton({
         <span key={pop} data-pop={liked && pop > 0 ? "" : undefined} className="ui-like-heart inline-grid">
           <Heart aria-hidden className="size-4" fill={liked ? "currentColor" : "none"} strokeWidth={1.8} />
         </span>
+        <span className="sr-only">{`${label}, ${new Intl.NumberFormat("tr-TR").format(value)} ${unit}`}</span>
         {hideZero && value === 0 ? null : (
           <span aria-hidden>
             <DigitRoll value={value} />

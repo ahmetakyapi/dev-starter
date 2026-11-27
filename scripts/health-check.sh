@@ -552,6 +552,14 @@ else
   pass "Palet disi renk yok"
 fi
 
+# Erisilebilir ad / gorunen metin (WCAG 2.5.3): aria-label'li butonda yuvarlanan sayi
+# CI'da zamanlamaya bagli dusuyordu (mistakes.md #127).
+if LABEL_OUT=$(node scripts/check-label-content.mjs 2>&1); then
+  pass "Erisilebilir ad ile gorunen metin uyumlu (DigitRoll/SlotText kapisi)"
+else
+  fail "aria-label'li buton icinde yuvarlanan sayi: $(echo "$LABEL_OUT" | sed -n 2p | xargs)"
+fi
+
 # ─── 13. Tech Stack Uyumu ─────────────────────────────────────────────────────
 header "Tech Stack Uyumu (motion)"
 

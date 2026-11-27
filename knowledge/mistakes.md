@@ -31,7 +31,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 | Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
 | Nimbstia'dan Öğrenilenler (2026-11-03) | 115–119 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
-| Görsel Katalog Turları (2026-11-17) | 120–126 | storybook, kapsam, play, hero, kontrast, koyu-tema, ızgara, a11y |
+| Görsel Katalog Turları (2026-11-17) | 120–127 | storybook, kapsam, play, hero, kontrast, koyu-tema, ızgara, a11y |
 
 ---
 
@@ -2168,6 +2168,24 @@ span veren çağıranlar temizlendi; bileşen kökleri `grid min-w-0 grid-cols-1
 
 **Kural**: Bileşen kökü `grid` ise `grid-cols-1` (ya da açık sütun) yazar. Span veren çocuk, ızgaranın
 sütun sayısını bilen yerde (çağıran) verilir; Well/kart kendi içinde `col-span` taşımaz.
+
+### 127. `aria-label`'lı Butonda Yuvarlanan Sayı CI'da Üç Kez Düştü (Yerelde Geçti)
+
+**Hata**: `like-button` "Kaydedilemeyen Beğeni" hikayesi main'de üç çalıştırma üst üste
+(153-155) axe `label-content-name-mismatch` ile düştü; yerelde `test:stories` her seferinde geçti.
+
+**Sebep**: Buton adı `aria-label="Beğen, 6 beğeni"`, içinde ise `DigitRoll` şeritleri (her rakam
+için 0-9 sütunu) vardı. Kural görünen metni hesaplarken şeritlerin o anki kaydırma durumuna ve
+yazı tipi ölçüsüne bağlı; CI tarayıcısında ara rakamlar "görünür metin" sayıldı.
+
+**Çözüm**: `aria-label` kaldırıldı; ad içerikten (gizli metin "Beğen, 6 beğeni" + sayı `aria-hidden`).
+Kural yalnız `aria-label`/`aria-labelledby` taşıyan öğeye uygulandığı için koşul ortadan kalktı.
+`scripts/check-label-content.mjs` (health-check ve dolayısıyla CI içinde): `aria-label`'lı buton/
+bağlantı içinde `DigitRoll`/`SlotText` görürse hata verir.
+
+**Kural**: Değeri değişen ya da animasyonlu metin taşıyan butonun adı `aria-label` ile değil
+içerikten kurulur (gizli metin + görsel kısım `aria-hidden`). Yerelde geçip CI'da düşen a11y testi
+"kararsız" diye geçiştirilmez: koşulu bul ve kaldır.
 
 ---
 
