@@ -33,7 +33,7 @@ export function PanelHeader({ title, meta, action, className }: PanelHeaderProps
   return (
     <header className={cn("mb-5 flex flex-wrap items-start justify-between gap-x-4 gap-y-2", className)}>
       <div className="min-w-0">
-        <h2 className="text-title font-semibold">{title}</h2>
+        <h2 className="text-title font-medium">{title}</h2>
         {meta ? <p className="mt-1 text-small text-muted">{meta}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}

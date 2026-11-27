@@ -1,6 +1,7 @@
 import type { HeroVariant } from "@/lib/content";
 import { AtmosphereHero } from "./Atmosphere";
 import { BentoHero } from "./Bento";
+import { CalmHero } from "./Calm";
 import { CornerHero } from "./Corner";
 import { EditorialSplitHero } from "./EditorialSplit";
 import { FloatingHero } from "./Floating";
@@ -29,6 +30,8 @@ import { StatementHero } from "./Statement";
  *  - floating         "Bu ürün çok şey yapıyor" duygusu: başlık çevresinde süzülen ürün kartları (telefonda yok).
  *  - horizon          Ürün panosu manzaradan doğar ve sayfa zeminine solar; ürün gösterilebiliyor ama ekran görüntüsü sıkıcıysa.
  *  - corner           Editoryal, koyu tam ekran sahne: köşe etiketi + sol altta dev başlık; mesaj kısa ve iddialıysa.
+ *  - calm             Sakin Akış yönü (`sakin-akis`): ortalı iki tonlu başlık (degrade yok), koyu hap eylem, geniş gri kuyuda
+ *                     canlı pano. Kişi/ekip sayfası, kütüphane kapağı, sakin ürün; gösteriş istenmiyorsa.
  *
  * Ortak kurallar `./shared.tsx` başında.
  */
@@ -45,6 +48,7 @@ const HEROES = {
   floating: FloatingHero,
   horizon: HorizonHero,
   corner: CornerHero,
+  calm: CalmHero,
 } as const satisfies Record<HeroVariant, () => React.JSX.Element>;
 
 export function Hero({ variant }: { variant: HeroVariant }) {

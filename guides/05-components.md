@@ -141,9 +141,10 @@ alınır, paket olarak kurulmaz:
 - **Agentic UI** — `agent-tool.tsx`, `action-card.tsx`, `agent-approval.tsx`;
   proaktif akış (agent hazırlar, kullanıcı onaylar) için `agent-feed.tsx`;
   karar için `/agentic`.
-- **Tanıtım sayfası kahramanı** — `landing` şablonunda on iki düzen
+- **Tanıtım sayfası kahramanı** — `landing` şablonunda on üç düzen
   (`components/heroes/`: **showcase** (varsayılan, 2026-11), editorial-split,
-  statement, product-frame, live-data, bento, minimal, scroll-stage, atmosphere, floating, horizon, corner),
+  statement, product-frame, live-data, bento, minimal, scroll-stage, atmosphere, floating, horizon, corner,
+  **calm** (Sakin Akış, 2026-11-27: ortalı iki tonlu başlık, koyu hap `Button variant="calm"`, geniş kuyuda ürün ekranı)),
   `lib/content.ts` → `hero.variant` ile seçilir. `showcase` ("tezgâh", 2026-11-21):
   iki tonlu başlık (ink'siz satır soluk, ink'li satır net; -0.04em, anlam
   öbekleriyle maskeli satır girişi; opaklık değişmez, LCP ilk karede) + altında

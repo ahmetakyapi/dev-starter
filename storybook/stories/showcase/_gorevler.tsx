@@ -155,19 +155,22 @@ export function GorevlerPage() {
             <WellTitle id="gorev-karar" hint="Panodaki işe bağlı küçük kararlar; sonuç oy verince görünür.">
               Ekip Kararı
             </WellTitle>
-            <QuickPoll
-              question="Kış sezonu fiyat listesinde bayi indirimi kaç olsun?"
-              meta="Mert Aksoy soruyor · Kış sezonu fiyat listesi taslağı · 6 Kas'a kadar"
-              options={[
-                { id: "8", label: "%8 · geçen yılla aynı" },
-                { id: "10", label: "%10 · hacim artışı için" },
-                { id: "12", label: "%12 · satış kuralının sınırı" },
-              ]}
-              counts={{ "8": 1, "10": 3, "12": 1 }}
-              value={vote}
-              onValueChange={setVote}
-              className="max-w-2xl"
-            />
+            {/* Anket + bağlam: kuyu tam genişlik, sağ yarı boş kalmasın; bağlam panodaki CANLI karttan (kolon taşınınca değişir). */}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+              <QuickPoll
+                question="Kış sezonu fiyat listesinde bayi indirimi kaç olsun?"
+                meta="Mert Aksoy soruyor · Kış sezonu fiyat listesi taslağı · 6 Kas'a kadar"
+                options={[
+                  { id: "8", label: "%8 · geçen yılla aynı" },
+                  { id: "10", label: "%10 · hacim artışı için" },
+                  { id: "12", label: "%12 · satış kuralının sınırı" },
+                ]}
+                counts={POLL_COUNTS}
+                value={vote}
+                onValueChange={setVote}
+              />
+              <DecisionContext columns={columns} vote={vote} counts={POLL_COUNTS} />
+            </div>
           </Well>
         </div>
       </div>
@@ -238,5 +241,47 @@ export function GorevlerPage() {
         ) : null}
       </Sheet>
     </div>
+  );
+}
+
+const POLL_COUNTS = { "8": 1, "10": 3, "12": 1 } as const;
+const POLL_LABEL: Record<string, string> = { "8": "%8", "10": "%10", "12": "%12" };
+
+/** Kararın bağlamı: bağlı pano kartı (kolon, sahip, son tarih), oy durumu ve kural. Sayılar veriden. */
+function DecisionContext({ columns, vote, counts }: { columns: readonly KanbanColumn[]; vote: string | null; counts: Record<string, number> }) {
+  const hit = columns.flatMap((c) => c.cards.map((card) => ({ card, column: c.title }))).find((x) => x.card.id === "g4");
+  const tally = Object.fromEntries(Object.entries(counts).map(([k, v]) => [k, v + (vote === k ? 1 : 0)]));
+  const total = Object.values(tally).reduce((a, b) => a + b, 0);
+  const lead = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
+  return (
+    <aside aria-label="Kararın Bağlamı" className="grid content-start gap-3 rounded-xl bg-overlay p-4 ring-1 ring-line-soft">
+      <p className="text-small text-muted">Bağlı İş</p>
+      {hit ? (
+        <div className="flex items-center gap-3">
+          {hit.card.assignee ? <Avatar name={hit.card.assignee.name} size="sm" /> : null}
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-base font-medium text-strong">{hit.card.title}</span>
+            <span className="block truncate text-small text-muted">
+              {hit.card.assignee?.name} · {hit.column}
+              {hit.card.due ? ` · ${shortDate.format(parse(hit.card.due))}` : ""}
+            </span>
+          </span>
+        </div>
+      ) : (
+        <p className="text-small text-muted">Kart panodan kaldırılmış.</p>
+      )}
+      <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 border-t border-line-soft pt-3 text-small">
+        <dt className="text-muted">Oy</dt>
+        <dd className="text-strong tabular-nums">
+          {num.format(total)} kişi{vote ? " · senin oyun dahil" : ""}
+        </dd>
+        <dt className="text-muted">Önde</dt>
+        <dd className="text-strong tabular-nums">
+          {lead ? `${POLL_LABEL[lead[0]] ?? lead[0]} · ${num.format(lead[1])} oy` : "Henüz oy yok"}
+        </dd>
+        <dt className="text-muted">Kural</dt>
+        <dd className="text-strong">Satış indirimi en çok %12</dd>
+      </dl>
+    </aside>
   );
 }

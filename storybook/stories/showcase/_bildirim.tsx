@@ -470,7 +470,37 @@ export function BildirimPage() {
           />
         </section>
 
-        <div className="grid gap-4">
+        {/* Sağ sütun yapışkan: uzun akış kayarken altı boş kalmaz; Özet sayıları akıştaki bildirimlerden. */}
+        <div className="grid gap-4 lg:sticky lg:top-4">
+          <section aria-labelledby="bildirim-ozet" className="rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line">
+            <h2 id="bildirim-ozet" className="text-base font-semibold text-strong">
+              Özet
+            </h2>
+            <p className="mt-0.5 text-small text-muted">
+              {unread ? `${num.format(unread)} okunmamış bildirim` : "Hepsi okundu"}
+            </p>
+            <ul className="mt-3 grid gap-1">
+              {TABS.filter((t) => t.value !== "tum").map((t) => {
+                const n = items.filter(t.match).length;
+                const open = items.filter((i) => t.match(i) && !i.read).length;
+                return (
+                  <li key={t.value}>
+                    <button
+                      type="button"
+                      onClick={() => setTab(t.value)}
+                      aria-pressed={tab === t.value}
+                      className="flex min-h-11 w-full items-center gap-3 rounded-lg px-2 text-start text-small transition-colors hover:bg-surface pointer-fine:min-h-9"
+                    >
+                      <span className="min-w-0 flex-1 truncate text-strong">{t.label}</span>
+                      {open ? <span className="text-muted tabular-nums">{num.format(open)} yeni</span> : null}
+                      <span className="w-8 text-end font-medium text-strong tabular-nums">{num.format(n)}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+
           <section aria-labelledby="bildirim-teslim" className="rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line">
             <h2 id="bildirim-teslim" className="text-base font-semibold text-strong">
               Teslimat

@@ -223,8 +223,9 @@ ile doğrulanıyor.
 
 ### Hero Kataloğu
 
-Landing şablonunda yedi hero düzeni var; `lib/content.ts` içinde `hero.variant`
-tek satırla değiştirilir. Görseller GitHub temana göre açık ya da koyu gelir.
+Landing şablonunda on üç hero düzeni var (aşağıda yedisi); `lib/content.ts` içinde
+`hero.variant` tek satırla değiştirilir. Sakin Akış yönü için `calm`: ortalı iki tonlu başlık,
+koyu hap eylem, geniş kuyuda ürün ekranı. Görseller GitHub temana göre açık ya da koyu gelir.
 
 <table>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-live-data-dark.webp"><img alt="hero-live-data" src=".github/readme/shots/hero-live-data-light.webp" width="100%"></picture><br><b>Canlı Veri</b> · <code>live-data</code><br><sub>Ölçülebilir bir vaat ve sayıların gerçek kaynağı varsa. Varsayılan.</sub></td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/readme/shots/hero-statement-dark.webp"><img alt="hero-statement" src=".github/readme/shots/hero-statement-light.webp" width="100%"></picture><br><b>Tek Mesaj</b> · <code>statement</code><br><sub>Mesaj tek başına güçlüyse: lansman, manifesto.</sub></td></tr>

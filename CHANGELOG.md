@@ -7,6 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Şablonlar, kütüphane ve kalan boşluklar — 2026-11-27
+
+- Landing şablonuna `calm` hero (on üçüncü düzen); iki şablonda `Button variant="calm"` (koyu hap), `PageHeader` ve `PanelHeader` 500 ağırlık.
+- Kütüphane: `badge variant="quiet"`, `chart-card source` (kaynak/tazelik satırı), `StatusText` (`status-icon`), değerler 500 ağırlık, takvim son tarih şeridi iki satır.
+- Pusula: Görevler'de "Ekip Kararı" yanında Bağlı İş paneli, Bildirimler'de Özet kartı.
+
 ### Bütün ekranlar Sakin Akış'a geçti — 2026-11-27
 
 - Pusula Tanıtım sayfası baştan: sakin iki tonlu kahraman, kendi kendine oynayan gelen kutusu, Ekranlar, Kişiselleştir (eski süsler gerçek özellik önizlemesi), SSS, sade kapanış.

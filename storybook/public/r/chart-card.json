@@ -3,7 +3,7 @@
   "name": "chart-card",
   "type": "registry:ui",
   "title": "Grafik Kartı",
-  "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları ; `source`: kaynak/tazelik satırı (\"Saatlik toplanır · 5 dk önce\")",
+  "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları; `source`: kaynak/tazelik satırı (\"Saatlik toplanır · 5 dk önce\")",
   "registryDependencies": [
     "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
   ],

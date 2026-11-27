@@ -59,7 +59,7 @@ YOK; gerekiyorsa `nextjs-fullstack` şablonundan alınır.
 
 1. `lib/site.ts` (ad, açıklama) ve `lib/content.ts` (bütün metin). Bileşene
    dokunmak gerekmez; `tests/content.test.ts` yazım ve yapı kurallarını denetler.
-2. Hero düzeni: `lib/content.ts` → `hero.variant` (on iki düzen, varsayılan
+2. Hero düzeni: `lib/content.ts` → `hero.variant` (on üç düzen, varsayılan
    `showcase`: iki tonlu sakin başlık (problem soluk, çözüm net) + altında
    tezgâh gibi alta solan canlı ürün panosu,
    `components/heroes/index.tsx` başında hangisinin ne zaman seçileceği).
@@ -87,6 +87,7 @@ YOK; gerekiyorsa `nextjs-fullstack` şablonundan alınır.
 | `doga-organik` | `atmosphere` ya da `horizon` | `verdant` | `calm` | Sakin, kısa |
 | `fintek-keskin` | `live-data` ya da `showcase` | `signature` | `product` | Kaynaklı sayı |
 | `sergi` | `product-frame` ya da `horizon` (+ `art-mat` paspartu, `snippets/ui`) | `signature` | `signature` / `product` | İki tonlu başlık, tek `head-mark`, mürekkep hap eylem |
+| `sakin-akis` | `calm` (birincil eylem `calm` buton) | `signature` (nötr) | `product` / `signature` | İki tonlu başlık, degrade yok, virgülsüz Title Case |
 
 Takas: `lib/content.ts` → `hero.variant` (tek satır) + `PALETTE`/`DEFAULT_THEME`
 (`lib/theme.ts`) + yazı presetı (`fontClass()`); sayfa dizilimini yön değiştirir

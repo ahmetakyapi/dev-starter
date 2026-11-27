@@ -14,6 +14,7 @@ const VARIANT_NOTES: Record<ButtonVariant, string> = {
   soft: "soft · Renkli ama İkinci Derece",
   ghost: "ghost · Araç Çubuğu, Satır İçi",
   danger: "danger · Yıkıcı Eylem",
+  calm: "calm · Sakin Akış Birincil Eylemi (Koyu Hap)",
 };
 
 const VARIANT_LABELS: Record<ButtonVariant, string> = {
@@ -23,6 +24,7 @@ const VARIANT_LABELS: Record<ButtonVariant, string> = {
   soft: "Taslak Olarak Kaydet",
   ghost: "Vazgeç",
   danger: "Sil",
+  calm: "Görüşme Planla",
 };
 
 const meta = {

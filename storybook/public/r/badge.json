@@ -3,7 +3,7 @@
   "name": "badge",
   "type": "registry:ui",
   "title": "Rozet",
-  "description": "Durum/kategori etiketi ; `variant=\"quiet\"` (Sakin Akış): şeffaf zemin + kıl halka, renk metinde",
+  "description": "Durum/kategori etiketi; `variant=\"quiet\"` (Sakin Akış): şeffaf zemin + kıl halka, renk metinde",
   "registryDependencies": [
     "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
   ],

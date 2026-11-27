@@ -30,6 +30,9 @@ export const BUTTON_VARIANTS = {
   soft: "bg-primary-wash text-primary-ink hover:bg-primary hover:text-on-primary",
   ghost: "text-body hover:bg-surface-raised hover:text-strong",
   danger: "bg-danger-wash text-danger hover:bg-danger hover:text-on-primary",
+  /* Sakin Akış birincil eylemi (`design-directions.md` → sakin-akis): koyu hap, degrade ve
+     gölge yok; palet rengi yalnız bilgi taşıdığı yerde kalır. `brand` yerine seçilir, ikisi aynı ekranda olmaz. */
+  calm: "rounded-full bg-strong text-page hover:bg-strong/85",
 } as const;
 
 export const BUTTON_SIZES = {

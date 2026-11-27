@@ -46,3 +46,4 @@ export const Atmosphere: Story = { name: "Atmosfer", args: { variant: "atmospher
 export const Floating: Story = { name: "Süzülen Kartlar", args: { variant: "floating" } };
 export const Horizon: Story = { name: "Ufuk", args: { variant: "horizon" } };
 export const Corner: Story = { name: "Köşe Etiketi", args: { variant: "corner" } };
+export const Calm: Story = { name: "Sakin Akış", args: { variant: "calm" } };

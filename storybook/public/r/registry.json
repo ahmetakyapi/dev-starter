@@ -469,7 +469,7 @@
       "name": "badge",
       "type": "registry:ui",
       "title": "Rozet",
-      "description": "Durum/kategori etiketi ; `variant=\"quiet\"` (Sakin Akış): şeffaf zemin + kıl halka, renk metinde",
+      "description": "Durum/kategori etiketi; `variant=\"quiet\"` (Sakin Akış): şeffaf zemin + kıl halka, renk metinde",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
@@ -742,7 +742,7 @@
       "name": "chart-card",
       "type": "registry:ui",
       "title": "Grafik Kartı",
-      "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları ; `source`: kaynak/tazelik satırı (\"Saatlik toplanır · 5 dk önce\")",
+      "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları; `source`: kaynak/tazelik satırı (\"Saatlik toplanır · 5 dk önce\")",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
