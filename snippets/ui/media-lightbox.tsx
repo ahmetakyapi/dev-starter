@@ -211,8 +211,10 @@ export function MediaLightbox({
                     aria-label={item.alt ?? item.title}
                   />
                 ) : item.src ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- kit next/* taşımaz
-                  <img src={item.src} alt={item.alt ?? ""} className="max-h-[70dvh] w-auto rounded-xl object-contain" />
+                  // <picture>: kit next/* taşımaz; projede next/image ile değiştirilebilir.
+                  <picture className="contents">
+                    <img src={item.src} alt={item.alt ?? ""} className="max-h-[70dvh] w-auto rounded-xl object-contain" />
+                  </picture>
                 ) : null}
               </div>
             </div>

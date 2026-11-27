@@ -118,6 +118,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `contact-list.tsx` | Telefon, e-posta, adres, web: tür etiketi ("İş", "Kişisel") + kopyala; müşteri kartı, tedarikçi profili | lucide, `copy-button` | Evet | Bağlantı türden üretilir (`tel:`, `mailto:`, `https:`), güvensiz şema düz metin kalır; "Telefon, İş: …" okunur |
 | `attention-list.tsx` | "Şimdi bakman gerekenler": kim/ne + ikonlu durum cümlesi + tek tıkla çözüm (`action` yuvası); sayaç satırlardan türer | lucide | Hayır | Renk tek işaret değil: ikon + durum metni; `emptyText` yalnız veri geldiyse; boş liste hiçbir şey çizmez |
 | `detail-panel.tsx` | Listenin yanında ana-ayrıntı yüzeyi: başlık (ikon, ad, alt satır, eylem) + başlıklı bölümler (`DetailSection`: sayaç, "Tümünü Gör"); içerik serbest | yok | Hayır | `aside` + başlığıyla adlı, her bölge `section`; seçilmemişse `emptyText` |
+| `status-icon.tsx` | İş/talep durumu şekille: Ön İnceleme (kesik daire), Yapılacak, Sürüyor (yarım dolu), Engelli (duraklat), Tamamlandı (tik), İptal (çapraz); `StatusPicker` gri hap + liste | lucide | Evet | Şekil durumu söyler, renk ikinci işaret; `label` ile `role="img"`; seçici `listbox` + `aria-activedescendant`, ↑↓ Home End Enter Escape, harfle atlama, odak tetikleyiciye döner; hareket azaltmada geçiş yok |
 
 ### Form ve Gezinme
 
@@ -152,7 +153,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `saved-views.tsx` | Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, "Görünümü Kaydet" satır içi ad alanı | `chip`, lucide | Evet | Grup + ad; görünüm `aria-pressed` + ✓; kayıt adı boş/uzun/yinelenen olamaz (`role="alert"`, `aria-invalid`); Enter kaydeder, Esc vazgeçer; odak butonye döner |
 | `setup-card.tsx` | Kenar çubuğu dibinde kurulum çağrısı: başlık, tek cümle, ilerleme halkası (3 / 4), Atla ve Sonraki | lucide | Evet | Halka `role="progressbar"` + "Adım 3, toplam 4", sayı da yazılı; butonlar 44/32 px; `headingLevel`; hareket azaltmada halka geçişsiz |
 | `workspace-switcher.tsx` | Kenar çubuğu tepesinde hesap/şirket/çalışma alanı değiştirici: logo karosu + ad + alt satır + çift ok; menü radyo listesi + `footer` | `dropdown-menu`, lucide | Evet | Base UI Menu: ok tuşları, Escape tetikleyiciye döner; tek alan varsa tıklanamaz düz kart; `collapsed` yalnız logo |
-| `ruler-toc.tsx` | Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda "01 · Ad" + önizleme; dar ekranda "01 Hoş geldin" düğmesi | lucide | Evet | `nav` + ad, gerçek bağlantılar, `aria-current="location"`; tık bölüme kaydırır ve odağı taşır; dar ekran düğmesi `aria-expanded`/`aria-controls`, Escape ve dışarı tık kapatır; hareket azaltmada yaysız |
+| `ruler-toc.tsx` | Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda "01 · Ad" + önizleme; dar ekranda "01 Hoş geldin" butonu | lucide | Evet | `nav` + ad, gerçek bağlantılar, `aria-current="location"`; tık bölüme kaydırır ve odağı taşır; dar ekran butonu `aria-expanded`/`aria-controls`, Escape ve dışarı tık kapatır; hareket azaltmada yaysız |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -239,6 +240,7 @@ kullanır (aynı etiket, yardım, hata ve `aria-describedby` bağı).
 | `kanban-board.tsx` | Kolonlu iş panosu: sürükle-bırak, WIP sınırı, etiket, sorumlu, son tarih; `onCardOpen` ile tık / Enter kartı açar | motion (`domMax`), lucide, `badge`, `avatar` | Evet | Klavye: Boşluk tut, ↑↓ sıra, ←→ kolon, Boşluk bırak, Escape geri al; her adım `aria-live`; dokunmada tutamaktan |
 | `week-calendar.tsx` | Haftalık ajanda: saat ızgarası, çakışanlar yan yana, şu an çizgisi; telefonda gün gün liste; `variant="card"`: ikonlu gri kart, katılımcı, Katıl butonu, büyük gün numarası, saat dilimi, Tüm Gün satırı, `weekdaysOnly` | lucide | Evet | Gün başına `role="group"` + başlık, etkinlikler `ol`; gün hapları `aria-pressed` |
 | `task-list.tsx` | Görev listesi: onay, öncelik, son tarih, alt görevler, tamamlananları gizle, satır içi ekleme | `checkbox`, motion, lucide | Evet | Kısmi alt görevde `indeterminate`; açma butonu `aria-expanded` + "2 / 4"; ekleme ve işaretleme canlı bölgede |
+| `phase-checklist.tsx` | Bağımlılıkla açılan aşamalı işler (işe başlama, kurulum, süreç): düğüm çizelgesi, "1/3" sayaç, Kilitli ("↳ Bekliyor: X" / "Açılış: 28 Kas") → Hazır → Tamamlandı; biten aşama katlanır, sıradaki açılır; `autoplay` tanıtım | `status-icon`, `digit-roll`, lucide | Evet | Aşama başlığı `aria-expanded`, işler `list`/`listitem` + gizli durum metni; tamamlama canlı bölgede ("X tamamlandı, 2/3"); kapalı aşama `inert`; autoplay'de Durdur/Oynat (`aria-pressed`), hareket azaltmada otomatik oynatma yok |
 
 ### Hareket ve Doku
 
@@ -319,6 +321,8 @@ Sayfası hikayesi.
 | `reasoning.tsx` | Modelin düşüncesi: akarken açık ve sayan, bitince "6 sn düşündü" satırına iner | `text-shimmer`, lucide | Evet | Başlık `aria-expanded`; bitiş canlı bölgede bir kez; kullanıcının açıp kapatması korunur |
 | `stream-text.tsx` | Parça parça gelen yanıt: yalnız yeni sözcük belirir, önceki metin kıpırdamaz | yok | Evet | Sözcükler gerçek metin; akarken `aria-busy`, okutma mesaj listesinde; hareket azaltmada doğrudan |
 | `signal-hub.tsx` | Ortada ürün işareti, dirsekli çizgilerle 2-3 çalışma kartı (ad, durum, parçalı ilerleme), çevrede "yapıldı" çipleri: yapay zekanın arka planda ne yaptığı | motion, lucide | Evet | Çizgi ve göbek `aria-hidden`; kartlar `ul`, ilerleme `sr-only` metinle; bitmiş işler ayrı liste; telefonda çipler kartların altında |
+| `approval-card.tsx` | Ajanın etkili bir eylemden (erişim verme, iade, toplu e-posta, silme) önce insan onayı istediği an: soru başlığı, sonuç cümlesi, etkilenen kişi çipleri, "denetim günlüğüne yazılır" satırı, isteğe not, Reddet / Onayla; konuşma içinde tek satır `ApprovalStrip` | `spinner`, lucide | Evet | `section` + başlığa bağlı ad; karar `role="status"`ta ("Onaylandı"), gönderim hatası `role="alert"`; not alanı görünür etiketli; kişiler `ul role="list"` + "Etkilenenler"; karar yalnız çağırana iletilir (`onDecision`), yetkiyi sunucu denetler; 44 px |
+| `tool-policy-list.tsx` | Ajan/entegrasyon ayarında araç başına kalıcı politika: İzin Ver / Sor / Otomatik; okuyan ve yazan/silen araçlar ayrı grupta, grup başlığında toplu ayar; yazan araçta Otomatik'e uyarı satırı; `defaultToolPolicies` | lucide | Evet | Yerel `<select>` (adı "<araç> izni"), klavye tam; grup `section` + `h3`, `ul role="list"`; uyarı metinle söylenir; politikayı sunucu uygular, model değiştiremez |
 
 ### Bloklar
 

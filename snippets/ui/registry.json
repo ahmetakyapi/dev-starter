@@ -171,6 +171,27 @@
       "palettes": false
     },
     {
+      "name": "approval-card",
+      "title": "İnsan Onayı",
+      "category": "Yapay Zeka",
+      "description": "Ajanın etkili bir eylemden (erişim verme, iade, toplu e-posta, silme) önce insan onayı istediği an: soru başlığı, sonuç cümlesi, etkilenen kişi çipleri, \"denetim günlüğüne yazılır\" satırı, isteğe not, Reddet / Onayla; konuşma içinde tek satır `ApprovalStrip`",
+      "file": "snippets/ui/approval-card.tsx",
+      "client": true,
+      "storyId": "approval-card",
+      "registryDependencies": [
+        "spinner"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "arc-carousel",
       "title": "Kavisli Galeri",
       "category": "Tanıtım",
@@ -2290,6 +2311,30 @@
       "palettes": false
     },
     {
+      "name": "phase-checklist",
+      "title": "Aşamalı Kontrol Listesi",
+      "category": "Verimlilik",
+      "description": "Bağımlılıkla açılan aşamalı işler (işe başlama, kurulum, süreç): düğüm çizelgesi, \"1/3\" sayaç, Kilitli (\"↳ Bekliyor: X\" / \"Açılış: 28 Kas\") → Hazır → Tamamlandı; biten aşama katlanır, sıradaki açılır; `autoplay` tanıtım",
+      "file": "snippets/ui/phase-checklist.tsx",
+      "client": true,
+      "storyId": "phase-checklist",
+      "registryDependencies": [
+        "digit-roll",
+        "status-icon"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "pixel-loader",
       "title": "Piksel Yükleyici",
       "category": "Hareket ve Doku",
@@ -2621,7 +2666,7 @@
       "name": "ruler-toc",
       "title": "Cetvel İçindekiler",
       "category": "Form ve Gezinme",
-      "description": "Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda \"01 · Ad\" + önizleme; dar ekranda \"01 Hoş geldin\" düğmesi",
+      "description": "Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda \"01 · Ad\" + önizleme; dar ekranda \"01 Hoş geldin\" butonu",
       "file": "snippets/ui/ruler-toc.tsx",
       "client": true,
       "storyId": "ruler-toc",
@@ -3265,6 +3310,25 @@
       "palettes": false
     },
     {
+      "name": "status-icon",
+      "title": "Durum İkonu",
+      "category": "Veri",
+      "description": "İş/talep durumu şekille: Ön İnceleme (kesik daire), Yapılacak, Sürüyor (yarım dolu), Engelli (duraklat), Tamamlandı (tik), İptal (çapraz); `StatusPicker` gri hap + liste",
+      "file": "snippets/ui/status-icon.tsx",
+      "client": true,
+      "storyId": "status-icon",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "status-list",
       "title": "Sistem Durumu",
       "category": "Geri Bildirim",
@@ -3723,6 +3787,25 @@
         "border-beam",
         "text-shimmer"
       ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "tool-policy-list",
+      "title": "Araç Politikası",
+      "category": "Yapay Zeka",
+      "description": "Ajan/entegrasyon ayarında araç başına kalıcı politika: İzin Ver / Sor / Otomatik; okuyan ve yazan/silen araçlar ayrı grupta, grup başlığında toplu ayar; yazan araçta Otomatik'e uyarı satırı; `defaultToolPolicies`",
+      "file": "snippets/ui/tool-policy-list.tsx",
+      "client": true,
+      "storyId": "tool-policy-list",
+      "registryDependencies": [],
       "templateFiles": [
         "lib/utils.ts"
       ],

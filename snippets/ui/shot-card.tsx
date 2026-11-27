@@ -25,6 +25,11 @@ import { cn } from "@/lib/utils";
  * poster durur, ortada "Oynat" butonu çıkar (sonra Duraklat). Medya
  * yüklenene kadar iskelet ışıltısı, gelince 400 ms'de solarak açılır.
  *
+ * ÖLÇEK (`fit`): ürün ekranı sahnesi sabit tasarım genişliğinde (ör. 880 px)
+ * çizilir ve kuyuya sığacak kadar küçültülür; küçültülmüş ekran görüntüsü
+ * gibi okunur, 390 px telefonda da aynı kompozisyon. Ayrıntılı sahne için
+ * kuyu oranı ~1.41 (`ratio={1.41}`) ve `tone="page"` (beyaz ekran) iyi durur.
+ *
  * TIKLAMA: `onOpen` verilirse sahne bir butondur (adı başlıktan:
  * "Aç: Rezervasyon Bağlantıları"); büyütülmüş görünüm çağıranın
  * (`media-lightbox`). Eylem yuvası (`actions`: beğen, paylaş) sahnenin
@@ -73,6 +78,16 @@ type ShotCardProps = {
   onOpen?: () => void;
   actions?: ReactNode;
   titleAs?: "h2" | "h3" | "h4";
+  /**
+   * Sahneyi sabit tasarım genişliğinde (px) çizip kuyuya ÖLÇEKLE: ürün
+   * ekranı küçültülmüş ekran görüntüsü gibi durur, telefonda kompozisyon
+   * bozulmaz. Verilmezse sahne kendi boyunda ortalanır.
+   */
+  fit?: number;
+  /** Kuyunun kenarla sahne arası payı (genişliğin oranı). Varsayılan `fit` ile .07, yoksa .06. */
+  inset?: number;
+  /** Kuyu zemini: `surface` (gri kuyu, varsayılan) ya da `page` (beyaz sayfa ekranı). */
+  tone?: "surface" | "page";
   className?: string;
 };
 
@@ -165,22 +180,59 @@ function ShotImage({ media }: { media: Extract<ShotMedia, { type: "image" }> }) 
     <>
       {!ready && <span aria-hidden className="ui-shot-skel absolute inset-0" />}
       {/* Sade <img>: kit next/image'e bağlanmasın; projede next/image ile değiştirilebilir. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={media.src || undefined}
-        alt={media.alt}
-        width={media.width}
-        height={media.height}
-        loading="lazy"
-        decoding="async"
-        ref={(el) => {
-          if (el?.complete && el.naturalWidth > 0) setReady(true);
-        }}
-        onLoad={() => setReady(true)}
-        data-ready={ready || undefined}
-        className="ui-shot-media absolute inset-0 size-full object-cover"
-      />
+      <picture className="contents">
+        <img
+          src={media.src || undefined}
+          alt={media.alt}
+          width={media.width}
+          height={media.height}
+          loading="lazy"
+          decoding="async"
+          ref={(el) => {
+            if (el?.complete && el.naturalWidth > 0) setReady(true);
+          }}
+          onLoad={() => setReady(true)}
+          data-ready={ready || undefined}
+          className="ui-shot-media absolute inset-0 size-full object-cover"
+        />
+      </picture>
     </>
+  );
+}
+
+/* Ölçekli sahne: içerik `width` px'te çizilir, kuyunun iç alanına sığacak
+   kadar küçültülür (büyütülmez). İlk ölçümden önce görünmez; ölçüm
+   ResizeObserver ile, kuyu boyu değişince yeniden. */
+function FitStage({ width, inset, children }: { width: number; inset: number; children: ReactNode }) {
+  const box = useRef<HTMLDivElement>(null);
+  const inner = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0);
+  useEffect(() => {
+    const b = box.current;
+    const i = inner.current;
+    if (!b || !i) return;
+    const measure = () => {
+      const w = b.clientWidth * (1 - inset * 2);
+      const h = b.clientHeight * (1 - inset * 2);
+      const ch = i.offsetHeight || 1;
+      setScale(Math.min(1, w / width, h / ch));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(b);
+    ro.observe(i);
+    return () => ro.disconnect();
+  }, [width, inset]);
+  return (
+    <div ref={box} className="absolute inset-0 overflow-hidden">
+      <div
+        ref={inner}
+        className="absolute top-1/2 left-1/2 origin-center transition-opacity duration-300"
+        style={{ width, transform: `translate(-50%, -50%) scale(${scale || 0.001})`, opacity: scale ? 1 : 0 }}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -194,12 +246,21 @@ export function ShotCard({
   onOpen,
   actions,
   titleAs: Title = "h2",
+  fit,
+  inset,
+  tone = "surface",
   className,
 }: ShotCardProps) {
   const stage = (
     <>
-      {children ? (
-        <div className="absolute inset-0 grid place-items-center overflow-hidden p-[6%]">{children}</div>
+      {children && fit ? (
+        <FitStage width={fit} inset={inset ?? 0.07}>
+          {children}
+        </FitStage>
+      ) : children ? (
+        <div className="absolute inset-0 grid place-items-center overflow-hidden" style={{ padding: `${(inset ?? 0.06) * 100}%` }}>
+          {children}
+        </div>
       ) : media?.type === "video" ? (
         <ShotVideo media={media} />
       ) : media?.type === "image" ? (
@@ -208,8 +269,11 @@ export function ShotCard({
     </>
   );
 
-  const stageClass =
-    "relative block w-full overflow-hidden rounded-2xl bg-surface ring-1 ring-line-soft transition-[box-shadow] duration-300";
+  /* Kuyu: büyük yarıçap (28 px), içe kıl halka; beyaz sayfa tonunda halka biraz daha belirgin. */
+  const stageClass = cn(
+    "relative block w-full overflow-hidden rounded-[1.75rem] ring-1 ring-inset transition-[box-shadow] duration-300",
+    tone === "page" ? "bg-page ring-line" : "bg-surface ring-line-soft",
+  );
 
   return (
     <article className={cn("group/shot grid gap-3", className)}>
@@ -229,7 +293,7 @@ export function ShotCard({
           </button>
           {/* Video, buton içinde iç içe buton (Oynat) olmasın diye üst katmanda. */}
           {!children && media?.type === "video" && (
-            <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl [&_button]:pointer-events-auto">{stage}</div>
+            <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[1.75rem] [&_button]:pointer-events-auto">{stage}</div>
           )}
         </div>
       ) : (

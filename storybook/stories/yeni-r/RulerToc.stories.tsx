@@ -54,7 +54,7 @@ const meta = {
       story: { inline: false, height: "640px" },
       description: {
         component:
-          "Uzun akışın sol kenarında sabit çizgi cetveli: her bölüm bir çizgi, okunan bölüm uzun ve koyu. İmleç cetvelin üstünde gezinince çizgiler çan eğrisiyle uzar (rAF yayı, yalnız hareket sürerken); satırda balon \"01 · Bölüm\" + isteğe önizleme. Tık bölüme kaydırır ve odağı taşır. Dar ekranda köşede \"01 Hoş geldin\" düğmesi açılır liste olur. Sakin Akış turundan (yalnız davranış).",
+          "Uzun akışın sol kenarında sabit çizgi cetveli: her bölüm bir çizgi, okunan bölüm uzun ve koyu. İmleç cetvelin üstünde gezinince çizgiler çan eğrisiyle uzar (rAF yayı, yalnız hareket sürerken); satırda balon \"01 · Bölüm\" + isteğe önizleme. Tık bölüme kaydırır ve odağı taşır. Dar ekranda köşede \"01 Hoş geldin\" butonu açılır liste olur. Sakin Akış turundan (yalnız davranış).",
       },
     },
   },

@@ -1918,3 +1918,17 @@ görsel, font ve imleç alınmadı, hepsi token'la sıfırdan yazıldı.
 - **İleride**: sahibi bütün örnek sayfaları (Pusula, Portal, landing) bu dile taşımayı
   düşünüyor; sayfa elden geçirilirken `sakin-akis` yönü önerilir, sayfanın kimliği sorulmadan
   silinmez.
+
+### Değişti (2026-11-27): Kapsamlı analiz, ürün ekranı sahneleri, dört bileşen
+
+- Kaynağın akışındaki 117 kare tek tek incelendi (98 ürün ekranı); ölçülen ritim (punto,
+  yarıçap, ölçü, hareket tablosu) ve "ürün ekranı dili" `sakin-akis` yönüne işlendi.
+- Sahibinin geri bildirimi: Kapak'ın sekmeleri eski Sergi dilinde kalmıştı (dev başlık, yoğun
+  kart) ve akış kareleri "eksik" duruyordu. Sekmeler satır listesi ve Lab çerçevesine geçti;
+  akış kareleri gerçek bileşenlerle kurulmuş, kendi kendine oynayan ürün ekranları oldu
+  (`shot-card fit`: sabit tasarım genişliği kuyuya ölçeklenir).
+- Yeni: `status-icon` (şekil durumu söyler), `phase-checklist` (bağımlılıkla açılan işler),
+  `approval-card` (ajanın insan onayı anı), `tool-policy-list` (araç başına İzin Ver/Sor/Otomatik).
+- Kapak oynatma betiği yalnız test koşusunda: arayüzde sekme kendi kendine değişmiyor.
+- Sıradaki adaylar (analizden, sahibinin onayıyla): `chat-composer` öneri çipleri + dock +
+  @-bahsetme, grafik başlığı yargı cümlesi + olay işaretleri, `metric-tabs`, `selection-toolbar`.

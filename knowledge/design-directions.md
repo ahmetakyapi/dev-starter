@@ -112,7 +112,7 @@ Biçim, Hero, Kabuk, Kart, Popup, Grafik, Boş Durum, Hareket, Yasak) eksiksiz y
 - **Kart:** çerçeveli, mono etiketli; `integration-card`, `code-block`.
 - **Popup:** `command-palette` birinci; ayrıntı `sheet`; modal az.
 - **Grafik:** `line-chart`, `heatmap`, `sankey-chart`; mono eksen.
-- **Boş Durum:** örnek komut ve kopyala düğmesi.
+- **Boş Durum:** örnek komut ve kopyala butonu.
 - **Hareket:** `stream-text`, `text-shimmer`, `scramble-text` ölçülü; ışıma sürekli değil.
 - **Yasak:** pastel dolgu, el yazısı, mascot, stok illüstrasyon.
 
@@ -158,7 +158,7 @@ Biçim, Hero, Kabuk, Kart, Popup, Grafik, Boş Durum, Hareket, Yasak) eksiksiz y
 - **Hero:** `statement` ya da `corner`; metin yüzeyin yarısını tutar.
 - **Kabuk:** sabit üst şerit + görünür ızgara çizgileri; menü açık liste.
 - **Kart:** kalın çerçeveli kutu, köşe sert; `corner-label`.
-- **Popup:** ortalı sert kenarlı modal; kapat düğmesi büyük.
+- **Popup:** ortalı sert kenarlı modal; kapat butonu büyük.
 - **Grafik:** sütun, düz dolgu, etiketler büyük.
 - **Boş Durum:** tek kelime, büyük punto.
 - **Hareket:** kesik, anlık (kısa ve doğrusal); yumuşatma yok.
@@ -226,6 +226,11 @@ Biçim, Hero, Kabuk, Kart, Popup, Grafik, Boş Durum, Hareket, Yasak) eksiksiz y
 - **Grafik:** yalnız katkı takvimi (`heatmap`) ve doğrulanabilir sayı ("316 PR · 997 commit"); pazarlama grafiği yok.
 - **Boş Durum:** tek soluk cümle, ortada ("Henüz bir şey eklenmedi.").
 - **Hareket:** işlevsel ve ölçülü, eğri `--ease-brand`: medya kaydırdıkça buğudan netleşir (`scroll-focus`), sekme içeriği 480 ms'de 2 px buğu + 6 px kaymayla gelir, seçim hapı kayar, ikon anlamına göre oynar, beğeni kalbi pop. Video yalnız görünümdeyken oynar.
+- **Ritim (ölçülen):** punto 12/13/14/15/17 (ürün içinde gövde 13-14, başlık aynı boyda 500 ağırlık; yalnız sayı ve tarih büyür: 20/28), harf aralığı −0.02em, ağırlık yalnız 400 ve 500. Yarıçap 6 çip · 8 öğe · 10 kontrol · 12 menü · 14 kart · 16 panel · 20 sahne · 28 akış karesi (iç = dış − boşluk). Ölçü: metin 500 px, liste 528, akış karesi oranı ~1.41. Halka gölgeden önce: kart `ring-1 ring-line-soft`, yüzen yüzey tek yumuşak gölge.
+- **Ürün ekranı dili:** gri kuyu + beyaz karo iki katman; satır 32-40 px, satırlar arası kıl çizgi yok (ayrım hover zemini); kayıt kimliği 2 px renkli dikey çizgi (asla durum); durum ikon ŞEKLİYLE (`status-icon`), gecikme yalnız metin rengiyle; rozet gri zemin ya da tek açık ton, kart başına en çok bir; sayaç "12 / 12" ilk sayı koyu; meta hap "etiket gri / değer koyu"; eylem hover'da çıkar, birincil koyu hap. Yapay zeka sohbet balonu değil iş akışının içinde: öneri çipleri, "Hazırlayan: asistan" künyesi, onay kartı (`approval-card`), araç politikası (`tool-policy-list`).
+- **Akış karesi:** `shot-card fit` ile ürün ekranı sabit genişlikte (520-900 px) çizilip kuyuya ölçeklenir; ekran gerçek bileşenlerle kurulur ve görünümdeyken "ekran kaydı" gibi oynar (satır kapanır, sayı yuvarlanır, metin akar), görünüm dışında ve hareket azaltmada durur. Örnek: `storybook/stories/_lib/sahneler.tsx`.
+- **Hareket tablosu:** renk/zemin 150 ms · basma 150 ms scale .97-.98 · küçük yüzey 200-280 ms · içerik girişi 480 ms (+80, y 6, blur 2) · kayan gösterge 560 ms · düzen değişimi 600 ms · beğeni pop 240-260 ms · kaydırmaya bağlı netleşme; eğri `--ease-brand`. Azaltmada gösterge zıplar, içerik 200 ms solar, döngü durur.
+- **Koyu tema:** kaynakta yok, biz tasarlarız: kuyu bir ton açık yüzey, halkalar beyaz %6-8, gölge yerine ton farkı.
 - **Yasak:** büyük iddia başlığı, degrade zemin, logo duvarı (müşteriler düz metin bağlantı listesi), sayaç/rozet gösterişi, her karta farklı renk, özel imleç, otomatik oynayan SESLİ medya, doğrulanamayan sayı.
 
 ---

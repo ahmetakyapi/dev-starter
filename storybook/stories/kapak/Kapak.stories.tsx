@@ -34,6 +34,7 @@ import uiPackage from "../../../packages/@ahmet/ui/package.json";
 import { PALETTES } from "../../.storybook/palettes";
 import { KIT_COUNT, STORY_COUNT, TOTAL } from "../amiral/_kapsam";
 import { testOnly } from "../_lib/testOnly";
+import { SCENES } from "../_lib/sahneler";
 import { Hero } from "./_hero";
 import { firstOf, under } from "./_harita";
 
@@ -662,103 +663,14 @@ const UPDATED = "2026-11-27";
 const REPO = "https://github.com/ahmetakyapi/dev-starter";
 
 function CalmShots() {
-  const [vote, setVote] = useState<string | null>(null);
-  const [range, setRange] = useState("hafta");
-  const shots: { id: string; title: string; description: string; meta: string[]; story: string; likes: number; scene: ReactNode }[] = [
-    {
-      id: "pano",
-      title: "Pusula · Pano",
-      description: "Örnek uygulamanın panosu: üç sayı ve iki dönemlik ciro eğrisi.",
-      meta: ["Örnek Sayfa", "Grafik"],
-      story: "demo-app--overview",
-      likes: 64,
-      scene: (
-        <AppWindow title="Pusula · Pano" icon={<CompassIcon className="size-3.5" />} className="w-full max-w-lg" data-product="pusula">
-          <div className="p-3">
-            <AreaChart
-              title="Aylık Ciro: Son 12 Ay ve Önceki 12 Ay"
-              labels={MONTHS}
-              series={[
-                { label: "Son 12 Ay", values: THIS_YEAR.map((v) => v * 1000), series: 1 },
-                { label: "Önceki 12 Ay", values: LAST_YEAR.map((v) => v * 1000), series: 2 },
-              ]}
-              valueFormat={{ style: "currency", currency: "TRY", notation: "compact", maximumFractionDigits: 1 }}
-              height="h-40"
-            />
-          </div>
-        </AppWindow>
-      ),
-    },
-    {
-      id: "oylama",
-      title: "Ekip Oylaması",
-      description: "Tek dokunuşla karar; sonuç oy verince görünür.",
-      meta: ["Bileşen", "Seçim"],
-      story: "quick-poll--default",
-      likes: 31,
-      scene: (
-        <div className="w-full max-w-sm rounded-[1.25rem] bg-overlay p-4 shadow-raised ring-1 ring-line">
-          <QuickPoll
-            question="Yeni sezonda hangi palet?"
-            meta="Tasarım ekibi · cumaya kadar"
-            options={[
-              { id: "signature", label: "Signature · mavi" },
-              { id: "jade", label: "Yeşim · yeşil" },
-              { id: "iris", label: "İris · mor" },
-            ]}
-            counts={{ signature: 5, jade: 3, iris: 2 }}
-            value={vote}
-            onValueChange={setVote}
-          />
-        </div>
-      ),
-    },
-    {
-      id: "ozet",
-      title: "Haftalık Özet Ayarı",
-      description: "Kayan seçim hapı ve anında etki eden anahtar; kaydet butonu yok.",
-      meta: ["Bileşen", "Form"],
-      story: "segmented-control--default",
-      likes: 18,
-      scene: (
-        <div className="grid w-full max-w-sm gap-3 rounded-[1.25rem] bg-overlay p-4 shadow-raised ring-1 ring-line">
-          <SegmentedControl
-            aria-label="Özet Sıklığı"
-            size="sm"
-            value={range}
-            onValueChange={setRange}
-            options={[
-              { value: "gun", label: "Günlük" },
-              { value: "hafta", label: "Haftalık" },
-              { value: "ay", label: "Aylık" },
-            ]}
-          />
-          <div className="rounded-lg bg-surface px-4 py-1">
-            <Switch label="Geciken Siparişleri Ekle" defaultChecked />
-          </div>
-        </div>
-      ),
-    },
-  ];
+  // Sahneler kendi kendine oynayan ürün ekranları (stories/_lib/sahneler.tsx): kuyuya ölçeklenir, kaydırdıkça buğudan netleşir.
+  const likes = [64, 31, 18, 22];
   return (
-    <div className="grid gap-10">
-      {shots.map((s) => (
+    <div className="grid gap-12">
+      {SCENES.map((s, i) => (
         <ScrollFocus key={s.id}>
-          <ShotCard
-            title={s.title}
-            description={s.description}
-            meta={s.meta}
-            titleAs="h3"
-            actions={
-              <span className="flex items-center gap-3">
-                <GlideLink href={to(s.story)} target="_top" className="text-small">
-                  Hikayeye git
-                </GlideLink>
-                <LikeButton count={s.likes} />
-              </span>
-            }
-          >
-            {s.scene}
+          <ShotCard title={s.title} description={s.description} meta={s.meta} titleAs="h3" fit={s.fit} ratio={s.ratio} tone={s.tone} actions={<LikeButton count={likes[i] ?? 9} />}>
+            {s.render()}
           </ShotCard>
         </ScrollFocus>
       ))}

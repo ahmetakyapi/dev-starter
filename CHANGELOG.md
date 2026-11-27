@@ -7,6 +7,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Sakin Akış turu: yeni yön, on beş bileşen, Kapak ve Portfolyo — 2026-11-27
+
+- Yeni tasarım yönü `sakin-akis` (portfolyo, ekip sayfası, lab vitrini): ölçülen ritim, ürün ekranı dili, hareket tablosu; uiux, frontend, design-reviewer ve agentic-ui rolleri bu dile başvurur.
+- Yeni bileşenler: `profile-intro`, `glide-link`, `shot-card` (`fit` ile ölçekli ürün ekranı), `shot-grid`, `scroll-focus`, `scroll-hide-bar`, `media-lightbox`, `like-button`, `note-card`, `demo-frame`, `ruler-toc`, `status-icon`, `phase-checklist`, `approval-card`, `tool-policy-list`.
+- Kapak Sakin Akış diline geçti: profil açılışı, sekmeler, kendi kendine oynayan ürün ekranı sahneleri; Sergi kahramanı ayrı hikayede (OG görseli oradan).
+- Pusula → Portfolyo örnek sayfası; "Her Şey Bir Arada"da yeni kuyular.
+
 ### Belge sayfaları, kenar çubuğu gecikmesi, bölge sıralaması — 2026-11-26
 
 - Belge sayfası ana hikayeyi ikinci kez basmaz; önizlemede tam ekran boşluğu yok. Vitrin doğrudan açılır.

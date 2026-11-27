@@ -151,6 +151,7 @@ import { FormEk, KatmanEk, SecimEk, VeriEk } from "./_ekler";
 import { GeriYeni, SecimYeni, VeriYeni } from "./_ekler-yeni";
 import { GeriN, GezinmeN, SecimN, VeriN } from "./_ekler-n";
 import { GeriP, GezinmeP, VeriP } from "./_ekler-p";
+import { VeriR } from "./_ekler-r";
 import { Cell, CellGrid, GroupHead } from "./_ui";
 
 const NOV = (d: number) => new Date(2026, 10, d);
@@ -1153,6 +1154,7 @@ function VeriGroup() {
       <VeriYeni />
       <VeriN />
       <VeriP />
+      <VeriR />
     </CellGrid>
   );
 }

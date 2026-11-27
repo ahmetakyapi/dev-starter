@@ -226,6 +226,33 @@
       ]
     },
     {
+      "name": "approval-card",
+      "type": "registry:ui",
+      "title": "İnsan Onayı",
+      "description": "Ajanın etkili bir eylemden (erişim verme, iade, toplu e-posta, silme) önce insan onayı istediği an: soru başlığı, sonuç cümlesi, etkilenen kişi çipleri, \"denetim günlüğüne yazılır\" satırı, isteğe not, Reddet / Onayla; konuşma içinde tek satır `ApprovalStrip`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/spinner.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zeka"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "approval-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/approval-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "arc-carousel",
       "type": "registry:ui",
       "title": "Kavisli Galeri",
@@ -3042,6 +3069,35 @@
       ]
     },
     {
+      "name": "phase-checklist",
+      "type": "registry:ui",
+      "title": "Aşamalı Kontrol Listesi",
+      "description": "Bağımlılıkla açılan aşamalı işler (işe başlama, kurulum, süreç): düğüm çizelgesi, \"1/3\" sayaç, Kilitli (\"↳ Bekliyor: X\" / \"Açılış: 28 Kas\") → Hazır → Tamamlandı; biten aşama katlanır, sıradaki açılır; `autoplay` tanıtım",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/digit-roll.json",
+        "https://dev-starter-storybook.vercel.app/r/status-icon.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Verimlilik"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "phase-checklist",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/phase-checklist.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "pixel-loader",
       "type": "registry:ui",
       "title": "Piksel Yükleyici",
@@ -3475,7 +3531,7 @@
       "name": "ruler-toc",
       "type": "registry:ui",
       "title": "Cetvel İçindekiler",
-      "description": "Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda \"01 · Ad\" + önizleme; dar ekranda \"01 Hoş geldin\" düğmesi",
+      "description": "Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda \"01 · Ad\" + önizleme; dar ekranda \"01 Hoş geldin\" butonu",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],
@@ -4316,6 +4372,32 @@
       ]
     },
     {
+      "name": "status-icon",
+      "type": "registry:ui",
+      "title": "Durum İkonu",
+      "description": "İş/talep durumu şekille: Ön İnceleme (kesik daire), Yapılacak, Sürüyor (yarım dolu), Engelli (duraklat), Tamamlandı (tik), İptal (çapraz); `StatusPicker` gri hap + liste",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Veri"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "status-icon",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/status-icon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "status-list",
       "type": "registry:ui",
       "title": "Sistem Durumu",
@@ -4916,6 +4998,32 @@
       "files": [
         {
           "path": "snippets/ui/tool-call.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tool-policy-list",
+      "type": "registry:ui",
+      "title": "Araç Politikası",
+      "description": "Ajan/entegrasyon ayarında araç başına kalıcı politika: İzin Ver / Sor / Otomatik; okuyan ve yazan/silen araçlar ayrı grupta, grup başlığında toplu ayar; yazan araçta Otomatik'e uyarı satırı; `defaultToolPolicies`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zeka"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "tool-policy-list",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/tool-policy-list.tsx",
           "type": "registry:ui"
         }
       ]

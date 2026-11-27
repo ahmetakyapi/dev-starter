@@ -70,7 +70,7 @@ type ProfileIntroProps = {
   updatedLabel?: string;
   cta?: { label: string; href?: string; onClick?: () => void; target?: "_self" | "_top" | "_parent" };
   links?: readonly ProfileLink[];
-  /** Verilirse sonda kopyalanan e-posta düğmesi. */
+  /** Verilirse sonda kopyalanan e-posta butonu. */
   email?: string;
   copyLabel?: string;
   copiedLabel?: string;

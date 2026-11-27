@@ -23,6 +23,7 @@ import { ThinkingOrb } from "@/components/ui/thinking-orb";
 import { ToolCall } from "@/components/ui/tool-call";
 import { HareketEk } from "./_ekler";
 import { AjanQ } from "./_ekler-q";
+import { AjanR } from "./_ekler-r";
 import { Cell, CellGrid } from "./_ui";
 
 /* Hareket ve Doku + Yapay Zeka grupları (secki.dev turu, 2026-11-06). Her
@@ -219,6 +220,7 @@ export function AjanGroup() {
         <StreamText text="Kavurucu takvimini 10 Kasım'a çekmeyi öneririm: 214 yenilemenin çoğu 12'sinde, paketler iki gün dinlenmiş gider." className="text-base text-strong" />
       </Cell>
       <AjanQ />
+      <AjanR />
     </CellGrid>
   );
 }

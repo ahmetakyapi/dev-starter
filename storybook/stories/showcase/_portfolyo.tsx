@@ -1,10 +1,14 @@
 "use client";
 
-import { AtSign, BarChart3, CodeXml, Inbox, PenLine, Sparkles } from "lucide-react";
+import { Archive, AtSign, BarChart3, CodeXml, FolderLock, Inbox, MailPlus, PenLine, Search, Users } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 import { AppWindow } from "@/components/ui/app-window";
 import { Badge } from "@/components/ui/badge";
+import { ApprovalCard } from "@/components/ui/approval-card";
 import { DemoFrame } from "@/components/ui/demo-frame";
+import { PhaseChecklist, type PhaseGroup } from "@/components/ui/phase-checklist";
+import { StatusPicker, type Status } from "@/components/ui/status-icon";
+import { ToolPolicyList, defaultToolPolicies, type PolicyGroup, type ToolPolicy } from "@/components/ui/tool-policy-list";
 import { GlideLink } from "@/components/ui/glide-link";
 import { Heatmap } from "@/components/ui/heatmap";
 import { LikeButton } from "@/components/ui/like-button";
@@ -20,6 +24,7 @@ import { ShotGrid, ShotGridToolbar, useShotGrid } from "@/components/ui/shot-gri
 import { Sparkline } from "@/components/ui/sparkline";
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
+import { SCENES } from "../_lib/sahneler";
 
 /**
  * Portfolyo: Pusula'nın tasarım liderinin kişisel sayfası (kurgu kişi).
@@ -83,21 +88,6 @@ function SettingsScene() {
   );
 }
 
-function AssistantScene() {
-  return (
-    <div className="grid w-full max-w-sm gap-2 rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line">
-      <span className="flex items-center gap-2 text-small text-muted">
-        <Sparkles aria-hidden className="size-3.5" /> Asistan Önerisi
-      </span>
-      <p className="text-body text-strong">PS-214 için iade adımı hazır; onaylarsan müşteriye bilgi notu gider.</p>
-      <div className="flex gap-2">
-        <span className="rounded-full bg-strong px-3 py-1 text-small text-page">Onayla</span>
-        <span className="rounded-full bg-surface px-3 py-1 text-small text-muted">Düzenle</span>
-      </div>
-    </div>
-  );
-}
-
 type Work = {
   id: string;
   title: string;
@@ -107,15 +97,25 @@ type Work = {
   likes: number;
   tags: { project: string; kind: string };
   scene: () => ReactNode;
+  fit?: number;
+  tone?: "surface" | "page";
 };
 
 const WORKS: readonly Work[] = [
-  { id: "gelen", title: "Gelen Kutusu", description: "Talepler önceliğe göre tek listede; acil olan ilk bakışta.", meta: ["2026", "Ürün"], ratio: 16 / 10, likes: 48, tags: { project: "pusula", kind: "urun" }, scene: InboxScene },
-  { id: "nabiz", title: "Çözüm Nabzı", description: "Ekibin haftası tek sayı ve yedi noktalık eğri.", meta: ["2026", "Pano"], ratio: 4 / 3, likes: 22, tags: { project: "pusula", kind: "pano" }, scene: PulseScene },
-  { id: "asistan", title: "Asistan Önerisi", description: "Model öneriyor, karar insanda kalıyor.", meta: ["2026", "Yapay Zeka"], ratio: 1, likes: 15, tags: { project: "pusula", kind: "ai" }, scene: AssistantScene },
+  ...SCENES.map((sc, i) => ({
+    id: sc.id,
+    title: sc.title,
+    description: sc.description,
+    meta: ["2026", sc.meta[1]],
+    ratio: sc.ratio,
+    likes: [48, 22, 15, 31][i],
+    tags: { project: "pusula", kind: ["urun", "ai", "urun", "pano"][i] },
+    scene: sc.render,
+    fit: sc.fit,
+    tone: sc.tone,
+  })),
   { id: "ayarlar", title: "Bildirim Ayarları", description: "Anında etki eden anahtarlar, kaydet butonu yok.", meta: ["2025", "Ürün"], ratio: 3 / 4, likes: 9, tags: { project: "rota", kind: "urun" }, scene: SettingsScene },
-  { id: "gelen-2", title: "Talep Ayrıntısı", description: "Müşteri, geçmiş ve sıradaki adım tek panelde.", meta: ["2025", "Ürün"], ratio: 16 / 9, likes: 10, tags: { project: "rota", kind: "urun" }, scene: InboxScene },
-  { id: "nabiz-2", title: "Şube Karşılaştırma", description: "Bölgeler hedefe göre sıralı, sapma rengiyle değil sözüyle.", meta: ["2025", "Pano"], ratio: 5 / 4, likes: 5, tags: { project: "rota", kind: "pano" }, scene: PulseScene },
+  { id: "nabiz", title: "Çözüm Nabzı", description: "Ekibin haftası tek sayı ve yedi noktalık eğri.", meta: ["2025", "Pano"], ratio: 5 / 4, likes: 5, tags: { project: "rota", kind: "pano" }, scene: PulseScene },
 ];
 
 const FILTERS = [
@@ -164,7 +164,9 @@ function Feed() {
                 title={w.title}
                 description={w.description}
                 meta={w.meta}
-                ratio={view === "masonry" ? w.ratio : 16 / 10}
+                ratio={view === "masonry" ? w.ratio : w.fit ? 1.41 : 16 / 10}
+                fit={w.fit}
+                tone={w.tone}
                 titleAs="h3"
                 onOpen={() => box.show(index)}
                 actions={<LikeButton count={w.likes} />}
@@ -229,6 +231,69 @@ function Cases() {
   );
 }
 
+const ONBOARDING: PhaseGroup[] = [
+  {
+    id: "once",
+    title: "İlk Günden Önce",
+    items: [
+      { id: "laptop", title: "Dizüstü bilgisayarı gönder", kind: "form", state: "ready" },
+      { id: "bordro", title: "Bordro ve yan haklar kaydı", kind: "flow", state: "locked", waitingOn: { label: "Dizüstü bilgisayarı gönder" } },
+    ],
+  },
+  {
+    id: "ilk-gun",
+    title: "İlk Gün",
+    items: [
+      { id: "rehber", title: "Rehberle tanış", kind: "scheduled", state: "locked", unlocksAt: "2026-11-28" },
+      { id: "kanallar", title: "Ekip kanallarına katıl", kind: "manual", state: "locked", waitingOn: { label: "Rehberle tanış" } },
+    ],
+  },
+];
+
+const AGENT_TOOLS: PolicyGroup[] = [
+  {
+    id: "read",
+    label: "Okuyan Araçlar",
+    kind: "read",
+    tools: [
+      { id: "search", name: "Talep Ara", description: "Başlık ve içerikte arar.", icon: <Search /> },
+      { id: "customers", name: "Müşteri Bilgisi", description: "Geçmiş talepler ve plan.", icon: <Users /> },
+    ],
+  },
+  {
+    id: "write",
+    label: "Yazan ve Silen Araçlar",
+    kind: "write",
+    tools: [
+      { id: "reply", name: "Yanıt Gönder", description: "Müşteriye e-posta gönderir.", icon: <MailPlus /> },
+      { id: "archive", name: "Arşivle", description: "Çözülen talebi arşive taşır.", icon: <Archive /> },
+    ],
+  },
+];
+
+function StatusLab() {
+  const [status, setStatus] = useState<Status>("progress");
+  return <StatusPicker value={status} onValueChange={setStatus} label="Talep durumu" />;
+}
+
+function AgentLab() {
+  const [policy, setPolicy] = useState<Record<string, ToolPolicy>>(() => defaultToolPolicies(AGENT_TOOLS));
+  return (
+    <div className="grid w-full max-w-md gap-4">
+      <ApprovalCard
+        icon={<FolderLock />}
+        title="Ece Doğan'a Muhasebe klasörüne erişim verilsin mi?"
+        description={<p>Ece klasördeki faturaları görebilecek ve yeni dosya yükleyebilecek.</p>}
+        people={[{ name: "Ece Doğan" }]}
+        note={false}
+      />
+      <div className="rounded-2xl bg-overlay p-4 shadow-raised ring-1 ring-line">
+        <ToolPolicyList groups={AGENT_TOOLS} value={policy} onValueChange={setPolicy} />
+      </div>
+    </div>
+  );
+}
+
 function Lab() {
   const [range, setRange] = useState<"gun" | "hafta" | "ay">("gun");
   const bars = { gun: [3, 5, 4, 7, 6, 8, 5], hafta: [6, 4, 7, 5, 8, 6, 9], ay: [8, 7, 9, 6, 7, 5, 6] }[range];
@@ -253,6 +318,17 @@ function Lab() {
             ))}
           </div>
         </div>
+      </DemoFrame>
+      <DemoFrame title="Sırayla açılan işler." description="Biten iş sıradakini açar, aşama bitince katlanır; tanıtımda kendiliğinden ilerler." size="lg">
+        <div className="w-full max-w-md rounded-2xl bg-overlay p-3 shadow-raised ring-1 ring-line">
+          <PhaseChecklist label="Ece Doğan işe başlıyor" groups={ONBOARDING} autoplay />
+        </div>
+      </DemoFrame>
+      <DemoFrame title="Şekliyle durum." description="Renk ikinci işaret; ikon şekli durumu söyler." size="sm">
+        <StatusLab />
+      </DemoFrame>
+      <DemoFrame title="Kararı insana bırak." description="Ajan etkili eylemden önce durur; araç başına izin politikası." size="lg">
+        <AgentLab />
       </DemoFrame>
       <DemoFrame title="Hemen etki eden ayar." description="Kaydet butonu yok; anahtar değişince sonuç orada." size="sm">
         <SettingsScene />

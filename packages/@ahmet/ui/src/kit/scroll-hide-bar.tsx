@@ -26,7 +26,7 @@ import { cn } from "../utils";
  * ROL: bileşen ROL VERMEZ; yalnız konum ve davranış. İçerik bir araç
  * çubuğuysa `role="toolbar"` + `aria-label` ve ok tuşu gezinmesi
  * içeriğin sorumluluğu (`ShotGridToolbar` bunu yapar). Gizliyken
- * `inert`: ekran okuyucu ve Tab görünmeyen düğmelere gitmez.
+ * `inert`: ekran okuyucu ve Tab görünmeyen butonlara gitmez.
  *
  * HAREKET: 320 ms `--ease-brand` ile kenara kayar; hareketi azaltan
  * kullanıcıda kayma yerine solar.

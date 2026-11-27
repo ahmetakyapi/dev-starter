@@ -27,12 +27,12 @@ import { cn } from "@/lib/utils";
  * - Satırın üstüne gelince/odakta balon: "01 · Bölüm adı" + isteğe önizleme.
  * - Tıklama bölüme kaydırır (hareket azaltmada anında), odak bölüme geçer
  *   (`tabIndex=-1` eklenir), adres `#id` olur.
- * - Dar ekranda (< md) cetvel yerine köşede kompakt düğme: "01 Hoş geldin"
- *   → açılır liste; dışarı tık ve Escape kapatır, odak düğmeye döner.
+ * - Dar ekranda (< md) cetvel yerine köşede kompakt buton: "01 Hoş geldin"
+ *   → açılır liste; dışarı tık ve Escape kapatır, odak butona döner.
  *
  * ERİŞİLEBİLİRLİK: `nav` + `aria-label`; her satır gerçek bağlantı, adı
  * bölüm adı (balon `aria-hidden` görsel kopya). Okunan bölüm
- * `aria-current="location"`. Dar ekran düğmesi `aria-expanded` +
+ * `aria-current="location"`. Dar ekran butonu `aria-expanded` +
  * `aria-controls`. Hareket azaltmada tümsek anında, yaysız.
  *
  * Sakin Akış turu (kişisel portfolyo dili); yalnız davranış, kod alınmadı.

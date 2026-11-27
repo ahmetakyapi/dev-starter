@@ -1,6 +1,6 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
 import { ChevronDown, Shuffle } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from "react";
 import { useScrollHideBar } from "./scroll-hide-bar";
 import { cn } from "../utils";
 
@@ -63,21 +63,34 @@ type Options<T extends ShotGridItem> = {
   storageKey?: string | null;
 };
 
+const subscribeStorage = (cb: () => void) => {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+};
+function readView(key: string | null): ShotGridView | null {
+  if (!key) return null;
+  try {
+    const v = localStorage.getItem(key);
+    return v === "feed" || v === "masonry" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
 export function useShotGrid<T extends ShotGridItem>({ items, filters = [], defaultView = "feed", storageKey = "shot-grid-view" }: Options<T>) {
-  const [view, setViewState] = useState<ShotGridView>(defaultView);
+  // Saklanan tercih dış depo gibi okunur: sunucuda ve ilk boyamada `defaultView` (hidrasyon eşleşir),
+  // sonra localStorage. Seçim yapılınca yerel durum önceliklidir.
+  const saved = useSyncExternalStore(
+    subscribeStorage,
+    () => readView(storageKey),
+    () => null,
+  );
+  const [picked, setViewState] = useState<ShotGridView | null>(null);
+  const view: ShotGridView = picked ?? saved ?? defaultView;
   const [values, setValues] = useState<Record<string, string>>({});
   const [order, setOrder] = useState<string[] | null>(null);
   const [round, setRound] = useState(0);
 
-  useEffect(() => {
-    if (!storageKey) return;
-    try {
-      const saved = localStorage.getItem(storageKey);
-      // Sunucuda bilinmeyen tercih ilk boyamadan sonra okunur (hidrasyon eşleşsin).
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (saved === "feed" || saved === "masonry") setViewState(saved);
-    } catch {}
-  }, [storageKey]);
 
   const setView = useCallback(
     (next: ShotGridView) => {
@@ -86,7 +99,9 @@ export function useShotGrid<T extends ShotGridItem>({ items, filters = [], defau
       if (!storageKey) return;
       try {
         localStorage.setItem(storageKey, next);
-      } catch {}
+      } catch {
+        // Gizli pencere ya da engelli depolama: tercih yalnız bu oturumda kalır.
+      }
     },
     [storageKey],
   );

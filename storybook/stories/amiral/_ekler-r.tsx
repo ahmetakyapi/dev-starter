@@ -1,8 +1,12 @@
 "use client";
 
-import { AtSign, Coffee, PenLine } from "lucide-react";
+import { Archive, AtSign, Coffee, MailPlus, PackageCheck, PenLine, Search } from "lucide-react";
 import { useState } from "react";
+import { ApprovalCard, ApprovalStrip } from "@/components/ui/approval-card";
 import { DemoFrame } from "@/components/ui/demo-frame";
+import { PhaseChecklist } from "@/components/ui/phase-checklist";
+import { StatusIcon, StatusPicker, STATUSES, STATUS_LABEL, type Status } from "@/components/ui/status-icon";
+import { ToolPolicyList, defaultToolPolicies, type PolicyGroup, type ToolPolicy } from "@/components/ui/tool-policy-list";
 import { GlideLink } from "@/components/ui/glide-link";
 import { LikeButton } from "@/components/ui/like-button";
 import { MediaLightbox, useLightbox } from "@/components/ui/media-lightbox";
@@ -191,6 +195,94 @@ export function TanitimR() {
             { id: "b-note-card", label: "Not Kartı" },
           ]}
         />
+      </Cell>
+    </>
+  );
+}
+
+/* ── Veri: durum dili ve aşamalı işler ───────────────────────────────── */
+function StatusWell() {
+  const [status, setStatus] = useState<Status>("todo");
+  return (
+    <div className="grid justify-items-center gap-4">
+      <ul className="flex flex-wrap justify-center gap-3 text-small text-muted">
+        {STATUSES.map((s) => (
+          <li key={s} className="flex items-center gap-1.5">
+            <StatusIcon status={s} /> {STATUS_LABEL[s]}
+          </li>
+        ))}
+      </ul>
+      <StatusPicker value={status} onValueChange={setStatus} label="Sipariş durumu" />
+    </div>
+  );
+}
+
+export function VeriR() {
+  return (
+    <>
+      <Cell file="status-icon" name="Durum İkonu" note="Şekil durumu söyler, renk ikinci işaret; gri hap seçici." span={3}>
+        <StatusWell />
+      </Cell>
+      <Cell file="phase-checklist" name="Aşamalı Kontrol Listesi" note="Biten iş sıradakini açar; aşama bitince katlanır." span={3} size="lg" align="stretch">
+        <PhaseChecklist
+          label={`${BRAND.name} yeni şube açılışı`}
+          groups={[
+            {
+              id: "hazirlik",
+              title: "Hazırlık",
+              items: [
+                { id: "makine", title: "Espresso makinesini kur", kind: "manual", state: "ready" },
+                { id: "stok", title: "İlk stok siparişi", kind: "form", state: "locked", waitingOn: { label: "Espresso makinesini kur" } },
+              ],
+            },
+            {
+              id: "acilis",
+              title: "Açılış",
+              items: [{ id: "tadim", title: "Açılış tadımı", kind: "scheduled", state: "locked", unlocksAt: "2026-12-05" }],
+            },
+          ]}
+        />
+      </Cell>
+    </>
+  );
+}
+
+/* ── Ajan: insan onayı ve araç politikası ─────────────────────────────── */
+const TOOLS: PolicyGroup[] = [
+  { id: "read", label: "Okuyan Araçlar", kind: "read", tools: [{ id: "search", name: "Sipariş Ara", description: "Şube siparişlerinde arar.", icon: <Search /> }] },
+  {
+    id: "write",
+    label: "Yazan ve Silen Araçlar",
+    kind: "write",
+    tools: [
+      { id: "mail", name: "Şubeye Yaz", description: "Şube sorumlusuna e-posta gönderir.", icon: <MailPlus /> },
+      { id: "archive", name: "Siparişi Kapat", description: "Teslim edilen siparişi arşivler.", icon: <Archive /> },
+    ],
+  },
+];
+
+function PolicyWell() {
+  const [value, setValue] = useState<Record<string, ToolPolicy>>(() => defaultToolPolicies(TOOLS));
+  return <ToolPolicyList groups={TOOLS} value={value} onValueChange={setValue} />;
+}
+
+export function AjanR() {
+  return (
+    <>
+      <Cell file="approval-card" name="Onay Kartı" note="Ajan etkili eylemden önce durur; karar insanda, denetim günlüğünde." span={3} size="lg" align="stretch">
+        <div className="grid gap-3">
+          <ApprovalCard
+            icon={<PackageCheck />}
+            title={`${CAFES[0].label} şubesine 24 kg iade onaylansın mı?`}
+            description={<p>Tutar şubenin bakiyesine eklenecek; kargo firmasına iade kaydı açılacak.</p>}
+            people={[{ name: "Selin Başaran" }]}
+            note={false}
+          />
+          <ApprovalStrip person={{ name: "Kerem Arıkan" }} />
+        </div>
+      </Cell>
+      <Cell file="tool-policy-list" name="Araç Politikası" note="Araç başına İzin Ver, Sor, Otomatik; yazan araçta uyarı." span={3} align="stretch">
+        <PolicyWell />
       </Cell>
     </>
   );
