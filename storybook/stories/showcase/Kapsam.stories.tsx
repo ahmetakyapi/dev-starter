@@ -44,6 +44,8 @@ const PAGE_OF: Record<string, string> = {
   _tanitim: "Tanıtım",
   "_tanitim-ek": "Tanıtım",
   _portfolyo: "Portfolyo",
+  "_tanitim-gorunum": "Tanıtım",
+  "_tanitim-sahne": "Tanıtım",
 };
 
 const USED = new Map<string, Set<string>>();

@@ -109,7 +109,7 @@ export const SECTION_OF: Record<Page, string> = {
  *      verinin güncellendiği an ve zil. Kullanıcı nerede olduğunu her sayfada aynı
  *      yerden okur.
  *   2. Başlık bloğu: büyük ad, bir satır bağlam, sağda sayfanın eylemleri.
- *      Birincil eylem varsa tek mavi `Button` (varsayılan); diğerleri
+ *      Birincil eylem varsa tek `Button` (Sakin Akış: pusula.css onu koyu hapa çevirir); diğerleri
  *      `secondary`. Koyu mürekkep hap (eski `INK`) kaldırıldı: Pano mavi,
  *      Takvim siyah butonla iki farklı "birincil" dili konuşuyordu.
  */
@@ -133,7 +133,7 @@ export function PageBar({
     ...(crumb ? [{ label: crumb }] : []),
   ];
   return (
-    <header className="border-b border-line-soft">
+    <header className="border-b border-line-soft bg-page">
       <div className="flex min-h-13 items-center gap-3 border-b border-line-soft px-4 sm:px-6">
         <Breadcrumb items={items} className="min-w-0 flex-1" />
         {/* Verinin tarihi, "canlı" iddiası değil: örnek veri 2 Kasım 10.24'te
@@ -147,8 +147,8 @@ export function PageBar({
       <div className="flex flex-wrap items-end gap-x-6 gap-y-3 px-4 pt-6 pb-5 sm:px-6">
         {/* En az 18rem: telefonda eylemler başlığı sıkıştırmaz, alt satıra iner. */}
         <div className="min-w-[min(100%,18rem)] flex-1">
-          <h1 className="text-heading font-semibold tracking-tight text-strong">{title}</h1>
-          {description ? <p className="mt-1 text-base text-muted">{description}</p> : null}
+          <h1 className="text-heading font-medium tracking-[-0.025em] text-strong">{title}</h1>
+          {description ? <p className="mt-1 text-base text-soft">{description}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
@@ -157,13 +157,12 @@ export function PageBar({
 }
 
 /**
- * Pusula kartı: beyaz zemin, kıl halkası, en hafif gölge. Karo içinde gri
- * kuyu yerine (eski "board" dili) beyaz kart: içerik zaten beyaz bir karonun
- * içinde; ikinci bir gri ton yüzeyi bulandırıyordu. Lejant karoları kartın
- * içinde gri çipe döner (gölgesiz).
+ * Pusula kartı (Sakin Akış, 27 Kasım 2026): gri kuyu zemininde beyaz karo,
+ * gölge yerine kıl halka, 16 px köşe. Lejant karoları kartın içinde gri çipe
+ * döner (gölgesiz).
  */
 export const CARD =
-  "rounded-xl bg-overlay p-1.5 shadow-raised ring-1 ring-line [&>.mt-auto>dl>div]:bg-surface [&>.mt-auto>dl>div]:shadow-none";
+  "rounded-2xl bg-overlay p-1.5 ring-1 ring-line-soft [&>.mt-auto>dl>div]:bg-surface [&>.mt-auto>dl>div]:shadow-none";
 
 /** Yumuşak renk karosu: ölçü, rapor ve kategori ikonlarının zemini. */
 export function IconTile({ children, tone = "primary", className }: { children: ReactNode; tone?: "primary" | "success" | "warning" | "danger" | "neutral"; className?: string }) {
@@ -190,10 +189,10 @@ export function SectionTitle({ id, title, note, className }: { id: string; title
   return (
     <div className={cn("flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-1", className)}>
       {/* scroll-mt: bölüm gezintisi (TocNav) yapışkan; başlık onun altında kalmasın. */}
-      <h2 id={id} className="scroll-mt-24 text-title font-semibold tracking-tight text-strong">
+      <h2 id={id} className="scroll-mt-24 text-title font-medium tracking-[-0.02em] text-strong">
         {title}
       </h2>
-      {note ? <p className="text-small text-muted">{note}</p> : null}
+      {note ? <p className="text-small text-soft">{note}</p> : null}
     </div>
   );
 }
@@ -201,7 +200,7 @@ export function SectionTitle({ id, title, note, className }: { id: string; title
 /** Ayar grupları, form kartları: beyaz kart + kıl halkası (eskiden gri kuyu; Ingot turu). */
 export function Well({ children, className, labelledBy }: { children: ReactNode; className?: string; labelledBy?: string }) {
   return (
-    <section aria-labelledby={labelledBy} className={cn("flex h-full flex-col rounded-xl bg-overlay p-4 shadow-raised ring-1 ring-line sm:p-5", className)}>
+    <section aria-labelledby={labelledBy} className={cn("flex h-full flex-col rounded-2xl bg-overlay p-4 ring-1 ring-line-soft sm:p-5", className)}>
       {children}
     </section>
   );
@@ -209,11 +208,12 @@ export function Well({ children, className, labelledBy }: { children: ReactNode;
 
 export function WellTitle({ id, children, hint }: { id: string; children: ReactNode; hint?: ReactNode }) {
   return (
-    <div className="-mx-4 mb-4 border-b border-line-soft px-4 pb-3 sm:-mx-5 sm:px-5">
-      <h2 id={id} className="scroll-mt-24 text-read font-semibold text-strong">
+    // Sakin Akış: başlık ile gövde arasında çizgi yok; ayrım boşluk ve tonla.
+    <div className="mb-4">
+      <h2 id={id} className="scroll-mt-24 text-read font-medium tracking-[-0.01em] text-strong">
         {children}
       </h2>
-      {hint ? <p className="mt-0.5 text-small text-muted">{hint}</p> : null}
+      {hint ? <p className="mt-0.5 text-small text-soft">{hint}</p> : null}
     </div>
   );
 }

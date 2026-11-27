@@ -102,3 +102,40 @@
    Pusula'da açıldığı için çerçeve burada sayfa rengine sabitlenir. */
 :root[data-theme="dark"] .pusula-shell { background-color: var(--page-bg); }
 :root[data-theme="dark"] .pusula-shell #icerik { background-color: var(--pusula-tile); }
+
+/* SAKİN AKIŞ (27 Kasım 2026, sahibinin onayı: "her ekran yeni tasarım diline uygun olsun"):
+   knowledge/design-directions.md → sakin-akis. Portal'ın (kuzeyova.css) aynı bloğu; ortak
+   parçalar (_ui.tsx: PageBar, CARD, Well, WellTitle, SectionTitle) TSX'te güncellendi, bu blok
+   sayfaların kendi kartlarına aynı dili verir.
+   1. Gri kuyu + beyaz karo: içerik zemini çok açık gri (açık tema), kartlar beyaz.
+   2. Kart: gölge yok, kıl halka, 16 px köşe. Kuyu içindeki seçim karoları (rounded-md/sm)
+      ve gri kuyular kendi dillerini korur.
+   3. Birincil eylem koyu hap; palet rengi yalnız bilgi taşıdığı yerde (grafik, durum, odak).
+   4. Gri zeminde soluk metin ve durum yıkamaları 4,5:1'in üstünde (iki tema).
+   5. Sayfa girişi: 480 ms, 2 px buğu, 6 px kayma; hareket azaltmada yalnız solma. */
+:root:not([data-theme="dark"]) .pusula-shell #icerik {
+  background-color: color-mix(in oklab, var(--text-strong) 4.5%, var(--page-bg));
+  --text-muted: color-mix(in oklab, var(--text-strong) 64%, var(--page-bg));
+  --success-wash: color-mix(in oklab, var(--success) 11%, var(--page-bg));
+  --warning-wash: color-mix(in oklab, var(--warning) 12%, var(--page-bg));
+  --danger-wash: color-mix(in oklab, var(--danger) 10%, var(--page-bg));
+}
+[data-product="pusula"] .pusula-shell #icerik :is(.rounded-xl, .rounded-2xl, .rounded-3xl).bg-overlay:is(.ring-1, .shadow-raised) {
+  box-shadow: 0 0 0 1px var(--line-soft);
+  border-radius: 1rem;
+}
+[data-product="pusula"] .pusula-shell #icerik :is(.rounded-xl, .rounded-2xl, .rounded-3xl).bg-surface { border-radius: 1.25rem; }
+[data-product="pusula"] :is(.pusula-shell #icerik, .pusula-giris) :is(.bg-cta, .bg-primary.shadow-cta) {
+  background: var(--text-strong);
+  color: var(--page-bg);
+  box-shadow: none;
+  border-radius: 999px;
+  padding-inline: 1rem;
+}
+[data-product="pusula"] :is(.pusula-shell #icerik, .pusula-giris) :is(.bg-cta, .bg-primary.shadow-cta):hover { filter: none; background: color-mix(in oklab, var(--text-strong) 84%, var(--page-bg)); }
+[data-product="pusula"] .pusula-shell #icerik > div > header :is(a, button).rounded-md:not(.bg-primary) { border-radius: 999px; }
+/* Sayfa kökü: div.flex > PageBar (header) + gövde. Gövde her sayfa açılışında buğudan gelir. */
+.pusula-shell #icerik > div > header ~ * { animation: pusula-enter 480ms cubic-bezier(.22,1,.36,1) 80ms both; }
+@keyframes pusula-enter { from { opacity: 0; translate: 0 6px; filter: blur(2px); } }
+@media (prefers-reduced-motion: reduce) { .pusula-shell #icerik > div > header ~ * { animation: pusula-fade 200ms ease both; } }
+@keyframes pusula-fade { from { opacity: 0; } }

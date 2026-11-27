@@ -2,7 +2,6 @@
 
 import { CalendarDays, Compass, Inbox, ListChecks, PackageCheck, Reply, Truck } from "lucide-react";
 import { AppWindow } from "@/components/ui/app-window";
-import { ArtMat } from "@/components/ui/art-mat";
 import { Badge } from "@/components/ui/badge";
 import { FeatureList } from "@/components/ui/feature-list";
 import { HeadMark } from "@/components/ui/head-mark";
@@ -15,7 +14,8 @@ import type { ReactNode } from "react";
 
 /**
  * Sergi turu (25 Kasım 2026) Pusula'da: Tanıtım sayfasında "nasıl çalışır"
- * (adım sekmeleri + paspartu + özellik listesi), Asistan'ın boş ekranında
+ * (adım sekmeleri + özellik listesi; 27 Kasım 2026'dan beri Sakin Akış:
+ * paspartu yerine sade gri kuyu, noktalı işaret; paspartu Kişiselleştir'de arka plan seçeneği), Asistan'ın boş ekranında
  * arka planda çalışanlar (sinyal göbeği). Sayılar Pusula kurgusundan, ÖRNEK.
  */
 
@@ -41,9 +41,9 @@ const STEPS: StepTab[] = [
     description: "E-posta, form ve mağaza mesajları tek gelen kutusuna düşer.",
     icon: <Inbox />,
     panel: (
-      <ArtMat variant="wash" edge="torn" crop pad="lg" className="h-64 sm:h-80" contentClassName="max-w-2xl">
-        <Window title="Gelen Kutusu" icon={<Inbox className="size-3.5" />} rows={[["Kargo nerede? · Elif T.", "Yeni", "warning"], ["İade talebi · Can D.", "Yeni", "warning"], ["Fatura kopyası · Ayşe K.", "Yanıtlandı", "success"]]} />
-      </ArtMat>
+      <div className="grid h-64 place-items-center overflow-hidden rounded-[1.75rem] bg-surface px-6 ring-1 ring-line-soft sm:h-80">
+        <div className="w-full max-w-2xl"><Window title="Gelen Kutusu" icon={<Inbox className="size-3.5" />} rows={[["Kargo nerede? · Elif T.", "Yeni", "warning"], ["İade talebi · Can D.", "Yeni", "warning"], ["Fatura kopyası · Ayşe K.", "Yanıtlandı", "success"]]} /></div>
+      </div>
     ),
   },
   {
@@ -52,9 +52,9 @@ const STEPS: StepTab[] = [
     description: "Her talep sahibine ve gününe atanır; takvim kendini doldurur.",
     icon: <CalendarDays />,
     panel: (
-      <ArtMat variant="grid" edge="torn" crop pad="lg" className="h-64 sm:h-80" contentClassName="max-w-2xl">
-        <Window title="Takvim" icon={<CalendarDays className="size-3.5" />} rows={[["09.00 · Haftalık özet", "Bugün", "neutral"], ["14.30 · Kargo eşitleme", "Bugün", "neutral"], ["10.00 · Tedarikçi görüşmesi", "Yarın", "neutral"]]} />
-      </ArtMat>
+      <div className="grid h-64 place-items-center overflow-hidden rounded-[1.75rem] bg-surface px-6 ring-1 ring-line-soft sm:h-80">
+        <div className="w-full max-w-2xl"><Window title="Takvim" icon={<CalendarDays className="size-3.5" />} rows={[["09.00 · Haftalık özet", "Bugün", "neutral"], ["14.30 · Kargo eşitleme", "Bugün", "neutral"], ["10.00 · Tedarikçi görüşmesi", "Yarın", "neutral"]]} /></div>
+      </div>
     ),
   },
   {
@@ -63,9 +63,9 @@ const STEPS: StepTab[] = [
     description: "Kargo durumu talebe yazılır, müşteri kendiliğinden bilgilenir.",
     icon: <Truck />,
     panel: (
-      <ArtMat variant="strata" tone="earth" edge="torn" crop pad="lg" className="h-64 sm:h-80" contentClassName="max-w-2xl">
-        <Window title="Siparişler" icon={<PackageCheck className="size-3.5" />} rows={[["#3105 · Filtre Kahve", "Yolda", "warning"], ["#3104 · Soğuk Demleme", "Teslim", "success"], ["#3102 · Kakule Latte", "Teslim", "success"]]} />
-      </ArtMat>
+      <div className="grid h-64 place-items-center overflow-hidden rounded-[1.75rem] bg-surface px-6 ring-1 ring-line-soft sm:h-80">
+        <div className="w-full max-w-2xl"><Window title="Siparişler" icon={<PackageCheck className="size-3.5" />} rows={[["#3105 · Filtre Kahve", "Yolda", "warning"], ["#3104 · Soğuk Demleme", "Teslim", "success"], ["#3102 · Kakule Latte", "Teslim", "success"]]} /></div>
+      </div>
     ),
   },
 ];
@@ -79,7 +79,7 @@ export function SergiSection() {
         eyebrow="Nasıl Çalışır"
         title={
           <>
-            <HeadMark variant="highlight" icon={<Compass />}>
+            <HeadMark variant="dotted" icon={<Compass />}>
               Talepten
             </HeadMark>{" "}
             Teslime

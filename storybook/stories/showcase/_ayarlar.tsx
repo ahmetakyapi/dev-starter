@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, Settings2, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import { Bell, ChevronDown, Settings2, Shield, SlidersHorizontal, UserRound } from "lucide-react";
 import { BannerAlert } from "@/components/ui/banner-alert";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -344,9 +344,17 @@ export function AyarlarPage() {
               maxTags={8}
               hint="Talep ekranında tek dokunuşla eklenir. En fazla 8."
             />
-            <div className="rounded-lg bg-surface p-3 ring-1 ring-inset ring-line-soft md:row-span-2 md:w-64">
+            {/* Sakin Akış: renk seçici (ton şeridi + hazır renkler) gerektiğinde açılır; kapalıyken
+                yalnız seçili renk ve ad. Gökkuşağı şerit sayfanın vurgu tavanını aşıyordu. */}
+            <details className="group self-start rounded-lg bg-surface ring-1 ring-inset ring-line-soft open:p-3 md:row-span-2 md:w-64">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2.5 rounded-lg px-3 text-small font-medium text-strong group-open:mb-2 group-open:min-h-0 group-open:px-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus [&::-webkit-details-marker]:hidden">
+                {/* token-ok: nokta rengi kullanıcının seçtiği etiket rengi (veri) */}
+                <span aria-hidden className="size-4 shrink-0 rounded-full ring-1 ring-line" style={{ backgroundColor: tagColor }} />
+                Etiket Rengi
+                <ChevronDown aria-hidden className="ml-auto size-4 text-muted transition-transform group-open:rotate-180" />
+              </summary>
               <ColorPicker label="Etiket Rengi" value={tagColor} onValueChange={setTagColor} presets={TAG_COLORS} />
-            </div>
+            </details>
             <section aria-labelledby="ayar-etiket-kullanim" className="grid content-start gap-2">
               <h3 id="ayar-etiket-kullanim" className="text-small font-semibold text-strong">
                 Son 8 Günde Kullanım
@@ -404,7 +412,7 @@ export function AyarlarPage() {
             {/* Kategoriye göre: her kalem kendi tik ölçeğinde, plan alanına (10 GB) oranla; renk bölümlü ölçerdekiyle aynı. */}
             <section aria-labelledby="ayar-alan-kalem" className="grid content-start gap-4 rounded-xl p-5 ring-1 ring-inset ring-line-soft">
               <h3 id="ayar-alan-kalem" className="text-small font-medium text-muted">
-                Kategoriye Göre · {WORKSPACE.storage.totalGb} GB içinde
+                Kategoriye Göre · {WORKSPACE.storage.totalGb} GB İçinde
               </h3>
               {WORKSPACE.storage.parts.map((part) => (
                 <Meter

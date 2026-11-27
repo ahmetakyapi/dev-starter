@@ -44,7 +44,7 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
   }
 
   return (
-    <div className="grid min-h-dvh bg-page lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start">
+    <div className="pusula-giris grid min-h-dvh bg-page lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start">
       <main id="icerik" className="flex min-h-dvh min-w-0 flex-col px-4 pt-4 pb-8 sm:px-8">
         {/* Sitenin menüsü giriş ekranında da: ürünü tanımayan ziyaretçi buradan tanıtıma döner. */}
         <MorphNav
@@ -146,56 +146,52 @@ export function GirisPage({ onSignedIn }: { onSignedIn: () => void }) {
         </div>
       </main>
 
-      {/* Ürünün renkli paneli: zemin .pusula-hero (iki temada beyaz metin AA). Bilgi verir, eylem taşımaz. */}
-      <aside aria-labelledby="giris-bugun" className="pusula-hero relative isolate hidden overflow-hidden lg:sticky lg:top-3 lg:m-3 lg:flex lg:h-[calc(100dvh-1.5rem)] lg:flex-col lg:justify-between lg:rounded-[1.75rem] lg:p-10 xl:p-12">
-        <div aria-hidden className="absolute -top-24 -right-24 -z-10 size-[28rem] rounded-full bg-primary-soft opacity-20 blur-3xl" />
+      {/* Sakin Akış (27 Kasım 2026): renkli marka paneli yerine gri kuyu; içinde beyaz karolar. Bilgi verir, eylem taşımaz. */}
+      <aside aria-labelledby="giris-bugun" className="relative isolate hidden bg-surface ring-1 ring-line-soft overflow-hidden lg:sticky lg:top-3 lg:m-3 lg:flex lg:h-[calc(100dvh-1.5rem)] lg:flex-col lg:justify-between lg:rounded-[1.75rem] lg:p-10 xl:p-12">
         <div className="grid gap-8">
           <div className="grid gap-3">
-            <p className="text-small font-medium text-on-brand/75">{longDate.format(TODAY)}</p>
-            <h2 id="giris-bugun" className="font-display text-display leading-tight font-bold tracking-tight text-on-brand text-balance">
+            <p className="text-small text-muted">{longDate.format(TODAY)}</p>
+            <h2 id="giris-bugun" className="font-display text-display leading-tight font-semibold tracking-[-0.03em] text-strong text-balance">
               <ScrambleText text={`${OPEN_TICKETS.length} Talep Seni Bekliyor`} />
             </h2>
-            <p className="max-w-[44ch] text-read text-on-brand/85">{DELAYED.length} siparişin teslim tarihi geçti. Girince ilk bunlar karşılar; en acil olan en üstte.</p>
+            <p className="max-w-[44ch] text-read text-body">{DELAYED.length} siparişin teslim tarihi geçti. Girince ilk bunlar karşılar; en acil olan en üstte.</p>
           </div>
           <ul className="grid max-w-md gap-2">
             {WAITING.map((t) => (
-              <li key={t.id} className="flex items-center gap-3 rounded-xl bg-on-brand/10 px-4 py-3 ring-1 ring-inset ring-on-brand/15">
+              <li key={t.id} className="flex items-center gap-3 rounded-xl bg-overlay px-4 py-3 ring-1 ring-line-soft">
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-base font-medium text-on-brand">{t.subject}</span>
-                  <span className="block truncate text-small text-on-brand/75">
+                  <span className="block truncate text-base font-medium text-strong">{t.subject}</span>
+                  <span className="block truncate text-small text-muted">
                     {t.id} · {customer(t.customerId).name}
                   </span>
                 </span>
-                {/* Beyaz hap + zeminin koyu tonu: yarı saydam beyaz hap mavi paneli açıp metni 3,5:1'e düşürüyordu. Acil'in noktası rengi tek işaret bırakmaz. */}
-                <span className="inline-flex w-20 shrink-0 items-center justify-center gap-1.5 rounded-full bg-on-brand px-2.5 py-0.5 text-small font-semibold">
-                  {t.priority === "Acil" ? <span aria-hidden className="size-1.5 rounded-full bg-danger" /> : null}
-                  <span className="pusula-hero-ink">{t.priority}</span>
-                </span>
+                {/* Sakin Akış: öncelik yalnız metin rengiyle (Gelen Kutusu ile aynı dil); Acil kırmızı. */}
+                <span className={`shrink-0 text-small ${t.priority === "Acil" ? "font-medium text-danger" : t.priority === "Yüksek" ? "text-warning" : "text-muted"}`}>{t.priority}</span>
               </li>
             ))}
           </ul>
         </div>
-        <dl className="grid max-w-md grid-cols-3 divide-x divide-on-brand/20 rounded-xl ring-1 ring-inset ring-on-brand/20">
+        <dl className="grid max-w-md grid-cols-3 divide-x divide-line-soft rounded-xl bg-overlay ring-1 ring-line-soft">
           {SUMMARY.map((s) => (
             <div key={s.label} className="grid gap-0.5 px-4 py-3">
-              <dt className="order-2 text-small text-on-brand/80">{s.label}</dt>
-              <dd className="order-1 font-display text-heading font-bold text-on-brand tabular-nums">{s.value}</dd>
+              <dt className="order-2 text-small text-muted">{s.label}</dt>
+              <dd className="order-1 font-display text-heading font-medium text-strong tabular-nums">{s.value}</dd>
             </div>
           ))}
         </dl>
         <section
           aria-labelledby="giris-musteriler"
           // Şeridin "Durdur" butonu `text-muted` gelir; renkli zeminde okunmuyordu.
-          className="grid gap-3 text-on-brand [&_.ui-marquee-control]:text-on-brand/85 [&_.ui-marquee-control:hover]:bg-on-brand/10 [&_.ui-marquee-control:hover]:text-on-brand"
+          className="grid gap-3 text-strong [&_.ui-marquee-control]:text-muted [&_.ui-marquee-control:hover]:bg-overlay [&_.ui-marquee-control:hover]:text-strong"
         >
-          <h2 id="giris-musteriler" className="text-small font-medium text-on-brand/75">
+          <h2 id="giris-musteriler" className="text-small text-muted">
             {WORKSPACE.name} Bu Müşterilere Hizmet Veriyor
           </h2>
           <Marquee label={`${WORKSPACE.name} müşterileri`} duration={36}>
             {CUSTOMERS.map((c) => (
-              <span key={c.id} className="inline-flex items-baseline gap-1.5 text-base font-semibold text-on-brand">
+              <span key={c.id} className="inline-flex items-baseline gap-1.5 text-base font-medium text-strong">
                 {c.name}
-                <span className="text-small font-normal text-on-brand/70">{c.city}</span>
+                <span className="text-small font-normal text-muted">{c.city}</span>
               </span>
             ))}
           </Marquee>

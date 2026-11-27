@@ -259,11 +259,15 @@ export function AsistanPage() {
         description={fresh ? "Yeni Sohbet" : `Geciken Siparişler · Bugün ${shortDate.format(TODAY)}`}
         actions={
           <>
-            <ThinkingOrb
-              state={thinking || (!fresh && !done) ? "thinking" : "idle"}
-              size={32}
-              label={thinking || (!fresh && !done) ? "Asistan çalışıyor" : "Asistan hazır"}
-            />
+            {/* Sakin Akış: büyük parlak küre yerine küçük küre + durum metni (iş akışının künyesi). */}
+            <span className="inline-flex items-center gap-2 text-small text-muted">
+              <ThinkingOrb
+                state={thinking || (!fresh && !done) ? "thinking" : "idle"}
+                size={18}
+                label={thinking || (!fresh && !done) ? "Asistan çalışıyor" : "Asistan hazır"}
+              />
+              <span aria-hidden>{thinking || (!fresh && !done) ? "Çalışıyor" : "Hazır"}</span>
+            </span>
             <Button
               variant="secondary"
               size="sm"

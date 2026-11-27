@@ -91,14 +91,14 @@ function FigureMedia({ figure, share, caption }: { figure: string; share: number
   const on = Math.round((Math.min(Math.max(share, 0), 100) / 100) * ticks);
   return (
     <span className="flex size-full flex-col gap-3 bg-surface p-5">
-      <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-overlay px-2.5 py-1 text-small font-medium text-body shadow-raised">
+      <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-overlay px-2.5 py-1 text-small font-medium text-body ring-1 ring-line-soft">
         <span aria-hidden className="size-1.5 rounded-full bg-primary" />
         {caption}
       </span>
-      <span className="mt-auto text-display font-semibold tracking-tight text-strong tabular-nums">{figure}</span>
+      <span className="mt-auto text-display font-medium tracking-[-0.03em] text-strong tabular-nums">{figure}</span>
       <span aria-hidden className="flex gap-1">
         {Array.from({ length: ticks }, (_, i) => (
-          <span key={i} className={cn("h-5 flex-1 rounded-full", i < on ? "bg-primary" : "bg-chart-track")} />
+          <span key={i} className={cn("h-3 flex-1 rounded-full", i < on ? "bg-primary" : "bg-chart-track")} />
         ))}
       </span>
     </span>
@@ -109,7 +109,7 @@ function FigureMedia({ figure, share, caption }: { figure: string; share: number
 function PeriodDigest({ s, label, loading }: { s: PeriodStats; label: string; loading: boolean }) {
   if (loading) {
     return (
-      <div aria-busy="true" className="grid min-h-48 place-items-center gap-3 rounded-lg bg-overlay p-6 shadow-raised">
+      <div aria-busy="true" className="grid min-h-48 place-items-center gap-3 rounded-2xl bg-overlay p-6 ring-1 ring-line-soft">
         <PixelLoader pattern="spiral" grid={5} dot={6} glow label="Asistan özeti yazıyor" />
         <p className="text-small text-muted">Asistan {label.toLocaleLowerCase("tr-TR")} verisini okuyor…</p>
       </div>

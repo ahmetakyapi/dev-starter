@@ -23,7 +23,9 @@ import {
 } from "lucide-react";
 import { AssigneePicker, type Person } from "@/components/ui/assignee-picker";
 import { Avatar } from "@/components/ui/avatar";
+import { ApprovalStrip } from "@/components/ui/approval-card";
 import { Badge } from "@/components/ui/badge";
+import { StatusIcon } from "@/components/ui/status-icon";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChipGroup, FilterChip, RemovableChip } from "@/components/ui/chip";
 import { Combobox, type ComboboxItem } from "@/components/ui/combobox";
@@ -105,7 +107,23 @@ import { PageBar, fromSlug, href, useApp, type Params } from "./_ui";
 const PER_PAGE = 8;
 
 const STATUS_TONE = { Açık: "primary", Beklemede: "warning", Çözüldü: "success" } as const;
-const PRIORITY_TONE = { Acil: "danger", Yüksek: "warning", Normal: "neutral", Düşük: "neutral" } as const;
+
+/* Sakin Akış: durum ikon ŞEKLİYLE (açık halka, beklemede kesik gri halka, çözüldü tik), öncelik yalnız
+   metin rengiyle (Acil kırmızı, Yüksek uyarı, diğerleri soluk). Renkli yıkama hapları satırı
+   kalabalıklaştırıyordu; aynı bilgi iki kez renkle söyleniyordu. */
+const STATUS_SHAPE = { Açık: "todo", Beklemede: "triage", Çözüldü: "done" } as const;
+function StatusLabel({ status }: { status: keyof typeof STATUS_SHAPE }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-small whitespace-nowrap text-strong">
+      <StatusIcon status={STATUS_SHAPE[status]} size={14} />
+      {status}
+    </span>
+  );
+}
+function TicketPriority({ priority, className }: { priority: Ticket["priority"]; className?: string }) {
+  const tone = priority === "Acil" ? "font-medium text-danger" : priority === "Yüksek" ? "text-warning" : "text-muted";
+  return <span className={cn("text-small whitespace-nowrap", tone, className)}>{priority}</span>;
+}
 const PRIORITY_RANK: Record<Priority, number> = { Acil: 4, Yüksek: 3, Normal: 2, Düşük: 1 };
 const CHANNEL_ICON = { "E-Posta": <Mail />, Telefon: <Phone />, "Canlı Sohbet": <Radio />, "Web Formu": <Hash /> } as const;
 
@@ -180,7 +198,7 @@ export function GelenPage() {
   const [view, setView] = useState<"liste" | "musteri">("liste");
   // Kanal sütunu geniş ekranda açık; 1280 px altında kapalı başlar (konu sütunu ~10 harfe iniyordu).
   // "Görünüm" menüsünden her genişlikte açılır.
-  const [showChannel, setShowChannel] = useState(() => typeof window === "undefined" || window.matchMedia("(min-width: 80rem)").matches);
+  const [showChannel, setShowChannel] = useState(() => typeof window === "undefined" || window.matchMedia("(min-width: 96rem)").matches);
   const [showMessages, setShowMessages] = useState(false);
   const [when, setWhen] = useState<DateRangeValue>(ALL_TIME);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -256,7 +274,7 @@ export function GelenPage() {
     {
       key: "talep",
       header: "Talep",
-      width: "19rem",
+      width: "24rem",
       render: (t) => (
         <ContextMenu>
           <ContextMenuTrigger className="-my-1 rounded-md py-1 outline-none">
@@ -305,17 +323,13 @@ export function GelenPage() {
         </ContextMenu>
       ),
     },
-    { key: "durum", header: "Durum", render: (t) => <Badge tone={STATUS_TONE[t.status]} dot>{t.status}</Badge> },
+    { key: "durum", header: "Durum", render: (t) => <StatusLabel status={t.status} /> },
     {
       key: "oncelik",
       header: "Öncelik",
       sortable: true,
       sortValue: (t) => PRIORITY_RANK[t.priority],
-      render: (t) => (
-        <Badge tone={PRIORITY_TONE[t.priority]} variant={t.priority === "Düşük" ? "outline" : "soft"}>
-          {t.priority}
-        </Badge>
-      ),
+      render: (t) => <TicketPriority priority={t.priority} />,
     },
     ...(showChannel
       ? [
@@ -746,11 +760,9 @@ export function GelenPage() {
                     ),
                     status: (
                       <>
-                        <Badge tone={STATUS_TONE[t.status]} dot>{t.status}</Badge>
-                        {/* Sabit genişlik: sağa yaslı grupta öncelik değişse de durum rozeti alt alta aynı hizada (hizalama kuralı). */}
-                        <Badge tone={PRIORITY_TONE[t.priority]} variant={t.priority === "Düşük" ? "outline" : "soft"} className="min-w-18 justify-center">
-                          {t.priority}
-                        </Badge>
+                        <StatusLabel status={t.status} />
+                        {/* Sabit genişlik: sağa yaslı grupta öncelik değişse de durum alt alta aynı hizada (hizalama kuralı). */}
+                        <TicketPriority priority={t.priority} className="min-w-12 text-right" />
                       </>
                     ),
                     people: [
@@ -804,7 +816,7 @@ export function GelenPage() {
                   id: t.id,
                   cells: {
                     ad: `${t.id} · ${t.subject}`,
-                    durum: <Badge tone={STATUS_TONE[t.status]} dot>{t.status}</Badge>,
+                    durum: <StatusLabel status={t.status} />,
                     adet: `${num.format(t.messages)} mesaj`,
                     son: dateTime(t.date),
                   },
@@ -946,6 +958,7 @@ function Metric({ label, value, note, bar }: { label: string; value: ReactNode; 
 const REPLY_TARGET_MIN = 30;
 
 function TicketDetail({ t, onAssign }: { t: Ticket; onAssign: (id: string) => void }) {
+  const { notify } = useApp();
   const c = customer(t.customerId);
   const [watchers, setWatchers] = useState<string[]>([...t.watchers]);
   const [tab, setTab] = useState("genel");
@@ -980,6 +993,22 @@ function TicketDetail({ t, onAssign }: { t: Ticket; onAssign: (id: string) => vo
         <Reactions label="Ekip tepkileri" defaultValue={teamReactions(t)} className="mt-3" />
       </figure>
 
+      {/* Sakin Akış: yapay zeka sohbet balonu değil iş akışının içinde. Asistan taslağı hazırlar,
+          gönderme kararı insanda (rules/agentic-ui.md: model yetkilendirmez). Çözülen talepte yok. */}
+      {t.status !== "Çözüldü" ? (
+        <section aria-labelledby="talep-taslak" className="grid gap-2">
+          <PanelLabel id="talep-taslak">Asistanın Yanıt Taslağı</PanelLabel>
+          <p className="rounded-xl bg-surface p-3 text-small text-body">
+            Merhaba {c.contact.split(" ")[0]}, talebinizi aldık; {t.subject.toLocaleLowerCase("tr-TR")} konusunu bugün inceleyip size dönüş yapacağız.
+          </p>
+          <ApprovalStrip
+            person={{ name: "Pusula Asistanı" }}
+            text="Taslak onayını bekliyor"
+            onDecision={(d) => notify({ tone: d === "approved" ? "success" : "info", title: d === "approved" ? `${t.id} Yanıtı Gönderildi` : "Taslak Geri Çekildi", body: t.subject })}
+          />
+        </section>
+      ) : null}
+
       <TicketPriorityFactors t={t} />
 
       <TicketCustomerPanel t={t} />
@@ -992,9 +1021,7 @@ function TicketDetail({ t, onAssign }: { t: Ticket; onAssign: (id: string) => vo
             <CopyButton value={t.id} label="Talep Numarasını Kopyala" />
           </InfoRow>
           <InfoRow label="Öncelik">
-            <Badge tone={PRIORITY_TONE[t.priority]} variant={t.priority === "Düşük" ? "outline" : "soft"}>
-              {t.priority}
-            </Badge>
+            <TicketPriority priority={t.priority} />
           </InfoRow>
           <InfoRow label="Atanan">
             <span className="truncate">{member(t.assignee).name}</span>

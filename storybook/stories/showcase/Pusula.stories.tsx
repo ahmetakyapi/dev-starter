@@ -394,25 +394,27 @@ export const Landing: Story = {
   name: "Tanıtım Sayfası",
   render: () => <TanitimPage onSignIn={() => {}} />,
   parameters: {
-    // Sabit menü ve köşe maskotu belge sayfasının üstüne binmesin: kendi çerçevesinde.
+    // Sabit menü belge sayfasının üstüne binmesin: kendi çerçevesinde.
     docs: {
       story: { inline: false, height: "900px" },
       description: {
         story:
-          "Oturum açmamış ziyaretçinin sayfası (Ribbon turu): kaydırınca üst kenara oturan menü, bulanıktan netleşen serif vurgulu başlık, görsel zemin üstünde beyaz birincil eylem, demoya inen ikincil eylem, cam duyuru hapı ve güven satırı, pencere şeridi + dock ile sayfada denenen ürün maketi, el yazısı ok notu, köşe maskotu; kavisli galeride hazır akışlar ve hareketli renk zeminli kapanış (Scrolltide turu).",
+          "Oturum açmamış ziyaretçinin sayfası, Sakin Akış dilinde: sakin menü, buğudan netleşen iki tonlu başlık, koyu hap eylem, geniş vitrinde kendi kendine oynayan gelen kutusu (asistan taslak yazar, insan gönderir), pencere şeridi + dock ile sayfada denenen demo, nasıl çalışır sekmeleri, özellikler, akan ekranlar, müşteri hikâyeleri (örnek), süreç, kısayollar, hazır akışlar, kişiselleştirme önizlemesi (arka plan, bildirimler, yardımcı simge), rehberler, SSS ve sade kapanış.",
       },
     },
   },
   play: testOnly(async ({ canvasElement, globals }) => {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Talepleri Kaybetmeden Yanıtla" });
-    // Renkli zemindeki iki eylem: biri giriş, öteki demoya iner (basılmayan hap kalmadı).
+    // İki eylem: biri giriş, öteki demoya iner.
     await expect(canvas.getAllByRole("button", { name: "Ücretsiz Dene" })[0]).toBeVisible();
     await expect(canvas.getByRole("link", { name: "Demoyu Gör" })).toHaveAttribute("href", "#tanitim-demo");
     const dock = canvas.getByRole("toolbar", { name: "Pusula uygulamaları" });
     await userEvent.click(within(dock).getByRole("button", { name: "Takvim" }));
     await waitFor(() => expect(canvas.getByRole("img", { name: /odakta Takvim/ })).toBeInTheDocument());
-    await userEvent.click(canvas.getByRole("button", { name: "Maskota merhaba de" }));
+    // Kişiselleştir: yardımcı simge açılınca köşede maskot çıkar ve selam verir.
+    await userEvent.click(canvas.getByRole("switch", { name: /Yardımcı Simge/ }));
+    await userEvent.click(await canvas.findByRole("button", { name: "Yardımcı simgeye merhaba de" }));
     await canvas.findByText("Merhaba!");
     await settle(globals);
   }),

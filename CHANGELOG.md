@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Bütün ekranlar Sakin Akış'a geçti — 2026-11-27
+
+- Pusula Tanıtım sayfası baştan: sakin iki tonlu kahraman, kendi kendine oynayan gelen kutusu, Ekranlar, Kişiselleştir (eski süsler gerçek özellik önizlemesi), SSS, sade kapanış.
+- Pusula ekranları: gri kuyu, gölgesiz kartlar, koyu hap; Gelen Kutusu durumu `status-icon`, talepte asistan taslağı + onay şeridi; Ayarlar, Asistan, Raporlar, Giriş sakinleşti.
+- Portal sayfaları: durum `StatusText` (şekil + metin), nötr ikon karoları, iki satırlık ölçü notları, yargı cümlesi grafik başlığı.
+- Katalog: Tema/Sakin Akış Ritmi sayfası; Tema, Vitrin, Her Şey Bir Arada, Örnek sayfalar ve belge sayfaları sakin dilde; kenar çubuğu araması `/` ve Ctrl+K.
+- Rehber, komut, agent, README ve bilgi tabanı yeni dille güncellendi; hikaye testleri 982/982.
+
 ### Canlı logo, etkileşimli başlık, ekran turu düzeltmeleri — 2026-11-27
 
 - Kapak: logo katmanları birleşir, imleci izler, tıklayınca palet değişir; "On Palet" palet tayfıyla akar (tıkla: palet), "İki Tema" yarı açık yarı koyu hap (tıkla: tema).
