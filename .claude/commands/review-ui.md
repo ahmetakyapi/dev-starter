@@ -80,4 +80,14 @@ Kodun yanında ekranı da görmek gerekiyorsa `design-reviewer` subagent'ini ön
      tonlu ve tek işaretli mi; künye en çok iki bölümde mi; paspartu
      (`art-mat`) en çok iki ve veri ekranının arkasında değil mi
 
+10. **Sakin Akış** (proje `sakin-akis` yönünü seçtiyse ya da "sakin, portfolyo gibi" isteniyorsa;
+    `~/dev-starter/knowledge/design-directions.md` → `sakin-akis`, `guides/05` § 8, `guides/04` § 16)
+   - Hiyerarşi tonla mı (güçlü / soluk, 500 ağırlık), boyla değil mi; degrade başlık ve virgüllü başlık yok
+   - Gri kuyu + beyaz karo; kart gölgesiz kıl halka; birincil eylem koyu hap
+   - Durum ikon şekliyle (`status-icon`), kayıt kimliği 2 px çizgi; tek açık tonlu rozet kayıt başına en çok bir
+   - Ürün ekranı vitrini `shot-card fit` ile okunur ölçekte; gri boşluk kalmıyor; görünüm dışında oynamıyor
+   - Gri zeminde yarı saydam token'lar iki temada ≥ 4,5:1 (mistakes #125); Title Case başlık/buton/sekme
+   - Ekranı gerçekten ölç: `cd ~/dev-starter/storybook && SB_CHROMIUM=<chromium> npm run test:stories`
+     (a11y + play) ve `design-reviewer` ile 1440/390 × açık/koyu
+
 Sonucu Gate raporu formatında sun: her madde ✅ / ⚠️ / ❌, bulgu başına dosya:satır ve önerilen düzeltme.

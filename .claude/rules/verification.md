@@ -21,6 +21,8 @@ paths:
 npm run ci:local              # Quality Checks + Ecosystem Health + Storybook tip/adres
 npm run ci:local -- --build   # + Storybook derlemesi
 npm run ci:local -- --tests   # + hikaye testleri (play + a11y, gerçek Chromium, ~3 dk)
+# Storybook'un Playwright sürümüne uyan tarayıcı yoksa: SB_CHROMIUM=<kurulu chromium yolu>
+# (ci-local /opt/pw-browsers/chromium'u kendisi bulur; mistakes.md #124)
 ```
 
 `scripts/ci-local.sh`, `.github/workflows/ci.yml`deki yerelde koşabilen

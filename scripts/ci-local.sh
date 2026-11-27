@@ -45,6 +45,9 @@ fi
 if [[ " $* " == *" --tests "* ]]; then
   # Onceden kurulu Chromium varsa (bulut oturumu) yolunu ver; yoksa Playwright kendi tarayicisini kullanir.
   [ -z "${SB_CHROMIUM:-}" ] && [ -x /opt/pw-browsers/chromium ] && export SB_CHROMIUM=/opt/pw-browsers/chromium
+  # Kurulu Chromium varsa (bulut kabı, CI dışı makine) onu kullan: Storybook'un Playwright
+  # sürümüne uyan tarayıcı yoksa testler atlanıyordu (mistakes.md #124).
+  if [[ -z "${SB_CHROMIUM:-}" && -e /opt/pw-browsers/chromium ]]; then export SB_CHROMIUM=/opt/pw-browsers/chromium; fi
   step "storybook tests"   bash -c 'cd storybook && npm run -s test:stories'
 fi
 

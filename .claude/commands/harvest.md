@@ -69,7 +69,9 @@ başındaki sözleşmeye uyar:
 - Yalnız token (`bg-overlay`, `text-strong`, `ring-line`…); hex, ham palet,
   `dark:` yok. Durum renkleri (`danger/warning/success`) sabit renk yerine.
 - Dosya başında Türkçe belge yorumu: ne zaman, ne zaman DEĞİL, nasıl çalışır,
-  erişilebilirlik, kısa örnek. Kaynağı adıyla an (kod alınmadı).
+  erişilebilirlik, kısa örnek. Kaynağı adıyla an (kod alınmadı); sahibi kaynağın
+  gizli kalmasını isterse site adı HİÇBİR dosyaya, commit ya da PR metnine yazılmaz, yerine tur adı
+  ("Sakin Akış turu") kullanılır ve kaynak yalnız hafızada tutulur.
 - Sunucu bileşeni mümkünse (CSS ile hareket, `useId`); istemci gerekiyorsa
   `"use client"` ve hareket azaltma, `pointer: fine`, dokunmatik ayrımı.
 - Bileşene özgü CSS: `<style href="ui-<ad>" precedence="default">`.

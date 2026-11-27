@@ -151,6 +151,27 @@ dosyadan üretiliyor; token değişip görsel güncellenmezse CI kırılıyor.
 
 ---
 
+## Tasarım Dili: Sakin Akış
+
+Katalog ve örnek uygulamalar tek bir sakin dille konuşur (yeni projede `sakin-akis` bir yön seçeneği; yön projenin işine göre seçilir): **hiyerarşi
+boyla değil tonla**, gri kuyu içinde beyaz karo, gölge yerine kıl halka, koyu hap birincil eylem,
+durum ikonun şekliyle. Hareket işlevsel: içerik kaydırdıkça buğudan netleşir, sekme içeriği 480 ms'de
+gelir, ürün ekranları görünümdeyken bir ekran kaydı gibi kendi kendine oynar.
+
+| Ne | Nasıl |
+|---|---|
+| Tipografi | 12-17 px tek boy; yalnız sayı ve tarih büyür; 400 ve 500 ağırlık; Title Case, başlıkta virgül yok |
+| Kart | Kuyu 20 px, karo 14-16 px, akış karesi 28 px; gölge yok, kıl halka |
+| Durum | İş durumu `status-icon` şekliyle; kayıt kimliği 2 px çizgi; tek açık tonlu rozet en çok bir |
+| Yapay zeka | Sohbet balonu değil iş akışında: öneri çipleri, `approval-card`, `tool-policy-list` |
+| Vitrin | `shot-card fit`: gerçek bileşenlerle çizilmiş ürün ekranı kuyuya ölçeklenir, okunur kalır |
+
+Canlı örnekler: Kapak, Pusula → Portfolyo ve Portal. Kurallar ve ölçüler:
+[`knowledge/design-directions.md`](knowledge/design-directions.md) (`sakin-akis`),
+[`guides/05-components.md`](guides/05-components.md) § 8, [`guides/04-motion.md`](guides/04-motion.md) § 16.
+
+---
+
 ## Hareket Dili
 
 <picture>
@@ -240,6 +261,7 @@ sınıflarına ve `cn()`'e dayanır, açık/koyu ve on palette doğru görünür
 | **Geri Bildirim ve Yükleme** | `toast` · `banner-alert` · `meter` · `progress` · `skeleton` · `spinner` · `route-progress` |
 | **Veri ve Verimlilik** | `data-table` · `record-list` · `tree-view` · `tree-table` · `stat` · `timeline` · `kanban-board` · `task-list` · `week-calendar` |
 | **Grafikler** | `area-chart` · `line-chart` · `combo-chart` · `funnel-chart` · `sankey-chart` · `heatmap` · `ring-chart` · `radar-chart` · `activity-rings` |
+| **Sakin Akış** | `profile-intro` · `shot-card` · `shot-grid` · `scroll-focus` · `media-lightbox` · `note-card` · `demo-frame` · `ruler-toc` · `status-icon` · `phase-checklist` · `approval-card` · `tool-policy-list` |
 | **Hareket, Tanıtım, Yapay Zeka** | `pattern-bg` · `dissolve` · `slot-text` · `mesh-gradient` · `liquid-glass` · `app-window` · `thinking-orb` · `stream-text` · `tool-call` |
 
 Tam liste, ne zaman hangisi ve bağımlılıklar: [`snippets/ui/README.md`](snippets/ui/README.md);

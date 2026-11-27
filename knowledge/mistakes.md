@@ -31,7 +31,7 @@ kayıt silinmez, başına `> **Durum**: bayat (yerine: #N / guides/X)` notu alı
 | Kapsamlı Kod Denetimi (2026-10-20) | 102–106 | hook, cwd, tailwind-source, paket, server-action, tema, form, agentic |
 | Geo Tour'dan Öğrenilenler (2026-10-26) | 107–114 | motion, safari, clip-path, view-timeline, og, whatsapp, hydration, intersection-observer, vercel-protection, canlı-önizleme, iframe, güvenlik-başlığı |
 | Nimbstia'dan Öğrenilenler (2026-11-03) | 115–119 | tasarım, okunabilirlik, renk-dengesi, font, readme-görseli, i18n, webview |
-| Görsel Katalog Turları (2026-11-17) | 120–123 | storybook, kapsam, play, hero, kontrast, koyu-tema |
+| Görsel Katalog Turları (2026-11-17) | 120–126 | storybook, kapsam, play, hero, kontrast, koyu-tema, ızgara, a11y |
 
 ---
 
@@ -2125,7 +2125,51 @@ yerelde koşabilen bütün adımları aynı komut ve sırayla, kırılan adımı
 Toplu metin değişikliğinde büyük harf, Başta-büyük ve küçük biçim ayrı ayrı aranır; Türkçe
 karakterli aramada `grep -i`e güvenilmez (Python ya da açık karakter sınıfı).
 
+### 124. Storybook Hikaye Testleri Yerelde Koşulmadan Main'e Gidildi (4 Kırmızı CI)
+
+**Hata**: Sakin Akış turunun dört commit'i main'e gitti, dördünde de CI'ın "Storybook Tests" işi
+kırmızıydı (11 test: a11y ve play). `ci:local` temizdi; hikaye testleri onun varsayılanında yok.
+
+**Sebep**: Bulut kabında Storybook'un Playwright sürümüne uyan tarayıcı yok sanıldı ve testler
+atlandı. Oysa `storybook/vitest.config.ts` kurulu Chromium için `SB_CHROMIUM` kaçışını veriyordu.
+
+**Çözüm**: `SB_CHROMIUM=/opt/pw-browsers/chromium npm run test:stories` ile 981/981; düşen testler
+gerçek sorunlardı (aria-hidden içinde odaklanabilir buton, 2.5.3 ad uyuşmazlığı, gri zeminde
+kontrast, sentetik Escape'in yerel dialog'u kapatmaması).
+
+**Kural**: Hikaye, bileşen ya da ekran değiştiyse main'den önce `npm run ci:local -- --tests`
+(tarayıcı uyuşmuyorsa `SB_CHROMIUM=<chromium yolu>`). "Yerelde koşmuyor" bir gerekçe değil, kaçış yolunu ara.
+
+### 125. Gri Kuyu Zemini Yarı Saydam Token'ların Kontrastını Düşürdü
+
+**Hata**: Portal içerik zemini çok açık griye (%4,5) çekilince `text-muted` gri kuyu ve sekme haplarında
+4,34:1'e, yarı saydam durum yıkaması (`success-wash` %10 alfa) üstündeki rozet metni 4,3:1'e düştü.
+
+**Sebep**: `--surface`, `--*-wash` ve sunken yüzeyler alfa ile tanımlı; zemin koyulaşınca hepsi
+birlikte koyulaşır, metin rengi aynı kalır. Açık temada düzelten değişiklik koyu temanın eşini unuttu (4,02:1).
+
+**Çözüm**: Gri zeminli kapsamda `--text-muted` bir ton koyu (açık) / açık (koyu) ve durum yıkamaları
+opak (`color-mix(... var(--page-bg))`) — `kuzeyova.css` → SAKİN AKIŞ.
+
+**Kural**: Sayfa zeminini değiştiren her değişiklikte, o zeminde duran yarı saydam token'lar (yüzey,
+yıkama) iki temada ölçülür; düzeltme iki temaya birden yazılır.
+
+### 126. Tek Sütunlu Izgarada `col-span-2` Gerçek Sütunu Sıfıra Ezdi
+
+**Hata**: Pusula Görevler 1440'ta sayfanın yarısı 0-32 px'lik sütuna sıkıştı, başlıklar harf harf
+kırıldı; Pano Destek'te 3 sütunlu ızgarada `col-span-6` çocuklar ilk üç kartı 80 px'e indirdi;
+`step-tabs` kökü sütun tanımsız `grid` olduğu için 390'da içerik kadar genişleyip metni kesti.
+
+**Sebep**: CSS grid, tanımdan fazla span gören çocuk için örtük sütun açar; `minmax(0,1fr)` sütunu
+sıfıra iner. Sütun tanımsız `grid`de örtük sütun `auto`dur ve geniş içeriğe (yatay kaydırmalı şerit) uyar.
+
+**Çözüm**: Span'ler ızgaranın sütun sayısına eşitlendi (6 sütun + 2/4/6 span); tek sütunlu ızgaraya
+span veren çağıranlar temizlendi; bileşen kökleri `grid min-w-0 grid-cols-1`.
+
+**Kural**: Bileşen kökü `grid` ise `grid-cols-1` (ya da açık sütun) yazar. Span veren çocuk, ızgaranın
+sütun sayısını bilen yerde (çağıran) verilir; Well/kart kendi içinde `col-span` taşımaz.
+
 ---
 
-*Son güncelleme: 2026-11-18*
+*Son güncelleme: 2026-11-27*
 *Yeni hata eklemek için bu dosyayı düzenle (önce indeks satırını güncelle).*

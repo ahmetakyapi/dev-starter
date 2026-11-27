@@ -23,6 +23,7 @@ gerekçe: `knowledge/decisions.md` → "Bağlam Dosyaları".
 | health-check, verify:*, anatomy/cinecode pin'i, slop, canlı denetim | `.claude/rules/verification.md` (`scripts/`, bootstrap) |
 | Paket kullanımı (`@ahmetakyapi/theme`, `/ui`) | `.claude/rules/packages.md` (`packages/`, `snippets/`, `templates/`) |
 | Subagent tablosu, wrapper sözleşmesi, context curation, komut ↔ skill | `.claude/rules/orchestration.md` (`.claude/`, `agents/`, `machine/`) |
+| Katalog ve örnek uygulamaların dili (Sakin Akış): ritim, kart, durum, hareket | `knowledge/design-directions.md` → `sakin-akis`, `guides/05` § 8, `guides/04` § 16 |
 | Kararlar ve geçmişi ("Değişti (tarih)") | `knowledge/decisions.md` |
 
 ---

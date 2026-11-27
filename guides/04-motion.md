@@ -510,6 +510,27 @@ bağlanması (kodda 0,95 / 0,97 / 0,98 karışık), hareketi azaltmada CSS
 sıfırlamasının opaklık geçişini de öldürmesi, komut paletinin açılış
 animasyonu, `motion` 14'e geçiş (`x`/`y` donanım hızlandırması 14.2'de).
 
+## 16. Sakin Akış Hareket Tablosu (2026-11-27)
+
+Yön `sakin-akis` seçildiyse (`knowledge/design-directions.md`) süreler bu tablodan; eğri her yerde
+`--ease-brand` (`cubic-bezier(.22,1,.36,1)`), basmada `(.2,0,0,1)`.
+
+| Sınıf | Süre | Örnek |
+|---|---|---|
+| Renk / zemin | 150 ms | hover yıkama, halka |
+| Basma | 150 ms, scale .97-.98 | buton, kart |
+| Küçük yüzey | 200-280 ms | tooltip, menü, panel |
+| İçerik girişi | 480 ms (+80), y 6 px, blur 2 px | sekme paneli, sayfa (`kz-enter`) |
+| Kayan gösterge | 560 ms | sekme ve seçim hapı |
+| Düzen değişimi | 600 ms | Akış ↔ Masonry, kart yeri |
+| Kaydırmaya bağlı | ekranın %98'i → %42'si | `scroll-focus`: opacity .34→1, blur 8→0, y 18→0 |
+| Vurgu pop | 240-420 ms | beğeni kalbi .82 → 1.18 → 1.04 |
+| Sahne döngüsü | 0,9-2,6 sn adım | `shot-card fit` ürün ekranı, yalnız görünümdeyken |
+
+Hareket azaltmada: göstergeler zıplar, içerik yalnız 200 ms solar, döngüler son anlamlı karede
+durur, kaydırmaya bağlı efekt kapalı. Logo ve başlık gibi oyuncak etkileşimler işlevli olmalı
+(Kapak: logoya tıklamak paleti değiştirir); işlevsiz süs frekans kapısını (§ 15) geçmez.
+
 ## Kontrol Listesi
 
 - [ ] `framer-motion` yok, `motion/react` + `m` + LazyMotion `strict`

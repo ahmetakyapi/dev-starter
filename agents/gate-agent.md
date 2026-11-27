@@ -178,7 +178,13 @@ grep -rn "from ['\"]framer-motion" app components                  # yeni projed
   açık + koyu, yazınca ≤ 0,5 sn, font anında, taslak canlıya sızmıyor. Yoksa FAIL
 - Responsive, dark/light parity, GPU-composited animasyon
 - Erişilebilirlik: `aria-label`, alt text, klavye navigasyonu
-- **Kontrast**: renk çiftini gerçekten hesapla, göz kararı verme
+- **Kontrast**: renk çiftini gerçekten hesapla, göz kararı verme; sayfa zemini griye çekildiyse
+  yarı saydam token'ları (yüzey, durum yıkaması) iki temada ölç (`mistakes.md` #125)
+- **Izgara**: bileşen kökü `grid` ise sütun tanımı var mı; span'ler ızgaranın sütun sayısını aşıyor mu
+  (aşan span gerçek sütunu sıfıra ezer, `mistakes.md` #126)
+- **dev-starter Storybook değiştiyse**: `cd ~/dev-starter && npm run ci:local -- --tests` (hikaye
+  play + a11y; bulut kabında `SB_CHROMIUM`). Koşmadan PASS verilmez (`mistakes.md` #124)
+- **Sakin Akış** yönündeki projede `.claude/commands/review-ui.md` § 10 maddeleri
 
 **Üretilen çıktıyı doğrula.** Tailwind `@layer components` içindeki kullanılmayan
 sınıfı purge eder; bir sınıfın çalıştığını varsayma, `.next`/`dist` CSS'inde ara.

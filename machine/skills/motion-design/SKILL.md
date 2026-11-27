@@ -110,6 +110,10 @@ Select ONE archetype per project. Apply consistently.
 
 ## Duration Table
 
+> dev-starter projelerinde `sakin-akis` yönü seçildiyse süreler `~/dev-starter/guides/04-motion.md` §16
+> "Sakin Akış Hareket Tablosu"ndan alınır (içerik girişi 480 ms + 80, y 6, blur 2; kayan gösterge 560 ms;
+> kaydırmaya bağlı netleşme; sahne döngüsü yalnız görünümdeyken). Aşağıdaki tablo genel kural.
+
 | Element Type | Duration | Rationale |
 |-------------|----------|-----------|
 | Tooltip / micro-feedback | 80-120ms | Must feel instant |

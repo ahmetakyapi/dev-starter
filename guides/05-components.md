@@ -309,6 +309,27 @@ Metnin sesi ve kalıpları: `content-editor` subagent'ı. Ölçülebilir olanlar
 `scripts/slop-scan.sh`te (yer tutucu, dolgu sözcüğü, şüpheli yuvarlak sayı,
 sevimli mesaj, ölü bağlantı).
 
+
+## 8. Sakin Akış: Kart, Durum ve Ürün Ekranı Dili (2026-11-27)
+
+Yön `sakin-akis` (`knowledge/design-directions.md`); örnek ekranlar Storybook → Kapak, Pusula →
+Portfolyo, Portal. Ölçüler kaynak analizinden, bileşen seçimi `guides/10` → "Sakin Akış Turu".
+
+- **İki katman:** gri kuyu (`bg-surface`, 20 px) içinde beyaz karo (`bg-overlay`, 14-16 px, kıl halka,
+  gölge yok). Sayfa zemini griye çekilirse yarı saydam token'lar iki temada yeniden ölçülür (mistakes #125).
+- **Tonla hiyerarşi:** başlık gövdeyle aynı boyda ya da 1-2 px büyük, 500 ağırlık; yalnız sayı ve
+  tarih büyür. Açıklama aynı satırda soluk ("**Başlık.** açıklama").
+- **Durum:** iş durumu ikon ŞEKLİYLE (`status-icon`); gecikme yalnız metin rengi; gri rozet tür ve
+  kilit; tek açık tonlu rozet kayıt başına en çok bir. Kayıt kimliği 2 px renkli çizgi, asla durum.
+- **Sayaç:** "12 / 12", ilk sayı koyu, bölü ve toplam soluk. Meta hap: etiket gri, değer koyu.
+- **Eylem:** birincil koyu hap (`bg-strong text-page`), ikincil çerçeveli hap; satır eylemi hover'da.
+- **Yapay zeka:** sohbet balonu değil iş akışında: öneri çipleri, "Hazırlayan: asistan" künyesi,
+  `approval-card` / `ApprovalStrip`, `tool-policy-list`.
+- **Ürün ekranı vitrini:** `shot-card fit` (oran verilmezse kuyu sahnenin boyunu alır; dar sahne en
+  çok %125 büyür); sahne gerçek bileşenlerle çizilir, görünümdeyken oynar (`stories/_lib/sahneler.tsx`).
+- **Izgara:** bileşen kökü `grid` ise `grid-cols-1`; span'i ızgarayı bilen çağıran verir (mistakes #126).
+- **Title Case** başlık, alt başlık, etiket, buton ve sekmede; başlıkta virgül yok.
+
 ---
 
 ## Kontrol Listesi
