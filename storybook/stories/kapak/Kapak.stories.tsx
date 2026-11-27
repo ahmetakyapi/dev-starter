@@ -18,7 +18,6 @@ import { ApprovalStrip } from "@/components/ui/approval-card";
 import { DigitRoll } from "@/components/ui/digit-roll";
 import { GlideLink } from "@/components/ui/glide-link";
 import { StatusIcon } from "@/components/ui/status-icon";
-import { ToneText } from "@/components/ui/tone-text";
 import { LikeButton } from "@/components/ui/like-button";
 import { RulerToc } from "@/components/ui/ruler-toc";
 import { ScrollFocus } from "@/components/ui/scroll-focus";
@@ -806,7 +805,91 @@ const HERO_CSS = `
 .kh-float-b { animation-duration: 7.5s; animation-delay: -2s; }
 @keyframes kh-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
 @media (prefers-reduced-motion: reduce) { .kh-in, .kh-float { animation: none; } }
+
+/* Canlı logo: katmanlar düşerek birleşir; üzerine gelince imleci izleyerek eğilir, katmanlar ayrılır, parlama izler. */
+.kh-mark { perspective: 640px; display: inline-grid; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.kh-mark__tile { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 520ms var(--ease-brand); }
+.kh-mark:hover .kh-mark__tile { transition-duration: 120ms; }
+.kh-mark__glare { position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity 300ms;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 20%), color-mix(in oklab, var(--on-brand) 45%, transparent), transparent 55%); }
+.kh-mark:hover .kh-mark__glare { opacity: 1; }
+.kh-mark__halo { position: absolute; inset: -30%; border-radius: 50%; filter: blur(28px); opacity: .45; background: var(--brand); animation: kh-halo 5s ease-in-out infinite; z-index: -1; }
+@keyframes kh-halo { 0%, 100% { opacity: .28; scale: .92; } 50% { opacity: .5; scale: 1.05; } }
+.kh-l { transition: translate 420ms var(--ease-brand); animation: kh-drop 760ms var(--ease-brand) both; }
+.kh-l3 { animation-delay: 80ms; } .kh-l2 { animation-delay: 220ms; } .kh-l1 { animation-delay: 360ms; }
+@keyframes kh-drop { from { opacity: 0; translate: 0 -9px; } 60% { opacity: 1; } }
+.kh-mark:hover .kh-l1 { translate: 0 -2.4px; } .kh-mark:hover .kh-l3 { translate: 0 2.4px; }
+/* Başlık: "On Palet" on paletin tayfıyla akar, "İki Tema" yarı açık yarı koyu hap. İkisi de tıklanır. */
+@property --kh-split { syntax: "<percentage>"; inherits: true; initial-value: 50%; }
+.kh-spectrum { background: var(--kh-spec); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: kh-spec 14s linear infinite; }
+@keyframes kh-spec { to { background-position: 220% 0; } }
+.kh-duo { --kh-split: 50%; display: inline-block; padding: .1em .16em .05em; border-radius: .2em; line-height: 1.02;
+  background: linear-gradient(90deg, var(--page-bg) var(--kh-split), var(--text-strong) var(--kh-split));
+  box-shadow: inset 0 0 0 max(1px, .02em) var(--line); animation: kh-split 7s ease-in-out infinite; }
+.kh-duo > span { background: linear-gradient(90deg, var(--text-strong) var(--kh-split), var(--page-bg) var(--kh-split));
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+@keyframes kh-split { 0%, 100% { --kh-split: 50%; } 30% { --kh-split: 64%; } 70% { --kh-split: 36%; } }
+.kh-hit { cursor: pointer; border-radius: .2em; transition: scale 200ms var(--ease-brand); }
+.kh-hit:hover { scale: 1.02; } .kh-hit:active { scale: .98; }
+.kh-hit:focus-visible { outline: 2px solid var(--line-focus); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .kh-mark__halo, .kh-l, .kh-spectrum, .kh-duo { animation: none; } .kh-mark__tile, .kh-l { transition: none; } }
 `;
+
+/**
+ * Canlı logo (27 Kasım 2026, "çok daha interaktif, animasyonlu"): BrandMark'ın çizimi.
+ * Açılışta üç katman düşerek birleşir; imleç üstündeyken karo imlece doğru eğilir,
+ * parlama izler, katmanlar ayrılır; tıklayınca sıradaki palet ve katmanlar yeniden birleşir.
+ * Süs ama işlevli: tıklama paleti değiştirir (aynı iş başlıktaki "On Palet"te de var).
+ * Hareket azaltmada eğilme ve döngü yok, tıklama yine palet değiştirir.
+ */
+function LiveMark({ onNext, className }: { onNext: () => void; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const reduce = useReducedMotion();
+  const [round, setRound] = useState(0);
+  const move = (e: React.PointerEvent) => {
+    const el = ref.current;
+    if (!el || reduce || e.pointerType !== "mouse") return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty("--rx", `${(-y * 22).toFixed(1)}deg`);
+    el.style.setProperty("--ry", `${(x * 22).toFixed(1)}deg`);
+    el.style.setProperty("--gx", `${((x + 0.5) * 100).toFixed(0)}%`);
+    el.style.setProperty("--gy", `${((y + 0.5) * 100).toFixed(0)}%`);
+  };
+  const leave = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
+  };
+  return (
+    <span
+      ref={ref}
+      aria-hidden
+      className={cn("kh-mark relative", className)}
+      onPointerMove={move}
+      onPointerLeave={leave}
+      onClick={() => {
+        onNext();
+        setRound((n) => n + 1);
+      }}
+    >
+      <span className="kh-mark__halo" />
+      <span className="kh-mark__tile relative inline-grid size-full place-items-center overflow-hidden rounded-[27%] bg-brand shadow-floating">
+        <span className="absolute inset-0 bg-linear-to-b from-on-brand/30 via-on-brand/0 to-strong/30" />
+        <span className="absolute inset-0 rounded-[inherit] ring-1 ring-on-brand/25 ring-inset" />
+        <span className="kh-mark__glare" />
+        <svg key={round} viewBox="0 0 32 32" className="relative size-[70%] overflow-visible text-on-brand drop-shadow-sm">
+          <path className="kh-l kh-l3" d="M6 20.8 16 25.9 26 20.8" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" opacity=".5" />
+          <path className="kh-l kh-l2" d="M6 16.2 16 21.3 26 16.2" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" opacity=".78" />
+          <path className="kh-l kh-l1" d="M16 6.5 26 11.6 16 16.7 6 11.6Z" fill="currentColor" />
+        </svg>
+      </span>
+    </span>
+  );
+}
 
 /** Görünüme girince 0'dan değere yuvarlanan sayı; azaltmada ve otomasyonda doğrudan değer. */
 function useCountIn(target: number) {
@@ -824,7 +907,11 @@ function useCountIn(target: number) {
   return { ref, value: (n: number) => (still || seen ? n : 0), target };
 }
 
-function CalmHero() {
+function CalmHero({ palette, theme, onPick, onTheme }: { palette: PaletteName; theme: ThemeName; onPick: (value: PaletteName) => void; onTheme: (next: ThemeName) => void }) {
+  const order = PALETTES.map((p) => p.value as PaletteName);
+  const nextPalette = () => onPick(order[(order.indexOf(palette) + 1) % order.length]);
+  const current = PALETTES.find((p) => p.value === palette)?.title ?? "Signature";
+  const spectrum = `linear-gradient(90deg, ${[...order, order[0]].map((p) => palettes[p][theme].primary).join(", ")})`;
   const count = useCountIn(TOTAL);
   const step = (i: number) => ({ "--i": i }) as CSSProperties;
   const stats: [number, string][] = [
@@ -839,7 +926,7 @@ function CalmHero() {
         {HERO_CSS}
       </style>
       <div className="mx-auto grid max-w-4xl justify-items-center gap-8 text-center sm:gap-9">
-        <BrandMark className="kh-in size-20 sm:size-24" />
+        <LiveMark onNext={nextPalette} className="kh-in size-20 sm:size-24" />
         <p className="kh-in flex flex-wrap items-center justify-center gap-x-2 text-base text-muted" style={step(1)}>
           <span className="font-medium text-strong">dev-starter</span>
           <span aria-hidden>·</span>
@@ -849,11 +936,17 @@ function CalmHero() {
             Güncellendi <time dateTime={UPDATED}>27 Kas 2026</time>
           </span>
         </p>
-        <ToneText as="h1" id="kapak-baslik" className="kh-in font-display text-[clamp(2.75rem,8vw,5.75rem)] leading-[0.96] font-semibold tracking-[-0.05em] text-balance" >
+        <h1 id="kapak-baslik" className="kh-in font-display text-[clamp(2.75rem,8vw,5.75rem)] leading-[1.02] font-semibold tracking-[-0.05em] text-balance text-strong" style={step(2)}>
           Tek Kimlik{" "}
           <br className="max-sm:hidden" />
-          <ToneText.Soft>On Palet ve İki Tema</ToneText.Soft>
-        </ToneText>
+          <button type="button" onClick={nextPalette} aria-label={`On Palet: ${current}, sıradakine geç`} className="kh-hit kh-spectrum" style={{ "--kh-spec": spectrum } as CSSProperties}>
+            On Palet
+          </button>{" "}
+          <span className="font-medium text-soft">ve</span>{" "}
+          <button type="button" onClick={() => onTheme(theme === "dark" ? "light" : "dark")} aria-label={`İki Tema: şu an ${theme === "dark" ? "koyu" : "açık"}, değiştir`} className="kh-hit kh-duo">
+            <span>İki Tema</span>
+          </button>
+        </h1>
         <p className="kh-in max-w-[44ch] text-[clamp(1.0625rem,1.6vw,1.3125rem)] leading-[1.6] text-body text-pretty" style={step(3)}>
           Yeni proje başlatmak, tema uygulamak ve yayına çıkmak için kişisel geliştirme ekosistemi. Her parça tek token mimarisinden; kod, metin ve
           görsel kopyalanmaz.
@@ -919,7 +1012,7 @@ function CalmCover({ palette, theme, onPick, onTheme }: { palette: PaletteName; 
         ]}
       />
       <main className="mx-auto grid max-w-6xl gap-20 px-5 pt-14 pb-12 sm:gap-28 sm:px-8 sm:pt-20">
-        <CalmHero />
+        <CalmHero palette={palette} theme={theme} onPick={onPick} onTheme={onTheme} />
         <section id="kapak-sekmeler" aria-label="Katalog" className="grid gap-8">
           <Tabs
             aria-label="Kapak Bölümleri"

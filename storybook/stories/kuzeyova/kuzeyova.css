@@ -139,7 +139,7 @@
    4. Sayfa girişi: 480 ms, 2 px buğu, 6 px kayma; hareket azaltmada yalnız solma. */
 :root:not([data-theme="dark"]) .kz-shell #icerik {
   background-color: color-mix(in oklab, var(--text-strong) 4.5%, var(--page-bg));
-  /* Gri kuyu zemininde soluk metin bir ton koyu: gri kuyular ve sekme hapları üstünde 4,5:1 (eski #6b6b6b 4,34'te kalıyordu). */
+  /* Gri kuyu zemininde soluk metin bir ton koyu: gri kuyular ve sekme hapları üstünde 4,5:1 (eski soluk ton 4,34:1 kalıyordu). */
   --text-muted: color-mix(in oklab, var(--text-strong) 64%, var(--page-bg));
   /* Durum yıkamaları opak: yarı saydam yıkama gri zeminde koyulaşıp rozet metnini 4,5:1'in altına düşürüyordu. */
   --success-wash: color-mix(in oklab, var(--success) 11%, var(--page-bg));
