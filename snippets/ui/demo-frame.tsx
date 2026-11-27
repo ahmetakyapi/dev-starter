@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -76,10 +76,12 @@ export function DemoFrame({
   className,
   stageClassName,
 }: DemoFrameProps) {
+  // figcaption adı tarayıcıların hepsinde figure'a geçmiyor: bağı açıkça kur.
+  const captionId = useId();
   const more =
     "mt-3 inline-flex min-h-8 items-center rounded-full px-3 text-small text-strong ring-1 ring-line transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus";
   return (
-    <figure className={cn("m-0", className)}>
+    <figure aria-labelledby={captionId} className={cn("m-0", className)}>
       <style href="ui-demo-frame" precedence="default">
         {CSS}
       </style>
@@ -94,7 +96,7 @@ export function DemoFrame({
         {controls && <div className="absolute top-3 left-3 z-10">{controls}</div>}
         <div className="w-full min-w-0 [&>*]:mx-auto">{children}</div>
       </div>
-      <figcaption className="mt-3 text-base leading-relaxed text-pretty text-muted">
+      <figcaption id={captionId} className="mt-3 text-base leading-relaxed text-pretty text-muted">
         <span className="font-medium text-strong">{title}</span>
         {description && <> {description}</>}
       </figcaption>

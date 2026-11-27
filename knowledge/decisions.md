@@ -1953,3 +1953,16 @@ görsel, font ve imleç alınmadı, hepsi token'la sıfırdan yazıldı.
 - `enableShortcuts: false`; `manager.ts` → `layout-guard`: her açılışta varsayılan düzen, düzen
   değişince sol altta "Düzeni Sıfırla" (Esc de aynı), panel sıfırlamadan önceki halinde kalır.
   SB 10.6'da `api.getState` yok: araç çubuğu `section.sb-bar` varlığıyla okunur (yükseltmede doğrula).
+
+### CI kırmızısı: Storybook Tests (2026-11-27)
+
+- Sakin Akış turundan beri main'de "Storybook Tests" işi kırmızıydı (11 test). Yerelde
+  koşturulmamıştı: bulut kabında Storybook'un Playwright sürümüne uyan tarayıcı yok sanıldı;
+  `vitest.config.ts` zaten `SB_CHROMIUM=/opt/pw-browsers/chromium` kaçışını veriyordu.
+  Ders: main'e göndermeden önce `SB_CHROMIUM=... npm run test:stories` (ya da `ci:local -- --tests`).
+- Düzeltmeler: aria-hidden kapta odaklanabilir buton (`inert`); gri kuyu zemininde soluk metin
+  ve yarı saydam durum yıkaması 4,5:1 altına düşüyordu (Portal'da `--text-muted` bir ton koyu,
+  yıkamalar opak); görünen metin erişilebilir adda yoktu (`shot-card` büyütme butonu sahnenin
+  üstünde boş katman, `ruler-toc` ve `profile-intro` adı görünen metinden); `demo-frame`
+  figure adı `aria-labelledby`; `media-lightbox` Escape'i kendisi de dinler (sentetik olay
+  yerel dialog'u kapatmaz).

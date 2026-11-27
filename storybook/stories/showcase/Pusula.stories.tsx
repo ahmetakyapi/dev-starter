@@ -435,7 +435,7 @@ export const Portfolio: Story = {
     const canvas = within(canvasElement);
     await canvas.findByRole("heading", { level: 1, name: "Deniz Aydın" });
     await expect(canvas.getAllByRole("article")).toHaveLength(6);
-    await userEvent.click(canvas.getByRole("button", { name: "Aç: Gelen Kutusu" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Aç: İşe Alım Süreci" }));
     await expect(await within(canvasElement.ownerDocument.body).findByRole("dialog")).toBeVisible();
     await userEvent.keyboard("{Escape}");
     await userEvent.click(canvas.getByRole("tab", { name: "Lab" }));

@@ -137,7 +137,15 @@
       (segmented, sekme) kendi gölgesini korur: kural yalnız sayfa kartlarına (bg-overlay + ring).
    3. Birincil eylem koyu hap: vurgu rengi yalnız bilgi taşıdığı yerde kalır.
    4. Sayfa girişi: 480 ms, 2 px buğu, 6 px kayma; hareket azaltmada yalnız solma. */
-:root:not([data-theme="dark"]) .kz-shell #icerik { background-color: color-mix(in oklab, var(--text-strong) 4.5%, var(--page-bg)); }
+:root:not([data-theme="dark"]) .kz-shell #icerik {
+  background-color: color-mix(in oklab, var(--text-strong) 4.5%, var(--page-bg));
+  /* Gri kuyu zemininde soluk metin bir ton koyu: gri kuyular ve sekme hapları üstünde 4,5:1 (eski #6b6b6b 4,34'te kalıyordu). */
+  --text-muted: color-mix(in oklab, var(--text-strong) 64%, var(--page-bg));
+  /* Durum yıkamaları opak: yarı saydam yıkama gri zeminde koyulaşıp rozet metnini 4,5:1'in altına düşürüyordu. */
+  --success-wash: color-mix(in oklab, var(--success) 11%, var(--page-bg));
+  --warning-wash: color-mix(in oklab, var(--warning) 12%, var(--page-bg));
+  --danger-wash: color-mix(in oklab, var(--danger) 10%, var(--page-bg));
+}
 /* Sayfa kartı: tema köşe ölçeğinden bağımsız 16 px (kaynakta kart 14-16); gölge yok, kıl halka.
    Kapsam: içerikteki beyaz yüzeyler (bg-overlay + halka). Kuyu içindeki seçim karoları
    (rounded-md/sm) ve gri kuyular (bg-surface, 20 px) dışarıda kalır. */

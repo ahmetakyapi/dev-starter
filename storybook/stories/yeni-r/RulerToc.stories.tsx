@@ -96,7 +96,7 @@ export const Mobile: Story = {
   globals: { viewport: { value: "mobile2", isRotated: false } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const toggle = canvas.queryByRole("button", { name: /Bu Sayfada, şu anki bölüm/ });
+    const toggle = canvas.queryByRole("button", { name: /Hoş geldin, Bu Sayfada/ });
     if (!toggle || (toggle as HTMLElement).offsetParent === null) return;
     await userEvent.click(toggle);
     await expect(toggle).toHaveAttribute("aria-expanded", "true");

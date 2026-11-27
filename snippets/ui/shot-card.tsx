@@ -166,7 +166,7 @@ function ShotVideo({ media }: { media: Extract<ShotMedia, { type: "video" }> }) 
             toggle();
           }}
           aria-label={playing ? "Duraklat" : "Oynat"}
-          className="absolute top-1/2 left-1/2 grid size-11 -translate-1/2 place-items-center rounded-full bg-strong/70 text-page shadow-floating backdrop-blur"
+          className="absolute top-1/2 left-1/2 z-10 grid size-11 -translate-1/2 place-items-center rounded-full bg-strong/70 text-page shadow-floating backdrop-blur"
         >
           {playing ? <span aria-hidden className="flex gap-1"><span className="h-3.5 w-1 rounded-sm bg-current" /><span className="h-3.5 w-1 rounded-sm bg-current" /></span> : <Play aria-hidden className="size-4 translate-x-px fill-current" />}
         </button>
@@ -326,20 +326,16 @@ export function ShotCard({
         {CSS}
       </style>
       {onOpen ? (
-        <div className="relative">
+        /* Büyütme butonu sahnenin ÜSTÜNDE boş bir katman: adı yalnız başlıktan ("Aç: …"),
+           sahnedeki metin butonun adına karışmaz (WCAG 2.5.3). Video Oynat butonu onun üstünde. */
+        <div className={cn(stageClass, "hover:shadow-raised")} style={auto ? undefined : { aspectRatio: ratio }}>
+          {children ? <div className="pointer-events-none">{stage}</div> : stage}
           <button
             type="button"
             onClick={onOpen}
             aria-label={`Aç: ${title}`}
-            className={cn(stageClass, "cursor-zoom-in text-left hover:shadow-raised")}
-            style={auto ? undefined : { aspectRatio: ratio }}
-          >
-            {children ? <div className="pointer-events-none">{stage}</div> : media?.type === "video" ? null : stage}
-          </button>
-          {/* Video, buton içinde iç içe buton (Oynat) olmasın diye üst katmanda. */}
-          {!children && media?.type === "video" && (
-            <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[1.75rem] [&_button]:pointer-events-auto">{stage}</div>
-          )}
+            className="absolute inset-0 cursor-zoom-in rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus focus-visible:ring-inset"
+          />
         </div>
       ) : (
         <div className={stageClass} style={auto ? undefined : { aspectRatio: ratio }}>

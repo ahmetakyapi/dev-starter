@@ -168,6 +168,13 @@ export function MediaLightbox({
           if (open && !e.currentTarget.open) onOpenChange(false);
         }}
         onKeyDown={(e) => {
+          // Escape'i biz de dinleriz: tarayıcının kendi kapatması yalnız güvenilir tuş olayında çalışır
+          // (otomasyon ve bazı yardımcı teknolojiler sentetik olay gönderir).
+          if (e.key === "Escape") {
+            e.preventDefault();
+            onOpenChange(false);
+            return;
+          }
           const t = e.target as HTMLElement;
           if (t.closest("video, input, textarea, [role='slider']")) return;
           if (e.key === "ArrowRight") {

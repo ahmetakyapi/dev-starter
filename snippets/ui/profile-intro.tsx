@@ -221,7 +221,7 @@ export function ProfileIntro({
             <button
               type="button"
               onClick={copy}
-              aria-label={copyName}
+              aria-label={tipText}
               data-copied={status !== "idle" ? "" : undefined}
               className={ICON_HIT}
             >

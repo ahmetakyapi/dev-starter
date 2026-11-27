@@ -894,7 +894,7 @@ function CalmHero() {
         {/* Yüzen parçalar sayfa genişliğini AŞMAZ: bildirim kuyunun üst kenarına oturur, onay şeridi
             alt payda ortalı (sahnenin satırlarını örtmez).
             Alt kenar künye satırının üstünden ölçülür; dar ekranda gizli (sahne zaten küçük). */}
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 bottom-[4.75rem] hidden lg:block">
+        <div aria-hidden inert className="pointer-events-none absolute inset-x-0 top-0 bottom-[4.75rem] hidden lg:block">
           <div className="kh-float absolute -top-6 right-10 flex items-center gap-2 rounded-2xl bg-overlay px-4 py-3 text-base text-strong shadow-floating ring-1 ring-line">
             <StatusIcon status="done" /> PS-3986 Tamamlandı
           </div>
