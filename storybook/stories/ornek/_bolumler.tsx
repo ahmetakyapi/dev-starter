@@ -141,7 +141,7 @@ export function Process() {
           <Badge tone="neutral" className="bg-page text-strong">
             Akış
           </Badge>
-          <h2 className="mt-5 max-w-md text-display font-medium text-page">Paranı yönetmenin daha akıllı yolu</h2>
+          <h2 className="mt-5 max-w-md text-display font-medium text-page">Paranı Yönetmenin Daha Akıllı Yolu</h2>
           <p className="mt-4 max-w-md text-lead text-page/70">Finansının kontrolünü al: yenilikçi araçlar, uzman içgörüler ve pratik stratejiler.</p>
         </div>
         <StepRail

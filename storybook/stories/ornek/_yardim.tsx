@@ -174,7 +174,7 @@ export function YardimMerkeziPage({ initialQuery = "" }: { initialQuery?: string
 
       <section aria-labelledby="yardim-ara" className="mt-6 rounded-xl bg-surface px-4 py-8 text-center sm:px-6">
         <h2 id="yardim-ara" className="text-title font-semibold tracking-tight text-strong">
-          Nasıl yardımcı olabiliriz, Ayşe?
+          Nasıl Yardımcı Olabiliriz Ayşe?
         </h2>
         <div className="mx-auto mt-4 max-w-xl">
           <SearchField
@@ -284,7 +284,7 @@ export function YardimMerkeziPage({ initialQuery = "" }: { initialQuery?: string
         <aside className="grid content-start gap-6" aria-label="İletişim ve durum">
           <section aria-labelledby="yardim-iletisim" id="iletisim">
             <h2 id="yardim-iletisim" className="text-read font-semibold text-strong">
-              Bize ulaş
+              Bize Ulaş
             </h2>
             <ul className="mt-1">
               <ContactRow icon={MessageCircle} title="Canlı sohbet" detail="Genelde 2 sa içinde yanıt" trailing={<Badge tone="success" dot>Çevrimiçi</Badge>} />

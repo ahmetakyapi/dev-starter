@@ -25,14 +25,17 @@ const GROUPS = [
 export default function VitrinPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-      <p className="text-small font-medium text-muted">dev-starter · board dili</p>
-      <h1 className="mt-2 max-w-2xl text-display font-semibold tracking-[-0.03em] text-strong sm:text-hero">Bileşen Vitrini</h1>
+      <p className="text-small font-medium text-muted">dev-starter · Sakin Akış</p>
+      <h1 className="mt-2 max-w-2xl text-heading font-medium tracking-[-0.03em] text-strong sm:text-display">
+        Bileşen Vitrini <span className="text-muted">Beş Grup</span>
+      </h1>
       <p className="mt-4 max-w-xl text-lead text-body">
         Sakin yüzey, renkli veri. Her parça kendi token&apos;larımızla, iki temada ve klavyeyle çalışır.
       </p>
-      <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {GROUPS.map((g) => (
-          <li key={g.href}>
+      {/* Beş kart: üst satır üç, alt satır iki geniş kart (son satırda boş hücre kalmaz). */}
+      <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        {GROUPS.map((g, i) => (
+          <li key={g.href} className={i < 3 ? "lg:col-span-2" : "lg:col-span-3"}>
             <Link
               href={g.href}
               className="group flex h-full flex-col rounded-2xl bg-surface edge-lit p-6 transition-colors hover:bg-surface-raised"

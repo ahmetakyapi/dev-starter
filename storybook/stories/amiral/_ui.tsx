@@ -90,7 +90,7 @@ export function SectionHead({
           <span aria-hidden className="h-px w-6 bg-line-strong" />
           {eyebrow}
         </p>
-        <h2 id={id} className="mt-4 text-[clamp(2rem,4.6vw,3.25rem)] leading-[1.04] font-semibold tracking-[-0.035em] text-strong">
+        <h2 id={id} className="mt-4 text-[clamp(1.875rem,4vw,2.75rem)] leading-[1.06] font-medium tracking-[-0.03em] text-strong">
           {title}
         </h2>
         {lead ? <p className="mt-4 max-w-2xl text-lead text-body">{lead}</p> : null}
@@ -104,7 +104,7 @@ export function SectionHead({
 export function GroupHead({ id, title, count, note }: { id: string; title: string; count: number; note: string }) {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-line pt-5">
-      <h3 id={id} className="flex items-baseline gap-3 text-heading font-semibold tracking-[-0.025em] text-strong">
+      <h3 id={id} className="flex items-baseline gap-3 text-heading font-medium tracking-[-0.02em] text-strong">
         {title}
         <span className="font-mono text-small font-normal text-muted tabular-nums">{count} bileşen</span>
       </h3>

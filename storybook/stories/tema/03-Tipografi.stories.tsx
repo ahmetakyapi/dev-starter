@@ -93,7 +93,7 @@ function TipografiSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Tipografi"
-        title="Kontrastı Punto Kurar, Ağırlık Değil"
+        title={<>Kontrastı Punto Kurar <span className="text-muted">Ağırlık Değil</span></>}
         lead="Punto adları rol taşır, piksel değil: text-small, text-heading. Tek aile, dört ağırlık, sıkı başlık aralığı. Board dilinin preseti Inter + JetBrains Mono."
       />
 

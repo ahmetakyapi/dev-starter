@@ -214,7 +214,7 @@ function RenklerSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Renkler"
-        title="Nötr Sistem, Renk Veriden Gelir"
+        title={<>Nötr Sistem <span className="text-muted">Renk Veriden Gelir</span></>}
         lead={
           <>
             Zemin, metin ve çizgi paletten bağımsız griler; mavi tonu taşımazlar. Yeşim ya da pembe bir ürün kendi rengini

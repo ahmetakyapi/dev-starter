@@ -308,7 +308,7 @@ export default function VitrinBloklar() {
   return (
     <main id="icerik" className="mx-auto max-w-6xl px-4 pt-12 pb-32 sm:px-6 sm:pt-16">
       <header className="mb-10 max-w-2xl">
-        <h1 className="text-display font-bold tracking-tight text-strong">Bloklar</h1>
+        <h1 className="text-display font-medium tracking-[-0.03em] text-strong">Bloklar</h1>
         <p className="mt-3 text-lead text-body">
           Birden çok bileşenin birleştiği hazır parçalar: uygulama kabuğu, sohbet, giriş, ayarlar ve palet seçici.
         </p>

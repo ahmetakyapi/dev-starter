@@ -73,7 +73,7 @@ export default function Vitrin() {
     <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <header className="mb-10 max-w-2xl">
         <p className="text-small font-semibold text-muted">dev-starter · board dili</p>
-        <h1 className="mt-1 text-display font-bold tracking-tight">Form Bileşenleri</h1>
+        <h1 className="mt-1 text-display font-medium tracking-[-0.03em]">Form Bileşenleri</h1>
         <p className="mt-3 text-read text-body">
           Kaydırıcıdan takvime dokuz giriş: hepsi aynı etiket, yardım ve hata düzeninde, klavyeyle tam kullanılır.
         </p>

@@ -278,7 +278,7 @@ export function AjanHarcamalariPage({ initialPeriod = "ay" }: { initialPeriod?: 
                 </span>
                 <div className="min-w-0">
                   <h2 id="uyari" className="text-base font-semibold text-strong">
-                    Olağan dışı harcama
+                    Olağan Dışı Harcama
                   </h2>
                   <p className="text-small text-body">Araştırma Ajanı · son 42 dakika</p>
                   <dl className="mt-3 grid grid-cols-2 gap-3 text-small">

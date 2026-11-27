@@ -176,7 +176,7 @@ function HareketSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Hareket"
-        title="Tek Eğri, Dört Süre, İki Yay"
+        title={<>Tek Eğri <span className="text-muted">Dört Süre ve İki Yay</span></>}
         lead="Hareket bir şeyin nereden gelip nereye gittiğini anlatır, süs değildir. Her geçiş aynı imza eğrisini kullanır: hızlı başlar, uzun ve sakin yavaşlar."
       >
         <div className="mt-6 flex flex-wrap items-center gap-2">

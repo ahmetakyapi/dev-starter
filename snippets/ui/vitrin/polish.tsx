@@ -147,7 +147,7 @@ export default function Vitrin() {
     <main id="icerik" className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <header className="mb-10 max-w-2xl">
         <p className="text-small font-medium text-muted">Bileşen Kütüphanesi</p>
-        <h1 className="mt-2 text-display font-semibold tracking-tight">Board Dili Vitrini</h1>
+        <h1 className="mt-2 text-display font-medium tracking-[-0.03em]">Sakin Akış Vitrini</h1>
         <p className="mt-3 text-read text-body">
           Mevcut otuz yedi bileşenin yeni görünüşü: gri kuyular, beyaz karolar, yumuşak gri vurgu ve yayla gelen küçük hareketler.
         </p>

@@ -561,7 +561,7 @@ export function SablonGalerisiPage({ initialOpen }: { initialOpen?: string }) {
       <section aria-labelledby="sablon-one" className="mt-8">
         <div className="flex items-baseline justify-between gap-3">
           <h2 id="sablon-one" className="text-read font-semibold text-strong">
-            Bu hafta öne çıkanlar
+            Bu Hafta Öne Çıkanlar
           </h2>
           <a href="#sablon-tum" className="text-small font-medium text-primary-ink underline-offset-4 hover:underline">
             Hepsini gör ({TEMPLATES.length})
@@ -576,7 +576,7 @@ export function SablonGalerisiPage({ initialOpen }: { initialOpen?: string }) {
 
       <section aria-labelledby="sablon-tum" className="mt-8">
         <h2 id="sablon-tum" className="sr-only">
-          Bütün şablonlar
+          Bütün Şablonlar
         </h2>
         <div className="flex flex-wrap items-center gap-2">
           <div role="group" aria-label="Kategori" className="flex min-w-0 flex-wrap gap-1.5">

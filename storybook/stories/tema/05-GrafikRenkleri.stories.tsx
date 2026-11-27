@@ -91,7 +91,7 @@ function GrafikRenkleriSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Grafik Renkleri"
-        title="Pastel, Eşit Parlak, Sırası Sabit"
+        title={<>Pastel ve Eşit Parlak <span className="text-muted">Sırası Sabit</span></>}
         lead="Altı seri rengi paletten bağımsız: veri her üründe aynı okunur. Birinci seri hep chart-1. Renk değer yazmaz; değeri yanında text-strong yazar."
       />
 

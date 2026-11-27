@@ -190,6 +190,20 @@ const THEME_PAGES: { id: string; title: string; text: string; preview: ReactNode
       </svg>
     ),
   },
+  {
+    id: "calm-rhythm--overview",
+    title: "Sakin Akış Ritmi",
+    text: "Punto, yarıçap, kuyu ve karo, şekille durum, hareket tablosu: yönün ölçülen değerleri canlı.",
+    preview: (
+      <span className="flex items-end gap-2">
+        {[12, 14, 17, 20, 28].map((px) => (
+          <span key={px} className="leading-none font-medium text-strong" style={{ fontSize: px }}>
+            Aa
+          </span>
+        ))}
+      </span>
+    ),
+  },
 ];
 
 const OTHER = [
@@ -265,19 +279,20 @@ function GirisSayfasi() {
 
       <Section id="tema" title="Tema" description="Token'ların kendisi: değerler kaynaktan okunur, oranlar hesaplanır.">
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {THEME_PAGES.map((page) => (
-            <li key={page.id}>
+          {THEME_PAGES.map((page, i) => (
+            // Yedinci kart (Sakin Akış Ritmi) satırı tek başına doldurur: son satırda boş hücre kalmaz.
+            <li key={page.id} className={i === 6 ? "sm:col-span-2 lg:col-span-3" : undefined}>
               <a
                 href={storyHref(page.id)}
                 target="_top"
                 className="group flex h-full flex-col rounded-2xl bg-surface p-2 transition-colors hover:bg-surface-raised"
               >
-                <span aria-hidden className="grid h-28 place-items-center rounded-xl bg-overlay shadow-raised">
+                <span aria-hidden className="grid h-28 place-items-center rounded-xl bg-overlay ring-1 ring-line-soft">
                   {page.preview}
                 </span>
                 <span className="flex items-start justify-between gap-3 px-3 pt-4 pb-3">
                   <span>
-                    <span className="block text-title font-semibold text-strong">{page.title}</span>
+                    <span className="block text-title font-medium text-strong">{page.title}</span>
                     <span className="mt-1 block text-base text-body">{page.text}</span>
                   </span>
                   <ArrowUpRight

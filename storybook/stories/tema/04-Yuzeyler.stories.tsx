@@ -157,7 +157,7 @@ function YuzeylerSayfasi() {
     <DocPage>
       <PageHero
         eyebrow="Tema / Yüzeyler"
-        title="Sayfa, Kuyu, Karo, Katman"
+        title={<>Sayfa Kuyu Karo <span className="text-muted">ve Katman</span></>}
         lead="Board dilinin iskeleti dört basamak. Derinlik ton farkıyla kurulur; gölge yalnızca gerçekten sayfanın üstünde yüzen katmanda belirgin. Koyuda yüzeyler yükseldikçe açılır."
       />
 

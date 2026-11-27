@@ -31,7 +31,7 @@ export function PageHero({
   return (
     <header className="max-w-3xl">
       <p className="font-mono text-small text-muted">{eyebrow}</p>
-      <h1 className="mt-4 text-display font-semibold tracking-[-0.035em] text-strong sm:text-[3.5rem] sm:leading-[1.02]">
+      <h1 className="mt-4 text-display font-medium tracking-[-0.035em] text-strong sm:text-[3.25rem] sm:leading-[1.04]">
         {title}
       </h1>
       {lead ? <p className="mt-5 max-w-2xl text-lead text-body">{lead}</p> : null}
@@ -58,7 +58,7 @@ export function Section({
     <section id={id} aria-labelledby={id ? `${id}-baslik` : undefined} className="mt-16 border-t border-line pt-10 sm:mt-24 sm:pt-12">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <h2 id={id ? `${id}-baslik` : undefined} className="text-heading font-semibold tracking-[-0.025em] text-strong">
+          <h2 id={id ? `${id}-baslik` : undefined} className="text-heading font-medium tracking-[-0.02em] text-strong">
             {title}
           </h2>
           {description ? <p className="mt-2 text-read text-body">{description}</p> : null}

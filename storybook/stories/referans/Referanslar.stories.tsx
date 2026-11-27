@@ -381,7 +381,7 @@ function Archive() {
         </div>
         <header className="mx-auto grid w-full max-w-2xl justify-items-center gap-4 px-4 text-center">
           <span className="rounded-full bg-overlay px-3 py-1 text-small font-medium text-body shadow-raised">Bilgi Tabanı · {total} Kaynak</span>
-          <h1 className="text-hero font-semibold">Referans Arşivi</h1>
+          <h1 className="text-display font-medium tracking-[-0.03em]">Referans Arşivi</h1>
           <p className="text-lead text-body">İncelediğimiz siteler, uyarladığımız kaynaklar ve bilerek almadıklarımız.</p>
         </header>
       </div>

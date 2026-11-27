@@ -26,28 +26,40 @@
 
 /* Belge sayfası: Storybook başlıkları `:where()` ile sıfır özgüllükte,
    bu kurallar `!important`sız ezer. Gölge yok, saç çizgisi ve ton farkı. */
+/* Sakin Akış (27 Kasım 2026): başlık 500-600 ağırlık ve tonla; açıklama soluk ve okunur ölçüde;
+   önizleme gri kuyu + beyaz karo (20 px kuyu, kıl halka, gölge yok). */
 .sbdocs-wrapper { padding: 4rem 48px; }
+@media (max-width: 600px) { .sbdocs-wrapper { padding: 2.25rem 16px; } }
 .sbdocs-content { max-width: 1040px; }
 .sbdocs.sbdocs-title {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2rem, 3.6vw, 2.75rem);
-  line-height: 1.05;
+  font-weight: 600;
+  font-size: clamp(1.875rem, 3.2vw, 2.5rem);
+  line-height: 1.08;
   letter-spacing: -0.03em;
 }
 /* `.sb-unstyled *`: "Projeye Al" bloğunun kendi başlığı belge başlığı değil;
    dışlanmazsa bloğun üstünde 3,5rem boşluk ve yarım bir çizgi çıkıyordu. */
 .sbdocs-content h2:not(.sb-anchor, .sb-unstyled, .sb-unstyled *) {
   font-family: var(--font-display);
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.015em;
   margin-top: 3.5rem;
   padding-top: 1.25rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--line-soft);
   border-bottom: 0;
 }
-.sbdocs-content h3:not(.sb-anchor, .sb-unstyled, .sb-unstyled *) { font-family: var(--font-display); font-weight: 650; }
-.sbdocs-preview, .docs-story { border-radius: 14px; box-shadow: none; }
+.sbdocs-content h3:not(.sb-anchor, .sb-unstyled, .sb-unstyled *) { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
+/* Önizleme kuyusu: gri kuyu, içindeki hikaye beyaz karoda (canvas zemini sayfa rengi). */
+.sbdocs.sbdocs-preview, .sbdocs-content .sbdocs-preview {
+  border-radius: 20px;
+  box-shadow: 0 0 0 1px var(--line-soft);
+  background: var(--surface);
+  padding: 8px;
+  border: 0;
+}
+.sbdocs.sbdocs-preview .docs-story, .sbdocs-content .sbdocs-preview .docs-story { border-radius: 14px; box-shadow: 0 0 0 1px var(--line-soft); background: var(--page-bg); overflow: hidden; }
+.docs-story { border-radius: 14px; box-shadow: none; }
 
 /* Belge sayfasındaki önizlemede tam ekran alt sınırı yok (26 Kasım 2026, Vitrin): sayfa
    hikayeleri `min-h-dvh` ile sarılı; belgede "ekran" önizleme çerçevesi olduğu için içerik

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ArrowUpRight, Blocks as BlocksIcon, ChartArea, Compass, LayoutGrid, Palette, Rocket, SwatchBook } from "lucide-react";
-import { Suspense, type ReactNode } from "react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { buttonClass } from "@/components/ui/Button";
 import { CommandPalette, type Command } from "@/components/ui/command-palette";
@@ -151,7 +151,7 @@ function Coverage() {
     <>
       <div className="grid gap-4 rounded-2xl bg-surface p-5 sm:grid-cols-[1fr_18rem] sm:items-end sm:p-7">
         <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="text-[clamp(3rem,7vw,4.5rem)] leading-none font-semibold tracking-[-0.05em] text-strong tabular-nums">
+          <span className="text-[clamp(2.5rem,5.5vw,3.5rem)] leading-none font-medium tracking-[-0.04em] text-strong tabular-nums">
             {COVERED}/{TOTAL}
           </span>
           <span className="text-read text-body">bileşen bu sayfanın kaynağında içe aktarılıyor</span>
@@ -266,7 +266,7 @@ function AllInOnePage() {
             eyebrow="Bileşenler"
             title={
               <>
-                {GALLERY_COUNT} Parça, <span className="text-muted">Hepsi Canlı</span>
+                {GALLERY_COUNT} Parça <span className="text-muted">Hepsi Canlı</span>
               </>
             }
             lead="Her biri kendi kuyusunda, gerçek veriyle ve tıklanabilir: menüler açılır, takvim oklarla gezilir, pencere odak tuzağıyla gelir."
@@ -294,7 +294,7 @@ function AllInOnePage() {
             eyebrow="Grafikler"
             title={
               <>
-                {count("grafik")} Grafik, <span className="text-muted">Tek Bir Pano</span>
+                {count("grafik")} Grafik <span className="text-muted">Tek Bir Pano</span>
               </>
             }
             lead="Kanal payı akışın kaynaklarıyla, huninin son aşaması ısı haritasının Ekim toplamıyla, abonelik halkası abone sayısıyla aynı. Hiçbir toplam elle yazılmadı."
@@ -313,7 +313,7 @@ function AllInOnePage() {
             eyebrow="Bloklar"
             title={
               <>
-                Parçalar Birleşince, <span className="text-muted">Ürün Olur</span>
+                Parçalar Birleşince <span className="text-muted">Ürün Olur</span>
               </>
             }
             lead="Uygulama kabuğunun içinde yapay zeka asistanı planını adım adım yürütür; yaz ve gönder, cevap gelir. Giriş kartı ile ayarlar penceresi aynı dilde."
@@ -330,7 +330,7 @@ function AllInOnePage() {
             eyebrow="Tema"
             title={
               <>
-                On Palet, <span className="display-ink">İki Tema</span>
+                On Palet <span className="text-muted">İki Tema</span>
               </>
             }
             lead="Sistem renkleri nötr kalır; palet yalnızca birincil eylemi, marka karosunu ve kısa başlığı boyar. Bir karta dokun: bütün sayfa o paletle döner."
@@ -353,7 +353,7 @@ function AllInOnePage() {
             eyebrow="Kapsam"
             title={
               <>
-                Sayılan, <span className="text-muted">Sayılmayan Değil</span>
+                Sayılan <span className="text-muted">Sayılmayan Değil</span>
               </>
             }
             lead={`Liste snippets/ui klasöründen (${SNIPPETS.length} dosya) ve bu sayfanın kaynak dosyalarındaki içe aktarımlardan derleme anında çıkar. Bir ada dokun, kuyusuna gidersin.`}
@@ -388,9 +388,23 @@ function AllInOnePage() {
         </footer>
       </main>
       <CommandPalette commands={COMMANDS} placeholder="Bölüm ya da palet ara" />
-      <PaletteSwitcher initialPalette="signature" initialTheme="light" />
+      {/* Palet çubuğu kahramanın grafiğine binmesin: ilk ekran geçilince belirir (Sakin Akış: yüzen çubuk içerikten sonra). */}
+      <LatePaletteSwitcher />
     </div>
   );
+}
+
+/** Palet çubuğu ilk ekran boyu kaydırılınca gelir; geri çıkınca kaybolmaz (bir kez açılır). */
+function LatePaletteSwitcher() {
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (shown) return;
+    const check = () => window.scrollY > window.innerHeight * 0.8 && setShown(true);
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, [shown]);
+  return shown ? <PaletteSwitcher initialPalette="signature" initialTheme="light" /> : null;
 }
 
 /* --- Hikaye --------------------------------------------------------------- */

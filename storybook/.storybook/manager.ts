@@ -142,7 +142,19 @@ addons.register("dev-starter/page-stories", (api: API) => {
    Türkçe, kutu da Türkçe konuşsun. Kutu yeniden çizilince (tema değişimi)
    gözlemci tekrar yazar. */
 addons.register("dev-starter/search-placeholder", () => {
-  const PLACEHOLDER = "Ara";
+  // Tek harf kısayolları kapalı (enableShortcuts: false), arama kısayolu bizde: "/" ya da ⌘K / Ctrl+K.
+  const PLACEHOLDER = "Bileşen ya da Sayfa Ara  /";
+  document.addEventListener("keydown", (event) => {
+    const t = event.target as HTMLElement | null;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    const combo = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
+    if (event.key !== "/" && !combo) return;
+    const input = document.getElementById("storybook-explorer-searchfield") as HTMLInputElement | null;
+    if (!input || input.offsetParent === null) return;
+    event.preventDefault();
+    input.focus();
+    input.select();
+  });
   const apply = () => {
     const input = document.getElementById("storybook-explorer-searchfield") as HTMLInputElement | null;
     if (input && input.placeholder !== PLACEHOLDER) input.placeholder = PLACEHOLDER;
