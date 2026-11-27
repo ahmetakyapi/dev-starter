@@ -1944,3 +1944,12 @@ görsel, font ve imleç alınmadı, hepsi token'la sıfırdan yazıldı.
   gölge yerine kıl halka, başlık altı çizgisiz; `kuzeyova.css` → içerik gri kuyu, sayfa kartları
   16 px, birincil eylem koyu hap (palet rengi yalnız bilgi taşıdığı yerde), sayfa girişi
   480 ms buğu. Sayfaların yapısı ve verisi aynı.
+
+### Storybook düzen koruması (2026-11-27)
+
+- Sahibi: "değişik bir edit moduna giriyoruz, çok kötü, çıkmak zor." Neden: Storybook'un tek harf
+  düzen kısayolları (F tam ekran, S kenar çubuğu, A panel, T araç çubuğu, D panel yönü) odak
+  kenar çubuğundayken yanlışlıkla tetikleniyor ve düzen tarayıcıda saklandığı için yenilemede sürüyordu.
+- `enableShortcuts: false`; `manager.ts` → `layout-guard`: her açılışta varsayılan düzen, düzen
+  değişince sol altta "Düzeni Sıfırla" (Esc de aynı), panel sıfırlamadan önceki halinde kalır.
+  SB 10.6'da `api.getState` yok: araç çubuğu `section.sb-bar` varlığıyla okunur (yükseltmede doğrula).

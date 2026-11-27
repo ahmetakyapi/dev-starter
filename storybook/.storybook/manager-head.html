@@ -220,4 +220,13 @@
   .ds-navtool { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid color-mix(in oklab, currentColor 14%, transparent); background: transparent; color: inherit; opacity: .78; font-family: inherit; font-size: 12px; font-weight: 500; line-height: 1; cursor: pointer; transition: opacity .15s, background-color .15s; }
   .ds-navtool:hover { opacity: 1; background: color-mix(in oklab, currentColor 7%, transparent); }
   .ds-navtool:focus-visible { outline: 2px solid var(--ds-accent, currentColor); outline-offset: 2px; opacity: 1; }
+
+  /* Düzen koruması (manager.ts → layout-guard): düzen değişince sol altta tek çıkış. */
+  .ds-layout-reset { position: fixed; left: 16px; bottom: 16px; z-index: 2147483000; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 8px 0 14px; border: 0; border-radius: 999px; background: #18181b; color: #fafafa; font-family: inherit; font-size: 13px; font-weight: 500; box-shadow: 0 0 0 .5px rgb(0 0 0 / .16), 0 8px 24px rgb(0 0 0 / .18); cursor: pointer; animation: ds-reset-in 320ms cubic-bezier(.22,1,.36,1) both; }
+  .ds-layout-reset[hidden] { display: none; }
+  .ds-layout-reset kbd { font: inherit; font-size: 11px; padding: 2px 6px; border-radius: 6px; background: rgb(255 255 255 / .14); }
+  .ds-layout-reset:hover { background: #27272a; }
+  .ds-layout-reset:focus-visible { outline: 2px solid var(--ds-accent, #fafafa); outline-offset: 2px; }
+  @keyframes ds-reset-in { from { opacity: 0; translate: 0 8px; } }
+  @media (prefers-reduced-motion: reduce) { .ds-layout-reset { animation: none; } }
 </style>

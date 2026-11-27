@@ -37,6 +37,62 @@ addons.setConfig({
   // showRoots kapalı: açıkken tek düzeyli başlıklar (Vitrin, Başlangıç) her
   // zaman bölüm başlıklarının ÜSTÜNE çıkıyor ve storySort sırası bozuluyordu.
   sidebar: { showRoots: false, renderLabel },
+  // Tek harf düzen kısayolları KAPALI (27 Kasım 2026, sahibinin geri bildirimi: "değişik bir
+  // edit moduna giriyoruz, çıkmak zor"): odak kenar çubuğundayken F/S/A/T/D'ye yanlışlıkla
+  // basmak tam ekranı, kenar çubuğunu, paneli ve araç çubuğunu değiştiriyordu.
+  enableShortcuts: false,
+});
+
+/* Düzen koruması: Storybook düzeni (tam ekran, gizli kenar çubuğu, gizli araç çubuğu)
+   tarayıcıda saklar; "garip mod" yenileyince de sürüyordu. Her açılışta varsayılan düzene
+   dönülür. Düzen yine de değişirse (ayarlar menüsü, "Kapat" butonu) sol altta tek buton
+   "Düzeni Sıfırla" çıkar; Esc de aynı işi görür (yazı alanında ve açık diyalogda değil).
+   Telefonda kenar çubuğu zaten çekmece: orada yalnız tam ekran ve araç çubuğu denetlenir. */
+addons.register("dev-starter/layout-guard", (api: API) => {
+  const desktop = () => window.matchMedia("(min-width: 600px)").matches;
+  // SB 10 araç çubuğu durumunu okuyan bir API vermiyor (getState yok): çubuk DOM'da `section.sb-bar`.
+  const toolbarShown = () => !!document.querySelector("section.sb-bar");
+  const odd = () => api.getIsFullscreen() || !toolbarShown() || (desktop() && !api.getIsNavShown());
+  const reset = () => {
+    // Panel düzene dahil değil: sayfa hikayelerinde page-stories eklentisi onu kapalı tutar.
+    const panel = api.getIsPanelShown();
+    if (api.getIsFullscreen()) api.toggleFullscreen(false);
+    if (!toolbarShown()) api.toggleToolbar(true);
+    if (desktop() && !api.getIsNavShown()) api.toggleNav(true);
+    // Storybook kenar çubuğunu açarken paneli de gecikmeli geri getiriyor: bir süre sonra eski haline.
+    if (!panel) for (const ms of [60, 250]) setTimeout(() => api.getIsPanelShown() && api.togglePanel(false), ms);
+  };
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "ds-layout-reset";
+  button.hidden = true;
+  button.innerHTML =
+    '<svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span>Düzeni Sıfırla</span><kbd>Esc</kbd>';
+  button.addEventListener("click", () => {
+    reset();
+    sync();
+  });
+  const sync = () => {
+    if (!button.isConnected) document.body.append(button);
+    button.hidden = !odd();
+  };
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !odd()) return;
+    const t = event.target as HTMLElement | null;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (document.querySelector("dialog[open], [role='dialog']")) return;
+    reset();
+    sync();
+  });
+
+  // Açılışta saklanmış "garip" düzeni temizle (Storybook durumu kurduktan sonra).
+  setTimeout(() => {
+    reset();
+    sync();
+  }, 300);
+  window.setInterval(sync, 700);
 });
 
 addons.register("dev-starter/theme-sync", (api: API) => {

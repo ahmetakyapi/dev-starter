@@ -7,6 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Büyük kahraman, Portal Sakin Akış'a geçti, Storybook düzen koruması — 2026-11-27
+
+- Kapak kahramanı büyüdü: iki tonlu dev başlık, büyük sayılar, geniş vitrinde okunur ürün ekranı.
+- Portal: gri kuyu zemin, 16 px beyaz kartlar, koyu hap birincil eylem, sayfa girişi.
+- Storybook: tek harf düzen kısayolları kapalı; düzen değişince "Düzeni Sıfırla" (Esc), açılışta varsayılan düzen.
+
 ### Sakin Akış turu: yeni yön, on beş bileşen, Kapak ve Portfolyo — 2026-11-27
 
 - Yeni tasarım yönü `sakin-akis` (portfolyo, ekip sayfası, lab vitrini): ölçülen ritim, ürün ekranı dili, hareket tablosu; uiux, frontend, design-reviewer ve agentic-ui rolleri bu dile başvurur.
