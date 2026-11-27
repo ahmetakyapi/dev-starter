@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glide-link",
+  "type": "registry:ui",
+  "title": "Süpürülen Bağlantı",
+  "description": "Metin içi bağlantı; logo duvarı yerine altı çizili müşteri listesi; çizgi soldan süpürülür; `glideLinkClass` kendi Link'ine",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/glide-link.tsx",
+      "content": "import type { AnchorHTMLAttributes, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Süpürülen bağlantı: metin içi bağlantı (bio paragrafı, müşteri listesi,\n * \"şu yazıda anlattım\"). Dinlenmede altında ince, sönük bir kıl çizgi durur;\n * üzerine gelince ya da klavye odağında metin rengindeki güçlü çizgi soldan\n * sağa süpürülerek o kılın üstüne çekilir, ayrılınca aynı yoldan geri çekilir.\n *\n * NE ZAMAN: okunan düz metnin içindeki bağlantılar; logo duvarı yerine altı\n * çizili düz müşteri listesi (\"Seçili işler: A, B, C\"). Kişisel site, hakkında\n * sayfası, makale.\n * NE ZAMAN DEĞİL: gezinme menüsü (orada `aria-current` ve hap var), buton gibi\n * davranan eylem (\"Kaydet\" bağlantı değildir), kart başlığı (bütün kart\n * tıklanıyorsa çizgi gürültüdür).\n *\n * NASIL: çizgi `text-decoration` değil, iki katmanlı `background-image`:\n * altta `--color-line-strong` kılı, üstte yarısı `currentColor` yarısı saydam\n * 200% genişliğinde şerit. `background-position` 100% → 0 geçişiyle (450 ms,\n * `--ease-brand`) renkli yarı soldan içeri kayar. Satır kırılınca çizgi her\n * satırda ayrı çizilir (`box-decoration-break: clone`). Sunucu bileşeni,\n * yalnız CSS; hareket azaltmada çizgi anında değişir.\n *\n * ERİŞİLEBİLİRLİK: rengi tek işaret değil (dinlenmede de çizgi var, WCAG\n * 1.4.1). Dış bağlantı (`http…`) kendiliğinden yeni sekmede açılır, `rel`\n * eklenir ve gizli \"(yeni sekmede açılır)\" okunur; `external={false}` ile kapat.\n * Odak halkası globals.css'teki `focus-visible`.\n *\n * Kaynak: Sakin Akış turu (kişisel portfolyo dili, Kasım 2026); yalnız davranış, kod alınmadı.\n *\n *   <p>Şu an <GlideLink href=\"https://ornek.dev\">Örnek Stüdyo</GlideLink>'da tasarım lideriyim.</p>\n *\n * next/link ile: sınıfı ve stili kendin ver (kit `next/*` taşımaz):\n *   <GlideLinkStyle /> <Link href=\"/yazilar\" className={glideLinkClass}>Yazılar</Link>\n */\n\nconst CSS = `\n.ui-gl {\n  color: inherit;\n  text-decoration: none;\n  padding-bottom: 1px;\n  background-image:\n    linear-gradient(to right, currentColor 50%, transparent 50%),\n    linear-gradient(var(--color-line-strong), var(--color-line-strong));\n  background-size: 200% 1px, 100% 1px;\n  background-position: 100% 100%, 0 100%;\n  background-repeat: no-repeat;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n  transition: background-position 450ms var(--ease-brand), color 200ms ease;\n}\n.ui-gl:focus-visible { background-position: 0 100%, 0 100%; color: var(--color-strong); }\n@media (hover: hover) {\n  .ui-gl:hover { background-position: 0 100%, 0 100%; color: var(--color-strong); }\n}\n@media (prefers-reduced-motion: reduce) { .ui-gl { transition: none; } }`;\n\n/** Kendi bağlantı bileşenine (ör. next/link) verilecek sınıf; yanına bir kez `<GlideLinkStyle />`. */\nexport const glideLinkClass = \"ui-gl\";\n\n/** Stili sayfaya bir kez ekler (React aynı `href`li stili tekilleştirir). */\nexport function GlideLinkStyle() {\n  return (\n    <style href=\"ui-glide-link\" precedence=\"default\">\n      {CSS}\n    </style>\n  );\n}\n\ntype GlideLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, \"href\" | \"children\"> & {\n  href: string;\n  children: ReactNode;\n  /** Yeni sekmede aç. Varsayılan: adres `http(s)://` ile başlıyorsa evet. */\n  external?: boolean;\n  /** Dış bağlantıda ekran okuyucunun duyduğu ek. */\n  newTabLabel?: string;\n};\n\nexport function GlideLink({ href, children, external, newTabLabel = \"(yeni sekmede açılır)\", className, ...rest }: GlideLinkProps) {\n  const isExternal = external ?? /^https?:\\/\\//.test(href);\n  return (\n    <>\n      <GlideLinkStyle />\n      <a\n        href={href}\n        className={cn(glideLinkClass, className)}\n        {...(isExternal ? { target: \"_blank\", rel: \"noopener noreferrer\" } : null)}\n        {...rest}\n      >\n        {children}\n        {isExternal ? <span className=\"sr-only\"> {newTabLabel}</span> : null}\n      </a>\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Tanıtım"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "glide-link",
+    "palettes": false
+  }
+}

@@ -1011,6 +1011,24 @@
       "palettes": false
     },
     {
+      "name": "demo-frame",
+      "title": "Lab Çerçevesi",
+      "category": "Tanıtım",
+      "description": "Lab kartı: canlı bileşen noktalı zeminli kuyuda, altında \"**Kalın başlık.** soluk açıklama\" künyesi + isteğe \"Devamı\"; sahne seçici yuvası",
+      "file": "snippets/ui/demo-frame.tsx",
+      "client": false,
+      "storyId": "demo-frame",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "detail-panel",
       "title": "Ayrıntı Paneli",
       "category": "Veri",
@@ -1432,6 +1450,24 @@
       "palettes": false
     },
     {
+      "name": "glide-link",
+      "title": "Süpürülen Bağlantı",
+      "category": "Tanıtım",
+      "description": "Metin içi bağlantı; logo duvarı yerine altı çizili müşteri listesi; çizgi soldan süpürülür; `glideLinkClass` kendi Link'ine",
+      "file": "snippets/ui/glide-link.tsx",
+      "client": false,
+      "storyId": "glide-link",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "halftone-image",
       "title": "Yarım Ton Görsel",
       "category": "Hareket ve Doku",
@@ -1780,6 +1816,29 @@
       "palettes": false
     },
     {
+      "name": "like-button",
+      "title": "Beğeni Butonu",
+      "category": "Buton ve İkon",
+      "description": "Herkese açık tek tür onay sayısı (çalışma, not, galeri karesi); kalp pop + yuvarlanan sayaç",
+      "file": "snippets/ui/like-button.tsx",
+      "client": true,
+      "storyId": "like-button",
+      "registryDependencies": [
+        "digit-roll"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "line-chart",
       "title": "Çizgi Grafiği",
       "category": "Grafik",
@@ -1876,6 +1935,26 @@
       "palettes": false
     },
     {
+      "name": "media-lightbox",
+      "title": "Medya Işıklığı",
+      "category": "Katmanlar",
+      "description": "Galeri, portfolyo ya da vaka karesini sayfanın üstünde büyük gösterme; görsel, sessiz video ya da canlı sahne, önceki/sonraki; `useLightbox`",
+      "file": "snippets/ui/media-lightbox.tsx",
+      "client": true,
+      "storyId": "media-lightbox",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "mesh-gradient",
       "title": "Hareketli Renk Zemini",
       "category": "Tanıtım",
@@ -1963,6 +2042,31 @@
         "lib/utils.ts"
       ],
       "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "note-card",
+      "title": "Not Kartı",
+      "category": "Tanıtım",
+      "description": "Kısa not/gönderi akışı (Notlar sekmesi, değişiklik günlüğü): yazar, göreli zaman, kaynak ikonu, metin, oynat butonlu poster, yanıt/paylaş/beğeni; `NoteList`, `NoteMedia`",
+      "file": "snippets/ui/note-card.tsx",
+      "client": true,
+      "storyId": "note-card",
+      "registryDependencies": [
+        "avatar",
+        "like-button"
+      ],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
@@ -2261,6 +2365,27 @@
       "palettes": false
     },
     {
+      "name": "profile-intro",
+      "title": "Profil Açılışı",
+      "category": "Tanıtım",
+      "description": "Kişisel site, ekip ya da yazar sayfası, ürün kapağının sakin girişi: 64 px avatar, ad, \"Güncellendi\" tarihi, koyu hap eylem + anlamına göre oynayan ikon bağlantıları, biyografi yuvası",
+      "file": "snippets/ui/profile-intro.tsx",
+      "client": true,
+      "storyId": "profile-intro",
+      "registryDependencies": [
+        "animated-icon"
+      ],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "progress",
       "title": "İlerleme",
       "category": "Geri Bildirim",
@@ -2493,6 +2618,25 @@
       "palettes": false
     },
     {
+      "name": "ruler-toc",
+      "title": "Cetvel İçindekiler",
+      "category": "Form ve Gezinme",
+      "description": "Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda \"01 · Ad\" + önizleme; dar ekranda \"01 Hoş geldin\" düğmesi",
+      "file": "snippets/ui/ruler-toc.tsx",
+      "client": true,
+      "storyId": "ruler-toc",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "sankey-chart",
       "title": "Akış Grafiği",
       "category": "Grafik",
@@ -2591,6 +2735,42 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "scroll-focus",
+      "title": "Kaydırma Odağı",
+      "category": "Hareket ve Doku",
+      "description": "Portfolyo akışında büyük medya kartı ya da vaka bölüm başlığı (`variant=\"title\"`): kaydırdıkça buğudan netleşir (.34→1, 8px→0, 18px→0)",
+      "file": "snippets/ui/scroll-focus.tsx",
+      "client": false,
+      "storyId": "scroll-focus",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "scroll-hide-bar",
+      "title": "Kaydırınca Çekilen Çubuk",
+      "category": "Katmanlar",
+      "description": "Uzun akışta yüzen hap çubuk: aşağı kaydırınca çekilir, yukarıda geri gelir (süzgeç çubuğu, okuma araçları); `useScrollHideBar().hold()`",
+      "file": "snippets/ui/scroll-hide-bar.tsx",
+      "client": true,
+      "storyId": "scroll-hide-bar",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -2766,6 +2946,46 @@
       "client": true,
       "storyId": "sheet",
       "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "shot-card",
+      "title": "Çalışma Kartı",
+      "category": "Tanıtım",
+      "description": "Portfolyo / vaka akışı kartı: gri kuyuda görsel, sessiz döngü video ya da bileşen sahnesi; başlık, açıklama, künye; `actions` yuvası, `onOpen` ile büyütme",
+      "file": "snippets/ui/shot-card.tsx",
+      "client": true,
+      "storyId": "shot-card",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "shot-grid",
+      "title": "Çalışma Izgarası",
+      "category": "Tanıtım",
+      "description": "8+ iş: Akış (tek sütun) ↔ Masonry (en kısa sütuna), süzgeç, Karıştır; `useShotGrid` + `ShotGrid` + `ShotGridToolbar`",
+      "file": "snippets/ui/shot-grid.tsx",
+      "client": true,
+      "storyId": "shot-grid",
+      "registryDependencies": [
+        "scroll-hide-bar"
+      ],
       "templateFiles": [
         "lib/utils.ts"
       ],

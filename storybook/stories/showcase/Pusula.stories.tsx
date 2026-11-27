@@ -5,6 +5,7 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import { BOARD, DELAYED, OPEN_TICKETS, TICKETS, periodStats, tl } from "./_data";
 import { PusulaApp } from "./_app";
 import { TanitimPage } from "./_tanitim";
+import { PortfolyoPage } from "./_portfolyo";
 import { settle } from "./_settle";
 
 /** Telefonda masaüstü öğeleri gizli: yalnızca görüneni tıkla. */
@@ -413,6 +414,32 @@ export const Landing: Story = {
     await waitFor(() => expect(canvas.getByRole("img", { name: /odakta Takvim/ })).toBeInTheDocument());
     await userEvent.click(canvas.getByRole("button", { name: "Maskota merhaba de" }));
     await canvas.findByText("Merhaba!");
+    await settle(globals);
+  }),
+};
+
+export const Portfolio: Story = {
+  name: "Portfolyo",
+  render: () => <PortfolyoPage />,
+  parameters: {
+    // Sabit cetvel ve yüzen süzgeç çubuğu belge sayfasının üstüne binmesin.
+    docs: {
+      story: { inline: false, height: "900px" },
+      description: {
+        story:
+          "Sakin Akış dilinin örnek sayfası (`design-directions.md` → `sakin-akis`): Pusula'nın tasarım liderinin kişisel sayfası. Profil açılışı (tazelik satırı, anlamına göre oynayan ikonlar, e-postayı kopyala), altı çizili müşteri listesi, sekmeler: Akış (Akış ↔ Masonry, süzgeç, karıştır; kaydırınca buğudan netleşen kartlar, büyütme, beğeni), Notlar, Vakalar (doğrulanabilir sayı + katkı takvimi), Lab (noktalı sahnede canlı bileşen). Süzgeç çubuğu aşağı kaydırınca saklanır; sol kenarda çizgi cetveli.",
+      },
+    },
+  },
+  play: testOnly(async ({ canvasElement, globals }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole("heading", { level: 1, name: "Deniz Aydın" });
+    await expect(canvas.getAllByRole("article")).toHaveLength(6);
+    await userEvent.click(canvas.getByRole("button", { name: "Aç: Gelen Kutusu" }));
+    await expect(await within(canvasElement.ownerDocument.body).findByRole("dialog")).toBeVisible();
+    await userEvent.keyboard("{Escape}");
+    await userEvent.click(canvas.getByRole("tab", { name: "Lab" }));
+    await canvas.findByText("Yumuşak durum değişimi.");
     await settle(globals);
   }),
 };

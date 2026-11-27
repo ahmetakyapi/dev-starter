@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import "../showcase/pusula.css";
-import { Archive, Blocks, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, LayoutTemplate, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
+import { Archive, Blocks, CodeXml, Compass as CompassIcon, SwatchBook, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, LayoutTemplate, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
 import { m, useReducedMotion } from "motion/react";
 import { useState, type ReactNode } from "react";
 import { useGlobals } from "storybook/preview-api";
@@ -11,7 +11,15 @@ import { AreaChart } from "@/components/ui/area-chart";
 import { CategoryCard, CategoryGrid, type CategoryTone } from "@/components/ui/category-card";
 import { AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { DemoFrame } from "@/components/ui/demo-frame";
 import { Dial } from "@/components/ui/dial";
+import { GlideLink } from "@/components/ui/glide-link";
+import { LikeButton } from "@/components/ui/like-button";
+import { ProfileIntro } from "@/components/ui/profile-intro";
+import { RulerToc } from "@/components/ui/ruler-toc";
+import { ScrollFocus } from "@/components/ui/scroll-focus";
+import { ShotCard } from "@/components/ui/shot-card";
+import { Tabs } from "@/components/ui/tabs";
 import { Kbd } from "@/components/ui/kbd";
 import { PATTERN_PRESETS, PatternBackground } from "@/components/ui/pattern-bg";
 import { QuickPoll } from "@/components/ui/quick-poll";
@@ -24,7 +32,8 @@ import { cn } from "@/lib/utils";
 import { palettes } from "../../../packages/@ahmet/theme/tokens";
 import uiPackage from "../../../packages/@ahmet/ui/package.json";
 import { PALETTES } from "../../.storybook/palettes";
-import { KIT_COUNT, TOTAL } from "../amiral/_kapsam";
+import { KIT_COUNT, STORY_COUNT, TOTAL } from "../amiral/_kapsam";
+import { testOnly } from "../_lib/testOnly";
 import { Hero } from "./_hero";
 import { firstOf, under } from "./_harita";
 
@@ -640,8 +649,312 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/* ── Sakin Akış kapağı (27 Kasım 2026) ───────────────────────────────────
+   Kataloğun ilk ekranı kişisel bir sayfa gibi: dar sütun, profil açılışı
+   (işaret, ad, tazelik, tek koyu eylem, anlamına göre oynayan ikonlar), üç
+   kısa paragraf ve altı çizili kapılar; altında sekmeler (Akış · Harita ·
+   Paletler · Kurulum). Akış kartlarının sahnesi gerçek bileşenler, kaydırdıkça
+   buğudan netleşir. Sergi kahramanı "Sergi" hikayesinde duruyor (OG görseli
+   oradan üretilir). Yön: knowledge/design-directions.md → sakin-akis. */
+
+/** Tazelik satırı: sürüm çıkarken (`/release`) güncellenir; uydurma tarih yazılmaz. */
+const UPDATED = "2026-11-27";
+const REPO = "https://github.com/ahmetakyapi/dev-starter";
+
+function CalmShots() {
+  const [vote, setVote] = useState<string | null>(null);
+  const [range, setRange] = useState("hafta");
+  const shots: { id: string; title: string; description: string; meta: string[]; story: string; likes: number; scene: ReactNode }[] = [
+    {
+      id: "pano",
+      title: "Pusula · Pano",
+      description: "Örnek uygulamanın panosu: üç sayı ve iki dönemlik ciro eğrisi.",
+      meta: ["Örnek Sayfa", "Grafik"],
+      story: "demo-app--overview",
+      likes: 64,
+      scene: (
+        <AppWindow title="Pusula · Pano" icon={<CompassIcon className="size-3.5" />} className="w-full max-w-lg" data-product="pusula">
+          <div className="p-3">
+            <AreaChart
+              title="Aylık Ciro: Son 12 Ay ve Önceki 12 Ay"
+              labels={MONTHS}
+              series={[
+                { label: "Son 12 Ay", values: THIS_YEAR.map((v) => v * 1000), series: 1 },
+                { label: "Önceki 12 Ay", values: LAST_YEAR.map((v) => v * 1000), series: 2 },
+              ]}
+              valueFormat={{ style: "currency", currency: "TRY", notation: "compact", maximumFractionDigits: 1 }}
+              height="h-40"
+            />
+          </div>
+        </AppWindow>
+      ),
+    },
+    {
+      id: "oylama",
+      title: "Ekip Oylaması",
+      description: "Tek dokunuşla karar; sonuç oy verince görünür.",
+      meta: ["Bileşen", "Seçim"],
+      story: "quick-poll--default",
+      likes: 31,
+      scene: (
+        <div className="w-full max-w-sm rounded-[1.25rem] bg-overlay p-4 shadow-raised ring-1 ring-line">
+          <QuickPoll
+            question="Yeni sezonda hangi palet?"
+            meta="Tasarım ekibi · cumaya kadar"
+            options={[
+              { id: "signature", label: "Signature · mavi" },
+              { id: "jade", label: "Yeşim · yeşil" },
+              { id: "iris", label: "İris · mor" },
+            ]}
+            counts={{ signature: 5, jade: 3, iris: 2 }}
+            value={vote}
+            onValueChange={setVote}
+          />
+        </div>
+      ),
+    },
+    {
+      id: "ozet",
+      title: "Haftalık Özet Ayarı",
+      description: "Kayan seçim hapı ve anında etki eden anahtar; kaydet butonu yok.",
+      meta: ["Bileşen", "Form"],
+      story: "segmented-control--default",
+      likes: 18,
+      scene: (
+        <div className="grid w-full max-w-sm gap-3 rounded-[1.25rem] bg-overlay p-4 shadow-raised ring-1 ring-line">
+          <SegmentedControl
+            aria-label="Özet Sıklığı"
+            size="sm"
+            value={range}
+            onValueChange={setRange}
+            options={[
+              { value: "gun", label: "Günlük" },
+              { value: "hafta", label: "Haftalık" },
+              { value: "ay", label: "Aylık" },
+            ]}
+          />
+          <div className="rounded-lg bg-surface px-4 py-1">
+            <Switch label="Geciken Siparişleri Ekle" defaultChecked />
+          </div>
+        </div>
+      ),
+    },
+  ];
+  return (
+    <div className="grid gap-10">
+      {shots.map((s) => (
+        <ScrollFocus key={s.id}>
+          <ShotCard
+            title={s.title}
+            description={s.description}
+            meta={s.meta}
+            titleAs="h3"
+            actions={
+              <span className="flex items-center gap-3">
+                <GlideLink href={to(s.story)} target="_top" className="text-small">
+                  Hikayeye git
+                </GlideLink>
+                <LikeButton count={s.likes} />
+              </span>
+            }
+          >
+            {s.scene}
+          </ShotCard>
+        </ScrollFocus>
+      ))}
+    </div>
+  );
+}
+
+/* Harita: kartlı dev ızgara yerine sakin satır listesi (ikon karosu, ad, soluk not, sayı). */
+function CalmMap() {
+  return (
+    <nav aria-label="Katalog Haritası" className="grid gap-8">
+      {mapSections().map((section) => (
+        <div key={section.label} className="grid gap-2">
+          <h2 className="px-3 text-small text-soft">{section.label}</h2>
+          <ul className="grid gap-1">
+            {section.rows.map((row) => (
+              <li key={row.id}>
+                <a
+                  href={to(row.id)}
+                  target="_top"
+                  className={cn("grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors duration-200 hover:bg-surface", FOCUS)}
+                >
+                  <span aria-hidden className="grid size-9 place-items-center rounded-xl bg-surface text-muted ring-1 ring-line-soft">
+                    <row.icon className="size-4" strokeWidth={1.8} />
+                  </span>
+                  <span className="grid min-w-0">
+                    <span className="truncate text-base text-strong">{row.name}</span>
+                    <span className="truncate text-small text-muted">{row.note}</span>
+                  </span>
+                  {row.count && <span className="text-small whitespace-nowrap text-soft tabular-nums">{row.count}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  );
+}
+
+/* Paletler: Lab çerçevesinde on numune (yerel radyo, oklarla gezilir) + tema anahtarı. */
+function CalmPalettes({ palette, theme, onPick, onTheme }: { palette: PaletteName; theme: ThemeName; onPick: (value: PaletteName) => void; onTheme: (next: ThemeName) => void }) {
+  const current = PALETTES.find((p) => p.value === palette) ?? PALETTES[0];
+  const values = palettes[palette][theme];
+  return (
+    <div className="grid gap-12">
+      <DemoFrame title="On palet, iki tema." description="Numuneye bas: tuval, kenar çubuğu ve belge aynı anda o paletle çizilir.">
+        <div className="grid w-full max-w-sm justify-items-center gap-5 rounded-2xl bg-overlay p-5 shadow-raised ring-1 ring-line">
+          <fieldset className="grid justify-items-center gap-3">
+            <legend className="sr-only">Palet</legend>
+            <div className="grid grid-cols-5 gap-2.5">
+              {PALETTES.map((p) => (
+                <label key={p.value} className="relative grid cursor-pointer place-items-center" title={p.title}>
+                  <input type="radio" name="kapak-palet" value={p.value} checked={p.value === palette} onChange={() => onPick(p.value as PaletteName)} aria-label={p.title} className="peer sr-only" />
+                  <span
+                    aria-hidden
+                    className="size-8 rounded-full ring-1 ring-line ring-offset-2 ring-offset-overlay transition-[scale,box-shadow] duration-200 peer-checked:ring-2 peer-checked:ring-strong peer-focus-visible:ring-2 peer-focus-visible:ring-line-focus hover:scale-105"
+                    style={{ backgroundColor: palettes[p.value as PaletteName][theme].primary }}
+                  />
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <p className="flex items-center gap-2 text-small">
+            <span className="text-strong">{current.title}</span>
+            <span className="font-mono text-soft">{values.primary}</span>
+          </p>
+          <div className="w-full rounded-lg bg-surface px-4 py-1">
+            <Switch label="Koyu Tema" checked={theme === "dark"} onChange={(e) => onTheme(e.currentTarget.checked ? "dark" : "light")} />
+          </div>
+        </div>
+      </DemoFrame>
+      <DemoFrame title="Rol renkleri." description="Birincil, üstü ve yıkanmış ton paletle birlikte döner; değerler token dosyasından." size="sm">
+        <div className="flex flex-wrap justify-center gap-2">
+          <span className="rounded-full bg-primary px-3 py-1 text-small text-on-primary">Birincil</span>
+          <span className="rounded-full bg-primary-wash px-3 py-1 text-small text-primary-ink">Yıkanmış</span>
+          <span className="rounded-full bg-surface px-3 py-1 text-small text-strong ring-1 ring-line">Yüzey</span>
+        </div>
+      </DemoFrame>
+    </div>
+  );
+}
+
+/* Kurulum: terminal Lab çerçevesinde, künye iki yolu tek cümlede söyler. */
+function CalmInstall() {
+  return (
+    <DemoFrame title="İki yoldan projeye al." description={`Kaynak olarak bağımlılıklarıyla ya da ${KIT_COUNT} bileşenlik paket olarak.`} size="lg">
+      <div className="w-full max-w-lg min-h-56">
+        <Terminal
+          title="~/yeni-proje"
+          lines={[
+            { kind: "comment", text: "kaynak olarak, bağımlılıklarıyla" },
+            { kind: "command", text: "node ~/dev-starter/scripts/add-ui.mjs . shot-card profile-intro" },
+            { kind: "output", text: "+ shot-card.tsx, profile-intro.tsx, animated-icon.tsx", tone: "success" },
+            { kind: "comment", text: "ya da paket olarak" },
+            { kind: "command", text: "npm i @ahmetakyapi/ui @ahmetakyapi/theme" },
+            { kind: "output", text: `+ @ahmetakyapi/ui@${uiPackage.version}`, tone: "success" },
+          ]}
+        />
+      </div>
+    </DemoFrame>
+  );
+}
+
+function CalmCover({ palette, theme, onPick, onTheme }: { palette: PaletteName; theme: ThemeName; onPick: (value: PaletteName) => void; onTheme: (next: ThemeName) => void }) {
+  return (
+    <div className="min-h-dvh overflow-x-clip bg-page text-body">
+      <RulerToc
+        label="Kapakta"
+        sections={[
+          { id: "kapak-giris", label: "Hoş geldin" },
+          { id: "kapak-sekmeler", label: "Katalog" },
+          { id: "kapak-kunye", label: "Künye" },
+        ]}
+      />
+      <main className="mx-auto grid max-w-3xl gap-16 px-5 pt-14 pb-12 sm:px-8 sm:pt-20">
+        <section id="kapak-giris" aria-label="Hoş geldin" className="mx-auto w-full max-w-[34rem]">
+          <ProfileIntro
+            name="dev-starter"
+            avatar={<BrandMark className="size-full rounded-none shadow-none" />}
+            updated={UPDATED}
+            cta={{ label: "Kataloğa Başla", href: to("showcase--all-in-one"), target: "_top" }}
+            links={[
+              { label: "Kod Deposu", href: REPO, icon: CodeXml, motion: "spin" },
+              { label: "Örnek Uygulama", href: to("demo-app--overview"), icon: CompassIcon, motion: "wiggle", target: "_top" },
+              { label: "Paletler", href: to("cover--exhibit"), icon: SwatchBook, motion: "bounce", target: "_top" },
+            ]}
+          >
+            <p>Kişisel geliştirme ekosistemi: yeni proje başlatmak, tema uygulamak ve yayına çıkmak buradan başlar.</p>
+            <p>
+              {TOTAL} bileşen, {STORY_COUNT} hikaye, {PALETTES.length} palet ve iki tema; hepsi tek token mimarisinden. Kod, metin ve görsel
+              kopyalanmaz, her şey token&rsquo;la yazılır.
+            </p>
+            <p>
+              Örnek sayfalar:{" "}
+              <GlideLink href={to("demo-app--overview")} target="_top">
+                Pusula
+              </GlideLink>
+              ,{" "}
+              <GlideLink href={to("demo-app--landing")} target="_top">
+                Tanıtım
+              </GlideLink>
+              ,{" "}
+              <GlideLink href={to("demo-app--portfolio")} target="_top">
+                Portfolyo
+              </GlideLink>
+              ,{" "}
+              <GlideLink href={to("showcase--all-in-one")} target="_top">
+                Her Şey Bir Arada
+              </GlideLink>
+              .
+            </p>
+          </ProfileIntro>
+        </section>
+        <section id="kapak-sekmeler" aria-label="Katalog" className="grid gap-8">
+          <Tabs
+            aria-label="Kapak Bölümleri"
+            className="mx-auto"
+            items={[
+              { value: "akis", label: "Akış", panel: <CalmShots /> },
+              { value: "harita", label: "Harita", panel: <CalmMap /> },
+              { value: "paletler", label: "Paletler", panel: <CalmPalettes palette={palette} theme={theme} onPick={onPick} onTheme={onTheme} /> },
+              { value: "kurulum", label: "Kurulum", panel: <CalmInstall /> },
+            ]}
+          />
+        </section>
+        <div id="kapak-kunye">
+          <Colophon />
+        </div>
+      </main>
+    </div>
+  );
+}
+
 export const Overview: Story = {
   name: "Tanıtım",
+  render: function Render() {
+    const [globals, updateGlobals] = useGlobals();
+    const palette = (String(globals.palette ?? "signature") in palettes ? String(globals.palette ?? "signature") : "signature") as PaletteName;
+    const theme: ThemeName = ["dark", "Koyu"].includes(String(globals.theme)) ? "dark" : "light";
+    return <CalmCover palette={palette} theme={theme} onPick={(value) => updateGlobals({ palette: value })} onTheme={(next) => updateGlobals({ theme: next })} />;
+  },
+  // Yalnız test koşusunda: arayüzde sekme kendi kendine değişmesin (ziyaretçi ilk ekranda Akış'ı görür).
+  play: testOnly(async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("heading", { level: 1 })).toHaveTextContent("dev-starter");
+    await expect(canvas.getByRole("link", { name: "Kataloğa Başla" })).toHaveAttribute("target", "_top");
+    await fireEvent.click(canvas.getByRole("tab", { name: "Paletler" }));
+    await expect(await canvas.findByRole("radio", { name: "Yeşim" })).toBeInTheDocument();
+    await fireEvent.click(canvas.getByRole("tab", { name: "Harita" }));
+    await expect(await canvas.findByRole("navigation", { name: "Katalog Haritası" })).toBeInTheDocument();
+  }),
+};
+
+export const Exhibit: Story = {
+  name: "Sergi",
   render: function Render() {
     const [globals, updateGlobals] = useGlobals();
     const palette = (String(globals.palette ?? "signature") in palettes ? String(globals.palette ?? "signature") : "signature") as PaletteName;

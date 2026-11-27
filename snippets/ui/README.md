@@ -75,6 +75,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `reactions.tsx` | Mesaja/nota tek dokunuşla tepki (Beğendim, Bakıyorum, Tamam) | Base UI (`popover`), lucide | Evet | Emoji yok, ikon + Türkçe ad; hap `aria-pressed`, adı sayıyı söyler; sıfıra inen hap kalkar |
 | `toggle-group.tsx` | Basılı/basılı değil butonlar: biçim araç çubuğu, görünüm seçimi; tekli ya da çoklu, `well`/`ghost` | Base UI, `tooltip`, `kbd`, lucide | Evet | `aria-pressed`, gezici tabindex ve oklar; yalnız ikonlu öğede `label` tipte zorunlu + tooltip |
 | `assignee-picker.tsx` | Kişi atama: talep, görev, kart (tekli ya da çoklu) | Base UI (`popover`), `avatar`, lucide | Evet | Tetikleyici adı durumu söyler; `combobox` + `listbox`, `aria-activedescendant`, ↑↓ Home End Enter; Türkçe harf düzleyen arama |
+| `like-button.tsx` | Herkese açık tek tür onay sayısı (çalışma, not, galeri karesi); kalp pop + yuvarlanan sayaç | `digit-roll`, lucide | Evet | `aria-pressed`, ad sayıyı söyler ("Beğen, 220 beğeni"); iyimser güncelleme, reddedilirse geri alınır ve hata `role="status"`ta okunur; dolu/boş şekil renge ek işaret; 44 px |
 
 ### Katmanlar
 
@@ -92,6 +93,8 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `context-menu.tsx` | Nesne üstünde sağ tık / uzun basma eylemleri | Base UI, `kbd` | Evet | Menü klavye haritası tam, alt menü sağ/sol okla; yıkıcı öğe ayrı grupta; kısayol `aria-hidden` |
 | `notification-center.tsx` | Üst çubukta zil + bildirim listesi | Base UI, lucide | Evet | Zil adı sayıyı söyler ("Bildirimler, 3 okunmamış"); gruplar başlıklı `ul`; `<time dateTime>` |
 | `hover-card.tsx` | Bağlantının önizlemesi (@ad, atanan kişi): `HoverCard` + `ProfilePreview` | Base UI, `avatar` | Evet | 500 ms fare beklemesi ya da klavye odağıyla açılır, Escape kapatır; dokunmatikte ilk dokunuş açar; kart yalnız ek bilgi |
+| `media-lightbox.tsx` | Galeri, portfolyo ya da vaka karesini sayfanın üstünde büyük gösterme; görsel, sessiz video ya da canlı sahne, önceki/sonraki; `useLightbox` | yerel `<dialog>`, lucide | Evet | Odak tuzağı ve Escape tarayıcıdan, odak açana döner, sayaçlı kilit; ad karenin başlığı, "3 / 12" canlı bölgede; ←/→; hareket azaltmada animasyon ve otomatik oynatma yok |
+| `scroll-hide-bar.tsx` | Uzun akışta yüzen hap çubuk: aşağı kaydırınca çekilir, yukarıda geri gelir (süzgeç çubuğu, okuma araçları); `useScrollHideBar().hold()` | yok | Evet | Rol vermez (içeriğin işi); gizliyken `inert`; odakta ya da `open` doğruyken gizlenmez; hareket azaltmada solma |
 
 ### Veri
 
@@ -149,6 +152,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `saved-views.tsx` | Sık kullanılan süzgeç + sıralama birleşimi tek tıkla çip: sabit görünüm kaldırılamaz, kullanıcınınki × ile silinir, "Görünümü Kaydet" satır içi ad alanı | `chip`, lucide | Evet | Grup + ad; görünüm `aria-pressed` + ✓; kayıt adı boş/uzun/yinelenen olamaz (`role="alert"`, `aria-invalid`); Enter kaydeder, Esc vazgeçer; odak butonye döner |
 | `setup-card.tsx` | Kenar çubuğu dibinde kurulum çağrısı: başlık, tek cümle, ilerleme halkası (3 / 4), Atla ve Sonraki | lucide | Evet | Halka `role="progressbar"` + "Adım 3, toplam 4", sayı da yazılı; butonlar 44/32 px; `headingLevel`; hareket azaltmada halka geçişsiz |
 | `workspace-switcher.tsx` | Kenar çubuğu tepesinde hesap/şirket/çalışma alanı değiştirici: logo karosu + ad + alt satır + çift ok; menü radyo listesi + `footer` | `dropdown-menu`, lucide | Evet | Base UI Menu: ok tuşları, Escape tetikleyiciye döner; tek alan varsa tıklanamaz düz kart; `collapsed` yalnız logo |
+| `ruler-toc.tsx` | Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda "01 · Ad" + önizleme; dar ekranda "01 Hoş geldin" düğmesi | lucide | Evet | `nav` + ad, gerçek bağlantılar, `aria-current="location"`; tık bölüme kaydırır ve odağı taşır; dar ekran düğmesi `aria-expanded`/`aria-controls`, Escape ve dışarı tık kapatır; hareket azaltmada yaysız |
 
 \* `accordion.tsx` yalnızca kaydırma çapası koruması için istemci; katlama
 JavaScript'siz de çalışır.
@@ -257,6 +261,7 @@ değişti, burası önemli) ve hareket azaltmada durur; renk yalnız token'dan,
 | `halftone-image.tsx` | Fotoğrafı token renginde nokta, kare ya da ASCII ızgarasına çevirir | motion (`useReducedMotion`) | Evet | Tuval `role="img"` + `alt` zorunlu; imleç etkisi yalnız ince işaretçide, hareket azaltmada yok |
 | `mark-annotate.tsx` | Kalemle çizilmiş vurgu: altı çizgi, fosforlu kalem, daire, kutu, üstü çizili | motion (`useInView`) | Evet | İşaret `aria-hidden`; anlam taşıyorsa metinle de (`<s>`); hareket azaltmada doğrudan çizili |
 | `expandable-card.tsx` | Kart yerinden büyüyüp pencereye döner; görsel ve başlık akar | motion (`domMax`), lucide, `react-dom` | Evet | `role="dialog"` + `aria-modal`; odak Kapat'a, Tab içeride, Escape ve zemin kapatır, odak karta döner |
+| `scroll-focus.tsx` | Portfolyo akışında büyük medya kartı ya da vaka bölüm başlığı (`variant="title"`): kaydırdıkça buğudan netleşir (.34→1, 8px→0, 18px→0) | yok | Hayır | İçerik DOM'da hep tam; desteksiz tarayıcıda ve hareket azaltmada düz görünür; kahramana ve gövde metnine verilmez |
 
 ### Tanıtım
 
@@ -298,6 +303,12 @@ Sayfası hikayesi.
 | `feature-list.tsx` | Özellik listesi: renkli çizgi ikon + başlık + soluk açıklama, kıl çizgili satırlar; sergilenen görselin yanında | yok | Hayır | `ul` + başlık düzeyi (`headingLevel`); renk yalnız ikonda, anlam metinde |
 | `head-mark.tsx` | Başlık içinde tek işaret: `tile` (satır boyu ikon karesi), `highlight` (açılışta çekilen kalem şeridi), `dotted` (varlık adının noktalı alt çizgisi) | yok | Hayır | İkon `aria-hidden`, başlık işaretsiz tam okunur; kalem şeridi hareket azaltmada baştan çizili |
 | `orb.tsx` | Küre: renkleri dönen parlak cam küre (`swirl`, yer gölgeli) ya da meridyenleri dönen noktalı dünya (`globe`); `OrbCarousel` ortadaki net, yandakiler bulanık ve kesik | motion | Evet | Süs `aria-hidden`, anlam taşıyorsa `label` → `role="img"`; şeritte küre butonu + `aria-pressed`; hareket azaltmada durağan |
+| `profile-intro.tsx` | Kişisel site, ekip ya da yazar sayfası, ürün kapağının sakin girişi: 64 px avatar, ad, "Güncellendi" tarihi, koyu hap eylem + anlamına göre oynayan ikon bağlantıları, biyografi yuvası | `animated-icon`, lucide | Evet | Ad `h1` (`titleAs`) ve hiç gizlenmez (açılış yalnız CSS); `<time dateTime>`; ikon bağlantısının adı `aria-label`, balon `aria-hidden` kopya; e-posta kopyalama sonucu `role="status"`, hata da söylenir; 44 px hedef |
+| `glide-link.tsx` | Metin içi bağlantı; logo duvarı yerine altı çizili müşteri listesi; çizgi soldan süpürülür; `glideLinkClass` kendi Link'ine | yok | Hayır | Dinlenmede de çizgi var (renk tek işaret değil); dış bağlantıda `target`/`rel` + gizli "(yeni sekmede açılır)"; hareket azaltmada geçiş yok |
+| `shot-card.tsx` | Portfolyo / vaka akışı kartı: gri kuyuda görsel, sessiz döngü video ya da bileşen sahnesi; başlık, açıklama, künye; `actions` yuvası, `onOpen` ile büyütme | lucide | Evet | `article` + başlık; video yalnız görünümdeyken oynar; hareket azaltmada posterde kalır, "Oynat/Duraklat" butonu çıkar; sahne butonunun adı "Aç: …" |
+| `shot-grid.tsx` | 8+ iş: Akış (tek sütun) ↔ Masonry (en kısa sütuna), süzgeç, Karıştır; `useShotGrid` + `ShotGrid` + `ShotGridToolbar` | lucide, `scroll-hide-bar` | Evet | Çubuk `role="toolbar"`, ← → Home/End, tek Tab durağı; süzgeç yerel `<select>`; görünüm `aria-pressed`; sonuç sayısı canlı bölgede; boş sonuçta "Süzgeçleri Temizle" |
+| `note-card.tsx` | Kısa not/gönderi akışı (Notlar sekmesi, değişiklik günlüğü): yazar, göreli zaman, kaynak ikonu, metin, oynat butonlu poster, yanıt/paylaş/beğeni; `NoteList`, `NoteMedia` | `avatar`, `like-button`, lucide | Evet | `<article>`, adı yazar + zaman (`aria-labelledby`), başlık düzeyi yok; `<time dateTime>`; eylem adları sayıyı söyler; liste `section` + ad |
+| `demo-frame.tsx` | Lab kartı: canlı bileşen noktalı zeminli kuyuda, altında "**Kalın başlık.** soluk açıklama" künyesi + isteğe "Devamı"; sahne seçici yuvası | yok | Hayır | `figure` + `figcaption` (künye sahnenin adı); nokta zemini CSS süsü; "Devamı" `href` ile bağlantı, `onMore` ile buton |
 
 ### Yapay Zeka
 

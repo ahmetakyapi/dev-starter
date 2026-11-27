@@ -57,6 +57,8 @@ export type ProfileLink = {
   motion?: IconMotion | "none";
   /** Yeni sekmede aç (dış bağlantı). Varsayılan: `http` ile başlıyorsa evet. */
   external?: boolean;
+  /** Çerçeveden çıkan iç bağlantı (`_top`: Storybook, gömülü önizleme). `external` önceliklidir. */
+  target?: "_self" | "_top" | "_parent";
 };
 
 type ProfileIntroProps = {
@@ -66,7 +68,7 @@ type ProfileIntroProps = {
   /** Son güncelleme (ISO metin ya da Date). */
   updated?: string | Date;
   updatedLabel?: string;
-  cta?: { label: string; href?: string; onClick?: () => void };
+  cta?: { label: string; href?: string; onClick?: () => void; target?: "_self" | "_top" | "_parent" };
   links?: readonly ProfileLink[];
   /** Verilirse sonda kopyalanan e-posta düğmesi. */
   email?: string;
@@ -184,7 +186,7 @@ export function ProfileIntro({
         <div className="ui-pi-step mt-3 -ml-0.5 flex flex-wrap items-center gap-x-0.5" style={step(2)}>
           {cta &&
             (cta.href ? (
-              <a href={cta.href} onClick={cta.onClick} className={cn(ctaClass, "mr-2")}>
+              <a href={cta.href} target={cta.target} onClick={cta.onClick} className={cn(ctaClass, "mr-2")}>
                 {cta.label}
               </a>
             ) : (
@@ -200,7 +202,7 @@ export function ProfileIntro({
                 href={l.href}
                 aria-label={l.label}
                 className={ICON_HIT}
-                {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+                {...(external ? { target: "_blank", rel: "noreferrer" } : l.target ? { target: l.target } : {})}
               >
                 <span className="relative">
                   {l.motion === "none" ? (

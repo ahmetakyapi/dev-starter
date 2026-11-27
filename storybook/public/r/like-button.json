@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "like-button",
+  "type": "registry:ui",
+  "title": "Beğeni Butonu",
+  "description": "Herkese açık tek tür onay sayısı (çalışma, not, galeri karesi); kalp pop + yuvarlanan sayaç",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/digit-roll.json",
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/like-button.tsx",
+      "content": "\"use client\";\n\nimport { Heart } from \"lucide-react\";\nimport { useRef, useState } from \"react\";\nimport { DigitRoll } from \"@/components/ui/digit-roll\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Beğeni butonu: kalp + sayaç. Basınca kalp dolar ve küçük bir \"pop\" yapar\n * (0,82 → 1,18 → 1,04; 420 ms), sayaçta yalnız değişen rakam yuvarlanır\n * (`digit-roll`). Kaldırınca kalp sessizce boşalır; geri alma kutlanmaz.\n *\n * NE ZAMAN: tek tür, herkese açık onay sayısı (portfolyo çalışması, not,\n * gönderi, galeri karesi). NE ZAMAN DEĞİL: ekip içinde ANLAMI farklı\n * tepkiler (Bakıyorum, Tamam) → `reactions`; yer imi / kaydet (kişisel liste,\n * sayaç yok) → `toggle-group` ya da ikon butonu.\n *\n * İYİMSER GÜNCELLEME: durum basar basmaz değişir, `onToggle(next)` çağrılır.\n * Promise reddederse durum geri alınır ve hata gizli canlı bölgede okunur\n * (\"Beğeni kaydedilemedi\"). İstek sürerken ikinci basış yok sayılmaz:\n * son basış kazanır (eski yanıtın hatası yenisini geri almaz).\n *\n * ERİŞİLEBİLİRLİK: `aria-pressed`; ad sayıyı söyler (\"Beğen, 220 beğeni\"),\n * görünen rakam `aria-hidden`. Renk tek işaret değil: dolu/boş kalp şekli de\n * değişir. 44 px dokunma alanı (görsel daha küçük). Hareket azaltmada pop\n * yok, rakam yerinde değişir.\n *\n * Kaynak: Sakin Akış turu (kişisel portfolyo dili, Kasım 2026); yalnız davranış, kod alınmadı.\n *\n *   <LikeButton count={220} onToggle={(liked) => fetch(`/api/begen?l=${liked}`, { method: \"POST\" })} />\n */\n\nconst CSS = `\n@keyframes ui-like-pop { 0% { scale: .82; } 58% { scale: 1.18; } 100% { scale: 1.04; } }\n.ui-like-heart[data-pop] { animation: ui-like-pop 420ms var(--ease-brand) both; }\n@media (prefers-reduced-motion: reduce) { .ui-like-heart[data-pop] { animation: none; } }`;\n\ntype LikeButtonProps = {\n  /** Başlangıç sayısı (kullanıcının kendi beğenisi DAHİL). */\n  count: number;\n  /** Başlangıçta kullanıcı beğenmiş mi. */\n  liked?: boolean;\n  /** Sunucuya yaz; reddederse durum geri alınır. */\n  onToggle?: (liked: boolean) => Promise<unknown> | void;\n  /** Eylemin adı; ad \"Beğen, 12 beğeni\" olur. */\n  label?: string;\n  /** Sayının birimi (ekran okuyucu için). */\n  unit?: string;\n  errorText?: string;\n  /** Sayı 0 iken rakam gizlensin mi (yalnız kalp). */\n  hideZero?: boolean;\n  className?: string;\n};\n\nexport function LikeButton({\n  count,\n  liked: initialLiked = false,\n  onToggle,\n  label = \"Beğen\",\n  unit = \"beğeni\",\n  errorText = \"Beğeni kaydedilemedi\",\n  hideZero = true,\n  className,\n}: LikeButtonProps) {\n  const [liked, setLiked] = useState(initialLiked);\n  const [value, setValue] = useState(count);\n  const [pop, setPop] = useState(0);\n  const [error, setError] = useState(\"\");\n  const seq = useRef(0);\n\n  function toggle() {\n    const next = !liked;\n    const prev = { liked, value };\n    setLiked(next);\n    setValue((v) => Math.max(0, v + (next ? 1 : -1)));\n    setError(\"\");\n    if (next) setPop((p) => p + 1);\n    const mine = ++seq.current;\n    const result = onToggle?.(next);\n    if (result && typeof (result as Promise<unknown>).then === \"function\") {\n      (result as Promise<unknown>).catch(() => {\n        if (mine !== seq.current) return; // daha yeni bir basış var\n        setLiked(prev.liked);\n        setValue(prev.value);\n        setError(errorText);\n      });\n    }\n  }\n\n  return (\n    <>\n      <style href=\"ui-like-button\" precedence=\"default\">\n        {CSS}\n      </style>\n      <button\n        type=\"button\"\n        aria-pressed={liked}\n        aria-label={`${label}, ${new Intl.NumberFormat(\"tr-TR\").format(value)} ${unit}`}\n        onClick={toggle}\n        className={cn(\n          \"group relative -my-2 inline-flex min-h-11 items-center gap-1.5 rounded-full px-2 text-small transition-colors duration-200\",\n          liked ? \"text-danger\" : \"text-muted hover:text-strong\",\n          className,\n        )}\n      >\n        <span key={pop} data-pop={liked && pop > 0 ? \"\" : undefined} className=\"ui-like-heart inline-grid\">\n          <Heart aria-hidden className=\"size-4\" fill={liked ? \"currentColor\" : \"none\"} strokeWidth={1.8} />\n        </span>\n        {hideZero && value === 0 ? null : (\n          <span aria-hidden>\n            <DigitRoll value={value} />\n          </span>\n        )}\n      </button>\n      <span role=\"status\" className=\"sr-only\">\n        {error}\n      </span>\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Buton ve İkon"
+  ],
+  "meta": {
+    "client": true,
+    "storyId": "like-button",
+    "palettes": false
+  }
+}

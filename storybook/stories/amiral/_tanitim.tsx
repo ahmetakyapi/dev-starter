@@ -17,6 +17,7 @@ import { BRAND, CAFES, ORDERS, SUBSCRIBERS, num } from "./_data";
 import { TanitimEk } from "./_ekler";
 import { TanitimYeni } from "./_ekler-yeni";
 import { TanitimQ } from "./_ekler-q";
+import { TanitimR } from "./_ekler-r";
 import { Cell, CellGrid } from "./_ui";
 
 /* Tanıtım grubu (Ribbon ve offscreen.wtf turları, 2026-11-07): ziyaretçiye
@@ -201,6 +202,7 @@ export function TanitimGroup() {
       <TanitimEk />
       <TanitimYeni />
       <TanitimQ />
+      <TanitimR />
     </CellGrid>
   );
 }

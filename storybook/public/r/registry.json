@@ -1327,6 +1327,29 @@
       ]
     },
     {
+      "name": "demo-frame",
+      "type": "registry:ui",
+      "title": "Lab Çerçevesi",
+      "description": "Lab kartı: canlı bileşen noktalı zeminli kuyuda, altında \"**Kalın başlık.** soluk açıklama\" künyesi + isteğe \"Devamı\"; sahne seçici yuvası",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "demo-frame",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/demo-frame.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "detail-panel",
       "type": "registry:ui",
       "title": "Ayrıntı Paneli",
@@ -1877,6 +1900,29 @@
       ]
     },
     {
+      "name": "glide-link",
+      "type": "registry:ui",
+      "title": "Süpürülen Bağlantı",
+      "description": "Metin içi bağlantı; logo duvarı yerine altı çizili müşteri listesi; çizgi soldan süpürülür; `glideLinkClass` kendi Link'ine",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "glide-link",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/glide-link.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "halftone-image",
       "type": "registry:ui",
       "title": "Yarım Ton Görsel",
@@ -2334,6 +2380,33 @@
       ]
     },
     {
+      "name": "like-button",
+      "type": "registry:ui",
+      "title": "Beğeni Butonu",
+      "description": "Herkese açık tek tür onay sayısı (çalışma, not, galeri karesi); kalp pop + yuvarlanan sayaç",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/digit-roll.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Buton ve İkon"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "like-button",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/like-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "line-chart",
       "type": "registry:ui",
       "title": "Çizgi Grafiği",
@@ -2460,6 +2533,33 @@
       ]
     },
     {
+      "name": "media-lightbox",
+      "type": "registry:ui",
+      "title": "Medya Işıklığı",
+      "description": "Galeri, portfolyo ya da vaka karesini sayfanın üstünde büyük gösterme; görsel, sessiz video ya da canlı sahne, önceki/sonraki; `useLightbox`",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "media-lightbox",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/media-lightbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "mesh-gradient",
       "type": "registry:ui",
       "title": "Hareketli Renk Zemini",
@@ -2581,6 +2681,34 @@
       "files": [
         {
           "path": "snippets/ui/morph-nav.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "note-card",
+      "type": "registry:ui",
+      "title": "Not Kartı",
+      "description": "Kısa not/gönderi akışı (Notlar sekmesi, değişiklik günlüğü): yazar, göreli zaman, kaynak ikonu, metin, oynat butonlu poster, yanıt/paylaş/beğeni; `NoteList`, `NoteMedia`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/avatar.json",
+        "https://dev-starter-storybook.vercel.app/r/like-button.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "note-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/note-card.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3015,6 +3143,33 @@
       ]
     },
     {
+      "name": "profile-intro",
+      "type": "registry:ui",
+      "title": "Profil Açılışı",
+      "description": "Kişisel site, ekip ya da yazar sayfası, ürün kapağının sakin girişi: 64 px avatar, ad, \"Güncellendi\" tarihi, koyu hap eylem + anlamına göre oynayan ikon bağlantıları, biyografi yuvası",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/animated-icon.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "profile-intro",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/profile-intro.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "progress",
       "type": "registry:ui",
       "title": "İlerleme",
@@ -3317,6 +3472,32 @@
       ]
     },
     {
+      "name": "ruler-toc",
+      "type": "registry:ui",
+      "title": "Cetvel İçindekiler",
+      "description": "Uzun akışta (portfolyo, vaka çalışması) sol kenarda çizgi cetveli içindekiler: imleç altında çan eğrisiyle uzayan çizgiler, okunan bölüm uzun, balonda \"01 · Ad\" + önizleme; dar ekranda \"01 Hoş geldin\" düğmesi",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Form ve Gezinme"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "ruler-toc",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/ruler-toc.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sankey-chart",
       "type": "registry:ui",
       "title": "Akış Grafiği",
@@ -3444,6 +3625,52 @@
       "files": [
         {
           "path": "snippets/ui/scramble-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scroll-focus",
+      "type": "registry:ui",
+      "title": "Kaydırma Odağı",
+      "description": "Portfolyo akışında büyük medya kartı ya da vaka bölüm başlığı (`variant=\"title\"`): kaydırdıkça buğudan netleşir (.34→1, 8px→0, 18px→0)",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Hareket ve Doku"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "scroll-focus",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/scroll-focus.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scroll-hide-bar",
+      "type": "registry:ui",
+      "title": "Kaydırınca Çekilen Çubuk",
+      "description": "Uzun akışta yüzen hap çubuk: aşağı kaydırınca çekilir, yukarıda geri gelir (süzgeç çubuğu, okuma araçları); `useScrollHideBar().hold()`",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Katmanlar"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "scroll-hide-bar",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/scroll-hide-bar.tsx",
           "type": "registry:ui"
         }
       ]
@@ -3683,6 +3910,59 @@
       "files": [
         {
           "path": "snippets/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "shot-card",
+      "type": "registry:ui",
+      "title": "Çalışma Kartı",
+      "description": "Portfolyo / vaka akışı kartı: gri kuyuda görsel, sessiz döngü video ya da bileşen sahnesi; başlık, açıklama, künye; `actions` yuvası, `onOpen` ile büyütme",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "shot-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/shot-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "shot-grid",
+      "type": "registry:ui",
+      "title": "Çalışma Izgarası",
+      "description": "8+ iş: Akış (tek sütun) ↔ Masonry (en kısa sütuna), süzgeç, Karıştır; `useShotGrid` + `ShotGrid` + `ShotGridToolbar`",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/scroll-hide-bar.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "shot-grid",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/shot-grid.tsx",
           "type": "registry:ui"
         }
       ]

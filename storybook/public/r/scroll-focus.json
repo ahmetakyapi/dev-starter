@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scroll-focus",
+  "type": "registry:ui",
+  "title": "Kaydırma Odağı",
+  "description": "Portfolyo akışında büyük medya kartı ya da vaka bölüm başlığı (`variant=\"title\"`): kaydırdıkça buğudan netleşir (.34→1, 8px→0, 18px→0)",
+  "registryDependencies": [
+    "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+  ],
+  "files": [
+    {
+      "path": "snippets/ui/scroll-focus.tsx",
+      "content": "import type { CSSProperties, ElementType, ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Kaydırma odağı: öğe ekranın altından yükselirken buğudan NETLEŞİR.\n * Saydamlık, bulanıklık, kayma ve hafif büyüklük kaydırma konumuna\n * bağlıdır; okur durursa geçiş de durur, geri kaydırırsa geri sararılır.\n * `Reveal` bir kez açılır ve biter; bu ise okurun eline bağlı bir\n * \"odaklanma\" hissidir. Sakin Akış turu (kişisel portfolyo dili); yalnız\n * davranış, kod alınmadı.\n *\n * NE ZAMAN: portfolyo akışında art arda gelen büyük medya kartları,\n * vaka sayfasında bölüm başlıkları (`variant=\"title\"`), uzun tanıtımda\n * sahne geçişleri.\n * NE ZAMAN DEĞİL: kahraman / LCP öğesi (ilk boyamada soluk görünür),\n * form, tablo, okunması gereken gövde metni; aynı ekranda onlarca küçük\n * öğe (her biri ayrı katman, gereksiz iş). Tek seferlik giriş yeter ise\n * `reveal.tsx` ya da globals.css'teki `.scroll-reveal`.\n *\n * NASIL: SUNUCU bileşeni, JavaScript yok. CSS `animation-timeline: view()`\n * + `animation-range`: öğenin üst kenarı ekranın %98'inden %42'sine\n * çıkarken (media) saydamlık .34→1, bulanıklık 8px→0, kayma 18px→0,\n * ölçek 1.012→1; `title` için %92→%52 aralığında .2→1, 10px, 14px.\n * Eğri ease-out-cubic, ara kareler elle örneklendi (CSS `linear` zaman\n * çizelgesinde eğriyi kareler taşır). Aralık `entry` ile yazıldı: öğe\n * ekrana girdikçe ilerler ve uzun öğede bile tam görünür olmadan biter;\n * sayfanın dibindeki öğe yarı saydam takılı kalmaz.\n *\n * DESTEKSİZ TARAYICI: `@supports` dışında hiçbir stil uygulanmaz; içerik\n * düz ve tam görünür durur (gizli kalmaz). Hareketi azaltan kullanıcıda da\n * animasyon yok.\n *\n * ERİŞİLEBİLİRLİK: içerik DOM'da hep tam; yalnız görsel geçiş. Saydamlık\n * metnin okunurluğunu bir an düşürür; bu yüzden gövde metnine verme.\n *\n *   <ScrollFocus><ShotCard … /></ScrollFocus>\n *   <ScrollFocus variant=\"title\" as=\"h2\" className=\"text-title\">Vaka</ScrollFocus>\n */\n\nconst CSS = `\n@supports (animation-timeline: view()) {\n  @media (prefers-reduced-motion: no-preference) {\n    .ui-sf {\n      animation: ui-sf-media linear both;\n      animation-timeline: view();\n      animation-range: entry 2% entry 100%;\n      will-change: opacity, filter, transform;\n    }\n    .ui-sf[data-variant=\"title\"] {\n      animation-name: ui-sf-title;\n      animation-range: entry 8% cover 48%;\n    }\n  }\n}\n@keyframes ui-sf-media {\n  0% { opacity: .34; filter: blur(8px); transform: translateY(18px) scale(1.012); }\n  25% { opacity: .78; filter: blur(3.4px); transform: translateY(7.6px) scale(1.005); }\n  50% { opacity: .92; filter: blur(1px); transform: translateY(2.3px) scale(1.0015); }\n  100% { opacity: 1; filter: blur(0); transform: none; }\n}\n@keyframes ui-sf-title {\n  0% { opacity: .2; filter: blur(10px); transform: translateY(14px); }\n  25% { opacity: .66; filter: blur(4.2px); transform: translateY(5.9px); }\n  50% { opacity: .9; filter: blur(1.25px); transform: translateY(1.75px); }\n  100% { opacity: 1; filter: blur(0); transform: none; }\n}`;\n\ntype ScrollFocusProps = {\n  children: ReactNode;\n  /** `media`: büyük kart/görsel · `title`: bölüm başlığı (daha geç başlar, daha erken biter). */\n  variant?: \"media\" | \"title\";\n  as?: ElementType;\n  className?: string;\n  style?: CSSProperties;\n};\n\nexport function ScrollFocus({ children, variant = \"media\", as: Tag = \"div\", className, style }: ScrollFocusProps) {\n  return (\n    <>\n      <style href=\"ui-scroll-focus\" precedence=\"default\">\n        {CSS}\n      </style>\n      <Tag data-variant={variant} className={cn(\"ui-sf\", className)} style={style}>\n        {children}\n      </Tag>\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "categories": [
+    "Hareket ve Doku"
+  ],
+  "meta": {
+    "client": false,
+    "storyId": "scroll-focus",
+    "palettes": false
+  }
+}

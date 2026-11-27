@@ -37,7 +37,7 @@ const browser = await chromium.launch();
 /** Kolaj: gerçek sayfadan, 2× yoğunlukta, istenen temada. */
 async function capture(theme) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 2 });
-  await page.goto(`${base}/iframe.html?id=cover--overview&viewMode=story&globals=theme:${theme};palette:signature`, { waitUntil: "networkidle" });
+  await page.goto(`${base}/iframe.html?id=cover--exhibit&viewMode=story&globals=theme:${theme};palette:signature`, { waitUntil: "networkidle" });
   await page.waitForTimeout(6000); // giriş hareketi ve play bitsin
   // Kolaj ilk ekranın altında: grafik görünüme girince çizilir. Önce kaydır, çizim bitsin, sonra çek.
   const shot = page.locator("section[aria-labelledby=kapak-baslik] > div.mt-14").first();
