@@ -121,7 +121,7 @@ import {
   WORK_STATUS_LABEL,
   type WorkOrderX,
 } from "./_store";
-import { InvoiceBadge, CustomerBadge, MeterBadge, MetricStrip, PageBody, PageHead, Panel, ReadingBadge, href, useApp, type PageProps, type Params } from "./_ui";
+import { InvoiceBadge, CustomerBadge, MeterBadge, MetricStrip, PageBody, PageHead, Panel, ReadingBadge, StatusText, href, useApp, type PageProps, type Params } from "./_ui";
 
 const PAGE_SIZE = 20;
 
@@ -395,10 +395,11 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
         const short = reason.startsWith("Sayaçta") ? "Müdahale Şüphesi" : reason.startsWith("Sayaç") ? "Sayaç Arızalı" : `${reason.split(" ")[0]} Gecikme`;
         return (
           <span title={reason}>
-            <Badge tone={reason.startsWith("Sayaç") ? "warning" : "danger"} dot>
+            {/* Sakin Akış: risk ikon şekli + metin (gecikme kırmızı metin, sayaç sorunu turuncu ikon). */}
+            <StatusText tone={reason.startsWith("Sayaç") ? "warning" : "danger"}>
               {short}
               <span className="sr-only">, riskli: {reason}</span>
-            </Badge>
+            </StatusText>
           </span>
         );
       },

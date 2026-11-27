@@ -683,7 +683,7 @@ export function RaporlarPage({ params, go }: PageProps) {
         </Panel>
 
         <Panel id="ozet-kalite" title="Ticari Kalite Göstergeleri" note="Süreler depodaki başvuru, çağrı ve itiraz kayıtlarından hesaplanır; hedefler ÖRNEK.">
-          <dl className="grid h-full auto-rows-fr gap-px bg-line-soft sm:grid-cols-2">
+          <dl className="grid flex-1 auto-rows-fr gap-px bg-line-soft sm:grid-cols-2">
             {[
               ["Başvurudan enerjilendirmeye", quality.appFinished ? `${fmtDec(quality.appDays, 1)} gün` : "Veri yok", `${quality.appFinished} tamamlanan başvuru`],
               ["Açık başvuru yaşı (ort.)", quality.openApps ? `${fmtDec(quality.openAppAge, 1)} gün` : "—", `${quality.openApps} açık başvuru`],

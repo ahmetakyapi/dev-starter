@@ -164,7 +164,8 @@ export function ArizaPage({ params, go }: PageProps) {
       label: `Açık Arızalar (${open.length})`,
       panel: (
         <div className="grid gap-5 pt-5">
-          <div className="grid gap-5 xl:grid-cols-5">
+          {/* items-start: liste kartı haritanın boyuna gerilip içinde boşluk bırakmasın (tasarım turu). */}
+          <div className="grid items-start gap-5 xl:grid-cols-5">
             <Panel id="ariza-harita" title="Şebeke Durumu" note="Bölgeye basınca liste süzülür; kırmızı bölgede açık arıza var." className="xl:col-span-2">
               <div className="p-4 sm:p-5">
 <div className="grid gap-3">

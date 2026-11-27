@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { openCommandPalette } from "@/components/ui/command-palette";
 import { Kbd } from "@/components/ui/kbd";
 import { NotificationCenter, type NotificationItem } from "@/components/ui/notification-center";
+import { StatusIcon, type Status } from "@/components/ui/status-icon";
 import { cn } from "@/lib/utils";
 import {
   type CustomerStatus,
@@ -215,16 +216,17 @@ export function Panel({ title, note, actions, children, className, id }: { title
 
 /** Yumuşak renk karosu: ölçü ve liste ikonlarının zemini. */
 export function IconTile({ children, tone = "primary", className }: { children: ReactNode; tone?: "primary" | "success" | "warning" | "danger" | "neutral"; className?: string }) {
+  // Sakin Akış: karo nötr (gri kuyu + kıl halka), renk yalnız ikonda; renkli büyük alan yok.
   return (
     <span
       aria-hidden
       className={cn(
-        "inline-grid size-8 shrink-0 place-items-center rounded-lg ring-1 ring-inset [&_svg]:size-4",
-        tone === "primary" && "bg-primary-wash text-primary-ink ring-primary/15",
-        tone === "success" && "bg-success-wash text-success ring-success/15",
-        tone === "warning" && "bg-warning-wash text-warning ring-warning/15",
-        tone === "danger" && "bg-danger-wash text-danger ring-danger/15",
-        tone === "neutral" && "bg-surface text-body ring-line",
+        "inline-grid size-8 shrink-0 place-items-center rounded-lg bg-surface ring-1 ring-line-soft ring-inset [&_svg]:size-4",
+        tone === "primary" && "text-primary-ink",
+        tone === "success" && "text-success",
+        tone === "warning" && "text-warning",
+        tone === "danger" && "text-danger",
+        tone === "neutral" && "text-body",
         className,
       )}
     >
@@ -277,50 +279,43 @@ export function DemoBadge() {
   );
 }
 
-/* --- Durum rozetleri: renk + metin (renk tek işaret değil) -------------------- */
+/* --- Durum: ikon şekli + metin (Sakin Akış, 27 Kasım 2026) ----------------------
+   Pastel hap yerine `status-icon` şekli: şekil durumu söyler (renk körlüğüne dayanıklı),
+   renk ikinci işaret ve YALNIZ ikonda; metin nötr (sorun durumunda koyu ve orta ağırlık).
+   Satırda tek bakışta "ne durumda" okunur; aynı durumdaki uzun liste kırmızıya boğulmaz. */
+type Tone = "success" | "neutral" | "warning" | "danger" | "primary";
+const SHAPE: Record<Tone, Status> = { success: "done", neutral: "triage", warning: "progress", danger: "blocked", primary: "todo" };
+export function StatusText({ tone, children, className }: { tone: Tone; children: ReactNode; className?: string }) {
+  return (
+    <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-small whitespace-nowrap", tone === "danger" ? "font-medium text-strong" : "text-body", className)}>
+      <StatusIcon status={SHAPE[tone]} size={14} />
+      {children}
+    </span>
+  );
+}
 
 export function InvoiceBadge({ status }: { status: InvoiceStatus }) {
   const tone = { odendi: "success", kesildi: "neutral", kismi: "warning", gecikti: "danger", itirazli: "primary" } as const;
-  return (
-    <Badge tone={tone[status]} dot>
-      {INVOICE_STATUS_LABEL[status]}
-    </Badge>
-  );
+  return <StatusText tone={tone[status]}>{INVOICE_STATUS_LABEL[status]}</StatusText>;
 }
 export function MeterBadge({ status }: { status: MeterStatus }) {
   const tone = { okunuyor: "success", "iletisim-yok": "warning", arizali: "danger", mudahale: "danger" } as const;
-  return (
-    <Badge tone={tone[status]} dot>
-      {METER_STATUS_LABEL[status]}
-    </Badge>
-  );
+  return <StatusText tone={tone[status]}>{METER_STATUS_LABEL[status]}</StatusText>;
 }
 export function CustomerBadge({ status }: { status: CustomerStatus }) {
   const tone = { aktif: "success", kesik: "danger", askida: "warning", kapali: "neutral" } as const;
-  return (
-    <Badge tone={tone[status]} dot>
-      {CUSTOMER_STATUS_LABEL[status]}
-    </Badge>
-  );
+  return <StatusText tone={tone[status]}>{CUSTOMER_STATUS_LABEL[status]}</StatusText>;
 }
 export function ReadingBadge({ status }: { status: ReadingStatus }) {
   const tone = { dogrulandi: "success", supheli: "danger", bekliyor: "neutral", duzeltildi: "primary" } as const;
-  return (
-    <Badge tone={tone[status]} dot>
-      {READING_STATUS_LABEL[status]}
-    </Badge>
-  );
+  return <StatusText tone={tone[status]}>{READING_STATUS_LABEL[status]}</StatusText>;
 }
 export function ReconBadge({ status }: { status: Reconciliation }) {
   const tone = { mutabik: "success", bekliyor: "neutral", farkli: "warning" } as const;
-  return (
-    <Badge tone={tone[status]} dot>
-      {RECON_LABEL[status]}
-    </Badge>
-  );
+  return <StatusText tone={tone[status]}>{RECON_LABEL[status]}</StatusText>;
 }
 export function OutageBadge({ status, kind }: { status: OutageStatus; kind: "plansiz" | "planli" }) {
-  if (status === "acik") return <Badge tone="danger" dot>Açık Arıza</Badge>;
-  if (status === "planlandi") return <Badge tone="primary" dot>Planlı Çalışma</Badge>;
-  return <Badge tone={kind === "planli" ? "neutral" : "success"} dot>Giderildi</Badge>;
+  if (status === "acik") return <StatusText tone="danger">Açık Arıza</StatusText>;
+  if (status === "planlandi") return <StatusText tone="primary">Planlı Çalışma</StatusText>;
+  return <StatusText tone={kind === "planli" ? "neutral" : "success"}>Giderildi</StatusText>;
 }

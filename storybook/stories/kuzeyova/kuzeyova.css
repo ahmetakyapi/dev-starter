@@ -138,8 +138,8 @@
    3. Birincil eylem koyu hap: vurgu rengi yalnız bilgi taşıdığı yerde kalır.
    4. Sayfa girişi: 480 ms, 2 px buğu, 6 px kayma; hareket azaltmada yalnız solma. */
 :root[data-theme="dark"] .kz-shell #icerik {
-  /* Koyu temada kuyu üstündeki soluk metin 4,02:1'de kalıyordu: bir ton açık (~5,5:1). */
-  --text-muted: color-mix(in oklab, var(--text-strong) 62%, var(--page-bg));
+  /* Koyu temada kuyu üstündeki soluk metin 4,02:1'de kalıyordu; kart içi kuyuda (iki basamak açık zemin) da 4,5:1 için %70. */
+  --text-muted: color-mix(in oklab, var(--text-strong) 70%, var(--page-bg));
 }
 :root:not([data-theme="dark"]) .kz-shell #icerik {
   background-color: color-mix(in oklab, var(--text-strong) 4.5%, var(--page-bg));
@@ -173,3 +173,21 @@
 @keyframes kz-enter { from { opacity: 0; translate: 0 6px; filter: blur(2px); } }
 @media (prefers-reduced-motion: reduce) { .kz-enter { animation: kz-fade 200ms ease both; } }
 @keyframes kz-fade { from { opacity: 0; } }
+
+/* Kalan pastel haplar (sayaç, tutar, tür rozetleri) ince çerçeveli hapa döner: zemin
+   yüzeyin kendisi, renk yalnız metinde ve noktada (Sakin Akış: "5 gün gecikti" yalnız metni
+   kırmızı, zemin beyaz). Kontrast beyaz/kart zemininde ölçülür, gri kuyuda yıkama koyulaşmaz. */
+[data-product="kuzeyova"] #icerik span.rounded-full:is(.bg-success-wash, .bg-warning-wash, .bg-danger-wash, .bg-primary-wash, .bg-surface-raised):not(:empty) {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* Tablo satırındaki ikincil eylem (İncele, Aç): mavi yıkama yerine ince çerçeveli hap; renk
+   satırın verisinde kalır. Seçim çipleri (süzgeç) tablonun dışında, dokunulmaz. */
+[data-product="kuzeyova"] #icerik table :is(button, a).bg-primary-wash {
+  background: transparent;
+  color: var(--text-strong);
+  box-shadow: inset 0 0 0 1px var(--line);
+  border-radius: 999px;
+}
+[data-product="kuzeyova"] #icerik table :is(button, a).bg-primary-wash:hover { background: var(--surface); }

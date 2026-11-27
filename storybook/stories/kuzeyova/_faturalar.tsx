@@ -15,8 +15,6 @@ import {
   Play,
   Printer,
   Receipt,
-  ShieldAlert,
-  TriangleAlert,
   Undo2,
   Wallet,
 } from "lucide-react";
@@ -537,7 +535,7 @@ function InvoiceList({ params, go }: PageProps) {
                 type="button"
                 aria-pressed={bucket === "hepsi"}
                 onClick={() => setBucket("hepsi")}
-                className="cursor-pointer rounded-lg border border-line bg-overlay p-3 text-left shadow-raised hover:border-line-strong aria-pressed:border-primary aria-pressed:bg-primary-wash"
+                className="cursor-pointer rounded-lg border border-line bg-overlay p-3 text-left shadow-raised hover:border-line-strong aria-pressed:border-strong aria-pressed:ring-1 aria-pressed:ring-strong"
               >
                 <span className="block text-small text-muted">Hepsi</span>
                 <span className="kz-mono text-heading font-semibold text-strong">{num.format(overdueAll.length)}</span>
@@ -548,7 +546,7 @@ function InvoiceList({ params, go }: PageProps) {
                   type="button"
                   aria-pressed={bucket === b.id}
                   onClick={() => setBucket(b.id)}
-                  className="cursor-pointer rounded-lg border border-line bg-overlay p-3 text-left shadow-raised hover:border-line-strong aria-pressed:border-primary aria-pressed:bg-primary-wash"
+                  className="cursor-pointer rounded-lg border border-line bg-overlay p-3 text-left shadow-raised hover:border-line-strong aria-pressed:border-strong aria-pressed:ring-1 aria-pressed:ring-strong"
                 >
                   <span className="block text-small text-muted">{b.label}</span>
                   <span className="kz-mono text-heading font-semibold text-strong">{num.format(b.count)}</span>
@@ -557,8 +555,9 @@ function InvoiceList({ params, go }: PageProps) {
               ))}
             </div>
             {today5.length ? (
-              <div className="rounded-lg bg-warning-wash p-3">
-                <h3 className="text-small font-semibold text-warning">Bugün Aranacaklar ({num.format(toCall.length)} Abone)</h3>
+              <div className="rounded-xl bg-surface p-3 ring-1 ring-line-soft">
+                {/* Sakin Akış: amber yıkama yerine gri kuyu; aciliyet listedeki gün sayısında. */}
+                <h3 className="text-small font-semibold text-strong">Bugün Aranacaklar ({num.format(toCall.length)} Abone)</h3>
                 <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
                   {today5.map((t) => (
                     <li key={t.cid} className="flex items-center justify-between gap-2 text-small">

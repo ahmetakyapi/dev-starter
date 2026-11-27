@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowLeft, CheckCircle2, ClipboardCheck, FileText, PlugZap, Send, Sun, TriangleAlert } from "lucide-react";
+import { ArrowLeft, ClipboardCheck, FileText, PlugZap, Send, Sun } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
 import { ChartCard } from "@/components/ui/chart-card";

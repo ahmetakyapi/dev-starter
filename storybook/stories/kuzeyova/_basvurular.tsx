@@ -366,7 +366,7 @@ const NEXT_LABEL: Record<ApplicationStage, string> = {
   red: "",
 };
 
-function ApplicationSheet({ app, onClose, go }: { app: Application | undefined; onClose: () => void; go: PageProps["go"] }) {
+function ApplicationSheet({ app, onClose }: { app: Application | undefined; onClose: () => void; go: PageProps["go"] }) {
   const { notify } = useApp();
   const canEdit = useCan("musteri");
   const canFee = useCan("odeme");

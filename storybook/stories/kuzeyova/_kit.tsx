@@ -190,7 +190,7 @@ export function Metric({ label, value, unit, delta, deltaLabel, goodWhen, spark,
       {delta !== undefined || context ? (
         <p className="flex min-w-0 items-center gap-1.5 text-small text-muted" title={[deltaLabel, foot].filter(Boolean).join(" · ")}>
           {delta !== undefined ? <Delta value={delta} goodWhen={goodWhen} label={deltaLabel} /> : null}
-          {context ? <span className="truncate">{context}</span> : null}
+          {context ? <span className="line-clamp-2">{context}</span> : null}
         </p>
       ) : null}
       {visual ? <div className="relative pt-2">{visual}</div> : null}

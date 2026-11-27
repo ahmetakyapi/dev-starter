@@ -363,7 +363,7 @@ function MeterList({ params, go }: PageProps) {
         return reasons.length ? (
           <span className="grid gap-1">
             {reasons.slice(0, 2).map((r) => (
-              <span key={r} className="text-small font-medium text-warning">
+              <span key={r} className="text-small text-body">
                 {r}
               </span>
             ))}

@@ -540,7 +540,8 @@ export function PanoPage({ go, params }: PageProps) {
             id="pano-yuk"
             className={`${FLAT} xl:col-span-3`}
             label="Günlük Yük Eğrisi"
-            value={`${fmtDec(peak(yesterday), 2)} MW`}
+            // Başlık bir yargı: tepe yükün değeri ve saati (Türkçe ek saate göre değiştiği için ek yok) (Sakin Akış grafik dili: değer + bağlam tek cümle).
+            value={`${fmtDec(peak(yesterday), 2)} MW · Tepe ${String(yesterday.indexOf(peak(yesterday))).padStart(2, "0")}.00`}
             change={Math.round(((peak(yesterday) - peak(lastWeek)) / peak(lastWeek)) * 1000) / 10}
             changeLabel="geçen haftaya göre (dünün tepe yükü)"
             action={<Badge tone="neutral">Saatlik · MW</Badge>}
@@ -555,6 +556,8 @@ export function PanoPage({ go, params }: PageProps) {
               unit="MW"
               valueFormat={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }}
             />
+            {/* Kaynak ve tazelik satırı: grafik neyi, ne sıklıkla gösteriyor. */}
+            <p className="px-2 pt-2 text-small text-muted">AMI sayaçlarından saatlik toplanır · dün ile geçen haftanın aynı günü.</p>
           </ChartCard>
 
           <ChartCard

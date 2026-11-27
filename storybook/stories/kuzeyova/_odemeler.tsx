@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
-import { BellRing, CheckCircle2, FileSpreadsheet, Plus, Scissors, ShieldCheck, TriangleAlert, Wallet, XCircle, Zap } from "lucide-react";
+import { BellRing, CheckCircle2, FileSpreadsheet, Plus, Scissors, ShieldCheck, Wallet, XCircle, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BarList } from "@/components/ui/bar-list";
 import { Button } from "@/components/ui/Button";
