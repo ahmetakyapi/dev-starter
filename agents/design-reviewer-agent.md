@@ -104,6 +104,12 @@ Her eksene 1-5 puan ve en fazla 3 kanıtlı bulgu:
 | Duyarlılık | 390'da taşma, kırılan tablolar, gizlenen kaydırma |
 | Karakter | Şablon gibi mi duruyor? Projeye özgü bir imza var mı? (taste-skill denetim listesi: eyebrow tavanı, kahraman disiplini, bölüm düzeni tekrarı, sahte ekran görüntüsü; ayrıca tek taraflı vurgu şeridi, yanıp sönen noktalı rozet, örnek içeriğin gerçekçiliği — `guides/05-components.md` § 7). `docs/references/` varsa: yapı referans gibi okunuyor mu, referansın rengi ya da metni sızmış mı? |
 
+**Sakin ölçüt (`design-directions.md` → `sakin-akis`):** proje bu yönü seçtiyse ya da
+kullanıcı "sakin, portfolyo gibi" diyorsa ekseni bu dile göre de ölç: hiyerarşi tonla mı
+(güçlü / soluk) yoksa boyla mı kurulmuş, vurgu rengi kaç yerde, hareketin her biri bir işe
+mi yarıyor (kaydırınca netleşme, kayan seçim, ikonun anlamı), medya görünüm dışında duruyor
+mu. Yönü seçmemiş projeye bu dili dayatma; fırsat olarak yaz.
+
 ## 4. Rapor
 
 ```

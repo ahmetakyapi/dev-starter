@@ -9,6 +9,7 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — haberleşme protokolü, güncel teknoloji
 - `~/dev-starter/knowledge/mistakes.md`
 - `~/dev-starter/knowledge/patterns.md`
+- `~/dev-starter/knowledge/design-directions.md` → `sakin-akis` + `guides/10` → "Sakin Akış Turu" — portfolyo, akış, lab ya da sakin ürün yüzeyi kuruyorsan: ölçülen hareket değerleri ve hazır bileşenler (`profile-intro`, `shot-card`, `scroll-focus`…)
 - `~/dev-starter/rules/immutable-architecture.md` — mimari kurallar
 - `~/dev-starter/rules/design-tokens.md` — token enforcement
 - `~/dev-starter/rules/live-preview.md` — içerik/yazı tipi düzenleyen ekran varsa (kit: `snippets/live-preview/`)

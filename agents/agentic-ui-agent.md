@@ -18,6 +18,7 @@ Bu agent çalışmadan önce şunları oku:
 - `~/dev-starter/knowledge/patterns.md → Agentic UI` — bölümün tüm desenleri
 - `~/dev-starter/knowledge/mistakes.md #58–73` — tuzaklar (indeksteki Agentic satırı)
 - `~/dev-starter/knowledge/decisions.md → Agentic UI` — açık karar durumu
+- `~/dev-starter/knowledge/design-directions.md → sakin-akis` — asistanın yanındaki yüzey sakin bir akış ya da not listesiyse (durum değişimi kayar, buğudan netleşen giriş, `note-card`, `scroll-focus`); agentic arayüz gösterişsiz kalır
 - `~/dev-starter/agents/AGENT_PROTOCOL.md` — doğrulama disiplini
 - `docs/ROUTEMAP.md` — sadece aktif story (varsa)
 

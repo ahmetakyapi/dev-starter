@@ -1892,3 +1892,29 @@ meets reality / Impact" telefon kartları ve KODOR kartları). `references.md`
   çubuk ve hedef çentiği, oran ve puan farkı, son 6 dönem eğilimi; satırlar kartın yüksekliğini
   paylaşır. Telefonda çubuk ikinci satırda tam genişlik. Kayıp oranında eğilim çizgisi `auto`
   tonla boyanmaz (artış iyi sayılıyordu); hedef üstü bölge birincil, diğerleri sönük.
+
+## Sakin Akış Turu — Portfolyo Dili, On Bir Bileşen, Kapak (2026-11-27)
+
+Kaynak bir kişisel portfolyo sitesi (tek sütun, gri tonlu, sakin). Sahibinin isteğiyle kaynağın
+adı depoya yazılmaz; tur adı "Sakin Akış". Alınan şey yalnız dil ve davranış: kod, metin,
+görsel, font ve imleç alınmadı, hepsi token'la sıfırdan yazıldı.
+
+- **Yeni yön `sakin-akis`** (`design-directions.md`): portfolyo, ekip sayfası, lab vitrini,
+  kütüphane kapağı. Hiyerarşi boyla değil TONLA (güçlü / soluk); başlık gövdeyle aynı boyda.
+  Sahibi bu dili tasarım, geliştirme ve agentic işlerde de referans istiyor: uiux, frontend,
+  design-reviewer ve agentic-ui rol tanımlarına satır eklendi.
+- **Ölçülen hareket** (kaynakta sayıyla okundu, bileşenlere işlendi): medya ekranın %98'inden
+  %42'sine yükselirken opacity .34→1, blur 8→0 px, y 18→0, scale 1.012→1 (`scroll-focus`);
+  sekme içeriği 480 ms, 2 px buğu, 6 px kayma, 80 ms gecikme; lightbox kartı .97 + 8 px'ten
+  yükselir; beğeni kalbi .82 → 1.18 → 1.04; araç çubuğu dy > 6 ve y > 80'de saklanır. Ortak
+  eğri `cubic-bezier(.22,1,.36,1)` zaten `--ease-brand`.
+- **Strateji dersleri**: müşteri listesi logo duvarı değil altı çizili düz metin bağlantılar;
+  "Güncellendi <tarih>" satırı tazelik sinyali (gerçek tarih, uydurulmaz); vaka kartında
+  doğrulanabilir sayı ("316 PR · 997 commit"); video yalnız görünümdeyken ve SESSİZ oynar.
+- **Alınmayanlar**: özel imleç (işlevsiz süs, frekans kapısını geçmez), lisanslı/deneme
+  fontları (yerine `product` preset'i), kaynağın görselleri ve metni.
+- **Kapak**: Sergi kahramanı Sakin Akış diline geçti (`profile-intro` + sekmeler + gerçek
+  bileşenlerden akış). Sergi silinmedi, "Kapak/Sergi" hikayesinde duruyor.
+- **İleride**: sahibi bütün örnek sayfaları (Pusula, Portal, landing) bu dile taşımayı
+  düşünüyor; sayfa elden geçirilirken `sakin-akis` yönü önerilir, sayfanın kimliği sorulmadan
+  silinmez.

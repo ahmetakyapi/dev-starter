@@ -212,6 +212,22 @@ Biçim, Hero, Kabuk, Kart, Popup, Grafik, Boş Durum, Hareket, Yasak) eksiksiz y
 - **Hareket:** yavaş ve az: başlık satır satır bulanıktan netleşir, kalem şeridi bir kez çekilir, paspartu kaydırınca daralır (yalnız `transform`), `step-tabs` kendiliğinden ilerler (durdurulabilir).
 - **Yasak:** her bölüme künye (sayfada en çok iki), aynı sayfada ikiden çok paspartu, veri ekranının arkasında doku, neon/mor-pembe degrade, sahte ekran görüntüsü (pencere gerçek bileşenlerle çizilir), doğrulanamayan yuvarlak sayı ("10.000+").
 
+### `sakin-akis` — Sakin Akış ve Portfolyo
+
+- **Etiket:** sektor=portfolyo,kisisel,ajans,tasarim,yazilim,yapay-zeka,gelistirici-araci · kitle=genel,uzman,gelistirici · yogunluk=dusuk · ton=sakin,zarif · tema=acik,koyu · tur=icerik,landing
+- **Ne zaman:** İşin kendisi argümansa ve kişi ya da küçük ekip konuşuyorsa: tasarımcı/geliştirici portfolyosu, ekip sayfası, değişiklik günlüğü, "lab" deney vitrini, bileşen kütüphanesi kapağı. Tek sütun; okur kaydırır, durur, açar. Gösteriş yok, iş akıyor.
+- **Palet:** neredeyse tamamen nötr; sayfa beyaz (koyu temada derin kömür), kart gri kuyu (`bg-surface`), metin `text-strong` / soluk `text-muted`. Vurgu YOK denecek kadar az: yalnız odak halkası, beğeni kalbi ve tek durum işareti. Birincil eylem koyu hap (`bg-strong text-page`, küçük).
+- **Yazı:** tek grotesk (`product` ya da `signature`), başlık BÜYÜK DEĞİL: ad ve kart başlıkları gövdeyle aynı boyda, orta ağırlıkta. Hiyerarşi boyla değil tonla kurulur (güçlü / soluk). Bağlantılar altı ince çizgili düz metin (`glide-link`).
+- **Biçim:** dar ölçü (metin ~34rem, akış kartı ~48rem); kart yarıçapı büyük (1.5-2rem), kıl halka, gölge yok ya da tek yumuşak; boşluk cömert, kartlar arası 2-3rem.
+- **Hero:** `profile-intro`: 64 px yuvarlatılmış avatar ya da işaret, ad, "Güncellendi <tarih>" tazelik satırı, koyu hap CTA + anlamına göre hareket eden ikon bağlantılar, 3-4 kısa bio paragrafı. İddia başlığı, degrade, büyük görsel YOK. Altında sayfa sekmeleri (hap vurgu kayar).
+- **Kabuk:** üst menü yok; sekmeler (Akış · Notlar · Vakalar · Lab) + sol kenarda `ruler-toc`; araç çubuğu altta yüzer, aşağı kaydırınca saklanır (`scroll-hide-bar`).
+- **Kart:** `shot-card`: gri kuyuda ortalanmış sahne (video ya da gerçek bileşen), altında başlık + soluk açıklama; notlar `note-card`; deneyler `demo-frame` (noktalı zemin + "**Kalın.** soluk" künye).
+- **Popup:** medya `media-lightbox` (önceki/sonraki, Esc); başka popup neredeyse yok.
+- **Grafik:** yalnız katkı takvimi (`heatmap`) ve doğrulanabilir sayı ("316 PR · 997 commit"); pazarlama grafiği yok.
+- **Boş Durum:** tek soluk cümle, ortada ("Henüz bir şey eklenmedi.").
+- **Hareket:** işlevsel ve ölçülü, eğri `--ease-brand`: medya kaydırdıkça buğudan netleşir (`scroll-focus`), sekme içeriği 480 ms'de 2 px buğu + 6 px kaymayla gelir, seçim hapı kayar, ikon anlamına göre oynar, beğeni kalbi pop. Video yalnız görünümdeyken oynar.
+- **Yasak:** büyük iddia başlığı, degrade zemin, logo duvarı (müşteriler düz metin bağlantı listesi), sayaç/rozet gösterişi, her karta farklı renk, özel imleç, otomatik oynayan SESLİ medya, doğrulanamayan sayı.
+
 ---
 
 ## Seçim Matrisi

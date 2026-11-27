@@ -343,6 +343,26 @@ punto CSS değişkeniyle anında.
 
 Canlı örnek: Storybook → Ekranlar → Örnek Sayfalar.
 
+### Sakin Akış Turu: Portfolyo ve Akış (2026-11)
+
+Tek sütunlu, gri tonlu kişisel/ekip sayfası dili (yön: `design-directions.md` → `sakin-akis`).
+
+| İhtiyaç | Bileşen | Ne zaman DEĞİL |
+|---|---|---|
+| Kişi/ekip açılışı: avatar, ad, tazelik, CTA, ikon bağlantılar | `profile-intro` | Ürün tanıtımı (iddia başlığı gerekiyorsa `tone-text`) |
+| Metin içi bağlantı, süpürülen alt çizgi | `glide-link` | Buton işi gören bağlantı |
+| Kaydırdıkça buğudan netleşen medya/başlık | `scroll-focus` | Kahraman/LCP öğesi; tek seferlik giriş (`Reveal`) |
+| İş vitrini kartı: video ya da sahne + künye | `shot-card` | Veri kartı; sesli otomatik video |
+| Akış ↔ Masonry, süzgeç, karıştır | `shot-grid` | 4'ten az kart |
+| Aşağı kaydırınca saklanan yüzen araç çubuğu | `scroll-hide-bar` | Sayfanın tek gezinmesi (gizlenen gezinme kaybolur) |
+| Medyayı büyüt, önceki/sonraki | `media-lightbox` | Form ya da onay (`dialog`) |
+| Beğeni + sayaç, iyimser | `like-button` | Çoklu tepki (`reactions`) |
+| Kısa not/gönderi akışı | `note-card` | Mesajlaşma (`chat-thread`) |
+| Uzun akışta kenar çizgi cetveli içindekiler | `ruler-toc` | Belge sayfası (`toc-nav` başlık metniyle) |
+| Canlı deney vitrini (noktalı sahne + künye) | `demo-frame` | Ürün ekranı (`app-window`, `art-mat`) |
+
+Canlı örnek: Storybook → Ekranlar → Pusula → Portfolyo; Kapak.
+
 ## 5. Klavye Haritaları
 
 ### TreeView (`role="tree"`)
