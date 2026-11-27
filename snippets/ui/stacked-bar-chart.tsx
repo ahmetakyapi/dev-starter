@@ -100,7 +100,8 @@ export function StackedBarChart({
   };
 
   return (
-    <figure className={cn("w-full", className)}>
+    // Balon en yüksek sütunun ÜSTÜNE çıkar: highlight varken üst pay, dar kartta başlığa binmesin.
+    <figure className={cn("w-full", highlight !== undefined && "pt-7", className)}>
       <div className="flex gap-3">
         <div aria-hidden className={cn("relative w-9 shrink-0 text-micro text-muted tabular-nums", height)}>
           {axis.map((t, ti) => (

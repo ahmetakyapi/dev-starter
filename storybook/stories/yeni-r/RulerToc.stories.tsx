@@ -3,7 +3,7 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import { RulerToc } from "@/components/ui/ruler-toc";
 
 const SECTIONS = [
-  { id: "rt-hos-geldin", label: "Hoş geldin" },
+  { id: "rt-hos-geldin", label: "Hoş Geldin" },
   { id: "rt-randevu", label: "Randevu bağlantıları" },
   { id: "rt-gorev", label: "Görev ayrıntısı" },
   { id: "rt-duyuru", label: "Duyurular" },
@@ -54,7 +54,7 @@ const meta = {
       story: { inline: false, height: "640px" },
       description: {
         component:
-          "Uzun akışın sol kenarında sabit çizgi cetveli: her bölüm bir çizgi, okunan bölüm uzun ve koyu. İmleç cetvelin üstünde gezinince çizgiler çan eğrisiyle uzar (rAF yayı, yalnız hareket sürerken); satırda balon \"01 · Bölüm\" + isteğe önizleme. Tık bölüme kaydırır ve odağı taşır. Dar ekranda köşede \"01 Hoş geldin\" butonu açılır liste olur. Sakin Akış turundan (yalnız davranış).",
+          "Uzun akışın sol kenarında sabit çizgi cetveli: her bölüm bir çizgi, okunan bölüm uzun ve koyu. İmleç cetvelin üstünde gezinince çizgiler çan eğrisiyle uzar (rAF yayı, yalnız hareket sürerken); satırda balon \"01 · Bölüm\" + isteğe önizleme. Tık bölüme kaydırır ve odağı taşır. Dar ekranda köşede \"01 Hoş Geldin\" butonu açılır liste olur. Sakin Akış turundan (yalnız davranış).",
       },
     },
   },
@@ -73,7 +73,7 @@ export const Default: Story = {
     await expect(navs.length).toBeGreaterThan(0);
     const desktop = navs.find((n) => n.tagName === "NAV" && n.querySelector("ol a[aria-current]"));
     await expect(desktop).toBeTruthy();
-    await expect(within(desktop!).getByRole("link", { name: "Hoş geldin", hidden: true })).toHaveAttribute("aria-current", "location");
+    await expect(within(desktop!).getByRole("link", { name: "Hoş Geldin", hidden: true })).toHaveAttribute("aria-current", "location");
   },
 };
 
@@ -96,7 +96,7 @@ export const Mobile: Story = {
   globals: { viewport: { value: "mobile2", isRotated: false } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const toggle = canvas.queryByRole("button", { name: /Hoş geldin, Bu Sayfada/ });
+    const toggle = canvas.queryByRole("button", { name: /Hoş Geldin, Bu Sayfada/ });
     if (!toggle || (toggle as HTMLElement).offsetParent === null) return;
     await userEvent.click(toggle);
     await expect(toggle).toHaveAttribute("aria-expanded", "true");

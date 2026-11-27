@@ -302,7 +302,7 @@ export function PusulaApp({ initialPage = "dashboard", initialParams = {}, initi
         current={href(loadingPage ?? route.page)}
         user={{ name: ME.name, detail: ME.role }}
         userAction={<IconButton icon={LogOut} aria-label="Oturumu Kapat" size="sm" onClick={() => setSignedIn(false)} />}
-        searchLabel="Ara ya da git"
+        searchLabel="Ara ya da Git"
         className="pusula-shell [&>aside]:sticky [&>aside]:top-0 [&>aside]:h-dvh [&>aside]:self-start"
       >
         {loadingPage ? <PageLoading page={loadingPage} /> : <PageView key={`${route.page}:${route.params.status ?? ""}:${route.params.tag ?? ""}`} page={route.page} />}

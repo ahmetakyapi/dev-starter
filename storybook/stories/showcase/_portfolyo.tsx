@@ -338,7 +338,7 @@ function Lab() {
 }
 
 const SECTIONS = [
-  { id: "hos-geldin", label: "Hoş geldin" },
+  { id: "hos-geldin", label: "Hoş Geldin" },
   { id: "calismalar", label: "Çalışmalar" },
 ];
 
@@ -347,7 +347,7 @@ export function PortfolyoPage() {
     <div className="min-h-dvh bg-page text-body">
       <RulerToc sections={SECTIONS} label="Bu Sayfada" />
       <main className="mx-auto grid max-w-3xl gap-16 px-5 pt-14 pb-28 sm:pt-20">
-        <section id="hos-geldin" aria-label="Hoş geldin" className="mx-auto w-full max-w-[34rem]">
+        <section id="hos-geldin" aria-label="Hoş Geldin" className="mx-auto w-full max-w-[34rem]">
           <ProfileIntro
             name="Deniz Aydın"
             updated="2026-11-22"

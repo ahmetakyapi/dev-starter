@@ -228,7 +228,7 @@ export function Blocks() {
           current={CURRENT}
           user={{ name: ME.name, detail: ME.role }}
           userAction={<IconButton icon={LogOut} aria-label="Oturumu Kapat" size="sm" />}
-          searchLabel="Ara ya da git"
+          searchLabel="Ara ya da Git"
           contentAs="div"
           className="h-[42rem] min-h-0 rounded-xl"
         >

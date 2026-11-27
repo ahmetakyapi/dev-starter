@@ -319,7 +319,7 @@ export function CartoMap({
           {TOWNS.map((t) => (
             <g key={t.name}>
               <circle cx={t.at[0]} cy={t.at[1]} r="1.8" style={{ fill: L.town }} />
-              <text x={t.end ? t.at[0] - 4 : t.at[0] + 4} y={t.at[1] + 3} textAnchor={t.end ? "end" : "start"} fontSize={7} className="italic" style={{ fill: L.town, paintOrder: "stroke", stroke: L.halo, strokeWidth: 2.4 } as CSSProperties}>
+              <text x={t.end ? t.at[0] - 4 : t.at[0] + 4} y={t.at[1] + 3} textAnchor={t.end ? "end" : "start"} fontSize={9} style={{ fill: L.town, paintOrder: "stroke", stroke: L.halo, strokeWidth: 2.4 } as CSSProperties}>
                 {t.name}
               </text>
             </g>
@@ -336,7 +336,7 @@ export function CartoMap({
                 <text x={s.at[0]} y={s.at[1]} textAnchor="middle" fontSize={9.5} className="font-semibold tracking-[0.16em]" style={{ fill: L.label, paintOrder: "stroke", stroke: L.halo, strokeWidth: 3 } as CSSProperties}>
                   {r.label.toLocaleUpperCase("tr-TR")}
                 </text>
-                <text x={s.at[0]} y={s.at[1] + 11} textAnchor="middle" fontSize={8} className="font-medium tabular-nums" style={{ fill: r.tone === "danger" ? "var(--danger)" : L.town, paintOrder: "stroke", stroke: L.halo, strokeWidth: 2.6 } as CSSProperties}>
+                <text x={s.at[0]} y={s.at[1] + 11} textAnchor="middle" fontSize={10} className="font-medium tabular-nums" style={{ fill: r.tone === "danger" ? "var(--danger)" : L.town, paintOrder: "stroke", stroke: L.halo, strokeWidth: 2.6 } as CSSProperties}>
                   {r.value}
                 </text>
               </g>
@@ -358,8 +358,8 @@ export function CartoMap({
         <g aria-hidden transform={`translate(${vx + 14} ${vy + vh - 18})`} style={{ fill: L.town } as CSSProperties}>
           <rect width="40" height="3" style={{ fill: L.label }} />
           <rect x="20" width="20" height="3" style={{ fill: L.halo === "transparent" ? "var(--page-bg)" : L.halo, stroke: L.label }} strokeWidth="0.6" />
-          <text y="-3" fontSize={7}>0</text>
-          <text x="36" y="-3" fontSize={7}>5 km</text>
+          <text y="-3" fontSize={9}>0</text>
+          <text x="36" y="-3" fontSize={9}>5 km</text>
         </g>
         <g aria-hidden transform={`translate(${vx + vw - 22} ${vy + 22})`}>
           <circle r="11" style={{ fill: L.halo === "transparent" ? "var(--page-bg)" : L.halo, stroke: L.border }} strokeWidth="0.8" />

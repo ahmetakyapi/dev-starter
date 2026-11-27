@@ -64,10 +64,10 @@ export function FeaturesSection() {
       <Reveal className="max-w-2xl">
         <CornerLabel>Özellikler</CornerLabel>
         <ToneText as="h2" className={`mt-4 ${H2}`}>
-          Bütün iş <ToneText.Soft>tek şeritte toplanır</ToneText.Soft>
+          Bütün İş <ToneText.Soft>Tek Şeritte Toplanır</ToneText.Soft>
         </ToneText>
         <span id="tanitim-ozellik-baslik" className="sr-only">
-          Bütün iş tek şeritte toplanır
+          Bütün İş Tek Şeritte Toplanır
         </span>
       </Reveal>
       <Reveal delay={0.08} className="mt-8">
@@ -145,7 +145,7 @@ export function StoriesSection() {
     <section aria-labelledby="tanitim-hikaye-baslik" className={SECTION}>
       <Reveal className="mx-auto max-w-2xl text-center">
         <ToneText as="h2" className={H2}>
-          Ekipler Pusula'yı <ToneText.Soft>nasıl kullanıyor</ToneText.Soft>
+          Ekipler Pusula'yı <ToneText.Soft>Nasıl Kullanıyor</ToneText.Soft>
         </ToneText>
         <span id="tanitim-hikaye-baslik" className="sr-only">
           Müşteri hikâyeleri (örnek)
@@ -189,7 +189,7 @@ export function ProcessSection() {
             {/* Ters yüzey: açık temada koyu, koyu temada açık. Metin `text-page`; `tone="media"` sabit beyaz olduğu için açık yüzeyde kaybolurdu. */}
             <p className="font-mono text-small tracking-[0.12em] uppercase opacity-75">Süreç</p>
             <h2 id="tanitim-surec-baslik" className="mt-4 font-display text-heading font-bold text-balance text-page sm:text-display">
-              Beş adımda ilk yanıta
+              Beş Adımda İlk Yanıta
             </h2>
             <p className="mt-3 max-w-md text-read opacity-75">Kurulum bir öğleden sonra sürer; ekip ilk gün gelen kutusuna girer.</p>
           </Reveal>
@@ -199,10 +199,10 @@ export function ProcessSection() {
             aria-label="Pusula kurulum adımları"
             steps={[
               { icon: <Pencil />, title: "Kaydol", description: "Çalışma alanını aç." },
-              { icon: <Link2 />, title: "Kanalları bağla", description: "E-posta, telefon ve web formu." },
-              { icon: <Reply />, title: "İlk talebi yanıtla", description: "Şablonlardan başla." },
-              { icon: <CalendarDays />, title: "Takvime işle", description: "Teslimat ve görüşmeler." },
-              { icon: <Users />, title: "Ekibi ekle", description: "Rol ver, kuyruğu paylaş." },
+              { icon: <Link2 />, title: "Kanalları Bağla", description: "E-posta, telefon ve web formu." },
+              { icon: <Reply />, title: "İlk Talebi Yanıtla", description: "Şablonlardan başla." },
+              { icon: <CalendarDays />, title: "Takvime İşle", description: "Teslimat ve görüşmeler." },
+              { icon: <Users />, title: "Ekibi Ekle", description: "Rol ver, kuyruğu paylaş." },
             ]}
           />
         </div>
@@ -233,9 +233,9 @@ export function FocusSection() {
   return (
     <section aria-labelledby="tanitim-odak-baslik" className={`${SECTION} grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:items-center`}>
       <Reveal>
-        <CornerLabel>Gelen kutusu</CornerLabel>
+        <CornerLabel>Gelen Kutusu</CornerLabel>
         <ToneText as="h2" className={`mt-4 ${H2}`}>
-          <span id="tanitim-odak-baslik">Sıradaki talep <ToneText.Soft>hep odakta</ToneText.Soft></span>
+          <span id="tanitim-odak-baslik">Sıradaki Talep <ToneText.Soft>Hep Odakta</ToneText.Soft></span>
         </ToneText>
         <p className="mt-3 max-w-md text-read text-body">Açık talepler sırayla öne gelir; üzerine gelince döngü durur, ok tuşlarıyla sen gezersin.</p>
       </Reveal>
@@ -267,7 +267,7 @@ export function HorizonSection({ onSignIn }: { onSignIn: () => void }) {
       scene={<Wallpaper scene="alpine" className="size-full" />}
     >
       <ToneText as="h2" className="font-display text-display font-bold text-balance text-strong">
-        Pazartesi sabahı <ToneText.Soft>sakin başlar</ToneText.Soft>
+        Pazartesi Sabahı <ToneText.Soft>Sakin Başlar</ToneText.Soft>
       </ToneText>
       <p className="mx-auto mt-4 max-w-md text-read text-body">Yanıt bekleyen talepler, bugünün teslimatları ve açık işler tek bakışta.</p>
       <button

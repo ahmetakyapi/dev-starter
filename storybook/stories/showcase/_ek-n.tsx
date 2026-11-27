@@ -183,7 +183,7 @@ export function CloseTicketDialog({
 export function PriceListWell() {
   const [channels, setChannels] = useState<string[]>(["Bayi"]);
   return (
-    <Well labelledBy="gorev-fiyat" className="lg:col-span-2">
+    <Well labelledBy="gorev-fiyat">
       <WellTitle id="gorev-fiyat" hint="Ekip kararı verilmeden önce taslağın neyi değiştirdiğini ve hangi kuralları zorladığını gör.">
         Fiyat Listesi Taslağı
       </WellTitle>
@@ -280,7 +280,7 @@ export function RevenueScenarioWell({ className }: { className?: string }) {
         />
       </div>
       <div className="px-3 pb-3">
-        <LeverGrid label="Senaryo Kaldıraçları">
+        <LeverGrid label="Senaryo Kaldıraçları" className="xl:grid-cols-3">
           <LeverCard
             title="Geciken Siparişleri Teslim Et"
             effect={`+${fmt(levers.late)}`}

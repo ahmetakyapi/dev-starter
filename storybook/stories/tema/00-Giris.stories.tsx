@@ -223,8 +223,9 @@ function GirisSayfasi() {
       <header className="grid gap-10">
         <div className="max-w-4xl">
           <p className="font-mono text-small text-muted">dev-starter · Görsel Katalog</p>
-          <h1 className="mt-5 text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-strong">
-            Sakin Yüzey, <span className="display-ink">Renkli Veri</span>
+          {/* Sakin Akış: degrade başlık yok, hiyerarşi tonla; başlıkta virgül yok. */}
+          <h1 className="mt-5 text-[clamp(2.5rem,6.5vw,4.5rem)] leading-[1] font-semibold tracking-[-0.045em] text-strong">
+            Sakin Yüzey <span className="text-muted">Renkli Veri</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lead text-body">
             Ekosistemin bütün arayüzleri tek bir dille konuşur: beyaz sayfa, gri kuyu, içinde beyaz karolar. Arayüz geri çekilir, renk

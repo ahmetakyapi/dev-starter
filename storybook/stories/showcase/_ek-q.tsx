@@ -73,7 +73,7 @@ const STEPS: StepTab[] = [
 /** Tanıtım sayfası: "nasıl çalışır" bölümü. Künyeli iki bölümden biri (sahne dili 3). */
 export function SergiSection() {
   return (
-    <section aria-labelledby="tanitim-sergi-baslik" className="mx-auto grid max-w-6xl gap-12 px-4 pb-28 sm:px-6">
+    <section aria-labelledby="tanitim-sergi-baslik" className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 pb-28 sm:px-6">
       <SectionHeading
         id="tanitim-sergi-baslik"
         eyebrow="Nasıl Çalışır"

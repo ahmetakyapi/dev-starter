@@ -558,7 +558,7 @@ function InvoiceList({ params, go }: PageProps) {
             </div>
             {today5.length ? (
               <div className="rounded-lg bg-warning-wash p-3">
-                <h3 className="text-small font-semibold text-warning">Bugün aranacaklar ({num.format(toCall.length)} abone)</h3>
+                <h3 className="text-small font-semibold text-warning">Bugün Aranacaklar ({num.format(toCall.length)} Abone)</h3>
                 <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
                   {today5.map((t) => (
                     <li key={t.cid} className="flex items-center justify-between gap-2 text-small">

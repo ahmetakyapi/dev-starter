@@ -304,7 +304,8 @@ function MusteriListesi({ params, go }: { params: Params; go: PageProps["go"] })
         const reason = riskReason(c);
         return (
           <>
-            <span aria-hidden className={`block h-10 w-1 rounded-full ${reason ? (reason.startsWith("Sayaç") ? "bg-warning" : "bg-danger") : "bg-line"}`} />
+            {/* Sakin Akış: durum renkli şeritle değil Durum sütunundaki rozetle söylenir; şerit ince ve nötr. */}
+            <span aria-hidden className="block h-6 w-0.5 rounded-full bg-line-strong" />
             <span className="sr-only">{reason ?? "Risk işareti yok"}</span>
           </>
         );

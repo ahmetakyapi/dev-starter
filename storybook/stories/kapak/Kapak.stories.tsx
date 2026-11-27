@@ -1006,7 +1006,7 @@ function CalmCover({ palette, theme, onPick, onTheme }: { palette: PaletteName; 
       <RulerToc
         label="Kapakta"
         sections={[
-          { id: "kapak-giris", label: "Hoş geldin" },
+          { id: "kapak-giris", label: "Hoş Geldin" },
           { id: "kapak-sekmeler", label: "Katalog" },
           { id: "kapak-kunye", label: "Künye" },
         ]}

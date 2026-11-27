@@ -98,7 +98,7 @@ export function StepTabs({ steps, label, value, defaultValue, onValueChange, aut
   return (
     <div
       ref={root}
-      className={cn("grid gap-8 sm:gap-10", className)}
+      className={cn("grid min-w-0 grid-cols-1 gap-8 sm:gap-10", className)}
       onPointerEnter={() => setHold(true)}
       onPointerLeave={() => setHold(false)}
       onFocusCapture={() => setHold(true)}

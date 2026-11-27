@@ -137,6 +137,10 @@
       (segmented, sekme) kendi gölgesini korur: kural yalnız sayfa kartlarına (bg-overlay + ring).
    3. Birincil eylem koyu hap: vurgu rengi yalnız bilgi taşıdığı yerde kalır.
    4. Sayfa girişi: 480 ms, 2 px buğu, 6 px kayma; hareket azaltmada yalnız solma. */
+:root[data-theme="dark"] .kz-shell #icerik {
+  /* Koyu temada kuyu üstündeki soluk metin 4,02:1'de kalıyordu: bir ton açık (~5,5:1). */
+  --text-muted: color-mix(in oklab, var(--text-strong) 62%, var(--page-bg));
+}
 :root:not([data-theme="dark"]) .kz-shell #icerik {
   background-color: color-mix(in oklab, var(--text-strong) 4.5%, var(--page-bg));
   /* Gri kuyu zemininde soluk metin bir ton koyu: gri kuyular ve sekme hapları üstünde 4,5:1 (eski soluk ton 4,34:1 kalıyordu). */

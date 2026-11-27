@@ -90,7 +90,7 @@ function FigureMedia({ figure, share, caption }: { figure: string; share: number
   const ticks = 24;
   const on = Math.round((Math.min(Math.max(share, 0), 100) / 100) * ticks);
   return (
-    <span className="flex size-full flex-col gap-3 bg-linear-to-b from-primary-wash to-transparent p-5">
+    <span className="flex size-full flex-col gap-3 bg-surface p-5">
       <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-overlay px-2.5 py-1 text-small font-medium text-body shadow-raised">
         <span aria-hidden className="size-1.5 rounded-full bg-primary" />
         {caption}

@@ -80,7 +80,7 @@ export function TaskViewsWell() {
   const countOf = (v: ViewDef) => open.filter((c) => match(c, v.filters)).length;
 
   return (
-    <Well labelledBy="gorev-gorunum" className="lg:col-span-2">
+    <Well labelledBy="gorev-gorunum">
       <WellTitle id="gorev-gorunum" hint="Sık baktığın süzgeçleri görünüm olarak kaydet; etkin süzgeç çipleri neyi görüntülediğini söyler.">
         Görevlere Bakış
       </WellTitle>

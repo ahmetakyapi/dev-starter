@@ -351,9 +351,9 @@ export function PanoPage() {
 
         <section aria-labelledby="pano-destek" className="grid grid-cols-1 gap-3">
           <SectionTitle id="pano-destek" title="Destek" note={`${num.format(s.ticketCount)} Talep · ${w.caption}`} />
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-6">
             <ChartCard
-              className={CARD}
+              className={cn(CARD, "lg:col-span-2")}
               id="pano-talep-kanal"
               label="Talep Kanalları"
               value={num.format(s.ticketCount)}
@@ -370,7 +370,7 @@ export function PanoPage() {
             </ChartCard>
 
             <ChartCard
-              className={CARD}
+              className={cn(CARD, "lg:col-span-2")}
               id="pano-kalite"
               label="Destek Kalitesi"
               value={`${avgScore} puan`}
@@ -398,25 +398,26 @@ export function PanoPage() {
             </ChartCard>
 
             <ChartCard
-              className={CARD}
+              className={cn(CARD, "lg:col-span-2")}
               id="pano-gun"
               label="Haftanın Gününe Göre İlk Yanıt"
               value={`${byWeekday.reduce((a, d) => (d.value > a.value ? d : a)).label} en yavaş`}
             >
-              <TrackBarChart title="Haftanın Gününe Göre Ortalama İlk Yanıt Süresi (dakika)" data={byWeekday} series={1} height="h-44" format={(v) => `${v} dk`} threshold={{ value: 30, label: "Hedef 30 dk" }} />
+              <TrackBarChart title="Haftanın Gününe Göre Ortalama İlk Yanıt Süresi (dakika)" data={byWeekday} series={1} height="h-44" format={(v) => `${v} dk`} threshold={{ value: 30, label: "Hedef" }} />
             </ChartCard>
 
-            <TicketStackCard s={s} className="lg:col-span-2" />
-            <UpcomingCard />
+            <TicketStackCard s={s} className="lg:col-span-4" />
+            <UpcomingCard className="lg:col-span-2" />
+            {/* Bölge haritası iki satır boyu; solunda iki kısa kart alt alta (eşit yüksekliğe gerilip ortası boş kalmasın). */}
             <GoalTicksCard s={s} className="lg:col-span-3" />
-            <RegionCard s={s} className="lg:col-span-3" />
-            <PanoOneriCard s={s} className="lg:col-span-3" />
+            <RegionCard s={s} className="lg:col-span-3 lg:row-span-2" />
             <OrderImpactCard s={s} className="lg:col-span-3" />
+            <PanoOneriCard s={s} className="lg:col-span-6" />
             <DelayedAttentionCard className="lg:col-span-6" />
 
             <ChartCard
               id="pano-asama"
-              className={cn(CARD, "lg:col-span-3")}
+              className={cn(CARD, "lg:col-span-6")}
               label="Talep Akışı"
               value={`%${pct(q.resolved, s.ticketCount).toLocaleString("tr-TR")} çözüldü`}
               change={pct(q.resolved, s.ticketCount) - pct(s.prevQuality.resolved, s.prevQuality.total)}

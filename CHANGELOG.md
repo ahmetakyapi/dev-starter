@@ -7,6 +7,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Canlı logo, etkileşimli başlık, ekran turu düzeltmeleri — 2026-11-27
+
+- Kapak: logo katmanları birleşir, imleci izler, tıklayınca palet değişir; "On Palet" palet tayfıyla akar (tıkla: palet), "İki Tema" yarı açık yarı koyu hap (tıkla: tema).
+- Ekran turu (84 hücre): Görevler ve Pano ızgara hataları, Tanıtım 390 taşması (`step-tabs` kök ızgarası), grafik balonu başlığa binmez (`stacked-bar-chart`), Portal koyu tema kontrastı, harita etiketleri okunur, Başlangıç ve Her Şey Bir Arada kahramanında degrade yerine ton, Raporlar ve Aboneler sakin dile geçti, Title Case düzeltmeleri.
+- Storybook Tests yeşil: 981/981.
+
 ### Büyük kahraman, Portal Sakin Akış'a geçti, Storybook düzen koruması — 2026-11-27
 
 - Kapak kahramanı büyüdü: iki tonlu dev başlık, büyük sayılar, geniş vitrinde okunur ürün ekranı.

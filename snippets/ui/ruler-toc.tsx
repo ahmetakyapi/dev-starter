@@ -27,12 +27,12 @@ import { cn } from "@/lib/utils";
  * - Satırın üstüne gelince/odakta balon: "01 · Bölüm adı" + isteğe önizleme.
  * - Tıklama bölüme kaydırır (hareket azaltmada anında), odak bölüme geçer
  *   (`tabIndex=-1` eklenir), adres `#id` olur.
- * - Dar ekranda (< md) cetvel yerine köşede kompakt buton: "01 Hoş geldin"
+ * - Dar ekranda (< md) cetvel yerine köşede kompakt buton: "01 Hoş Geldin"
  *   → açılır liste; dışarı tık ve Escape kapatır, odak butona döner.
  *
  * ERİŞİLEBİLİRLİK: `nav` + `aria-label`; her satır gerçek bağlantı, adı
  * bölüm adı (balon `aria-hidden` görsel kopya). Okunan bölüm
- * `aria-current="location"`. Dar ekran butonunun adı görünen metinden ("01 Hoş geldin", gizli ek ", Bu Sayfada"); `aria-expanded` +
+ * `aria-current="location"`. Dar ekran butonunun adı görünen metinden ("01 Hoş Geldin", gizli ek ", Bu Sayfada"); `aria-expanded` +
  * `aria-controls`. Hareket azaltmada tümsek anında, yaysız.
  *
  * Sakin Akış turu (kişisel portfolyo dili); yalnız davranış, kod alınmadı.
@@ -241,7 +241,7 @@ export function RulerToc({
           className="inline-flex min-h-11 items-center gap-2 rounded-full bg-overlay px-4 text-small shadow-floating ring-1 ring-line-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus"
         >
           <span aria-hidden className="h-px w-3 bg-strong" />
-          {/* Ad görünen metinden gelir ("01 Hoş geldin"), ardından gizli bağlam: WCAG 2.5.3. */}
+          {/* Ad görünen metinden gelir ("01 Hoş Geldin"), ardından gizli bağlam: WCAG 2.5.3. */}
           <span className="font-mono text-micro text-soft tabular-nums">{pad(activeIdx)}</span>{" "}
           <span className="font-medium text-strong">{current?.label}</span>
           <span className="sr-only">, {label}</span>

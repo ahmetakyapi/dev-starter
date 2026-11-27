@@ -52,7 +52,7 @@ export function Shell({ brand, groups, current, user, children }: ShellProps) {
       groups={groups}
       current={current}
       user={user}
-      searchLabel="Ara ya da git"
+      searchLabel="Ara ya da Git"
       className="[&>aside]:sticky [&>aside]:top-0 [&>aside]:h-dvh [&>aside]:self-start"
     >
       {children}
