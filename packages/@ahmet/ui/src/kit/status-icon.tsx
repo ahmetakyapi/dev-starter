@@ -1,6 +1,6 @@
 // ÜRETİLDİ: scripts/build-ui-package.mjs — elle düzenleme, kaynak snippets/ui/
 import { Check, ChevronDown } from "lucide-react";
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
@@ -77,6 +77,27 @@ type StatusIconProps = {
   size?: number;
   className?: string;
 };
+
+/**
+ * Durum metni (Sakin Akış): pastel hap yerine ŞEKİL + metin. Liste sütunlarında
+ * (fatura, sayaç, abone durumu) uzun liste renge boğulmaz; renk yalnız ikonda,
+ * sorun (`danger`) metni koyu ve orta ağırlıkta. `tone` anlamdan şekil seçer
+ * (başarı → tik, uyarı → yarım, sorun → duraklat, birincil → halka, nötr → kesik);
+ * belirli bir şekil gerekiyorsa `status` ile ver.
+ *
+ *   <StatusText tone="danger">6 Gecikme</StatusText>
+ */
+export type StatusTone = "success" | "neutral" | "warning" | "danger" | "primary";
+const TONE_SHAPE: Record<StatusTone, Status> = { success: "done", neutral: "triage", warning: "progress", danger: "blocked", primary: "todo" };
+
+export function StatusText({ tone = "neutral", status, children, className }: { tone?: StatusTone; status?: Status; children: ReactNode; className?: string }) {
+  return (
+    <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-small whitespace-nowrap", tone === "danger" ? "font-medium text-strong" : "text-body", className)}>
+      <StatusIcon status={status ?? TONE_SHAPE[tone]} size={14} />
+      {children}
+    </span>
+  );
+}
 
 export function StatusIcon({ status, label, size = 16, className }: StatusIconProps) {
   const fill = status === "done" ? FILL_C : status === "progress" ? FILL_C / 2 : 0;

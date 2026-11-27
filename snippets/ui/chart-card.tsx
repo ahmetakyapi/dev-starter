@@ -39,12 +39,14 @@ type ChartCardProps = {
   id?: string;
   children: ReactNode;
   footer?: ReactNode;
+  /** Kaynak / tazelik satırı (Sakin Akış): "Saatlik toplanır · son güncelleme 5 dk önce". Başlığın altında soluk. */
+  source?: ReactNode;
   /** Başlık düzeyi: sayfadaki yerine göre (h1'in hemen altındaysa h2). */
   titleAs?: "h2" | "h3" | "h4";
   className?: string;
 };
 
-export function ChartCard({ label, value, change, changeLabel = "önceki döneme göre", action, id, children, footer, titleAs: Title = "h3", className }: ChartCardProps) {
+export function ChartCard({ label, value, change, changeLabel = "önceki döneme göre", action, id, children, footer, source, titleAs: Title = "h3", className }: ChartCardProps) {
   const hasChange = typeof change === "number" && Number.isFinite(change);
   const up = hasChange && change > 0;
   const down = hasChange && change < 0;
@@ -58,7 +60,7 @@ export function ChartCard({ label, value, change, changeLabel = "önceki döneme
             {label}
           </Title>
           <p className="mt-1 flex flex-wrap items-center gap-2">
-            <span className="text-heading font-semibold tracking-tight text-strong tabular-nums">{value}</span>
+            <span className="text-heading font-medium tracking-[-0.02em] text-strong tabular-nums">{value}</span>
             {hasChange ? (
               <span
                 className={cn(
@@ -74,6 +76,7 @@ export function ChartCard({ label, value, change, changeLabel = "önceki döneme
               </span>
             ) : null}
           </p>
+          {source ? <p className="mt-1 text-small text-muted">{source}</p> : null}
         </div>
         {action ? <div className="shrink-0">{action}</div> : null}
       </header>
@@ -96,7 +99,7 @@ export function ChartLegend({ items, columns = 2, className }: { items: readonly
             <span aria-hidden className={cn("size-2.5 shrink-0 rounded-[3px]", SERIES_BG[item.series - 1])} />
             <span className="truncate">{item.label}</span>
           </dt>
-          <dd className="mt-0.5 text-base font-semibold text-strong tabular-nums">
+          <dd className="mt-0.5 text-base font-medium text-strong tabular-nums">
             {number.format(item.value)}
             {item.unit ? <span className="font-medium text-muted"> {item.unit}</span> : null}
           </dd>

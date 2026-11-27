@@ -7,7 +7,7 @@ import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { openCommandPalette } from "@/components/ui/command-palette";
 import { Kbd } from "@/components/ui/kbd";
 import { NotificationCenter, type NotificationItem } from "@/components/ui/notification-center";
-import { StatusIcon, type Status } from "@/components/ui/status-icon";
+import { StatusText } from "@/components/ui/status-icon";
 import { cn } from "@/lib/utils";
 import {
   type CustomerStatus,
@@ -283,17 +283,8 @@ export function DemoBadge() {
    Pastel hap yerine `status-icon` şekli: şekil durumu söyler (renk körlüğüne dayanıklı),
    renk ikinci işaret ve YALNIZ ikonda; metin nötr (sorun durumunda koyu ve orta ağırlık).
    Satırda tek bakışta "ne durumda" okunur; aynı durumdaki uzun liste kırmızıya boğulmaz. */
-type Tone = "success" | "neutral" | "warning" | "danger" | "primary";
-const SHAPE: Record<Tone, Status> = { success: "done", neutral: "triage", warning: "progress", danger: "blocked", primary: "todo" };
-export function StatusText({ tone, children, className }: { tone: Tone; children: ReactNode; className?: string }) {
-  return (
-    <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-small whitespace-nowrap", tone === "danger" ? "font-medium text-strong" : "text-body", className)}>
-      <StatusIcon status={SHAPE[tone]} size={14} />
-      {children}
-    </span>
-  );
-}
-
+// Durum metni kütüphanede: snippets/ui/status-icon.tsx → StatusText (şekil + metin); sayfalar buradan da alır.
+export { StatusText };
 export function InvoiceBadge({ status }: { status: InvoiceStatus }) {
   const tone = { odendi: "success", kesildi: "neutral", kismi: "warning", gecikti: "danger", itirazli: "primary" } as const;
   return <StatusText tone={tone[status]}>{INVOICE_STATUS_LABEL[status]}</StatusText>;

@@ -66,7 +66,7 @@ export function Stat({
     <div className={cn("min-w-0", className)}>
       <dt className="text-small font-medium text-muted">{label}</dt>
       <dd className="mt-1.5">
-        <span className={cn("font-semibold tracking-tight text-strong tabular-nums", size === "lg" ? "text-display" : "text-heading")}>
+        <span className={cn("font-medium tracking-[-0.02em] text-strong tabular-nums", size === "lg" ? "text-display" : "text-heading")}>
           {value}
           {unit ? <span className="text-base font-medium text-muted">{" "}{unit}</span> : null}
         </span>

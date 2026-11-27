@@ -330,9 +330,10 @@ export function WeekCalendar({
               return (
                 <ul key={keys[i]} aria-label={dayLong.format(day)} className="grid min-w-0 content-start gap-1 border-l border-line-soft p-1">
                   {shown.map((e) => (
-                    <li key={e.id} className="flex min-w-0 items-center gap-1 rounded-md bg-surface px-1.5 py-1 text-micro text-strong ring-1 ring-inset ring-line-soft" title={e.title}>
-                      <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", DOT[(e.series ?? 1) - 1])} />
-                      <span className="truncate">{e.title}</span>
+                    <li key={e.id} className="flex min-w-0 items-start gap-1 rounded-md bg-surface px-1.5 py-1 text-micro text-strong ring-1 ring-inset ring-line-soft" title={e.title}>
+                      <span aria-hidden className={cn("mt-1 size-1.5 shrink-0 rounded-full", DOT[(e.series ?? 1) - 1])} />
+                      {/* İki satıra kırılır: dar gün sütununda tek satır kırpma adı "Lavanta Spa gecikm…" yapıyordu. */}
+                      <span className="line-clamp-2 break-words">{e.title}</span>
                     </li>
                   ))}
                   {list.length > shown.length ? (

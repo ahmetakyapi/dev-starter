@@ -469,7 +469,7 @@
       "name": "badge",
       "type": "registry:ui",
       "title": "Rozet",
-      "description": "Durum/kategori etiketi",
+      "description": "Durum/kategori etiketi ; `variant=\"quiet\"` (Sakin Akış): şeffaf zemin + kıl halka, renk metinde",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
@@ -742,7 +742,7 @@
       "name": "chart-card",
       "type": "registry:ui",
       "title": "Grafik Kartı",
-      "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları",
+      "description": "Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları ; `source`: kaynak/tazelik satırı (\"Saatlik toplanır · 5 dk önce\")",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
@@ -4375,7 +4375,7 @@
       "name": "status-icon",
       "type": "registry:ui",
       "title": "Durum İkonu",
-      "description": "İş/talep durumu şekille: Ön İnceleme (kesik daire), Yapılacak, Sürüyor (yarım dolu), Engelli (duraklat), Tamamlandı (tik), İptal (çapraz); `StatusPicker` gri hap + liste",
+      "description": "İş/talep durumu şekille: Ön İnceleme (kesik daire), Yapılacak, Sürüyor (yarım dolu), Engelli (duraklat), Tamamlandı (tik), İptal (çapraz); `StatusPicker` gri hap + liste ; `StatusText`: liste sütununda şekil + metin (pastel hap yerine)",
       "dependencies": [
         "lucide-react@^1.51.0"
       ],

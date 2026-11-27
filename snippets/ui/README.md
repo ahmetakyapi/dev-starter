@@ -118,7 +118,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `contact-list.tsx` | Telefon, e-posta, adres, web: tür etiketi ("İş", "Kişisel") + kopyala; müşteri kartı, tedarikçi profili | lucide, `copy-button` | Evet | Bağlantı türden üretilir (`tel:`, `mailto:`, `https:`), güvensiz şema düz metin kalır; "Telefon, İş: …" okunur |
 | `attention-list.tsx` | "Şimdi bakman gerekenler": kim/ne + ikonlu durum cümlesi + tek tıkla çözüm (`action` yuvası); sayaç satırlardan türer | lucide | Hayır | Renk tek işaret değil: ikon + durum metni; `emptyText` yalnız veri geldiyse; boş liste hiçbir şey çizmez |
 | `detail-panel.tsx` | Listenin yanında ana-ayrıntı yüzeyi: başlık (ikon, ad, alt satır, eylem) + başlıklı bölümler (`DetailSection`: sayaç, "Tümünü Gör"); içerik serbest | yok | Hayır | `aside` + başlığıyla adlı, her bölge `section`; seçilmemişse `emptyText` |
-| `status-icon.tsx` | İş/talep durumu şekille: Ön İnceleme (kesik daire), Yapılacak, Sürüyor (yarım dolu), Engelli (duraklat), Tamamlandı (tik), İptal (çapraz); `StatusPicker` gri hap + liste | lucide | Evet | Şekil durumu söyler, renk ikinci işaret; `label` ile `role="img"`; seçici `listbox` + `aria-activedescendant`, ↑↓ Home End Enter Escape, harfle atlama, odak tetikleyiciye döner; hareket azaltmada geçiş yok |
+| `status-icon.tsx` | İş/talep durumu şekille: Ön İnceleme (kesik daire), Yapılacak, Sürüyor (yarım dolu), Engelli (duraklat), Tamamlandı (tik), İptal (çapraz); `StatusPicker` gri hap + liste ; `StatusText`: liste sütununda şekil + metin (pastel hap yerine)| lucide | Evet | Şekil durumu söyler, renk ikinci işaret; `label` ile `role="img"`; seçici `listbox` + `aria-activedescendant`, ↑↓ Home End Enter Escape, harfle atlama, odak tetikleyiciye döner; hareket azaltmada geçiş yok |
 
 ### Form ve Gezinme
 
@@ -134,7 +134,7 @@ alabilir (`render`, `hrefFor`) ve tarayıcıya JavaScript indirmez.
 | `tabs.tsx` | `Tabs`: sayfa içi · `TabLinks`: ayrı adresler; etiket yanında isteğe bağlı sayaç ("Tümü 48") | `next/link` | Evet | WAI-ARIA tabs; bağlantı sekmesi `aria-current`; kayan karo hareket azaltmada yerinde |
 | `accordion.tsx` | SSS, katlanır bölüm | yerel `<details>` | Evet* | Ctrl+F kapalı içeriği bulur; açılınca bastığın yerde kalır |
 | `breadcrumb.tsx` | Konum çubuğu | `next/link` | Hayır | Son öğe `aria-current`; ikonlar `aria-hidden`; `iconOnly`de ad gizli metin |
-| `badge.tsx` | Durum/kategori etiketi | yok | Hayır | Metin asıl işaret, renk hızlandırır |
+| `badge.tsx` | Durum/kategori etiketi; `variant="quiet"` (Sakin Akış): şeffaf zemin + kıl halka, renk metinde | yok | Hayır | Metin asıl işaret, renk hızlandırır |
 | `avatar.tsx` | Görsel + baş harf yedeği | Base UI | Evet | Baş harf `tr-TR` büyük harf; addan türeyen pastel zemin + `text-strong` (iki temada AA); `AvatarGroup` `role="group"` + "… ve N kişi daha" |
 | `stepper.tsx` | Çok adımlı akışta konum | lucide | Hayır | `<ol>`, `aria-current="step"`, gizli "Tamamlandı" |
 | `file-dropzone.tsx` | Dosya yükleme | yok | Evet | Klavyeyle açılır, reddedilen dosya nedeniyle okunur; SVG varsayılan RED |
@@ -182,7 +182,7 @@ hal anında; verinin tamamı ekran okuyucuya `sr-only` tablo ya da liste.
 
 | Dosya | Ne Zaman | Bağımlılık | İstemci | Erişilebilirlik |
 |-------|----------|------------|---------|-----------------|
-| `chart-card.tsx` | Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları | yok | Hayır | `section` + başlık; lejant `dl`; değişim "artış/düşüş" diye okunur |
+| `chart-card.tsx` | Grafik kabı: etiket + değer + değişim + dönem; altta lejant karoları; `source`: kaynak/tazelik satırı ("Saatlik toplanır · 5 dk önce")| yok | Hayır | `section` + başlık; lejant `dl`; değişim "artış/düşüş" diye okunur |
 | `stage-bars.tsx` | Huni aşamaları, iz üstünde tek renkli hap çubuk | `chart-card` | Hayır | `ol`; değer ve pay metinde, çubuk `aria-hidden` |
 | `track-bar-chart.tsx` | Sıralı tek seri (ay, gün), iz üstünde sütun; `threshold` ile hedef çizgisi, aşan sütun `warning` | `chart-card` | Hayır | Görsel `aria-hidden`, veri `sr-only` tabloda; aşan satıra ", eşiği aştı" eklenir |
 | `ring-chart.tsx` | 2-5 kategorinin iç içe halkası, ortada değer | yok | Hayır | `role="img"` + `title`; her yayın kendi `title`ı |

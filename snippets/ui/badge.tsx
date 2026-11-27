@@ -20,63 +20,75 @@ import { cn } from '@/lib/utils'
  *     grafikteki seriyle eşleştirmek için (aynı sıra, aynı renk).
  *
  * `variant`: `soft` (varsayılan) yıkanmış zemin; `outline` yalnızca çizgi,
- * yoğun tablolarda daha sessiz. `shape`: `pill` (varsayılan) ya da
+ * yoğun tablolarda daha sessiz; `quiet` (Sakin Akış) şeffaf zemin + kıl halka,
+ * renk yalnız metinde: tutar, sayaç, tür gibi bilgi hapları. `shape`: `pill` (varsayılan) ya da
  * `rounded` (8 piksel köşe; 24 piksel boyda 12 piksel zaten hap olurdu).
  */
 
 const TONES = {
   neutral: {
     soft: 'bg-surface-raised text-body',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-body',
     outline: 'border-line-strong text-body',
     dot: 'bg-muted',
   },
   primary: {
     soft: 'bg-primary-wash text-primary-ink',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-primary-ink',
     outline: 'border-primary/40 text-primary-ink',
     dot: 'bg-primary',
   },
   success: {
     soft: 'bg-success-wash text-success',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-success',
     outline: 'border-success/40 text-success',
     dot: 'bg-success',
   },
   warning: {
     soft: 'bg-warning-wash text-warning',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-warning',
     outline: 'border-warning/40 text-warning',
     dot: 'bg-warning',
   },
   danger: {
     soft: 'bg-danger-wash text-danger',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-danger',
     outline: 'border-danger/40 text-danger',
     dot: 'bg-danger',
   },
   'chart-1': {
     soft: 'bg-chart-1/22 text-strong',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-strong',
     outline: 'border-chart-1 text-strong',
     dot: 'bg-chart-1',
   },
   'chart-2': {
     soft: 'bg-chart-2/22 text-strong',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-strong',
     outline: 'border-chart-2 text-strong',
     dot: 'bg-chart-2',
   },
   'chart-3': {
     soft: 'bg-chart-3/22 text-strong',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-strong',
     outline: 'border-chart-3 text-strong',
     dot: 'bg-chart-3',
   },
   'chart-4': {
     soft: 'bg-chart-4/22 text-strong',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-strong',
     outline: 'border-chart-4 text-strong',
     dot: 'bg-chart-4',
   },
   'chart-5': {
     soft: 'bg-chart-5/22 text-strong',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-strong',
     outline: 'border-chart-5 text-strong',
     dot: 'bg-chart-5',
   },
   'chart-6': {
     soft: 'bg-chart-6/22 text-strong',
+    quiet: 'bg-transparent ring-1 ring-inset ring-line text-strong',
     outline: 'border-chart-6 text-strong',
     dot: 'bg-chart-6',
   },
@@ -84,7 +96,7 @@ const TONES = {
 
 type BadgeProps = ComponentProps<'span'> & {
   tone?: keyof typeof TONES
-  variant?: 'soft' | 'outline'
+  variant?: 'soft' | 'outline' | 'quiet'
   shape?: 'pill' | 'rounded'
   dot?: boolean
 }
