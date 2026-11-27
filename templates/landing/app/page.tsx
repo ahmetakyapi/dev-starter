@@ -43,7 +43,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
       <ScrollProgress />
       {/* Sunucu çerezi okumaz (sayfa statik); buton hidrasyondan hemen sonra
           `<html data-theme>`daki gerçek temaya geçer. */}
-      <SiteHeader initialTheme={DEFAULT_THEME} />
+      <SiteHeader initialTheme={DEFAULT_THEME} ctaVariant={variant === "calm" ? "calm" : "primary"} />
       <main id="icerik">
         <Hero variant={variant} />
         <Logos />

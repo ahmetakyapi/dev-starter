@@ -23,7 +23,7 @@ const meta = {
   // Üst bilgiyle: kahramanın zemini başlığın altına uzanır (-4rem), sayfadaki gibi görünsün.
   render: (args) => (
     <div className="min-h-dvh bg-page text-body">
-      <SiteHeader initialTheme={DEFAULT_THEME} />
+      <SiteHeader initialTheme={DEFAULT_THEME} ctaVariant={args.variant === "calm" ? "calm" : "primary"} />
       <main id="icerik">
         <Hero {...args} />
       </main>

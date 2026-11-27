@@ -24,7 +24,11 @@ import { cn } from "@/lib/utils";
  */
 const SCROLL_THRESHOLD = 8;
 
-export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
+/**
+ * `ctaVariant`: menüdeki birincil eylemin buton varyantı. Kahraman `calm` (Sakin Akış)
+ * seçildiyse sayfa onu `"calm"` (koyu hap) yapar; menü ile kahramanın eylemi aynı dili konuşur.
+ */
+export function SiteHeader({ initialTheme, ctaVariant = "primary" }: { initialTheme: Theme; ctaVariant?: "primary" | "calm" }) {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -91,7 +95,7 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
           <ThemeToggle initialTheme={initialTheme} />
           <a
             href={nav.cta.href}
-            className={buttonClass({ variant: "primary", size: "sm", className: "hidden rounded-full px-4 sm:inline-flex" })}
+            className={buttonClass({ variant: ctaVariant, size: "sm", className: "hidden rounded-full px-4 sm:inline-flex" })}
           >
             {nav.cta.label}
           </a>
@@ -145,7 +149,7 @@ export function SiteHeader({ initialTheme }: { initialTheme: Theme }) {
             <a
               href={nav.cta.href}
               onClick={() => setOpen(false)}
-              className={buttonClass({ variant: "primary", size: "lg", className: "mt-3 w-full" })}
+              className={buttonClass({ variant: ctaVariant, size: "lg", className: "mt-3 w-full" })}
             >
               {nav.cta.label}
             </a>

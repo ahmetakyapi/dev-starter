@@ -7,11 +7,11 @@
 name: [PROJE_ADI]
 description: [tek satırlık tanım]
 # ─── Tasarım yönü (knowledge/design-directions.md; boş alan yok) ───────────
-direction: [kimlik: editoryal | kurumsal-guven | veri-yogun | sicak-butik | teknik-gelistirici | oyuncul-canli | luks-minimal | brutalist-net | doga-organik | fintek-keskin | sergi]
+direction: [kimlik: editoryal | kurumsal-guven | veri-yogun | sicak-butik | teknik-gelistirici | oyuncul-canli | luks-minimal | brutalist-net | doga-organik | fintek-keskin | sergi | sakin-akis]
 direction-reason: '[tek cümle, ürüne bağlı]'
 palette: [signature | verdant | ember | iris | marka]
 font: [snippets/fonts FONT_PRESETS adı]
-hero: [hero.variant ya da yok]
+hero: [hero.variant ya da yok; sakin-akis → calm]
 shell: [sol-menu | ust-cubuk | ray-komut | alt-dock | gizli-menu]
 card: [cizgili | cerceveli | dolgu | kartsiz]
 popup: [sheet | modal | komut | alt-sheet | tam-ekran]

@@ -76,6 +76,20 @@ kullanin — hepsi `tsc --noEmit` ile dogrulanmistir:
 | `action-card.tsx` | `useRenderTool` | Sunucu tool'unun sonucu + Geri Al |
 | `agent-approval.tsx` | `useHumanInTheLoop` | Geri alinamaz aksiyon oncesi onay |
 
+**Kartlarin gorunumu (Sakin Akis, 2026-11-27):** onay ve sonuc kartlarini sifirdan
+cizme; kutuphanedeki hazir parcalari `useHumanInTheLoop` / `useRenderTool` render'ina koy:
+
+| Is | Bilesen (`snippets/ui/`) |
+|----|--------------------------|
+| Geri alinamaz aksiyon oncesi insan onayi (kim etkilenir, not, denetim satiri) | `approval-card.tsx` (`ApprovalCard`), sohbet icinde tek satir `ApprovalStrip` |
+| Arac basina izin politikasi (Izin Ver / Sor / Otomatik) | `tool-policy-list.tsx` |
+| Arac cagrisinin kaydi, surenin durumu | `tool-call.tsx`, `status-icon.tsx` (`StatusText`) |
+| Cok adimli plan | `agent-plan.tsx`, `phase-checklist.tsx` |
+
+Yapay zeka sohbet balonunda degil is akisinin icinde konusur (oneri cipleri,
+"Hazirlayan: asistan" kunyesi); karar insanda, yetkiyi sunucu denetler
+(`rules/agentic-ui.md`). Dil: `knowledge/design-directions.md` → `sakin-akis`.
+
 Kaydeden bilesen `CopilotProvider` agacinin **icinde**, yani ayni segmentte
 render edilmeli:
 

@@ -9,6 +9,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ### Şablonlar, kütüphane ve kalan boşluklar — 2026-11-27
 
+- Landing menüsünün birincil eylemi `calm` kahraman seçilince koyu hap (`SiteHeader ctaVariant`); `DESIGN.template.md` yön listesinde `sakin-akis`; `agentic-chat` README'sinde onay ve araç kartları için Sakin Akış bileşenleri.
+
 - Landing şablonuna `calm` hero (on üçüncü düzen); iki şablonda `Button variant="calm"` (koyu hap), `PageHeader` ve `PanelHeader` 500 ağırlık.
 - Kütüphane: `badge variant="quiet"`, `chart-card source` (kaynak/tazelik satırı), `StatusText` (`status-icon`), değerler 500 ağırlık, takvim son tarih şeridi iki satır.
 - Pusula: Görevler'de "Ekip Kararı" yanında Bağlı İş paneli, Bildirimler'de Özet kartı.
