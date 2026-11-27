@@ -170,7 +170,7 @@ export function Metric({ label, value, unit, delta, deltaLabel, goodWhen, spark,
   const context = foot ?? deltaLabel;
   return (
     <div className={cn("relative flex min-w-0 flex-col justify-center gap-0.5", lg ? "gap-1 bg-overlay px-4 py-3.5 lg:px-5" : "px-4 py-2.5", to && "transition-colors hover:bg-surface-raised focus-within:bg-surface-raised", className)}>
-      <p className="flex min-w-0 items-center gap-1.5 text-small font-medium text-muted" title={label}>
+      <p className="flex min-w-0 items-center gap-1.5 text-small text-muted" title={label}>
         {icon ? <span aria-hidden className="shrink-0 [&_svg]:size-3.5">{icon}</span> : null}
         {to ? (
           <NavLink to={to} className="truncate outline-none after:absolute after:inset-0 focus-visible:after:rounded-[inherit] focus-visible:after:ring-2 focus-visible:after:ring-line-focus focus-visible:after:ring-inset">
@@ -181,7 +181,7 @@ export function Metric({ label, value, unit, delta, deltaLabel, goodWhen, spark,
         )}
       </p>
       <div className="flex items-end justify-between gap-3">
-        <p className={cn("flex flex-wrap items-baseline gap-x-1.5 leading-tight font-semibold tracking-tight text-strong tabular-nums", lg ? "text-heading" : "text-title")}>
+        <p className={cn("flex flex-wrap items-baseline gap-x-1.5 leading-tight font-medium tracking-[-0.02em] text-strong tabular-nums", lg ? "text-heading" : "text-title")}>
           <span>{value}</span>
           {unit ? <span className="text-base font-medium text-muted">{unit}</span> : null}
         </p>
@@ -240,7 +240,7 @@ export function PageHero({ primary, secondary, className }: { primary: MetricPro
   const rest = n % cols;
   const lastSpan = rest === 0 ? 1 : cols - rest + 1;
   return (
-    <section aria-label="Öne Çıkan Ölçüler" className={cn("grid overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]", className)}>
+    <section aria-label="Öne Çıkan Ölçüler" className={cn("grid overflow-hidden rounded-2xl bg-overlay ring-1 ring-line-soft lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]", className)}>
       <Metric {...primary} size="lg" className="border-b border-line-soft lg:border-r lg:border-b-0" />
       <div
         className="grid grid-cols-2 gap-px bg-line-soft lg:grid-cols-(--hero-cols)"

@@ -156,7 +156,7 @@ export function ProcessScene() {
   const { ref, step } = useSceneLoop(9, 1100, 6);
   const done = Math.min(step, 6);
   return (
-    <div ref={ref} aria-hidden className="grid h-[560px] grid-cols-[176px_minmax(0,1fr)_236px] overflow-hidden rounded-[14px] bg-page text-[12px] leading-[18px] text-body ring-1 ring-line">
+    <div ref={ref} aria-hidden className="grid h-[560px] grid-cols-[164px_minmax(0,1fr)_260px] overflow-hidden rounded-[14px] bg-page text-[12px] leading-[18px] text-body ring-1 ring-line">
       <SceneStyle />
       {/* Kenar çubuğu */}
       <aside className="flex flex-col gap-0.5 bg-surface p-2">

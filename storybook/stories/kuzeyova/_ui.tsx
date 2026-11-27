@@ -163,7 +163,7 @@ export function PageHead({ title, description, actions, crumb, greeting }: { tit
     ...(detail ? [{ label: detail }] : []),
   ];
   return (
-    <header className="border-b border-line-soft">
+    <header className="border-b border-line-soft bg-page">
       {/* Telefonda tek başlık: üst çubuk (menü, marka, zil, arama) kabuğun kendisinde; bu satır yalnız masaüstünde. */}
       <div className="grid min-h-13 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 border-b border-line-soft px-4 max-lg:hidden sm:px-6">
         <Breadcrumb items={items} className="min-w-0 overflow-hidden whitespace-nowrap [&_ol]:flex-nowrap" />
@@ -182,8 +182,8 @@ export function PageHead({ title, description, actions, crumb, greeting }: { tit
         <div className="min-w-[min(100%,18rem)] flex-1">
           {/* Karşılama (yalnız Pano): kişiye ve güne seslenen tek satır, başlığın üstünde sakin. */}
           {greeting ? <p className="mb-1 text-base text-muted">{greeting}</p> : null}
-          <h1 className="text-heading font-semibold tracking-tight text-strong">{title}</h1>
-          {description ? <p className="mt-1 text-base text-muted">{description}</p> : null}
+          <h1 className="text-heading font-medium tracking-[-0.025em] text-strong">{title}</h1>
+          {description ? <p className="mt-1 text-base text-soft">{description}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
@@ -191,19 +191,20 @@ export function PageHead({ title, description, actions, crumb, greeting }: { tit
   );
 }
 
-/** Kart: beyaz zemin, kıl halkası, en hafif gölge (Pusula `CARD` ile aynı). */
-export const CARD = "rounded-xl bg-overlay p-1.5 shadow-raised ring-1 ring-line [&>.mt-auto>dl>div]:bg-surface [&>.mt-auto>dl>div]:shadow-none";
+/** Kart (Sakin Akış, 27 Kasım 2026): gri kuyu zemininde beyaz karo, gölge yerine kıl halka, 16 px köşe. */
+export const CARD = "rounded-2xl bg-overlay p-1.5 ring-1 ring-line-soft [&>.mt-auto>dl>div]:bg-surface [&>.mt-auto>dl>div]:shadow-none";
 
 /** Kart gövdesi: iç dolgu + başlık satırı. Liste/tablo kartları için. */
 export function Panel({ title, note, actions, children, className, id }: { title: ReactNode; note?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string; id?: string }) {
   return (
-    <section aria-labelledby={id} className={cn("flex min-w-0 flex-col rounded-xl bg-overlay shadow-raised ring-1 ring-line", className)}>
-      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-line-soft px-4 py-3 sm:px-5">
+    <section aria-labelledby={id} className={cn("flex min-w-0 flex-col rounded-2xl bg-overlay ring-1 ring-line-soft", className)}>
+      {/* Sakin Akış: başlık ile gövde arasında çizgi yok; ayrım boşluk ve tonla. */}
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 pt-4 pb-2 sm:px-5">
         <div className="min-w-0">
-          <h2 id={id} className="text-read font-semibold text-strong">
+          <h2 id={id} className="text-read font-medium tracking-[-0.01em] text-strong">
             {title}
           </h2>
-          {note ? <p className="mt-0.5 text-small text-muted">{note}</p> : null}
+          {note ? <p className="mt-0.5 text-small text-soft">{note}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </header>
@@ -243,7 +244,7 @@ export function MetricStrip({ children, className }: { children: ReactNode; clas
   const n = Math.max(1, Children.count(children));
   const style = { "--c-lg": n <= 3 ? n : n === 4 ? 2 : 3, "--c-xl": Math.min(n, 6) } as CSSProperties;
   return (
-    <div className={cn("overflow-hidden rounded-xl bg-overlay shadow-raised ring-1 ring-line", className)}>
+    <div className={cn("overflow-hidden rounded-2xl bg-overlay ring-1 ring-line-soft", className)}>
       <div className="kz-strip" style={style}>
         {children}
       </div>
@@ -253,7 +254,8 @@ export function MetricStrip({ children, className }: { children: ReactNode; clas
 
 /** Sayfa gövdesi: kenar boşluğu ve dikey ritim. */
 export function PageBody({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("grid grid-cols-1 gap-5 p-4 sm:p-6", className)}>{children}</div>;
+  // kz-enter: sayfa açılınca içerik 480 ms'de buğudan gelir (Sakin Akış sekme girişi).
+  return <div className={cn("kz-enter grid grid-cols-1 gap-5 p-4 sm:p-6", className)}>{children}</div>;
 }
 
 /**

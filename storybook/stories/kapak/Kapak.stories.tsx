@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import "../showcase/pusula.css";
-import { Archive, Blocks, CodeXml, Compass as CompassIcon, SwatchBook, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, LayoutTemplate, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
+import { Archive, ArrowRight as ArrowRightIcon, Blocks, CodeXml, ChartColumn, Check, Compass, Grid3x3, Layers, LayoutGrid, LayoutTemplate, Monitor, Palette, PanelsTopLeft, Rocket, Search, type LucideIcon } from "lucide-react";
 import { m, useReducedMotion } from "motion/react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useGlobals } from "storybook/preview-api";
 import { expect, fireEvent, waitFor, within } from "storybook/test";
 import { Reveal, RevealItem } from "@/components/motion/Reveal";
@@ -13,9 +13,13 @@ import { AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DemoFrame } from "@/components/ui/demo-frame";
 import { Dial } from "@/components/ui/dial";
+import { AnimatedIcon } from "@/components/ui/animated-icon";
+import { ApprovalStrip } from "@/components/ui/approval-card";
+import { DigitRoll } from "@/components/ui/digit-roll";
 import { GlideLink } from "@/components/ui/glide-link";
+import { StatusIcon } from "@/components/ui/status-icon";
+import { ToneText } from "@/components/ui/tone-text";
 import { LikeButton } from "@/components/ui/like-button";
-import { ProfileIntro } from "@/components/ui/profile-intro";
 import { RulerToc } from "@/components/ui/ruler-toc";
 import { ScrollFocus } from "@/components/ui/scroll-focus";
 import { ShotCard } from "@/components/ui/shot-card";
@@ -34,7 +38,7 @@ import uiPackage from "../../../packages/@ahmet/ui/package.json";
 import { PALETTES } from "../../.storybook/palettes";
 import { KIT_COUNT, STORY_COUNT, TOTAL } from "../amiral/_kapsam";
 import { testOnly } from "../_lib/testOnly";
-import { SCENES } from "../_lib/sahneler";
+import { ProcessScene, SCENES } from "../_lib/sahneler";
 import { Hero } from "./_hero";
 import { firstOf, under } from "./_harita";
 
@@ -775,6 +779,119 @@ function CalmInstall() {
   );
 }
 
+/* ── Büyük kahraman (27 Kasım 2026, sahibinin geri bildirimi: "bir kahraman
+   için çok sade, küçük ve ekran okunmuyor") ─────────────────────────────
+   Sakin dil korunur (nötr palet, tonla hiyerarşi, tek koyu eylem) ama ölçek
+   kahramanın: ortalı iki tonlu dev başlık, okunur gövde (lead), büyük eylem,
+   dosyalardan sayılan dört büyük sayı (görünüme girince yuvarlanır) ve
+   altında GENİŞ vitrin: kendi kendine oynayan ürün ekranı neredeyse gerçek
+   boyutunda, üstünde yüzen canlı parçalar (onay şeridi, durum bildirimi). */
+
+const HERO_CSS = `
+.kh-in { animation: kh-in 620ms var(--ease-brand) both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes kh-in { from { opacity: 0; translate: 0 10px; filter: blur(4px); } }
+.kh-float { animation: kh-float 6s ease-in-out infinite; }
+.kh-float-b { animation-duration: 7.5s; animation-delay: -2s; }
+@keyframes kh-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+@media (prefers-reduced-motion: reduce) { .kh-in, .kh-float { animation: none; } }
+`;
+
+/** Görünüme girince 0'dan değere yuvarlanan sayı; azaltmada ve otomasyonda doğrudan değer. */
+function useCountIn(target: number) {
+  const ref = useRef<HTMLDListElement>(null);
+  const reduce = useReducedMotion();
+  const still = !!reduce || (typeof navigator !== "undefined" && navigator.webdriver === true);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || still) return;
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [still]);
+  return { ref, value: (n: number) => (still || seen ? n : 0), target };
+}
+
+function CalmHero() {
+  const count = useCountIn(TOTAL);
+  const step = (i: number) => ({ "--i": i }) as CSSProperties;
+  const stats: [number, string][] = [
+    [TOTAL, "bileşen"],
+    [STORY_COUNT, "hikaye"],
+    [PALETTES.length, "palet"],
+    [2, "tema"],
+  ];
+  return (
+    <section id="kapak-giris" aria-labelledby="kapak-baslik" className="grid gap-14 sm:gap-20">
+      <style href="kapak-hero-sakin" precedence="default">
+        {HERO_CSS}
+      </style>
+      <div className="mx-auto grid max-w-4xl justify-items-center gap-7 text-center">
+        <BrandMark className="kh-in size-20 sm:size-24" />
+        <p className="kh-in flex flex-wrap items-center justify-center gap-x-2 text-base text-muted" style={step(1)}>
+          <span className="font-medium text-strong">dev-starter</span>
+          <span aria-hidden>·</span>
+          <span className="tabular-nums">v{uiPackage.version}</span>
+          <span aria-hidden>·</span>
+          <span>
+            Güncellendi <time dateTime={UPDATED}>27 Kas 2026</time>
+          </span>
+        </p>
+        <ToneText as="h1" id="kapak-baslik" className="kh-in font-display text-[clamp(2.75rem,8vw,5.75rem)] leading-[0.96] font-semibold tracking-[-0.05em] text-balance" >
+          Tek Kimlik{" "}
+          <br className="max-sm:hidden" />
+          <ToneText.Soft>On Palet ve İki Tema</ToneText.Soft>
+        </ToneText>
+        <p className="kh-in max-w-[44ch] text-[clamp(1.0625rem,1.6vw,1.3125rem)] leading-[1.6] text-body text-pretty" style={step(3)}>
+          Yeni proje başlatmak, tema uygulamak ve yayına çıkmak için kişisel geliştirme ekosistemi. Her parça tek token mimarisinden; kod, metin ve
+          görsel kopyalanmaz.
+        </p>
+        <div className="kh-in flex flex-wrap items-center justify-center gap-3" style={step(4)}>
+          <a href={to("showcase--all-in-one")} target="_top" className={cn("group inline-flex h-12 items-center gap-2 rounded-full bg-strong px-6 text-base font-medium text-page shadow-raised hover:-translate-y-px", PRESS, FOCUS)}>
+            Kataloğa Başla <AnimatedIcon icon={ArrowRightIcon} motion="nudge" size={18} />
+          </a>
+          <a href={to("demo-app--portfolio")} target="_top" className={cn("inline-flex h-12 items-center rounded-full bg-surface px-6 text-base font-medium text-strong ring-1 ring-inset ring-line hover:-translate-y-px", PRESS, FOCUS)}>
+            Örnek Sayfalar
+          </a>
+          <a href={REPO} target="_blank" rel="noreferrer" aria-label="Kod Deposu (yeni sekmede açılır)" className={cn("group grid size-12 place-items-center rounded-full text-muted hover:bg-surface hover:text-strong", PRESS, FOCUS)}>
+            <AnimatedIcon icon={CodeXml} motion="spin" size={20} />
+          </a>
+        </div>
+        <p className="kh-in text-base text-muted" style={step(5)}>
+          <GlideLink href={to("demo-app--overview")} target="_top">Pusula</GlideLink>, <GlideLink href={to("demo-app--landing")} target="_top">Tanıtım</GlideLink>,{" "}
+          <GlideLink href={to("demo-app--portfolio")} target="_top">Portfolyo</GlideLink> ve <GlideLink href={to("showcase--all-in-one")} target="_top">Her Şey Bir Arada</GlideLink>
+        </p>
+      </div>
+
+      <dl ref={count.ref} className="mx-auto grid w-full max-w-4xl grid-cols-2 gap-y-8 sm:grid-cols-4 sm:divide-x sm:divide-line">
+        {stats.map(([n, label]) => (
+          <div key={label} className="grid justify-items-center gap-1 px-4">
+            <dd className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] leading-none font-semibold tracking-[-0.04em] text-strong tabular-nums">
+              <DigitRoll value={count.value(n)} />
+            </dd>
+            <dt className="text-base text-muted">{label}</dt>
+          </div>
+        ))}
+      </dl>
+
+      {/* Geniş vitrin: ürün ekranı neredeyse gerçek boyutunda; yüzen parçalar süs (kartın adı ne olduğunu söyler). */}
+      <div className="relative mx-auto w-full max-w-6xl">
+        <ShotCard title="İşe Alım Süreci" description="Aşamalar sırayla kapanır; sayaçlar, ilerleme ve ayrıntı paneli birlikte güncellenir. Kütüphanenin parçalarıyla kurulmuş gerçek ekran." meta={["Pusula", "Ürün ekranı"]} titleAs="h2" fit={900} inset={0.05} ratio={1.55} tone="surface">
+          <ProcessScene />
+        </ShotCard>
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 hidden aspect-[1.55] sm:block">
+          <div className="kh-float absolute top-[9%] -right-3 flex items-center gap-2 rounded-2xl bg-overlay px-4 py-3 text-base text-strong shadow-floating ring-1 ring-line lg:-right-8">
+            <StatusIcon status="done" /> PS-3986 tamamlandı
+          </div>
+          <div className="kh-float kh-float-b absolute bottom-[10%] -left-3 w-[27rem] rounded-2xl bg-overlay p-1.5 shadow-floating ring-1 ring-line lg:-left-10">
+            <ApprovalStrip person={{ name: "Selin Başaran" }} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CalmCover({ palette, theme, onPick, onTheme }: { palette: PaletteName; theme: ThemeName; onPick: (value: PaletteName) => void; onTheme: (next: ThemeName) => void }) {
   return (
     <div className="min-h-dvh overflow-x-clip bg-page text-body">
@@ -786,58 +903,21 @@ function CalmCover({ palette, theme, onPick, onTheme }: { palette: PaletteName; 
           { id: "kapak-kunye", label: "Künye" },
         ]}
       />
-      <main className="mx-auto grid max-w-3xl gap-16 px-5 pt-14 pb-12 sm:px-8 sm:pt-20">
-        <section id="kapak-giris" aria-label="Hoş geldin" className="mx-auto w-full max-w-[34rem]">
-          <ProfileIntro
-            name="dev-starter"
-            avatar={<BrandMark className="size-full rounded-none shadow-none" />}
-            updated={UPDATED}
-            cta={{ label: "Kataloğa Başla", href: to("showcase--all-in-one"), target: "_top" }}
-            links={[
-              { label: "Kod Deposu", href: REPO, icon: CodeXml, motion: "spin" },
-              { label: "Örnek Uygulama", href: to("demo-app--overview"), icon: CompassIcon, motion: "wiggle", target: "_top" },
-              { label: "Paletler", href: to("cover--exhibit"), icon: SwatchBook, motion: "bounce", target: "_top" },
-            ]}
-          >
-            <p>Kişisel geliştirme ekosistemi: yeni proje başlatmak, tema uygulamak ve yayına çıkmak buradan başlar.</p>
-            <p>
-              {TOTAL} bileşen, {STORY_COUNT} hikaye, {PALETTES.length} palet ve iki tema; hepsi tek token mimarisinden. Kod, metin ve görsel
-              kopyalanmaz, her şey token&rsquo;la yazılır.
-            </p>
-            <p>
-              Örnek sayfalar:{" "}
-              <GlideLink href={to("demo-app--overview")} target="_top">
-                Pusula
-              </GlideLink>
-              ,{" "}
-              <GlideLink href={to("demo-app--landing")} target="_top">
-                Tanıtım
-              </GlideLink>
-              ,{" "}
-              <GlideLink href={to("demo-app--portfolio")} target="_top">
-                Portfolyo
-              </GlideLink>
-              ,{" "}
-              <GlideLink href={to("showcase--all-in-one")} target="_top">
-                Her Şey Bir Arada
-              </GlideLink>
-              .
-            </p>
-          </ProfileIntro>
-        </section>
+      <main className="mx-auto grid max-w-6xl gap-20 px-5 pt-14 pb-12 sm:gap-28 sm:px-8 sm:pt-20">
+        <CalmHero />
         <section id="kapak-sekmeler" aria-label="Katalog" className="grid gap-8">
           <Tabs
             aria-label="Kapak Bölümleri"
-            className="mx-auto"
+            className="[&>[role=tablist]]:mx-auto"
             items={[
-              { value: "akis", label: "Akış", panel: <CalmShots /> },
-              { value: "harita", label: "Harita", panel: <CalmMap /> },
-              { value: "paletler", label: "Paletler", panel: <CalmPalettes palette={palette} theme={theme} onPick={onPick} onTheme={onTheme} /> },
-              { value: "kurulum", label: "Kurulum", panel: <CalmInstall /> },
+              { value: "akis", label: "Akış", panel: <div className="mx-auto max-w-5xl"><CalmShots /></div> },
+              { value: "harita", label: "Harita", panel: <div className="mx-auto max-w-3xl"><CalmMap /></div> },
+              { value: "paletler", label: "Paletler", panel: <div className="mx-auto max-w-3xl"><CalmPalettes palette={palette} theme={theme} onPick={onPick} onTheme={onTheme} /></div> },
+              { value: "kurulum", label: "Kurulum", panel: <div className="mx-auto max-w-3xl"><CalmInstall /></div> },
             ]}
           />
         </section>
-        <div id="kapak-kunye">
+        <div id="kapak-kunye" className="mx-auto w-full max-w-5xl">
           <Colophon />
         </div>
       </main>
@@ -856,7 +936,7 @@ export const Overview: Story = {
   // Yalnız test koşusunda: arayüzde sekme kendi kendine değişmesin (ziyaretçi ilk ekranda Akış'ı görür).
   play: testOnly(async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("heading", { level: 1 })).toHaveTextContent("dev-starter");
+    await expect(canvas.getByRole("heading", { level: 1 })).toHaveTextContent("Tek Kimlik On Palet ve İki Tema");
     await expect(canvas.getByRole("link", { name: "Kataloğa Başla" })).toHaveAttribute("target", "_top");
     await fireEvent.click(canvas.getByRole("tab", { name: "Paletler" }));
     await expect(await canvas.findByRole("radio", { name: "Yeşim" })).toBeInTheDocument();

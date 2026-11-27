@@ -128,3 +128,36 @@
 @keyframes kz-flash { 0%, 60% { box-shadow: 0 0 0 3px var(--line-focus); } 100% { box-shadow: 0 0 0 3px transparent; } }
 .kz-flash { border-radius: 0.75rem; outline: none; animation: kz-flash 1.6s cubic-bezier(.22,1,.36,1); }
 @media (prefers-reduced-motion: reduce) { .kz-flash { animation: none; box-shadow: 0 0 0 3px var(--line-focus); } }
+
+/* SAKİN AKIŞ (27 Kasım 2026, sahibinin isteği: "portal sayfalarını yeni tasarıma göre"):
+   knowledge/design-directions.md → sakin-akis. Ortak parçalar (_ui, _kit) TSX'te güncellendi;
+   bu blok sayfaların kendi kartlarına aynı dili verir.
+   1. Gri kuyu + beyaz karo: içerik zemini çok açık gri (açık tema), kartlar beyaz.
+   2. Kart: gölge yok, kıl halka (line-soft), 16 px köşe. Kuyu içindeki seçim karoları
+      (segmented, sekme) kendi gölgesini korur: kural yalnız sayfa kartlarına (bg-overlay + ring).
+   3. Birincil eylem koyu hap: vurgu rengi yalnız bilgi taşıdığı yerde kalır.
+   4. Sayfa girişi: 480 ms, 2 px buğu, 6 px kayma; hareket azaltmada yalnız solma. */
+:root:not([data-theme="dark"]) .kz-shell #icerik { background-color: color-mix(in oklab, var(--text-strong) 4.5%, var(--page-bg)); }
+/* Sayfa kartı: tema köşe ölçeğinden bağımsız 16 px (kaynakta kart 14-16); gölge yok, kıl halka.
+   Kapsam: içerikteki beyaz yüzeyler (bg-overlay + halka). Kuyu içindeki seçim karoları
+   (rounded-md/sm) ve gri kuyular (bg-surface, 20 px) dışarıda kalır. */
+[data-product="kuzeyova"] #icerik :is(.rounded-xl, .rounded-2xl, .rounded-3xl).bg-overlay:is(.ring-1, .shadow-raised) {
+  box-shadow: 0 0 0 1px var(--line-soft);
+  border-radius: 1rem;
+}
+[data-product="kuzeyova"] #icerik :is(.rounded-xl, .rounded-2xl, .rounded-3xl).bg-surface { border-radius: 1.25rem; }
+/* Birincil eylem koyu hap (palet rengi yalnız bilgi taşıdığı yerde: grafik, durum, odak). */
+[data-product="kuzeyova"] #icerik :is(.bg-cta, .bg-primary.shadow-cta) {
+  background: var(--text-strong);
+  color: var(--page-bg);
+  box-shadow: none;
+  border-radius: 999px;
+  padding-inline: 1rem;
+}
+[data-product="kuzeyova"] #icerik :is(.bg-cta, .bg-primary.shadow-cta):hover { filter: none; background: color-mix(in oklab, var(--text-strong) 84%, var(--page-bg)); }
+/* İkincil eylemler de hap: başlık satırındaki çerçeveli butonlar aynı ritimde. */
+[data-product="kuzeyova"] #icerik header :is(a, button).rounded-md:not(.bg-primary) { border-radius: 999px; }
+.kz-enter { animation: kz-enter 480ms cubic-bezier(.22,1,.36,1) 80ms both; }
+@keyframes kz-enter { from { opacity: 0; translate: 0 6px; filter: blur(2px); } }
+@media (prefers-reduced-motion: reduce) { .kz-enter { animation: kz-fade 200ms ease both; } }
+@keyframes kz-fade { from { opacity: 0; } }

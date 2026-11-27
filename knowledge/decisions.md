@@ -1932,3 +1932,15 @@ görsel, font ve imleç alınmadı, hepsi token'la sıfırdan yazıldı.
 - Kapak oynatma betiği yalnız test koşusunda: arayüzde sekme kendi kendine değişmiyor.
 - Sıradaki adaylar (analizden, sahibinin onayıyla): `chat-composer` öneri çipleri + dock +
   @-bahsetme, grafik başlığı yargı cümlesi + olay işaretleri, `metric-tabs`, `selection-toolbar`.
+
+### Değişti (2026-11-27): Büyük kahraman, Portal Sakin Akış'a geçti
+
+- Sahibi: "bir kahraman için çok sade, küçük; ekranı rahat göremiyoruz." Kapak kahramanı büyüdü:
+  ortalı iki tonlu dev başlık ("Tek Kimlik" / soluk "On Palet ve İki Tema"), okunur gövde,
+  büyük koyu eylem, dosyalardan sayılan dört büyük sayı ve altında GENİŞ vitrin (ürün ekranı
+  ~%95 boyutunda, yüzen onay şeridi ve durum bildirimi). Akış kartları 64 rem'e genişledi.
+  Sakin dil korundu: nötr palet, tonla hiyerarşi; büyüyen yalnız ölçek.
+- Portal: ortak parçalarda (PageHead, Panel, CARD, MetricStrip, Metric, PageHero) 500 ağırlık,
+  gölge yerine kıl halka, başlık altı çizgisiz; `kuzeyova.css` → içerik gri kuyu, sayfa kartları
+  16 px, birincil eylem koyu hap (palet rengi yalnız bilgi taşıdığı yerde), sayfa girişi
+  480 ms buğu. Sayfaların yapısı ve verisi aynı.
