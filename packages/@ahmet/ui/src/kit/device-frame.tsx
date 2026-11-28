@@ -29,7 +29,8 @@ import { cn } from "../utils";
  *
  * ERİŞİLEBİLİRLİK: çerçeve katmanları (gövde, ada, durum çubuğu, ev
  * çubuğu) `aria-hidden`; içerik normal erişilebilir. `label` verilirse
- * `figure` + görünmez `figcaption`. İçeriğe gerçek bağlantı koyarsan
+ * * `figure` + görünmez `figcaption` + `aria-label` (Chromium figcaption adını
+ * güvenilir hesaplamıyor). İçeriğe gerçek bağlantı koyarsan
  * odaklanabilir kalır; süs sahnesinde çağıran `inert` versin.
  *
  *   <DeviceFrame label="Kişisel finans uygulaması, ana ekran" tilt>
@@ -74,7 +75,7 @@ export type DeviceFrameProps = {
 export function DeviceFrame({ children, time = "9:41", tone = "light", size = 280, tilt, label, className }: DeviceFrameProps) {
   const Root = label ? "figure" : "div";
   return (
-    <Root data-tilt={tilt || undefined} className={cn("ui-device m-0 max-w-full", className)} style={{ width: size }}>
+    <Root data-tilt={tilt || undefined} aria-label={label} className={cn("ui-device m-0 max-w-full", className)} style={{ width: size }}>
       <style href="ui-device-frame" precedence="default">
         {CSS}
       </style>
@@ -113,7 +114,7 @@ export function DeviceRow({ children, label, className }: DeviceRowProps) {
   const front = items.length === 3 ? 1 : 0;
   const Root = label ? "figure" : "div";
   return (
-    <Root className={cn("m-0 flex items-center justify-center [perspective:1600px]", className)}>
+    <Root aria-label={label} className={cn("m-0 flex items-center justify-center [perspective:1600px]", className)}>
       {items.map((child, i) => {
         const side = i === front ? 0 : i < front ? -1 : 1;
         return (

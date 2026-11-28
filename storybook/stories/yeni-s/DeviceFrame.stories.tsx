@@ -3,7 +3,7 @@ import { expect, within } from "storybook/test";
 import { DeviceFrame, DeviceRow } from "@/components/ui/device-frame";
 import { RingChart } from "@/components/ui/ring-chart";
 import { Sparkline } from "@/components/ui/sparkline";
-import { Stat } from "@/components/ui/stat";
+import { Stat, StatGrid } from "@/components/ui/stat";
 import { Wallpaper } from "@/components/ui/wallpaper";
 
 /** Kurgu kişisel finans ekranı (ÖRNEK veri). */
@@ -15,7 +15,7 @@ function FinanceHome() {
         <span className="rounded-full bg-primary-wash px-2 text-micro font-medium text-primary-ink">Örnek</span>
       </div>
       <div className="rounded-lg bg-surface p-3 text-strong">
-        <Stat label="Net Varlık" value="₺128.443" change={2.4} changeLabel="Geçen Aya Göre" />
+        <StatGrid className="grid-cols-1 sm:grid-cols-1"><Stat label="Net Varlık" value="₺128.443" change={2.4} changeLabel="Geçen Aya Göre" /></StatGrid>
         <Sparkline values={[96, 101, 99, 108, 112, 109, 118, 124, 128]} title="Son dokuz ay net varlık" width={200} height={36} className="mt-2 w-full" />
       </div>
       <div className="rounded-lg bg-surface p-3 text-strong">

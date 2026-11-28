@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
  *
  * ERİŞİLEBİLİRLİK: kart `article`, başlık düzeyi `headingLevel` (varsayılan
  * 3). Kaydet butonu `aria-pressed`, adı "Kaydet: Kıyı Evleri". Eylem hapının
- * adı başlıkla bağlamlı ("İncele, Kıyı Evleri"; ekte görünmez başlık).
+ * adı başlıkla bağlamlı ("İncele, Kıyı Evleri"; `aria-label`, görünen etiket başta).
  * Puan yıldızı süs; metin "4,8 (674 Yorum)" okunur. `image.alt` boş
  * verilebilir (başlık zaten kartın adı); bilgi taşıyan görselde doldur.
  *
@@ -124,12 +124,10 @@ export function OfferCard({
     "inline-flex items-center gap-1 rounded-full bg-scrim px-2.5 py-1 text-small font-medium text-on-brand ring-1 ring-inset ring-on-brand/20 backdrop-blur-md [&_svg]:size-3.5";
   const actionClass =
     "mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-on-brand px-5 text-base font-semibold text-chart-ink transition-[opacity,translate] hover:opacity-90 active:translate-y-px";
-  const actionContent = action ? (
-    <>
-      {action.label}
-      <span className="sr-only">, {title}</span>
-    </>
-  ) : null;
+  // Ad açıkça verilir: `sr-only` parça (konumlu öğe) ad hesabında virgülden
+  // önce boşluk doğuruyordu ("İncele , Kıyı Evleri"). Görünen etiket adın başında.
+  const actionContent = action ? action.label : null;
+  const actionName = action ? `${action.label}, ${title}` : undefined;
 
   return (
     <article
@@ -203,11 +201,11 @@ export function OfferCard({
 
         {action ? (
           action.href ? (
-            <a href={action.href} onClick={action.onClick} className={actionClass}>
+            <a href={action.href} onClick={action.onClick} aria-label={actionName} className={actionClass}>
               {actionContent}
             </a>
           ) : (
-            <button type="button" onClick={action.onClick} className={actionClass}>
+            <button type="button" onClick={action.onClick} aria-label={actionName} className={actionClass}>
               {actionContent}
             </button>
           )
