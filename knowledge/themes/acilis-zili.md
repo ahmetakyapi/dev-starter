@@ -286,6 +286,30 @@ Bu projede çalışırken:
 
 ---
 
+## 10. Görsel Tur 3 — Yoğunluk ve Tekrar (2026-11-28)
+
+Önce iki maket turu (statik HTML, önce/sonra sürgülü karşılaştırma), sonra
+koda geçiş; dört ekran (Ana Sayfa, Şirket Detayı, Bilanço Analizi,
+Piyasalar) dört paralel `ekran-tasarimcisi` ajanıyla.
+
+- **Maket 1 — `sakin-akis` ürün dili** (gri kuyu + beyaz karo, degradesiz
+  başlık, harf karosu): sahibi yalnız hisse detayının iskeletini sevdi;
+  "mavi geçişleri bozmayalım, logolar gözüksün, görsel geçişler olsun".
+- **Maket 2 — kimlik + sakinlik:** degrade başlık ve kahraman sayı, zil
+  karosu, gerçek logolar, giriş/çizim hareketi, az yoğunluk → onaylandı.
+  Ek istek: ana sayfada uyuyan (zzz) zil kalsın, sağ-sol denge korunsun.
+- **Koda geçen kurallar** (kaynak `acilis-zili/.claude/rules/arayuz.md` →
+  "Yoğunluk ve tekrar"): uzun liste ilk 5–10 satır + yerinde katlama;
+  kartlarda tekrarlanan künye başlığa bir kez; dolu satır vurgu zemini yok;
+  pay yarım ay ölçerle (`lib/half-arc.ts`, halka 6 px, dilim ucu düz); en
+  büyük punto sonuca (EPS sürprizi, "4 Gün Önce" değil).
+- **Ölçüm (sahte sağlayıcı, önce → sonra):** Piyasalar 1440 7.332 → 4.386 px;
+  analiz okuması 390 14.357 → 10.330 px; ana sayfa 1440 7.550 → 7.014 px,
+  kolon dip farkı ≤ 23 px; hisse 1440 kapak kolonları fark 0. 50 ölçümde
+  taşma, kırpık, <12 px metin, <44 px hedef 0.
+- **Ders:** kimlik yönü belirsizken koddan önce maket ucuz; maket brifine
+  mevcut degrade tokenlarını ve logo yolunu yaz, yoksa maket kimliği kaybeder.
+
 ## Teknoloji Notu
 
 Tailwind v4 — yapılandırma `@theme {}` bloğunda, `tailwind.config.ts` **yok**.

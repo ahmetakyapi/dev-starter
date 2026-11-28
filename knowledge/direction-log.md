@@ -18,6 +18,7 @@ yazılmaz. Satırlar eskiden yeniye dizilir; yeni kayıt EN ALTA eklenir.
 | 2026-07 | Mimio | — | mavi + bej (Mavi Baskı, açık) | — | — | Yön sistemi öncesi; klinik araç; `knowledge/themes/mimio.md`. En yakın: `kurumsal-guven` |
 | — | Nimbstia | — | mavi (`#2563ff`, açık+koyu) | — | — | Yön sistemi öncesi; macOS çalışma tezgahı; `knowledge/themes/nimbstia.md` |
 | — | Ramazan Vakitleri | — | mor + pembe (koyu) | — | — | Yön sistemi öncesi; `knowledge/themes/ramazan-vakitleri.md` |
+| 2026-11-28 | Açılış Zili | fintek-keskin | signature (mavi) | geri sayım + endeks destesi | ust-cubuk | Görsel Tur 3: mavi degrade kimlik korunarak yoğunluk azaltıldı (uzun liste katlanır, künye bir kez, sayı yerine ölçer/logo çizimi); `sakin-akis` ürün dili maketle denendi, sahibi "degrade ve logolar kalsın" dedi. `knowledge/themes/acilis-zili.md` § 10 |
 
 <!-- Yeni kayıt örneği (yorum satırı, sayılmaz):
 | 2026-12-01 | Proje Adı | veri-yogun | signature | live-data | sol-menu | tek cümle gerekçe |
