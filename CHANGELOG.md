@@ -7,6 +7,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](
 
 ## [Yayınlanmamış] — orkestrasyon: uçtan uca otonom geliştirme
 
+### Manzara turu: sahnede ürün, altı kahraman, on bir bileşen — 2026-11-28
+
+- Kütüphane (Tanıtım): `query-demo` (ilk ekranda denenen sorgu şeridi, canlı istek satırı), `prompt-bar` (niyet çubuğu + kapsam çipleri), `edge-blur` (kenarları kademeli buğulu şerit), `offer-card` + `OfferRow` (görsel kartı), `folder-card` (kağıtları yükselen cam klasör), `card-fan` (yelpaze kartlar), `gloss-tile` + `GlossArc` (parlak ikon karosu), `device-frame` + `DeviceRow` (telefon çerçevesi), `frame-rails` + `RuledRow` (cetvel çizgili çerçeve).
+- Kütüphane (Yapay Zeka): `workflow-trace` (bir işin adım adım izi + sonuç), `doc-extract` (belgeden alana çıkarma).
+- `wallpaper`: dört yeni sahne (Sulu Boya Vadi, Çayır, Bulut Denizi, Zirvede Akşam); `peaks`, `treePts`, `cloudPuffs` yardımcıları.
+- Landing şablonu: altı yeni kahraman (`gallery`, `framed`, `prompt`, `vista`, `flow`, `devices`; on dokuz düzen), `heroScenes` verisi, serif başlık (`.hero-serif`, Instrument Serif ön yüklemesiz), yarım ton maskesi (`.halftone-art`).
+- `sergi` yönüne Manzara ekleri; `/reference` ve `/harvest` sahne dili notları.
+
 ### Şablonlar, kütüphane ve kalan boşluklar — 2026-11-27
 
 - Landing menüsünün birincil eylemi `calm` kahraman seçilince koyu hap (`SiteHeader ctaVariant`); `DESIGN.template.md` yön listesinde `sakin-akis`; `agentic-chat` README'sinde onay ve araç kartları için Sakin Akış bileşenleri.

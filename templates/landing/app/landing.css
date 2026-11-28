@@ -310,6 +310,107 @@
     filter: brightness(0.55) saturate(0.85);
   }
 
+  /* ── Manzara turu kahramanları (gallery, framed, prompt, vista, flow, devices) ──
+     Serif başlık: `--font-serif-face` (layout.tsx → Instrument Serif, ön
+     yüklemesiz; yalnız bu sınıfı kullanan kahramanda iner). Yoksa display'e,
+     o da yoksa gövde fontuna düşer: düzen kırılmaz, yalnız karakter değişir. */
+  .hero-serif {
+    font-family: var(--font-serif-face, var(--font-display-face, var(--font-sans-face))), ui-serif, Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+  }
+
+  /* Serif başlığın büyük boyu: punto ölçeğinin `hero` basamağı (4.5rem tavan)
+     serif yüzde küçük kalıyor; serif aynı boyda grotesktan dar ve hafif
+     görünür. Yalnız bu sınıfla, punto sınıfı verilmeden kullanılır. */
+  .hero-serif-xl {
+    font-size: clamp(3rem, 7.2vw, 6.5rem);
+  }
+
+  /* Yarım ton (halftone) sanat: altındaki illüstrasyon renk kaybetmeden nokta
+     ızgarasına bölünür, kenarlara doğru solar. Görsel yok, yalnız iki maske:
+     nokta deseni × solma (kesişim). `--ht` nokta adımı. */
+  .halftone-art {
+    --ht: 6px;
+    -webkit-mask-image: radial-gradient(circle at center, #000 0 34%, transparent 46%), var(--ht-fade, linear-gradient(#000, #000));
+    mask-image: radial-gradient(circle at center, #000 0 34%, transparent 46%), var(--ht-fade, linear-gradient(#000, #000));
+    -webkit-mask-size: var(--ht) var(--ht), 100% 100%;
+    mask-size: var(--ht) var(--ht), 100% 100%;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .halftone-fade-b {
+    --ht-fade: linear-gradient(to bottom, transparent 0%, #000 45%);
+  }
+
+  .halftone-fade-x {
+    --ht-fade: radial-gradient(120% 90% at 50% 100%, #000 30%, transparent 75%);
+  }
+
+  /* gallery: yan sütunlar. Nokta ızgarası × iç kenara (başlığa) doğru solma
+     × üst ve alt kenarda solma (üç maskenin kesişimi): sütun sert kesilmez. */
+  .gallery-flank {
+    --flank-dir: to right;
+    -webkit-mask-image: radial-gradient(circle at center, #000 0 34%, transparent 46%), linear-gradient(var(--flank-dir), #000 25%, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 70%, transparent);
+    mask-image: radial-gradient(circle at center, #000 0 34%, transparent 46%), linear-gradient(var(--flank-dir), #000 25%, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 70%, transparent);
+    -webkit-mask-size: 6px 6px, 100% 100%, 100% 100%;
+    mask-size: 6px 6px, 100% 100%, 100% 100%;
+    -webkit-mask-composite: source-in, source-in;
+    mask-composite: intersect, intersect;
+  }
+
+  .gallery-flank-end {
+    --flank-dir: to left;
+  }
+
+  /* Koyu temada beyaz bulut noktaları gürültüye döner: soluk ve kısık. */
+  [data-theme="dark"] .gallery-flank,
+  [data-theme="dark"] .halftone-art {
+    filter: brightness(0.7) saturate(0.9);
+    opacity: 0.4;
+  }
+
+  /* Açık illüstrasyon zemini koyu temada kısılır (resim temayla dönmez,
+     ama sayfanın geri kalanı koyuyken parlak bir pencere gibi durmasın). */
+  [data-theme="dark"] .scene-dim {
+    filter: brightness(0.6) saturate(0.85);
+  }
+
+  /* prompt: başlığın arkasında buğulu nokta sisi (veri yok, doku), başlığın sıkı harf aralığı satır içinde (punto
+     sınıfının letter-spacing'i utilities katmanında, bileşen katmanını ezer). */
+  .prompt-mist {
+    background-image: radial-gradient(var(--line-strong) 1px, transparent 1.6px);
+    background-size: 7px 7px;
+    -webkit-mask-image: radial-gradient(60% 55% at 50% 30%, #000, transparent 70%);
+    mask-image: radial-gradient(60% 55% at 50% 30%, #000, transparent 70%);
+    opacity: 0.55;
+  }
+
+  /* devices: telefonlar sahnenin alt kenarına solar (renk değil alfa: sahne
+     temayla dönmüyor, renkli örtü açık temada yanlış tona düşerdi). */
+  .devices-stage {
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+    mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+
+  /* vista: örtü yalnız başlığın (sol üst) ve kartların (alt) olduğu yerde;
+     ortadaki zirve ve güneş örtüsüz kalır. */
+  .vista-scrim {
+    -webkit-mask-image: radial-gradient(70% 60% at 15% 20%, #000 20%, transparent 75%), linear-gradient(to top, #000, transparent 40%);
+    mask-image: radial-gradient(70% 60% at 15% 20%, #000 20%, transparent 75%), linear-gradient(to top, #000, transparent 40%);
+  }
+
+  /* Görsel panelin üst kenarında nokta matrisi (veri hissi): yalnız alfa. */
+  .matrix-veil {
+    background-image: radial-gradient(color-mix(in oklab, var(--color-on-brand) 70%, transparent) 1px, transparent 1.6px);
+    background-size: 9px 9px;
+    -webkit-mask-image: linear-gradient(to bottom, #000, transparent 38%);
+    mask-image: linear-gradient(to bottom, #000, transparent 38%);
+    opacity: 0.45;
+  }
+
   /* Bento hücresi deseni: düz yüzeyler arasında dokulu bir hücre. Renk
      degradesi değil, çizgi tonunda nokta ızgarası. */
   .dot-grid {

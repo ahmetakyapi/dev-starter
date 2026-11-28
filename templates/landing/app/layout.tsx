@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { organization } from "@/lib/content";
@@ -25,6 +25,10 @@ import "./landing.css";
  */
 const sans = Inter({ subsets: ["latin", "latin-ext"], axes: ["opsz"], variable: "--font-sans-face", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-face", display: "swap" });
+/* Serif başlık yalnız Manzara turu kahramanlarında (`.hero-serif`, landing.css).
+   `preload: false`: başka bir kahraman seçiliyse dosya hiç inmez; seçiliyse
+   ilk boyamada yedek fontla çizilir, sonra değişir (display: swap). */
+const serif = Instrument_Serif({ weight: "400", style: ["normal", "italic"], subsets: ["latin", "latin-ext"], variable: "--font-serif-face", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -89,7 +93,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       // `iso`: anatomy figür kitinin token kapsamı. Kit `.iso[data-theme="light"]`
       // ile açık temaya geçer; tema bu öğede olduğu için ThemeToggle figürü de
       // çevirir. Kit kurulmadıysa (scripts/add-figure-kit.mjs) sınıfın etkisi yok.
-      className={`iso ${sans.variable} ${mono.variable}`}
+      className={`iso ${sans.variable} ${mono.variable} ${serif.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />

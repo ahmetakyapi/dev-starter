@@ -30,6 +30,7 @@ const PAGE_OF: Record<string, string> = {
   "_ek-n": "Pano",
   "_ek-p": "Pano",
   "_ek-q": "Tanıtım",
+  "_ek-s": "Tanıtım",
   _gecikme: "Pano",
   _gelen: "Gelen Kutusu",
   _gorevler: "Görevler",

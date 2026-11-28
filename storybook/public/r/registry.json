@@ -662,6 +662,29 @@
       ]
     },
     {
+      "name": "card-fan",
+      "type": "registry:ui",
+      "title": "Yelpaze Kartlar",
+      "description": "Bölüm başlığının yanında yelpaze kartlar (3-5): eğik deste, üzerine gelince açılır, kart öne çıkar; `interactive` ile seçilebilir",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "card-fan",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/card-fan.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "carousel",
       "type": "registry:ui",
       "title": "Kart Kaydırıcı",
@@ -1400,6 +1423,32 @@
       ]
     },
     {
+      "name": "device-frame",
+      "type": "registry:ui",
+      "title": "Telefon Çerçevesi",
+      "description": "Telefon çerçevesi (durum çubuğu, dinamik ada, ev çubuğu), içerik canlı bileşen; `DeviceRow` 2-3 telefon, ortadaki önde, telefonda yalnız o",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "device-frame",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/device-frame.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dial",
       "type": "registry:ui",
       "title": "Döner Buton",
@@ -1520,6 +1569,32 @@
       ]
     },
     {
+      "name": "doc-extract",
+      "type": "registry:ui",
+      "title": "Belge Çıkarma",
+      "description": "Belgeden alana: solda soluk belge iskeleti, dirsekli çizgi, sağda çıkarılan alanlar kartı + \"Hazır\" durumu; `animate` ile tarama çizgisi geçer, alanlar sırayla yazılır",
+      "dependencies": [
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zeka"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "doc-extract",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/doc-extract.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dock",
       "type": "registry:ui",
       "title": "Uygulama Rafı",
@@ -1616,6 +1691,29 @@
       "files": [
         {
           "path": "snippets/ui/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "edge-blur",
+      "type": "registry:ui",
+      "title": "Kenar Buğusu",
+      "description": "Yatay şeridin kenarlarında kademeli buğu (3-4 `backdrop-filter` katmanı, maskeyle dilimli) + solma; `scrollable` ile kendisi kayan liste, kenar buğusu kaydırma konumuna göre",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "edge-blur",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/edge-blur.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1846,6 +1944,29 @@
       ]
     },
     {
+      "name": "folder-card",
+      "type": "registry:ui",
+      "title": "Klasör Kartı",
+      "description": "Her proje bir cam klasör: arka kapak, kağıtlar, buğulu ön kapak (başlık, kişi, durum hapı); üzerine gelince ön kapak geriye yatar, kağıtlar yükselir",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "folder-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/folder-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "forecast-chart",
       "type": "registry:ui",
       "title": "Tahmin Grafiği",
@@ -1868,6 +1989,29 @@
       "files": [
         {
           "path": "snippets/ui/forecast-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "frame-rails",
+      "type": "registry:ui",
+      "title": "Çizgili Çerçeve",
+      "description": "Cetvel çizgili sayfa çerçevesi (iki yan ray, isteğe üst/alt çizgi, kesişimde artı) ve `RuledRow`/`RuledCell`: kıl çizgiyle bölünmüş araç/logo satırı",
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "frame-rails",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/frame-rails.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1945,6 +2089,32 @@
       "files": [
         {
           "path": "snippets/ui/glide-link.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "gloss-tile",
+      "type": "registry:ui",
+      "title": "Parlak Karo",
+      "description": "Parlak 3B ikon karosu (üstten açık dolgu, parlama, hale) ve `GlossArc`: karoları yay boyunca dizer, isteğe yavaş kayar; özellik kartı başı, uygulama tanıtımı",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": false,
+        "storyId": "gloss-tile",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/gloss-tile.tsx",
           "type": "registry:ui"
         }
       ]
@@ -2822,6 +2992,32 @@
       ]
     },
     {
+      "name": "offer-card",
+      "type": "registry:ui",
+      "title": "Teklif Kartı",
+      "description": "Görsel kartı (konaklama, şehir, şablon galerisi): künye hapı, kaydet, alt örtü, başlık, puan ve meta çipleri, fiyat, tam genişlik açık hap; `OfferRow` yatay sıra",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "offer-card",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/offer-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "option-cards",
       "type": "registry:ui",
       "title": "Seçenek Kartları",
@@ -3249,6 +3445,60 @@
       "files": [
         {
           "path": "snippets/ui/progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "prompt-bar",
+      "type": "registry:ui",
+      "title": "Niyet Çubuğu",
+      "description": "Niyet çubuğu: hap kutuda arama ikonu, giriş, isteğe seçim hapı, koyu gönder + çizilen vurgu yayı; altında aç/kapa kapsam çipleri (×/+). `onSubmit` yoksa yerel form",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "prompt-bar",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/prompt-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "query-demo",
+      "type": "registry:ui",
+      "title": "Sorgu Deneme Şeridi",
+      "description": "Kahraman altında ürünün kendisi denenir: etiketli giriş + hazır ifade çipleri + Çalıştır; canlı istek satırı (`GET /yol?…`) anında güncellenir, örnek sonuçlar sırayla gelir. Sunucudan `request` şablonuyla (`\"{input}\"`, `\"{preset}\"`) (Manzara turu)",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-motion.json",
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Tanıtım"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "query-demo",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/query-demo.tsx",
           "type": "registry:ui"
         }
       ]
@@ -5184,7 +5434,7 @@
       "name": "wallpaper",
       "type": "registry:ui",
       "title": "Duvar Kağıdı",
-      "description": "8 illüstrasyon duvar kağıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
+      "description": "12 illüstrasyon duvar kağıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları, sulu boya vadi, çayır, bulut denizi, zirvede akşam); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
       "registryDependencies": [
         "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
       ],
@@ -5225,6 +5475,33 @@
       "files": [
         {
           "path": "snippets/ui/week-calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "workflow-trace",
+      "type": "registry:ui",
+      "title": "İş Akışı İzi",
+      "description": "Bir otomasyonun/ajanın tek iş üzerindeki izi: başlık, \"İŞ AKIŞI\" künyesi, renkli noktalı adımlar + zaman, en altta sonuç kutusu; `animate` ile görününce adım adım dolar (Manzara turu)",
+      "dependencies": [
+        "lucide-react@^1.51.0",
+        "motion@^13.5.1"
+      ],
+      "registryDependencies": [
+        "https://dev-starter-storybook.vercel.app/r/lib-utils.json"
+      ],
+      "categories": [
+        "Yapay Zeka"
+      ],
+      "meta": {
+        "client": true,
+        "storyId": "workflow-trace",
+        "palettes": false
+      },
+      "files": [
+        {
+          "path": "snippets/ui/workflow-trace.tsx",
           "type": "registry:ui"
         }
       ]

@@ -24,6 +24,7 @@ import { ToolCall } from "@/components/ui/tool-call";
 import { HareketEk } from "./_ekler";
 import { AjanQ } from "./_ekler-q";
 import { AjanR } from "./_ekler-r";
+import { AjanS } from "./_ekler-s";
 import { Cell, CellGrid } from "./_ui";
 
 /* Hareket ve Doku + Yapay Zeka grupları (secki.dev turu, 2026-11-06). Her
@@ -221,6 +222,7 @@ export function AjanGroup() {
       </Cell>
       <AjanQ />
       <AjanR />
+      <AjanS />
     </CellGrid>
   );
 }

@@ -41,7 +41,7 @@ export const nav = {
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
 /**
- * On üç hero düzeni (`components/heroes/`). Seçim tek satır: `hero.variant`.
+ * On dokuz hero düzeni (`components/heroes/`). Seçim tek satır: `hero.variant`.
  * Hangisinin ne zaman kullanılacağı `components/heroes/index.tsx` başında.
  */
 export const HERO_VARIANTS = [
@@ -58,6 +58,12 @@ export const HERO_VARIANTS = [
   "horizon",
   "corner",
   "calm",
+  "gallery",
+  "framed",
+  "prompt",
+  "vista",
+  "flow",
+  "devices",
 ] as const;
 export type HeroVariant = (typeof HERO_VARIANTS)[number];
 
@@ -199,6 +205,121 @@ export const hero = {
   stage: readonly [string, string, string];
   board: HeroBoard;
 };
+
+/* ── Manzara turu kahramanlarının verisi ─────────────────────────────────── */
+
+/**
+ * gallery, framed, prompt, vista, flow ve devices düzenlerinin kendine özgü
+ * parçaları. Başlık, açıklama ve eylemler yine `hero`dan gelir; burada yalnız
+ * o düzenin sahnesi var. Hepsi düz veri (sunucudan istemci bileşenine geçer):
+ * ikon yok, fonksiyon yok. Sayılar ve kayıtlar ÖRNEK (`sample: true`).
+ */
+export const heroScenes = {
+  /** gallery: başlığın altında denenen sorgu şeridi (gerçek API'nin biçimi). */
+  gallery: {
+    sample: true,
+    input: { label: "Ekip Kodunu Yaz", placeholder: "Ör. DESTEK", defaultValue: "DESTEK" },
+    presetsLabel: "Hazır Bir İfade Seç",
+    presets: [
+      { value: "gecikmiş iade", label: "Gecikmiş İade" },
+      { value: "fatura itirazı", label: "Fatura İtirazı" },
+      { value: "kargo hasarı", label: "Kargo Hasarı" },
+    ],
+    request: {
+      method: "GET",
+      path: "/api/v1/ara",
+      params: [
+        { key: "q", value: "{preset}" },
+        { key: "ekip", value: "{input}" },
+        { key: "limit", value: "5" },
+      ],
+    },
+    runLabel: "Sorguyu Çalıştır",
+    results: [
+      { title: "Talep #1042 · İade Bekliyor", detail: "Muhasebe · 2 gündür açık", value: "0,94" },
+      { title: "Talep #1038 · İade Onaylandı", detail: "Destek · dün kapandı", value: "0,88" },
+      { title: "Talep #1021 · Kısmi İade", detail: "Destek · geçen hafta", value: "0,71" },
+    ],
+  },
+  /** framed: sağ paneldeki tablo ve altındaki çizgili entegrasyon satırı. */
+  framed: {
+    badge: "Hepsi Tek Yerde",
+    toolsLabel: "Kullandığın Araçlarla Çalışır",
+    tools: ["Defter", "Kargoya", "Not Kutusu", "Sohbet"],
+    more: { label: "Bütün Entegrasyonlar", href: "#ozellikler" },
+  },
+  /** prompt: niyet çubuğu ve altındaki kayan şablon kartları. */
+  prompt: {
+    badge: "Akıllı İş Planlayıcı",
+    placeholder: "Ör. iade taleplerini muhasebeye yönlendir",
+    submitLabel: "Akışı Kur",
+    scopes: [
+      { value: "e-posta", label: "E-posta" },
+      { value: "form", label: "Form" },
+      { value: "sohbet", label: "Sohbet" },
+    ],
+    defaultScopes: ["e-posta"],
+    cards: [
+      { title: "İade Akışı", tag: "Destek", rating: 4.8, meta: "12 Adım", price: "5 dk", unit: "kurulum", scene: "lagoon" },
+      { title: "Fatura Onayı", tag: "Muhasebe", rating: 4.6, meta: "8 Adım", price: "3 dk", unit: "kurulum", scene: "dunes" },
+      { title: "Yeni Müşteri", tag: "Satış", rating: 4.9, meta: "10 Adım", price: "4 dk", unit: "kurulum", scene: "valley" },
+      { title: "Haftalık Özet", tag: "Yönetim", rating: 4.7, meta: "5 Adım", price: "2 dk", unit: "kurulum", scene: "summit" },
+      { title: "Kargo Takibi", tag: "Operasyon", rating: 4.5, meta: "7 Adım", price: "3 dk", unit: "kurulum", scene: "meadow" },
+    ],
+    cardAction: "Şablonu Aç",
+  },
+  /** vista: iki alt köşedeki cam künye kartları (en çok iki). */
+  vista: {
+    captions: [
+      { text: "Gelen her talep doğru kişiye, doğru sırayla ve kaybolmadan ulaşır.", link: { label: "Nasıl Çalışır", href: "#nasil" } },
+      { text: "Haftanın sonunda neyin bittiği, neyin takıldığı kendiliğinden görünür.", link: null },
+    ],
+  },
+  /** flow: görsel panelde bir talebin izi ve asistanın konuşması. */
+  flow: {
+    sample: true,
+    badge: "El İşini Aşan Ekipler İçin",
+    trace: {
+      title: "Teslimat Gecikmesi Algılandı",
+      subtitle: "Talep #1042 · 2 dk önce",
+      label: "İş Akışı",
+      steps: [
+        { title: "Sorun Algılandı", detail: "Müşteri gecikmeyi bildirdi", time: "09.42", tone: "danger" },
+        { title: "Asistan İnceledi", detail: "Sipariş, stok ve kargo okundu", time: "09.42", tone: "primary" },
+        { title: "Kargo Güncellendi", detail: "En yakın depodan yeniden çıkış", time: "09.43", tone: "success" },
+        { title: "Müşteriye Haber Verildi", detail: "E-posta ve kısa mesaj", time: "09.44", tone: "warning" },
+      ],
+      result: { title: "Çözüldü", detail: "Bütün kayıtlar eşitlendi", time: "2 dk" },
+    },
+    chat: {
+      title: "Asistan",
+      subtitle: "Destek Asistanı",
+      messages: [
+        { from: "user", text: "Müşterinin siparişi gecikti." },
+        { from: "assistant", text: "Gecikme bölge deposundaki yoğunluktan. Siparişi en yakın depoya aktarıyorum." },
+        { from: "assistant", text: "Müşteriye haber verildi, yeni teslim tarihi kayda işlendi." },
+      ],
+      placeholder: "Bir şey sor ya da komut yaz",
+    },
+  },
+  /** devices: koyu sahnede üç telefon; ortadaki ekran gerçek bileşenlerle. */
+  devices: {
+    sample: true,
+    badge: "Yeni",
+    badgeText: "Erken Erişime Katıl",
+    greeting: "Günaydın Deniz",
+    score: { value: 72, label: "Akış Sağlığı" },
+    figures: [
+      { label: "Açık Talep", value: "128", delta: "−%12" },
+      { label: "Bu Hafta Kapanan", value: "640", delta: "+%9" },
+    ],
+    queue: [
+      { label: "İade Talepleri", value: "24" },
+      { label: "Fatura İtirazları", value: "11" },
+      { label: "Kargo Sorunları", value: "7" },
+    ],
+  },
+} as const;
 
 /* ── Logo şeridi ───────────────────────────────────────────────────────── */
 

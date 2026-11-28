@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "On iki kahraman düzeni (`components/heroes/`), seçim `lib/content.ts` → `hero.variant`. Ürün arayüzü gösterilebiliyorsa `showcase` (varsayılan: iki tonlu başlık, alta solan canlı pano ve iki kenar notu), mesaj yeterince güçlüyse `statement`, içerik sayfasında `minimal`. Yeni dört düzen (görsel zeminli): `atmosphere`, `floating`, `horizon`, `corner`. Başlık LCP öğesidir: Reveal'e sarılmaz, maske + transform ile açılır; parçacık sahnesi yalnızca hassas işaretçi, 768 px ve serbest harekette iner.",
+          "On dokuz kahraman düzeni (`components/heroes/`), seçim `lib/content.ts` → `hero.variant`. Ürün arayüzü gösterilebiliyorsa `showcase` (varsayılan: iki tonlu başlık, alta solan canlı pano ve iki kenar notu), mesaj yeterince güçlüyse `statement`, içerik sayfasında `minimal`. Görsel zeminli düzenler: `atmosphere`, `floating`, `horizon`, `corner`. Manzara turu (ürün manzaranın içinde sergilenir): `gallery` (serif başlık + yarım ton sanat + denenen sorgu şeridi), `framed` (cetvel çizgili ızgara), `prompt` (niyet çubuğu + buğulu kart şeridi), `vista` (tam ekran manzara, cam künyeler), `flow` (iş akışı izi + asistan), `devices` (üç telefon, parlak ikon yayı). Başlık LCP öğesidir: Reveal'e sarılmaz, maske + transform ile açılır; parçacık sahnesi yalnızca hassas işaretçi, 768 px ve serbest harekette iner.",
       },
     },
   },
@@ -23,7 +23,7 @@ const meta = {
   // Üst bilgiyle: kahramanın zemini başlığın altına uzanır (-4rem), sayfadaki gibi görünsün.
   render: (args) => (
     <div className="min-h-dvh bg-page text-body">
-      <SiteHeader initialTheme={DEFAULT_THEME} ctaVariant={args.variant === "calm" ? "calm" : "primary"} />
+      <SiteHeader initialTheme={DEFAULT_THEME} ctaVariant={args.variant === "calm" || args.variant === "framed" || args.variant === "gallery" ? "calm" : "primary"} />
       <main id="icerik">
         <Hero {...args} />
       </main>
@@ -47,3 +47,9 @@ export const Floating: Story = { name: "Süzülen Kartlar", args: { variant: "fl
 export const Horizon: Story = { name: "Ufuk", args: { variant: "horizon" } };
 export const Corner: Story = { name: "Köşe Etiketi", args: { variant: "corner" } };
 export const Calm: Story = { name: "Sakin Akış", args: { variant: "calm" } };
+export const Gallery: Story = { name: "Sergi Kapısı", args: { variant: "gallery" } };
+export const Framed: Story = { name: "Çizgili Çerçeve", args: { variant: "framed" } };
+export const Prompt: Story = { name: "Niyet Çubuğu", args: { variant: "prompt" } };
+export const Vista: Story = { name: "Manzara", args: { variant: "vista" } };
+export const Flow: Story = { name: "İş Akışı Sahnesi", args: { variant: "flow" } };
+export const Devices: Story = { name: "Üç Telefon", args: { variant: "devices" } };

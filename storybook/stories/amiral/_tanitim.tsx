@@ -18,6 +18,7 @@ import { TanitimEk } from "./_ekler";
 import { TanitimYeni } from "./_ekler-yeni";
 import { TanitimQ } from "./_ekler-q";
 import { TanitimR } from "./_ekler-r";
+import { TanitimS } from "./_ekler-s";
 import { Cell, CellGrid } from "./_ui";
 
 /* Tanıtım grubu (Ribbon ve offscreen.wtf turları, 2026-11-07): ziyaretçiye
@@ -203,6 +204,7 @@ export function TanitimGroup() {
       <TanitimYeni />
       <TanitimQ />
       <TanitimR />
+      <TanitimS />
     </CellGrid>
   );
 }

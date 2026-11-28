@@ -505,6 +505,24 @@
       "palettes": false
     },
     {
+      "name": "card-fan",
+      "title": "Yelpaze Kartlar",
+      "category": "Tanıtım",
+      "description": "Bölüm başlığının yanında yelpaze kartlar (3-5): eğik deste, üzerine gelince açılır, kart öne çıkar; `interactive` ile seçilebilir",
+      "file": "snippets/ui/card-fan.tsx",
+      "client": true,
+      "storyId": "card-fan",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "carousel",
       "title": "Kart Kaydırıcı",
       "category": "Form ve Gezinme",
@@ -1068,6 +1086,25 @@
       "palettes": false
     },
     {
+      "name": "device-frame",
+      "title": "Telefon Çerçevesi",
+      "category": "Tanıtım",
+      "description": "Telefon çerçevesi (durum çubuğu, dinamik ada, ev çubuğu), içerik canlı bileşen; `DeviceRow` 2-3 telefon, ortadaki önde, telefonda yalnız o",
+      "file": "snippets/ui/device-frame.tsx",
+      "client": false,
+      "storyId": "device-frame",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "dial",
       "title": "Döner Buton",
       "category": "Hareket ve Doku",
@@ -1160,6 +1197,25 @@
       "palettes": false
     },
     {
+      "name": "doc-extract",
+      "title": "Belge Çıkarma",
+      "category": "Yapay Zeka",
+      "description": "Belgeden alana: solda soluk belge iskeleti, dirsekli çizgi, sağda çıkarılan alanlar kartı + \"Hazır\" durumu; `animate` ile tarama çizgisi geçer, alanlar sırayla yazılır",
+      "file": "snippets/ui/doc-extract.tsx",
+      "client": true,
+      "storyId": "doc-extract",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "dock",
       "title": "Uygulama Rafı",
       "category": "Tanıtım",
@@ -1232,6 +1288,24 @@
         "@base-ui/react": "1.8.0",
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "edge-blur",
+      "title": "Kenar Buğusu",
+      "category": "Tanıtım",
+      "description": "Yatay şeridin kenarlarında kademeli buğu (3-4 `backdrop-filter` katmanı, maskeyle dilimli) + solma; `scrollable` ile kendisi kayan liste, kenar buğusu kaydırma konumuna göre",
+      "file": "snippets/ui/edge-blur.tsx",
+      "client": true,
+      "storyId": "edge-blur",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1408,6 +1482,24 @@
       "palettes": false
     },
     {
+      "name": "folder-card",
+      "title": "Klasör Kartı",
+      "category": "Tanıtım",
+      "description": "Her proje bir cam klasör: arka kapak, kağıtlar, buğulu ön kapak (başlık, kişi, durum hapı); üzerine gelince ön kapak geriye yatar, kağıtlar yükselir",
+      "file": "snippets/ui/folder-card.tsx",
+      "client": false,
+      "storyId": "folder-card",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "forecast-chart",
       "title": "Tahmin Grafiği",
       "category": "Grafik",
@@ -1424,6 +1516,24 @@
       "npm": {
         "clsx": "^2.1.1",
         "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "frame-rails",
+      "title": "Çizgili Çerçeve",
+      "category": "Tanıtım",
+      "description": "Cetvel çizgili sayfa çerçevesi (iki yan ray, isteğe üst/alt çizgi, kesişimde artı) ve `RuledRow`/`RuledCell`: kıl çizgiyle bölünmüş araç/logo satırı",
+      "file": "snippets/ui/frame-rails.tsx",
+      "client": false,
+      "storyId": "frame-rails",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -1484,6 +1594,25 @@
       ],
       "npm": {
         "clsx": "^2.1.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "gloss-tile",
+      "title": "Parlak Karo",
+      "category": "Tanıtım",
+      "description": "Parlak 3B ikon karosu (üstten açık dolgu, parlama, hale) ve `GlossArc`: karoları yay boyunca dizer, isteğe yavaş kayar; özellik kartı başı, uygulama tanıtımı",
+      "file": "snippets/ui/gloss-tile.tsx",
+      "client": false,
+      "storyId": "gloss-tile",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false
@@ -2156,6 +2285,25 @@
       "palettes": false
     },
     {
+      "name": "offer-card",
+      "title": "Teklif Kartı",
+      "category": "Tanıtım",
+      "description": "Görsel kartı (konaklama, şehir, şablon galerisi): künye hapı, kaydet, alt örtü, başlık, puan ve meta çipleri, fiyat, tam genişlik açık hap; `OfferRow` yatay sıra",
+      "file": "snippets/ui/offer-card.tsx",
+      "client": true,
+      "storyId": "offer-card",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
       "name": "option-cards",
       "title": "Seçenek Kartları",
       "category": "Form Girişleri",
@@ -2444,6 +2592,46 @@
       ],
       "npm": {
         "@base-ui/react": "1.8.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "prompt-bar",
+      "title": "Niyet Çubuğu",
+      "category": "Tanıtım",
+      "description": "Niyet çubuğu: hap kutuda arama ikonu, giriş, isteğe seçim hapı, koyu gönder + çizilen vurgu yayı; altında aç/kapa kapsam çipleri (×/+). `onSubmit` yoksa yerel form",
+      "file": "snippets/ui/prompt-bar.tsx",
+      "client": true,
+      "storyId": "prompt-bar",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "query-demo",
+      "title": "Sorgu Deneme Şeridi",
+      "category": "Tanıtım",
+      "description": "Kahraman altında ürünün kendisi denenir: etiketli giriş + hazır ifade çipleri + Çalıştır; canlı istek satırı (`GET /yol?…`) anında güncellenir, örnek sonuçlar sırayla gelir. Sunucudan `request` şablonuyla (`\"{input}\"`, `\"{preset}\"`) (Manzara turu)",
+      "file": "snippets/ui/query-demo.tsx",
+      "client": true,
+      "storyId": "query-demo",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/motion.ts",
+        "lib/utils.ts"
+      ],
+      "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
         "motion": "^13.5.1",
@@ -3935,7 +4123,7 @@
       "name": "wallpaper",
       "title": "Duvar Kağıdı",
       "category": "Tanıtım",
-      "description": "8 illüstrasyon duvar kağıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
+      "description": "12 illüstrasyon duvar kağıdı (SVG; gün batımı, altın saat, lagün, şafak dağları, kutup ışığı, ipek, gece ağı, kağıt katmanları, sulu boya vadi, çayır, bulut denizi, zirvede akşam); maket arkası ya da `downloadWallpaper()` ile PNG (2880×1800, 1290×2796). Renk seti elle seçilmiş (`token-ok-file`)",
       "file": "snippets/ui/wallpaper.tsx",
       "client": false,
       "storyId": "wallpaper",
@@ -3964,6 +4152,26 @@
       "npm": {
         "clsx": "^2.1.1",
         "lucide-react": "^1.51.0",
+        "tailwind-merge": "^3.7.0"
+      },
+      "palettes": false
+    },
+    {
+      "name": "workflow-trace",
+      "title": "İş Akışı İzi",
+      "category": "Yapay Zeka",
+      "description": "Bir otomasyonun/ajanın tek iş üzerindeki izi: başlık, \"İŞ AKIŞI\" künyesi, renkli noktalı adımlar + zaman, en altta sonuç kutusu; `animate` ile görününce adım adım dolar (Manzara turu)",
+      "file": "snippets/ui/workflow-trace.tsx",
+      "client": true,
+      "storyId": "workflow-trace",
+      "registryDependencies": [],
+      "templateFiles": [
+        "lib/utils.ts"
+      ],
+      "npm": {
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.51.0",
+        "motion": "^13.5.1",
         "tailwind-merge": "^3.7.0"
       },
       "palettes": false

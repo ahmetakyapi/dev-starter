@@ -53,7 +53,15 @@ parçanın hazır karşılığı çoğu zaman var. Örnek: kaydırınca kenara o
 menü → `docking-nav`, görsel üstü cam buton → `liquid-glass`, buğudan gelen
 başlık → `blur-in`, ekran görüntüsü yerine ürün maketi → `app-window` +
 `dock`, eylem altı güvence → `trust-line`, el notu → `hand-callout`
-(Tanıtım grubu). Varsa `add-ui` ile kur, yapıyı onun üstüne oturt. Karşılığı
+(Tanıtım grubu). Manzara turu (2026-11-28): ürün manzara içinde →
+`wallpaper` (`valley`, `meadow`, `clouds`, `summit`) + cam paspartu,
+kahramanda denenen API → `query-demo`, niyet/arama çubuğu → `prompt-bar`,
+kenarları buğulu kart şeridi → `edge-blur` + `offer-card`, cetvel çizgili
+sayfa ve logo satırı → `frame-rails`, iş akışı izi → `workflow-trace`,
+belgeden alana → `doc-extract`, cam klasör → `folder-card`, yelpaze →
+`card-fan`, parlak ikon karosu → `gloss-tile`, telefon maketi →
+`device-frame`. Landing'de hazır kahramanlar: `gallery`, `framed`,
+`prompt`, `vista`, `flow`, `devices`. Varsa `add-ui` ile kur, yapıyı onun üstüne oturt. Karşılığı
 yoksa ve desen başka projelerde de işe yarayacaksa bu işten sonra
 `/harvest` öner.
 

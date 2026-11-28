@@ -24,9 +24,9 @@ export const metadata: Metadata = {
 };
 
 /*
- * `?hero=statement` yalnızca GELİŞTİRMEDE okunur: on üç düzeni aynı sunucuda
+ * `?hero=statement` yalnızca GELİŞTİRMEDE okunur: on dokuz düzeni aynı sunucuda
  * yan yana denemek için. Üretimde parametre yok sayılır; yoksa aynı sayfa
- * on üç farklı adreste on üç farklı içerikle dizine girebilirdi. Üretimde
+ * on dokuz farklı adreste on dokuz farklı içerikle dizine girebilirdi. Üretimde
  * `searchParams` hiç beklenmediği için sayfa statik kalır (`○`).
  */
 async function resolveVariant(searchParams: PageProps<"/">["searchParams"]): Promise<HeroVariant> {
@@ -43,7 +43,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
       <ScrollProgress />
       {/* Sunucu çerezi okumaz (sayfa statik); buton hidrasyondan hemen sonra
           `<html data-theme>`daki gerçek temaya geçer. */}
-      <SiteHeader initialTheme={DEFAULT_THEME} ctaVariant={variant === "calm" ? "calm" : "primary"} />
+      <SiteHeader initialTheme={DEFAULT_THEME} ctaVariant={variant === "calm" || variant === "framed" || variant === "gallery" ? "calm" : "primary"} />
       <main id="icerik">
         <Hero variant={variant} />
         <Logos />

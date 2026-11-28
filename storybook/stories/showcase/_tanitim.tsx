@@ -24,6 +24,7 @@ import { ClosingSection, FaqSection, FeaturesSection, FocusSection, H2, ProcessS
 import { GorunumSection } from "./_tanitim-gorunum";
 import { InboxScene } from "./_tanitim-sahne";
 import { SergiSection } from "./_ek-q";
+import { ManzaraSections } from "./_ek-s";
 
 /**
  * Pusula'nın tanıtım sayfası (oturum açmamış ziyaretçi), Sakin Akış dilinde
@@ -201,6 +202,7 @@ export function TanitimPage({ onSignIn }: { onSignIn: () => void }) {
         </section>
 
         <SergiSection />
+        <ManzaraSections />
         <FeaturesSection />
         <ScreensSection />
         <FocusSection />

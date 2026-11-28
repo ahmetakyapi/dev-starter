@@ -290,6 +290,17 @@ export type GroupId = "temel" | "secim" | "form" | "katman" | "veri" | "geri" | 
 
 /** Her dosya tam bir grupta. Kaynaktaki listeyle karşılaştırılır (kapsam rozeti). */
 export const GROUP_OF: Record<string, GroupId> = {
+  "query-demo": "tanitim",
+  "prompt-bar": "tanitim",
+  "edge-blur": "tanitim",
+  "offer-card": "tanitim",
+  "folder-card": "tanitim",
+  "card-fan": "tanitim",
+  "gloss-tile": "tanitim",
+  "device-frame": "tanitim",
+  "frame-rails": "tanitim",
+  "workflow-trace": "ajan",
+  "doc-extract": "ajan",
   "status-icon": "veri",
   "phase-checklist": "veri",
   "approval-card": "ajan",

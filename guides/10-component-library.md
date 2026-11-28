@@ -363,6 +363,27 @@ Tek sütunlu, gri tonlu kişisel/ekip sayfası dili (yön: `design-directions.md
 
 Canlı örnek: Storybook → Ekranlar → Pusula → Portfolyo; Kapak.
 
+### Manzara Turu: Sahnede Ürün (2026-11-28)
+
+Ürünü manzaranın içinde sergileyen tanıtım dili (yön: `design-directions.md` → `sergi` → Manzara ekleri).
+
+| İhtiyaç | Bileşen | Ne zaman DEĞİL |
+|---|---|---|
+| Kahramanda ürünün API'si denenir, istek satırı canlı | `query-demo` | Gerçek arama (`search-field`), form gönderimi |
+| Doğal dil girdili ürünün tek odağı: niyet çubuğu + kapsam çipleri | `prompt-bar` | Sohbet ekranı (`chat-composer`) |
+| Kart şeridinin kenarı kademeli buğulu, devamı var | `edge-blur` | Dikey liste; tek kart |
+| Görsel üstü kart: künye, kaydet, puan, fiyat, eylem | `offer-card` | Veri kartı; görselsiz liste (`category-card`) |
+| Proje/iş dosyası hissi; dokununca kağıtlar yükselir | `folder-card` | Gerçek dosya yöneticisi (`tree-view`) |
+| Bölüm başlığı yanında koleksiyon özeti | `card-fan` | Seçim denetimi (`option-cards`) |
+| Uygulama ikonu hissi, ikon yayı | `gloss-tile` | Arayüz ikonu (düz `lucide`), veri ekranı |
+| Mobil yüz, canlı bileşenle | `device-frame` | Gerçek mobil önizleme (`live-preview`) |
+| Cetvel çizgili sayfa, çizgili logo/araç satırı | `frame-rails` | Uygulama ekranı, form |
+| Bir işin adım adım izi + sonuç | `workflow-trace` | Uzun geçmiş (`timeline`, `audit-log`) |
+| Belgeden alana çıkarma anı | `doc-extract` | Gerçek belge görüntüleyici |
+
+Zemin: `wallpaper` → `valley`, `meadow`, `clouds`, `summit`. Canlı örnek: Storybook → Ekranlar → Pusula → Tanıtım
+(Pusula'yı Dene, Anlat Akışı O Kursun, Sen Uyurken Akış Yürür, Cepte Pusula); Açılış Sayfası → Üst Bölüm Varyantları.
+
 ## 5. Klavye Haritaları
 
 ### TreeView (`role="tree"`)

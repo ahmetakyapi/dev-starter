@@ -100,3 +100,21 @@ her birine evet/hayır ver; ayrıntı ve yasaklar `knowledge/design-directions.m
 7. **Hareket bir kez:** başlık satır satır netleşir, kalem şeridi bir kez
    çekilir, paspartu kaydırınca daralır; hepsi `transform`, hareket
    azaltmada durağan. Sürekli dönen şey yalnız durdurulabilir olandır.
+
+### Manzara Ekleri (28 Kasım 2026)
+
+Sekiz tanıtım görselinin turu üç karar daha ekledi (`design-directions.md` →
+`sergi` → "Manzara ekleri"):
+
+8. **Ürün manzaranın içinde:** pencere ya da kart, illüstrasyon zeminde
+   (`wallpaper`: `valley`, `meadow`, `clouds`, `summit`) cam paspartuda durur,
+   görselin boş alanına oturur, özneyle çakışmaz. Fotoğraf yok; gerçek görsel
+   gelirse `.halftone-art` maskesi onu yarım tona çevirir. Sayfada en çok iki
+   manzara zemini.
+9. **İlk ekranda dene:** ürünün girdisi sorguysa `query-demo` (canlı istek
+   satırı), doğal dilse `prompt-bar` (+ kenarları buğulu `edge-blur` +
+   `offer-card` şablon şeridi). Demo verisi ÖRNEK künyeli.
+10. **Cetvel çizgili düzen:** kurumsal ama sakin sayfada `frame-rails`
+    (iki ray, kesişimde artı) ve logo duvarı yerine `RuledRow` (kurgu ya da
+    gerçek adlı kelime işareti, doğrulanamayan "50+" yok). Serif dev başlık
+    yalnız kahramanda.

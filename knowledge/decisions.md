@@ -1966,3 +1966,43 @@ görsel, font ve imleç alınmadı, hepsi token'la sıfırdan yazıldı.
   üstünde boş katman, `ruler-toc` ve `profile-intro` adı görünen metinden); `demo-frame`
   figure adı `aria-labelledby`; `media-lightbox` Escape'i kendisi de dinler (sentetik olay
   yerel dialog'u kapatmaz).
+
+## Manzara Turu — Sahnede Ürün, Altı Kahraman, On Bir Bileşen (2026-11-28)
+
+Kaynak: kullanıcının paylaştığı sekiz tanıtım sitesi ekran görüntüsü (adresler ve adlar
+depoya yazılmaz; tur adı "Manzara"). Yöntem `/harvest`; yalnız yapı ve davranış. Kod,
+metin, logo, fotoğraf, klasik resim ve marka alınmadı.
+
+- **Ortak payda:** ürün arayüzü bir MANZARANIN içinde sergilenir (boyalı vadi, çayır,
+  bulut, dağ); başlık ya serif ve büyük (afiş ciddiyeti) ya da çok sıkı grotesk; ilk
+  ekranda ürün DENENİR (sorgu şeridi, niyet çubuğu); sayfa ince cetvel çizgileriyle
+  çerçevelenir; özellik kartlarının içinde küçük canlı demolar (klasör açılır, durum
+  değişir, belge alana dönüşür). `sergi` yönünün devamı sayıldı, yeni yön açılmadı
+  (`design-directions.md` → `sergi` → "Manzara ekleri").
+- **Fotoğraf yerine illüstrasyon:** referansların hepsi fotoğraf ya da yağlı boya
+  kullanıyordu. Depoya üçüncü taraf görseli girmez; `wallpaper`a dört SVG sahne eklendi
+  (`valley` sulu boya vadi: türbülansla oynatılmış kenarlar + gölde kırpılmış yansıma;
+  `meadow` çayır: 520 tohumlu ot çizgisi; `clouds` bulut denizi: üst yarı boş, metin
+  oraya; `summit` zirvede akşam). Yarım ton sanat görsel dosyası değil MASKE:
+  `.halftone-art` (nokta deseni × solma, `mask-composite: intersect`), renk
+  illüstrasyondan gelir. Proje gerçek fotoğrafını koyarsa aynı sınıf onu da basar.
+- **Serif yalnız kahramanda:** landing'e Instrument Serif `preload: false` ile eklendi
+  (`--font-serif-face`, `.hero-serif`); seçili olmayan kahramanda dosya inmez. Punto
+  ölçeğinin `hero` basamağı (4.5rem) serif yüzde küçük kalıyordu: `.hero-serif-xl`
+  (en çok 6.5rem), punto sınıfıyla birlikte kullanılmaz (utilities katmanı ezer).
+- **Altı yeni kahraman** (landing, on dokuz düzen): `gallery`, `framed`, `prompt`,
+  `vista`, `flow`, `devices`. Sahne verileri `heroScenes` (düz veri: sunucudan istemci
+  bileşenine geçer; ikonlar kahraman dosyasında ada göre eşlenir).
+- **Sunucudan düz props:** yeni istemci bileşenlerinde fonksiyon prop'u isteğe bağlı;
+  `query-demo` istek şablonu (`"{input}"`, `"{preset}"`) alır, `prompt-bar` `onSubmit`
+  yoksa yerel form gönderir, ikonlar ReactNode. Ders: kahramanda kullanılacak her istemci
+  bileşeni sunucu bileşeninden çağrılabilir olmalı.
+- **Kural:** bir sayfada en çok iki manzara zemini (kahraman + bir bölüm). Kartlar
+  görselin boş alanına oturur, özneyle (güneş, zirve) çakışmaz. Görsel üstü metin sabit
+  açık + maskeli örtü (`vista-scrim`); iki temada kontrast aynı.
+- **Alınmayanlar:** klasik resim figürleri ve sütunlar (telifli/üçüncü taraf görsel;
+  yerine manzara + yarım ton), sürüklenen el imleci (oyuncak hareket, frekans kapısı),
+  "5000+ işletme" türü doğrulanamayan sayı, gerçek marka logoları (yerine kurgu kelime
+  işaretli çizgili hücreler), tarih seçici şeridi (zaten `date-calendar` var), kanban
+  sürükleme demosu (`kanban-board` var; sahne olarak gerekirse oradan).
+

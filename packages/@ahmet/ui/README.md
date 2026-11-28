@@ -1,7 +1,7 @@
 # @ahmetakyapi/ui
 
 Türkçe, erişilebilir, token'lı React bileşen kiti: form, katman, veri,
-grafik, yapay zeka, hareket ve doku, tanıtım. 168 bileşen + `Surface`, `Button`,
+grafik, yapay zeka, hareket ve doku, tanıtım. 179 bileşen + `Surface`, `Button`,
 `Chip`, `CustomCursor` ve motion yardımcıları.
 
 Görsel katalog: <https://dev-starter-storybook.vercel.app>

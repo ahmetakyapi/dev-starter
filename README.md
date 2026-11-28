@@ -47,7 +47,7 @@ node ~/dev-starter/scripts/add-ui.mjs . date-picker --dry-run   # önce ne kopya
 node ~/dev-starter/scripts/add-ui.mjs . date-picker --install   # bağımlılıklarıyla kur
 ```
 
-**2. Paket olarak kur** (168 bileşen tek pakette, güncellemeyi sürüm taşır):
+**2. Paket olarak kur** (179 bileşen tek pakette, güncellemeyi sürüm taşır):
 
 ```bash
 npm install @ahmetakyapi/theme @ahmetakyapi/ui motion

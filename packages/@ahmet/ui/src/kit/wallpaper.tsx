@@ -4,7 +4,7 @@ import { useId, type ReactNode } from "react";
 import { cn } from "../utils";
 
 /**
- * Duvar kağıdı: çözünürlükten bağımsız (SVG) sekiz illüstrasyon sahnesi.
+ * Duvar kağıdı: çözünürlükten bağımsız (SVG) on iki illüstrasyon sahnesi.
  * Masaüstü maketinin arkası (`app-window` + `dock`), tanıtım sayfasının
  * görsel zemini ya da `downloadWallpaper()` ile indirilen gerçek duvar kağıdı
  * (Retina masaüstü 2880×1800, telefon 1290×2796). Storybook → Tanıtım/Duvar Kağıdı.
@@ -13,7 +13,10 @@ import { cn } from "../utils";
  * sürüm paletin tek tonunu beyaz/siyahla karıştırıyordu; sonuç bulanık ve
  * kahverengiye çalan sahnelerdi. Resim temayla dönmez (gece sahnesi açık
  * temada da gece); arayüz paletiyle uyum için sahne seçilir (signature →
- * Lagün, Şafak; ember → Altın Saat; iris → Gün Batımı, İpek).
+ * Lagün, Şafak; ember → Altın Saat, Zirvede Akşam; iris → Gün Batımı, İpek;
+ * verdant → Sulu Boya Vadi, Çayır; her palet → Bulut Denizi).
+ * Manzara turu (2026-11-28) dört sahneyi ekledi: vadi, çayır, bulut denizi,
+ * zirve; ürün penceresinin arkasında "sergilenen nesne" zemini olarak.
  *
  * İŞÇİLİK: her katmanın kendi dikey ışık degradesi (üst kenar aydınlık,
  * etek gölgede), katmanlar arası sis, gün ışığında geniş hale, kumda
@@ -30,7 +33,7 @@ import { cn } from "../utils";
  *   </div>
  */
 
-export const WALLPAPER_SCENES = ["sunset", "dunes", "lagoon", "alpine", "aurora", "silk", "mesh", "paper"] as const;
+export const WALLPAPER_SCENES = ["sunset", "dunes", "lagoon", "alpine", "aurora", "silk", "mesh", "paper", "valley", "meadow", "clouds", "summit"] as const;
 export type WallpaperScene = (typeof WALLPAPER_SCENES)[number];
 
 export const WALLPAPER_NAMES: Record<WallpaperScene, string> = {
@@ -42,6 +45,10 @@ export const WALLPAPER_NAMES: Record<WallpaperScene, string> = {
   silk: "İpek",
   mesh: "Gece Ağı",
   paper: "Kağıt Katmanları",
+  valley: "Sulu Boya Vadi",
+  meadow: "Çayır",
+  clouds: "Bulut Denizi",
+  summit: "Zirvede Akşam",
 };
 
 /* --- Geometri ------------------------------------------------------------ */
@@ -86,6 +93,57 @@ function ridgePts(base: number, amp: number, seed: number, count = 9, sharp = 0)
       amp * (0.55 * Math.sin(t * 5.1 + ph[0]) + 0.3 * Math.sin(t * 11.3 + ph[1]) + 0.15 * Math.sin(t * 23 + ph[2])) -
       (sharp ? (i % 2 ? -1 : 1) * rnd() * sharp : 0);
     return [x, y] as Pt;
+  });
+}
+
+/**
+ * Düzensiz zirveler: ara mesafe ve yükseklik tohumlu, zirve ile vadi arasına
+ * omuz noktası (tek eğimli testere dişi değil, kayalık sırt).
+ */
+function peaks(base: number, amp: number, seed: number, minW = 110, varW = 170): Pt[] {
+  const rnd = seeded(seed);
+  const pts: Pt[] = [];
+  let x = -80;
+  while (x < 1700) {
+    const w = minW + rnd() * varW;
+    const h = amp * (0.3 + rnd() * 0.7);
+    pts.push([x, base - amp * rnd() * 0.18]);
+    pts.push([x + w * (0.25 + rnd() * 0.15), base - h * (0.45 + rnd() * 0.2)]);
+    pts.push([x + w * (0.45 + rnd() * 0.1), base - h]);
+    pts.push([x + w * (0.7 + rnd() * 0.1), base - h * (0.5 + rnd() * 0.2)]);
+    x += w;
+  }
+  return pts;
+}
+
+/**
+ * Ağaç sırası: iğne yapraklı siluet. Her ağaç sivri tepe + iki omuz; boylar
+ * tohumlu, `roll` uzun dalga ile sıra yer yer yükselip alçalır. Düz çizgiyle
+ * kapatılır (`peaksBelow`), yumuşatılmaz: yumuşatınca alev gibi görünüyordu.
+ */
+function treePts(base: number, amp: number, seed: number, count = 80): Pt[] {
+  const rnd = seeded(seed);
+  const pts: Pt[] = [];
+  const step = 1720 / count;
+  for (let i = 0; i <= count; i++) {
+    const x = -60 + i * step + (rnd() - 0.5) * step * 0.4;
+    const roll = 0.55 + 0.45 * Math.sin((i / count) * 4.2 + seed);
+    const h = amp * roll * (0.6 + rnd() * 0.4);
+    pts.push([x - step * 0.42, base - h * 0.28]);
+    pts.push([x - step * 0.2, base - h * 0.62]);
+    pts.push([x, base - h]);
+    pts.push([x + step * 0.2, base - h * 0.6]);
+  }
+  return pts;
+}
+
+/** Kümülüs bulut: daireler kümesi (cx, cy merkez, s ölçek, tohumlu dağılım). */
+function cloudPuffs(cx: number, cy: number, s: number, seed: number, n = 7) {
+  const rnd = seeded(seed);
+  return Array.from({ length: n }, (_, i) => {
+    const t = n === 1 ? 0.5 : i / (n - 1);
+    const r = (46 + rnd() * 52) * s * (1 - Math.abs(t - 0.5) * 0.9);
+    return { x: cx + (t - 0.5) * 300 * s + (rnd() - 0.5) * 30 * s, y: cy - r * 0.55 + (rnd() - 0.5) * 18 * s, r };
   });
 }
 
@@ -253,23 +311,6 @@ function Scene({ scene, id }: { scene: WallpaperScene; id: string }) {
         { base: 830, amp: 140, seed: 79, color: "#3730a3", op: 1 },
         { base: 940, amp: 110, seed: 83, color: "#1e1b4b", op: 1 },
       ];
-      // Düzensiz zirveler: ara mesafe ve yükseklik tohumlu, zirve ile vadi
-      // arasına omuz noktası (tek eğimli testere dişi değil, kayalık sırt).
-      const peaks = (base: number, amp: number, seed: number) => {
-        const rnd = seeded(seed);
-        const pts: Pt[] = [];
-        let x = -80;
-        while (x < 1700) {
-          const w = 110 + rnd() * 170;
-          const h = amp * (0.3 + rnd() * 0.7);
-          pts.push([x, base - amp * rnd() * 0.18]);
-          pts.push([x + w * (0.25 + rnd() * 0.15), base - h * (0.45 + rnd() * 0.2)]);
-          pts.push([x + w * (0.45 + rnd() * 0.1), base - h]);
-          pts.push([x + w * (0.7 + rnd() * 0.1), base - h * (0.5 + rnd() * 0.2)]);
-          x += w;
-        }
-        return pts;
-      };
       return (
         <>
           <defs>
@@ -519,6 +560,204 @@ function Scene({ scene, id }: { scene: WallpaperScene; id: string }) {
           {sheets.map((s, i) => (
             <path key={i} d={fillBelow(ridgePts(s.base, s.amp, s.seed, 6))} fill={u(`p${i}`)} filter={u("shadow")} />
           ))}
+          <rect width="1600" height="1000" filter={u("grain")} />
+        </>
+      );
+    }
+
+    case "valley": {
+      // Sulu boya: kenarlar türbülansla yerinden oynatılır (fırça payı),
+      // katmanlar arası sis bantları, gölde ters yansıma ve ışık çizgileri.
+      const rnd = seeded(203);
+      const streaks = Array.from({ length: 34 }, () => ({ x: rnd() * 1600, y: 790 + rnd() * 200, w: 40 + rnd() * 180 }));
+      const hills = [
+        { pts: ridgePts(560, 70, 211, 8), top: "#c9d6cf", bottom: "#dfe7e2", op: 0.75 },
+        { pts: ridgePts(610, 95, 223, 8), top: "#a9bfb2", bottom: "#cddad3", op: 0.85 },
+        { pts: ridgePts(680, 80, 227, 9), top: "#7f9f8c", bottom: "#b4c8bc", op: 0.95 },
+      ];
+      return (
+        <>
+          <defs>
+            <Linear id={g("sky")} user={[0, 0, 0, 780]} stops={[[0, "#f3d9d7"], [0.35, "#f1e3da"], [0.7, "#e6ece4"], [1, "#dde8e3"]]} />
+            <Linear id={g("lake")} user={[0, 770, 0, 1000]} stops={[[0, "#cfe0dc"], [0.5, "#b7d1cc"], [1, "#9fc0bb"]]} />
+            <Linear id={g("mist")} stops={[[0, "#f4f1ec", 0], [0.55, "#f4f1ec", 0.8], [1, "#f4f1ec", 0]]} />
+            <Linear id={g("woods")} stops={[[0, "#3c6553"], [1, "#2a4a3d"]]} />
+            <Linear id={g("near")} stops={[[0, "#557d68"], [1, "#3b5f4f"]]} />
+            {hills.map((h, i) => (
+              <Linear key={i} id={g(`v${i}`)} stops={[[0, h.top], [1, h.bottom]]} />
+            ))}
+            <filter id={g("wash")} x="-5%" y="-10%" width="110%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.011 0.03" numOctaves="3" seed="7" />
+              <feDisplacementMap in="SourceGraphic" scale="22" />
+              <feGaussianBlur stdDeviation="1.6" />
+            </filter>
+            <filter id={g("soft")} x="-10%" y="-40%" width="120%" height="180%">
+              <feGaussianBlur stdDeviation="14" />
+            </filter>
+            <filter id={g("brush")} x="-2%" y="-10%" width="104%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="11" />
+              <feDisplacementMap in="SourceGraphic" scale="5" />
+              <feGaussianBlur stdDeviation="0.8" />
+            </filter>
+            {/* Yansıma yalnız gölde: ters çevrilen siluetin kapalı alanı göğe taşmasın. */}
+            <clipPath id={g("lakeclip")}>
+              <rect y="772" width="1600" height="228" />
+            </clipPath>
+            <Grain id={g("grain")} amount={0.06} />
+          </defs>
+          <rect width="1600" height="1000" fill={u("sky")} />
+          {hills.map((h, i) => (
+            <g key={i}>
+              <path d={fillBelow(h.pts)} fill={u(`v${i}`)} opacity={h.op} filter={u("wash")} />
+              <rect y={540 + i * 60} width="1600" height="130" fill={u("mist")} opacity={0.7 - i * 0.15} />
+            </g>
+          ))}
+          <g filter={u("brush")}>
+            <path d={peaksBelow(treePts(735, 120, 231, 70).map(([x, y]) => [x, y + Math.max(0, Math.min(1, (x - 700) / 500)) * 90] as Pt))} fill={u("woods")} />
+            <path d={peaksBelow(treePts(778, 60, 239, 90).map(([x, y]) => [x, x < 900 ? y + 60 : y] as Pt))} fill={u("near")} opacity="0.92" />
+          </g>
+          <rect y="772" width="1600" height="228" fill={u("lake")} />
+          <g clipPath={u("lakeclip")}>
+            <g transform="translate(0 1544) scale(1 -1)" opacity="0.28" filter={u("soft")}>
+              <path d={peaksBelow(treePts(735, 120, 231, 70))} fill="#2a4a3d" />
+            </g>
+          </g>
+          <rect y="772" width="1600" height="3" fill="#f4f1ec" opacity="0.7" />
+          {streaks.map((st, i) => (
+            <rect key={i} x={f(st.x)} y={f(st.y)} width={f(st.w)} height="1.6" rx="0.8" fill="#f6f3ee" opacity="0.5" />
+          ))}
+          <rect width="1600" height="1000" filter={u("grain")} />
+        </>
+      );
+    }
+
+    case "meadow": {
+      // Gök + kümülüs, ufukta ağaç sırası, öne doğru koyulaşan çayır ve
+      // tohumlu ot çizgileri (ön planda uzun ve koyu, ufka doğru kısa ve açık).
+      const rnd = seeded(307);
+      const blades = Array.from({ length: 520 }, () => {
+        const y = 690 + rnd() ** 0.7 * 330;
+        const depth = (y - 690) / 330;
+        const h = 8 + depth * 70 * (0.5 + rnd());
+        const lean = (rnd() - 0.5) * h * 0.6;
+        return { x: rnd() * 1600, y, h, lean, lit: rnd() > 0.55, w: 0.8 + depth * 2.2 };
+      });
+      return (
+        <>
+          <defs>
+            <Linear id={g("sky")} user={[0, 0, 0, 690]} stops={[[0, "#2f5f96"], [0.45, "#6f9ccb"], [0.85, "#c9dceb"], [1, "#e8eff0"]]} />
+            <Linear id={g("field")} user={[0, 680, 0, 1000]} stops={[[0, "#8aa65a"], [0.25, "#5f7f34"], [0.7, "#3c5a22"], [1, "#22361a"]]} />
+            <Linear id={g("cloud")} stops={[[0, "#ffffff"], [0.7, "#eef3f6"], [1, "#c9d5df"]]} />
+            <Radial id={g("glow")} stops={[[0, "#fff6dc", 0.85], [0.5, "#fff6dc", 0.25], [1, "#fff6dc", 0]]} />
+            <filter id={g("soft")} x="-30%" y="-60%" width="160%" height="220%">
+              <feGaussianBlur stdDeviation="6" />
+            </filter>
+            <Grain id={g("grain")} amount={0.06} />
+          </defs>
+          <rect width="1600" height="1000" fill={u("sky")} />
+          <g fill={u("cloud")} filter={u("soft")} opacity="0.95">
+            {[
+              [300, 250, 1, 311],
+              [1150, 190, 0.8, 313],
+              [820, 380, 0.55, 317],
+              [1460, 420, 0.5, 331],
+              [120, 470, 0.45, 337],
+            ].map(([x, y, sc, seed], i) =>
+              cloudPuffs(x, y, sc, seed).map((c, j) => <circle key={`${i}-${j}`} cx={f(c.x)} cy={f(c.y)} r={f(c.r)} />),
+            )}
+          </g>
+          <ellipse cx="1000" cy="690" rx="700" ry="160" fill={u("glow")} />
+          <path d={peaksBelow(treePts(696, 22, 341, 150))} fill="#3d5a3a" opacity="0.8" />
+          <path d={fillBelow(ridgePts(700, 10, 347, 6))} fill={u("field")} />
+          <g strokeLinecap="round" fill="none">
+            {blades.map((b, i) => (
+              <path
+                key={i}
+                d={`M${f(b.x)} ${f(b.y)} q${f(b.lean * 0.4)} ${f(-b.h * 0.6)} ${f(b.lean)} ${f(-b.h)}`}
+                stroke={b.lit ? "#a9c46a" : "#2b4418"}
+                strokeOpacity={b.lit ? 0.55 : 0.7}
+                strokeWidth={f(b.w)}
+              />
+            ))}
+          </g>
+          <rect width="1600" height="1000" filter={u("grain")} />
+        </>
+      );
+    }
+
+    case "clouds": {
+      // Açık, havadar bulut denizi: üst yarı boş ve aydınlık (metin oraya),
+      // bulut kümeleri alt kenarda üst üste; gölge yüzleri soğuk, tepeler sıcak.
+      const banks = [
+        { y: 760, s: 1.25, seeds: [401, 403, 409, 419, 421, 431], op: 0.85, shade: "#d3dedd" },
+        { y: 860, s: 1.5, seeds: [433, 439, 443, 449, 457], op: 0.95, shade: "#c4d3d1" },
+        { y: 970, s: 1.8, seeds: [461, 463, 467, 479], op: 1, shade: "#b9cac8" },
+      ];
+      return (
+        <>
+          <defs>
+            <Linear id={g("sky")} user={[0, 0, 0, 1000]} stops={[[0, "#f7f8f6"], [0.5, "#eef2f0"], [1, "#dfe8e6"]]} />
+            <Radial id={g("warm")} stops={[[0, "#fbe7cc", 0.7], [1, "#fbe7cc", 0]]} />
+            {banks.map((b, i) => (
+              <Linear key={i} id={g(`c${i}`)} stops={[[0, "#ffffff"], [0.55, "#f3f6f5"], [1, b.shade]]} />
+            ))}
+            <filter id={g("puff")} x="-20%" y="-40%" width="140%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="3" />
+              <feDisplacementMap in="SourceGraphic" scale="26" />
+              <feGaussianBlur stdDeviation="3" />
+            </filter>
+            <Grain id={g("grain")} amount={0.04} />
+          </defs>
+          <rect width="1600" height="1000" fill={u("sky")} />
+          <ellipse cx="380" cy="700" rx="520" ry="260" fill={u("warm")} />
+          <ellipse cx="1300" cy="760" rx="460" ry="220" fill={u("warm")} />
+          {banks.map((b, i) => (
+            <g key={i} fill={u(`c${i}`)} opacity={b.op} filter={u("puff")}>
+              {b.seeds.flatMap((seed, j) =>
+                cloudPuffs(-80 + (j + (i % 2) * 0.5) * (1760 / b.seeds.length), b.y, b.s, seed, 6).map((c, k) => (
+                  <circle key={`${j}-${k}`} cx={f(c.x)} cy={f(c.y)} r={f(c.r)} />
+                )),
+              )}
+            </g>
+          ))}
+          <rect width="1600" height="1000" filter={u("grain")} />
+        </>
+      );
+    }
+
+    case "summit": {
+      // Altın saatte sıradağlar: sıcak gök, uzakta karlı zirveler (ışık tarafı
+      // turuncu), aralarda bulut denizi, önde koyu otlu tepe (metin sol üstte).
+      const ranges = [
+        { base: 520, amp: 200, seed: 501, color: "#8b7a96", lit: "#f3c4a0", op: 0.8 },
+        { base: 600, amp: 170, seed: 509, color: "#5f5470", lit: "#e9a684", op: 0.95 },
+        { base: 700, amp: 130, seed: 521, color: "#3f3850", lit: "#c98a6e", op: 1 },
+      ];
+      return (
+        <>
+          <defs>
+            <Linear id={g("sky")} user={[0, 0, 0, 640]} stops={[[0, "#33324f"], [0.35, "#6b5878"], [0.7, "#d98a6c"], [1, "#f6c191"]]} />
+            <Radial id={g("sun")} stops={[[0, "#fff1d6", 0.95], [0.3, "#ffc58f", 0.55], [1, "#ffc58f", 0]]} />
+            <Linear id={g("sea")} stops={[[0, "#f0b394", 0], [0.5, "#e7a790", 0.8], [1, "#b98a8c", 0.4]]} />
+            <Linear id={g("hill")} user={[0, 760, 0, 1000]} stops={[[0, "#5b4a35"], [0.4, "#3a2f24"], [1, "#1c1712"]]} />
+            {ranges.map((r, i) => (
+              <Linear key={i} id={g(`r${i}`)} x2={1} y2={0.3} stops={[[0, r.color], [0.55, r.color], [0.8, r.lit], [1, r.lit]]} />
+            ))}
+            <filter id={g("soft")} x="-5%" y="-50%" width="110%" height="200%">
+              <feGaussianBlur stdDeviation="16" />
+            </filter>
+            <Grain id={g("grain")} amount={0.06} />
+          </defs>
+          <rect width="1600" height="1000" fill={u("sky")} />
+          <circle cx="1250" cy="430" r="420" fill={u("sun")} />
+          {ranges.map((r, i) => (
+            <g key={i}>
+              <path d={peaksBelow(peaks(r.base, r.amp, r.seed, 140, 220))} fill={u(`r${i}`)} opacity={r.op} />
+              <rect y={r.base - 10} width="1600" height="150" fill={u("sea")} opacity={0.75 - i * 0.15} filter={u("soft")} />
+            </g>
+          ))}
+          <path d={fillBelow(ridgePts(860, 60, 541, 7))} fill={u("hill")} />
+          <path d={smooth(ridgePts(860, 60, 541, 7))} fill="none" stroke="#f0b98a" strokeOpacity="0.35" strokeWidth="2" />
           <rect width="1600" height="1000" filter={u("grain")} />
         </>
       );
