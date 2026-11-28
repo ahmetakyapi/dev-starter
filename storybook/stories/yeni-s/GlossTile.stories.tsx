@@ -85,7 +85,7 @@ export const InFeature: Story = {
 export const Arc: Story = {
   name: "Yay Şeridi, Kayan",
   render: () => (
-    <div className="grid w-[min(100vw-2rem,48rem)] justify-items-center gap-2 rounded-xl bg-surface pt-6 pb-8">
+    <div className="grid w-[min(100vw-2rem,48rem)] grid-cols-1 justify-items-center gap-2 rounded-xl bg-surface pt-6 pb-8">
       <GlossArc tiles={ARC} count={7} radius={360} arc={96} size="lg" drift label="Bütçe, birikim, kart ve rapor araçları" />
       <p className="text-lead font-semibold text-strong">Paran Tek Yerde</p>
     </div>

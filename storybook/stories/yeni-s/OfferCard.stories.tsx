@@ -22,7 +22,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Görselin tamamen kapladığı koyu yuvarlak kart: cam künye hapı, kaydet toggle'ı (`aria-pressed`), alt örtüde başlık, puan ve ülke çipleri, fiyat satırı ve tam genişlik açık hap eylem. Metin iki temada da sabit açık (`text-on-brand`, örtü `--color-scrim`). `OfferRow` kartları yatay sıraya dizer; `EdgeBlur` ile sarılabilir. Manzara turundan (yalnız davranış ve yapı).",
+          "Görselin tamamen kapladığı koyu yuvarlak kart: cam künye hapı, kaydet toggle'ı (`aria-pressed`), alt örtüde başlık, puan ve ülke çipleri, fiyat satırı ve tam genişlik açık hap eylem. Metin iki temada da sabit açık (`text-on-brand`, örtü `--color-scrim`). `OfferRow` kartları kendi kayan sırasına dizer; kenar buğusu isteniyorsa `OfferRow` yerine `EdgeBlur scrollable` (kayan şeridi `EdgeBlur` ile sarmalama: kenarlar hep buğulu kalır). Manzara turundan (yalnız davranış ve yapı).",
       },
     },
   },
@@ -69,8 +69,7 @@ export const Row: Story = {
   name: "Sıra ve Kenar Buğusu",
   render: () => (
     <div className="mx-auto w-full max-w-5xl">
-      <EdgeBlur size="6rem">
-        <OfferRow label="Hafta sonu kaçamakları">
+      <EdgeBlur scrollable size="6rem" label="Hafta sonu kaçamakları" itemClassName="w-64 shrink-0 sm:w-72">
           {OFFERS.map((o, i) => (
             <OfferCard
               key={o.title}
@@ -85,7 +84,6 @@ export const Row: Story = {
               defaultSaved={i === 1}
             />
           ))}
-        </OfferRow>
       </EdgeBlur>
     </div>
   ),
@@ -95,5 +93,32 @@ export const Row: Story = {
     await expect(within(region).getAllByRole("article")).toHaveLength(OFFERS.length);
     await expect(canvas.getByRole("button", { name: "Kaydet: Çam Yamacı" })).toHaveAttribute("aria-pressed", "true");
     await expect(canvas.getByRole("link", { name: "İncele, Kıyı Evleri" })).toHaveAttribute("href", "#lagoon");
+  },
+};
+
+export const PlainRow: Story = {
+  name: "Kayan Sıra",
+  render: () => (
+    <div className="mx-auto w-full max-w-5xl">
+      <OfferRow label="Şehir kaçamakları" itemClassName="w-64 sm:w-72">
+        {OFFERS.slice(0, 3).map((o) => (
+          <OfferCard
+            key={o.title}
+            title={o.title}
+            tag="Otel"
+            media={<Wallpaper scene={o.scene} className="size-full" />}
+            rating={{ value: o.rating, reviews: o.reviews }}
+            price={o.price}
+            priceUnit="/ gece"
+            action={{ label: "İncele", href: `#${o.scene}` }}
+          />
+        ))}
+      </OfferRow>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const region = canvas.getByRole("region", { name: "Şehir kaçamakları" });
+    await expect(within(region).getAllByRole("article")).toHaveLength(3);
   },
 };

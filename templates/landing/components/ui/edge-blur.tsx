@@ -32,6 +32,10 @@ import { cn } from "@/lib/utils";
  * (altındaki kart tıklanır). `scrollable` bölge klavyeyle odaklanır
  * (`tabIndex=0`, ok tuşları kaydırır) ve `label` adını taşır.
  *
+ * DİKKAT: `scrollable` olmadan iki kenar HEP buğuludur (kaydırma konumunu
+ * bilmez). Kendi kayan listesi olan bir şeridi (`OfferRow`) sarmalama: ilk ve
+ * son kartın yarısı daima bulanık kalır; `scrollable` ile kartları doğrudan ver.
+ *
  * Manzara turundan (tanıtım sitesi kart şeridi; yalnız davranış ve yapı).
  *
  *   <EdgeBlur scrollable label="Öne çıkan konaklamalar" itemClassName="w-72">

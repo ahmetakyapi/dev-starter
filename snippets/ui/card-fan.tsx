@@ -76,8 +76,10 @@ const SPREAD = {
 
 const OPEN = (inner: string) => `.ui-fan:focus-within ${inner}`;
 
+// `display` burada YAZILMAZ: bu CSS katmansız, Tailwind sınıfları katmanlı;
+// yazılsaydı çağıranın `hidden` / `max-md:hidden` sınıfını ezerdi.
 const CSS = `
-.ui-fan { --cw: 7rem; position: relative; display: block; flex: none; width: calc(var(--cw) * (1.25 + var(--fan-span) * var(--open-x)));
+.ui-fan { --cw: 7rem; position: relative; flex: none; width: calc(var(--cw) * (1.25 + var(--fan-span) * var(--open-x)));
   height: calc(var(--cw) * 1.75); }
 @media (min-width: 40rem) { .ui-fan { --cw: 9rem; } }
 .ui-fan-card[data-ink="dark"] { color: color-mix(in oklab, var(--tone) 20%, black); }

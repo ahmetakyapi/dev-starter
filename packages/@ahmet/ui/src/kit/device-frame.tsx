@@ -39,7 +39,7 @@ import { cn } from "../utils";
  */
 
 const CSS = `
-.ui-device { container-type: inline-size; position: relative; display: block; flex: none; aspect-ratio: 9 / 19.5; }
+.ui-device { container-type: inline-size; position: relative; flex: none; aspect-ratio: 9 / 19.5; }
 .ui-device-stage { position: absolute; inset: 0; perspective: 1400px; }
 .ui-device-body { position: absolute; inset: 0; border-radius: 15cqw; transition: rotate 0.5s var(--ease-brand);
   background: color-mix(in oklab, black 84%, var(--text-muted));
